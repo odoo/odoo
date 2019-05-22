@@ -539,7 +539,7 @@ class MailTemplate(models.Model):
                 template_ctx = {
                     'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=record.display_name)),
                     'model_description': self.env['ir.model']._get(record._name).display_name,
-                    'company': 'company_id' in record and record['company_id'] or self.env.company_id,
+                    'company': 'company_id' in record and record['company_id'] or self.env.company,
                 }
                 body = template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
                 values['body_html'] = self.env['mail.thread']._replace_local_links(body)

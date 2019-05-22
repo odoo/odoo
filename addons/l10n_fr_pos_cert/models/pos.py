@@ -154,7 +154,7 @@ class pos_order(models.Model):
                             order="l10n_fr_secure_sequence_number ASC")
 
         if not orders:
-            raise UserError(_('There isn\'t any order flagged for data inalterability yet for the company %s. This mechanism only runs for point of sale orders generated after the installation of the module France - Certification CGI 286 I-3 bis. - POS') % self.env.company_id.name)
+            raise UserError(_('There isn\'t any order flagged for data inalterability yet for the company %s. This mechanism only runs for point of sale orders generated after the installation of the module France - Certification CGI 286 I-3 bis. - POS') % self.env.company.name)
         previous_hash = u''
         start_order_info = []
         for order in orders:

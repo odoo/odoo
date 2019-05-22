@@ -169,7 +169,7 @@ class ResourceCalendar(models.Model):
     name = fields.Char(required=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env.company_id)
+        default=lambda self: self.env.company)
     attendance_ids = fields.One2many(
         'resource.calendar.attendance', 'calendar_id', 'Working Time',
         copy=True)
@@ -446,7 +446,7 @@ class ResourceResource(models.Model):
     active = fields.Boolean(
         'Active', default=True, tracking=True,
         help="If the active field is set to False, it will allow you to hide the resource record without removing it.")
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company_id)
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     resource_type = fields.Selection([
         ('user', 'Human'),
         ('material', 'Material')], string='Resource Type',
@@ -457,7 +457,7 @@ class ResourceResource(models.Model):
         help="This field is used to calculate the the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes.")
     calendar_id = fields.Many2one(
         "resource.calendar", string='Working Time',
-        default=lambda self: self.env.company_id.resource_calendar_id,
+        default=lambda self: self.env.company.resource_calendar_id,
         required=True,
         help="Define the schedule of resource")
     tz = fields.Selection(

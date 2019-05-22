@@ -25,7 +25,7 @@ class ProductReplenish(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super(ProductReplenish, self).default_get(fields)
-        company_user = self.env.company_id
+        company_user = self.env.company
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
         product_tmpl_id = False
         if 'product_id' in fields:

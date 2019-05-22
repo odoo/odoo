@@ -97,4 +97,4 @@ class ProductSupplierinfo(models.Model):
 
     @api.onchange('name')
     def _onchange_name(self):
-        self.currency_id = self.name.property_purchase_currency_id.id or self.env.company_id.currency_id.id
+        self.currency_id = self.name.property_purchase_currency_id.id or self.env.company.currency_id.id

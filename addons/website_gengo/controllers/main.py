@@ -27,7 +27,7 @@ class WebsiteGengo(http.Controller):
 
     @http.route('/website/set_gengo_config', type='json', auth='user', website=True)
     def set_gengo_config(self, config):
-        request.env.company_id.write(config)
+        request.env.company.write(config)
         return True
 
     @http.route('/website/post_gengo_jobs', type='json', auth='user', website=True)

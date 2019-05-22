@@ -20,7 +20,7 @@ class CrmLead(models.Model):
             total = 0.0
             quotation_cnt = 0
             sale_order_cnt = 0
-            company_currency = lead.company_currency or self.env.company_id.currency_id
+            company_currency = lead.company_currency or self.env.company.currency_id
             for order in lead.order_ids:
                 if order.state in ('draft', 'sent'):
                     quotation_cnt += 1

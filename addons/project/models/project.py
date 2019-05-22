@@ -171,7 +171,7 @@ class Project(models.Model):
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
     sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of Projects.")
     partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True)
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company_id)
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", string="Currency", readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
         help="Analytic account to which this project is linked for financial management. "
@@ -187,7 +187,7 @@ class Project(models.Model):
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', string='Working Time',
-        default=lambda self: self.env.company_id.resource_calendar_id.id,
+        default=lambda self: self.env.company.resource_calendar_id.id,
         help="Timetable working hours to adjust the gantt diagram report")
     type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages')
     task_count = fields.Integer(compute='_compute_task_count', string="Task Count")
@@ -522,7 +522,7 @@ class Task(models.Model):
     manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True, related_sudo=False)
     company_id = fields.Many2one('res.company',
         string='Company',
-        default=lambda self: self.env.company_id)
+        default=lambda self: self.env.company)
     color = fields.Integer(string='Color Index')
     user_email = fields.Char(related='user_id.email', string='User Email', readonly=True, related_sudo=False)
     attachment_ids = fields.One2many('ir.attachment', compute='_compute_attachment_ids', string="Main Attachments",

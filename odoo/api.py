@@ -855,7 +855,7 @@ class Environment(Mapping):
         return self(user=SUPERUSER_ID)['res.users'].browse(self.uid)
 
     @property
-    def company_id(self):
+    def company(self):
         """ return the company in which the user is logged in (as an instance) """
         try:
             company_id = int(self.context.get('allowed_company_ids')[0])
@@ -866,7 +866,7 @@ class Environment(Mapping):
             return self.user.company_id
 
     @property
-    def company_ids(self):
+    def companies(self):
         """ return a recordset of the enabled companies by the user """
         try:  # In case the user tries to bidouille the url (eg: cids=1,foo,bar)
             allowed_company_ids = self.context.get('allowed_company_ids')

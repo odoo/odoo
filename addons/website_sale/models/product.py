@@ -21,7 +21,7 @@ class ProductPricelist(models.Model):
 
     def _default_website(self):
         """ Find the first company's website, if there is one. """
-        company_id = self.env.company_id.id
+        company_id = self.env.company.id
 
         if self._context.get('default_company_id'):
             company_id = self._context.get('default_company_id')

@@ -147,7 +147,7 @@ class TestStockValuation(TransactionCase):
         """
         self.env['res.currency.rate'].search([]).unlink()
         usd_currency = self.env.ref('base.USD')
-        self.env.company_id.currency_id = usd_currency.id
+        self.env.company.currency_id = usd_currency.id
 
         eur_currency = self.env.ref('base.EUR')
 
@@ -176,7 +176,7 @@ class TestStockValuation(TransactionCase):
         # convert the price unit in the company currency
         price_unit_usd = po1.currency_id._convert(
             po1.order_line.price_unit, po1.company_id.currency_id,
-            self.env.company_id, fields.Date.today(), round=False)
+            self.env.company, fields.Date.today(), round=False)
 
         # the unit price of the move is the unit price of the purchase order line converted in
         # the company's currency
@@ -192,7 +192,7 @@ class TestStockValuation(TransactionCase):
         eur_currency._compute_current_rate()
         price_unit_usd_new_rate = po1.currency_id._convert(
             po1.order_line.price_unit, po1.company_id.currency_id,
-            self.env.company_id, fields.Date.today(), round=False)
+            self.env.company, fields.Date.today(), round=False)
 
         # the new price_unit is lower than th initial because of the rate's change
         self.assertLess(price_unit_usd_new_rate, price_unit_usd)
@@ -330,7 +330,7 @@ class TestStockValuationWithCOA(AccountingTestCase):
         })
 
     def test_fifo_anglosaxon_return(self):
-        self.env.company_id.anglo_saxon_accounting = True
+        self.env.company.anglo_saxon_accounting = True
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
         self.product1.product_tmpl_id.invoice_policy = 'delivery'
@@ -426,7 +426,7 @@ class TestStockValuationWithCOA(AccountingTestCase):
         self.assertEqual(price_diff_entry.credit, 100)
 
     def test_anglosaxon_valuation(self):
-        self.env.company_id.anglo_saxon_accounting = True
+        self.env.company.anglo_saxon_accounting = True
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
         self.product1.product_tmpl_id.invoice_policy = 'delivery'

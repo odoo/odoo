@@ -106,7 +106,7 @@ class WebsitePayment(http.Controller):
     def payment_method(self, **kwargs):
         acquirers = list(request.env['payment.acquirer'].search([
             ('website_published', '=', True), ('registration_view_template_id', '!=', False),
-            ('payment_flow', '=', 's2s'), ('company_id', '=', request.env.company_id.id)
+            ('payment_flow', '=', 's2s'), ('company_id', '=', request.env.company.id)
         ]))
         partner = request.env.user.partner_id
         payment_tokens = partner.payment_token_ids

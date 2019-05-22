@@ -18,7 +18,7 @@ class WebsiteBackend(http.Controller):
                 'system': has_group_system,
                 'website_designer': has_group_designer
             },
-            'currency': request.env.company_id.currency_id.id,
+            'currency': request.env.company.currency_id.id,
             'dashboards': {
                 'visits': {},
             }

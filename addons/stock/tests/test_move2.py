@@ -2030,7 +2030,7 @@ class TestRoutes(TestStockCommon):
                 'name': 'create a move to push location',
                 'location_src_id': stock_location.id,
                 'location_id': push_location.id,
-                'company_id': self.env.company_id.id,
+                'company_id': self.env.company.id,
                 'action': 'push',
                 'auto': 'manual',
                 'picking_type_id': self.env.ref('stock.picking_type_in').id,

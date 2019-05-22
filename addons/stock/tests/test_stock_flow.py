@@ -1857,11 +1857,11 @@ class TestStockFlow(TestStockCommon):
         # Need to add a new company on user.
         self.env.user.write({'company_ids': [(4, company_2.id)]})
 
-        warehouse_company_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company_id.id)], limit=1)
+        warehouse_company_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
 
         f = Form(self.env['stock.location.route'])
         f.name = 'From Company 1 to InterCompany'
-        f.company_id = self.env.company_id
+        f.company_id = self.env.company
         with f.rule_ids.new() as rule:
             rule.name = 'From Company 1 to InterCompany'
             rule.action = 'pull'
@@ -1898,8 +1898,8 @@ class TestStockFlow(TestStockCommon):
         incoming_picking = self.env['stock.picking'].search([('product_id', '=', product.id), ('picking_type_id', '=', warehouse_company_1.in_type_id.id)])
         outgoing_picking = self.env['stock.picking'].search([('product_id', '=', product.id), ('picking_type_id', '=', warehouse_company_2.out_type_id.id)])
 
-        self.assertEqual(incoming_picking.company_id, self.env.company_id)
-        self.assertEqual(incoming_picking.move_lines.company_id, self.env.company_id)
+        self.assertEqual(incoming_picking.company_id, self.env.company)
+        self.assertEqual(incoming_picking.move_lines.company_id, self.env.company)
         self.assertEqual(outgoing_picking.company_id, company_2)
         self.assertEqual(outgoing_picking.move_lines.company_id, company_2)
 
@@ -1921,11 +1921,11 @@ class TestStockFlow(TestStockCommon):
         # Need to add a new company on user.
         self.env.user.write({'company_ids': [(4, company_2.id)]})
 
-        warehouse_company_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company_id.id)], limit=1)
+        warehouse_company_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
 
         f = Form(self.env['stock.location.route'])
         f.name = 'From Company 1 to InterCompany'
-        f.company_id = self.env.company_id
+        f.company_id = self.env.company
         with f.rule_ids.new() as rule:
             rule.name = 'From Company 1 to InterCompany'
             rule.action = 'pull'
@@ -1990,15 +1990,15 @@ class TestStockFlow(TestStockCommon):
         incoming_picking = self.env['stock.picking'].search([('product_id', '=', product_from_company_2.id), ('picking_type_id', '=', warehouse_company_1.in_type_id.id)])
         outgoing_picking = self.env['stock.picking'].search([('product_id', '=', product_from_company_2.id), ('picking_type_id', '=', warehouse_company_2.out_type_id.id)])
 
-        self.assertEqual(incoming_picking.company_id, self.env.company_id)
-        self.assertEqual(incoming_picking.move_lines.mapped('company_id'), self.env.company_id)
+        self.assertEqual(incoming_picking.company_id, self.env.company)
+        self.assertEqual(incoming_picking.move_lines.mapped('company_id'), self.env.company)
         self.assertEqual(outgoing_picking.company_id, company_2)
         self.assertEqual(outgoing_picking.move_lines.company_id, company_2)
 
         incoming_picking = self.env['stock.picking'].search([('product_id', '=', product_from_company_3.id), ('picking_type_id', '=', warehouse_company_1.in_type_id.id)])
         outgoing_picking = self.env['stock.picking'].search([('product_id', '=', product_from_company_3.id), ('picking_type_id', '=', warehouse_company_3.out_type_id.id)])
 
-        self.assertEqual(incoming_picking.company_id, self.env.company_id)
-        self.assertEqual(incoming_picking.move_lines.mapped('company_id'), self.env.company_id)
+        self.assertEqual(incoming_picking.company_id, self.env.company)
+        self.assertEqual(incoming_picking.move_lines.mapped('company_id'), self.env.company)
         self.assertEqual(outgoing_picking.company_id, company_3)
         self.assertEqual(outgoing_picking.move_lines.company_id, company_3)

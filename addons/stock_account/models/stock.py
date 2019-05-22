@@ -166,8 +166,8 @@ class StockMove(models.Model):
                     ('location_id.company_id', '=', False),
                     '&',
                         ('location_id.usage', 'in', ['inventory', 'production']),
-                        ('location_id.company_id', '=', company_id or self.env.company_id.id),
-                ('location_dest_id.company_id', '=', company_id or self.env.company_id.id),
+                        ('location_id.company_id', '=', company_id or self.env.company.id),
+                ('location_dest_id.company_id', '=', company_id or self.env.company.id),
         ]
         return domain
 
@@ -190,15 +190,15 @@ class StockMove(models.Model):
                         ('location_id.company_id', '=', False),
                         '&',
                             ('location_id.usage', 'in', ['inventory', 'production']),
-                            ('location_id.company_id', '=', company_id or self.env.company_id.id),
-                    ('location_dest_id.company_id', '=', company_id or self.env.company_id.id),
+                            ('location_id.company_id', '=', company_id or self.env.company.id),
+                    ('location_dest_id.company_id', '=', company_id or self.env.company.id),
                 '&',
-                    ('location_id.company_id', '=', company_id or self.env.company_id.id),
+                    ('location_id.company_id', '=', company_id or self.env.company.id),
                     '|',
                         ('location_dest_id.company_id', '=', False),
                         '&',
                             ('location_dest_id.usage', '=', 'inventory'),
-                            ('location_dest_id.company_id', '=', company_id or self.env.company_id.id),
+                            ('location_dest_id.company_id', '=', company_id or self.env.company.id),
         ]
         return domain
 

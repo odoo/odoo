@@ -11,10 +11,10 @@ class SaleOrderTemplate(models.Model):
     _description = "Quotation Template"
 
     def _get_default_require_signature(self):
-        return self.env.company_id.portal_confirmation_sign
+        return self.env.company.portal_confirmation_sign
 
     def _get_default_require_payment(self):
-        return self.env.company_id.portal_confirmation_pay
+        return self.env.company.portal_confirmation_pay
 
     name = fields.Char('Quotation Template', required=True)
     sale_order_template_line_ids = fields.One2many('sale.order.template.line', 'sale_order_template_id', 'Lines', copy=True)

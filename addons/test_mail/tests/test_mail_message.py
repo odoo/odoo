@@ -62,7 +62,7 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
 
         msg = self.Message.create({})
         self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
-        reply_to_name = self.env.company_id.name
+        reply_to_name = self.env.company.name
         reply_to_email = '%s@%s' % (alias_catchall, alias_domain)
         self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
         self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
@@ -89,7 +89,7 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
             'res_id': self.alias_record.id
         })
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
-        reply_to_name = '%s %s' % (self.env.company_id.name, self.alias_record.name)
+        reply_to_name = '%s %s' % (self.env.company.name, self.alias_record.name)
         reply_to_email = '%s@%s' % (self.alias_record.alias_name, alias_domain)
         self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
         self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
@@ -105,7 +105,7 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
             'res_id': self.alias_record.id
         })
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
-        reply_to_name = '%s %s' % (self.env.company_id.name, self.alias_record.name)
+        reply_to_name = '%s %s' % (self.env.company.name, self.alias_record.name)
         reply_to_email = '%s@%s' % (self.alias_record.alias_name, alias_domain)
         self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
         self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
@@ -452,4 +452,4 @@ class TestMessageModeration(common.Moderation):
         msg_emp_pending_c2 = self._create_new_message(self.channel_2.id, status='pending_moderation', author=self.partner_employee)
 
         self.env['mail.message']._notify_moderators()
-        self.assertEmails(False, self.partner_employee | self.partner_employee_2, subject='Message are pending moderation', email_from=self.env.company_id.catchall or self.env.company_id.email)
+        self.assertEmails(False, self.partner_employee | self.partner_employee_2, subject='Message are pending moderation', email_from=self.env.company.catchall or self.env.company.email)

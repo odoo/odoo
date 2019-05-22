@@ -33,7 +33,7 @@ class TestSeller(TransactionCase):
         self.assertEqual('C2CCODE', context_code, "Partner's code not used in product name with context set")
 
     def test_20_sellers_company(self):
-        company_a = self.env.company_id
+        company_a = self.env.company
         company_b = self.env['res.company'].create({
             'name': 'Saucisson Inc.',
         })

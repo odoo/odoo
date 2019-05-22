@@ -48,7 +48,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             'location_dest_id': self.customer_location_id})
 
     def test_00_landed_costs_on_incoming_shipment(self):
-        chart_of_accounts = self.env.company_id.chart_template_id
+        chart_of_accounts = self.env.company.chart_template_id
         generic_coa = self.env.ref('l10n_generic_coa.configurable_chart_template')
         if chart_of_accounts != generic_coa:
             raise unittest.SkipTest('Skip this test as it works only with %s (%s loaded)' % (generic_coa.name, chart_of_accounts.name))
@@ -101,7 +101,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         self.assertEqual(account_entry['debit'], 430.0, 'Wrong Account Entry')
 
     def test_01_negative_landed_costs_on_incoming_shipment(self):
-        chart_of_accounts = self.env.company_id.chart_template_id
+        chart_of_accounts = self.env.company.chart_template_id
         generic_coa = self.env.ref('l10n_generic_coa.configurable_chart_template')
         if chart_of_accounts != generic_coa:
             raise unittest.SkipTest('Skip this test as it works only with %s (%s loaded)' % (generic_coa.name, chart_of_accounts.name))

@@ -56,7 +56,7 @@ class PurchaseRequisition(models.Model):
     schedule_date = fields.Date(string='Delivery Date', index=True, help="The expected and scheduled delivery date where all the products are received", tracking=True)
     user_id = fields.Many2one('res.users', string='Purchase Representative', default= lambda self: self.env.user)
     description = fields.Text()
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company_id)
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     purchase_ids = fields.One2many('purchase.order', 'requisition_id', string='Purchase Orders', states={'done': [('readonly', True)]})
     line_ids = fields.One2many('purchase.requisition.line', 'requisition_id', string='Products to Purchase', states={'done': [('readonly', True)]}, copy=True)
     state = fields.Selection(PURCHASE_REQUISITION_STATES,
@@ -65,7 +65,7 @@ class PurchaseRequisition(models.Model):
     state_blanket_order = fields.Selection(PURCHASE_REQUISITION_STATES, compute='_set_state')
     is_quantity_copy = fields.Selection(related='type_id.quantity_copy', readonly=True)
     currency_id = fields.Many2one('res.currency', 'Currency', required=True,
-        default=lambda self: self.env.company_id.currency_id.id)
+        default=lambda self: self.env.company.currency_id.id)
 
     @api.depends('state')
     def _set_state(self):
@@ -181,7 +181,7 @@ class PurchaseRequisitionLine(models.Model):
     price_unit = fields.Float(string='Unit Price', digits=dp.get_precision('Product Price'))
     qty_ordered = fields.Float(compute='_compute_ordered_qty', string='Ordered Quantities')
     requisition_id = fields.Many2one('purchase.requisition', required=True, string='Purchase Agreement', ondelete='cascade')
-    company_id = fields.Many2one('res.company', related='requisition_id.company_id', string='Company', store=True, readonly=True, default= lambda self: self.env.company_id)
+    company_id = fields.Many2one('res.company', related='requisition_id.company_id', string='Company', store=True, readonly=True, default= lambda self: self.env.company)
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     schedule_date = fields.Date(string='Scheduled Date')

@@ -201,7 +201,7 @@ class Company(models.Model):
             - Deprecated
         """
         _logger.warning(_("The method '_company_default_get' on res.company is deprecated and shouldn't be used anymore"))
-        return self.env.company_id
+        return self.env.company
 
     # deprecated, use clear_caches() instead
     def cache_restart(self):
@@ -278,7 +278,7 @@ class Company(models.Model):
     def action_open_base_onboarding_company(self):
         """ Onboarding step for company basic information. """
         action = self.env.ref('base.action_open_base_onboarding_company').read()[0]
-        action['res_id'] = self.env.company_id.id
+        action['res_id'] = self.env.company.id
         return action
 
     def set_onboarding_step_done(self, step_name):

@@ -136,7 +136,7 @@ class IrSequence(models.Model):
                              help="Odoo will automatically adds some '0' on the left of the "
                                   "'Next Number' to get the required padding size.")
     company_id = fields.Many2one('res.company', string='Company',
-                                 default=lambda s: s.env.company_id)
+                                 default=lambda s: s.env.company)
     use_date_range = fields.Boolean(string='Use subsequences per date_range')
     date_range_ids = fields.One2many('ir.sequence.date_range', 'sequence_id', string='Subsequences')
 
@@ -277,7 +277,7 @@ class IrSequence(models.Model):
         self.check_access_rights('read')
         force_company = self._context.get('force_company')
         if not force_company:
-            force_company = self.env.company_id.id
+            force_company = self.env.company.id
         seq_ids = self.search([('code', '=', sequence_code), ('company_id', 'in', [force_company, False])], order='company_id')
         if not seq_ids:
             _logger.debug("No ir.sequence has been found for code '%s'. Please make sure a sequence is set for current company." % sequence_code)

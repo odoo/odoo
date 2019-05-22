@@ -13,7 +13,7 @@ class SaleOrder(models.Model):
 
     @api.model
     def _default_warehouse_id(self):
-        company = self.env.company_id.id
+        company = self.env.company.id
         warehouse_ids = self.env['stock.warehouse'].search([('company_id', '=', company)], limit=1)
         return warehouse_ids
 

@@ -19,7 +19,7 @@ class TestPurchase(TestStockCommon):
         }
         return ProcurementGroup.run([self.env['procurement.group'].Procurement(
             product, product_qty, self.uom_unit, self.warehouse_1.lot_stock_id,
-            product.name, '/', self.env.company_id, order_values)
+            product.name, '/', self.env.company, order_values)
         ])
 
     def _load(self, module, *args):

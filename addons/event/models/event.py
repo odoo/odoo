@@ -103,12 +103,12 @@ class EventEvent(models.Model):
         readonly=False, states={'done': [('readonly', True)]})
     company_id = fields.Many2one(
         'res.company', string='Company', change_default=True,
-        default=lambda self: self.env.company_id,
+        default=lambda self: self.env.company,
         required=False, readonly=False, states={'done': [('readonly', True)]})
     organizer_id = fields.Many2one(
         'res.partner', string='Organizer',
         tracking=True,
-        default=lambda self: self.env.company_id.partner_id)
+        default=lambda self: self.env.company.partner_id)
     event_type_id = fields.Many2one(
         'event.type', string='Category',
         readonly=False, states={'done': [('readonly', True)]},
@@ -167,7 +167,7 @@ class EventEvent(models.Model):
     is_online = fields.Boolean('Online Event')
     address_id = fields.Many2one(
         'res.partner', string='Location',
-        default=lambda self: self.env.company_id.partner_id,
+        default=lambda self: self.env.company.partner_id,
         readonly=False, states={'done': [('readonly', True)]},
         tracking=True)
     country_id = fields.Many2one('res.country', 'Country',  related='address_id.country_id', store=True, readonly=False)

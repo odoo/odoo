@@ -5,7 +5,7 @@
         <field name="type">ir.actions.server</field>
         <field name="state">code</field>
         <field name="code">
-            action = env['account.move']._check_hash_integrity(env.company_id.id)
+            action = env['account.move']._check_hash_integrity(env.company.id)
         </field>
     </record>
 

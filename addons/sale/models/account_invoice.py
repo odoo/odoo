@@ -43,7 +43,7 @@ class AccountInvoice(models.Model):
         self.partner_shipping_id = addr and addr.get('delivery')
         inv_type = self.type or self.env.context.get('type', 'out_invoice')
         if inv_type == 'out_invoice':
-            company = self.company_id or self.env.company_id
+            company = self.company_id or self.env.company
             self.comment = company.with_context(lang=self.partner_id.lang).invoice_terms
 
     @api.multi

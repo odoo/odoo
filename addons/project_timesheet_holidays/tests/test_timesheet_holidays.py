@@ -19,7 +19,7 @@ class TestTimesheetHolidaysCreate(common.TransactionCase):
             'allocation_type': 'no'
         })
 
-        company = self.env.company_id
+        company = self.env.company
         self.assertEqual(status.timesheet_project_id, company.leave_timesheet_project_id, 'The default project linked to the status should be the same as the company')
         self.assertEqual(status.timesheet_task_id, company.leave_timesheet_task_id, 'The default task linked to the status should be the same as the company')
 
@@ -37,8 +37,8 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         self.leave_end_datetime = self.leave_start_datetime + relativedelta(days=3)
 
         # all company have those internal project/task (created by default)
-        self.internal_project = self.env.company_id.leave_timesheet_project_id
-        self.internal_task_leaves = self.env.company_id.leave_timesheet_task_id
+        self.internal_project = self.env.company.leave_timesheet_project_id
+        self.internal_task_leaves = self.env.company.leave_timesheet_task_id
 
         self.hr_leave_type_with_ts = self.env['hr.leave.type'].create({
             'name': 'Leave Type with timesheet generation',

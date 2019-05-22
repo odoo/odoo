@@ -90,7 +90,7 @@ class AccountAnalyticLine(models.Model):
     @api.model
     def _apply_timesheet_label(self, view_arch):
         doc = etree.XML(view_arch)
-        encoding_uom = self.env.company_id.timesheet_encode_uom_id
+        encoding_uom = self.env.company.timesheet_encode_uom_id
         # Here, we select only the unit_amount field having no string set to give priority to
         # custom inheretied view stored in database. Even if normally, no xpath can be done on
         # 'string' attribute.
@@ -159,7 +159,7 @@ class AccountAnalyticLine(models.Model):
                 cost = timesheet.employee_id.timesheet_cost or 0.0
                 amount = -timesheet.unit_amount * cost
                 amount_converted = timesheet.employee_id.currency_id._convert(
-                    amount, timesheet.account_id.currency_id, self.env.company_id, timesheet.date)
+                    amount, timesheet.account_id.currency_id, self.env.company, timesheet.date)
                 result[timesheet.id].update({
                     'amount': amount_converted,
                 })

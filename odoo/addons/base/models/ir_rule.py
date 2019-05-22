@@ -51,7 +51,7 @@ class IrRule(models.Model):
         return {
             'user': self.env.user,
             'time': time,
-            'company_ids': self.env.company_ids.ids,
+            'company_ids': self.env.companies.ids,
         }
 
     @api.depends('groups')

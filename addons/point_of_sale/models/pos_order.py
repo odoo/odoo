@@ -537,7 +537,7 @@ class PosOrder(models.Model):
         return self._default_session().config_id.pricelist_id
 
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
-    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, default=lambda self: self.env.company_id)
+    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, default=lambda self: self.env.company)
     date_order = fields.Datetime(string='Order Date', readonly=True, index=True, default=fields.Datetime.now)
     user_id = fields.Many2one(
         comodel_name='res.users', string='User',
@@ -1048,7 +1048,7 @@ class PosOrderLine(models.Model):
             line[2]['tax_ids'] = [(6, 0, [x.id for x in product.taxes_id])]
         return line
 
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company_id)
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     name = fields.Char(string='Line No', required=True, copy=False)
     notice = fields.Char(string='Discount Notice')
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], required=True, change_default=True)
@@ -1221,7 +1221,7 @@ class ReportSaleDetails(models.AbstractModel):
 
         orders = self.env['pos.order'].search(domain)
 
-        user_currency = self.env.company_id.currency_id
+        user_currency = self.env.company.currency_id
 
         total = 0.0
         products_sold = {}
@@ -1269,7 +1269,7 @@ class ReportSaleDetails(models.AbstractModel):
             'currency_precision': user_currency.decimal_places,
             'total_paid': user_currency.round(total),
             'payments': payments,
-            'company_name': self.env.company_id.name,
+            'company_name': self.env.company.name,
             'taxes': list(taxes.values()),
             'products': sorted([{
                 'product_id': product.id,

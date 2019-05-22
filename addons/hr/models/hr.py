@@ -47,7 +47,7 @@ class Job(models.Model):
     description = fields.Text(string='Job Description')
     requirements = fields.Text('Requirements')
     department_id = fields.Many2one('hr.department', string='Department')
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company_id)
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     state = fields.Selection([
         ('recruit', 'Recruitment in Progress'),
         ('open', 'Not Recruiting')
@@ -382,7 +382,7 @@ class Department(models.Model):
     name = fields.Char('Department Name', required=True)
     complete_name = fields.Char('Complete Name', compute='_compute_complete_name', store=True)
     active = fields.Boolean('Active', default=True)
-    company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.company_id)
+    company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.company)
     parent_id = fields.Many2one('hr.department', string='Parent Department', index=True)
     child_ids = fields.One2many('hr.department', 'parent_id', string='Child Departments')
     manager_id = fields.Many2one('hr.employee', string='Manager', tracking=True)

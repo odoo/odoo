@@ -64,7 +64,7 @@ class HolidaysType(models.Model):
         compute='_compute_group_days_allocation', string='Days Allocated')
     group_days_leave = fields.Float(
         compute='_compute_group_days_leave', string='Group Time Off')
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company_id)
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     responsible_id = fields.Many2one('res.users', 'Responsible', domain=lambda self: [('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id)],
                                      help="This user will be responsible for approving this type of times off"
                                      "This is only used when validation is 'hr' or 'both'",)
@@ -220,7 +220,7 @@ class HolidaysType(models.Model):
         elif 'default_employee_id' in self._context:
             employee_id = self._context['default_employee_id']
         else:
-            employee_id = self.env['hr.employee'].search([('user_id', '=', self.env.user.id), ('company_id', '=', self.env.company_id.id)], limit=1).id
+            employee_id = self.env['hr.employee'].search([('user_id', '=', self.env.user.id), ('company_id', '=', self.env.company.id)], limit=1).id
         return employee_id
 
     @api.multi

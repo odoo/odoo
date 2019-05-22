@@ -271,16 +271,16 @@ class AccountInvoice(models.Model):
 
         message = self.env['mail.message'].create({
             'subject': _('Sending file: %s') % (self.l10n_it_einvoice_id.name),
-            'body': _('Sending file: %s to ES: %s') % (self.l10n_it_einvoice_id.name, self.env.company_id.l10n_it_address_recipient_fatturapa),
+            'body': _('Sending file: %s to ES: %s') % (self.l10n_it_einvoice_id.name, self.env.company.l10n_it_address_recipient_fatturapa),
             'author_id': self.env.user.partner_id.id,
-            'email_from': self.env.company_id.l10n_it_address_send_fatturapa,
-            'mail_server_id': self.env.company_id.l10n_it_mail_pec_server_id.id,
+            'email_from': self.env.company.l10n_it_address_send_fatturapa,
+            'mail_server_id': self.env.company.l10n_it_mail_pec_server_id.id,
             'attachment_ids': [(6, 0, self.l10n_it_einvoice_id.ids)],
         })
 
         mail_fattura = self.env['mail.mail'].create({
             'mail_message_id': message.id,
-            'email_to': self.env.company_id.l10n_it_address_recipient_fatturapa,
+            'email_to': self.env.company.l10n_it_address_recipient_fatturapa,
         })
         try:
             mail_fattura.send(raise_exception=True)
@@ -332,15 +332,15 @@ class AccountInvoice(models.Model):
             if company:
                 self_ctx = self_ctx.with_context(company_id=company.id)
             else:
-                company = self.env.company_id
+                company = self.env.company
                 if elements:
                     _logger.info(_('Company not found with codice fiscale: %s. The company\'s user is set by default.') % elements[0].text)
                 else:
                     _logger.info(_('Company not found. The company\'s user is set by default.'))
 
             if not self.env.user._is_superuser():
-                if self.env.company_id != company:
-                    raise UserError(_("You can only import invoice concern your current company: %s") % self.env.company_id.display_name)
+                if self.env.company != company:
+                    raise UserError(_("You can only import invoice concern your current company: %s") % self.env.company.display_name)
 
             journal_id = self_ctx._default_journal().id
             self_ctx = self_ctx.with_context(journal_id=journal_id)
@@ -395,7 +395,7 @@ class AccountInvoice(models.Model):
                 if elements:
                     currency_str = elements[0].text
                     currency = self.env.ref('base.%s' % currency_str.upper(), raise_if_not_found=False)
-                    if currency != self.env.company_id.currency_id and currency.active:
+                    if currency != self.env.company.currency_id and currency.active:
                         invoice_form.currency_id = currency
 
                 # Date. <2.1.1.3>

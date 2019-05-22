@@ -175,7 +175,7 @@ class Lang(models.Model):
         if default_value is None:
             IrDefault.set('res.partner', 'lang', lang_code)
             # set language of main company, created directly by db bootstrap SQL
-            partner = self.env.company_id.partner_id
+            partner = self.env.company.partner_id
             if not partner.lang:
                 partner.write({'lang': lang_code})
         return True

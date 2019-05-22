@@ -36,7 +36,7 @@ class LunchOrder(models.Model):
                               ('confirmed', 'Received'),
                               ('cancelled', 'Cancelled')],
                              'Status', readonly=True, index=True, default='new')
-    company_id = fields.Many2one('res.company', default=lambda self: self.env.company_id.id)
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True, store=True)
     quantity = fields.Float('Quantity', required=True, default=1)
 

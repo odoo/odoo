@@ -9,7 +9,7 @@ class TestIrDefault(TransactionCase):
 
     def test_defaults(self):
         """ check the mechanism of user-defined defaults """
-        companyA = self.env.company_id
+        companyA = self.env.company
         companyB = companyA.create({'name': 'CompanyB'})
         user1 = self.env.user
         user2 = user1.create({'name': 'u2', 'login': 'u2'})

@@ -134,7 +134,7 @@ class PortalWizardUser(models.TransientModel):
                     if wizard_user.partner_id.company_id:
                         company_id = wizard_user.partner_id.company_id.id
                     else:
-                        company_id = self.env.company_id.id
+                        company_id = self.env.company.id
                     user_portal = wizard_user.sudo().with_context(company_id=company_id)._create_user()
                 else:
                     user_portal = user

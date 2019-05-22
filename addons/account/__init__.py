@@ -13,7 +13,7 @@ SYSCOHADA_LIST = ['BJ', 'BF', 'CM', 'CF', 'KM', 'CG', 'CI', 'GA', 'GN', 'GW', 'G
 def _auto_install_l10n(cr, registry):
     #check the country of the main company (only) and eventually load some module needed in that country
     env = api.Environment(cr, SUPERUSER_ID, {})
-    country_code = env.company_id.country_id.code
+    country_code = env.company.country_id.code
     if country_code:
         #auto install localization module(s) if available
         module_list = []

@@ -174,7 +174,7 @@ class Product(models.Model):
         Warehouse = self.env['stock.warehouse']
 
         if self.env.context.get('company_owned', False):
-            company_id = self.env.company_id.id
+            company_id = self.env.company.id
             return (
                 [('location_id.company_id', '=', company_id), ('location_id.usage', 'in', ['internal', 'transit'])],
                 [('location_id.company_id', '=', False), ('location_dest_id.company_id', '=', company_id)],

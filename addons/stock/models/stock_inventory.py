@@ -14,7 +14,7 @@ class Inventory(models.Model):
 
     @api.model
     def _default_location_id(self):
-        company_user = self.env.company_id
+        company_user = self.env.company
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
         if warehouse:
             return warehouse.lot_stock_id.id
@@ -49,7 +49,7 @@ class Inventory(models.Model):
         'res.company', 'Company',
         readonly=True, index=True, required=True,
         states={'draft': [('readonly', False)]},
-        default=lambda self: self.env.company_id)
+        default=lambda self: self.env.company)
     location_id = fields.Many2one(
         'stock.location', 'Inventoried Location',
         readonly=True, required=True,

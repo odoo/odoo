@@ -21,7 +21,7 @@ class LunchOrderWizard(models.TransientModel):
                                                                 order="date desc, id desc", limit=1)
         return last_time_ordered
 
-    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company_id.currency_id)
+    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
 
     product_id = fields.Many2one('lunch.product', string='Product ID')
     product_description = fields.Text('Description', related='product_id.description')

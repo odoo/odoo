@@ -58,7 +58,7 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
         picking_landed_cost_1 = self.env['stock.picking'].create(vals)
 
         # Confirm and assign picking
-        self.env.company_id.anglo_saxon_accounting = True
+        self.env.company.anglo_saxon_accounting = True
         picking_landed_cost_1.action_confirm()
         picking_landed_cost_1.action_assign()
         picking_landed_cost_1.move_lines.quantity_done = 5

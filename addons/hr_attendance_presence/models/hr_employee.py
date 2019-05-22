@@ -16,7 +16,7 @@ class Employee(models.Model):
         action = super(Employee, self)._action_open_presence_view()
 
         if self.env['ir.config_parameter'].sudo().get_param('hr_presence.hr_presence_control_attendance'):
-            company = self.env.company_id
+            company = self.env.company
             employees = self.env['hr.employee'].search([
                 ('department_id.company_id', '=', company.id),
                 ('user_id', '!=', False),

@@ -168,7 +168,7 @@
             <field name="account_id" model="account.account"
                 search="['|', ('tag_ids', '=', ref('account.demo_ceo_wages_account')),
                         ('user_type_id', '=', ref('account.data_account_type_expenses')),
-                        ('company_id', '=', obj().env.company_id.id)]"/>
+                        ('company_id', '=', obj().env.company.id)]"/>
         </record>
         <function model="account.invoice" name="action_invoice_open">
             <value eval="[ref('demo_invoice_january_wages')]"/>
@@ -189,12 +189,12 @@
             <field name="account_id" model="account.account"
                 search="['|', ('tag_ids', '=', ref('account.demo_office_furniture_account')),
                         ('user_type_id', '=', ref('account.data_account_type_expenses')),
-                        ('company_id', '=', obj().env.company_id.id)]"/>
+                        ('company_id', '=', obj().env.company.id)]"/>
             <field name="invoice_line_tax_ids" model="account.tax"
                 eval="[(6, 0, obj().search([
                     ('type_tax_use', '=', 'purchase'),
                     ('amount', '&gt;', 0),
-                    ('company_id', '=', obj().env.company_id.id)], limit=1).ids)]"/>
+                    ('company_id', '=', obj().env.company.id)], limit=1).ids)]"/>
         </record>
 
         <function model="account.invoice" name="_onchange_invoice_line_ids">
@@ -209,7 +209,7 @@
             <field name="account_id" model="account.account" search="[
               ('user_type_id', '=', ref('account.data_account_type_revenue')),
               ('tag_ids', 'in', [ref('account.account_tag_financing')]),
-              ('company_id', '=', obj().env.company_id.id)]"/>
+              ('company_id', '=', obj().env.company.id)]"/>
         </record>
 
         <function model="account.bank.statement.line" name="fast_counterpart_creation">

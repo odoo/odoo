@@ -19,7 +19,7 @@ class FleetVehicle(models.Model):
 
     name = fields.Char(compute="_compute_vehicle_name", store=True)
     active = fields.Boolean('Active', default=True, tracking=True)
-    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company_id)
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     license_plate = fields.Char(tracking=True,
         help='License plate number of the vehicle (i = plate number for a car)')

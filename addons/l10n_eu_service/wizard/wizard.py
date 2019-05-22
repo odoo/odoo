@@ -18,7 +18,7 @@ class l10n_eu_service(models.TransientModel):
         return eu_group
 
     def _get_default_company_id(self):
-        return self.env.company_id.id
+        return self.env.company.id
 
     def _default_fiscal_position_id(self):
         user = self.env.user

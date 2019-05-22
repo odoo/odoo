@@ -16,7 +16,7 @@ class AccountVoucher(models.Model):
     @api.model
     def _default_journal(self):
         voucher_type = self._context.get('voucher_type', 'sale')
-        company_id = self._context.get('company_id', self.env.company_id.id)
+        company_id = self._context.get('company_id', self.env.company.id)
         domain = [
             ('type', '=', voucher_type),
             ('company_id', '=', company_id),
@@ -25,7 +25,7 @@ class AccountVoucher(models.Model):
 
     @api.model
     def _default_payment_journal(self):
-        company_id = self._context.get('company_id', self.env.company_id.id)
+        company_id = self._context.get('company_id', self.env.company.id)
         domain = [
             ('type', 'in', ('bank', 'cash')),
             ('company_id', '=', company_id),
@@ -96,11 +96,11 @@ class AccountVoucher(models.Model):
         journal = self.env['account.journal'].browse(self.env.context.get('default_journal_id', False))
         if journal.currency_id:
             return journal.currency_id.id
-        return self.env.company_id.currency_id.id
+        return self.env.company.currency_id.id
 
     @api.model
     def _get_company(self):
-        return self._context.get('company_id', self.env.company_id.id)
+        return self._context.get('company_id', self.env.company.id)
 
     @api.constrains('company_id', 'currency_id')
     def _check_company_id(self):
@@ -274,7 +274,7 @@ class AccountVoucher(models.Model):
         :return: Tuple build as (remaining amount not allocated on voucher lines, list of account_move_line created in this method)
         :rtype: tuple(float, list of int)
         '''
-        tax_calculation_rounding_method = self.env.company_id.tax_calculation_rounding_method
+        tax_calculation_rounding_method = self.env.company.tax_calculation_rounding_method
         tax_lines_vals = []
         for line in self.line_ids:
             #create one move line per voucher line where amount is not 0.0

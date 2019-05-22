@@ -58,7 +58,7 @@ class ReportBomStructure(models.AbstractModel):
         lines = self._get_operation_line(bom.routing_id, float_round(qty / bom.product_qty, precision_rounding=1, rounding_method='UP'), level)
         values = {
             'bom_id': bom_id,
-            'currency': self.env.company_id.currency_id,
+            'currency': self.env.company.currency_id,
             'operations': lines,
         }
         return self.env.ref('mrp.report_mrp_operation_line').render({'data': values})
@@ -111,7 +111,7 @@ class ReportBomStructure(models.AbstractModel):
             'bom': bom,
             'bom_qty': bom_quantity,
             'bom_prod_name': product.display_name,
-            'currency': self.env.company_id.currency_id,
+            'currency': self.env.company.currency_id,
             'product': product,
             'code': bom and bom.display_name or '',
             'price': product.uom_id._compute_price(product.standard_price, bom.product_uom_id) * bom_quantity,
@@ -140,14 +140,14 @@ class ReportBomStructure(models.AbstractModel):
                 sub_total = self._get_price(line.child_bom_id, factor, line.product_id)
             else:
                 sub_total = price
-            sub_total = self.env.company_id.currency_id.round(sub_total)
+            sub_total = self.env.company.currency_id.round(sub_total)
             components.append({
                 'prod_id': line.product_id.id,
                 'prod_name': line.product_id.display_name,
                 'code': line.child_bom_id and line.child_bom_id.display_name or '',
                 'prod_qty': line_quantity,
                 'prod_uom': line.product_uom_id.name,
-                'prod_cost': self.env.company_id.currency_id.round(price),
+                'prod_cost': self.env.company.currency_id.round(price),
                 'parent_id': bom.id,
                 'line_id': line.id,
                 'level': level or 0,
@@ -173,7 +173,7 @@ class ReportBomStructure(models.AbstractModel):
                 'operation': operation,
                 'name': operation.name + ' - ' + operation.workcenter_id.name,
                 'duration_expected': duration_expected,
-                'total': self.env.company_id.currency_id.round(total),
+                'total': self.env.company.currency_id.round(total),
             })
         return operations
 
@@ -200,7 +200,7 @@ class ReportBomStructure(models.AbstractModel):
             else:
                 prod_qty = line.product_qty * factor
                 not_rounded_price = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id) * prod_qty
-                price += self.env.company_id.currency_id.round(not_rounded_price)
+                price += self.env.company.currency_id.round(not_rounded_price)
         return price
 
     def _get_pdf_line(self, bom_id, product_id=False, qty=1, child_bom_ids=[], unfolded=False):

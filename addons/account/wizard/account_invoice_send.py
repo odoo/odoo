@@ -10,8 +10,8 @@ class AccountInvoiceSend(models.TransientModel):
     _inherits = {'mail.compose.message':'composer_id'}
     _description = 'Account Invoice Send'
 
-    is_email = fields.Boolean('Email', default=lambda self: self.env.company_id.invoice_is_email)
-    is_print = fields.Boolean('Print', default=lambda self: self.env.company_id.invoice_is_print)
+    is_email = fields.Boolean('Email', default=lambda self: self.env.company.invoice_is_email)
+    is_print = fields.Boolean('Print', default=lambda self: self.env.company.invoice_is_print)
     printed = fields.Boolean('Is Printed', default=False)
     invoice_ids = fields.Many2many('account.invoice', 'account_invoice_account_invoice_send_rel', string='Invoices')
     composer_id = fields.Many2one('mail.compose.message', string='Composer', required=True, ondelete='cascade')

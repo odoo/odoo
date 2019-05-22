@@ -657,7 +657,7 @@ class Field(MetaField('DummyField', (object,), {})):
         # read property as superuser, as the current user may not have access
         context = records.env.context
         if 'force_company' not in context:
-            company = records.env.company_id
+            company = records.env.company
             context = dict(context, force_company=company.id)
         Property = records.env(user=SUPERUSER_ID, context=context)['ir.property']
         values = Property.get_multi(self.name, self.model_name, records.ids)
@@ -668,7 +668,7 @@ class Field(MetaField('DummyField', (object,), {})):
         # update property as superuser, as the current user may not have access
         context = records.env.context
         if 'force_company' not in context:
-            company = records.env.company_id
+            company = records.env.company
             context = dict(context, force_company=company.id)
         Property = records.env(user=SUPERUSER_ID, context=context)['ir.property']
         values = {

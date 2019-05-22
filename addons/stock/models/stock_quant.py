@@ -368,7 +368,7 @@ class QuantPackage(models.Model):
     @api.depends('quant_ids.package_id', 'quant_ids.location_id', 'quant_ids.company_id', 'quant_ids.owner_id', 'quant_ids.quantity', 'quant_ids.reserved_quantity')
     def _compute_package_info(self):
         for package in self:
-            values = {'location_id': False, 'company_id': self.env.company_id.id, 'owner_id': False}
+            values = {'location_id': False, 'company_id': self.env.company.id, 'owner_id': False}
             if package.quant_ids:
                 values['location_id'] = package.quant_ids[0].location_id
                 if all(q.owner_id == package.quant_ids[0].owner_id for q in package.quant_ids):

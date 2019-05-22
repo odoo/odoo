@@ -27,12 +27,12 @@ class ResCompany(models.Model):
     @api.model
     def action_close_sale_quotation_onboarding(self):
         """ Mark the onboarding panel as closed. """
-        self.env.company_id.sale_quotation_onboarding_state = 'closed'
+        self.env.company.sale_quotation_onboarding_state = 'closed'
 
     @api.model
     def action_open_sale_onboarding_payment_acquirer(self):
         """ Called by onboarding panel above the quotation list."""
-        self.env.company_id.get_chart_of_accounts_or_fail()
+        self.env.company.get_chart_of_accounts_or_fail()
         action = self.env.ref('sale.action_open_sale_onboarding_payment_acquirer_wizard').read()[0]
         return action
 
@@ -40,7 +40,7 @@ class ResCompany(models.Model):
         """ Get a sample quotation or create one if it does not exist. """
         # use current user as partner
         partner = self.env.user.partner_id
-        company_id = self.env.company_id.id
+        company_id = self.env.company.id
         # is there already one?
         sample_sales_order = self.env['sale.order'].search(
             [('company_id', '=', company_id), ('partner_id', '=', partner.id),
@@ -107,7 +107,7 @@ class ResCompany(models.Model):
     def action_open_sale_onboarding_quotation_layout(self):
         """ Onboarding step for the quotation layout. """
         action = self.env.ref('sale.action_open_sale_onboarding_quotation_layout').read()[0]
-        action['res_id'] = self.env.company_id.id
+        action['res_id'] = self.env.company.id
         return action
 
     _sql_constraints = [('check_quotation_validity_days', 'CHECK(quotation_validity_days > 0)', 'Quotation Validity is required and must be greater than 0.')]

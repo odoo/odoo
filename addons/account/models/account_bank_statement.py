@@ -101,7 +101,7 @@ class AccountBankStatement(models.Model):
     @api.model
     def _default_journal(self):
         journal_type = self.env.context.get('journal_type', False)
-        company_id = self.env.company_id.id
+        company_id = self.env.company.id
         if journal_type:
             journals = self.env['account.journal'].search([('type', '=', journal_type), ('company_id', '=', company_id)])
             if journals:
@@ -145,7 +145,7 @@ class AccountBankStatement(models.Model):
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'confirm': [('readonly', True)]}, default=_default_journal)
     journal_type = fields.Selection(related='journal_id.type', help="Technical field used for usability purposes", readonly=False)
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
-        default=lambda self: self.env.company_id)
+        default=lambda self: self.env.company)
 
     total_entry_encoding = fields.Monetary('Transactions Subtotal', compute='_end_balance', store=True, help="Total of transaction lines.")
     balance_end = fields.Monetary('Computed Balance', compute='_end_balance', store=True, help='Balance as calculated based on Opening Balance and transaction lines')

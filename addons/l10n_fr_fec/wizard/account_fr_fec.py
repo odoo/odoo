@@ -65,7 +65,7 @@ class AccountFrFec(models.TransientModel):
             sql_query += '''
             AND am.state = 'posted'
             '''
-        company = self.env.company_id
+        company = self.env.company
         formatted_date_from = fields.Date.to_string(self.date_from).replace('-', '')
         date_from = self.date_from
         formatted_date_year = date_from.year
@@ -108,7 +108,7 @@ class AccountFrFec(models.TransientModel):
         # 2) CSV files are easier to read/use for a regular accountant.
         # So it will be easier for the accountant to check the file before
         # sending it to the fiscal administration
-        company = self.env.company_id
+        company = self.env.company
         company_legal_data = self._get_company_legal_data(company)
 
         header = [

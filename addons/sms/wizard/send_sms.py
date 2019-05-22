@@ -32,7 +32,7 @@ class SendSMS(models.TransientModel):
     def _phone_get_country(self, partner):
         if 'country_id' in partner:
             return partner.country_id
-        return self.env.company_id.country_id
+        return self.env.company.country_id
 
     def _sms_sanitization(self, partner, field_name):
         number = partner[field_name]

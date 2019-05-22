@@ -28,7 +28,7 @@ class ResCompany(models.Model):
 
     @api.model
     def _check_presence(self):
-        company = self.env.company_id
+        company = self.env.company
         if not company.hr_presence_last_compute_date or \
                 company.hr_presence_last_compute_date.day != Datetime.now().day:
             self.env['hr.employee'].search([

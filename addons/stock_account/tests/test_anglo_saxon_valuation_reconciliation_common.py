@@ -53,7 +53,7 @@ class ValuationReconciliationTestCase(AccountingTestCase):
     def setUp(self):
         super(ValuationReconciliationTestCase, self).setUp()
 
-        self.company = self.env.company_id
+        self.company = self.env.company
         self.company.anglo_saxon_accounting = True
         self.currency_one = self.company.currency_id
         currency_two_name = 'USD' if self.currency_one.name != 'USD' else 'EUR'

@@ -13,7 +13,7 @@ class AccountReconcileModel(models.Model):
     # Base fields.
     name = fields.Char(string='Name', required=True)
     sequence = fields.Integer(required=True, default=10)
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company_id)
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
 
     rule_type = fields.Selection(selection=[
         ('writeoff_button', _('Manually create a write-off on clicked button.')),
