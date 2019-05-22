@@ -20,6 +20,7 @@
         'web_tour',
         'contacts',
         'digest',
+        'phone_validation',
     ],
     'data': [
         'security/crm_security.xml',
@@ -29,6 +30,7 @@
         'data/crm_stage_data.xml',
         'data/crm_lead_data.xml',
         'data/digest_data.xml',
+        'data/crm_lead_prediction_data.xml',
 
         'wizard/crm_lead_lost_views.xml',
         'wizard/crm_lead_to_opportunity_views.xml',
