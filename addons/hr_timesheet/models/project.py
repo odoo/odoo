@@ -120,6 +120,17 @@ class Task(models.Model):
                 raise UserError(_('This task must be part of a project because there are some timesheets linked to it.'))
         return super(Task, self).write(values)
 
+    def name_get(self):
+        if self.env.context.get('hr_timesheet_display_remaining_hours'):
+            name_mapping = dict(super().name_get())
+            for task in self:
+                if task.allow_timesheets and task.planned_hours > 0:
+                    hours, mins = (str(int(duration)).rjust(2, '0') for duration in divmod(abs(task.remaining_hours) * 60, 60))
+                    hours_left = _("(%s%s:%s remaining)") % ('-' if task.remaining_hours < 0 else '', hours, mins)
+                    name_mapping[task.id] = name_mapping.get(task.id, '') + " ‒ " + hours_left
+            return list(name_mapping.items())
+        return super().name_get()
+
     @api.model
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         """ Set the correct label for `unit_amount`, depending on company UoM """
