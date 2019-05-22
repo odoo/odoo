@@ -178,3 +178,33 @@ class TestCRMLead(TestCrmCases):
         self.assertEqual(merged_opportunity.partner_id.id, self.env.ref("base.res_partner_3").id, 'Partner mismatch')
         self.assertEqual(merged_opportunity.type, 'opportunity', 'Type mismatch: when opps get merged together, the result should be a new opp (instead of %s)' % merged_opportunity.type)
         self.assertFalse(test_crm_opp_03.exists(), 'This tailing opp (id %s) should not exist anymore' % test_crm_opp_03.id)
+
+    def test_lead_won(self):
+        """
+        As there are multiple ways to set a lead as won (by action_set_won or moving the lead to a won stage)
+        The logic behind the set as won is now in the write override to be executed
+        each time the new stage is a won stage.
+        """
+        # Create leads at different stage
+        leads_to_create = []
+        for i in range(3):
+            for x in range(3):
+                leads_to_create.append({
+                    'type': "lead",
+                    'name': "Test lead new " + str(x),
+                    'partner_id': self.env.ref("base.res_partner_1").id,
+                    'description': "This is the description of the test new lead.",
+                    'team_id': self.env.ref("sales_team.team_sales_department").id,
+                    'stage_id': self.env.ref("crm.stage_lead%s" % (str(i + 1))).id,
+                })
+        leads = self.env['crm.lead'].create(leads_to_create)
+        # Set leads as won (stage = won)
+        leads[:4].write({'stage_id': self.env.ref("crm.stage_lead4").id})
+        # Mark leads as won (via action)
+        leads[4:].action_set_won()
+        # Check if every single lead has the correct probability + correct stage
+        index = 0
+        for lead in leads:
+            self.assertEqual(lead.stage_id.id, self.env.ref("crm.stage_lead4").id, 'Stage must be "Won"')
+            self.assertEqual(lead.probability, 100, 'Probability of a won lead must be = 100%')
+            index += 1
