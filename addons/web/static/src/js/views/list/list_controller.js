@@ -326,8 +326,9 @@ var ListController = BasicController.extend({
      * @returns {Deferred}
      */
     _update: function () {
-        this._toggleSidebar();
-        return this._super.apply(this, arguments);
+        return this._super.apply(this, arguments)
+            .then(this._toggleSidebar.bind(this))
+            .then(this._updateButtons.bind(this, 'readonly'));
     },
     /**
      * This helper simply makes sure that the control panel buttons matches the
