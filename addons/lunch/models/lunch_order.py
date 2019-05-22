@@ -73,8 +73,8 @@ class LunchOrder(models.Model):
                         'To add some money to your wallet, please contact your lunch manager.'))
 
     def action_order(self):
-        self._check_wallet()
         self.write({'state': 'ordered'})
+        self._check_wallet()
 
     def action_confirm(self):
         self.write({'state': 'confirmed'})
