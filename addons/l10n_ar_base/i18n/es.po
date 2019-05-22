@@ -6,24 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-06 20:01+0000\n"
-"PO-Revision-Date: 2019-05-06 20:01+0000\n"
+"POT-Creation-Date: 2019-05-22 13:19+0000\n"
+"PO-Revision-Date: 2019-05-22 13:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-
-#. module: l10n_ar_base
-#: model_terms:ir.ui.view,arch_db:l10n_ar_base.view_partner_form
-msgid "), are you sure to create a new one?"
-msgstr "), estas segurodde crear uno nuevo?"
-
-#. module: l10n_ar_base
-#: model_terms:ir.ui.view,arch_db:l10n_ar_base.view_partner_form
-msgid "A partner with the same Identification Number already exists ("
-msgstr "Un contacto con el mimo número de identificación ya existe ("
 
 #. module: l10n_ar_base
 #: model_terms:ir.ui.view,arch_db:l10n_ar_base.view_l10n_ar_identification_type_search
@@ -47,12 +37,17 @@ msgid "Afip Code"
 msgstr "Código Afip"
 
 #. module: l10n_ar_base
+#: model_terms:ir.ui.view,arch_db:l10n_ar_base.view_l10n_ar_identification_type_search
+msgid "Archived"
+msgstr "Archivado"
+
+#. module: l10n_ar_base
 #: model:ir.model,name:l10n_ar_base.model_res_partner_bank
 msgid "Bank Accounts"
 msgstr "Cuentas bancarias"
 
 #. module: l10n_ar_base
-#: code:addons/l10n_ar_base/models/res_partner_bank.py:24
+#: code:addons/l10n_ar_base/models/res_partner_bank.py:19
 #, python-format
 msgid "CBU"
 msgstr ""
@@ -93,12 +88,6 @@ msgstr "CUIT definido por AFIP para reconocer los contactos de este pais que son
 #: model:ir.model.fields,help:l10n_ar_base.field_res_country__l10n_ar_cuit_otro
 msgid "CUIT defined by AFIP in order to recognize partners from this country that are not natural persons or legal entity, maybe some other type of person category"
 msgstr "CUIT definido por AFIP para reconocer los contactos de este pais que son no son personas físicas o personas jurídicas, tal vez alguna otra categóriga de persona"
-
-#. module: l10n_ar_base
-#: code:addons/l10n_ar_base/models/res_partner.py:140
-#, python-format
-msgid "Can not define CUIT for contacts, you can set cuit to Commercial Entity. Check contacts: %s"
-msgstr "No puede definir CUIT para contactos, solo puede asignar CUIT a la Entidad Comercial. Revise los contactos:"
 
 #. module: l10n_ar_base
 #: model:ir.model.fields,field_description:l10n_ar_base.field_l10n_ar_identification_type__code
@@ -165,19 +154,6 @@ msgid "ID name"
 msgstr "Nombre ID"
 
 #. module: l10n_ar_base
-#: model_terms:ir.ui.view,arch_db:l10n_ar_base.view_company_form
-#: model_terms:ir.ui.view,arch_db:l10n_ar_base.view_partner_form
-msgid "Identification"
-msgstr "Identificación"
-
-#. module: l10n_ar_base
-#: model:ir.model.fields,field_description:l10n_ar_base.field_res_company__l10n_ar_id_number
-#: model:ir.model.fields,field_description:l10n_ar_base.field_res_partner__l10n_ar_id_number
-#: model:ir.model.fields,field_description:l10n_ar_base.field_res_users__l10n_ar_id_number
-msgid "Identification Number"
-msgstr "Número de Identificación"
-
-#. module: l10n_ar_base
 #: model:ir.actions.act_window,name:l10n_ar_base.action_l10n_ar_identification_type
 #: model:ir.model,name:l10n_ar_base.model_l10n_ar_identification_type
 #: model:ir.model.fields,field_description:l10n_ar_base.field_res_company__l10n_ar_identification_type_id
@@ -194,9 +170,10 @@ msgid "Identification Types"
 msgstr "Tipos de Identificación"
 
 #. module: l10n_ar_base
-#: model_terms:ir.ui.view,arch_db:l10n_ar_base.view_l10n_ar_identification_type_search
-msgid "Inactive"
-msgstr "Inactivo"
+#: code:addons/l10n_ar_base/models/res_partner.py:102
+#, python-format
+msgid "Invalid length."
+msgstr "La longitud no es valida"
 
 #. module: l10n_ar_base
 #: model:ir.model.fields,field_description:l10n_ar_base.field_l10n_ar_identification_type____last_update
@@ -224,29 +201,16 @@ msgid "Name of this ID type. For example: 'Passport'"
 msgstr "El nombre de este tipo de ID. Por ejemplo: 'Pasaporte'"
 
 #. module: l10n_ar_base
-#: code:addons/l10n_ar_base/models/res_partner.py:90
+#: code:addons/l10n_ar_base/models/res_partner.py:47
 #, python-format
 msgid "No CUIT configured for partner [%i] %s"
 msgstr "No hay CUIT configurado para el contacto [%i] %s"
 
 #. module: l10n_ar_base
-#: model_terms:ir.ui.view,arch_db:l10n_ar_base.view_company_form
-#: model_terms:ir.ui.view,arch_db:l10n_ar_base.view_partner_form
-msgid "Number"
-msgstr "Número"
-
-#. module: l10n_ar_base
-#: model:ir.model.fields,help:l10n_ar_base.field_res_company__l10n_ar_id_number
-#: model:ir.model.fields,help:l10n_ar_base.field_res_partner__l10n_ar_id_number
-#: model:ir.model.fields,help:l10n_ar_base.field_res_users__l10n_ar_id_number
-msgid "Number that appears in the person/legal entity identification document. Number should be expressed completely in integers"
-msgstr ""
-
-#. module: l10n_ar_base
-#: model:ir.model.fields,field_description:l10n_ar_base.field_res_partner__l10n_ar_same_id_number_partner
-#: model:ir.model.fields,field_description:l10n_ar_base.field_res_users__l10n_ar_same_id_number_partner
-msgid "Partner with same Identification Number"
-msgstr "Contacto con el mismo número de identificación"
+#: code:addons/l10n_ar_base/models/res_partner.py:104
+#, python-format
+msgid "Only numbers allowed."
+msgstr "Solo números soportados"
 
 #. module: l10n_ar_base
 #: model:ir.model.fields,field_description:l10n_ar_base.field_l10n_ar_identification_type__sequence
@@ -265,20 +229,8 @@ msgstr "Mostrar los tipos de identificación activos"
 
 #. module: l10n_ar_base
 #: model_terms:ir.ui.view,arch_db:l10n_ar_base.view_l10n_ar_identification_type_search
-msgid "Show inactive identification types"
-msgstr "Mostrar los tipos de identificación inaactivos"
-
-#. module: l10n_ar_base
-#: model:ir.model.fields,help:l10n_ar_base.field_res_partner__l10n_ar_same_id_number_partner
-#: model:ir.model.fields,help:l10n_ar_base.field_res_users__l10n_ar_same_id_number_partner
-msgid "Technical field used to show a warning when trying to create a  a partner with a identification number already used by another partner. Parent/child partners could share identification number so for this cases not warning will appears"
-msgstr ""
-
-#. module: l10n_ar_base
-#: code:addons/l10n_ar_base/models/res_partner_bank.py:17
-#, python-format
-msgid "The CBU \"%s\" is not valid"
-msgstr "El CBU \"%s\" no es valido"
+msgid "Show archived identification types"
+msgstr "Mostrar los tipos de identificación inactivos"
 
 #. module: l10n_ar_base
 #: model:ir.model.fields,help:l10n_ar_base.field_res_company__l10n_ar_identification_type_id
@@ -288,7 +240,12 @@ msgid "The type od identifications defined by AFIP that could identify a person 
 msgstr ""
 
 #. module: l10n_ar_base
-#: model_terms:ir.ui.view,arch_db:l10n_ar_base.view_company_form
+#: code:addons/l10n_ar_base/models/res_partner.py:100
+#, python-format
+msgid "The validation digit is not valid."
+msgstr "El dígito de validación no es valido."
+
+#. module: l10n_ar_base
 #: model_terms:ir.ui.view,arch_db:l10n_ar_base.view_partner_form
 msgid "Type"
 msgstr "Tipo"
