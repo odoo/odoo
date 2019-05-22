@@ -27,7 +27,7 @@ var ToolbarPlugin = Plugins.toolbar.extend({
      */
     update: function () {
         var $btn = this.$toolbar.children().not('.note-history, .note-view').find('button');
-        var target = this.context.invoke('editor.restoreTarget') || this.context.invoke('editor.createRange').sc;
+        var target = this.context.invoke('editor.restoreTarget') || this.options.hasFocus() && this.context.invoke('editor.createRange').sc;
 
         if (!target || !$.contains(this.editable, target) || !this.options.isEditableNode(target)) {
             $btn.addClass('o_disabled');

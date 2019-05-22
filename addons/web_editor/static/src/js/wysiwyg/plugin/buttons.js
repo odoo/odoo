@@ -47,7 +47,9 @@ Plugins.buttons.include({
      */
     updateCurrentStyle: function ($container) {
         this._super.apply(this, arguments);
-
+        if (!this.options.hasFocus()) {
+            return;
+        }
         this.updateParaAlignIcon($container || this.$toolbar);
         this.updateActiveStyleDropdown($container || this.$toolbar);
     },
