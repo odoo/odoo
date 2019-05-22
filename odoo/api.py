@@ -863,6 +863,7 @@ class Environment(Mapping):
                 return self['res.company'].browse(company_id)
             return self.user.company_id
         except Exception:
+            _logger.warning("No 'allowed_company_ids' defined on the context. Please investigate.")
             return self.user.company_id
 
     @property
