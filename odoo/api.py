@@ -784,6 +784,10 @@ class Environment(Mapping):
 
     def __new__(cls, cr, uid, context):
         assert context is not None
+
+        if uid == SUPERUSER_ID and 'allowed_company_ids' not in context:
+            cr.execute("""SELECT company_id FROM res_users WHERE id=%s""" , (SUPERUSER_ID,))
+            context['allowed_company_ids'] = list(cr.fetchone())
         assert 'allowed_company_ids' in context, "You have to specify the 'allowed_company_ids' in the context"
 
         args = (cr, uid, context)
