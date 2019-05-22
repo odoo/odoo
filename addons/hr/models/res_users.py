@@ -116,7 +116,7 @@ class User(models.Model):
         # However, in this case, we want the user to be able to read/write its own data,
         # even if they are protected by groups.
         # We make the front-end aware of those fields by sending all field definitions.
-        if not self.env.user.share:
+        if not self.env.user.share and self._context.get('res_users_my_profile_mode'):
             self = self.sudo()
         return super(User, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
