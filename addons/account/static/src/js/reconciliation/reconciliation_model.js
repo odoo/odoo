@@ -624,12 +624,12 @@ var StatementModel = BasicModel.extend({
             prop = this._formatQuickCreate(line);
             line.reconciliation_proposition.push(prop);
         }
-        if (!line.reconciliation_proposition.slice(0,-1).every(function(prop) {return prop.to_check == values.to_check})) {
+        if ('to_check' in values && !line.reconciliation_proposition.slice(0,-1).every(function(prop) {return prop.to_check == values.to_check})) {
             new CrashManager().show_warning({data: {
                 exception_type: _t("Incorrect Operation"),
                 message: _t("You cannot mix items with and without the 'To Check' checkbox ticked.")
             }});
-            $('.create_to_check input').click();
+            $('.create_to_check input:visible').prop('checked', !values.to_check).change();
             return $.when();
         }
         _.each(values, function (value, fieldName) {
