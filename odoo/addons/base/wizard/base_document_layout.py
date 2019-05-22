@@ -2,13 +2,11 @@
 
 import logging
 import base64
+import json
 
 from PIL import Image
 from odoo import api, fields, models, tools
 from odoo.tools.image import image_data_uri
-
-_logger = logging.getLogger(__name__)
-
 
 def rgb_to_hex(rgb):
     hex_list = []
@@ -46,6 +44,7 @@ def average_dominant_color(colors, margin):
 
     return final_avg, remaining
 
+
 class BaseDocumentLayout(models.TransientModel):
     """
         Customise the company document layout and display a live preview
@@ -67,7 +66,8 @@ class BaseDocumentLayout(models.TransientModel):
     primary_color = fields.Char(related='company_id.primary_color', readonly=False)
     secondary_color = fields.Char(related='company_id.secondary_color', readonly=False)
 
-    custom_colors = fields.Boolean(compute="_compute_custom_colors")
+    company_colors = fields.Char(compute="_compute_report_layout_id", string="Colors", readonly=False)
+    previous_default = False
 
     report_layout_id = fields.Many2one('report.layout', compute="_compute_report_layout_id", readonly=False)
     preview = fields.Html(compute='_compute_preview')
@@ -82,22 +82,26 @@ class BaseDocumentLayout(models.TransientModel):
             wizard.report_layout_id = wizard.env["report.layout"].search([
                 ('view_id.key', '=', wizard.company_id.external_report_layout_id.key)
             ])
+            wizard.company_colors = json.dumps({
+                'default': [wizard.report_layout_id.primary_color, wizard.report_layout_id.secondary_color],
+                'values': [wizard.primary_color, wizard.secondary_color],
+            })
+            BaseDocumentLayout.previous_default = [wizard.report_layout_id.primary_color, wizard.report_layout_id.secondary_color]
 
     @api.depends('report_layout_id')
     def _compute_header_in_footer(self):
         for wizard in self:
             wizard.header_in_footer = (wizard.report_layout_id.name == 'Clean')
-
-    @api.depends('primary_color', 'secondary_color')
-    def _compute_custom_colors(self):
-        for wizard in self:
-            wizard.custom_colors = wizard.primary_color != wizard.report_layout_id.primary_color or wizard.secondary_color != wizard.report_layout_id.secondary_color
+            
 
     @api.depends('logo', 'font')
     def _compute_preview(self):
         """ compute a qweb based preview to display on the wizard """
         for wizard in self:
             ir_qweb = wizard.env['ir.qweb']
+            colors = json.loads(wizard.company_colors)
+            wizard.primary_color = colors['values'][0]
+            wizard.secondary_color = colors['values'][1]
             wizard.preview = ir_qweb.render('web.layout_preview', {
                 'company': wizard,
             })
@@ -105,35 +109,51 @@ class BaseDocumentLayout(models.TransientModel):
     @api.depends('report_header')
     def _compute_header(self):
         for wizard in self:
-            header = wizard.report_header
+            header = wizard.report_header or ''
             lines = [header[i:i+30] for i in range(0, len(header), 30)]
             wizard.preview_header = '\n'.join(lines[:2])
 
     @api.depends('report_footer')
     def _compute_footer(self):
         for wizard in self:
-            footer = wizard.report_footer
+            footer = wizard.report_footer or ''
             lines = [footer[i:i+30] for i in range(0, len(footer), 30)]
             wizard.preview_footer = '\n'.join(lines[:3])
 
-    @api.onchange('primary_color', 'secondary_color')
-    def onchange_colors(self):
+    @api.onchange('company_colors')
+    def onchange_company_colors(self):
         for wizard in self:
+            values = json.loads(wizard.company_colors)['values']
+            wizard.primary_color = values[0]
+            wizard.secondary_color = values[1]
             wizard._compute_preview()
 
     @api.onchange('report_layout_id')
     def onchange_report_layout_id(self):
         for wizard in self:
-            if not wizard.custom_colors:
-                wizard.primary_color = wizard.report_layout_id.primary_color
-                wizard.secondary_color = wizard.report_layout_id.secondary_color
             wizard.external_report_layout_id = wizard.report_layout_id.view_id
+            
+            values = json.loads(wizard.company_colors)['values']
+            default = [wizard.report_layout_id.primary_color,
+                       wizard.report_layout_id.secondary_color]
+
+            print('\nOld default :',  BaseDocumentLayout.previous_default)
+            if BaseDocumentLayout.previous_default == values:
+                values = default
+            BaseDocumentLayout.previous_default = default
+            wizard.company_colors = json.dumps({
+                'default': default,
+                'values': values,
+            })
+            print('Onchange report layout id', wizard.company_colors, '\n')
             wizard._compute_preview()
 
     @api.onchange('logo')
     def onchange_logo(self):
         """ Identify dominant colors of the logo """
         for wizard in self:
+            if not wizard.logo:
+                return
             margin = 50
             white_threshold = 245
 
@@ -154,12 +174,7 @@ class BaseDocumentLayout(models.TransientModel):
             secondary = average_dominant_color(remaining, margin)[
                 0] if len(remaining) > 0 else primary
 
-            wizard.primary_color = rgb_to_hex(primary)
-            wizard.secondary_color = rgb_to_hex(secondary)
-
-    @api.multi
-    def reset_colors(self):
-        """ set the colors to the current layout default colors """
-        for wizard in self:
-            wizard.primary_color = wizard.report_layout_id.primary_color
-            wizard.secondary_color = wizard.report_layout_id.secondary_color
+            wizard.company_colors = json.dumps({
+                'default': [wizard.report_layout_id.primary_color, wizard.report_layout_id.secondary_color],
+                'values': [rgb_to_hex(primary), rgb_to_hex(secondary)],
+            })

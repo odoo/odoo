@@ -3020,22 +3020,74 @@ var FieldColor = AbstractField.extend({
     supportedFieldTypes: ['char'],
     events: {
         'click .o_field_color': '_onColorClick',
+        'click .o_reset_colors': '_onResetColors',
     },
     custom_events: {
         'colorpicker:saved': '_onColorSaved',
     },
 
     //--------------------------------------------------------------------------
-    // Private
+    // Public
     //--------------------------------------------------------------------------
 
     /**
-    * @private
+    * @override
+    */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.selectedColor = null;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    _checkDefault: function () {
+        var parsed = JSON.parse(this.value);
+        if (parsed.values.join() === parsed.default.join()) {
+            this.$('.o_reset_colors').hide();
+        } else {
+            this.$('.o_reset_colors').show();
+        }
+    },
+
+    /**
     * @override
     */
     _render: function () {
         this._super.apply(this, arguments);
-        this.$('.o_field_color').css('background-color', this.value);
+        this.$('.o_field_colors').empty();
+        var values = JSON.parse(this.value).values;
+        for (var i = 0; i < values.length; i ++) {
+            var colorField = $('<span/>')
+                .addClass('o_field_color')
+                .data('value', values[i])
+                .attr('data-value', values[i])
+                .css('background-color', values[i]);
+            this.$('.o_field_colors').append(colorField);
+        }
+        this._checkDefault();
+    },
+
+    // /**
+    // * @override
+    // */
+    // _reset: function () {
+    //     this._super.apply(this, arguments);
+    //     if (! this.selectedColor) {
+    //         if (this.isDefault) {
+    //             this._resetColors();
+    //         }
+    //     }
+    // },
+
+    _resetColors: function () {
+        // var self = this;
+        var parsed = JSON.parse(this.value);
+        this._setValue(JSON.stringify({
+            default: parsed.default,
+            values: parsed.default,
+        }));
     },
 
     //--------------------------------------------------------------------------
@@ -3047,17 +3099,46 @@ var FieldColor = AbstractField.extend({
     * @param {Event} ev
     */
     _onColorClick: function (ev) {
-        this.colorpicker = new ColorpickerDialog(this, {defaultColor: this.value}).open();
+        this.selectedColor = $(ev.target);
+        this.colorpicker = new ColorpickerDialog(this, { defaultColor: this.selectedColor.data('value') }).open();
     },
+
     /**
     * @private
     * @param {Event} ev
     */
     _onColorSaved: function (ev) {
-        ev.stopPropagation();
-        this._setValue(ev.data.cssColor);
+        var self = this;
+        this.selectedColor
+            .data('value', ev.data.hex)
+            .attr('data-value', ev.data.hex)
+            .css('background-color', ev.data.hex);
+        
+        var values = [].slice.call($('.o_field_color'))
+            .map(function (colorField) {
+                return $(colorField).data('value');
+            });
+        this._setValue(JSON.stringify({
+            default: JSON.parse(this.value).default,
+            values: values,
+        })).then(function () {
+            self.selectedColor = null;
+            self._checkDefault();
+        });
         this.trigger_up('color:change', this);
-    }
+    },
+
+    /**
+    * @private
+    * @param {Event} ev
+    */
+    _onResetColors: function (ev) {
+        var parsed = JSON.parse(this.value);
+        this._setValue(JSON.stringify({
+            default: parsed.default,
+            values: parsed.default,
+        }));
+    },
 });
 
 return {
