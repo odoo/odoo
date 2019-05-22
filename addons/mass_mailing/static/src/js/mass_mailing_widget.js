@@ -56,6 +56,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         }
 
         var $editable = this.wysiwyg.getEditable();
+        var isCodeView = this.wysiwyg.isCodeViewActivated();
 
         return this.wysiwyg.save().then(function (result) {
             self._isDirty = result.isDirty;
@@ -66,7 +67,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
 
             self.trigger_up('field_changed', {
                 dataPointID: self.dataPointID,
-                changes: _.object([fieldName], [self._unWrap($editable.html())])
+                changes: _.object([fieldName], [self._unWrap(isCodeView ? $editable.val() : $editable.html())])
             });
 
             if (self._isDirty && self.mode === 'edit') {
