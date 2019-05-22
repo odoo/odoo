@@ -8,7 +8,7 @@
             <search string="Stage Search">
                 <field name="name"/>
                 <field name="sequence"/>
-                <field name="probability"/>
+                <field name="is_won"/>
                 <field name="team_id"/>
             </search>
         </field>
@@ -21,7 +21,7 @@
             <tree string="Stages">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="probability"/>
+                <field name="is_won"/>
                 <field name="team_id"/>
             </tree>
         </field>
@@ -44,14 +44,11 @@
                     </div>
                     <group>
                         <group>
-                            <field name="on_change"/>
-                            <field name="probability" attrs="{'invisible': [('on_change', '=', False)]}"/>
-                        </group>
-                        <field name="team_count" invisible="1"/>
-                        <group>
+                            <field name="is_won"/>
                             <field name="fold"/>
                             <field name="team_id" options='{"no_open": True, "no_create": True}' attrs="{'invisible': [('team_count', '&lt;=', 1)]}"/>
                         </group>
+                        <field name="team_count" invisible="1"/>
                     </group>
                     <separator string="Requirements"/>
                     <field name="requirements" nolabel="1" placeholder="Give your team the requirements to move an opportunity to this stage."/>
