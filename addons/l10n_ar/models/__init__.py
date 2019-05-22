@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import account_journal
-from . import account_tax
 from . import account_tax_group
 from . import account_fiscal_position
 from . import account_fiscal_position_template
@@ -17,5 +16,4 @@ from . import uom_uom
 from . import account_chart_template
 from . import account_move_line
 from . import account_move
-from . import account_account_tag
 from . import ir_sequence
