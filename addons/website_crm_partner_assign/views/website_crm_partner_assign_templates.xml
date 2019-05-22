@@ -350,72 +350,74 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-body row">
-                    <div class="col-lg-6">
-                        <div class="row" t-if="lead.partner_name or lead.email_from or lead.partner_id">
-                            <label class="col-4">Customer</label>
-                            <address class="col-8">
-                                <div>
-                                    <span t-if="lead.partner_name" itemprop="name" t-field="lead.partner_name" />
-                                    <span t-if="not lead.partner_name" itemprop="name" t-field="lead.contact_name"/>
-                                </div>
-                                <div t-if="lead.phone">
-                                    <span class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span itemprop="telephone" t-field="lead.phone" />
-                                </div>
-                                <div t-if="lead.mobile">
-                                    <span class="fa fa-mobile" role="img" aria-label="Mobile" title="Mobile"/> <span itemprop="telephone" t-field="lead.mobile" />
-                                </div>
-                                <div t-if="lead.email_from">
-                                    <span class="fa fa-envelope" role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-field="lead.email_from" />
-                                </div>
-                            </address>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="row" t-if="lead.partner_name or lead.email_from or lead.partner_id">
+                                <label class="col-4">Customer</label>
+                                <address class="col-8">
+                                    <div>
+                                        <span t-if="lead.partner_name" itemprop="name" t-field="lead.partner_name" />
+                                        <span t-if="not lead.partner_name" itemprop="name" t-field="lead.contact_name"/>
+                                    </div>
+                                    <div t-if="lead.phone">
+                                        <span class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span itemprop="telephone" t-field="lead.phone" />
+                                    </div>
+                                    <div t-if="lead.mobile">
+                                        <span class="fa fa-mobile" role="img" aria-label="Mobile" title="Mobile"/> <span itemprop="telephone" t-field="lead.mobile" />
+                                    </div>
+                                    <div t-if="lead.email_from">
+                                        <span class="fa fa-envelope" role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-field="lead.email_from" />
+                                    </div>
+                                </address>
+                            </div>
+                            <div class="row" t-if="lead.street or lead.street2 or lead.city or lead.state_id or lead.country_id">
+                                <label class="col-4">Address</label>
+                                <address class="col-8">
+                                    <div t-if="lead.street"><span t-field="lead.street"/></div>
+                                    <div t-if="lead.street2"><span t-field="lead.street2"/></div>
+                                    <div t-if="lead.city or lead.zip">
+                                        <span t-field="lead.city"/> <span t-field="lead.zip"/>
+                                    </div>
+                                    <div t-if="lead.state_id or country_id">
+                                        <span t-field="lead.state_id"/> <span t-field="lead.country_id"/>
+                                    </div>
+                                </address>
+                            </div>
+                            <div class="row" t-if="lead.user_id">
+                                <label class="col-4">Salesperson</label>
+                                <span class="col-8" t-field="lead.user_id" />
+                            </div>
+                            <div class="row" t-if="lead.team_id">
+                                <label class="col-4">Sales Team</label>
+                                <span class="col-8" t-field="lead.team_id" />
+                            </div>
                         </div>
-                        <div class="row" t-if="lead.street or lead.street2 or lead.city or lead.state_id or lead.country_id">
-                            <label class="col-4">Address</label>
-                            <address class="col-8">
-                                <div t-if="lead.street"><span t-field="lead.street"/></div>
-                                <div t-if="lead.street2"><span t-field="lead.street2"/></div>
-                                <div t-if="lead.city or lead.zip">
-                                    <span t-field="lead.city"/> <span t-field="lead.zip"/>
-                                </div>
-                                <div t-if="lead.state_id or country_id">
-                                    <span t-field="lead.state_id"/> <span t-field="lead.country_id"/>
-                                </div>
-                            </address>
-                        </div>
-                        <div class="row" t-if="lead.user_id">
-                            <label class="col-4">Salesperson</label>
-                            <span class="col-8" t-field="lead.user_id" />
-                        </div>
-                        <div class="row" t-if="lead.team_id">
-                            <label class="col-4">Sales Team</label>
-                            <span class="col-8" t-field="lead.team_id" />
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="row" t-if="lead.date_deadline">
-                            <label class="col-4">Expected Closing</label>
-                            <span class="col-8" t-field="lead.date_deadline" />
-                        </div>
-                        <div class="row" groups="!base.group_portal" t-if="lead.tag_ids">
-                            <label class="col-4">Tags</label>
-                            <span class="col-8">
-                                <t t-foreach="lead.tag_ids" t-as="tag">
-                                    <span class="badge badge-info" t-esc="tag.name" />
-                                </t>
-                            </span>
-                        </div>
-                        <div class="row mt16" t-if="lead.partner_assigned_id">
-                            <label class="col-4">Assigned Partner</label>
-                            <address class="col-8" t-field="lead.partner_assigned_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"], "no_marker": True}'/>
-                        </div>
-                        <div class="row mt16" t-if="lead.campaign_id">
-                            <label class="col-4">Campaign</label>
-                            <span class="col-8" t-field="lead.campaign_id" />
-                        </div>
-                        <div class="row" t-if="lead.medium_id">
-                            <label class="col-4">Medium</label>
-                            <span class="col-8" t-field="lead.medium_id" />
+                        <div class="col-lg-6">
+                            <div class="row" t-if="lead.date_deadline">
+                                <label class="col-4">Expected Closing</label>
+                                <span class="col-8" t-field="lead.date_deadline" />
+                            </div>
+                            <div class="row" groups="!base.group_portal" t-if="lead.tag_ids">
+                                <label class="col-4">Tags</label>
+                                <span class="col-8">
+                                    <t t-foreach="lead.tag_ids" t-as="tag">
+                                        <span class="badge badge-info" t-esc="tag.name" />
+                                    </t>
+                                </span>
+                            </div>
+                            <div class="row mt16" t-if="lead.partner_assigned_id">
+                                <label class="col-4">Assigned Partner</label>
+                                <address class="col-8" t-field="lead.partner_assigned_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"], "no_marker": True}'/>
+                            </div>
+                            <div class="row mt16" t-if="lead.campaign_id">
+                                <label class="col-4">Campaign</label>
+                                <span class="col-8" t-field="lead.campaign_id" />
+                            </div>
+                            <div class="row" t-if="lead.medium_id">
+                                <label class="col-4">Medium</label>
+                                <span class="col-8" t-field="lead.medium_id" />
+                            </div>
                         </div>
                     </div>
                 </div>
