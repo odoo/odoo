@@ -1472,7 +1472,7 @@ exports.Orderline = Backbone.Model.extend({
         var lots_required = 1;
 
         if (this.product.tracking == 'serial') {
-            lots_required = this.quantity;
+            lots_required = Math.abs(this.quantity);
         }
 
         return lots_required;
@@ -1875,8 +1875,11 @@ var PacklotlineCollection = Backbone.Collection.extend({
 
     set_quantity_by_lot: function() {
         if (this.order_line.product.tracking == 'serial') {
-            var valid_lots = this.get_valid_lots();
-            this.order_line.set_quantity(valid_lots.length);
+            var valid_lots_quantity = this.get_valid_lots().length;
+            if (this.order_line.quantity < 0){
+                valid_lots_quantity = -valid_lots_quantity;
+            }
+            this.order_line.set_quantity(valid_lots_quantity);
         }
     }
 });
