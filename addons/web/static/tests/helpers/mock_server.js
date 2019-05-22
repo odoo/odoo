@@ -940,7 +940,7 @@ var MockServer = Class.extend({
                 if (fields[fieldName].type === 'date') {
                     value += formatValue(groupByField, record[fieldName]);
                 } else {
-                    value += record[groupByField];
+                    value += JSON.stringify(record[groupByField]);
                 }
             });
             return value;
