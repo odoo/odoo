@@ -168,7 +168,7 @@ class AccountChartTemplate(models.Model):
         """
         self.ensure_one()
         # do not use `request.env` here, it can cause deadlocks
-        if request and 'allowed_company_ids' in dir(request):
+        if request and hasattr(request, 'allowed_company_ids'):
             company = self.env['res.company'].browse(request.allowed_company_ids[0])
         else:
             company = self.env.company
@@ -186,7 +186,7 @@ class AccountChartTemplate(models.Model):
         """
         self.ensure_one()
         # do not use `request.env` here, it can cause deadlocks
-        if request and 'allowed_company_ids' in dir(request):
+        if request and hasattr(request, 'allowed_company_ids'):
             company = self.env['res.company'].browse(request.allowed_company_ids[0])
         else:
             company = self.env.company
