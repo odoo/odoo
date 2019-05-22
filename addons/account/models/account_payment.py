@@ -72,7 +72,7 @@ class account_payment(models.Model):
     partner_id = fields.Many2one('res.partner', string='Partner', tracking=True, readonly=True, states={'draft': [('readonly', False)]})
 
     amount = fields.Monetary(string='Payment Amount', required=True, readonly=True, states={'draft': [('readonly', False)]}, tracking=True)
-    currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company_id.currency_id)
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, readonly=True, states={'draft': [('readonly', False)]}, copy=False, tracking=True)
     communication = fields.Char(string='Memo', readonly=True, states={'draft': [('readonly', False)]})
     journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True, readonly=True, states={'draft': [('readonly', False)]}, tracking=True, domain=[('type', 'in', ('bank', 'cash'))])
@@ -314,7 +314,7 @@ class account_payment(models.Model):
             if payment_currency == currency:
                 total += amount_total
             else:
-                total += payment_currency._convert(amount_total, currency, self.env.company_id, self.payment_date or fields.Date.today())
+                total += payment_currency._convert(amount_total, currency, self.env.company, self.payment_date or fields.Date.today())
         return total
 
     @api.multi
@@ -717,7 +717,7 @@ class payment_register(models.TransientModel):
         if 'invoice_ids' not in rec:
             rec['invoice_ids'] = [(6, 0, invoices.ids)]
         if 'journal_id' not in rec:
-            rec['journal_id'] = self.env['account.journal'].search([('company_id', '=', self.env.company_id.id), ('type', 'in', ('bank', 'cash'))], limit=1).id
+            rec['journal_id'] = self.env['account.journal'].search([('company_id', '=', self.env.company.id), ('type', 'in', ('bank', 'cash'))], limit=1).id
         if 'payment_method_id' not in rec:
             if invoices[0].type in ('out_invoice', 'in_refund'):
                 domain = [('payment_type', '=', 'inbound')]

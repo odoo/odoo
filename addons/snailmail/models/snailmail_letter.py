@@ -32,15 +32,15 @@ class SnailmailLetter(models.Model):
     res_id = fields.Integer('Document ID', required=True)
     partner_id = fields.Many2one('res.partner', string='Recipient', required=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True,
-        default=lambda self: self.env.company_id.id)
+        default=lambda self: self.env.company.id)
     report_template = fields.Many2one('ir.actions.report', 'Optional report to print and attach')
 
     attachment_id = fields.Many2one('ir.attachment', string='Attachment', ondelete='cascade')
     attachment_datas = fields.Binary('Document', related='attachment_id.datas')
     attachment_fname = fields.Char('Attachment Filename', related='attachment_id.datas_fname')
-    color = fields.Boolean(string='Color', default=lambda self: self.env.company_id.snailmail_color)
-    cover = fields.Boolean(string='Cover Page', default=lambda self: self.env.company_id.snailmail_cover)
-    duplex = fields.Boolean(string='Both side', default=lambda self: self.env.company_id.snailmail_duplex)
+    color = fields.Boolean(string='Color', default=lambda self: self.env.company.snailmail_color)
+    cover = fields.Boolean(string='Cover Page', default=lambda self: self.env.company.snailmail_cover)
+    duplex = fields.Boolean(string='Both side', default=lambda self: self.env.company.snailmail_duplex)
     state = fields.Selection([
         ('pending', 'In Queue'),
         ('sent', 'Sent'),
@@ -402,8 +402,8 @@ class SnailmailLetter(models.Model):
             'account_token': "",
             'documents': doc_list,
             'options': {
-                'color': self.env.company_id.snailmail_color,
-                'duplex': self.env.company_id.snailmail_duplex,
+                'color': self.env.company.snailmail_color,
+                'duplex': self.env.company.snailmail_duplex,
                 'currency_name': 'EUR',
             },
         }

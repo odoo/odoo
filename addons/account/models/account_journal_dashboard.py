@@ -317,7 +317,7 @@ class account_journal(models.Model):
         curr_cache = {} if curr_cache is None else curr_cache
         for result in results_dict:
             cur = self.env['res.currency'].browse(result.get('currency'))
-            company = self.env['res.company'].browse(result.get('company_id')) or self.env.company_id
+            company = self.env['res.company'].browse(result.get('company_id')) or self.env.company
             rslt_count += 1
             date = result.get('date_invoice') or fields.Date.today()
 

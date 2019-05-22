@@ -13,7 +13,7 @@ class OnboardingController(http.Controller):
             It can be empty if the user has closed it or if he doesn't have
             the permission to see it. """
 
-        company = request.env.company_id
+        company = request.env.company
         if not request.env.user._is_admin() or \
            company.sale_quotation_onboarding_state == 'closed':
             return {}

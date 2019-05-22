@@ -208,7 +208,7 @@ class AccountAccount(models.Model):
         'account_id', 'tax_id', string='Default Taxes', context={'append_type_to_tax_name': True})
     note = fields.Text('Internal Notes')
     company_id = fields.Many2one('res.company', string='Company', required=True,
-        default=lambda self: self.env.company_id)
+        default=lambda self: self.env.company)
     tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
     group_id = fields.Many2one('account.group')
 
@@ -507,7 +507,7 @@ class AccountJournalGroup(models.Model):
     _description = "Account Journal Group"
 
     name = fields.Char(required=True, translate=True)
-    company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company_id)
+    company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company)
     account_journal_ids = fields.Many2many('account.journal', string="Journals")
     sequence = fields.Integer(default=10)
 
@@ -574,7 +574,7 @@ class AccountJournal(models.Model):
 
     #groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
     currency_id = fields.Many2one('res.currency', help='The currency used to enter statement', string="Currency", oldname='currency')
-    company_id = fields.Many2one('res.company', string='Company', required=True, index=True, default=lambda self: self.env.company_id,
+    company_id = fields.Many2one('res.company', string='Company', required=True, index=True, default=lambda self: self.env.company,
         help="Company related to this journal")
 
     refund_sequence = fields.Boolean(string='Dedicated Credit Note Sequence', help="Check this box if you don't want to share the same sequence for invoices and credit notes made from this journal", default=False)
@@ -877,7 +877,7 @@ class AccountJournal(models.Model):
 
     @api.model
     def create(self, vals):
-        company_id = vals.get('company_id', self.env.company_id.id)
+        company_id = vals.get('company_id', self.env.company.id)
         if vals.get('type') in ('bank', 'cash'):
             # For convenience, the name can be inferred from account number
             if not vals.get('name') and 'bank_acc_number' in vals:
@@ -949,16 +949,16 @@ class AccountJournal(models.Model):
     @api.depends('company_id')
     def _belong_to_company(self):
         for journal in self:
-            journal.belong_to_company = (journal.company_id.id == self.env.company_id.id)
+            journal.belong_to_company = (journal.company_id.id == self.env.company.id)
 
     @api.multi
     def _search_company_journals(self, operator, value):
         if value:
-            recs = self.search([('company_id', operator, self.env.company_id.id)])
+            recs = self.search([('company_id', operator, self.env.company.id)])
         elif operator == '=':
-            recs = self.search([('company_id', '!=', self.env.company_id.id)])
+            recs = self.search([('company_id', '!=', self.env.company.id)])
         else:
-            recs = self.search([('company_id', operator, self.env.company_id.id)])
+            recs = self.search([('company_id', operator, self.env.company.id)])
         return [('id', 'in', [x.id for x in recs])]
 
     @api.multi
@@ -1030,7 +1030,7 @@ class AccountTax(models.Model):
         e.g 200 * (1 - 10%) = 180 (price included)
         """)
     active = fields.Boolean(default=True, help="Set active to false to hide the tax without removing it.")
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company_id)
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     children_tax_ids = fields.Many2many('account.tax', 'account_tax_filiation_rel', 'parent_tax', 'child_tax', string='Children Taxes')
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
@@ -1257,7 +1257,7 @@ class AccountTax(models.Model):
             }],
         } """
         if not self:
-            company = self.env.company_id
+            company = self.env.company
         else:
             company = self[0].company_id
 

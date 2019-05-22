@@ -192,7 +192,7 @@ class SaleOrderLine(models.Model):
             'partner_id': partner_supplier.id,
             'partner_ref': partner_supplier.ref,
             'company_id': self.company_id.id,
-            'currency_id': partner_supplier.property_purchase_currency_id.id or self.env.company_id.currency_id.id,
+            'currency_id': partner_supplier.property_purchase_currency_id.id or self.env.company.currency_id.id,
             'dest_address_id': self.order_id.partner_shipping_id.id,
             'origin': self.order_id.name,
             'payment_term_id': partner_supplier.property_supplier_payment_term_id.id,

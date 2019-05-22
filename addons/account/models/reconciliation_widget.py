@@ -361,7 +361,7 @@ class AccountReconciliation(models.AbstractModel):
                 is_partner and ' ' or "AND at.type <> 'payable' AND at.type <> 'receivable'",
                 account_type and "AND at.type = %(account_type)s" or '',
                 res_ids and 'AND ' + res_alias + '.id in %(res_ids)s' or '',
-                self.env.company_id.id,
+                self.env.company.id,
                 is_partner and 'AND l.partner_id = p.id' or ' ',
                 aml_ids and 'AND l.id IN %(aml_ids)s' or '',
                 is_partner and 'l.partner_id, p.id,' or ' ',

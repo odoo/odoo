@@ -243,10 +243,10 @@ class Users(models.Model):
     # Special behavior for this field: res.company.search() will only return the companies
     # available to the current user (should be the user's companies?), when the user_preference
     # context is set.
-    company_id = fields.Many2one('res.company', string='Default Company', required=True, default=lambda self: self.env.company_id.id,
+    company_id = fields.Many2one('res.company', string='Default Company', required=True, default=lambda self: self.env.company.id,
         help='The default company for this user.', context={'user_preference': True})
     company_ids = fields.Many2many('res.company', 'res_company_users_rel', 'user_id', 'cid',
-        string='Companies', default=lambda self: self.env.company_id.ids)
+        string='Companies', default=lambda self: self.env.company.ids)
 
     # overridden inherited fields to bypass access rights, in case you have
     # access to the user but not its corresponding partner
@@ -783,7 +783,7 @@ class Users(models.Model):
 
     @api.model
     def get_company_currency_id(self):
-        return self.env.company_id.currency_id.id
+        return self.env.company.currency_id.id
 
     def _crypt_context(self):
         """ Passlib CryptContext instance used to encrypt and verify

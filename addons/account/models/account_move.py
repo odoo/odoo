@@ -26,7 +26,7 @@ class AccountMove(models.Model):
     def default_get(self, fields):
         rec = super(AccountMove, self).default_get(fields)
         if not rec.get('journal_id'):
-            rec.update({'journal_id': self.env['account.journal'].search([('type', '=', 'general'), ('company_id', '=', self.env.company_id.id)], limit=1).id})
+            rec.update({'journal_id': self.env['account.journal'].search([('type', '=', 'general'), ('company_id', '=', self.env.company.id)], limit=1).id})
         return rec
 
     @api.multi
@@ -117,7 +117,7 @@ class AccountMove(models.Model):
     @api.multi
     def _get_default_journal(self):
         if self.env.context.get('default_journal_type'):
-            return self.env['account.journal'].search([('company_id', '=', self.env.company_id.id), ('type', '=', self.env.context['default_journal_type'])], limit=1).id
+            return self.env['account.journal'].search([('company_id', '=', self.env.company.id), ('type', '=', self.env.context['default_journal_type'])], limit=1).id
 
     @api.multi
     @api.depends('line_ids.partner_id')
@@ -418,7 +418,7 @@ class AccountMove(models.Model):
     def assert_balanced(self):
         if not self.ids:
             return True
-        prec = self.env.company_id.currency_id.decimal_places
+        prec = self.env.company.currency_id.decimal_places
 
         self._cr.execute("""\
             SELECT      move_id
@@ -1382,7 +1382,7 @@ class AccountMoveLine(models.Model):
         currency_id = False
         date = self.env.context.get('date') or fields.Date.today()
         company = self.env.context.get('company_id')
-        company = self.env['res.company'].browse(company) if company else self.env.company_id
+        company = self.env['res.company'].browse(company) if company else self.env.company
         if src_currency and src_currency != company_currency:
             amount_currency = amount
             amount = src_currency._convert(amount, company_currency, company, date)
@@ -1438,7 +1438,7 @@ class AccountMoveLine(models.Model):
                 'move_id': move_line.id,
                 'user_id': move_line.invoice_id.user_id.id or self._uid,
                 'partner_id': move_line.partner_id.id,
-                'company_id': move_line.analytic_account_id.company_id.id or self.env.company_id.id,
+                'company_id': move_line.analytic_account_id.company_id.id or self.env.company.id,
             })
         return result
 
@@ -1463,7 +1463,7 @@ class AccountMoveLine(models.Model):
             'ref': self.ref,
             'move_id': self.id,
             'user_id': self.invoice_id.user_id.id or self._uid,
-            'company_id': distribution.account_id.company_id.id or self.env.company_id.id,
+            'company_id': distribution.account_id.company_id.id or self.env.company.id,
         }
 
     @api.model

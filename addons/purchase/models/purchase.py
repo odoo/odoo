@@ -91,7 +91,7 @@ class PurchaseOrder(models.Model):
         help="Put an address if you want to deliver directly from the vendor to the customer. "
              "Otherwise, keep empty to deliver to your own company.")
     currency_id = fields.Many2one('res.currency', 'Currency', required=True, states=READONLY_STATES,
-        default=lambda self: self.env.company_id.currency_id.id)
+        default=lambda self: self.env.company.currency_id.id)
     state = fields.Selection([
         ('draft', 'RFQ'),
         ('sent', 'RFQ Sent'),
@@ -124,7 +124,7 @@ class PurchaseOrder(models.Model):
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product', readonly=False)
     user_id = fields.Many2one('res.users', string='Purchase Representative', index=True, tracking=True, default=lambda self: self.env.user)
-    company_id = fields.Many2one('res.company', 'Company', required=True, index=True, states=READONLY_STATES, default=lambda self: self.env.company_id.id)
+    company_id = fields.Many2one('res.company', 'Company', required=True, index=True, states=READONLY_STATES, default=lambda self: self.env.company.id)
 
     def _compute_access_url(self):
         super(PurchaseOrder, self)._compute_access_url()
@@ -192,11 +192,11 @@ class PurchaseOrder(models.Model):
         if not self.partner_id:
             self.fiscal_position_id = False
             self.payment_term_id = False
-            self.currency_id = self.env.company_id.currency_id.id
+            self.currency_id = self.env.company.currency_id.id
         else:
             self.fiscal_position_id = self.env['account.fiscal.position'].with_context(company_id=self.company_id.id).get_fiscal_position(self.partner_id.id)
             self.payment_term_id = self.partner_id.property_supplier_payment_term_id.id
-            self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.company_id.currency_id.id
+            self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
         return {}
 
     @api.onchange('fiscal_position_id')
@@ -325,7 +325,7 @@ class PurchaseOrder(models.Model):
             # Deal with double validation process
             if order.company_id.po_double_validation == 'one_step'\
                     or (order.company_id.po_double_validation == 'two_step'\
-                        and order.amount_total < self.env.company_id.currency_id._convert(
+                        and order.amount_total < self.env.company.currency_id._convert(
                             order.company_id.po_double_validation_amount, order.currency_id, order.company_id, order.date_order or fields.Date.today()))\
                     or order.user_has_groups('purchase.group_purchase_manager'):
                 order.button_approve()
@@ -359,7 +359,7 @@ class PurchaseOrder(models.Model):
             # Do not add a contact as a supplier
             partner = self.partner_id if not self.partner_id.parent_id else self.partner_id.parent_id
             if partner not in line.product_id.seller_ids.mapped('name') and len(line.product_id.seller_ids) <= 10:
-                currency = partner.property_purchase_currency_id or self.env.company_id.currency_id
+                currency = partner.property_purchase_currency_id or self.env.company.currency_id
                 supplierinfo = {
                     'name': partner.id,
                     'sequence': max(line.product_id.seller_ids.mapped('sequence')) + 1 if line.product_id.seller_ids else 1,
@@ -609,7 +609,7 @@ class PurchaseOrderLine(models.Model):
 
         fpos = self.order_id.fiscal_position_id
         if self.env.uid == SUPERUSER_ID:
-            company_id = self.env.company_id.id
+            company_id = self.env.company.id
             self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id.filtered(lambda r: r.company_id.id == company_id))
         else:
             self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id)

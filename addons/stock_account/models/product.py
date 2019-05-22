@@ -67,7 +67,7 @@ class ProductProduct(models.Model):
 
         quant_locs = self.env['stock.quant'].sudo().read_group([('product_id', 'in', self.ids)], ['location_id'], ['location_id'])
         quant_loc_ids = [loc['location_id'][0] for loc in quant_locs]
-        locations = self.env['stock.location'].search([('usage', '=', 'internal'), ('company_id', '=', self.env.company_id.id), ('id', 'in', quant_loc_ids)])
+        locations = self.env['stock.location'].search([('usage', '=', 'internal'), ('company_id', '=', self.env.company.id), ('id', 'in', quant_loc_ids)])
 
         product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in self}
 
@@ -131,7 +131,7 @@ class ProductProduct(models.Model):
 
     @api.multi
     def _compute_stock_value_currency(self):
-        currency_id = self.env.company_id.currency_id
+        currency_id = self.env.company.currency_id
         for product in self:
             product.stock_value_currency_id = currency_id
 
@@ -149,7 +149,7 @@ class ProductProduct(models.Model):
                          FROM account_move_line AS aml
                         WHERE aml.product_id IN %%s AND aml.company_id=%%s %s
                      GROUP BY aml.product_id, aml.account_id"""
-            params = (tuple(real_time_product_ids), self.env.company_id.id)
+            params = (tuple(real_time_product_ids), self.env.company.id)
             if to_date:
                 query = query % ('AND aml.date <= %s',)
                 params = params + (to_date,)
@@ -192,7 +192,7 @@ class ProductProduct(models.Model):
                 price_used = product.standard_price
                 if to_date:
                     price_used = product.get_history_price(
-                        self.env.company_id.id,
+                        self.env.company.id,
                         date=to_date,
                     )
                 product.stock_value = price_used * qty_available

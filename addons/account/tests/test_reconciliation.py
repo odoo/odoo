@@ -935,7 +935,7 @@ class TestReconciliationExec(TestReconciliation):
         account_type = ['receivable']
         report_date_to = time.strftime('%Y') + '-07-17'
         partner = self.env['res.partner'].create({'name': 'AgedPartner'})
-        currency = self.env.company_id.currency_id
+        currency = self.env.company.currency_id
 
         invoice = self.create_invoice_partner(currency_id=currency.id, partner_id=partner.id)
         journal = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'THE'})
@@ -1044,7 +1044,7 @@ class TestReconciliationExec(TestReconciliation):
         AgedReport = self.env['report.account.report_agedpartnerbalance'].with_context(include_nullified_amount=True)
         account_type = ['receivable']
         partner = self.env['res.partner'].create({'name': 'AgedPartner'})
-        currency = self.env.company_id.currency_id
+        currency = self.env.company.currency_id
 
         invoice = self.create_invoice_partner(currency_id=currency.id, partner_id=partner.id)
         journal = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'THE'})
@@ -1546,7 +1546,7 @@ class TestReconciliationExec(TestReconciliation):
 
     def test_reconciliation_to_check(self):
         partner = self.env['res.partner'].create({'name': 'UncertainPartner'})
-        currency = self.env.company_id.currency_id
+        currency = self.env.company.currency_id
         invoice = self.create_invoice_partner(currency_id=currency.id, partner_id=partner.id)
         journal = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'THE', 'update_posted':True})
 

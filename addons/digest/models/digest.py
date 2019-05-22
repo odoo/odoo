@@ -33,7 +33,7 @@ class Digest(models.Model):
                                   default=lambda self: self.env.ref('digest.digest_mail_template'),
                                   required=True)
     currency_id = fields.Many2one(related="company_id.currency_id", string='Currency', readonly=False)
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company_id.id)
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
     available_fields = fields.Char(compute='_compute_available_fields')
     is_subscribed = fields.Boolean('Is user subscribed', compute='_compute_is_subscribed')
     state = fields.Selection([('activated', 'Activated'), ('deactivated', 'Deactivated')], string='Status', readonly=True, default='activated')

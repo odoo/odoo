@@ -25,7 +25,7 @@ class TestSaleProductAttributeValueSetup(TestProductAttributeValueSetup):
         non-reliant on demo data."""
         name = fields.Date.today()
         currency_id = currency.id
-        company_id = self.env.company_id.id
+        company_id = self.env.company.id
 
         CurrencyRate = self.env['res.currency.rate']
 

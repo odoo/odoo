@@ -313,7 +313,7 @@ Best Regards,'''))
     @api.model
     def setting_init_fiscal_year_action(self):
         """ Called by the 'Fiscal Year Opening' button of the setup bar."""
-        company = self.env.company_id
+        company = self.env.company
         company.create_op_move_if_non_existant()
         new_wizard = self.env['account.financial.year.op'].create({'company_id': company.id})
         view_id = self.env.ref('account.setup_financial_year_opening_form').id
@@ -331,7 +331,7 @@ Best Regards,'''))
     @api.model
     def setting_chart_of_accounts_action(self):
         """ Called by the 'Chart of Accounts' button of the setup bar."""
-        company = self.env.company_id
+        company = self.env.company
         company.set_onboarding_step_done('account_setup_coa_state')
 
         # If an opening move has already been posted, we open the tree view showing all the accounts
@@ -455,25 +455,25 @@ Best Regards,'''))
     @api.model
     def action_close_account_invoice_onboarding(self):
         """ Mark the invoice onboarding panel as closed. """
-        self.env.company_id.account_invoice_onboarding_state = 'closed'
+        self.env.company.account_invoice_onboarding_state = 'closed'
 
     @api.model
     def action_close_account_dashboard_onboarding(self):
         """ Mark the dashboard onboarding panel as closed. """
-        self.env.company_id.account_dashboard_onboarding_state = 'closed'
+        self.env.company.account_dashboard_onboarding_state = 'closed'
 
     @api.model
     def action_open_account_onboarding_invoice_layout(self):
         """ Onboarding step for the invoice layout. """
         action = self.env.ref('account.action_open_account_onboarding_invoice_layout').read()[0]
-        action['res_id'] = self.env.company_id.id
+        action['res_id'] = self.env.company.id
         return action
 
     @api.model
     def action_open_account_onboarding_sale_tax(self):
         """ Onboarding step for the invoice layout. """
         action = self.env.ref('account.action_open_account_onboarding_sale_tax').read()[0]
-        action['res_id'] = self.env.company_id.id
+        action['res_id'] = self.env.company.id
         return action
 
     @api.model
@@ -482,7 +482,7 @@ Best Regards,'''))
         # use current user as partner
         partner = self.env.user.partner_id
 
-        company_id = self.env.company_id.id
+        company_id = self.env.company.id
         # try to find an existing sample invoice
         sample_invoice = self.env['account.invoice'].search(
             [('company_id', '=', company_id),
@@ -490,7 +490,7 @@ Best Regards,'''))
 
         if len(sample_invoice) == 0:
             # If there are no existing accounts or no journal, fail
-            account = self.env.company_id.get_chart_of_accounts_or_fail()
+            account = self.env.company.get_chart_of_accounts_or_fail()
 
             journal = self.env['account.journal'].search([('company_id', '=', company_id)], limit=1)
             if len(journal) == 0:

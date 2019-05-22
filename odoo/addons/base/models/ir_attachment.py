@@ -282,7 +282,7 @@ class IrAttachment(models.Model):
     res_field = fields.Char('Resource Field', readonly=True)
     res_id = fields.Integer('Resource ID', readonly=True, help="The record id this is attached to.")
     company_id = fields.Many2one('res.company', string='Company', change_default=True,
-                                 default=lambda self: self.env.company_id)
+                                 default=lambda self: self.env.company)
     type = fields.Selection([('url', 'URL'), ('binary', 'File')],
                             string='Type', required=True, default='binary', change_default=True,
                             help="You can either upload a file from your computer or copy/paste an internet link to your file.")

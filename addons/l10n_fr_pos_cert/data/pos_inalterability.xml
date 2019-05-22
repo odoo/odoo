@@ -10,7 +10,7 @@
         <field name="type">ir.actions.server</field>
         <field name="state">code</field>
         <field name="code">
-action = env['pos.order']._check_hash_integrity(env.company_id.id)
+action = env['pos.order']._check_hash_integrity(env.company.id)
         </field>
     </record>
 

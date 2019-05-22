@@ -109,7 +109,7 @@ class Repair(models.Model):
     quotation_notes = fields.Text('Quotation Notes')
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env.company_id)
+        default=lambda self: self.env.company)
     invoiced = fields.Boolean('Invoiced', copy=False, readonly=True)
     repaired = fields.Boolean('Repaired', copy=False, readonly=True)
     amount_untaxed = fields.Float('Untaxed Amount', compute='_amount_untaxed', store=True)

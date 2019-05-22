@@ -26,7 +26,7 @@ class Project(models.Model):
         return values
 
     def _plan_prepare_values(self):
-        currency = self.env.company_id.currency_id
+        currency = self.env.company.currency_id
         uom_hour = self.env.ref('uom.product_uom_hour')
         hour_rounding = uom_hour.rounding
         billable_types = ['non_billable', 'non_billable_project', 'billable_time', 'billable_fixed']

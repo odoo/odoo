@@ -278,7 +278,7 @@ class CRMRevealRule(models.Model):
         }
 
     def _get_rules_payload(self):
-        company_country = self.env.company_id.country_id
+        company_country = self.env.company.country_id
         rule_payload = {}
         for rule in self:
             data = {
