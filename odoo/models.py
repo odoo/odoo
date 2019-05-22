@@ -4811,6 +4811,8 @@ Fields:
 
             The returned recordset has the same prefetch object as ``self``.
         """
+        if args and 'allowed_company_ids' not in args[0]:
+            args[0]['allowed_company_ids'] = self._context.get('allowed_company_ids') 
         context = dict(args[0] if args else self._context, **kwargs)
         return self.with_env(self.env(context=context))
 
