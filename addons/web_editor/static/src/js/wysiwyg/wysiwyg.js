@@ -127,7 +127,7 @@ var Wysiwyg = Widget.extend({
         return this._summernote.layoutInfo.editable;
     },
     /**
-     * Returns true if the editable code view is activated
+     * Returns true if code view is activated
      *
      * @returns {boolean}
      */

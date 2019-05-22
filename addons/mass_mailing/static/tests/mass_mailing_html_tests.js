@@ -133,6 +133,75 @@ QUnit.test('save arch and html', function (assert) {
     });
 });
 
+QUnit.test('save arch and html in codeView', function (assert) {
+    var done = assert.async();
+    assert.expect(3);
+
+    testUtils.mock.patch(Wysiwyg, {
+        isCodeViewActivated: function () {
+            assert.step("Wysiwyg");
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    testUtils.createAsyncView({
+        View: FormView,
+        model: 'mail.mass_mailing',
+        data: this.data,
+        arch: '<form>' +
+            '   <field name="body_html" class="oe_read_only" widget="html"'+
+            '       options="{'+
+            '                \'cssReadonly\': \'template.assets\','+
+            '       }"'+
+            '   />'+
+            '   <field name="body_arch" class="oe_edit_only" widget="mass_mailing_html"'+
+            '       options="{'+
+            '                \'snippets\': \'template.assets\','+
+            '                \'cssEdit\': \'template.assets\','+
+            '                \'inline-field\': \'body_html\''+
+            '       }"'+
+            '   />'+
+            '</form>',
+        res_id: 1,
+        mockRPC: function (route, args) {
+            if (args.method === "write") {
+                var values = args.args[1];
+                assert.strictEqual(values.body_html,
+                    '<div class="field_body" style="background-color:red;"><p><i>code</i> to edit</p></div>',
+                    "should save the right content");
+            }
+            return this._super.apply(this, arguments);
+        },
+    }).then(function (form) {
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        var $fieldEdit = form.$('.oe_form_field[name="body_arch"]');
+
+        var $iframe = $fieldEdit.find('iframe');
+        $iframe.data('load-def').then(function () {
+            var doc = $iframe.contents()[0];
+            var $content = $('#iframe_target', doc);
+
+            //selecting few letters and make it italic
+            var pText = $content.find('.note-editable p').first().contents()[0];
+            Wysiwyg.setRange(pText, 0, pText, 4);
+
+            $content.find('.note-toolbar .note-font .note-btn-italic').mousedown().click();
+
+            $content.find('.note-view .btn-codeview').click();
+
+            form.$buttons.find('.o_form_button_save').click();
+
+            assert.verifySteps(["Wysiwyg"]);
+
+            testUtils.mock.unpatch(Wysiwyg);
+            form.destroy();
+            done();
+        });
+    });
+});
+
 });
 });
 });
