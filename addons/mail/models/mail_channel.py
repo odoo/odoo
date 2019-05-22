@@ -503,15 +503,10 @@ class Channel(models.Model):
                     notifications.append([(self._cr.dbname, 'res.partner', partner.id), channel_info])
         return notifications
 
-    def _notify_thread(self, message, msg_vals=False, model_description=False, mail_auto_delete=True):
+    def _notify_thread(self, message, msg_vals=False, **kwargs):
         # When posting a message on a mail channel, manage moderation and postpone notify users
         if not msg_vals or msg_vals.get('moderation_status') != 'pending_moderation':
-            super(Channel, self)._notify_thread(
-                message,
-                msg_vals=msg_vals,
-                model_description=model_description,
-                mail_auto_delete=mail_auto_delete,
-            )
+            super(Channel, self)._notify_thread(message, msg_vals=msg_vals, **kwargs)
         else:
             message._notify_pending_by_chat()
 

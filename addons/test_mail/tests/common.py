@@ -86,13 +86,13 @@ class BaseFunctionalTest(common.SavepointCase):
                     self.assertEqual(expected, real, 'Invalid number of notification for %s: %s instead of %s' %
                                                      (partner.name, real, expected))
                 if partner_notif:
-                    self.assertTrue(all(n.is_email == (notif_type == 'email') for n in partner_notif))
+                    self.assertTrue(all(n.notification_type == notif_type for n in partner_notif))
                     self.assertTrue(all(n.is_read == (notif_read == 'read') for n in partner_notif),
                                     'Invalid read status for %s' % partner.name)
 
             # for simplification, limitate to single message asserts
             if hasattr(self, 'assertEmails') and len(new_messages) == 1:
-                self.assertEmails(new_messages.author_id, new_notifications.filtered(lambda n: n.is_email).mapped('res_partner_id'))
+                self.assertEmails(new_messages.author_id, new_notifications.filtered(lambda n: n.notification_type == 'email').mapped('res_partner_id'))
 
     def assertBusNotification(self, channels, message_items=None, init=True):
         """ Check for bus notifications. Basic check is about used channels.
