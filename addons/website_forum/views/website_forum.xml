@@ -1132,7 +1132,7 @@
                         </div>
                     </div>
                     <t t-if="question.parent_id">
-                        <div t-foreach="question" t-as="answer" class="col">
+                        <div t-foreach="question" t-as="answer" class="col-md-10 col-sm-8">
                             <t t-call="website_forum.moderation_display_post_answer"/>
                             <small class="text-muted">
                                  <i t-attf-class="fa fa-user" role="img" aria-label="Question" />
