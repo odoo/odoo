@@ -389,7 +389,7 @@ class AccountFrFec(models.TransientModel):
         rows_length = len(rows)
         for i, row in enumerate(rows):
             if not i == rows_length - 1:
-                row.append(lineterminator)
+                row[-1] += lineterminator
             writer.writerow(row)
 
         fecvalue = fecfile.getvalue()
