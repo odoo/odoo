@@ -500,6 +500,9 @@ var SearchPanel = Widget.extend({
         var category = this.categories[$item.data('categoryId')];
         var valueId = $item.data('id') || false;
         category.activeValueId = valueId;
+        if (category.values[valueId]) {
+            category.values[valueId].folded = !category.values[valueId].folded;
+        }
         var storageKey = this._getLocalStorageKey(category);
         this.call('local_storage', 'setItem', storageKey, valueId);
         this._notifyDomainUpdated();
