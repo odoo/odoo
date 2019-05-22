@@ -200,7 +200,7 @@ class TestAdvMailPerformance(BaseMailPerformance):
     def test_message_assignation_email(self):
         self.user_test.write({'notification_type': 'email'})
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(__system__=55, emp=58):  # com runbot: 55 - 58 // test_mail only: 55 - 58
+        with self.assertQueryCount(__system__=52, emp=54):  # com runbot: 52 - 54 // test_mail only: 52 - 54
             record.write({
                 'user_id': self.user_test.id,
             })
@@ -209,7 +209,7 @@ class TestAdvMailPerformance(BaseMailPerformance):
     @warmup
     def test_message_assignation_inbox(self):
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(__system__=33, emp=39):  # test_mail only: 33 - 39
+        with self.assertQueryCount(__system__=31, emp=36):  # test_mail only: 31 - 36
             record.write({
                 'user_id': self.user_test.id,
             })
@@ -253,7 +253,7 @@ class TestAdvMailPerformance(BaseMailPerformance):
     def test_message_post_one_email_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=47, emp=51):  # com runbot: 47 - 51 // test_mail only: 47 - 51
+        with self.assertQueryCount(__system__=44, emp=47):  # com runbot: 44 - 47 // test_mail only: 44 - 47
             record.message_post(
                 body='<p>Test Post Performances with an email ping</p>',
                 partner_ids=self.customer.ids,
@@ -265,7 +265,7 @@ class TestAdvMailPerformance(BaseMailPerformance):
     def test_message_post_one_inbox_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=30, emp=36):  # com runbot 30 - 36 // test_mail only: 30 - 36
+        with self.assertQueryCount(__system__=28, emp=33):  # com runbot 28 - 33 // test_mail only: 28 - 33
             record.message_post(
                 body='<p>Test Post Performances with an inbox ping</p>',
                 partner_ids=self.user_test.partner_id.ids,
@@ -373,7 +373,7 @@ class TestHeavyMailPerformance(BaseMailPerformance):
         self.umbrella.message_subscribe(self.user_portal.partner_id.ids)
         record = self.umbrella.with_user(self.env.user)
 
-        with self.assertQueryCount(__system__=78, emp=82):  # com runbot: 78 - 82 // test_mail only: 78 - 82
+        with self.assertQueryCount(__system__=82, emp=85):  # com runbot: 82 - 85 // test_mail only: 82 - 85
             record.message_post(
                 body='<p>Test Post Performances</p>',
                 message_type='comment',
@@ -390,7 +390,7 @@ class TestHeavyMailPerformance(BaseMailPerformance):
         record = self.umbrella.with_user(self.env.user)
         template_id = self.env.ref('test_mail.mail_test_tpl').id
 
-        with self.assertQueryCount(__system__=93, emp=99):  # com runbot: 93 - 99 // test_mail only: 93 - 99
+        with self.assertQueryCount(__system__=98, emp=103):  # com runbot: 98 - 103 // test_mail only: 98 - 103
             record.message_post_with_template(template_id, message_type='comment', composition_mode='comment')
 
         self.assertEqual(record.message_ids[0].body, '<p>Adding stuff on %s</p>' % record.name)
@@ -459,7 +459,7 @@ class TestHeavyMailPerformance(BaseMailPerformance):
             'user_id': self.env.uid,
         })
         self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id)
-        with self.assertQueryCount(__system__=54, emp=57):  # com runbot: 54 - 57 // test_mail only: 54 - 57
+        with self.assertQueryCount(__system__=51, emp=53):  # com runbot: 51 - 53 // test_mail only: 51 - 53
             rec.write({'user_id': self.user_portal.id})
         self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
         # write tracking message
@@ -479,7 +479,7 @@ class TestHeavyMailPerformance(BaseMailPerformance):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(__system__=145, emp=149):  # com runbot: 145 - 149 // test_mail only: 145 - 149
+        with self.assertQueryCount(__system__=146, emp=149):  # com runbot: 146 - 149 // test_mail only: 146 - 149
             rec = self.env['mail.test.full'].create({
                 'name': 'Test',
                 'umbrella_id': umbrella_id,
@@ -506,7 +506,7 @@ class TestHeavyMailPerformance(BaseMailPerformance):
         })
         self.assertEqual(rec.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
         self.assertEqual(len(rec.message_ids), 1)
-        with self.assertQueryCount(__system__=95, emp=100):  # com runbot: 95 - 100 // test_mail only: 95 - 100
+        with self.assertQueryCount(__system__=99, emp=103):  # com runbot: 99 -103 // test_mail only: 99 - 103
             rec.write({
                 'name': 'Test2',
                 'umbrella_id': self.umbrella.id,
@@ -542,7 +542,7 @@ class TestHeavyMailPerformance(BaseMailPerformance):
         })
         self.assertEqual(rec.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
 
-        with self.assertQueryCount(__system__=100, emp=105):  # test_mail only: 100 - 105
+        with self.assertQueryCount(__system__=104, emp=108):  # test_mail only: 104 - 108
             rec.write({
                 'name': 'Test2',
                 'umbrella_id': umbrella_id,
@@ -704,14 +704,14 @@ class TestMailPerformancePost(BaseMailPerformance):
         partner_ids = [self.user_inbox.partner_id.id, self.user_email.partner_id.id, self.partner.id]
         channel_ids = [self.channel_inbox.id, self.channel_email.id]
         record = self.record.with_user(self.env.user)
-        attachements = [ # not linear on number of attachements
+        attachements = [  # not linear on number of attachements
             ('attach tuple 1', "attachement tupple content 1"),
             ('attach tuple 2', "attachement tupple content 2", {'cid': 'cid1'}),
             ('attach tuple 3', "attachement tupple content 3", {'cid': 'cid2'}),
         ]
-        self.attachements = self.env['ir.attachment'].with_user(self.env.user).create(self.vals) #-> 163-> 165 query
+        self.attachements = self.env['ir.attachment'].with_user(self.env.user).create(self.vals)
         attachement_ids = self.attachements.ids
-        with self.assertQueryCount(emp=175):  # com runbot 154 // test_mail only: 133
+        with self.assertQueryCount(emp=175):  # com runbot 154 // test_mail only: 132
             self.cr.sql_log = self.warm and self.cr.sql_log_count
             record.with_context({}).message_post(
                 body='<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>',

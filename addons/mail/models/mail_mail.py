@@ -154,24 +154,24 @@ class MailMail(models.Model):
         notif_mails_ids = [mail.id for mail in self if mail.notification]
         if notif_mails_ids:
             notifications = self.env['mail.notification'].search([
-                ('is_email', '=', True),
+                ('notification_type', '=', 'email'),
                 ('mail_id', 'in', notif_mails_ids),
-                ('email_status', 'not in', ('sent', 'canceled'))
+                ('notification_status', 'not in', ('sent', 'canceled'))
             ])
             if notifications:
-                #find all notification linked to a failure
+                # find all notification linked to a failure
                 failed = self.env['mail.notification']
                 if failure_type:
                     failed = notifications.filtered(lambda notif: notif.res_partner_id not in success_pids)
                     failed.sudo().write({
-                        'email_status': 'exception',
+                        'notification_status': 'exception',
                         'failure_type': failure_type,
                         'failure_reason': failure_reason,
                     })
                     messages = notifications.mapped('mail_message_id').filtered(lambda m: m.is_thread_message())
-                    messages._notify_failure_update()  # notify user that we have a failure
+                    messages._notify_mail_failure_update()  # notify user that we have a failure
                 (notifications - failed).sudo().write({
-                    'email_status': 'sent',
+                    'notification_status': 'sent',
                     'failure_type': '',
                     'failure_reason': '',
                 })
@@ -335,14 +335,14 @@ class MailMail(models.Model):
                 # update in case an email bounces while sending all emails related to current
                 # mail record.
                 notifs = self.env['mail.notification'].search([
-                    ('is_email', '=', True),
+                    ('notification_type', '=', 'email'),
                     ('mail_id', 'in', mail.ids),
-                    ('email_status', 'not in', ('sent', 'canceled'))
+                    ('notification_status', 'not in', ('sent', 'canceled'))
                 ])
                 if notifs:
                     notif_msg = _('Error without exception. Probably due do concurrent access update of notification records. Please see with an administrator.')
                     notifs.sudo().write({
-                        'email_status': 'exception',
+                        'notification_status': 'exception',
                         'failure_type': 'UNKNOWN',
                         'failure_reason': notif_msg,
                     })
