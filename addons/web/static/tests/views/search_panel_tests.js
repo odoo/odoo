@@ -534,7 +534,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('category with parent_field', async function (assert) {
-        assert.expect(24);
+        assert.expect(28);
 
         this.data.company.records.push({id: 40, name: 'child company 1', parent_id: 5});
         this.data.company.records.push({id: 41, name: 'child company 2', parent_id: 5});
@@ -593,7 +593,14 @@ QUnit.module('Views', {
         assert.containsOnce(kanban, '.o_search_panel_category_value:nth(2) .active');
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 1);
 
+        // parent company should be folded
+        assert.containsOnce(kanban, '.o_search_panel_category_value .active');
+        assert.containsOnce(kanban, '.o_search_panel_category_value:nth(2) .active');
+        assert.containsN(kanban, '.o_search_panel_category_value', 3);
+        assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 1);
+
         // fold category with children
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value .o_toggle_fold'));
         await testUtils.dom.click(kanban.$('.o_search_panel_category_value .o_toggle_fold'));
 
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
