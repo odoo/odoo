@@ -10,10 +10,9 @@ class AccountChartTemplate(models.Model):
     @api.multi
     def generate_fiscal_position(
             self, tax_template_ref, acc_template_ref, company):
-        """
-        if chart is argentina localization, then we add l10n_ar_afip_code to
-        fiscal positions.
-        We also add other data to add fiscal positions automatically
+        """ If chart is argentina, then we add l10n_ar_afip_code to
+        fiscal positions. We also add other data to add fiscal positions
+        automatically
         """
         res = super(AccountChartTemplate, self).generate_fiscal_position(
             tax_template_ref, acc_template_ref, company)
