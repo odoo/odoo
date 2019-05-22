@@ -1248,17 +1248,16 @@ class DisableCacheMiddleware(object):
             parsed = urls.url_parse(referer)
             debug = parsed.query.count('debug') >= 1
 
-            new_headers = []
-            unwanted_keys = ['Last-Modified']
             if debug:
                 new_headers = [('Cache-Control', 'no-cache')]
-                unwanted_keys += ['Expires', 'Etag', 'Cache-Control']
 
-            for k, v in headers:
-                if k not in unwanted_keys:
-                    new_headers.append((k, v))
+                for k, v in headers:
+                    if k.lower() != 'cache-control':
+                        new_headers.append((k, v))
 
-            start_response(status, new_headers)
+                start_response(status, new_headers)
+            else:
+                start_response(status, headers)
         return self.app(environ, start_wrapped)
 
 class Root(object):

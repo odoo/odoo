@@ -101,7 +101,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
         KeyboardNavigationMixin.init.call(this);
         this.origin = undefined;
         this._current_state = null;
-        this.menu_dm = new concurrency.DropMisordered();
+        this.menu_dp = new concurrency.DropPrevious();
         this.action_mutex = new concurrency.Mutex();
         this.set('title_part', {"zopenerp": "Odoo"});
     },
