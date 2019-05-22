@@ -303,23 +303,20 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def action_move_create(self):
-        """
-        We add currency rate on move creation so it can be used by electronic
-        invoice later on action_number
-        """
+        """ We add currency rate on move creation so it can be used by
+        electronic invoice later on action_number """
         self.check_argentinian_invoice_taxes()
         return super(AccountInvoice, self).action_move_create()
 
     @api.multi
     def check_argentinian_invoice_taxes(self):
+        """ We consider argentinian invoices the ones from companies with
+        localization AR that belongs to a journal with use_documents
+        """
         _logger.info('Running checks related to argentinian documents')
-
-        # we consider argentinian invoices the ones from companies with
-        # localization localization and that belongs to a journal with
-        # use_documents
         argentinian_invoices = self.filtered(
-            lambda r: (
-                r.company_id.country_id.code != 'AR' and r.l10n_latam_use_documents))
+            lambda r: r.company_id.country_id.code == 'AR'
+                and r.l10n_latam_use_documents)
         if not argentinian_invoices:
             return True
 
