@@ -3406,12 +3406,8 @@ QUnit.module('Media', {
 
             },
             mockRPC: function (route, args) {
-                if (args.model === 'ir.attachment' || !args.length) {
-                    if (!args.length && route.indexOf('data:image/png;base64') === 0 ||
-                        args.method === "search_read" &&
-                        args.kwargs.domain[7][2].join(',') === "image/gif,image/jpe,image/jpeg,image/jpg,image/gif,image/png") {
-                        return Promise.resolve(this.data.records);
-                    }
+                if (route.indexOf('data:image/png;base64') === 0) {
+                    return Promise.resolve();
                 }
                 if (route.indexOf('youtube') !== -1) {
                     return Promise.resolve();

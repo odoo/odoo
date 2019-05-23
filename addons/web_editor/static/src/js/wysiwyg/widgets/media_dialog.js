@@ -55,9 +55,7 @@ var MediaDialog = Dialog.extend({
         this.noVideos = onlyImages || options.noVideos;
 
         if (!this.noDocuments) {
-            this.documentDialog = new MediaModules.ImageWidget(this, this.media, _.extend({}, options, {
-                document: true,
-            }));
+            this.documentDialog = new MediaModules.DocumentWidget(this, this.media, options);
             this.documentDialog.tabToShow = 'document';
         }
         if (!this.noIcons) {
