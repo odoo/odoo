@@ -1067,18 +1067,20 @@ class AccountTax(models.Model):
 
     @api.model
     def default_get(self, vals):
-        rslt = super(AccountTax, self).default_get(vals)
+        # company_id is added so that we are sure to fetch a default value from it to use in repartition lines, below
+        rslt = super(AccountTax, self).default_get(vals + ['company_id'])
 
+        company_id = rslt.get('company_id')
         if 'refund_repartition_line_ids' in vals:
             rslt['refund_repartition_line_ids'] = [
-                (0, 0, { 'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': rslt.get('company_id')}),
-                (0, 0, { 'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': rslt.get('company_id')}),
+                (0, 0, { 'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id}),
+                (0, 0, { 'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id}),
             ]
 
         if 'invoice_repartition_line_ids' in vals:
             rslt['invoice_repartition_line_ids'] = [
-                (0, 0, { 'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': rslt.get('company_id')}),
-                (0, 0, { 'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': rslt.get('company_id')}),
+                (0, 0, { 'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id}),
+                (0, 0, { 'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id}),
             ]
 
         return rslt
