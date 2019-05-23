@@ -18,6 +18,8 @@ class MailTestSMS(models.Model):
     mobile_nbr = fields.Char()
     customer_id = fields.Many2one('res.partner', 'Customer')
 
-    @api.multi
-    def _get_default_sms_recipients(self):
+    def _sms_get_default_partners(self):
         return self.mapped('customer_id')
+
+    def _sms_get_number_fields(self):
+        return ['phone_nbr', 'mobile_nbr']

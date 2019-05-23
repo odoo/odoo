@@ -174,13 +174,13 @@ class TestRecipients(common.SavepointCase):
             'name': 'Valid Lelitre',
             'email': 'valid.lelitre@agrolait.com',
             'country_id': cls.env.ref('base.be').id,
-            'mobile': '0475001122',
+            'mobile': '0456001122',
         })
         cls.partner_2 = Partner.create({
             'name': 'Valid Poilvache',
             'email': 'valid.other@gmail.com',
             'country_id': cls.env.ref('base.be').id,
-            'mobile': '+32 475 22 11 00',
+            'mobile': '+32 456 22 11 00',
         })
 
 

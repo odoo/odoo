@@ -7,7 +7,7 @@ from odoo import models
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    def _get_default_sms_recipients(self):
+    def _sms_get_default_partners(self):
         """ Override of mail.thread method.
             SMS recipients on partners are the partners themselves.
         """
