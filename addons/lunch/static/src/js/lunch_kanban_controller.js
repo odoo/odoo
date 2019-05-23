@@ -143,17 +143,7 @@ var LunchKanbanController = KanbanController.extend({
 
         ev.stopPropagation();
 
-        this._rpc({
-            route: '/lunch/user_location_set',
-            params: {
-                user_id: this.userId,
-                location_id: ev.data.locationId,
-            },
-        }).then(function () {
-            self.model._updateLocation(ev.data.locationId).then(function () {
-                self.reload();
-            });
-        });
+        this.model._updateLocation(ev.data.locationId)
     },
     _onOpenWizard: function (ev) {
         var self = this;

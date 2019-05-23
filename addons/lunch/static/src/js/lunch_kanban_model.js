@@ -74,9 +74,18 @@ var LunchKanbanModel = KanbanModel.extend({
             },
         });
     },
+    _setUserLocation: function () {
+        return this._rpc({
+            route: '/lunch/user_location_set',
+            params: {
+                location_id: this.locationId,
+                user_id: this.userId,
+            },
+        });
+    },
     _updateLocation: function (locationId) {
         this.locationId = locationId;
-        return $.when();
+        return this._setUserLocation();
     },
     _updateUser: function (userId) {
         var self = this;
