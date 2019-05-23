@@ -141,16 +141,6 @@ var MediaDialog = Dialog.extend({
         var args = arguments;
         return Promise.resolve(this.active.save()).then(function (data) {
             self.final_data = data;
-            // In the case of multi images selection we suppose this was not to
-            // replace an old media, so we only retrieve the images and save.
-            if (!self.multiImages) {
-                // TODO this dialog triggers 'save' and 'saved' with different
-                // data on close... should refactor to avoid confusion...
-                self.trigger('saved', {
-                    attachments: self.active.images,
-                    media: data,
-                });
-            }
             return _super.apply(self, args);
         });
     },
