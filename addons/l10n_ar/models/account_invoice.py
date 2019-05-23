@@ -459,3 +459,15 @@ class AccountInvoice(models.Model):
                     relativedelta(day=1, days=-1, months=+1)
             if vals:
                 rec.write(vals)
+
+    @api.onchange('partner_id')
+    def check_afip_responsability_set(self):
+        if self.env.user.company_id.country_id.code == 'AR' and \
+           self.env.user.company_id.l10n_latam_use_documents:
+            if self.partner_id and \
+               not self.partner_id.l10n_ar_afip_responsability_type:
+                return {'warning': {
+                    'title': 'Missing Partner Configuration',
+                    'message': 'Please configure the partners'
+                    ' AFIP Responsability in order to continue',
+                }}
