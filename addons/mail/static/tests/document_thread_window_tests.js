@@ -48,7 +48,7 @@ QUnit.module('Document Thread', {
                 },
                 records: [{
                     id: 1,
-                    author_id: [1, 'Me'],
+                    author_id: [partnerID, 'Me'],
                     body: '<p>Some Message on a document</p>',
                     channel_ids: [],
                     model: 'some.res.model',
