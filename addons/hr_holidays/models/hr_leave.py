@@ -793,7 +793,7 @@ class HolidaysRequest(models.Model):
             return self.employee_id.parent_id.user_id
         elif self.department_id.manager_id.user_id:
             return self.department_id.manager_id.user_id
-        return self.env.user
+        return self.env.context.get('uid') and self.env['res.users'].browse(self.env.context.get('uid')) or self.env.user
 
     def activity_update(self):
         to_clean, to_do = self.env['hr.leave'], self.env['hr.leave']
