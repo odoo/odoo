@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_zero_quantity_count" model="ir.ui.view">
+        <field name="name">stock_zero_quantity_count</field>
+        <field name="model">stock.zero.quantity.count</field>
+        <field name="arch" type="xml">
+            <form string="Zero Quantity count">
+                <p>Can you confirm there is no stock left in <field name="location_id" readonly="1"/> ?</p>
+                <br/>
+                <footer>
+                    <button name="confirm_zqc" string="Yes" type="object" class="btn-primary"/>
+                    <button name="get_zqc_inventory_wizard" string="No" type="object" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_stock_zero_quantity_count_inventory" model="ir.ui.view">
+        <field name="name">stock.zero.quantity.count.inventory.view.form</field>
+        <field name="model">stock.zero.quantity.count.inventory</field>
+        <field name="arch" type="xml">
+            <form string="Zero Quantity Count - Inventory Adjustment">
+                <group>
+                    <p> Products counted in <field name="location_id" readonly="1"/>: </p>
+                </group>
+                <field name="zqc_inventory_line_ids">
+                    <tree editable="top" string="Inventory Details">
+                        <field name="location_id" invisible="1"/>
+                        <field name="product_tracking" invisible="1"/>
+                        <field name="product_id" options="{'no_create': True}"
+                               readonly="context.get('default_product_id', False)"/>
+                        <field name="prod_lot_id" groups="stock.group_production_lot"
+                               attrs="{'invisible': [('product_tracking', '=', 'none')]}"
+                               context="{'default_product_id': product_id}"
+                               domain="[('product_id', '=', product_id)]"/>
+                        <field name="package_id" groups="stock.group_tracking_lot"
+                               string="Package"
+                               domain="['|', ('location_id','=', False), ('location_id', '=', location_id)]"/>
+                        <field name="partner_id" groups="stock.group_tracking_owner"/>
+                        <field name="theoretical_qty" string="Theoritical Quantity"
+                               force_save="1" readonly="1"/>
+                        <field name="product_qty"/>
+                        <field name="product_uom_id" string="UoM" groups="uom.group_uom" force_save="1"/>
+                    </tree>
+                </field>
+                <footer>
+                    <button name="adjust_inventory" string="Confirm" type="object" class="btn-primary"/>
+                    <button name="cancel_inventory" string="Cancel" type="object" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -137,10 +137,10 @@ class TestBatchPicking(TransactionCase):
         self.assertTrue(back_order_wizard_dict)
         back_order_wizard = self.env[(back_order_wizard_dict.get('res_model'))].browse(back_order_wizard_dict.get('res_id'))
         self.assertEqual(len(back_order_wizard.pick_ids), 2)
-        self.assertEqual(self.picking_client_2.state, 'done', 'Picking 2 should be done')
         back_order_wizard.process()
 
         self.assertEqual(self.picking_client_1.state, 'done', 'Picking 1 should be done')
+        self.assertEqual(self.picking_client_2.state, 'done', 'Picking 2 should be done')
         self.assertEqual(self.picking_client_1.move_lines.product_uom_qty, 5, 'initial demand should be 5 after picking split')
         self.assertTrue(self.env['stock.picking'].search([('backorder_id', '=', self.picking_client_1.id)]), 'no back order created')
 

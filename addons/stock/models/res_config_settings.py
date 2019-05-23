@@ -25,6 +25,8 @@ class ResConfigSettings(models.TransientModel):
     group_stock_adv_location = fields.Boolean("Multi-Step Routes",
         implied_group='stock.group_adv_location',
         help="Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks).")
+    group_stock_zero_quantity_count = fields.Boolean('Zero Quantity Count',
+        implied_group='stock.group_stock_zero_quantity_count', help='Request confirmation the quantity has reached 0 in the location')
     group_warning_stock = fields.Boolean("Warnings for Stock", implied_group='stock.group_warning_stock')
     module_stock_picking_batch = fields.Boolean("Batch Pickings", oldname="module_stock_picking_wave")
     module_stock_barcode = fields.Boolean("Barcode Scanner")

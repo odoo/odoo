@@ -751,14 +751,64 @@ class Picking(models.Model):
     def _finalize_validation(self):
         """ Raise wizards if needed before and after applying action_done() on the picking(s) """
 
+        # ---------------------------
+        # "Pre action_done()" wizards
+        # ---------------------------
         if self._check_no_quantities_done() and not self._context.get('skip_no_quantity_check'):
             return self.action_generate_immediate_transfer_wizard()
 
         # Check backorder should check for other barcodes
         if self._check_backorder() and not self._context.get('skip_backorder_check'):
             return self.action_generate_backorder_wizard()
+
         self.action_done()
+
+        # ----------------------------
+        # "Post action_done()" wizards
+        # ----------------------------
+        if self.env.user.has_group('stock.group_stock_zero_quantity_count'):
+            return self.action_generate_zqc_wizards()
         return True
+
+    def action_generate_zqc_wizards(self):
+        """ Get the locations and the products where the quantity should be zero regarding
+        the current move lines.
+        :return: a defaultdict(list) with location as keys and a list of products as values
+        """
+        locations = self.mapped('move_lines.move_line_ids.location_id')
+        empty_locations = self.env['stock.location']
+        for loc in locations:
+            nb_remaings_quants = self.env['stock.quant'].search_count([('location_id', '=', loc.id), ('quantity', '!=', 0)])
+            if not nb_remaings_quants:
+                empty_locations |= loc
+
+        if empty_locations:
+            zqc_wizards = self.env['stock.zero.quantity.count'].create([{
+                'location_id': location.id,
+                'pick_ids': [(4, pick.id) for pick in self]
+            } for location in empty_locations])
+
+            return self.with_context({'remaining_zqc_wizard_ids': zqc_wizards.ids})._get_next_zqc_wizard()
+        return True
+
+    def _get_next_zqc_wizard(self):
+        view = self.env.ref('stock.view_zero_quantity_count')
+        remaining_wizard_ids = self.env.context.get('remaining_zqc_wizard_ids')
+        if remaining_wizard_ids:
+            return {
+                'name': _('Zero Quantity Count'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'stock.zero.quantity.count',
+                'res_id': remaining_wizard_ids[0],
+                'view_type': 'form',
+                'view_mode': 'form',
+                'views': [(view.id, 'form')],
+                'view_id': view.id,
+                'target': 'new',
+                'context': self.env.context,
+            }
+        else:
+            return {'type': 'ir.actions.act_window_close'}
 
     def action_generate_immediate_transfer_wizard(self):
         view = self.env.ref('stock.view_immediate_transfer')
