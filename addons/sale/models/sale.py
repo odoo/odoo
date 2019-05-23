@@ -25,16 +25,16 @@ class SaleOrder(models.Model):
 
     def _default_validity_date(self):
         if self.env['ir.config_parameter'].sudo().get_param('sale.use_quotation_validity_days'):
-            days = self.env.company_id.quotation_validity_days
+            days = self.env.company.quotation_validity_days
             if days > 0:
                 return fields.Date.to_string(datetime.now() + timedelta(days))
         return False
 
     def _get_default_require_signature(self):
-        return self.env.company_id.portal_confirmation_sign
+        return self.env.company.portal_confirmation_sign
 
     def _get_default_require_payment(self):
-        return self.env.company_id.portal_confirmation_pay
+        return self.env.company.portal_confirmation_pay
 
     @api.depends('order_line.price_total')
     def _amount_all(self):
@@ -101,7 +101,7 @@ class SaleOrder(models.Model):
 
     @api.model
     def _default_note(self):
-        return self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company_id.invoice_terms or ''
+        return self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company.invoice_terms or ''
 
     @api.model
     def _get_default_team(self):
@@ -175,7 +175,7 @@ class SaleOrder(models.Model):
 
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term', help="Payment terms applies to all invoices issued from this order.")
     fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position', help=" Fiscal positions are used to adapt taxes and accounts for particular customers or sales orders/invoices. The default value comes from the customer.")
-    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company_id)
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     team_id = fields.Many2one('crm.team', 'Sales Team', change_default=True, default=_get_default_team, oldname='section_id')
 
     signature = fields.Binary('Signature', help='Signature received through the portal.', copy=False, attachment=True)
@@ -310,8 +310,8 @@ class SaleOrder(models.Model):
             'partner_shipping_id': addr['delivery'],
             'user_id': self.partner_id.user_id.id or self.partner_id.commercial_partner_id.user_id.id or self.env.uid
         }
-        if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company_id.invoice_terms:
-            values['note'] = self.with_context(lang=self.partner_id.lang).env.company_id.invoice_terms
+        if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company.invoice_terms:
+            values['note'] = self.with_context(lang=self.partner_id.lang).env.company.invoice_terms
 
         # Use team of saleman before to fallback on team of partner.
         values['team_id'] = self.partner_id.user_id and self.partner_id.user_id.sale_team_id.id or self.partner_id.team_id.id
@@ -659,7 +659,7 @@ class SaleOrder(models.Model):
     def message_post(self, **kwargs):
         if self.env.context.get('mark_so_as_sent'):
             self.filtered(lambda o: o.state == 'draft').with_context(tracking_disable=True).write({'state': 'sent'})
-            self.env.company_id.set_onboarding_step_done('sale_onboarding_sample_quotation_state')
+            self.env.company.set_onboarding_step_done('sale_onboarding_sample_quotation_state')
         return super(SaleOrder, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
 
     @api.multi
@@ -1569,7 +1569,7 @@ class SaleOrderLine(models.Model):
                 product_currency = pricelist_item.base_pricelist_id.currency_id
             currency_id = pricelist_item.pricelist_id.currency_id
 
-        product_currency = product_currency or(product.company_id and product.company_id.currency_id) or self.env.company_id.currency_id
+        product_currency = product_currency or(product.company_id and product.company_id.currency_id) or self.env.company.currency_id
         if not currency_id:
             currency_id = product_currency
             cur_factor = 1.0

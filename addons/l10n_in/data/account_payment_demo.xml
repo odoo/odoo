@@ -11,11 +11,11 @@
         <field name="journal_id" model="account.journal"
             eval="obj().search([
                 ('type', '=', 'cash'),
-                ('company_id', '=', obj().env.company_id.id)], limit=1).id"/>
+                ('company_id', '=', obj().env.company.id)], limit=1).id"/>
         <field name="payment_method_id" model="account.journal"
             eval="obj().search([
                 ('type', '=', 'cash'),
-                ('company_id', '=', obj().env.company_id.id)], limit=1).inbound_payment_method_ids[0].id"/>
+                ('company_id', '=', obj().env.company.id)], limit=1).inbound_payment_method_ids[0].id"/>
     </record>
 
     <function model="account.payment" name="post">

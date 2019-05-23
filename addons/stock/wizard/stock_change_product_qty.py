@@ -24,7 +24,7 @@ class ProductChangeQuantity(models.TransientModel):
     def default_get(self, fields):
         res = super(ProductChangeQuantity, self).default_get(fields)
         if 'location_id' in fields and not res.get('location_id'):
-            company_user = self.env.company_id
+            company_user = self.env.company
             warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
             if warehouse:
                 res['location_id'] = warehouse.lot_stock_id.id

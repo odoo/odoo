@@ -339,7 +339,7 @@ class View(models.Model):
                 for website in Website.search([]) if website != cur
             ]
 
-            cur_company = self.env.company_id
+            cur_company = self.env.company
             qcontext['multi_website_companies_current'] = {'company_id': cur_company.id, 'name': cur_company.name}
             qcontext['multi_website_companies'] = [
                 {'company_id': comp.id, 'name': comp.name}

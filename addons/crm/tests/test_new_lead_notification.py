@@ -43,7 +43,7 @@ class NewLeadNotification(TestCrmCases):
         self.assertTrue(lead_user.message_needaction)
 
     def test_new_lead_from_email_multicompany(self):
-        company0 = self.env.company_id
+        company0 = self.env.company
         company1 = self.env['res.company'].create({'name': 'new_company'})
 
         self.env.user.write({

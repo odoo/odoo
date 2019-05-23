@@ -784,6 +784,12 @@ class Environment(Mapping):
 
     def __new__(cls, cr, uid, context):
         assert context is not None
+
+        if uid == SUPERUSER_ID and 'allowed_company_ids' not in context:
+            cr.execute("""SELECT company_id FROM res_users WHERE id=%s""" , (SUPERUSER_ID,))
+            context['allowed_company_ids'] = list(cr.fetchone())
+        assert 'allowed_company_ids' in context, "You have to specify the 'allowed_company_ids' in the context"
+
         args = (cr, uid, context)
 
         # if env already exists, return it
@@ -855,7 +861,7 @@ class Environment(Mapping):
         return self(user=SUPERUSER_ID)['res.users'].browse(self.uid)
 
     @property
-    def company_id(self):
+    def company(self):
         """ return the company in which the user is logged in (as an instance) """
         try:
             company_id = int(self.context.get('allowed_company_ids')[0])
@@ -863,10 +869,11 @@ class Environment(Mapping):
                 return self['res.company'].browse(company_id)
             return self.user.company_id
         except Exception:
+            _logger.warning("No 'allowed_company_ids' defined on the context. Please investigate.")
             return self.user.company_id
 
     @property
-    def company_ids(self):
+    def companies(self):
         """ return a recordset of the enabled companies by the user """
         try:  # In case the user tries to bidouille the url (eg: cids=1,foo,bar)
             allowed_company_ids = self.context.get('allowed_company_ids')

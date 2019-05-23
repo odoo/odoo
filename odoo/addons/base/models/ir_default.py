@@ -57,7 +57,7 @@ class IrDefault(models.Model):
         if user_id is True:
             user_id = self.env.uid
         if company_id is True:
-            company_id = self.env.company_id.id
+            company_id = self.env.company.id
 
         # check consistency of model_name, field_name, and value
         try:
@@ -107,7 +107,7 @@ class IrDefault(models.Model):
         if user_id is True:
             user_id = self.env.uid
         if company_id is True:
-            company_id = self.env.company_id.id
+            company_id = self.env.company.id
 
         field = self.env['ir.model.fields']._get(model_name, field_name)
         default = self.search([

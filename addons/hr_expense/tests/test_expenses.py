@@ -83,11 +83,11 @@ class TestAccountEntry(TestExpenseCommon):
             multi-currency. And taxes. """
 
         # Clean-up the rates
-        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [self.env.ref('base.USD').id, self.env.company_id.id])
+        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [self.env.ref('base.USD').id, self.env.company.id])
         self.env['res.currency.rate'].search([]).unlink()
         self.env['res.currency.rate'].create({
             'currency_id': self.env.ref('base.EUR').id,
-            'company_id': self.env.company_id.id,
+            'company_id': self.env.company.id,
             'rate': 2.0,
             'name': '2010-01-01',
         })
@@ -142,7 +142,7 @@ class TestAccountEntry(TestExpenseCommon):
         self.assertEquals(self.analytic_account.line_ids, expense.account_move_id.mapped('line_ids.analytic_line_ids'))
         self.assertEquals(len(self.analytic_account.line_ids), 1, "Analytic Account should have only one line")
         self.assertAlmostEquals(self.analytic_account.line_ids[0].amount, -318.18, "Amount on the only AAL is wrong")
-        self.assertAlmostEquals(self.analytic_account.line_ids[0].currency_id, self.env.company_id.currency_id, "Currency on the only AAL is wrong")
+        self.assertAlmostEquals(self.analytic_account.line_ids[0].currency_id, self.env.company.currency_id, "Currency on the only AAL is wrong")
         self.assertEquals(self.analytic_account.line_ids[0].product_id, self.product_expense, "Product of AAL should be the one from the expense")
 
     def test_expense_from_email(self):

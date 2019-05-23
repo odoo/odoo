@@ -42,7 +42,7 @@ class AccountPaymentTerm(models.Model):
         if self.env.context.get('currency_id'):
             currency = self.env['res.currency'].browse(self.env.context['currency_id'])
         else:
-            currency = self.env.company_id.currency_id
+            currency = self.env.company.currency_id
         for line in self.line_ids:
             if line.value == 'fixed':
                 amt = sign * currency.round(line.value_amount)

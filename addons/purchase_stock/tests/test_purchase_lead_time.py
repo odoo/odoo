@@ -102,7 +102,7 @@ class TestPurchaseLeadTime(TestPurchase):
         date_planned = fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10))
         # Create procurement order of product_1
         self.env['procurement.group'].run([self.env['procurement.group'].Procurement(
-            self.product_1, 5.000, self.uom_unit, self.warehouse_1.lot_stock_id, 'Test scheduler for RFQ', '/', self.env.company_id,
+            self.product_1, 5.000, self.uom_unit, self.warehouse_1.lot_stock_id, 'Test scheduler for RFQ', '/', self.env.company,
             {
                 'warehouse_id': self.warehouse_1,
                 'date_planned': date_planned,  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.

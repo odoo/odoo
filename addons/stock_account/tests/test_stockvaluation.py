@@ -942,7 +942,7 @@ class TestStockValuation(SavepointCase):
 
         # send 10 units in our transit location, the valorisation should not be impacted
         transit_location = self.env['stock.location'].search([
-            ('company_id', '=', self.env.company_id.id),
+            ('company_id', '=', self.env.company.id),
             ('usage', '=', 'transit'),
         ], limit=1)
         move8 = self.env['stock.move'].create({

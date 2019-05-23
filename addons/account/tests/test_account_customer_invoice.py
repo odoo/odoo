@@ -108,7 +108,7 @@ class TestAccountCustomerInvoice(AccountTestUsers):
 
     def test_customer_invoice_tax(self):
 
-        self.env.company_id.tax_calculation_rounding_method = 'round_globally'
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
 
         payment_term = self.env.ref('account.account_payment_term_advance')
         journalrec = self.env['account.journal'].search([('type', '=', 'sale')])[0]
@@ -169,7 +169,7 @@ class TestAccountCustomerInvoice(AccountTestUsers):
         self.assertAlmostEquals(invoice.amount_untaxed, sum([x.base for x in invoice.tax_line_ids]))
 
     def test_customer_invoice_tax_refund(self):
-        company = self.env.company_id
+        company = self.env.company
         tax_account = self.env['account.account'].create({
             'name': 'TAX',
             'code': 'TAX',

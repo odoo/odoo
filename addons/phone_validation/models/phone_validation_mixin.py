@@ -12,12 +12,12 @@ class PhoneValidationMixin(models.AbstractModel):
     def _phone_get_country(self):
         if 'country_id' in self and self.country_id:
             return self.country_id
-        return self.env.company_id.country_id
+        return self.env.company.country_id
 
     def _phone_get_always_international(self):
         if 'company_id' in self and self.company_id:
             return self.company_id.phone_international_format == 'prefix'
-        return self.env.company_id.phone_international_format == 'prefix'
+        return self.env.company.phone_international_format == 'prefix'
 
     def phone_format(self, number, country=None, company=None):
         country = country or self._phone_get_country()
