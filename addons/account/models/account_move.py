@@ -4257,7 +4257,7 @@ class AccountPartialReconcile(models.Model):
                             'tax_base_amount': line.tax_base_amount,
                             'tag_ids': [(6, 0, line.tag_ids.ids)],
                         })
-                        if line.account_id.reconcile:
+                        if line.account_id.reconcile and not line.reconciled:
                             #setting the account to allow reconciliation will help to fix rounding errors
                             to_clear_aml |= line
                             to_clear_aml.reconcile()
