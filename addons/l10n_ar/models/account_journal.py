@@ -129,6 +129,8 @@ class AccountJournal(models.Model):
         """ Return the match sequences for the given journal and invoice
         """
         self.ensure_one()
+        if self.l10n_latam_country_code != 'AR':
+            return False
         if self.l10n_ar_share_sequences:
             return self.l10n_ar_sequence_ids.filtered(
                 lambda x: x.l10n_ar_letter == invoice.l10n_ar_letter)
