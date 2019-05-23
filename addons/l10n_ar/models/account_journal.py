@@ -197,3 +197,13 @@ class AccountJournal(models.Model):
             lambda x: x.type == 'sale' and x.l10n_ar_afip_pos_number == 0)
         if missing_pos_number:
             raise ValidationError(_('Please define a valid AFIP POS number'))
+
+    @api.onchange('l10n_ar_afip_pos_system')
+    def _onchange_l10n_ar_afip_pos_system(self):
+        """ On 'Factura Pre-impresa' the usual is to share sequences.
+        On other types, do not share
+        """
+        if self.l10n_ar_afip_pos_system == 'II_IM':
+            self.l10n_ar_share_sequences = True
+        else:
+            self.l10n_ar_share_sequences = False
