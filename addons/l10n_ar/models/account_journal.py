@@ -140,7 +140,7 @@ class AccountJournal(models.Model):
                 invoice.l10n_latam_document_type_id)
 
     def create_document_type_sequences(self):
-        """ Search if exist, it need to me updated? (can be?), or create
+        """ Create new sequences for document types, update if can be updated
         """
         self.ensure_one()
         if self.company_id.country_id.code != 'AR':
@@ -151,13 +151,7 @@ class AccountJournal(models.Model):
             return False
 
         sequences = self.l10n_ar_sequence_ids
-        if sequences:
-            if sequences.filtered(lambda x: x.number_next_actual > 1):
-                raise ValidationError(_(
-                    'Can not update journal AFIP Configuration when already'
-                    ' has validated invoices'))
-            else:
-                sequences.unlink()
+        sequences.unlink()
 
         # Create Sequences
         letters = self.get_journal_letter()
@@ -186,9 +180,21 @@ class AccountJournal(models.Model):
 
     @api.constrains('type', 'l10n_ar_afip_pos_system',
                     'l10n_ar_afip_pos_number', 'l10n_ar_share_sequences')
-    def check_sequences(self):
-        """ Create / Update the Document Sequences """
-        for rec in self.filtered(lambda x: x.type == 'sale'):
+    def check_afip_configurations(self):
+        """ IF AFIP Configuration change try to review if this can be done
+        and then create / update the document sequences """
+        for rec in self:
+            invoices = self.env['account.invoice'].search([
+                ('journal_id', '=', rec.id),
+                ('state', 'in', ['open', 'in_payment', 'paid']),
+            ])
+            if invoices:
+                raise ValidationError(_(
+                    'You can not change the journal configuration for a'
+                    ' journal that already have validate invoices: %s' % (
+                        ', '.join(invoices.mapped('display_name'))
+                    )
+                ))
             rec.create_document_type_sequences()
 
     @api.constrains('l10n_ar_afip_pos_number')
