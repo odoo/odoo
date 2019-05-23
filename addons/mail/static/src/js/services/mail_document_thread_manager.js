@@ -48,23 +48,16 @@ MailManager.include({
      *
      * @override
      * @param {Object} data
-     * @param {Array} [data.author_id] [int, string] where int is server ID of
-     *   the author, and string is the name of the author.
      * @param {integer} data.id server ID of the message
-     * @param {string} [data.model] the model name of the document that this
-     *   message is related to.
-     * @param {integer} [data.res_id] the ID of the document that this message
-     *   is related to.
-     *
+     * @param {Object} [options]
+     * @param {boolean} [options.postedFromDocumentThread=false]
      */
-    addMessage: function (data) {
+    addMessage: function (data, options) {
         var message = this.getMessage(data.id);
         if (
             !message &&
-            data.res_id &&
-            data.model &&
-            data.author_id &&
-            data.author_id[0] === session.partner_id
+            options &&
+            options.postedFromDocumentThread
         ) {
             var key = this.DOCUMENT_THREAD_MESSAGE_KEY;
             this.call('local_storage', 'setItem', key, data);
