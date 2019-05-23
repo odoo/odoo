@@ -162,7 +162,8 @@
                     attrs="{'invisible': [('accrual', '=', False)]}"/>
                 <div attrs="{'invisible': [('accrual', '=', False)]}">
                     <div class="o_row">
-                        Run until <field name="date_to" string="Run Until" help="If no value set, runs indefinitely"/>
+                        Run from <field name="date_from" string="Run From" attrs="{'required': [('accrual', '=', True)]}"/>
+                        to <field name="date_to" string="To" help="If no value set, runs indefinitely"/>
                     </div>
                     <div class="o_row">
                         <span>Add</span>
