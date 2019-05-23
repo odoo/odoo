@@ -182,12 +182,13 @@
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
             <tree string="POS Orders" decoration-info="state == 'draft'" decoration-muted="state in ('done','cancel')" create="0">
+                <field name="currency_id" invisible='1'/>
                 <field name="name"/>
                 <field name="pos_reference"/>
                 <field name="partner_id"/>
                 <field name="date_order"/>
                 <field name="user_id"/>
-                <field name="amount_total" sum="Amount total" widget="monetary"/>
+                <field name="amount_total" sum="Amount total" widget='monetary'/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state"/>
                 <field name="session_id" />
