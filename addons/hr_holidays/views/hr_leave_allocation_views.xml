@@ -8,10 +8,8 @@
             <search string="Search allocations">
                 <field name="employee_id"/>
                 <field name="name"/>
-                <field name="accrual"/>
                 <filter domain="[('state','in',('confirm', 'validate1'))]" string="To Approve" name="approve"/>
                 <filter string="Approved Allocations" domain="[('state', '=', 'validate')]" name="validated"/>
-                <filter string="Accrual Allocations" domain="[('accrual', '=', True)]" name="accrual_allocation"/>
                 <separator/>
                 <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on allocations that belong to an time off type that is 'active' (active field is True)"/>
                 <separator/>
@@ -101,7 +99,6 @@
                                 <span class="ml8" attrs="{'invisible': [('type_request_unit', '!=', 'hour')]}">Hours</span>
                             </div>
 
-                            <field name="accrual" invisible="1"/>
                         </group>
                         <group name="alloc_right_col">
                             <field name="employee_id" invisible="1" groups="hr_holidays.group_hr_holidays_user"/>
@@ -153,31 +150,6 @@
             <xpath expr="//field[@name='department_id']" position="after">
                 <field name="mode_company_id" groups="hr_holidays.group_hr_holidays_user"
                     attrs="{'required': [('holiday_type', '=', 'company')], 'invisible': [('holiday_type', '!=', 'company')]}"/>
-            </xpath>
-            <xpath expr="//field[@name='accrual']" position="attributes">
-                <attribute name="invisible">0</attribute>
-            </xpath>
-            <xpath expr="//field[@name='accrual']" position="after">
-                <label for="date_to" string=""
-                    attrs="{'invisible': [('accrual', '=', False)]}"/>
-                <div attrs="{'invisible': [('accrual', '=', False)]}">
-                    <div class="o_row">
-                        Run from <field name="date_from" string="Run From" attrs="{'required': [('accrual', '=', True)]}"/>
-                        to <field name="date_to" string="To" help="If no value set, runs indefinitely"/>
-                    </div>
-                    <div class="o_row">
-                        <span>Add</span>
-                        <field name="number_per_interval" class="ml8"
-                            attrs="{'required': [('accrual', '=', True)]}"/>
-                        <field name="unit_per_interval"
-                            attrs="{'required': [('accrual', '=', True)]}"/>
-                        <span class="ml8">of time off every</span>
-                        <field name="interval_number" class="ml8"
-                            attrs="{'required': [('accrual', '=', True)]}"/>
-                        <field name="interval_unit"
-                            attrs="{'required': [('accrual', '=', True)]}"/>
-                    </div>
-                </div>
             </xpath>
         </field>
     </record>

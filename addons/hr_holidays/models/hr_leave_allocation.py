@@ -110,23 +110,6 @@ class HolidaysAllocation(models.Model):
     category_id = fields.Many2one(
         'hr.employee.category', string='Employee Tag', readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    # accrual configuration
-    accrual = fields.Boolean(
-        "Accrual", readonly=True,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    accrual_limit = fields.Integer('Balance limit', default=0, help="Maximum of allocation for accrual; 0 means no maximum.")
-    number_per_interval = fields.Float("Number of unit per interval", readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=1)
-    interval_number = fields.Integer("Number of unit between two intervals", readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=1)
-    unit_per_interval = fields.Selection([
-        ('hours', 'Hours'),
-        ('days', 'Days')
-        ], string="Unit of time added at each interval", default='hours', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    interval_unit = fields.Selection([
-        ('weeks', 'Weeks'),
-        ('months', 'Months'),
-        ('years', 'Years')
-        ], string="Unit of time between two intervals", default='weeks', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    nextcall = fields.Date("Date of the next accrual allocation", default=False, readonly=True)
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves')
 
@@ -138,11 +121,8 @@ class HolidaysAllocation(models.Model):
          "(holiday_type='company' AND mode_company_id IS NOT NULL))",
          "The employee, department, company or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
         ('duration_check', "CHECK ( number_of_days >= 0 )", "The number of days must be greater than 0."),
-        ('number_per_interval_check', "CHECK(number_per_interval > 0)", "The number per interval should be greater than 0"),
-        ('interval_number_check', "CHECK(interval_number > 0)", "The interval number should be greater than 0"),
     ]
 
-    @api.multi
     @api.depends('employee_id', 'holiday_status_id')
     def _compute_leaves(self):
         for allocation in self:
@@ -241,19 +221,6 @@ class HolidaysAllocation(models.Model):
             if new_date_to < self.date_to:
                 self.date_to = new_date_to
 
-        if self.accrual:
-            self.number_of_days = 0
-
-            if self.holiday_status_id.request_unit == 'hour':
-                self.unit_per_interval = 'hours'
-            else:
-                self.unit_per_interval = 'days'
-        else:
-            self.interval_number = 1
-            self.interval_unit = 'weeks'
-            self.number_per_interval = 1
-            self.unit_per_interval = 'hours'
-
     ####################################################
     # ORM Overrides methods
     ####################################################
@@ -296,13 +263,6 @@ class HolidaysAllocation(models.Model):
                 if vstart > today or vstop < today:
                     raise UserError(_('You can allocate %s only between %s and %s') % (allocation.holiday_status_id.display_name,
                                                                                   allocation.holiday_status_id.validity_start, allocation.holiday_status_id.validity_stop))
-
-    @api.multi
-    @api.constrains('date_from', 'date_to')
-    def _check_start_end_dates(self):
-        for allocation in self:
-            if allocation.accrual and allocation.date_to and allocation.date_from > allocation.date_to:
-                raise ValidationError('The start date cannot be after the end date')
 
     @api.model
     def create(self, values):
@@ -354,12 +314,7 @@ class HolidaysAllocation(models.Model):
             'number_of_days': self.number_of_days,
             'parent_id': self.id,
             'employee_id': employee.id,
-            'accrual': self.accrual,
             'date_to': self.date_to,
-            'interval_unit': self.interval_unit,
-            'interval_number': self.interval_number,
-            'number_per_interval': self.number_per_interval,
-            'unit_per_interval': self.unit_per_interval,
         }
         return values
 
