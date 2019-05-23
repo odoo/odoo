@@ -50,6 +50,15 @@ var Dialog = Widget.extend({
      * @param {boolean} [options.technical=true]
      *        If set to false, the modal will have the standard frontend style
      *        (use this for non-editor frontend features)
+     * @param {jQueryElement} [options.$parentNode]
+     *        Element in which dialog will be appended, by default it will be
+     *        in the body
+     * @param {boolean} [options.backdrop=true]
+     *        Whether modal rendered with backdrop or not
+     * @param {boolean} [options.renderHeader=true]
+     *        Whether or not the dialog should be rendered with header
+     * @param {boolean} [options.renderFooter=true]
+     *        Whether or not the dialog should be rendered with footer
      */
     init: function (parent, options) {
         var self = this;
@@ -65,6 +74,10 @@ var Dialog = Widget.extend({
             $content: false,
             buttons: [{text: _t("Ok"), close: true}],
             technical: true,
+            $parentNode: false,
+            backdrop: true,
+            renderHeader: true,
+            renderFooter: true,
         });
 
         this.$content = options.$content;
@@ -75,6 +88,10 @@ var Dialog = Widget.extend({
         this.size = options.size;
         this.buttons = options.buttons;
         this.technical = options.technical;
+        this.$parentNode = options.$parentNode;
+        this.backdrop = options.backdrop;
+        this.renderHeader = options.renderHeader;
+        this.renderFooter = options.renderFooter;
     },
     /**
      * Wait for XML dependencies and instantiate the modal structure (except
@@ -91,6 +108,8 @@ var Dialog = Widget.extend({
                 title: self.title,
                 subtitle: self.subtitle,
                 technical: self.technical,
+                renderHeader: self.renderHeader,
+                renderFooter: self.renderFooter,
             }));
             switch (self.size) {
                 case 'large':
@@ -100,8 +119,10 @@ var Dialog = Widget.extend({
                     self.$modal.find('.modal-dialog').addClass('modal-sm');
                     break;
             }
-            self.$footer = self.$modal.find(".modal-footer");
-            self.set_buttons(self.buttons);
+            if (self.renderFooter) {
+                self.$footer = self.$modal.find(".modal-footer");
+                self.set_buttons(self.buttons);
+            }
             self.$modal.on('hidden.bs.modal', _.bind(self.destroy, self));
         });
     },
@@ -186,7 +207,13 @@ var Dialog = Widget.extend({
             self.$modal.find(".modal-body").replaceWith(self.$el);
             self.$modal.attr('open', true);
             self.$modal.removeAttr("aria-hidden");
-            self.$modal.modal('show');
+            if (self.$parentNode) {
+                self.$modal.appendTo(self.$parentNode);
+            }
+            self.$modal.modal({
+                show: true,
+                backdrop: self.backdrop,
+            });
             self._openedResolver();
             if (options && options.shouldFocusButtons) {
                 self._onFocusControlButton();
