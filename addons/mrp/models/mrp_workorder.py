@@ -49,11 +49,20 @@ class MrpWorkorder(models.Model):
         ('done', 'Finished'),
         ('cancel', 'Cancelled')], string='Status',
         default='pending')
+    leave_id = fields.Many2one(
+        'resource.calendar.leaves',
+        help='Slot into workcenter calendar once planned')
     date_planned_start = fields.Datetime(
         'Scheduled Date Start',
+        compute='_compute_dates_planned',
+        inverse='_set_dates_planned',
+        search='_search_date_planned_start',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     date_planned_finished = fields.Datetime(
         'Scheduled Date Finished',
+        compute='_compute_dates_planned',
+        inverse='_set_dates_planned',
+        search='_search_date_planned_finished',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     date_start = fields.Datetime(
         'Effective Start Date',
@@ -113,6 +122,33 @@ class MrpWorkorder(models.Model):
     finished_workorder_line_ids = fields.One2many('mrp.workorder.line',
         'finished_workorder_id', string='By-products')
     allowed_lots_domain = fields.One2many(comodel_name='stock.production.lot', compute="_compute_allowed_lots_domain")
+
+    # Both `date_planned_start` and `date_planned_finished` are related fields on `leave_id`. Let's say
+    # we slide a workorder on a gantt view, a single call to write is made with both
+    # fields Changes. As the ORM doesn't batch the write on related fields and instead
+    # makes multiple call, the constraint check_dates() is raised.
+    # That's why the compute and set methods are needed. to ensure the dates are updated
+    # in the same time. The two next search method are needed as the field are non stored and
+    # not direct related fields.
+    @api.depends('leave_id')
+    def _compute_dates_planned(self):
+        for workorder in self:
+            workorder.date_planned_start = workorder.leave_id.date_from
+            workorder.date_planned_finished = workorder.leave_id.date_to
+
+    def _set_dates_planned(self):
+        date_from = self.date_planned_start[0]
+        date_to = self.date_planned_finished[0]
+        self.mapped('leave_id').write({
+            'date_from': date_from,
+            'date_to': date_to,
+        })
+
+    def _search_date_planned_start(self, operator, value):
+        return [('leave_id.date_from', operator, value)]
+
+    def _search_date_planned_finished(self, operator, value):
+        return [('leave_id.date_to', operator, value)]
 
     @api.onchange('finished_lot_id')
     def _onchange_finished_lot_id(self):
