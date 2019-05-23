@@ -298,12 +298,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 },
                 on_success: resolve,
                 on_fail: function () {
-                    // Allows buttons not to close the modal when performing an action
-                    if (attrs.noclose) {
-                        reload();
-                    } else {
-                        self.update({}, {reload: false}).then(reject).guardedCatch(reject);
-                    }
+                    self.update({}, { reload: false }).then(reject).guardedCatch(reject);
                 },
                 on_closed: reload,
             });

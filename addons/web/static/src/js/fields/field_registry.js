@@ -80,7 +80,6 @@ registry
     .add('one2many', relational_fields.FieldOne2Many)
     .add('statusbar', relational_fields.FieldStatus)
     .add('reference', relational_fields.FieldReference)
-    .add('one2many_list', relational_fields.FieldOne2Many)
     .add('font', relational_fields.FieldSelectionFont);
 
 // Special fields

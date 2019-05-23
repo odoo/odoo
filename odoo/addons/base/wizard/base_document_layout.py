@@ -113,7 +113,6 @@ class BaseDocumentLayout(models.TransientModel):
             default = [wizard.report_layout_id.primary_color,
                        wizard.report_layout_id.secondary_color]
 
-            print('\nOld default :',  BaseDocumentLayout.previous_default)
             if BaseDocumentLayout.previous_default == values:
                 values = default
             BaseDocumentLayout.previous_default = default
@@ -121,7 +120,6 @@ class BaseDocumentLayout(models.TransientModel):
                 'default': default,
                 'values': values,
             })
-            print('Onchange report layout id', wizard.company_colors, '\n')
             wizard._compute_preview()
 
     @api.onchange('logo')
@@ -133,8 +131,8 @@ class BaseDocumentLayout(models.TransientModel):
             margin = 50
             white_threshold = 245
 
-            # Compute image
-            image = tools.base64_to_image(wizard.logo).resize((40, 40))
+            # The "===" gives different base64 encoding a correct padding
+            image = tools.base64_to_image(wizard.logo + "===").resize((40, 40))
 
             transparent = 'A' not in image.getbands()
 
