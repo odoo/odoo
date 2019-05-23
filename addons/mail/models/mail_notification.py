@@ -42,7 +42,7 @@ class Notification(models.Model):
     _sql_constraints = [
         # email notification;: partner is required
         ('notification_partner_required',
-            "CHECK(notification_type in ('email', 'inbox') AND res_partner_id IS NOT NULL)",
+            "CHECK(notification_type NOT IN ('email', 'inbox') OR res_partner_id IS NOT NULL)",
             'Customer is required for inbox / email notification'),
     ]
 
