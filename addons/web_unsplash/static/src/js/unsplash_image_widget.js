@@ -240,7 +240,7 @@ widgetsMedia.ImageWidget.include({
         var imgid = $(ev.currentTarget).data('imgid');
         var url = $(ev.currentTarget).data('url');
         var downloadURL = $(ev.currentTarget).data('download-url');
-        if (!this.multiImages) {
+        if (!this.options.multiImages) {
             this._unsplash.selectedImages = {};
         }
         if (imgid in this._unsplash.selectedImages) {

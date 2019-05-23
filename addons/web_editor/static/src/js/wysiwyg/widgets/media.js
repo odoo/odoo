@@ -127,14 +127,10 @@ var FileWidget = SearchableMediaWidget.extend({
         this.imagesRows = this.IMAGES_ROWS;
         this.IMAGES_DISPLAYED_TOTAL = this.IMAGES_PER_ROW * this.imagesRows;
 
-        this.options = options;
-        this.context = options.context;
-        this.accept = options.accept;
-
-        this.multiImages = options.multiImages;
-
-        this.firstFilters = options.firstFilters || [];
-        this.lastFilters = options.lastFilters || [];
+        this.options = _.extend({
+            firstFilters: [],
+            lastFilters: [],
+        }, options || {});
 
         this.images = [];
     },
@@ -208,7 +204,7 @@ var FileWidget = SearchableMediaWidget.extend({
                 domain: this._getAttachmentsDomain(needle),
                 fields: ['name', 'datas_fname', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'access_token'],
                 order: [{name: 'id', asc: false}],
-                context: this.context,
+                context: this.options.context,
             },
         }).then(function (records) {
             self.records = _.chain(records)
@@ -219,13 +215,13 @@ var FileWidget = SearchableMediaWidget.extend({
                     return (r.url || r.id);
                 })
                 .sortBy(function (r) {
-                    if (_.any(self.firstFilters, function (filter) {
+                    if (_.any(self.options.firstFilters, function (filter) {
                         var regex = new RegExp(filter, 'i');
                         return r.name.match(regex) || r.datas_fname && r.datas_fname.match(regex);
                     })) {
                         return -1;
                     }
-                    if (_.any(self.lastFilters, function (filter) {
+                    if (_.any(self.options.lastFilters, function (filter) {
                         var regex = new RegExp(filter, 'i');
                         return r.name.match(regex) || r.datas_fname && r.datas_fname.match(regex);
                     })) {
@@ -405,7 +401,8 @@ var FileWidget = SearchableMediaWidget.extend({
      */
     _save: function () {
         var self = this;
-        if (this.multiImages) {
+
+        if (this.options.multiImages) {
             return this.images;
         }
 
@@ -480,7 +477,7 @@ var FileWidget = SearchableMediaWidget.extend({
      * @private
      */
     _toggleImage: function (attachment, clearSearch, forceSelect) {
-        if (this.multiImages) {
+        if (this.options.multiImages) {
             var img = _.select(this.images, function (v) { return v.id === attachment.id; });
             if (img.length) {
                 if (!forceSelect) {
@@ -569,7 +566,7 @@ var FileWidget = SearchableMediaWidget.extend({
                         self.$errorText.text(error);
                     }
 
-                    if (!self.multiImages) {
+                    if (!self.options.multiImages) {
                         self.trigger_up('save_request');
                     }
                 }
