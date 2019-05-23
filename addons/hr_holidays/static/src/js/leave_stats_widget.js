@@ -60,7 +60,7 @@ odoo.define('hr_holidays.LeaveStatsWidget', function (require) {
          * @param {Object} state
          * @returns {String[]} list of updated fields
          */
-        _setState(state) {
+        _setState: function (state) {
             var updatedFields = [];
             if (state.data.employee_id.res_id !== (this.employee && this.employee.res_id)) {
                 updatedFields.push('employee');
