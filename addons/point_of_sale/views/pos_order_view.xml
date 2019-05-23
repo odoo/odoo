@@ -186,6 +186,7 @@
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
             <tree string="POS Orders" decoration-info="state == 'draft'" decoration-muted="state in ('done','cancel')" create="0">
+                <field name="currency_id" invisible="1"/>
                 <field name="name"/>
                 <field name="pos_reference"/>
                 <field name="partner_id"/>
