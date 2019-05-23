@@ -19,7 +19,6 @@ Argentinian accounting chart and tax localization.
     * Country
     * Product Unit of Measure
     * Tax Group
-    * Account Incoterms
     * Fiscal Position
     * Fiscal Position Template
 
@@ -51,7 +50,6 @@ Follow the next configuration steps
         'data/res_currency_data.xml',
         'data/res_country_data.xml',
         'data/product_product_data.xml',
-        'data/account_incoterms_data.xml',
         # los cargamos con csv pero los hacemos no actualizables con un hook
         'views/account_move_line_view.xml',
         'views/account_move_view.xml',
