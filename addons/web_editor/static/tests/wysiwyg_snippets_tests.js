@@ -352,8 +352,8 @@ QUnit.test('background-image', function (assert) {
             $('#oe_manipulators .oe_overlay_options a.snippet-option-background[data-choose-image]').click();
 
             defMediaDialogInit.then(function () {
-                $('.modal.note-image-dialog .existing-attachments .o_image').click();
-                $('.modal.note-image-dialog .modal-footer .btn-primary').click();
+                $('.o_select_media_dialog .existing-attachments .o_image').click();
+                $('.o_select_media_dialog .modal-footer .btn-primary').click();
             });
 
             defMediaDialogSave.then(function () {
