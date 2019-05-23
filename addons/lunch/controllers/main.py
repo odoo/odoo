@@ -93,7 +93,9 @@ class LunchController(http.Controller):
             'currency': {'symbol': currency.symbol, 'position': currency.position},
         })
 
-        user_location = user.last_lunch_location_id if user.last_lunch_location_id else request.env['lunch.location'].search([], limit=1)
+        if not user.last_lunch_location_id:
+            user.last_lunch_location_id = request.env['lunch.location'].search([], limit=1)
+        user_location = user.last_lunch_location_id
 
         alert_domain = expression.AND([
             [('available_today', '=', True)],
