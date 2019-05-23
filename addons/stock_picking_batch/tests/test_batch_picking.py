@@ -136,7 +136,7 @@ class TestBatchPicking(TransactionCase):
         back_order_wizard_dict = self.batch.done()
         self.assertTrue(back_order_wizard_dict)
         back_order_wizard = self.env[(back_order_wizard_dict.get('res_model'))].browse(back_order_wizard_dict.get('res_id'))
-        self.assertEqual(len(back_order_wizard.pick_ids), 1)
+        self.assertEqual(len(back_order_wizard.pick_ids), 2)
         self.assertEqual(self.picking_client_2.state, 'done', 'Picking 2 should be done')
         back_order_wizard.process()
 
@@ -173,7 +173,7 @@ class TestBatchPicking(TransactionCase):
         back_order_wizard_dict = immediate_transfer_wizard.process()
         self.assertTrue(back_order_wizard_dict)
         back_order_wizard = self.env[(back_order_wizard_dict.get('res_model'))].browse(back_order_wizard_dict.get('res_id'))
-        self.assertEqual(len(back_order_wizard.pick_ids), 1)
+        self.assertEqual(len(back_order_wizard.pick_ids), 2)
         back_order_wizard.process()
 
         self.assertEqual(self.picking_client_1.state, 'done', 'Picking 1 should be done')
@@ -205,12 +205,14 @@ class TestBatchPicking(TransactionCase):
         # There should be a wizard asking to process picking without quantity done
         immediate_transfer_wizard_dict = self.batch.done()
         self.assertTrue(immediate_transfer_wizard_dict)
+        self.assertEquals(immediate_transfer_wizard_dict.get('res_model'), 'stock.immediate.transfer', 'A Wizard for an immediate transfer should be raised')
         immediate_transfer_wizard = self.env[(immediate_transfer_wizard_dict.get('res_model'))].browse(immediate_transfer_wizard_dict.get('res_id'))
-        self.assertEqual(len(immediate_transfer_wizard.pick_ids), 1)
+        self.assertEqual(len(immediate_transfer_wizard.pick_ids), 2)
         back_order_wizard_dict = immediate_transfer_wizard.process()
         self.assertTrue(back_order_wizard_dict)
+        self.assertEquals(back_order_wizard_dict.get('res_model'), 'stock.backorder.confirmation', 'A Wizard for a backorder confirmation should be raised')
         back_order_wizard = self.env[(back_order_wizard_dict.get('res_model'))].browse(back_order_wizard_dict.get('res_id'))
-        self.assertEqual(len(back_order_wizard.pick_ids), 1)
+        self.assertEqual(len(back_order_wizard.pick_ids), 2)
         back_order_wizard.process()
 
         self.assertEqual(self.picking_client_1.state, 'done', 'Picking 1 should be done')

@@ -3,6 +3,7 @@
 
 from odoo import fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import float_is_zero
 
 
 class StockImmediateTransfer(models.TransientModel):
@@ -12,9 +13,8 @@ class StockImmediateTransfer(models.TransientModel):
     pick_ids = fields.Many2many('stock.picking', 'stock_picking_transfer_rel')
 
     def process(self):
-        pick_to_backorder = self.env['stock.picking']
-        pick_to_do = self.env['stock.picking']
-        for picking in self.pick_ids:
+        pickings_to_process = self.pick_ids._check_no_quantities_done()
+        for picking in pickings_to_process:
             # If still in draft => confirm and assign
             if picking.state == 'draft':
                 picking.action_confirm()
@@ -25,13 +25,5 @@ class StockImmediateTransfer(models.TransientModel):
             for move in picking.move_lines.filtered(lambda m: m.state not in ['done', 'cancel']):
                 for move_line in move.move_line_ids:
                     move_line.qty_done = move_line.product_uom_qty
-            if picking._check_backorder():
-                pick_to_backorder |= picking
-                continue
-            pick_to_do |= picking
         # Process every picking that do not require a backorder, then return a single backorder wizard for every other ones.
-        if pick_to_do:
-            pick_to_do.action_done()
-        if pick_to_backorder:
-            return pick_to_backorder.action_generate_backorder_wizard()
-        return False
+        return self.pick_ids.with_context(skip_no_quantity_check=True)._finalize_validation()

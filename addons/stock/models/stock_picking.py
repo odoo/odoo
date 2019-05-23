@@ -727,8 +727,7 @@ class Picking(models.Model):
 
         # If no lots when needed, raise error
         picking_type = self.picking_type_id
-        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        no_quantities_done = all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in self.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel')))
+        no_quantities_done = self._check_no_quantities_done()
         no_reserved_quantities = all(float_is_zero(move_line.product_qty, precision_rounding=move_line.product_uom_id.rounding) for move_line in self.move_line_ids)
         if no_reserved_quantities and no_quantities_done:
             raise UserError(_('You cannot validate a transfer if no quantites are reserved nor done. To force the transfer, switch in edit more and encode the done quantities.'))
@@ -747,40 +746,35 @@ class Picking(models.Model):
                     if not line.lot_name and not line.lot_id:
                         raise UserError(_('You need to supply a Lot/Serial number for product %s.') % product.display_name)
 
-        if no_quantities_done:
-            view = self.env.ref('stock.view_immediate_transfer')
-            wiz = self.env['stock.immediate.transfer'].create({'pick_ids': [(4, self.id)]})
-            return {
-                'name': _('Immediate Transfer?'),
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'res_model': 'stock.immediate.transfer',
-                'views': [(view.id, 'form')],
-                'view_id': view.id,
-                'target': 'new',
-                'res_id': wiz.id,
-                'context': self.env.context,
-            }
+        return self._finalize_validation()
 
-        if self._get_overprocessed_stock_moves() and not self._context.get('skip_overprocessed_check'):
-            view = self.env.ref('stock.view_overprocessed_transfer')
-            wiz = self.env['stock.overprocessed.transfer'].create({'picking_id': self.id})
-            return {
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'res_model': 'stock.overprocessed.transfer',
-                'views': [(view.id, 'form')],
-                'view_id': view.id,
-                'target': 'new',
-                'res_id': wiz.id,
-                'context': self.env.context,
-            }
+    def _finalize_validation(self):
+        """ Raise wizards if needed before and after applying action_done() on the picking(s) """
+
+        if self._check_no_quantities_done() and not self._context.get('skip_no_quantity_check'):
+            return self.action_generate_immediate_transfer_wizard()
 
         # Check backorder should check for other barcodes
-        if self._check_backorder():
+        if self._check_backorder() and not self._context.get('skip_backorder_check'):
             return self.action_generate_backorder_wizard()
         self.action_done()
-        return
+        return True
+
+    def action_generate_immediate_transfer_wizard(self):
+        view = self.env.ref('stock.view_immediate_transfer')
+        wiz = self.env['stock.immediate.transfer'].create({'pick_ids': [(4, p.id) for p in self]})
+        return {
+            'name': _('Immediate Transfer?'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'stock.immediate.transfer',
+            'views': [(view.id, 'form')],
+            'view_id': view.id,
+            'target': 'new',
+            'res_id': wiz.id,
+            'context': self.env.context,
+        }
 
     def action_generate_backorder_wizard(self):
         view = self.env.ref('stock.view_backorder_confirmation')
@@ -802,6 +796,15 @@ class Picking(models.Model):
         self.is_locked = not self.is_locked
         return True
 
+    def _check_no_quantities_done(self):
+        picking_no_quantities_done = self.env['stock.picking']
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        for picking in self:
+            if all(float_is_zero(move_line.qty_done, precision_digits=precision_digits)
+                   for move_line in picking.mapped('move_line_ids').filtered(lambda m: m.state not in ('done', 'cancel'))):
+                picking_no_quantities_done |= picking
+        return picking_no_quantities_done
+
     def _check_backorder(self):
         """ This method will loop over all the move lines of self and
         check if creating a backorder is necessary. This method is
@@ -811,21 +814,25 @@ class Picking(models.Model):
 
         :return: True if a backorder is necessary else False
         """
-        quantity_todo = {}
-        quantity_done = {}
-        for move in self.mapped('move_lines'):
-            quantity_todo.setdefault(move.product_id.id, 0)
-            quantity_done.setdefault(move.product_id.id, 0)
-            quantity_todo[move.product_id.id] += move.product_uom_qty
-            quantity_done[move.product_id.id] += move.quantity_done
-        for ops in self.mapped('move_line_ids').filtered(lambda x: x.package_id and not x.product_id and not x.move_id):
-            for quant in ops.package_id.quant_ids:
-                quantity_done.setdefault(quant.product_id.id, 0)
-                quantity_done[quant.product_id.id] += quant.qty
-        for pack in self.mapped('move_line_ids').filtered(lambda x: x.product_id and not x.move_id):
-            quantity_done.setdefault(pack.product_id.id, 0)
-            quantity_done[pack.product_id.id] += pack.product_uom_id._compute_quantity(pack.qty_done, pack.product_id.uom_id)
-        return any(quantity_done[x] < quantity_todo.get(x, 0) for x in quantity_done)
+        pickings_to_backorder = self.env['stock.picking']
+        for picking in self:
+            quantity_todo = {}
+            quantity_done = {}
+            for move in picking.mapped('move_lines'):
+                quantity_todo.setdefault(move.product_id.id, 0)
+                quantity_done.setdefault(move.product_id.id, 0)
+                quantity_todo[move.product_id.id] += move.product_uom_qty
+                quantity_done[move.product_id.id] += move.quantity_done
+            for ops in picking.mapped('move_line_ids').filtered(lambda x: x.package_id and not x.product_id and not x.move_id):
+                for quant in ops.package_id.quant_ids:
+                    quantity_done.setdefault(quant.product_id.id, 0)
+                    quantity_done[quant.product_id.id] += quant.qty
+            for pack in picking.mapped('move_line_ids').filtered(lambda x: x.product_id and not x.move_id):
+                quantity_done.setdefault(pack.product_id.id, 0)
+                quantity_done[pack.product_id.id] += pack.product_uom_id._compute_quantity(pack.qty_done, pack.product_id.uom_id)
+            if any(quantity_done[x] < quantity_todo.get(x, 0) for x in quantity_done):
+                pickings_to_backorder |= picking
+        return pickings_to_backorder
 
     @api.multi
     def _autoconfirm_picking(self):

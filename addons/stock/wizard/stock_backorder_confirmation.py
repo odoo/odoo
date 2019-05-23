@@ -14,16 +14,17 @@ class StockBackorderConfirmation(models.TransientModel):
     @api.one
     def _process(self, cancel_backorder=False):
         if cancel_backorder:
-            for pick_id in self.pick_ids:
+            pickings_to_process = self.pick_ids._check_backorder()
+            for pick_id in pickings_to_process:
                 moves_to_log = {}
                 for move in pick_id.move_lines:
                     if float_compare(move.product_uom_qty, move.quantity_done, precision_rounding=move.product_uom.rounding) > 0:
                         moves_to_log[move] = (move.quantity_done, move.product_uom_qty)
                 pick_id._log_less_quantities_than_expected(moves_to_log)
-        self.pick_ids.with_context({'cancel_backorder': cancel_backorder}).action_done()
+        return self.pick_ids.with_context({'cancel_backorder': cancel_backorder, 'skip_backorder_check': True})._finalize_validation()
 
     def process(self):
-        self._process()
+        return self._process()
 
     def process_cancel_backorder(self):
-        self._process(cancel_backorder=True)
+        return self._process(cancel_backorder=True)
