@@ -103,11 +103,11 @@ var FileWidget = SearchableMediaWidget.extend({
     events: _.extend({}, SearchableMediaWidget.prototype.events || {}, {
         'click .o_upload_media_button': '_onUploadButtonClick',
         'click .o_upload_media_button_no_optimization': '_onUploadButtonNoOptimizationClick',
-        'change input[type=file]': '_onImageSelection',
+        'change .o_file_input': '_onImageSelection',
         'click .o_upload_media_url_button': '_onUploadURLButtonClick',
-        'input input[name="url"]': '_onURLInputChange',
-        'click .existing-attachments [data-src]': '_onImageClick',
-        'dblclick .existing-attachments [data-src]': '_onImageDblClick',
+        'input .o_we_url_input': '_onURLInputChange',
+        'click .o_existing_attachment_cell [data-src]': '_onImageClick',
+        'dblclick .o_existing_attachment_cell [data-src]': '_onImageDblClick',
         'click .o_existing_attachment_remove': '_onRemoveClick',
         'click .o_load_more': '_onLoadMoreClick',
     }),
@@ -153,6 +153,15 @@ var FileWidget = SearchableMediaWidget.extend({
     start: function () {
         var def = this._super.apply(this, arguments);
         var self = this;
+        this.$urlInput = this.$('.o_we_url_input');
+        this.$form = this.$('form');
+        this.$fileInput = this.$('.o_file_input');
+        this.$uploadButton = this.$('.o_upload_media_button');
+        this.$addUrlButton = this.$('.o_upload_media_url_button');
+        this.$urlSuccess = this.$('.o_we_url_success');
+        this.$urlWarning = this.$('.o_we_url_warning');
+        this.$urlError = this.$('.o_we_url_error');
+        this.$errorText = this.$('.o_we_error_text');
 
         this._renderImages(true);
 
@@ -189,7 +198,7 @@ var FileWidget = SearchableMediaWidget.extend({
     search: function (needle, noRender) {
         var self = this;
         if (!noRender) {
-            this.$('input.o_we_url_input').val('').trigger('input').trigger('change');
+            this.$urlInput.val('').trigger('input').trigger('change');
         }
         return this._rpc({
             model: 'ir.attachment',
@@ -360,7 +369,7 @@ var FileWidget = SearchableMediaWidget.extend({
             .values()
             .value();
 
-        this.$('.form-text').empty();
+        this.$errorText.empty();
 
        // Render menu & content
         this.$('.existing-attachments').replaceWith(
@@ -498,16 +507,12 @@ var FileWidget = SearchableMediaWidget.extend({
      * @param {boolean} isImage
      */
     _updateAddUrlUi(emptyValue, isURL, isImage) {
-        var $button = this.$('.o_upload_media_url_button');
-        var $success = this.$('.o_we_url_success');
-        var $error = this.$('.o_we_url_error');
-
-        $button.toggleClass('btn-secondary', emptyValue)
+        this.$addUrlButton.toggleClass('btn-secondary', emptyValue)
             .toggleClass('btn-primary', !emptyValue)
             .prop('disabled', !isURL);
 
-        $success.toggleClass('d-none', !isURL);
-        $error.toggleClass('d-none', emptyValue || isURL);
+        this.$urlSuccess.toggleClass('d-none', !isURL);
+        this.$urlError.toggleClass('d-none', emptyValue || isURL);
     },
     /**
      * @private
@@ -554,14 +559,14 @@ var FileWidget = SearchableMediaWidget.extend({
                 resolve();
 
                 function _processFile(attachment, error) {
-                    var $button = self.$('.o_upload_image_button');
+                    var $button = self.$uploadButton;
                     if (!error) {
                         $button.addClass('btn-success');
                         self._toggleImage(attachment, true);
                     } else {
                         $button.addClass('btn-danger');
                         self.$el.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
-                        self.$el.find('.form-text').text(error);
+                        self.$errorText.text(error);
                     }
 
                     if (!self.multiImages) {
@@ -571,7 +576,7 @@ var FileWidget = SearchableMediaWidget.extend({
             });
             self.$el.submit();
 
-            self.$('.o_file_input').val('');
+            self.$fileInput.val('');
         });
     },
 
@@ -601,11 +606,10 @@ var FileWidget = SearchableMediaWidget.extend({
      * @private
      */
     _onImageSelection: function () {
-        var $form = this.$('form');
         this.$el.addClass('nosave');
-        $form.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
-        $form.find('.form-text').empty();
-        this.$('.o_upload_media_button').removeClass('btn-danger btn-success');
+        this.$form.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
+        this.$errorText.empty();
+        this.$uploadButton.removeClass('btn-danger btn-success');
         this._uploadFile();
     },
     /**
@@ -615,7 +619,7 @@ var FileWidget = SearchableMediaWidget.extend({
         var self = this;
         Dialog.confirm(this, _t("Are you sure you want to delete this file ?"), {
             confirm_callback: function () {
-                var $helpBlock = self.$('.form-text').empty();
+                var $helpBlock = self.$errorText.empty();
                 var $a = $(ev.currentTarget);
                 var id = parseInt($a.data('id'), 10);
                 var attachment = _.findWhere(self.records, {id: id});
@@ -658,14 +662,14 @@ var FileWidget = SearchableMediaWidget.extend({
      * @private
      */
     _onUploadButtonClick: function () {
-        this.$('input[type=file]').click();
+        this.$fileInput.click();
     },
     /**
      * @private
      */
     _onUploadButtonNoOptimizationClick: function () {
         this.$('input[name="disable_optimization"]').val('1');
-        this.$('.o_upload_media_button').click();
+        this.$uploadButton.click();
     },
     /**
      * @private
@@ -716,12 +720,8 @@ var ImageWidget = FileWidget.extend({
      */
     _updateAddUrlUi: function (emptyValue, isURL, isImage) {
         this._super.apply(this, arguments);
-
-        var $button = this.$('.o_upload_media_url_button');
-        var $warning = this.$('.o_we_url_warning');
-
-        $button.text((isURL && !isImage) ? _t("Add as document") : _t("Add image"));
-        $warning.toggleClass('d-none', !isURL || isImage);
+        this.$addUrlButton.text((isURL && !isImage) ? _t("Add as document") : _t("Add image"));
+        this.$urlWarning.toggleClass('d-none', !isURL || isImage);
     },
 });
 
@@ -753,12 +753,8 @@ var DocumentWidget = FileWidget.extend({
      */
     _updateAddUrlUi: function (emptyValue, isURL, isImage) {
         this._super.apply(this, arguments);
-
-        var $button = this.$('.o_upload_media_url_button');
-        var $warning = this.$('.o_we_url_warning');
-
-        $button.text((isURL && isImage) ? _t("Add as image") : _t("Add document"));
-        $warning.toggleClass('d-none', !isURL || !isImage);
+        this.$addUrlButton.text((isURL && isImage) ? _t("Add as image") : _t("Add document"));
+        this.$urlWarning.toggleClass('d-none', !isURL || !isImage);
     },
 });
 

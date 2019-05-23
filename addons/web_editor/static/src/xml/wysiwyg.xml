@@ -105,7 +105,7 @@
             <input t-if="widget.options.res_id" type="hidden" name="res_id" t-att-value="widget.options.res_id"/>
             <input t-if="widget.options.res_model" type="hidden" name="res_model" t-att-value="widget.options.res_model"/>
             <t t-call="wysiwyg.widgets.files.submenu"/>
-            <div class="form-text"/>
+            <div class="form-text o_we_error_text"/>
             <div class="existing-attachments"/>
             <div class="mt-4 text-center mx-auto">
                 <button class="btn btn-primary o_load_more" type="button">Load more...</button>
