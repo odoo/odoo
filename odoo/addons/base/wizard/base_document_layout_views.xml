@@ -14,22 +14,14 @@
                             <field name="report_layout_id" widget="radio" string="Layout" />
                             <field name="logo" widget="image" />
                             <field name="company_colors" widget="color" title="Change company colors" />
-                            <field name="font" widget="selection" />
+                            <field name="font" widget="font" />
                             <field name="report_header" widget="char" placeholder="e.g. Global Business Solutions" />
                             <field name="report_footer" string="Footer" placeholder="e.g. Opening hours, bank accounts (one per line)" />
                             <field name="paperformat_id" />
                         </group>
                         <div class="o_document_layout_preview">
-                            <field name="header_in_footer" invisible="1" />
-                            <div class="o_preview_header">
-                                <field name="preview_logo" widget="image" readonly="1" nolabel="1" class="o_document_layout_preview_logo" />
-                                <field name="preview_header" class="header_top" attrs="{'invisible': [('header_in_footer', '=', True)]}" />
-                            </div>
+                            <field name="preview_logo" widget="image" readonly="1" nolabel="1" class="o_document_layout_preview_logo" />
                             <field name="preview" widget="html" class="o_document_layout_preview_html" />
-                            <div class="o_preview_footer">
-                                <field name="preview_footer" />
-                                <field name="preview_header" attrs="{'invisible': [('header_in_footer', '=', False)]}" />
-                            </div>
                         </div>
                     </group>
                     <footer>

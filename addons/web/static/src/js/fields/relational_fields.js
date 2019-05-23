@@ -2787,15 +2787,30 @@ var FieldSelectionBadge = FieldSelection.extend({
     },
 });
 
-var FieldSelectionFont = FieldMany2One.extend({
+var FieldSelectionFont = FieldSelection.extend({
 
-    init: function () {
-        this._super.apply(this, arguments);
-        this.can_create = false;
-    },
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
 
-    _render: function () {
+    /**
+     * Changes CSS for all options according to their value.
+     * Also removes empty labels.
+     *
+     * @private
+     * @override
+     */
+    _renderEdit: function () {
         this._super.apply(this, arguments);
+
+        var options = [].slice.call(this.$('option'));
+        options.forEach(option => {
+            if (! option.label) {
+                $(option).remove();
+            }
+            $(option).css('font-family', option.value);
+        });
+        this.$el.css('font-family', this.value);
     },
 });
 

@@ -23,6 +23,8 @@
         border: 1px solid;
         border-color: lightgray;
         padding: 12px;
+        display: flex;
+        flex-direction: column;
     }
 }
 
@@ -33,30 +35,30 @@
     max-height: 45px;
 }
 
-
-.o_preview_header, .o_preview_footer {
-    .header_top {
-        text-align: right;
-    }
-    display: flex;
-    * {
-        flex: 1;
-        padding: 0 5px 0 5px;
-    }
-}
-
 .o_document_layout_preview_html {
+    height: 100%;
+    flex: 1;
+    .o_readonly {
+        height: 100%;
+    }
+    .o_preview_layout {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
     .header {
         h2 {
-            padding-top: 30px;
+            margin: 30px 0;
+        }
+        .o_layout_information {
+            margin-bottom: 20px;
         }
     }
     .article {
-        margin-bottom: 10px;
+        flex: 1;
     }
     .footer {
         border-top: 1px solid;
-        margin-bottom: 10px;
     }
     .o_preview_Background_layout {
         background-image: url(/base/static/img/bg_background_template.jpg);

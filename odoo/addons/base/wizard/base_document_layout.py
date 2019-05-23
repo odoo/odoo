@@ -71,10 +71,6 @@ class BaseDocumentLayout(models.TransientModel):
 
     report_layout_id = fields.Many2one('report.layout', compute="_compute_report_layout_id", readonly=False)
     preview = fields.Html(compute='_compute_preview')
-    preview_header = fields.Text(compute="_compute_header")
-    preview_footer = fields.Text(compute="_compute_footer")
-
-    header_in_footer = fields.Boolean(compute="_compute_header_in_footer")
 
     @api.depends('company_id')
     def _compute_report_layout_id(self):
@@ -88,12 +84,6 @@ class BaseDocumentLayout(models.TransientModel):
             })
             BaseDocumentLayout.previous_default = [wizard.report_layout_id.primary_color, wizard.report_layout_id.secondary_color]
 
-    @api.depends('report_layout_id')
-    def _compute_header_in_footer(self):
-        for wizard in self:
-            wizard.header_in_footer = (wizard.report_layout_id.name == 'Clean')
-            
-
     @api.depends('logo', 'font')
     def _compute_preview(self):
         """ compute a qweb based preview to display on the wizard """
@@ -106,20 +96,6 @@ class BaseDocumentLayout(models.TransientModel):
                 'company': wizard,
             })
     
-    @api.depends('report_header')
-    def _compute_header(self):
-        for wizard in self:
-            header = wizard.report_header or ''
-            lines = [header[i:i+30] for i in range(0, len(header), 30)]
-            wizard.preview_header = '\n'.join(lines[:2])
-
-    @api.depends('report_footer')
-    def _compute_footer(self):
-        for wizard in self:
-            footer = wizard.report_footer or ''
-            lines = [footer[i:i+30] for i in range(0, len(footer), 30)]
-            wizard.preview_footer = '\n'.join(lines[:3])
-
     @api.onchange('company_colors')
     def onchange_company_colors(self):
         for wizard in self:

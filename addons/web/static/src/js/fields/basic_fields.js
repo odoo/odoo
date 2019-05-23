@@ -20,7 +20,6 @@ var session = require('web.session');
 var utils = require('web.utils');
 var view_dialogs = require('web.view_dialogs');
 var field_utils = require('web.field_utils');
-var ColorpickerDialog = require('wysiwyg.widgets.ColorpickerDialog');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -3017,14 +3016,18 @@ var AceEditor = DebouncedField.extend({
  */
 var FieldColor = AbstractField.extend({
     template: 'FieldColor',
-    supportedFieldTypes: ['char'],
+    // supportedFieldTypes: ['char'],
+    jsLibs: [
+        "/web_editor/static/src/js/wysiwyg/widgets/colorpicker_dialog.js",
+    ],
     events: {
-        'click .o_field_color': '_onColorClick',
+        // 'click .o_field_color': '_onColorClick',
+        'change .o_field_color_input': '_onColorChange',
         'click .o_reset_colors': '_onResetColors',
     },
-    custom_events: {
-        'colorpicker:saved': '_onColorSaved',
-    },
+    // custom_events: {
+    //     'colorpicker:saved': '_onColorSaved',
+    // },
 
     //--------------------------------------------------------------------------
     // Public
@@ -3058,31 +3061,38 @@ var FieldColor = AbstractField.extend({
         this._super.apply(this, arguments);
         this.$('.o_field_colors').empty();
         var values = JSON.parse(this.value).values;
+        var idPrefix = Math.floor(Math.random() * 1000).toString();
+        var id = 0;
         for (var i = 0; i < values.length; i ++) {
-            var colorField = $('<span/>')
+            id ++;
+            var colorField = $('<label/>')
                 .addClass('o_field_color')
-                .data('value', values[i])
-                .attr('data-value', values[i])
+                .attr('for', 'o_field_color_input_' + idPrefix + id)
                 .css('background-color', values[i]);
+            var colorInput = $('<input type="color"/>')
+                .addClass('o_field_color_input')
+                .attr('id', 'o_field_color_input_' + idPrefix + id)
+                .val(values[i])
+                .hide();
             this.$('.o_field_colors').append(colorField);
+            this.$('.o_field_colors').append(colorInput);
         }
         this._checkDefault();
     },
 
-    // /**
-    // * @override
-    // */
-    // _reset: function () {
-    //     this._super.apply(this, arguments);
-    //     if (! this.selectedColor) {
-    //         if (this.isDefault) {
-    //             this._resetColors();
-    //         }
-    //     }
-    // },
+    /**
+    * @override
+    */
+    _reset: function () {
+        this._super.apply(this, arguments);
+        if (! this.selectedColor) {
+            if (this.isDefault) {
+                this._resetColors();
+            }
+        }
+    },
 
     _resetColors: function () {
-        // var self = this;
         var parsed = JSON.parse(this.value);
         this._setValue(JSON.stringify({
             default: parsed.default,
@@ -3094,36 +3104,18 @@ var FieldColor = AbstractField.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-    * @private
-    * @param {Event} ev
-    */
-    _onColorClick: function (ev) {
-        this.selectedColor = $(ev.target);
-        this.colorpicker = new ColorpickerDialog(this, { defaultColor: this.selectedColor.data('value') }).open();
-    },
-
-    /**
-    * @private
-    * @param {Event} ev
-    */
-    _onColorSaved: function (ev) {
+    _onColorChange: function (ev) {
+        $('label[for=' + ev.target.id + ']').css('backgroundColor', ev.target.value);
         var self = this;
-        this.selectedColor
-            .data('value', ev.data.hex)
-            .attr('data-value', ev.data.hex)
-            .css('background-color', ev.data.hex);
-        
-        var values = [].slice.call($('.o_field_color'))
+        var values = [].slice.call($('.o_field_color_input'))
             .map(function (colorField) {
-                return $(colorField).data('value');
+                return colorField.value;
             });
         this._setValue(JSON.stringify({
             default: JSON.parse(this.value).default,
             values: values,
         })).then(function () {
             self.selectedColor = null;
-            self._checkDefault();
         });
         this.trigger_up('color:change', this);
     },
@@ -3133,11 +3125,7 @@ var FieldColor = AbstractField.extend({
     * @param {Event} ev
     */
     _onResetColors: function (ev) {
-        var parsed = JSON.parse(this.value);
-        this._setValue(JSON.stringify({
-            default: parsed.default,
-            values: parsed.default,
-        }));
+        this._resetColors();
     },
 });
 

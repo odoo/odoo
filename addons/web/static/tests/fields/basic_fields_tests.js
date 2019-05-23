@@ -58,7 +58,7 @@ QUnit.module('basic_fields', {
                     trululu: 4,
                     selection: 'blocked',
                     document: 'coucou==\n',
-                    hex_color: '#00ff00'
+                    hex_color: '{"default": ["#000000", "#000000"], "values": ["#ff0000", "#0000ff"]}',
                 }, {
                     id: 2,
                     display_name: "second record",
@@ -5475,7 +5475,32 @@ QUnit.module('basic_fields', {
 
     QUnit.module('FieldColor');
 
-    QUnit.test('Field Color: click on widget', async function (assert) {
+    QUnit.test('Field Color: default state', async function (assert) {
+        assert.expect(2);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<field name="hex_color" widget="color" />' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.containsN(form, $('.o_field_color'), 2, 
+            "Two color fields should be displayed");
+        assert.containsOnce(form, $('.btn.o_reset_colors'),
+            "Reset colors button should be visible");
+
+        form.destroy();
+    });
+
+    QUnit.test('Field Color: pick a color', async function (assert) {
         assert.expect(1);
 
         var form = await createView({
@@ -5492,15 +5517,18 @@ QUnit.module('basic_fields', {
             },
         });
 
-        // FIXME: test fails when using firefox
-        await testUtils.dom.click(form.$('.o_field_color'));
-        assert.strictEqual($('.modal .o_colorpicker_widget').length, 1,
-            "Clicking on the FieldColor widget should bring up a color picker dialog");
+        await testUtils.dom.click(form.$('.o_field_color:first'));
+
+        await testUtils.fields.editInput(form.$('.o_field_color_input:first'), '#00ff00');
+        await testUtils.dom.triggerEvents(form.$('.o_field_color_input:first'), ['change']);
+
+        assert.strictEqual($('.o_field_color:first').css('backgroundColor'), 'rgb(0, 255, 0)',
+            "Background of the first field should be updated");
 
         form.destroy();
     });
 
-    QUnit.test('Field Color: default value', async function (assert) {
+    QUnit.test('Field Color: reset colors', async function (assert) {
         assert.expect(1);
 
         var form = await createView({
@@ -5511,14 +5539,14 @@ QUnit.module('basic_fields', {
                 '<form>' +
                     '<field name="hex_color" widget="color" />' +
                 '</form>',
-            res_id: 2,
+            res_id: 1,
             viewOptions: {
                 mode: 'edit',
             },
         });
-
-        assert.strictEqual(form.$('.o_field_color').css('backgroundColor'), "rgb(0, 0, 0)",
-            "The FieldColor widget should default to black when field value is undefined");
+        await testUtils.dom.click(form.$('.btn.o_reset_colors'));
+        assert.strictEqual(form.$('.o_field_color:first').css('backgroundColor'), "rgb(0, 0, 0)",
+            "Value of the fields should be reset to default");
 
         form.destroy();
     });
