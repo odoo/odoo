@@ -5,6 +5,7 @@ from dateutil import relativedelta
 import datetime
 
 from odoo import api, exceptions, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class MrpWorkcenter(models.Model):
@@ -55,6 +56,19 @@ class MrpWorkcenter(models.Model):
     oee_target = fields.Float(string='OEE Target', help="OEE Target in percentage", default=90)
     performance = fields.Integer('Performance', compute='_compute_performance', help='Performance over the last month')
     workcenter_load = fields.Float('Work Center Load', compute='_compute_workorder_count')
+    alternative_workcenter_ids = fields.Many2many(
+        'mrp.workcenter',
+        'mrp_workcenter_alternative_rel',
+        'workcenter_id',
+        'alternative_workcenter_id',
+        string="Alternative Workcenters",
+        help="Alternative workcenters that can be substituted to this one in order to dispatch production"
+    )
+
+    @api.constrains('alternative_workcenter_ids')
+    def _check_alternative_workcenter(self):
+        if self in self.alternative_workcenter_ids:
+            raise ValidationError(_("A workcenter cannot be an alternative of itself"))
 
     @api.depends('order_ids.duration_expected', 'order_ids.workcenter_id', 'order_ids.state', 'order_ids.date_planned_start')
     def _compute_workorder_count(self):
