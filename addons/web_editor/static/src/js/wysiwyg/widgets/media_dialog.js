@@ -167,7 +167,7 @@ var MediaDialog = Dialog.extend({
         var self = this;
         var _super = this._super;
         var args = arguments;
-        return Promise.resolve(this.activeWidget.save()).then(function (data) {
+        return this.activeWidget.save().then(function (data) {
             self.final_data = data;
             return _super.apply(self, args);
         });
