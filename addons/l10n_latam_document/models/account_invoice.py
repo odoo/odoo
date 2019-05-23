@@ -39,7 +39,7 @@ class AccountInvoice(models.Model):
     )
     l10n_latam_sequence_id = fields.Many2one(
         'ir.sequence',
-        compute='compute_l10n_latam_sequence',
+        compute='_compute_l10n_latam_sequence',
     )
     l10n_latam_document_number = fields.Char(
         string='Document Number',
@@ -67,7 +67,7 @@ class AccountInvoice(models.Model):
     )
 
     @api.depends('l10n_latam_document_type_id', 'journal_id')
-    def compute_l10n_latam_sequence(self):
+    def _compute_l10n_latam_sequence(self):
         for rec in self:
             rec.l10n_latam_sequence_id = \
                 rec.journal_id.get_document_type_sequence(rec)
