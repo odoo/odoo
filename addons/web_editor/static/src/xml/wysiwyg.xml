@@ -68,17 +68,17 @@
     <!-- Media Dialog (allows to choose an img/pictogram/video) -->
     <div t-name="wysiwyg.widgets.media">
         <ul class="nav nav-tabs" role="tablist">
-            <li class="nav-item"><a role="tab" href="#editor-media-image" aria-controls="editor-media-image" data-toggle="tab" t-attf-class="nav-link#{widget.noImages ? ' d-none' : ''}">Image</a></li>
-            <li class="nav-item"><a role="tab" href="#editor-media-document" aria-controls="editor-media-document" data-toggle="tab" t-attf-class="nav-link#{widget.noDocuments ? ' d-none' : ''}">Document</a></li>
-            <li class="nav-item"><a role="tab" href="#editor-media-icon" aria-controls="editor-media-icon" data-toggle="tab" t-attf-class="nav-link#{widget.noIcons ? ' d-none' : ''}">Pictogram</a></li>
-            <li class="nav-item"><a role="tab" href="#editor-media-video" aria-controls="editor-media-video" data-toggle="tab" t-attf-class="nav-link#{widget.noVideos ? ' d-none' : ''}">Video</a></li>
+            <li t-if="!widget.options.noImages" class="nav-item"><a t-attf-class="nav-link #{widget.isImageActive() ? 'active' : ''}" id="editor-media-image-tab" data-toggle="tab" href="#editor-media-image" role="tab" aria-controls="editor-media-image" t-att-aria-selected="widget.isImageActive().toString()">Image</a></li>
+            <li t-if="!widget.options.noDocuments" class="nav-item"><a t-attf-class="nav-link #{widget.isDocumentActive() ? 'active' : ''}" id="editor-media-document-tab" data-toggle="tab" href="#editor-media-document" role="tab" aria-controls="editor-media-document" t-att-aria-selected="widget.isDocumentActive().toString()">Document</a></li>
+            <li t-if="!widget.options.noIcons" class="nav-item"><a t-attf-class="nav-link #{widget.isIconActive() ? 'active' : ''}" id="editor-media-icon-tab" data-toggle="tab" href="#editor-media-icon" role="tab" aria-controls="editor-media-icon" t-att-aria-selected="widget.isIconActive().toString()">Pictogram</a></li>
+            <li t-if="!widget.options.noVideos" class="nav-item"><a t-attf-class="nav-link #{widget.isVideoActive() ? 'active' : ''}" id="editor-media-video-tab" data-toggle="tab" href="#editor-media-video" role="tab" aria-controls="editor-media-video" t-att-aria-selected="widget.isVideoActive().toString()">Video</a></li>
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane fade" id="editor-media-image"/>
-            <div role="tabpanel" class="tab-pane fade" id="editor-media-document"/>
-            <div role="tabpanel" class="tab-pane fade" id="editor-media-icon"/>
-            <div role="tabpanel" class="tab-pane fade" id="editor-media-video"/>
+            <div t-if="!widget.options.noImages" t-attf-class="tab-pane fade #{widget.isImageActive() ? 'show active': ''}" id="editor-media-image" role="tabpanel" aria-labelledby="editor-media-image-tab"/>
+            <div t-if="!widget.options.noDocuments" t-attf-class="tab-pane fade #{widget.isDocumentActive() ? 'show active': ''}" id="editor-media-document" role="tabpanel" aria-labelledby="editor-media-document-tab"/>
+            <div t-if="!widget.options.noIcons" t-attf-class="tab-pane fade #{widget.isIconActive() ? 'show active': ''}" id="editor-media-icon" role="tabpanel" aria-labelledby="editor-media-icon-tab"/>
+            <div t-if="!widget.options.noVideos" t-attf-class="tab-pane fade #{widget.isVideoActive() ? 'show active': ''}" id="editor-media-video" role="tabpanel" aria-labelledby="editor-media-video-tab"/>
         </div>
     </div>
 
