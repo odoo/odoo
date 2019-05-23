@@ -3474,7 +3474,7 @@ var _clickMedia = async function (wysiwyg, assert, callbackInit, test) {
 };
 
 var _uploadAndInsertImg = async function (url) {
-    $('.modal-dialog input[name="url"]:first').val(url).trigger('input');
+    $('.modal-dialog .o_we_url_input:first').val(url).trigger('input');
     await testUtils.nextTick();
     await testUtils.dom.triggerEvents($('.modal-dialog .o_upload_media_url_button:first'), ['mousedown', 'click']);
 };
