@@ -12,7 +12,7 @@ class LunchProductReport(models.Model):
     _order = 'is_favorite desc, is_new desc, last_order_date asc, product_id asc'
 
     id = fields.Integer('ID')
-    product_id = fields.Integer('Product ID')
+    product_id = fields.Many2one('lunch.product', 'Product')
     name = fields.Char('Product Name')
     category_id = fields.Many2one('lunch.product.category', 'Product Category')
     description = fields.Text('Description')
@@ -53,15 +53,14 @@ class LunchProductReport(models.Model):
 
     @api.multi
     def write(self, values):
-        user_id = self.env.user.id
         if 'is_favorite' in values:
-            for report in self:
-                if values['is_favorite']:
-                    self.env.cr.execute('''INSERT INTO lunch_product_favorite_user_rel(product_id, user_id) VALUES (%s, %s)''',
-                                (report.product_id, user_id))
-                else:
-                    self.env.cr.execute('''DELETE FROM lunch_product_favorite_user_rel WHERE product_id=%s AND user_id=%s''',
-                                (report.product_id, user_id))
+            if values['is_favorite']:
+                commands = [(4, product_id) for product_id in self.mapped('product_id').ids]
+            else:
+                commands = [(3, product_id) for product_id in self.mapped('product_id').ids]
+            self.env.user.write({
+                'favorite_lunch_product_ids': commands,
+            })
 
     def init(self):
         tools.drop_view_if_exists(self._cr, self._table)

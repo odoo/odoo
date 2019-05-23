@@ -26,7 +26,7 @@ odoo.define('lunch.LunchKanbanRecord', function (require) {
             ev.preventDefault();
             // ignore clicks on oe_kanban_action elements
             if (!$(ev.target).hasClass('oe_kanban_action')) {
-                this.trigger_up('open_wizard', {productId: this.recordData.product_id});
+                this.trigger_up('open_wizard', {productId: this.recordData.product_id ? this.recordData.product_id.res_id: this.recordData.id});
             }
         },
     });
