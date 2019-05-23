@@ -47,6 +47,8 @@ var MediaWidget = Widget.extend({
      */
     search: function (needle) {},
     /**
+     * Saves the currently configured media on the target media.
+     *
      * @abstract
      * @returns {*}
      */
