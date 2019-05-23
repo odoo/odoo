@@ -30,6 +30,7 @@ class AccountJournal(models.Model):
         'res.partner',
         'AFIP POS Address',
         help='This is the address used for invoice reports of this POS',
+        domain=lambda self: [('id', 'child_of', self.env.user.company_id.partner_id.id)],
     )
     l10n_ar_sequence_ids = fields.One2many(
         'ir.sequence',
