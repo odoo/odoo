@@ -312,9 +312,10 @@ class Lead(models.Model):
         if vals.get('user_id') and 'date_open' not in vals:
             vals['date_open'] = fields.Datetime.now()
 
-        if context.get('default_partner_id') and not vals.get('email_from'):
-            partner = self.env['res.partner'].browse(context['default_partner_id'])
-            vals['email_from'] = partner.email
+        partner_id = vals.get('partner_id') or context.get('default_partner_id')
+        onchange_values = self._onchange_partner_id_values(partner_id)
+        onchange_values.update(vals)  # we don't want to overwrite any existing key
+        vals = onchange_values
 
         # context: no_log, because subtype already handle this
         return super(Lead, self.with_context(context, mail_create_nolog=True)).create(vals)

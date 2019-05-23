@@ -16,6 +16,19 @@ class TestPartnerAssign(TransactionCase):
     def setUp(self):
         super(TestPartnerAssign, self).setUp()
 
+        self.customer_uk = self.env['res.partner'].create({
+            'name': 'Nigel',
+            'country_id': self.env.ref('base.uk').id,
+            'city': 'Birmingham',
+            'zip': 'B46 3AG',
+            'street': 'Cannon Hill Park',
+        })
+        self.lead_uk = self.env['crm.lead'].create({
+            'type': 'opportunity',
+            'name': 'Office Design and Architecture',
+            'partner_id': self.customer_uk.id
+        })
+
         def geo_find(addr, apikey):
             return {
                 'Wavre, Belgium': (50.7158956, 4.6128075),
@@ -51,7 +64,7 @@ class TestPartnerAssign(TransactionCase):
             "partner_weight": 10,
         })
 
-        lead = self.env.ref('crm.crm_case_21')
+        lead = self.lead_uk
 
         # In order to test find nearest Partner functionality and assign to opportunity,
         # I Set Geo Lattitude and Longitude according to partner address.
