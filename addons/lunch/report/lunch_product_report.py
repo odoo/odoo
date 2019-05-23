@@ -12,6 +12,7 @@ class LunchProductReport(models.Model):
     _order = 'is_favorite desc, is_new desc, last_order_date asc, product_id asc'
 
     id = fields.Integer('ID')
+    # RLI FIXME change this into a real many2one
     product_id = fields.Integer('Product ID')
     name = fields.Char('Product Name')
     category_id = fields.Many2one('lunch.product.category', 'Product Category')
@@ -55,13 +56,17 @@ class LunchProductReport(models.Model):
     def write(self, values):
         user_id = self.env.user.id
         if 'is_favorite' in values:
-            for report in self:
-                if values['is_favorite']:
-                    self.env.cr.execute('''INSERT INTO lunch_product_favorite_user_rel(product_id, user_id) VALUES (%s, %s)''',
-                                (report.product_id, user_id))
-                else:
-                    self.env.cr.execute('''DELETE FROM lunch_product_favorite_user_rel WHERE product_id=%s AND user_id=%s''',
-                                (report.product_id, user_id))
+            # Use sudo here, because we cannot allow everyone to modify lunch.product
+            # but everyone needs to be able to favorite a product
+            products = self.env['lunch.product'].browse(self.mapped('product_id')).sudo()
+            if values['is_favorite']:
+                products.write({
+                    'favorite_user_ids': [(4, user_id)],
+                })
+            else:
+                products.write({
+                    'favorite_user_ids': [(3, user_id)],
+                })
 
     def init(self):
         tools.drop_view_if_exists(self._cr, self._table)
