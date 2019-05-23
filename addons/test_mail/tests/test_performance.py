@@ -506,7 +506,7 @@ class TestHeavyMailPerformance(BaseMailPerformance):
         })
         self.assertEqual(rec.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
         self.assertEqual(len(rec.message_ids), 1)
-        with self.assertQueryCount(__system__=99, emp=103):  # com runbot: 99 -103 // test_mail only: 99 - 103
+        with self.assertQueryCount(__system__=100, emp=106):  # com runbot: 100 -106 // test_mail only: 100 - 106
             rec.write({
                 'name': 'Test2',
                 'umbrella_id': self.umbrella.id,
@@ -542,7 +542,7 @@ class TestHeavyMailPerformance(BaseMailPerformance):
         })
         self.assertEqual(rec.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
 
-        with self.assertQueryCount(__system__=104, emp=108):  # test_mail only: 104 - 108
+        with self.assertQueryCount(__system__=105, emp=111):  # test_mail only: 105 - 111
             rec.write({
                 'name': 'Test2',
                 'umbrella_id': umbrella_id,

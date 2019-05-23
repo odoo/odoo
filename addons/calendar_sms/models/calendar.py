@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 class CalendarEvent(models.Model):
     _inherit = 'calendar.event'
 
-    def _get_default_sms_recipients(self):
+    def _sms_get_default_partners(self):
         """ Method overriden from mail.thread (defined in the sms module).
             SMS text messages will be sent to attendees that haven't declined the event(s).
         """
@@ -21,8 +21,7 @@ class CalendarEvent(models.Model):
         """ Send an SMS text reminder to attendees that haven't declined the event """
         for event in self:
             sms_msg = _("Event reminder: %s on %s.") % (event.name, event.start_datetime or event.start_date)
-            note_msg = _('SMS text message reminder sent !')
-            event.message_post_send_sms(sms_msg, note_msg=note_msg)
+            event._message_sms(sms_msg)
 
 
 class CalendarAlarm(models.Model):
