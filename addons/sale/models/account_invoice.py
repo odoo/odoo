@@ -46,6 +46,11 @@ class AccountInvoice(models.Model):
             company = self.company_id or self.env.company
             self.comment = company.with_context(lang=self.partner_id.lang).invoice_terms or (self._origin.company_id == company and self.comment)
 
+    @api.onchange('user_id')
+    def onchange_user_id(self):
+        if self.user_id and self.user_id.sale_team_id:
+            self.team_id = self.user_id.sale_team_id
+
     @api.multi
     def _prepare_refund(self, invoice, date_invoice=None, date=None, description=None, journal_id=None):
         values = super(AccountInvoice, self)._prepare_refund(invoice, date_invoice, date, description, journal_id)

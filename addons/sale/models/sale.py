@@ -303,19 +303,25 @@ class SaleOrder(models.Model):
             return
 
         addr = self.partner_id.address_get(['delivery', 'invoice'])
+        partner_user = self.partner_id.user_id or self.partner_id.commercial_partner_id.user_id
         values = {
             'pricelist_id': self.partner_id.property_product_pricelist and self.partner_id.property_product_pricelist.id or False,
             'payment_term_id': self.partner_id.property_payment_term_id and self.partner_id.property_payment_term_id.id or False,
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
-            'user_id': self.partner_id.user_id.id or self.partner_id.commercial_partner_id.user_id.id or self.env.uid
+            'user_id': partner_user.id or self.env.uid
         }
         if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company.invoice_terms:
             values['note'] = self.with_context(lang=self.partner_id.lang).env.company.invoice_terms
 
-        # Use team of saleman before to fallback on team of partner.
-        values['team_id'] = self.partner_id.user_id and self.partner_id.user_id.sale_team_id.id or self.partner_id.team_id.id
+        # Use team of salesman if any otherwise leave as-is
+        values['team_id'] = partner_user.team_id.id if partner_user and partner_user.team_id else self.team_id
         self.update(values)
+
+    @api.onchange('user_id')
+    def onchange_user_id(self):
+        if self.user_id and self.user_id.sale_team_id:
+            self.team_id = self.user_id.sale_team_id
 
     @api.onchange('partner_id')
     def onchange_partner_id_warning(self):
