@@ -347,9 +347,11 @@ class AccountInvoice(models.Model):
         # check this
         for rec in self.filtered(
                 lambda x: not x.l10n_latam_sequence_id and x.l10n_latam_document_type_id):
-            rec.l10n_latam_document_number = \
+            l10n_latam_document_number = \
                 rec.l10n_latam_document_type_id._format_document_number(
                     rec.l10n_latam_document_number)
+            if l10n_latam_document_number != rec.l10n_latam_document_number:
+                rec.l10n_latam_document_number = l10n_latam_document_number
 
     @api.constrains('type', 'l10n_latam_document_type_id')
     def check_invoice_type_document_type(self):
