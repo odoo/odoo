@@ -439,7 +439,7 @@ class WebsiteForum(WebsiteProfile):
 
         values = self._prepare_user_values(forum=forum)
         values.update({
-            'posts_ids': posts_to_validate_ids,
+            'posts_ids': posts_to_validate_ids.sudo(),
             'queue_type': 'validation',
         })
 
@@ -459,7 +459,7 @@ class WebsiteForum(WebsiteProfile):
 
         values = self._prepare_user_values(forum=forum)
         values.update({
-            'posts_ids': flagged_posts_ids,
+            'posts_ids': flagged_posts_ids.sudo(),
             'queue_type': 'flagged',
             'flagged_queue_active': 1,
         })
@@ -478,7 +478,7 @@ class WebsiteForum(WebsiteProfile):
 
         values = self._prepare_user_values(forum=forum)
         values.update({
-            'posts_ids': offensive_posts_ids,
+            'posts_ids': offensive_posts_ids.sudo(),
             'queue_type': 'offensive',
         })
 
