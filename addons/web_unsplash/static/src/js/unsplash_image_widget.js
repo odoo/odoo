@@ -56,9 +56,7 @@ widgetsMedia.ImageWidget.include({
      * @override
      */
     start: function () {
-        if (!this.options.document) {
-            this.$('.o_we_search_icon').replaceWith(core.qweb.render('web_unsplash.dialog.media.search_icon'));
-        }
+        this.$('.o_we_search_icon').replaceWith(core.qweb.render('web_unsplash.dialog.media.search_icon'));
         return this._super.apply(this, arguments);
     },
     /**
@@ -286,18 +284,16 @@ widgetsMedia.ImageWidget.include({
      * @override
      */
     _onSearchInput: function (ev) {
-        if (!this.options.document) {
-            var $input = $(ev.currentTarget);
-            var inputValue = $input.val();
-            this.$('.o_search_value_input').text(inputValue);
+        var $input = $(ev.currentTarget);
+        var inputValue = $input.val();
+        this.$('.o_search_value_input').text(inputValue);
 
-            var $icon = this.$('.o_we_search_icon');
-            if ($icon.parent().is('.show')) {
-                $icon.dropdown('update');
-            } else if (!this.hasSearched) {
-                $icon.dropdown('toggle');
-                $input.focus();
-            }
+        var $icon = this.$('.o_we_search_icon');
+        if ($icon.parent().is('.show')) {
+            $icon.dropdown('update');
+        } else if (!this.hasSearched) {
+            $icon.dropdown('toggle');
+            $input.focus();
         }
         this._super.apply(this, arguments);
     },
