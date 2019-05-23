@@ -3017,7 +3017,7 @@ var AceEditor = DebouncedField.extend({
 var FieldColor = AbstractField.extend({
     template: 'FieldColor',
     events: {
-        'change .o_field_color_input': '_onColorChange',
+        'click .o_field_color_input': '_onColorClick',
         'click .o_reset_colors': '_onResetColors',
     },
 
@@ -3057,21 +3057,12 @@ var FieldColor = AbstractField.extend({
         this._super.apply(this, arguments);
         this.$('.o_field_colors').empty();
         var values = JSON.parse(this.value).values;
-        var idPrefix = Math.floor(Math.random() * 1000).toString();
-        var id = 0;
         for (var i = 0; i < values.length; i ++) {
-            id ++;
-            var colorField = $('<label/>')
+            var colorField = $('<span/>')
                 .addClass('o_field_color')
-                .attr('for', 'o_field_color_input_' + idPrefix + id)
+                .data('value', values[i])
                 .css('background-color', values[i]);
-            var colorInput = $('<input type="color"/>')
-                .addClass('o_field_color_input')
-                .attr('id', 'o_field_color_input_' + idPrefix + id)
-                .val(values[i])
-                .hide();
             this.$('.o_field_colors').append(colorField);
-            this.$('.o_field_colors').append(colorInput);
         }
         this._checkDefault();
     },
@@ -3084,12 +3075,12 @@ var FieldColor = AbstractField.extend({
     * @private
     * @param {Event} ev
     */
-    _onColorChange: function (ev) {
-        $('label[for=' + ev.target.id + ']').css('backgroundColor', ev.target.value);
+    _onColorClick: function (ev) {
+        $(ev.target).css('backgroundColor', ev.target.value);
         var self = this;
         var values = [].slice.call($('.o_field_color_input'))
             .map(function (colorField) {
-                return colorField.value;
+                return $(colorField).data('value');
             });
         this._setValue(JSON.stringify({
             default: JSON.parse(this.value).default,
