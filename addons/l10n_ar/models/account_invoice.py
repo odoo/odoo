@@ -31,7 +31,7 @@ class AccountInvoice(models.Model):
         related='l10n_latam_document_type_id.l10n_ar_letter',
     )
     l10n_ar_afip_responsability_type = fields.Selection(
-        related='partner_id.l10n_ar_afip_responsability_type',
+        related='move_id.l10n_ar_afip_responsability_type',
     )
     l10n_ar_invoice_number = fields.Integer(
         compute='_compute_l10n_ar_invoice_number',

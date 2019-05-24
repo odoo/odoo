@@ -14,7 +14,7 @@
             </div>
 
             <field name="journal_id" position="after">
-                <field name="l10n_ar_afip_responsability_type" states="open,paid" attrs="{'invisible': [('l10n_latam_country_code', '!=', 'AR')]}"/>
+                <field name="l10n_ar_afip_responsability_type" attrs="{'invisible': ['|', ('state', 'not in', ['open', 'paid']), ('l10n_latam_country_code', '!=', 'AR')]}"/>
             </field>
 
             <field name="payment_term_id" position="after">
@@ -33,7 +33,7 @@
         <field name="inherit_id" ref="l10n_latam_document.view_supplier_invoice_form"/>
         <field name="arch" type="xml">
             <field name="journal_id" position="after">
-                <field name="l10n_ar_afip_responsability_type" states="open,paid" attrs="{'invisible': [('l10n_latam_country_code', '!=', 'AR')]}"/>
+                <field name="l10n_ar_afip_responsability_type" attrs="{'invisible': ['|', ('state', 'not in', ['open', 'paid']), ('l10n_latam_country_code', '!=', 'AR')]}"/>
             </field>
         </field>
     </record>
