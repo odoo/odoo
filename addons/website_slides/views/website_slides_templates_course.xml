@@ -335,7 +335,7 @@
                             <div t-if="channel.can_publish and category_id" class="o_wslides_slides_list_drag py-2 pr-3">
                                 <i class="fa fa-bars"/>
                             </div>
-                            <span t-if="category_id" t-att-class="'text-muted' if not channel.can_upload else ''" t-esc="category['name']"/>
+                            <span t-if="category_id" t-att-class="'text-muted' if not channel.can_upload else ''" t-field="category['category'].name"/>
                             <small t-if="not category['total_slides'] and category_id" class="ml-1 text-muted"><b>(empty)</b></small>
                         </div>
                         <div t-if="category_id" class="o_text_link d-flex border-left">
