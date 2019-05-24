@@ -16,7 +16,7 @@ class AccountChartTemplate(models.Model):
         """
         res = super(AccountChartTemplate, self).generate_fiscal_position(
             tax_template_ref, acc_template_ref, company)
-        if company.country_id.code != 'AR':
+        if company.country_id == self.env.ref('base.ar'):
             return res
         positions = self.env['account.fiscal.position.template'].search(
             [('chart_template_id', '=', self.id)])
