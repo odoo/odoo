@@ -213,7 +213,6 @@ The only difference being that you must use the ``account.tax.template`` model.
 
         <!-- [Optional] Define the tax's type.
         'sale', 'purchase' or 'none' are the allowed values. 'sale' is the default value.
-        'adjustment' is also available to do some tax adjustments.
         Note: 'none' means a tax can't be used by itself, however it can still be used in a group. -->
         <field name="type_tax_use">...</field>
 
