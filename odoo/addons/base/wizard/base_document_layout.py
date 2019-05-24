@@ -87,6 +87,10 @@ class BaseDocumentLayout(models.TransientModel):
             ])
             primary = wizard.primary_color or wizard.report_layout_id.primary_color
             secondary = wizard.secondary_color or wizard.report_layout_id.secondary_color
+
+            if wizard.logo and (not wizard.primary_color and not wizard.secondary_color):
+                primary, secondary = wizard.with_context(bin_size=False)._parse_logo_colors()
+
             wizard.company_colors = json.dumps({
                 'default': [wizard.report_layout_id.primary_color, wizard.report_layout_id.secondary_color],
                 'values': [primary, secondary],
@@ -113,6 +117,37 @@ class BaseDocumentLayout(models.TransientModel):
             wizard.secondary_color = values[1]
             wizard._compute_preview()
 
+    def _parse_logo_colors(self):
+        self.ensure_one()
+        logo = self.logo
+        if not logo:
+            return None, None
+        margin = 50
+        white_threshold = 245
+
+        # The "===" gives different base64 encoding a correct padding
+        if isinstance(logo, bytes):
+            logo = logo + b'==='
+        else:
+            logo = logo + '==='
+        image = tools.base64_to_image(logo).resize((40, 40))
+
+        transparent = 'A' not in image.getbands()
+
+        converted = image.convert('RGBA') if transparent else image
+        w, h = image.size
+        colors = []
+        for color in converted.getcolors(w * h):
+            if not(transparent and color[1][0] > white_threshold and
+                   color[1][1] > white_threshold and color[1][2] > white_threshold) and color[1][3] > 0:
+                colors.append(color)
+
+        primary, remaining = average_dominant_color(colors, margin)
+        secondary = average_dominant_color(remaining, margin)[
+            0] if len(remaining) > 0 else primary
+
+        return process_rgb(primary), process_rgb(secondary)
+
     @api.onchange('report_layout_id')
     def onchange_report_layout_id(self):
         for wizard in self:
@@ -135,30 +170,8 @@ class BaseDocumentLayout(models.TransientModel):
     def onchange_logo(self):
         """ Identify dominant colors of the logo """
         for wizard in self:
-            print('\n\n', wizard.logo, '\n\n')
-            if not wizard.logo:
-                return
-            margin = 50
-            white_threshold = 245
-
-            # The "===" gives different base64 encoding a correct padding
-            image = tools.base64_to_image(wizard.logo + "===").resize((40, 40))
-
-            transparent = 'A' not in image.getbands()
-
-            converted = image.convert('RGBA') if transparent else image
-            w, h = image.size
-            colors = []
-            for color in converted.getcolors(w * h):
-                if not(transparent and color[1][0] > white_threshold and
-                       color[1][1] > white_threshold and color[1][2] > white_threshold) and color[1][3] > 0:
-                    colors.append(color)
-
-            primary, remaining = average_dominant_color(colors, margin)
-            secondary = average_dominant_color(remaining, margin)[
-                0] if len(remaining) > 0 else primary
-
+            primary, secondary = wizard._parse_logo_colors()
             wizard.company_colors = json.dumps({
                 'default': [wizard.report_layout_id.primary_color, wizard.report_layout_id.secondary_color],
-                'values': [process_rgb(primary), process_rgb(secondary)],
+                'values': [primary, secondary]
             })
