@@ -53,6 +53,7 @@
         'wizard/stock_track_confirmation_views.xml',
         'wizard/stock_package_destination_views.xml',
         'wizard/stock_picking_responsible.xml',
+        'wizard/stock_scrap_wizard_view.xml',
 
         'views/res_partner_views.xml',
         'views/product_strategy_views.xml',

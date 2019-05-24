@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_scrap_form_view2" model="ir.ui.view">
+        <field name="name">stock.scrap.form2</field>
+        <field name="model">stock.create.scrap</field>
+        <field name="arch" type="xml">
+            <form string="Scrap">
+                <group>
+                    <group>
+                        <field name="state" invisible="1"/>
+                        <field name="product_id" options="{'no_create': True}" domain="[('id', 'in', context.get('product_ids', []))]"/>
+                        <label for="scrap_qty"/>
+                        <div class="o_row">
+                            <field name="scrap_qty"/>
+                            <field name="product_uom_id" groups="uom.group_uom"/>
+                        </div>
+                    </group>
+                    <group>
+                        <field name="picking_id" invisible="1"/>
+                        <field name="tracking" invisible="1"/>
+                        <field name="lot_id" attrs="{'invisible': [('tracking', '=', 'none')], 'required': [('tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
+                        <field name="package_id" groups="stock.group_tracking_lot"/>
+                        <field name="owner_id" groups="stock.group_tracking_owner"/>
+                        <field name="location_id" groups="stock.group_stock_multi_locations" options="{'no_open': True, 'no_create': True}"/>
+                        <field name="scrap_location_id" groups="stock.group_stock_multi_locations" options="{'no_open': True, 'no_create': True}" />
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_validate" string="Done" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

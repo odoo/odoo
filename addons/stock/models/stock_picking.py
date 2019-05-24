@@ -1108,7 +1108,7 @@ class Picking(models.Model):
             'name': _('Scrap'),
             'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'stock.scrap',
+            'res_model': 'stock.create.scrap',
             'view_id': view.id,
             'views': [(view.id, 'form')],
             'type': 'ir.actions.act_window',

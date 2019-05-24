@@ -517,7 +517,7 @@ class MrpWorkorder(models.Model):
             'name': _('Scrap'),
             'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'stock.scrap',
+            'res_model': 'stock.create.scrap',
             'view_id': self.env.ref('stock.stock_scrap_form_view2').id,
             'type': 'ir.actions.act_window',
             'context': {'default_workorder_id': self.id, 'default_production_id': self.production_id.id, 'product_ids': (self.production_id.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')) | self.production_id.move_finished_ids.filtered(lambda x: x.state == 'done')).mapped('product_id').ids},

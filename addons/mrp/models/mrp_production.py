@@ -869,7 +869,7 @@ class MrpProduction(models.Model):
             'name': _('Scrap'),
             'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'stock.scrap',
+            'res_model': 'stock.create.scrap',
             'view_id': self.env.ref('stock.stock_scrap_form_view2').id,
             'type': 'ir.actions.act_window',
             'context': {'default_production_id': self.id,
