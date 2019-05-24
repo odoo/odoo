@@ -76,6 +76,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
             'partner_id': self.partner_id.id,
             'analytic_account_id': self.project_id.analytic_account_id.id,
             'client_order_ref': self.project_id.name,
+            'company_id': self.project_id.company_id.id,
         })
         sale_order.onchange_partner_id()
         sale_order.onchange_partner_shipping_id()

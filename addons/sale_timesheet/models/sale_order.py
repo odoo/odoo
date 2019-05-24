@@ -212,7 +212,7 @@ class SaleOrderLine(models.Model):
         if 'product_uom_qty' in values:
             for line in self:
                 if line.task_id:
-                    planned_hours = line._convert_qty_company_hours()
+                    planned_hours = line._convert_qty_company_hours(line.task_id.company_id)
                     line.task_id.write({'planned_hours': planned_hours})
         return result
 
@@ -220,8 +220,8 @@ class SaleOrderLine(models.Model):
     # Service : Project and task generation
     ###########################################
 
-    def _convert_qty_company_hours(self):
-        company_time_uom_id = self.env.company.project_time_mode_id
+    def _convert_qty_company_hours(self, dest_company):
+        company_time_uom_id = dest_company.project_time_mode_id
         if self.product_uom.id != company_time_uom_id.id and self.product_uom.category_id.id == company_time_uom_id.category_id.id:
             planned_hours = self.product_uom._compute_quantity(self.product_uom_qty, company_time_uom_id)
         else:
@@ -249,6 +249,7 @@ class SaleOrderLine(models.Model):
             'sale_line_id': self.id,
             'sale_order_id': self.order_id.id,
             'active': True,
+            'company_id': self.company_id.id,
         }
         if self.product_id.project_template_id:
             values['name'] = "%s - %s" % (values['name'], self.product_id.project_template_id.name)
@@ -270,7 +271,7 @@ class SaleOrderLine(models.Model):
 
     def _timesheet_create_task_prepare_values(self, project):
         self.ensure_one()
-        planned_hours = self._convert_qty_company_hours()
+        planned_hours = self._convert_qty_company_hours(self.company_id)
         sale_line_name_parts = self.name.split('\n')
         title = sale_line_name_parts[0] or self.product_id.name
         description = '<br/>'.join(sale_line_name_parts[1:])
