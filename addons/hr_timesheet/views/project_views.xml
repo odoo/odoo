@@ -45,9 +45,6 @@
                 <xpath expr="//group[@name='extra_settings']" position="inside">
                     <field name="allow_timesheets"/>
                 </xpath>
-                <xpath expr="//field[@name='partner_id']" position="after">
-                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" />
-                </xpath>
             </field>
         </record>
 
@@ -177,6 +174,9 @@
                             <span class="o_label">Timesheets</span>
                         </div>
                     </a>
+                </xpath>
+                <xpath expr="//a[@name='action_view_account_analytic_line']" position="attributes">
+                    <attribute name="t-if">record.analytic_account_id.raw_value and !record.allow_timesheets.raw_value</attribute>
                 </xpath>
             </field>
         </record>
