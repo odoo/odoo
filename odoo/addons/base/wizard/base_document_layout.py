@@ -102,7 +102,7 @@ class BaseDocumentLayout(models.TransientModel):
             wizard.preview = ir_qweb.render('web.layout_preview', {
                 'company': wizard,
             })
-    
+
     @api.onchange('company_colors')
     def onchange_company_colors(self):
         for wizard in self:
