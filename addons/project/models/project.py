@@ -408,7 +408,7 @@ class Project(models.Model):
     def _create_analytic_account_from_values(self, values):
         analytic_account = self.env['account.analytic.account'].create({
             'name': values.get('name', _('Unknown Analytic Account')),
-            'company_id': values.get('company_id', self.env.user.company_id.id),
+            'company_id': values.get('company_id') or self.env.company.id,
             'partner_id': values.get('partner_id'),
             'active': True,
         })
