@@ -1,20 +1,32 @@
 .css_attribute_color {
-    display: inline-block;
-    border: 1px solid #999999;
-    text-align: center;
-
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: inset 1px 1px 4px rgba(0,0,0,0.3);
+    height: 2.5rem;
     input {
-        margin: 8px;
-        height: 13px;
+        // margin: 1rem;
         opacity: 0;
+        width: 2.5rem;
+        height: 2.5rem;
     }
+
 
     &.active {
-        border: 3px ridge #66ee66;
-    }
-
-    &.active input {
-        margin: 6px;
+        &:before {
+            content: '\f00c';
+            font-family: "FontAwesome";
+            font-size: 1rem;
+            color: $gray-800;
+            position: absolute;
+            display: block;
+            background-color: #fff;
+            padding: 5px;
+            line-height: 1rem;
+            border-radius: 50%;
+        }
     }
 
     &.custom_value {
@@ -61,13 +73,27 @@ option.css_not_available {
 }
 
 label.css_not_available {
-    opacity: 0.6;
+    // opacity: 0.6;
 }
 
 label.css_attribute_color.css_not_available {
-    opacity: 1;
-    background-image: url("/website_sale/static/src/img/redcross.png");
-    background-size: cover;
+    &.active:before {
+        display: none !important;
+    }
+    &:after {
+        content: '\f00d';
+        font-family: "FontAwesome";
+        font-size: 1rem;
+        position: absolute;
+        color: $danger;
+        display: block;
+        background-color: #fff;
+        text-align: center;
+        width: 1.5rem;
+        height: 1.5rem;
+        line-height: 1.5rem;
+        border-radius: 50%;
+    }
 }
 
 .variant_attribute {
