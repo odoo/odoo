@@ -170,6 +170,48 @@ class TestSMSPost(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS, 
 
         self.assertSMSNotification([{'partner': self.partner_1}, {'number': self.random_numbers_san[0]}], self._test_body, messages)
 
+    def test_message_sms_with_template(self):
+        sms_template = self.env['sms.template'].create({
+            'name': 'Test Template',
+            'model_id': self.env['ir.model']._get('mail.test.sms').id,
+            'body': 'Dear ${object.display_name} this is an SMS.',
+        })
+
+        with self.sudo('employee'):
+            with self.mockSMSGateway():
+                test_record = self.env['mail.test.sms'].browse(self.test_record.id)
+                messages = test_record._message_sms_with_template(template=sms_template)
+
+        self.assertSMSNotification([{'partner': self.partner_1, 'number': self.test_numbers_san[1]}], 'Dear %s this is an SMS.' % self.test_record.display_name, messages)
+
+    def test_message_sms_with_template_fallback(self):
+        with self.sudo('employee'):
+            with self.mockSMSGateway():
+                test_record = self.env['mail.test.sms'].browse(self.test_record.id)
+                messages = test_record._message_sms_with_template(template_xmlid='test_mail_full.this_should_not_exists', template_fallback='Fallback for ${object.id}')
+
+        self.assertSMSNotification([{'partner': self.partner_1, 'number': self.test_numbers_san[1]}], 'Fallback for %s' % self.test_record.id, messages)
+
+    def test_message_sms_with_template_xmlid(self):
+        sms_template = self.env['sms.template'].create({
+            'name': 'Test Template',
+            'model_id': self.env['ir.model']._get('mail.test.sms').id,
+            'body': 'Dear ${object.display_name} this is an SMS.',
+        })
+        self.env['ir.model.data'].create({
+            'name': 'this_should_exists',
+            'module': 'test_mail_full',
+            'model': sms_template._name,
+            'res_id': sms_template.id,
+        })
+
+        with self.sudo('employee'):
+            with self.mockSMSGateway():
+                test_record = self.env['mail.test.sms'].browse(self.test_record.id)
+                messages = test_record._message_sms_with_template(template_xmlid='test_mail_full.this_should_exists')
+
+        self.assertSMSNotification([{'partner': self.partner_1, 'number': self.test_numbers_san[1]}], 'Dear %s this is an SMS.' % self.test_record.display_name, messages)
+
 
 class TestSMSPostException(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS, test_mail_common.MockEmails, test_mail_common.TestRecipients):
 
