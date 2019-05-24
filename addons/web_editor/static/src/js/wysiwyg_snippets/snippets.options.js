@@ -835,32 +835,6 @@ registry.background = SnippetOption.extend({
         }
     },
     /**
-     * Handles a background video change.
-     *
-     * @param {object} data
-     */
-    backgroundVideo: function (previewMode, data) {
-        if (previewMode === 'reset' && data === undefined) {
-            // No background has been selected and we want to reset back to the
-            // original custom video
-            this._setCustomVideo(this.__customVideoData);
-            return;
-        }
-
-        if (data) {
-            var src = $(data).find('iframe').attr('src');
-            var opacity = $(data).attr('data-opacity');
-            this.$target.attr({'src': src, 'opacity': opacity});
-            this.$target.addClass('o_video_background o_video');
-            $(this.$target.children().first()).addClass('o_video_bg');
-            var param = $.deparam(src.split('?')[1]);
-            this.$target.attr({'muted': param.mute, 'loop': param.loop, 'controls': param.controls, 'autoplay': param.autoplay});
-            this._refreshPublicWidgets();
-        } else {
-            this._removeVideo();
-        }
-    },
-    /**
      * @override
      */
     selectClass: function (previewMode, value, $opt) {
@@ -897,13 +871,14 @@ registry.background = SnippetOption.extend({
             $image.remove();
             if ($(data).is('img')) {
                 this._removeVideo();
+                this.__customVideoData = undefined;
                 this._setCustomBackground($image.attr('src'));
             } else {
                 if ($(data).find('iframe').attr('src') === '') {
                     this._removeVideo();
                     return;
                 }
-                this._setCustomVideo(data);
+                this._setCustomVideo(false, data);
             }
             this.$target.trigger('content_changed');
         });
@@ -933,7 +908,7 @@ registry.background = SnippetOption.extend({
                     this.__customVideoData = undefined;
                 }
                 this.background(previewMode);
-                this.backgroundVideo(previewMode);
+                this._setCustomVideo(previewMode);
             }).bind(this));
     },
     /**
@@ -1013,9 +988,26 @@ registry.background = SnippetOption.extend({
      * @private
      * @param {object} data
      */
-    _setCustomVideo: function (data) {
-        this.__customVideoData = data;
-        this.backgroundVideo(false, this.__customVideoData);
+    _setCustomVideo: function (previewMode, data) {
+        if (previewMode === 'reset' && data === undefined) {
+            // No background has been selected and we want to reset back to the
+            // original custom video
+            this._setCustomVideo(false, this.__customVideoData);
+            return;
+        }
+        if (data) {
+            this.__customVideoData = data;
+            var src = $(data).find('iframe').attr('src');
+            var opacity = $(data).attr('data-opacity');
+            this.$target.attr({'src': src, 'opacity': opacity});
+            this.$target.addClass('o_video_background o_video');
+            $(this.$target.children().first()).addClass('o_video_bg');
+            var param = $.deparam(src.split('?')[1]);
+            this.$target.attr({'muted': param.mute, 'loop': param.loop, 'controls': param.controls, 'autoplay': param.autoplay});
+            this._refreshPublicWidgets();
+        } else {
+            this._removeVideo();
+        }
         this.$target.trigger('snippet-option-change', [this]);
     },
 });
