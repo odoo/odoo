@@ -467,7 +467,7 @@ class Home(http.Controller):
             # this method must specify a content-type application/json instead of using the default text/html set because
             # the type of the route is set to HTTP, but the rpc is made with a get and expects JSON
             ('Content-Type', 'application/json'),
-            ('Cache-Control', 'public, max-age=31536000'),
+            ('Cache-Control', 'public, max-age=' + str(CONTENT_MAXAGE)),
         ])
         return response
 
