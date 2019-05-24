@@ -15,12 +15,11 @@
                     <button
                         type="action"
                         name="%(sms.sms_composer_action_form)d"
-                        class="btn-sm btn-link mb4 fa fa-envelope-o"
-                        aria-label="Send SMS"
-                        title="Send SMS"
+                        class="btn-sm btn-link mb4 fa fa-comment"
+                        aria-label="Send SMS Text Message"
+                        title="Send SMS Text Message"
                         attrs="{'invisible':[('phone', '=', False)]}"
-                        context="{'field_name': 'phone'}"
-                    />
+                        context="{'default_partner_field_name': 'phone'}" />
                 </div>
             </xpath>
             <xpath expr="//field[@name='mobile']" position="replace">
@@ -31,14 +30,37 @@
                         type="action"
                         name="%(sms.sms_composer_action_form)d"
                         class="btn-sm btn-link mb4 fa fa-envelope-o"
-                        aria-label="Send SMS"
-                        title="Send SMS"
+                        aria-label="Send SMS Text Message"
+                        title="Send SMS Text Message"
                         attrs="{'invisible':[('mobile', '=', False)]}"
-                        context="{'field_name': 'mobile'}"
-                        />
-                    </div>
-                </xpath>
+                        context="{'default_partner_field_name': 'mobile'}" />
+                </div>
+            </xpath>
         </field>
     </record>
+
+    <!-- Add action entry in the Action Menu for Partners -->
+    <act_window id="res_partner_act_window_sms_composer_single"
+        name="Send SMS Text Message"
+        binding_model="res.partner"
+        res_model="sms.composer"
+        binding_views="list"
+        view_mode="form"
+        target="new"
+        context="{
+            'default_composition_mode': 'mass',
+        }"
+    />
+    <act_window id="res_partner_act_window_sms_composer_multi"
+        name="Send SMS Text Message"
+        binding_model="res.partner"
+        res_model="sms.composer"
+        binding_views="form"
+        view_mode="form"
+        target="new"
+        context="{
+            'default_composition_mode': 'comment',
+        }"
+    />
 
 </odoo>

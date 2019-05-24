@@ -73,6 +73,14 @@ class MailThread(models.AbstractModel):
                     result[record.id] = {'partner': partner, 'sanitized': False, 'number': partner.mobile or partner.phone}
         return result
 
+    def _message_sms_using_template(self, partner_ids=False, sms_template_xmlid=False, sms_template_fallback='', put_in_queue=False):
+        self.ensure_one()
+        template = self.env.ref(sms_template_xmlid) if sms_template_xmlid else False
+        if template:
+            return self._message_sms(sms_template_fallback, partner_ids=partner_ids)
+        else:
+            return self._message_sms(sms_template_fallback, partner_ids=partner_ids)
+
     def _message_sms(self, body, subtype_id=False, partner_ids=False, number_field=False, numbers=False):
         """ Main method to post a message on a record using SMS-based notification
         method.
