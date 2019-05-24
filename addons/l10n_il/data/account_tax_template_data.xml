@@ -51,6 +51,11 @@
         <field name="applicability">taxes</field>
     </record>
 
+    <record id="tax_tag_self_invoice" model="account.account.tag">
+        <field name="name">Self Invoice 17</field>
+        <field name="applicability">taxes</field>
+    </record>
+
     <!-- account.tax.template -->
     <record id="il_vat_pa_purchase_16" model="account.tax.template">
         <field name="sequence">3</field>
@@ -179,7 +184,7 @@
     </record>
 
     <record id="il_vat_equipment_17" model="account.tax.template">
-        <field name="sequence">1</field>
+        <field name="sequence">10</field>
         <field name="description">17%</field>
         <field name="name">VAT 17 equipment</field>
         <field name="amount">17</field>
@@ -187,6 +192,30 @@
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="il_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tax_tag_equipment_input')])]"/>
+        <field name="tax_group_id" ref="tax_group_vat_17"/>
+    </record>
+
+    <record id="il_vat_self_inv_purchase" model="account.tax.template">
+        <field name="sequence">11</field>
+        <field name="description">17%</field>
+        <field name="name">Self Invoice 17%</field>
+        <field name="amount">17</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="il_chart_template"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_self_invoice')])]"/>
+        <field name="tax_group_id" ref="tax_group_vat_17"/>
+    </record>
+
+    <record id="il_vat_self_inv_sale" model="account.tax.template">
+        <field name="sequence">12</field>
+        <field name="description">17%</field>
+        <field name="name">Self Invoice 17%</field>
+        <field name="amount">17</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="il_chart_template"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_self_invoice')])]"/>
         <field name="tax_group_id" ref="tax_group_vat_17"/>
     </record>
 </odoo>
