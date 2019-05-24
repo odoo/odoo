@@ -325,7 +325,8 @@ class Lead(models.Model):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.Datetime.now()
-        if vals.get('user_id') and 'date_open' not in vals:
+        # Only write the 'date_open' if no salesperson was assigned.
+        if vals.get('user_id') and 'date_open' not in vals and not self.mapped('user_id'):
             vals['date_open'] = fields.Datetime.now()
         # stage change with new stage: update probability and date_closed
         if vals.get('stage_id') and 'probability' not in vals:
