@@ -30,7 +30,6 @@ class AccountJournal(models.Model):
         'res.partner',
         'AFIP POS Address',
         help='This is the address used for invoice reports of this POS',
-        domain=lambda self: [('id', 'child_of', self.env.user.company_id.partner_id.id)],
     )
     l10n_ar_sequence_ids = fields.One2many(
         'ir.sequence',
@@ -214,3 +213,14 @@ class AccountJournal(models.Model):
             self.l10n_ar_share_sequences = True
         else:
             self.l10n_ar_share_sequences = False
+
+    @api.onchange('company_id')
+    def _onchange_company_set_domain(self):
+        """ Will define the AFIP POS Address field domain taking into account
+        the company configured in the journal """
+        company_partner = self.company_id.partner_id.id
+        return {'domain': {'l10n_ar_afip_pos_partner_id': [
+            '|', ('id', '=', company_partner),
+            '&', ('id', 'child_of', company_partner),
+            ('type', '!=', 'contact')],
+        }}
