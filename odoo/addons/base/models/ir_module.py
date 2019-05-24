@@ -445,7 +445,8 @@ class Module(models.Model):
         # allowed companies to configure it on the correct company.
         # Otherwise, the SUPERUSER won't be aware of that and will try to
         # configure the CoA on his own company, which makes no sense.
-        request.allowed_company_ids = self.env.company_ids.ids
+        if request:
+            request.allowed_company_ids = self.env.company_ids.ids
         return self._button_immediate_function(type(self).button_install)
 
     @assert_log_admin_access
