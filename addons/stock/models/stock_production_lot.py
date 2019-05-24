@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.osv import expression
 
 
 class ProductionLot(models.Model):
@@ -16,7 +17,7 @@ class ProductionLot(models.Model):
     ref = fields.Char('Internal Reference', help="Internal reference number in case it differs from the manufacturer's lot/serial number")
     product_id = fields.Many2one(
         'product.product', 'Product',
-        domain=[('type', '=', 'product')], required=True)
+        domain=lambda self: self._domain_product_id(), required=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         related='product_id.uom_id', store=True, readonly=False)
@@ -28,6 +29,12 @@ class ProductionLot(models.Model):
     _sql_constraints = [
         ('name_ref_uniq', 'unique (name, product_id)', 'The combination of serial number and product must be unique !'),
     ]
+
+    def _domain_product_id(self):
+        domain = [('type', '=', 'product')]
+        if self.env.context.get('default_product_tmpl_id'):
+            domain = expression.AND([domain, [('product_tmpl_id', '=', self.env.context['default_product_tmpl_id'])]])
+        return domain
 
     def _check_create(self):
         active_picking_id = self.env.context.get('active_picking_id', False)

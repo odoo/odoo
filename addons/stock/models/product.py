@@ -471,7 +471,7 @@ class Product(models.Model):
         self.ensure_one()
         action = self.env.ref('stock.action_production_lot_form').read()[0]
         action['domain'] = [('product_id', '=', self.id)]
-        action['context'] = {'default_product_id': self.id}
+        action['context'] = {'default_product_id': self.id, 'set_product_readonly': True}
         return action
 
     # Be aware that the exact same function exists in product.template
@@ -769,11 +769,11 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         action = self.env.ref('stock.action_production_lot_form').read()[0]
         action['domain'] = [('product_id.product_tmpl_id', '=', self.id)]
+        action['context'] = {'default_product_tmpl_id': self.id}
         if self.product_variant_count == 1:
-            action['context'] = {
+            action['context'].update({
                 'default_product_id': self.product_variant_id.id,
-            }
-
+            })
         return action
 
     def action_product_tmpl_forecast_report(self):
