@@ -681,8 +681,8 @@ class IrTranslation(models.Model):
         rows_by_type = defaultdict(list)
         for vals in vals_list:
             rows_by_type[vals['type']].append((
-                vals['name'], vals['lang'], vals['res_id'], vals['src'], vals['type'],
-                vals.get('module'), vals['value'], vals.get('state'), vals.get('comments'),
+                vals['name'], vals['lang'], vals['res_id'], vals['src'] or '', vals['type'],
+                vals.get('module'), vals['value'] or '', vals.get('state'), vals.get('comments'),
             ))
 
         if rows_by_type['model']:
