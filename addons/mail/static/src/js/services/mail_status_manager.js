@@ -89,6 +89,8 @@ MailManager.include({
         return this._rpc({
             route: '/longpolling/im_status',
             params: { partner_ids: partnerIDs },
+        }, {
+            shadow: true,
         }).then( function (results) {
             self.updateImStatus(results);
         });
