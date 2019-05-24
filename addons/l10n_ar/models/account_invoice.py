@@ -115,7 +115,7 @@ class AccountInvoice(models.Model):
     )
     def _compute_l10n_ar_afip_concept(self):
         for rec in self.filtered(
-                lambda x: x.company_id.country_id.code == 'AR' and
+                lambda x: x.company_id.country_id == self.env.ref('base.ar') and
                 x.l10n_latam_use_documents):
             afip_concept = False
             if rec.l10n_ar_force_afip_concept:
@@ -241,7 +241,7 @@ class AccountInvoice(models.Model):
     @api.multi
     def get_localization_invoice_vals(self):
         self.ensure_one()
-        if self.company_id.country_id.code == 'AR':
+        if self.company_id.country_id == self.env.ref('base.ar'):
             if self.company_id.currency_id == self.currency_id:
                 l10n_ar_currency_rate = 1.0
             else:
@@ -258,7 +258,7 @@ class AccountInvoice(models.Model):
 
     @api.model
     def _get_available_document_types(self, journal, invoice_type, partner):
-        if journal.company_id.country_id.code != 'AR':
+        if journal.company_id.country_id != self.env.ref('base.ar'):
             return super(AccountInvoice, self)._get_available_document_types(
                 journal, invoice_type, partner)
 
@@ -315,7 +315,7 @@ class AccountInvoice(models.Model):
         """
         _logger.info('Running checks related to argentinian documents')
         argentinian_invoices = self.filtered(
-            lambda r: r.company_id.country_id.code == 'AR'
+            lambda r: r.company_id.country_id == self.env.ref('base.ar')
                 and r.l10n_latam_use_documents)
         if not argentinian_invoices:
             return True
@@ -462,7 +462,7 @@ class AccountInvoice(models.Model):
 
     @api.onchange('partner_id')
     def check_afip_responsability_set(self):
-        if self.env.user.company_id.country_id.code == 'AR' and \
+        if self.env.user.company_id.country_id == self.env.ref('base.ar') and \
            self.env.user.company_id.l10n_latam_use_documents:
             if self.partner_id and \
                not self.partner_id.l10n_ar_afip_responsability_type:

@@ -18,7 +18,7 @@ class AccountFiscalPosition(models.Model):
         """
         company_id = self._context.get(
             'force_company', self.env.user.company_id.id)
-        if self.env['res.company'].browse(company_id).country_id.code == 'AR':
+        if self.env['res.company'].browse(company_id).country_id == self.env.ref('base.ar'):
             partner = self.env['res.partner'].browse(partner_id)
             afip_responsability = \
                 partner.commercial_partner_id.l10n_ar_afip_responsability_type

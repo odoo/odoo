@@ -52,7 +52,7 @@ class L10nLatamDocumentType(models.Model):
         """
         values = super(
             L10nLatamDocumentType, self).get_document_sequence_vals(journal)
-        if self.country_id.code == 'AR':
+        if self.country_id == self.env.ref('base.ar'):
             values.update({
                 'padding': 8,
                 'implementation': 'no_gap',
@@ -77,7 +77,7 @@ class L10nLatamDocumentType(models.Model):
         """ In argentina we include taxes depending on document letter
         """
         self.ensure_one()
-        if self.country_id.code == 'AR' and self.l10n_ar_letter in [
+        if self.country_id == self.env.ref('base.ar') and self.l10n_ar_letter in [
            'B', 'C', 'X', 'R']:
             return self.env['account.tax'].search(
                 [('tax_group_id.l10n_ar_tax', '=', 'vat'),
@@ -94,7 +94,7 @@ class L10nLatamDocumentType(models.Model):
           * format the document_number against a pattern and return it
         """
         self.ensure_one()
-        if self.country_id.code != 'AR':
+        if self.country_id != self.env.ref('base.ar'):
             return super()._format_document_number()
 
         if not document_number:

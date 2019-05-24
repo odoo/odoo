@@ -71,7 +71,7 @@ class ResPartner(models.Model):
             # If the partner is outside Argentina then we return the defined
             # country cuit defined by AFIP for that specific partner
             elif commercial_partner.country_id and \
-                 commercial_partner.country_id.code != 'AR':
+                 commercial_partner.country_id != self.env.ref('base.ar'):
                 rec.l10n_ar_cuit = commercial_partner.country_id[
                     commercial_partner.is_company and
                     'l10n_ar_cuit_juridica' or 'l10n_ar_cuit_fisica']

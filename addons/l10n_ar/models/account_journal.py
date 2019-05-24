@@ -143,7 +143,7 @@ class AccountJournal(models.Model):
         """ Create new sequences for document types, update if can be updated
         """
         self.ensure_one()
-        if self.company_id.country_id.code != 'AR':
+        if self.company_id.country_id != self.env.ref('base.ar'):
             return super().create_document_type_sequences()
         if not self.type == 'sale':
             return False
