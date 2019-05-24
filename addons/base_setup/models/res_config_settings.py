@@ -71,6 +71,7 @@ class ResConfigSettings(models.TransientModel):
             'res_id': self.env.company_id.id,
             'target': 'current',
         }
+
     @api.multi
     def open_default_user(self):
         action = self.env.ref('base.action_res_users').read()[0]
@@ -100,7 +101,7 @@ class ResConfigSettings(models.TransientModel):
         company = self.env.user.company_id
         wizard = self.env['base.document.layout'].create({'company_id': company.id})
         view_id = self.env.ref('base.view_base_document_layout').id
-        
+
         return {
             'type': 'ir.actions.act_window',
             'name': _('Configure your document layout'),

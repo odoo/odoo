@@ -85,9 +85,11 @@ class BaseDocumentLayout(models.TransientModel):
             wizard.report_layout_id = wizard.env["report.layout"].search([
                 ('view_id.key', '=', wizard.company_id.external_report_layout_id.key)
             ])
+            primary = wizard.primary_color or wizard.report_layout_id.primary_color
+            secondary = wizard.secondary_color or wizard.report_layout_id.secondary_color
             wizard.company_colors = json.dumps({
                 'default': [wizard.report_layout_id.primary_color, wizard.report_layout_id.secondary_color],
-                'values': [wizard.primary_color, wizard.secondary_color],
+                'values': [primary, secondary],
             })
             BaseDocumentLayout.previous_default = [wizard.report_layout_id.primary_color, wizard.report_layout_id.secondary_color]
 
@@ -115,7 +117,7 @@ class BaseDocumentLayout(models.TransientModel):
     def onchange_report_layout_id(self):
         for wizard in self:
             wizard.external_report_layout_id = wizard.report_layout_id.view_id
-            
+
             values = json.loads(wizard.company_colors)['values']
             default = [wizard.report_layout_id.primary_color,
                        wizard.report_layout_id.secondary_color]
