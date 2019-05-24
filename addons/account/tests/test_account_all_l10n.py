@@ -27,7 +27,10 @@ class TestAllL10n(SingleTransactionCase):
         _logger.info("Modules to install: %s" % [x.name for x in l10n_mods])
         for mod in l10n_mods:
             _logger.info('Installing l10n module %s' % mod.name)
-            mod.button_immediate_install()
+            try:
+                mod.button_immediate_install()
+            except Exception:
+                _logger.error('Failure during installation of module "%s"', mod.name)
         # Now that new modules are installed, we have to reset the environment
         api.Environment.reset()
         cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
@@ -36,9 +39,13 @@ class TestAllL10n(SingleTransactionCase):
         coas = self.env['account.chart.template'].search([])
         for coa in coas:
             cname = 'company_%s' % str(coa.id)
-            _logger.info('Testing COA: %s (company: %s)' % (coa.name, cname))
             comp = self.env['res.company'].create({
                 'name': cname,
             })
-            self.env.company_id = comp
-            coa.try_loading_for_current_company()
+            self.env.user.company_ids += comp
+            self.env.user.company_id = comp
+            msg = 'Testing COA: %s (company: %s)' % (coa.name, cname)
+            _logger.info(msg)
+            with self.subTest(msg=msg):
+                with self.cr.savepoint():
+                    coa.try_loading_for_current_company()
