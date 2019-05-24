@@ -8,10 +8,17 @@ from PIL import Image
 from odoo import api, fields, models, tools
 from odoo.tools.image import image_data_uri
 
-def rgb_to_hex(rgb):
+def process_rgb(rgb):
+    """
+        Darkens the value if the value of a band is above a given threshold,
+        then converts the tuple to a hex value
+    """
     hex_list = []
+    threshold = 200
+    brightest = max(rgb)
     for color in range(3):
-        hex_list.append(hex(rgb[color]).split('x')[-1].zfill(2))
+        value = rgb[color] / (brightest / threshold) if brightest > threshold else rgb[color]
+        hex_list.append(hex(int(value)).split('x')[-1].zfill(2))
     return '#' + ''.join(hex_list)
 
 
@@ -126,6 +133,7 @@ class BaseDocumentLayout(models.TransientModel):
     def onchange_logo(self):
         """ Identify dominant colors of the logo """
         for wizard in self:
+            print('\n\n', wizard.logo, '\n\n')
             if not wizard.logo:
                 return
             margin = 50
@@ -150,5 +158,5 @@ class BaseDocumentLayout(models.TransientModel):
 
             wizard.company_colors = json.dumps({
                 'default': [wizard.report_layout_id.primary_color, wizard.report_layout_id.secondary_color],
-                'values': [rgb_to_hex(primary), rgb_to_hex(secondary)],
+                'values': [process_rgb(primary), process_rgb(secondary)],
             })

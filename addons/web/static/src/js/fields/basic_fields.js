@@ -20,6 +20,7 @@ var session = require('web.session');
 var utils = require('web.utils');
 var view_dialogs = require('web.view_dialogs');
 var field_utils = require('web.field_utils');
+var ColorpickerDialog = require('wysiwyg.widgets.ColorpickerDialog');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -3018,8 +3019,11 @@ var AceEditor = DebouncedField.extend({
 var FieldColor = AbstractField.extend({
     template: 'FieldColor',
     events: {
-        'click .o_field_color_input': '_onColorClick',
+        'click .o_field_color': '_onColorClick',
         'click .o_reset_colors': '_onResetColors',
+    },
+    custom_events: {
+        'colorpicker:saved': '_onColorpickerSaved',
     },
 
     //--------------------------------------------------------------------------
@@ -3039,18 +3043,6 @@ var FieldColor = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
-    * @private
-    */
-    _checkDefault: function () {
-        var parsed = JSON.parse(this.value);
-        if (parsed.values.join() === parsed.default.join()) {
-            this.$('.o_reset_colors').hide();
-        } else {
-            this.$('.o_reset_colors').show();
-        }
-    },
-
-    /**
     * @override
     * @private
     */
@@ -3065,7 +3057,10 @@ var FieldColor = AbstractField.extend({
                 .css('background-color', values[i]);
             this.$('.o_field_colors').append(colorField);
         }
-        this._checkDefault();
+        // Checks whether the colors are the default ones
+        var parsed = JSON.parse(this.value);
+        this.$('.o_reset_colors').toggle(
+            parsed.values.join().toLowerCase() !== parsed.default.join().toLowerCase());
     },
 
     //--------------------------------------------------------------------------
@@ -3077,18 +3072,27 @@ var FieldColor = AbstractField.extend({
     * @param {Event} ev
     */
     _onColorClick: function (ev) {
-        $(ev.target).css('backgroundColor', ev.target.value);
-        var self = this;
-        var values = [].slice.call($('.o_field_color_input'))
+        this.selectedColor = ev.target;
+        new ColorpickerDialog(this, { defaultColor: $(ev.target).data('value') })
+            .open();
+    },
+
+    /**
+    * @private
+    * @param {Event} ev
+    */
+    _onColorpickerSaved: function (ev) {
+        $(this.selectedColor).data('value', ev.data.hex)
+            .css('backgroundColor', ev.data.hex);
+        var values = [].slice.call($('.o_field_color'))
             .map(function (colorField) {
                 return $(colorField).data('value');
             });
         this._setValue(JSON.stringify({
             default: JSON.parse(this.value).default,
             values: values,
-        })).then(function () {
-            self.selectedColor = null;
-        });
+        }));
+        this.selectedColor = null;
         this.trigger_up('color:change', this);
     },
 

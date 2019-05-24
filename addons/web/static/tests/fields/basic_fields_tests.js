@@ -5475,8 +5475,8 @@ QUnit.module('basic_fields', {
 
     QUnit.module('FieldColor');
 
-    QUnit.test('Field Color: default state', async function (assert) {
-        assert.expect(2);
+    QUnit.test('Field Color: pick a color', async function (assert) {
+        assert.expect(3);
 
         var form = await createView({
             View: FormView,
@@ -5492,38 +5492,20 @@ QUnit.module('basic_fields', {
             },
         });
 
-        assert.containsN(form, $('.o_field_color'), 2, 
+        assert.containsN(form, $('.o_field_color'), 2,
             "Two color fields should be displayed");
         assert.containsOnce(form, $('.btn.o_reset_colors'),
             "Reset colors button should be visible");
 
-        form.destroy();
-    });
-
-    QUnit.test('Field Color: pick a color', async function (assert) {
-        assert.expect(1);
-
-        var form = await createView({
-            View: FormView,
-            model: 'partner',
-            data: this.data,
-            arch:
-                '<form>' +
-                    '<field name="hex_color" widget="color" />' +
-                '</form>',
-            res_id: 1,
-            viewOptions: {
-                mode: 'edit',
-            },
-        });
-
         await testUtils.dom.click(form.$('.o_field_color:first'));
+        await testUtils.nextTick();
 
-        await testUtils.fields.editInput(form.$('.o_field_color_input:first'), '#00ff00');
-        await testUtils.dom.triggerEvents(form.$('.o_field_color_input:first'), ['change']);
+        await testUtils.fields.editInput($('.modal .o_hex_input'), '#00ff00');
+        await testUtils.dom.triggerEvents($('.modal .o_hex_input'), ['change']);
+        await testUtils.dom.click($('.modal .btn:contains("Choose")'));
 
         assert.strictEqual($('.o_field_color:first').css('backgroundColor'), 'rgb(0, 255, 0)',
-            "Background of the first field should be updated");
+            "Background of the first field should be updated to green");
 
         form.destroy();
     });

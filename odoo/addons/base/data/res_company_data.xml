@@ -5,21 +5,13 @@
             <field name="name">My Company</field>
             <field name="partner_id" ref="main_partner"/>
             <field name="currency_id" ref="base.EUR"/>
+            <field name="primary_color">#000000</field>
+            <field name="secondary_color">#000000</field>
             <field name="favicon" model="res.company" eval="obj()._get_default_favicon(original=True)"/>
         </record>
 
         <record id="main_partner" model="res.partner">
             <field name="company_id" ref="main_company"/>
-        </record>
-
-        <record id="default_company_scss" model="ir.attachment">
-            <field name="name">/web/static/src/scss/res_company.scss</field>
-            <field name="type">binary</field>
-            <field name="mimetype">text/scss</field>
-            <!-- $o-company-primary-color:#000000;$o-company-secondary-color:#000000;$o-company-font:Lato; -->
-            <field name="datas">JG8tY29tcGFueS1wcmltYXJ5LWNvbG9yOiMwMDAwMDA7JG8tY29tcGFueS1zZWNvbmRhcnktY29sb3I6IzAwMDAwMDskby1jb21wYW55LWZvbnQ6TGF0bzs=</field>
-            <field name="datas_fname">res_company.scss</field>
-            <field name="url">/web/static/src/scss/res_company.scss</field>
         </record>
     </data> 
 </odoo>
