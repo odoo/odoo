@@ -26,9 +26,15 @@ class WebsiteSaleProductComparison(WebsiteSale):
                 if not var.attribute_id.create_variant:
                     continue
                 res.setdefault(cat_name, OrderedDict()).setdefault(att_name, [' - '] * len(products))
-                val = product.attribute_value_ids.filtered(lambda x: x.attribute_id == var.attribute_id)
-                if val:
-                    res[cat_name][att_name][num] = val[0].name
+                if product.attribute_value_ids:
+                    val = product.attribute_value_ids.filtered(lambda x: x.attribute_id == var.attribute_id)
+                    if val:
+                        res[cat_name][att_name][num] = val[0].name
+                else:
+                    val = product.product_tmpl_id.attribute_line_ids.value_ids.filtered(lambda x: x.attribute_id == var.attribute_id)
+                    if val:
+                        res[cat_name][att_name][num] = ', '.join(value.name for value in val)
+
         values['specs'] = res
         values['compute_currency'] = self._get_compute_currency_and_context(products[:1].product_tmpl_id)[0]
         return request.render("website_sale_comparison.product_compare", values)
