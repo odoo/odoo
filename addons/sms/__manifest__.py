@@ -18,6 +18,7 @@ The service is provided by the In App Purchase Odoo platform.
         'views/res_partner_views.xml',
         'views/assets.xml',
         'views/sms_sms_views.xml',
+        'views/sms_template_views.xml',
         'security/ir.model.access.csv',
     ],
     'qweb': [

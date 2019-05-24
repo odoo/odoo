@@ -77,6 +77,33 @@ class MailThread(models.AbstractModel):
                 result[record.id] = {'partner': self.env['res.partner'], 'sanitized': False, 'number': False}
         return result
 
+    def _message_sms_schedule_mass(self, body='', template=False, active_domain=None):
+        composer_context = {
+            'default_res_model': self._name,
+            'default_composition_mode': 'mass',
+            'default_template_id': template.id if template else False,
+            'default_body': body if body and not template else False,
+        }
+        if active_domain is not None:
+            composer_context['default_use_active_domain'] = True
+            composer_context['default_active_domain'] = repr(active_domain)
+        else:
+            composer_context['default_res_ids'] = self.ids
+
+        composer = self.env['sms.composer'].with_context(**composer_context).create({})
+        return composer._action_send_sms()
+
+    def _message_sms_with_template(self, template_xmlid=False, template=False, template_fallback='', partner_ids=False, put_in_queue=False):
+        self.ensure_one()
+        if not template and template_xmlid:
+            template = self.env.ref(template_xmlid, raise_if_not_found=False)
+        if template:
+            template_w_lang = template._set_context_lang(self.ids)[self.id]
+            body = template._render_template(template_w_lang.body, self._name, self.ids)[self.id]
+        else:
+            body = self.env['sms.template']._render_template(template_fallback, self._name, self.ids)[self.id]
+        return self._message_sms(body, partner_ids=partner_ids)
+
     def _message_sms(self, body, subtype_id=False, partner_ids=False, number_field=False, numbers=False):
         """ Main method to post a message on a record using SMS-based notification
         method.
