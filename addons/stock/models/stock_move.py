@@ -1043,7 +1043,7 @@ class StockMove(models.Model):
                 if all(state in ('done', 'cancel') for state in siblings_states):
                     move.move_dest_ids.write({'procure_method': 'make_to_stock'})
                     move.move_dest_ids.write({'move_orig_ids': [(3, move.id, 0)]})
-            if move.previous_move_propagate:
+            if move.previous_move_propagate and move.move_orig_ids:
                 move._action_cancel_origin()
         self.write({'state': 'cancel', 'move_orig_ids': [(5, 0, 0)]})
         return True
@@ -1248,17 +1248,20 @@ class StockMove(models.Model):
                 else:
                     move.state = 'confirmed'
 
-    def _get_upstream_documents_and_responsibles(self, visited):
+    def _get_upstream_documents_and_responsibles(self, visited, log_activity=None):
         if self.move_orig_ids and any(m.state not in ('done', 'cancel') for m in self.move_orig_ids):
             result = set()
             visited |= self
             for move in self.move_orig_ids:
                 if move.state not in ('done', 'cancel'):
-                    for document, responsible, visited in move._get_upstream_documents_and_responsibles(visited):
-                        result.add((document, responsible, visited))
+                    if not move.previous_move_propagate:
+                        log_activity = False
+                    for (document, responsible, visited, activity) in move._get_upstream_documents_and_responsibles(visited, log_activity):
+                        result.add((document, responsible, visited, activity))
             return result
         else:
-            return [(self.picking_id, self.product_id.responsible_id, visited)]
+            result = [(self.picking_id, self.product_id.responsible_id, visited, log_activity)]
+            return result
 
     def _set_quantity_done(self, qty):
         """

@@ -25,7 +25,7 @@ class StockMove(models.Model):
             > Check if some of previouse moves are not cancel decrease the line quantity.
             > Check that purchase line has been generated from the multiple move or not.
         """
-        moves_purchase_line = self.filtered(lambda m: m.created_purchase_line_id and m.state not in ('done', 'cancel'))
+        moves_purchase_line = self.move_orig_ids.filtered(lambda m: m.created_purchase_line_id and m.state not in ('done', 'cancel'))
         pol_to_unlink = self.env['purchase.order.line']
         po_to_cancel = self.env['purchase.order']
         for move in moves_purchase_line:
@@ -37,10 +37,10 @@ class StockMove(models.Model):
                     if all(state == 'cancel' for state in siblings_states):
                         if len(order.order_line) > 1:
                             # Need to log the message that line has been removed.
-                            pol_to_unlink += purchase_line
+                            pol_to_unlink |= purchase_line
                         else:
                             # Cancel order line incase its generated from single demand.
-                            po_to_cancel += order
+                            po_to_cancel |= order
                     else:
                         # When purchase line is merged for two sale orders.
                         total_previous_qty = 0.0
@@ -50,15 +50,16 @@ class StockMove(models.Model):
                             cancel_quantity = move.product_uom._compute_quantity(move.product_uom_qty, purchase_line.product_uom)
                             if cancel_quantity == purchase_line.product_qty:
                                 if len(order.order_line.ids) == 1:
-                                    po_to_cancel += order
+                                    po_to_cancel |= order
                                 else:
-                                    pol_to_unlink += purchase_line
+                                    pol_to_unlink |= purchase_line
                             else:
                                 purchase_line.write({'product_qty': purchase_line.product_qty - cancel_quantity})
+        # Skip moves which have created purchase lines
+        super(StockMove, self - moves_purchase_line)._action_cancel_origin()
         pol_to_unlink.unlink()
         po_to_cancel.button_cancel()
-        # Skip moves which have created purchase lines
-        return super(StockMove, self - moves_purchase_line)._action_cancel_origin()
+        return True
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
@@ -128,11 +129,12 @@ class StockMove(models.Model):
         super(StockMove, self)._clean_merged()
         self.write({'created_purchase_line_id': False})
 
-    def _get_upstream_documents_and_responsibles(self, visited):
-        if self.created_purchase_line_id and (not self.previous_move_propagate or self.created_purchase_line_id.state != 'draft') and self.created_purchase_line_id.state not in ('done', 'cancel'):
-            return [(self.created_purchase_line_id.order_id, self.created_purchase_line_id.order_id.user_id, visited)]
+    def _get_upstream_documents_and_responsibles(self, visited, log_activity=False):
+        if self.created_purchase_line_id:
+            log_activity = True if self.created_purchase_line_id.state == 'purchase' else False
+            return [(self.created_purchase_line_id.order_id, self.created_purchase_line_id.order_id.user_id, visited, log_activity)]
         else:
-            return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
+            return super(StockMove, self)._get_upstream_documents_and_responsibles(visited, log_activity)
 
     def _get_related_invoices(self):
         """ Overridden to return the vendor bills related to this stock move.

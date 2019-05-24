@@ -161,14 +161,14 @@ class PurchaseOrder(models.Model):
             }
             return self.env.ref('purchase_stock.exception_on_po').render(values=values)
 
-        documents = self.env['stock.picking']._log_activity_get_documents(purchase_order_lines_quantities, 'move_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
+        documents = self.env['stock.picking']._log_activity_get_documents(purchase_order_lines_quantities, 'move_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby, log_activity=True)
         filtered_documents = {}
-        for (parent, responsible), rendering_context in documents.items():
+        for (parent, responsible, activity), rendering_context in documents.items():
             if parent._name == 'stock.picking':
                 if parent.state == 'cancel':
                     continue
-            filtered_documents[(parent, responsible)] = rendering_context
-        self.env['stock.picking']._log_activity(_render_note_exception_quantity_po, filtered_documents)
+            filtered_documents[(parent, responsible, activity)] = rendering_context
+        self.env['stock.picking']._log_activity_message(_render_note_exception_quantity_po, filtered_documents)
 
     @api.multi
     def _get_destination_location(self):

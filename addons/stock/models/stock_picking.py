@@ -863,7 +863,7 @@ class Picking(models.Model):
                 backorders |= backorder_picking
         return backorders
 
-    def _log_activity_get_documents(self, orig_obj_changes, stream_field, stream, sorted_method=False, groupby_method=False):
+    def _log_activity_get_documents(self, orig_obj_changes, stream_field, stream, sorted_method=False, groupby_method=False, log_activity=None):
         """ Generic method to log activity. To use with
         _log_activity method. It either log on uppermost
         ongoing documents or following documents. This method
@@ -895,9 +895,16 @@ class Picking(models.Model):
         # {'(delivery_picking_1, admin)': stock.move(1, 2)
         #  '(delivery_picking_2, admin)': stock.move(3)}
         visited_documents = {}
+        grouped_moves = {}
         if stream == 'DOWN':
             if sorted_method and groupby_method:
-                grouped_moves = groupby(sorted(origin_objects.mapped(stream_field), key=sorted_method), key=groupby_method)
+                grp_moves = groupby(sorted(origin_objects.mapped(stream_field), key=sorted_method), key=groupby_method)
+                for ((parent, responsible), moves) in grp_moves:
+                    if grouped_moves.get((parent, responsible, True)):
+                        grouped_moves[(parent, responsible, True)] |= moves
+                    else:
+                        grouped_moves[(parent, responsible, True)] = moves
+                grouped_moves = grouped_moves.items()
             else:
                 raise UserError(_('You have to define a groupby and sorted method and pass them as arguments.'))
         elif stream == 'UP':
@@ -906,19 +913,19 @@ class Picking(models.Model):
             # destination objects in order to ascend documents.
             grouped_moves = {}
             for visited_move in origin_objects.mapped(stream_field):
-                for document, responsible, visited in visited_move._get_upstream_documents_and_responsibles(self.env[visited_move._name]):
-                    if grouped_moves.get((document, responsible)):
-                        grouped_moves[(document, responsible)] |= visited_move
-                        visited_documents[(document, responsible)] |= visited
+                for (document, responsible, visited, activity) in visited_move._get_upstream_documents_and_responsibles(self.env[visited_move._name], log_activity):
+                    if grouped_moves.get((document, responsible, activity)):
+                        grouped_moves[(document, responsible, activity)] |= visited_move
+                        visited_documents[(document, responsible, activity)] |= visited
                     else:
-                        grouped_moves[(document, responsible)] = visited_move
-                        visited_documents[(document, responsible)] = visited
+                        grouped_moves[(document, responsible, activity)] = visited_move
+                        visited_documents[(document, responsible, activity)] = visited
             grouped_moves = grouped_moves.items()
         else:
             raise UserError(_('Unknow stream.'))
 
         documents = {}
-        for (parent, responsible), moves in grouped_moves:
+        for ((parent, responsible, activity), moves) in grouped_moves:
             if not parent:
                 continue
             moves = list(moves)
@@ -926,12 +933,12 @@ class Picking(models.Model):
             # Get the note
             rendering_context = {move: (orig_object, orig_obj_changes[orig_object]) for move in moves for orig_object in move_to_orig_object_rel[move]}
             if visited_documents:
-                documents[(parent, responsible)] = rendering_context, visited_documents.values()
+                documents[(parent, responsible, activity)] = rendering_context, visited_documents.values()
             else:
-                documents[(parent, responsible)] = rendering_context
+                documents[(parent, responsible, activity)] = rendering_context
         return documents
 
-    def _log_activity(self, render_method, documents):
+    def _log_activity_message(self, render_method, documents):
         """ Log a note for each documents, responsible pair in
         documents passed as argument. The render_method is then
         call in order to use a template and render it with a
@@ -951,14 +958,18 @@ class Picking(models.Model):
         the render_method should return a string with an html format
         :param stream string:
         """
-        for (parent, responsible), rendering_context in documents.items():
+        for (parent, responsible, activity), rendering_context in documents.items():
             note = render_method(rendering_context)
-            parent.activity_schedule(
-                'mail.mail_activity_data_warning',
-                date.today(),
-                note=note,
-                user_id=responsible.id or SUPERUSER_ID
-            )
+            if activity:
+                parent.activity_schedule(
+                    'mail.mail_activity_data_warning',
+                    date.today(),
+                    note=note,
+                    user_id=responsible.id or SUPERUSER_ID
+                )
+            else:
+                order_id = parent
+                order_id.message_post(body=note)
 
     def _log_less_quantities_than_expected(self, moves):
         """ Log an activity on picking that follow moves. The note
@@ -994,9 +1005,9 @@ class Picking(models.Model):
             }
             return self.env.ref('stock.exception_on_picking').render(values=values)
 
-        documents = self._log_activity_get_documents(moves, 'move_dest_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
+        documents = self._log_activity_get_documents(moves, 'move_dest_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby, log_activity=True)
         documents = self._less_quantities_than_expected_add_documents(moves, documents)
-        self._log_activity(_render_note_exception_quantity, documents)
+        self._log_activity_message(_render_note_exception_quantity, documents)
 
     def _less_quantities_than_expected_add_documents(self, moves, documents):
         return documents

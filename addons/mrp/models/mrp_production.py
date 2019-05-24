@@ -964,5 +964,4 @@ class MrpProduction(models.Model):
                 'cancel': cancel
             }
             return self.env.ref('mrp.exception_on_mo').render(values=values)
-
-        self.env['stock.picking']._log_activity(_render_note_exception_quantity_mo, documents)
+        self.env['stock.picking']._log_activity_message(_render_note_exception_quantity_mo, documents)

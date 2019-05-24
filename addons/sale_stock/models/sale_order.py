@@ -85,8 +85,16 @@ class SaleOrder(models.Model):
                     elif float_compare(order_line.product_uom_qty, pre_order_line_qty[order_line], order_line.product_uom.rounding) > 0:
                         order_lines_to_run |= order_line
                 if to_log:
-                    documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
-                    order._log_decrease_ordered_quantity(documents)
+                    activity = False if order.state not in ['done', 'cancel'] else True
+                    documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP', log_activity=activity)
+                    filtered_documents = {}
+                    for (parent, responsible, activity), rendering_context in documents.items():
+                        if parent._name == 'stock.picking':
+                            if parent.state == 'cancel':
+                                continue
+                        rendering_context += (activity,)
+                        filtered_documents[(parent, responsible, activity)] = rendering_context
+                    order._log_decrease_ordered_quantity(filtered_documents, cancel=False)
                 if order_lines_to_run:
                     order_lines_to_run._action_launch_stock_rule(pre_order_line_qty)
         return res
@@ -145,15 +153,16 @@ class SaleOrder(models.Model):
         for sale_order in self:
             if sale_order.state == 'sale' and sale_order.order_line:
                 sale_order_lines_quantities = {order_line: (order_line.product_uom_qty, 0) for order_line in sale_order.order_line}
-                documents = self.env['stock.picking']._log_activity_get_documents(sale_order_lines_quantities, 'move_ids', 'UP')
+                documents = self.env['stock.picking']._log_activity_get_documents(sale_order_lines_quantities, 'move_ids', 'UP', log_activity=True)
         self.mapped('picking_ids').action_cancel()
         if documents:
             filtered_documents = {}
-            for (parent, responsible), rendering_context in documents.items():
+            for (parent, responsible, activity), rendering_context in documents.items():
                 if parent._name == 'stock.picking':
                     if parent.state == 'cancel':
                         continue
-                filtered_documents[(parent, responsible)] = rendering_context
+                rendering_context += (activity,)
+                filtered_documents[(parent, responsible, activity)] = rendering_context
             self._log_decrease_ordered_quantity(filtered_documents, cancel=True)
         return super(SaleOrder, self).action_cancel()
 
@@ -170,8 +179,9 @@ class SaleOrder(models.Model):
 
     def _log_decrease_ordered_quantity(self, documents, cancel=False):
 
-        def _render_note_exception_quantity_so(rendering_context):
-            order_exceptions, visited_moves = rendering_context
+        def _render_note_exception_quantity_so(values):
+            order_exceptions, visited_moves, activity = rendering_context
+            template = 'sale_stock.exception_on_so' if activity else 'sale_stock.message_on_so'
             visited_moves = list(visited_moves)
             visited_moves = self.env[visited_moves[0]._name].concat(*visited_moves)
             order_line_ids = self.env['sale.order.line'].browse([order_line.id for order in order_exceptions.values() for order_line in order[0]])
@@ -183,9 +193,10 @@ class SaleOrder(models.Model):
                 'impacted_pickings': impacted_pickings,
                 'cancel': cancel
             }
-            return self.env.ref('sale_stock.exception_on_so').render(values=values)
+            return self.env.ref(template).render(values=values)
 
-        self.env['stock.picking']._log_activity(_render_note_exception_quantity_so, documents)
+        for (parent, responsible, activity), rendering_context in documents.items():
+            self.env['stock.picking']._log_activity_message(_render_note_exception_quantity_so, documents)
 
 
 class SaleOrderLine(models.Model):
