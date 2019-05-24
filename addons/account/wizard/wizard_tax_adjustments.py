@@ -18,28 +18,27 @@ class TaxAdjustments(models.TransientModel):
     debit_account_id = fields.Many2one('account.account', string='Debit account', required=True, domain=[('deprecated', '=', False)])
     credit_account_id = fields.Many2one('account.account', string='Credit account', required=True, domain=[('deprecated', '=', False)])
     amount = fields.Monetary(currency_field='company_currency_id', required=True)
-    adjustment_type = fields.Selection([('debit', 'Applied on debit journal item'), ('credit', 'Applied on credit journal item')], string="Adjustment Type", store=False, required=True)
-    company_currency_id = fields.Many2one('res.currency', readonly=True, default=lambda self: self.env.company.currency_id)
-    tax_id = fields.Many2one('account.tax', string='Adjustment Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'adjustment')], required=True)
+    adjustment_type = fields.Selection([('debit', 'Applied on debit journal item'), ('credit', 'Applied on credit journal item')], string="Adjustment Type", required=True)
+    tax_report_line_id = fields.Many2one(string="Report Line", comodel_name='account.tax.report.line', required=True, help="The report line to make an adjustment for.")
+    company_currency_id = fields.Many2one('res.currency', readonly=True, default=lambda x: x.env.company_id.currency_id)
+    country_id = fields.Many2one(string="Country", comodel_name='res.country', readonly=True, default=lambda x: x.env.company_id.country_id)
 
-    @api.multi
-    def _create_move(self):
-        adjustment_type = self.env.context.get('adjustment_type', (self.amount > 0.0 and 'debit' or 'credit'))
+    def create_move(self):
         move_line_vals = []
 
-        is_debit = adjustment_type == 'debit'
-        for tax_vals in self.tax_id.compute_all(abs(self.amount))['taxes']:
-            repartition_line = self.env['account.tax.repartition.line'].browse(tax_vals['tax_repartition_line_id'])
-            # Vals for the amls corresponding to the tax
-            move_line_vals.append((0, 0, {
-                'name': self.reason,
-                'debit': is_debit and abs(self.amount) or 0,
-                'credit': not is_debit and abs(self.amount) or 0,
-                'account_id': is_debit and self.debit_account_id.id or self.credit_account_id.id,
-                'tax_repartition_line_id': repartition_line.id,
-                'tax_base_amount': tax_vals['base'],
-                'tag_ids': [(6, False, repartition_line.tag_ids.ids)],
-            }))
+        is_debit = self.adjustment_type == 'debit'
+        sign_multiplier = (self.amount<0 and -1 or 1) * (self.adjustment_type == 'credit' and -1 or 1)
+        filter_lambda = (sign_multiplier < 0) and (lambda x: x.tax_negate) or (lambda x: not x.tax_negate)
+        adjustment_tag = self.tax_report_line_id.tag_ids.filtered(filter_lambda)
+
+        # Vals for the amls corresponding to the ajustment tag
+        move_line_vals.append((0, 0, {
+            'name': self.reason,
+            'debit': is_debit and abs(self.amount) or 0,
+            'credit': not is_debit and abs(self.amount) or 0,
+            'account_id': is_debit and self.debit_account_id.id or self.credit_account_id.id,
+            'tag_ids': [(6, False, [adjustment_tag.id])],
+        }))
 
         # Vals for the counterpart line
         move_line_vals.append((0, 0, {
@@ -47,7 +46,6 @@ class TaxAdjustments(models.TransientModel):
             'debit': not is_debit and abs(self.amount) or 0,
             'credit': is_debit and abs(self.amount) or 0,
             'account_id': is_debit and self.credit_account_id.id or self.debit_account_id.id,
-            'tax_repartition_line_id': False,
         }))
 
         # Create the move
@@ -59,22 +57,10 @@ class TaxAdjustments(models.TransientModel):
         }
         move = self.env['account.move'].create(vals)
         move.post()
-        return move.id
 
-    @api.multi
-    def create_move_debit(self):
-        return self.with_context(adjustment_type='debit').create_move()
-
-    @api.multi
-    def create_move_credit(self):
-        return self.with_context(adjustment_type='credit').create_move()
-
-    def create_move(self):
-        #create the adjustment move
-        move_id = self._create_move()
-        #return an action showing the created move
+        # Return an action opening the created move
         action = self.env.ref(self.env.context.get('action', 'account.action_move_line_form'))
         result = action.read()[0]
         result['views'] = [(False, 'form')]
-        result['res_id'] = move_id
+        result['res_id'] = move.id
         return result
