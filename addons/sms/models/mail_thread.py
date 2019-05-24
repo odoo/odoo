@@ -84,6 +84,46 @@ class MailThread(models.AbstractModel):
                 result[record.id] = {'partner': self.env['res.partner'], 'sanitized': False, 'number': False}
         return result
 
+    def _message_sms_schedule_mass(self, body='', template=False, active_domain=None):
+        """ Shortcut method to schedule a mass sms sending on a recordset.
+
+        :param template: an optional sms.template record;
+        :param active_domain: bypass self.ids and apply composer on active_domain
+          instead;
+        """
+        composer_context = {
+            'default_res_model': self._name,
+            'default_composition_mode': 'mass',
+            'default_template_id': template.id if template else False,
+            'default_body': body if body and not template else False,
+        }
+        if active_domain is not None:
+            composer_context['default_use_active_domain'] = True
+            composer_context['default_active_domain'] = repr(active_domain)
+        else:
+            composer_context['default_res_ids'] = self.ids
+
+        composer = self.env['sms.composer'].with_context(**composer_context).create({})
+        return composer._action_send_sms()
+
+    def _message_sms_with_template(self, template=False, template_xmlid=False, template_fallback='', partner_ids=False, **kwargs):
+        """ Shortcut method to perform a _message_sms with an sms.template.
+
+        :param template: a valid sms.template record;
+        :param template_xmlid: XML ID of an sms.template (if no template given);
+        :param template_fallback: plaintext (jinja-enabled) in case template
+          and template xml id are falsy (for example due to deleted data);
+        """
+        self.ensure_one()
+        if not template and template_xmlid:
+            template = self.env.ref(template_xmlid, raise_if_not_found=False)
+        if template:
+            template_w_lang = template._get_context_lang_per_id(self.ids)[self.id]
+            body = template._render_template(template_w_lang.body, self._name, self.ids)[self.id]
+        else:
+            body = self.env['sms.template']._render_template(template_fallback, self._name, self.ids)[self.id]
+        return self._message_sms(body, partner_ids=partner_ids, **kwargs)
+
     def _message_sms(self, body, subtype_id=False, partner_ids=False, number_field=False,
                      sms_numbers=None, sms_pid_to_number=None, **kwargs):
         """ Main method to post a message on a record using SMS-based notification

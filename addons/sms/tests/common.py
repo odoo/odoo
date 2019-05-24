@@ -73,6 +73,8 @@ class MockSMS(common.BaseCase):
     def assertSMSCanceled(self, partner, number, error_code, content=None):
         """ Check canceled SMS. Search is done for a pair partner / number where
         partner can be an empty recordset. """
+        if number is None and partner:
+            number = phone_validation.phone_get_sanitized_record_number(partner)
         sms = self.env['sms.sms'].sudo().search([
             ('partner_id', '=', partner.id), ('number', '=', number),
             ('state', '=', 'canceled')
@@ -85,6 +87,8 @@ class MockSMS(common.BaseCase):
     def assertSMSFailed(self, partner, number, error_code, content=None):
         """ Check failed SMS. Search is done for a pair partner / number where
         partner can be an empty recordset. """
+        if number is None and partner:
+            number = phone_validation.phone_get_sanitized_record_number(partner)
         sms = self.env['sms.sms'].sudo().search([
             ('partner_id', '=', partner.id), ('number', '=', number),
             ('state', '=', 'error')
@@ -97,11 +101,13 @@ class MockSMS(common.BaseCase):
     def assertSMSOutgoing(self, partner, number, content=None):
         """ Check outgoing SMS. Search is done for a pair partner / number where
         partner can be an empty recordset. """
+        if number is None and partner:
+            number = phone_validation.phone_get_sanitized_record_number(partner)
         sms = self.env['sms.sms'].sudo().search([
             ('partner_id', '=', partner.id), ('number', '=', number),
             ('state', '=', 'outgoing')
         ])
-        self.assertTrue(sms, 'SMS: not found failed SMS for %s (number: %s, state)' % (partner, number))
+        self.assertTrue(sms, 'SMS: not found failed SMS for %s (number: %s)' % (partner, number))
         if content is not None:
             self.assertEqual(sms.body, content)
 
