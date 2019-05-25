@@ -55,6 +55,7 @@
 # Satish kumar <Satishafd@gmail.com>, 2019
 # Doryan R, 2019
 # Moka Tourisme <hello@mokatourisme.fr>, 2019
+# Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2019
 # Martin Trigaux, 2019
 # 
 msgid ""
@@ -1091,6 +1092,12 @@ msgid ""
 "    * The new lock date for advisors must be set after the previous lock date.\n"
 "    "
 msgstr ""
+"\n"
+"Rendre la date de blocage irréversible :\n"
+"\n"
+" * Vous ne pouvez pas définir des conditions plus strictes pour les conseillers que pour les utilisateurs. Dans ce cas, la date de blocage du conseiller doit être fixée avant la date de blocage pour les utilisateurs.\n"
+"* Vous ne pouvez pas bloquer une période qui n'est pas encore terminée. Dans ce cas, la date de blocage pour les conseillers doit être fixée avant le dernier jour du mois précédent.\n"
+"* La nouvelle date de blocage pour les conseillers doit être fixée après la date de blocage précédente."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -8748,7 +8755,7 @@ msgstr "Application"
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Application Accesses"
-msgstr "Accès à l'application"
+msgstr "Accès des applications"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_app
