@@ -94,7 +94,6 @@
         <field name="parent_id" ref="tax_report_issqn"/>
     </record>
 
-
     <record id="tax_report_csll" model="account.tax.report.line">
         <field name="name">CSLL</field>
         <field name="report_id" ref="tax_report"/>
@@ -238,7 +237,8 @@
     </record>
 
     <record id="tax_report_cofins_oper_export" model="account.tax.report.line">
-        <field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas no Mercado Interno e de Exportação </field>
+        <field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas no Mercado Interno e de Exportação
+        </field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="15"/>
         <field name="parent_id" ref="tax_report_cofins"/>
@@ -802,7 +802,7 @@
         <field name="parent_id" ref="tax_report_icms"/>
     </record>
 
-     <record id="tax_report_icms_nao_tributada" model="account.tax.report.line">
+    <record id="tax_report_icms_nao_tributada" model="account.tax.report.line">
         <field name="name">Não tributada</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="6"/>
@@ -816,7 +816,7 @@
         <field name="parent_id" ref="tax_report_icms"/>
     </record>
 
-     <record id="tax_report_icms_diferimento" model="account.tax.report.line">
+    <record id="tax_report_icms_diferimento" model="account.tax.report.line">
         <field name="name">Diferimento</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="8"/>
