@@ -2903,7 +2903,9 @@ var AceEditor = DebouncedField.extend({
         '/web/static/lib/ace/ace.js',
         [
             '/web/static/lib/ace/mode-python.js',
-            '/web/static/lib/ace/mode-xml.js'
+            '/web/static/lib/ace/mode-xml.js',
+            '/web/static/lib/ace/mode-js.js',
+            '/web/static/lib/ace/mode-scss.js'
         ]
     ],
     events: {}, // events are triggered manually for this debounced widget
