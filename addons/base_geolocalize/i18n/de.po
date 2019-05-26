@@ -3,14 +3,25 @@
 # * base_geolocalize
 # 
 # Translators:
-# Martin Trigaux, 2018
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# Ralf Hilgenstock <rh@dialoge.info>, 2017
+# Rudolf Schnapka <rs@techno-flex.de>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Thomas Neu <t.neu@runbox.com>, 2017
+# Wolfgang Taferner, 2017
+# Niki Waibel, 2017
+# AppleMentalist <felix.schnatbaum@gmail.com>, 2017
+# Martin Trigaux, 2019
+# Johannes Croe <jcr@odoo.com>, 2019
+# Leon Grill <leg@odoo.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,31 +45,61 @@ msgid "<span> ;  Long:  </span>"
 msgstr "<span> ; Länge: </span>"
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/res_partner.py:19
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_id
+msgid "API"
+msgstr "API"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/base_geocoder.py:104
 #, python-format
 msgid ""
 "API key for GeoCoding (Places) required.\n"
-"\n"
-"                          Save this key in System Parameters with key: google.api_key_geocode, value: <your api key>\n"
-"                          Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information.\n"
-"                          "
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
 msgstr ""
+"API-Schlüssel für GeoCoding (Orte) erforderlich.\n"
+"Besuchen Sie https://developers.google.com/maps/documentation/geocoding/get-api-key für mehr Informationen."
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/res_partner.py:28
-#, python-format
-msgid ""
-"Cannot contact geolocation servers. Please make sure that your Internet "
-"connection is up and running (%s)."
-msgstr ""
-"Verbindung zu den Geolokalisierungs Servern konnte nicht hergestellt werden."
-" Bitte Stelle sicher, dass die Verbindung zum Internet hergestellt ist (%s)."
-" "
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
+msgid "API:"
+msgstr "API:"
+
+#. module: base_geolocalize
+#: model:ir.model,name:base_geolocalize.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfiguration "
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_partner
 msgid "Contact"
 msgstr "Kontakt"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__create_uid
+msgid "Created by"
+msgstr "Erstellt von"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__create_date
+msgid "Created on"
+msgstr "Erstellt am"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__display_name
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder__display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/base_geocoder.py:146
+#, python-format
+msgid "Error with geolocation server:"
+msgstr "Fehler beim Geolokalisierungsserver:"
+
+#. module: base_geolocalize
+#: model:ir.model,name:base_geolocalize.model_base_geocoder
+msgid "Geo Coder"
+msgstr "Geocoder"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__partner_latitude
@@ -71,6 +112,11 @@ msgstr "Geo Breitengrad"
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_users__partner_longitude
 msgid "Geo Longitude"
 msgstr "Geo Längengrad"
+
+#. module: base_geolocalize
+#: model:ir.model,name:base_geolocalize.model_base_geo_provider
+msgid "Geo Provider"
+msgstr "Geo-Anbieter"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -89,6 +135,65 @@ msgid "Geolocation Date"
 msgstr "Ortungsdatum"
 
 #. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
+msgid "Google Map API Key"
+msgstr "Google Map API Schlüssel"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__id
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
+msgid "Key:"
+msgstr "Schlüssel:"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider____last_update
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder____last_update
+msgid "Last Modified on"
+msgstr "Zuletzt geändert am"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__write_uid
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert durch"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__write_date
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__name
+msgid "Name"
+msgstr "Name"
+
+#. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Partner Assignation"
 msgstr "Partner-Zuordnung"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/base_geocoder.py:69
+#, python-format
+msgid "Provider %s is not implemented for geolocation service."
+msgstr ""
+"Der Anbieter%s ist für den Geolokalisierungsdienst nicht implementiert."
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_techname
+msgid "Tech Name"
+msgstr "Tech Name"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
+msgid ""
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key"
+" for more information."
+msgstr ""
+"Besuchen Sie https://developers.google.com/maps/documentation/geocoding/get-"
+"api-key für mehr Informationen."
