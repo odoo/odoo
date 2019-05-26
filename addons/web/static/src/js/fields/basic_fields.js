@@ -2840,6 +2840,7 @@ var FieldDomain = AbstractField.extend({
     _onShowSelectionButtonClick: function (e) {
         e.preventDefault();
         new view_dialogs.SelectCreateDialog(this, {
+        	context: this.attrs.context || {},
             title: _t("Selected records"),
             res_model: this._domainModel,
             domain: this.value || "[]",
