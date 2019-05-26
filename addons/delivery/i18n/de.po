@@ -28,6 +28,7 @@
 # Joshua Streitz <joshua.streitz@streitzgroup.com>, 2019
 # Martin Trigaux, 2019
 # Chris Egal <sodaswed@web.de>, 2019
+# Leon Grill <leg@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -35,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-20 13:49+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
+"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +49,7 @@ msgstr ""
 #: code:addons/delivery/models/sale_order.py:116
 #, python-format
 msgid " (Estimated Cost: %s )"
-msgstr ""
+msgstr " (Geschätzte Kosten: %s )"
 
 #. module: delivery
 #: model:mail.template,report_name:delivery.mail_template_data_delivery_confirmation
@@ -119,6 +120,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                    Get rate"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                    Rate abrufen"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:83
@@ -174,7 +177,7 @@ msgstr "Hinzufügen"
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 #, python-format
 msgid "Add a shipping method"
-msgstr ""
+msgstr "Eine Versandmethode hinzufügen"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__amount
@@ -228,7 +231,7 @@ msgstr "Frachtführer"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_choose_delivery_carrier__carrier_id
 msgid "Choose the method to deliver your goods"
-msgstr ""
+msgstr "Wählen Sie die Methode, mit der Sie Ihre Waren liefern möchten"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__company_id
@@ -296,7 +299,7 @@ msgstr "Protokollierung der Fehlerdiagnose"
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
 #: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
 msgid "Default delivery method used in sales orders."
-msgstr ""
+msgstr "Standard-Liefermethode, die in Kundenaufträgen verwendet wird."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -321,7 +324,7 @@ msgstr "Lieferungsspediteur"
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_carrier
 msgid "Delivery Carrier Selection Wizard"
-msgstr ""
+msgstr "Assistent zur Auswahl von Lieferungsspediteuren"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
@@ -372,7 +375,7 @@ msgstr "Lieferungen"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
 msgid "Delivery Price"
-msgstr ""
+msgstr "Lieferpreis"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
@@ -392,13 +395,13 @@ msgstr "Lieferungserfolgbewertung"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_set
 msgid "Delivery Set"
-msgstr ""
+msgstr "Lieferset"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__recompute_delivery_price
 msgid "Delivery cost should be recomputed"
-msgstr ""
+msgstr "Versandkosten sollten neu berechnet werden"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -458,11 +461,13 @@ msgid ""
 "Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
 "Real Cost: the customer will be invoiced the real cost of the shipping, the cost of the shipping will be updated on the SO after the delivery."
 msgstr ""
+"Geschätzte Kosten: Dem Kunden werden die geschätzten Kosten für den Versand in Rechnung gestellt.\n"
+"Tatsächliche Kosten: Dem Kunden werden die realen Kosten für den Versand in Rechnung gestellt, die Kosten für den Versand werden nach der Lieferung auf der SO aktualisiert."
 
 #. module: delivery
 #: selection:delivery.carrier,invoice_policy:0
 msgid "Estimated cost"
-msgstr ""
+msgstr "Geschätzte Kosten"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
@@ -564,7 +569,7 @@ msgstr "Rechnungsstellung bei Lieferung"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__invoicing_message
 msgid "Invoicing Message"
-msgstr ""
+msgstr "Rechnungsnachricht"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__invoice_policy
@@ -755,7 +760,7 @@ msgstr "Preisregeln"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Print Return Label"
-msgstr ""
+msgstr "Rücksendeetikett drucken"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move_line
@@ -790,12 +795,12 @@ msgstr "Menge"
 #. module: delivery
 #: selection:delivery.carrier,invoice_policy:0
 msgid "Real cost"
-msgstr ""
+msgstr "Tatsächliche Kosten"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "Recompute shipping cost"
-msgstr ""
+msgstr "Versandkosten neuberechnen"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
@@ -873,7 +878,7 @@ msgstr "Lieferadresse"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_id
 msgid "Shipping Method"
-msgstr ""
+msgstr "Versandmethode"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__shipping_weight
@@ -915,13 +920,13 @@ msgstr "The Poste"
 #: code:addons/delivery/models/delivery_carrier.py:134
 #, python-format
 msgid "The shipping is free since the order amount exceeds %.2f."
-msgstr ""
+msgstr "Der Versand ist kostenlos, da der Bestellwert höher ist als %.2f."
 
 #. module: delivery
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:48
 #, python-format
 msgid "The shipping price will be set once the delivery is done."
-msgstr ""
+msgstr "Der Versandpreis wird nach erfolgter Lieferung festgelegt."
 
 #. module: delivery
 #: code:addons/delivery/wizard/choose_delivery_package.py:60
@@ -958,12 +963,12 @@ msgstr "Dieser Prozentsatz wird zu den Versandkosten hinzugefügt."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__weight
 msgid "Total weight of all the products contained in the package."
-msgstr ""
+msgstr "Gesamtgewicht aller in der Verpackung enthaltenen Produkte."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
 msgid "Total weight of the package."
-msgstr ""
+msgstr "Gesamtgewicht des Pakets."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__shipping_weight
@@ -971,11 +976,14 @@ msgid ""
 "Total weight of the packages and products which are not in a package. That's"
 " the weight used to compute the cost of the shipping."
 msgstr ""
+"Gesamtgewicht der Verpackungen und Produkte, die sich nicht in einer "
+"Verpackung befinden. Das ist das Gewicht, mit dem die Kosten für den Versand"
+" berechnet werden."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight
 msgid "Total weight of the products in the picking."
-msgstr ""
+msgstr "Gesamtgewicht der Produkte in der Warenkommissionierung."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
@@ -1006,7 +1014,7 @@ msgstr "Lieferung vornehmen"
 #: code:addons/delivery/models/stock_picking.py:203
 #, python-format
 msgid "Unable to update the delivery price because of: "
-msgstr ""
+msgstr "Der Lieferpreis kann nicht aktualisiert werden aufgrund von: "
 
 #. module: delivery
 #: model:product.product,uom_name:delivery.product_product_delivery
@@ -1060,7 +1068,7 @@ msgstr "Gewicht für den Versand"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Weight for shipping"
-msgstr ""
+msgstr "Gewicht für den Versand"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__weight_uom_name
