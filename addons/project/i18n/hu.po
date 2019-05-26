@@ -1346,6 +1346,8 @@ msgid ""
 "Choosing a sub-tasks project will both enable sub-tasks and set their "
 "default project (possibly the project itself)"
 msgstr ""
+"Az alfeladat projekt kiválasztása mind bekapcsolja az alfeladatokat, mind "
+"beállítja az alapértelmezett projektjeiket (esetleg magát a projektet)"
 
 #. module: project
 #. openerp-web
@@ -1895,7 +1897,7 @@ msgstr "Befejezési dátum"
 #: code:addons/project/models/project.py:556
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of task(s)."
-msgstr ""
+msgstr "Hiba! Nem hozható létre a feladat(ok) rekurzív hierarchiája."
 
 #. module: project
 #: sql_constraint:project.project:0
@@ -2953,7 +2955,7 @@ msgstr "Szülő rekord folyamat azonosító"
 #: model:ir.ui.view,arch_db:project.view_task_form2
 #, python-format
 msgid "Parent Task"
-msgstr ""
+msgstr "Szülőfeladat"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_parent_model_id
@@ -3103,7 +3105,7 @@ msgstr "Projekt feladatai"
 #. module: project
 #: model:ir.actions.server,name:project.ir_actions_server_project_sample
 msgid "Project: Activate Sample Project"
-msgstr ""
+msgstr "Projekt: mintaprojekt aktiválása"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -3164,7 +3166,7 @@ msgstr ""
 #: model:project.task.type,legend_done:project.project_stage_data_2
 #, python-format
 msgid "Ready for Next Stage"
-msgstr ""
+msgstr "Készen áll a következő szakaszra"
 
 #. module: project
 #. openerp-web
@@ -3237,7 +3239,7 @@ msgstr "Piros"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_blocked
 msgid "Red Kanban Label"
-msgstr ""
+msgstr "Piros kanbancímke"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3363,7 +3365,7 @@ msgstr "Keresés az üzenetek között"
 #: code:addons/project/controllers/portal.py:98
 #, python-format
 msgid "Search in Stages"
-msgstr ""
+msgstr "Keresés a szakaszok között"
 
 #. module: project
 #. openerp-web
@@ -3474,6 +3476,8 @@ msgstr "Feladat specifikációja leírva"
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Split your tasks to organize your work into sub-milestones"
 msgstr ""
+"Ossza fel a feladatait annak érdekében, hogy al-mérföldkövekbe szervezze a "
+"munkáját"
 
 #. module: project
 #. openerp-web
@@ -3527,7 +3531,7 @@ msgstr "Kedvenc"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
 msgid "Starred Explanation"
-msgstr ""
+msgstr "Csillagozás magyarázata"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3548,12 +3552,12 @@ msgstr "Kezdési dátum"
 #: model:ir.model.fields,field_description:project.field_project_project_subtask_project_id
 #: model:ir.model.fields,field_description:project.field_project_task_subtask_project_id
 msgid "Sub-task Project"
-msgstr ""
+msgstr "Alfeladat projekt"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_subtask_count
 msgid "Sub-task count"
-msgstr ""
+msgstr "Alfeladatok száma"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_sub_task
@@ -3561,7 +3565,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_res_config_settings_group_subtask_project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Sub-tasks"
-msgstr ""
+msgstr "Alfeladatok"
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3844,12 +3848,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_projects
 msgid "There are no projects."
-msgstr ""
+msgstr "Nincsenek projektek."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "There are no tasks."
-msgstr ""
+msgstr "Nincsenek feladatok."
 
 #. module: project
 #. openerp-web
@@ -3957,7 +3961,7 @@ msgstr "Idő becslés a feladatra"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Time Management"
-msgstr ""
+msgstr "Idő menedzsment"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -4072,7 +4076,7 @@ msgstr "Munkaidő-kiosztás használata"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Use collaborative rich text pads on tasks"
-msgstr ""
+msgstr "Kollaboratív, formázott szövegszerkesztők használata a feladatokon"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4105,6 +4109,8 @@ msgstr ""
 #: model:project.task.type,legend_priority:project.project_stage_0
 msgid "Use the star for tasks related to gold customers"
 msgstr ""
+"Használja a csillagot az arany fokozatú ügyfelekkel kapcsolatos feladatok "
+"esetében"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -4295,32 +4301,32 @@ msgstr "Munkaidő"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr ""
+msgstr "Munkaidő a hozzárendelésig"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Close"
-msgstr ""
+msgstr "Munkaidő a lezárásig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_days_open
 msgid "Working days to assign"
-msgstr ""
+msgstr "Munkanapok a hozzárendelésig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_days_close
 msgid "Working days to close"
-msgstr ""
+msgstr "Munkanapok a lezárásig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_hours_open
 msgid "Working hours to assign"
-msgstr ""
+msgstr "Munkaórák a hozzárendelésig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_hours_close
 msgid "Working hours to close"
-msgstr ""
+msgstr "Munkaórák a lezárásig"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
@@ -4457,7 +4463,7 @@ msgstr "stb.."
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "for project:"
-msgstr ""
+msgstr "ehhez a projekthez:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
