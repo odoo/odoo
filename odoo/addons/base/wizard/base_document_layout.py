@@ -121,7 +121,10 @@ class BaseDocumentLayout(models.TransientModel):
             secondary = wizard.secondary_color or wizard.report_layout_id.secondary_color
 
             if wizard.logo and (not wizard.primary_color and not wizard.secondary_color):
-                primary, secondary = wizard.with_context(bin_size=False)._parse_logo_colors()
+                wizard_for_image = wizard
+                if wizard._context.get('bin_size'):
+                    wizard_for_image = wizard.with_context(bin_size=False)
+                primary, secondary = wizard_for_image._parse_logo_colors()
 
             wizard.company_colors = json.dumps({
                 'default': [wizard.report_layout_id.primary_color, wizard.report_layout_id.secondary_color],
