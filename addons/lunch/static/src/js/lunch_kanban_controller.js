@@ -77,13 +77,14 @@ var LunchKanbanController = KanbanController.extend({
      */
     _renderLunchKanbanWidget: function () {
         var self = this;
-        if (this.widget) {
-            this.widget.destroy();
-        }
+        var oldWidget = this.widget;
         this.widgetData.wallet = parseFloat(this.widgetData.wallet).toFixed(2);
         this.widget = new LunchKanbanWidget(this, _.extend(this.widgetData, {edit: this.editMode}));
         return this.widget.appendTo(document.createDocumentFragment()).then(function () {
             self.$('.o_lunch_kanban').prepend(self.widget.$el);
+            if (oldWidget) {
+                oldWidget.destroy();
+            }
         });
     },
     _showPaymentDialog: function (title) {
