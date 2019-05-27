@@ -5,20 +5,9 @@ class L10nLatamDocumentType(models.Model):
 
     _inherit = 'l10n_latam.document.type'
 
-    _l10n_ar_letters = [
-        ('A', 'A'),
-        ('B', 'B'),
-        ('C', 'C'),
-        ('E', 'E'),
-        ('M', 'M'),
-        ('T', 'T'),
-        ('R', 'R'),
-        ('X', 'X'),
-    ]
-
     l10n_ar_letter = fields.Selection(
-        _l10n_ar_letters,
-        'Letters',
+        selection='_get_l10n_ar_letters',
+        string='Letters',
         help='Letters defined by the AFIP that can be used to identify the'
         ' documents presented to the goverment and that depends on the'
         ' operation type, the responsability of both the issuer and the'
@@ -46,30 +35,45 @@ class L10nLatamDocumentType(models.Model):
         help='Cero o No cero según lo requiere la declaración del CITI compras'
     )
 
+    def _get_l10n_ar_letters(self):
+        """ Return the list of values of the selection field. """
+        return [
+            ('A', 'A'),
+            ('B', 'B'),
+            ('C', 'C'),
+            ('E', 'E'),
+            ('M', 'M'),
+            ('T', 'T'),
+            ('R', 'R'),
+            ('X', 'X'),
+        ]
+
     @api.multi
     def get_document_sequence_vals(self, journal):
         """ Values to create the sequences
         """
         values = super(
             L10nLatamDocumentType, self).get_document_sequence_vals(journal)
-        if self.country_id == self.env.ref('base.ar'):
+        if self.country_id != self.env.ref('base.ar'):
+            return values
+
+        values.update({
+            'padding': 8,
+            'implementation': 'no_gap',
+            'prefix': "%04i-" % (journal.l10n_ar_afip_pos_number),
+            'l10n_latam_journal_id': journal.id,
+        })
+        if journal.l10n_ar_share_sequences:
             values.update({
-                'padding': 8,
-                'implementation': 'no_gap',
-                'prefix': "%04i-" % (journal.l10n_ar_afip_pos_number),
-                'l10n_latam_journal_id': journal.id,
+                'name': '%s - Letter %s Documents' % (
+                    journal.name, self.l10n_ar_letter),
+                'l10n_ar_letter': self.l10n_ar_letter,
             })
-            if journal.l10n_ar_share_sequences:
-                values.update({
-                    'name': '%s - Letter %s Documents' % (
-                        journal.name, self.l10n_ar_letter),
-                    'l10n_ar_letter': self.l10n_ar_letter,
-                })
-            else:
-                values.update({
-                    'name': '%s - %s' % (journal.name, self.name),
-                    'l10n_latam_document_type_id': self.id,
-                })
+        else:
+            values.update({
+                'name': '%s - %s' % (journal.name, self.name),
+                'l10n_latam_document_type_id': self.id,
+            })
         return values
 
     @api.multi

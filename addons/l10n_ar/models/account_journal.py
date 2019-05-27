@@ -8,18 +8,9 @@ class AccountJournal(models.Model):
 
     _inherit = "account.journal"
 
-    _l10n_ar_afip_pos_types_selection = [
-        ('II_IM', 'Factura Pre-impresa'),
-        ('RLI_RLM', 'Factura en Linea'),
-        ('CF', 'Controlador Fiscal'),
-        ('BFERCEL', 'Bonos Fiscales Electrónicos - Factura en Linea'),
-        ('FEERCELP', 'Comprobantes de Exportacion - Facturador Plus'),
-        ('FEERCEL', 'Comprobantes de Exportacion - Factura en Linea'),
-    ]
-
     l10n_ar_afip_pos_system = fields.Selection(
-        _l10n_ar_afip_pos_types_selection,
-        'AFIP POS System',
+        selection='_get_l10n_ar_afip_pos_types_selection',
+        string='AFIP POS System',
     )
     l10n_ar_afip_pos_number = fields.Integer(
         'AFIP POS Number',
@@ -40,6 +31,17 @@ class AccountJournal(models.Model):
         help='Use same sequence for documents with the same letter',
     )
 
+    def _get_l10n_ar_afip_pos_types_selection(self):
+        """ Return the list of values of the selection field. """
+        return [
+            ('II_IM', 'Factura Pre-impresa'),
+            ('RLI_RLM', 'Factura en Linea'),
+            ('CF', 'Controlador Fiscal'),
+            ('BFERCEL', 'Bonos Fiscales Electrónicos - Factura en Linea'),
+            ('FEERCELP', 'Comprobantes de Exportacion - Facturador Plus'),
+            ('FEERCEL', 'Comprobantes de Exportacion - Factura en Linea'),
+        ]
+
     def get_journal_letter(self, counterpart_partner=False):
         self.ensure_one()
         return self._get_journal_letter(
@@ -50,9 +52,8 @@ class AccountJournal(models.Model):
     @api.model
     def _get_letters_data(self):
         """ Dictionary the the information about the letters, which
-        responsability can used and the kind of operation received/issued
-        """
-        res = {
+        responsability can used and the kind of operation received/issued """
+        return {
             'issued': {
                 '1': ['A', 'B', 'E'],
                 '1FM': ['B', 'M'],
@@ -78,7 +79,6 @@ class AccountJournal(models.Model):
                 '13': ['B', 'C'],
             },
         }
-        return res
 
     @api.model
     def _get_journal_letter(
@@ -97,14 +97,16 @@ class AccountJournal(models.Model):
         letters = letters_data[
             'issued' if journal_type == 'sale' else 'received'][
             company.l10n_ar_afip_responsability_type]
-        if counterpart_partner:
-            if not counterpart_partner.l10n_ar_afip_responsability_type:
-                letters = []
-            else:
-                counterpart_letters = letters_data[
-                    'issued' if journal_type == 'purchase' else 'received'][
-                        counterpart_partner.l10n_ar_afip_responsability_type]
-                letters = list(set(letters) & set(counterpart_letters))
+        if not counterpart_partner:
+            return letters
+
+        if not counterpart_partner.l10n_ar_afip_responsability_type:
+            letters = []
+        else:
+            counterpart_letters = letters_data[
+                'issued' if journal_type == 'purchase' else 'received'][
+                    counterpart_partner.l10n_ar_afip_responsability_type]
+            letters = list(set(letters) & set(counterpart_letters))
         return letters
 
     def get_journal_codes(self):
@@ -183,18 +185,19 @@ class AccountJournal(models.Model):
     def check_afip_configurations(self):
         """ IF AFIP Configuration change try to review if this can be done
         and then create / update the document sequences """
+        invoices = self.env['account.invoice'].search([
+            ('journal_id', '=', self.ids),
+            ('state', 'in', ['open', 'in_payment', 'paid']),
+        ])
+        if invoices:
+            raise ValidationError(_(
+                'You can not change the journal configuration for a'
+                ' journal that already have validate invoices: %s' % (
+                    ', '.join(invoices.mapped('display_name'))
+                )
+            ))
+
         for rec in self:
-            invoices = self.env['account.invoice'].search([
-                ('journal_id', '=', rec.id),
-                ('state', 'in', ['open', 'in_payment', 'paid']),
-            ])
-            if invoices:
-                raise ValidationError(_(
-                    'You can not change the journal configuration for a'
-                    ' journal that already have validate invoices: %s' % (
-                        ', '.join(invoices.mapped('display_name'))
-                    )
-                ))
             rec.create_document_type_sequences()
 
     @api.constrains('l10n_ar_afip_pos_number')

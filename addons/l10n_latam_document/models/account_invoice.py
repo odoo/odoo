@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -116,17 +116,18 @@ class AccountInvoice(models.Model):
             # we must check if sequence use date ranges
             if not sequence.use_date_range:
                 invoice.l10n_latam_next_number = sequence.number_next_actual
-            else:
-                dt = fields.Date.today()
-                if self.env.context.get('ir_sequence_date'):
-                    dt = self.env.context.get('ir_sequence_date')
-                seq_date = self.env['ir.sequence.date_range'].search([
-                    ('sequence_id', '=', sequence.id),
-                    ('date_from', '<=', dt),
-                    ('date_to', '>=', dt)], limit=1)
-                if not seq_date:
-                    seq_date = sequence._create_date_range_seq(dt)
-                invoice.l10n_latam_next_number = seq_date.number_next_actual
+                continue
+
+            dt = fields.Date.today()
+            if self.env.context.get('ir_sequence_date'):
+                dt = self.env.context.get('ir_sequence_date')
+            seq_date = self.env['ir.sequence.date_range'].search([
+                ('sequence_id', '=', sequence.id),
+                ('date_from', '<=', dt),
+                ('date_to', '>=', dt)], limit=1)
+            if not seq_date:
+                seq_date = sequence._create_date_range_seq(dt)
+            invoice.l10n_latam_next_number = seq_date.number_next_actual
 
     @api.multi
     def name_get(self):
@@ -302,23 +303,21 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def write(self, vals):
-        """
-        If someone change the type (for eg from sale order), we update
-        de document type
-        """
+        """ If someone change the type (for eg from sale order), we update
+        the document type"""
         inv_type = vals.get('type')
         # if len(vals) == 1 and vals.get('type'):
         # podrian pasarse otras cosas ademas del type
-        if inv_type:
-            for rec in self:
-                res = rec._get_available_document_types(
-                    rec.journal_id, inv_type, rec.partner_id)
-                vals['l10n_latam_document_type_id'] = res[
-                    'document_type'].id
-                # call write for each inoice
-                super(AccountInvoice, rec).write(vals)
-                return True
-        return super(AccountInvoice, self).write(vals)
+        if not inv_type:
+            return super(AccountInvoice, self).write(vals)
+
+        for rec in self:
+            res = rec._get_available_document_types(
+                rec.journal_id, inv_type, rec.partner_id)
+            vals['l10n_latam_document_type_id'] = res['document_type'].id
+            # call write for each invoice
+            super(AccountInvoice, rec).write(vals)
+        return True
 
     @api.model
     def _get_available_document_types(
@@ -355,20 +354,18 @@ class AccountInvoice(models.Model):
 
     @api.constrains('type', 'l10n_latam_document_type_id')
     def check_invoice_type_document_type(self):
-        for rec in self:
+        for rec in self.filtered('l10n_latam_document_type_id.internal_type'):
             internal_type = rec.l10n_latam_document_type_id.internal_type
             invoice_type = rec.type
-            if not internal_type:
-                continue
-            elif internal_type in [
+            if internal_type in [
                     'debit_note', 'invoice'] and invoice_type in [
                     'out_refund', 'in_refund']:
-                raise Warning(_(
+                raise ValidationError(_(
                     'You can not use a %s document type with a refund '
                     'invoice') % internal_type)
             elif internal_type == 'credit_note' and invoice_type in [
                     'out_invoice', 'in_invoice']:
-                raise Warning(_(
+                raise ValidationError(_(
                     'You can not use a %s document type with a invoice') % (
                     internal_type))
 
@@ -427,4 +424,5 @@ class AccountInvoice(models.Model):
                         rec.commercial_partner_id.id)]
                 msg += ' y proveedor'
             if rec.search(domain):
-                raise UserError(msg % (rec.id, rec.l10n_latam_document_number))
+                raise ValidationError(
+                    msg % (rec.id, rec.l10n_latam_document_number))

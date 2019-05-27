@@ -48,10 +48,8 @@ class AccountInvoiceRefund(models.TransientModel):
 
     @api.depends('l10n_ar_invoice_id')
     def _compute_l10n_latam_available_document_types(self):
-        for rec in self:
+        for rec in self.filtered('l10n_ar_invoice_id'):
             invoice = rec.l10n_ar_invoice_id
-            if not invoice:
-                continue
             invoice_type = TYPE2REFUND[invoice.type]
             res = invoice._get_available_document_types(
                 invoice.journal_id, invoice_type, invoice.partner_id)

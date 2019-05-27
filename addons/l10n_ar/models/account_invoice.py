@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
 import re
 import logging
@@ -11,13 +11,6 @@ _logger = logging.getLogger(__name__)
 class AccountInvoice(models.Model):
 
     _inherit = "account.invoice"
-
-    afip_invoice_concepts = [
-        ('1', 'Producto / Exportación definitiva de bienes'),
-        ('2', 'Servicios'),
-        ('3', 'Productos y Servicios'),
-        ('4', '4-Otros (exportación)'),
-    ]
 
     l10n_ar_currency_rate = fields.Float(
         copy=False,
@@ -77,7 +70,7 @@ class AccountInvoice(models.Model):
     l10n_ar_afip_concept = fields.Selection(
         compute='_compute_l10n_ar_afip_concept',
         inverse='_inverse_l10n_ar_afip_concept',
-        selection=afip_invoice_concepts,
+        selection='get_afip_invoice_concepts',
         string="Computed AFIP Concept",
         help="A concept is suggested regarding the type of the products on the"
         " invoice but it is allowed to force a different type if required.",
@@ -85,7 +78,7 @@ class AccountInvoice(models.Model):
         states={'draft': [('readonly', False)]},
     )
     l10n_ar_force_afip_concept = fields.Selection(
-        selection=afip_invoice_concepts,
+        selection='get_afip_invoice_concepts',
         string="AFIP Concept",
         readonly=True,
         help='AFIP requires to report the kind of products related to the'
@@ -106,7 +99,14 @@ class AccountInvoice(models.Model):
         states={'draft': [('readonly', False)]},
     )
 
-    @api.multi
+    def get_afip_invoice_concepts(self):
+        """ Return the list of values of the selection field. """
+        return [
+            ('1', 'Products / Definitive export of goods'),
+            ('2', 'Services'),
+            ('3', 'Products and Services'),
+            ('4', '4-Other (export)')]
+
     @api.depends(
         'invoice_line_ids',
         'invoice_line_ids.product_id',
@@ -154,9 +154,9 @@ class AccountInvoice(models.Model):
         if product_types.issubset(consumible):
             afip_concept = '1'
         # on expo invoice you can mix services and products
-        if self.l10n_latam_document_type_id.code in ['19', '20', '21']:
-            if afip_concept == '3':
-                afip_concept = '1'
+        if self.l10n_latam_document_type_id.code in ['19', '20', '21'] and \
+           afip_concept == '3':
+            afip_concept = '1'
         return afip_concept
 
     @api.multi
@@ -205,7 +205,6 @@ class AccountInvoice(models.Model):
             rec.l10n_ar_not_vat_tax_ids = not_vat_taxes
             rec.l10n_ar_other_taxes_amount = l10n_ar_other_taxes_amount
 
-    @api.multi
     @api.depends('l10n_latam_document_number', 'number')
     def _compute_l10n_ar_invoice_number(self):
         for rec in self.filtered('l10n_latam_document_number'):
@@ -230,7 +229,7 @@ class AccountInvoice(models.Model):
                 point_of_sale = str_number[:4]
                 invoice_number = str_number[-8:]
             else:
-                raise ValidationError(_(
+                raise UserError(_(
                     'Could not get invoice number and point of sale for '
                     'Invoice [%i] %s') % (rec.id, rec.display_name))
             rec.l10n_ar_invoice_number = int(
@@ -241,20 +240,19 @@ class AccountInvoice(models.Model):
     @api.multi
     def get_localization_invoice_vals(self):
         self.ensure_one()
-        if self.company_id.country_id == self.env.ref('base.ar'):
-            if self.company_id.currency_id == self.currency_id:
-                l10n_ar_currency_rate = 1.0
-            else:
-                currency = self.currency_id.with_context(
-                    date=self.date_invoice or fields.Date.context_today(self))
-                l10n_ar_currency_rate = currency.compute(
-                    1., self.company_id.currency_id, round=False)
-            return {
-                'l10n_ar_currency_rate': l10n_ar_currency_rate,
-            }
+        if self.company_id.country_id != self.env.ref('base.ar'):
+            return super(AccountInvoice, self).get_localization_invoice_vals()
+
+        if self.company_id.currency_id == self.currency_id:
+            l10n_ar_currency_rate = 1.0
         else:
-            return super(
-                AccountInvoice, self).get_localization_invoice_vals()
+            currency = self.currency_id.with_context(
+                date=self.date_invoice or fields.Date.context_today(self))
+            l10n_ar_currency_rate = currency.compute(
+                1., self.company_id.currency_id, round=False)
+        return {
+            'l10n_ar_currency_rate': l10n_ar_currency_rate,
+        }
 
     @api.model
     def _get_available_document_types(self, journal, invoice_type, partner):
@@ -330,7 +328,7 @@ class AccountInvoice(models.Model):
                 lambda x:
                 x.tax_group_id.l10n_ar_tax == 'vat' and x.tax_group_id.l10n_ar_type == 'tax')
             if len(vat_taxes) != 1:
-                raise ValidationError(_(
+                raise UserError(_(
                     'Debe haber un y solo un impuesto de IVA por línea. '
                     'Verificar líneas con producto "%s"' % (
                         inv_line.product_id.name)))
@@ -341,7 +339,7 @@ class AccountInvoice(models.Model):
             lambda x:
                 not x.commercial_partner_id.l10n_ar_afip_responsability_type)
         if without_responsability:
-            raise ValidationError(_(
+            raise UserError(_(
                 'The following invoices has a partner without AFIP '
                 'responsability:\n\n'
                 '%s') % ('\n'.join(
@@ -353,7 +351,7 @@ class AccountInvoice(models.Model):
         wihtout_tax_id = argentinian_invoices.mapped('tax_line_ids').filtered(
             lambda r: not r.tax_id)
         if wihtout_tax_id:
-            raise ValidationError(_(
+            raise UserError(_(
                 "Some Invoice Tax Lines don't have a tax_id asociated, please "
                 "correct them or try to refresh invoice. Tax lines: %s") % (
                 ', '.join(wihtout_tax_id.mapped('name'))))
@@ -365,7 +363,7 @@ class AccountInvoice(models.Model):
             lambda r: not r.l10n_ar_type or
             not r.l10n_ar_tax or not r.l10n_ar_application)
         if unconfigured_tax_groups:
-            raise ValidationError(_(
+            raise UserError(_(
                 "You are using argentinian localization and there are some tax"
                 " groups that are not configured. Tax Groups (id): %s" % (
                     ', '.join(unconfigured_tax_groups.mapped(
@@ -378,7 +376,7 @@ class AccountInvoice(models.Model):
             x.l10n_latam_document_type_id.purchase_cuit_required and
             not x.commercial_partner_id.cuit)
         if without_cuit:
-            raise ValidationError(_(
+            raise UserError(_(
                 'Las siguientes partners no tienen configurado CUIT: %s') % (
                     ', '.join(
                         without_cuit.mapped('commercial_partner_id.name'))
@@ -390,7 +388,7 @@ class AccountInvoice(models.Model):
             x.l10n_latam_document_type_id.purchase_alicuots == 'zero' and
             any([t.tax_id.tax_group_id.l10n_ar_afip_code != 0 for t in x.l10n_ar_vat_tax_ids]))
         if not_zero_alicuot:
-            raise ValidationError(_(
+            raise UserError(_(
                 'Las siguientes facturas tienen configurados IVA incorrecto. '
                 'Debe utilizar IVA no corresponde.\n*Facturas: %s') % (
                     ', '.join(not_zero_alicuot.mapped('display_name'))
@@ -402,7 +400,7 @@ class AccountInvoice(models.Model):
             x.l10n_latam_document_type_id.purchase_alicuots == 'not_zero' and
             any([t.tax_id.tax_group_id.l10n_ar_afip_code == 0 for t in x.l10n_ar_vat_tax_ids]))
         if zero_alicuot:
-            raise ValidationError(_(
+            raise UserError(_(
                 'Las siguientes facturas tienen IVA no corresponde pero debe '
                 'seleccionar una alícuota correcta (No gravado, Exento, Cero, '
                 '10,5, etc).\n*Facturas: %s') % (
@@ -418,7 +416,7 @@ class AccountInvoice(models.Model):
                     special_vat_taxes and
                     invoice.fiscal_position_id.l10n_ar_afip_code
                     not in afip_exempt_codes):
-                raise ValidationError(_(
+                raise UserError(_(
                     "If you have choose a 0, exempt or untaxed 'tax', or "
                     "you must choose a fiscal position with afip code in %s.\n"
                     "* Invoice [%i] %s") % (
@@ -438,7 +436,7 @@ class AccountInvoice(models.Model):
                     zero_vat_lines and
                     invoice.fiscal_position_id.l10n_ar_afip_code
                     not in afip_exempt_codes):
-                raise ValidationError(_(
+                raise UserError(_(
                     "Si hay líneas con IVA declarado 0, entonces debe elegir "
                     "una posición fiscal con código de afip '%s'.\n"
                     "* Invoice [%i] %s") % (

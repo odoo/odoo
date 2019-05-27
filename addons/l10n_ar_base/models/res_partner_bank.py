@@ -23,6 +23,6 @@ class ResPartnerBank(models.Model):
     def retrieve_acc_type(self, acc_number):
         try:
             validate_cbu(acc_number)
-            return 'cbu'
         except Exception:
             return super(ResPartnerBank, self).retrieve_acc_type(acc_number)
+        return 'cbu'
