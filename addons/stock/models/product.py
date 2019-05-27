@@ -572,6 +572,8 @@ class ProductTemplate(models.Model):
                 }
 
     def action_open_quants(self):
+        self.env['stock.quant']._merge_quants()
+        self.env['stock.quant']._unlink_zero_quants()
         products = self.mapped('product_variant_ids')
         action = self.env.ref('stock.product_open_quants').read()[0]
         action['domain'] = [('product_id', 'in', products.ids)]
