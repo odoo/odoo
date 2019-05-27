@@ -8,48 +8,83 @@ from PIL import Image
 from odoo import api, fields, models, tools
 from odoo.tools.image import image_data_uri
 
+"""
+MARGINS USED FOR IMAGE PROCESSING
+
+Thos are arbitrary and can be tweaked for better results
+
+WHITE_THRESHOLD is used to discard colors having all bands higher than the provided value
+MITIGATION is the maximum value a band can reach
+    => HARD_MITIGATION is used when the color is too bright
+DEFAULT_MARGIN is used to group similar colors (sames band values are within <margin> of each other)
+"""
+WHITE_THRESHOLD = 225
+MITIGATION = 200
+HARD_MITIGATION = 160
+DEFAULT_MARGIN = 40
+
 def process_rgb(rgb):
     """
-        Darkens the value if the value of a band is above a given threshold,
-        then converts the tuple to a hex value
+    Darkens the value if the value of a band is above a given threshold,
+    then converts the tuple to a hex value
     """
     hex_list = []
-    threshold = 200
+    threshold = MITIGATION if sum(rgb) < 650 else HARD_MITIGATION
     brightest = max(rgb)
     for color in range(3):
-        value = rgb[color] / (brightest / threshold) if brightest > threshold else rgb[color]
+        value = rgb[color] / (brightest /
+                                threshold) if brightest > threshold else rgb[color]
         hex_list.append(hex(int(value)).split('x')[-1].zfill(2))
     return '#' + ''.join(hex_list)
 
 
-def average_dominant_color(colors, margin):
+def average_dominant_color(colors):
+    """
+    This function is used to calculate the average dominant color
+
+    There are 4 steps :
+        1) Select dominant colors (highest count), isolate its values and remove
+            it from the current color set.
+        2) Set margins according to its R, G and B bands (full margin for dominant band).
+        3) Evaluate the colors. Similar colors are grouped in the dominant set
+            while others are put in the "remaining" list.
+        4) Calculate the average color for the dominant set. This is simply done by
+            averaging each band and joining them into a tuple.
+
+    :param colors: list of tuples having:
+        [0] color count in the image
+        [1] actual color: tuple(R, G, B, A)
+    :returns: a tuple with two items:
+        [0] the average color of the dominant set as: tuple(R, G, B)
+        [1] list of remaining colors, used to evaluate subsequent dominant colors
+    """
     dominant_color = max(colors)
+    dominant_rgb = dominant_color[1]
     dominant_set = [dominant_color]
     colors.remove(dominant_color)
     remaining = []
 
+    margins = [DEFAULT_MARGIN] * 3
+    margins[dominant_rgb.index(max(dominant_rgb[:3]))] = 255
+
     for color in colors:
-        # Test similarity (r, g and b are within <margin> of dominant color)
-        if (color[1][0] < dominant_color[1][0] + margin and
-            color[1][0] > dominant_color[1][0] - margin and
-            color[1][1] < dominant_color[1][1] + margin and
-            color[1][1] > dominant_color[1][1] - margin and
-            color[1][2] < dominant_color[1][2] + margin and
-                color[1][2] > dominant_color[1][2] - margin):
+        rgb = color[1]
+        if (rgb[0] < dominant_rgb[0] + margins[0] and rgb[0] > dominant_rgb[0] - margins[0] and
+            rgb[1] < dominant_rgb[1] + margins[1] and rgb[1] > dominant_rgb[1] - margins[1] and
+                rgb[2] < dominant_rgb[2] + margins[2] and rgb[2] > dominant_rgb[2] - margins[2]):
             dominant_set.append(color)
         else:
             remaining.append(color)
 
-    final_avg = []
+    dominant_avg = []
     for band in range(3):
-        avg = 0
-        total = 0
+        avg = total = 0
         for color in dominant_set:
             avg += color[0] * color[1][band]
             total += color[0]
-        final_avg.append(round(avg / total))
+        dominant_avg.append(int(avg / total))
 
-    return final_avg, remaining
+    return tuple(dominant_avg), remaining
 
 
 class BaseDocumentLayout(models.TransientModel):
@@ -74,7 +109,7 @@ class BaseDocumentLayout(models.TransientModel):
     secondary_color = fields.Char(related='company_id.secondary_color', readonly=False)
 
     company_colors = fields.Char(compute="_compute_report_layout_id", string="Colors", readonly=False)
-    previous_default = False
+    previous_default = fields.Char(compute="_compute_report_layout_id")
 
     report_layout_id = fields.Many2one('report.layout', compute="_compute_report_layout_id", readonly=False)
     preview = fields.Html(compute='_compute_preview')
@@ -95,7 +130,8 @@ class BaseDocumentLayout(models.TransientModel):
                 'default': [wizard.report_layout_id.primary_color, wizard.report_layout_id.secondary_color],
                 'values': [primary, secondary],
             })
-            BaseDocumentLayout.previous_default = [wizard.report_layout_id.primary_color, wizard.report_layout_id.secondary_color]
+            wizard.previous_default = ','.join((
+                wizard.report_layout_id.primary_color, wizard.report_layout_id.secondary_color))
 
     @api.depends('logo', 'font')
     def _compute_preview(self):
@@ -118,12 +154,17 @@ class BaseDocumentLayout(models.TransientModel):
             wizard._compute_preview()
 
     def _parse_logo_colors(self):
+        """
+        Identifies dominant colors
+
+        First resizes the original image to improve performance, then discards
+        transparent colors and white-ish colors, then calls the averaging
+        method twice to evaluate both primary and secondary colors.
+        """
         self.ensure_one()
         logo = self.logo
         if not logo:
             return None, None
-        margin = 50
-        white_threshold = 245
 
         # The "===" gives different base64 encoding a correct padding
         if isinstance(logo, bytes):
@@ -132,19 +173,25 @@ class BaseDocumentLayout(models.TransientModel):
             logo = logo + '==='
         image = tools.base64_to_image(logo).resize((40, 40))
 
-        transparent = 'A' not in image.getbands()
+        base_w, base_h = image.size
+        w = int(40 * base_w / base_h)
+        h = 40
 
-        converted = image.convert('RGBA') if transparent else image
-        w, h = image.size
+        # Converts to RGBA if no alpha detected
+        image_converted = image.convert(
+            'RGBA') if 'A' not in image.getbands() else image
+        image_resized = image_converted.resize((w, h))
+
         colors = []
-        for color in converted.getcolors(w * h):
-            if not(transparent and color[1][0] > white_threshold and
-                   color[1][1] > white_threshold and color[1][2] > white_threshold) and color[1][3] > 0:
+        for color in image_resized.getcolors(w * h):
+            if not(color[1][0] > WHITE_THRESHOLD and
+                   color[1][1] > WHITE_THRESHOLD and
+                   color[1][2] > WHITE_THRESHOLD) and color[1][3] > 0:
                 colors.append(color)
 
-        primary, remaining = average_dominant_color(colors, margin)
-        secondary = average_dominant_color(remaining, margin)[
-            0] if len(remaining) > 0 else primary
+        primary, remaining = average_dominant_color(colors)
+        secondary = average_dominant_color(
+            remaining)[0] if len(remaining) > 0 else primary
 
         return process_rgb(primary), process_rgb(secondary)
 
@@ -157,9 +204,11 @@ class BaseDocumentLayout(models.TransientModel):
             default = [wizard.report_layout_id.primary_color,
                        wizard.report_layout_id.secondary_color]
 
-            if BaseDocumentLayout.previous_default == values:
+            print("Before", wizard.previous_default)
+            if wizard.previous_default.split(',') == values:
                 values = default
-            BaseDocumentLayout.previous_default = default
+            wizard.previous_default = ','.join(default)
+            print("After", wizard.previous_default)
             wizard.company_colors = json.dumps({
                 'default': default,
                 'values': values,

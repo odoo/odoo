@@ -1,5 +1,5 @@
 .o_document_layout .o_group {
-    display: flex;
+    display: -webkit-flex;
     .o_document_layout_company {
         flex: 5;
         img {
@@ -7,7 +7,7 @@
         }
         .o_document_layout_colors {
             vertical-align: middle;
-            display: flex;
+            display: -webkit-flex;
             .btn-link {
                 font-size: 18px;
                 padding-top: 0;
@@ -23,12 +23,10 @@
         border: 1px solid;
         border-color: lightgray;
         padding: 12px;
-        display: flex;
+        display: -webkit-flex;
         flex-direction: column;
     }
 }
-
-
 
 .o_document_layout_preview_logo img {
     padding-left: 5px;
@@ -42,7 +40,7 @@
         height: 100%;
     }
     .o_preview_layout {
-        display: flex;
+        display: -webkit-flex;
         flex-direction: column;
         height: 100%;
     }
@@ -58,6 +56,12 @@
     .article {
         flex: 1;
         padding: 0 10px;
+        table th, table td {
+            text-align: right;
+            &:first-child {
+                text-align: left;
+            }
+        }
     }
     .footer {
         border-top: 1px solid;
@@ -109,5 +113,11 @@
                 color: white;
             }
         }
+    }
+}
+
+@media (max-width: 620px) {
+    .o_document_layout .o_group {
+        flex-direction: column;
     }
 }
