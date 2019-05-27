@@ -200,7 +200,7 @@ class WebsiteProfile(http.Controller):
         return {
             'id': user.id,
             'name': user.name,
-            'company_name': user.company_id.name,
+            'company_name': user.partner_id.company_name,
             'rank': user.rank_id.name,
             'karma': user.karma,
             'badge_count': len(user.badge_ids),
