@@ -18,7 +18,7 @@ class Http(models.AbstractModel):
     def webclient_rendering_context(self):
         return {
             'menu_data': request.env['ir.ui.menu'].load_menus(request.session.debug),
-            'session_info': json.dumps(self.session_info()),
+            'session_info': self.session_info(),
         }
 
     def session_info(self):
