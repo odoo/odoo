@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
+from collections import defaultdict
 from itertools import groupby
 
 from odoo import api, fields, models, _
@@ -202,6 +203,27 @@ class MrpProduction(models.Model):
     production_location_id = fields.Many2one('stock.location', "Production Location", related='product_id.property_stock_production', readonly=False)
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this manufacturing order')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
+    confirm_cancel = fields.Boolean(compute='_compute_confirm_cancel')
+
+    @api.depends('move_raw_ids.state', 'move_finished_ids.state')
+    def _compute_confirm_cancel(self):
+        """ If the manufacturing order contains some done move (via an intermediate
+        post inventory), the user has to confirm the cancellation.
+        """
+        domain = [
+            ('state', '=', 'done'),
+            '|',
+                ('production_id', 'in', self.ids),
+                ('raw_material_production_id', 'in', self.ids)
+        ]
+        res = self.env['stock.move'].read_group(domain, ['state', 'production_id', 'raw_material_production_id'], ['production_id', 'raw_material_production_id'], lazy=False)
+        productions_with_done_move = {}
+        for rec in res:
+            production_record = rec['production_id'] or rec['raw_material_production_id']
+            if production_record:
+                productions_with_done_move[production_record[0]] = True
+        for production in self:
+            production.confirm_cancel = productions_with_done_move.get(production.id, False)
 
     @api.depends('procurement_group_id')
     def _compute_picking_ids(self):
@@ -770,33 +792,36 @@ class MrpProduction(models.Model):
         if not self.move_raw_ids:
             self.state = 'cancel'
             return True
-        if any(workorder.state == 'progress' for workorder in self.mapped('workorder_ids')):
-            raise UserError(_('You can not cancel production order, a work order is still in progress.'))
-        documents = {}
+        self._action_cancel()
+        return True
+
+    def _action_cancel(self):
+        documents_by_production = {}
         for production in self:
-            for move_raw_id in production.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
+            documents = defaultdict(list)
+            for move_raw_id in self.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
                 iterate_key = self._get_document_iterate_key(move_raw_id)
                 if iterate_key:
                     document = self.env['stock.picking']._log_activity_get_documents({move_raw_id: (move_raw_id.product_uom_qty, 0)}, iterate_key, 'UP')
                     for key, value in document.items():
-                        if documents.get(key):
-                            documents[key] += [value]
-                        else:
-                            documents[key] = [value]
-            production.workorder_ids.filtered(lambda x: x.state != 'cancel').action_cancel()
-            finish_moves = production.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-            raw_moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-            (finish_moves | raw_moves)._action_cancel()
-            picking_ids = production.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-            picking_ids.action_cancel()
+                        documents[key] += [value]
+            if documents:
+                documents_by_production[production] = documents
 
-        if documents:
+        self.workorder_ids.filtered(lambda x: x.state not in ['done', 'cancel']).action_cancel()
+        finish_moves = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+        raw_moves = self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+        (finish_moves | raw_moves)._action_cancel()
+        picking_ids = self.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+        picking_ids.action_cancel()
+
+        for production, documents in documents_by_production.items():
             filtered_documents = {}
             for (parent, responsible), rendering_context in documents.items():
-                if not parent or parent._name == 'stock.picking' and parent.state == 'cancel' or parent == self:
+                if not parent or parent._name == 'stock.picking' and parent.state == 'cancel' or parent == production:
                     continue
                 filtered_documents[(parent, responsible)] = rendering_context
-            self._log_manufacture_exception(filtered_documents, cancel=True)
+            production._log_manufacture_exception(filtered_documents, cancel=True)
         return True
 
     def _get_document_iterate_key(self, move_raw_id):
