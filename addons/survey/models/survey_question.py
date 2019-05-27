@@ -101,6 +101,7 @@ class SurveyQuestion(models.Model):
     display_mode = fields.Selection(
         [('columns', 'Radio Buttons'), ('dropdown', 'Selection Box')],
         string='Display Mode', default='columns', help='Display mode of simple choice questions.')
+    display_type = fields.Selection([('line_section', 'Section')], default=False, help="Technical field for UX purpose.")
     # Comments
     comments_allowed = fields.Boolean('Show Comments Field')
     comments_message = fields.Char('Comment Message', translate=True, default=lambda self: _("If other, please specify:"))
