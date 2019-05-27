@@ -134,12 +134,6 @@ class StockMove(models.Model):
                                                'workorder_id': move.workorder_id.id,})
         return res
 
-    def _action_cancel(self):
-        if any(move.quantity_done and (move.raw_material_production_id or move.production_id) for move in self):
-            raise exceptions.UserError(_('You cannot cancel a manufacturing order if you have already consumed material.\
-             If you want to cancel this MO, please change the consumed quantities to 0.'))
-        return super(StockMove, self)._action_cancel()
-
     def _action_confirm(self, merge=True, merge_into=False):
         moves = self.env['stock.move']
         for move in self:
