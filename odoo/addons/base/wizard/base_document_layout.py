@@ -95,7 +95,7 @@ class BaseDocumentLayout(models.TransientModel):
     _name = 'base.document.layout'
     _description = 'Company Document Layout'
 
-    company_id = fields.Many2one('res.company', required=True)
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company_id, required=True)
 
     logo = fields.Binary(related='company_id.logo', readonly=False)
     preview_logo = fields.Binary(related='logo', string="Preview logo")
@@ -153,7 +153,7 @@ class BaseDocumentLayout(models.TransientModel):
             wizard.secondary_color = values[1]
             wizard._compute_preview()
 
-    def _parse_logo_colors(self):
+    def _parse_logo_colors(self, logo=None):
         """
         Identifies dominant colors
 
@@ -162,7 +162,7 @@ class BaseDocumentLayout(models.TransientModel):
         method twice to evaluate both primary and secondary colors.
         """
         self.ensure_one()
-        logo = self.logo
+        logo = logo or self.logo
         if not logo:
             return None, None
 
@@ -170,6 +170,7 @@ class BaseDocumentLayout(models.TransientModel):
         if isinstance(logo, bytes):
             logo = logo + b'==='
         else:
+            # In onchange
             logo = logo + '==='
         image = tools.base64_to_image(logo).resize((40, 40))
 
@@ -217,10 +218,19 @@ class BaseDocumentLayout(models.TransientModel):
 
     @api.onchange('logo')
     def onchange_logo(self):
-        """ Identify dominant colors of the logo """
         for wizard in self:
             primary, secondary = wizard._parse_logo_colors()
             wizard.company_colors = json.dumps({
                 'default': [wizard.report_layout_id.primary_color, wizard.report_layout_id.secondary_color],
                 'values': [primary, secondary]
             })
+
+    @api.model
+    def action_open_base_document_layout(self, action_ref=None):
+        if not action_ref:
+            action_ref = 'base.action_base_document_layout_configurator'
+        return self.env.ref(action_ref).read()[0]
+
+    def document_layout_save(self):
+        # meant to be overriden
+        pass

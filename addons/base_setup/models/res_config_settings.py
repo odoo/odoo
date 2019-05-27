@@ -95,19 +95,3 @@ class ResConfigSettings(models.TransientModel):
         if not self.external_report_layout_id:
             return False
         return self._prepare_report_view_action(self.external_report_layout_id.key)
-
-    @api.multi
-    def change_report_template(self):
-        company = self.env.user.company_id
-        wizard = self.env['base.document.layout'].create({'company_id': company.id})
-        view_id = self.env.ref('base.view_base_document_layout').id
-
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Configure your document layout'),
-            'view_mode': 'form',
-            'res_model': 'base.document.layout',
-            'res_id': wizard.id,
-            'views': [[view_id, 'form']],
-            'target': 'new',
-        }
