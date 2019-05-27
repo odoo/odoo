@@ -75,6 +75,23 @@ class TestQWebTField(TransactionCase):
         text = etree.fromstring(view1.render()).find('span').text
         self.assertEqual(text, u'5.0000')
 
+    def test_xss_breakout(self):
+        view = self.env['ir.ui.view'].create({
+            'name': 'dummy', 'type': 'qweb',
+            'arch': u"""
+                <t t-name="base.dummy">
+                    <root>
+                        <script type="application/javascript">
+                            var s = <t t-raw="json.dumps({'key': malicious})"/>;
+                        </script>
+                    </root>
+                </t>
+            """
+        })
+        rendered = view.render({'malicious': '1</script><script>alert("pwned")</script><script>'}).decode()
+        self.assertIn('alert', rendered, "%r doesn't seem to be rendered" % rendered)
+        doc = etree.fromstring(rendered)
+        self.assertEqual(len(doc.xpath('//script')), 1)
 
 class TestQWebNS(TransactionCase):
     def test_render_static_xml_with_namespace(self):
