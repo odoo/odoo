@@ -850,7 +850,6 @@ class Warehouse(models.Model):
 
     @api.returns('self')
     def _get_all_routes(self):
-        # TDE FIXME: check overrides
         routes = self.mapped('route_ids') | self.mapped('mto_pull_id').mapped('route_id')
         routes |= self.env["stock.location.route"].search([('supplied_wh_id', 'in', self.ids)])
         return routes
