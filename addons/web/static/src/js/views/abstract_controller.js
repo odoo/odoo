@@ -470,10 +470,15 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
                     self.trigger_up('reload');
                 };
             }
-            this.dp.add(this._rpc({
+            var callParams = {
                 model: data.model,
                 method: data.method,
-            })).then(function (action) {
+            };
+            if (data.args) {
+                var args = data.args;
+                callParams.args = args instanceof Array ? args : [args];
+            }
+            this.dp.add(this._rpc(callParams)).then(function (action) {
                 if (action !== undefined) {
                     self.do_action(action, options);
                 }

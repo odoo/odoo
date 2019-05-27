@@ -69,9 +69,14 @@
                         <t t-esc="description" />
                     </p>
                 </div>
+                <!-- data-method and data-model are set: then the method on the model is called. This has priority (cf: js code) -->
+                <!-- name: set the name of the action. can be action ID or action full reference -->
                 <a class="o_onboarding_step_action btn" type="action"
-                   data-reload-on-close="true" role="button" t-att-data-method="method"
-                   t-att-data-model="model">
+                   data-reload-on-close="true" role="button"
+                   t-att-data-model="model"
+                   t-att-data-method="method"
+                   t-att-data-args="method_args"
+                   t-att-name="action_ref">
                     <t t-if="btn_text" t-esc="btn_text" />
                     <t t-else="">Let's do it</t>
                 </a>
