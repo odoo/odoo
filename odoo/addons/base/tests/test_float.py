@@ -4,7 +4,7 @@
 from math import log10
 
 from odoo.tests.common import TransactionCase
-from odoo.tools import float_compare, float_is_zero, float_repr, float_round, float_split_str, pycompat
+from odoo.tools import float_compare, float_is_zero, float_repr, float_round, float_split_str
 
 
 class TestFloatPrecision(TransactionCase):
@@ -111,7 +111,7 @@ class TestFloatPrecision(TransactionCase):
         # Note: max precision for double floats is 53 bits of precision or
         # 17 significant decimal digits
         for magnitude in range(7):
-            for frac, exp, prec in pycompat.izip(fractions, expecteds, precisions):
+            for frac, exp, prec in zip(fractions, expecteds, precisions):
                 for sign in [-1,1]:
                     for x in range(0, 10000, 97):
                         n = x * 10 ** magnitude
@@ -202,10 +202,28 @@ class TestFloatPrecision(TransactionCase):
             float_is_zero(0.01, precision_digits=3, precision_rounding=0.01)
 
         with self.assertRaises(AssertionError):
+            float_is_zero(0.0, precision_rounding=0.0)
+
+        with self.assertRaises(AssertionError):
+            float_is_zero(0.0, precision_rounding=-0.1)
+
+        with self.assertRaises(AssertionError):
             float_compare(0.01, 0.02, precision_digits=3, precision_rounding=0.01)
 
         with self.assertRaises(AssertionError):
+            float_compare(1.0, 1.0, precision_rounding=0.0)
+
+        with self.assertRaises(AssertionError):
+            float_compare(1.0, 1.0, precision_rounding=-0.1)
+
+        with self.assertRaises(AssertionError):
             float_round(0.01, precision_digits=3, precision_rounding=0.01)
+
+        with self.assertRaises(AssertionError):
+            float_round(1.25, precision_rounding=0.0)
+
+        with self.assertRaises(AssertionError):
+            float_round(1.25, precision_rounding=-0.1)
 
     def test_amount_to_text_10(self):
         """ verify that amount_to_text works as expected """

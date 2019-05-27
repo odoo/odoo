@@ -17,6 +17,11 @@ class SaleOrder(models.Model):
     tasks_ids = fields.Many2many('project.task', compute='_compute_tasks_ids', string='Tasks associated to this sale')
     tasks_count = fields.Integer(string='Tasks', compute='_compute_tasks_ids', groups="project.group_project_user")
 
+    visible_project = fields.Boolean('Display project', compute='_compute_visible_project', readonly=True)
+    project_id = fields.Many2one(
+        'project.project', 'Project', domain=[('billable_type', 'in', ('no', 'task_rate')), ('analytic_account_id', '!=', False)],
+        readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        help='Select a non billable project on which tasks can be created.')
     project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user", help="Projects used in this sales order.")
 
     @api.multi
@@ -40,18 +45,38 @@ class SaleOrder(models.Model):
             order.tasks_count = len(order.tasks_ids)
 
     @api.multi
+    @api.depends('order_line.product_id.service_tracking')
+    def _compute_visible_project(self):
+        """ Users should be able to select a project_id on the SO if at least one SO line has a product with its service tracking
+        configured as 'task_in_project' """
+        for order in self:
+            order.visible_project = any(
+                service_tracking == 'task_in_project' for service_tracking in order.order_line.mapped('product_id.service_tracking')
+            )
+
+    @api.multi
     @api.depends('order_line.product_id', 'order_line.project_id')
     def _compute_project_ids(self):
         for order in self:
             projects = order.order_line.mapped('product_id.project_id')
             projects |= order.order_line.mapped('project_id')
+            projects |= order.project_id
             order.project_ids = projects
 
+    @api.onchange('project_id')
+    def _onchange_project_id(self):
+        """ Set the SO analytic account to the selected project's analytic account """
+        if self.project_id.analytic_account_id:
+            self.analytic_account_id = self.project_id.analytic_account_id
+
     @api.multi
-    def action_confirm(self):
+    def _action_confirm(self):
         """ On SO confirmation, some lines should generate a task or a project. """
-        result = super(SaleOrder, self).action_confirm()
-        self.mapped('order_line').sudo()._timesheet_service_generation()
+        result = super(SaleOrder, self)._action_confirm()
+        self.mapped('order_line').sudo().with_context(
+            default_company_id=self.company_id.id,
+            force_company=self.company_id.id,
+        )._timesheet_service_generation()
         return result
 
     @api.multi
@@ -74,7 +99,7 @@ class SaleOrder(models.Model):
             action = self.env.ref('project.action_view_task').read()[0]
             action['context'] = {}  # erase default context to avoid default filter
             if len(self.tasks_ids) > 1:  # cross project kanban task
-                action['views'] = [[False, 'kanban'], [list_view_id, 'tree'], [form_view_id, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot'], [False, 'graph']]
+                action['views'] = [[False, 'kanban'], [list_view_id, 'tree'], [form_view_id, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot']]
             elif len(self.tasks_ids) == 1:  # single task -> form view
                 action['views'] = [(form_view_id, 'form')]
                 action['res_id'] = self.tasks_ids.id
@@ -196,7 +221,7 @@ class SaleOrderLine(models.Model):
     ###########################################
 
     def _convert_qty_company_hours(self):
-        company_time_uom_id = self.env.user.company_id.project_time_mode_id
+        company_time_uom_id = self.env.company_id.project_time_mode_id
         if self.product_uom.id != company_time_uom_id.id and self.product_uom.category_id.id == company_time_uom_id.category_id.id:
             planned_hours = self.product_uom._compute_quantity(self.product_uom_qty, company_time_uom_id)
         else:
@@ -222,6 +247,8 @@ class SaleOrderLine(models.Model):
             'analytic_account_id': account.id,
             'partner_id': self.order_id.partner_id.id,
             'sale_line_id': self.id,
+            'sale_order_id': self.order_id.id,
+            'active': True,
         }
         if self.product_id.project_template_id:
             values['name'] = "%s - %s" % (values['name'], self.product_id.project_template_id.name)
@@ -278,16 +305,16 @@ class SaleOrderLine(models.Model):
             implied if so line of generated task has been modified, we may regenerate it.
         """
         so_line_task_global_project = self.filtered(lambda sol: sol.is_service and sol.product_id.service_tracking == 'task_global_project')
-        so_line_new_project = self.filtered(lambda sol: sol.is_service and sol.product_id.service_tracking in ['project_only', 'task_new_project'])
+        so_line_new_project = self.filtered(lambda sol: sol.is_service and sol.product_id.service_tracking in ['project_only', 'task_in_project'])
 
         # search so lines from SO of current so lines having their project generated, in order to check if the current one can
         # create its own project, or reuse the one of its order.
         map_so_project = {}
         if so_line_new_project:
             order_ids = self.mapped('order_id').ids
-            so_lines_with_project = self.search([('order_id', 'in', order_ids), ('project_id', '!=', False), ('product_id.service_tracking', 'in', ['project_only', 'task_new_project']), ('product_id.project_template_id', '=', False)])
+            so_lines_with_project = self.search([('order_id', 'in', order_ids), ('project_id', '!=', False), ('product_id.service_tracking', 'in', ['project_only', 'task_in_project']), ('product_id.project_template_id', '=', False)])
             map_so_project = {sol.order_id.id: sol.project_id for sol in so_lines_with_project}
-            so_lines_with_project_templates = self.search([('order_id', 'in', order_ids), ('project_id', '!=', False), ('product_id.service_tracking', 'in', ['project_only', 'task_new_project']), ('product_id.project_template_id', '!=', False)])
+            so_lines_with_project_templates = self.search([('order_id', 'in', order_ids), ('project_id', '!=', False), ('product_id.service_tracking', 'in', ['project_only', 'task_in_project']), ('product_id.project_template_id', '!=', False)])
             map_so_project_templates = {(sol.order_id.id, sol.product_id.project_template_id.id): sol.project_id for sol in so_lines_with_project_templates}
 
         # search the global project of current SO lines, in which create their task
@@ -303,25 +330,42 @@ class SaleOrderLine(models.Model):
                     return True
             return False
 
+        def _determine_project(so_line):
+            """Determine the project for this sale order line.
+            Rules are different based on the service_tracking:
+
+            - 'project_only': the project_id can only come from the sale order line itself
+            - 'task_in_project': the project_id comes from the sale order line only if no project_id was configured
+              on the parent sale order"""
+
+            if so_line.product_id.service_tracking == 'project_only':
+                return so_line.project_id
+            elif so_line.product_id.service_tracking == 'task_in_project':
+                return so_line.order_id.project_id or so_line.project_id
+
+            return False
+
         # task_global_project: create task in global project
         for so_line in so_line_task_global_project:
             if not so_line.task_id:
                 if map_sol_project.get(so_line.id):
                     so_line._timesheet_create_task(project=map_sol_project[so_line.id])
 
-        # project_only, task_new_project: create a new project, based or not on a template (1 per SO). May be create a task too.
+        # project_only, task_in_project: create a new project, based or not on a template (1 per SO). May be create a task too.
+        # if 'task_in_project' and project_id configured on SO, use that one instead
         for so_line in so_line_new_project:
-            project = so_line.project_id
+            project = _determine_project(so_line)
             if not project and _can_create_project(so_line):
                 project = so_line._timesheet_create_project()
                 if so_line.product_id.project_template_id:
                     map_so_project_templates[(so_line.order_id.id, so_line.product_id.project_template_id.id)] = project
                 else:
                     map_so_project[so_line.order_id.id] = project
-            if so_line.product_id.service_tracking == 'task_new_project':
+            if so_line.product_id.service_tracking == 'task_in_project':
                 if not project:
                     if so_line.product_id.project_template_id:
                         project = map_so_project_templates[(so_line.order_id.id, so_line.product_id.project_template_id.id)]
                     else:
                         project = map_so_project[so_line.order_id.id]
-                so_line._timesheet_create_task(project=project)
+                if not so_line.task_id:
+                    so_line._timesheet_create_task(project=project)

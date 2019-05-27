@@ -12,7 +12,7 @@ class SaleOrderLine(models.Model):
     purchase_price = fields.Float(string='Cost', digits=dp.get_precision('Product Price'))
 
     def _compute_margin(self, order_id, product_id, product_uom_id):
-        frm_cur = self.env.user.company_id.currency_id
+        frm_cur = self.env.company_id.currency_id
         to_cur = order_id.pricelist_id.currency_id
         purchase_price = product_id.standard_price
         if product_uom_id != product_id.uom_id:
@@ -23,14 +23,14 @@ class SaleOrderLine(models.Model):
 
     @api.model
     def _get_purchase_price(self, pricelist, product, product_uom, date):
-        frm_cur = self.env.user.company_id.currency_id
+        frm_cur = self.env.company_id.currency_id
         to_cur = pricelist.currency_id
         purchase_price = product.standard_price
         if product_uom != product.uom_id:
             purchase_price = product.uom_id._compute_price(purchase_price, product_uom)
         price = frm_cur._convert(
             purchase_price, to_cur,
-            self.order_id.company_id or self.env.user.company_id,
+            self.order_id.company_id or self.env.company_id,
             date or fields.Date.today(), round=False)
         return {'purchase_price': price}
 
@@ -46,7 +46,7 @@ class SaleOrderLine(models.Model):
 
         # Calculation of the margin for programmatic creation of a SO line. It is therefore not
         # necessary to call product_id_change_margin manually
-        if 'purchase_price' not in vals:
+        if 'purchase_price' not in vals and ('display_type' not in vals or not vals['display_type']):
             order_id = self.env['sale.order'].browse(vals['order_id'])
             product_id = self.env['product.product'].browse(vals['product_id'])
             product_uom_id = self.env['uom.uom'].browse(vals['product_uom'])
@@ -60,16 +60,8 @@ class SaleOrderLine(models.Model):
         for line in self:
             currency = line.order_id.pricelist_id.currency_id
             price = line.purchase_price
-            if not price:
-                from_cur = line.env.user.company_id.currency_id
-                price = from_cur._convert(
-                    line.product_id.standard_price,
-                    currency,
-                    line.order_id.company_id or self.env.user.company_id,
-                    line.order_id.date_order or fields.Date.today(), round=False)
-
-            line.margin = currency.round(line.price_subtotal - (price * line.product_uom_qty))
-
+            margin = line.price_subtotal - (price * line.product_uom_qty)
+            line.margin = currency.round(margin) if currency else margin
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"

@@ -1,12 +1,15 @@
 odoo.define('mail.discuss_moderation_tests', function (require) {
 "use strict";
 
+var Thread = require('mail.model.Thread');
 var mailTestUtils = require('mail.testUtils');
+
+var testUtils = require('web.test_utils');
 
 var createDiscuss = mailTestUtils.createDiscuss;
 
 QUnit.module('mail', {}, function () {
-QUnit.module('Discuss moderation', {
+QUnit.module('Discuss (Moderation)', {
     beforeEach: function () {
         // patch _.debounce and _.throttle to be fast and synchronous
         this.underscoreDebounce = _.debounce;
@@ -101,7 +104,7 @@ QUnit.test('moderator: display moderation box', function (assert) {
     .then(function (discuss) {
         var moderationBoxSelector = '.o_mail_discuss_item' +
                                     '[data-thread-id="mailbox_moderation"]';
-        assert.strictEqual(discuss.$(moderationBoxSelector).length, 1,
+        assert.containsOnce(discuss, moderationBoxSelector,
             "there should be a moderation mailbox");
         discuss.destroy();
         done();
@@ -142,7 +145,7 @@ QUnit.test('moderator: moderated channel with pending moderation message', funct
         data: this.data,
         services: this.services,
     })
-    .then(function (discuss) {
+    .then(async function (discuss) {
         var $moderationBox = discuss.$(
                                 '.o_mail_discuss_item' +
                                 '[data-thread-id="mailbox_moderation"]');
@@ -153,7 +156,7 @@ QUnit.test('moderator: moderated channel with pending moderation message', funct
             "the mailbox counter of the moderation mailbox should display '1'");
 
         // 1. go to moderation mailbox
-        $moderationBox.click();
+        await testUtils.dom.click($moderationBox);
         var $message = discuss.$('.o_thread_message');
         // check message
         assert.strictEqual($message.length, 1,
@@ -167,27 +170,27 @@ QUnit.test('moderator: moderated channel with pending moderation message', funct
         assert.notOk($message.find('.moderation_checkbox').prop('checked'), false,
             "the moderation checkbox should be unchecked by default");
         // check moderation actions next to message
-        assert.strictEqual(discuss.$('.o_thread_message_moderation').length, 5,
+        assert.containsN(discuss, '.o_thread_message_moderation', 5,
             "there should be 5 contextual moderation decisions next to the message");
-        assert.strictEqual(discuss.$('.o_thread_message_moderation[data-decision="accept"]').length, 1,
+        assert.containsOnce(discuss, '.o_thread_message_moderation[data-decision="accept"]',
             "there should be a contextual moderation decision to accept the message");
-        assert.strictEqual(discuss.$('.o_thread_message_moderation[data-decision="reject"]').length, 1,
+        assert.containsOnce(discuss, '.o_thread_message_moderation[data-decision="reject"]',
             "there should be a contextual moderation decision to reject the message");
-        assert.strictEqual(discuss.$('.o_thread_message_moderation[data-decision="discard"]').length, 1,
+        assert.containsOnce(discuss, '.o_thread_message_moderation[data-decision="discard"]',
             "there should be a contextual moderation decision to discard the message");
-        assert.strictEqual(discuss.$('.o_thread_message_moderation[data-decision="allow"]').length, 1,
+        assert.containsOnce(discuss, '.o_thread_message_moderation[data-decision="allow"]',
             "there should be a contextual moderation decision to allow the user of the message)");
-        assert.strictEqual(discuss.$('.o_thread_message_moderation[data-decision="ban"]').length, 1,
+        assert.containsOnce(discuss, '.o_thread_message_moderation[data-decision="ban"]',
             "there should be a contextual moderation decision to ban the user of the message");
 
         // check select all (enabled) / unselect all (disabled) buttons
         assert.strictEqual($('.o_mail_discuss_button_select_all').length, 1,
             "there should be a 'Select All' button in the control panel");
-        assert.notOk($('.o_mail_discuss_button_select_all').hasClass('disabled'),
+        assert.doesNotHaveClass($('.o_mail_discuss_button_select_all'), 'disabled',
             "the 'Select All' button should not be disabled");
         assert.strictEqual($('.o_mail_discuss_button_unselect_all').length, 1,
             "there should be a 'Unselect All' button in the control panel");
-        assert.ok($('.o_mail_discuss_button_unselect_all').hasClass('disabled'),
+        assert.hasClass($('.o_mail_discuss_button_unselect_all'),'disabled',
             "the 'Unselect All' button should be disabled");
         // check moderate all buttons (invisible)
         var moderateAllSelector = '.o_mail_discuss_button_moderate_all';
@@ -195,36 +198,36 @@ QUnit.test('moderator: moderated channel with pending moderation message', funct
             "there should be 3 buttons to moderate selected messages in the control panel");
         assert.strictEqual($(moderateAllSelector + '[data-decision="accept"]').length, 1,
             "there should one moderate button to accept messages pending moderation");
-        assert.strictEqual($(moderateAllSelector + '[data-decision="accept"]').attr('style'),
-            'display: none;', 'the moderate button "Accept" should be invisible by default');
+        assert.hasClass($(moderateAllSelector + '[data-decision="accept"]'),'d-none',
+            'the moderate button "Accept" should be invisible by default');
         assert.strictEqual($(moderateAllSelector + '[data-decision="reject"]').length, 1,
             "there should one moderate button to reject messages pending moderation");
-        assert.strictEqual($(moderateAllSelector + '[data-decision="reject"]').attr('style'),
-            'display: none;', 'the moderate button "Reject" should be invisible by default');
+        assert.hasClass($(moderateAllSelector + '[data-decision="reject"]'),'d-none',
+            'the moderate button "Reject" should be invisible by default');
         assert.strictEqual($(moderateAllSelector + '[data-decision="discard"]').length, 1,
             "there should one moderate button to discard messages pending moderation");
-        assert.strictEqual($(moderateAllSelector + '[data-decision="discard"]').attr('style'),
-            'display: none;', 'the moderate button "Discard" should be invisible by default');
+        assert.hasClass($(moderateAllSelector + '[data-decision="discard"]'),'d-none',
+            'the moderate button "Discard" should be invisible by default');
 
         // click on message moderation checkbox
-        $message.find('.moderation_checkbox').click();
+        await testUtils.dom.click($message.find('.moderation_checkbox'));
         assert.ok($message.find('.moderation_checkbox').prop('checked'),
             "the moderation checkbox should become checked after click");
         // check select all (disabled) / unselect all buttons (enabled)
-        assert.ok($('.o_mail_discuss_button_select_all').hasClass('disabled'),
+        assert.hasClass($('.o_mail_discuss_button_select_all'),'disabled',
             "the 'Select All' button should be disabled");
-        assert.notOk($('.o_mail_discuss_button_unselect_all').hasClass('disabled'),
+        assert.doesNotHaveClass($('.o_mail_discuss_button_unselect_all'), 'disabled',
             "the 'Unselect All' button should not be disabled");
         // check moderate all buttons updated (visible)
-        assert.strictEqual($(moderateAllSelector + '[data-decision="accept"]').attr('style'),
-            'display: inline-block;', 'the moderate button "Accept" should become visible');
-        assert.strictEqual($(moderateAllSelector + '[data-decision="reject"]').attr('style'),
-            'display: inline-block;', 'the moderate button "Reject" should become visible');
-        assert.strictEqual($(moderateAllSelector + '[data-decision="discard"]').attr('style'),
-            'display: inline-block;', 'the moderate button "Discard" should become visible');
+        assert.doesNotHaveClass($(moderateAllSelector + '[data-decision="accept"]'), 'd-none',
+            'the moderate button "Accept" should become visible');
+        assert.doesNotHaveClass($(moderateAllSelector + '[data-decision="reject"]'), 'd-none',
+            'the moderate button "Reject" should become visible');
+        assert.doesNotHaveClass($(moderateAllSelector + '[data-decision="discard"]'), 'd-none',
+            'the moderate button "Discard" should become visible');
 
         // 2. go to channel 'general'
-        discuss.$('.o_mail_discuss_item[data-thread-id="1"]').click();
+        await testUtils.dom.click(discuss.$('.o_mail_discuss_item[data-thread-id="1"]'));
         $message = discuss.$('.o_thread_message');
         // check correct message
         assert.strictEqual($message.length, 1,
@@ -286,12 +289,12 @@ QUnit.test('moderator: accept pending moderation message', function (assert) {
             return this._super.apply(this, arguments);
         },
     })
-    .then(function (discuss) {
+    .then(async function (discuss) {
         // 1. go to moderation box
         var $moderationBox = discuss.$(
                                 '.o_mail_discuss_item' +
                                 '[data-thread-id="mailbox_moderation"]');
-        $moderationBox.click();
+        await testUtils.dom.click($moderationBox);
         // check there is a message to moderate
         var $message = discuss.$('.o_thread_message');
         assert.strictEqual($message.length, 1,
@@ -301,16 +304,16 @@ QUnit.test('moderator: accept pending moderation message', function (assert) {
         assert.strictEqual($message.find('.moderation_checkbox').length, 1,
             "the message should have a moderation checkbox");
         // accept the message pending moderation
-        discuss.$('.o_thread_message_moderation[data-decision="accept"]').click();
+        await testUtils.dom.click(discuss.$('.o_thread_message_moderation[data-decision="accept"]'));
         assert.verifySteps(['moderate']);
 
         // stop the fadeout animation and immediately remove the element
         discuss.$('.o_thread_message').stop(false, true);
-        assert.strictEqual(discuss.$('.o_thread_message').length, 0,
+        assert.containsNone(discuss, '.o_thread_message',
             "should now have no message displayed in moderation box");
 
         // 2. go to channel 'general'
-        discuss.$('.o_mail_discuss_item[data-thread-id="1"]').click();
+        await testUtils.dom.click(discuss.$('.o_mail_discuss_item[data-thread-id="1"]'));
         $message = discuss.$('.o_thread_message');
         // check message is there and has no moderate checkbox
         assert.strictEqual($message.length, 1,
@@ -376,12 +379,12 @@ QUnit.test('moderator: reject pending moderation message (reject with explanatio
             return this._super.apply(this, arguments);
         },
     })
-    .then(function (discuss) {
+    .then(async function (discuss) {
         // 1. go to moderation box
         var $moderationBox = discuss.$(
                                 '.o_mail_discuss_item' +
                                 '[data-thread-id="mailbox_moderation"]');
-        $moderationBox.click();
+        await testUtils.dom.click($moderationBox);
         // check there is a message to moderate
         var $message = discuss.$('.o_thread_message');
         assert.strictEqual($message.length, 1,
@@ -391,7 +394,7 @@ QUnit.test('moderator: reject pending moderation message (reject with explanatio
         assert.strictEqual($message.find('.moderation_checkbox').length, 1,
             "the message should have a moderation checkbox");
         // reject the message pending moderation
-        discuss.$('.o_thread_message_moderation[data-decision="reject"]').click();
+        await testUtils.dom.click(discuss.$('.o_thread_message_moderation[data-decision="reject"]'));
 
         // check reject dialog prompt
         assert.strictEqual($('.modal-dialog').length, 1,
@@ -401,14 +404,14 @@ QUnit.test('moderator: reject pending moderation message (reject with explanatio
         var $messageTitle = $('.modal-body input[id="message_title"]');
         assert.strictEqual($messageTitle.length, 1,
             "should have a title of message for rejecting the message");
-        assert.strictEqual($messageTitle.attr('placeholder'), "Subject",
+        assert.hasAttrValue($messageTitle, 'placeholder', "Subject",
             "message title for reject reason should have correct placeholder");
         assert.strictEqual($messageTitle.val(), "Message Rejected",
             "message title for reject reason should have correct default value");
         var $messageBody = $('.modal-body textarea[id="reject_message"]');
         assert.strictEqual($messageBody.length, 1,
             "should have a body of message for rejecting the message");
-        assert.strictEqual($messageBody.attr('placeholder'), "Mail Body",
+        assert.hasAttrValue($messageBody, 'placeholder', "Mail Body",
             "message body for reject reason should have correct placeholder");
         assert.strictEqual($messageBody.text(), "Your message was rejected by moderator.",
             "message body for reject reason should have correct default text content");
@@ -416,18 +419,17 @@ QUnit.test('moderator: reject pending moderation message (reject with explanatio
             "should have a send button on the reject dialog");
 
         // send mesage
-        $('.modal-footer button').click();
+        await testUtils.dom.click($('.modal-footer button'));
         assert.verifySteps(['moderate']);
 
         // // stop the fadeout animation and immediately remove the element
         discuss.$('.o_thread_message').stop(false, true);
-        assert.strictEqual(discuss.$('.o_thread_message').length, 0,
+        assert.containsNone(discuss, '.o_thread_message',
             "should now have no message displayed in moderation box");
 
         // 2. go to channel 'general'
-        discuss.$('.o_mail_discuss_item[data-thread-id="1"]').click();
-        assert.strictEqual(discuss.$('.o_thread_message').length, 0,
-            "should now have no message displayed in moderated channel");
+        await testUtils.dom.click(discuss.$('.o_mail_discuss_item[data-thread-id="1"]'));
+        assert.containsNone(discuss, '.o_thread_message')
 
         discuss.destroy();
         done();
@@ -480,12 +482,12 @@ QUnit.test('moderator: discard pending moderation message (reject without explan
             return this._super.apply(this, arguments);
         },
     })
-    .then(function (discuss) {
+    .then(async function (discuss) {
         // 1. go to moderation box
         var $moderationBox = discuss.$(
                                 '.o_mail_discuss_item' +
                                 '[data-thread-id="mailbox_moderation"]');
-        $moderationBox.click();
+        await testUtils.dom.click($moderationBox);
         // check there is a message to moderate
         var $message = discuss.$('.o_thread_message');
         assert.strictEqual($message.length, 1,
@@ -495,7 +497,7 @@ QUnit.test('moderator: discard pending moderation message (reject without explan
         assert.strictEqual($message.find('.moderation_checkbox').length, 1,
             "the message should have a moderation checkbox");
         // discard the message pending moderation
-        discuss.$('.o_thread_message_moderation[data-decision="discard"]').click();
+        await testUtils.dom.click(discuss.$('.o_thread_message_moderation[data-decision="discard"]'));
 
         // check discard dialog prompt
         assert.strictEqual($('.modal-dialog').length, 1,
@@ -511,18 +513,17 @@ QUnit.test('moderator: discard pending moderation message (reject without explan
             "should have a cancel button in the dialog for discard");
 
         // discard mesage
-        $('.modal-footer button.btn-primary').click();
+        await testUtils.dom.click($('.modal-footer button.btn-primary'));
         assert.verifySteps(['moderate']);
 
         // stop the fadeout animation and immediately remove the element
         discuss.$('.o_thread_message').stop(false, true);
-        assert.strictEqual(discuss.$('.o_thread_message').length, 0,
+        assert.containsNone(discuss, '.o_thread_message',
             "should now have no message displayed in moderation box");
 
         // 2. go to channel 'general'
-        discuss.$('.o_mail_discuss_item[data-thread-id="1"]').click();
-        assert.strictEqual(discuss.$('.o_thread_message').length, 0,
-            "should now have no message displayed in moderated channel");
+        await testUtils.dom.click(discuss.$('.o_mail_discuss_item[data-thread-id="1"]'));
+        assert.containsNone(discuss, '.o_thread_message')
 
         discuss.destroy();
         done();
@@ -533,7 +534,7 @@ QUnit.test('author: send message in moderated channel', function (assert) {
     assert.expect(4);
     var done = assert.async();
 
-    var messagePostDef = $.Deferred();
+    var messagePostDef = testUtils.makeTestPromise();
 
     this.data.initMessaging = {
         channel_slots: {
@@ -553,7 +554,7 @@ QUnit.test('author: send message in moderated channel', function (assert) {
         params: {},
         data: this.data,
         services: this.services,
-        mockRPC: function (route, args) {
+        mockRPC: async function (route, args) {
             if (args.method === 'message_post') {
                 var message = {
                     id: 100,
@@ -571,9 +572,10 @@ QUnit.test('author: send message in moderated channel', function (assert) {
                 };
                 var notification = [metaData, notifData];
                 objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
+                await testUtils.nextTick();
 
                 messagePostDef.resolve();
-                return $.when(message.id);
+                return Promise.resolve(message.id);
             }
             return this._super.apply(this, arguments);
         },
@@ -581,14 +583,14 @@ QUnit.test('author: send message in moderated channel', function (assert) {
             partner_id: 2,
         },
     })
-    .then(function (discuss) {
+    .then(async function (discuss) {
         objectDiscuss = discuss;
 
         // go to channel 'general'
-        discuss.$('.o_mail_discuss_item[data-thread-id="1"]').click();
+        await testUtils.dom.click(discuss.$('.o_mail_discuss_item[data-thread-id="1"]'));
         // post a message
         discuss.$('.o_composer_input textarea').first().val("some text");
-        discuss.$('.o_composer_send button').click();
+        await testUtils.dom.click(discuss.$('.o_composer_send button'));
 
         messagePostDef
             .then(function () {
@@ -645,10 +647,10 @@ QUnit.test('author: sent message accepted in moderated channel', function (asser
             partner_id: 2,
         },
     })
-    .then(function (discuss) {
+    .then(async function (discuss) {
 
         // go to channel 'general'
-        discuss.$('.o_mail_discuss_item[data-thread-id="1"]').click();
+        await testUtils.dom.click(discuss.$('.o_mail_discuss_item[data-thread-id="1"]'));
         // check message is pending
         var $message = discuss.$('.o_thread_message');
         assert.strictEqual($message.length, 1,
@@ -673,7 +675,7 @@ QUnit.test('author: sent message accepted in moderated channel', function (asser
         var metaData = [dbName, 'mail.channel'];
         var notification = [metaData, messageData];
         discuss.call('bus_service', 'trigger', 'notification', [notification]);
-
+        await testUtils.nextTick();
         // check message is accepted
         $message = discuss.$('.o_thread_message');
         assert.strictEqual($message.length, 1,
@@ -682,7 +684,7 @@ QUnit.test('author: sent message accepted in moderated channel', function (asser
             "message should still have ID returned from 'message_post'");
         assert.strictEqual($message.find('.o_thread_author').text().trim(),
             "Someone", "message should still have correct author displayed name");
-        assert.strictEqual(discuss.$('.o_thread_icons i.text-danger').length, 0,
+        assert.containsNone(discuss, '.o_thread_icons i.text-danger',
             "the message should not be in pending moderation anymore");
 
         discuss.destroy();
@@ -726,10 +728,10 @@ QUnit.test('author: sent message rejected in moderated channel', function (asser
             partner_id: 2,
         },
     })
-    .then(function (discuss) {
+    .then(async function (discuss) {
 
         // go to channel 'general'
-        discuss.$('.o_mail_discuss_item[data-thread-id="1"]').click();
+        await testUtils.dom.click(discuss.$('.o_mail_discuss_item[data-thread-id="1"]'));
         // check message is pending
         var $message = discuss.$('.o_thread_message');
         assert.strictEqual($message.length, 1,
@@ -750,14 +752,91 @@ QUnit.test('author: sent message rejected in moderated channel', function (asser
         var metaData = [dbName, 'res.partner'];
         var notification = [metaData, notifData];
         discuss.call('bus_service', 'trigger', 'notification', [notification]);
-
+        await testUtils.nextTick();
         // // check no message
-        assert.strictEqual(discuss.$('.o_thread_message').length, 0,
+        assert.containsNone(discuss, '.o_thread_message',
             "message should be removed from channel after reject");
 
         discuss.destroy();
         done();
     });
+});
+
+QUnit.test('no crash when load-more fetching "accepted" message twice', async function (assert) {
+    // This tests requires discuss not loading more messages due to having less
+    // messages to fetch than available height. This justifies we simply do not
+    // patch FETCH_LIMIT to 1, as it would detect that more messages could fit
+    // the empty space (it behaviour is linked to "auto load more").
+    assert.expect(2);
+
+    var FETCH_LIMIT = Thread.prototype._FETCH_LIMIT;
+    // FETCH LIMIT + 30 should be enough to cover the whole available space in
+    // the thread of discuss app.
+    var messageData = [];
+    _.each(_.range(1, FETCH_LIMIT+31), function (num) {
+        messageData.push({
+                id: num,
+                body: "<p>test" + num + "</p>",
+                author_id: [100, "Someone"],
+                channel_ids: [1],
+                model: 'mail.channel',
+                res_id: 1,
+                moderation_status: 'accepted',
+            }
+        );
+    });
+
+    this.data['mail.message'].records = messageData;
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "general",
+            }],
+        },
+    };
+    var count = 0;
+
+    var discuss = await createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        session: { partner_id: 3 },
+        mockRPC: function (route, args) {
+            if (args.method === 'message_fetch') {
+                count++;
+                if (count === 1) {
+                    // inbox message_fetch
+                    return Promise.resolve([]);
+                }
+                // general message_fetch
+                return Promise.resolve(messageData);
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    var $general = discuss.$('.o_mail_discuss_sidebar')
+                    .find('.o_mail_discuss_item[data-thread-id=1]');
+    assert.strictEqual($general.length, 1,
+        "should have the channel item with id 1");
+    assert.strictEqual($general.attr('title'), 'general',
+        "should have the title 'general'");
+
+    // click on general
+    await testUtils.dom.click($general);
+
+    // simulate search
+    discuss.trigger_up('search', {
+        domains: [['author_id', '=', 100]],
+    });
+    await testUtils.nextTick();
+
+    discuss.destroy();
 });
 
 });

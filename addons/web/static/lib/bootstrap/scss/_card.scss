@@ -6,7 +6,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  min-width: 0;
+  min-width: 0; // See https://github.com/twbs/bootstrap/pull/22740#issuecomment-305868106
   word-wrap: break-word;
   background-color: $card-bg;
   background-clip: border-box;
@@ -36,6 +36,7 @@
   // as much space as possible, ensuring footers are aligned to the bottom.
   flex: 1 1 auto;
   padding: $card-spacer-x;
+  color: $card-color;
 }
 
 .card-title {
@@ -43,7 +44,7 @@
 }
 
 .card-subtitle {
-  margin-top: -($card-spacer-y / 2);
+  margin-top: -$card-spacer-y / 2;
   margin-bottom: 0;
 }
 
@@ -68,6 +69,7 @@
 .card-header {
   padding: $card-spacer-y $card-spacer-x;
   margin-bottom: 0; // Removes the default margin-bottom of <hN>
+  color: $card-cap-color;
   background-color: $card-cap-bg;
   border-bottom: $card-border-width solid $card-border-color;
 
@@ -98,15 +100,15 @@
 //
 
 .card-header-tabs {
-  margin-right: -($card-spacer-x / 2);
+  margin-right: -$card-spacer-x / 2;
   margin-bottom: -$card-spacer-y;
-  margin-left: -($card-spacer-x / 2);
+  margin-left: -$card-spacer-x / 2;
   border-bottom: 0;
 }
 
 .card-header-pills {
-  margin-right: -($card-spacer-x / 2);
-  margin-left: -($card-spacer-x / 2);
+  margin-right: -$card-spacer-x / 2;
+  margin-left: -$card-spacer-x / 2;
 }
 
 // Card image
@@ -194,53 +196,33 @@
 
       // Handle rounded corners
       @if $enable-rounded {
-        &:first-child {
+        &:not(:last-child) {
           @include border-right-radius(0);
 
           .card-img-top,
           .card-header {
+            // stylelint-disable-next-line property-blacklist
             border-top-right-radius: 0;
           }
           .card-img-bottom,
           .card-footer {
+            // stylelint-disable-next-line property-blacklist
             border-bottom-right-radius: 0;
           }
         }
 
-        &:last-child {
+        &:not(:first-child) {
           @include border-left-radius(0);
 
           .card-img-top,
           .card-header {
+            // stylelint-disable-next-line property-blacklist
             border-top-left-radius: 0;
           }
           .card-img-bottom,
           .card-footer {
+            // stylelint-disable-next-line property-blacklist
             border-bottom-left-radius: 0;
-          }
-        }
-
-        &:only-child {
-          @include border-radius($card-border-radius);
-
-          .card-img-top,
-          .card-header {
-            @include border-top-radius($card-border-radius);
-          }
-          .card-img-bottom,
-          .card-footer {
-            @include border-bottom-radius($card-border-radius);
-          }
-        }
-
-        &:not(:first-child):not(:last-child):not(:only-child) {
-          @include border-radius(0);
-
-          .card-img-top,
-          .card-img-bottom,
-          .card-header,
-          .card-footer {
-            @include border-radius(0);
           }
         }
       }
@@ -277,25 +259,31 @@
 //
 
 .accordion {
-  .card:not(:first-of-type):not(:last-of-type) {
-    border-bottom: 0;
-    border-radius: 0;
-  }
+  > .card {
+    overflow: hidden;
 
-  .card:not(:first-of-type) {
-    .card-header:first-child {
-      border-radius: 0;
+    &:not(:first-of-type) {
+      .card-header:first-child {
+        @include border-radius(0);
+      }
+
+      &:not(:last-of-type) {
+        border-bottom: 0;
+        @include border-radius(0);
+      }
     }
-  }
 
-  .card:first-of-type {
-    border-bottom: 0;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
-  }
+    &:first-of-type {
+      border-bottom: 0;
+      @include border-bottom-radius(0);
+    }
 
-  .card:last-of-type {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+    &:last-of-type {
+      @include border-top-radius(0);
+    }
+
+    .card-header {
+      margin-bottom: -$card-border-width;
+    }
   }
 }

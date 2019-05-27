@@ -3,6 +3,7 @@ odoo.define('mail.composer.Chatter', function (require) {
 
 var BasicComposer = require('mail.composer.Basic');
 var mailUtils = require('mail.utils');
+var session = require('web.session');
 
 var core = require('web.core');
 var viewDialogs = require('web.view_dialogs');
@@ -20,6 +21,7 @@ var ChatterComposer = BasicComposer.extend({
     template: 'mail.chatter.Composer',
     events: _.extend({}, BasicComposer.prototype.events, {
         'click .o_composer_button_full_composer': '_onOpenFullComposer',
+        'click .o_suggested_show_more_less': '_onClickPartnerSuggestionsReadMoreLess',
     }),
     init: function (parent, model, suggestedPartners, options) {
         this._super(parent, options);
@@ -45,7 +47,7 @@ var ChatterComposer = BasicComposer.extend({
      *
      * @override
      */
-    clearComposerOnSend: function () {},
+    _clearComposerOnSend: function () {},
 
     //--------------------------------------------------------------------------
     // Private
@@ -58,109 +60,119 @@ var ChatterComposer = BasicComposer.extend({
      * @private
      * @param {Array} checkedSuggestedPartners list of 'recipient' partners to
      *   complete informations or validate
-     * @returns {Deferred} resolved with the list of checked suggested partners
+     * @returns {Promise} resolved with the list of checked suggested partners
      *   (real partner)
      **/
     _checkSuggestedPartners: function (checkedSuggestedPartners) {
         var self = this;
-        var checkDone = $.Deferred();
+        var checkDone = new Promise(function (resolve, reject) {
+            var recipients = _.filter(checkedSuggestedPartners, function (recipient) {
+                return recipient.checked;
+            });
+            var recipientsToFind = _.filter(recipients, function (recipient) {
+                return (! recipient.partner_id);
+            });
+            var namesToFind = _.pluck(recipientsToFind, 'full_name');
+            var recipientsToCheck = _.filter(recipients, function (recipient) {
+                return (recipient.partner_id && ! recipient.email_address);
+            });
+            var recipientIDs = _.pluck(_.filter(recipients, function (recipient) {
+                return recipient.partner_id && recipient.email_address;
+            }), 'partner_id');
 
-        var recipients = _.filter(checkedSuggestedPartners, function (recipient) {
-            return recipient.checked;
-        });
-        var recipientsToFind = _.filter(recipients, function (recipient) {
-            return (! recipient.partner_id);
-        });
-        var namesToFind = _.pluck(recipientsToFind, 'full_name');
-        var recipientsToCheck = _.filter(recipients, function (recipient) {
-            return (recipient.partner_id && ! recipient.email_address);
-        });
-        var recipientIDs = _.pluck(_.filter(recipients, function (recipient) {
-            return recipient.partner_id && recipient.email_address;
-        }), 'partner_id');
+            var namesToRemove = [];
+            var recipientIDsToRemove = [];
 
-        var namesToRemove = [];
-        var recipientIDsToRemove = [];
-
-        // have unknown names
-        //   -> call message_get_partner_info_from_emails to try to find
-        //      partner_id
-        var def;
-        if (namesToFind.length > 0) {
-            def = this._rpc({
-                    model: this._model,
-                    method: 'message_partner_info_from_emails',
-                    args: [[this.context.default_res_id], namesToFind],
-                });
-        }
-
-        // for unknown names + incomplete partners
-        //   -> open popup - cancel = remove from recipients
-        $.when(def).pipe(function (result) {
-            result = result || [];
-            var emailDefs = [];
-            var recipientPopups = result.concat(recipientsToCheck);
-
-            _.each(recipientPopups, function (partnerInfo) {
-                var deferred = $.Deferred();
-                emailDefs.push(deferred);
-
-                var partnerName = partnerInfo.full_name;
-                var partnerID = partnerInfo.partner_id;
-                var parsedEmail = mailUtils.parseEmail(partnerName);
-
-                var dialog = new viewDialogs.FormViewDialog(self, {
-                    res_model: 'res.partner',
-                    res_id: partnerID,
-                    context: {
-                        active_model: self._model,
-                        active_id: self.context.default_res_id,
-                        force_email: true,
-                        ref: 'compound_context',
-                        default_name: parsedEmail[0],
-                        default_email: parsedEmail[1],
+            // have unknown names
+            //   -> call message_get_partner_info_from_emails to try to find
+            //      partner_id
+            var def;
+            if (namesToFind.length > 0) {
+                def = this._rpc({
+                    route: '/mail/get_partner_info',
+                    params: {
+                        model: self._model,
+                        res_ids: [self.context.default_res_id],
+                        emails: namesToFind,
                     },
-                    title: _t("Please complete customer's informations"),
-                    disable_multiple_selection: true,
-                }).open();
-                dialog.on('closed', self, function () {
-                    deferred.resolve();
                 });
-                dialog.opened().then(function () {
-                    dialog.form_view.on('on_button_cancel', self, function () {
-                        namesToRemove.push(partnerName);
-                        if (partnerID) {
-                            recipientIDsToRemove.push(partnerID);
-                        }
-                    });
-                });
-            });
-            $.when.apply($, emailDefs).then(function () {
-                var newNamesToFind = _.difference(namesToFind, namesToRemove);
-                var def;
-                if (newNamesToFind.length > 0) {
-                    def = self._rpc({
-                            model: self._model,
-                            method: 'message_partner_info_from_emails',
-                            args: [[self.context.default_res_id], newNamesToFind, true],
+            }
+
+            // for unknown names + incomplete partners
+            //   -> open popup - cancel = remove from recipients
+            Promise.resolve(def).then(function (result) {
+                result = result || [];
+                var emailDefs = [];
+                var recipientPopups = result.concat(recipientsToCheck);
+
+                _.each(recipientPopups, function (partnerInfo) {
+                    var prom = new Promise(function(innerResolve, innerReject) {
+                        var partnerName = partnerInfo.full_name;
+                        var partnerID = partnerInfo.partner_id;
+                        var parsedEmail = mailUtils.parseEmail(partnerName);
+
+                        var dialog = new viewDialogs.FormViewDialog(self, {
+                            res_model: 'res.partner',
+                            res_id: partnerID,
+                            context: {
+                                active_model: self._model,
+                                active_id: self.context.default_res_id,
+                                force_email: true,
+                                ref: 'compound_context',
+                                default_name: parsedEmail[0],
+                                default_email: parsedEmail[1],
+                            },
+                            title: _t("Please complete customer's informations"),
+                            disable_multiple_selection: true,
+                        }).open();
+                        dialog.on('closed', self, function () {
+                            innerResolve();
                         });
-                }
-                $.when(def).pipe(function (result) {
-                    result = result || [];
-                    var recipientPopups = result.concat(recipientsToCheck);
-                    _.each(recipientPopups, function (partnerInfo) {
-                        if (
-                            partnerInfo.partner_id &&
-                            _.indexOf(partnerInfo.partner_id, recipientIDsToRemove) === -1
-                        ) {
-                            recipientIDs.push(partnerInfo.partner_id);
-                        }
+                        dialog.opened().then(function () {
+                            dialog.form_view.on('on_button_cancel', self, function () {
+                                namesToRemove.push(partnerName);
+                                if (partnerID) {
+                                    recipientIDsToRemove.push(partnerID);
+                                }
+                            });
+                        });
                     });
-                }).pipe(function () {
-                    checkDone.resolve(recipientIDs);
+
+                    emailDefs.push(prom);
+
+                });
+                Promise.all(emailDefs).then(function () {
+                    var newNamesToFind = _.difference(namesToFind, namesToRemove);
+                    var def;
+                    if (newNamesToFind.length > 0) {
+                        def = self._rpc({
+                            route: '/mail/get_partner_info',
+                            params: {
+                                model: self._model,
+                                res_ids: [self.context.default_res_id],
+                                emails: namesToFind,
+                                link_mail: true,
+                            },
+                        });
+                    }
+                    Promise.resolve(def).then(function (result) {
+                        result = result || [];
+                        var recipientPopups = result.concat(recipientsToCheck);
+                        _.each(recipientPopups, function (partnerInfo) {
+                            if (
+                                partnerInfo.partner_id &&
+                                _.indexOf(partnerInfo.partner_id, recipientIDsToRemove) === -1
+                            ) {
+                                recipientIDs.push(partnerInfo.partner_id);
+                            }
+                        });
+                    }).then(function () {
+                        resolve(recipientIDs);
+                    });
                 });
             });
         });
+
         return checkDone;
     },
     /**
@@ -186,41 +198,40 @@ var ChatterComposer = BasicComposer.extend({
     /**
      * @override
      * @private
-     * @returns {$.Deferred}
+     * @returns {Promise}
      */
     _preprocessMessage: function () {
         var self = this;
-        var def = $.Deferred();
-        this._super().then(function (message) {
-            message = _.extend(message, {
-                subtype: 'mail.mt_comment',
-                message_type: 'comment',
-                context: self.context,
-            });
-
-            // Subtype
-            if (self.options.isLog) {
-                message.subtype = 'mail.mt_note';
-            }
-
-            // Partner_ids
-            if (!self.options.isLog) {
-                var checkedSuggestedPartners = self._getCheckedSuggestedPartners();
-                self._checkSuggestedPartners(checkedSuggestedPartners).done(function (partnerIDs) {
-                    message.partner_ids = (message.partner_ids || []).concat(partnerIDs);
-                    // update context
-                    message.context = _.defaults({}, message.context, {
-                        mail_post_autofollow: true,
-                    });
-                    def.resolve(message);
+        return new Promise(function (resolve, reject) {
+            self._super().then(function (message) {
+                message = _.extend(message, {
+                    subtype: 'mail.mt_comment',
+                    message_type: 'comment',
+                    context: _.defaults({}, self.context, session.user_context),
                 });
-            } else {
-                def.resolve(message);
-            }
 
+                // Subtype
+                if (self.options.isLog) {
+                    message.subtype = 'mail.mt_note';
+                }
+
+                // Partner_ids
+                if (!self.options.isLog) {
+                    var checkedSuggestedPartners = self._getCheckedSuggestedPartners();
+                    self._checkSuggestedPartners(checkedSuggestedPartners).then(function (partnerIDs) {
+                        message.partner_ids = (message.partner_ids || []).concat(partnerIDs);
+                        // update context
+                        message.context = _.defaults({}, message.context, {
+                            mail_post_autofollow: true,
+                        });
+                        resolve(message);
+                    });
+                } else {
+                    resolve(message);
+                }
+
+            });
         });
-
-        return def;
     },
     /**
      * @override
@@ -236,6 +247,14 @@ var ChatterComposer = BasicComposer.extend({
 
     /**
      * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickPartnerSuggestionsReadMoreLess: function (ev) {
+        ev.preventDefault();
+        this.$('.o_suggested_toggle').toggleClass('o_hidden');
+    },
+    /**
+     * @private
      */
     _onOpenFullComposer: function () {
         if (!this._doCheckAttachmentUpload()){
@@ -243,20 +262,20 @@ var ChatterComposer = BasicComposer.extend({
         }
 
         var self = this;
-        var recipientDoneDef = $.Deferred();
-
-        // any operation on the full-composer will reload the record, so
-        // warn the user that any unsaved changes on the record will be lost.
-        this.trigger_up('discard_record_changes', {
-            proceed: function () {
-                if (self.options.isLog) {
-                    recipientDoneDef.resolve([]);
-                } else {
-                    var checkedSuggestedPartners = self._getCheckedSuggestedPartners();
-                    self._checkSuggestedPartners(checkedSuggestedPartners)
-                        .then(recipientDoneDef.resolve.bind(recipientDoneDef));
-                }
-            },
+        var recipientDoneDef = new Promise(function (resolve, reject) {
+            // any operation on the full-composer will reload the record, so
+            // warn the user that any unsaved changes on the record will be lost.
+            self.trigger_up('discard_record_changes', {
+                proceed: function () {
+                    if (self.options.isLog) {
+                        resolve([]);
+                    } else {
+                        var checkedSuggestedPartners = self._getCheckedSuggestedPartners();
+                        self._checkSuggestedPartners(checkedSuggestedPartners)
+                            .then(resolve);
+                    }
+                },
+            });
         });
 
         recipientDoneDef.then(function (partnerIDs) {

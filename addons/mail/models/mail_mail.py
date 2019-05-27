@@ -5,6 +5,7 @@ import base64
 import datetime
 import logging
 import psycopg2
+import smtplib
 import threading
 import re
 
@@ -36,10 +37,12 @@ class MailMail(models.Model):
     # Auto-detected based on create() - if 'mail_message_id' was passed then this mail is a notification
     # and during unlink() we will not cascade delete the parent and its attachments
     notification = fields.Boolean('Is Notification', help='Mail has been created to notify people of an existing mail.message')
-    # recipients
+    # recipients: include inactive partners (they may have been archived after
+    # the message was sent, but they should remain visible in the relation)
     email_to = fields.Text('To', help='Message recipients (emails)')
     email_cc = fields.Char('Cc', help='Carbon copy message recipients')
-    recipient_ids = fields.Many2many('res.partner', string='To (Partners)')
+    recipient_ids = fields.Many2many('res.partner', string='To (Partners)',
+        context={'active_test': False})
     # process
     state = fields.Selection([
         ('outgoing', 'Outgoing'),
@@ -62,7 +65,18 @@ class MailMail(models.Model):
         # notification field: if not set, set if mail comes from an existing mail.message
         if 'notification' not in values and values.get('mail_message_id'):
             values['notification'] = True
-        return super(MailMail, self).create(values)
+        new_mail = super(MailMail, self).create(values)
+        if values.get('attachment_ids'):
+            new_mail.attachment_ids.check(mode='read')
+        return new_mail
+
+    @api.multi
+    def write(self, vals):
+        res = super(MailMail, self).write(vals)
+        if vals.get('attachment_ids'):
+            for mail in self:
+                mail.attachment_ids.check(mode='read')
+        return res
 
     @api.multi
     def unlink(self):
@@ -117,6 +131,8 @@ class MailMail(models.Model):
             ids = filtered_ids
         else:
             ids = list(set(filtered_ids) & set(ids))
+        ids.sort()
+
         res = None
         try:
             # auto-commit except in testing mode
@@ -127,7 +143,7 @@ class MailMail(models.Model):
         return res
 
     @api.multi
-    def _postprocess_sent_message(self, success_pids, failure_reason=False, failure_type='NONE'):
+    def _postprocess_sent_message(self, success_pids, failure_reason=False, failure_type=None):
         """Perform any post-processing necessary after sending ``mail``
         successfully, including deleting it completely along with its
         attachment if the ``auto_delete`` flag of the mail was set.
@@ -145,19 +161,19 @@ class MailMail(models.Model):
             if notifications:
                 #find all notification linked to a failure
                 failed = self.env['mail.notification']
-                if failure_type != 'NONE':
+                if failure_type:
                     failed = notifications.filtered(lambda notif: notif.res_partner_id not in success_pids)
-                    failed.write({
+                    failed.sudo().write({
                         'email_status': 'exception',
                         'failure_type': failure_type,
                         'failure_reason': failure_reason,
                     })
                     messages = notifications.mapped('mail_message_id').filtered(lambda m: m.res_id and m.model)
                     messages._notify_failure_update()  # notify user that we have a failure
-                (notifications - failed).write({
+                (notifications - failed).sudo().write({
                     'email_status': 'sent',
                 })
-        if failure_type in ('NONE', 'RECIPIENT'):  # if we have another error, we want to keep the mail.
+        if not failure_type or failure_type == 'RECIPIENT':  # if we have another error, we want to keep the mail.
             mail_to_delete_ids = [mail.id for mail in self if mail.auto_delete]
             self.browse(mail_to_delete_ids).sudo().unlink()
         return True
@@ -259,7 +275,7 @@ class MailMail(models.Model):
         IrAttachment = self.env['ir.attachment']
         for mail_id in self.ids:
             success_pids = []
-            failure_type = 'NONE'
+            failure_type = None
             processing_pid = None
             mail = None
             try:
@@ -290,7 +306,6 @@ class MailMail(models.Model):
                     values['partner_id'] = partner
                     email_list.append(values)
 
-
                 # headers
                 headers = {}
                 ICP = self.env['ir.config_parameter'].sudo()
@@ -314,6 +329,22 @@ class MailMail(models.Model):
                     'state': 'exception',
                     'failure_reason': _('Error without exception. Probably due do sending an email without computed recipients.'),
                 })
+                # Update notification in a transient exception state to avoid concurrent
+                # update in case an email bounces while sending all emails related to current
+                # mail record.
+                notifs = self.env['mail.notification'].search([
+                    ('is_email', '=', True),
+                    ('mail_id', 'in', mail.ids),
+                    ('email_status', 'not in', ('sent', 'canceled'))
+                ])
+                if notifs:
+                    notif_msg = _('Error without exception. Probably due do concurrent access update of notification records. Please see with an administrator.')
+                    notifs.sudo().write({
+                        'email_status': 'exception',
+                        'failure_type': 'UNKNOWN',
+                        'failure_reason': notif_msg,
+                    })
+
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None
                 for email in email_list:
@@ -364,11 +395,12 @@ class MailMail(models.Model):
                     mail.id, mail.message_id)
                 # mail status will stay on ongoing since transaction will be rollback
                 raise
-            except psycopg2.Error:
-                # If an error with the database occurs, chances are that the cursor is unusable.
-                # This will lead to an `psycopg2.InternalError` being raised when trying to write
-                # `state`, shadowing the original exception and forbid a retry on concurrent
-                # update. Let's bubble it.
+            except (psycopg2.Error, smtplib.SMTPServerDisconnected):
+                # If an error with the database or SMTP session occurs, chances are that the cursor
+                # or SMTP session are unusable, causing further errors when trying to save the state.
+                _logger.exception(
+                    'Exception while processing mail with ID %r and Msg-Id %r.',
+                    mail.id, mail.message_id)
                 raise
             except Exception as e:
                 failure_reason = tools.ustr(e)
@@ -376,10 +408,13 @@ class MailMail(models.Model):
                 mail.write({'state': 'exception', 'failure_reason': failure_reason})
                 mail._postprocess_sent_message(success_pids=success_pids, failure_reason=failure_reason, failure_type='UNKNOWN')
                 if raise_exception:
-                    if isinstance(e, AssertionError):
-                        # get the args of the original error, wrap into a value and throw a MailDeliveryException
-                        # that is an except_orm, with name and value as arguments
-                        value = '. '.join(e.args)
+                    if isinstance(e, (AssertionError, UnicodeEncodeError)):
+                        if isinstance(e, UnicodeEncodeError):
+                            value = "Invalid text: %s" % e.object
+                        else:
+                            # get the args of the original error, wrap into a value and throw a MailDeliveryException
+                            # that is an except_orm, with name and value as arguments
+                            value = '. '.join(e.args)
                         raise MailDeliveryException(_("Mail Delivery Failed"), value)
                     raise
 

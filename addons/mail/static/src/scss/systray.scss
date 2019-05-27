@@ -20,13 +20,16 @@
         flex-flow: column nowrap;
     }
     .o_notification_counter {
-        @include o-position-absolute($top: 20%, $right: 1px);
-        background: $o-brand-primary;
+        margin-top: -0.8rem;
+        margin-right: 0;
+        margin-left: -0.6rem;
+        background: #00A09D;
         color: white;
-        padding: 0em 0.3em;
+        vertical-align: super;
         font-size: 0.7em;
     }
     .o_mail_systray_dropdown {
+        direction: ltr;
         width: 350px;
         padding: 0;
 
@@ -72,6 +75,10 @@
                     .o_mail_preview_image {
                         width: 40px;
                         height: 40px;
+
+                        .fa-circle-o {
+                            display: none;
+                        }
                     }
                     .o_preview_info {
                         margin-left: 10px;

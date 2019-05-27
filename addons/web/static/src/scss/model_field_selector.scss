@@ -61,17 +61,21 @@
                     padding: 0px 35px;
                     text-align: center;
                 }
+                .o_field_selector_search {
+                    padding-right: 0.4rem;
+                    > .o_input {
+                        padding: 5px 0.4rem;
+                    }
+                }
                 .o_field_selector_popover_option {
                     @include o-position-absolute($top: 0);
-                    padding: 7px 8px 8px 6px;
+                    padding: 8px;
 
-                    &.o_prev_page {
+                    &.o_field_selector_prev_page {
                         left: 0;
-                        border-right: 1px solid darken(theme-color('primary'), 10%);
                     }
                     &.o_field_selector_close {
                         right: 0;
-                        border-left: 1px solid darken(theme-color('primary'), 10%);
                     }
                     &:hover {
                         background: darken(theme-color('primary'), 10%);

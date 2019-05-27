@@ -11,8 +11,6 @@ from lxml import html
 from lxml import etree
 from werkzeug import urls
 
-from odoo.tools import pycompat
-
 from odoo import api, models, tools
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, _SAFE_OPCODES
 from odoo.http import request
@@ -34,6 +32,7 @@ class IrQWeb(models.AbstractModel, QWeb):
     """
 
     _name = 'ir.qweb'
+    _description = 'Qweb'
 
     @api.model
     def render(self, id_or_xml_id, values=None, **options):
@@ -106,6 +105,10 @@ class IrQWeb(models.AbstractModel, QWeb):
         tools.ormcache('id_or_xml_id', 'tuple(options.get(k) for k in self._get_template_cache_keys())'),
     )
     def compile(self, id_or_xml_id, options):
+        try:
+            id_or_xml_id = int(id_or_xml_id)
+        except:
+            pass
         return super(IrQWeb, self).compile(id_or_xml_id, options=options)
 
     def load(self, name, options):
@@ -125,12 +128,12 @@ class IrQWeb(models.AbstractModel, QWeb):
             view = self.env['ir.ui.view'].browse(view_id)
             return view.inherit_id is not None
 
-        if isinstance(name, pycompat.integer_types) or is_child_view(name):
-            for node in etree.fromstring(template):
+        if isinstance(name, int) or is_child_view(name):
+            view = etree.fromstring(template)
+            for node in view:
                 if node.get('t-name'):
                     node.set('t-name', str(name))
-                    return node.getparent()
-            return None  # trigger "template not found" in QWeb
+            return view
         else:
             return template
 
@@ -275,33 +278,6 @@ class IrQWeb(models.AbstractModel, QWeb):
             )
         ]
 
-    # for backward compatibility to remove after v10
-    def _compile_widget_options(self, el, directive_type):
-        field_options = super(IrQWeb, self)._compile_widget_options(el, directive_type)
-
-        if ('t-%s-options' % directive_type) in el.attrib:
-            if tools.config['dev_mode']:
-                _logger.warning("Use new syntax t-options instead of t-%s-options for '%s'" % (directive_type, etree.tostring(el)))
-            if not field_options:
-                field_options = el.attrib.pop('t-%s-options' % directive_type)
-
-        if field_options and 'monetary' in field_options:
-            try:
-                options = "{'widget': 'monetary'"
-                for k, v in json.loads(field_options).items():
-                    if k in ('display_currency', 'from_currency'):
-                        options = "%s, '%s': %s" % (options, k, v)
-                    else:
-                        options = "%s, '%s': '%s'" % (options, k, v)
-                options = "%s}" % options
-                field_options = options
-                _logger.warning("Use new syntax for '%s' monetary widget t-options (python dict instead of deprecated JSON syntax)." % etree.tostring(el))
-            except ValueError:
-                pass
-
-        return field_options
-    # end backward
-
     # method called by computing code
 
     def get_asset_bundle(self, xmlid, files, remains=None, env=None):
@@ -336,7 +312,8 @@ class IrQWeb(models.AbstractModel, QWeb):
             edit_translations=False, translatable=False,
             rendering_bundle=True)
 
-        env = self.env(context=options)
+        options['website_id'] = self.env.context.get('website_id')
+        IrQweb = self.env['ir.qweb'].with_context(options)
 
         def can_aggregate(url):
             return not urls.url_parse(url).scheme and not urls.url_parse(url).netloc and not url.startswith('/web/content')
@@ -349,7 +326,7 @@ class IrQWeb(models.AbstractModel, QWeb):
                 from odoo.addons.web.controllers.main import module_boot
                 return json.dumps(module_boot())
             return '[]'
-        template = env['ir.qweb'].render(xmlid, {"get_modules_order": get_modules_order})
+        template = IrQweb.render(xmlid, {"get_modules_order": get_modules_order})
 
         files = []
         remains = []
@@ -374,7 +351,7 @@ class IrQWeb(models.AbstractModel, QWeb):
                     files.append({'atype': atype, 'url': href, 'filename': filename, 'content': el.text, 'media': media})
                 elif can_aggregate(src) and el.tag == 'script':
                     atype = 'text/javascript'
-                    path = [segment for segment in href.split('/') if segment]
+                    path = [segment for segment in src.split('/') if segment]
                     filename = get_resource_path(*path) if path else None
                     files.append({'atype': atype, 'url': src, 'filename': filename, 'content': el.text, 'media': media})
                 else:

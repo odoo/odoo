@@ -76,7 +76,7 @@ class TestCreatePicking(common.TestProductCommon):
     def test_01_check_double_validation(self):
 
         # make double validation two step
-        self.env.user.company_id.write({'po_double_validation': 'two_step','po_double_validation_amount':2000.00})
+        self.env.company_id.write({'po_double_validation': 'two_step','po_double_validation_amount':2000.00})
 
         # Draft purchase order created
         self.po = self.env['purchase.order'].sudo(self.user_purchase_user).create(self.po_vals)
@@ -118,6 +118,7 @@ class TestCreatePicking(common.TestProductCommon):
             'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
             'seller_ids': [(6, 0, [seller.id])],
             'categ_id': self.env.ref('product.product_category_all').id,
+            'supplier_taxes_id': [(6, 0, [])],
         })
 
         customer_move = self.env['stock.move'].create({

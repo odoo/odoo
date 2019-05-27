@@ -12,6 +12,7 @@ _logger = logging.getLogger(__name__)
 class AutoVacuum(models.AbstractModel):
     """ Expose the vacuum method to the cron jobs mechanism. """
     _name = 'ir.autovacuum'
+    _description = 'Automatic Vacuum'
 
     @api.model
     def _gc_transient_models(self):

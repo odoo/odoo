@@ -13,10 +13,8 @@
 }
 
 .o_thread_composer {
-    position: relative;
     flex: 0 0 auto;
     display: flex;
-    margin: 1px 0;
     border-top: none;
     background: theme-color('light');
 
@@ -56,6 +54,9 @@
                 font-style: italic;
                 color: gray;
             }
+            .fa {
+                font-size: 0.8em;
+            }
         }
         textarea {
             resize: none;
@@ -67,11 +68,6 @@
         .o_composer_button_full_composer {
             @include o-position-absolute(auto, 0);
         }
-        @include media-breakpoint-down(sm) {
-            .o_composer_button_send {
-                color: $o-brand-primary;
-            }
-        }
 
         .o_mail_emoji_container {
             padding: 0 $o-mail-chatter-gap $o-mail-chatter-gap 0;
@@ -82,8 +78,8 @@
             .o_mail_emoji {
                 margin: $o-mail-chatter-gap 0 0 $o-mail-chatter-gap;
                 cursor: pointer; // only in the popover
-                min-width: 20px;
-                min-height: 20px;
+                min-width: 22px;
+                min-height: 22px;
             }
         }
     }
@@ -111,11 +107,18 @@
         .o_composer {
             border-radius: 2px;
             textarea {
+                padding-top: $o-mail-chatter-gap !important;
                 padding-right: $grid-gutter-width; // avoid overlaps betwenn textarea and o_composer_button_full_composer
             }
 
             .o_mail_emoji_container {
                 margin: 0 -$o-mail-chatter-gap;
+            }
+
+            @include media-breakpoint-down(sm) {
+                .o_composer_button_send {
+                    color: $o-brand-primary;
+                }
             }
         }
 
@@ -139,14 +142,22 @@
         &:not(.o_chat_inline_composer) {
             flex-flow: row wrap;
 
+            .o_composer_container {
+                max-width: 100%;
+            }
             .o_composer_container, .o_composer_button_send {
                 flex: 1 0 100%;
             }
             .o_composer, .o_composer_subject {
-                padding: $o-mail-chatter-gap $o-mail-chatter-gap 0;
+                padding: 0 $o-mail-chatter-gap 0;
             }
             .o_composer_send {
                 margin-top: $o-mail-chatter-gap;
+
+                > .o_composer_button_discard:not(:hover) {
+                    background: theme-color('light');
+                    border-color: transparent;
+                }
             }
         }
 
@@ -167,6 +178,10 @@
             .o_composer_input {
                 display: flex;
                 flex-flow: row wrap;
+
+                textarea {
+                    padding-top: 0px !important;
+                }
             }
             .o_composer_text_field {
                 flex: 1 1 50%;
@@ -178,6 +193,11 @@
             }
             .o_composer_attachments_list {
                 flex: 1 0 100%;
+            }
+
+            .o_composer_thread_typing {
+                font-size: 0.9em;
+                color: gray('600');
             }
 
             .o_chatter_composer_tools {
@@ -226,9 +246,24 @@
                 }
             }
         }
-        .o_composer_button_send, .o_chatter_avatar {
-            display: none;
+        .o_composer_send .o_composer_button_send, .o_chatter_avatar {
+            display: none !important;
         }
+    }
+
+    .o_file_drop_zone_container {
+        display: flex;
+        position: absolute;
+        left: 0px;
+        bottom: 0px;
+        height: 100%;
+        width: 100%;
+        color: $o-brand-primary;
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px dashed $o-brand-primary;
+        z-index: 1;
+        align-items: center;
+        justify-content: center;
     }
 }
 
@@ -241,7 +276,7 @@
 .o_mail_emoji {
     display: inline-block;
     padding: 0;
-    //font-size:150%;
+    font-size: 1.3rem;
     font-family: emojifont;
 }
 .o_mail_preview .o_mail_emoji {
@@ -249,109 +284,10 @@
 }
 
 // Attachment Icons (common for chat thread and chat composer)
-// ------------------------------------------------------------------
-$o-mail-attachment-image-size: 38px;
-$o-mail-attachment-margin: 5px;
-
 .o_attachments_list, .o_attachments_previews {
-    margin: 0 (-$o-mail-attachment-margin) 0;
+    margin: 0 (-$o-attachment-margin) 0;
     display: flex;
     flex-flow: row wrap;
-}
-
-.o_attachment {
-    position: relative;
-    width: 100%;
-    padding: $o-mail-attachment-margin;
-
-    @include media-breakpoint-up(md) {
-        width: 50%;
-    }
-    @include media-breakpoint-up(lg) {
-        width: 25%;
-    }
-
-    .o_attachment_wrap {
-        overflow: hidden;
-        position: relative;
-        border-bottom: 1px solid rgba(black, 0.1);
-        border-radius: 2px;
-        padding: 4px 6px 0 4px;
-        background-color: rgba(black, 0.05);
-    }
-
-    &.o_attachment_editable .o_attachment_wrap  {
-        padding-right: 40px;
-    }
-
-    .o_image {
-        width: $o-mail-attachment-image-size;
-        height: $o-mail-attachment-image-size;
-        image-orientation: from-image; // Only supported in Firefox
-        &.o_hover {
-            @include o-hover-opacity($default-opacity: 1, $hover-opacity: 0.7);
-        }
-    }
-
-    .o_attachment_view {
-        cursor: zoom-in;
-    }
-
-    .caption {
-        @include o-text-overflow(block);
-
-        a {
-            @include o-hover-text-color($default-color: $o-main-text-color, $hover-color: $headings-color);
-        }
-    }
-
-    .o_attachment_progress_bar {
-        display: none;
-    }
-
-    .o_attachment_uploaded, .o_attachment_delete {
-        @include o-position-absolute(0, 0, 0, $left: auto);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 45px;
-    }
-
-    .o_attachment_delete {
-        background: desaturate(theme-color('primary'), 50%);
-        color: white;
-        cursor: pointer;
-        font-size: 20px;
-        transform: translateX(100%);
-        transition: all 0.3s ease 0s;
-
-        &:hover {
-            background: theme-color('primary');
-        }
-    }
-
-    &.o_attachment_uploading {
-        .o_attachment_progress_bar {
-            display: inline-block;
-            margin: 0 0 0 8px;
-            border-radius: 2px;
-            vertical-align: bottom;
-
-            > div {
-                font-size: 11px;
-                padding: 0 7px;
-            }
-        }
-
-        .o_attachment_delete, .o_attachment_uploaded {
-            display: none;
-        }
-    }
-
-    &:hover .o_attachment_delete {
-        transition: all 0.1s ease 0s;
-        transform: translateX(0);
-    }
 }
 
 .o_attachments_previews {
@@ -405,6 +341,10 @@ $o-mail-attachment-margin: 5px;
                 font-size: $font-size-sm;
             }
 
+            .o_attachment_delete_cross {
+                color: white;
+            }
+
             .o_attachment_download {
                 @include o-position-absolute($right: 7px, $bottom:7px);
             }
@@ -452,6 +392,11 @@ $o-mail-attachment-margin: 5px;
                 font-size: $h1-font-size;
                 font-weight: 300;
             }
+
+            .o_image_caption {
+                bottom: 20%;
+                position: absolute;
+            }
         }
 
         .o_loading_img {
@@ -492,6 +437,20 @@ $o-mail-attachment-margin: 5px;
                     box-shadow: 1px 1px 20px 1px #000;
                 }
 
+                @include media-breakpoint-down(sm) {
+                    .o_viewer_pdf, .o_viewer_text {
+                        width: 100%;
+                    }
+                }
+
+                .o_viewer_text {
+                    width: 80%;
+                    height: 100%;
+                    border: 0px;
+                    box-shadow: 1px 1px 20px 1px #000;
+                    background-color: white;
+                }
+
                 .o_viewer_video {
                     height: 80%;
                 }
@@ -499,11 +458,15 @@ $o-mail-attachment-margin: 5px;
         }
 
         .o_viewer_toolbar {
-            @include o-position-absolute($left: 50%, $bottom: $grid-gutter-width*0.5);
-            transform: translate(-50%, -50%);
+            @include o-position-absolute($bottom: $grid-gutter-width*0.5);
+            width: 100%;
             overflow: hidden;
+            justify-content: center;
             border-radius: 4px;
-            background-color: rgba(black, 0.4);
+
+            > .btn-group {
+                background-color: rgba(black, 0.4);
+            }
 
             .o_viewer_toolbar_btn {
                 @include o-viewer-black-btn;

@@ -58,23 +58,6 @@ var DocumentThread = Thread.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Add this message to this document thread.
-     *
-     * @override
-     * @param {mail.model.Message} message
-     */
-    addMessage: function (message) {
-        // update internal list of messages
-        this._messages.push(message);
-        this._messages = _.sortBy(this._messages, function (msg) {
-            return msg.getID();
-        });
-        // update message ids associated to this document thread
-        if (!_.contains(this._messageIDs, message.getID())) {
-            this._messageIDs.push(message.getID());
-        }
-    },
-    /**
      * Overrides to store the thread's state in the LocalStorage, so that it is
      * shared between tabs, and restored on F5.
      *
@@ -109,7 +92,7 @@ var DocumentThread = Thread.extend({
      * @param {Object} options
      * @param {boolean} [options.forceFetch] if true, fetch anyway, as user
      *   clicked on 'load more'.
-     * @returns {$.Promise<mail.model.Message[]>}
+     * @returns {Promise<mail.model.Message[]>}
      */
     fetchMessages: function (options) {
         var self = this;
@@ -174,56 +157,11 @@ var DocumentThread = Thread.extend({
         return true;
     },
     /**
-     * Overrides this method so that all the messages of this document thread
-     * are marked as read on the server.
-     *
-     * @override
-     * @returns {$.Promise} resolved when messages have been marked as read on
-     *   the server.
+     * @param {integer[]} attachmentIDs
      */
-    markAsRead: function () {
-        this._super.apply(this, arguments);
-        return this.call('mail_service', 'markMessagesAsRead', this._messageIDs);
-    },
-    /**
-     * Post message for document thread
-     *
-     * @override
-     * @param {Object} data data related to the new message
-     * @return {$.Promise<Object>} resolved when the message has been sent to
-     *   the server, with the object message that has been sent to the server.
-     */
-    postMessage: function (data) {
-        var self = this;
-        var resModel = this.getDocumentModel();
-        var resID = this.getDocumentID();
-        return this._super.apply(this, arguments)
-            .then(function (messageData) {
-                _.extend(messageData, {
-                    context: data.context,
-                    message_type: data.message_type,
-                    subtype: data.subtype || "mail.mt_comment",
-                    subtype_id: data.subtype_id,
-                });
-                return self._rpc({
-                        model: resModel,
-                        method: 'message_post',
-                        args: [resID],
-                        kwargs: messageData,
-                    })
-                    .then(function (messageID) {
-                        return self._rpc({
-                                model: 'mail.message',
-                                method: 'message_format',
-                                args: [[messageID]],
-                            })
-                            .then(function (messages) {
-                                messages[0].model = resModel;
-                                messages[0].res_id = resID;
-                                self.call('mail_service', 'addMessage', messages[0]);
-                                return messages[0];
-                            });
-                    });
+    removeAttachmentsFromMessages: function (attachmentIDs) {
+        _.each(this.getMessages(), function (message) {
+            message.removeAttachments(attachmentIDs);
         });
     },
     /**
@@ -238,34 +176,55 @@ var DocumentThread = Thread.extend({
         this._mustFetchMessageIDs = false;
         this._messageIDs = messageIDs;
     },
-    /**
-     * Set the name of this document thread
-     *
-     * This is useful if the name of the document related to the document thread
-     * has changed
-     *
-     * @param {string} newName
-     */
-    setName: function (newName) {
-        this._name = newName;
-    },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
     /**
+     * Add this message to this document thread.
+     *
+     * This is ignored if the message is already linked to this document thread.
+     * Also, there is no fetch of unread message counter in a document thread,
+     * as this object is built from messages and/or thread field widget. The
+     * unread counter of a document thread is the sum of needaction messages
+     * linked to this document thread.
+     *
+     * @override
+     * @private
+     * @param {mail.model.Message} message
+     */
+    _addMessage: function (message) {
+        this._super.apply(this, arguments);
+        if (_.contains(this._messages, message)) {
+            return;
+        }
+        // update internal list of messages
+        this._messages.push(message);
+        this._messages = _.sortBy(this._messages, function (msg) {
+            return msg.getID();
+        });
+        // update message ids associated to this document thread
+        if (!_.contains(this._messageIDs, message.getID())) {
+            this._messageIDs.push(message.getID());
+        }
+        // update unread counter
+        if (message.isNeedaction()) {
+            this._unreadCounter++;
+        }
+    },
+    /**
      * Get most up to date messageIDs
      *
      * @private
-     * @returns {$.Promise} resolved when message IDs have been fetched and set
+     * @returns {Promise} resolved when message IDs have been fetched and set
      *   in the model
      */
     _fetchMessageIDs: function () {
         var self = this;
         var resID = this.getDocumentID();
         if (!resID || !this._mustFetchMessageIDs) {
-            return $.when();
+            return Promise.resolve();
         }
         return this._rpc({
             model: this.getDocumentModel(),
@@ -280,7 +239,7 @@ var DocumentThread = Thread.extend({
      * @private
      * @param {Object} options
      * @param {boolean} [options.forceFetch]
-     * @returns {$.Promise} resolved when messages have been fetched + document
+     * @returns {Promise} resolved when messages have been fetched + document
      *   thread has updated messages
      */
     _fetchMessages: function (options) {
@@ -314,9 +273,66 @@ var DocumentThread = Thread.extend({
                         });
                     });
             } else {
-                return $.when();
+                return Promise.resolve();
             }
 
+        });
+    },
+    /**
+     * Overrides this method so that all the messages of this document thread
+     * are marked as read on the server.
+     *
+     * @override
+     * @private
+     * @returns {Promise} resolved when messages have been marked as read on
+     *   the server.
+     */
+    _markAsRead: function () {
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self.call('mail_service', 'markMessagesAsRead', self._messageIDs);
+        });
+    },
+    /**
+     * Post message for document thread
+     *
+     * @override
+     * @private
+     * @param {Object} data data related to the new message
+     * @return {Promise<Object>} resolved when the message has been sent to
+     *   the server, with the object message that has been sent to the server.
+     */
+    _postMessage: function (data) {
+        var self = this;
+        var resModel = this.getDocumentModel();
+        var resID = this.getDocumentID();
+        return this._super.apply(this, arguments)
+            .then(function (messageData) {
+                _.extend(messageData, {
+                    context: data.context,
+                    message_type: data.message_type,
+                    subtype: data.subtype || "mail.mt_comment",
+                    subtype_id: data.subtype_id,
+                });
+                return self._rpc({
+                        model: resModel,
+                        method: 'message_post',
+                        args: [resID],
+                        kwargs: messageData,
+                    })
+                    .then(function (messageID) {
+                        return self._rpc({
+                                model: 'mail.message',
+                                method: 'message_format',
+                                args: [[messageID]],
+                            })
+                            .then(function (messages) {
+                                messages[0].model = resModel;
+                                messages[0].res_id = resID;
+                                self.call('mail_service', 'addMessage', messages[0]);
+                                return messages[0];
+                            });
+                    });
         });
     },
 });

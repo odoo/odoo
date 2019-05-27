@@ -13,3 +13,4 @@ class Company(models.Model):
     social_linkedin = fields.Char('LinkedIn Account')
     social_youtube = fields.Char('Youtube Account')
     social_googleplus = fields.Char('Google+ Account')
+    social_instagram = fields.Char('Instagram Account')

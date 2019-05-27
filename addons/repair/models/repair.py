@@ -46,7 +46,7 @@ class Repair(models.Model):
     partner_id = fields.Many2one(
         'res.partner', 'Customer',
         index=True, states={'confirmed': [('readonly', True)]},
-        help='Choose partner for whom the order will be invoiced and delivered.')
+        help='Choose partner for whom the order will be invoiced and delivered. You can find a partner by its Name, TIN, Email or Internal Reference.')
     address_id = fields.Many2one(
         'res.partner', 'Delivery Address',
         domain="[('parent_id','=',partner_id)]",
@@ -61,7 +61,7 @@ class Repair(models.Model):
         ('2binvoiced', 'To be Invoiced'),
         ('invoice_except', 'Invoice Exception'),
         ('done', 'Repaired')], string='Status',
-        copy=False, default='draft', readonly=True, track_visibility='onchange',
+        copy=False, default='draft', readonly=True, tracking=True,
         help="* The \'Draft\' status is used when a user is encoding a new and unconfirmed repair order.\n"
              "* The \'Confirmed\' status is used when a user confirms the repair order.\n"
              "* The \'Ready to Repair\' status is used to start to repairing, user can start repairing only after repair order is confirmed.\n"
@@ -96,10 +96,10 @@ class Repair(models.Model):
         help='Selecting \'Before Repair\' or \'After Repair\' will allow you to generate invoice before or after the repair is done respectively. \'No invoice\' means you don\'t want to generate invoice for this repair order.')
     invoice_id = fields.Many2one(
         'account.invoice', 'Invoice',
-        copy=False, readonly=True, track_visibility="onchange")
+        copy=False, readonly=True, tracking=True)
     move_id = fields.Many2one(
         'stock.move', 'Move',
-        copy=False, readonly=True, track_visibility="onchange",
+        copy=False, readonly=True, tracking=True,
         help="Move created by the repair order")
     fees_lines = fields.One2many(
         'repair.fee', 'repair_id', 'Operations',
@@ -108,13 +108,13 @@ class Repair(models.Model):
     quotation_notes = fields.Text('Quotation Notes')
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get('repair.order'))
+        default=lambda self: self.env.company_id)
     invoiced = fields.Boolean('Invoiced', copy=False, readonly=True)
     repaired = fields.Boolean('Repaired', copy=False, readonly=True)
     amount_untaxed = fields.Float('Untaxed Amount', compute='_amount_untaxed', store=True)
     amount_tax = fields.Float('Taxes', compute='_amount_tax', store=True)
     amount_total = fields.Float('Total', compute='_amount_total', store=True)
-    tracking = fields.Selection('Product Tracking', related="product_id.tracking")
+    tracking = fields.Selection('Product Tracking', related="product_id.tracking", readonly=False)
 
     @api.one
     @api.depends('partner_id')
@@ -159,7 +159,8 @@ class Repair(models.Model):
     @api.onchange('product_id')
     def onchange_product_id(self):
         self.guarantee_limit = False
-        self.lot_id = False
+        if (self.product_id and self.lot_id and self.lot_id.product_id != self.product_id) or not self.product_id:
+            self.lot_id = False
         if self.product_id:
             self.product_uom = self.product_id.uom_id.id
 
@@ -274,7 +275,7 @@ class Repair(models.Model):
 
     def action_repair_invoice_create(self):
         for repair in self:
-            repair.action_invoice_create()
+            repair._create_invoices()
             if repair.invoice_method == 'b4repair':
                 repair.action_repair_ready()
             elif repair.invoice_method == 'after_repair':
@@ -282,7 +283,7 @@ class Repair(models.Model):
         return True
 
     @api.multi
-    def action_invoice_create(self, group=False):
+    def _create_invoices(self, group=False):
         """ Creates invoice(s) for repair order.
         @param group: It is set to true when group invoice is to be generated.
         @return: Invoice Ids.
@@ -497,7 +498,7 @@ class Repair(models.Model):
 
 class RepairLine(models.Model):
     _name = 'repair.line'
-    _description = 'Repair Line'
+    _description = 'Repair Line (parts)'
 
     name = fields.Text('Description', required=True)
     repair_id = fields.Many2one(
@@ -598,22 +599,29 @@ class RepairLine(models.Model):
                     'title': _('No pricelist found.'),
                     'message':
                         _('You have to select a pricelist in the Repair form !\n Please set one before choosing a product.')}
-            else:
-                price = pricelist.get_product_price(self.product_id, self.product_uom_qty, partner)
-                if price is False:
-                    warning = {
-                        'title': _('No valid pricelist line found.'),
-                        'message':
-                            _("Couldn't find a pricelist line matching this product and quantity.\nYou have to change either the product, the quantity or the pricelist.")}
-                else:
-                    self.price_unit = price
-            if warning:
                 return {'warning': warning}
+            else:
+                self._onchange_product_uom()
+
+    @api.onchange('product_uom')
+    def _onchange_product_uom(self):
+        partner = self.repair_id.partner_id
+        pricelist = self.repair_id.pricelist_id
+        if pricelist and self.product_id and self.type != 'remove':
+            price = pricelist.get_product_price(self.product_id, self.product_uom_qty, partner, uom_id=self.product_uom.id)
+            if price is False:
+                warning = {
+                    'title': _('No valid pricelist line found.'),
+                    'message':
+                        _("Couldn't find a pricelist line matching this product and quantity.\nYou have to change either the product, the quantity or the pricelist.")}
+                return {'warning': warning}
+            else:
+                self.price_unit = price
 
 
 class RepairFee(models.Model):
     _name = 'repair.fee'
-    _description = 'Repair Fees Line'
+    _description = 'Repair Fees'
 
     repair_id = fields.Many2one(
         'repair.order', 'Repair Order Reference',
@@ -658,14 +666,21 @@ class RepairFee(models.Model):
                 'title': _('No pricelist found.'),
                 'message':
                     _('You have to select a pricelist in the Repair form !\n Please set one before choosing a product.')}
+            return {'warning': warning}
         else:
-            price = pricelist.get_product_price(self.product_id, self.product_uom_qty, partner)
+            self._onchange_product_uom()
+
+    @api.onchange('product_uom')
+    def _onchange_product_uom(self):
+        partner = self.repair_id.partner_id
+        pricelist = self.repair_id.pricelist_id
+        if pricelist and self.product_id:
+            price = pricelist.get_product_price(self.product_id, self.product_uom_qty, partner, uom_id=self.product_uom.id)
             if price is False:
                 warning = {
                     'title': _('No valid pricelist line found.'),
                     'message':
                         _("Couldn't find a pricelist line matching this product and quantity.\nYou have to change either the product, the quantity or the pricelist.")}
+                return {'warning': warning}
             else:
                 self.price_unit = price
-        if warning:
-            return {'warning': warning}

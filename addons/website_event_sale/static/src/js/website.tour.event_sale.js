@@ -2,12 +2,10 @@ odoo.define('website_event_sale.tour', function (require) {
 'use strict';
 
 var tour = require('web_tour.tour');
-var base = require("web_editor.base");
 
 tour.register('event_buy_tickets', {
     test: true,
     url: '/event',
-    wait_for: base.ready()
 },
     [
         {
@@ -87,7 +85,7 @@ tour.register('event_buy_tickets', {
         },
         {
             content: "Last step",
-            trigger: '.oe_website_sale:contains("Thank you for your order")',
+            trigger: '.oe_website_sale:contains("Pending... The order will be validated after the payment.")',
             timeout: 30000,
         }
     ]

@@ -6,8 +6,8 @@
             <field name="name">Event: Registration Badge</field>
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="subject">Your badge for ${object.event_id.name}</field>
-            <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
-            <field name="email_to">${('"%s" &lt;%s&gt;' % (object.partner_id.name or object.name, object.partner_id.email or object.email)) | safe}</field>
+            <field name="email_from">${(object.event_id.organizer_id.email_formatted or object.event_id.user_id.email_formatted or '') | safe}</field>
+            <field name="email_to">${(object.partner_id.email_formatted or '"%s" &lt;%s&gt;' % (object.name, object.email) or '') | safe}</field>
             <field name="body_html" type="html">
 <div>
     Dear ${object.name},<br/>
@@ -24,15 +24,15 @@
             <field name="report_name">badge_of_${(object.event_id.name or '').replace('/','_')}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="False"/>
         </record>
 
         <record id="event_subscription" model="mail.template">
             <field name="name">Event: Registration</field>
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="subject">Your registration at ${object.event_id.name}</field>
-            <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
-            <field name="email_to">${('"%s" &lt;%s&gt;' % (object.partner_id.name or object.name, object.partner_id.email or object.email)) | safe}</field>
-            <field name="reply_to" eval="False"/>
+            <field name="email_from">${(object.event_id.organizer_id.email_formatted or object.event_id.user_id.email_formatted or '') | safe}</field>
+            <field name="email_to">${(object.partner_id.email_formatted or '"%s" &lt;%s&gt;' % (object.name, object.email) or '') | safe}</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 % set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')
@@ -177,7 +177,7 @@
                             <td style="padding:25px 0px;">
                                 <strong>Add this event to your calendar</strong>
                                 <a href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text=${object.event_id.name}&amp;dates=${date_begin}/${date_end}&amp;location=${location}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Google</a>
-                                <a href="https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&amp;summary=${object.event_id.name}&amp;dtstart=${date_begin}&amp;dtend=${date_end}&amp;location=${location}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Outlook</a>
+                                <a href="/event/${slug(object.event_id)}/ics" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> iCal/Outlook</a>
                                 <a href="https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title=${object.event_id.name}&amp;in_loc=${location}&amp;st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&amp;et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new">
                                     <img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Yahoo</a>
                             </td>
@@ -205,10 +205,11 @@
 </table>
 </td></tr>
 <!-- FOOTER BY -->
+% if object.company_id
 <tr><td align="center" style="min-width: 590px;">
     <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
       <tr><td style="text-align: center; font-size: 14px;">
-        Sent by <a target="_blank" href="object.company_id.website" style="color: #875A7B;">${object.company_id.name}</a>
+        Sent by <a target="_blank" href="${object.company_id.website}" style="color: #875A7B;">${object.company_id.name}</a>
         % if 'website_url' in object.event_id and object.event_id.website_url:
         <br />
         Discover <a href="/event" style="text-decoration:none;color:#717188;">all our events</a>.
@@ -216,18 +217,19 @@
       </td></tr>
     </table>
 </td></tr>
+% endif
 </table>
             </field>
             <field name="lang">${object.partner_id.lang}</field>
+            <field name="user_signature" eval="False"/>
         </record>
 
         <record id="event_reminder" model="mail.template">
             <field name="name">Event: Reminder</field>
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="subject">${object.event_id.name}: ${object.get_date_range_str()}</field>
-            <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
-            <field name="email_to">${('"%s" &lt;%s&gt;' % (object.partner_id.name or object.name, object.partner_id.email or object.email)) | safe}</field>
-            <field name="reply_to" eval="False"/>
+            <field name="email_from">${(object.event_id.organizer_id.email_formatted or object.event_id.user_id.email_formatted or '') | safe}</field>
+            <field name="email_to">${(object.partner_id.email_formatted or '"%s" &lt;%s&gt;' % (object.name, object.email) or '') | safe}</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 % set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')
@@ -372,6 +374,7 @@
                             <td style="padding:25px 0px;">
                                 <strong>Add this event to your calendar</strong>
                                 <a href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text=${object.event_id.name}&amp;dates=${date_begin}/${date_end}&amp;location=${location}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Google</a>
+                                <a href="/event/${slug(object.event_id)}/ics" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> iCal/Outlook</a>
                                 <a href="https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title=${object.event_id.name}&amp;in_loc=${location}&amp;st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&amp;et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new">
                                     <img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Yahoo</a>
                             </td>
@@ -399,10 +402,11 @@
 </table>
 </td></tr>
 <!-- FOOTER BY -->
+% if object.company_id
 <tr><td align="center" style="min-width: 590px;">
     <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
       <tr><td style="text-align: center; font-size: 14px;">
-        Sent by <a target="_blank" href="object.company_id.website" style="color: #875A7B;">${object.company_id.name}</a>
+        Sent by <a target="_blank" href="${object.company_id.website}" style="color: #875A7B;">${object.company_id.name}</a>
         % if 'website_url' in object.event_id and object.event_id.website_url:
         <br />
         Discover <a href="/event" style="text-decoration:none;color:#717188;">all our events</a>.
@@ -410,9 +414,11 @@
       </td></tr>
     </table>
 </td></tr>
+% endif
 </table>
             </field>
             <field name="lang">${object.partner_id.lang}</field>
+            <field name="user_signature" eval="False"/>
         </record>
 
     </data>

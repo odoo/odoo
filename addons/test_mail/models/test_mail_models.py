@@ -15,6 +15,19 @@ class MailTestSimple(models.Model):
     email_from = fields.Char()
 
 
+class MailTestGateway(models.Model):
+    """ A very simple model only inheriting from mail.thread to test pure mass
+    mailing features and base performances. """
+    _description = 'Simple Chatter Model for Mail Gateway'
+    _name = 'mail.test.gateway'
+    _inherit = ['mail.thread.blacklist']
+    _primary_email = 'email_from'
+
+    name = fields.Char()
+    email_from = fields.Char()
+    custom_field = fields.Char()
+
+
 class MailTestStandard(models.Model):
     """ This model can be used in tests when automatic subscription and simple
     tracking is necessary. Most features are present in a simple way. """
@@ -24,8 +37,9 @@ class MailTestStandard(models.Model):
 
     name = fields.Char()
     email_from = fields.Char()
-    user_id = fields.Many2one('res.users', 'Responsible', track_visibility='onchange')
-    umbrella_id = fields.Many2one('mail.test', track_visibility='onchange')
+    user_id = fields.Many2one('res.users', 'Responsible', tracking=True)
+    umbrella_id = fields.Many2one('mail.test', tracking=True)
+    company_id = fields.Many2one('res.company')
 
 
 class MailTestActivity(models.Model):
@@ -40,7 +54,7 @@ class MailTestActivity(models.Model):
     active = fields.Boolean(default=True)
 
     def action_start(self, action_summary):
-        self.activity_schedule(
+        return self.activity_schedule(
             'test_mail.mail_act_test_todo',
             summary=action_summary
         )
@@ -57,28 +71,32 @@ class MailTestFull(models.Model):
     _inherit = ['mail.thread']
 
     name = fields.Char()
-    email_from = fields.Char(track_visibility='always')
+    email_from = fields.Char(tracking=True)
     count = fields.Integer(default=1)
     datetime = fields.Datetime(default=fields.Datetime.now)
     mail_template = fields.Many2one('mail.template', 'Template')
-    customer_id = fields.Many2one('res.partner', 'Customer', track_visibility='onchange', track_sequence=2)
-    user_id = fields.Many2one('res.users', 'Responsible', track_visibility='onchange', track_sequence=1)
-    umbrella_id = fields.Many2one('mail.test', track_visibility='onchange')
+    customer_id = fields.Many2one('res.partner', 'Customer', tracking=2)
+    user_id = fields.Many2one('res.users', 'Responsible', tracking=1)
+    umbrella_id = fields.Many2one('mail.test', tracking=True)
 
-    def _track_template(self, tracking):
-        res = super(MailTestFull, self)._track_template(tracking)
+    def _track_template(self, changes):
+        res = super(MailTestFull, self)._track_template(changes)
         record = self[0]
-        changes, tracking_value_ids = tracking[record.id]
         if 'customer_id' in changes and record.mail_template:
             res['customer_id'] = (record.mail_template, {'composition_mode': 'mass_mail'})
         elif 'datetime' in changes:
             res['datetime'] = ('test_mail.mail_test_full_tracking_view', {'composition_mode': 'mass_mail'})
         return res
 
+    def _creation_subtype(self):
+        if self.umbrella_id:
+            return self.env.ref('test_mail.st_mail_test_full_umbrella_upd')
+        return super(MailTestFull, self)._creation_subtype()
+
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'umbrella_id' in init_values and self.umbrella_id:
-            return 'test_mail.st_mail_test_full_umbrella_upd'
+            return self.env.ref('test_mail.st_mail_test_full_umbrella_upd')
         return super(MailTestFull, self)._track_subtype(init_values)
 
 
@@ -110,15 +128,23 @@ class MailTestAlias(models.Model):
 
 class MailModel(models.Model):
     _name = 'test_performance.mail'
+    _description = 'Test Performance Mail'
     _inherit = 'mail.thread'
 
     name = fields.Char()
     value = fields.Integer()
     value_pc = fields.Float(compute="_value_pc", store=True)
-    track = fields.Char(default='test', track_visibility="onchange")
+    track = fields.Char(default='test', tracking=True)
     partner_id = fields.Many2one('res.partner', string='Customer')
 
     @api.depends('value')
     def _value_pc(self):
         for record in self:
             record.value_pc = float(record.value) / 100
+
+
+class MailCC(models.Model):
+    _name = 'mail.test.cc'
+    _inherit = ['mail.thread.cc']
+
+    name = fields.Char()

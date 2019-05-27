@@ -22,12 +22,7 @@ class TestPartnerAssign(TransactionCase):
                 'Cannon Hill Park, B46 3AG Birmingham, United Kingdom': (52.45216, -1.898578),
             }.get(addr)
 
-        patcher = patch('odoo.addons.base_geolocalize.models.res_partner.geo_find', wraps=geo_find)
-        patcher.start()
-        self.addCleanup(patcher.stop)
-
-        patcher = patch('odoo.addons.website_crm_partner_assign.models.crm_lead.geo_find',
-                        wraps=geo_find)
+        patcher = patch('odoo.addons.base_geolocalize.models.base_geocoder.GeoCoder.geo_find', wraps=geo_find)
         patcher.start()
         self.addCleanup(patcher.stop)
 
@@ -93,7 +88,7 @@ class TestPartnerLeadPortal(TestCrmCases):
             'name': 'Super Customer Odoo Intregrating Partner',
             'email': 'super.partner@ododo.com',
             'login': 'superpartner',
-            'groups_id': [(4, self.env.ref('base.group_portal').id)],
+            'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
             'user_id': self.crm_salesman.id,
             'grade_id': self.grade.id,
         })
@@ -110,8 +105,6 @@ class TestPartnerLeadPortal(TestCrmCases):
         # Sales Team of crm_salesman
         self.team = self.env['crm.team'].with_context(mail_notrack=True).create({
             'name': 'Test Team FOR THE WIN',
-            'use_leads': True,
-            'use_opportunities': True,
             'member_ids': [(6, 0, [self.crm_salesman.id])],
         })
 
@@ -140,7 +133,7 @@ class TestPartnerLeadPortal(TestCrmCases):
             'name': 'Poor Partner (not integrating one)',
             'email': 'poor.partner@ododo.com',
             'login': 'poorpartner',
-            'groups_id': [(4, self.env.ref('base.group_portal').id)],
+            'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
         })
         # try to accept a lead that is not mine
         with self.assertRaises(AccessError):
@@ -158,3 +151,8 @@ class TestPartnerLeadPortal(TestCrmCases):
 
         self.assertEqual(opportunity.team_id, salesmanteam, 'The created opportunity should have the same team as the salesman default team of the opportunity creator.')
         self.assertEqual(opportunity.partner_assigned_id, self.portal_partner, 'Assigned Partner of created opportunity is the (portal) creator.')
+
+    def test_portal_mixin_url(self):
+        record_action = self.lead.get_access_action(self.portal_user.id)
+        self.assertEqual(record_action['url'], '/my/opportunity/%s' % self.lead.id)
+        self.assertEqual(record_action['type'], 'ir.actions.act_url')

@@ -5,10 +5,10 @@
    <record model="ir.actions.act_window" id="action_mrp_unbuild_moves">
         <field name="name">Stock Moves</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">stock.move</field>
+        <field name="res_model">stock.move.line</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">['|', ('unbuild_id', '=', active_id), ('consume_unbuild_id', '=', active_id)]</field>
+        <field name="domain">['|', ('move_id.unbuild_id', '=', active_id), ('move_id.consume_unbuild_id', '=', active_id)]</field>
     </record>
 
         <record id="mrp_unbuild_search_view" model="ir.ui.view">
@@ -68,6 +68,8 @@
                     <field name="product_uom_id"/>
                     <field name="state"/>
                     <field name="location_id"/>
+                    <field name="activity_state"/>
+                    <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
@@ -83,7 +85,7 @@
                                     </div>
                                     <div class="col-4">
                                         <span class="float-right text-right">
-                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'done': 'success'}}"/>
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'done': 'success'}}"/>
                                         </span>
                                     </div>
                                 </div>
@@ -106,20 +108,20 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" name="%(action_mrp_unbuild_moves)d"
-                                    string="Product Moves" type="action" icon="fa-arrows-v" states="done"/>
+                                    string="Product Moves" type="action" icon="fa-exchange" states="done"/>
                         </div>
                         <div class="oe_title">
                             <h1><field name="name" placeholder="Unbuild Order" nolabel="1"/></h1>
                         </div>
                         <group>
                             <group>
-                                <field name="product_id" domain="[('bom_ids', '!=', False)]"/>
+                                <field name="product_id" domain="[('bom_ids', '!=', False)]" attrs="{'readonly':[('mo_id','!=',False)]}" force_save="1"/>
                                 <field name="bom_id" domain="['|',
                                             ('product_id','=',product_id),
                                             '&amp;',
                                                 ('product_tmpl_id.product_variant_ids','=',product_id),
                                                 ('product_id','=',False),
-                                                ('type', '=', 'normal')]"/>
+                                                ('type', '=', 'normal')]" attrs="{'readonly':[('mo_id','!=',False)]}" force_save="1"/>
                                 <label for="product_qty"/>
                                 <div class="o_row">
                                     <field name="product_qty"/>
@@ -128,8 +130,8 @@
                             </group>
                             <group>
                                 <field name="mo_id" domain="[('state','=','done')]"/>
-                                <field name="location_id" groups="stock.group_stock_multi_locations"/>
-                                <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
+                                <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" domain="[('usage','=','internal')]"/>
+                                <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" domain="[('usage','=','internal')]"/>
                                 <field name="has_tracking" invisible="1"/>
                                 <field name="lot_id" attrs="{'invisible': [('has_tracking', '=', 'none')], 'required': [('has_tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
                             </group>
@@ -156,7 +158,7 @@
                     <field name="product_qty"/>
                     <field name="product_uom_id" groups="uom.group_uom"/>
                     <field name="state"/>
-                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                 </tree>
             </field>
         </record>

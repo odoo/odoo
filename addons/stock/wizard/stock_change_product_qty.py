@@ -13,7 +13,7 @@ class ProductChangeQuantity(models.TransientModel):
     # TDE FIXME: strange dfeault method, was present before migration ? to check
     product_id = fields.Many2one('product.product', 'Product', required=True)
     product_tmpl_id = fields.Many2one('product.template', 'Template', required=True)
-    product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count')
+    product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count', readonly=False)
     new_quantity = fields.Float(
         'New Quantity on Hand', default=1,
         digits=dp.get_precision('Product Unit of Measure'), required=True,
@@ -24,7 +24,7 @@ class ProductChangeQuantity(models.TransientModel):
     def default_get(self, fields):
         res = super(ProductChangeQuantity, self).default_get(fields)
         if 'location_id' in fields and not res.get('location_id'):
-            company_user = self.env.user.company_id
+            company_user = self.env.company_id
             warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
             if warehouse:
                 res['location_id'] = warehouse.lot_stock_id.id

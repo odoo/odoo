@@ -5,9 +5,9 @@
         <!--Email template -->
         
         <record id="email_template_goal_reminder" model="mail.template">
-            <field name="name">Reminder for Goal Update</field>
+            <field name="name">Goal: Reminder for Goal Update</field>
             <field name="model_id" ref="gamification.model_gamification_goal"/>
-            <field name="lang">${object.user_id.lang}</field>
+            <field name="partner_to">${object.user_id.partner_id.id}</field>
             <field name="body_html" type="html">
 <div>
     <strong>Reminder ${object.name}</strong><br/>
@@ -19,10 +19,13 @@ Thank you,
     ${object.challenge_id.manager_id.signature | safe}
     % endif
 </div></field>
+            <field name="lang">${object.user_id.lang}</field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
         </record>
         
         <record id="simple_report_template" model="mail.template">
-            <field name="name">Simple Challenge Report Progress</field>
+            <field name="name">Challenge: Simple Challenge Report Progress</field>
             <field name="model_id" ref="gamification.model_gamification_challenge"/>
             <field name="body_html" type="html">
 <table cellspacing="0" cellpadding="0" width="100%" style="background-color: #EEE; border-collapse: collapse;">
@@ -113,7 +116,7 @@ Thank you,
                                         <tr><td style="padding:0 30px;">
                                             <table cellspacing="0" cellpadding="0" width="100%" style="table-layout: fixed;">
                                                 <tr>
-                                                    % set top_goals = [line['goals'][1], line['goals'][0], line['goals'][2]]
+                                                    % set top_goals = line['goals'][:3]
                                                     % for goal in top_goals:
                                                         <td align="center" style="width:32%;">
                                                             % if loop.index == 1:
@@ -142,9 +145,8 @@ Thank you,
                                                                 <div style="height:${heightA}px;">
                                                                     ${extra_div | safe}   
                                                                     <div style="height:55px;">
-                                                                        % set path = object.env['res.users'].browse(goal['user_id']).partner_id.image_small
-                                                                        <img style="margin-bottom:5px;width:50px;height:50px;border-radius:50%;" src="data:image/jpeg;base64,${path}" alt="${goal['name']}"/>
-                                                                    </div> 
+                                                                        <img style="margin-bottom:5px;width:50px;height:50px;border-radius:50%;" t-att-src="image_data_uri(object.env['res.users'].browse(goal['user_id']).partner_id.image_small)" alt="${goal['name']}"/>
+                                                                    </div>
                                                                     <div align="center" style ="color:${bgColor};height:20px">
                                                                         ${goal['name']}
                                                                     </div>

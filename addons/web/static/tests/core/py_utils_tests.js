@@ -340,8 +340,95 @@ QUnit.module('core', function () {
 
     });
 
+    QUnit.test('add', function (assert) {
+        assert.expect(2);
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2017, 4, 18, 9, 32, 15).add(hours=2, minutes=30, " +
+                "seconds=10)).strftime('%Y-%m-%d %H:%M:%S')", pyUtils.context()),
+            '2017-04-18 12:02:25'
+        );
+        assert.strictEqual(
+            py.eval("(datetime.date(2017, 4, 18).add(months=1, years=3, days=5))" +
+                ".strftime('%Y-%m-%d')", pyUtils.context()),
+            '2020-05-23'
+        );
+    });
+
+    QUnit.test('subtract', function(assert) {
+        assert.expect(2);
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2017, 4, 18, 9, 32, 15).subtract(hours=1, minutes=5, " +
+                "seconds=33)).strftime('%Y-%m-%d %H:%M:%S')", pyUtils.context()),
+            '2017-04-18 08:26:42'
+        );
+        assert.strictEqual(
+            py.eval("(datetime.date(2017, 4, 18).subtract(years=5, months=1, days=1))" +
+                ".strftime('%Y-%m-%d')", pyUtils.context()),
+            '2012-03-17'
+        );
+    })
+
+    QUnit.test('start_of/end_of', function (assert) {
+        assert.expect(26);
+
+        var datetime = pyUtils.context().datetime;
+        // Ain't that a kick in the head?
+        var _date = datetime.date.fromJSON(2281, 10, 11);
+        var _datetime = datetime.datetime.fromJSON(2281, 10, 11, 22, 33, 44);
+        var ctx = {
+            _date: _date,
+            _datetime: _datetime,
+            date: datetime.date,
+            datetime: datetime.datetime
+        };
+
+        // Start of period
+        // Dates first
+        assert.ok(py.eval('_date.start_of("year") == date(2281, 1, 1)', ctx));
+        assert.ok(py.eval('_date.start_of("quarter") == date(2281, 10, 1)', ctx));
+        assert.ok(py.eval('_date.start_of("month") == date(2281, 10, 1)', ctx));
+        assert.ok(py.eval('_date.start_of("week") == date(2281, 10, 10)', ctx));
+        assert.ok(py.eval('_date.start_of("day") == date(2281, 10, 11)', ctx));
+        assert.throws(function () {
+            py.eval('_date.start_of("hour")', ctx);
+        }, /^Error: ValueError:/);
+
+        // Datetimes
+        assert.ok(py.eval('_datetime.start_of("year") == datetime(2281, 1, 1)', ctx));
+        assert.ok(py.eval('_datetime.start_of("quarter") == datetime(2281, 10, 1)', ctx));
+        assert.ok(py.eval('_datetime.start_of("month") == datetime(2281, 10, 1)', ctx));
+        assert.ok(py.eval('_datetime.start_of("week") == datetime(2281, 10, 10)', ctx));
+        assert.ok(py.eval('_datetime.start_of("day") == datetime(2281, 10, 11)', ctx));
+        assert.ok(py.eval('_datetime.start_of("hour") == datetime(2281, 10, 11, 22, 0, 0)', ctx));
+        assert.throws(function () {
+            py.eval('_datetime.start_of("cheese")', ctx);
+        }, /^Error: ValueError:/);
+
+        // End of period
+        // Dates
+        assert.ok(py.eval('_date.end_of("year") == date(2281, 12, 31)', ctx));
+        assert.ok(py.eval('_date.end_of("quarter") == date(2281, 12, 31)', ctx));
+        assert.ok(py.eval('_date.end_of("month") == date(2281, 10, 31)', ctx));
+        assert.ok(py.eval('_date.end_of("week") == date(2281, 10, 16)', ctx));
+        assert.ok(py.eval('_date.end_of("day") == date(2281, 10, 11)', ctx));
+        assert.throws(function () {
+            py.eval('_date.start_of("hour")', ctx);
+        }, /^Error: ValueError:/);
+
+        // Datetimes
+        assert.ok(py.eval('_datetime.end_of("year") == datetime(2281, 12, 31, 23, 59, 59)', ctx));
+        assert.ok(py.eval('_datetime.end_of("quarter") == datetime(2281, 12, 31, 23, 59, 59)', ctx));
+        assert.ok(py.eval('_datetime.end_of("month") == datetime(2281, 10, 31, 23, 59, 59)', ctx));
+        assert.ok(py.eval('_datetime.end_of("week") == datetime(2281, 10, 16, 23, 59, 59)', ctx));
+        assert.ok(py.eval('_datetime.end_of("day") == datetime(2281, 10, 11, 23, 59, 59)', ctx));
+        assert.ok(py.eval('_datetime.end_of("hour") == datetime(2281, 10, 11, 22, 59, 59)', ctx));
+        assert.throws(function () {
+            py.eval('_datetime.end_of("cheese")', ctx);
+        }, /^Error: ValueError:/);
+    });
+
     QUnit.test('relativedelta', function (assert) {
-        assert.expect(5);
+        assert.expect(7);
 
         assert.strictEqual(
             py.eval("(datetime.date(2012, 2, 15) + relativedelta(days=-1)).strftime('%Y-%m-%d 23:59:59')",
@@ -363,6 +450,14 @@ QUnit.module('core', function () {
             py.eval("(datetime.date(2015,2,5)+relativedelta(days=-6,weekday=0)).strftime('%Y-%m-%d')",
                     pyUtils.context()),
             '2015-02-02');
+        assert.strictEqual(
+            py.eval("(datetime.date(2018, 2, 1) + relativedelta(years=7, months=42, days=42)).strftime('%Y-%m-%d')",
+                    pyUtils.context()),
+            '2028-09-12');
+        assert.strictEqual(
+            py.eval("(datetime.date(2018, 2, 1) + relativedelta(years=-7, months=-42, days=-42)).strftime('%Y-%m-%d')",
+                    pyUtils.context()),
+            '2007-06-20');
     });
 
 
@@ -1054,7 +1149,7 @@ QUnit.module('core', function () {
         assert.checkAST("1.4", "float value");
         assert.checkAST("-12", "negative integer value");
         assert.checkAST("True", "boolean");
-        assert.checkAST("'some string'", "a string");
+        assert.checkAST(`"some string"`, "a string");
         assert.checkAST("None", "None");
     });
 
@@ -1062,8 +1157,8 @@ QUnit.module('core', function () {
         assert.expect(3);
 
         assert.checkAST("{}", "empty dictionary");
-        assert.checkAST("{'a': 1}", "dictionary with a single key");
-        assert.checkAST("d['a']", "get a value in a dictionary");
+        assert.checkAST(`{"a": 1}`, "dictionary with a single key");
+        assert.checkAST(`d["a"]`, "get a value in a dictionary");
     });
 
     QUnit.test("list", function (assert) {
@@ -1130,14 +1225,14 @@ QUnit.module('core', function () {
 
     QUnit.test("strftime", function (assert) {
         assert.expect(3);
-        assert.checkAST("time.strftime('%Y')", "strftime with year");
-        assert.checkAST("time.strftime('%Y') + '-01-30'", "strftime with year");
-        assert.checkAST("time.strftime('%Y-%m-%d %H:%M:%S')", "strftime with year");
+        assert.checkAST(`time.strftime("%Y")`, "strftime with year");
+        assert.checkAST(`time.strftime("%Y") + "-01-30"`, "strftime with year");
+        assert.checkAST(`time.strftime("%Y-%m-%d %H:%M:%S")`, "strftime with year");
     });
 
     QUnit.test("context_today", function (assert) {
         assert.expect(1);
-        assert.checkAST("context_today().strftime('%Y-%m-%d')", "context today call");
+        assert.checkAST(`context_today().strftime("%Y-%m-%d")`, "context today call");
     });
 
 
@@ -1155,7 +1250,7 @@ QUnit.module('core', function () {
         assert.checkAST('(a - b).days', "substraction and .days");
         assert.checkAST('a + day == date(2002, 3, 3)');
 
-        var expr = "[('type', '=', 'in'), ('day', '<=', time.strftime('%Y-%m-%d')), ('day', '>', (context_today() - datetime.timedelta(days = 15)).strftime('%Y-%m-%d'))]";
+        var expr = `[("type", "=", "in"), ("day", "<=", time.strftime("%Y-%m-%d")), ("day", ">", (context_today() - datetime.timedelta(days = 15)).strftime("%Y-%m-%d"))]`;
         assert.checkAST(expr);
     });
 
@@ -1176,23 +1271,23 @@ QUnit.module('core', function () {
         assert.expect(3);
 
         assert.checkNormalization("[]");
-        assert.checkNormalization("[('a', '=', 1)]");
-        assert.checkNormalization("['!', ('a', '=', 1)]");
+        assert.checkNormalization(`[("a", "=", 1)]`);
+        assert.checkNormalization(`["!", ("a", "=", 1)]`);
     });
 
     QUnit.test("properly add the & in a non normalized domain", function (assert) {
         assert.expect(1);
         assert.checkNormalization(
-            "[('a', '=', 1), ('b', '=', 2)]",
-            "['&', ('a', '=', 1), ('b', '=', 2)]"
+            `[("a", "=", 1), ("b", "=", 2)]`,
+            `["&", ("a", "=", 1), ("b", "=", 2)]`
         );
     });
 
     QUnit.test("normalize domain with ! operator", function (assert) {
         assert.expect(1);
         assert.checkNormalization(
-            "['!', ('a', '=', 1), ('b', '=', 2)]",
-            "['&', '!', ('a', '=', 1), ('b', '=', 2)]"
+            `["!", ("a", "=", 1), ("b", "=", 2)]`,
+            `["&", "!", ("a", "=", 1), ("b", "=", 2)]`
         );
     });
 

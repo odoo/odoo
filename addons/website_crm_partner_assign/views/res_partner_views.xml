@@ -10,10 +10,12 @@
             <field name="model">res.partner.activation</field>
             <field name="arch" type="xml">
                 <form string="Activation">
-                    <group col="4">
-                        <field name="name" />
-                        <field name="sequence" />
-                    </group>
+                    <sheet>
+                        <group col="4">
+                            <field name="name" />
+                            <field name="sequence" />
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -58,7 +60,7 @@
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" name="website_publish_button"
                                 type="object" icon="fa-globe">
-                            <field name="website_published" widget="website_button"/>
+                            <field name="is_published" widget="website_button"/>
                         </button>
                     </div>
                     <div class="oe_title">
@@ -136,7 +138,7 @@
                     </group>
                 </xpath>
                 <xpath expr="//group[@name='sale']" position="inside">
-                    <field name="assigned_partner_id" groups="base.group_no_one"/>
+                    <field name="assigned_partner_id" groups="base.group_no_one" attrs="{'invisible': [('customer','=', False)]}"/>
                 </xpath>
             </data>
         </field>

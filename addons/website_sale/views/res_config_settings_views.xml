@@ -6,25 +6,8 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="website.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='sales_settings_invoicing_policy']" position="after">
-                <!--
-                Show the automatic invoices setting in sales settings.
-                -->
-                <div class="col-12 col-lg-6 o_setting_box"
-                     attrs="{'invisible': ['|', ('default_invoice_policy', '!=', 'order'), '&amp;', ('portal_confirmation_pay', '=', False), ('module_website_quote', '=', False)]}">
-                    <div class="o_setting_left_pane">
-                        <field name="automatic_invoice" nolabel="1"/>
-                    </div>
-                    <div class="o_setting_right_pane">
-                        <label for="automatic_invoice"/>
-                        <div class="text-muted">
-                            Generate the invoice automatically when the payment is received
-                        </div>
-                    </div>
-                </div>
-            </xpath>
             <div id="webmaster_settings" position="after">
-                <h2>Product Catalog</h2>
+                <h2>Products</h2>
                 <div class="row mt16 o_settings_container" id="sale_product_catalog_settings">
                     <div class="col-12 col-lg-6 o_setting_box" id="product_attributes_setting">
                         <div class="o_setting_left_pane">
@@ -33,12 +16,23 @@
                         <div class="o_setting_right_pane">
                             <label for="group_product_variant"/>
                             <div class="text-muted">
-                                Set product attributes (e.g. color, size) to sell variants
+                                Sell variants of a product using attributes (size, color, etc.)
                             </div>
                             <div class="content-group" attrs="{'invisible': [('group_product_variant', '=', False)]}">
                                 <div class="mt16">
                                     <button type="action" name="%(product.attribute_action)d" string="Attributes" class="btn-link" icon="fa-arrow-right"/>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="module_sale_product_configurator" string="Optional Products"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="module_sale_product_configurator" string="Optional Products"/>
+                            <div class="text-muted">
+                                Display a prompt with optional products when adding to cart
                             </div>
                         </div>
                     </div>
@@ -53,18 +47,15 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <h2>Customer Experience</h2>
-                <div class="row mt16 o_settings_container" id="sale_customer_experience_settings">
-                    <div class="col-12 col-lg-6 o_setting_box" id="whishlist_option_setting">
+                    <div class="col-12 col-lg-6 o_setting_box" id="wishlist_option_setting">
                         <div class="o_setting_left_pane">
                             <field name="module_website_sale_wishlist"/>
                         </div>
                         <div class="o_setting_right_pane">
                             <label for="module_website_sale_wishlist"/>
                             <div class="text-muted">
-                                Let returning shoppers save products in a whishlist
+                                Let returning shoppers save products in a wishlist
                             </div>
                         </div>
                     </div>
@@ -76,17 +67,6 @@
                             <label for="module_website_sale_comparison"/>
                             <div class="text-muted">
                                 Allow shoppers to compare products based on their attributes
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box" id="sale_option_setting" title="Select optional products from the configuration form of your main products (in Sales tab).">
-                        <div class="o_setting_left_pane">
-                            <field name="module_website_sale_options"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="module_website_sale_options"/>
-                            <div class="text-muted">
-                                Suggest optional products when adding to cart
                             </div>
                         </div>
                     </div>
@@ -140,14 +120,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-6 o_setting_box" id="discount_setting" title="Once activated, discounted prices can be applied from Pricelists setup form (Discount policy field).">
+                    <div class="col-12 col-lg-6 o_setting_box" id="discount_setting" title="Apply manual discounts on sales order lines or display discounts computed from pricelists (option to activate in the pricelist configuration).">
                         <div class="o_setting_left_pane">
                             <field name="group_discount_per_so_line"/>
                         </div>
                         <div class="o_setting_right_pane">
                             <label for="group_discount_per_so_line"/>
                             <div class="text-muted">
-                                Display crossed-out public prices
+                                Grant discounts on sales order lines
                             </div>
                         </div>
                     </div>
@@ -296,50 +276,70 @@
                             <div class="o_setting_right_pane">
                                 <label for="automatic_invoice"/>
                                 <div class="text-muted">
-                                    Generate the invoice automatically when the order is confirmed
+                                    Generate the invoice automatically when the online payment is confirmed
+                                </div>
+                                <div  attrs="{'invisible': [('automatic_invoice','=',False)]}">
+                                    <label for="template_id" class="o_light_label"/>
+                                    <field name="template_id" class="oe_inline"/>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <h2>Orders</h2>
+                <h2>Orders Followup</h2>
                 <div class="row mt16 o_settings_container" id="sale_checkout_settings">
-                    <div class="col-12 col-lg-6 o_setting_box" id="abandoned_carts_setting" title="Send a recovery email to authenticated shoppers">
-                        <div class="o_setting_left_pane"/>
-                        <div class="o_setting_right_pane">
-                            <span class="o_form_label">Email for Abandoned carts</span>
-                            <div class="text-muted">
-                                Default recovery email to send when a cart is abandoned
-                            </div>
-                            <div class="content-group">
-                                <div class="row mt16">
-                                    <label for="cart_recovery_mail_template" string="Email Template" class="col-lg-3 o_light_label"/>
-                                    <field name="cart_recovery_mail_template" class="oe_inline"/>
-                                </div>
-                            </div>
-                            <div class="content-group">
-                                <div class="row mt16">
-                                  <label for="cart_abandoned_delay" string="Cart are considered abandoned after" class="col-lg-6 o_light_label"/>
-                                  <span class="col-lg-3"><field name="cart_abandoned_delay"/>hours</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="col-12 col-lg-6 o_setting_box" id="checkout_assignation_setting">
                         <div class="o_setting_right_pane">
                             <span class="o_form_label">Assignation</span>
+                            <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
                             <div class="text-muted">
                                 Assignation of online orders
                             </div>
                             <div class="content-group">
                                 <div class="row mt16">
                                     <label class="o_light_label col-lg-3" string="Sales Team" for="salesteam_id"/>
-                                    <field name="salesteam_id" context="{'default_team_type': 'website'}"/>
+                                    <field name="salesteam_id" />
                                 </div>
                                 <div class="row">
                                     <label class="o_light_label col-lg-3" for="salesperson_id"/>
                                     <field name="salesperson_id"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" id="confirmation_email_setting">
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Confirmation Email</span>
+                            <div class="text-muted">
+                                Email sent to the customer after the checkout
+                            </div>
+                            <div class="row mt16">
+                                <label for="confirmation_template_id" string="Email Template" class="col-lg-4 o_light_label"/>
+                                <field name="confirmation_template_id" class="oe_inline"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-6 o_setting_box" id="abandoned_carts_setting" title="Abandoned carts are all carts left unconfirmed by website visitors. You can find them in *Website > Orders > Abandoned Carts*. From there you can send recovery emails to visitors who entered their contact details.">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Abandoned Carts</span>
+                            <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                            <div class="text-muted">
+                                Send a recovery email when a cart is abandoned
+                            </div>
+                            <div class="content-group" title="This email template is suggested by default when you send a recovery email.">
+                                <div class="row mt16">
+                                    <label for="cart_recovery_mail_template" string="Email Template" class="col-lg-4 o_light_label"/>
+                                    <field name="cart_recovery_mail_template" class="oe_inline"/>
+                                </div>
+                            </div>
+                            <div class="content-group" title="Carts are flagged as abandoned after this delay.">
+                                <div class="row mt16">
+                                    <div class="col-12">
+                                      <label for="cart_abandoned_delay" string="Cart is abandoned after" class="o_light_label"/>
+                                      <field class="col-2" name="cart_abandoned_delay"/> hour(s).
+                                    </div>
                                 </div>
                             </div>
                         </div>

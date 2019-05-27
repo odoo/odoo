@@ -20,7 +20,7 @@ class Digest(models.Model):
                 ('confirmation_date', '>=', start),
                 ('confirmation_date', '<', end),
                 ('state', 'not in', ['draft', 'cancel', 'sent']),
-                ('team_id.team_type', '=', 'website'),
+                ('website_id', '!=', False),
                 ('company_id', '=', company.id)
             ])
             record.kpi_website_sale_total_value = sum(confirmed_website_sales.mapped('amount_total'))

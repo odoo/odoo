@@ -112,6 +112,9 @@
                 &.oe_folded {
                     display: none;
                 }
+                .o_view_nocontent {
+                    display: none; // we don't have a create button on the dashboard, so no need to display that
+                }
             }
 
             // Override border of many2manytags defined for form_views
@@ -120,8 +123,8 @@
             }
 
             // Override height of graph. min-height doesn't do the trick
-            .o_graph {
-                height: 500px;
+            .o_graph_svg_container {
+                height: 250px;
             }
         }
     }
@@ -149,4 +152,14 @@
 .o_add_to_dashboard {
     display: none; // hidden by default
     @include o-search-options-dropdown-custom-item;
+}
+
+@include media-breakpoint-down(sm) {
+    .o_dashboard .oe_dashboard {
+        table-layout: fixed;
+
+        .oe_action .oe_header .oe_header_text {
+            display: none;
+        }
+    }
 }

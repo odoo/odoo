@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!-- Admin should not receive emails at creation -->
+        <!-- user root should not receive emails at creation -->
         <record id="base.user_root" model="res.users">
             <field name="notification_type">inbox</field>
         </record>
@@ -88,11 +88,14 @@
 </ul>
 <div t-if="signature" t-raw="signature" class="font-size: 13px;"/>
 <p style="color: #555555; margin-top:32px;">
-    Sent by
+    Sent
+    <span t-if="company.name">
+    by
     <a t-if="website_url" t-att-href="website_url" style="text-decoration:none; color: #875A7B;">
         <span t-esc="company.name"/>
     </a>
     <span t-if="not website_url" t-esc="company.name"/>
+    </span>
     using
     <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" style="text-decoration:none; color: #875A7B;">Odoo</a>.
 </p>
@@ -166,7 +169,7 @@
         <td align="center" style="min-width: 590px;">
             <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: white; padding: 0; border-collapse:separate;">
                 <tr><td valign="middle">
-                    <span style="font-size: 10px;">Your <t t-esc="'%s' % model_description or 'document'"/></span><br/>
+                    <span style="font-size: 10px;">Your <t t-esc="model_description or 'document'"/></span><br/>
                     <span style="font-size: 20px; font-weight: bold;">
                         <t t-esc="message.record_name and message.record_name.replace('/','-') or ''"/>
                     </span>
@@ -219,7 +222,7 @@
           * this template works best with portal-enable models although it is not
             a complete requirement currently;
         -->
-        <template id="mail_notification_paynow" name="blableblu">
+        <template id="mail_notification_paynow" name="Mail: Pay Now mail notification template">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 24px; background-color: white; color: #454748; border-collapse:separate;">
 <tbody>
@@ -228,14 +231,15 @@
         <td align="center" style="min-width: 590px;">
             <t t-set="access_action" t-value="record.with_context(force_website=True).get_access_action()"/>
             <t t-set="is_online" t-value="access_action and access_action['type'] == 'ir.actions.act_url'"/>
-            <t t-set="access_url" t-value="is_online and record._get_share_url(redirect=True, signup_partner=True) or ''"/>
-            <t t-set="access_code" t-value="'view'"/>
+            <t t-set="base_url" t-value="record.get_base_url()"/>
+            <t t-set="share_url" t-value="record._get_share_url(redirect=True, signup_partner=True)"/>
+            <t t-set="access_url" t-value="is_online and share_url and base_url + share_url or ''"/>
             <t t-set="access_name">
-                View <t t-esc="record._description.lower()"/>
+                View <t t-esc="model_description or 'document'"/>
             </t>
             <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: white; padding: 0; border-collapse:separate;">
                 <tr><td valign="middle">
-                    <span style="font-size: 10px;">Your <t t-esc="'%s' % model_description or 'document'"/></span><br/>
+                    <span style="font-size: 10px;">Your <t t-esc="model_description or 'document'"/></span><br/>
                     <span style="font-size: 20px; font-weight: bold;">
                         <t t-esc="message.record_name"/>
                     </span>
@@ -258,13 +262,15 @@
                     <t t-esc="access_name"/>
                 </a>
             </div>
-            <div style="margin: 0px; padding: 0px; font-size:13px;">
-                Best regards,
-            </div>
-            <div>&amp;nbsp;</div>
-            <div t-if="record.user_id and record.user_id.signature" style="font-size: 13px;">
-                <div t-raw="record.user_id.signature"/>
-            </div>
+            <t t-if="record.user_id and not record.env.user._is_superuser()">
+                <div style="margin: 0px; padding: 0px; font-size:13px;">
+                    Best regards,
+                </div>
+                <div>&amp;nbsp;</div>
+                <div t-if="record.user_id.sudo().signature" style="font-size: 13px;">
+                    <div t-raw="record.user_id.sudo().signature"/>
+                </div>
+            </t>
         </td>
     </tr>
     <!-- FOOTER -->
@@ -298,12 +304,12 @@
         <!-- Discuss utility templates for notifications -->
         <template id="message_user_assigned">
 <p style="margin: 0px;">
-    <span>Dear <t t-esc="object.user_id.name"/>,</span><br />
-    <span style="margin-top: 8px;">You have been assigned to the <t t-esc="object._description.lower()"/> <t t-esc="object.name_get()[0][1]"/>.</span>
+    <span>Dear <t t-esc="object.user_id.sudo().name"/>,</span><br />
+    <span style="margin-top: 8px;">You have been assigned to the <t t-esc="model_description or 'document'"/> <t t-esc="object.display_name"/>.</span>
 </p>
 <p style="margin-top: 24px; margin-bottom: 16px;">
     <a t-att-href="'/mail/view?model=%s&amp;res_id=%s' % (object._name, object.id)" style="background-color:#875A7B; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px;">
-            View <t t-esc="object._description.lower()"/>
+            View <t t-esc="model_description or 'document'"/>
     </a>
 </p>
         </template>
@@ -311,21 +317,21 @@
         <template id="message_activity_done">
 <div>
     <p>
-        <strong><span t-attf-class="fa #{activity.activity_type_id.icon}"/></strong> <span t-field="activity.activity_type_id.name"/> done
-        by <span t-field="activity.user_id.name"/><span t-if="activity.summary">:</span>
-        <span t-if="activity.summary" t-field="activity.summary"/>
+        <span t-attf-class="fa #{activity.activity_type_id.icon} fa-fw"/><span t-field="activity.activity_type_id.name"/> done
+        <t t-if="display_assignee"> (originally assigned to <span t-field="activity.user_id.name"/>)</t>
+        <span t-if="activity.summary">: </span><span t-if="activity.summary" t-field="activity.summary"/>
     </p>
-    <div t-field="activity.note" style="margin-left: 8px;"/>
-    <div t-if="activity.feedback" style="margin-top: 8px;">
-        <strong> Feedback</strong>
-    <div t-field="activity.feedback" style="margin-left: 8px;"></div>
-    </div>
+    <div t-if="feedback" t-esc="feedback"/>
+    <t t-if="activity.note != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'"><!-- <p></br></p> -->
+        <div class="o_mail_note_title"><strong>Original note:</strong></div>
+        <div t-field="activity.note"/>
+    </t>
 </div>
         </template>
 
         <template id="message_activity_assigned">
 <div style="margin: 0px; padding: 0px; font-size: 13px;">
-    <span t-field="activity.create_user_id.name"/> assigned you an activity <span t-field="activity.activity_type_id.name"/>
+    <span t-field="activity.create_uid.name"/> assigned you an activity <span t-field="activity.activity_type_id.name"/>
     <t t-if="activity.summary">(<span t-field="activity.summary"/>)</t>
     on <span t-field="activity.res_name"/>
     to close for <span t-field="activity.date_deadline"/>.<br />
@@ -358,30 +364,22 @@
     <p>Hello <t t-esc='record.name'/></p>
     <p>You have messages to moderate, please go for the proceedings.</p><br/><br/>
     <div style="text-align: center;">
-        <a href="/web#action=mail.mail_channel_action_client_chat&amp;active_id=mailbox_moderation" style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;" class="o_default_snippet_text">Moderate Messages</a>
+        <a href="/web#action=mail.action_discuss&amp;active_id=mailbox_moderation" style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;" class="o_default_snippet_text">Moderate Messages</a>
         <br/><br/><br/>
     </div>
     <p>Thank you!</p>
 </div>
         </template>
 
-        <record id="mail_template_channel_send_guidelines" model="mail.template">
-            <field name="name">Partner: Send channel guidelines</field>
-            <field name="model_id" ref="base.model_res_partner"/>
-            <field name="email_from">${object.company_id.catchall or object.company_id.email|safe}</field>
-            <field name="partner_to">${object.id}</field>
-            <field name="subject">Guidelines of channel ${ctx['channel'].name}</field>
-            <field name="body_html" type="xml">
+       <template id="mail_channel_send_guidelines">
 <div>
-<p>Hello ${object.name or ''},</p>
-<p>Please find below the guidelines of the ${ctx['channel'].name} channel.</p>
+<p>Hello <t t-esc="partner.name"/>,</p>
+<p>Please find below the guidelines of the <t t-esc="channel.name"/> channel.</p>
 <p>
-${ctx['channel'].moderation_guidelines_msg}
+<t t-esc="channel.moderation_guidelines_msg"/>
 </p>
 <p></p>
 </div>
-</field>
-            <field name="user_signature" eval="False"/>
-        </record>
+        </template>
     </data>
 </odoo>

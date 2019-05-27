@@ -2,10 +2,43 @@
 <templates>
 
     <!--
+        Chatter attachment tab
+    -->
+
+    <div t-name="mail.chatter.AttachmentBox" class="o_mail_chatter_attachments">
+        <div class="o_chatter_attachment">
+            <div class="o_border_dashed">
+                <span class="o_attach_title">Attachments</span>
+            </div>
+            <div t-if="widget.imageList.length > 0" class="o_attachments_previews">
+                <t t-foreach="widget.imageList" t-as="attachment">
+                    <t t-call="mail.AttachmentPreview"/>
+                </t>
+            </div>
+            <div t-if="widget.otherList.length > 0" class="o_attachments_list">
+                <t t-foreach="widget.otherList" t-as="attachment">
+                    <t t-call="mail.Attachment"/>
+                </t>
+            </div>
+            <div class="o_chatter_attachment_form">
+                <t t-call="HiddenInputFile">
+                    <t t-set="fileupload_id" t-value="widget.fileuploadId"/>
+                    <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
+                    <t t-set="multi_upload" t-value="true"/>
+                    <input type="hidden" name="model" t-att-value="widget.currentResModel"/>
+                    <input type="hidden" name="id" t-att-value="widget.currentResID"/>
+                    <center><span class="btn btn-link o_upload_attachments_button"><span class="fa fa-plus-square"/> Add Attachments</span></center>
+                </t>
+            </div>
+        </div>
+    </div>
+
+    <!--
         Chatter composer
 
         @param {mail.composer.Chatter} widget
     -->
+
     <t t-name="mail.chatter.Composer" t-extend="mail.Composer">
         <!-- Insert information before the composer -->
         <t t-jquery=".o_composer_container" t-operation="before">
@@ -25,9 +58,9 @@
                     </b>
                 </small>
                 <!-- List of followers -->
-                <div class="o_composer_suggestedPartners">
+                <div class="o_composer_suggested_partners">
                     <t t-foreach='widget.suggestedPartners' t-as='recipient'>
-                        <div t-attf-title="Add as recipient and follower (reason: #{recipient.reason})">
+                        <div t-attf-title="Add as recipient and follower (reason: #{recipient.reason})" t-att-class="recipient_index > 2 ? 'o_suggested_toggle o_hidden' : ''">
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox"
                                        class="custom-control-input"
@@ -40,6 +73,14 @@
                                 </label>
                             </div>
                         </div>
+                    </t>
+                    <t t-if='widget.suggestedPartners.length > 3'>
+                        <a href="#" class='o_suggested_show_more_less o_suggested_toggle'>
+                            Show <t t-esc="widget.suggestedPartners.length - 3"/> more
+                        </a>
+                        <a href="#" class='o_suggested_show_more_less o_suggested_toggle o_hidden'>
+                            Show <t t-esc="widget.suggestedPartners.length - 3"/> less
+                        </a>
                     </t>
                 </div>
             </t>
@@ -69,6 +110,24 @@
         <button t-if="scheduleActivityButton" class="btn btn-link o_chatter_button_schedule_activity" title="Log or schedule an activity" disabled="disabled">
             <i class="fa fa-clock-o" role="img" aria-label="Dates" title="Dates"/> <t t-if="isMobile">Activity</t><t t-else="">Schedule activity</t>
         </button>
+
+    </t>
+
+    <!--
+        Chatter attachment paperclip button.
+
+        @param {boolean} [displayCounter]
+        @param {integer} [count]
+    -->
+    <t t-name="mail.chatter.Attachment.Button">
+        <button class="btn btn-link o_chatter_button_attachment" title="View all the attachments of the current record">
+            <span>
+                <i class="fa fa-paperclip"/>
+                <span t-if="displayCounter" class="o_chatter_attachment_button_count">
+                    <t t-esc="count"/>
+                </span>
+            </span>
+        </button>
     </t>
 
     <!--
@@ -76,7 +135,9 @@
     -->
     <t t-name="mail.Chatter">
         <aside class="o_chatter">
-            <div class="o_chatter_topbar"/>
+            <div class="o_chatter_topbar">
+                <div class="o_topbar_right_area"/>
+            </div>
         </aside>
     </t>
 

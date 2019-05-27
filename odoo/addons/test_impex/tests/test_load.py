@@ -59,7 +59,7 @@ class ImporterCase(common.TransactionCase):
                 return '%s.%s' % (d['module'], d['name'])
             return d['name']
 
-        name = record.name_get()[0][1]
+        name = record.display_name
         # fix dotted name_get results, otherwise xid lookups blow up
         name = name.replace('.', '-')
         ModelData.create({
@@ -335,7 +335,6 @@ class test_float_field(ImporterCase):
         self.assertEqual(result['messages'], [
             message(u"'foobar' does not seem to be a number for field 'Value'")])
 
-
 class test_string_field(ImporterCase):
     model_name = 'export.string.bounded'
 
@@ -439,7 +438,7 @@ class test_selection(ImporterCase):
         ])
         self.assertEqual(len(result['ids']), 4)
         self.assertFalse(result['messages'])
-        self.assertEqual([3, 2, 1, 2], values(self.read()))
+        self.assertEqual(['3', '2', '1', '2'], values(self.read()))
 
     def test_imported_translated(self):
         self.add_translations(
@@ -453,7 +452,7 @@ class test_selection(ImporterCase):
         self.assertEqual(len(result['ids']), 3)
         self.assertFalse(result['messages'])
 
-        self.assertEqual([3, 1, 2], values(self.read()))
+        self.assertEqual(['3', '1', '2'], values(self.read()))
 
         result = self.import_(['value'], [['Foo']], context={'lang': 'fr_FR'})
         self.assertEqual(len(result['ids']), 1)
@@ -466,7 +465,7 @@ class test_selection(ImporterCase):
             u"Value 'Baz' not found in selection field 'Value'",
             moreinfo="Foo Bar Qux 4".split())])
 
-        result = self.import_(['value'], [[42]])
+        result = self.import_(['value'], [['42']])
         self.assertIs(result['ids'], False)
         self.assertEqual(result['messages'], [message(
             u"Value '42' not found in selection field 'Value'",
@@ -496,7 +495,7 @@ class test_selection_with_default(ImporterCase):
 
         self.assertEqual(
             values(self.read()),
-            [2])
+            ['2'])
 
 
 class test_selection_function(ImporterCase):
@@ -676,6 +675,20 @@ class test_m2o(ImporterCase):
             u"name, external id or database id")])
         self.assertIs(result['ids'], False)
 
+    def test_name_create_enabled_m2o(self):
+        result = self.import_(['value'], [[101]])
+        self.assertEqual(result['messages'], [message(
+            u"No matching record found for name '101' "
+            u"in field 'Value'", moreinfo=moreaction(
+                res_model='export.integer'))])
+        self.assertIs(result['ids'], False)
+        context = {
+            'name_create_enabled_fields': {'value': True},
+        }
+        result = self.import_(['value'], [[101]], context=context)
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
+
 
 class test_m2m(ImporterCase):
     model_name = 'export.many2many'
@@ -748,7 +761,7 @@ class test_m2m(ImporterCase):
         record2 = self.env['export.many2many.other'].create({'value': 84, 'str': 'record2'})
         record3 = self.env['export.many2many.other'].create({'value': 9, 'str': 'record3'})
 
-        name = lambda record: record.name_get()[0][1]
+        name = lambda record: record.display_name
 
         result = self.import_(['value'], [
             ['%s,%s' % (name(record1), name(record2))],

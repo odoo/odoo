@@ -21,8 +21,8 @@
                     <filter name="reserved" string="Reservations" domain="[('reserved_quantity', '&gt;', 0.0)]"/>
                 </group>
                 <group expand='0' string='Group by...'>
-                    <filter string='Location' name="locationgroup" domain="[]" context="{'group_by': 'location_id'}"/>
                     <filter string='Product' name="productgroup" context="{'group_by': 'product_id'}"/>
+                    <filter string='Location' name="locationgroup" domain="[]" context="{'group_by': 'location_id'}"/>
                     <filter string='Owner' name="owner" context="{'group_by': 'owner_id'}" groups="stock.group_tracking_owner"/>
                     <filter string='Lot/Serial Number' name="Lot_Serial_number" context="{'group_by': 'lot_id'}" groups="stock.group_production_lot"/>
                     <filter string='Package' name="package" domain="[]" context="{'group_by': 'package_id'}" groups="stock.group_tracking_lot"/>
@@ -40,12 +40,12 @@
             <form string="Inventory Valuation" create="false" edit="false" delete="false">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" icon="fa-arrows-v" type="object" name="action_view_stock_moves" string="Picking Moves"/>
+                        <button class="oe_stat_button" icon="fa-exchange" type="object" name="action_view_stock_moves" string="Product Moves"/>
                     </div>
                     <group>
                         <group>
                             <field name="product_id"/>
-                            <field name="location_id"/>
+                            <field name="location_id" options="{'no_create': True}"/>
                             <field name="lot_id" groups="stock.group_production_lot"/>
                             <field name="package_id" groups="stock.group_tracking_lot"/>
                             <field name="owner_id" groups="stock.group_tracking_owner"/>
@@ -76,7 +76,7 @@
         <field name="arch" type="xml">
             <tree string="Inventory Valuation" create="0" delete="0" decoration-danger="quantity &lt; 0">
                 <field name="product_id"/>
-                <field name="location_id"/>
+                <field name="location_id" options="{'no_create': True}"/>
                 <field name="lot_id" groups="stock.group_production_lot"/>
                 <field name="package_id" groups="stock.group_tracking_lot"/>
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
@@ -117,7 +117,11 @@
         <field name="res_model">stock.quant</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,pivot,graph</field>
-        <field name="context">{'search_default_internal_loc': 1, 'group_by': ['product_id', 'location_id']}</field>
+        <field name="context">{
+            'search_default_internal_loc': 1,
+            'search_default_productgroup': 1,
+            'search_default_locationgroup': 1
+        }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 No inventory found
@@ -134,7 +138,6 @@
     </record>
      <record model="ir.actions.act_window" id="product_open_quants"> <!-- product_view + python -->
         <field name="name">Stock On Hand</field>
-        <field name="context">{'search_default_internal_loc': 1, 'search_default_locationgroup':1}</field>
        <field name="domain">[('product_id', '=', active_id)]</field>
         <field name="res_model">stock.quant</field>
     </record>
@@ -186,10 +189,10 @@
                         <group>
                             <field name='company_id' groups="base.group_multi_company"/>
                             <field name='owner_id' groups="stock.group_tracking_owner"/>
-                            <field name="location_id"/>
+                            <field name="location_id" options="{'no_create': True}"/>
                         </group>
                     </group>
-                    <separator string="Content" />
+                    <separator string="Content"/>
                     <field name="quant_ids">
                         <tree>
                             <field name="product_id"/>
@@ -210,7 +213,7 @@
         <field name="arch" type="xml">
             <tree string="Package">
                 <field name="display_name"/>
-                <field name="location_id"/>
+                <field name="location_id" options="{'no_create': True}"/>
                 <field name="company_id"/>
             </tree>
         </field>

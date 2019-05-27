@@ -31,6 +31,8 @@ var Dialog = Widget.extend({
      * @param {string} [options.title=Odoo]
      * @param {string} [options.subtitle]
      * @param {string} [options.size=large] - 'large', 'medium' or 'small'
+     * @param {boolean} [options.fullscreen=false] - whether or not the dialog
+     *        should be open in fullscreen mode (the main usecase is mobile)
      * @param {string} [options.dialogClass] - class to add to the modal-body
      * @param {jQuery} [options.$content]
      *        Element which will be the $el, replace the .modal-body and get the
@@ -50,12 +52,15 @@ var Dialog = Widget.extend({
      *        (use this for non-editor frontend features)
      */
     init: function (parent, options) {
+        var self = this;
         this._super(parent);
-        this._opened = $.Deferred();
-
+        this._opened = new Promise(function (resolve) {
+            self._openedResolver = resolve;
+        });
         options = _.defaults(options || {}, {
             title: _t('Odoo'), subtitle: '',
             size: 'large',
+            fullscreen: false,
             dialogClass: '',
             $content: false,
             buttons: [{text: _t("Ok"), close: true}],
@@ -65,6 +70,7 @@ var Dialog = Widget.extend({
         this.$content = options.$content;
         this.title = options.title;
         this.subtitle = options.subtitle;
+        this.fullscreen = options.fullscreen;
         this.dialogClass = options.dialogClass;
         this.size = options.size;
         this.buttons = options.buttons;
@@ -81,6 +87,7 @@ var Dialog = Widget.extend({
         return this._super.apply(this, arguments).then(function () {
             // Render modal once xml dependencies are loaded
             self.$modal = $(QWeb.render('Dialog', {
+                fullscreen: self.fullscreen,
                 title: self.title,
                 subtitle: self.subtitle,
                 technical: self.technical,
@@ -135,10 +142,14 @@ var Dialog = Widget.extend({
                     def = buttonData.click.call(self, e);
                 }
                 if (buttonData.close) {
-                    $.when(def).always(self.close.bind(self));
+                    Promise.resolve(def).then(self.close.bind(self)).guardedCatch(self.close.bind(self));
                 }
             });
-            self.$footer.append($button);
+            if (self.technical) {
+                self.$footer.append($button);
+            } else {
+                self.$footer.prepend($button);
+            }
         });
     },
 
@@ -176,11 +187,11 @@ var Dialog = Widget.extend({
             self.$modal.attr('open', true);
             self.$modal.removeAttr("aria-hidden");
             self.$modal.modal('show');
-            self._opened.resolve();
+            self._openedResolver();
+            if (options && options.shouldFocusButtons) {
+                self._onFocusControlButton();
+            }
         });
-        if (options && options.shouldFocusButtons) {
-            self._onFocusControlButton();
-        }
 
         return self;
     },
@@ -220,13 +231,13 @@ var Dialog = Widget.extend({
             this.$modal.remove();
         }
 
-        if (!isFocusSet) {
-            var modals = $('body > .modal').filter(':visible');
-            if (modals.length) {
+        var modals = $('body > .modal').filter(':visible');
+        if (modals.length) {
+            if (!isFocusSet) {
                 modals.last().focus();
-                // Keep class modal-open (deleted by bootstrap hide fnct) on body to allow scrolling inside the modal
-                $('body').addClass('modal-open');
             }
+            // Keep class modal-open (deleted by bootstrap hide fnct) on body to allow scrolling inside the modal
+            $('body').addClass('modal-open');
         }
     },
     /**

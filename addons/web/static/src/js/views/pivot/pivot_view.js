@@ -28,6 +28,8 @@ var PivotView = AbstractView.extend({
         Renderer: PivotRenderer,
     },
     viewType: 'pivot',
+    searchMenuTypes: ['filter', 'groupBy', 'timeRange', 'favorite'],
+
     /**
      * @override
      * @param {Object} params
@@ -36,14 +38,13 @@ var PivotView = AbstractView.extend({
         var self = this;
         this._super.apply(this, arguments);
 
-        var self = this;
-
         var activeMeasures = [];
         var colGroupBys = [];
         var rowGroupBys = [];
 
         var measures = {};
         var groupableFields = {};
+        var widgets = {};
 
         this.fields.__count = {string: _t("Count"), type: "integer"};
         _.each(this.fields, function (field, name) {
@@ -65,6 +66,15 @@ var PivotView = AbstractView.extend({
                 name += ':' + field.attrs.interval;
             }
 
+            if (field.attrs.widget) {
+                widgets[name] = field.attrs.widget;
+            }
+
+
+            if (field.attrs.invisible && py.eval(field.attrs.invisible)) {
+                delete measures[name];
+                return;
+            }
             // add active measures to the measure list.  This is very rarely
             // necessary, but it can be useful if one is working with a
             // functional field non stored, but in a model with an overrided
@@ -76,6 +86,11 @@ var PivotView = AbstractView.extend({
             if (field.attrs.type === 'measure' && !(field.attrs.name in measures)) {
                 measures[field.attrs.name] = self.fields[field.attrs.name];
             }
+
+            if (field.attrs.string) {
+              measures[name].string = field.attrs.string;
+            }
+
             if (field.attrs.type === 'measure' || 'operator' in field.attrs) {
                 activeMeasures.push(name);
                 measures[name] = self.fields[name];
@@ -88,7 +103,7 @@ var PivotView = AbstractView.extend({
             }
         });
         if ((!activeMeasures.length) || this.arch.attrs.display_quantity) {
-            activeMeasures.push('__count');
+            activeMeasures = ['__count'].concat(activeMeasures);
         }
 
         this.loadParams.measures = activeMeasures;
@@ -97,16 +112,17 @@ var PivotView = AbstractView.extend({
         this.loadParams.fields = this.fields;
         this.loadParams.default_order = params.default_order || this.arch.attrs.default_order;
 
+        this.rendererParams.widgets = widgets;
+
         this.controllerParams.title = params.title || this.arch.attrs.string || _t("Untitled");
         this.controllerParams.enableLinking = !this.arch.attrs.disable_linking;
         this.controllerParams.measures = measures;
         this.controllerParams.groupableFields = groupableFields;
         // retrieve form and list view ids from the action to open those views
         // when a data cell of the pivot view is clicked
-
         this.controllerParams.views = [
-            _findView(params.action && params.action.views, 'list'),
-            _findView(params.action && params.action.views, 'form'),
+            _findView(params.actionViews, 'list'),
+            _findView(params.actionViews, 'form'),
         ];
         function _findView(views, viewType) {
             var view = _.find(views, function (view) {

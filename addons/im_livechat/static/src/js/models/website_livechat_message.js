@@ -13,9 +13,10 @@ var AbstractMessage = require('mail.model.AbstractMessage');
 var WebsiteLivechatMessage =  AbstractMessage.extend({
 
     /**
-     * @param {Widget} parent
+     * @param {im_livechat.im_livechat.LivechatButton} parent
      * @param {Object} data
      * @param {Object} options
+     * @param {string} options.default_username
      * @param {string} options.serverURL
      */
     init: function (parent, data, options) {
@@ -38,7 +39,7 @@ var WebsiteLivechatMessage =  AbstractMessage.extend({
     getAvatarSource: function () {
         var source = this._serverURL;
         if (this.hasAuthor()) {
-            source += '/web/image/res.partner/' + this.getAuthorID() + '/image_small';
+            source += '/web/partner_image/' + this.getAuthorID();
         } else {
             source += '/mail/static/src/img/smiley/avatar.jpg';
         }

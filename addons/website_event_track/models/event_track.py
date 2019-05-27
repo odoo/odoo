@@ -8,7 +8,7 @@ from odoo.addons.http_routing.models.ir_http import slug
 
 class TrackTag(models.Model):
     _name = "event.track.tag"
-    _description = 'Track Tag'
+    _description = 'Event Track Tag'
     _order = 'name'
 
     name = fields.Char('Tag')
@@ -22,14 +22,14 @@ class TrackTag(models.Model):
 
 class TrackLocation(models.Model):
     _name = "event.track.location"
-    _description = 'Track Location'
+    _description = 'Event Track Location'
 
     name = fields.Char('Room')
 
 
 class TrackStage(models.Model):
     _name = 'event.track.stage'
-    _description = 'Track Stage'
+    _description = 'Event Track Stage'
     _order = 'sequence, id'
 
     name = fields.Char(string='Stage Name', required=True, translate=True)
@@ -57,7 +57,7 @@ class Track(models.Model):
 
     name = fields.Char('Title', required=True, translate=True)
     active = fields.Boolean(default=True)
-    user_id = fields.Many2one('res.users', 'Responsible', track_visibility='onchange', default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.user)
     partner_id = fields.Many2one('res.partner', 'Speaker')
     partner_name = fields.Char('Speaker Name')
     partner_email = fields.Char('Speaker Email')
@@ -68,12 +68,12 @@ class Track(models.Model):
         'event.track.stage', string='Stage', ondelete='restrict',
         index=True, copy=False, default=_get_default_stage_id,
         group_expand='_read_group_stage_ids',
-        required=True, track_visibility='onchange')
+        required=True, tracking=True)
     kanban_state = fields.Selection([
         ('normal', 'Grey'),
         ('done', 'Green'),
         ('blocked', 'Red')], string='Kanban State',
-        copy=False, default='normal', required=True, track_visibility='onchange',
+        copy=False, default='normal', required=True, tracking=True,
         help="A track's kanban state indicates special situations affecting it:\n"
              " * Grey is the default situation\n"
              " * Red indicates something is preventing the progress of this track\n"
@@ -88,14 +88,14 @@ class Track(models.Model):
         ('0', 'Low'), ('1', 'Medium'),
         ('2', 'High'), ('3', 'Highest')],
         'Priority', required=True, default='1')
-    image = fields.Binary('Image', related='partner_id.image_medium', store=True, attachment=True)
+    image = fields.Binary('Image', related='partner_id.image_medium', store=True, readonly=False)
 
     @api.multi
     @api.depends('name')
     def _compute_website_url(self):
         super(Track, self)._compute_website_url()
         for track in self:
-            if not isinstance(track.id, models.NewId):
+            if track.id:
                 track.website_url = '/event/%s/track/%s' % (slug(track.event_id), slug(track))
 
     @api.onchange('partner_id')
@@ -134,10 +134,9 @@ class Track(models.Model):
         return stages.search([], order=order)
 
     @api.multi
-    def _track_template(self, tracking):
-        res = super(Track, self)._track_template(tracking)
+    def _track_template(self, changes):
+        res = super(Track, self)._track_template(changes)
         track = self[0]
-        changes, tracking_value_ids = tracking[track.id]
         if 'stage_id' in changes and track.stage_id.mail_template_id:
             res['stage_id'] = (track.stage_id.mail_template_id, {
                 'composition_mode': 'comment',
@@ -151,14 +150,14 @@ class Track(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'kanban_state' in init_values and self.kanban_state == 'blocked':
-            return 'website_event_track.mt_track_blocked'
+            return self.env.ref('website_event_track.mt_track_blocked')
         elif 'kanban_state' in init_values and self.kanban_state == 'done':
-            return 'website_event_track.mt_track_ready'
+            return self.env.ref('website_event_track.mt_track_ready')
         return super(Track, self)._track_subtype(init_values)
 
     @api.multi
-    def message_get_suggested_recipients(self):
-        recipients = super(Track, self).message_get_suggested_recipients()
+    def _message_get_suggested_recipients(self):
+        recipients = super(Track, self)._message_get_suggested_recipients()
         for track in self:
             if track.partner_email != track.partner_id.email:
                 track._message_add_suggested_recipient(recipients, email=track.partner_email, reason=_('Speaker Email'))
@@ -209,5 +208,5 @@ class Sponsor(models.Model):
     sponsor_type_id = fields.Many2one('event.sponsor.type', 'Sponsoring Type', required=True)
     partner_id = fields.Many2one('res.partner', 'Sponsor/Customer', required=True)
     url = fields.Char('Sponsor Website')
-    sequence = fields.Integer('Sequence', store=True, related='sponsor_type_id.sequence')
-    image_medium = fields.Binary(string='Logo', related='partner_id.image_medium', store=True, attachment=True)
+    sequence = fields.Integer('Sequence', store=True, related='sponsor_type_id.sequence', readonly=False)
+    image_medium = fields.Binary(string='Logo', related='partner_id.image_medium', store=True, readonly=False)

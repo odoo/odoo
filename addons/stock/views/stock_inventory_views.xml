@@ -9,7 +9,7 @@
                 <field name="product_id"/>
                 <field name="product_qty"/>
                 <field name="product_uom_id" groups="uom.group_uom"/>
-                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
             </tree>
         </field>
     </record>
@@ -22,7 +22,7 @@
                 <field name="product_tracking" invisible="1"/>
                 <field name="product_id"  domain="[('type','=','product')]"/>
                 <field name="product_uom_id" string="UoM" groups="uom.group_uom"/>
-                <field name="location_id" domain="[('id', 'child_of', inventory_location_id)]" groups="stock.group_stock_multi_locations"/>
+                <field name="location_id" options="{'no_create': True}" domain="[('id', 'child_of', inventory_location_id)]" groups="stock.group_stock_multi_locations"/>
                 <field name="prod_lot_id" domain="[('product_id', '=', product_id)]" attrs="{'readonly': [('product_tracking', '=', 'none')]}" context="{'default_product_id': product_id}"  groups="stock.group_production_lot"/>
                 <field name="package_id" domain="['|', ('location_id','=', False), ('location_id', '=', location_id)]" groups="stock.group_tracking_lot"/>
                 <field name="partner_id" groups="stock.group_tracking_owner"/>
@@ -30,7 +30,7 @@
                 <field name="product_qty" string="Real Quantity"/>
                 <field name="state" invisible="1"/>
                 <field name="inventory_id" invisible="1"/>
-                <field name="inventory_location_id" invisible="1"/>
+                <field name="inventory_location_id" options="{'no_create': True}" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -58,6 +58,9 @@
                 <field name="date"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="product_id" string="Inventory Product" filter_domain="['|', ('product_id', 'ilike', self), ('line_ids.product_id','ilike',self)]"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="In Progress" name="confirm" domain="[('state', '=', 'confirm')]"/>
+                <filter string="Validated" name="done" domain="[('state', '=', 'done')]"/>
                 <group expand="0" string="Group By">
                     <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Inventories Date" name="inventories_month" domain="[]" context="{'group_by':'date'}" help="Physical Inventories by Date"/>
@@ -94,7 +97,7 @@
                                 <div class="o_kanban_record_headings">
                                     <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>
                                 </div>
-                                <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'info', 'cancel': 'default', 'confirm': 'success', 'done': 'success'}}"/>
+                                <field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'cancel': 'default', 'confirm': 'success', 'done': 'success'}}"/>
                             </div>
                             <div class="o_kanban_record_bottom">
                                 <div class="oe_kanban_bottom_left">
@@ -140,7 +143,7 @@
                 </div>
                 <group>
                     <group>
-                        <field name="location_id" domain="[('usage','not in', ['supplier','production'])]" groups="stock.group_stock_multi_locations"/>
+                        <field name="location_id" options="{'no_create': True}" domain="[('usage','not in', ['supplier','production'])]" groups="stock.group_stock_multi_locations"/>
                         <field name="filter" string="Inventory of" widget='radio' attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                     </group>
                     <group>
@@ -160,9 +163,10 @@
                         <field name="line_ids" string="Inventory Details" context="{'default_location_id': location_id,  'default_product_id': product_id, 'default_prod_lot_id': lot_id, 'default_package_id': package_id, 'default_partner_id': partner_id}" mode="tree,kanban">
                             <tree string="Inventory Details" editable="bottom" decoration-info="product_qty != theoretical_qty" decoration-danger="theoretical_qty &lt; 0">
                                 <field name="product_tracking" invisible="1"/>
-                                <field name="product_id"  domain="[('type','=','product')]"/>
-                                <field name="product_uom_id" string="UoM" groups="uom.group_uom"/>
-                                <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" groups="stock.group_stock_multi_locations"/>
+                                <field name="product_id" domain="[('type','=','product')]" attrs="{'readonly': [('parent.filter', '=', 'product')]}" force_save="1"/>
+                                <field name="product_uom_id" string="UoM" groups="uom.group_uom" domain="[('category_id', '=', product_uom_category_id)]"/>
+                                <field name="product_uom_category_id" invisible="1"/>
+                                <field name="location_id" options="{'no_create': True}" domain="[('id', 'child_of', parent.location_id)]" groups="stock.group_stock_multi_locations"/>
                                 <field name="prod_lot_id" domain="[('product_id', '=', product_id)]" attrs="{'readonly': [('product_tracking', '=', 'none')]}" context="{'default_product_id': product_id}"  groups="stock.group_production_lot"/>
                                 <field name="package_id" domain="['|', ('location_id','=', False), ('location_id', '=', location_id)]" groups="stock.group_tracking_lot"/>
                                 <field name="partner_id" groups="stock.group_tracking_owner"/>
@@ -225,15 +229,15 @@
                         <field name="move_ids">
                             <tree decoration-muted="scrapped == True" string="Stock Moves">
                                 <field name="product_id"/>
-                                <field name="product_uom_qty"/>
-                                <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                                 <field name="picking_id" invisible="1" />
                                 <field name="create_date" invisible="1" />
                                 <field name="date_expected" invisible="1" />
                                 <field name="scrapped" invisible="1"/>
-                                <field name="location_id"/>
-                                <field name="location_dest_id"/>
-                                <field name="state"/>
+                                <field name="state" invisible="1"/>
+                                <field name="location_id" options="{'no_create': True}" string="From"/>
+                                <field name="location_dest_id" string="To"/>
+                                <field name="quantity_done"/>
+                                <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                             </tree>
                         </field>
                     </page>

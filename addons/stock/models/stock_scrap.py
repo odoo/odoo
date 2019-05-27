@@ -9,12 +9,13 @@ from odoo.tools import float_compare
 class StockScrap(models.Model):
     _name = 'stock.scrap'
     _order = 'id desc'
+    _description = 'Scrap'
 
     def _get_default_scrap_location_id(self):
-        return self.env['stock.location'].search([('scrap_location', '=', True), ('company_id', 'in', [self.env.user.company_id.id, False])], limit=1).id
+        return self.env['stock.location'].search([('scrap_location', '=', True), ('company_id', 'in', [self.env.company_id.id, False])], limit=1).id
 
     def _get_default_location_id(self):
-        company_user = self.env.user.company_id
+        company_user = self.env.company_id
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
         if warehouse:
             return warehouse.lot_stock_id.id
@@ -26,7 +27,7 @@ class StockScrap(models.Model):
         states={'done': [('readonly', True)]})
     origin = fields.Char(string='Source Document')
     product_id = fields.Many2one(
-        'product.product', 'Product',
+        'product.product', 'Product', domain=[('type', 'in', ['product', 'consu'])],
         required=True, states={'done': [('readonly', True)]})
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
@@ -62,6 +63,14 @@ class StockScrap(models.Model):
     def onchange_product_id(self):
         if self.product_id:
             self.product_uom_id = self.product_id.uom_id.id
+            # Check if we can get a more precise location instead of
+            # the default location (a location corresponding to where the
+            # reserved product is stored)
+            if self.picking_id:
+                for move_line in self.picking_id.move_line_ids:
+                    if move_line.product_id == self.product_id:
+                        self.location_id = move_line.location_id
+                        break
 
     @api.model
     def create(self, vals):
@@ -105,7 +114,8 @@ class StockScrap(models.Model):
     def do_scrap(self):
         for scrap in self:
             move = self.env['stock.move'].create(scrap._prepare_move_values())
-            move._action_done()
+            # master: replace context by cancel_backorder
+            move.with_context(is_scrap=True)._action_done()
             scrap.write({'move_id': move.id, 'state': 'done'})
         return True
 
@@ -121,6 +131,8 @@ class StockScrap(models.Model):
 
     def action_validate(self):
         self.ensure_one()
+        if self.product_id.type != 'product':
+            return self.do_scrap()
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         available_qty = sum(self.env['stock.quant']._gather(self.product_id,
                                                             self.location_id,
@@ -128,7 +140,8 @@ class StockScrap(models.Model):
                                                             self.package_id,
                                                             self.owner_id,
                                                             strict=True).mapped('quantity'))
-        if float_compare(available_qty, self.scrap_qty, precision_digits=precision) >= 0:
+        scrap_qty = self.product_uom_id._compute_quantity(self.scrap_qty, self.product_id.uom_id)
+        if float_compare(available_qty, scrap_qty, precision_digits=precision) >= 0:
             return self.do_scrap()
         else:
             return {

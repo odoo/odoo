@@ -11,7 +11,7 @@ var QWeb = core.qweb;
 var _t = core._t;
 
 var Dashboard = AbstractAction.extend({
-    template: 'DashboardMain',
+    contentTemplate: 'DashboardMain',
 
     init: function(){
         this.all_dashboards = ['apps', 'invitations', 'share', 'translations', 'company'];
@@ -19,13 +19,14 @@ var Dashboard = AbstractAction.extend({
     },
 
     start: function(){
-        return this.load(this.all_dashboards);
+        var superDef = this._super.apply(this, arguments);
+        return Promise.all([superDef, this.load(this.all_dashboards)]);
     },
 
     load: function(dashboards){
         var self = this;
-        var loading_done = new $.Deferred();
-        this._rpc({route: '/web_settings_dashboard/data'})
+        return new Promise(function (resolve, reject) {
+            self._rpc({route: '/web_settings_dashboard/data'})
             .then(function (data) {
                 // Load each dashboard
                 var all_dashboards_defs = [];
@@ -36,12 +37,12 @@ var Dashboard = AbstractAction.extend({
                     }
                 });
 
-                // Resolve loading_done when all dashboards defs are resolved
-                $.when.apply($, all_dashboards_defs).then(function() {
-                    loading_done.resolve();
+                // Resolve the promise when all dashboards defs are resolved
+                Promise.all(all_dashboards_defs).then(function() {
+                    resolve();
                 });
             });
-        return loading_done;
+        });
     },
 
     load_apps: function(data){
@@ -219,7 +220,7 @@ var DashboardInvitations = Widget.extend({
             .then(function () {
                 self.reload();
             })
-            .fail(function () {
+            .guardedCatch(function () {
                 $button.button('reset');
             });
         }
@@ -247,7 +248,7 @@ var DashboardApps = Widget.extend({
     template: 'DashboardApps',
 
     events: {
-        'click .o_browse_apps': 'on_new_apps',
+        'click .o_browse_apps': '_onClickBrowseApps',
         'click .o_confirm_upgrade': 'confirm_upgrade',
     },
 
@@ -264,7 +265,18 @@ var DashboardApps = Widget.extend({
         }
     },
 
-    on_new_apps: function(){
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when clicking on 'Browse Apps' button.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickBrowseApps: function (ev) {
+        ev.preventDefault();
         this.do_action('base.open_module_tree');
     },
 
@@ -345,10 +357,22 @@ var DashboardTranslations = Widget.extend({
     template: 'DashboardTranslations',
 
     events: {
-        'click .o_load_translations': 'on_load_translations'
+        'click .o_load_translations': '_onLoadTranslations'
     },
 
-    on_load_translations: function () {
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when clicking on "Load a translation" button. It prompts a dialog
+     * to load a translation.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onLoadTranslations: function (ev) {
+        ev.preventDefault();
         this.do_action('base.action_view_base_language_install');
     }
 
@@ -358,7 +382,7 @@ var DashboardCompany = Widget.extend({
     template: 'DashboardCompany',
 
     events: {
-        'click .o_setup_company': 'on_setup_company'
+        'click .o_setup_company': '_onSetupCompany'
     },
 
     init: function (parent, data) {
@@ -367,7 +391,16 @@ var DashboardCompany = Widget.extend({
         this._super.apply(this, arguments);
     },
 
-    on_setup_company: function () {
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onSetupCompany: function (ev) {
+        ev.preventDefault();
         var self = this;
         var action = {
             type: 'ir.actions.act_window',

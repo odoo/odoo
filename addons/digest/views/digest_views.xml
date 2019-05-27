@@ -45,7 +45,6 @@
                     <group>
                         <group>
                             <field name="periodicity" widget="radio" options="{'horizontal': true}"/>
-                            <field name="user_ids" widget="many2many_tags" options="{'no_create': True}" groups="base.group_system"/>
                             <field name="template_id" groups="base.group_no_one"/>
                             <field name="next_run_date" groups="base.group_system"/>
                             <field name="company_id" options="{'no_create': True}" invisible="1"/>
@@ -62,6 +61,16 @@
                                 <group name="kpi_sales"/>
                             </group>
                         </page>
+                        <page name="recipients" string="Recipients" groups="base.group_system">
+                            <group>
+                                <field name="user_ids" options="{'no_create': True}">
+                                    <tree string="Recipients">
+                                        <field name="name"/>
+                                        <field name="email"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
                         <page name="how_to" string="How to customize your digest?" groups="base.group_no_one">
                             <div class="alert alert-info" role="alert">
                                 In order to build your customized digest, follow these steps:
@@ -76,12 +85,12 @@
                                             </li>
                                             <li>
                                                 first create a boolean field called
-                                                <code>x_kpi_myfield</code>
+                                                <code>kpi_myfield</code>
                                                 and display it in the KPI's tab;
                                             </li>
                                             <li>
                                                 then create a computed field called
-                                                <code>x_kpi_myfield_value</code>
+                                                <code>kpi_myfield_value</code>
                                                 that will compute your customized KPI.
                                             </li>
                                         </ul>

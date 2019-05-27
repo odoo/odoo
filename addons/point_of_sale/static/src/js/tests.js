@@ -39,14 +39,18 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
                     var backend_price = backend_result[0].price;
                     assert(frontend_price === backend_price,
                            JSON.stringify(debug_info) + ' DOESN\'T MATCH -> ' + backend_price + ' (backend) != ' + frontend_price + ' (frontend)');
-                    return (new $.Deferred()).resolve();
+                    return Promise.resolve();
                 });
         };
     }
 
-    var steps = [{
+    var steps = [{ // Leave category displayed by default
+        content: "click category switch",
+        trigger: ".js-category-switch",
+        run: 'click',
+    }, {
         content: 'waiting for loading to finish',
-        trigger: '.o_main_content:has(.loader:hidden)',
+        trigger: 'body:has(.loader:hidden)',
         run: function () {
             var product_wall_shelf = posmodel.db.search_product_in_category(0, 'Wall Shelf Unit')[0];
             var product_small_shelf = posmodel.db.search_product_in_category(0, 'Small Shelf')[0];
@@ -209,6 +213,7 @@ shelf have not (their price was manually overriden)",
     }, {
         content: "confirm closing the frontend",
         trigger: ".header-button",
+        run: function() {}, //it's a check,
     }]);
 
     Tour.register('pos_pricelist', { test: true, url: '/pos/web' }, steps);
@@ -226,6 +231,20 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
         }, {
             content: 'the ' + product_name + ' have been added to the order',
             trigger: '.order .product-name:contains("' + product_name + '")',
+            run: function () {}, // it's a check
+        }];
+    }
+
+    function set_fiscal_position_on_order(fp_name) {
+        return [{
+            content: 'set fiscal position',
+            trigger: '.control-button.o_fiscal_position_button',
+        }, {
+            content: 'choose fiscal position ' + fp_name + ' to add to the order',
+            trigger: '.popups .popup .selection .selection-item:contains("' + fp_name + '")',
+        }, {
+            content: 'the fiscal position ' + fp_name + ' has been set to the order',
+            trigger: '.control-button.o_fiscal_position_button:contains("' + fp_name + '")',
             run: function () {}, // it's a check
         }];
     }
@@ -284,13 +303,21 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
         }, {
             content: "next order",
             trigger: '.button.next:visible',
+        }, { // Leave category displayed by default
+            content: "click category switch",
+            trigger: ".js-category-switch",
+            run: 'click',
         }];
     }
 
     var steps = [{
             content: 'waiting for loading to finish',
-            trigger: '.o_main_content:has(.loader:hidden)',
+            trigger: 'body:has(.loader:hidden)',
             run: function () {}, // it's a check
+        }, { // Leave category displayed by default
+            content: "click category switch",
+            trigger: ".js-category-switch",
+            run: 'click',
         }];
 
     steps = steps.concat(add_product_to_order('Desk Organizer'));
@@ -321,12 +348,18 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
     steps = steps.concat(generate_payment_screen_keypad_steps("10"));
     steps = steps.concat(finish_order());
 
+    // Test fiscal position one2many map (align with backend)
+    steps = steps.concat(add_product_to_order('Letter Tray'));
+    steps = steps.concat(verify_order_total('5.28'));
+    steps = steps.concat(set_fiscal_position_on_order('FP-POS-2M'));
+    steps = steps.concat(verify_order_total('5.52'));
+
     steps = steps.concat([{
         content: "close the Point of Sale frontend",
         trigger: ".header-button",
     }, {
         content: "confirm closing the frontend",
-        trigger: ".header-button.confirm",
+        trigger: ".header-button",
         run: function() {}, //it's a check,
     }]);
 

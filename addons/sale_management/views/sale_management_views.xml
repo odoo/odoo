@@ -21,12 +21,6 @@
     <record id="sale.prod_config_main" model="ir.ui.menu">
         <field name="active" eval="True"/>
     </record>
-    <record id="sale.menu_attribute_action" model="ir.ui.menu">
-        <field name="active" eval="True"/>
-    </record>
-    <record id="sale.menu_variants_action" model="ir.ui.menu">
-        <field name="active" eval="True"/>
-    </record>
     <record id="sale.menu_products" model="ir.ui.menu">
         <field name="active" eval="True"/>
     </record>
@@ -75,7 +69,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='sale_pay']/field[@name='invoice_status']" position="attributes">
+            <xpath expr="//group[@name='sale_info']/field[@name='invoice_status']" position="attributes">
                 <attribute name="invisible" eval="False"/>
             </xpath>
             <xpath expr="//button[@name='action_quotation_send']" position="before">
@@ -105,7 +99,10 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//page[@name='sales']" position="attributes">
+            <xpath expr="//group[@name='sale']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//group[@name='invoicing']" position="attributes">
                 <attribute name="invisible">0</attribute>
             </xpath>
         </field>

@@ -17,9 +17,9 @@ class BaseLanguageImport(models.TransientModel):
     _description = "Language Import"
 
     name = fields.Char('Language Name', required=True)
-    code = fields.Char('ISO Code', size=5, required=True,
+    code = fields.Char('ISO Code', size=6, required=True,
                        help="ISO Language and Country code, e.g. en_US")
-    data = fields.Binary('File', required=True)
+    data = fields.Binary('File', required=True, attachment=False)
     filename = fields.Char('File Name', required=True)
     overwrite = fields.Boolean('Overwrite Existing Terms',
                                help="If you enable this option, existing translations (including custom ones) "
@@ -41,5 +41,9 @@ class BaseLanguageImport(models.TransientModel):
                                       lang_name=this.name, context=this._context)
             except Exception as e:
                 _logger.exception('File unsuccessfully imported, due to format mismatch.')
-                raise UserError(_('File not imported due to format mismatch or a malformed file. (Valid formats are .csv, .po, .pot)\n\nTechnical Details:\n%s') % tools.ustr(e))
+                raise UserError(
+                    _('File %r not imported due to format mismatch or a malformed file.'
+                      ' (Valid formats are .csv, .po, .pot)\n\nTechnical Details:\n%s') % \
+                    (this.filename, tools.ustr(e))
+                )
         return True

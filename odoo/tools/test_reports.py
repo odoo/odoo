@@ -13,7 +13,7 @@ import tempfile
 from subprocess import Popen, PIPE
 
 from .. import api
-from . import pycompat, ustr, config
+from . import ustr, config
 from .safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -88,7 +88,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                 Eg. 'OK' or 'fa-print'
         :param our_module: the name of the calling module (string), like 'account'
     """
-    if not our_module and isinstance(action_id, pycompat.string_types):
+    if not our_module and isinstance(action_id, str):
         if '.' in action_id:
             our_module = action_id.split('.', 1)[0]
 
@@ -109,7 +109,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
     if not wiz_buttons:
         wiz_buttons = []
 
-    if isinstance(action_id, pycompat.string_types):
+    if isinstance(action_id, str):
         if '.' in action_id:
             _, act_xmlid = action_id.split('.', 1)
         else:
@@ -120,7 +120,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
         action = env.ref(action_id)
         act_model, act_id = action._name, action.id
     else:
-        assert isinstance(action_id, pycompat.integer_types)
+        assert isinstance(action_id, int)
         act_model = 'ir.action.act_window'     # assume that
         act_id = action_id
         act_xmlid = '<%s>' % act_id
@@ -134,7 +134,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
         if datas.get('id',False):
             context.update( {'active_id': datas.get('id',False), 'active_ids': datas.get('ids',[]), 'active_model': datas.get('model',False)})
         context1 = action.get('context', {})
-        if isinstance(context1, pycompat.string_types):
+        if isinstance(context1, str):
             context1 = safe_eval(context1, dict(context))
         context.update(context1)
         env = env(context=context)

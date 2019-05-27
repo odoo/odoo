@@ -12,8 +12,17 @@ from odoo.http import request
 class WebsiteSaleBackend(WebsiteBackend):
 
     @http.route()
-    def fetch_dashboard_data(self, date_from, date_to):
-        results = super(WebsiteSaleBackend, self).fetch_dashboard_data(date_from, date_to)
+    def fetch_dashboard_data(self, website_id, date_from, date_to):
+        Website = request.env['website']
+        current_website = website_id and Website.browse(website_id) or Website.get_current_website()
+
+        results = super(WebsiteSaleBackend, self).fetch_dashboard_data(website_id, date_from, date_to)
+
+        date_date_from = fields.Date.from_string(date_from)
+        date_date_to = fields.Date.from_string(date_to)
+        date_diff_days = (date_date_to - date_date_from).days
+        datetime_from = datetime.combine(date_date_from, time.min)
+        datetime_to = datetime.combine(date_date_to, time.max)
 
         sales_values = dict(
             graph=[],
@@ -27,20 +36,15 @@ class WebsiteSaleBackend(WebsiteBackend):
         )
         results['dashboards']['sales'] = sales_values
 
+        results['dashboards']['sales']['utm_graph'] = self.fetch_utm_data(datetime_from, datetime_to)
         results['groups']['sale_salesman'] = request.env['res.users'].has_group('sales_team.group_sale_salesman')
         if not results['groups']['sale_salesman']:
             return results
 
-        date_date_from = fields.Date.from_string(date_from)
-        date_date_to = fields.Date.from_string(date_to)
-        date_diff_days = (date_date_to - date_date_from).days
-        datetime_from = datetime.combine(date_date_from, time.min)
-        datetime_to = datetime.combine(date_date_to, time.max)
-
         # Product-based computation
         report_product_lines = request.env['sale.report'].read_group(
             domain=[
-                ('team_id.team_type', '=', 'website'),
+                ('website_id', '=', current_website.id),
                 ('state', 'in', ['sale', 'done']),
                 ('confirmation_date', '>=', date_from),
                 ('confirmation_date', '<=', fields.Datetime.now())],
@@ -57,7 +61,8 @@ class WebsiteSaleBackend(WebsiteBackend):
 
         # Sale-based results computation
         sale_order_domain = [
-            ('team_id', 'in', request.env['crm.team'].search([('team_type', '=', 'website')]).ids),
+            ('website_id', '=', current_website.id),
+            ('team_id', 'in', request.env['crm.team'].search([('website_ids', '!=', False)]).ids),
             ('date_order', '>=', fields.Datetime.to_string(datetime_from)),
             ('date_order', '<=', fields.Datetime.to_string(datetime_to))]
         so_group_data = request.env['sale.order'].read_group(sale_order_domain, fields=['state'], groupby='state')
@@ -70,7 +75,7 @@ class WebsiteSaleBackend(WebsiteBackend):
 
         report_price_lines = request.env['sale.report'].read_group(
             domain=[
-                ('team_id.team_type', '=', 'website'),
+                ('website_id', '=', current_website.id),
                 ('state', 'in', ['sale', 'done']),
                 ('date', '>=', date_from),
                 ('date', '<=', date_to)],
@@ -110,7 +115,7 @@ class WebsiteSaleBackend(WebsiteBackend):
             previous_sale_label = _('Previous Year')
 
         sales_domain = [
-            ('team_id.team_type', '=', 'website'),
+            ('website_id', '=', current_website.id),
             ('state', 'in', ['sale', 'done']),
             ('confirmation_date', '>=', date_from),
             ('confirmation_date', '<=', fields.Datetime.now())
@@ -125,8 +130,42 @@ class WebsiteSaleBackend(WebsiteBackend):
 
         return results
 
-    def _compute_sale_graph(self, date_from, date_to, sales_domain, previous=False):
+    def fetch_utm_data(self, date_from, date_to):
+        sale_utm_domain = [
+            ('website_id', '!=', False),
+            ('state', 'in', ['sale', 'done']),
+            ('confirmation_date', '>=', date_from),
+            ('confirmation_date', '<=', date_to)
+        ]
 
+        orders_data_groupby_campaign_id = request.env['sale.order'].read_group(
+            domain=sale_utm_domain + [('campaign_id', '!=', False)],
+            fields=['amount_total', 'id', 'campaign_id'],
+            groupby='campaign_id')
+
+        orders_data_groupby_medium_id = request.env['sale.order'].read_group(
+            domain=sale_utm_domain + [('medium_id', '!=', False)],
+            fields=['amount_total', 'id', 'medium_id'],
+            groupby='medium_id')
+
+        orders_data_groupby_source_id = request.env['sale.order'].read_group(
+            domain=sale_utm_domain + [('source_id', '!=', False)],
+            fields=['amount_total', 'id', 'source_id'],
+            groupby='source_id')
+
+        return {
+            'campaign_id': self.compute_utm_graph_data('campaign_id', orders_data_groupby_campaign_id),
+            'medium_id': self.compute_utm_graph_data('medium_id', orders_data_groupby_medium_id),
+            'source_id': self.compute_utm_graph_data('source_id', orders_data_groupby_source_id),
+        }
+
+    def compute_utm_graph_data(self, utm_type, utm_graph_data):
+        return [{
+            'utm_type': data[utm_type][1],
+            'amount_total': data['amount_total']
+        } for data in utm_graph_data]
+
+    def _compute_sale_graph(self, date_from, date_to, sales_domain, previous=False):
         days_between = (date_to - date_from).days
         date_list = [(date_from + timedelta(days=x)) for x in range(0, days_between + 1)]
 

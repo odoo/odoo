@@ -38,7 +38,7 @@ class ServerAction(models.Model):
     def _get_website_url(self):
         for action in self:
             if action.state == 'code' and action.website_published:
-                action.website_url = self._compute_website_url(action.website_path, action.xml_id)
+                action.website_url = action._compute_website_url(action.website_path, action.xml_id)
 
     @api.model
     def _get_eval_context(self, action):

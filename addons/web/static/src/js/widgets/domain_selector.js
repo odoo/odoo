@@ -59,6 +59,8 @@ var DomainNode = Widget.extend({
      * @param {Array|string} domain - the prefix representation of the domain
      * @param {Object} [options] - an object with possible values:
      * @param {boolean} [options.readonly=true] - true if is readonly
+     * @param {Array} [options.default] - default domain used when creating a
+     *   new node
      * @param {string[]} [options.operators=null]
      *        a list of available operators (null = all of supported ones)
      * @param {boolean} [options.debugMode=false] - true if should be in debug
@@ -177,26 +179,23 @@ var DomainTree = DomainNode.extend({
      * operator from the domain.
      * @see DomainTree._addFlattenedChildren
      */
-    init: function (parent, model, domain, options) {
+    init: function (parent, model, domain) {
         this._super.apply(this, arguments);
-        try {
-            domain = Domain.prototype.stringToArray(domain);
-        } catch (err) {
-            // TODO: domain could contain `parent` for example, which is
-            // currently not handled by the DomainSelector
-            this.invalidDomain = true;
-            this.children = [];
-            return;
+        var parsedDomain = this._parseDomain(domain);
+        if (parsedDomain) {
+            this._initialize(parsedDomain);
         }
-        this._initialize(domain);
     },
     /**
      * @see DomainNode.start
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     start: function () {
         this._postRender();
-        return $.when(this._super.apply(this, arguments), this._renderChildrenTo(this.$childrenContainer));
+        return Promise.all([
+            this._super.apply(this, arguments),
+            this._renderChildrenTo(this.$childrenContainer)
+        ]);
     },
 
     //--------------------------------------------------------------------------
@@ -373,11 +372,11 @@ var DomainTree = DomainNode.extend({
      *
      * @private
      * @param {jQuery} $to - the jQuery node to which the children must be added
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _renderChildrenTo: function ($to) {
         var $div = $("<div/>");
-        return $.when.apply($, _.map(this.children, (function (child) {
+        return Promise.all(_.map(this.children, (function (child) {
             return child.appendTo($div);
         }).bind(this))).then((function () {
             _.each(this.children, function (child) {
@@ -385,6 +384,23 @@ var DomainTree = DomainNode.extend({
                                          // children are not misordered
             });
         }).bind(this));
+    },
+    /**
+     * @param {string} domain
+     * @returns {Array[]}
+     */
+    _parseDomain: function (domain) {
+        var parsedDomain = false;
+        try {
+            parsedDomain = Domain.prototype.stringToArray(domain);
+            this.invalidDomain = false;
+        } catch (err) {
+            // TODO: domain could contain `parent` for example, which is
+            // currently not handled by the DomainSelector
+            this.invalidDomain = true;
+            this.children = [];
+        }
+        return parsedDomain;
     },
 
     //--------------------------------------------------------------------------
@@ -409,7 +425,7 @@ var DomainTree = DomainNode.extend({
      * @param {OdooEvent} e
      */
     _onNodeAdditionAsk: function (e) {
-        var domain = [["id", "=", 1]];
+        var domain = this.options.default || [["id", "=", 1]];
         if (e.data.newBranch) {
             domain = [this.operator === "&" ? "|" : "&"].concat(domain).concat(domain);
         }
@@ -471,14 +487,17 @@ var DomainSelector = DomainTree.extend({
      * If the internal domain value was already equal to the given one, this
      * does nothing.
      *
-     * @param {Array|string} domain
-     * @returns {Deferred} resolved when the rerendering is finished
+     * @param {string} domain
+     * @returns {Promise} resolved when the rerendering is finished
      */
     setDomain: function (domain) {
-        if (Domain.prototype.arrayToString(domain) === Domain.prototype.arrayToString(this.getDomain())) {
-            return $.when();
+        if (domain === Domain.prototype.arrayToString(this.getDomain())) {
+            return Promise.resolve();
         }
-        return this._redraw(domain);
+        var parsedDomain = this._parseDomain(domain);
+        if (parsedDomain) {
+            return this._redraw(parsedDomain);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -526,16 +545,16 @@ var DomainSelector = DomainTree.extend({
      * This method is ugly but achieves the right behavior without flickering.
      *
      * @param {Array|string} domain
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _redraw: function (domain) {
         var oldChildren = this.children.slice();
         this._initialize(domain || this.getDomain());
         return this._renderChildrenTo($("<div/>")).then((function () {
+            _.each(oldChildren, function (child) { child.destroy(); });
             this.renderElement();
             this._postRender();
             _.each(this.children, (function (child) { child.$el.appendTo(this.$childrenContainer); }).bind(this));
-            _.each(oldChildren, function (child) { child.destroy(); });
         }).bind(this));
     },
 
@@ -548,7 +567,7 @@ var DomainSelector = DomainTree.extend({
      * node
      */
     _onAddFirstButtonClick: function () {
-        this._addChild([["id", "=", 1]]);
+        this._addChild(this.options.default || [["id", "=", 1]]);
     },
     /**
      * Called when the debug input value is changed -> constructs the tree
@@ -621,7 +640,7 @@ var DomainLeaf = DomainNode.extend({
      * Prepares the information the rendering of the widget will need by
      * pre-instantiating its internal field selector widget.
      *
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     willStart: function () {
         var defs = [this._super.apply(this, arguments)];
@@ -686,17 +705,17 @@ var DomainLeaf = DomainNode.extend({
                     }).bind(this)));
                 }
 
-                return $.when.apply($, wDefs);
+                return Promise.all(wDefs);
             }
         }).bind(this)));
 
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
     /**
      * @see DomainNode.start
      * Appends the prepared field selector and value widget.
      *
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     start: function () {
         this.fieldSelector.$el.prependTo(this.$("> .o_domain_leaf_info, > .o_domain_leaf_edition")); // place the field selector

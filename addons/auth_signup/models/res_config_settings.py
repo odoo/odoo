@@ -11,8 +11,8 @@ class ResConfigSettings(models.TransientModel):
 
     auth_signup_reset_password = fields.Boolean(string='Enable password reset from Login page', config_parameter='auth_signup.reset_password')
     auth_signup_uninvited = fields.Selection([
-        ('b2b', 'On invitation (B2B)'),
-        ('b2c', 'Free sign up (B2C)'),
+        ('b2b', 'On invitation'),
+        ('b2c', 'Free sign up'),
     ], string='Customer Account', default='b2b', config_parameter='auth_signup.invitation_scope')
     auth_signup_template_user_id = fields.Many2one('res.users', string='Template user for new users created through signup',
                                                    config_parameter='base.template_portal_user_id')

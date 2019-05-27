@@ -16,7 +16,8 @@ var DiagramView = BasicView.extend({
     display_name: _lt('Diagram'),
     icon: 'fa-code-fork',
     multi_record: false,
-    searchable: false,
+    withSearchBar: false,
+    searchMenuTypes: [],
     jsLibs: [[
         '/web_diagram/static/lib/js/jquery.mousewheel.js',
         '/web_diagram/static/lib/js/raphael.js',

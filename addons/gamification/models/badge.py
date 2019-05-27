@@ -4,15 +4,16 @@
 import logging
 from datetime import date
 
-from odoo import api, fields, models, _, exceptions
+from odoo import api, tools, fields, models, _, exceptions
 
 _logger = logging.getLogger(__name__)
+
 
 class BadgeUser(models.Model):
     """User having received a badge"""
 
     _name = 'gamification.badge.user'
-    _description = 'Gamification user badge'
+    _description = 'Gamification User Badge'
     _order = "create_date desc"
     _rec_name = "badge_name"
 
@@ -21,9 +22,10 @@ class BadgeUser(models.Model):
     badge_id = fields.Many2one('gamification.badge', string='Badge', required=True, ondelete="cascade", index=True)
     challenge_id = fields.Many2one('gamification.challenge', string='Challenge originating', help="If this badge was rewarded through a challenge")
     comment = fields.Text('Comment')
-    badge_name = fields.Char(related='badge_id.name', string="Badge Name")
-    create_date = fields.Datetime('Created', readonly=True)
-    create_uid = fields.Many2one('res.users', string='Creator', readonly=True)
+    badge_name = fields.Char(related='badge_id.name', string="Badge Name", readonly=False)
+    level = fields.Selection(
+        [('bronze', 'Bronze'), ('silver', 'Silver'), ('gold', 'Gold')],
+        string='Badge Level', related="badge_id.level", store=True, readonly=True)
 
     def _send_badge(self):
         """Send a notification to a user for receiving a badge
@@ -62,13 +64,26 @@ class GamificationBadge(models.Model):
     TOO_MANY = 5
 
     _name = 'gamification.badge'
-    _description = 'Gamification badge'
+    _description = 'Gamification Badge'
     _inherit = ['mail.thread']
 
     name = fields.Char('Badge', required=True, translate=True)
     active = fields.Boolean('Active', default=True)
     description = fields.Text('Description', translate=True)
-    image = fields.Binary("Image", attachment=True, help="This field holds the image used for the badge, limited to 256x256")
+    image = fields.Binary("Image", help="This field holds the image used for the badge.")
+    image_medium = fields.Binary(
+        "Medium-sized badge image",
+        help="Medium-sized image of the badge. It is automatically "
+             "resized as a 128x128px image, with aspect ratio preserved. "
+             "Use this field in form views or some kanban views.")
+    image_small = fields.Binary(
+        "Small-sized badge image",
+        help="Small-sized image of the badge. It is automatically "
+             "resized as a 64x64px image, with aspect ratio preserved. "
+             "Use this field anywhere a small image is required.")
+    level = fields.Selection([
+        ('bronze', 'Bronze'), ('silver', 'Silver'), ('gold', 'Gold')],
+        string='Forum Badge Level', default='bronze')
 
     rule_auth = fields.Selection([
             ('everyone', 'Everyone'),
@@ -122,6 +137,17 @@ class GamificationBadge(models.Model):
         "Remaining Sending Allowed", compute='_remaining_sending_calc',
         help="If a maximum is set")
 
+    @api.model_create_multi
+    def create(self, values_list):
+        for vals in values_list:
+            tools.image_resize_images(vals)
+        return super(GamificationBadge, self).create(values_list)
+
+    @api.multi
+    def write(self, vals):
+        tools.image_resize_images(vals)
+        return super(GamificationBadge, self).write(vals)
+
     @api.depends('owner_ids')
     def _get_owners_info(self):
         """Return:
@@ -157,18 +183,18 @@ class GamificationBadge(models.Model):
     @api.depends('owner_ids.badge_id', 'owner_ids.create_date', 'owner_ids.user_id')
     def _get_badge_user_stats(self):
         """Return stats related to badge users"""
-        first_month_day = fields.Date.to_string(date.today().replace(day=1))
+        first_month_day = date.today().replace(day=1)
 
         for badge in self:
             owners = badge.owner_ids
-            badge.stats_my = sum(o.user_id == self.env.user for o in owners)
-            badge.stats_this_month = sum(o.create_date >= first_month_day for o in owners)
-            badge.stats_my_this_month = sum(
-                o.user_id == self.env.user and o.create_date >= first_month_day
+            badge.stat_my = sum(o.user_id == self.env.user for o in owners)
+            badge.stat_this_month = sum(o.create_date.date() >= first_month_day for o in owners)
+            badge.stat_my_this_month = sum(
+                o.user_id == self.env.user and o.create_date.date() >= first_month_day
                 for o in owners
             )
-            badge.stats_my_monthly_sending = sum(
-                o.create_uid == self.env.user and o.create_date >= first_month_day
+            badge.stat_my_monthly_sending = sum(
+                o.create_uid == self.env.user and o.create_date.date() >= first_month_day
                 for o in owners
             )
 
@@ -233,7 +259,7 @@ class GamificationBadge(models.Model):
         elif self.rule_auth == 'users' and self.env.user not in self.rule_auth_user_ids:
             return self.USER_NOT_VIP
         elif self.rule_auth == 'having':
-            all_user_badges = self.env['gamification.badge.user'].search([('user_id', '=', self.env.uid)])
+            all_user_badges = self.env['gamification.badge.user'].search([('user_id', '=', self.env.uid)]).mapped('badge_id')
             if self.rule_auth_badge_ids - all_user_badges:
                 return self.BADGE_REQUIRED
 

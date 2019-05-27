@@ -3,14 +3,14 @@
 # * payment_payumoney
 # 
 # Translators:
-# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
+# Jorunn D. Newth, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Jorunn D. Newth <jdn@eyenetworks.no>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Jorunn D. Newth, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,20 +19,44 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_payumoney
-#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer_payumoney_merchant_key
-msgid "Merchant Key"
-msgstr ""
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
 
 #. module: payment_payumoney
-#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer_payumoney_merchant_salt
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Manuelt oppsett"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
+msgid "Merchant Key"
+msgstr "Merchant Key"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_salt
 msgid "Merchant Salt"
 msgstr ""
 
 #. module: payment_payumoney
-#: code:addons/payment_payumoney/models/payment.py:146
-#, python-format
-msgid "PayUmoney: feedback error"
-msgstr ""
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment.py:108
@@ -44,13 +68,13 @@ msgstr ""
 #: code:addons/payment_payumoney/models/payment.py:102
 #, python-format
 msgid "PayUmoney: received data for reference %s; multiple orders found"
-msgstr ""
+msgstr "PayUmoney: Mottatt data for referanse %s; flere ordrer funnet"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment.py:99
 #, python-format
 msgid "PayUmoney: received data for reference %s; no order found"
-msgstr ""
+msgstr "PayUmoney: Mottatt data for referanse %s; ingen ordre funnet"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment.py:94
@@ -59,6 +83,8 @@ msgid ""
 "PayUmoney: received data with missing reference (%s) or pay_id (%s) or "
 "shashign (%s)"
 msgstr ""
+"PayUmoney: Mottatt data med manglende referanse (%s) eller pay_id (%s) eller"
+" shasign (%s)"
 
 #. module: payment_payumoney
 #: model:ir.model,name:payment_payumoney.model_payment_acquirer
@@ -69,3 +95,28 @@ msgstr "Betalingsløsning"
 #: model:ir.model,name:payment_payumoney.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Betalingstransaksjon"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "PayPal"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Tilbyder"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr ""
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Bankoverføring"

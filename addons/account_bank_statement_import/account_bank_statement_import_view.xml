@@ -50,9 +50,9 @@
                 <span>or <a type="object" name="import_statement">Import</a></span>
             </xpath>
             <xpath expr='//div[@name="bank_cash_commands"]' position="before">
-                <t t-if="journal_type == 'bank'">
+                <div t-if="journal_type == 'bank'">
                     <a type="object" name="import_statement">Import Statement</a>
-                </t>
+                </div>
             </xpath>
         </field>
     </record>

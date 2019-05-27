@@ -1,13 +1,33 @@
-odoo.define('website.snippets.options', function (require) {
+odoo.define('website.editor.snippets.options', function (require) {
 'use strict';
 
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var weWidgets = require('web_editor.widget');
+var weWidgets = require('wysiwyg.widgets');
 var options = require('web_editor.snippets.options');
 
 var _t = core._t;
 var qweb = core.qweb;
+
+options.Class.include({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Refreshes all public widgets related to the given element.
+     *
+     * @private
+     * @param {jQuery} [$el=this.$target]
+     */
+    _refreshPublicWidgets: function ($el) {
+        this.trigger_up('widgets_start_request', {
+            editableMode: true,
+            $target: $el || this.$target,
+        });
+    },
+});
 
 options.registry.menu_data = options.Class.extend({
     xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
@@ -37,12 +57,13 @@ options.registry.menu_data = options.Class.extend({
                         actionName: 'edit_menu',
                         params: [
                             function () {
-                                var def = $.Deferred();
-                                self.trigger_up('request_save', {
-                                    onSuccess: def.resolve.bind(def),
-                                    onFailure: def.reject.bind(def),
+                                var prom = new Promise(function (resolve, reject) {
+                                    self.trigger_up('request_save', {
+                                        onSuccess: resolve,
+                                        onFailure: reject,
+                                    });
                                 });
-                                return def;
+                                return prom;
                             },
                         ],
                     });
@@ -62,10 +83,10 @@ options.registry.company_data = options.Class.extend({
      */
     start: function () {
         var proto = options.registry.company_data.prototype;
-        var def;
+        var prom;
         var self = this;
         if (proto.__link === undefined) {
-            def = this._rpc({route: '/web/session/get_session_info'}).then(function (session) {
+            prom = this._rpc({route: '/web/session/get_session_info'}).then(function (session) {
                 return self._rpc({
                     model: 'res.users',
                     method: 'read',
@@ -75,7 +96,7 @@ options.registry.company_data = options.Class.extend({
                 proto.__link = '/web#action=base.action_res_company_form&view_type=form&id=' + (res && res[0] && res[0].company_id[0] || 1);
             });
         }
-        return $.when(this._super.apply(this, arguments), def);
+        return Promise.all([this._super.apply(this, arguments), prom]);
     },
     /**
      * When the users selects company data, opens a dialog to ask him if he
@@ -125,7 +146,7 @@ options.registry.carousel = options.Class.extend({
             self.trigger_up('option_update', {
                 optionNames: ['background', 'background_position', 'colorpicker', 'sizing_y'],
                 name: 'target',
-                data: self.$target.find('.item.active'),
+                data: self.$target.find('.carousel-item.active'),
             });
         });
 
@@ -139,7 +160,6 @@ options.registry.carousel = options.Class.extend({
     onBuilt: function () {
         this.id = 'myCarousel' + new Date().getTime();
         this.$target.attr('id', this.id);
-        this.$target.find('[data-slide]').attr('data-cke-saved-href', '#' + this.id);
         this.$target.find('[data-target]').attr('data-target', '#' + this.id);
         this._rebindEvents();
     },
@@ -167,7 +187,7 @@ options.registry.carousel = options.Class.extend({
      */
     cleanForSave: function () {
         this._super.apply(this, arguments);
-        this.$target.find('.item').removeClass('next prev left right active')
+        this.$target.find('.carousel-item').removeClass('next prev left right active')
             .first().addClass('active');
         this.$target.find('.carousel-indicators').find('li').removeClass('active').html('')
             .first().addClass('active');
@@ -185,12 +205,12 @@ options.registry.carousel = options.Class.extend({
      */
     addSlide: function (previewMode) {
         var self = this;
-        var cycle = this.$inner.find('.item').length;
-        var $active = this.$inner.find('.item.active, .item.prev, .item.next').first();
+        var cycle = this.$inner.find('.carousel-item').length;
+        var $active = this.$inner.find('.carousel-item.active, .carousel-item.prev, .carousel-item.next').first();
         var index = $active.index();
         this.$('.carousel-control-prev, .carousel-control-next, .carousel-indicators').removeClass('d-none');
         this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
-        var $clone = this.$('.item:first').clone(true);
+        var $clone = $active.clone(true);
         $clone.removeClass('active').insertAfter($active);
         _.defer(function () {
             self.$target.carousel().carousel(++index);
@@ -209,7 +229,7 @@ options.registry.carousel = options.Class.extend({
 
         var self = this;
 
-        var $items = this.$inner.find('.item');
+        var $items = this.$inner.find('.carousel-item');
         var cycle = $items.length - 1;
         var $active = $items.filter('.active');
         var index = $active.index();
@@ -227,6 +247,7 @@ options.registry.carousel = options.Class.extend({
                 }
             });
             _.defer(function () {
+                self._refreshPublicWidgets();
                 self.$target.carousel(index > 0 ? --index : cycle);
             });
         }
@@ -248,6 +269,7 @@ options.registry.carousel = options.Class.extend({
      * @override
      */
     _setActive: function () {
+        this._super.apply(this, arguments);
         this.$el.find('[data-interval]').removeClass('active')
             .filter('[data-interval=' + this.$target.attr('data-interval') + ']').addClass('active');
     },
@@ -267,6 +289,115 @@ options.registry.carousel = options.Class.extend({
 
         /* Fix: backward compatibility saas-3 */
         this.$target.find('.item.text_image, .item.image_text, .item.text_only').find('.container > .carousel-caption > div, .container > img.carousel-image').attr('contentEditable', 'true');
+    },
+});
+
+options.registry.navTabs = options.Class.extend({
+    /**
+     * @override
+     */
+    start: function () {
+        this._findLinksAndPanes();
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    onBuilt: function () {
+        this._generateUniqueIDs();
+    },
+    /**
+     * @override
+     */
+    onClone: function () {
+        this._generateUniqueIDs();
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Creates a new tab and tab-pane.
+     *
+     * @see this.selectClass for parameters
+     */
+    addTab: function (previewMode, value, $opt) {
+        var $activeItem = this.$navLinks.filter('.active').parent();
+        var $activePane = this.$tabPanes.filter('.active');
+
+        var $navItem = $activeItem.clone();
+        var $navLink = $navItem.find('.nav-link').removeClass('active show');
+        var $tabPane = $activePane.clone().removeClass('active show');
+        $navItem.insertAfter($activeItem);
+        $tabPane.insertAfter($activePane);
+        this._findLinksAndPanes();
+        this._generateUniqueIDs();
+
+        $navLink.tab('show');
+    },
+    /**
+     * Removes the current active tab and its content.
+     *
+     * @see this.selectClass for parameters
+     */
+    removeTab: function (previewMode, value, $opt) {
+        var self = this;
+
+        var $activeLink = this.$navLinks.filter('.active');
+        var $activePane = this.$tabPanes.filter('.active');
+
+        var $next = this.$navLinks.eq((this.$navLinks.index($activeLink) + 1) % this.$navLinks.length);
+        $next.one('shown.bs.tab', function () {
+            $activeLink.parent().remove();
+            $activePane.remove();
+            self._findLinksAndPanes();
+            self._setActive(); // TODO forced to do this because we do not return deferred for options
+        });
+        $next.tab('show');
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _findLinksAndPanes: function () {
+        this.$navLinks = this.$target.find('.nav-link');
+        var $el = this.$target;
+        do {
+            $el = $el.parent();
+            this.$tabPanes = $el.find('.tab-pane');
+        } while (this.$tabPanes.length === 0 && !$el.is('body'));
+    },
+    /**
+     * @private
+     */
+    _generateUniqueIDs: function () {
+        for (var i = 0 ; i < this.$navLinks.length ; i++) {
+            var id = _.now() + '_' + _.uniqueId();
+            var idLink = 'nav_tabs_link_' + id;
+            var idContent = 'nav_tabs_content_' + id;
+            this.$navLinks.eq(i).attr({
+                'id': idLink,
+                'href': '#' + idContent,
+                'aria-controls': idContent,
+            });
+            this.$tabPanes.eq(i).attr({
+                'id': idContent,
+                'aria-labelledby': idLink,
+            });
+        }
+    },
+    /**
+     * @private
+     * @override
+     */
+    _setActive: function () {
+        this._super.apply(this, arguments);
+        this.$el.filter('[data-remove-tab]').toggleClass('d-none', this.$tabPanes.length <= 2);
     },
 });
 
@@ -390,7 +521,7 @@ options.registry.layout_column = options.Class.extend({
         var colClass = 'col-lg-' + colSize;
         _.each($columns, function (column) {
             var $column = $(column);
-            $column.attr('class', $column.attr('class').replace(/\bcol-lg-(offset-)?\d+\b/g, ''));
+            $column.attr('class', $column.attr('class').replace(/\b(col|offset)-lg(-\d+)?\b/g, ''));
             $column.addClass(colClass);
         });
         if (colOffset) {
@@ -412,8 +543,10 @@ options.registry.parallax = options.Class.extend({
      * @override
      */
     start: function () {
-        this._refresh_callback = this._refresh.bind(this);
-        this.$target.on('snippet-option-change snippet-option-preview', this._refresh_callback);
+        var self = this;
+        this.$target.on('snippet-option-change snippet-option-preview', function () {
+            self._refreshPublicWidgets();
+        });
         return this._super.apply(this, arguments);
     },
     /**
@@ -425,13 +558,17 @@ options.registry.parallax = options.Class.extend({
             name: 'target',
             data: this.$target.find('> .s_parallax_bg'),
         });
-        this._refresh();
+        // Refresh the parallax animation on focus; at least useful because
+        // there may have been changes in the page that influenced the parallax
+        // rendering (new snippets, ...).
+        // TODO make this automatic.
+        this._refreshPublicWidgets();
     },
     /**
      * @override
      */
     onMove: function () {
-        this._refresh();
+        this._refreshPublicWidgets();
     },
 
     //--------------------------------------------------------------------------
@@ -445,27 +582,13 @@ options.registry.parallax = options.Class.extend({
      */
     scroll: function (previewMode, value) {
         this.$target.attr('data-scroll-background-ratio', value);
-        this._refresh();
+        this._refreshPublicWidgets();
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * Notifies the parallax animation that it needs to be reinitialized.
-     *
-     * @private
-     */
-    _refresh: function () {
-        var self = this;
-        _.defer(function () {
-            self.trigger_up('animation_start_demand', {
-                editableMode: true,
-                $target: self.$target,
-            });
-        });
-    },
     /**
      * @override
      */
@@ -517,11 +640,11 @@ var FacebookPageDialog = weWidgets.Dialog.extend({
      */
     _renderPreview: function () {
         var self = this;
-        var match = this.fbData.href.match(/^(?:https?:\/\/)?(?:www\.)?(?:fb|facebook)\.com\/(\w+)/);
+        var match = this.fbData.href.match(/^(?:https?:\/\/)?(?:www\.)?(?:fb|facebook)\.com\/(?:([\w.]+)|[^/?#]+-([0-9]{15,16}))(?:$|[\/?# ])/);
         if (match) {
             // Check if the page exists on Facebook or not
             $.ajax({
-                url: 'https://graph.facebook.com/' + match[1] + '/picture',
+                url: 'https://graph.facebook.com/' + (match[2] || match[1]) + '/picture',
                 statusCode: {
                     200: function () {
                         self._toggleWarning(true);
@@ -534,7 +657,7 @@ var FacebookPageDialog = weWidgets.Dialog.extend({
                         } else if (!self.fbData.small_header) {
                             self.fbData.height = self.fbData.show_facepile ? 225 : 150;
                         }
-                        options.registry.facebookPage.prototype.markFbElement(self, self.$previewPage, self.fbData);
+                        options.registry.facebookPage.prototype.markFbElement(self.getParent(), self.$previewPage, self.fbData);
                     },
                     404: function () {
                         self._toggleWarning(false);
@@ -552,7 +675,7 @@ var FacebookPageDialog = weWidgets.Dialog.extend({
      * @param {boolean} toggle
      */
     _toggleWarning: function (toggle) {
-        this.trigger_up('animation_stop_demand', {
+        this.trigger_up('widgets_stop_request', {
             $target: this.$previewPage,
         });
         this.$('.facebook_page_warning').toggleClass('d-none', toggle);
@@ -582,8 +705,7 @@ var FacebookPageDialog = weWidgets.Dialog.extend({
 });
 options.registry.facebookPage = options.Class.extend({
     /**
-     * Initializes the required facebook page data to create the animation
-     * iframe.
+     * Initializes the required facebook page data to create the iframe.
      *
      * @override
      */
@@ -616,7 +738,7 @@ options.registry.facebookPage = options.Class.extend({
             }));
         }
 
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
     /**
      * @override
@@ -667,10 +789,7 @@ options.registry.facebookPage = options.Class.extend({
             $el.attr('data-' + key, value);
             $el.data(key, value);
         });
-        self.trigger_up('animation_start_demand', {
-            editableMode: true,
-            $target: $el,
-        });
+        self._refreshPublicWidgets($el);
     },
 });
 
@@ -692,8 +811,8 @@ options.registry.ul = options.Class.extend({
         this._super();
         if (!this.$target.hasClass('o_ul_folded')) {
             this.$target.find('.o_close').removeClass('o_close');
+            this.$target.find('li').css('list-style', '');
         }
-        this.$target.find('li:not(:has(>ul))').css('list-style', '');
     },
 
     //--------------------------------------------------------------------------
@@ -706,7 +825,7 @@ options.registry.ul = options.Class.extend({
     toggleClass: function () {
         this._super.apply(this, arguments);
 
-        this.trigger_up('animation_stop_demand', {
+        this.trigger_up('widgets_stop_request', {
             $target: this.$target,
         });
 
@@ -722,17 +841,12 @@ options.registry.ul = options.Class.extend({
         })
         .prepend('<a href="#" class="o_ul_toggle_self fa" />');
         var $li = this.$target.find('li:has(+li:not(>.o_ul_toggle_self)>ul, +li:not(>.o_ul_toggle_self)>ol)');
+        $li.css('list-style', this.$target.hasClass('o_ul_folded') ? 'none' : '');
         $li.map(function () { return $(this).children()[0] || this; })
             .prepend('<a href="#" class="o_ul_toggle_next fa" />');
         $li.removeClass('o_open').next().addClass('o_close');
-        this.$target.find('li').removeClass('o_open').css('list-style', '');
-        this.$target.find('li:has(.o_ul_toggle_self, .o_ul_toggle_next), li:has(>ul,>ol):not(:has(>li))').css('list-style', 'none');
-
-        this.$target.find('li:not(:has(>ul))').css('list-style', '');
-        this.trigger_up('animation_start_demand', {
-            editableMode: true,
-            $target: this.$target,
-        });
+        this.$target.find('li').removeClass('o_open');
+        this._refreshPublicWidgets();
     },
 });
 
@@ -801,7 +915,7 @@ options.registry.collapse = options.Class.extend({
         $tab.data('parent', '#'+tablist_id);
 
         // link to the collapse
-        var $panel = this.$target.find('.panel-collapse');
+        var $panel = this.$target.find('.collapse');
         var panel_id = $panel.attr('id');
         if (!panel_id) {
             while ($('#'+(panel_id = 'myCollapseTab' + time)).length) {
@@ -824,12 +938,12 @@ options.registry.gallery = options.Class.extend({
         var self = this;
 
         // The snippet should not be editable
-        this.$target.attr('contentEditable', false);
+        this.$target.addClass('o_fake_not_editable').attr('contentEditable', false);
 
         // Make sure image previews are updated if images are changed
         this.$target.on('save', 'img', function (ev) {
             var $img = $(ev.currentTarget);
-            var index = self.$target.find('.item.active').index();
+            var index = self.$target.find('.carousel-item.active').index();
             self.$('.carousel:first li[data-target]:eq(' + index + ')')
                 .css('background-image', 'url(' + $img.attr('src') + ')');
         });
@@ -840,6 +954,21 @@ options.registry.gallery = options.Class.extend({
             e.stopImmediatePropagation();
             self.addImages(false);
         });
+
+        this.$target.on('dropped', 'img', function (ev) {
+            self.mode(null, self.getMode());
+            if (!ev.target.height) {
+                $(ev.target).one('load', function () {
+                    setTimeout(function () {
+                        self.trigger_up('cover_update');
+                    });
+                });
+            }
+        });
+
+        if (this.$('.container:first > *:not(div)').length) {
+            self.mode(null, self.getMode());
+        }
 
         return this._super.apply(this, arguments);
     },
@@ -872,7 +1001,7 @@ options.registry.gallery = options.Class.extend({
     addImages: function (previewMode) {
         var self = this;
         var $container = this.$('.container:first');
-        var dialog = new weWidgets.MediaDialog(this, {multiImages: true}, this.$target.closest('.o_editable'), null);
+        var dialog = new weWidgets.MediaDialog(this, {multiImages: true}, null);
         var lastImage = _.last(this._getImages());
         var index = lastImage ? this._getIndex(lastImage) : -1;
         dialog.on('save', this, function (attachments) {
@@ -899,6 +1028,24 @@ options.registry.gallery = options.Class.extend({
 
         var $activeMode = this.$el.find('.active[data-mode]');
         this.mode(null, $activeMode.data('mode'), $activeMode);
+    },
+    /**
+     * Get the image target's layout mode (slideshow, masonry, grid or nomode).
+     *
+     * @returns {String('slideshow'|'masonry'|'grid'|'nomode')}
+     */
+    getMode: function () {
+        var mode = 'slideshow';
+        if (this.$target.hasClass('o_masonry')) {
+            mode = 'masonry';
+        }
+        if (this.$target.hasClass('o_grid')) {
+            mode = 'grid';
+        }
+        if (this.$target.hasClass('o_nomode')) {
+            mode = 'nomode';
+        }
+        return mode;
     },
     /**
      * Displays the images with the "grid" layout.
@@ -932,6 +1079,7 @@ options.registry.gallery = options.Class.extend({
      * Displays the images with the "masonry" layout.
      */
     masonry: function () {
+        var self = this;
         var imgs = this._getImages();
         var columns = this._getColumns();
         var colClass = 'col-lg-' + (12 / columns);
@@ -954,7 +1102,7 @@ options.registry.gallery = options.Class.extend({
             var $lowest;
             _.each(cols, function (col) {
                 var $col = $(col);
-                var height = $col.height();
+                var height = $col.is(':empty') ? 0 : $col.find('img').last().offset().top + $col.find('img').last().height() - self.$target.offset().top;
                 if (height < min) {
                     min = height;
                     $lowest = $col;
@@ -974,6 +1122,7 @@ options.registry.gallery = options.Class.extend({
         this.$target
             .removeClass('o_nomode o_masonry o_grid o_slideshow')
             .addClass('o_' + value);
+        this.trigger_up('cover_update');
     },
     /**
      * Displays the images with the standard layout: floating images.
@@ -1039,10 +1188,7 @@ options.registry.gallery = options.Class.extend({
         // Apply layout animation
         this.$target.off('slide.bs.carousel').off('slid.bs.carousel');
         this.$('li.fa').off('click');
-        this.trigger_up('animation_start_demand', {
-            editableMode: true,
-            $target: this.$target,
-        });
+        this._refreshPublicWidgets();
     },
     /**
      * Allows to change the style of the individual images.
@@ -1218,6 +1364,179 @@ options.registry.gallery_img = options.Class.extend({
                 position: value,
             },
         });
+    },
+});
+
+options.registry.topMenuTransparency = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Handles the toggling between normal and overlay positions of the header.
+     *
+     * @see this.selectClass for params
+     */
+    transparent: function (previewMode, value, $opt) {
+        var self = this;
+        this.trigger_up('action_demand', {
+            actionName: 'toggle_page_option',
+            params: [{name: 'header_overlay'}],
+            onSuccess: function () {
+                self.trigger_up('action_demand', {
+                    actionName: 'toggle_page_option',
+                    params: [{name: 'header_color', value: ''}],
+                });
+            },
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _setActive: function () {
+        this._super.apply(this, arguments);
+
+        var enabled;
+        this.trigger_up('action_demand', {
+            actionName: 'get_page_option',
+            params: ['header_overlay'],
+            onSuccess: function (value) {
+                enabled = value;
+            },
+        });
+        this.$el.find('[data-transparent]').addBack('[data-transparent]').toggleClass('active', !!enabled);
+    },
+});
+
+options.registry.topMenuColor = options.registry.colorpicker.extend({
+    /**
+     * @override
+     */
+    start: function () {
+        var self = this;
+        var def = this._super.apply(this, arguments);
+        this.$target.on('snippet-option-change', function () {
+            self.onFocus();
+        });
+        return def;
+    },
+    /**
+     * @override
+     */
+    onFocus: function () {
+        var enabled;
+        this.trigger_up('action_demand', {
+            actionName: 'get_page_option',
+            params: ['header_overlay'],
+            onSuccess: function (value) {
+                enabled = value;
+            },
+        });
+        this.$el.toggleClass('d-none', !enabled);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _onColorButtonClick: function () {
+        this._super.apply(this, arguments);
+        var bgs = this.$target.attr('class').match(/bg-(\w|-)+/g);
+        var allowedBgs = this.classes.split(' ');
+        var color = _.intersection(bgs, allowedBgs).join(' ');
+        this.trigger_up('action_demand', {
+            actionName: 'toggle_page_option',
+            params: [{name: 'header_color', value: color}],
+        });
+    },
+});
+
+/**
+ * Handles the edition of snippet's anchor name.
+ */
+options.registry.anchorName = options.Class.extend({
+    xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
+    preventChildPropagation: true,
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    onClone: function () {
+        this.$target.removeAttr('id data-anchor');
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    openAnchorDialog: function (previewMode, value, $opt) {
+        var self = this;
+        new Dialog(this, {
+            title: _t("Anchor Name"),
+            $content: $(qweb.render('website.dialog.anchorName', {
+                currentAnchor: this.$target.attr('id'),
+            })),
+            buttons: [
+                {
+                    text: _t("Save"),
+                    classes: 'btn-primary',
+                    click: function () {
+                        var $input = this.$('.o_input_anchor_name');
+                        var anchorName = $input.val().trim().replace(/\s/g, '_');
+                        var isValid = /^[\w-]+$/.test(anchorName);
+                        var alreadyExists = isValid && $('#' + anchorName).length > 0;
+                        var anchorOK = isValid && !alreadyExists;
+                        this.$('.o_anchor_not_valid').toggleClass('d-none', isValid);
+                        this.$('.o_anchor_already_exists').toggleClass('d-none', !alreadyExists);
+                        $input.toggleClass('is-invalid', !anchorOK);
+                        if (anchorOK) {
+                            self._setAnchorName(anchorName);
+                            this.close();
+                        }
+                    }
+                },
+                {
+                    text: _t("Discard"),
+                    close: true,
+                },
+            ],
+        }).open();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {String} value
+     */
+    _setAnchorName: function (value) {
+        if (value) {
+            this.$target.attr({
+                'id': value,
+                'data-anchor': true,
+            });
+        } else {
+            this.$target.removeAttr('id data-anchor');
+        }
+        this.$target.trigger('content_changed');
     },
 });
 });

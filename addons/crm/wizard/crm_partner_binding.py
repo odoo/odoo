@@ -15,7 +15,7 @@ class PartnerBinding(models.TransientModel):
     """
 
     _name = 'crm.partner.binding'
-    _description = 'Handle partner binding or generation in CRM wizards.'
+    _description = 'Partner linking/binding in CRM wizard'
 
     @api.model
     def default_get(self, fields):
@@ -29,8 +29,8 @@ class PartnerBinding(models.TransientModel):
         return res
 
     action = fields.Selection([
-        ('exist', 'Link to an existing customer'),
         ('create', 'Create a new customer'),
+        ('exist', 'Link to an existing customer'),
         ('nothing', 'Do not link to a customer')
     ], 'Related Customer', required=True)
     partner_id = fields.Many2one('res.partner', 'Customer')
@@ -62,6 +62,10 @@ class PartnerBinding(models.TransientModel):
 
         if lead.contact_name:
             partner = Partner.search([('name', 'ilike', '%' + lead.contact_name+'%')], limit=1)
+            return partner.id
+
+        if lead.name: # to be aligned with _create_lead_partner, search on lead's name as last possibility
+            partner = Partner.search([('name', 'ilike', '%' + lead.name + '%')], limit=1)
             return partner.id
 
         return False

@@ -6,7 +6,7 @@
     'version': '1.0',
     'category': 'Sales',
     'sequence': 17,
-    'summary': 'From quotes to invoices',
+    'summary': 'From quotations to invoices',
     'description': """
 Manage sales quotations and orders
 ==================================
@@ -26,11 +26,6 @@ If you also installed the Warehouse Management, you can deal with the following 
 * Invoicing: choose how invoices will be paid
 * Incoterms: International Commercial terms
 
-You can choose flexible invoicing methods:
-
-* *On Demand*: Invoices are created manually from Sales Orders when needed
-* *On Delivery Order*: Invoices are generated from picking (delivery)
-* *Before Delivery*: A Draft invoice is created and must be paid before delivery
 
 With this module you can personnalize the sales order and invoice report with
 categories, subtotals or page-breaks.
@@ -41,12 +36,21 @@ The Dashboard for the Sales Manager will include
 * Monthly Turnover (Graph)
     """,
     'website': 'https://www.odoo.com/page/sales',
-    'depends': ['sale', 'account', 'digest'],
+    'depends': ['sale', 'digest'],
     'data': [
+        'security/sale_management_security.xml',
+        'views/sale_portal_templates.xml',
+        'views/sale_order_template_views.xml',
+        'security/ir.model.access.csv',
+        'views/res_config_settings_views.xml',
         'data/digest_data.xml',
         'views/sale_management_views.xml',
-        'views/sale_management_templates.xml',
         'views/digest_views.xml',
+        'views/sale_order_views.xml',
+        'report/sale_report_templates.xml',
+    ],
+    'demo': [
+        'data/sale_order_template_demo.xml',
     ],
     'application': True,
     'uninstall_hook': 'uninstall_hook',

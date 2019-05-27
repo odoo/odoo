@@ -3,7 +3,7 @@
     <data noupdate="1">
 
         <record id="partner_demo" model="res.partner">
-            <field name="name">Marc Brown</field>
+            <field name="name">Marc Demo</field>
             <field name="company_id" ref="main_company"/>
             <field name="customer" eval="False"/>
             <field name="company_name">YourCompany</field>
@@ -12,6 +12,7 @@
             <field name="state_id"  model="res.country.state" search="[('code','ilike','OR')]"/>
             <field name="zip">97401</field>
             <field name="country_id" ref="us"/>
+            <field name="tz">Europe/Brussels</field>
             <field name="email">mark.brown23@example.com</field>
             <field name="phone">(441)-695-2334</field>
         </record>
@@ -19,12 +20,12 @@
         <record id="main_partner" model="res.partner">
             <field name="name">YourCompany</field>
             <field name="company_name">YourCompany</field>
-            <field name="street">1725 Slough Ave.</field>
-            <field name="city">Scranton</field>
-            <field name="zip">18540</field>
+            <field name="street">250 Executive Park Blvd, Suite 3400</field>
+            <field name="city">San Francisco</field>
+            <field name="zip">94134</field>
             <field name='country_id' ref='base.us'/>
-            <field name='state_id' ref='state_us_39'/>
-            <field name="phone">+1 555 123 8069</field>
+            <field name='state_id' ref='state_us_5'/>
+            <field name="phone">+1 (650) 691-3277 </field>
             <field name="email">info@yourcompany.example.com</field>
             <field name="website">www.example.com</field>
         </record>
@@ -40,7 +41,12 @@
         </record>
 
         <record model="res.partner" id="base.partner_root">
-            <field name="name">Mitchell Stephens</field>
+            <field name="email">root@yourcompany.example.com</field>
+            <field name="tz">Europe/Brussels</field>
+        </record>
+
+        <record model="res.partner" id="base.partner_admin">
+            <field name="name">Mitchell Admin</field>
             <field name="company_name">YourCompany</field>
             <field name="street">215 Vine St</field>
             <field name="city">Scranton</field>
@@ -77,9 +83,6 @@
             <field name="groups_id" eval="[(5,)]"/><!-- Avoid auto-including this user in any default group -->
         </record>
 
-        <record id="base.group_user" model="res.groups"><!-- Remove the demo user for the internal_user group -->
-            <field name="users" eval="[(3,ref('demo_user0'))]"/>
-        </record>
         <record id="base.group_portal" model="res.groups"><!-- Add the demo user to the portal (and therefore to the portal member group) -->
             <field name="users" eval="[(4,ref('demo_user0'))]"/>
         </record>

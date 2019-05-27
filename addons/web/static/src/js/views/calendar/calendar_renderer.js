@@ -77,15 +77,15 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
                     self.model.get(recordID),
                     {
                         mode: 'edit',
-                        can_create: false,
                         attrs: {
-                            'placeholder': _.str.sprintf(_t("Add %s"), self.title),
+                            placeholder: _.str.sprintf(_t("Add %s"), self.title),
+                            can_create: false
                         },
                     });
             });
             defs.push(def);
         }
-        return $.when.apply($, defs);
+        return Promise.all(defs);
 
     },
     /**
@@ -112,11 +112,13 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
     _onFieldChanged: function (event) {
         var self = this;
         event.stopPropagation();
+        var createValues = {'user_id': session.uid};
         var value = event.data.changes[this.write_field].id;
+        createValues[this.write_field] = value;
         this._rpc({
                 model: this.write_model,
                 method: 'create',
-                args: [{'user_id': session.uid,'partner_id': value,}],
+                args: [createValues],
             })
             .then(function () {
                 self.trigger_up('changeFilter', {
@@ -191,7 +193,7 @@ return AbstractRenderer.extend({
     },
     /**
      * @override
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     start: function () {
         this._initSidebar();
@@ -362,6 +364,11 @@ return AbstractRenderer.extend({
 
         this.$calendar = this.$(".o_calendar_widget");
 
+        // This seems like a workaround but apparently passing the locale
+        // in the options is not enough. We should initialize it beforehand
+        var locale = moment.locale();
+        $.fullCalendar.locale(locale);
+
         //Documentation here : http://arshaw.com/fullcalendar/docs/
         var fc_options = $.extend({}, this.state.fc_options, {
             eventDrop: function (event) {
@@ -413,6 +420,8 @@ return AbstractRenderer.extend({
             },
             height: 'parent',
             unselectAuto: false,
+            isRTL: _t.database.parameters.direction === "rtl",
+            locale: locale, // reset locale when fullcalendar has already been instanciated before now
         });
 
         this.$calendar.fullCalendar(fc_options);
@@ -451,7 +460,7 @@ return AbstractRenderer.extend({
      *
      * @override method from AbstractRenderer
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _render: function () {
         var $calendar = this.$calendar;
@@ -495,7 +504,7 @@ return AbstractRenderer.extend({
         this.$sidebar_container.toggleClass('o_sidebar_hidden', fullWidth);
         this.$sidebar.toggleClass('o_hidden', fullWidth);
 
-        this._renderFilters();
+        var filterProm = this._renderFilters();
         this.$calendar.appendTo('body');
         if (scrollTop) {
             this.$calendar.fullCalendar('reinitView');
@@ -505,7 +514,7 @@ return AbstractRenderer.extend({
         this._renderEvents();
         this.$calendar.prependTo(this.$('.o_calendar_view'));
 
-        return this._super.apply(this, arguments);
+        return Promise.all([filterProm, this._super.apply(this, arguments)]);
     },
     /**
      * Render all events
@@ -520,25 +529,47 @@ return AbstractRenderer.extend({
      * Render all filters
      *
      * @private
+     * @returns {Promise} resolved when all filters have been rendered
      */
     _renderFilters: function () {
-        var self = this;
         _.each(this.filters || (this.filters = []), function (filter) {
             filter.destroy();
         });
         if (this.state.fullWidth) {
             return;
         }
-        _.each(this.state.filters, function (options) {
+        return this._renderFiltersOneByOne();
+    },
+    /**
+     * Renders each filter one by one, waiting for the first filter finished to
+     * be rendered and appended to render the next one.
+     * We need to do like this since render a filter is asynchronous, we don't
+     * know which one will be appened at first and we want tp force them to be
+     * rendered in order.
+     *
+     * @param {number} filterIndex if not set, 0 by default
+     * @returns {Promise} resolved when all filters have been rendered
+     */
+    _renderFiltersOneByOne: function (filterIndex) {
+        filterIndex = filterIndex || 0;
+        var arrFilters = _.toArray(this.state.filters);
+        var prom;
+        if (filterIndex < arrFilters.length) {
+            var options = arrFilters[filterIndex];
             if (!_.find(options.filters, function (f) {return f.display == null || f.display;})) {
                 return;
             }
-            options.getColor = self.getColor.bind(self);
-            options.fields = self.state.fields;
+
+            var self = this;
+            options.getColor = this.getColor.bind(this);
+            options.fields = this.state.fields;
             var filter = new SidebarFilter(self, options);
-            filter.appendTo(self.$sidebar);
-            self.filters.push(filter);
-        });
+            prom = filter.appendTo(this.$sidebar).then(function () {
+                return self._renderFiltersOneByOne(filterIndex + 1);
+            });
+            this.filters.push(filter);
+        }
+        return Promise.resolve(prom);
     },
 
     //--------------------------------------------------------------------------

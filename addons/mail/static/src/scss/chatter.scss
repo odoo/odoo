@@ -16,20 +16,42 @@
         padding: 0;
         display: flex;
 
+        > .o_topbar_right_area {
+            border-bottom: 1px solid transparent;
+            position: relative;
+            float: right;
+            flex: 1 1 auto;
+            height: $o-statusbar-height;
+
+            .o_chatter_button_attachment {
+                height: $o-statusbar-height;
+                float: right;
+                margin-right: 25px;
+
+                .fa-paperclip, .o_chatter_attachment_button_count {
+                    font-weight: bold;
+                }
+            }
+            .o_followers {
+                height: $o-statusbar-height;
+                border-bottom: 1px solid transparent;
+                flex: 0 1 auto;
+            }
+        }
         > .btn {
-            height: $o-statusbar-height + 1;
+            height: $o-statusbar-height;
             border: 1px solid transparent;
         }
-
-        > .o_followers {
-            height: $o-statusbar-height + 1;
-            border-bottom: 1px solid transparent;
-            flex: 1 1 auto;
+        .btn {
+            @extend .text-nowrap;
+            padding-right: $btn-padding-x;
+            padding-left: $btn-padding-x;
         }
+
     }
 
     &.o_chatter_composer_active .o_chatter_topbar {
-        > .btn, > .o_followers{
+        > .btn, > .o_followers, > .o_topbar_right_area{
             border-radius: $border-radius-sm $border-radius-sm 0 0;
             border-width: 0 0 1px;
             border-bottom-color: gray('300');
@@ -40,6 +62,14 @@
                 border-color: gray('300');
                 border-width: 1px 1px 0;
             }
+        }
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .o_chatter .o_chatter_topbar > .o_topbar_right_area {
+        .o_chatter_button_attachment {
+            margin-right: initial;
         }
     }
 }

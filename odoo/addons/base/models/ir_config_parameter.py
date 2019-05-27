@@ -8,7 +8,7 @@ import uuid
 import logging
 
 from odoo import api, fields, models
-from odoo.tools import config, ormcache, mute_logger, pycompat
+from odoo.tools import config, ormcache, mute_logger
 
 _logger = logging.getLogger(__name__)
 
@@ -16,8 +16,8 @@ _logger = logging.getLogger(__name__)
 A dictionary holding some configuration parameters to be initialized when the database is created.
 """
 _default_parameters = {
-    "database.secret": lambda: pycompat.text_type(uuid.uuid4()),
-    "database.uuid": lambda: pycompat.text_type(uuid.uuid1()),
+    "database.secret": lambda: str(uuid.uuid4()),
+    "database.uuid": lambda: str(uuid.uuid1()),
     "database.create_date": fields.Datetime.now,
     "web.base.url": lambda: "http://localhost:%s" % config.get('http_port'),
     "base.login_cooldown_after": lambda: 10,
@@ -28,6 +28,7 @@ _default_parameters = {
 class IrConfigParameter(models.Model):
     """Per-database storage of configuration key-value pairs."""
     _name = 'ir.config_parameter'
+    _description = 'System Parameter'
     _rec_name = 'key'
     _order = 'key'
 
@@ -82,7 +83,8 @@ class IrConfigParameter(models.Model):
         if param:
             old = param.value
             if value is not False and value is not None:
-                param.write({'value': value})
+                if str(value) != old:
+                    param.write({'value': value})
             else:
                 param.unlink()
             return old

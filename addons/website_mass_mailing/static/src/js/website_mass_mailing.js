@@ -2,21 +2,16 @@ odoo.define('mass_mailing.website_integration', function (require) {
 "use strict";
 
 var utils = require('web.utils');
-var sAnimation = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimation.registry.subscribe = sAnimation.Class.extend({
+publicWidget.registry.subscribe = publicWidget.Widget.extend({
     selector: ".js_subscribe",
+    disabledInEditableMode: false,
+
     start: function () {
         var self = this;
 
-        // set value and display button
-        self.$target.find("input").removeClass('d-none');
-        this._rpc({
-            route: '/website_mass_mailing/is_subscriber',
-            params: {
-                list_id: this.$target.data('list-id'),
-            },
-        }).always(function (data) {
+        var always = function (data) {
             self.$target.find('input.js_subscribe_email')
                 .val(data.email ? data.email : "")
                 .attr("disabled", data.is_subscriber && data.email.length ? "disabled" : false);
@@ -26,7 +21,16 @@ sAnimation.registry.subscribe = sAnimation.Class.extend({
             self.$target.removeClass('d-none');
             self.$target.find('.js_subscribe_btn').toggleClass('d-none', !!data.is_subscriber);
             self.$target.find('.js_subscribed_btn').toggleClass('d-none', !data.is_subscriber);
-        });
+        };
+
+        // set value and display button
+        self.$target.find("input").removeClass('d-none');
+        this._rpc({
+            route: '/website_mass_mailing/is_subscriber',
+            params: {
+                list_id: this.$target.data('list-id'),
+            },
+        }).then(always).guardedCatch(always);
 
         // not if editable mode to allow designer to edit alert field
         if (!this.editableMode) {
@@ -63,12 +67,29 @@ sAnimation.registry.subscribe = sAnimation.Class.extend({
     },
 });
 
-sAnimation.registry.newsletter_popup = sAnimation.Class.extend({
+publicWidget.registry.newsletter_popup = publicWidget.Widget.extend({
     selector: ".o_newsletter_popup",
+    disabledInEditableMode: false,
+
     start: function () {
         var self = this;
+
+        // Compatibility: rebuilding a correct modal from user database
+        // content. Since the first version, the modal is saved in databases
+        // directly but has never used a correct structure. While it was working
+        // with BS3, it is not with BS4.
+        // TODO review the newsletter popup creation, save and loading.
+        var $modal = this.$('.modal');
+        if ($modal.is('.modal-dialog')) {
+            $modal.removeClass('modal-md modal-dialog');
+            var $modalContent = $modal.find('.modal-content');
+            $modalContent.wrapAll($('<div/>', {class: 'modal-dialog'}));
+        }
+
         var popupcontent = self.$target.find(".o_popup_content_dev").empty();
-        if (!self.$target.data('list-id')) return;
+        if (!self.$target.data('list-id')) {
+            return;
+        }
 
         this._rpc({
             route: '/website_mass_mailing/get_content',
@@ -130,45 +151,4 @@ sAnimation.registry.newsletter_popup = sAnimation.Class.extend({
         }
     }
 });
-});
-
-//==============================================================================
-
-odoo.define('mass_mailing.unsubscribe', function (require) {
-    'use strict';
-
-    var ajax = require('web.ajax');
-    var core = require('web.core');
-    require('web.dom_ready');
-
-    var _t = core._t;
-
-    if (!$('.o_unsubscribe_form').length) {
-        return $.Deferred().reject("DOM doesn't contain '.o_unsubscribe_form'");
-    }
-
-    $('#unsubscribe_form').on('submit', function (e) {
-        e.preventDefault();
-
-        var email = $("input[name='email']").val();
-        var mailing_id = parseInt($("input[name='mailing_id']").val());
-
-        var checked_ids = [];
-        $("input[type='checkbox']:checked").each(function (i){
-          checked_ids[i] = parseInt($(this).val());
-        });
-
-        var unchecked_ids = [];
-        $("input[type='checkbox']:not(:checked)").each(function (i){
-          unchecked_ids[i] = parseInt($(this).val());
-        });
-
-        ajax.jsonRpc('/mail/mailing/unsubscribe', 'call', {'opt_in_ids': checked_ids, 'opt_out_ids': unchecked_ids, 'email': email, 'mailing_id': mailing_id})
-            .then(function (result) {
-                $('.alert-info').html(_t('Your changes have been saved.')).removeClass('alert-info').addClass('alert-success');
-            })
-            .fail(function () {
-                $('.alert-info').html(_t('Your changes have not been saved, try again later.')).removeClass('alert-info').addClass('alert-warning');
-            });
-    });
 });

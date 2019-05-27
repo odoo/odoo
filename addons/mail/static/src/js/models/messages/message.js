@@ -46,22 +46,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         Mixins.EventDispatcherMixin.init.call(this, arguments);
         this.setParent(parent);
 
-        this._customerEmailData = data.customer_email_data || [];
-        this._customerEmailStatus = data.customer_email_status;
-        this._documentModel = data.model;
-        this._documentName = data.record_name;
-        this._documentID = data.res_id;
-        this._emailFrom = data.email_from;
-        this._info = data.info;
-        this._moduleIcon = data.module_icon;
-        this._needactionPartnerIDs = data.needaction_partner_ids || [];
-        this._starredPartnerIDs = data.starred_partner_ids || [];
-        this._subject = data.subject;
-        this._subtypeDescription = data.subtype_description;
-        this._threadIDs = data.channel_ids || [];
-        this._trackingValueIDs = data.tracking_value_ids;
-
-        this._moderationStatus = data.moderation_status || 'accepted';
+        this._setInitialData(data);
 
         this._processBody(emojis);
         this._processMailboxes();
@@ -81,6 +66,16 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         this._customerEmailData.push(data);
     },
     /**
+     * @override
+     * @return {string|undefined}
+     */
+    getAuthorImStatus: function () {
+        if (!this.hasAuthor()) {
+            return undefined;
+        }
+        return this.call('mail_service', 'getImStatus', { partnerID: this.getAuthorID() });
+    },
+    /**
      * Get the name of the author of this message
      * If there are no author, return "".
      *
@@ -97,7 +92,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      */
     getAvatarSource: function () {
         if (this._isOdoobotAuthor()) {
-            return '/mail/static/src/img/odoo_o.png';
+            return '/mail/static/src/img/odoobot.png';
         } else if (this.hasAuthor()) {
             return '/web/image/res.partner/' + this.getAuthorID() + '/image_small';
         } else if (this.getType() === 'email') {
@@ -262,8 +257,10 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
             documentID: this.getDocumentID(),
             id: id,
             imageSRC: this._getModuleIcon() || this.getAvatarSource(),
+            messageID: this.getID(),
             status: this.status,
             title: title,
+            isLinkedToDocumentThread: this.isLinkedToDocumentThread(),
         };
     },
     /**
@@ -358,14 +355,6 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         return !!(this._trackingValueIDs && (this._trackingValueIDs.length > 0));
     },
     /**
-     * State whether the current user is the author of this message
-     *
-     * @return {boolean}
-     */
-    isAuthor: function () {
-        return this._isAuthor();
-    },
-    /**
      * State whether this message is linked to a document thread (not channel)
      *
      * Usually, if this is true, then this message comes from a document thread,
@@ -380,6 +369,14 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      */
     isLinkedToDocumentThread: function () {
         return !!(this._documentModel !== 'mail.channel' && this._documentID);
+    },
+    /**
+     * State whether the current user is the author of this message
+     *
+     * @return {boolean}
+     */
+    isMyselfAuthor: function () {
+        return this._isMyselfAuthor();
     },
     /**
      * States whether the current message needs moderation in general.
@@ -457,6 +454,9 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      */
     setModerationStatus: function (newModerationStatus, options) {
         var self = this;
+        if (newModerationStatus === this._moderationStatus) {
+            return;
+        }
         this._moderationStatus = newModerationStatus;
         if (newModerationStatus === 'accepted' && options) {
             _.each(options.additionalThreadIDs, function (threadID) {
@@ -512,7 +512,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @see {mail.Manager.Notification} for the receipt of 'toggle_star'
      *   notification after this rpc.
      *
-     * @return {$.Promise}
+     * @return {Promise}
      */
     toggleStarStatus: function () {
         return this._rpc({
@@ -560,7 +560,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      */
     _getAuthorName: function () {
         if (this._isOdoobotAuthor()) {
-            return "Odoobot";
+            return "OdooBot";
         }
         return this._super.apply(this, arguments);
     },
@@ -572,7 +572,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         return this._moduleIcon;
     },
     /**
-     * State if the author of this message is Odoobot
+     * State if the author of this message is OdooBot
      * This is the default author for transient messages.
      *
      * @private
@@ -724,6 +724,44 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
                 }
             });
         }
+    },
+    /**
+     * @private
+     * @param {Object} data
+     * @param {string} [data.body = ""]
+     * @param {(string|integer)[]} [data.channel_ids]
+     * @param {Object[]} [data.customer_email_data]
+     * @param {string} [data.customer_email_status]
+     * @param {string} [data.email_from]
+     * @param {string} [data.info]
+     * @param {string} [data.model]
+     * @param {string} [data.moderation_status='accepted']
+     * @param {string} [data.module_icon]
+     * @param {Array} [data.needaction_partner_ids = []]
+     * @param {string} [data.record_name]
+     * @param {integer} [data.res_id]
+     * @param {Array} [data.starred_partner_ids = []]
+     * @param {string} [data.subject]
+     * @param {string} [data.subtype_description]
+     * @param {Object[]} [data.tracking_value_ids]
+     */
+    _setInitialData: function (data){
+        this._customerEmailData = data.customer_email_data || [];
+        this._customerEmailStatus = data.customer_email_status;
+        this._documentModel = data.model;
+        this._documentName = data.record_name;
+        this._documentID = data.res_id;
+        this._emailFrom = data.email_from;
+        this._info = data.info;
+        this._moduleIcon = data.module_icon;
+        this._needactionPartnerIDs = data.needaction_partner_ids || [];
+        this._starredPartnerIDs = data.starred_partner_ids || [];
+        this._subject = data.subject;
+        this._subtypeDescription = data.subtype_description;
+        this._threadIDs = data.channel_ids || [];
+        this._trackingValueIDs = data.tracking_value_ids;
+
+        this._moderationStatus = data.moderation_status || 'accepted';
     },
     /**
      * Set whether the message is moderated by current user or not.

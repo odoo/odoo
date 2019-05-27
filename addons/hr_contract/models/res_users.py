@@ -1,13 +1,27 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import models, fields, api, _
 
 
-class ResUsers(models.Model):
-    _inherit = 'res.users'
+class User(models.Model):
+    _inherit = ['res.users']
 
-    group_hr_contract_user = fields.Selection(
-        selection=lambda self: self._get_group_selection('base.module_category_hr_contract'),
-        string='Contracts', compute='_compute_groups_id', inverse='_inverse_groups_id',
-        category_xml_id='base.module_category_hr_contract')
+    medic_exam = fields.Date(related="employee_id.medic_exam")
+    vehicle = fields.Char(related="employee_id.vehicle")
+    bank_account_id = fields.Many2one(related="employee_id.bank_account_id")
+
+    def __init__(self, pool, cr):
+        """ Override of __init__ to add access rights.
+            Access rights are disabled by default, but allowed
+            on some specific fields defined in self.SELF_{READ/WRITE}ABLE_FIELDS.
+        """
+        contract_readable_fields = [
+            'medic_exam',
+            'vehicle',
+            'bank_account_id',
+        ]
+        init_res = super(User, self).__init__(pool, cr)
+        # duplicate list to avoid modifying the original reference
+        type(self).SELF_READABLE_FIELDS = type(self).SELF_READABLE_FIELDS + contract_readable_fields
+        return init_res

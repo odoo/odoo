@@ -5,6 +5,8 @@
         <menuitem name="Forum" id="menu_website_forum"
             parent="website.menu_website_configuration" sequence="50" groups="website.group_website_designer"/>
 
+        <menuitem name="Forum" id="menu_website_forum_global"
+            parent="website.menu_website_global_configuration" sequence="170" groups="website.group_website_designer"/>
 
         <!-- FORUM VIEWS -->
         <record id="view_forum_forum_list" model="ir.ui.view">
@@ -13,10 +15,8 @@
             <field name="arch" type="xml">
                 <tree string="Forums">
                     <field name="name"/>
+                    <field name="website_id" groups="website.group_multi_website"/>
                     <field name="active" invisible="1"/>
-                    <field name="allow_question"/>
-                    <field name="allow_link"/>
-                    <field name="allow_discussion"/>
                 </tree>
             </field>
         </record>
@@ -37,19 +37,16 @@
                             <field name="name"/>
                         </h1>
                         <field name="description"/>
+                        <group>
+                            <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                        </group>
                         <notebook>
                             <page string="Options">
-                              <group string="Post Types">
-                                <field name="allow_question"/>
-                                <field name="allow_link"/>
-                                <field name="allow_discussion"/>
-                                <field name="default_post_type"/>
-                              </group>
                               <group string="Orders">
                                 <field name="default_order"/>
                                 <label for="relevancy_post_vote" string="Relevance Computation" groups="base.group_no_one"/>
-                                <div groups="base.group_no_one">
-                                    (votes - 1) ** <field name="relevancy_post_vote" class="oe_inline"/> / (days + 2) ** <field name="relevancy_time_decay" class="oe_inline"/>
+                                <div groups="base.group_no_one" class="o_row">
+                                    (votes - 1) ** <field name="relevancy_post_vote"/> / (days + 2) ** <field name="relevancy_time_decay"/>
                                 </div>
                               </group>
                             </page>
@@ -125,7 +122,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="menu_forum" parent="menu_website_forum" name="Forums" action="action_forum_forum" sequence="10"/>
+        <menuitem id="menu_forum_global" parent="menu_website_forum_global" name="Forums" action="action_forum_forum" sequence="10"/>
 
         <!-- POST VIEWS -->
         <record id="view_forum_post_list" model="ir.ui.view">
@@ -136,6 +133,7 @@
                     <field name="name"/>
                     <field name="active" invisible="1"/>
                     <field name="forum_id"/>
+                    <field name="website_id" groups="website.group_multi_website"/>
                 </tree>
             </field>
         </record>
@@ -158,6 +156,7 @@
                         <group>
                             <group>
                                 <field name="forum_id"/>
+                                <field name="website_id" groups="website.group_multi_website"/>
                                 <field name="parent_id"/>
                             </group><group>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
@@ -255,7 +254,7 @@
             <field name="name">forum.tag.list</field>
             <field name="model">forum.tag</field>
             <field name="arch" type="xml">
-                <tree string="Tag">
+                <tree string="Tags">
                     <field name="name"/>
                     <field name="forum_id"/>
                 </tree>
@@ -282,7 +281,7 @@
         </record>
 
         <record id="forum_tag_action" model="ir.actions.act_window">
-            <field name="name">Tag</field>
+            <field name="name">Tags</field>
             <field name="res_model">forum.tag</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -293,7 +292,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_forum_tag" parent="menu_website_forum" name="Tag" action="forum_tag_action" sequence="30"/>
-
+        <menuitem id="menu_forum_tag_global" parent="menu_website_forum_global" name="Tags" action="forum_tag_action" sequence="30"/>
+        <menuitem id="menu_forum_rank_global" parent="menu_website_forum_global" name="Ranks" action="gamification.gamification_karma_ranks_action" sequence="5"/>
     </data>
 </odoo>

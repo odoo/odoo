@@ -4,7 +4,7 @@
     'name': 'Maintenance',
     'version': '1.0',
     'sequence': 125,
-    'category': 'Human Resources',
+    'category': 'Human Resources/Maintenance',
     'description': """
         Track equipments and maintenance requests""",
     'depends': ['mail'],
@@ -18,7 +18,6 @@
         'views/maintenance_views.xml',
         'views/maintenance_templates.xml',
         'views/mail_activity_views.xml',
-        'views/res_users_views.xml',
         'data/maintenance_cron.xml',
     ],
     'demo': ['data/maintenance_demo.xml'],

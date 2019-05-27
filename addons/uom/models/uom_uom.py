@@ -9,11 +9,12 @@ class UoMCategory(models.Model):
     _name = 'uom.category'
     _description = 'Product UoM Categories'
 
-    name = fields.Char('Name', required=True, translate=True)
+    name = fields.Char('Unit of Measure Category', required=True, translate=True)
     measure_type = fields.Selection([
         ('unit', 'Units'),
         ('weight', 'Weight'),
-        ('time', 'Time'),
+        ('time', 'Time (Duration)'),
+        ('working_time', 'Working Time'),
         ('length', 'Length'),
         ('volume', 'Volume'),
     ], string="Type of Measure")
@@ -21,6 +22,12 @@ class UoMCategory(models.Model):
     _sql_constraints = [
         ('uom_category_unique_type', 'UNIQUE(measure_type)', 'You can have only one category per measurement type.'),
     ]
+
+    @api.multi
+    def unlink(self):
+        if self.filtered(lambda categ: categ.measure_type in ['working_time', 'time']):
+            raise UserError(_("You cannot delete this UoM Category as it is used by the system."))
+        return super(UoMCategory, self).unlink()
 
 
 class UoM(models.Model):
@@ -53,7 +60,8 @@ class UoM(models.Model):
 
     _sql_constraints = [
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!'),
-        ('rounding_gt_zero', 'CHECK (rounding>0)', 'The rounding precision must be greater than 0!')
+        ('rounding_gt_zero', 'CHECK (rounding>0)', 'The rounding precision must be strictly positive.'),
+        ('factor_reference_is_one', "CHECK((uom_type = 'reference' AND factor = 1.0) OR (uom_type != 'reference'))", "The reference unit must have a conversion factor equal to 1.")
     ]
 
     @api.one
@@ -101,6 +109,12 @@ class UoM(models.Model):
             factor_inv = values.pop('factor_inv')
             values['factor'] = factor_inv and (1.0 / factor_inv) or 0.0
         return super(UoM, self).write(values)
+
+    @api.multi
+    def unlink(self):
+        if self.filtered(lambda uom: uom.measure_type == 'working_time'):
+            raise UserError(_("You cannot delete this UoM as it is used by the system. You should rather archive it."))
+        return super(UoM, self).unlink()
 
     @api.model
     def name_create(self, name):

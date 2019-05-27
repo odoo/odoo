@@ -34,7 +34,7 @@ var AbstractFieldUpgrade = {
      * Redirects the user to the odoo-enterprise/uprade page
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _confirmUpgrade: function () {
         return this._rpc({

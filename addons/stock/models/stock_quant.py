@@ -24,7 +24,7 @@ class StockQuant(models.Model):
     # so user can filter on template in webclient
     product_tmpl_id = fields.Many2one(
         'product.template', string='Product Template',
-        related='product_id.product_tmpl_id')
+        related='product_id.product_tmpl_id', readonly=False)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         readonly=True, related='product_id.uom_id')
@@ -198,7 +198,6 @@ class StockQuant(models.Model):
         """
         self = self.sudo()
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
-        rounding = product_id.uom_id.rounding
 
         incoming_dates = [d for d in quants.mapped('in_date') if d]
         incoming_dates = [fields.Datetime.from_string(incoming_date) for incoming_date in incoming_dates]
@@ -219,9 +218,6 @@ class StockQuant(models.Model):
                         'quantity': quant.quantity + quantity,
                         'in_date': in_date,
                     })
-                    # cleanup empty quants
-                    if float_is_zero(quant.quantity, precision_rounding=rounding) and float_is_zero(quant.reserved_quantity, precision_rounding=rounding):
-                        quant.unlink()
                     break
             except OperationalError as e:
                 if e.pgcode == '55P03':  # could not obtain the lock
@@ -293,6 +289,22 @@ class StockQuant(models.Model):
         return reserved_quants
 
     @api.model
+    def _unlink_zero_quants(self):
+        """ _update_available_quantity may leave quants with no
+        quantity and no reserved_quantity. It used to directly unlink
+        these zero quants but this proved to hurt the performance as
+        this method is often called in batch and each unlink invalidate
+        the cache. We defer the calls to unlink in this method.
+        """
+        precision_digits = max(6, self.env.ref('product.decimal_product_uom').digits * 2)
+        # Use a select instead of ORM search for UoM robustness.
+        query = """SELECT id FROM stock_quant WHERE round(quantity::numeric, %s) = 0 AND round(reserved_quantity::numeric, %s) = 0;"""
+        params = (precision_digits, precision_digits)
+        self.env.cr.execute(query, params)
+        quant_ids = self.env['stock.quant'].browse([quant['id'] for quant in self.env.cr.dictfetchall()])
+        quant_ids.sudo().unlink()
+
+    @api.model
     def _merge_quants(self):
         """ In a situation where one transaction is updating a quant via
         `_update_available_quantity` and another concurrent one calls this function with the same
@@ -324,17 +336,23 @@ class StockQuant(models.Model):
         except Error as e:
             _logger.info('an error occured while merging quants: %s', e.pgerror)
 
+    @api.model
+    def _quant_tasks(self):
+        self._merge_quants()
+        self._unlink_zero_quants()
+
 
 class QuantPackage(models.Model):
     """ Packages containing quants and/or other packages """
     _name = "stock.quant.package"
-    _description = "Physical Packages"
+    _description = "Packages"
     _order = 'name'
 
     name = fields.Char(
         'Package Reference', copy=False, index=True,
         default=lambda self: self.env['ir.sequence'].next_by_code('stock.quant.package') or _('Unknown Pack'))
-    quant_ids = fields.One2many('stock.quant', 'package_id', 'Bulk Content', readonly=True)
+    quant_ids = fields.One2many('stock.quant', 'package_id', 'Bulk Content', readonly=True,
+        domain=['|', ('quantity', '!=', 0), ('reserved_quantity', '!=', 0)])
     packaging_id = fields.Many2one(
         'product.packaging', 'Package Type', index=True)
     location_id = fields.Many2one(
@@ -347,12 +365,16 @@ class QuantPackage(models.Model):
         'res.partner', 'Owner', compute='_compute_package_info', search='_search_owner',
         index=True, readonly=True)
 
-    @api.depends('quant_ids.package_id', 'quant_ids.location_id', 'quant_ids.company_id', 'quant_ids.owner_id')
+    @api.depends('quant_ids.package_id', 'quant_ids.location_id', 'quant_ids.company_id', 'quant_ids.owner_id', 'quant_ids.quantity', 'quant_ids.reserved_quantity')
     def _compute_package_info(self):
         for package in self:
-            values = {'location_id': False, 'company_id': self.env.user.company_id.id, 'owner_id': False}
+            values = {'location_id': False, 'company_id': self.env.company_id.id, 'owner_id': False}
             if package.quant_ids:
                 values['location_id'] = package.quant_ids[0].location_id
+                if all(q.owner_id == package.quant_ids[0].owner_id for q in package.quant_ids):
+                    values['owner_id'] = package.quant_ids[0].owner_id
+                if all(q.company_id == package.quant_ids[0].company_id for q in package.quant_ids):
+                    values['company_id'] = package.quant_ids[0].company_id
             package.location_id = values['location_id']
             package.company_id = values['company_id']
             package.owner_id = values['owner_id']
@@ -401,7 +423,7 @@ class QuantPackage(models.Model):
         return action
 
     def _get_contained_quants(self):
-        return self.env['stock.quant'].search([('package_id', 'child_of', self.ids)])
+        return self.env['stock.quant'].search([('package_id', 'in', self.ids)])
 
     def _get_all_products_quantities(self):
         '''This function computes the different product quantities for the given package

@@ -6,6 +6,7 @@ import itertools
 from odoo.addons.test_mail.tests import common as mail_common
 from odoo.tests import common
 from odoo.tools import mute_logger
+from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 
 
 class TestMail(common.SavepointCase, mail_common.MockEmails):
@@ -14,12 +15,7 @@ class TestMail(common.SavepointCase, mail_common.MockEmails):
     def setUpClass(cls):
         super(TestMail, cls).setUpClass()
 
-        cls.user_employee = cls.env['res.users'].with_context({
-            'no_reset_password': True,
-            'mail_create_nolog': True,
-            'mail_create_nosubscribe': True,
-            'mail_notrack': True,
-        }).create({
+        cls.user_employee = cls.env['res.users'].with_context(mail_common.BaseFunctionalTest._test_context).create({
             'name': 'Ernest Employee',
             'login': 'ernest',
             'email': 'e.e@example.com',
@@ -43,3 +39,13 @@ class TestMail(common.SavepointCase, mail_common.MockEmails):
         self.email_to_list.extend(itertools.chain.from_iterable(sent_email['email_to'] for sent_email in self._mails if sent_email.get('email_to')))
         self.assertNotIn(u'Ernest Employee <e.e@example.com>', self.email_to_list)
         self.assertIn(u'test@example.com', self.email_to_list)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_message_values_unicode(self):
+        mail = self.env['mail.mail'].create({
+            'body_html': '<p>Test</p>',
+            'email_to': 'test.😊@example.com',
+            'partner_ids': [(4, self.user_employee.partner_id.id)]
+        })
+
+        self.assertRaises(MailDeliveryException, lambda: mail.send(raise_exception=True))

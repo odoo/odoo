@@ -7,24 +7,74 @@
         <field name="priority">10</field>
         <field name="groups_id" eval="[(4,ref('hr_attendance.group_hr_attendance_user'))]"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='toggle_active']" position="before">
+            <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="attendance_state" invisible="1"/>
                 <button name="%(hr_attendance_action_employee)d"
                     class="oe_stat_button"
                     type="action" attrs="{'invisible': [('attendance_state', '=', False)]}">
-                    <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-user o_button_icon oe_hr_attendance_status_green" attrs="{'invisible': [('attendance_state', '=', 'checked_out')]}" aria-label="Available" title="Available"/>
-                    <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-user o_button_icon oe_hr_attendance_status_red" attrs="{'invisible': [('attendance_state', '=', 'checked_in')]}" aria-label="Not available" title="Not available"/>
+                    <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon oe_hr_attendance_status_green" attrs="{'invisible': [('attendance_state', '=', 'checked_out')]}" aria-label="Available" title="Available"/>
+                    <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon oe_hr_attendance_status_red" attrs="{'invisible': [('attendance_state', '=', 'checked_in')]}" aria-label="Not available" title="Not available"/>
                     <div class="o_stat_info">
                         <span class="o_stat_text">Attendance</span>
                     </div>
                 </button>
             </xpath>
-            <xpath expr="//group[@name='active_group']" position="after">
-                <group string='Attendance' groups="hr_attendance.group_hr_attendance_user">
-                    <field name="barcode"/>
-                    <field name="pin" groups="hr_attendance.group_hr_attendance_use_pin"/>
-                    <field name="manual_attendance" attrs="{'invisible': [('user_id', '=', False)]}"/>
-                </group>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(hr_attendance_action)d"
+                        class="oe_stat_button"
+                        icon="fa-calendar"
+                        type="action"
+                        context="{'search_default_employee_id': active_id, 'search_default_check_in_filter': '1'}"
+                        groups="base.group_user"
+                        help="Worked hours last month">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="hours_last_month"/> Hours
+                        </span>
+                        <span class="o_stat_text">
+                            Last Month
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_user_view_form" model="ir.ui.view">
+        <field name="name">hr.user.preferences.view.form.attendance.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="attendance_state" invisible="1"/>
+                <button name="%(hr_attendance_action_my_attendances)d"
+                    class="oe_stat_button"
+                    type="action" attrs="{'invisible': [('attendance_state', '=', False)]}">
+                    <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon oe_hr_attendance_status_green" attrs="{'invisible': [('attendance_state', '=', 'checked_out')]}" aria-label="Available" title="Available"/>
+                    <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon oe_hr_attendance_status_red" attrs="{'invisible': [('attendance_state', '=', 'checked_in')]}" aria-label="Not available" title="Not available"/>
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Attendance</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="employee_ids" invisible="1"/>
+                <button name="%(hr_attendance_action)d"
+                        class="oe_stat_button"
+                        icon="fa-calendar"
+                        type="action"
+                        context="{'search_default_employee_id': employee_ids, 'search_default_check_in_filter': '1'}"
+                        groups="base.group_user"
+                        help="Worked hours last month">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="hours_last_month"/> Hours
+                        </span>
+                        <span class="o_stat_text">
+                            Last Month
+                        </span>
+                    </div>
+                </button>
             </xpath>
         </field>
     </record>
@@ -35,9 +85,10 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_filter"/>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='inactive']" position="after">
+            <xpath expr="//filter[@name='inactive']" position="before">
                 <filter string="Signed In" name="signed_in" domain="[('last_attendance_id.check_out', '=', False)]"/>
                 <filter string="Signed Out" name="signed_out" domain="['|', ('last_attendance_id', '=', False), ('last_attendance_id.check_out', '!=', False)]"/>
+                <separator/>
             </xpath>
         </field>
     </record>
@@ -60,10 +111,10 @@
                         <div class="oe_kanban_details">
                             <div id="textbox">
                                 <div class="float-right" t-if="record.attendance_state.raw_value == 'checked_in'">
-                                    <span id="oe_hr_attendance_status" class="fa fa-user oe_hr_attendance_status_green" role="img" aria-label="Available" title="Available"></span>
+                                    <span id="oe_hr_attendance_status" class="fa fa-circle oe_hr_attendance_status_green" role="img" aria-label="Available" title="Available"></span>
                                 </div>
                                 <div class="float-right" t-if="record.attendance_state.raw_value == 'checked_out'">
-                                    <span id="oe_hr_attendance_status" class="fa fa-user oe_hr_attendance_status_red" role="img" aria-label="Not available" title="Not available"></span>
+                                    <span id="oe_hr_attendance_status" class="fa fa-circle oe_hr_attendance_status_red" role="img" aria-label="Not available" title="Not available"></span>
                                 </div>
                                 <strong>
                                     <field name="name"/>
@@ -93,10 +144,10 @@
             <field name="name" position="replace">
                 <div>
                     <div class="float-right" t-if="record.attendance_state.raw_value == 'checked_in'">
-                        <span id="oe_hr_attendance_status" class="fa fa-user oe_hr_attendance_status_green" role="img" aria-label="Available" title="Available"></span>
+                        <span id="oe_hr_attendance_status" class="fa fa-circle oe_hr_attendance_status_green" role="img" aria-label="Available" title="Available"></span>
                     </div>
                     <div class="float-right" t-if="record.attendance_state.raw_value == 'checked_out'">
-                        <span id="oe_hr_attendance_status" class="fa fa-user oe_hr_attendance_status_red" role="img" aria-label="Not available" title="Not available"></span>
+                        <span id="oe_hr_attendance_status" class="fa fa-circle oe_hr_attendance_status_red" role="img" aria-label="Not available" title="Not available"></span>
                     </div>
                     <strong>
                         <field name="name" placeholder="Employee's Name"/>
@@ -109,7 +160,7 @@
     <record id="hr_employee_attendance_action_kanban" model="ir.actions.act_window">
         <field name="name">Employees</field>
         <field name="res_model">hr.employee</field>
-        <field name="view_mode">kanban</field>
+        <field name="view_mode">kanban,tree,activity</field>
         <field name="view_id" ref="hr_employees_view_kanban"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

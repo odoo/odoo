@@ -4,7 +4,7 @@ odoo.define('mail.composer.Basic', function (require) {
 var emojis = require('mail.emojis');
 var MentionManager = require('mail.composer.MentionManager');
 var DocumentViewer = require('mail.DocumentViewer');
-var mailUtils = require('mail.utils');
+var utils = require('web.utils');
 
 var config = require('web.config');
 var core = require('web.core');
@@ -26,8 +26,11 @@ var BasicComposer = Widget.extend({
         'click .o_composer_button_add_attachment': '_onClickAddAttachment',
         'click .o_composer_button_emoji': '_onEmojiButtonClick',
         'focusout .o_composer_button_emoji': '_onEmojiButtonFocusout',
-        'click .o_mail_emoji_container .o_mail_emoji': '_onEmojiImageClick',
+        'mousedown .o_mail_emoji_container .o_mail_emoji': '_onEmojiImageClick',
         'focus .o_mail_emoji_container .o_mail_emoji': '_onEmojiImageFocus',
+        'dragover .o_file_drop_zone_container': '_onFileDragover',
+        'drop .o_file_drop_zone_container': '_onFileDrop',
+        'input .o_input': '_onInput',
         'keydown .o_composer_input textarea': '_onKeydown',
         'keyup .o_composer_input': '_onKeyup',
         'click .o_composer_button_send': '_sendMessage',
@@ -55,7 +58,7 @@ var BasicComposer = Widget.extend({
         // Attachments
         this._attachmentDataSet = new data.DataSetSearch(this, 'ir.attachment', this.context);
         this.fileuploadID = _.uniqueId('o_chat_fileupload');
-        this.set('attachment_ids', []);
+        this.set('attachment_ids', options.attachmentIds || []);
 
         // Mention
         this._mentionManager = new MentionManager(this);
@@ -117,15 +120,29 @@ var BasicComposer = Widget.extend({
         });
 
         // Attachments
+        this._renderAttachments();
         $(window).on(this.fileuploadID, this._onAttachmentLoaded.bind(this));
         this.on('change:attachment_ids', this, this._renderAttachments);
 
-        // Mention
-        this._mentionManager.prependTo(this.$('.o_composer'));
+        this.call('mail_service', 'getMailBus')
+            .on('update_typing_partners', this, this._onUpdateTypingPartners);
 
-        return this._super();
+        // Mention
+        var prependPromise = this._mentionManager.prependTo(this.$('.o_composer'));
+
+        // Drag-Drop files
+        // Allowing body to detect dragenter and dragleave for display
+        var $body = $('body');
+        this._dropZoneNS = _.uniqueId('o_dz_');  // For event namespace used when multiple chat window is open
+        $body.on('dragleave.' + this._dropZoneNS, this._onBodyFileDragLeave.bind(this));
+        $body.on("dragover." + this._dropZoneNS, this._onBodyFileDragover.bind(this));
+        $body.on("drop." + this._dropZoneNS, this._onBodyFileDrop.bind(this));
+        return Promise.all([this._super(), prependPromise]);
     },
     destroy: function () {
+        $("body").off('dragleave.' + this._dropZoneNS);
+        $("body").off('dragover.' + this._dropZoneNS);
+        $("body").off('drop.' + this._dropZoneNS);
         $(window).off(this.fileuploadID);
         return this._super.apply(this, arguments);
     },
@@ -147,6 +164,15 @@ var BasicComposer = Widget.extend({
      */
     focus: function () {
         this.$input.focus();
+    },
+    /**
+     * Get cursor position and selection
+     *
+     * @returns {Object} a current cursor position as { start: {integer}, end: {integer} }
+    */
+   getSelectionPositions: function () {
+        var InputElement = this.$input.get(0);
+        return InputElement ? dom.getSelectionRange(InputElement) : { start: 0, end: 0 };
     },
     /**
      * Get the state of the composer.
@@ -185,6 +211,14 @@ var BasicComposer = Widget.extend({
         this.$input.val(state.text);
     },
     /**
+     * Set the thread that this composer refers to.
+     *
+     * @param {mail.model.Thread} thread
+     */
+    setThread: function (thread) {
+        this.options.thread = thread;
+    },
+    /**
      * Set the list of command suggestions on the thread.
      *
      * When the user partially types a command, matching commands are displayed
@@ -202,7 +236,8 @@ var BasicComposer = Widget.extend({
      * displayed to the user. If none of them match, then it will fetch for more
      * partner suggestions (@see _mentionFetchPartners).
      *
-     * @param {$.Deferred<Object[]>} prefetchedPartners
+     * @param {Promise<Object[]>} prefetchedPartners list of list of
+     *   prefetched partners.
      */
     mentionSetPrefetchedPartners: function (prefetchedPartners) {
         this._mentionPrefetchedPartners = prefetchedPartners;
@@ -244,22 +279,41 @@ var BasicComposer = Widget.extend({
         this._$emojisContainer.remove();
     },
     /**
+     * Making sure that dragging content is external files.
+     * Ignoring other content draging like text.
+     *
+     * @private
+     * @param {DataTransfer} dataTransfer
+     * @returns {boolean}
+     */
+    _isDragSourceExternalFile: function (dataTransfer) {
+        var DragDataType = dataTransfer.types;
+        if (DragDataType.constructor === DOMStringList) {
+            return DragDataType.contains('Files');
+        }
+        if (DragDataType.constructor === Array) {
+            return DragDataType.indexOf('Files') !== -1;
+        }
+        return false;
+    },
+    /**
      * @private
      * @param {string} search
-     * @returns {$.Deferred<Object[]>}
+     * @returns {Promise<Object[]>}
      */
     _mentionGetCannedResponses: function (search) {
         var self = this;
-        var def = $.Deferred();
-        clearTimeout(this._cannedTimeout);
-        this._cannedTimeout = setTimeout(function () {
-            var cannedResponses = self.call('mail_service', 'getCannedResponses');
-            var matches = fuzzy.filter(mailUtils.unaccent(search), _.pluck(cannedResponses, 'source'));
-            var indexes = _.pluck(matches.slice(0, self.options.mentionFetchLimit), 'index');
-            def.resolve(_.map(indexes, function (index) {
-                return cannedResponses[index];
-            }));
-        }, 500);
+        var def = new Promise(function (resolve, reject) {
+            clearTimeout(self._cannedTimeout);
+            self._cannedTimeout = setTimeout(function () {
+                var cannedResponses = self.call('mail_service', 'getCannedResponses');
+                var matches = fuzzy.filter(utils.unaccent(search), _.pluck(cannedResponses, 'source'));
+                var indexes = _.pluck(matches.slice(0, self.options.mentionFetchLimit), 'index');
+                resolve(_.map(indexes, function (index) {
+                    return cannedResponses[index];
+                }));
+            }, 500);
+        });
         return def;
     },
     /**
@@ -268,7 +322,7 @@ var BasicComposer = Widget.extend({
      * @returns {Array}
      */
     _mentionGetCommands: function (search) {
-        var searchRegexp = new RegExp(_.str.escapeRegExp(mailUtils.unaccent(search)), 'i');
+        var searchRegexp = new RegExp(_.str.escapeRegExp(utils.unaccent(search)), 'i');
         return _.filter(this._mentionCommands, function (command) {
             return searchRegexp.test(command.name);
         }).slice(0, this.options.mentionFetchLimit);
@@ -293,21 +347,23 @@ var BasicComposer = Widget.extend({
      */
     _mentionFetchPartners: function (search) {
         var self = this;
-        return $.when(this._mentionPrefetchedPartners).then(function (partners) {
+        return Promise.resolve(this._mentionPrefetchedPartners).then(function (prefetchedPartners) {
             // filter prefetched partners with the given search string
             var suggestions = [];
             var limit = self.options.mentionFetchLimit;
-            var searchRegexp = new RegExp(_.str.escapeRegExp(mailUtils.unaccent(search)), 'i');
-            if (limit > 0) {
-                var filteredPartners = _.filter(partners, function (partner) {
-                    return partner.email && searchRegexp.test(partner.email) ||
-                           partner.name && searchRegexp.test(mailUtils.unaccent(partner.name));
-                });
-                if (filteredPartners.length) {
-                    suggestions.push(filteredPartners.slice(0, limit));
-                    limit -= filteredPartners.length;
+            var searchRegexp = new RegExp(_.str.escapeRegExp(utils.unaccent(search)), 'i');
+            _.each(prefetchedPartners, function (partners) {
+                if (limit > 0) {
+                    var filteredPartners = _.filter(partners, function (partner) {
+                        return partner.email && searchRegexp.test(partner.email) ||
+                            partner.name && searchRegexp.test(utils.unaccent(partner.name));
+                    });
+                    if (filteredPartners.length) {
+                        suggestions.push(filteredPartners.slice(0, limit));
+                        limit -= filteredPartners.length;
+                    }
                 }
-            }
+            });
             if (!suggestions.length && !self.options.mentionPartnersRestricted) {
                 // no result found among prefetched partners, fetch other suggestions
                 suggestions = self._mentionFetchThrottled(
@@ -316,7 +372,15 @@ var BasicComposer = Widget.extend({
                     { limit: limit, search: search }
                 );
             }
-            return suggestions;
+            return Promise.resolve(suggestions).then(function (suggestions) {
+                //add im_status on suggestions
+                _.each(suggestions, function (suggestionsSet) {
+                    _.each(suggestionsSet, function (suggestion) {
+                        suggestion.im_status = self.call('mail_service', 'getImStatus', { partnerID: suggestion.id });
+                    });
+                });
+                return suggestions;
+            });
         });
     },
     /**
@@ -324,27 +388,27 @@ var BasicComposer = Widget.extend({
      * @param {string} model
      * @param {string} method
      * @param {Object} kwargs
-     * @return {$.Deferred}
+     * @return {Promise}
      */
     _mentionFetchThrottled: function (model, method, kwargs) {
         var self = this;
         // Delays the execution of the RPC to prevent unnecessary RPCs when the user is still typing
-        var def = $.Deferred();
-        clearTimeout(this.mentionFetchTimer);
-        this.mentionFetchTimer = setTimeout(function () {
-            return self._rpc({model: model, method: method, kwargs: kwargs})
+        return new Promise(function (resolve, reject) {
+            clearTimeout(self.mentionFetchTimer);
+            self.mentionFetchTimer = setTimeout(function () {
+                return self._rpc({model: model, method: method, kwargs: kwargs})
                 .then(function (results) {
-                    def.resolve(results);
+                    resolve(results);
                 });
-        }, this.MENTION_THROTTLE);
-        return def;
+            }, self.MENTION_THROTTLE);
+        });
     },
     /**
      * @private
-     * @returns {$.Deferred}
+     * @returns {Promise}
      */
     _preprocessMessage: function () {
-        // Return a deferred as this function is extended with asynchronous
+        // Return a promise as this function is extended with asynchronous
         // behavior for the chatter composer
 
         //Removing unwanted extra spaces from message
@@ -357,12 +421,75 @@ var BasicComposer = Widget.extend({
         var commands = this.options.commandsEnabled ?
                         this._mentionManager.getListenerSelection('/') :
                         [];
-        return $.when({
+        return Promise.resolve({
             content: this._mentionManager.generateLinks(value),
             attachment_ids: _.pluck(this.get('attachment_ids'), 'id'),
             partner_ids: _.uniq(_.pluck(this._mentionManager.getListenerSelection('@'), 'id')),
+            canned_response_ids: _.uniq(_.pluck(this._mentionManager.getListenerSelections()[':'], 'id')),
+            channel_ids: _.uniq(_.pluck(this._mentionManager.getListenerSelection('#'), 'id')),
             command: commands.length > 0 ? commands[0].name : undefined,
         });
+    },
+    /**
+     * Allowing to upload attachment with file selector as well drag drop feature.
+     *
+     * @private
+     * @param {Array<File>} params.files
+     * @param {boolean} params.submitForm [optional]
+     */
+    _processAttachmentChange: function (params) {
+        var self = this,
+        attachments = this.get('attachment_ids'),
+        files = params.files,
+        submitForm = params.submitForm;
+        _.each(files, function (file) {
+            var attachment = _.findWhere(attachments, {
+                name: file.name,
+                size: file.size
+            });
+            // if the files already exits, delete the file before upload
+            if (attachment) {
+                self._attachmentDataSet.unlink([attachment.id]);
+                attachments = _.without(attachments, attachment);
+            }
+        });
+        var $form = this.$('form.o_form_binary_form');
+        if (submitForm) {
+            $form.submit();
+            this._$attachmentButton.prop('disabled', true);
+        } else {
+            var data = new FormData($form[0]);
+            _.each(files, function (file) {
+                // removing existing key with blank data and appending again with file info
+                // In safari, existing key will not be updated when append with new file.
+                data.delete("ufile");
+                data.append("ufile", file, file.name);
+                $.ajax({
+                    url: $form.attr("action"),
+                    type: "POST",
+                    enctype: 'multipart/form-data',
+                    processData: false,
+                    contentType: false,
+                    data: data,
+                    success: function (result) {
+                        var $el = $(result);
+                        $.globalEval($el.contents().text());
+                    }
+                });
+            });
+        }
+        var uploadAttachments = _.map(files, function (file){
+            return {
+                id: 0,
+                name: file.name,
+                filename: file.name,
+                url: '',
+                upload: true,
+                mimetype: '',
+            };
+        });
+        attachments = attachments.concat(uploadAttachments);
+        this.set('attachment_ids', attachments);
     },
     /**
      * @private
@@ -383,9 +510,10 @@ var BasicComposer = Widget.extend({
         clearTimeout(this._cannedTimeout);
         var self = this;
         this._preprocessMessage().then(function (message) {
-            self.trigger('post_message', message);
-            self._clearComposerOnSend();
-            self.$input.focus();
+            self.trigger('post_message', message, function() {
+                self._clearComposerOnSend();
+                self.$input.focus();
+            });
         });
     },
     /**
@@ -406,33 +534,10 @@ var BasicComposer = Widget.extend({
      * @param {jQuery.Event} ev
      */
     _onAttachmentChange: function (ev) {
-        var self = this;
-        var files = ev.target.files;
-        var attachments = this.get('attachment_ids');
-
-        _.each(files, function (file){
-            var attachment = _.findWhere(attachments, {name: file.name});
-            // if the files already exits, delete the file before upload
-            if (attachment){
-                self._attachmentDataSet.unlink([attachment.id]);
-                attachments = _.without(attachments, attachment);
-            }
+        this._processAttachmentChange({
+            files: ev.currentTarget.files,
+            submitForm: true
         });
-
-        this.$('form.o_form_binary_form').submit();
-        this._$attachmentButton.prop('disabled', true);
-        var uploadAttachments = _.map(files, function (file){
-            return {
-                id: 0,
-                name: file.name,
-                filename: file.name,
-                url: '',
-                upload: true,
-                mimetype: '',
-            };
-        });
-        attachments = attachments.concat(uploadAttachments);
-        this.set('attachment_ids', attachments);
     },
     /**
      * @private
@@ -484,6 +589,7 @@ var BasicComposer = Widget.extend({
                         name: file.name || file.filename,
                         filename: file.filename,
                         mimetype: file.mimetype,
+                        size: file.size,
                         url: session.url('/web/content', { id: file.id, download: true }),
                     });
                 }
@@ -504,6 +610,46 @@ var BasicComposer = Widget.extend({
             attachmentViewer.appendTo($('body'));
         }
     },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onBodyFileDragLeave: function (ev) {
+        // On every dragenter chain created with parent child element
+        // That's why dragleave is fired every time when a child elemnt is hovered
+        // so here we hide dropzone based on mouse position
+        if (ev.originalEvent.clientX <= 0
+            || ev.originalEvent.clientY <= 0
+            || ev.originalEvent.clientX >= window.innerWidth
+            || ev.originalEvent.clientY >= window.innerHeight
+        ) {
+            this.$(".o_file_drop_zone_container").addClass("d-none");
+        }
+    },
+    /**
+     * When user start dragging on element drop area will be visible to drop selected files.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onBodyFileDragover: function (ev) {
+        ev.preventDefault();
+        if (this._isDragSourceExternalFile(ev.originalEvent.dataTransfer)) {
+            this.$(".o_file_drop_zone_container").removeClass("d-none");
+        }
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onBodyFileDrop: function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        this.$(".o_file_drop_zone_container").addClass("d-none");
+    },
+    /**
+     * @private
+     */
     _onClickAddAttachment: function () {
         this.$('input.o_input_file').click();
         this.$input.focus();
@@ -541,15 +687,25 @@ var BasicComposer = Widget.extend({
         }
     },
     /**
-     * Called when an emoji is clicked -> adds it in the <input/>, focuses the
-     * <input/> and closes the emoji panel.
+     * Called when an emoji is clicked from the emoji panel.
+     * Emoji is inserted in the composer based on the position of the cursor,
+     * and it automatically focuses the composer and set the cursor position
+     * just after the newly inserted emoji.
      *
      * @private
      * @param {Event} ev
      */
     _onEmojiImageClick: function (ev) {
-        this.$input.val(this.$input.val() + " " + $(ev.currentTarget).data('emoji') + " ");
+        ev.preventDefault();
+        var cursorPosition = this.getSelectionPositions();
+        var inputVal = this.$input.val();
+        var leftSubstring = inputVal.substring(0, cursorPosition.start);
+        var rightSubstring = inputVal.substring(cursorPosition.end);
+        var newInputVal  = [leftSubstring , $(ev.currentTarget).data('emoji'), rightSubstring].join(" ");
+        var newCursorPosition = newInputVal.length - rightSubstring.length;
+        this.$input.val(newInputVal);
         this.$input.focus();
+        this.$input[0].setSelectionRange(newCursorPosition, newCursorPosition);
         this._hideEmojis();
     },
     /**
@@ -559,6 +715,43 @@ var BasicComposer = Widget.extend({
      */
     _onEmojiImageFocus: function () {
         clearTimeout(this._hideEmojisTimeout);
+    },
+    /**
+     * Setting drop Effect to copy so when mouse pointer on dropzone
+     * cursor icon changed to copy ('+')
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onFileDragover: function (ev) {
+        ev.originalEvent.dataTransfer.dropEffect = "copy";
+    },
+    /**
+     * Called when user drop selected files on drop area
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onFileDrop: function (ev) {
+        ev.preventDefault();
+        // FIX: In case multiple chat windows are opened, and file droped in one of them
+        // at that time, other chat windows are still displaing drop areas so here hide them all with $ selector
+        $(".o_file_drop_zone_container").addClass("d-none");
+        if (this._isDragSourceExternalFile(ev.originalEvent.dataTransfer)) {
+            var files = ev.originalEvent.dataTransfer.files;
+            this._processAttachmentChange({ files: files });
+        }
+    },
+    /**
+     * Called when the input in the composer changes
+     *
+     * @private
+     */
+    _onInput: function () {
+        if (this.options.thread && this.options.thread.hasTypingNotification()) {
+            var isTyping = this.$input.val().length > 0;
+            this.options.thread.setMyselfTyping({ typing: isTyping });
+        }
     },
     /**
      * _onKeydown event is triggered when is key is pressed
@@ -633,6 +826,24 @@ var BasicComposer = Widget.extend({
             default:
                 this._mentionManager.detectDelimiter();
         }
+    },
+    /**
+     * @private
+     * @param {integer|string} threadID
+     */
+    _onUpdateTypingPartners: function (threadID) {
+        if (!this.options.showTyping) {
+            return;
+        }
+        if (!this.options.thread) {
+            return;
+        }
+        if (this.options.thread.getID() !== threadID) {
+            return;
+        }
+        this.$('.o_composer_thread_typing').html(QWeb.render('mail.Composer.ThreadTyping', {
+            thread: this.options.thread,
+        }));
     },
 });
 

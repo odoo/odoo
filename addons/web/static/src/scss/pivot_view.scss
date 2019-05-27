@@ -7,12 +7,31 @@
         .o_pivot_cell_value:hover {
             color: $o-brand-primary;
             cursor: pointer;
+
+        }
+    }
+    .o_pivot_cell_value {
+        font-size: 1em;
+        .o_comparison {
+            font-size: 0.61em;
+        }
+        .o_variation {
+            &.o_positive {
+                color: green;
+            }
+            &.o_negative {
+                color: red;
+            }
         }
     }
 
     table {
         background-color: $o-view-background-color;
         width: auto;  // bootstrap override
+
+        thead th:not(.o_pivot_header_cell_closed):not(.o_pivot_header_cell_opened) {
+            text-align: center;
+        }
 
         th {
             font-weight: normal;  // bootstrap override

@@ -6,7 +6,7 @@ var Registry = require('web.Registry');
 return new Registry();
 });
 
-odoo.define('web._field_registry', function(require) {
+odoo.define('web._field_registry', function (require) {
 "use strict";
 
 var AbstractField = require('web.AbstractField');
@@ -26,6 +26,7 @@ registry
     .add('datetime', basic_fields.FieldDateTime)
     .add('domain', basic_fields.FieldDomain)
     .add('text', basic_fields.FieldText)
+    .add('list.text', basic_fields.ListFieldText)
     .add('html', basic_fields.FieldText)
     .add('float', basic_fields.FieldFloat)
     .add('char', basic_fields.FieldChar)
@@ -43,16 +44,18 @@ registry
     .add('percentage', basic_fields.FieldPercentage)
     .add('priority', basic_fields.PriorityWidget)
     .add('attachment_image', basic_fields.AttachmentImage)
-    .add('image_selection', basic_fields.ImageSelection)
     .add('label_selection', basic_fields.LabelSelection)
+    .add('kanban_label_selection', basic_fields.LabelSelection) // deprecated, use label_selection
     .add('state_selection', basic_fields.StateSelectionWidget)
-    .add('kanban_state_selection', basic_fields.StateSelectionWidget)
+    .add('kanban_state_selection', basic_fields.StateSelectionWidget) // deprecated, use state_selection
     .add('boolean_favorite', basic_fields.FavoriteWidget)
     .add('boolean_button', basic_fields.FieldBooleanButton)
     .add('boolean_toggle', basic_fields.BooleanToggle)
     .add('statinfo', basic_fields.StatInfo)
     .add('percentpie', basic_fields.FieldPercentPie)
     .add('float_time', basic_fields.FieldFloatTime)
+    .add('float_factor', basic_fields.FieldFloatFactor)
+    .add('float_toggle', basic_fields.FieldFloatToggle)
     .add('progressbar', basic_fields.FieldProgressBar)
     .add('toggle_button', basic_fields.FieldToggleBoolean)
     .add('dashboard_graph', basic_fields.JournalDashboardGraph)
@@ -64,6 +67,7 @@ registry
     .add('radio', relational_fields.FieldRadio)
     .add('selection_badge', relational_fields.FieldSelectionBadge)
     .add('many2one', relational_fields.FieldMany2One)
+    .add('many2one_barcode', relational_fields.Many2oneBarcode)
     .add('list.many2one', relational_fields.ListFieldMany2One)
     .add('kanban.many2one', relational_fields.KanbanFieldMany2One)
     .add('many2many', relational_fields.FieldMany2Many)
@@ -74,10 +78,10 @@ registry
     .add('many2many_checkboxes', relational_fields.FieldMany2ManyCheckBoxes)
     .add('one2many', relational_fields.FieldOne2Many)
     .add('statusbar', relational_fields.FieldStatus)
-    .add('reference', relational_fields.FieldReference)
-    .add('one2many_list', relational_fields.FieldOne2Many);
+    .add('reference', relational_fields.FieldReference);
 
 // Special fields
 registry
-    .add('timezone_mismatch', special_fields.FieldTimezoneMismatch);
+    .add('timezone_mismatch', special_fields.FieldTimezoneMismatch)
+    .add('report_layout', special_fields.FieldReportLayout);
 });

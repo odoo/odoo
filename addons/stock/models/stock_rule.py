@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
-from datetime import datetime
+from collections import namedtuple, OrderedDict, defaultdict
 from dateutil.relativedelta import relativedelta
 from odoo.tools.misc import split_every
 from psycopg2 import OperationalError
 
-from odoo import api, fields, models, registry, _
+from odoo import api, fields, models, registry, SUPERUSER_ID, _
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_round
 
@@ -21,7 +20,7 @@ class StockRule(models.Model):
     """ A rule describe what a procurement should do; produce, buy, move, ... """
     _name = 'stock.rule'
     _description = "Stock Rule"
-    _order = "sequence, name"
+    _order = "sequence, id"
 
     name = fields.Char(
         'Name', required=True, translate=True,
@@ -39,17 +38,19 @@ class StockRule(models.Model):
         required=True)
     sequence = fields.Integer('Sequence', default=20)
     company_id = fields.Many2one('res.company', 'Company',
-        default=lambda self: self.env.user.company_id)
+        default=lambda self: self.env.company_id)
     location_id = fields.Many2one('stock.location', 'Destination Location', required=True)
     location_src_id = fields.Many2one('stock.location', 'Source Location')
     route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
     procure_method = fields.Selection([
         ('make_to_stock', 'Take From Stock'),
-        ('make_to_order', 'Trigger Another Rule')], string='Move Supply Method',
-        default='make_to_stock', required=True,
-        help="""Create Procurement: A procurement will be created in the source location and the system will try to find a rule to resolve it. The available stock will be ignored.
-             Take from Stock: The products will be taken from the available stock.""")
-    route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True)
+        ('make_to_order', 'Trigger Another Rule'),
+        ('mts_else_mto', 'Take From Stock, if unavailable, Trigger Another Rule')], string='Supply Method', default='make_to_stock', required=True,
+        help="Take From Stock: the products will be taken from the available stock of the source location.\n"
+             "Trigger Another Rule: the system will try to find a stock rule to bring the products in the source location. The available stock will be ignored.\n"
+             "Take From Stock, if Unavailable, Trigger Another Rule: the products will be taken from the available stock of the source location."
+             "If there is no stock available, the system will try to find a  rule to bring the products in the source location.")
+    route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True, readonly=False)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
         required=True)
@@ -81,7 +82,8 @@ class StockRule(models.Model):
     @api.onchange('route_id', 'company_id')
     def _onchange_route(self):
         """ Ensure that the rule's company is the same than the route's company. """
-        self.company_id = self.route_id.company_id
+        if self.route_id.company_id:
+            self.company_id = self.route_id.company_id
         if self.picking_type_id.warehouse_id.company_id != self.route_id.company_id:
             self.picking_type_id = False
         domain = {'company_id': self.route_id.company_id and [('id', '=', self.route_id.company_id.id)] or []}
@@ -109,6 +111,8 @@ class StockRule(models.Model):
             suffix = ""
             if self.procure_method == 'make_to_order' and self.location_src_id:
                 suffix = _("<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill it.") % (source)
+            if self.procure_method == 'mts_else_mto' and self.location_src_id:
+                suffix = _("<br>If the products are not available in <b>%s</b>, a rule will be triggered to bring products in this location.") % source
             message_dict = {
                 'pull': _('When products are needed in <b>%s</b>, <br/> <b>%s</b> are created from <b>%s</b> to fulfill the need.') % (destination, operation, source) + suffix,
                 'push': _('When products arrive in <b>%s</b>, <br/> <b>%s</b> are created to send them in <b>%s</b>.') % (source, operation, destination)
@@ -167,41 +171,80 @@ class StockRule(models.Model):
         }
         return new_move_vals
 
-    def _run_pull(self, product_id, product_qty, product_uom, location_id, name, origin, values):
-        if not self.location_src_id:
-            msg = _('No source location defined on stock rule: %s!') % (self.name, )
-            raise UserError(msg)
+    @api.model
+    def _run_pull(self, procurements):
+        moves_values_by_company = defaultdict(list)
+        mtso_products_by_locations = defaultdict(list)
 
-        # create the move as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
-        # Search if picking with move for it exists already:
-        group_id = False
-        if self.group_propagation_option == 'propagate':
-            group_id = values.get('group_id', False) and values['group_id'].id
-        elif self.group_propagation_option == 'fixed':
-            group_id = self.group_id.id
+        # To handle the `mts_else_mto` procure method, we do a preliminary loop to
+        # isolate the products we would need to read the forecasted quantity,
+        # in order to to batch the read. We also make a sanitary check on the
+        # `location_src_id` field.
+        for procurement, rule in procurements:
+            if not rule.location_src_id:
+                msg = _('No source location defined on stock rule: %s!') % (rule.name, )
+                raise UserError(msg)
 
-        data = self._get_stock_move_values(product_id, product_qty, product_uom, location_id, name, origin, values, group_id)
-        # Since action_confirm launch following procurement_group we should activate it.
-        move = self.env['stock.move'].sudo().with_context(force_company=data.get('company_id', False)).create(data)
-        move._action_confirm()
+            if rule.procure_method == 'mts_else_mto':
+                mtso_products_by_locations[rule.location_src_id].append(procurement.product_id.id)
+
+        # Get the forecasted quantity for the `mts_else_mto` procurement.
+        forecasted_qties_by_loc = {}
+        for location, product_ids in mtso_products_by_locations.items():
+            products = self.env['product.product'].browse(product_ids).with_context(location=location.id)
+            forecasted_qties_by_loc[location] = {product.id: product.virtual_available for product in products}
+
+        # Prepare the move values, adapt the `procure_method` if needed.
+        for procurement, rule in procurements:
+            procure_method = rule.procure_method
+            if rule.procure_method == 'mts_else_mto':
+                qty_needed = procurement.product_uom._compute_quantity(procurement.product_qty, procurement.product_id.uom_id)
+                qty_available = forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id]
+                if float_compare(qty_needed, qty_available, precision_rounding=procurement.product_id.uom_id.rounding) <= 0:
+                    procure_method = 'make_to_stock'
+                    forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id] -= qty_needed
+                else:
+                    procure_method = 'make_to_order'
+
+            move_values = rule._get_stock_move_values(*procurement)
+            move_values['procure_method'] = procure_method
+            moves_values_by_company[procurement.company_id.id].append(move_values)
+
+        for company_id, moves_values in moves_values_by_company.items():
+            # create the move as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
+            moves = self.env['stock.move'].sudo().with_context(force_company=company_id).create(moves_values)
+            # Since action_confirm launch following procurement_group we should activate it.
+            moves._action_confirm()
         return True
 
-    def _get_stock_move_values(self, product_id, product_qty, product_uom, location_id, name, origin, values, group_id):
+    def _get_custom_move_fields(self):
+        """ The purpose of this method is to be override in order to easily add
+        fields from procurement 'values' argument to move data.
+        """
+        return []
+
+    def _get_stock_move_values(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
         ''' Returns a dictionary of values that will be used to create a stock move from a procurement.
         This function assumes that the given procurement has a rule (action == 'pull' or 'pull_push') set on it.
 
         :param procurement: browse record
         :rtype: dictionary
         '''
+        group_id = False
+        if self.group_propagation_option == 'propagate':
+            group_id = values.get('group_id', False) and values['group_id'].id
+        elif self.group_propagation_option == 'fixed':
+            group_id = self.group_id.id
+
         date_expected = fields.Datetime.to_string(
             fields.Datetime.from_string(values['date_planned']) - relativedelta(days=self.delay or 0)
         )
         # it is possible that we've already got some move done, so check for the done qty and create
         # a new move with the correct qty
         qty_left = product_qty
-        return {
+        move_values = {
             'name': name[:2000],
-            'company_id': self.company_id.id or self.location_src_id.company_id.id or self.location_id.company_id.id or values['company_id'].id,
+            'company_id': self.company_id.id or self.location_src_id.company_id.id or self.location_id.company_id.id or company_id.id,
             'product_id': product_id.id,
             'product_uom': product_uom.id,
             'product_uom_qty': qty_left,
@@ -219,8 +262,13 @@ class StockRule(models.Model):
             'date': date_expected,
             'date_expected': date_expected,
             'propagate': self.propagate,
+            'description_picking': product_id._get_description(self.picking_type_id),
             'priority': values.get('priority', "1"),
         }
+        for field in self._get_custom_move_fields():
+            if field in values:
+                move_values[field] = values.get(field)
+        return move_values
 
     def _log_next_activity(self, product_id, note):
         existing_activity = self.env['mail.activity'].search([('res_id', '=',  product_id.product_tmpl_id.id), ('res_model_id', '=', self.env.ref('product.model_product_template').id),
@@ -234,13 +282,10 @@ class StockRule(models.Model):
             self.env['mail.activity'].create({
                 'activity_type_id': activity_type_id,
                 'note': note,
-                'user_id': product_id.responsible_id.id,
+                'user_id': product_id.responsible_id.id or SUPERUSER_ID,
                 'res_id': product_id.product_tmpl_id.id,
                 'res_model_id': self.env.ref('product.model_product_template').id,
             })
-
-    def _make_po_get_domain(self, values, partner):
-        return ()
 
 
 class ProcurementGroup(models.Model):
@@ -267,9 +312,11 @@ class ProcurementGroup(models.Model):
     sequence computed if created manually.
     """
     _name = 'procurement.group'
-    _description = 'Procurement Requisition'
+    _description = 'Procurement Group'
     _order = "id desc"
 
+    Procurement = namedtuple('Procurement', ['product_id', 'product_qty',
+        'product_uom', 'location_id', 'name', 'origin', 'company_id', 'values'])
     partner_id = fields.Many2one('res.partner', 'Partner')
     name = fields.Char(
         'Reference',
@@ -281,23 +328,40 @@ class ProcurementGroup(models.Model):
         required=True)
 
     @api.model
-    def run(self, product_id, product_qty, product_uom, location_id, name, origin, values):
+    def run(self, procurements):
         """ Method used in a procurement case. The purpose is to supply the
         product passed as argument in the location also given as an argument.
         In order to be able to find a suitable location that provide the product
         it will search among stock.rule.
         """
-        values.setdefault('company_id', self.env['res.company']._company_default_get('procurement.group'))
-        values.setdefault('priority', '1')
-        values.setdefault('date_planned', fields.Datetime.now())
-        rule = self._get_rule(product_id, location_id, values)
-        if not rule:
-            raise UserError(_('No procurement rule found in location "%s" for product "%s".\n Check routes configuration.') % (location_id.display_name, product_id.display_name))
-        action = 'pull' if rule.action == 'pull_push' else rule.action
-        if hasattr(rule, '_run_%s' % action):
-            getattr(rule, '_run_%s' % action)(product_id, product_qty, product_uom, location_id, name, origin, values)
-        else:
-            _logger.error("The method _run_%s doesn't exist on the procument rules" % action)
+        actions_to_run = defaultdict(list)
+        errors = []
+        for procurement in procurements:
+            procurement.values.setdefault('company_id', self.env.company_id)
+            procurement.values.setdefault('priority', '1')
+            procurement.values.setdefault('date_planned', fields.Datetime.now())
+            rule = self._get_rule(procurement.product_id, procurement.location_id, procurement.values)
+            if not rule:
+                errors.append(_('No procurement rule found in location "%s" for product "%s".\n Check routes configuration.') %
+                    (procurement.location_id.display_name, procurement.product_id.display_name))
+            else:
+                action = 'pull' if rule.action == 'pull_push' else rule.action
+                actions_to_run[action].append((procurement, rule))
+
+        if errors:
+            raise UserError('\n'.join(errors))
+
+        for action, procurements in actions_to_run.items():
+            if hasattr(self.env['stock.rule'], '_run_%s' % action):
+                try:
+                    getattr(self.env['stock.rule'], '_run_%s' % action)(procurements)
+                except UserError as e:
+                    errors.append(e.name)
+            else:
+                _logger.error("The method _run_%s doesn't exist on the procurement rules" % action)
+
+        if errors:
+            raise UserError('\n'.join(errors))
         return True
 
     @api.model
@@ -316,7 +380,7 @@ class ProcurementGroup(models.Model):
             product_routes = product_id.route_ids | product_id.categ_id.total_route_ids
             if product_routes:
                 res = Rule.search(expression.AND([[('route_id', 'in', product_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
-        if not res:
+        if not res and warehouse_id:
             warehouse_routes = warehouse_id.route_ids
             if warehouse_routes:
                 res = Rule.search(expression.AND([[('route_id', 'in', warehouse_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
@@ -346,13 +410,22 @@ class ProcurementGroup(models.Model):
             ('product_id', '=', values['product_id'].id)]
 
     @api.model
+    def _get_moves_to_assign_domain(self):
+        return expression.AND([
+            [('state', 'in', ['confirmed', 'partially_available'])],
+            [('product_uom_qty', '!=', 0.0)]
+        ])
+
+    @api.model
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
         # Minimum stock rules
         self.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id)
 
         # Search all confirmed stock_moves and try to assign them
-        confirmed_moves = self.env['stock.move'].search([('state', '=', 'confirmed'), ('product_uom_qty', '!=', 0.0)], limit=None, order='priority desc, date_expected asc')
-        for moves_chunk in split_every(100, confirmed_moves.ids):
+        domain = self._get_moves_to_assign_domain()
+        moves_to_assign = self.env['stock.move'].search(domain, limit=None,
+            order='priority desc, date_expected asc')
+        for moves_chunk in split_every(100, moves_to_assign.ids):
             self.env['stock.move'].browse(moves_chunk)._action_assign()
             if use_new_cursor:
                 self._cr.commit()
@@ -361,7 +434,7 @@ class ProcurementGroup(models.Model):
             self._cr.commit()
 
         # Merge duplicated quants
-        self.env['stock.quant']._merge_quants()
+        self.env['stock.quant']._quant_tasks()
 
     @api.model
     def run_scheduler(self, use_new_cursor=False, company_id=False):
@@ -412,7 +485,7 @@ class ProcurementGroup(models.Model):
             1000 orderpoints.
             This is appropriate for batch jobs only.
         """
-        if company_id and self.env.user.company_id.id != company_id:
+        if company_id and self.env.company_id.id != company_id:
             # To ensure that the company_id is taken into account for
             # all the processes triggered by this method
             # i.e. If a PO is generated by the run of the procurements the
@@ -433,9 +506,19 @@ class ProcurementGroup(models.Model):
             orderpoints_noprefetch = orderpoints_noprefetch[1000:]
 
             # Calculate groups that can be executed together
-            location_data = defaultdict(lambda: dict(products=self.env['product.product'], orderpoints=self.env['stock.warehouse.orderpoint'], groups=list()))
+            location_data = OrderedDict()
+
+            def makedefault():
+                return {
+                    'products': self.env['product.product'],
+                    'orderpoints': self.env['stock.warehouse.orderpoint'],
+                    'groups': []
+                }
+
             for orderpoint in orderpoints:
                 key = self._procurement_from_orderpoint_get_grouping_key([orderpoint.id])
+                if not location_data.get(key):
+                    location_data[key] = makedefault()
                 location_data[key]['products'] += orderpoint.product_id
                 location_data[key]['orderpoints'] += orderpoint
                 location_data[key]['groups'] = self._procurement_from_orderpoint_get_groups([orderpoint.id])
@@ -472,8 +555,11 @@ class ProcurementGroup(models.Model):
                                     values = orderpoint._prepare_procurement_values(qty_rounded, **group['procurement_values'])
                                     try:
                                         with self._cr.savepoint():
-                                            self.env['procurement.group'].run(orderpoint.product_id, qty_rounded, orderpoint.product_uom, orderpoint.location_id,
-                                                                              orderpoint.name, orderpoint.name, values)
+                                            #TODO: make it batch
+                                            self.env['procurement.group'].run([self.env['procurement.group'].Procurement(
+                                                orderpoint.product_id, qty_rounded, orderpoint.product_uom,
+                                                orderpoint.location_id, orderpoint.name, orderpoint.name,
+                                                orderpoint.company_id, values)])
                                     except UserError as error:
                                         self.env['stock.rule']._log_next_activity(orderpoint.product_id, error.name)
                                     self._procurement_from_orderpoint_post_process([orderpoint.id])

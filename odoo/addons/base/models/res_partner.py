@@ -2,10 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import collections
 import datetime
 import hashlib
 import pytz
 import threading
+import re
 
 from email.utils import formataddr
 
@@ -17,10 +19,9 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.modules import get_module_resource
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import pycompat
 
 # Global variables used for the warning fields declared on the res.partner
-# in the following modules : sale, purchase, account, stock 
+# in the following modules : sale, purchase, account, stock
 WARNING_MESSAGE = [
                    ('no-message','No Message'),
                    ('warning','Warning'),
@@ -34,18 +35,20 @@ ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
 def _lang_get(self):
     return self.env['res.lang'].get_installed()
 
-@api.model
+
+# put POSIX 'Etc/*' entries at the end to avoid confusing users - see bug 1086728
+_tzs = [(tz, tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
 def _tz_get(self):
-    # put POSIX 'Etc/*' entries at the end to avoid confusing users - see bug 1086728
-    return [(tz, tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
+    return _tzs
 
 
 class FormatAddressMixin(models.AbstractModel):
     _name = "format.address.mixin"
+    _description = 'Fomat Address'
 
     def _fields_view_get_address(self, arch):
         # consider the country of the user, not the country of the partner we want to display
-        address_view_id = self.env.user.company_id.country_id.address_view_id
+        address_view_id = self.env.company_id.country_id.address_view_id
         if address_view_id and not self._context.get('no_address_format'):
             #render the partner address accordingly to address_view_id
             doc = etree.fromstring(arch)
@@ -120,6 +123,7 @@ class PartnerCategory(models.Model):
 class PartnerTitle(models.Model):
     _name = 'res.partner.title'
     _order = 'name'
+    _description = 'Partner Title'
 
     name = fields.Char(string='Title', required=True, translate=True)
     shortcut = fields.Char(string='Abbreviation', translate=True)
@@ -135,7 +139,7 @@ class Partner(models.Model):
         return self.env['res.partner.category'].browse(self._context.get('category_id'))
 
     def _default_company(self):
-        return self.env['res.company']._company_default_get('res.partner')
+        return self.env.company_id
 
     def _split_street_with_params(self, street_raw, street_format):
         return {'street': street_raw}
@@ -146,11 +150,10 @@ class Partner(models.Model):
     title = fields.Many2one('res.partner.title')
     parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
     parent_name = fields.Char(related='parent_id.name', readonly=True, string='Parent name')
-    child_ids = fields.One2many('res.partner', 'parent_id', string='Contacts', domain=[('active', '=', True)])  # force "active_test" domain to bypass _search() override
-    ref = fields.Char(string='Internal Reference', index=True)
+    child_ids = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)])  # force "active_test" domain to bypass _search() override
+    ref = fields.Char(string='Reference', index=True)
     lang = fields.Selection(_lang_get, string='Language', default=lambda self: self.env.lang,
-                            help="If the selected language is loaded in the system, all documents related to "
-                                 "this contact will be printed in this language. If not, it will be English.")
+                            help="All the emails and documents sent to this contact will be translated in this language.")
     tz = fields.Selection(_tz_get, string='Timezone', default=lambda self: self._context.get('tz'),
                           help="The partner's timezone, used to output proper date and time values "
                                "inside printed reports. It is important to set a value for this field. "
@@ -158,40 +161,37 @@ class Partner(models.Model):
                                "render date and time values: your computer's timezone.")
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
     user_id = fields.Many2one('res.users', string='Salesperson',
-      help='The internal user that is in charge of communicating with this contact if any.')
-    vat = fields.Char(string='TIN', help="Tax Identification Number. "
-                                         "Fill it if the company is subjected to taxes. "
-                                         "Used by the some of the legal statements.")
+      help='The internal user in charge of this contact.')
+    vat = fields.Char(string='Tax ID', help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
+    same_vat_partner_id = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
     bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
-    website = fields.Char(help="Website of Partner or Company")
+    website = fields.Char('Website Link')
     comment = fields.Text(string='Notes')
 
     category_id = fields.Many2many('res.partner.category', column1='partner_id',
                                     column2='category_id', string='Tags', default=_default_category)
     credit_limit = fields.Float(string='Credit Limit')
-    barcode = fields.Char(oldname='ean13')
     active = fields.Boolean(default=True)
     customer = fields.Boolean(string='Is a Customer', default=True,
-                               help="Check this box if this contact is a customer.")
+                               help="Check this box if this contact is a customer. It can be selected in sales orders.")
     supplier = fields.Boolean(string='Is a Vendor',
-                               help="Check this box if this contact is a vendor. "
-                               "If it's not checked, purchase people will not see it when encoding a purchase order.")
+                               help="Check this box if this contact is a vendor. It can be selected in purchase orders.")
     employee = fields.Boolean(help="Check this box if this contact is an Employee.")
     function = fields.Char(string='Job Position')
     type = fields.Selection(
         [('contact', 'Contact'),
-         ('invoice', 'Invoice address'),
-         ('delivery', 'Shipping address'),
-         ('other', 'Other address'),
+         ('invoice', 'Invoice Address'),
+         ('delivery', 'Delivery Address'),
+         ('other', 'Other Address'),
          ("private", "Private Address"),
         ], string='Address Type',
         default='contact',
-        help="Used to select automatically the right address according to the context in sales and purchases documents.")
+        help="Invoice & Delivery addresses are used in sales orders. Private addresses are only visible by authorized users.")
     street = fields.Char()
     street2 = fields.Char()
     zip = fields.Char(change_default=True)
     city = fields.Char()
-    state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict')
+    state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', domain="[('country_id', '=?', country_id)]")
     country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
     email = fields.Char()
     email_formatted = fields.Char(
@@ -223,13 +223,13 @@ class Partner(models.Model):
     company_name = fields.Char('Company Name')
 
     # image: all image fields are base64 encoded and PIL-supported
-    image = fields.Binary("Image", attachment=True,
+    image = fields.Binary("Image",
         help="This field holds the image used as avatar for this contact, limited to 1024x1024px",)
-    image_medium = fields.Binary("Medium-sized image", attachment=True,
+    image_medium = fields.Binary("Medium-sized image",
         help="Medium-sized image of this contact. It is automatically "\
              "resized as a 128x128px image, with aspect ratio preserved. "\
              "Use this field in form views or some kanban views.")
-    image_small = fields.Binary("Small-sized image", attachment=True,
+    image_small = fields.Binary("Small-sized image",
         help="Small-sized image of this contact. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
@@ -240,12 +240,11 @@ class Partner(models.Model):
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name.'),
     ]
 
-    @api.multi
-    def toggle_active(self):
-        for partner in self:
-            if partner.active and partner.user_ids:
-                raise ValidationError(_('You cannot archive a contact linked to an internal user.'))
-        super(Partner, self).toggle_active()
+    @api.model_cr
+    def init(self):
+        self._cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'res_partner_vat_index'""")
+        if not self._cr.fetchone():
+            self._cr.execute("""CREATE INDEX res_partner_vat_index ON res_partner (regexp_replace(upper(vat), '[^A-Z0-9]+', '', 'g'))""")
 
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name')
     def _compute_display_name(self):
@@ -259,10 +258,20 @@ class Partner(models.Model):
         for partner in self:
             partner.tz_offset = datetime.datetime.now(pytz.timezone(partner.tz or 'GMT')).strftime('%z')
 
-    @api.depends('user_ids.share')
+    @api.depends('user_ids.share', 'user_ids.active')
     def _compute_partner_share(self):
         for partner in self:
-            partner.partner_share = not partner.user_ids or any(user.share for user in partner.user_ids)
+            partner.partner_share = not partner.user_ids or not any(not user.share for user in partner.user_ids)
+
+    @api.depends('vat')
+    def _compute_same_vat_partner_id(self):
+        for partner in self:
+            # use _origin to deal with onchange()
+            partner_id = partner._origin.id
+            domain = [('vat', '=', partner.vat)]
+            if partner_id:
+                domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]
+            partner.same_vat_partner_id = partner.vat and not partner.parent_id and self.env['res.partner'].search(domain, limit=1)
 
     @api.depends(lambda self: self._display_address_depends())
     def _compute_contact_address(self):
@@ -275,8 +284,32 @@ class Partner(models.Model):
 
     @api.depends('is_company', 'parent_id.commercial_partner_id')
     def _compute_commercial_partner(self):
+        self.env.cr.execute("""
+        WITH RECURSIVE cpid(id, parent_id, commercial_partner_id, final) AS (
+            SELECT
+                id, parent_id, id,
+                (coalesce(is_company, false) OR parent_id IS NULL) as final
+            FROM res_partner
+            WHERE id = ANY(%s)
+        UNION
+            SELECT
+                cpid.id, p.parent_id, p.id,
+                (coalesce(is_company, false) OR p.parent_id IS NULL) as final
+            FROM res_partner p
+            JOIN cpid ON (cpid.parent_id = p.id)
+            WHERE NOT cpid.final
+        )
+        SELECT cpid.id, cpid.commercial_partner_id
+        FROM cpid
+        WHERE final AND id = ANY(%s);
+        """, [self.ids, self.ids])
+
+        d = dict(self.env.cr.fetchall())
         for partner in self:
-            if partner.is_company or not partner.parent_id:
+            fetched = d.get(partner.id)
+            if fetched is not None:
+                partner.commercial_partner_id = fetched
+            elif partner.is_company or not partner.parent_id:
                 partner.commercial_partner_id = partner
             else:
                 partner.commercial_partner_id = partner.parent_id.commercial_partner_id
@@ -292,29 +325,29 @@ class Partner(models.Model):
         if getattr(threading.currentThread(), 'testing', False) or self._context.get('install_mode'):
             return False
 
-        colorize, img_path, image = False, False, False
+        colorize, img_path, image_base64 = False, False, False
 
         if partner_type in ['other'] and parent_id:
             parent_image = self.browse(parent_id).image
-            image = parent_image and base64.b64decode(parent_image) or None
+            image_base64 = parent_image or None
 
-        if not image and partner_type == 'invoice':
+        if not image_base64 and partner_type == 'invoice':
             img_path = get_module_resource('base', 'static/img', 'money.png')
-        elif not image and partner_type == 'delivery':
+        elif not image_base64 and partner_type == 'delivery':
             img_path = get_module_resource('base', 'static/img', 'truck.png')
-        elif not image and is_company:
+        elif not image_base64 and is_company:
             img_path = get_module_resource('base', 'static/img', 'company_image.png')
-        elif not image:
+        elif not image_base64:
             img_path = get_module_resource('base', 'static/img', 'avatar.png')
             colorize = True
 
         if img_path:
             with open(img_path, 'rb') as f:
-                image = f.read()
-        if image and colorize:
-            image = tools.image_colorize(image)
+                image_base64 = base64.b64encode(f.read())
+        if image_base64 and colorize:
+            image_base64 = tools.image_process(image_base64, colorize=True)
 
-        return tools.image_resize_image_big(base64.b64encode(image))
+        return tools.image_process(image_base64, size=tools.IMAGE_BIG_SIZE)
 
     @api.model
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
@@ -344,7 +377,7 @@ class Partner(models.Model):
         if not self.parent_id:
             return
         result = {}
-        partner = getattr(self, '_origin', self)
+        partner = self._origin
         if partner.parent_id and partner.parent_id != self.parent_id:
             result['warning'] = {
                 'title': _('Warning'),
@@ -365,10 +398,13 @@ class Partner(models.Model):
 
     @api.onchange('country_id')
     def _onchange_country_id(self):
-        if self.country_id:
-            return {'domain': {'state_id': [('country_id', '=', self.country_id.id)]}}
-        else:
-            return {'domain': {'state_id': []}}
+        if self.country_id and self.country_id != self.state_id.country_id:
+            self.state_id = False
+
+    @api.onchange('state_id')
+    def _onchange_state(self):
+        if self.state_id.country_id:
+            self.country_id = self.state_id.country_id
 
     @api.onchange('email')
     def onchange_email(self):
@@ -404,6 +440,8 @@ class Partner(models.Model):
             field = self._fields[fname]
             if field.type == 'many2one':
                 values[fname] = self[fname].id
+                if fname == 'company_id' and not self[fname].id:
+                    values.pop('company_id')
             elif field.type == 'one2many':
                 raise AssertionError(_('One2Many fields cannot be synchronized as part of `commercial_fields` or `address fields`'))
             elif field.type == 'many2many':
@@ -416,6 +454,11 @@ class Partner(models.Model):
     def _address_fields(self):
         """Returns the list of address fields that are synced from the parent."""
         return list(ADDRESS_FIELDS)
+
+    @api.model
+    def _formatting_address_fields(self):
+        """Returns the list of address fields usable to format addresses."""
+        return self._address_fields()
 
     @api.multi
     def update_address(self, vals):
@@ -430,7 +473,7 @@ class Partner(models.Model):
         partners that aren't `commercial entities` themselves, and will be
         delegated to the parent `commercial entity`. The list is meant to be
         extended by inheriting classes. """
-        return ['vat', 'credit_limit']
+        return ['vat', 'credit_limit', 'company_id']
 
     @api.multi
     def _commercial_sync_from_company(self):
@@ -457,31 +500,35 @@ class Partner(models.Model):
         """ Sync commercial fields and address fields from company and to children after create/update,
         just as if those were all modeled as fields.related to the parent """
         # 1. From UPSTREAM: sync from parent
-        if values.get('parent_id') or values.get('type', 'contact'):
+        if values.get('parent_id') or values.get('type') == 'contact':
             # 1a. Commercial fields: sync if parent changed
             if values.get('parent_id'):
                 self._commercial_sync_from_company()
-            # 1b. Address fields: sync if parent or use_parent changed *and* both are now set 
+            # 1b. Address fields: sync if parent or use_parent changed *and* both are now set
             if self.parent_id and self.type == 'contact':
                 onchange_vals = self.onchange_parent_id().get('value', {})
                 self.update_address(onchange_vals)
 
         # 2. To DOWNSTREAM: sync children
-        if self.child_ids:
-            # 2a. Commercial Fields: sync if commercial entity
-            if self.commercial_partner_id == self:
-                commercial_fields = self._commercial_fields()
-                if any(field in values for field in commercial_fields):
-                    self._commercial_sync_to_children()
-            for child in self.child_ids.filtered(lambda c: not c.is_company):
-                if child.commercial_partner_id != self.commercial_partner_id :
-                    self._commercial_sync_to_children()
-                    break
-            # 2b. Address fields: sync if address changed
-            address_fields = self._address_fields()
-            if any(field in values for field in address_fields):
-                contacts = self.child_ids.filtered(lambda c: c.type == 'contact')
-                contacts.update_address(values)
+        self._children_sync(values)
+
+    def _children_sync(self, values):
+        if not self.child_ids:
+            return
+        # 2a. Commercial Fields: sync if commercial entity
+        if self.commercial_partner_id == self:
+            commercial_fields = self._commercial_fields()
+            if any(field in values for field in commercial_fields):
+                self._commercial_sync_to_children()
+        for child in self.child_ids.filtered(lambda c: not c.is_company):
+            if child.commercial_partner_id != self.commercial_partner_id:
+                self._commercial_sync_to_children()
+                break
+        # 2b. Address fields: sync if address changed
+        address_fields = self._address_fields()
+        if any(field in values for field in address_fields):
+            contacts = self.child_ids.filtered(lambda c: c.type == 'contact')
+            contacts.update_address(values)
 
     @api.multi
     def _handle_first_contact_creation(self):
@@ -525,7 +572,9 @@ class Partner(models.Model):
                     if len(companies) > 1 or company not in companies:
                         raise UserError(
                             ("The selected company is not compatible with the companies of the related user(s)"))
-        tools.image_resize_images(vals, sizes={'image': (1024, None)})
+        # no padding on the big image, because it's used as website logo
+        tools.image_resize_images(vals, return_big=False)
+        tools.image_resize_images(vals, return_medium=False, return_small=False)
 
         result = True
         # To write in SUPERUSER on field is_company and avoid access rights problems.
@@ -541,6 +590,8 @@ class Partner(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        if self.env.context.get('import_file'):
+            self._check_import_consistency(vals_list)
         for vals in vals_list:
             if vals.get('website'):
                 vals['website'] = self._clean_website(vals['website'])
@@ -550,10 +601,54 @@ class Partner(models.Model):
             # cannot be easily performed if default images are in the way
             if not vals.get('image'):
                 vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
-            tools.image_resize_images(vals, sizes={'image': (1024, None)})
+            # no padding on the big image, because it's used as website logo
+            tools.image_resize_images(vals, return_big=False)
+            tools.image_resize_images(vals, return_medium=False, return_small=False)
         partners = super(Partner, self).create(vals_list)
-        for partner, vals in pycompat.izip(partners, vals_list):
+
+        if self.env.context.get('_partners_skip_fields_sync'):
+            return partners
+
+        for partner, vals in zip(partners, vals_list):
             partner._fields_sync(vals)
+            partner._handle_first_contact_creation()
+        return partners
+
+    def _load_records_create(self, vals_list):
+        partners = super(Partner, self.with_context(_partners_skip_fields_sync=True))._load_records_create(vals_list)
+
+        # batch up first part of _fields_sync
+        # group partners by commercial_partner_id (if not self) and parent_id (if type == contact)
+        groups = collections.defaultdict(list)
+        for partner, vals in zip(partners, vals_list):
+            cp_id = None
+            if vals.get('parent_id') and partner.commercial_partner_id != partner:
+                cp_id = partner.commercial_partner_id.id
+
+            add_id = None
+            if partner.parent_id and partner.type == 'contact':
+                add_id = partner.parent_id.id
+            groups[(cp_id, add_id)].append(partner.id)
+
+        for (cp_id, add_id), children in groups.items():
+            # values from parents (commercial, regular) written to their common children
+            to_write = {}
+            # commercial fields from commercial partner
+            if cp_id:
+                to_write = self.browse(cp_id)._update_fields_values(self._commercial_fields())
+            # address fields from parent
+            if add_id:
+                parent = self.browse(add_id)
+                for f in self._address_fields():
+                    v = parent[f]
+                    if v:
+                        to_write[f] = v.id if isinstance(v, models.BaseModel) else v
+            if to_write:
+                self.browse(children).write(to_write)
+
+        # do the second half of _fields_sync the "normal" way
+        for partner, vals in zip(partners, vals_list):
+            partner._children_sync(vals)
             partner._handle_first_contact_creation()
         return partners
 
@@ -596,27 +691,37 @@ class Partner(models.Model):
                 'target': 'new',
                 'flags': {'form': {'action_buttons': True}}}
 
+    def _get_name(self):
+        """ Utility method to allow name_get to be overrided without re-browse the partner """
+        partner = self
+        name = partner.name or ''
+
+        if partner.company_name or partner.parent_id:
+            if not name and partner.type in ['invoice', 'delivery', 'other']:
+                name = dict(self.fields_get(['type'])['type']['selection'])[partner.type]
+            if not partner.is_company:
+                name = "%s, %s" % (partner.commercial_company_name or partner.parent_id.name, name)
+        if self._context.get('show_address_only'):
+            name = partner._display_address(without_company=True)
+        if self._context.get('show_address'):
+            name = name + "\n" + partner._display_address(without_company=True)
+        name = name.replace('\n\n', '\n')
+        name = name.replace('\n\n', '\n')
+        if self._context.get('address_inline'):
+            name = name.replace('\n', ', ')
+        if self._context.get('show_email') and partner.email:
+            name = "%s <%s>" % (name, partner.email)
+        if self._context.get('html_format'):
+            name = name.replace('\n', '<br/>')
+        if self._context.get('show_vat') and partner.vat:
+            name = "%s ‒ %s" % (name, partner.vat)
+        return name
+
     @api.multi
     def name_get(self):
         res = []
         for partner in self:
-            name = partner.name or ''
-
-            if partner.company_name or partner.parent_id:
-                if not name and partner.type in ['invoice', 'delivery', 'other']:
-                    name = dict(self.fields_get(['type'])['type']['selection'])[partner.type]
-                if not partner.is_company:
-                    name = "%s, %s" % (partner.commercial_company_name or partner.parent_id.name, name)
-            if self._context.get('show_address_only'):
-                name = partner._display_address(without_company=True)
-            if self._context.get('show_address'):
-                name = name + "\n" + partner._display_address(without_company=True)
-            name = name.replace('\n\n', '\n')
-            name = name.replace('\n\n', '\n')
-            if self._context.get('show_email') and partner.email:
-                name = "%s <%s>" % (name, partner.email)
-            if self._context.get('html_format'):
-                name = name.replace('\n', '<br/>')
+            name = partner._get_name()
             res.append((partner.id, name))
         return res
 
@@ -669,6 +774,7 @@ class Partner(models.Model):
             where_query = self._where_calc(args)
             self._apply_ir_rules(where_query, 'read')
             from_clause, where_clause, where_clause_params = where_query.get_sql()
+            from_str = from_clause if from_clause else 'res_partner'
             where_str = where_clause and (" WHERE %s AND " % where_clause) or ' WHERE '
 
             # search on the name of the contacts and of its company
@@ -680,8 +786,8 @@ class Partner(models.Model):
 
             unaccent = get_unaccent_wrapper(self.env.cr)
 
-            query = """SELECT id
-                         FROM res_partner
+            query = """SELECT res_partner.id
+                         FROM {from_str}
                       {where} ({email} {operator} {percent}
                            OR {display_name} {operator} {percent}
                            OR {reference} {operator} {percent}
@@ -689,15 +795,18 @@ class Partner(models.Model):
                            -- don't panic, trust postgres bitmap
                      ORDER BY {display_name} {operator} {percent} desc,
                               {display_name}
-                    """.format(where=where_str,
+                    """.format(from_str=from_str,
+                               where=where_str,
                                operator=operator,
-                               email=unaccent('email'),
-                               display_name=unaccent('display_name'),
-                               reference=unaccent('ref'),
+                               email=unaccent('res_partner.email'),
+                               display_name=unaccent('res_partner.display_name'),
+                               reference=unaccent('res_partner.ref'),
                                percent=unaccent('%s'),
-                               vat=unaccent('vat'),)
+                               vat=unaccent('res_partner.vat'),)
 
-            where_clause_params += [search_name]*5
+            where_clause_params += [search_name]*3  # for email / display_name, reference
+            where_clause_params += [re.sub('[^a-zA-Z0-9]+', '', search_name) or None]  # for vat
+            where_clause_params += [search_name]  # for order by
             if limit:
                 query += ' limit %s'
                 where_clause_params.append(limit)
@@ -705,7 +814,7 @@ class Partner(models.Model):
             partner_ids = [row[0] for row in self.env.cr.fetchall()]
 
             if partner_ids:
-                return self.browse(partner_ids).name_get()
+                return models.lazy_name_get(self.browse(partner_ids))
             else:
                 return []
         return super(Partner, self)._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)
@@ -800,6 +909,10 @@ class Partner(models.Model):
     def _get_default_address_format(self):
         return "%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
 
+    @api.model
+    def _get_address_format(self):
+        return self.country_id.address_format or self._get_default_address_format()
+
     @api.multi
     def _display_address(self, without_company=False):
 
@@ -814,16 +927,15 @@ class Partner(models.Model):
         '''
         # get the information that will be injected into the display format
         # get the address format
-        address_format = self.country_id.address_format or \
-            self._get_default_address_format()
+        address_format = self._get_address_format()
         args = {
             'state_code': self.state_id.code or '',
             'state_name': self.state_id.name or '',
             'country_code': self.country_id.code or '',
-            'country_name': self.country_id.name or '',
+            'country_name': self._get_country_name(),
             'company_name': self.commercial_company_name or '',
         }
-        for field in self._address_fields():
+        for field in self._formatting_address_fields():
             args[field] = getattr(self, field) or ''
         if without_company:
             args['company_name'] = ''
@@ -833,7 +945,7 @@ class Partner(models.Model):
 
     def _display_address_depends(self):
         # field dependencies of method _display_address()
-        return self._address_fields() + [
+        return self._formatting_address_fields() + [
             'country_id.address_format', 'country_id.code', 'country_id.name',
             'company_name', 'state_id.code', 'state_id.name',
         ]
@@ -844,6 +956,36 @@ class Partner(models.Model):
             'label': _('Import Template for Customers'),
             'template': '/base/static/xls/res_partner.xls'
         }]
+
+    @api.model
+    def _check_import_consistency(self, vals_list):
+        """
+        The values created by an import are generated by a name search, field by field.
+        As a result there is no check that the field values are consistent with each others.
+        We check that if the state is given a value, it does belong to the given country, or we remove it.
+        """
+        States = self.env['res.country.state']
+        states_ids = {vals['state_id'] for vals in vals_list if vals.get('state_id')}
+        state_to_country = States.search([('id', 'in', list(states_ids))]).read(['country_id'])
+        for vals in vals_list:
+            if vals.get('state_id'):
+                country_id = next(c['country_id'][0] for c in state_to_country if c['id'] == vals.get('state_id'))
+                state = States.browse(vals['state_id'])
+                if state.country_id.id != country_id:
+                    state_domain = [('code', '=', state.code),
+                                    ('country_id', '=', country_id)]
+                    state = States.search(state_domain, limit=1)
+                    vals['state_id'] = state.id  # replace state or remove it if not found
+
+    @api.multi
+    def _get_country_name(self):
+        return self.country_id.name or ''
+
+    @api.multi
+    def get_base_url(self):
+        """Get the base URL for the current partner."""
+        self.ensure_one()
+        return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
 
 class ResPartnerIndustry(models.Model):

@@ -29,7 +29,7 @@ function addMockSupportEnvironment(widget, params) {
     var originalRPC = supportSession.rpc;
     var defaultMockSupportRPC = function (route, args) {
         if (route === '/odoo_im_support/get_support_channel') {
-            return $.when({
+            return Promise.resolve({
                 available: true,
                 channel_type: 'livechat',
                 public: 'private',
@@ -37,13 +37,13 @@ function addMockSupportEnvironment(widget, params) {
             });
         }
         if (route === '/odoo_im_support/fetch_messages') { // fetching history
-            return $.when([]);
+            return Promise.resolve([]);
         }
         if (route === '/odoo_im_support/chat_post') {
-            return $.when();
+            return Promise.resolve();
         }
         if (route === '/longpolling/support_poll') {
-            return $.Deferred();
+            return Promise.resolve();
         }
     };
     supportSession.rpc = function (route, args) {
@@ -58,7 +58,7 @@ function addMockSupportEnvironment(widget, params) {
         }
         return result;
     };
-    testUtils.addMockEnvironment(widget, params);
+    testUtils.mock.addMockEnvironment(widget, params);
     var widgetDestroy = widget.destroy;
     widget.destroy = function () {
         supportSession.rpc = originalRPC;
@@ -69,7 +69,7 @@ function addMockSupportEnvironment(widget, params) {
     // 'im_support.poll_timeout', to simulate a pending longpolling connection to
     // the Support server, such that the initSupport initiates a poll connection
     if (params.enableSupportPoll) {
-        testUtils.intercept(widget, 'call_service', function (ev) {
+        testUtils.mock.intercept(widget, 'call_service', function (ev) {
             if (ev.data.service === 'local_storage') {
                 if (ev.data.method === 'getItem' && ev.data.args[0] === 'im_support.poll_timeout') {
                     ev.data.callback(Date.now() + (60 * 1000));

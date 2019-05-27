@@ -4,13 +4,13 @@
 
         <record id="cal_contact_1" model="calendar.contacts">
             <field name="active" eval="True"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="partner_id" ref="base.res_partner_1"/>
         </record>
 
         <record id="cal_contact_2" model="calendar.contacts">
             <field name="active" eval="True"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="partner_id" ref="base.partner_demo"/>
         </record>
 
@@ -36,7 +36,7 @@
 
         <record id="calendar_event_1" model="calendar.event">
             <field name="active" eval="True"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="partner_ids" eval="[(6,0,[ref('base.res_partner_1')])]"/>
             <field name="name">Follow-up for Project proposal</field>
             <field name="description">Meeting to discuss project plan and hash out the details of implementation.</field>
@@ -64,7 +64,8 @@
 
         <record id="calendar_event_3" model="calendar.event">
             <field name="active" eval="True"/>
-            <field name="partner_ids" eval="[(6,0,[ref('base.partner_root')])]"/>
+            <field name="partner_ids" eval="[(6,0,[ref('base.partner_admin')])]"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="name">Pricing Discussion</field>
             <field name="description">Internal meeting for discussion for new pricing for product and services.</field>
             <field name="categ_ids" eval="[(6,0,[ref('categ_meet1'), ref('categ_meet2')])]"/>
@@ -90,7 +91,8 @@
 
         <record id="calendar_event_5" model="calendar.event">
             <field name="active" eval="True"/>
-            <field name="partner_ids" eval="[(6,0,[ref('base.partner_root'),ref('base.res_partner_12')])]"/>
+            <field name="partner_ids" eval="[(6,0,[ref('base.partner_admin'),ref('base.res_partner_12')])]"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="name">Changes in Designing</field>
             <field name="categ_ids" eval="[(6,0,[ref('categ_meet1')])]"/>
             <field name="start" eval="time.strftime('%Y-%m-22')"/>

@@ -1,13 +1,16 @@
-.o_graph {
-    .o_graph_svg_container {
+.o_graph_controller {
+    .o_graph_renderer {
         height: 100%;
         overflow: auto;
-        svg {
-            background-color: $o-view-background-color;
+        .o_graph_canvas_container {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            top: 0px;
+            left: 0px;
+            canvas {
+                background-color: $o-view-background-color;
+            }
         }
     }
-}
-
-.nvtooltip thead {
-    background-color: transparent;
 }

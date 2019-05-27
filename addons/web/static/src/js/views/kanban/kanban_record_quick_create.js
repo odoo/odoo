@@ -37,6 +37,7 @@ var RecordQuickCreate = Widget.extend({
         this.context = options.context;
         this.formViewRef = options.formViewRef;
         this.model = options.model;
+        this._disabled = false; // to prevent from creating multiple records (e.g. on double-clicks)
     },
     /**
      * Loads the form fieldsView (if not provided), instantiates the form view
@@ -46,14 +47,14 @@ var RecordQuickCreate = Widget.extend({
      */
     willStart: function () {
         var self = this;
-        var def1 = this._super.apply(this, arguments);
-        var def2;
+        var superWillStart = this._super.apply(this, arguments);
+        var viewsLoaded;
         if (this.formViewRef) {
             var views = [[false, 'form']];
             var context = _.extend({}, this.context, {
                 form_view_ref: this.formViewRef,
             });
-            def2 = this.loadViews(this.model, context, views);
+            viewsLoaded = this.loadViews(this.model, context, views);
         } else {
             var fieldsView = {};
             fieldsView.arch = '<form>' +
@@ -64,9 +65,9 @@ var RecordQuickCreate = Widget.extend({
             };
             fieldsView.fields = fields;
             fieldsView.viewFields = fields;
-            def2 = $.when({form: fieldsView});
+            viewsLoaded = Promise.resolve({form: fieldsView});
         }
-        def2 = def2.then(function (fieldsViews) {
+        viewsLoaded = viewsLoaded.then(function (fieldsViews) {
             var formView = new QuickCreateFormView(fieldsViews.form, {
                 context: self.context,
                 modelName: self.model,
@@ -77,7 +78,7 @@ var RecordQuickCreate = Widget.extend({
                 return self.controller.appendTo(document.createDocumentFragment());
             });
         });
-        return $.when(def1, def2);
+        return Promise.all([superWillStart, viewsLoaded]);
     },
     /**
      * @override
@@ -112,7 +113,7 @@ var RecordQuickCreate = Widget.extend({
      * have been made yet
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     cancel: function () {
         var self = this;
@@ -128,33 +129,73 @@ var RecordQuickCreate = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * @override
      * @private
      * @param {Object} [options]
      * @param {boolean} [options.openRecord] set to true to directly open the
      *   newly created record in a form view (in edit mode)
-     * @returns {Deferred}
      */
     _add: function (options) {
         var self = this;
-        return this.controller.commitChanges().then(function () {
+        if (this._disabled) {
+            // don't do anything if we are already creating a record
+            return;
+        }
+        // disable the widget to prevent the user from creating multiple records
+        // with the current values ; if the create works, the widget will be
+        // destroyed and another one will be instantiated, so there is no need
+        // to re-enable it in that case
+        this._disableQuickCreate();
+        this.controller.commitChanges().then(function () {
             var canBeSaved = self.controller.canBeSaved();
             if (canBeSaved) {
                 self.trigger_up('quick_create_add_record', {
                     openRecord: options && options.openRecord || false,
                     values: self.controller.getChanges(),
+                    onFailure: self._enableQuickCreate.bind(self),
                 });
+            } else {
+                self._enableQuickCreate();
             }
-        });
+        }).guardedCatch(this._enableQuickCreate.bind(this));
     },
     /**
      * Notifies the environment that the quick creation must be cancelled
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _cancel: function () {
         this.trigger_up('cancel_quick_create');
+    },
+    /**
+     * Disable the widget to indicate the user that it can't interact with it.
+     * This function must be called when a record is being created, to prevent
+     * it from being created twice.
+     *
+     * Note that if the record creation works as expected, there is no need to
+     * re-enable the widget as it will be destroyed anyway (and replaced by a
+     * new instance).
+     *
+     * @private
+     */
+    _disableQuickCreate: function () {
+        this._disabled = true; // ensures that the record won't be created twice
+        this.$el.addClass('o_disabled');
+        this.$('input:not(:disabled)')
+            .addClass('o_temporarily_disabled')
+            .attr('disabled', 'disabled');
+    },
+    /**
+     * Re-enable the widget to allow the user to create again.
+     *
+     * @private
+     */
+    _enableQuickCreate: function () {
+        this._disabled = false; // allows to create again
+        this.$el.removeClass('o_disabled');
+        this.$('input.o_temporarily_disabled')
+            .removeClass('o_temporarily_disabled')
+            .attr('disabled', false);
     },
 
     //--------------------------------------------------------------------------

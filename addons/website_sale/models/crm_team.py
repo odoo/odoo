@@ -4,7 +4,8 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo import fields, models, _
+from odoo import fields,api, models, _
+from odoo.exceptions import UserError, ValidationError
 
 
 class CrmTeam(models.Model):
@@ -22,7 +23,7 @@ class CrmTeam(models.Model):
         # abandoned carts to recover are draft sales orders that have no order lines,
         # a partner other than the public user, and created over an hour ago
         # and the recovery mail was not yet sent
-        website_teams = self.filtered(lambda team: team.team_type == 'website')
+        website_teams = self.filtered(lambda team: team.website_ids)
         if website_teams:
             abandoned_carts_data = self.env['sale.order'].read_group([
                 ('is_abandoned_cart', '=', True),
@@ -33,11 +34,6 @@ class CrmTeam(models.Model):
             for team in website_teams:
                 team.abandoned_carts_count = counts.get(team.id, 0)
                 team.abandoned_carts_amount = amounts.get(team.id, 0)
-
-    def _compute_dashboard_button_name(self):
-        website_teams = self.filtered(lambda team: team.team_type == 'website' and not team.use_quotations)
-        website_teams.update({'dashboard_button_name': _("Online Sales")})
-        super(CrmTeam, self - website_teams)._compute_dashboard_button_name()
 
     def get_abandoned_carts(self):
         self.ensure_one()

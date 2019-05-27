@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 class HrEmployee(models.Model):
     _name = 'hr.employee'
-    _inherit = ['hr.employee', 'website.published.mixin']
+    _inherit = ['hr.employee', 'website.published.multi.mixin']
 
     public_info = fields.Char(string='Public Info')
 

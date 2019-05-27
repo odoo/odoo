@@ -11,6 +11,7 @@ from odoo.exceptions import UserError
 
 class HrHolidaySummaryReport(models.AbstractModel):
     _name = 'report.hr_holidays.report_holidayssummary'
+    _description = 'Holidays Summary Report'
 
     def _get_header_info(self, start_date, holiday_type):
         st_date = fields.Date.from_string(start_date)
@@ -74,7 +75,7 @@ class HrHolidaySummaryReport(models.AbstractModel):
                 if date_from >= start_date and date_from <= end_date:
                     res[(date_from-start_date).days]['color'] = holiday.holiday_status_id.color_name
                 date_from += timedelta(1)
-            count += abs(holiday.number_of_days)
+            count += holiday.number_of_days
         self.sum = count
         return res
 

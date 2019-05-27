@@ -58,14 +58,17 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
         @param {Object} [lang] lang The language. If not specified it will default to the language
         of the current user.
         @param {string} [url='/web/webclient/translations']
-        @returns {jQuery.Deferred}
+        @returns {Promise}
     */
     load_translations: function(session, modules, lang, url) {
         var self = this;
-        return session.rpc(url || '/web/webclient/translations', {
-            "mods": modules || null,
-            "lang": lang || null
-        }).done(function(trans) {
+        var cacheId = session.cache_hashes && session.cache_hashes.translations;
+        url = url || '/web/webclient/translations';
+        url += '/' + (cacheId ? cacheId : Date.now());
+        return $.get(url, {
+            mods: modules ? modules.join(',') : null,
+            lang: lang || null,
+        }).then(function (trans) {
             self.set_bundle(trans);
         });
     }

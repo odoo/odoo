@@ -75,7 +75,7 @@
                             </h1>
                         </div>
                         <group>
-                            <group>
+                            <group name="provider_details">
                                 <label for="delivery_type"/>
                                 <div>
                                     <field name="delivery_type" widget="radio"/>
@@ -83,7 +83,8 @@
                                 </div>
                                 <field name="integration_level" widget="radio" attrs="{'invisible': ['|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"/>
                             </group>
-                            <group>
+                            <group name="delivery_details">
+                                <field name="invoice_policy" widget="radio" attrs="{'invisible': ['|', ('delivery_type', 'in', ('fixed', 'base_on_rule')), ('integration_level', '=', 'rate')]}"/>
                                 <label for="margin" string="Margin on Rate"/>
                                 <div>
                                     <field name="margin" class="oe_inline"/>%
@@ -93,14 +94,17 @@
                                     <label for="free_over"/>
                                 </div>
                                 <field nolabel="1" name="amount" attrs="{'required':[('free_over','!=', False)], 'invisible':[('free_over','=', False)]}"/>
-                                <field name="product_id" context="{'default_type': 'service', 'sale_ok': False, 'purchase_ok': False}" />
+                                <field name="product_id" context="{'default_type': 'service', 'default_sale_ok': False, 'default_purchase_ok': False}" />
                                 <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="can_generate_return" invisible="1"/>
+                                <field name="return_label_on_delivery" attrs="{'invisible': [('can_generate_return', '=', False)]}"/>
+                                <field name="get_return_label_from_portal" attrs="{'invisible': [('return_label_on_delivery', '=', False)]}"/>
                             </group>
                         </group>
                         <notebook>
-                            <page string="Pricing" attrs="{'invisible': [('delivery_type', 'not in', ['fixed', 'base_on_rule'])]}">
+                            <page name="pricing" string="Pricing" attrs="{'invisible': [('delivery_type', 'not in', ['fixed', 'base_on_rule'])]}">
                                 <group attrs="{'invisible':[('delivery_type', '!=', 'fixed')]}">
-                                    <group>
+                                    <group name="fixed_price">
                                         <field name="fixed_price"/>
                                     </group>
                                 </group>
@@ -115,15 +119,15 @@
                                     </p>
                                 </group>
                                 <group>
-                                    <group>
+                                    <group name="country_details">
                                         <field name="country_ids" widget="many2many_tags"/>
                                         <field name="state_ids" widget="many2many_tags"/>
                                     </group>
                                     <group></group>
-                                    <group>
+                                    <group name="zip_from">
                                         <field name="zip_from"/>
                                     </group>
-                                    <group>
+                                    <group name="zip_to">
                                         <field name="zip_to"/>
                                     </group>
                                 </group>
@@ -135,7 +139,7 @@
         </record>
 
         <record id="action_delivery_carrier_form" model="ir.actions.act_window">
-            <field name="name">Delivery Methods</field>
+            <field name="name">Shipping Methods</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">delivery.carrier</field>
             <field name="view_type">form</field>
@@ -203,10 +207,9 @@
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
               <data>
-                <xpath expr="//page[@name='extra']" position="inside">
-                <separator string="Delivery Information"/>
-                <group>
-                    <group name='carrier_data'>
+                <xpath expr="//group[@name='other_infos']" position="before">
+                    <group name='carrier_data' string="Shipping Information">
+                        <field name="is_return_picking" invisible="1"/>
                         <field name="carrier_id" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}" options="{'no_create': True, 'no_open': True}"/>
                         <field name="delivery_type" attrs="{'invisible':True}"/>
                         <label for="carrier_tracking_ref"/>
@@ -214,28 +217,35 @@
                             <field name="carrier_tracking_ref" class="oe_inline" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                             <button type='object' class="fa fa-arrow-right oe_link" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done'))]}"/>
                         </div>
-                    </group>
-                    <group>
                         <label for="weight" string="Weight"/>
                         <div>
                             <field name="weight" class="oe_inline"/>
-                            <field name="weight_uom_id" nolabel="1" class="oe_inline" style="margin-left:5px"/>
+                            <field name="weight_uom_name" nolabel="1" class="oe_inline" style="margin-left:5px"/>
                         </div>
-                        <field name="shipping_weight"/>
+                        <label for="shipping_weight" string="Weight for shipping"/>
+                        <div>
+                            <field name="shipping_weight" class="oe_inline"/>
+                            <field name="weight_uom_name" nolabel="1" class="oe_inline" style="margin-left:5px"/>
+                        </div>
                     </group>
-                </group>
                 </xpath>
                 <div name="button_box" position="inside">
                     <button type="object" name="open_website_url" class="oe_stat_button" icon='fa-truck' string="Tracking"
                          attrs="{'invisible': ['|','|',('carrier_tracking_ref','=',False),('carrier_id', '=', False),('delivery_type','=','grid')]}" />
                 </div>
                 <xpath expr="/form/header/button[last()]" position="after">
-                    <button name="send_to_shipper" string="Send to Shipper" type="object" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','!=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done'))]}"/>
+                    <button name="send_to_shipper" string="Send to Shipper" type="object" attrs="{'invisible':['|','|','|','|',('carrier_tracking_ref','!=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done')),('picking_type_code', '=', 'incoming')]}"/>
+                </xpath>
+                <xpath expr="/form/header/button[last()]" position="after">
+                    <button name="print_return_label" string="Print Return Label" type="object" attrs="{'invisible':['|', ('is_return_picking', '=', False),('state', '=', 'done')]}"/>
                 </xpath>
                 <xpath expr="//button[@name='do_print_picking']" position="after">
                     <button name="action_send_confirmation_email" string="Send Confirmation Email" type="object" attrs="{'invisible':['|', ('state', '!=', 'done'), ('carrier_id', '=', False)]}"/>
                  </xpath>
               </data>
+              <xpath expr="//field[@name='partner_id']" position="attributes">
+                  <attribute name="attrs">{'required': ['&amp;', ('delivery_type', '!=', False), ('delivery_type', 'not in', ['fixed', 'base_on_rule'])]}</attribute>
+              </xpath>
             </field>
         </record>
 
@@ -257,8 +267,16 @@
             <field name="arch" type="xml">
                 <field name="company_id" position="before">
                     <field name="packaging_id" domain="[('product_id', '=', False)]"/>
-                    <field name="weight"/>
-                    <field name="shipping_weight"/>
+                    <label for="weight" string="Weight"/>
+                    <div>
+                        <field name="weight" class="oe_inline"/>
+                        <field name="weight_uom_name" nolabel="1" class="oe_inline" style="margin-left:5px"/>
+                    </div>
+                    <label for="shipping_weight"/>
+                    <div class="o_row" name="Shipping Weight">
+                        <field name="shipping_weight"/>
+                        <span><field name="weight_uom_name"/></span>
+                    </div>
                 </field>
             </field>
         </record>
@@ -280,28 +298,45 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <data>
-                  <xpath expr="//field[@name='payment_term_id']" position="after">
-                      <field name="id" invisible="1"/>
-                      <field name="available_carrier_ids" invisible="1"/>
-                      <label for="carrier_id"/>
-                      <div name='carrier_selection'>
-                          <div>
-                            <field name="carrier_id" domain="[('id', 'in', available_carrier_ids)]" context="{'order_id': id}" class="oe_inline" options="{'no_create': True, 'no_open': True}" attrs="{'readonly':[('state','not in',('draft','sent'))]}"/> <i class="fa fa-check text-success" role="img" aria-label="Rating OK" title="Rating OK" attrs="{'invisible':['|','|',('carrier_id','=',False),('state','not in',('draft','sent')),('delivery_rating_success','=',False)]}"></i>
-                          </div>
-                          <div>
-                            <field name='delivery_price' widget='monetary' class="oe_inline" options="{'currency_field': 'currency_id'}" nolabel="1" attrs="{'invisible': [('carrier_id','=', False)]}" force_save="1"/>
-                            <button name="get_delivery_price" string="Get rate" type="object" class="oe_inline fa fa-arrow-right oe_link" attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
-                            <button name="set_delivery_line" string="Add to order" type="object" class="oe_inline fa fa-arrow-right oe_link" attrs="{'invisible':['|','|',('carrier_id','=',False),('state','not in',('draft','sent')),('delivery_rating_success','=',False)]}"/>
-                            <field name='delivery_rating_success' invisible="1" force_save="1"/>
-                          </div>
-                          <div class="alert alert-info" role="status" attrs="{'invisible': ['|',('carrier_id','=', False),('delivery_message','=',False)]}">
-                            <field name='delivery_message' force_save="1"/>
-                          </div>
-                      </div>
-                  </xpath>
-                  <xpath expr="//field[@name='product_uom_qty']" position="after">
-                      <field name="product_qty" invisible="1"/>
-                  </xpath>
+                    <xpath expr="//field[@name='partner_id']" position='after'>
+                        <field name="delivery_set" invisible="1"/>
+                        <field name="is_all_service" invisible="1"/>
+                        <field name="recompute_delivery_price" invisible="1"/>
+                    </xpath>
+                    <xpath expr="//group[@name='note_group']" position="before">
+                        <div class="oe_left" style="margin-left: 10px">
+                            <button
+                                string="Add a shipping method"
+                                name="action_open_delivery_wizard"
+                                type="object"
+                                attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('order_line', '=', []), ('delivery_set', '=', True)]}"
+                            />
+                            <button
+                                string="Recompute shipping cost"
+                                name="recompute_delivery_cost"
+                                type="object"
+                                class="text-warning btn-secondary"
+                                attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('recompute_delivery_price', '=', False), ('delivery_set', '=', False)]}"
+                            />
+                            <button
+                                string="Recompute shipping cost"
+                                name="recompute_delivery_cost"
+                                type="object"
+                                attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('recompute_delivery_price', '=', True), ('delivery_set', '=', False)]}"
+                            />
+                        </div>
+                    </xpath>
+                    <xpath expr="//field[@name='order_line']/form/group/group/field[@name='price_unit']" position="before">
+                        <field name="recompute_delivery_price" invisible="1"/>
+                        <field name="is_delivery" invisible="1"/>
+                    </xpath>
+                    <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="before">
+                        <field name="recompute_delivery_price" invisible="1"/>
+                        <field name="is_delivery" invisible="1"/>
+                    </xpath>
+                    <xpath expr="//field[@name='order_line']/tree" position="attributes">
+                        <attribute name="decoration-warning">recompute_delivery_price and is_delivery</attribute>
+                    </xpath>
                 </data>
             </field>
         </record>

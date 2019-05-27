@@ -19,43 +19,39 @@
                             <table class="table table-sm">
                                 <thead>
                                     <tr>
-                                        <th>Date</th>
-                                        <th>Responsible</th>
-                                        <th>Description</th>
+                                        <th><span>Date</span></th>
+                                        <th><span>Responsible</span></th>
+                                        <th><span>Description</span></th>
                                         <th t-if="show_task"><t t-if="show_project">Project - </t>Task</th>
-                                        <th class="text-right">Time</th>
+                                        <th class="text-right"><span>Time</span></th>
                                     </tr>
                                </thead>
                                <tbody>
-                                    <t t-foreach="docs" t-as="l">
-                                        <tr>
-                                            <td>
-                                               <span t-field="l.date"/>
-                                            </td>
-                                            <td>
-                                               <span t-field="l.user_id.partner_id.name"/>
-                                            </td>
-                                            <td >
-                                                <span t-field="l.name" t-options="{'widget': 'text'}"/>
-                                            </td>
-                                            <td t-if="show_task or show_project">
-                                                <t t-if="show_project"><span t-field="l.project_id.name"/></t>
-                                                <t t-if="show_project and l.task_id"> - </t>
-                                                <t t-if="l.task_id"><span t-field="l.task_id.name"/></t>
-                                            </td>
-                                            <td class="text-right">
-                                                <span t-field="l.unit_amount" t-options="{'widget': 'float_time'}"/>
-                                            </td>
-                                        </tr>
-                                    </t>
+                                    <tr t-foreach="docs" t-as="l">
+                                        <td>
+                                           <span t-field="l.date"/>
+                                        </td>
+                                        <td>
+                                           <span t-field="l.user_id.partner_id.name"/>
+                                        </td>
+                                        <td >
+                                            <span t-field="l.name" t-options="{'widget': 'text'}"/>
+                                        </td>
+                                        <td t-if="show_task">
+                                            <t t-if="show_project"><span t-field="l.project_id.name"/></t>
+                                            <t t-if="show_project and l.task_id"> - </t>
+                                            <t t-if="l.task_id"><span t-field="l.task_id.name"/></t>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="l.unit_amount" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}"/>
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td />
                                         <td />
                                         <td t-if="show_task"/>
                                         <td class="text-right"><strong>Total</strong></td>
-                                        <t t-set="total_value" t-value="sum(docs.mapped('unit_amount'))" />
-                                        <t t-set="sign" t-value="'-' if total_value &lt; 0 else ''"/>
-                                        <td class="text-right"><strong t-esc="sign + '%s:%02.0f' % tuple(int(round(x)) for x in divmod(abs(total_value)*60,60))"/></td>
+                                        <td class="text-right"><strong t-esc="sum(docs.mapped('unit_amount'))" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}"/></td>
                                     </tr>
                                 </tbody>
                             </table>

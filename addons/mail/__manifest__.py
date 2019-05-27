@@ -36,6 +36,8 @@
         'views/ir_actions_views.xml',
         'views/ir_model_views.xml',
         'views/res_partner_views.xml',
+        'views/mail_blacklist_views.xml',
+        'views/mail_channel_partner_views.xml',
     ],
     'demo': [
         'data/mail_demo.xml',
@@ -45,6 +47,7 @@
     'application': True,
     'qweb': [
         'static/src/xml/activity.xml',
+        'static/src/xml/activity_view.xml',
         'static/src/xml/composer.xml',
         'static/src/xml/chatter.xml',
         'static/src/xml/discuss.xml',
@@ -54,6 +57,7 @@
         'static/src/xml/abstract_thread_window.xml',
         'static/src/xml/thread_window.xml',
         'static/src/xml/announcement.xml',
+        'static/src/xml/user_menu.xml',
         'static/src/xml/web_kanban_activity.xml',
     ],
 }

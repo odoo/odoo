@@ -9,11 +9,12 @@
             <search string="maintenance Request Search">
                 <field name="name"/>
                 <field name="category_id"/>
-                <field name="technician_user_id"/>
+                <field name="user_id"/>
                 <field name="equipment_id"/>
                 <field name="owner_user_id"/>
                 <field name="stage_id"/>
                 <field name="maintenance_team_id"/>
+                <filter string="My Requests" name="my_requests" domain="[('user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="To do" domain="[('stage_id.done', '=', False)]" name="todo"/>
                 <filter string="Blocked" name="kanban_state_block" domain="[('kanban_state', '=', 'blocked')]"/>
@@ -22,8 +23,6 @@
                 <filter string="Top Priorities" name="top_priority" domain="[('priority', '=', '3')]"/>
                 <separator/>
                 <filter string="Unscheduled Maintenance" domain="[('schedule_date', '=', False)]" name="unscheduled"/>
-                <separator/>
-                <filter string="My Requests" name="my_requests" domain="[('technician_user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="My Activities" name="activities_my"
                     domain="[('activity_ids.user_id', '=', uid)]"/>
@@ -41,7 +40,7 @@
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('archive','=',True)]"/>
                 <group  expand='0' string='Group by...'>
-                    <filter string='Assigned' name="assigned" domain="[]" context="{'group_by': 'technician_user_id'}"/>
+                    <filter string='Assigned' name="assigned" domain="[]" context="{'group_by': 'user_id'}"/>
                     <filter string='Category' name="category" domain="[]" context="{'group_by' : 'category_id'}"/>
                     <filter string='Stages' name="stages" domain="[]" context="{'group_by' : 'stage_id'}"/>
                     <filter string='Created By' name='created_by' domain="[]" context="{'group_by': 'owner_user_id'}"/>
@@ -86,14 +85,16 @@
                         </group>
                         <group>
                             <field name="maintenance_team_id" options="{'no_create': True, 'no_open': True}"/>
-                            <field name="technician_user_id" string="Responsible"/>
-                            <label for="schedule_date"/>
-                            <div class="o_row">
-                                <field name="schedule_date"/>
-                                <label for="duration" string="for"/>
-                                <field name="duration" class="oe_inline"/> hours
+                            <field name="user_id" string="Responsible"/>
+                            <field name="schedule_date"/>
+                            <label for="duration"/>
+                            <div>
+                                <field name="duration"
+                                       widget="float_time"
+                                       class="oe_inline"/> <span class="ml8">hours</span>
                             </div>
                             <field name="priority" widget="priority"/>
+                            <field name="email_cc" string="Email cc" groups="base.group_no_one"/>
                         </group>
                     </group>
                     <field name='description' placeholder="Internal Note ......."/>
@@ -116,18 +117,19 @@
                 <field name="color"/>
                 <field name="priority"/>
                 <field name="equipment_id"/>
-                <field name="technician_user_id"/>
+                <field name="user_id"/>
                 <field name="owner_user_id"/>
                 <field name="category_id"/>
                 <field name="kanban_state"/>
                 <field name="message_needaction_counter"/>
                 <field name="activity_ids" />
                 <field name="activity_state" />
+                <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
                 <templates>
                     <t t-name="kanban-tooltip">
                        <ul class="oe_kanban_tooltip">
                           <li><b>Category:</b> <field name="category_id"/></li>
-                          <li><b>Request to:</b> <field name="technician_user_id"/></li>
+                          <li><b>Request to:</b> <field name="user_id"/></li>
                        </ul>
                     </t>
                     <t t-name="kanban-box">
@@ -164,7 +166,7 @@
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <field name="kanban_state" widget="state_selection"/>
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.technician_user_id.raw_value)" t-att-title="record.technician_user_id.value" t-att-alt="record.technician_user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
                                     </div>
                                 </div>
                             </div>
@@ -185,7 +187,7 @@
                 <field name="name"/>
                 <field name="request_date" groups="base.group_no_one"/>
                 <field name="owner_user_id"/>
-                <field name="technician_user_id"/>
+                <field name="user_id"/>
                 <field name="category_id" groups="maintenance.group_equipment_manager"/>
                 <field name="stage_id"/>
             </tree>
@@ -197,7 +199,7 @@
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
             <graph string="maintenance Request">
-                <field name="technician_user_id"/>
+                <field name="user_id"/>
                 <field name="stage_id"/>
             </graph>
         </field>
@@ -208,7 +210,7 @@
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
             <pivot string="maintenance Request">
-                <field name="technician_user_id"/>
+                <field name="user_id"/>
                 <field name="stage_id"/>
             </pivot>
         </field>
@@ -219,9 +221,9 @@
         <field name="name">equipment.request.calendar</field>
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
-            <calendar date_start="schedule_date" date_delay="duration" color="technician_user_id">
+            <calendar date_start="schedule_date" date_delay="duration" color="user_id">
                 <field name="name"/>
-                <field name="technician_user_id"/>
+                <field name="user_id"/>
             </calendar>
         </field>
     </record>
@@ -232,7 +234,7 @@
         <field name="res_model">maintenance.request</field>
         <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
         <field name="view_id" ref="hr_equipment_request_view_kanban"/>
-        <field name="context">{'default_technician_user_id': uid}</field>
+        <field name="context">{'default_user_id': uid}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Add a new maintenance request
@@ -371,6 +373,7 @@
                                     <field name="model"/>
                                     <field name="serial_no"/>
                                 </group><group>
+                                    <field name="effective_date"/>
                                     <field name="cost" groups="maintenance.group_equipment_manager"/>
                                     <field name="warranty_date"/>
                                 </group>
@@ -420,6 +423,7 @@
                 <field name="technician_user_id"/>
                 <field name="activity_ids" />
                 <field name="activity_state" />
+                <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">

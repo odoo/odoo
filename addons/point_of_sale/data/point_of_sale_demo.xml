@@ -12,15 +12,13 @@
 
         <record id="base.user_root" model="res.users">
             <field name="barcode">0410100000006</field>
-        </record>
-        <record id="base.user_root" model="res.users">
-            <field name="barcode">0410100000006</field>
             <field name="groups_id" eval="[(4,ref('group_pos_manager'))]"/>
         </record>
 
         <record id="base.user_demo" model="res.users">
             <field name="groups_id" eval="[(4, ref('group_pos_user'))]"/>
         </record>
+
 
         <!-- Resource: pos.category -->
         <record id="pos_category_miscellaneous" model="pos.category">
@@ -33,6 +31,11 @@
           <field name="name">Chairs</field>
         </record>
 
+        <record model="pos.config" id="pos_config_main">
+            <field name="iface_start_categ_id" ref="pos_category_chairs"/>
+            <field name="start_category">True</field>
+        </record>
+
         <!-- Resource: product.product -->
         <record id="stock.product_cable_management_box" model="product.product">
           <field name="pos_categ_id" ref="point_of_sale.pos_category_miscellaneous"/>
@@ -43,6 +46,7 @@
           <field name="name">Wall Shelf Unit</field>
           <field name="default_code">FURN_0009</field>
           <field name="type">product</field>
+          <field name="weight">0.01</field>
           <field name="to_weight">True</field>
           <field name="barcode">2100002000003</field>
           <field name="taxes_id">False</field>
@@ -58,6 +62,7 @@
           <field name="name">Small Shelf</field>
           <field name="default_code">FURN_0008</field>
           <field name="type">product</field>
+          <field name="weight">0.01</field>
           <field name="taxes_id">False</field>
           <field name="categ_id" ref="product.product_category_5"/>
           <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
@@ -73,6 +78,7 @@
           <field name="name">Letter Tray</field>
           <field name="default_code">FURN_0004</field>
           <field name="type">product</field>
+          <field name="weight">0.01</field>
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_5"/>
           <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
@@ -88,6 +94,7 @@
           <field name="to_weight">True</field>
           <field name="barcode">2300001000008</field>
           <field name="type">product</field>
+          <field name="weight">0.01</field>
           <field name="categ_id" ref="product.product_category_5"/>
           <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
           <field name="uom_id" ref="uom.product_uom_kgm" />
@@ -102,6 +109,7 @@
           <field name="name">Magnetic Board</field>
           <field name="default_code">FURN_0005</field>
           <field name="type">product</field>
+          <field name="weight">0.01</field>
           <field name="barcode">2301000000006</field>
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_5"/>
@@ -116,6 +124,7 @@
           <field name="name">Monitor Stand</field>
           <field name="default_code">FURN_0006</field>
           <field name="type">product</field>
+          <field name="weight">0.01</field>
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_5"/>
           <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
@@ -129,6 +138,7 @@
           <field name="name">Desk Pad</field>
           <field name="default_code">FURN_0002</field>
           <field name="type">product</field>
+          <field name="weight">0.01</field>
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_5"/>
           <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
@@ -143,6 +153,7 @@
           <field name="name">Whiteboard</field>
           <field name="to_weight">True</field>
           <field name="type">product</field>
+          <field name="weight">0.01</field>
           <field name="categ_id" ref="product.product_category_5"/>
           <field name="uom_id" ref="uom.product_uom_kgm" />
           <field name="uom_po_id" ref="uom.product_uom_kgm" />
@@ -155,6 +166,7 @@
           <field name="name">LED Lamp</field>
           <field name="default_code">FURN_0003</field>
           <field name="type">product</field>
+          <field name="weight">0.01</field>
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_5"/>
           <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
@@ -169,6 +181,7 @@
           <field name="name">Newspaper Rack</field>
           <field name="default_code">FURN_0007</field>
           <field name="type">product</field>
+          <field name="weight">0.01</field>
           <field name="to_weight">True</field>
           <field name="barcode">2100001000004</field>
           <field name="categ_id" ref="product.product_category_5"/>
@@ -182,6 +195,7 @@
           <field name="available_in_pos">True</field>
           <field name="list_price">1.20</field>
           <field name="name">Whiteboard Pen</field>
+          <field name="weight">0.01</field>
           <field name="default_code">CONS_0001</field>
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_consumable"/>

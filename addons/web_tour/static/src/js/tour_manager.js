@@ -20,6 +20,7 @@ var get_running_key = utils.get_running_key;
 var get_running_delay_key = utils.get_running_delay_key;
 var get_first_visible_element = utils.get_first_visible_element;
 var do_before_unload = utils.do_before_unload;
+var get_jquery_element_from_selector = utils.get_jquery_element_from_selector;
 
 return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     init: function(parent, consumed_tours) {
@@ -31,7 +32,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         this.tours = {};
         this.consumed_tours = consumed_tours || [];
         this.running_tour = local_storage.getItem(get_running_key());
-        this.running_step_delay = parseInt(local_storage.getItem(get_running_delay_key()), 10) || 10;
+        this.running_step_delay = parseInt(local_storage.getItem(get_running_delay_key()), 10) || 0;
         this.edition = (_.last(session.server_version_info) === 'e') ? 'enterprise' : 'community';
         this._log = [];
         console.log('Tour Manager is ready.  running_tour=' + this.running_tour);
@@ -48,7 +49,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
      *        the url to load when manually running the tour
      * @param {boolean} [options.rainbowMan=true]
      *        whether or not the rainbowman must be shown at the end of the tour
-     * @param {Deferred} [options.wait_for]
+     * @param {Promise} [options.wait_for]
      *        indicates when the tour can be started
      * @param {Object[]} steps - steps' descriptions, each step being an object
      *                     containing a tip description
@@ -69,7 +70,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             url: options.url,
             rainbowMan: options.rainbowMan === undefined ? true : !!options.rainbowMan,
             test: options.test,
-            wait_for: options.wait_for || $.when(),
+            wait_for: options.wait_for || Promise.resolve(),
         };
         if (options.skip_enabled) {
             tour.skip_link = '<p><span class="o_skip_tour">' + _t('Skip tour') + '</span></p>';
@@ -87,7 +88,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         _.each(this.tours, this._register.bind(this, do_update));
     },
     _register: function (do_update, tour, name) {
-        if (tour.ready) return $.when();
+        if (tour.ready) return Promise.resolve();
 
         var tour_is_consumed = _.contains(this.consumed_tours, name);
 
@@ -170,31 +171,47 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             if (this.running_tour && this.running_tour_timeout === undefined) {
                 this._set_running_tour_timeout(this.running_tour, this.active_tooltips[this.running_tour]);
             }
-            this._check_for_tooltip(this.active_tooltips[tour_name], tour_name);
+            var self = this;
+            setTimeout(function () {
+                self._check_for_tooltip(self.active_tooltips[tour_name], tour_name);
+            });
         } else {
-            _.each(this.active_tooltips, this._check_for_tooltip.bind(this));
+            for (var tourName in this.active_tooltips) {
+                var tip = this.active_tooltips[tourName];
+                var activated = this._check_for_tooltip(tip, tourName);
+                if (activated) {
+                    break;
+                }
+            }
         }
     },
+    /**
+     *  Check (and activate or update) a help tooltip for a tour.
+     *
+     * @param {Object} tip
+     * @param {string} tour_name
+     * @returns {boolean} true if a tip was found and activated/updated
+     */
     _check_for_tooltip: function (tip, tour_name) {
 
-        if ($('.blockUI').length) {
+        if ($('body').hasClass('o_ui_blocked')) {
             this._deactivate_tip(tip);
             this._log.push("blockUI is preventing the tip to be consumed");
-            return;
+            return false;
         }
 
         var $trigger;
         if (tip.in_modal !== false && this.$modal_displayed.length) {
             $trigger = this.$modal_displayed.find(tip.trigger);
         } else {
-            $trigger = $(tip.trigger);
+            $trigger = get_jquery_element_from_selector(tip.trigger);
         }
         var $visible_trigger = get_first_visible_element($trigger);
 
         var extra_trigger = true;
-        var $extra_trigger = undefined;
+        var $extra_trigger;
         if (tip.extra_trigger) {
-            $extra_trigger = $(tip.extra_trigger);
+            $extra_trigger = get_jquery_element_from_selector(tip.extra_trigger);
             extra_trigger = get_first_visible_element($extra_trigger).length;
         }
 
@@ -206,6 +223,22 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 tip.widget.update($visible_trigger);
             }
         } else {
+            if ($trigger.iframeContainer || ($extra_trigger && $extra_trigger.iframeContainer)) {
+                var $el = $();
+                if ($trigger.iframeContainer) {
+                    $el = $el.add($trigger.iframeContainer);
+                }
+                if (($extra_trigger && $extra_trigger.iframeContainer) && $trigger.iframeContainer !== $extra_trigger.iframeContainer) {
+                    $el = $el.add($extra_trigger.iframeContainer);
+                }
+                var self = this;
+                $el.off('load').one('load', function () {
+                    $el.off('load');
+                    if (self.active_tooltips[tour_name] === tip) {
+                        self.update(tour_name);
+                    }
+                });
+            }
             this._deactivate_tip(tip);
 
             if (this.running_tour === tour_name) {
@@ -219,6 +252,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 }
             }
         }
+        return !!triggered;
     },
     _activate_tip: function(tip, tour_name, $anchor) {
         var tour = this.tours[tour_name];
@@ -245,13 +279,17 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             delete tip.widget;
         }
     },
+    _describeTip: function(tip) {
+        return tip.content ? tip.content + ' (trigger: ' + tip.trigger + ')' : tip.trigger;
+    },
     _consume_tip: function(tip, tour_name) {
         this._deactivate_tip(tip);
         this._to_next_step(tour_name);
 
         var is_running = (this.running_tour === tour_name);
         if (is_running) {
-            console.log(_.str.sprintf("Tour %s: step %s succeeded", tour_name, tip.trigger));
+            var stepDescription = this._describeTip(tip);
+            console.log(_.str.sprintf("Tour %s: step '%s' succeeded", tour_name, stepDescription));
         }
 
         if (this.active_tooltips[tour_name]) {
@@ -303,11 +341,12 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 _.each(this._log, function (log) {
                     console.log(log);
                 });
-                console.log(document.body.outerHTML);
-                console.log("error " + error); // phantomJS wait for message starting by error
+                console.log(document.body.parentElement.outerHTML);
+                console.error(error); // will be displayed as error info
+                console.error("test failed"); // browser_js wait for error message "test failed"
             } else {
                 console.log(_.str.sprintf("Tour %s succeeded", tour_name));
-                console.log("ok"); // phantomJS wait for exact message "ok"
+                console.log("test successful"); // browser_js wait for message "test successful"
             }
             this._log = [];
         } else {
@@ -325,7 +364,8 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     _set_running_tour_timeout: function (tour_name, step) {
         this._stop_running_tour_timeout();
         this.running_tour_timeout = setTimeout((function() {
-            this._consume_tour(tour_name, _.str.sprintf("Tour %s failed at step %s", tour_name, step.trigger));
+            var descr = this._describeTip(step);
+            this._consume_tour(tour_name, _.str.sprintf("Tour %s failed at step %s", tour_name, descr));
         }).bind(this), (step.timeout || RUNNING_TOUR_TIMEOUT) + this.running_step_delay);
     },
     _stop_running_tour_timeout: function () {
@@ -334,11 +374,23 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     },
     _to_next_running_step: function (tip, tour_name) {
         if (this.running_tour !== tour_name) return;
+        var self = this;
         this._stop_running_tour_timeout();
+        if (this.running_step_delay) {
+            // warning: due to the delay, it may happen that the $anchor isn't
+            // in the DOM anymore when exec is called, either because:
+            // - it has been removed from the DOM meanwhile and the tip's
+            //   selector doesn't match anything anymore
+            // - it has been re-rendered and thus the selector still has a match
+            //   in the DOM, but executing the step with that $anchor won't work
+            _.delay(exec, this.running_step_delay);
+        } else {
+            exec();
+        }
 
-        var action_helper = new RunningTourActionHelper(tip.widget);
-        _.delay((function () {
-            do_before_unload(this._consume_tip.bind(this, tip, tour_name));
+        function exec() {
+            var action_helper = new RunningTourActionHelper(tip.widget);
+            do_before_unload(self._consume_tip.bind(self, tip, tour_name));
 
             if (typeof tip.run === "function") {
                 tip.run.call(tip.widget, action_helper);
@@ -348,24 +400,18 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             } else {
                 action_helper.auto();
             }
-        }).bind(this), this.running_step_delay);
+        }
     },
 
     /**
      * Tour predefined steps
      */
     STEPS: {
-        MENU_MORE: {
-            edition: "community",
-            trigger: "body > header > nav",
-            position: "bottom",
+        SHOW_APPS_MENU_ITEM: {
+            edition: 'community',
+            trigger: '.o_menu_apps a',
             auto: true,
-            run: function (actions) {
-                var $more = $('.o_extra_menu_items > .dropdown-toggle');
-                if ($more.length) {
-                    actions.auto($more);
-                }
-            },
+            position: "bottom",
         },
 
         TOGGLE_HOME_MENU: {

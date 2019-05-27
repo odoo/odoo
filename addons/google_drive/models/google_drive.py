@@ -9,7 +9,6 @@ import werkzeug.urls
 
 from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, UserError
-from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.translate import _
 
@@ -57,7 +56,7 @@ class GoogleDrive(models.Model):
         if not google_drive_refresh_token:
             if user_is_admin:
                 dummy, action_id = self.env['ir.model.data'].get_object_reference('base_setup', 'action_general_configuration')
-                msg = _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it .")
+                msg = _("There is no refresh code set for Google Drive. You can set it up from the configuration panel.")
                 raise RedirectWarning(msg, action_id, _('Go to the configuration panel'))
             else:
                 raise UserError(_("Google Drive is not yet configured. Please contact your administrator."))
@@ -155,7 +154,7 @@ class GoogleDrive(models.Model):
           :return: the config id and config name
         '''
         # TO DO in master: fix my signature and my model
-        if isinstance(res_model, pycompat.string_types):
+        if isinstance(res_model, str):
             res_model = self.env['ir.model'].search([('model', '=', res_model)]).id
         if not res_id:
             raise UserError(_("Creating google drive may only be done by one at a time."))
@@ -177,7 +176,7 @@ class GoogleDrive(models.Model):
         return config_values
 
     name = fields.Char('Template Name', required=True)
-    model_id = fields.Many2one('ir.model', 'Model', ondelete='set null', required=True)
+    model_id = fields.Many2one('ir.model', 'Model', required=True)
     model = fields.Char('Related Model', related='model_id.model', readonly=True)
     filter_id = fields.Many2one('ir.filters', 'Filter', domain="[('model_id', '=', model)]")
     google_drive_template_url = fields.Char('Template URL', required=True)

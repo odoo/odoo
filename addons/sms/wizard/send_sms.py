@@ -24,6 +24,7 @@ except ImportError:
 
 class SendSMS(models.TransientModel):
     _name = 'sms.send_sms'
+    _description = 'Send SMS'
 
     recipients = fields.Char('Recipients', required=True)
     message = fields.Text('Message', required=True)
@@ -31,7 +32,7 @@ class SendSMS(models.TransientModel):
     def _phone_get_country(self, partner):
         if 'country_id' in partner:
             return partner.country_id
-        return self.env.user.company_id.country_id
+        return self.env.company_id.country_id
 
     def _sms_sanitization(self, partner, field_name):
         number = partner[field_name]
@@ -66,7 +67,7 @@ class SendSMS(models.TransientModel):
         model = self.env[active_model]
 
         records = self._get_records(model)
-        if getattr(records, '_get_default_sms_recipients'):
+        if getattr(records, '_get_default_sms_recipients') and not self.env.context.get('default_recipients'):
             partners = records._get_default_sms_recipients()
             phone_numbers = []
             no_phone_partners = []

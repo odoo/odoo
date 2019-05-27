@@ -100,14 +100,14 @@ class ProductProduct(models.Model):
             if "force_company" in self.env.context:
                 company_id = self.env.context['force_company']
             else:
-                company_id = self.env.user.company_id.id
+                company_id = self.env.company_id.id
 
             #Cost price is calculated afterwards as it is a property
             sqlstr = """
                 select
                     sum(l.price_unit * l.quantity)/nullif(sum(l.quantity),0) as avg_unit_price,
                     sum(l.quantity) as num_qty,
-                    sum(l.quantity * (l.price_subtotal/(nullif(l.quantity,0)))) as total,
+                    sum(l.quantity * (l.price_subtotal_signed/(nullif(l.quantity,0)))) as total,
                     sum(l.quantity * pt.list_price) as sale_expected
                 from account_invoice_line l
                 left join account_invoice i on (l.invoice_id = i.id)

@@ -19,7 +19,7 @@ Sidebar.include({
         if (this.options.viewType === "form") {
             def = this._addGoogleDocItems(this.env.model, this.env.activeIds[0]);
         }
-        return $.when(def).then(this._super.bind(this));
+        return Promise.resolve(def).then(this._super.bind(this));
     },
 
     //--------------------------------------------------------------------------
@@ -30,12 +30,12 @@ Sidebar.include({
      * @private
      * @param {string} model
      * @param {integer} resID
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _addGoogleDocItems: function (model, resID) {
         var self = this;
         if (!resID) {
-            return $.when();
+            return Promise.resolve();
         }
         var gdoc_item = _.indexOf(_.pluck(self.items.other, 'classname'), 'oe_share_gdoc');
         if (gdoc_item !== -1) {
@@ -59,7 +59,7 @@ Sidebar.include({
                     }
                     if (!already_there) {
                         self._addItems('other', [{
-                            callback: self._onGoogleDocItemClicked.bind(self, res.id, resID),
+                            callback: self._onGoogleDocItemClicked.bind(self, res.id),
                             classname: 'oe_share_gdoc',
                             config_id: res.id,
                             label: res.name,
@@ -81,8 +81,9 @@ Sidebar.include({
      * @param {integer} configID
      * @param {integer} resID
      */
-    _onGoogleDocItemClicked: function (configID, resID) {
+    _onGoogleDocItemClicked: function (configID) {
         var self = this;
+        var resID = this.env.activeIds[0];
         var domain = [['id', '=', configID]];
         var fields = ['google_drive_resource_id', 'google_drive_client_id'];
         this._rpc({

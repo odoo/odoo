@@ -9,10 +9,12 @@ import logging
 import os
 import re
 import time
+import uuid
 
 import itertools
 from dateutil.relativedelta import relativedelta
 from functools import partial
+from difflib import HtmlDiff
 from operator import itemgetter
 
 import json
@@ -32,6 +34,7 @@ from odoo.tools.parse_version import parse_version
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.view_validation import valid_view
 from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
+from odoo.tools.image import image_data_uri
 
 _logger = logging.getLogger(__name__)
 
@@ -81,6 +84,7 @@ def keep_query(*keep_params, **additional_params):
 
 class ViewCustom(models.Model):
     _name = 'ir.ui.view.custom'
+    _description = 'Custom View'
     _order = 'create_date desc'  # search(limit=1) should return the last customization
 
     ref_id = fields.Many2one('ir.ui.view', string='Original View', index=True, required=True, ondelete='cascade')
@@ -127,6 +131,13 @@ def get_view_arch_from_file(filename, xmlid):
         if node.tag in ('template', 'record'):
             if node.tag == 'record':
                 field = node.find('field[@name="arch"]')
+                if field is None:
+                    if node.find('field[@name="view_id"]') is not None:
+                        view_id = node.find('field[@name="view_id"]').attrib.get('ref')
+                        ref_id = '%s%s' % ('.' not in view_id and xmlid.split('.')[0] + '.' or '', view_id)
+                        return get_view_arch_from_file(filename, ref_id)
+                    else:
+                        return None
                 _fix_multiple_roots(field)
                 inner = u''.join([etree.tostring(child, encoding='unicode') for child in field.iterchildren()])
                 return field.text + inner
@@ -178,6 +189,7 @@ READONLY = re.compile(r"\breadonly\b")
 
 class View(models.Model):
     _name = 'ir.ui.view'
+    _description = 'View'
     _order = "priority,name,id"
 
     name = fields.Char(string='View Name', required=True)
@@ -194,10 +206,18 @@ class View(models.Model):
                              ('kanban', 'Kanban'),
                              ('search', 'Search'),
                              ('qweb', 'QWeb')], string='View Type')
-    arch = fields.Text(compute='_compute_arch', inverse='_inverse_arch', string='View Architecture', nodrop=True)
-    arch_base = fields.Text(compute='_compute_arch_base', inverse='_inverse_arch_base', string='Base View Architecture')
-    arch_db = fields.Text(string='Arch Blob', translate=xml_translate, oldname='arch')
-    arch_fs = fields.Char(string='Arch Filename')
+    arch = fields.Text(compute='_compute_arch', inverse='_inverse_arch', string='View Architecture',
+                       help="""This field should be used when accessing view arch. It will use translation.
+                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode.""")
+    arch_base = fields.Text(compute='_compute_arch_base', inverse='_inverse_arch_base', string='Base View Architecture',
+                            help="This field is the same as `arch` field without translations")
+    arch_db = fields.Text(string='Arch Blob', translate=xml_translate, oldname='arch',
+                          help="This field stores the view arch.")
+    arch_fs = fields.Char(string='Arch Filename', help="""File from where the view originates.
+                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode.""")
+    arch_updated = fields.Boolean(string='Modified Architecture')
+    arch_prev = fields.Text(string='Previous View Architecture', help="""This field will save the current `arch_db` before writing on it.
+                                                                         Useful to (soft) reset a broken view.""")
     inherit_id = fields.Many2one('ir.ui.view', string='Inherited View', ondelete='restrict', index=True)
     inherit_children_ids = fields.One2many('ir.ui.view', 'inherit_id', string='Views which inherit from this one')
     field_parent = fields.Char(string='Child Field')
@@ -208,8 +228,6 @@ class View(models.Model):
     groups_id = fields.Many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
                                  string='Groups', help="If this field is empty, the view applies to all users. Otherwise, the view applies to the users of those groups only.")
     model_ids = fields.One2many('ir.model.data', 'res_id', string="Models", domain=[('model', '=', 'ir.ui.view')], auto_join=True)
-    create_date = fields.Datetime(readonly=True)
-    write_date = fields.Datetime(string='Last Modification Date', readonly=True)
 
     mode = fields.Selection([('primary', "Base view"), ('extension', "Extension View")],
                             string="View inheritance mode", default='primary', required=True,
@@ -229,7 +247,7 @@ actual arch.
 * if False, the view currently does not extend its parent but can be enabled
          """)
 
-    @api.depends('arch_db', 'arch_fs')
+    @api.depends('arch_db', 'arch_fs', 'arch_updated')
     def _compute_arch(self):
         def resolve_external_ids(arch_fs, view_xml_id):
             def replacer(m):
@@ -241,15 +259,18 @@ actual arch.
 
         for view in self:
             arch_fs = None
-            if 'xml' in config['dev_mode'] and view.arch_fs and view.xml_id:
+            xml_id = view.xml_id or view.key
+            read_file = self._context.get('read_arch_from_file') or \
+                ('xml' in config['dev_mode'] and not view.arch_updated)
+            if read_file and view.arch_fs and xml_id:
                 # It is safe to split on / herebelow because arch_fs is explicitely stored with '/'
                 fullpath = get_resource_path(*view.arch_fs.split('/'))
                 if fullpath:
-                    arch_fs = get_view_arch_from_file(fullpath, view.xml_id)
+                    arch_fs = get_view_arch_from_file(fullpath, xml_id)
                     # replace %(xml_id)s, %(xml_id)d, %%(xml_id)s, %%(xml_id)d by the res_id
-                    arch_fs = arch_fs and resolve_external_ids(arch_fs, view.xml_id).replace('%%', '%')
+                    arch_fs = arch_fs and resolve_external_ids(arch_fs, xml_id).replace('%%', '%')
                 else:
-                    _logger.warning("View %s: Full path [%s] cannot be found.", view.xml_id, view.arch_fs)
+                    _logger.warning("View %s: Full path [%s] cannot be found.", xml_id, view.arch_fs)
                     arch_fs = False
             view.arch = pycompat.to_text(arch_fs or view.arch_db)
 
@@ -262,17 +283,30 @@ actual arch.
                 path_info = get_resource_from_path(self._context['install_filename'])
                 if path_info:
                     data['arch_fs'] = '/'.join(path_info[0:2])
+                    data['arch_updated'] = False
             view.write(data)
 
     @api.depends('arch')
     def _compute_arch_base(self):
         # 'arch_base' is the same as 'arch' without translation
-        for view, view_wo_lang in pycompat.izip(self, self.with_context(lang=None)):
+        for view, view_wo_lang in zip(self, self.with_context(lang=None)):
             view.arch_base = view_wo_lang.arch
 
     def _inverse_arch_base(self):
-        for view, view_wo_lang in pycompat.izip(self, self.with_context(lang=None)):
+        for view, view_wo_lang in zip(self, self.with_context(lang=None)):
             view_wo_lang.arch = view.arch_base
+
+    @api.multi
+    def reset_arch(self, mode='soft'):
+        for view in self:
+            arch = False
+            if mode == 'soft':
+                arch = view.arch_prev
+            elif mode == 'hard' and view.arch_fs:
+                arch = view.with_context(read_arch_from_file=True).arch
+            if arch:
+                # Don't save current arch in previous since we reset, this arch is probably broken
+                view.with_context(no_save_prev=True).write({'arch_db': arch})
 
     @api.depends('write_date')
     def _compute_model_data_id(self):
@@ -283,7 +317,7 @@ actual arch.
             view.model_data_id = data['id']
 
     def _search_model_data_id(self, operator, value):
-        name = 'name' if isinstance(value, pycompat.string_types) else 'id'
+        name = 'name' if isinstance(value, str) else 'id'
         domain = [('model', '=', 'ir.ui.view'), (name, operator, value)]
         data = self.env['ir.model.data'].sudo().search(domain)
         return [('id', 'in', data.mapped('res_id'))]
@@ -318,6 +352,12 @@ actual arch.
                         self.raise_view_error(message, self.id)
         return True
 
+    def _check_groups_validity(self, view, view_name):
+        for node in view.xpath('//*[@groups]'):
+            for group in node.get('groups').replace('!', '').split(','):
+                if not self.env.ref(group.strip(), raise_if_not_found=False):
+                    _logger.warning("The group %s defined in view %s does not exist!", group, view_name)
+
     @api.constrains('arch_db')
     def _check_xml(self):
         # Sanity checks: the view should not break anything upon rendering!
@@ -330,6 +370,7 @@ actual arch.
             view_arch_utf8 = view_def['arch']
             if view.type != 'qweb':
                 view_doc = etree.fromstring(view_arch_utf8)
+                self._check_groups_validity(view_doc, view.name)
                 # verify that all fields used are valid, etc.
                 self.postprocess_and_fields(view.model, view_doc, view.id)
                 # RNG-based validation is not possible anymore with 7.0 forms
@@ -363,6 +404,9 @@ actual arch.
          "CHECK (mode != 'extension' OR inherit_id IS NOT NULL)",
          "Invalid inheritance mode: if the mode is 'extension', the view must"
          " extend an other view"),
+        ('qweb_required_key',
+         "CHECK (type != 'qweb' OR key IS NOT NULL)",
+         "Invalid key: QWeb view should have a key"),
     ]
 
     @api.model_cr_context
@@ -374,7 +418,10 @@ actual arch.
 
     def _compute_defaults(self, values):
         if 'inherit_id' in values:
-            values.setdefault('mode', 'extension' if values['inherit_id'] else 'primary')
+            # Do not automatically change the mode if the view already has an inherit_id,
+            # and the user change it to another.
+            if not values['inherit_id'] or all(not view.inherit_id for view in self):
+                values.setdefault('mode', 'extension' if values['inherit_id'] else 'primary')
         return values
 
     @api.model_create_multi
@@ -393,8 +440,14 @@ actual arch.
                         # don't raise here, the constraint that runs `self._check_xml` will
                         # do the job properly.
                         pass
+            if not values.get('key') and values.get('type') == 'qweb':
+                values['key'] = "gen_key.%s" % str(uuid.uuid4())[:6]
+                if values.get('model'):
+                    values['key'] = "%s.gen_key_%s" % (values.get('model'), str(uuid.uuid4())[:6])
             if not values.get('name'):
                 values['name'] = "%s %s" % (values.get('model'), values['type'])
+            # Create might be called with either `arch` (xml files), `arch_base` (form view) or `arch_db`.
+            values['arch_prev'] = values.get('arch_base') or values.get('arch_db') or values.get('arch')
             values.update(self._compute_defaults(values))
 
         self.clear_caches()
@@ -402,10 +455,10 @@ actual arch.
 
     @api.multi
     def write(self, vals):
-        # If view is modified we remove the arch_fs information thus activating the arch_db
-        # version. An `init` of the view will restore the arch_fs for the --dev mode
+        # Keep track if view was modified. That will be useful for the --dev mode
+        # to prefer modified arch over file arch.
         if ('arch' in vals or 'arch_base' in vals) and 'install_filename' not in self._context:
-            vals['arch_fs'] = False
+            vals['arch_updated'] = True
 
         # drop the corresponding view customizations (used for dashboards for example), otherwise
         # not all users would see the updated views
@@ -414,13 +467,24 @@ actual arch.
             custom_view.unlink()
 
         self.clear_caches()
+        if 'arch_db' in vals and not self.env.context.get('no_save_prev'):
+            vals['arch_prev'] = self.arch_db
         return super(View, self).write(self._compute_defaults(vals))
 
     def unlink(self):
         # if in uninstall mode and has children views, emulate an ondelete cascade
-        if self.env.context.get('_force_unlink', False) and self.mapped('inherit_children_ids'):
-            self.mapped('inherit_children_ids').unlink()
+        if self.env.context.get('_force_unlink', False) and self.inherit_children_ids:
+            self.inherit_children_ids.unlink()
         super(View, self).unlink()
+
+    @api.multi
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        self.ensure_one()
+        if self.key and default and 'key' not in default:
+            new_key = self.key + '_%s' % str(uuid.uuid4())[:6]
+            default = dict(default or {}, key=new_key)
+        return super(View, self).copy(default)
 
     @api.multi
     def toggle(self):
@@ -730,18 +794,19 @@ actual arch.
         [view_data] = root.read(fields=fields)
         view_arch = etree.fromstring(view_data['arch'].encode('utf-8'))
         if not root.inherit_id:
+            if self._context.get('inherit_branding'):
+                view_arch.attrib.update({
+                    'data-oe-model': 'ir.ui.view',
+                    'data-oe-id': str(root.id),
+                    'data-oe-field': 'arch',
+                })
             arch_tree = view_arch
         else:
+            if self._context.get('inherit_branding'):
+                self.inherit_branding(view_arch, root.id, root.id)
             parent_view = root.inherit_id.read_combined(fields=fields)
             arch_tree = etree.fromstring(parent_view['arch'])
             arch_tree = self.apply_inheritance_specs(arch_tree, view_arch, parent_view['id'])
-
-        if self._context.get('inherit_branding'):
-            arch_tree.attrib.update({
-                'data-oe-model': 'ir.ui.view',
-                'data-oe-id': str(root.id),
-                'data-oe-field': 'arch',
-            })
 
         # and apply inheritance
         arch = self.apply_view_inheritance(arch_tree, root.id, self.model)
@@ -845,6 +910,30 @@ actual arch.
                 if field:
                     orm.transfer_field_to_modifiers(field, modifiers)
 
+        elif node.tag == 'groupby':
+            # groupby nodes should be considered as nested view because they may
+            # contain fields on the comodel
+            field = Model._fields.get(node.get('name'))
+            if field:
+                if field.type != 'many2one':
+                    self.raise_view_error(_('groupby can only target many2one (%(field)s') % dict(field=field.name), view_id)
+                attrs = fields.setdefault(node.get('name'), {})
+                children = False
+                # move all children nodes into a new node <groupby>
+                groupby_node = E.groupby()
+                for child in list(node):
+                    node.remove(child)
+                    groupby_node.append(child)
+                # validate the new node as a nested view, and associate it to the field
+                xarch, xfields = self.with_context(
+                    base_model_name=model,
+                    view_is_editable=False,
+                ).postprocess_and_fields(field.comodel_name, groupby_node, view_id)
+                attrs['views'] = {'groupby': {
+                    'arch': xarch,
+                    'fields': xfields,
+                }}
+
         elif node.tag in ('form', 'tree'):
             result = Model.view_header_get(False, node.tag)
             if result:
@@ -927,11 +1016,19 @@ actual arch.
             'context_today',
             'active_id',
             'active_ids',
+            'allowed_company_ids',
+            'current_company_id',
             'active_model',
             'time',
             'datetime',
             'relativedelta',
             'current_date',
+            'abs',
+            'len',
+            'bool',
+            'float',
+            'str',
+            'unicode',
         }
 
     def get_attrs_field_names(self, arch, model, editable):
@@ -973,7 +1070,7 @@ actual arch.
             if node.tag in VIEW_TYPES:
                 # determine whether this view is editable
                 editable = editable and self._view_is_editable(node)
-            elif node.tag == 'field':
+            elif node.tag in ('field', 'groupby'):
                 # determine whether the field is editable
                 field = model._fields.get(node.get('name'))
                 if field:
@@ -987,11 +1084,11 @@ actual arch.
                 elif key == 'attrs':
                     process_attrs(val, get, key, val)
 
-            if node.tag == 'field' and field and field.relational:
+            if node.tag in ('field', 'groupby') and field and field.relational:
                 if editable and not node.get('domain'):
                     domain = field._description_domain(self.env)
                     # process the field's domain as if it was in the view
-                    if isinstance(domain, pycompat.string_types):
+                    if isinstance(domain, str):
                         process_expr(domain, get, 'domain', domain)
                 # retrieve subfields of 'parent'
                 model = self.env[field.comodel_name]
@@ -1020,17 +1117,11 @@ actual arch.
             self.raise_view_error(_('Model not found: %(model)s') % dict(model=model), view_id)
         Model = self.env[model]
 
-        is_base_model = self.env.context.get('base_model_name', model) == model
-
         if node.tag == 'diagram':
             if node.getchildren()[0].tag == 'node':
                 node_model = self.env[node.getchildren()[0].get('object')]
                 node_fields = node_model.fields_get(None)
                 fields.update(node_fields)
-                if (not node.get("create") and
-                        not node_model.check_access_rights('create', raise_exception=False) or
-                        not self._context.get("create", True) and is_base_model):
-                    node.set("create", 'false')
             if node.getchildren()[1].tag == 'arrow':
                 arrow_fields = self.env[node.getchildren()[1].get('object')].fields_get(None)
                 fields.update(arrow_fields)
@@ -1045,23 +1136,7 @@ actual arch.
             attrs_fields = self.get_attrs_field_names(node, Model, editable)
 
         fields_def = self.postprocess(model, node, view_id, False, fields)
-        if node.tag in ('kanban', 'tree', 'form', 'gantt'):
-            for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
-                if (not node.get(action) and
-                        not Model.check_access_rights(operation, raise_exception=False) or
-                        not self._context.get(action, True) and is_base_model):
-                    node.set(action, 'false')
-        if node.tag in ('kanban',):
-            group_by_name = node.get('default_group_by')
-            if group_by_name in Model._fields:
-                group_by_field = Model._fields[group_by_name]
-                if group_by_field.type == 'many2one':
-                    group_by_model = Model.env[group_by_field.comodel_name]
-                    for action, operation in (('group_create', 'create'), ('group_delete', 'unlink'), ('group_edit', 'write')):
-                        if (not node.get(action) and
-                                not group_by_model.check_access_rights(operation, raise_exception=False) or
-                                not self._context.get(action, True) and is_base_model):
-                            node.set(action, 'false')
+        self._postprocess_access_rights(model, node)
 
         arch = etree.tostring(node, encoding="unicode").replace('\t', '')
         for k in list(fields):
@@ -1089,13 +1164,49 @@ actual arch.
 
         return arch, fields
 
+    def _postprocess_access_rights(self, model, node):
+        """ Compute and set on node access rights based on view type. Specific
+        views can add additional specific rights like creating columns for
+        many2one-based grouping views. """
+        Model = self.env[model]
+        is_base_model = self.env.context.get('base_model_name', model) == model
+
+        if node.tag == 'diagram':
+            if node.getchildren()[0].tag == 'node':
+                node_model = self.env[node.getchildren()[0].get('object')]
+                if (not node.get("create") and
+                        not node_model.check_access_rights('create', raise_exception=False) or
+                        not self._context.get("create", True) and is_base_model):
+                    node.set("create", 'false')
+
+        if node.tag in ('kanban', 'tree', 'form', 'gantt', 'activity'):
+            for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
+                if (not node.get(action) and
+                        not Model.check_access_rights(operation, raise_exception=False) or
+                        not self._context.get(action, True) and is_base_model):
+                    node.set(action, 'false')
+
+        if node.tag in ('kanban',):
+            group_by_name = node.get('default_group_by')
+            if group_by_name in Model._fields:
+                group_by_field = Model._fields[group_by_name]
+                if group_by_field.type == 'many2one':
+                    group_by_model = Model.env[group_by_field.comodel_name]
+                    for action, operation in (('group_create', 'create'), ('group_delete', 'unlink'), ('group_edit', 'write')):
+                        if (not node.get(action) and
+                                not group_by_model.check_access_rights(operation, raise_exception=False) or
+                                not self._context.get(action, True) and is_base_model):
+                            node.set(action, 'false')
+
+        return node
+
     #------------------------------------------------------
     # QWeb template views
     #------------------------------------------------------
 
     def _read_template_keys(self):
         """ Return the list of context keys to use for caching ``_read_template``. """
-        return ['lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations', 'website_id']
+        return ['lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations']
 
     # apply ormcache_context decorator unless in dev mode...
     @api.model
@@ -1108,8 +1219,7 @@ actual arch.
         arch = self.browse(view_id).read_combined(['arch'])['arch']
         arch_tree = etree.fromstring(arch)
         self.distribute_branding(arch_tree)
-        root = E.templates(arch_tree)
-        arch = etree.tostring(root, encoding='unicode')
+        arch = etree.tostring(arch_tree, encoding='unicode')
         return arch
 
     @api.model
@@ -1121,12 +1231,16 @@ actual arch.
         """ Return the view ID corresponding to ``template``, which may be a
         view ID or an XML ID. Note that this method may be overridden for other
         kinds of template values.
+
+        This method could return the ID of something that is not a view (when
+        using fallback to `xmlid_to_res_id`).
         """
-        if isinstance(template, pycompat.integer_types):
+        if isinstance(template, int):
             return template
         if '.' not in template:
             raise ValueError('Invalid template id: %r' % template)
-        return self.env['ir.model.data'].xmlid_to_res_id(template, raise_if_not_found=True)
+        view = self.search([('key', '=', template)], limit=1)
+        return view and view.id or self.env['ir.model.data'].xmlid_to_res_id(template, raise_if_not_found=True)
 
     def clear_cache(self):
         """ Deprecated, use `clear_caches` instead. """
@@ -1136,6 +1250,7 @@ actual arch.
     def _contains_branded(self, node):
         return node.tag == 't'\
             or 't-raw' in node.attrib\
+            or 't-call' in node.attrib\
             or any(self.is_node_branded(child) for child in node.iterdescendants())
 
     def _pop_view_branding(self, element):
@@ -1223,7 +1338,7 @@ actual arch.
 
     @api.multi
     def render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
-        assert isinstance(self.id, pycompat.integer_types)
+        assert isinstance(self.id, int)
 
         qcontext = dict() if minimal_qcontext else self._prepare_qcontext()
         qcontext.update(values or {})
@@ -1238,7 +1353,7 @@ actual arch.
         qcontext = dict(
             env=self.env,
             user_id=self.env["res.users"].browse(self.env.user.id),
-            res_company=self.env.user.company_id.sudo(),
+            res_company=self.env.company_id.sudo(),
             keep_query=keep_query,
             request=request,  # might be unbound if we're not in an httprequest context
             debug=request.debug if request else False,
@@ -1250,6 +1365,7 @@ actual arch.
             xmlid=self.key,
             viewid=self.id,
             to_text=pycompat.to_text,
+            image_data_uri=image_data_uri,
         )
         return qcontext
 
@@ -1354,32 +1470,110 @@ actual arch.
 
     @api.model
     def _validate_module_views(self, module):
-        """Validate architecture of all the views of a given module"""
-        assert not self.pool._init or module in self.pool._init_modules
-        xmlid_filter = ''
-        params = (module,)
-        if self.pool._init:
-            # only validate the views that are still existing...
-            xmlid_filter = "AND md.name IN %s"
-            names = tuple(
-                name
-                for (xmod, name), (model, res_id) in self.pool.model_data_reference_ids.items()
-                if xmod == module and model == self._name
-            )
-            if not names:
-                # no views for this module, nothing to validate
-                return
-            params += (names,)
+        """ Validate the architecture of all the views of a given module that
+            are impacted by view updates, but have not been checked yet.
+        """
+        assert self.pool._init
 
-        query = """SELECT max(v.id)
-                     FROM ir_ui_view v
-                LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
-                    WHERE md.module = %s {0}
-                 GROUP BY coalesce(v.inherit_id, v.id)""".format(xmlid_filter)
-        self._cr.execute(query, params)
+        # only validate the views that still exist...
+        prefix = module + '.'
+        prefix_len = len(prefix)
+        names = tuple(
+            xmlid[prefix_len:]
+            for xmlid in self.pool.loaded_xmlids
+            if xmlid.startswith(prefix)
+        )
+        if not names:
+            return
 
-        for vid, in self._cr.fetchall():
+        # retrieve the views with an XML id that has not been checked yet, i.e.,
+        # the views with noupdate=True on their xml id
+        query = """
+            SELECT v.id
+            FROM ir_ui_view v
+            JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
+            WHERE md.module = %s AND md.name IN %s AND md.noupdate
+        """
+        self._cr.execute(query, (module, names))
+        views = self.browse([row[0] for row in self._cr.fetchall()])
+
+        for view in views:
             try:
-                self.browse(vid)._check_xml()
+                view._check_xml()
             except Exception as e:
-                self.raise_view_error("Can't validate view:\n%s" % e, vid)
+                self.raise_view_error("Can't validate view:\n%s" % e, view.id)
+
+
+class ResetViewArchWizard(models.TransientModel):
+    """ A wizard to reset views architecture. """
+    _name = "reset.view.arch.wizard"
+    _description = "Reset View Architecture Wizard"
+
+    def _default_view_id(self):
+        view_id = self._context.get('active_model') == 'ir.ui.view' and self._context.get('active_id') or []
+        return view_id
+
+    view_id = fields.Many2one('ir.ui.view', string='View', default=_default_view_id)
+    view_name = fields.Char(related='view_id.name', string='View Name')
+    arch_diff = fields.Html(string='Architecture Diff', compute='_compute_arch_diff', readonly=True, sanitize_tags=False)
+    reset_mode = fields.Selection([
+        ('soft', 'Restore previous version (soft reset).'),
+        ('hard', 'Reset to file version (hard reset).')
+    ], string='Reset Mode', default='soft', required=True, help="You might want to try a soft reset first.")
+
+    @api.one
+    @api.depends('reset_mode', 'view_id')
+    def _compute_arch_diff(self):
+        ''' Return the differences between the current view arch and either its
+        previous or initial arch, depending of `reset_mode` (soft/hard).
+        The diff will be returned in an HTML table like on github.com.
+        '''
+        def handle_style(html_diff):
+            ''' The HtmlDiff lib will add some usefull classes on the DOM to
+            identify elements. Simply replace those classes by BS4 ones.
+            For the table to fit the modal width, some custom style is needed.
+            '''
+            to_replace = {
+                'diff_header': 'diff_header bg-600 text-center align-top px-2',
+                'diff_next': 'd-none',
+                'diff_add': 'bg-success',
+                'diff_chg': 'bg-warning',
+                'diff_sub': 'bg-danger',
+                'nowrap': '',
+            }
+            for old, new in to_replace.items():
+                html_diff = html_diff.replace(old, new)
+            html_diff += '''
+                <style>
+                    table.diff { width: 100%; }
+                    table.diff .diff_header { white-space: nowrap; }
+                    table.diff th.diff_header { width: 50%; }
+                    table.diff td { word-break: break-all; }
+                </style>
+            '''
+            return html_diff
+
+        soft = self.reset_mode == 'soft'
+        arch_to_compare = False
+        if soft:
+            arch_to_compare = self.view_id.arch_prev
+        elif not soft and self.view_id.arch_fs:
+            arch_to_compare = self.view_id.with_context(read_arch_from_file=True).arch
+
+        diff = False
+        if arch_to_compare:
+            diff = HtmlDiff(tabsize=2).make_table(
+                arch_to_compare.splitlines(),
+                self.view_id.arch.splitlines(),
+                _("Previous Arch") if soft else _("File Arch"),
+                _("Current Arch"),
+                context=True,  # Show only diff lines, not all the code
+            )
+            diff = handle_style(diff)
+        self.arch_diff = diff
+
+    @api.multi
+    def reset_view_button(self):
+        self.ensure_one()
+        self.view_id.reset_arch(self.reset_mode)
+        return {'type': 'ir.actions.act_window_close'}

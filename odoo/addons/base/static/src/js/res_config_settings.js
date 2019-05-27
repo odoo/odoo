@@ -24,12 +24,22 @@ var BaseSettingRenderer = FormRenderer.extend({
     },
 
     start: function () {
-        this._super.apply(this, arguments);
+        var prom = this._super.apply(this, arguments);
         if (config.device.isMobile) {
             core.bus.on("DOM_updated", this, function () {
                 this._moveToTab(this.currentIndex || this._currentAppIndex());
             });
         }
+        return prom;
+    },
+
+    /**
+     * @override
+     */
+    on_attach_callback: function () {
+        this._super.apply(this, arguments);
+        // set default focus on searchInput
+        this.searchInput.focus();
     },
 
     /**
@@ -171,19 +181,6 @@ var BaseSettingRenderer = FormRenderer.extend({
         }));
     },
     /**
-     * add placeholder attr in input element
-     * @override
-     * @private
-     * @param {jQueryElement} $el
-     * @param {Object} node
-     */
-    _handleAttributes: function ($el, node) {
-        this._super.apply(this, arguments);
-        if (node.attrs.placeholder) {
-            $el.attr('placeholder', node.attrs.placeholder);
-        }
-    },
-    /**
      * move to selected setting
      *
      * @private
@@ -213,6 +210,7 @@ var BaseSettingRenderer = FormRenderer.extend({
     },
 
     _onSettingTabClick: function (event) {
+        this.searchInput.focus();
         if (this.searchText.length > 0) {
             this.searchInput.val('');
             this.searchText = "";
@@ -256,14 +254,16 @@ var BaseSettingRenderer = FormRenderer.extend({
     },
 
     _render: function () {
-        var res = this._super.apply(this, arguments);
-        this._initModules();
-        this._renderLeftPanel();
-        this._initSearch();
-        if (config.device.isMobile) {
-            this._enableSwipe();
-        }
-        return res;
+        var self = this;
+        return this._super.apply(this, arguments).then(function() {
+            self._initModules();
+            self._renderLeftPanel();
+            self._initSearch();
+            
+            if (config.device.isMobile) {
+                self._enableSwipe();
+            }
+        });
     },
 
     _renderLeftPanel: function () {
@@ -341,7 +341,17 @@ var BaseSettingRenderer = FormRenderer.extend({
 var BaseSettingController = FormController.extend({
     init: function () {
         this._super.apply(this, arguments);
+        this.disableAutofocus = true;
         this.renderer.activeSettingTab = this.initialState.context.module;
+    },
+    /**
+     * Settings view should always be in edit mode, so we have to override
+     * default behaviour
+     *
+     * @override
+     */
+    willRestore: function () {
+        this.mode = 'edit';
     },
 });
 

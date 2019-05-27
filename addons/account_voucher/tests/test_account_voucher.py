@@ -28,7 +28,6 @@ class TestAccountVoucher(common.TransactionCase):
         voucher_user = self.env['res.users'].create({
             'name': 'Voucher Accountant',
             'login': 'vacc',
-            'password': 'vacc',
             'email': 'accountant@yourcompany.com',
             'company_id': self.env.ref('base.main_company').id,
             'groups_id': [(6, 0, [

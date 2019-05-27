@@ -3,15 +3,16 @@
 # * website_twitter
 # 
 # Translators:
-# Kostas Goutoudis <goutoudis@gmail.com>, 2017
-# George Tarasidis <george_tarasidis@yahoo.com>, 2017
+# Martin Trigaux, 2018
+# Kostas Goutoudis <goutoudis@gmail.com>, 2018
+# George Tarasidis <george_tarasidis@yahoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2018\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,20 +21,56 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_twitter_snippet
-msgid "<span class=\"oe_snippet_thumbnail_title\">Twitter Scroller</span>"
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                Show me how to obtain the Twitter API key and Twitter API secret"
 msgstr ""
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_api_key
-#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Twitter Roller</span>\n"
+"                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Callback URL: </strong>Leave blank"
+msgstr ""
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Description: </strong> Odoo Twitter Integration"
+msgstr ""
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Name: </strong> Odoo Twitter Integration"
+msgstr ""
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Website: </strong>"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_key
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API Key"
 msgstr "Κλειδί API"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_api_secret
-#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_secret
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API secret"
+msgstr "Κλειδί API"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+"Accept terms of use and click on the Create your Twitter application button "
+"at the bottom"
 msgstr ""
 
 #. module: website_twitter
@@ -45,28 +82,45 @@ msgid ""
 msgstr ""
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_create_uid
+#: model:ir.model,name:website_twitter.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+"Copy/Paste Consumer Key (API Key) and Consumer Secret (API Secret) keys "
+"below."
+msgstr ""
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Create a new Twitter application on"
+msgstr "Δημιουργήσετε μια νέα εφαρμογή Twitter σε"
+
+#. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_uid
 msgid "Created by"
 msgstr "Δημιουργήθηκε από"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_create_date
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_date
 msgid "Created on"
 msgstr "Δημιουργήθηκε στις"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_display_name
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__display_name
 msgid "Display Name"
 msgstr "Εμφάνιση Ονόματος"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_screen_name
-#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_screen_name
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Favorites From"
 msgstr "Αγαπημένα Από"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_screen_name
+#: model:ir.model.fields,field_description:website_twitter.field_website__twitter_screen_name
 msgid "Get favorites from this screen name"
 msgstr "Πάρτε τα αγαπημένα από αυτό το όνομα προβολής"
 
@@ -77,7 +131,12 @@ msgid "HTTP Error: Something is misconfigured"
 msgstr ""
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_id
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "How to configure the Twitter API access"
+msgstr "Πώς να ρυθμίσετε την πρόσβαση στο Twitter API"
+
+#. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__id
 msgid "ID"
 msgstr "Κωδικός"
 
@@ -88,17 +147,17 @@ msgid "Internet connection refused"
 msgstr ""
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet___last_update
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet____last_update
 msgid "Last Modified on"
 msgstr "Τελευταία τροποποίηση στις"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_write_uid
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__write_uid
 msgid "Last Updated by"
 msgstr "Τελευταία Ενημέρωση από"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_write_date
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__write_date
 msgid "Last Updated on"
 msgstr "Τελευταία Ενημέρωση στις"
 
@@ -127,7 +186,7 @@ msgstr "Ορίστε το κλειδί Twitter API και το Secret στις �
 
 #. module: website_twitter
 #. openerp-web
-#: code:addons/website_twitter/static/src/xml/website.twitter.xml:35
+#: code:addons/website_twitter/static/src/js/website.twitter.editor.js:21
 #, python-format
 msgid "Reload"
 msgstr "Ανανέωση"
@@ -141,12 +200,12 @@ msgid ""
 msgstr ""
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_screen_name
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__screen_name
 msgid "Screen Name"
 msgstr "Όνομα Προβολής"
 
 #. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_screen_name
+#: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_screen_name
 msgid ""
 "Screen Name of the Twitter Account from which you want to load favorites.It "
 "does not have to match the API Key/Secret."
@@ -155,9 +214,9 @@ msgstr ""
 "αγαπημένα. Δεν έχει σχέση με κλειδί API/Secret."
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_tutorial
-msgid "Show me how to obtain the Twitter API Key and Secret"
-msgstr "Δείξε μου πώς να αποκτήσω το κλειδί Twitter API και Secret"
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Switch to the API Keys tab: <br/>"
+msgstr ""
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:21
@@ -197,66 +256,56 @@ msgid "There was no new data to return."
 msgstr ""
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Tutorial"
-msgstr ""
-
-#. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_tweet_id
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet_id
 msgid "Tweet ID"
 msgstr "Κωδικός Tweet"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_tweet
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet
 msgid "Tweets"
 msgstr "Tweets"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Twitter API Credentials"
 msgstr ""
 
 #. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_website_twitter_api_key
+#: model:ir.model.fields,help:website_twitter.field_website__twitter_api_key
 msgid "Twitter API Key"
 msgstr "Κλειδί Twitter API"
 
 #. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_website_twitter_api_secret
+#: model:ir.model.fields,help:website_twitter.field_website__twitter_api_secret
 msgid "Twitter API Secret"
 msgstr "Twitter API Secret"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_api_key
+#: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_key
 msgid "Twitter API key"
 msgstr "Κλειδί Twitter API"
 
 #. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_api_key
+#: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_key
 msgid "Twitter API key you can get it from https://apps.twitter.com/"
 msgstr ""
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_api_secret
+#: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_secret
 msgid "Twitter API secret"
 msgstr "Twitter API secret"
 
 #. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_api_secret
+#: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_secret
 msgid "Twitter API secret you can get it from https://apps.twitter.com/"
 msgstr ""
 
 #. module: website_twitter
 #. openerp-web
-#: code:addons/website_twitter/static/src/xml/website.twitter.xml:41
+#: code:addons/website_twitter/static/src/xml/website.twitter.xml:40
 #, python-format
 msgid "Twitter Configuration"
 msgstr "Ρύθμιση παραμέτρων Twitter"
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Twitter Roller"
-msgstr ""
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:62
@@ -279,6 +328,16 @@ msgid ""
 msgstr ""
 
 #. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_server_uri
+msgid "Twitter server uri"
+msgstr ""
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Twitter tutorial"
+msgstr ""
+
+#. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:37
 #, python-format
 msgid ""
@@ -287,6 +346,13 @@ msgid ""
 msgstr ""
 "Το όνομα χρήστη Twitter @%(username)s έχει λιγότερο από 12 αγαπημένα tweets."
 " Παρακαλώ προσθέσετε περισσότερα ή επιλέξετε ένα διαφορετικό όνομα προβολής."
+
+#. module: website_twitter
+#. openerp-web
+#: code:addons/website_twitter/static/src/xml/website.twitter.xml:6
+#, python-format
+msgid "Twitter's user"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
@@ -304,16 +370,26 @@ msgstr ""
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_website_id
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__website_id
 msgid "Website"
 msgstr "Ιστότοπος"
 
 #. module: website_twitter
-#: model:ir.model,name:website_twitter.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
+#: model:ir.model,name:website_twitter.model_website_twitter_tweet
+msgid "Website Twitter"
+msgstr ""
 
 #. module: website_twitter
-#: model:ir.model,name:website_twitter.model_website_twitter_tweet
-msgid "website.twitter.tweet"
-msgstr "website.twitter.tweet"
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "api_key.png"
+msgstr ""
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "https://apps.twitter.com/app/new"
+msgstr "https://apps.twitter.com/app/new"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "with the following values:"
+msgstr "με τις ακόλουθες τιμές:"

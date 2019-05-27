@@ -1,7 +1,7 @@
 odoo.define('mail.model.Mailbox', function (require) {
 "use strict";
 
-var ThreadWithCache = require('mail.model.ThreadWithCache');
+var SearchableThread = require('mail.model.SearchableThread');
 
 var core = require('web.core');
 
@@ -14,16 +14,14 @@ var _t = core._t;
  * list of messages, but the inbox does not represent a conversation: Inbox is
  * modeled as a mailbox.
  */
-var Mailbox = ThreadWithCache.extend({
+var Mailbox = SearchableThread.extend({
 
     /**
      * @override
      * @param {Object} params
      * @param {Object} params.data
-     * @param {string} params.data.id the ID of the mailbox, without the
-     *   'mailbox_' prefix.
-     * @param {integer} [params.data.mailboxCounter=0] the initial mailbox
-     *   counter of this mailbox.
+     * @param {string} params.data.id the ID of the mailbox, without the ``mailbox_`` prefix.
+     * @param {integer} [params.data.mailboxCounter=0] the initial mailbox counter of this mailbox.
      */
     init: function (params) {
         var data = params.data;
@@ -48,31 +46,6 @@ var Mailbox = ThreadWithCache.extend({
         this._mailboxCounter = Math.max(this._mailboxCounter - num, 0);
     },
     /**
-     * Get the local messages of the mailbox (by local messages, we mean
-     * messages that have already been fetched from the server).
-     *
-     * It is possible to filter on local messages that are specific to a
-     * document with the `options` parameter.
-     *
-     * @param {Object} [options]
-     * @param {string} [options.documentModel] model of the document that the
-     *   local messages of inbox must be linked to.
-     * @param {integer} [options.documentID] ID of the document that the local
-     *   messages of inbox must be linked to.
-     */
-    getLocalMessages: function (options) {
-        var localMessages = this._cache['[]'].messages;
-        if (!options) {
-            return localMessages;
-        }
-        if (options.documentModel && options.documentID) {
-            return _.filter(localMessages, function (localMessage) {
-                return localMessage.getDocumentModel() === options.documentModel &&
-                        localMessage.getDocumentID() === options.documentID;
-            });
-        }
-    },
-    /**
      * Get the mailbox counter of this mailbox.
      *
      * @returns {integer}
@@ -86,7 +59,7 @@ var Mailbox = ThreadWithCache.extend({
      * channel, only keep the lastest message of this document/channel in the
      * previews.
      *
-     * @returns {$.Promise<Object[]>}
+     * @returns {Promise<Object[]>}
      */
     getMessagePreviews: function () {
         var self = this;
@@ -94,31 +67,40 @@ var Mailbox = ThreadWithCache.extend({
         return this.fetchMessages().then(function (messages) {
             // pick only last message of chatter
             // items = list of objects
-            // { unreadCounter: integer, message: mail.model.Message }
+            // {
+            //    unreadCounter: {integer},
+            //    message: {mail.model.Message},
+            //    messageIDs: {integer[]},
+            // }
             var items = [];
             _.each(messages, function (message) {
                 var unreadCounter = 1;
+                var messageIDs = [message.getID()];
                 var similarItem = _.find(items, function (item) {
                     return self._areMessagesFromSameDocumentThread(item.message, message) ||
                             self._areMessagesFromSameChannel(item.message, message);
                 });
                 if (similarItem) {
                     unreadCounter = similarItem.unreadCounter + 1;
+                    messageIDs = similarItem.messageIDs.concat(messageIDs);
                     var index = _.findIndex(items, similarItem);
                     items[index] = {
                         unreadCounter: unreadCounter,
                         message: message,
+                        messageIDs: messageIDs
                     };
                 } else {
                     items.push({
                         unreadCounter: unreadCounter,
                         message: message,
+                        messageIDs: messageIDs,
                     });
                 }
             });
             return _.map(items, function (item) {
                 return _.extend(item.message.getPreview(), {
                     unreadCounter: item.unreadCounter,
+                    messageIDs: item.messageIDs,
                 });
             });
         });
@@ -137,7 +119,7 @@ var Mailbox = ThreadWithCache.extend({
      * makes only sense for 'Inbox'.
      *
      * @param  {Array} domain
-     * @return {$.Promise} resolved when all messages have been marked as read
+     * @return {Promise} resolved when all messages have been marked as read
      *   on the server
      */
     markAllMessagesAsRead: function (domain) {
@@ -151,7 +133,7 @@ var Mailbox = ThreadWithCache.extend({
                 },
             });
         }
-        return $.when();
+        return Promise.resolve();
     },
 
     //--------------------------------------------------------------------------
@@ -204,8 +186,29 @@ var Mailbox = ThreadWithCache.extend({
         } else if (this._id === 'mailbox_moderation') {
             return [['need_moderation', '=', true]];
         } else {
-            throw _t(_.str("Missing domain for mailbox with ID '%s'", this._id));
+            throw (_.str(_t("Missing domain for mailbox with ID '%s'"), this._id));
         }
+    },
+    /**
+     * Post a message from inbox. This is used when using the 'reply' feature
+     * on a message that is linked to a document thread.
+     *
+     * @override
+     * @private
+     * @param {Object} messageData
+     * @param {Object} options
+     * @param {integer} options.documentID
+     * @param {string} options.documentModel
+     * @returns {$.Promise}
+     */
+    _postMessage: function (messageData, options) {
+        var documentThread = this.call(
+            'mail_service',
+            'getDocumentThread',
+            options.documentModel,
+            options.documentID
+        );
+        return documentThread.postMessage(messageData);
     },
 });
 

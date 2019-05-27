@@ -22,7 +22,7 @@ function _parseAndTransform(nodes, transformFunction) {
 
 // Suggested URL Javascript regex of http://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
 // Adapted to make http(s):// not required if (and only if) www. is given. So `should.notmatch` does not match.
-var urlRegexp = /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=]{2,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+.~#?&'$//=]*)/gi;
+var urlRegexp = /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=]{2,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+.~#?&'$//=;]*)/gi;
 function linkify(text, attrs) {
     attrs = attrs || {};
     if (attrs.target === undefined) {
@@ -84,30 +84,19 @@ function getTextToHTML(text) {
         .replace(/[\n\r]/g,'<br/>');
 }
 
-var accentedLettersMapping = {
-    'a': '[àáâãäå]',
-    'ae': 'æ',
-    'c': 'ç',
-    'e': '[èéêë]',
-    'i': '[ìíîï]',
-    'n': 'ñ',
-    'o': '[òóôõö]',
-    'oe': 'œ',
-    'u': '[ùúûűü]',
-    'y': '[ýÿ]',
-};
-function unaccent(str) {
-    _.each(accentedLettersMapping, function (value, key) {
-        str = str.replace(new RegExp(value, 'g'), key);
-    });
-    return str;
-}
-
 function timeFromNow(date) {
     if (moment().diff(date, 'seconds') < 45) {
         return _t("now");
     }
     return date.fromNow();
+}
+
+function o_clearTimeout(id) {
+    return clearTimeout(id);
+}
+
+function o_setTimeout(func, delay) {
+    return setTimeout(func, delay);
 }
 
 return {
@@ -119,7 +108,8 @@ return {
     parseEmail: parseEmail,
     stripHTML: stripHTML,
     timeFromNow: timeFromNow,
-    unaccent: unaccent,
+    clearTimeout: o_clearTimeout,
+    setTimeout: o_setTimeout,
 };
 
 });

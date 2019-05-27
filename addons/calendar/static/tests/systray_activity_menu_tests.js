@@ -37,40 +37,35 @@ QUnit.module('ActivityMenu', {
     }
 });
 
-QUnit.test('activity menu widget:today meetings', function (assert) {
-    assert.expect(8);
+QUnit.test('activity menu widget:today meetings', async function (assert) {
+    assert.expect(6);
     var self = this;
     var activityMenu = new ActivityMenu();
-    testUtils.addMockEnvironment(activityMenu, {
+    testUtils.mock.addMockEnvironment(activityMenu, {
         services: this.services,
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {
-                return $.when(self.data['calendar.event']['records']);
+                return Promise.resolve(self.data['calendar.event']['records']);
             }
             return this._super(route, args);
         },
     });
 
-    activityMenu.appendTo($('#qunit-fixture'));
+    await activityMenu.appendTo($('#qunit-fixture'));
 
-    assert.ok(activityMenu.$el.hasClass('o_mail_systray_item'), 'should be the instance of widget');
+    assert.hasClass(activityMenu.$el,'o_mail_systray_item', 'should be the instance of widget');
 
-    testUtils.intercept(activityMenu, 'do_action', function (event) {
-        assert.ok(true, "should have triggered a do_action");
-        assert.strictEqual(event.data.action.res_id,  activityMenu.$('.o_meeting_filter').eq(0).data('res_id'), 'should open particular meeting form view');
-    });
-    activityMenu.$('.dropdown-toggle').click();
-    activityMenu.$('.o_meeting_filter').eq(0).click();
+    await testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
 
-    testUtils.intercept(activityMenu, 'do_action', function (event) {
+    testUtils.mock.intercept(activityMenu, 'do_action', function (event) {
         assert.strictEqual(event.data.action,  "calendar.action_calendar_event", 'should open meeting calendar view in day mode');
     });
-    activityMenu.$('.o_mail_preview').click();
+    await testUtils.dom.click(activityMenu.$('.o_mail_preview'));
 
     assert.ok(activityMenu.$('.o_meeting_filter'), "should be a meeting");
-    assert.strictEqual(activityMenu.$('.o_meeting_filter').length, 2, 'there should be 2 meetings');
-    assert.strictEqual(activityMenu.$('.o_meeting_filter').eq(0).hasClass('o_meeting_bold'), true, 'this meeting is yet to start');
-    assert.strictEqual(activityMenu.$('.o_meeting_filter').eq(1).hasClass('o_meeting_bold'), false, 'this meeting has been started');
+    assert.containsN(activityMenu, '.o_meeting_filter', 2, 'there should be 2 meetings');
+    assert.hasClass(activityMenu.$('.o_meeting_filter').eq(0), 'o_meeting_bold', 'this meeting is yet to start');
+    assert.doesNotHaveClass(activityMenu.$('.o_meeting_filter').eq(1), 'o_meeting_bold', 'this meeting has been started');
     activityMenu.destroy();
 });
 });

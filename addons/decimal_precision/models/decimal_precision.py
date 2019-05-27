@@ -5,6 +5,7 @@ from odoo import api, fields, models, tools
 
 class DecimalPrecision(models.Model):
     _name = 'decimal.precision'
+    _description = 'Decimal Precision'
 
     name = fields.Char('Usage', index=True, required=True)
     digits = fields.Integer('Digits', required=True, default=2)
@@ -61,6 +62,7 @@ class DecimalPrecisionFloat(models.AbstractModel):
 
 class DecimalPrecisionTestModel(models.Model):
     _name = 'decimal.precision.test'
+    _description = 'Decimal Precision Test'
 
     float = fields.Float()
     float_2 = fields.Float(digits=(16, 2))

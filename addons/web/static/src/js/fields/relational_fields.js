@@ -16,16 +16,18 @@ odoo.define('web.relational_fields', function (require) {
 var AbstractField = require('web.AbstractField');
 var basicFields = require('web.basic_fields');
 var concurrency = require('web.concurrency');
-var ControlPanel = require('web.ControlPanel');
+var ControlPanelView = require('web.ControlPanelView');
 var dialogs = require('web.view_dialogs');
 var core = require('web.core');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
+var KanbanRecord = require('web.KanbanRecord');
 var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
 var Pager = require('web.Pager');
 
 var _t = core._t;
+var _lt = core._lt;
 var qweb = core.qweb;
 
 //------------------------------------------------------------------------------
@@ -91,6 +93,7 @@ var M2ODialog = Dialog.extend({
 });
 
 var FieldMany2One = AbstractField.extend({
+    description: _lt("Many2one"),
     supportedFieldTypes: ['many2one'],
     template: 'FieldMany2One',
     custom_events: _.extend({}, AbstractField.prototype.custom_events, {
@@ -107,8 +110,14 @@ var FieldMany2One = AbstractField.extend({
         'click': '_onClick',
     }),
     AUTOCOMPLETE_DELAY: 200,
+    SEARCH_MORE_LIMIT: 320,
 
-    init: function () {
+    /**
+     * @override
+     * @param {boolean} [options.noOpen=false] if true, there is no external
+     *   button to open the related record in a dialog
+     */
+    init: function (parent, name, record, options) {
         this._super.apply(this, arguments);
         this.limit = 7;
         this.orderer = new concurrency.DropMisordered();
@@ -121,6 +130,7 @@ var FieldMany2One = AbstractField.extend({
         this.nodeOptions = _.defaults(this.nodeOptions, {
             quick_create: true,
         });
+        this.noOpen = 'noOpen' in (options || {}) ? options.noOpen : this.nodeOptions.no_open;
         this.m2o_value = this._formatValue(this.value);
         // 'recordParams' is a dict of params used when calling functions
         // 'getDomain' and 'getContext' on this.record
@@ -131,6 +141,17 @@ var FieldMany2One = AbstractField.extend({
         // coming by an onchange on another field)
         this.isDirty = false;
         this.lastChangeEvent = undefined;
+
+        // List of autocomplete sources
+        this._autocompleteSources = [];
+        // Add default search method for M20 (name_search)
+        this._addAutocompleteSource(this._search, {placeholder: _t('Loading...'), order: 1});
+
+        // use a DropPrevious to properly handle related record quick creations,
+        // and store a createDef to be able to notify the environment that there
+        // is pending quick create operation
+        this.dp = new concurrency.DropPrevious();
+        this.createDef = undefined;
     },
     start: function () {
         // booleean indicating that the content of the input isn't synchronized
@@ -142,11 +163,32 @@ var FieldMany2One = AbstractField.extend({
         this.$external_button = this.$('.o_external_button');
         return this._super.apply(this, arguments);
     },
+    /**
+     * @override
+     */
+    destroy: function () {
+        if (this._onScroll) {
+            window.removeEventListener('scroll', this._onScroll, true);
+        }
+        this._super.apply(this, arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * Override to make the caller wait for potential ongoing record creation.
+     * This ensures that the correct many2one value is set when the main record
+     * is saved.
+     *
+     * @override
+     * @returns {Promise} resolved as soon as there is no longer record being
+     *   (quick) created
+     */
+    commitChanges: function () {
+        return Promise.resolve(this.createDef);
+    },
     /**
      * @override
      * @returns {jQuery}
@@ -160,7 +202,7 @@ var FieldMany2One = AbstractField.extend({
     reinitialize: function (value) {
         this.isDirty = false;
         this.floating = false;
-        this._setValue(value);
+        return this._setValue(value);
     },
     /**
      * Re-renders the widget if it isn't dirty. The widget is dirty if the user
@@ -178,7 +220,7 @@ var FieldMany2One = AbstractField.extend({
             this.isDirty = false;
         }
         if (this.isDirty) {
-            return $.when();
+            return Promise.resolve();
         } else {
             return this._render();
         }
@@ -189,14 +231,52 @@ var FieldMany2One = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Add a source to the autocomplete results
+     *
+     * @param {function} method : A function that returns a list of results. If async source, the function should return a promise
+     * @param {Object} params : Parameters containing placeholder/validation/order
+     * @private
+     */
+    _addAutocompleteSource: function (method, params) {
+        this._autocompleteSources.push({
+            method: method,
+            placeholder: (params.placeholder ? _t(params.placeholder) : _t('Loading...')) + '<i class="fa fa-spinner fa-spin pull-right"></i>' ,
+            validation: params.validation,
+            loading: false,
+            order: params.order || 999
+        });
+
+        this._autocompleteSources = _.sortBy(this._autocompleteSources, 'order');
+    },
+    /**
      * @private
      */
     _bindAutoComplete: function () {
         var self = this;
+        // avoid ignoring autocomplete="off" by obfuscating placeholder, see #30439
+        if ($.browser.chrome && this.$input.attr('placeholder')) {
+            this.$input.attr('placeholder', function (index, val) {
+                return val.split('').join('\ufeff');
+            });
+        }
         this.$input.autocomplete({
             source: function (req, resp) {
-                self._search(req.term).then(function (result) {
-                    resp(result);
+                _.each(self._autocompleteSources, function (source) {
+                    // Resets the results for this source
+                    source.results = [];
+
+                    // Check if this source should be used for the searched term
+                    if (!source.validation || source.validation.call(self, req.term)) {
+                        source.loading = true;
+
+                        // Wrap the returned value of the source.method with a promise
+                        // So event if the returned value is not async, it will work
+                        Promise.resolve(source.method.call(self, req.term)).then(function (results) {
+                            source.results = results;
+                            source.loading = false;
+                            resp(self._concatenateAutocompleteResults());
+                        });
+                    }
                 });
             },
             select: function (event, ui) {
@@ -217,11 +297,22 @@ var FieldMany2One = AbstractField.extend({
             focus: function (event) {
                 event.preventDefault(); // don't automatically select values on focus
             },
+            open: function (event) {
+                self._onScroll = function (ev) {
+                    if (ev.target !== self.$input.get(0) && self.$input.hasClass('ui-autocomplete-input')) {
+                        self.$input.autocomplete('close');
+                    }
+                };
+                window.addEventListener('scroll', self._onScroll, true);
+            },
             close: function (event) {
                 // it is necessary to prevent ESC key from propagating to field
                 // root, to prevent unwanted discard operations.
                 if (event.which === $.ui.keyCode.ESCAPE) {
                     event.stopPropagation();
+                }
+                if (self._onScroll) {
+                    window.removeEventListener('scroll', self._onScroll, true);
                 }
             },
             autoFocus: true,
@@ -231,6 +322,25 @@ var FieldMany2One = AbstractField.extend({
         });
         this.$input.autocomplete("option", "position", { my : "left top", at: "left bottom" });
         this.autocomplete_bound = true;
+    },
+    /**
+     * Concatenate async results for autocomplete.
+     *
+     * @returns {Array}
+     * @private
+     */
+    _concatenateAutocompleteResults: function () {
+        var results = [];
+        _.each(this._autocompleteSources, function (source) {
+            if (source.results && source.results.length) {
+                results = results.concat(source.results);
+            } else if (source.loading) {
+                results.push({
+                    label: source.placeholder
+                });
+            }
+        });
+        return results;
     },
     /**
      * @private
@@ -279,38 +389,55 @@ var FieldMany2One = AbstractField.extend({
     /**
      * @private
      * @param {string} name
-     * @returns {Deferred} resolved after the name_create or when the slowcreate
+     * @returns {Promise} resolved after the name_create or when the slowcreate
      *                     modal is closed.
      */
     _quickCreate: function (name) {
         var self = this;
-        var def = $.Deferred();
-        var slowCreate = function () {
-            var dialog = self._searchCreatePopup("form", false, self._createContext(name));
-            dialog.on('closed', self, def.resolve.bind(def));
-        };
-        if (this.nodeOptions.quick_create) {
-            this.trigger_up('mutexify', {
-                action: function () {
-                    return self._rpc({
-                        model: self.field.relation,
-                        method: 'name_create',
-                        args: [name],
-                        context: self.record.getContext(self.recordParams),
-                    }).then(function (result) {
+        var createDone;
+
+        var def = new Promise(function (resolve, reject) {
+            self.createDef = new Promise(function (innerResolve) {
+                // called when the record has been quick created, or when the dialog has
+                // been closed (in the case of a 'slow' create), meaning that the job is
+                // done
+                createDone = function () {
+                    innerResolve();
+                    resolve();
+                    self.createDef = undefined;
+                };
+            });
+
+            // called if the quick create is disabled on this many2one, or if the
+            // quick creation failed (probably because there are mandatory fields on
+            // the model)
+            var slowCreate = function () {
+                var dialog = self._searchCreatePopup("form", false, self._createContext(name));
+                dialog.on('closed', self, createDone);
+            };
+            if (self.nodeOptions.quick_create) {
+                var nameCreateDef = self._rpc({
+                    model: self.field.relation,
+                    method: 'name_create',
+                    args: [name],
+                    context: self.record.getContext(self.recordParams),
+                }).guardedCatch(function (reason) {
+                    reason.event.preventDefault();
+                    slowCreate();
+                });
+                self.dp.add(nameCreateDef)
+                    .then(function (result) {
                         if (self.mode === "edit") {
                             self.reinitialize({id: result[0], display_name: result[1]});
                         }
-                        def.resolve();
-                    }).fail(function (error, event) {
-                        event.preventDefault();
-                        slowCreate();
-                    });
-                },
-            });
-        } else {
-            slowCreate();
-        }
+                        createDone();
+                    })
+                    .guardedCatch(reject);
+            } else {
+                slowCreate();
+            }
+        });
+
         return def;
     },
     /**
@@ -338,9 +465,12 @@ var FieldMany2One = AbstractField.extend({
      * @private
      */
     _renderReadonly: function () {
-        var value = _.escape((this.m2o_value || "").trim()).split("\n").join("<br/>");
+        var escapedValue = _.escape((this.m2o_value || "").trim());
+        var value = escapedValue.split('\n').map(function (line) {
+            return '<span>' + line + '</span>';
+        }).join('<br/>');
         this.$el.html(value);
-        if (!this.nodeOptions.no_open && this.value) {
+        if (!this.noOpen && this.value) {
             this.$el.attr('href', _.str.sprintf('#id=%s&model=%s', this.value.res_id, this.field.relation));
             this.$el.addClass('o_form_uri');
         }
@@ -354,37 +484,36 @@ var FieldMany2One = AbstractField.extend({
         this.m2o_value = this._formatValue(this.value);
     },
     /**
+     * Executes a name_search and process its result.
+     *
      * @private
      * @param {string} search_val
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _search: function (search_val) {
         var self = this;
-        var def = $.Deferred();
-        this.orderer.add(def);
+        var def = new Promise(function (resolve, reject) {
+            var context = self.record.getContext(self.recordParams);
+            var domain = self.record.getDomain(self.recordParams);
 
-        var context = this.record.getContext(this.recordParams);
-        var domain = this.record.getDomain(this.recordParams);
+            // Add the additionalContext
+            _.extend(context, self.additionalContext);
 
-        // Add the additionalContext
-        _.extend(context, this.additionalContext)
+            var blacklisted_ids = self._getSearchBlacklist();
+            if (blacklisted_ids.length > 0) {
+                domain.push(['id', 'not in', blacklisted_ids]);
+            }
 
-        var blacklisted_ids = this._getSearchBlacklist();
-        if (blacklisted_ids.length > 0) {
-            domain.push(['id', 'not in', blacklisted_ids]);
-        }
-
-        this._rpc({
-            model: this.field.relation,
-            method: "name_search",
-            kwargs: {
-                name: search_val,
-                args: domain,
-                operator: "ilike",
-                limit: this.limit + 1,
-                context: context,
-            }})
-            .then(function (result) {
+            self._rpc({
+                model: self.field.relation,
+                method: "name_search",
+                kwargs: {
+                    name: search_val,
+                    args: domain,
+                    operator: "ilike",
+                    limit: self.limit + 1,
+                    context: context,
+                }}).then(function (result) {
                 // possible selections for the m2o
                 var values = _.map(result, function (x) {
                     x[1] = self._getDisplayName(x[1]);
@@ -402,18 +531,33 @@ var FieldMany2One = AbstractField.extend({
                     values.push({
                         label: _t("Search More..."),
                         action: function () {
-                            self._rpc({
+                            var prom;
+                            if (search_val !== '') {
+                                prom = self._rpc({
                                     model: self.field.relation,
                                     method: 'name_search',
                                     kwargs: {
                                         name: search_val,
                                         args: domain,
                                         operator: "ilike",
-                                        limit: 160,
+                                        limit: self.SEARCH_MORE_LIMIT,
                                         context: context,
                                     },
-                                })
-                                .then(self._searchCreatePopup.bind(self, "search"));
+                                });
+                            }
+                            Promise.resolve(prom).then(function (results) {
+                                var dynamicFilters;
+                                if (results) {
+                                    var ids = _.map(results, function (x) {
+                                        return x[0];
+                                    });
+                                    dynamicFilters = [{
+                                        description: _.str.sprintf(_t('Quick search: %s'), search_val),
+                                        domain: [['id', 'in', ids]],
+                                    }];
+                                }
+                                self._searchCreatePopup("search", false, {}, dynamicFilters);
+                            });
                         },
                         classname: 'o_m2o_dropdown_option',
                     });
@@ -448,29 +592,37 @@ var FieldMany2One = AbstractField.extend({
                     });
                 }
 
-                def.resolve(values);
+                resolve(values);
             });
-
+        });
+        this.orderer.add(def);
         return def;
     },
     /**
      * all search/create popup handling
      *
+     * TODO: ids argument is no longer used, remove it in master (as well as
+     * initial_ids param of the dialog)
+     *
      * @private
      * @param {any} view
      * @param {any} ids
      * @param {any} context
+     * @param {Object[]} [dynamicFilters=[]] filters to add to the search view
+     *   in the dialog (each filter has keys 'description' and 'domain')
      */
-    _searchCreatePopup: function (view, ids, context) {
+    _searchCreatePopup: function (view, ids, context, dynamicFilters) {
         var self = this;
         return new dialogs.SelectCreateDialog(this, _.extend({}, this.nodeOptions, {
             res_model: this.field.relation,
             domain: this.record.getDomain({fieldName: this.name}),
             context: _.extend({}, this.record.getContext(this.recordParams), context || {}),
+            dynamicFilters: dynamicFilters || [],
             title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + this.string,
-            initial_ids: ids ? _.map(ids, function (x) { return x[0]; }) : undefined,
+            initial_ids: ids,
             initial_view: view,
             disable_multiple_selection: true,
+            no_create: !self.can_create,
             on_selected: function (records) {
                 self.reinitialize(records[0]);
                 self.activate();
@@ -481,7 +633,7 @@ var FieldMany2One = AbstractField.extend({
      * @private
      */
     _updateExternalButton: function () {
-        var has_external_button = !this.nodeOptions.no_open && !this.floating && this.isSet();
+        var has_external_button = !this.noOpen && !this.floating && this.isSet();
         this.$external_button.toggle(has_external_button);
         this.$el.toggleClass('o_with_button', has_external_button); // Should not be required anymore but kept for compatibility
     },
@@ -497,7 +649,7 @@ var FieldMany2One = AbstractField.extend({
      */
     _onClick: function (event) {
         var self = this;
-        if (this.mode === 'readonly' && !this.nodeOptions.no_open) {
+        if (this.mode === 'readonly' && !this.noOpen) {
             event.preventDefault();
             event.stopPropagation();
             this._rpc({
@@ -548,8 +700,9 @@ var FieldMany2One = AbstractField.extend({
                     readonly: !self.can_write,
                     on_saved: function (record, changed) {
                         if (changed) {
-                            self._setValue(self.value.data, {forceChange: true});
-                            self.trigger_up('reload', {db_id: self.value.id});
+                            self._setValue(self.value.data, {forceChange: true}).then(function() {
+                                self.trigger_up('reload', {db_id: self.value.id});
+                            });
                         }
                     },
                 }).open();
@@ -581,10 +734,11 @@ var FieldMany2One = AbstractField.extend({
      * @param {OdooEvent} ev
      */
     _onInputKeyup: function (ev) {
-        if (ev.which === $.ui.keyCode.ENTER) {
-            // If we pressed enter, we want to prevent _onInputFocusout from
+        if (ev.which === $.ui.keyCode.ENTER || ev.which === $.ui.keyCode.TAB) {
+            // If we pressed enter or tab, we want to prevent _onInputFocusout from
             // executing since it would open a M2O dialog to request
             // confirmation that the many2one is not properly set.
+            // It's a case that is already handled by the autocomplete lib.
             return;
         }
         this.isDirty = true;
@@ -636,7 +790,12 @@ var FieldMany2One = AbstractField.extend({
     },
 });
 
+var Many2oneBarcode = FieldMany2One.extend({
+    description: "",
+});
+
 var ListFieldMany2One = FieldMany2One.extend({
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -682,7 +841,7 @@ var FieldX2Many = AbstractField.extend({
         open_record: '_onOpenRecord',
         kanban_record_delete: '_onRemoveRecord',
         list_record_remove: '_onRemoveRecord',
-        resequence: '_onResequence',
+        resequence_records: '_onResequenceRecords',
         save_line: '_onSaveLine',
         toggle_column_order: '_onToggleColumnOrder',
         activate_next_widget: '_onActiveNextWidget',
@@ -716,10 +875,10 @@ var FieldX2Many = AbstractField.extend({
         var arch = this.view && this.view.arch;
         if (arch) {
             this.activeActions.create = arch.attrs.create ?
-                                            JSON.parse(arch.attrs.create) :
+                                            !!JSON.parse(arch.attrs.create) :
                                             true;
             this.activeActions.delete = arch.attrs.delete ?
-                                            JSON.parse(arch.attrs.delete) :
+                                            !!JSON.parse(arch.attrs.delete) :
                                             true;
             this.editable = arch.attrs.editable;
         }
@@ -745,14 +904,14 @@ var FieldX2Many = AbstractField.extend({
      * user if he wants to discard it if necessary.
      *
      * @override
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     commitChanges: function () {
         var self = this;
         var inEditionRecordID =
-            this.renderer
-            && this.renderer.viewType === "list"
-            && this.renderer.getEditableRecordID();
+            this.renderer &&
+            this.renderer.viewType === "list" &&
+            this.renderer.getEditableRecordID();
         if (inEditionRecordID) {
             return this.renderer.commitChanges(inEditionRecordID).then(function () {
                 return self._saveLine(inEditionRecordID);
@@ -771,7 +930,7 @@ var FieldX2Many = AbstractField.extend({
      * @param {Object} record
      * @param {OdooEvent} [ev] an event that triggered the reset action
      * @param {Boolean} [fieldChanged] if true, the widget field has changed
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     reset: function (record, ev, fieldChanged) {
         // If 'fieldChanged' is false, it means that the reset was triggered by
@@ -781,7 +940,7 @@ var FieldX2Many = AbstractField.extend({
         if (!fieldChanged) {
            var newEval = this._evalColumnInvisibleFields();
            if (_.isEqual(this.currentColInvisibleFields, newEval)) {
-               return $.when();
+               return Promise.resolve();
            }
         } else if (ev && ev.target === this && ev.data.changes && this.view.arch.tag === 'tree') {
             var command = ev.data.changes[this.name];
@@ -812,7 +971,8 @@ var FieldX2Many = AbstractField.extend({
 
     /**
      * @override
-     * @param {Object} [options]
+     * @param {Object|undefined} [options={}]
+     * @param {boolean} [options.noAutomaticCreate=false]
      */
     activate: function (options) {
         if (!this.activeActions.create || this.isReadonly || !this.$el.is(":visible")) {
@@ -822,7 +982,11 @@ var FieldX2Many = AbstractField.extend({
             this.$buttons.find(".o-kanban-button-new").focus();
         }
         if (this.view.arch.tag === 'tree') {
-            this.renderer.$('.o_field_x2many_list_row_add a').focus();
+            if (options && options.noAutomaticCreate) {
+                this.renderer.$('.o_field_x2many_list_row_add a:first').focus();
+            } else {
+                this.renderer.$('.o_field_x2many_list_row_add a:first').click();
+            }
         }
         return true;
     },
@@ -866,17 +1030,20 @@ var FieldX2Many = AbstractField.extend({
      *
      * @override
      * @private
-     * @returns {Deferred|undefined}
+     * @returns {Promise|undefined}
      */
     _render: function () {
+        var self = this;
         if (!this.view) {
             return this._super();
         }
         if (this.renderer) {
             this.currentColInvisibleFields = this._evalColumnInvisibleFields();
-            this.renderer.updateState(this.value, {'columnInvisibleFields': this.currentColInvisibleFields});
-            this.pager.updateState({ size: this.value.count });
-            return $.when();
+            return this.renderer.updateState(this.value, {
+                columnInvisibleFields: this.currentColInvisibleFields,
+            }).then(function () {
+                self.pager.updateState({ size: self.value.count });
+            });
         }
         var arch = this.view.arch;
         var viewType;
@@ -905,6 +1072,7 @@ var FieldX2Many = AbstractField.extend({
             };
             _.extend(rendererParams, {
                 record_options: record_options,
+                readOnlyMode: this.isReadonly,
             });
         }
 
@@ -922,22 +1090,29 @@ var FieldX2Many = AbstractField.extend({
      * Prepends the control panel's $el to this widget's $el.
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _renderControlPanel: function () {
         if (!this.view) {
-            return $.when();
+            return Promise.resolve();
         }
         var self = this;
         var defs = [];
-        this.control_panel = new ControlPanel(this, "X2ManyControlPanel");
+        var controlPanelView = new ControlPanelView({
+            template: 'X2ManyControlPanel',
+            withSearchBar: false,
+        });
+        var cpDef = controlPanelView.getController(this).then(function (controlPanel) {
+            self._controlPanel = controlPanel;
+            return self._controlPanel.prependTo(self.$el);
+        });
         this.pager = new Pager(this, this.value.count, this.value.offset + 1, this.value.limit, {
             single_page_hidden: true,
             withAccessKey: false,
             validate: function () {
                 var isList = self.view.arch.tag === 'tree';
                 // TODO: we should have some common method in the basic renderer...
-                return isList ? self.renderer.unselectRow() : $.when();
+                return isList ? self.renderer.unselectRow() : Promise.resolve();
             },
         });
         this.pager.on('pager_changed', this, function (new_state) {
@@ -953,9 +1128,9 @@ var FieldX2Many = AbstractField.extend({
         });
         this._renderButtons();
         defs.push(this.pager.appendTo($('<div>'))); // start the pager
-        defs.push(this.control_panel.prependTo(this.$el));
-        return $.when.apply($, defs).then(function () {
-            self.control_panel.update({
+        defs.push(cpDef);
+        return Promise.all(defs).then(function () {
+            self._controlPanel.updateContents({
                 cp_content: {
                     $buttons: self.$buttons,
                     $pager: self.pager.$el,
@@ -988,25 +1163,32 @@ var FieldX2Many = AbstractField.extend({
      *
      * @private
      * @param {string} recordID
-     * @returns {Deferred} resolved if the line was properly saved or discarded.
+     * @returns {Promise} resolved if the line was properly saved or discarded.
      *                     rejected if the line could not be saved and the user
      *                     did not agree to discard.
      */
     _saveLine: function (recordID) {
         var self = this;
-        var def = $.Deferred();
-        var fieldNames = this.renderer.canBeSaved(recordID);
-        if (fieldNames.length) {
-            this.trigger_up('discard_changes', {
-                recordID: recordID,
-                onSuccess: def.resolve.bind(def),
-                onFailure: def.reject.bind(def),
-            });
-        } else {
-            this.renderer.setRowMode(recordID, 'readonly').done(def.resolve.bind(def));
-        }
-        return def.then(function () {
+        return new Promise(function (resolve, reject) {
+            var fieldNames = self.renderer.canBeSaved(recordID);
+            if (fieldNames.length) {
+                self.trigger_up('discard_changes', {
+                    recordID: recordID,
+                    onSuccess: resolve,
+                    onFailure: reject,
+                });
+            } else {
+                self.renderer.setRowMode(recordID, 'readonly').then(resolve);
+            }
+        }).then(function () {
             self.pager.updateState({ size: self.value.count });
+            var newEval = self._evalColumnInvisibleFields();
+            if (!_.isEqual(self.currentColInvisibleFields, newEval)) {
+                self.currentColInvisibleFields = newEval;
+                self.renderer.updateState(self.value, {
+                    columnInvisibleFields: self.currentColInvisibleFields,
+                });
+            }
         });
     },
     /**
@@ -1089,9 +1271,8 @@ var FieldX2Many = AbstractField.extend({
     _onEditLine: function (ev) {
         ev.stopPropagation();
         this.trigger_up('edited_list', { id: this.value.id });
-        var editedRecord = this.value.data[ev.data.index];
-        this.renderer.setRowMode(editedRecord.id, 'edit')
-            .done(ev.data.onSuccess);
+        this.renderer.setRowMode(ev.data.recordId, 'edit')
+            .then(ev.data.onSuccess);
     },
     /**
      * Updates the given record with the changes.
@@ -1118,8 +1299,41 @@ var FieldX2Many = AbstractField.extend({
                 operation: 'UPDATE',
                 id: ev.data.dataPointID,
                 data: changes,
+            }).then(function () {
+                if (ev.data.onSuccess) {
+                    ev.data.onSuccess();
+                }
+            }).guardedCatch(function () {
+                if (ev.data.onFailure) {
+                    ev.data.onFailure();
+                }
             });
         }
+    },
+    /**
+     * Override to handle the navigation inside editable list controls
+     *
+     * @override
+     * @private
+     */
+    _onNavigationMove: function (ev) {
+        if (this.view.arch.tag === 'tree') {
+            var $curControl = this.renderer.$('.o_field_x2many_list_row_add a:focus');
+            if ($curControl.length) {
+                var $nextControl;
+                if (ev.data.direction === 'right') {
+                    $nextControl = $curControl.next('a');
+                } else if (ev.data.direction === 'left') {
+                    $nextControl = $curControl.prev('a');
+                }
+                if ($nextControl && $nextControl.length) {
+                    ev.stopPropagation();
+                    $nextControl.focus();
+                    return;
+                }
+            }
+        }
+        this._super.apply(this, arguments);
     },
     /**
      * Called when the user clicks on a relational record.
@@ -1153,55 +1367,67 @@ var FieldX2Many = AbstractField.extend({
     _onSaveLine: function (ev) {
         var self = this;
         ev.stopPropagation();
-        this.trigger_up('mutexify', {
-            action: function () {
-                return self.renderer.commitChanges(ev.data.recordID).then(function () {
-                    self.trigger_up('mutexify', {
-                        action: function () {
-                            return self._saveLine(ev.data.recordID)
-                                .done(ev.data.onSuccess)
-                                .fail(ev.data.onFailure);
-                        },
-                    });
-                });
-            },
+        this.renderer.commitChanges(ev.data.recordID).then(function () {
+            self.trigger_up('mutexify', {
+                action: function () {
+                    return self._saveLine(ev.data.recordID)
+                        .then(ev.data.onSuccess)
+                        .guardedCatch(ev.data.onFailure);
+                },
+            });
         });
     },
     /**
      * Forces a resequencing of the records.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
+     * @param {string[]} ev.data.recordIds
+     * @param {integer} ev.data.offset
+     * @param {string} ev.data.handleField
      */
-    _onResequence: function (event) {
-        event.stopPropagation();
+    _onResequenceRecords: function (ev) {
+        ev.stopPropagation();
         var self = this;
-        this.trigger_up('edited_list', { id: this.value.id });
-        var rowIDs = event.data.rowIDs.slice();
-        var rowID = rowIDs.pop();
-        var defs = _.map(rowIDs, function (rowID, index) {
+        if (this.view.arch.tag === 'tree') {
+            this.trigger_up('edited_list', { id: this.value.id });
+        }
+        var handleField = ev.data.handleField;
+        var offset = ev.data.offset;
+        var recordIds = ev.data.recordIds.slice();
+        // trigger an update of all records but the last one with option
+        // 'notifyChanges' set to false, and once all those changes have been
+        // validated by the model, trigger the change on the last record
+        // (without the option, s.t. the potential onchange on parent record
+        // is triggered)
+        var recordId = recordIds.pop();
+        var proms = recordIds.map(function (recordId, index) {
             var data = {};
-            data[event.data.handleField] = event.data.offset + index;
+            data[handleField] = offset + index;
             return self._setValue({
                 operation: 'UPDATE',
-                id: rowID,
+                id: recordId,
                 data: data,
             }, {
                 notifyChange: false,
             });
         });
-        $.when.apply($, defs).then(function () {
-            // trigger only once the onchange for parent record
+        Promise.all(proms).then(function () {
+            function always() {
+                if (self.view.arch.tag === 'tree') {
+                    self.trigger_up('toggle_column_order', {
+                        id: self.value.id,
+                        name: handleField,
+                    });
+                }
+            }
+            var data = {};
+            data[handleField] = offset + recordIds.length;
             self._setValue({
                 operation: 'UPDATE',
-                id: rowID,
-                data: _.object([event.data.handleField], [event.data.offset + rowIDs.length]),
-            }).always(function () {
-                self.trigger_up('toggle_column_order', {
-                    id: self.value.id,
-                    name: event.data.handleField,
-                });
-            });
+                id: recordId,
+                data: data,
+            }).then(always).guardedCatch(always);
         });
     },
     /**
@@ -1226,7 +1452,61 @@ var FieldX2Many = AbstractField.extend({
     },
 });
 
+var One2ManyKanbanRecord = KanbanRecord.extend({
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Apply same logic as in the ListRenderer: buttons with type="object"
+     * are disabled for no saved yet records, as calling the python method
+     * with no id would make no sense.
+     *
+     * To avoid to expose this logic inside all Kanban views, we define
+     * a specific KanbanRecord Class for the One2many case.
+     *
+     * This could be refactored to prevent from duplicating this logic in
+     * list and kanban views.
+     *
+     * @private
+     */
+    _postProcessObjectButtons: function () {
+        var self = this;
+        // if the res_id is defined, it's already correctly handled by the Kanban record global event click
+        if (!this.state.res_id) {
+            this.$('.oe_kanban_action[data-type=object]').each(function (index, button) {
+                var $button = $(button);
+                if ($button.attr('warn')) {
+                    $button.on('click', function (e) {
+                        e.stopPropagation();
+                        self.do_warn(_t('Warning'), _t('Please click on the "save" button first.'));
+                    });
+                } else {
+                    $button.attr('disabled', 'disabled');
+                }
+            });
+        }
+    },
+    /**
+     * @override
+     * @private
+     */
+    _render: function () {
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self._postProcessObjectButtons();
+        });
+    },
+});
+
+var One2ManyKanbanRenderer = KanbanRenderer.extend({
+    config: _.extend({}, KanbanRenderer.prototype.config, {
+        KanbanRecord: One2ManyKanbanRecord,
+    }),
+});
+
 var FieldOne2Many = FieldX2Many.extend({
+    description: _lt("One2many"),
     className: 'o_field_one2many',
     supportedFieldTypes: ['one2many'],
 
@@ -1247,7 +1527,7 @@ var FieldOne2Many = FieldX2Many.extend({
      * @override
      * @param {Object} record
      * @param {OdooEvent} [ev] an event that triggered the reset action
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     reset: function (record, ev) {
         var self = this;
@@ -1280,6 +1560,16 @@ var FieldOne2Many = FieldX2Many.extend({
     //--------------------------------------------------------------------------
 
     /**
+      * @override
+      * @private
+      */
+    _getRenderer: function () {
+        if (this.view.arch.tag === 'kanban') {
+            return One2ManyKanbanRenderer;
+        }
+        return this._super.apply(this, arguments);
+    },
+    /**
      * Overrides to only render the buttons if the 'create' action is available.
      *
      * @override
@@ -1309,6 +1599,7 @@ var FieldOne2Many = FieldX2Many.extend({
             fields_view: this.attrs.views && this.attrs.views.form,
             parentID: this.value.id,
             viewInfo: this.view,
+            deletable: this.activeActions.delete,
         }));
     },
 
@@ -1324,6 +1615,15 @@ var FieldOne2Many = FieldX2Many.extend({
      * @param {OdooEvent|MouseEvent} ev this event comes either from the 'Add
      *   record' link in the list editable renderer, or from the 'Create' button
      *   in the kanban view
+     * @param {Array} ev.data.context additional context for the added records,
+     *   if several contexts are provided, multiple records will be added
+     *   (form dialog will only use the context at index 0 if provided)
+     * @param {boolean} ev.data.forceEditable this is used to bypass the dialog opening
+     *   in case you want to add record(s) to a list
+     * @param {function} ev.data.onSuccess called when the records are correctly created
+     *   (not supported by form dialog)
+     * @param {boolean} ev.data.allowWarning defines if the records can be added
+     *   to the list even if warnings are triggered (e.g: stock warning for product availability)
      */
     _onAddRecord: function (ev) {
         var self = this;
@@ -1332,7 +1632,7 @@ var FieldOne2Many = FieldX2Many.extend({
         // we don't want interference with the components upstream.
         ev.stopPropagation();
 
-        if (this.editable) {
+        if (this.editable || data.forceEditable) {
             if (!this.activeActions.create) {
                 if (data.onFail) {
                     data.onFail();
@@ -1342,15 +1642,24 @@ var FieldOne2Many = FieldX2Many.extend({
                 this.trigger_up('edited_list', { id: this.value.id });
                 this._setValue({
                     operation: 'CREATE',
-                    position: this.editable,
+                    position: this.editable || data.forceEditable,
                     context: data.context,
-                }).always(function () {
+                }, {
+                    allowWarning: data.allowWarning
+                }).then(function () {
                     self.creatingRecord = false;
-                });
+                }).then(function (){
+                    if (data.onSuccess){
+                        data.onSuccess();
+                    }
+                }).guardedCatch(function() {
+                    self.creatingRecord = false;
+                })
+                ;
             }
         } else {
             this._openFormDialog({
-                context: data.context,
+                context: data.context && data.context[0],
                 on_saved: function (record) {
                     self._setValue({ operation: 'ADD', id: record.id });
                 },
@@ -1369,9 +1678,9 @@ var FieldOne2Many = FieldX2Many.extend({
      */
     _onOpenRecord: function (ev) {
         // we don't want interference with the components upstream.
+        var self = this;
         ev.stopPropagation();
 
-        var self = this;
         var id = ev.data.id;
         var onSaved = function (record) {
             if (_.some(self.value.data, {id: record.id})) {
@@ -1392,12 +1701,17 @@ var FieldOne2Many = FieldX2Many.extend({
         this._openFormDialog({
             id: id,
             on_saved: onSaved,
+            on_remove: function () {
+                self._setValue({operation: 'DELETE', ids: [id]});
+            },
+            deletable: this.activeActions.delete,
             readonly: this.mode === 'readonly',
         });
     },
 });
 
 var FieldMany2Many = FieldX2Many.extend({
+    description: _lt("Many2many"),
     className: 'o_field_many2many',
     supportedFieldTypes: ['many2many'],
 
@@ -1455,10 +1769,16 @@ var FieldMany2Many = FieldX2Many.extend({
             domain: this.record.getDomain(this.recordParams),
             fields_view: this.attrs.views && this.attrs.views.form,
             on_saved: function () {
-                self._setValue({operation: 'TRIGGER_ONCHANGE'}, {forceChange: true});
-                self.trigger_up('reload', {db_id: ev.data.id});
+                self._setValue({operation: 'TRIGGER_ONCHANGE'}, {forceChange: true})
+                    .then(function () {
+                        self.trigger_up('reload', {db_id: ev.data.id});
+                    });
+            },
+            on_remove: function () {
+                self._setValue({operation: 'FORGET', ids: [ev.data.id]});
             },
             readonly: this.mode === 'readonly',
+            deletable: this.activeActions.delete,
             string: this.string,
         });
     },
@@ -1469,6 +1789,7 @@ var FieldMany2Many = FieldX2Many.extend({
  */
 var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
     template: "FieldBinaryFileUploader",
+    template_files: "FieldBinaryFileUploader.files",
     supportedFieldTypes: ['many2many'],
     fieldsToFetch: {
         name: {type: 'char'},
@@ -1477,7 +1798,7 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
     },
     events: {
         'click .o_attach': '_onAttach',
-        'click .oe_delete': '_onDelete',
+        'click .o_attachment_delete': '_onDelete',
         'change .o_input_file': '_onFileChanged',
     },
     /**
@@ -1542,8 +1863,8 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
         // render the attachments ; as the attachments will changes after each
         // _setValue, we put the rendering here to ensure they will be updated
         this._generatedMetadata();
-        this.$('.oe_placeholder_files, .oe_attachments')
-            .replaceWith($(qweb.render('FieldBinaryFileUploader.files', {
+        this.$('.oe_placeholder_files, .o_attachments')
+            .replaceWith($(qweb.render(this.template_files, {
                 widget: this,
             })));
         this.$('.oe_fileupload').show();
@@ -1605,6 +1926,10 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
         var files = ev.target.files;
         var attachment_ids = this.value.res_ids;
 
+        // Don't create an attachment if the upload window is cancelled.
+        if(files.length === 0)
+            return;
+
         _.each(files, function (file) {
             var record = _.find(self.value.data, function (attachment) {
                 return attachment.data.name === file.name;
@@ -1662,6 +1987,7 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
 });
 
 var FieldMany2ManyTags = AbstractField.extend({
+    description: _lt("Tags"),
     tag_template: "FieldMany2ManyTag",
     className: "o_field_many2manytags",
     supportedFieldTypes: ['many2many'],
@@ -1686,6 +2012,7 @@ var FieldMany2ManyTags = AbstractField.extend({
         }
 
         this.colorField = this.nodeOptions.color_field;
+        this.hasDropdown = false;
     },
 
     //--------------------------------------------------------------------------
@@ -1718,10 +2045,12 @@ var FieldMany2ManyTags = AbstractField.extend({
      * @override
      */
     reset: function (record, event) {
-        this._super.apply(this, arguments);
-        if (event && event.target === this) {
-            this.activate();
-        }
+        var self = this;
+        return this._super.apply(this, arguments).then(function(){
+            if (event && event.target === self) {
+                self.activate();
+            }
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -1752,6 +2081,7 @@ var FieldMany2ManyTags = AbstractField.extend({
         return {
             colorField: this.colorField,
             elements: elements,
+            hasDropdown: this.hasDropdown,
             readonly: this.mode === "readonly",
         };
     },
@@ -1777,14 +2107,15 @@ var FieldMany2ManyTags = AbstractField.extend({
         }
         this.many2one = new FieldMany2One(this, this.name, this.record, {
             mode: 'edit',
+            noOpen: true,
             viewType: this.viewType,
+            attrs: this.attrs,
         });
         // to prevent the M2O to take the value of the M2M
         this.many2one.value = false;
         // to prevent the M2O to take the relational values of the M2M
         this.many2one.m2o_value = '';
 
-        this.many2one.nodeOptions.no_open = true;
         this.many2one._getSearchBlacklist = function () {
             return self.value.res_ids;
         };
@@ -1812,6 +2143,8 @@ var FieldMany2ManyTags = AbstractField.extend({
      * @param {MouseEvent} event
      */
     _onDeleteTag: function (event) {
+        event.preventDefault();
+        event.stopPropagation();
         this._removeTag($(event.target).parent().data('id'));
     },
     /**
@@ -1856,11 +2189,18 @@ var FieldMany2ManyTags = AbstractField.extend({
 
 var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
     events: _.extend({}, FieldMany2ManyTags.prototype.events, {
-        'click .badge': '_onOpenColorPicker',
+        'click .dropdown-toggle': '_onOpenColorPicker',
         'mousedown .o_colorpicker a': '_onUpdateColor',
         'mousedown .o_colorpicker .o_hide_in_kanban': '_onUpdateColor',
-        'focusout .o_colorpicker': '_onCloseColorPicker',
     }),
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+
+        this.hasDropdown = !!this.colorField;
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -1868,17 +2208,12 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
 
     /**
      * @private
-     */
-    _onCloseColorPicker: function () {
-        this.$color_picker.remove();
-    },
-    /**
-     * @private
      * @param {MouseEvent} ev
      */
     _onOpenColorPicker: function (ev) {
-        var tagID = $(ev.currentTarget).data('id');
-        var tagColor = $(ev.currentTarget).data('color');
+        ev.preventDefault();
+        var tagID = $(ev.currentTarget).parent().data('id');
+        var tagColor = $(ev.currentTarget).parent().data('color');
         var tag = _.findWhere(this.value.data, { res_id: tagID });
         if (tag && this.colorField in tag.data) { // if there is a color field on the related model
             this.$color_picker = $(qweb.render('FieldMany2ManyTag.colorpicker', {
@@ -1886,8 +2221,8 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
                 'tag_id': tagID,
             }));
 
-            $(ev.currentTarget).append(this.$color_picker);
-            this.$color_picker.dropdown('toggle');
+            $(ev.currentTarget).after(this.$color_picker);
+            this.$color_picker.dropdown();
             this.$color_picker.attr("tabindex", 1).focus();
             if (!tagColor) {
                 this.$('.custom-checkbox input').prop('checked', true);
@@ -1907,8 +2242,8 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
         var $target = $(ev.currentTarget);
         var color = $target.data('color');
         var id = $target.data('id');
-        var tag = this.$("button.badge[data-id='" + id + "']");
-        var currentColor = tag.data('color');
+        var $tag = this.$(".badge[data-id='" + id + "']");
+        var currentColor = $tag.data('color');
         var changes = {};
 
         if ($target.is('.o_hide_in_kanban')) {
@@ -1916,7 +2251,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
             $checkbox.prop('checked', !$checkbox.prop('checked')); // toggle checkbox
             this.prevColors = this.prevColors ? this.prevColors : {};
             if ($checkbox.is(':checked')) {
-                this.prevColors[id] = currentColor
+                this.prevColors[id] = currentColor;
             } else {
                 color = this.prevColors[id] ? this.prevColors[id] : 1;
             }
@@ -1972,6 +2307,7 @@ var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
 });
 
 var FieldMany2ManyCheckBoxes = AbstractField.extend({
+    description: _lt("Checkboxes"),
     template: 'FieldMany2ManyCheckBoxes',
     events: _.extend({}, AbstractField.prototype.events, {
         change: '_onChange',
@@ -2128,6 +2464,7 @@ var FieldStatus = AbstractField.extend({
  * of type 'selection' and 'many2one'.
  */
 var FieldSelection = AbstractField.extend({
+    description: _lt("Selection"),
     template: 'FieldSelection',
     specialData: "_fetchSpecialRelation",
     supportedFieldTypes: ['selection', 'many2one'],
@@ -2158,6 +2495,19 @@ var FieldSelection = AbstractField.extend({
      */
     isSet: function () {
         return this.value !== false;
+    },
+    /**
+     * Listen to modifiers updates to hide/show the falsy value in the dropdown
+     * according to the required modifier.
+     *
+     * @override
+     */
+    updateModifiersValue: function () {
+        this._super.apply(this, arguments);
+        if (!this.attrs.modifiersValue.invisible && this.mode !== 'readonly') {
+            this._setValues();
+            this._renderEdit();
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -2212,7 +2562,9 @@ var FieldSelection = AbstractField.extend({
                 return v[0] === false && v[1] === '';
             });
         }
-        this.values = [[false, this.attrs.placeholder || '']].concat(this.values);
+        if (!this.attrs.modifiersValue || !this.attrs.modifiersValue.required) {
+            this.values = [[false, this.attrs.placeholder || '']].concat(this.values);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -2239,6 +2591,7 @@ var FieldSelection = AbstractField.extend({
 });
 
 var FieldRadio = FieldSelection.extend({
+    description: _lt("Radio"),
     template: null,
     className: 'o_field_radio',
     tagName: 'span',
@@ -2343,6 +2696,7 @@ var FieldRadio = FieldSelection.extend({
 
 
 var FieldSelectionBadge = FieldSelection.extend({
+    description: _lt("Badges"),
     template: null,
     className: 'o_field_selection_badge',
     tagName: 'span',
@@ -2415,10 +2769,12 @@ var FieldSelectionBadge = FieldSelection.extend({
  * a FieldMany2one for its value.
  * Its intern representation is similar to the many2one (a datapoint with a
  * `name_get` as data).
+ * Note that there is some logic to support char field because of one use in our
+ * codebase, but this use should be removed along with this note.
  */
 var FieldReference = FieldMany2One.extend({
     specialData: "_fetchSpecialReference",
-    supportedFieldTypes: ['char', 'reference'],
+    supportedFieldTypes: ['reference'],
     template: 'FieldReference',
     events: _.extend({}, FieldMany2One.prototype.events, {
         'change select': '_onSelectionChange',
@@ -2557,9 +2913,11 @@ var FieldReference = FieldMany2One.extend({
 
 return {
     FieldMany2One: FieldMany2One,
+    Many2oneBarcode: Many2oneBarcode,
     KanbanFieldMany2One: KanbanFieldMany2One,
     ListFieldMany2One: ListFieldMany2One,
 
+    FieldX2Many : FieldX2Many,
     FieldOne2Many: FieldOne2Many,
 
     FieldMany2Many: FieldMany2Many,

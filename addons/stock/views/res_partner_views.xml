@@ -12,9 +12,9 @@
         <field name="arch" type="xml">
             <xpath expr="//page[@name='sales_purchases']/group" position="inside">
                     <group name="container_row_stock" groups="base.group_no_one" priority="6">
-                        <group string="Warehouse" name="warehouse">
-                            <field name="property_stock_customer" domain="[('usage','=','customer')]"/>
-                            <field name="property_stock_supplier" domain="[('usage','=','supplier')]"/>
+                        <group string="Inventory" name="inventory" colspan="2">
+                            <field name="property_stock_customer" />
+                            <field name="property_stock_supplier" />
                         </group>
                     </group>
             </xpath>

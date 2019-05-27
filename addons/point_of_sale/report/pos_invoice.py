@@ -7,6 +7,7 @@ from odoo.exceptions import UserError
 
 class PosInvoiceReport(models.AbstractModel):
     _name = 'report.point_of_sale.report_invoice'
+    _description = 'Point of Sale Invoice Report'
 
     @api.model
     def _get_report_values(self, docids, data=None):

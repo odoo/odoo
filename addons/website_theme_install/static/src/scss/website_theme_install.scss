@@ -25,27 +25,8 @@
         background: none;
         border: none;
 
-        .o_browser_bar:before {
-            content: "•••";
-            display: block;
-            padding-left: 10px;
-            color: darken($o-theme-kanban-gray, 10%);
-            font: 12px/20px Courier, monospace;
-            letter-spacing: -1px;
-        }
-
-        &.o_theme_installed .o_theme_preview_top {
-            border-color: $o-brand-primary;
-
-            > .fa-check-circle {
-                @include o-position-absolute(10px, 10px);
-                width: 20px;
-                height: 20px;
-                font-size: 20px;
-            }
-        }
-
         .o_theme_preview_top {
+            position: relative;
             border: 1px solid darken($o-theme-kanban-gray, 20%);
             border-radius: 2px;
             transform-origin: center bottom;
@@ -75,7 +56,7 @@
         }
 
         .o_button_area {
-            @include o-position-absolute(20px, -1px, -1px, -1px);
+            @include o-position-absolute(0, 0, 0, 0);
             transition: opacity 100ms ease 0s;
             display: flex;
             flex-flow: column nowrap;
@@ -95,19 +76,21 @@
             }
         }
 
-        &:not(.o_theme_installed) {
-            .o_theme_preview_top:hover {
-                transition: all .3s ease 0s;
-                transform: translateY(-10px);
-                border-color: darken($o-theme-kanban-gray, 26%);
-                box-shadow: 0 15px 12px -8px rgba(0, 0, 0, .4);
+        .o_theme_preview_top:hover {
+            transition: all .3s ease 0s;
+            transform: translateY(-10px);
+            border-color: darken($o-theme-kanban-gray, 26%);
+            box-shadow: 0 15px 12px -8px rgba(0, 0, 0, .4);
 
-                .o_button_area {
-                    opacity: 1;
-                    visibility: visible;
-                    transition: opacity 0.2s ease 0.1s;
-                }
+            .o_button_area {
+                opacity: 1;
+                visibility: visible;
+                transition: opacity 0.2s ease 0.1s;
             }
+        }
+
+        &.o_theme_installed .o_theme_preview_top {
+            border: 3px solid $o-brand-primary;
         }
     }
 

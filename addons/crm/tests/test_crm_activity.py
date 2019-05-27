@@ -15,19 +15,19 @@ class TestCrmMailActivity(TestCrmCases):
         ActivityType = self.env['mail.activity.type']
         self.activity3 = ActivityType.create({
             'name': 'Celebrate the sale',
-            'days': 3,
+            'delay_count': 3,
             'summary': 'ACT 3 : Beers for everyone because I am a good salesman !',
             'res_model_id': lead_model_id,
         })
         self.activity2 = ActivityType.create({
             'name': 'Call for Demo',
-            'days': 6,
+            'delay_count': 6,
             'summary': 'ACT 2 : I want to show you my ERP !',
             'res_model_id': lead_model_id,
         })
         self.activity1 = ActivityType.create({
             'name': 'Initial Contact',
-            'days': 5,
+            'delay_count': 5,
             'summary': 'ACT 1 : Presentation, barbecue, ... ',
             'res_model_id': lead_model_id,
         })

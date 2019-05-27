@@ -4,7 +4,7 @@
 {
     'name': 'Employees',
     'version': '1.1',
-    'category': 'Human Resources',
+    'category': 'Human Resources/Employees',
     'sequence': 75,
     'summary': 'Centralize employee information',
     'description': "",
@@ -24,11 +24,15 @@
     'data': [
         'security/hr_security.xml',
         'security/ir.model.access.csv',
+        'wizard/hr_plan_wizard_views.xml',
+        'wizard/hr_departure_wizard_views.xml',
         'views/hr_views.xml',
         'views/hr_templates.xml',
         'views/res_config_settings_views.xml',
-        'views/res_users_views.xml',
+        'views/mail_channel_views.xml',
+        'views/res_users.xml',
         'data/hr_data.xml',
+        'report/hr_employee_badge.xml'
     ],
     'demo': [
         'data/hr_demo.xml'
@@ -36,5 +40,5 @@
     'installable': True,
     'application': True,
     'auto_install': False,
-    'qweb': [],
+    'qweb': ['static/src/xml/hr_templates.xml'],
 }

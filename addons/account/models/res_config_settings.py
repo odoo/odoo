@@ -8,23 +8,23 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     has_accounting_entries = fields.Boolean(compute='_compute_has_chart_of_accounts')
-    currency_id = fields.Many2one('res.currency', related="company_id.currency_id", required=True,
+    currency_id = fields.Many2one('res.currency', related="company_id.currency_id", required=True, readonly=False,
         string='Currency', help="Main currency of the company.")
     currency_exchange_journal_id = fields.Many2one(
         'account.journal',
-        related='company_id.currency_exchange_journal_id',
+        related='company_id.currency_exchange_journal_id', readonly=False,
         string="Exchange Gain or Loss Journal",
         domain="[('company_id', '=', company_id), ('type', '=', 'general')]",
         help='The accounting journal where automatic exchange differences will be registered')
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
     chart_template_id = fields.Many2one('account.chart.template', string='Template',
         domain="[('visible','=', True)]")
-    sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", related='company_id.account_sale_tax_id')
-    purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax", related='company_id.account_purchase_tax_id')
+    sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", related='company_id.account_sale_tax_id', readonly=False)
+    purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax", related='company_id.account_purchase_tax_id', readonly=False)
     tax_calculation_rounding_method = fields.Selection([
         ('round_per_line', 'Round calculation of taxes per line'),
         ('round_globally', 'Round globally calculation of taxes '),
-        ], related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method')
+        ], related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method', readonly=False)
     module_account_accountant = fields.Boolean(string='Accounting')
     group_analytic_accounting = fields.Boolean(string='Analytic Accounting',
         implied_group='analytic.group_analytic_accounting')
@@ -43,6 +43,10 @@ class ResConfigSettings(models.TransientModel):
         "Show line subtotals with taxes (B2C)",
         implied_group='account.group_show_line_subtotals_tax_included',
         group='base.group_portal,base.group_user,base.group_public')
+    group_products_in_bills = fields.Boolean(string="Use products in vendor bills",
+        implied_group='account.group_products_in_bills',
+        group='base.group_user',
+        help="Disable this option to use a simplified versions of vendor bills, where products are hidden.")
     show_line_subtotals_tax_selection = fields.Selection([
         ('tax_excluded', 'Tax-Excluded'),
         ('tax_included', 'Tax-Included')], string="Line Subtotals Tax Display",
@@ -51,7 +55,7 @@ class ResConfigSettings(models.TransientModel):
     module_account_asset = fields.Boolean(string='Assets Management')
     module_account_deferred_revenue = fields.Boolean(string="Revenue Recognition")
     module_account_budget = fields.Boolean(string='Budget Management')
-    module_account_payment = fields.Boolean(string='Online Payment')
+    module_account_payment = fields.Boolean(string='Invoice Online Payment')
     module_account_reports = fields.Boolean("Dynamic Reports")
     module_account_reports_followup = fields.Boolean("Follow-up Levels")
     module_account_check_printing = fields.Boolean("Allow check printing and deposits")
@@ -67,21 +71,29 @@ class ResConfigSettings(models.TransientModel):
     module_account_bank_statement_import_csv = fields.Boolean("Import in .csv format")
     module_account_bank_statement_import_camt = fields.Boolean("Import in CAMT.053 format")
     module_currency_rate_live = fields.Boolean(string="Automatic Currency Rates")
-    module_print_docsaway = fields.Boolean(string="Docsaway")
     module_account_intrastat = fields.Boolean(string='Intrastat')
     module_product_margin = fields.Boolean(string="Allow Product Margin")
     module_l10n_eu_service = fields.Boolean(string="EU Digital Goods VAT")
     module_account_taxcloud = fields.Boolean(string="Account TaxCloud")
-    tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility')
-    tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal")
-    account_hide_setup_bar = fields.Boolean(string='Hide Setup Bar', related='company_id.account_setup_bar_closed',help="Tick if you wish to hide the setup bar on the dashboard")
-    invoice_reference_type = fields.Selection(string='Communication',
-        related='company_id.invoice_reference_type', help='Default Reference Type on Invoices.')
+    module_account_invoice_extract = fields.Boolean(string="Bill Digitalization")
+    module_snailmail_account = fields.Boolean(string="Snailmail")
+    tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility', readonly=False)
+    tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal", readonly=False)
     account_bank_reconciliation_start = fields.Date(string="Bank Reconciliation Threshold",
-        related='company_id.account_bank_reconciliation_start',
+        related='company_id.account_bank_reconciliation_start', readonly=False,
         help="""The bank reconciliation widget won't ask to reconcile payments older than this date.
                This is useful if you install accounting after having used invoicing for some time and
                don't want to reconcile all the past payments with bank statements.""")
+
+    qr_code = fields.Boolean(string='Display SEPA QR code', related='company_id.qr_code', readonly=False)
+    invoice_is_print = fields.Boolean(string='Print', related='company_id.invoice_is_print', readonly=False)
+    invoice_is_email = fields.Boolean(string='Send Email', related='company_id.invoice_is_email', readonly=False)
+    incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm', related='company_id.incoterm_id', help='International Commercial Terms are a series of predefined commercial terms used in international transactions.', readonly=False)
+    invoice_terms = fields.Text(related='company_id.invoice_terms', string="Terms & Conditions", readonly=False)
+    use_invoice_terms = fields.Boolean(
+        string='Default Terms & Conditions',
+        oldname='default_use_sale_note',
+        config_parameter='account.use_invoice_terms')
 
     @api.multi
     def set_values(self):
@@ -130,7 +142,7 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_tax_exigibility(self):
         res = {}
         tax = self.env['account.tax'].search([
-            ('company_id', '=', self.env.user.company_id.id), ('tax_exigibility', '=', 'on_payment')
+            ('company_id', '=', self.env.company_id.id), ('tax_exigibility', '=', 'on_payment')
         ], limit=1)
         if not self.tax_exigibility and tax:
             self.tax_exigibility = True

@@ -2,15 +2,24 @@
 {
     'name': "Snail Mail",
     'description': """
-Allows users to send invoices by post
+Allows users to send documents by post
 =====================================================
         """,
     'category': 'Tools',
     'version': '0.1',
-    'depends': ['account', 'iap'],
+    'depends': ['iap', 'mail'],
     'data': [
-        'data/mail_activity_data.xml',
-        'wizard/multi_compose_message_views.xml',
-        'views/res_config_settings_views.xml',
+        'data/snailmail_data.xml',
+        'views/report_assets.xml',
+        'views/snailmail_views.xml',
+        'views/assets.xml',
+        'wizard/snailmail_letter_cancel_views.xml',
+        'wizard/snailmail_letter_format_error_views.xml',
+        'wizard/snailmail_letter_missing_required_fields_views.xml',
+        'security/ir.model.access.csv',
     ],
+    'qweb': [
+        'static/src/xml/thread.xml',
+    ],
+    'auto_install': True,
 }

@@ -6,7 +6,7 @@ from datetime import date, datetime, time
 from odoo import fields
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import common
-from odoo.tools import mute_logger, float_repr, pycompat
+from odoo.tools import mute_logger, float_repr
 from odoo.tools.date_utils import add, subtract, start_of, end_of
 
 
@@ -18,8 +18,8 @@ class TestFields(common.TransactionCase):
         discussion = self.env.ref('test_new_api.discussion_0')
 
         # read field as a record attribute or as a record item
-        self.assertIsInstance(discussion.name, pycompat.string_types)
-        self.assertIsInstance(discussion['name'], pycompat.string_types)
+        self.assertIsInstance(discussion.name, str)
+        self.assertIsInstance(discussion['name'], str)
         self.assertEqual(discussion['name'], discussion.name)
 
         # read it with method read()
@@ -51,6 +51,10 @@ class TestFields(common.TransactionCase):
         assert len(records) > 1
         with self.assertRaises(ValueError):
             records.body = 'Faulty'
+
+        # field assigmenent does not cache the wrong value when write overridden
+        record.priority = 4
+        self.assertEqual(record.priority, 5)
 
     def test_10_computed(self):
         """ check definition of computed fields """
@@ -368,6 +372,26 @@ class TestFields(common.TransactionCase):
         self.assertEqual(record.bar2, 'B')
         self.assertEqual(record.bar3, 'C')
         self.assertCountEqual(log, ['compute'])
+
+    def test_13_inverse_access(self):
+        """ test access rights on inverse fields """
+        foo = self.env['test_new_api.category'].create({'name': 'Foo'})
+        user = self.env['res.users'].create({'name': 'Foo', 'login': 'foo'})
+        self.assertFalse(user.has_group('base.group_system'))
+        # add group on non-stored inverse field
+        self.patch(type(foo).display_name, 'groups', 'base.group_system')
+        with self.assertRaises(AccessError):
+            foo.sudo(user).display_name = 'Forbidden'
+
+    def test_13_inverse_access(self):
+        """ test access rights on inverse fields """
+        foo = self.env['test_new_api.category'].create({'name': 'Foo'})
+        user = self.env['res.users'].create({'name': 'Foo', 'login': 'foo'})
+        self.assertFalse(user.has_group('base.group_system'))
+        # add group on non-stored inverse field
+        self.patch(type(foo).display_name, 'groups', 'base.group_system')
+        with self.assertRaises(AccessError):
+            foo.sudo(user).display_name = 'Forbidden'
 
     def test_14_search(self):
         """ test search on computed fields """
@@ -747,8 +771,9 @@ class TestFields(common.TransactionCase):
         """ test company-dependent fields. """
         # consider three companies
         company0 = self.env.ref('base.main_company')
-        company1 = self.env['res.company'].create({'name': 'A', 'parent_id': company0.id})
-        company2 = self.env['res.company'].create({'name': 'B', 'parent_id': company1.id})
+        company1 = self.env['res.company'].create({'name': 'A'})
+        company2 = self.env['res.company'].create({'name': 'B'})
+
         # create one user per company
         user0 = self.env['res.users'].create({'name': 'Foo', 'login': 'foo',
                                               'company_id': company0.id, 'company_ids': []})
@@ -756,23 +781,82 @@ class TestFields(common.TransactionCase):
                                               'company_id': company1.id, 'company_ids': []})
         user2 = self.env['res.users'].create({'name': 'Baz', 'login': 'baz',
                                               'company_id': company2.id, 'company_ids': []})
-        # create a default value for the company-dependent field
-        field = self.env['ir.model.fields'].search([('model', '=', 'test_new_api.company'),
-                                                    ('name', '=', 'foo')])
-        self.env['ir.property'].create({'name': 'foo', 'fields_id': field.id,
+
+        # create values for many2one field
+        tag0 = self.env['test_new_api.multi.tag'].create({'name': 'Qux'})
+        tag1 = self.env['test_new_api.multi.tag'].create({'name': 'Quux'})
+        tag2 = self.env['test_new_api.multi.tag'].create({'name': 'Quuz'})
+
+        # create default values for the company-dependent fields
+        field_foo = self.env['ir.model.fields']._get('test_new_api.company', 'foo')
+        self.env['ir.property'].create({'name': 'foo', 'fields_id': field_foo.id,
                                         'value': 'default', 'type': 'char'})
+        field_tag_id = self.env['ir.model.fields']._get('test_new_api.company', 'tag_id')
+        self.env['ir.property'].create({'name': 'foo', 'fields_id': field_tag_id.id,
+                                        'value': tag0, 'type': 'many2one'})
+
+        # assumption: users don't have access to 'ir.property'
+        accesses = self.env['ir.model.access'].search([('model_id.model', '=', 'ir.property')])
+        accesses.write(dict.fromkeys(['perm_read', 'perm_write', 'perm_create', 'perm_unlink'], False))
 
         # create/modify a record, and check the value for each user
-        record = self.env['test_new_api.company'].create({'foo': 'main'})
+        record = self.env['test_new_api.company'].create({
+            'foo': 'main',
+            'date': '1932-11-09',
+            'moment': '1932-11-09 00:00:00',
+            'tag_id': tag1.id,
+        })
         record.invalidate_cache()
         self.assertEqual(record.sudo(user0).foo, 'main')
         self.assertEqual(record.sudo(user1).foo, 'default')
         self.assertEqual(record.sudo(user2).foo, 'default')
+        self.assertEqual(str(record.sudo(user0).date), '1932-11-09')
+        self.assertEqual(record.sudo(user1).date, False)
+        self.assertEqual(record.sudo(user2).date, False)
+        self.assertEqual(str(record.sudo(user0).moment), '1932-11-09 00:00:00')
+        self.assertEqual(record.sudo(user1).moment, False)
+        self.assertEqual(record.sudo(user2).moment, False)
+        self.assertEqual(record.sudo(user0).tag_id, tag1)
+        self.assertEqual(record.sudo(user1).tag_id, tag0)
+        self.assertEqual(record.sudo(user2).tag_id, tag0)
 
-        record.sudo(user1).foo = 'alpha'
+        record.sudo(user1).write({
+            'foo': 'alpha',
+            'date': '1932-12-10',
+            'moment': '1932-12-10 23:59:59',
+            'tag_id': tag2.id,
+        })
         record.invalidate_cache()
         self.assertEqual(record.sudo(user0).foo, 'main')
         self.assertEqual(record.sudo(user1).foo, 'alpha')
+        self.assertEqual(record.sudo(user2).foo, 'default')
+        self.assertEqual(str(record.sudo(user0).date), '1932-11-09')
+        self.assertEqual(str(record.sudo(user1).date), '1932-12-10')
+        self.assertEqual(record.sudo(user2).date, False)
+        self.assertEqual(str(record.sudo(user0).moment), '1932-11-09 00:00:00')
+        self.assertEqual(str(record.sudo(user1).moment), '1932-12-10 23:59:59')
+        self.assertEqual(record.sudo(user2).moment, False)
+        self.assertEqual(record.sudo(user0).tag_id, tag1)
+        self.assertEqual(record.sudo(user1).tag_id, tag2)
+        self.assertEqual(record.sudo(user2).tag_id, tag0)
+
+        # unlink value of a many2one (tag2), and check again
+        tag2.unlink()
+        self.assertEqual(record.sudo(user0).tag_id, tag1)
+        self.assertEqual(record.sudo(user1).tag_id, tag0.browse())
+        self.assertEqual(record.sudo(user2).tag_id, tag0)
+
+        record.sudo(user1).foo = False
+        record.invalidate_cache()
+        self.assertEqual(record.sudo(user0).foo, 'main')
+        self.assertEqual(record.sudo(user1).foo, False)
+        self.assertEqual(record.sudo(user2).foo, 'default')
+
+        # set field with 'force_company' in context
+        record.sudo(user0).with_context(force_company=company1.id).foo = 'beta'
+        record.invalidate_cache()
+        self.assertEqual(record.sudo(user0).foo, 'main')
+        self.assertEqual(record.sudo(user1).foo, 'beta')
         self.assertEqual(record.sudo(user2).foo, 'default')
 
         # create company record and attribute
@@ -793,6 +877,25 @@ class TestFields(common.TransactionCase):
         self.assertEqual(attribute_record.company.foo, 'DEF')
         self.assertEqual(attribute_record.bar, 'DEFDEF')
         self.assertFalse(self.env.has_todo())
+
+        # add group on company-dependent field
+        self.assertFalse(user0.has_group('base.group_system'))
+        self.patch(type(record).foo, 'groups', 'base.group_system')
+        with self.assertRaises(AccessError):
+            record.sudo(user0).foo = 'forbidden'
+
+        user0.write({'groups_id': [(4, self.env.ref('base.group_system').id)]})
+        record.sudo(user0).foo = 'yes we can'
+
+        # add ir.rule to prevent access on record
+        self.assertTrue(user0.has_group('base.group_user'))
+        rule = self.env['ir.rule'].create({
+            'model_id': self.env['ir.model']._get_id(record._name),
+            'groups': [self.env.ref('base.group_user').id],
+            'domain_force': str([('id', '!=', record.id)]),
+        })
+        with self.assertRaises(AccessError):
+            record.sudo(user0).foo = 'forbidden'
 
     def test_30_read(self):
         """ test computed fields as returned by read(). """
@@ -818,32 +921,189 @@ class TestFields(common.TransactionCase):
         cat1, cat2 = cats
         self.assertEqual(cat2.name, 'ACCESS')
         # both categories should be ready for prefetching
-        self.assertItemsEqual(cat2._prefetch[Category._name], cats.ids)
+        self.assertItemsEqual(cat2._prefetch_ids, cats.ids)
         # but due to our (lame) overwrite of `read`, it should not forbid us to read records we have access to
         self.assertFalse(cat2.discussions)
         self.assertEqual(cat2.parent, cat1)
         with self.assertRaises(AccessError):
             cat1.name
 
-    def test_40_new(self):
-        """ test new records. """
+    def test_40_new_defaults(self):
+        """ Test new records with defaults. """
+        user = self.env.user
         discussion = self.env.ref('test_new_api.discussion_0')
 
-        # create a new message
-        message = self.env['test_new_api.message'].new()
-        self.assertFalse(message.id)
+        # create a new message; fields have their default value if not given
+        new_msg = self.env['test_new_api.message'].new({'body': "XXX"})
+        self.assertFalse(new_msg.id)
+        self.assertEqual(new_msg.body, "XXX")
+        self.assertEqual(new_msg.author, user)
 
         # assign some fields; should have no side effect
-        message.discussion = discussion
-        message.body = BODY = "May the Force be with you."
-        self.assertEqual(message.discussion, discussion)
-        self.assertEqual(message.body, BODY)
-        self.assertFalse(message.author)
-        self.assertNotIn(message, discussion.messages)
+        new_msg.discussion = discussion
+        new_msg.body = "YYY"
+        self.assertEqual(new_msg.discussion, discussion)
+        self.assertEqual(new_msg.body, "YYY")
+        self.assertNotIn(new_msg, discussion.messages)
 
         # check computed values of fields
-        self.assertEqual(message.name, "[%s] %s" % (discussion.name, ''))
-        self.assertEqual(message.size, len(BODY))
+        self.assertEqual(new_msg.name, "[%s] %s" % (discussion.name, user.name))
+        self.assertEqual(new_msg.size, 3)
+
+        # extra tests for x2many fields with default
+        cat1 = self.env['test_new_api.category'].create({'name': "Cat1"})
+        cat2 = self.env['test_new_api.category'].create({'name': "Cat2"})
+        discussion = discussion.with_context(default_categories=[(4, cat1.id)])
+        # no value gives the default value
+        new_disc = discussion.new({'name': "Foo"})
+        self.assertEqual(new_disc.categories._origin, cat1)
+        # value is combined with default value
+        new_disc = discussion.new({'name': "Foo", 'categories': [(4, cat2.id)]})
+        self.assertEqual(new_disc.categories._origin, cat1 + cat2)
+
+    def test_40_new_fields(self):
+        """ Test new records with relational fields. """
+        # create a new discussion with all kinds of relational fields
+        msg0 = self.env['test_new_api.message'].create({'body': "XXX"})
+        msg1 = self.env['test_new_api.message'].create({'body': "WWW"})
+        cat0 = self.env['test_new_api.category'].create({'name': 'AAA'})
+        cat1 = self.env['test_new_api.category'].create({'name': 'DDD'})
+        new_disc = self.env['test_new_api.discussion'].new({
+            'name': "Stuff",
+            'moderator': self.env.uid,
+            'messages': [
+                (4, msg0.id),
+                (4, msg1.id), (1, msg1.id, {'body': "YYY"}),
+                (0, 0, {'body': "ZZZ"})
+            ],
+            'categories': [
+                (4, cat0.id),
+                (4, cat1.id), (1, cat1.id, {'name': "BBB"}),
+                (0, 0, {'name': "CCC"})
+            ],
+        })
+        self.assertFalse(new_disc.id)
+
+        # many2one field values are actual records
+        self.assertEqual(new_disc.moderator.id, self.env.uid)
+
+        # x2many fields values are new records
+        new_msg0, new_msg1, new_msg2 = new_disc.messages
+        self.assertFalse(new_msg0.id)
+        self.assertFalse(new_msg1.id)
+        self.assertFalse(new_msg2.id)
+
+        new_cat0, new_cat1, new_cat2 = new_disc.categories
+        self.assertFalse(new_cat0.id)
+        self.assertFalse(new_cat1.id)
+        self.assertFalse(new_cat2.id)
+
+        # the x2many has its inverse field set
+        self.assertEqual(new_msg0.discussion, new_disc)
+        self.assertEqual(new_msg1.discussion, new_disc)
+        self.assertEqual(new_msg2.discussion, new_disc)
+
+        self.assertFalse(msg0.discussion)
+        self.assertFalse(msg1.discussion)
+
+        self.assertEqual(new_cat0.discussions, new_disc)    # add other discussions
+        self.assertEqual(new_cat1.discussions, new_disc)
+        self.assertEqual(new_cat2.discussions, new_disc)
+
+        self.assertNotIn(new_disc, cat0.discussions)
+        self.assertNotIn(new_disc, cat1.discussions)
+
+        # new lines are connected to their origin
+        self.assertEqual(new_msg0._origin, msg0)
+        self.assertEqual(new_msg1._origin, msg1)
+        self.assertFalse(new_msg2._origin)
+
+        self.assertEqual(new_cat0._origin, cat0)
+        self.assertEqual(new_cat1._origin, cat1)
+        self.assertFalse(new_cat2._origin)
+
+        # the field values are either specific, or the same as the origin
+        self.assertEqual(new_msg0.body, "XXX")
+        self.assertEqual(new_msg1.body, "YYY")
+        self.assertEqual(new_msg2.body, "ZZZ")
+
+        self.assertEqual(msg0.body, "XXX")
+        self.assertEqual(msg1.body, "WWW")
+
+        self.assertEqual(new_cat0.name, "AAA")
+        self.assertEqual(new_cat1.name, "BBB")
+        self.assertEqual(new_cat2.name, "CCC")
+
+        self.assertEqual(cat0.name, "AAA")
+        self.assertEqual(cat1.name, "DDD")
+
+        # special case for many2one fields that define _inherits
+        new_email = self.env['test_new_api.emailmessage'].new({'body': "XXX"})
+        self.assertFalse(new_email.id)
+        self.assertTrue(new_email.message)
+        self.assertFalse(new_email.message.id)
+        self.assertEqual(new_email.body, "XXX")
+
+        new_email = self.env['test_new_api.emailmessage'].new({'message': msg0.id})
+        self.assertFalse(new_email.id)
+        self.assertFalse(new_email._origin)
+        self.assertFalse(new_email.message.id)
+        self.assertEqual(new_email.message._origin, msg0)
+        self.assertEqual(new_email.body, "XXX")
+
+    def test_40_new_ref_origin(self):
+        """ Test the behavior of new records with ref/origin. """
+        Discussion = self.env['test_new_api.discussion']
+        new = Discussion.new
+
+        # new records with identical/different refs
+        xs = new() + new(ref='a') + new(ref='b') + new(ref='b')
+        self.assertEqual([x == y for x in xs for y in xs], [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 1,
+            0, 0, 1, 1,
+        ])
+        for x in xs:
+            self.assertFalse(x._origin)
+
+        # new records with identical/different origins
+        a, b = Discussion.create([{'name': "A"}, {'name': "B"}])
+        xs = new() + new(origin=a) + new(origin=b) + new(origin=b)
+        self.assertEqual([x == y for x in xs for y in xs], [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 1,
+            0, 0, 1, 1,
+        ])
+        self.assertFalse(xs[0]._origin)
+        self.assertEqual(xs[1]._origin, a)
+        self.assertEqual(xs[2]._origin, b)
+        self.assertEqual(xs[3]._origin, b)
+        self.assertEqual(xs._origin, a + b + b)
+        self.assertEqual(xs._origin._origin, a + b + b)
+
+        # new records with refs and origins
+        x1 = new(ref='a')
+        x2 = new(origin=b)
+        self.assertNotEqual(x1, x2)
+
+        # new discussion based on existing discussion
+        disc = self.env.ref('test_new_api.discussion_0')
+        new_disc = disc.new(origin=disc)
+        self.assertFalse(new_disc.id)
+        self.assertEqual(new_disc._origin, disc)
+        self.assertEqual(new_disc.name, disc.name)
+        # many2one field
+        self.assertEqual(new_disc.moderator, disc.moderator)
+        # one2many field
+        self.assertTrue(new_disc.messages)
+        self.assertNotEqual(new_disc.messages, disc.messages)
+        self.assertEqual(new_disc.messages._origin, disc.messages)
+        # many2many field
+        self.assertTrue(new_disc.participants)
+        self.assertNotEqual(new_disc.participants, disc.participants)
+        self.assertEqual(new_disc.participants._origin, disc.participants)
 
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_41_new_related(self):
@@ -856,17 +1116,16 @@ class TestFields(common.TransactionCase):
         env = self.env(user=self.env.ref('base.user_demo'))
         self.assertEqual(env.user.login, "demo")
 
-        with self.env.do_in_onchange():
-            # create a new message as demo user
-            discussion = self.env.ref('test_new_api.discussion_0')
-            message = env['test_new_api.message'].new({'discussion': discussion})
-            self.assertEqual(message.discussion, discussion)
+        # create a new message as demo user
+        discussion = self.env.ref('test_new_api.discussion_0')
+        message = env['test_new_api.message'].new({'discussion': discussion})
+        self.assertEqual(message.discussion, discussion)
 
-            # read the related field discussion_name
-            self.assertEqual(message.discussion.env, env)
-            self.assertEqual(message.discussion_name, discussion.name)
-            with self.assertRaises(AccessError):
-                message.discussion.name
+        # read the related field discussion_name
+        self.assertEqual(message.discussion.env, env)
+        self.assertEqual(message.discussion_name, discussion.name)
+        with self.assertRaises(AccessError):
+            message.discussion.name
 
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_42_new_related(self):
@@ -879,15 +1138,24 @@ class TestFields(common.TransactionCase):
         env = self.env(user=self.env.ref('base.user_demo'))
         self.assertEqual(env.user.login, "demo")
 
-        with self.env.do_in_onchange():
-            # create a new discussion and a new message as demo user
-            discussion = env['test_new_api.discussion'].new({'name': 'Stuff'})
-            message = env['test_new_api.message'].new({'discussion': discussion})
-            self.assertEqual(message.discussion, discussion)
+        # create a new discussion and a new message as demo user
+        discussion = env['test_new_api.discussion'].new({'name': 'Stuff'})
+        message = env['test_new_api.message'].new({'discussion': discussion})
+        self.assertEqual(message.discussion, discussion)
 
-            # read the related field discussion_name
-            self.assertNotEqual(message.sudo().env, message.env)
-            self.assertEqual(message.discussion_name, discussion.name)
+        # read the related field discussion_name
+        self.assertNotEqual(message.sudo().env, message.env)
+        self.assertEqual(message.discussion_name, discussion.name)
+
+    def test_43_new_related(self):
+        """ test the behavior of one2many related fields """
+        partner = self.env['res.partner'].create({
+            'name': 'Foo',
+            'child_ids': [(0, 0, {'name': 'Bar'})],
+        })
+        multi = self.env['test_new_api.multi'].new()
+        multi.partner = partner
+        self.assertEqual(multi.partners.mapped('name'), ['Bar'])
 
     def test_50_defaults(self):
         """ test default values. """
@@ -901,7 +1169,7 @@ class TestFields(common.TransactionCase):
     def test_50_search_many2one(self):
         """ test search through a path of computed fields"""
         messages = self.env['test_new_api.message'].search(
-            [('author_partner.name', '=', 'Marc Brown')])
+            [('author_partner.name', '=', 'Marc Demo')])
         self.assertEqual(messages, self.env.ref('test_new_api.message_0_1'))
 
     def test_60_x2many_domain(self):
@@ -943,8 +1211,130 @@ class TestFields(common.TransactionCase):
         self.assertEqual(len(discussion.important_messages), 2)
         self.assertEqual(len(discussion.very_important_messages), 2)
 
+    def test_80_copy(self):
+        Translations = self.env['ir.translation']
+        discussion = self.env.ref('test_new_api.discussion_0')
+        message = self.env.ref('test_new_api.message_0_0')
+        message1 = self.env.ref('test_new_api.message_0_1')
+
+        email = self.env.ref('test_new_api.emailmessage_0_0')
+        self.assertEqual(email.message, message)
+
+        french = self.env['res.lang']._lang_get('fr_FR')
+        french.active = True
+
+        def count(msg):
+            # return the number of translations of msg.label
+            return Translations.search_count([
+                ('name', '=', 'test_new_api.message,label'),
+                ('res_id', '=', msg.id),
+            ])
+
+        # set a translation for message.label
+        email.with_context(lang='fr_FR').label = "bonjour"
+        self.assertEqual(count(message), 1)
+        self.assertEqual(count(message1), 0)
+
+        # setting the parent record should not copy its translations
+        email.copy({'message': message1.id})
+        self.assertEqual(count(message), 1)
+        self.assertEqual(count(message1), 0)
+
+        # setting a one2many should not copy translations on the lines
+        discussion.copy({'messages': [(6, 0, message1.ids)]})
+        self.assertEqual(count(message), 1)
+        self.assertEqual(count(message1), 0)
+
+    def test_90_binary_svg(self):
+        from odoo.addons.base.tests.test_mimetypes import SVG
+        # This should work without problems
+        self.env['test_new_api.binary_svg'].create({
+            'name': 'Test without attachment',
+            'image_wo_attachment': SVG,
+        })
+        # And this gives error
+        with self.assertRaises(UserError):
+            self.env['test_new_api.binary_svg'].sudo(
+                self.env.ref('base.user_demo'),
+            ).create({
+                'name': 'Test without attachment',
+                'image_wo_attachment': SVG,
+            })
+
+    def test_91_binary_svg_attachment(self):
+        from odoo.addons.base.tests.test_mimetypes import SVG
+        # This doesn't neuter SVG with admin
+        record = self.env['test_new_api.binary_svg'].create({
+            'name': 'Test without attachment',
+            'image_attachment': SVG,
+        })
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', record._name),
+            ('res_field', '=', 'image_attachment'),
+            ('res_id', '=', record.id),
+        ])
+        self.assertEqual(attachment.mimetype, 'image/svg+xml')
+        # ...but this should be neutered with demo user
+        record = self.env['test_new_api.binary_svg'].sudo(
+            self.env.ref('base.user_demo'),
+        ).create({
+            'name': 'Test without attachment',
+            'image_attachment': SVG,
+        })
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', record._name),
+            ('res_field', '=', 'image_attachment'),
+            ('res_id', '=', record.id),
+        ])
+        self.assertEqual(attachment.mimetype, 'text/plain')
+
+    def test_92_binary_self_avatar_svg(self):
+        from odoo.addons.base.tests.test_mimetypes import SVG
+        demo_user = self.env.ref('base.user_demo')
+        # User demo changes his own avatar
+        demo_user.sudo(demo_user).image = SVG
+        # The SVG file should have been neutered
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', demo_user.partner_id._name),
+            ('res_field', '=', 'image'),
+            ('res_id', '=', demo_user.partner_id.id),
+        ])
+        self.assertEqual(attachment.mimetype, 'text/plain')
+
+    def test_93_monetary_related(self):
+        """ Check the currency field on related monetary fields. """
+        # check base field
+        field = self.env['test_new_api.monetary_base']._fields['amount']
+        self.assertEqual(field.currency_field, 'base_currency_id')
+
+        # related fields must use the field 'currency_id' or 'x_currency_id'
+        field = self.env['test_new_api.monetary_related']._fields['amount']
+        self.assertEqual(field.related, ('monetary_id', 'amount'))
+        self.assertEqual(field.currency_field, 'currency_id')
+
+        field = self.env['test_new_api.monetary_custom']._fields['x_amount']
+        self.assertEqual(field.related, ('monetary_id', 'amount'))
+        self.assertEqual(field.currency_field, 'x_currency_id')
+
+        # inherited field must use the same field as its parent field
+        field = self.env['test_new_api.monetary_inherits']._fields['amount']
+        self.assertEqual(field.related, ('monetary_id', 'amount'))
+        self.assertEqual(field.currency_field, 'base_currency_id')
+
 
 class TestX2many(common.TransactionCase):
+    def test_definition_many2many(self):
+        """ Test the definition of inherited many2many fields. """
+        field = self.env['test_new_api.multi.line']._fields['tags']
+        self.assertEqual(field.relation, 'test_new_api_multi_line_test_new_api_multi_tag_rel')
+        self.assertEqual(field.column1, 'test_new_api_multi_line_id')
+        self.assertEqual(field.column2, 'test_new_api_multi_tag_id')
+
+        field = self.env['test_new_api.multi.line2']._fields['tags']
+        self.assertEqual(field.relation, 'test_new_api_multi_line2_test_new_api_multi_tag_rel')
+        self.assertEqual(field.column1, 'test_new_api_multi_line2_id')
+        self.assertEqual(field.column2, 'test_new_api_multi_tag_id')
+
     def test_search_many2many(self):
         """ Tests search on many2many fields. """
         tags = self.env['test_new_api.multi.tag']
@@ -1004,7 +1394,7 @@ class TestX2many(common.TransactionCase):
         recY = recs.create({'lines': [(0, 0, {})]})
         recZ = recs.create({})
         recs = recX + recY + recZ
-        line1, line2, line3 = recs.mapped('lines')
+        line1, line2, line3 = recs.lines
         line4 = recs.create({'lines': [(0, 0, {})]}).lines
         line0 = line4.create({})
 
@@ -1276,3 +1666,25 @@ class TestParentStore(common.TransactionCase):
         """ Move multiple nodes to create a cycle. """
         with self.assertRaises(UserError):
             self.cats(1, 3).write({'parent': self.cats(9).id})
+
+
+class TestRequiredMany2one(common.TransactionCase):
+
+    def test_explicit_ondelete(self):
+        field = self.env['test_new_api.req_m2o']._fields['foo']
+        self.assertEqual(field.ondelete, 'cascade')
+
+    def test_implicit_ondelete(self):
+        field = self.env['test_new_api.req_m2o']._fields['bar']
+        self.assertEqual(field.ondelete, 'restrict')
+
+    def test_explicit_set_null(self):
+        Model = self.env['test_new_api.req_m2o']
+        field = Model._fields['foo']
+
+        # invalidate registry to redo the setup afterwards
+        self.registry.registry_invalidated = True
+        self.patch(field, 'ondelete', 'set null')
+
+        with self.assertRaises(ValueError):
+            field._setup_regular_base(Model)

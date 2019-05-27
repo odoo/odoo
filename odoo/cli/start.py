@@ -7,6 +7,7 @@ import itertools
 import os
 import sys
 
+import odoo
 from . import Command
 from .server import main
 from odoo.modules.module import get_module_root, MANIFEST_NAMES
@@ -60,6 +61,7 @@ class Start(Command):
         # TODO: forbid some database names ? eg template1, ...
         try:
             _create_empty_database(args.db_name)
+            odoo.tools.config['init']['base'] = True
         except DatabaseExists as e:
             pass
         except Exception as e:

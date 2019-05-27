@@ -5,7 +5,6 @@ var emojis = require('mail.emojis');
 var AbstractThread = require('mail.model.AbstractThread');
 var mailUtils = require('mail.utils');
 
-var Mixins = require('web.mixins');
 var ServicesMixin = require('web.ServicesMixin');
 
 /**
@@ -15,8 +14,9 @@ var ServicesMixin = require('web.ServicesMixin');
  *
  * In particular, channels and mailboxes are two different kinds of threads.
  */
-var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
-
+var Thread = AbstractThread.extend(ServicesMixin, {
+    // max number of fetched messages from the server
+    _FETCH_LIMIT: 30,
     /**
      * @override
      * @param {Object} params
@@ -27,34 +27,19 @@ var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
      * @param {string} [params.data.type]
      */
     init: function (params) {
-        Mixins.EventDispatcherMixin.init.call(this, arguments);
-        this.setParent(params.parent);
         this._super.apply(this, arguments);
         // threads are not detached by default
         this._detached = false;
-        // if this._massMailing is set, display subject on messages, use
-        // extended composer and show "Send by messages by email" on discuss
-        // sidebar
-        this._massMailing = false;
         // on 1st request to getPreview, fetch data if incomplete. Otherwise it
         // means that there is no message in this channel.
         this._previewed = false;
         this._type = params.data.type || params.data.channel_type;
-        // max number of fetched messages from the server
-        this._FETCH_LIMIT = 30;
     },
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
-    /**
-     * Add a message to this thread.
-     *
-     * @abstract
-     * @param {mail.model.Message} message
-     */
-    addMessage: function (message) {},
     /**
      * Updates the _detached state of the thread. Must be overriden to reflect
      * the new state in the interface.
@@ -73,12 +58,13 @@ var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
      *   of this thread. Otherwise unfold it while detaching it.
      * @param {boolean} [options.passively=false] if set, if the thread window
      *   will be created passively.
+     * @returns {Promise}
      */
     detach: function (options) {
         options = options || {};
         this._detached = true;
         this._folded = options.keepFoldState ? this._folded : false;
-        this._warnUpdatedWindowState({
+        return this._warnUpdatedWindowState({
             passively: options.passively,
         });
     },
@@ -94,10 +80,10 @@ var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
      * `this.LIMIT` number of messages at a time.
      *
      * @abstract
-     * @returns {$.Promise<mail.model.Message[]>}
+     * @returns {Promise<mail.model.Message[]>}
      */
     fetchMessages: function () {
-        return $.when([]);
+        return Promise.resolve([]);
     },
     /**
      * Updates the folded state of the thread. Must be overriden to reflect
@@ -125,10 +111,10 @@ var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
      * By default, a thread has not listener.
      *
      * @abstract
-     * @returns {$.Promise<Object[]>}
+     * @returns {Promise<Array<Object[]>>}
      */
     getMentionPartnerSuggestions: function () {
-        return $.when([]);
+        return Promise.resolve([]);
     },
     /**
      * Returns the information required to render the preview of this channel.
@@ -140,7 +126,7 @@ var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         return {
             id: this.getID(),
             imageSRC: '/mail/static/src/img/smiley/avatar.jpg',
-            isChat: this.isChat(),
+            isTwoUserThread: this.isTwoUserThread(),
             status: this.getStatus(),
             title: this.getName(),
             unreadCounter: this.getUnreadCounter(),
@@ -189,16 +175,6 @@ var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
      */
     incrementNeedactionCounter: function () {},
     /**
-     * Increment the unread counter of this thread by 1 unit, and warn that the
-     * counter has been changed.
-     *
-     * @override
-     */
-    incrementUnreadCounter: function () {
-        this._super.apply(this, arguments);
-        this._warnUpdatedUnreadCounter();
-    },
-    /**
      * States whether the thread should be auto-selected on creation
      *
      * Note that this is not of the responsibility of the thread: it only
@@ -220,17 +196,6 @@ var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
      * @returns {boolean}
      */
     isChannel: function () {
-        return false;
-    },
-    /**
-     * States whether this thread is a chat or not. In particular, public and
-     * private channels are not chat, but DMs and Livechats are chats. Chats
-     * are threads used for communication between two users.
-     * By default, any thread is not a chat
-     *
-     * @returns {boolean}
-     */
-    isChat: function () {
         return false;
     },
     /**
@@ -256,10 +221,12 @@ var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
      * This is a server-side setting, that determine the type of composer that
      * is used (basic or extended composer).
      *
+     * By default, thread have not mass-mailings feature set.
+     *
      * @return {boolean}
      */
     isMassMailing: function () {
-        return this._massMailing;
+        return false;
     },
     /**
 
@@ -277,7 +244,18 @@ var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
      *
      * @returns {boolean}
      */
-    isModerator: function () {
+    isMyselfModerator: function () {
+        return false;
+    },
+    /**
+     * States whether this is a two-user thread or not. In particular, public
+     * and private channels are not two-user threads, but DMs and Livechats are
+     * two-user threads. Two-user threads are used for communication between
+     * two users. By default, any thread is not two-user thread.
+     *
+     * @returns {boolean}
+     */
+    isTwoUserThread: function () {
         return false;
     },
     /**
@@ -295,56 +273,12 @@ var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         this._previewed = true;
     },
     /**
-     * Mark the thread as read, which resets the unread counter to 0.
+     * Set the name of this thread
      *
-     * @returns {$.Promise} resolved
+     * @param {string} newName
      */
-    markAsRead: function () {
-        if (this._unreadCounter > 0) {
-            this.resetUnreadCounter();
-        }
-        return $.when();
-    },
-    /**
-     * Post a message on the thread.
-     *
-     * This method must be completed by concrete threads,
-     * As it currently only pre-process the messages at the moment.
-     *
-     * @abstract
-     * @param {Object} data
-     * @returns {$.Promise<Object>} resolved with the message object to be sent
-     *   to the server
-     */
-    postMessage: function (data) {
-        // This message will be received from the mail composer as html content
-        // subtype but the urls will not be linkified. If the mail composer
-        // takes the responsibility to linkify the urls we end up with double
-        // linkification a bit everywhere. Ideally we want to keep the content
-        // as text internally and only make html enrichment at display time but
-        // the current design makes this quite hard to do.
-        var body = mailUtils.parseAndTransform(_.str.trim(data.content), mailUtils.addLink);
-        body = this._generateEmojis(body);
-        var messageData = {
-            partner_ids: data.partner_ids,
-            body: body,
-            attachment_ids: data.attachment_ids,
-        };
-        if ('subject' in data) {
-            messageData.subject = data.subject;
-        }
-        return $.when(messageData);
-    },
-    /**
-     * Overrides the method so that it also warns that the counter has been
-     * changed on this thread.
-     *
-     * @override
-     * @private
-     */
-    resetUnreadCounter: function () {
-        this._super.apply(this, arguments);
-        this._warnUpdatedUnreadCounter();
+    setName: function (newName) {
+        this._name = newName;
     },
 
     //--------------------------------------------------------------------------
@@ -354,10 +288,10 @@ var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
     /**
      * @abstract
      * @private
-     * @return {$.Promise}
+     * @return {Promise}
      */
     _fetchMessages: function () {
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * Replace character representations of emojis by their unicode
@@ -378,13 +312,61 @@ var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         return htmlString;
     },
     /**
-     * Warn on the chat bus that the unread counter has been updated
+     * Increment the unread counter of this thread by 1 unit, and warn that the
+     * counter has been changed.
      *
+     * @override
+     * @private
+     */
+    _incrementUnreadCounter: function () {
+        this._super.apply(this, arguments);
+        this._warnUpdatedUnreadCounter();
+    },
+    /**
+     * Post a message on the thread.
+     *
+     * This method must be completed by concrete threads,
+     * As it currently only pre-process the messages at the moment.
+     *
+     * @abstract
+     * @private
+     * @param {Object} data
+     * @returns {Promise<Object>} resolved with the message object to be sent
+     *   to the server
+     */
+    _postMessage: function (data) {
+        // This message will be received from the mail composer as html content
+        // subtype but the urls will not be linkified. If the mail composer
+        // takes the responsibility to linkify the urls we end up with double
+        // linkification a bit everywhere. Ideally we want to keep the content
+        // as text internally and only make html enrichment at display time but
+        // the current design makes this quite hard to do.
+        var body = mailUtils.parseAndTransform(_.str.trim(data.content), mailUtils.addLink);
+        body = this._generateEmojis(body);
+        var messageData = {
+            partner_ids: data.partner_ids,
+            channel_ids: _.map(data.channel_ids, function (channelID) {
+               return [4, channelID, false];
+            }),
+            body: body,
+            attachment_ids: data.attachment_ids,
+            canned_response_ids: data.canned_response_ids,
+        };
+        if ('subject' in data) {
+            messageData.subject = data.subject;
+        }
+        return this._super.apply(this, arguments).then(function () {
+            return messageData;
+        });
+    },
+    /**
+     * Warn on the mail bus that the unread counter has been updated
+     *
+     * @override
      * @private
      */
     _warnUpdatedUnreadCounter: function () {
-        this.call('mail_service', 'getMailBus')
-            .trigger('update_thread_unread_counter', this);
+        this.call('mail_service', 'getMailBus').trigger('update_thread_unread_counter', this);
     },
     /**
      * Warn other mail components that the window state of this thread has
@@ -392,10 +374,12 @@ var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
      *
      * @private
      * @param {Object} [options={}]
+     * @param {boolean} [options.passively=false]
+     * @returns {Promise}
      */
     _warnUpdatedWindowState: function (options) {
         options = options || {};
-        this.call('mail_service', 'updateThreadWindow', this.getID(), options);
+        return this.call('mail_service', 'updateThreadWindow', this.getID(), options);
     },
 });
 

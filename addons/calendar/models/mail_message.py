@@ -5,8 +5,6 @@ from odoo import api, models
 
 from odoo.addons.calendar.models.calendar import get_real_ids
 
-from odoo.tools import pycompat
-
 
 class Message(models.Model):
 
@@ -18,7 +16,7 @@ class Message(models.Model):
         args = list(args)
         for index in range(len(args)):
             if args[index][0] == "res_id":
-                if isinstance(args[index][2], pycompat.string_types):
+                if isinstance(args[index][2], str):
                     args[index] = (args[index][0], args[index][1], get_real_ids(args[index][2]))
                 elif isinstance(args[index][2], list):
                     args[index] = (args[index][0], args[index][1], [get_real_ids(x) for x in args[index][2]])
@@ -28,6 +26,6 @@ class Message(models.Model):
     def _find_allowed_model_wise(self, doc_model, doc_dict):
         if doc_model == 'calendar.event':
             order = self._context.get('order', self.env[doc_model]._order)
-            for virtual_id in self.env[doc_model].browse(doc_dict).get_recurrent_ids([], order=order):
+            for virtual_id in self.env[doc_model].with_context(active_test=False).search([('id', 'in', list(doc_dict))], order=order).ids:
                 doc_dict.setdefault(virtual_id, doc_dict[get_real_ids(virtual_id)])
         return super(Message, self)._find_allowed_model_wise(doc_model, doc_dict)

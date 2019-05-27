@@ -1,14 +1,27 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, api
 
 
-class ResUsers(models.Model):
+class Users(models.Model):
+    """ Update of res.users class
+        - add a preference about username for livechat purpose
+    """
     _inherit = 'res.users'
 
-    group_im_livechat_user = fields.Selection(
-        selection=lambda self: self._get_group_selection('im_livechat.module_category_im_livechat'),
-        string='Live Support', compute='_compute_groups_id', inverse='_inverse_groups_id',
-        category_xml_id='im_livechat.module_category_im_livechat',
-        help='User: The user will be able to join support channels.\nManager: The user will be able to delete support channels.')
+    livechat_username = fields.Char("Livechat Username", help="This username will be used as your name in the livechat channels.")
+
+    def __init__(self, pool, cr):
+        """ Override of __init__ to add access rights on livechat_username
+            Access rights are disabled by default, but allowed
+            on some specific fields defined in self.SELF_{READ/WRITE}ABLE_FIELDS.
+        """
+        init_res = super(Users, self).__init__(pool, cr)
+        # duplicate list to avoid modifying the original reference
+        type(self).SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
+        type(self).SELF_WRITEABLE_FIELDS.extend(['livechat_username'])
+        # duplicate list to avoid modifying the original reference
+        type(self).SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
+        type(self).SELF_READABLE_FIELDS.extend(['livechat_username'])
+        return init_res

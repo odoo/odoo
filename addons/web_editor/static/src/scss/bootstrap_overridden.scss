@@ -1,0 +1,57 @@
+// Use auto threshold for yiq colors
+$yiq-contrasted-threshold: false !default;
+
+// Automatically update bootstrap colors map (unused by BS itself)
+$colors: () !default;
+$colors: map-merge($o-color-palette, $colors);
+
+// Automatically extend bootstrap to create theme background/text/button classes
+$theme-colors: () !default;
+$theme-colors: map-merge($o-theme-color-palette, $theme-colors);
+
+// Automatically extend bootstrap gray palette (the theme palette is supposed to
+// at least declare white and black)
+$grays: () !default;
+$grays: map-merge($o-gray-color-palette, $grays);
+
+// Bootstrap use standard variables to define individual colors which are then
+// placed into a map which is then used to get the value of each individual
+// color. As BS4 allows to extend the map a priori to define our own colors,
+// it does not take care of making the standard variables match the values in
+// the user's map. The problem is that, at least for grays, bootstrap uses the
+// standard variables in its _variables.scss file, so if:
+//
+// User file:
+// $grays: (
+//     '100': blue,
+// );
+//
+// BS4:
+// $gray-100: gray !default;
+// $grays: () !default;
+// $grays: map-merge((
+//     '100': $gray-100,
+// ), $grays);
+//
+// -> Here gray('100') is blue but $gray-100 is still gray... so BS4 is not
+// correctly generated as BS4 uses $gray-100 in _variables.scss
+$primary: theme-color('primary') !default;
+$secondary: theme-color('secondary') !default;
+$success: theme-color('success') !default;
+$info: theme-color('info') !default;
+$warning: theme-color('warning') !default;
+$danger: theme-color('danger') !default;
+$light: theme-color('light') !default;
+$dark: theme-color('dark') !default;
+
+$white: gray('white') !default;
+$gray-100: gray('100') !default;
+$gray-200: gray('200') !default;
+$gray-300: gray('300') !default;
+$gray-400: gray('400') !default;
+$gray-500: gray('500') !default;
+$gray-600: gray('600') !default;
+$gray-700: gray('700') !default;
+$gray-800: gray('800') !default;
+$gray-900: gray('900') !default;
+$black: gray('black') !default;

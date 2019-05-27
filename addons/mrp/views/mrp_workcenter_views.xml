@@ -17,7 +17,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,gantt,pivot,graph,calendar</field>
             <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
-            <field name="domain">[('workcenter_id', '=', active_id), ('state', '!=', 'done')]</field>
+            <field name="domain">[('state', 'not in', ('done', 'cancel'))]</field>
+            <field name="context">{'search_default_workcenter_id': active_id}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Add a work center
@@ -127,7 +128,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="mrp_workorder_report">
-            <field name="name">Work Orders Performance</field>
+            <field name="name">Work Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.workorder</field>
             <field name="domain">[]</field>
@@ -171,7 +172,7 @@
                                         <div class="col-6 o_kanban_primary_left">
                                             <div class="btn-group" name="o_wo">
                                             <t t-if="record.workorder_count.raw_value &gt; 0">
-                                                <button class="btn btn-primary" name="%(action_work_orders)d" type="action" context="{'search_default_ready': 1, 'search_default_progress': 1, 'search_default_pending': 1}">
+                                                <button class="btn btn-primary" name="action_work_order" type="object">
                                                     <span>WORK ORDERS</span>
                                                 </button>
                                             </t>
@@ -185,7 +186,7 @@
                                         <div class="col-6 o_kanban_primary_right">
                                             <div class="row" t-if="record.workorder_ready_count.raw_value &gt; 0">
                                                 <div class="col-8">
-                                                    <a name="%(action_work_orders)d" type="action" context="{'search_default_ready': 1}">
+                                                    <a name="action_work_order" type="object" context="{'search_default_ready': 1}">
                                                         To Launch
                                                     </a>
                                                 </div>
@@ -195,7 +196,7 @@
                                             </div>
                                             <div class="row" t-if="record.workorder_progress_count.raw_value &gt; 0">
                                                 <div class="col-8">
-                                                    <a name="%(action_work_orders)d" type="action" context="{'search_default_progress': 1}">
+                                                    <a name="action_work_order" type="object" context="{'search_default_progress': 1}">
                                                         In Progress
                                                     </a>
                                                 </div>
@@ -205,7 +206,7 @@
                                             </div>
                                             <div class="row" t-if="record.workorder_late_count.raw_value &gt; 0">
                                                 <div class="col-8">
-                                                    <a name="%(action_work_orders)d" type="action" context="{'search_default_late': 1}">
+                                                    <a name="action_work_order" type="object" context="{'search_default_late': 1}">
                                                         Late
                                                     </a>
                                                 </div>
@@ -252,7 +253,7 @@
                                                 <span>Actions</span>
                                             </div>
                                             <div role="menuitem" name="plan_order">
-                                                <a name="%(action_work_orders)d" type="action">Plan Orders</a>
+                                                <a name="action_work_order" type="object">Plan Orders</a>
                                             </div>
                                         </div>
                                         <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
@@ -268,7 +269,7 @@
                                                 </a>
                                             </div>
                                             <div role="menuitem">
-                                                <a name="%(action_work_orders)d" type="action" context="{'search_default_waiting': 1}">Waiting Availability</a>
+                                                <a name="action_work_order" type="object" context="{'search_default_waiting': 1}">Waiting Availability</a>
                                             </div>
                                         </div>
                                     </div>
@@ -327,11 +328,11 @@
                         </div>
                         <group>
                             <group>
-                                <field name="name" string="Work Center Name"/>
+                                <field name="name" string="Work Center Name" required="True"/>
                             </group>
                             <group>
                                 <field name="code"/>
-                                <field name="resource_calendar_id"/>
+                                <field name="resource_calendar_id" required="1"/>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             </group>
                         </group>
@@ -411,7 +412,7 @@
         </record>
 
         <record id="mrp_workcenter_kanban_action" model="ir.actions.act_window">
-            <field name="name">Work Centers Dashboard</field>
+            <field name="name">Work Centers Overview</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.workcenter</field>
             <field name="view_type">form</field>
@@ -436,7 +437,7 @@
             sequence="90"/>
 
         <menuitem id="menu_mrp_dashboard"
-            name="Dashboard"
+            name="Overview"
             action="mrp_workcenter_kanban_action"
             groups="group_mrp_routings"
             parent="menu_mrp_root"
@@ -448,14 +449,12 @@
         <field name="model">mrp.workcenter.productivity.loss</field>
         <field name="arch" type="xml">
             <form string="Workcenter Productivity Loss">
-                <group>
+                <sheet>
                     <group>
                         <field name="name"/>
-                        <field name="loss_type"/>
-                    </group><group>
-                        <field name="manual"/>
+                        <field name="loss_id" widget="selection"/>
                     </group>
-                </group>
+                </sheet>
             </form>
         </field>
     </record>
@@ -466,9 +465,8 @@
         <field name="arch" type="xml">
             <tree string="Workcenter Productivity Loss">
                 <field name="sequence" widget="handle"/>
-                <field name="name"/>
-                <field name="loss_type"/>
-                <field name="manual"/>
+                <field name="name" string="Blocking Reasons"/>
+                <field name="loss_type" string="Category"/>
             </tree>
         </field>
     </record>
@@ -519,7 +517,7 @@
         <field name="res_model">mrp.workcenter.productivity.loss</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
-        <field name="domain">[]</field>
+        <field name="domain">[('manual', '=', 'True')]</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_empty_folder">
             No productivity loss defined
@@ -540,8 +538,6 @@
         <field name="arch" type="xml">
             <search string="Operations">
                 <field name="workcenter_id"/>
-                <filter string="Start Date" name="date_start_filter" date="date_start"/>
-                <separator/>
                 <field name="workcenter_id"/>
                 <field name="loss_id"/>
                 <separator/>
@@ -551,11 +547,9 @@
                 <filter name="productive" string="Fully Productive" domain="[('loss_type','=','productive')]"/>
                 <separator/>
                 <group expand='0' string='Group by...'>
-                    <filter string="Date" name="loss_date" context="{'group_by': 'date_start'}"/>
                     <filter string="User" name="user" context="{'group_by': 'create_uid'}"/>
                     <filter string='Workcenter' name="workcenter_group" context="{'group_by': 'workcenter_id'}"/>
                     <filter string="Loss Reason" name="loss_group" context="{'group_by': 'loss_id'}"/>
-                    <filter string="TPM Big Loss" name="loss_group_main" context="{'group_by': 'loss_type'}"/>
                 </group>
             </search>
         </field>

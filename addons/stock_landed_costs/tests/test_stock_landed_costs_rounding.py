@@ -25,21 +25,20 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         # valuation and real price costing method
         product_landed_cost_3 = self.env['product.product'].create({
             'name': "LC product 3",
-            'cost_method': 'fifo',
             'uom_id': product_uom_unit_round_1.id,
-            'valuation': 'real_time',
-            'property_stock_account_input': self.ref('stock_landed_costs.o_expense'),
-            'property_stock_account_output': self.ref('stock_landed_costs.o_income'),
         })
+        product_landed_cost_3.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        product_landed_cost_3.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.ref('stock_landed_costs.o_expense')
+        product_landed_cost_3.product_tmpl_id.categ_id.property_stock_account_output_categ_id = self.ref('stock_landed_costs.o_income')
 
         product_landed_cost_4 = self.env['product.product'].create({
             'name': "LC product 4",
-            'cost_method': 'fifo',
             'uom_id': product_uom_unit_round_1.id,
-            'valuation': 'real_time',
-            'property_stock_account_input': self.ref('stock_landed_costs.o_expense'),
-            'property_stock_account_output': self.ref('stock_landed_costs.o_income'),
         })
+        product_landed_cost_4.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        product_landed_cost_4.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        product_landed_cost_4.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.ref('stock_landed_costs.o_expense')
+        product_landed_cost_4.product_tmpl_id.categ_id.property_stock_account_output_categ_id = self.ref('stock_landed_costs.o_income')
 
         picking_default_vals = self.env['stock.picking'].default_get(list(self.env['stock.picking'].fields_get()))
 

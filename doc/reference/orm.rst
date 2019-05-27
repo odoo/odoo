@@ -278,12 +278,18 @@ Common ORM methods
    .. tip:: to just check if any record matches a domain, or count the number
              of records which do, use
              :meth:`~odoo.models.Model.search_count`
-:meth:`~odoo.models.Model.create`
-    Takes a number of field values, and returns a recordset containing the
-    record created::
 
-        >>> self.create({'name': "New Name"})
+:meth:`~odoo.models.Model.create`
+    Takes a dictionary of field values, or a list of such dictionaries, and
+    returns a recordset containing the records created::
+
+        >>> self.create({'name': "Joe"})
         res.partner(78)
+        >>> self.create([{'name': "Jack"}, {'name': "William"}, {'name': "Averell"}])
+        res.partner(79, 80, 81)
+
+    See :ref:`how to define method \`create\` with one API or the other
+    <reference/orm/oldapi>`.
 
 :meth:`~odoo.models.Model.write`
     Takes a number of field values, writes them to all the records in its
@@ -499,8 +505,8 @@ necessary to clear caches when using ``CREATE``, ``UPDATE`` or ``DELETE`` in
 SQL, but not ``SELECT`` (which simply reads the database).
 
 Clearing caches can be performed using the
-:meth:`~odoo.api.Environment.invalidate_all` method of the
-:class:`~odoo.api.Environment` object.
+:meth:`~odoo.models.BaseModel.invalidate_cache` method of the
+:class:`~odoo.models.BaseModel` object.
 
 
 .. _reference/orm/oldapi:
@@ -568,6 +574,19 @@ Two decorators can expose a new-style method to the old API:
             pass
         # can be called as
         old_style_model.some_method(cr, uid, [id1, id2], a_value, context=context)
+
+Note that a method `create` decorated with :func:`~odoo.api.model` will always
+be called with a single dictionary. A method `create` decorated with the variant
+:func:`~odoo.api.model_create_multi` will always be called with a list of dicts.
+The decorators take care of converting the argument to one form or the other::
+
+    @api.model
+    def create(self, vals):
+        ...
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        ...
 
 Because new-style APIs tend to return recordsets and old-style APIs tend to
 return lists of ids, there is also a decorator managing this:
@@ -681,9 +700,10 @@ Model Reference
 
     .. attribute:: _parent_store
 
-        Alongside :attr:`~.parent_left` and :attr:`~.parent_right`, sets up a
-        `nested set <http://en.wikipedia.org/wiki/Nested_set_model>`_  to
-        enable fast hierarchical queries on the records of the current model
+        Alongside a :attr:`~.parent_path` field, sets up an indexed storage
+        of the tree structure of records, to enable faster hierarchical queries
+        on the records of the current model using the ``child_of`` and
+        ``parent_of`` domain operators.
         (default: ``False``)
 
         :type: bool
@@ -806,17 +826,17 @@ Model Reference
     .. attribute:: parent_id
 
         used to order records in a tree structure and enables the ``child_of``
-        operator in domains
+        and ``parent_of`` operators in domains
 
         :type: :class:`~odoo.fields.Many2one`
 
-    .. attribute:: parent_left
+    .. attribute:: parent_path
 
-        used with :attr:`~._parent_store`, allows faster tree structure access
+        used to store an index of the tree structure when :attr:`~._parent_store`
+        is set to True - must be declared with ``index=True`` for proper operation.
 
-    .. attribute:: parent_right
+        :type: :class:`~odoo.fields.Char`
 
-        see :attr:`~.parent_left`
 
 .. _reference/orm/decorators:
 
@@ -991,17 +1011,17 @@ them (e.g. to change their default sort order):
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/extension.py
     :language: python
-    :lines: 5-
+    :lines: 7-
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/tests/test_extension.py
     :language: python
-    :lines: 8,13
+    :lines: 10,15
 
 will yield:
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/tests/test_extension.py
     :language: text
-    :lines: 11
+    :lines: 13
 
 .. note:: it will also yield the various :ref:`automatic fields
           <reference/orm/model/automatic>` unless they've been disabled
@@ -1014,7 +1034,9 @@ at runtime) but less power: using the :attr:`~odoo.models.Model._inherits`
 a model *delegates* the lookup of any field not found on the current model
 to "children" models. The delegation is performed via
 :class:`~odoo.fields.Reference` fields automatically set up on the parent
-model:
+model. The main difference is in the meaning. When using Delegation, the model
+**has one** instead of **is one**, turning the relationship in a composition
+instead of inheritance:
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/delegation.py
     :language: python

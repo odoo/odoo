@@ -9,8 +9,9 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     group_multi_company = fields.Boolean("Manage multiple companies", implied_group='base.group_multi_company')
+    group_toggle_company = fields.Boolean("Toggle multiple companies", implied_group='base.group_toggle_company')
     company_id = fields.Many2one('res.company', string='Company', required=True,
-        default=lambda self: self.env.user.company_id)
+        default=lambda self: self.env.company_id)
     user_default_rights = fields.Boolean(
         "Default Access Rights",
         config_parameter='base_setup.default_user_rights',
@@ -31,16 +32,19 @@ class ResConfigSettings(models.TransientModel):
     module_pad = fields.Boolean("Collaborative Pads")
     module_voip = fields.Boolean("Asterisk (VoIP)")
     module_web_unsplash = fields.Boolean("Unsplash Image Library")
+    module_partner_autocomplete = fields.Boolean("Partner Autocomplete")
+    module_sms = fields.Boolean("Send SMS")
+    module_base_geolocalize = fields.Boolean("GeoLocalize")
     company_share_partner = fields.Boolean(string='Share partners to all companies',
         help="Share your partners to all companies defined in your instance.\n"
              " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
              " * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies.")
-    report_footer = fields.Text(related="company_id.report_footer", string='Custom Report Footer', help="Footer text displayed at the bottom of all reports.")
+    report_footer = fields.Text(related="company_id.report_footer", string='Custom Report Footer', help="Footer text displayed at the bottom of all reports.", readonly=False)
     group_multi_currency = fields.Boolean(string='Multi-Currencies',
             implied_group='base.group_multi_currency',
             help="Allows to work in a multi currency environment")
-    paperformat_id = fields.Many2one(related="company_id.paperformat_id", string='Paper format')
-    external_report_layout = fields.Selection(related="company_id.external_report_layout")
+    paperformat_id = fields.Many2one(related="company_id.paperformat_id", string='Paper format', readonly=False)
+    external_report_layout_id = fields.Many2one(related="company_id.external_report_layout_id", readonly=False)
     show_effect = fields.Boolean(string="Show Effect", config_parameter='base_setup.show_effect')
 
     @api.model
@@ -64,7 +68,7 @@ class ResConfigSettings(models.TransientModel):
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'res.company',
-            'res_id': self.env.user.company_id.id,
+            'res_id': self.env.company_id.id,
             'target': 'current',
         }
     @api.multi
@@ -87,9 +91,9 @@ class ResConfigSettings(models.TransientModel):
 
     @api.multi
     def edit_external_header(self):
-        if not self.external_report_layout:
+        if not self.external_report_layout_id:
             return False
-        return self._prepare_report_view_action('web.external_layout_' + self.external_report_layout)
+        return self._prepare_report_view_action(self.external_report_layout_id.key)
 
     @api.multi
     def change_report_template(self):
@@ -100,7 +104,7 @@ class ResConfigSettings(models.TransientModel):
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
-            'res_id': self.env.user.company_id.id,
+            'res_id': self.env.company_id.id,
             'res_model': 'res.company',
             'views': [(template.id, 'form')],
             'view_id': template.id,

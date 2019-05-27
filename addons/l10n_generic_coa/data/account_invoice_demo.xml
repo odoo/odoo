@@ -9,7 +9,7 @@
             <field name="date_invoice" eval="time.strftime('%Y-%m')+'-01'"/>
         </record>
         <record id="demo_invoice_1_line_1" model="account.invoice.line">
-            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_02').partner_ref"/>
+            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_02').get_product_multiline_description_sale()"/>
             <field name="invoice_id" ref="demo_invoice_1"/>
             <field name="product_id" ref="product.consu_delivery_02"/>
             <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_02').categ_id.property_account_income_categ_id.id"/>
@@ -17,7 +17,7 @@
             <field name="quantity">5</field>
         </record>
         <record id="demo_invoice_1_line_2" model="account.invoice.line">
-            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_03').partner_ref"/>
+            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_03').get_product_multiline_description_sale()"/>
             <field name="invoice_id" ref="demo_invoice_1"/>
             <field name="product_id" ref="product.consu_delivery_03"/>
             <field name="account_id" model="account.invoice.line"  eval="obj().env.ref('product.consu_delivery_03').categ_id.property_account_income_categ_id.id"/>
@@ -35,7 +35,7 @@
             <field name="date_invoice" eval="time.strftime('%Y-%m')+'-08'"/>
         </record>
         <record id="demo_invoice_2_line_1" model="account.invoice.line">
-            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_03').partner_ref"/>
+            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_03').get_product_multiline_description_sale()"/>
             <field name="invoice_id" ref="demo_invoice_2"/>
             <field name="product_id" ref="product.consu_delivery_03"/>
             <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_03').categ_id.property_account_income_categ_id.id"/>
@@ -43,7 +43,7 @@
             <field name="quantity">5</field>
         </record>
         <record id="demo_invoice_2_line_2" model="account.invoice.line">
-            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_01').partner_ref"/>
+            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_01').get_product_multiline_description_sale()"/>
             <field name="invoice_id" ref="demo_invoice_2"/>
             <field name="product_id" ref="product.consu_delivery_01"/>
             <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_01').categ_id.property_account_income_categ_id.id"/>
@@ -61,7 +61,7 @@
             <field name="date_invoice" eval="time.strftime('%Y-%m')+'-08'"/>
         </record>
         <record id="demo_invoice_3_line_1" model="account.invoice.line">
-            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_01').partner_ref"/>
+            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_01').get_product_multiline_description_sale()"/>
             <field name="invoice_id" ref="demo_invoice_3"/>
             <field name="product_id" ref="product.consu_delivery_01"/>
             <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_01').categ_id.property_account_income_categ_id.id"/>
@@ -69,7 +69,7 @@
             <field name="quantity">5</field>
         </record>
         <record id="demo_invoice_3_line_2" model="account.invoice.line">
-            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_03').partner_ref"/>
+            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_03').get_product_multiline_description_sale()"/>
             <field name="invoice_id" ref="demo_invoice_3"/>
             <field name="product_id" ref="product.consu_delivery_03"/>
             <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_03').categ_id.property_account_income_categ_id.id"/>
@@ -90,7 +90,7 @@
             <field name="date_invoice" eval="(datetime.today() + timedelta(days=-15)).strftime('%Y-%m-%d')"/>
         </record>
         <record id="demo_invoice_followup_line_1" model="account.invoice.line">
-            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_02').partner_ref"/>
+            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_02').get_product_multiline_description_sale()"/>
             <field name="invoice_id" ref="demo_invoice_followup"/>
             <field name="product_id" ref="product.consu_delivery_02"/>
             <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_02').categ_id.property_account_income_categ_id.id"/>
@@ -98,7 +98,7 @@
             <field name="quantity">5</field>
         </record>
         <record id="demo_invoice_followup_line_2" model="account.invoice.line">
-            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_03').partner_ref"/>
+            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_03').get_product_multiline_description_sale()"/>
             <field name="invoice_id" ref="demo_invoice_followup"/>
             <field name="product_id" ref="product.consu_delivery_03"/>
             <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_03').categ_id.property_account_income_categ_id.id"/>
@@ -134,6 +134,25 @@
             <field name="price_unit">4.0</field>
             <field name="quantity">5.0</field>
         </record>
+        <record id="demo_invoice_extract" model="account.invoice">
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="type">in_invoice</field>
+        </record>
+        <record id="ir_attachment_in_invoice_draft" model="ir.attachment">
+            <field name="name">in_invoice_pdf</field>
+            <field name="type">binary</field>
+            <field name="datas" type="base64" file="l10n_generic_coa/static/src/demo/in_invoice_yourcompany_demo.pdf"/>
+            <field name="datas_fname">in_invoice_yourcompany_demo.pdf</field>
+        </record>
+        <record id="mail_message_in_invoice_0" model="mail.message">
+            <field name="model">account.invoice</field>
+            <field name="res_id" ref="l10n_generic_coa.demo_invoice_extract"/>
+            <field name="body">Vendor Bill attachment</field>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('ir_attachment_in_invoice_draft')])]"/>
+        </record>
 
         <record id="demo_invoice_january_wages" model="account.invoice">
             <field name="partner_id" ref="base.res_partner_12"/>
@@ -149,7 +168,7 @@
             <field name="account_id" model="account.account"
                 search="['|', ('tag_ids', '=', ref('account.demo_ceo_wages_account')),
                         ('user_type_id', '=', ref('account.data_account_type_expenses')),
-                        ('company_id', '=', obj().env['res.company']._company_default_get('account.account').id)]"/>
+                        ('company_id', '=', obj().env.company_id.id)]"/>
         </record>
         <function model="account.invoice" name="action_invoice_open">
             <value eval="[ref('demo_invoice_january_wages')]"/>
@@ -162,20 +181,20 @@
             <field name="journal_id" search="[('type', '=', 'purchase')]"/>
         </record>
 
-        <record id="coffee_machine_line" model="account.invoice.line">
+        <record id="large_cabinet_invoice_line" model="account.invoice.line">
             <field name="invoice_id" ref="demo_invoice_equipment_purchase"/>
-            <field name="name">Coffee Machine with huge 'employee\'s performances boosting perk'</field>
+            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_6').partner_ref"/>
             <field name="product_id" ref="product.product_product_6"/>
             <field name="price_unit">4999.99</field>
             <field name="account_id" model="account.account"
-                search="['|', ('tag_ids', '=', ref('account.demo_coffee_machine_account')),
+                search="['|', ('tag_ids', '=', ref('account.demo_office_furniture_account')),
                         ('user_type_id', '=', ref('account.data_account_type_expenses')),
-                        ('company_id', '=', obj().env['res.company']._company_default_get('account.account').id)]"/>
+                        ('company_id', '=', obj().env.company_id.id)]"/>
             <field name="invoice_line_tax_ids" model="account.tax"
-                eval="[(6, 0, [obj().search([
+                eval="[(6, 0, obj().search([
                     ('type_tax_use', '=', 'purchase'),
                     ('amount', '&gt;', 0),
-                    ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).id])]"/>
+                    ('company_id', '=', obj().env.company_id.id)], limit=1).ids)]"/>
         </record>
 
         <function model="account.invoice" name="_onchange_invoice_line_ids">
@@ -190,7 +209,7 @@
             <field name="account_id" model="account.account" search="[
               ('user_type_id', '=', ref('account.data_account_type_revenue')),
               ('tag_ids', 'in', [ref('account.account_tag_financing')]),
-              ('company_id', '=', obj().env['res.company']._company_default_get('account.account').id)]"/>
+              ('company_id', '=', obj().env.company_id.id)]"/>
         </record>
 
         <function model="account.bank.statement.line" name="fast_counterpart_creation">

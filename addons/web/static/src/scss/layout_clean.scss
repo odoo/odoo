@@ -1,5 +1,5 @@
 .o_clean_footer, .o_clean_header, .o_report_layout_clean {
-    font-family: 'Lato';
+    font-family: 'Lato', 'Noto';
     color: #000;
 }
 .o_clean_header {
@@ -18,12 +18,10 @@
         font-weight: bolder;
     }
     .pagenumber {
-        width: 35px;
-        height: 35px;
         border: 3px solid $o-brand-odoo;
         background-color: $o-brand-primary;
         color: white;
-        padding-top: 6px;
+        padding: 4px 8px;
         text-align: center;
     }
 }
@@ -36,6 +34,10 @@
         color: $o-brand-odoo;
     }
     table {
+        &.o_main_table {
+            margin-bottom: 0;
+        }
+
         thead {
             color: $o-brand-odoo;
             tr th {
@@ -66,17 +68,21 @@
         }
     }
     /*Total table*/
-    .row > .col-4 {
-            width: 43%;
-            position: relative;
-            top: -20px;
-            > table {
-            tr:last-child td {
-                border-top: 1px solid gray('200') !important;
-            }
-            tr:first-child td {
-                /*we could get rid of this rule if .border-black td would be terminated in report.scss*/
+    /* compat 12.0 */
+    .row:not(#total) > div:has(table) {
+        top: -16px;
+    }
+    /* row col rule compat 12.0 */
+    .row > div > table,
+    div#total table {
+        tr {
+            &:first-child td,
+            &.o_subtotal {
                 border-top: none !important;
+            }
+            &:last-child td,
+            &.o_total {
+                border-top: 1px solid gray('200') !important;
             }
         }
     }

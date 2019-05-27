@@ -35,15 +35,18 @@
                                         <field name="reception_steps" widget='radio'/>
                                         <field name="delivery_steps" widget='radio'/>
                                     </group>
-                                    <group string="Resupply" groups="stock.group_stock_multi_warehouses">
+                                    <field name="show_resupply" invisible="1"/>
+                                    <group name="group_resupply" string="Resupply" attrs="{'invisible': [('show_resupply', '!=', True)]}">
                                         <field name="warehouse_count" invisible="1"/>
-                                        <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget='many2many_checkboxes' attrs="{'invisible': [('warehouse_count', '&lt;', 1)]}"/>
+                                        <field name="resupply_wh_ids" attrs="{'invisible': [('show_resupply', '!=', True)]}" domain="[('id', '!=', id)]" widget='many2many_checkboxes'/>
                                     </group>
                                 </group>
                             </page>
                             <page string="Technical Information" groups='base.group_no_one'>
                                 <group>
                                     <group string="Locations">
+                                        <field name="view_location_id" string="Warehouse view location" readonly="1" required="0"/>
+                                        <field name="lot_stock_id" readonly="1" required="0"/>
                                         <field name="wh_input_stock_loc_id" readonly="1"/>
                                         <field name="wh_qc_stock_loc_id" readonly="1"/>
                                         <field name="wh_pack_stock_loc_id" readonly="1"/>
@@ -164,7 +167,7 @@
                     <field name="name"/>
                     <field name="active" invisible="1"/>
                     <field name="warehouse_id" groups="stock.group_stock_multi_locations"/>
-                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                     <field name="product_id"/>
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                     <field name="product_min_qty"/>
@@ -204,14 +207,20 @@
                             </button>
                         </div>
                         <group>
+                            <div class="alert alert-info" role="alert">
+                                <a style="cursor: pointer" class="alert-link o_form_uri" type="action" name="%(action_procurement_compute)d">Run the scheduler</a> manually to trigger the reordering rules right now.
+                            </div>
+                        </group>
+                        <group>
                             <group>
                                 <field name="name" />
                                 <field name="product_id"/>
                             </group>
                             <group>
+                                <field name="allowed_location_ids" invisible="1"/>
                                 <field name="warehouse_id" widget="selection" groups="stock.group_stock_multi_locations"/>
                                 <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
-                                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                                <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" domain="[('id', 'in', allowed_location_ids)]"/>
                                 <field name="group_id" groups="stock.group_adv_location"/>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             </group>

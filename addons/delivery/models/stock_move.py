@@ -18,5 +18,9 @@ class StockMove(models.Model):
 
     def _get_new_picking_values(self):
         vals = super(StockMove, self)._get_new_picking_values()
-        vals['carrier_id'] = self.sale_line_id.order_id.carrier_id.id
+        vals['carrier_id'] = self.mapped('sale_line_id.order_id.carrier_id').id
         return vals
+
+    def _key_assign_picking(self):
+        keys = super(StockMove, self)._key_assign_picking()
+        return keys + (self.sale_line_id.order_id.carrier_id,)

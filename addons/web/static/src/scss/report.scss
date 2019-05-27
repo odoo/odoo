@@ -1,12 +1,13 @@
 html, body {
     height: 100%;
+    direction: ltr;
 }
 
 body {
     color: #000 !important;
     word-wrap: break-word;
 }
-.border-black td {
+.border-black td, .border-black th {
     border-top: 1px solid black !important;
 }
 
@@ -34,20 +35,27 @@ body {
     display: none;
 }
 
-
-/*
-    The goal of the following lines is to contain CSS hacks related to allowing
-    section and note on sale order and invoice.
-*/
-.row.o_is_line_section,
-.table > tbody > tr.o_is_line_section td {
-    font-weight: bold;
-    background-color: #EEE;
-    padding: 8px;
-    border: 1px solid #BBB;
+.o_bold {
+    font-weight: bolder;
+}
+.o_italic {
+    font-style: italic;
+}
+.o_underline {
+    text-decoration: underline;
 }
 
-.row.o_is_line_note,
-tr.o_is_line_note {
-    color: #999;
+/*Total table*/
+div#total {
+    page-break-inside: avoid;
+    table {
+        tr {
+            &.o_subtotal,
+            &.o_total {
+                td {
+                    border-top: 1px solid black !important;
+                }
+            }
+        }
+    }
 }

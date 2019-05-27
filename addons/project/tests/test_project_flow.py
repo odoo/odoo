@@ -55,8 +55,10 @@ class TestProjectFlow(TestProjectBase):
         # Test: check partner in message followers
         self.assertIn(self.partner_2, task.message_partner_ids, "Partner in message cc is not added as a task followers.")
         # Test: messages
-        self.assertEqual(len(task.message_ids), 2,
-                         'project: message_process: newly created task should have 2 messages: creation and email')
+        self.assertEqual(len(task.message_ids), 1,
+                         'project: message_process: newly created task should have 1 message: email')
+        self.assertEqual(task.message_ids[0].subtype_id, self.env.ref('project.mt_task_new'),
+                         'project: message_process: first message of new task should have Task Created subtype')
         self.assertEqual(task.message_ids[0].author_id, self.user_projectuser.partner_id,
                          'project: message_process: second message should be the one from Agrolait (partner failed)')
         self.assertEqual(task.message_ids[0].subject, 'Frogs',
@@ -80,14 +82,14 @@ class TestProjectFlow(TestProjectBase):
         # Test: check partner in message followers
         self.assertIn(self.partner_2, task.message_partner_ids, "Partner in message cc is not added as a task followers.")
         # Test: messages
-        self.assertEqual(len(task.message_ids), 2,
-                         'project: message_process: newly created task should have 2 messages: creation and email')
-        self.assertEqual(task.message_ids[1].subtype_id, self.env.ref('project.mt_task_new'),
+        self.assertEqual(len(task.message_ids), 1,
+                         'project: message_process: newly created task should have 1 messages: email')
+        self.assertEqual(task.message_ids[0].subtype_id, self.env.ref('project.mt_task_new'),
                          'project: message_process: first message of new task should have Task Created subtype')
         self.assertEqual(task.message_ids[0].author_id, self.user_projectuser.partner_id,
-                         'project: message_process: second message should be the one from Agrolait (partner failed)')
+                         'project: message_process: first message should be the one from Agrolait (partner failed)')
         self.assertEqual(task.message_ids[0].subject, 'Cats',
-                         'project: message_process: second message should be the one from Agrolait (subject failed)')
+                         'project: message_process: first message should be the one from Agrolait (subject failed)')
         # Test: task content
         self.assertEqual(task.name, 'Cats', 'project_task: name should be the email subject')
         self.assertEqual(task.project_id.id, self.project_goats.id, 'project_task: incorrect project')
@@ -164,8 +166,9 @@ class TestProjectFlow(TestProjectBase):
         self.assertEqual(rating_bad.rating_text, 'not_satisfied')
         self.assertEqual(first_task.rating_count, 1, "Task should have only one rating associated, since one is not consumed")
         self.assertEqual(rating_good.parent_res_id, self.project_pigs.id)
-        self.assertEqual(self.project_goats.percentage_satisfaction_task, -1)
-        self.assertEqual(self.project_pigs.percentage_satisfaction_task, -1)
+
+        self.assertEqual(self.project_goats.rating_percentage_satisfaction, -1)
+        self.assertEqual(self.project_pigs.rating_percentage_satisfaction, 0)  # There is a rating but not a "great" on, just an "okay".
 
         # Consuming rating_good
         first_task.rating_apply(10, rating_good.access_token)
@@ -176,8 +179,8 @@ class TestProjectFlow(TestProjectBase):
 
         self.assertEqual(first_task.rating_count, 2, "Task should have two ratings associated with it")
         self.assertEqual(rating_good.parent_res_id, self.project_pigs.id)
-        self.assertEqual(self.project_goats.percentage_satisfaction_task, -1)
-        self.assertEqual(self.project_pigs.percentage_satisfaction_task, 50)
+        self.assertEqual(self.project_goats.rating_percentage_satisfaction, -1)
+        self.assertEqual(self.project_pigs.rating_percentage_satisfaction, 50)
 
         # We change the task from project_pigs to project_goats, ratings should be associated with the new project
         first_task.project_id = self.project_goats.id
@@ -187,5 +190,5 @@ class TestProjectFlow(TestProjectBase):
         first_task.invalidate_cache()
 
         self.assertEqual(rating_good.parent_res_id, self.project_goats.id)
-        self.assertEqual(self.project_goats.percentage_satisfaction_task, 50)
-        self.assertEqual(self.project_pigs.percentage_satisfaction_task, -1)
+        self.assertEqual(self.project_goats.rating_percentage_satisfaction, 50)
+        self.assertEqual(self.project_pigs.rating_percentage_satisfaction, -1)

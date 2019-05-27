@@ -17,6 +17,7 @@ NUMBER_PARENS = re.compile(r"\(([0-9]+)\)")
 
 class IrUiMenu(models.Model):
     _name = 'ir.ui.menu'
+    _description = 'Menu'
     _order = "sequence,id"
     _parent_store = True
 

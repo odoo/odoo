@@ -4,7 +4,7 @@
     'version': '1.0',
     'sequence': 170,
     'summary': 'Chat with your website visitors',
-    'category': 'Website',
+    'category': 'Website/Live Chat',
     'complexity': 'easy',
     'website': 'https://www.odoo.com/page/live-chat',
     'description':
@@ -19,6 +19,8 @@ Help your customers with this chat, and analyse their feedback.
 
         """,
     'data': [
+        "data/mail_shortcode_data.xml",
+        "data/im_livechat_channel_data.xml",
         "security/im_livechat_channel_security.xml",
         "security/ir.model.access.csv",
         "views/rating_views.xml",

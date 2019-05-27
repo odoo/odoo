@@ -18,11 +18,11 @@
 .modal {
   position: fixed;
   top: 0;
-  right: 0;
-  bottom: 0;
   left: 0;
   z-index: $zindex-modal;
   display: none;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   // Prevent Chrome on Windows from adding a focus outline. For details, see
   // https://github.com/twbs/bootstrap/pull/10951.
@@ -43,23 +43,57 @@
   // When fading in the modal, animate it to slide down
   .modal.fade & {
     @include transition($modal-transition);
-    transform: translate(0, -25%);
+    transform: $modal-fade-transform;
   }
   .modal.show & {
-    transform: translate(0, 0);
+    transform: $modal-show-transform;
+  }
+}
+
+.modal-dialog-scrollable {
+  display: flex; // IE10/11
+  max-height: calc(100% - #{$modal-dialog-margin * 2});
+
+  .modal-content {
+    max-height: calc(100vh - #{$modal-dialog-margin * 2}); // IE10/11
+    overflow: hidden;
+  }
+
+  .modal-header,
+  .modal-footer {
+    flex-shrink: 0;
+  }
+
+  .modal-body {
+    overflow-y: auto;
   }
 }
 
 .modal-dialog-centered {
   display: flex;
   align-items: center;
-  min-height: calc(100% - (#{$modal-dialog-margin} * 2));
+  min-height: calc(100% - #{$modal-dialog-margin * 2});
 
   // Ensure `modal-dialog-centered` extends the full height of the view (IE10/11)
   &::before {
     display: block; // IE10
-    height: calc(100vh - (#{$modal-dialog-margin} * 2));
+    height: calc(100vh - #{$modal-dialog-margin * 2});
     content: "";
+  }
+
+  // Ensure `.modal-body` shows scrollbar (IE10/11)
+  &.modal-dialog-scrollable {
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+
+    .modal-content {
+      max-height: none;
+    }
+
+    &::before {
+      content: none;
+    }
   }
 }
 
@@ -70,6 +104,7 @@
   flex-direction: column;
   width: 100%; // Ensure `.modal-content` extends the full width of the parent `.modal-dialog`
   // counteract the pointer-events: none; in the .modal-dialog
+  color: $modal-content-color;
   pointer-events: auto;
   background-color: $modal-content-bg;
   background-clip: padding-box;
@@ -84,10 +119,10 @@
 .modal-backdrop {
   position: fixed;
   top: 0;
-  right: 0;
-  bottom: 0;
   left: 0;
   z-index: $zindex-modal-backdrop;
+  width: 100vw;
+  height: 100vh;
   background-color: $modal-backdrop-bg;
 
   // Fade for backdrop
@@ -108,7 +143,7 @@
   .close {
     padding: $modal-header-padding;
     // auto on the left force icon to the right even when there is no .modal-title
-    margin: (-$modal-header-padding) (-$modal-header-padding) (-$modal-header-padding) auto;
+    margin: (-$modal-header-padding-y) (-$modal-header-padding-x) (-$modal-header-padding-y) auto;
   }
 }
 
@@ -135,6 +170,7 @@
   justify-content: flex-end; // Right align buttons with flex property because text-align doesn't work on flex items
   padding: $modal-inner-padding;
   border-top: $modal-footer-border-width solid $modal-footer-border-color;
+  @include border-bottom-radius($modal-content-border-radius);
 
   // Easily place margin between footer elements
   > :not(:first-child) { margin-left: .25rem; }
@@ -158,13 +194,20 @@
     margin: $modal-dialog-margin-y-sm-up auto;
   }
 
+  .modal-dialog-scrollable {
+    max-height: calc(100% - #{$modal-dialog-margin-y-sm-up * 2});
+
+    .modal-content {
+      max-height: calc(100vh - #{$modal-dialog-margin-y-sm-up * 2});
+    }
+  }
+
   .modal-dialog-centered {
-    min-height: calc(100% - (#{$modal-dialog-margin-y-sm-up} * 2));
+    min-height: calc(100% - #{$modal-dialog-margin-y-sm-up * 2});
 
     &::before {
-      height: calc(100vh - (#{$modal-dialog-margin-y-sm-up} * 2));
+      height: calc(100vh - #{$modal-dialog-margin-y-sm-up * 2});
     }
-
   }
 
   .modal-content {
@@ -172,9 +215,15 @@
   }
 
   .modal-sm { max-width: $modal-sm; }
-
 }
 
 @include media-breakpoint-up(lg) {
-  .modal-lg { max-width: $modal-lg; }
+  .modal-lg,
+  .modal-xl {
+    max-width: $modal-lg;
+  }
+}
+
+@include media-breakpoint-up(xl) {
+  .modal-xl { max-width: $modal-xl; }
 }

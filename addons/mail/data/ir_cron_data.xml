@@ -26,7 +26,11 @@
             <field eval="False" name="doall" />
             <field name="priority">1000</field>
         </record>
-		
+
+        <record id="base.ir_cron_act" model="ir.actions.act_window">
+            <field name="domain" eval="[('id','!=', ref('mail.ir_cron_module_update_notification'))]"/>
+        </record>
+
         <record id="ir_cron_mail_notify_channel_moderators" model="ir.cron">
             <field name="name">Mail: Notify channel moderators</field>
             <field name="model_id" ref="model_mail_message"/>

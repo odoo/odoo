@@ -1,7 +1,8 @@
 odoo.define('mail.model.Channel', function (require) {
 "use strict";
 
-var ThreadWithCache = require('mail.model.ThreadWithCache');
+var SearchableThread = require('mail.model.SearchableThread');
+var ThreadTypingMixin = require('mail.model.ThreadTypingMixin');
 var mailUtils = require('mail.utils');
 
 var session = require('web.session');
@@ -15,12 +16,11 @@ var time = require('web.time');
  * Any piece of code in JS that make use of channels must ideally interact with
  * such objects, instead of direct data from the server.
  */
-var Channel = ThreadWithCache.extend({
+var Channel = SearchableThread.extend(ThreadTypingMixin, {
     /**
      * @override
      * @param {Object} params
      * @param {Object} params.data
-     * @param {string} [params.data.anonymous_name]
      * @param {string} params.data.channel_type
      * @param {integer} [params.data.create_uid] the ID of the user that has
      *   created the channel.
@@ -29,9 +29,17 @@ var Channel = ThreadWithCache.extend({
      * @param  {boolean} params.data.is_moderator whether the current user is
      *   moderator of this channel.
      * @param {string} [params.data.last_message_date] date in server-format
-     * @param {boolean} [params.data.mass_mailing]
+     * @param {Object[]} [params.data.members=[]]
+     * @param {integer} [params.data.members[i].id]
+     * @param {string} [params.data.members[i].name]
+     * @param {string} [params.data.members[i].email]
      * @param {integer} [params.data.message_unread_counter]
-     * @param {string} [params.data.public] either 'public' or 'private'
+     * @param {boolean} [params.data.moderation=false] whether the channel is
+     *   moderated or not
+     * @param {Object[]} [params.data.partners_info=[]]
+     * @param {integer} [params.data.partners_info[i].partner_id]
+     * @param {integer} [params.data.partners_info[i].fetched_message_id]
+     * @param {integer} [params.data.partners_info[i].seen_message_id]
      * @param {string} params.data.state
      * @param {string} [params.data.uuid]
      * @param {Object} params.options
@@ -41,6 +49,7 @@ var Channel = ThreadWithCache.extend({
     init: function (params) {
         var self = this;
         this._super.apply(this, arguments);
+        ThreadTypingMixin.init.apply(this, arguments);
 
         var data = params.data;
         var options = params.options;
@@ -48,28 +57,25 @@ var Channel = ThreadWithCache.extend({
 
         // If set, autoswitch channel on joining this channel in discuss
         // the default behaviour is to autoswitch on join.
-        // exception: receiving channel or chat session notifications
+        // exception: receiving channel session notifications
         this._autoswitch = 'autoswitch' in options ? options.autoswitch : true;
-        this._chat = undefined; // FIXME: could be dropped when livechat and DM are moved out of this class
         this._commands = undefined;
         this._creatorUID = data.create_uid;
-        this._detached = data.is_minimized;
+        this._detached = data.is_minimized || false;
         this._directPartnerID = undefined;
         this._folded = data.state === 'folded';
         // if set: hide 'Leave channel' button
         this._groupBasedSubscription = data.group_based_subscription;
-        this._isModerator = data.is_moderator;
+        this._isModerated = data.moderation;
+        this._isMyselfModerator = data.is_moderator;
         this._lastMessageDate = undefined;
-        this._massMailing = data.mass_mailing;
-        // Deferred that is resolved on fetched members of this channel.
+        this._members = data.members || [];
+        // Promise that is resolved on fetched members of this channel.
         this._membersDef = undefined;
-        this._moderation = data.is_moderation;
         // number of messages that are 'needaction', which is equivalent to the
         // number of messages in this channel that are in inbox.
         this._needactionCounter = data.message_needaction_counter || 0;
         this._serverType = data.channel_type;
-        this._status = undefined;
-        this._throttleFetchSeen = _.throttle(this._fetchSeen.bind(this), 3000);
         // unique identifier for this channel, which is required for some rpc
         this._uuid = data.uuid;
 
@@ -78,16 +84,9 @@ var Channel = ThreadWithCache.extend({
             return !command.channel_types ||
                     _.contains(command.channel_types, self._serverType);
         });
-        if (this._type === 'channel') {
-            this._type = data.public !== 'private' ? 'public' : 'private';
-        }
-        if ('anonymous_name' in data) {
-            this._name = data.anonymous_name;
-        }
         if (data.last_message_date) {
             this._lastMessageDate = moment(time.str_to_datetime(data.last_message_date));
         }
-        this._chat = !this.getType().match(/^(public|private)$/);
         if (data.message_unread_counter) {
             this._unreadCounter = data.message_unread_counter;
         }
@@ -130,19 +129,21 @@ var Channel = ThreadWithCache.extend({
      * @pverride
      */
     detach: function () {
-        this._super.apply(this, arguments);
-        this._rpc({
-            model: 'mail.channel',
-            method: 'channel_minimize',
-            args: [this.getUUID(), true],
-        }, {
-            shadow: true,
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self._rpc({
+                model: 'mail.channel',
+                method: 'channel_minimize',
+                args: [self.getUUID(), true],
+            }, {
+                shadow: true,
+            });
         });
     },
     /**
      * Force fetch members of the channel
      *
-     * @returns {$.Promise<Object[]>} resolved with list of channel listeners
+     * @returns {Promise<Object[]>} resolved with list of channel listeners
      */
     forceFetchMembers: function () {
         this._membersDef = undefined;
@@ -187,9 +188,11 @@ var Channel = ThreadWithCache.extend({
     /**
      * Get listeners of a channel
      *
-     * @returns {$.Promise<Object[]>} resolved with list of channel listeners
+     * @returns {Promise<Object[]>} resolved with list of list of
+     *   channel listeners.
      */
     getMentionPartnerSuggestions: function () {
+        var self = this;
         if (!this._membersDef) {
             this._membersDef = this._rpc({
                 model: 'mail.channel',
@@ -199,7 +202,8 @@ var Channel = ThreadWithCache.extend({
                 shadow: true
             })
             .then(function (members) {
-                return members;
+                self._members = members;
+                return [members];
             });
         }
         return this._membersDef;
@@ -215,26 +219,16 @@ var Channel = ThreadWithCache.extend({
      */
     getPreview: function () {
         var result = this._super.apply(this, arguments);
-        if (!this.isChat()) {
+        if (!this.isTwoUserThread()) {
             result.imageSRC = '/web/image/mail.channel/' + this.getID() + '/image_small';
         }
         var lastMessage = this.getLastMessage();
         return _.extend(result, {
             author: lastMessage ? lastMessage.getDisplayedAuthor() : '',
             body: lastMessage ? mailUtils.parseAndTransform(lastMessage.getBody(), mailUtils.inline) : '',
-            date: lastMessage ? lastMessage.getDate() : moment(),
-            isAuthor: this.hasMessages() && this.getLastMessage().isAuthor(),
+            date: lastMessage ? lastMessage.getDate() : undefined,
+            isMyselfAuthor: this.hasMessages() && this.getLastMessage().isMyselfAuthor(),
         });
-    },
-    /**
-     * Returns the title to display in thread window's headers.
-     * For channels, the title is prefixed with "#".
-     *
-     * @override
-     * @returns {string|Object} the name of the thread by default (see getName)
-     */
-    getTitle: function () {
-        return "#" + this._super.apply(this, arguments);
     },
     /**
      * Get the UUID of the channel.
@@ -250,15 +244,6 @@ var Channel = ThreadWithCache.extend({
      */
     incrementNeedactionCounter: function () {
         this._needactionCounter++;
-    },
-    /**
-     * Tells whether the current user is administrator of the channel.
-     * Note that there is no administrator for chat channels
-     *
-     * @returns {boolean}
-     */
-    isAdministrator: function () {
-        return session.uid === this._creatorUID && !this.isChat();
     },
     /**
      * States whether the channel should be auto-selected on creation
@@ -282,18 +267,6 @@ var Channel = ThreadWithCache.extend({
         return true;
     },
     /**
-     * States whether this channel is a chat or not.
-     * These types of channels are chat:
-     * - direct messages (DM)
-     * - livechat
-     *
-     * @override
-     * @returns {boolean}
-     */
-    isChat: function () {
-        return this._chat;
-    },
-    /**
      * States whether the channel auto-subscribes some users in a group
      *
      * @returns {boolean}
@@ -308,81 +281,32 @@ var Channel = ThreadWithCache.extend({
      * @returns {boolean}
      */
     isModerated: function () {
-        return this._moderation;
+        return this._isModerated;
+    },
+    /**
+     * Tells whether the current user is administrator of the channel.
+     * Note that there is no administrator for two-user channels
+     *
+     * @returns {boolean}
+     */
+    isMyselfAdministrator: function () {
+        return session.uid === this._creatorUID && !this.isTwoUserThread();
     },
     /**
      * States whether the current user is moderator of this channel.
      *
      * @returns {boolean}
      */
-    isModerator: function () {
-        return this._isModerator;
-    },
-    /**
-     * Marks this channel as read.
-     * The last seen message will be the last message.
-     * Resolved with the last seen message, only for non-mailbox channels
-     *
-     * @override
-     * @returns {$.Promise<integer|undefined>} resolved with last message ID
-     *   seen in the channel, and when the channel has been marked as seen on
-     *   the server.
-     */
-    markAsRead: function () {
-        if (this._unreadCounter > 0) {
-            this.resetUnreadCounter();
-            return this._throttleFetchSeen();
-        }
-        return this._super.apply(this, arguments);
-    },
-    /**
-     * Prepare and send a message to the server on this channel
-     *
-     * @override
-     * @param {Object} data data related to the new message
-     * @returns {$.Promise<Object>} resolved when the message has been sent to
-     *   the server, with the object message that has been sent to the server.
-     */
-    postMessage: function (data) {
-        var self = this;
-        return this._super.apply(this, arguments).then(function (messageData) {
-            _.extend(messageData, {
-                message_type: 'comment',
-                subtype: 'mail.mt_comment',
-                command: data.command,
-            });
-            return self._rpc({
-                    model: 'mail.channel',
-                    method: data.command ? 'execute_command' : 'message_post',
-                    args: [self._id],
-                    kwargs: messageData,
-                }).then(function () {
-                    return messageData;
-                });
-        });
+    isMyselfModerator: function () {
+        return this._isMyselfModerator;
     },
     /**
      * Unsubscribes from channel
      *
-     * @returns {$.Promise} resolve when unsubscribed
+     * @abstract
+     * @returns {Promise} resolve when unsubscribed
      */
-    unsubscribe: function () {
-        if (_.contains(['public', 'private'], this.getType())) {
-            // unfollow channel
-            return this._rpc({
-                model: 'mail.channel',
-                method: 'action_unfollow',
-                args: [[this._id]],
-            });
-        } else {
-            // unpin livechat
-            return this._rpc({
-                model: 'mail.channel',
-                method: 'channel_pin',
-                args: [this.getUUID(), false],
-            });
-        }
-    },
+    unsubscribe: function () {},
     /**
      * Updates the internal state of the channel, and reflects the changes in
      * the UI.
@@ -417,41 +341,122 @@ var Channel = ThreadWithCache.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Override so that it tells whether the channel is moderated or not. This
+     * is useful in order to display pending moderation messages when the
+     * current user is either moderator of the channel or has posted some
+     * messages that are pending moderation.
+     *
+     * @override
      * @private
-     * @returns {$.Promise<integer>} resolved with ID of last seen message
+     * @returns {Object}
      */
-    _fetchSeen: function () {
-        var self = this;
-        return this._rpc({
-            model: 'mail.channel',
-            method: 'channel_seen',
-            args: [[this._id]],
-        }, {
-            shadow: true
-        }).then(function (lastSeenMessageID) {
-            self._lastSeenMessageID = lastSeenMessageID;
-            return lastSeenMessageID;
-        });
+    _getFetchMessagesKwargs: function () {
+        var kwargs = this._super.apply(this, arguments);
+        if (this.isModerated()) {
+            kwargs.moderated_channel_ids = [this.getID()];
+        }
+        return kwargs;
     },
     /**
      * Get the domain to fetch all the messages in the current channel
-     *
-     * Note that with moderation, even though some messages are not really
-     * linked to a channel ('channel_ids'), we should nonetheless display them.
-     * These messages are fetched from their associated document
-     * ('mail.channel' with provided channel ID), and messages that are pending
-     * moderation.
      *
      * @override
      * @private
      * @returns {Array}
      */
     _getThreadDomain: function () {
-        return ['|', '&', '&',
-                ['model', '=', 'mail.channel'],
-                ['res_id', 'in', [this._id]],
-                ['need_moderation', '=', true],
-                ['channel_ids', 'in', [this._id]]];
+        return [['channel_ids', 'in', [this._id]]];
+    },
+    /**
+     * @override {mail.model.ThreadTypingMixin}
+     * @private
+     * @param {Object} params
+     * @param {integer} params.partnerID
+     */
+    _isTypingMyselfInfo: function (params) {
+        return session.partner_id === params.partnerID;
+    },
+    /**
+     * Marks this channel as read.
+     * The last seen message will be the last message.
+     * Resolved with the last seen message, only for non-mailbox channels
+     *
+     * @override
+     * @private
+     * @returns {Promise} resolved when message has been marked as read
+     */
+    _markAsRead: function () {
+        var superDef = this._super.apply(this, arguments);
+        var seenDef = this._notifySeen();
+        return Promise.all([superDef, seenDef]);
+    },
+    /**
+     * @override {mail.model.ThreadTypingMixin}
+     * @private
+     * @param {Object} params
+     * @param {boolean} params.typing
+     * @returns {Promise}
+     */
+    _notifyMyselfTyping: function (params) {
+        return this._rpc({
+            model: 'mail.channel',
+            method: 'notify_typing',
+            args: [this.getID()],
+            kwargs: { is_typing: params.typing },
+        }, { shadow: true });
+    },
+    /**
+     * @private
+     * @returns {$.Promise<integer>} resolved with ID of last seen message
+     */
+    _notifySeen: function () {
+        var self = this;
+        return this._rpc({
+            model: 'mail.channel',
+            method: 'channel_seen',
+            args: [[this._id]],
+        }, { shadow: true }).then(function (lastSeenMessageID) {
+            self._lastSeenMessageID = lastSeenMessageID;
+            return lastSeenMessageID;
+        });
+    },
+    /**
+     * Prepare and send a message to the server on this channel.
+     *
+     * @override
+     * @private
+     * @param {Object} data data related to the new message
+     * @returns {Promise<Object>} resolved when the message has been sent to
+     *   the server, with the object message that has been sent to the server.
+     */
+    _postMessage: function (data) {
+        var self = this;
+        return this._super.apply(this, arguments).then(function (messageData) {
+            _.extend(messageData, {
+                message_type: 'comment',
+                subtype: 'mail.mt_comment',
+                command: data.command,
+            });
+            return self._rpc({
+                    model: 'mail.channel',
+                    method: data.command ? 'execute_command' : 'message_post',
+                    args: [self._id],
+                    kwargs: messageData,
+                }).then(function () {
+                    return messageData;
+                });
+        });
+    },
+    /**
+     * Warn views that the list of users that are currently typing on this
+     * thread has been updated.
+     *
+     * @override {mail.model.ThreadTypingMixin}
+     * @private
+     */
+    _warnUpdatedTypingPartners: function () {
+        this.call('mail_service', 'getMailBus')
+            .trigger('update_typing_partners', this.getID());
     },
 });
 

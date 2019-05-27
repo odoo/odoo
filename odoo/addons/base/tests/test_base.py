@@ -4,7 +4,8 @@
 import ast
 import unittest
 
-from odoo.exceptions import ValidationError
+from odoo import SUPERUSER_ID
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval, const_eval
@@ -250,6 +251,41 @@ class TestBase(TransactionCase):
         branch11.write({'type': 'contact'})
         self.assertEqual(leaf111.address_get([]),
                         {'contact': branch11.id}, 'Invalid address resolution, branch11 should now be contact')
+
+    def test_commercial_partner_nullcompany(self):
+        """ The commercial partner is the first/nearest ancestor-or-self which
+        is a company or doesn't have a parent
+        """
+        P = self.env['res.partner']
+        p0 = P.create({'name': '0', 'email': '0'})
+        self.assertEqual(p0.commercial_partner_id, p0, "partner without a parent is their own commercial partner")
+
+        p1 = P.create({'name': '1', 'email': '1', 'parent_id': p0.id})
+        self.assertEqual(p1.commercial_partner_id, p0, "partner's parent is their commercial partner")
+        p12 = P.create({'name': '12', 'email': '12', 'parent_id': p1.id})
+        self.assertEqual(p12.commercial_partner_id, p0, "partner's GP is their commercial partner")
+
+        p2 = P.create({'name': '2', 'email': '2', 'parent_id': p0.id, 'is_company': True})
+        self.assertEqual(p2.commercial_partner_id, p2, "partner flagged as company is their own commercial partner")
+        p21 = P.create({'name': '21', 'email': '21', 'parent_id': p2.id})
+        self.assertEqual(p21.commercial_partner_id, p2, "commercial partner is closest ancestor with themselves as commercial partner")
+
+        p3 = P.create({'name': '3', 'email': '3', 'is_company': True})
+        self.assertEqual(p3.commercial_partner_id, p3, "being both parent-less and company should be the same as either")
+
+        notcompanies = p0 | p1 | p12 | p21
+        self.env.cr.execute('update res_partner set is_company=null where id = any(%s)', [notcompanies.ids])
+        for parent in notcompanies:
+            p = P.create({
+                'name': parent.name + '_sub',
+                'email': parent.email + '_sub',
+                'parent_id': parent.id,
+            })
+            self.assertEqual(
+                p.commercial_partner_id,
+                parent.commercial_partner_id,
+                "check that is_company=null is properly handled when looking for ancestor"
+            )
 
     def test_50_res_partner_commercial_sync(self):
         res_partner = self.env['res.partner']
@@ -556,3 +592,12 @@ class TestGroups(TransactionCase):
         a = self.env['res.groups'].with_context(lang='en_US').create({'name': 'A'})
         b = a.copy()
         self.assertFalse(a.name == b.name)
+
+
+class TestUsers(TransactionCase):
+    def test_superuser(self):
+        """ The superuser is inactive and must remain as such. """
+        user = self.env['res.users'].browse(SUPERUSER_ID)
+        self.assertFalse(user.active)
+        with self.assertRaises(UserError):
+            user.write({'active': True})

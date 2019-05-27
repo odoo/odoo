@@ -8,10 +8,12 @@
             <field name="model">ir.actions.actions</field>
             <field name="arch" type="xml">
                 <form string="Action">
+                <sheet>
                     <group>
                         <field name="name"/>
                         <field name="type"/>
                     </group>
+                </sheet>
                 </form>
             </field>
         </record>
@@ -62,7 +64,7 @@
                                     attrs="{'invisible':[('binding_model_id','=',False)]}" icon="fa-minus-square"
                                     help="Remove the contextual action related this report" class="oe_stat_button"/>
                             <button name="associated_view" string="QWeb views" type="object"
-                                    attrs="{'invisible':[('report_type', 'not in', ['qweb-pdf', 'qweb-html'])]}" icon='fa-code'
+                                    attrs="{'invisible':[('report_type', 'not in', ['qweb-pdf', 'qweb-html', 'qweb-text'])]}" icon='fa-code'
                                     class="oe_stat_button"/>
                         </div>
                         <group>
@@ -155,28 +157,29 @@
             <field name="model">ir.actions.act_window</field>
             <field name="arch" type="xml">
                 <form string="Open a Window">
+                <sheet>
                     <group>
-                        <group>
+                        <group name="main_details">
                             <field name="name"/>
                             <field name="xml_id" string="External ID"/>
                             <field name="res_model" string="Object"/>
                             <field name="src_model" string="Source Object"/>
                         </group>
-                        <group>
+                        <group name="action_details">
                             <field name="usage"/>
                             <field name="type" readonly="1"/>
                             <field name="target"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="General Settings">
+                        <page name="general_settings" string="General Settings">
                             <group>
-                                <group string="Views">
+                                <group name="views" string="Views">
                                     <field name="view_mode"/>
                                     <field name="view_id"/>
                                     <field name="search_view_id"/>
                                 </group>
-                                <group string="Filters">
+                                <group name="filters" string="Filters">
                                     <field name="domain"/>
                                     <field name="context"/>
                                     <field name="limit"/>
@@ -185,10 +188,10 @@
                                     <field name="multi"/>
                                 </group>
                             </group>
-                            <group string="Help">
+                            <group name="help" string="Help">
                                 <field colspan="2" name="help" nolabel="1"/>
                             </group>
-                            <group string="Views">
+                            <group name="views_tree" string="Views">
                                 <field colspan="2" name="view_ids" nolabel="1">
                                     <form string="Views">
                                         <group>
@@ -198,7 +201,7 @@
                                         </group>
                                     </form>
                                     <tree string="Views">
-                                        <field name="sequence"/>
+                                        <field name="sequence" widget="handle"/>
                                         <field name="view_mode"/>
                                         <field name="view_id"/>
                                     </tree>
@@ -209,6 +212,7 @@
                             <field name="groups_id"/>
                         </page>
                     </notebook>
+                </sheet>
                 </form>
             </field>
         </record>
@@ -284,7 +288,8 @@
                                     attrs="{'invisible': [('state', '!=', 'object_create')], 'required': [('state', '=', 'object_create')]}"/>
                                 <field name="crud_model_name" invisible="1"/>
                                 <field name="link_field_id"
-                                    domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name), ('ttype', 'in', ['many2one'])]"
+                                    domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name),
+                                    ('ttype', 'in', ['many2one', 'one2many', 'many2many'])]"
                                     attrs="{'invisible': [('state', '!=', 'object_create')]}"/>
                             </group>
                         </group>
@@ -294,7 +299,7 @@
                                 <field name="code" widget="ace" options="{'mode': 'python'}" placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
                             </page>
 
-                            <page string="Data to Write" autofocus="autofocus"
+                            <page string="Data to Write" name="page_object" autofocus="autofocus"
                                     attrs="{'invisible':[('state', 'not in', ['object_create', 'object_write'])]}">
                                 <p attrs="{'invisible': [('model_id', '!=', False)]}">
                                     Please set the Model to Create before choosing values
@@ -302,11 +307,15 @@
                                 <field name="fields_lines">
                                      <tree string="Field Mappings" editable="bottom">
                                         <field name="col1" domain="['|', ('model_id', '=', parent.crud_model_id), ('model_id', '=', parent.model_id)]"/>
-                                        <field name="type"/>
-                                        <field name="resource_ref" attrs="{'readonly': [('type', '!=', 'reference')]}" options="{'hide_model': True}"/>
-                                        <field name="value" attrs="{'readonly': [('type', '=', 'reference')]}" force_save="1"/>
+                                        <field name="evaluation_type"/>
+                                        <field name="resource_ref" attrs="{'readonly': [('evaluation_type', '!=', 'reference')]}" options="{'hide_model': True}"/>
+                                        <field name="value" attrs="{'readonly': [('evaluation_type', '=', 'reference')]}" force_save="1"/>
                                     </tree>
                                 </field>
+                            </page>
+
+                            <page string="Security">
+                                <field name="groups_id"/>
                             </page>
 
                             <page string="Actions" autofocus="autofocus"
@@ -318,7 +327,7 @@
                                 <field name="child_ids" domain="[('model_id', '=', model_id)]"/>
                             </page>
 
-                            <page string="Help"
+                            <page string="Help" autofocus="autofocus"
                                     attrs="{'invisible': [('state', '!=', 'code')]}">
                                 <group>
                                     <div style="margin-top: 4px;">

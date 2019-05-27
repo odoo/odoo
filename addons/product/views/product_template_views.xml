@@ -44,7 +44,7 @@
 
             <xpath expr="//page[@name='general_information']" position="after">
                 <page name="variants" string="Variants" groups="product.group_product_variant">
-                    <field name="attribute_line_ids" widget="one2many_list" context="{'show_attribute': False}">
+                    <field name="attribute_line_ids" widget="one2many" context="{'show_attribute': False}">
                         <tree string="Variants" editable="bottom">
                             <field name="attribute_id"/>
                             <field name="value_ids" widget="many2many_tags" options="{'no_create_edit': True}" domain="[('attribute_id', '=', attribute_id)]" context="{'default_attribute_id': attribute_id}"/>
@@ -69,8 +69,9 @@
                 <field name="image_small"/>
                 <field name="lst_price"/>
                 <field name="product_variant_count"/>
-                <field name="product_variant_ids"/>
                 <field name="currency_id"/>
+                <field name="activity_state"/>
+                <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
@@ -100,6 +101,27 @@
         </field>
     </record>
 
+    <record id="product_template_view_activity" model="ir.ui.view">
+        <field name="name">product.template.activity</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <activity string="Products">
+                <field name="id"/>
+                <templates>
+                    <div t-name="activity-box">
+                        <img t-att-src="activity_image('product.template', 'image_small', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
+                        <div>
+                            <field name="name" display="full"/>
+                            <div t-if="record.default_code.value" class="text-muted">
+                                [<field name="default_code"/>]
+                            </div>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
     <record id="product_template_action" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="type">ir.actions.act_window</field>
@@ -113,8 +135,8 @@
             <p class="o_view_nocontent_smiling_face">
                 Create a new product
             </p><p>
-                You must define a product for everything you purchase,
-                whether it's a physical product, a consumable or services.
+                You must define a product for everything you sell or purchase,
+                whether it's a storable product, a consumable or a service.
             </p>
         </field>
     </record>

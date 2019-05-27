@@ -8,7 +8,7 @@
     'description': "",
     'website': 'https://www.odoo.com/page/warehouse',
     'depends': ['product', 'barcodes'],
-    'category': 'Warehouse',
+    'category': 'Operations/Inventory',
     'sequence': 13,
     'demo': [
         'data/stock_demo_pre.xml',
@@ -34,6 +34,11 @@
         'report/report_stockpicking_operations.xml',
         'report/report_deliveryslip.xml',
         'report/report_stockinventory.xml',
+        'report/report_stock_rule.xml',
+        'report/package_templates.xml',
+        'report/picking_templates.xml',
+        'report/product_templates.xml',
+        'report/product_packaging.xml',
 
         'wizard/stock_change_product_qty_views.xml',
         'wizard/stock_picking_return_views.xml',
@@ -42,9 +47,12 @@
         'wizard/stock_backorder_confirmation_views.xml',
         'wizard/stock_overprocessed_transfer_views.xml',
         'wizard/stock_quantity_history.xml',
+        'wizard/stock_rules_report_views.xml',
         'wizard/stock_warn_insufficient_qty_views.xml',
         'wizard/product_replenish_views.xml',
         'wizard/stock_track_confirmation_views.xml',
+        'wizard/stock_package_destination_views.xml',
+        'wizard/stock_picking_responsible.xml',
 
         'views/res_partner_views.xml',
         'views/product_strategy_views.xml',
@@ -62,7 +70,6 @@
         'views/report_stock_traceability.xml',
         'views/stock_template.xml',
         'views/stock_rule_views.xml',
-        'views/res_users_views.xml',
         'views/stock_package_level_views.xml',
 
         'data/default_barcode_patterns.xml',

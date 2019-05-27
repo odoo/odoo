@@ -24,10 +24,10 @@ QUnit.module('base_settings_tests', {
 
     QUnit.module('BaseSetting');
 
-    QUnit.test('change setting on nav bar click in base settings', function (assert) {
+    QUnit.test('change setting on nav bar click in base settings', async function (assert) {
         assert.expect(4);
 
-        var form = createView({
+        var form = await createView({
             View: BaseSettingsView,
             model: 'project',
             data: this.data,
@@ -76,18 +76,17 @@ QUnit.module('base_settings_tests', {
                 '</form>',
         });
 
-        form.$("div[setting='project']").click();
-        assert.strictEqual(form.$('.selected').attr('data-key'),"crm","crm setting selected");
-        assert.strictEqual(form.$(".settings .app_settings_block").hasClass('o_hidden'),false,"project settings show");
-        form.$('.searchInput').val('b').trigger('keyup');
+        assert.hasAttrValue(form.$('.selected'), 'data-key',"crm","crm setting selected");
+        assert.isVisible(form.$(".settings .app_settings_block"), "project settings show");
+        await testUtils.fields.editAndTrigger(form.$('.searchInput'), 'b', 'keyup');
         assert.strictEqual($('.highlighter').html(),"B","b word hilited");
-        form.$('.searchInput').val('bx').trigger('keyup');
-        assert.strictEqual(form.$('.notFound').hasClass('o_hidden'),false,"record not found message shown");
+        await testUtils.fields.editAndTrigger(form.$('.searchInput'), 'bx', 'keyup');
+        assert.isVisible(form.$('.notFound'), "record not found message shown");
         form.destroy();
     });
 
-    QUnit.test('settings views does not read existing id when coming back in breadcrumbs', function (assert) {
-        assert.expect(7);
+    QUnit.test('settings views does not read existing id when coming back in breadcrumbs', async function (assert) {
+        assert.expect(8);
 
         var actions = [{
             id: 1,
@@ -112,7 +111,7 @@ QUnit.module('base_settings_tests', {
             'project,false,search': '<search></search>',
         };
 
-        var actionManager = createActionManager({
+        var actionManager = await createActionManager({
             actions: actions,
             archs: archs,
             data: this.data,
@@ -124,9 +123,11 @@ QUnit.module('base_settings_tests', {
             },
         });
 
-        actionManager.doAction(1);
-        actionManager.$('button[name="4"]').click();
-        $('.o_control_panel .breadcrumb-item a').click();
+        await actionManager.doAction(1);
+        await testUtils.nextTick();
+        await testUtils.dom.click(actionManager.$('button[name="4"]'));
+        await testUtils.dom.click($('.o_control_panel .breadcrumb-item a'));
+        assert.hasClass(actionManager.$('.o_form_view'), 'o_form_editable');
         assert.verifySteps([
             'load_views', // initial setting action
             'default_get', // this is a setting view => create new record
@@ -140,10 +141,10 @@ QUnit.module('base_settings_tests', {
         actionManager.destroy();
     });
 
-    QUnit.test('settings view does not display other settings after reload', function (assert) {
+    QUnit.test('settings view does not display other settings after reload', async function (assert) {
         assert.expect(2);
 
-        var form = createView({
+        var form = await createView({
             View: BaseSettingsView,
             model: 'project',
             data: this.data,
@@ -173,7 +174,7 @@ QUnit.module('base_settings_tests', {
         });
 
         assert.strictEqual(form.$('.app_settings_block').text().replace(/\s/g,''), 'CRMcrmtab');
-        form.reload();
+        await form.reload();
         assert.strictEqual(form.$('.app_settings_block').text().replace(/\s/g,''), 'CRMcrmtab');
         form.destroy();
     });

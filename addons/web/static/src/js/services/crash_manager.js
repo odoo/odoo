@@ -20,8 +20,29 @@ var map_title ={
 };
 
 var CrashManager = core.Class.extend({
-    init: function() {
+    init: function () {
+        var self = this;
         this.active = true;
+        this.isConnected = true;
+
+        // listen to unhandled rejected promises, and throw an error when the
+        // promise has been rejected due to a crash
+        window.addEventListener('unhandledrejection', function (ev) {
+            if (ev.reason && ev.reason instanceof Error) {
+                var traceback = ev.reason.stack;
+                self.show_error({
+                    type: _t("Odoo Client Error"),
+                    message: '',
+                    data: {debug: _t('Traceback:') + "\n" + traceback},
+                });
+            } else {
+                // the rejection is not due to an Error, so prevent the browser
+                // from displaying an 'unhandledrejection' error in the console
+                ev.stopPropagation();
+                ev.stopImmediatePropagation();
+                ev.preventDefault();
+            }
+        });
     },
     enable: function () {
         this.active = true;
@@ -29,8 +50,29 @@ var CrashManager = core.Class.extend({
     disable: function () {
         this.active = false;
     },
-    rpc_error: function(error) {
+    handleLostConnection: function () {
         var self = this;
+        if (!this.isConnected) {
+            // already handled, nothing to do.  This can happen when several
+            // rpcs are done in parallel and fail because of a lost connection.
+            return;
+        }
+        this.isConnected = false;
+        var delay = 2000;
+        core.bus.trigger('connection_lost');
+
+        setTimeout(function checkConnection() {
+            ajax.jsonRpc('/web/webclient/version_info', 'call', {}, {shadow:true}).then(function () {
+                core.bus.trigger('connection_restored');
+                self.isConnected = true;
+            }).guardedCatch(function () {
+                // exponential backoff, with some jitter
+                delay = (delay * 1.5) + 500*Math.random();
+                setTimeout(checkConnection, delay);
+            });
+        }, delay);
+    },
+    rpc_error: function(error) {
         if (!this.active) {
             return;
         }
@@ -38,16 +80,7 @@ var CrashManager = core.Class.extend({
             return;
         }
         if (error.code === -32098) {
-            core.bus.trigger('connection_lost');
-            this.connection_lost = true;
-            var timeinterval = setInterval(function() {
-                var options = {shadow: true};
-                ajax.jsonRpc('/web/webclient/version_info', 'call', {}, options).then(function () {
-                    clearInterval(timeinterval);
-                    core.bus.trigger('connection_restored');
-                    self.connection_lost = false;
-                });
-            }, 2000);
+            this.handleLostConnection();
             return;
         }
         var handler = core.crash_registry.get(error.data.name, true);
@@ -130,7 +163,11 @@ var CrashManager = core.Class.extend({
             clipboard = new window.ClipboardJS($clipboardBtn[0], {
                 text: function () {
                     return (_t("Error") + ":\n" + error.message + "\n\n" + error.data.debug).trim();
-                }
+                },
+                // Container added because of Bootstrap modal that give the focus to another element.
+                // We need to give to correct focus to ClipboardJS (see in ClipboardJS doc)
+                // https://github.com/zenorocha/clipboard.js/issues/155
+                container: dialog.el,
             });
             clipboard.on("success", function (e) {
                 _.defer(function () {
@@ -194,8 +231,12 @@ var RedirectWarningHandler = Dialog.extend(ExceptionHandler, {
             title: _.str.capitalize(error.type) || _t("Odoo Warning"),
             buttons: [
                 {text: error.data.arguments[2], classes : "btn-primary", click: function() {
-                    window.location.href = '#action='+error.data.arguments[1];
+                    $.bbq.pushState({
+                        'action': error.data.arguments[1],
+                        'cids': $.bbq.getState().cids,
+                    }, 2);
                     self.destroy();
+                    location.reload();
                 }},
                 {text: _t("Cancel"), click: function() { self.destroy(); }, close: true}
             ],

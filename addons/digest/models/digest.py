@@ -32,8 +32,8 @@ class Digest(models.Model):
                                   domain="[('model','=','digest.digest')]",
                                   default=lambda self: self.env.ref('digest.digest_mail_template'),
                                   required=True)
-    currency_id = fields.Many2one(related="company_id.currency_id", string='Currency')
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id.id)
+    currency_id = fields.Many2one(related="company_id.currency_id", string='Currency', readonly=False)
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company_id.id)
     available_fields = fields.Char(compute='_compute_available_fields')
     is_subscribed = fields.Boolean('Is user subscribed', compute='_compute_is_subscribed')
     state = fields.Selection([('activated', 'Activated'), ('deactivated', 'Deactivated')], string='Status', readonly=True, default='activated')
@@ -51,7 +51,7 @@ class Digest(models.Model):
         for digest in self:
             kpis_values_fields = []
             for field_name, field in digest._fields.items():
-                if field.type == 'boolean' and (field_name.startswith('kpi_') or field_name.startswith('x_kpi_')) and digest[field_name]:
+                if field.type == 'boolean' and field_name.startswith(('kpi_', 'x_kpi_', 'x_studio_kpi_')) and digest[field_name]:
                     kpis_values_fields += [field_name + '_value']
             digest.available_fields = ', '.join(kpis_values_fields)
 
@@ -65,9 +65,10 @@ class Digest(models.Model):
             record.kpi_res_users_connected_value = user_connected
 
     def _compute_kpi_mail_message_total_value(self):
+        discussion_subtype_id = self.env.ref('mail.mt_comment').id
         for record in self:
             start, end, company = record._get_kpi_compute_parameters()
-            total_messages = self.env['mail.message'].search_count([('create_date', '>=',start), ('create_date', '<', end)])
+            total_messages = self.env['mail.message'].search_count([('create_date', '>=', start), ('create_date', '<', end), ('subtype_id', '=', discussion_subtype_id), ('message_type', 'in', ['comment', 'email'])])
             record.kpi_mail_message_total_value = total_messages
 
     @api.onchange('periodicity')
@@ -101,7 +102,7 @@ class Digest(models.Model):
         for digest in self:
             for user in digest.user_ids:
                 subject = '%s: %s' % (user.company_id.name, digest.name)
-                digest.template_id.with_context(user=user, company=user.company_id).send_mail(digest.id, force_send=True, raise_exception=True, email_values={'email_to': user.email, 'subject': subject})
+                digest.template_id.with_context(user=user).send_mail(digest.id, force_send=True, raise_exception=True, email_values={'email_to': user.email, 'subject': subject})
             digest.next_run_date = digest._get_next_run_date()
 
     def compute_kpis(self, company, user):
@@ -112,7 +113,7 @@ class Digest(models.Model):
             previous_digest = self.with_context(start_date=tf[1][0], end_date=tf[1][1], company=company).sudo(user.id)
             kpis = {}
             for field_name, field in self._fields.items():
-                if field.type == 'boolean' and (field_name.startswith('kpi_') or field_name.startswith('x_kpi_')) and self[field_name]:
+                if field.type == 'boolean' and field_name.startswith(('kpi_', 'x_kpi_', 'x_studio_kpi_')) and self[field_name]:
 
                     try:
                         compute_value = digest[field_name + '_value']
@@ -133,9 +134,9 @@ class Digest(models.Model):
         tip = self.env['digest.tip'].search([('user_ids', '!=', user.id), '|', ('group_id', 'in', user.groups_id.ids), ('group_id', '=', False)], limit=1)
         if not tip:
             return False
-        tip.user_ids = [4, user.id]
+        tip.user_ids += user
         body = tools.html_sanitize(tip.tip_description)
-        tip_description = self.env['mail.template'].render_template(body, 'digest.tip', self.id)
+        tip_description = self.env['mail.template']._render_template(body, 'digest.tip', self.id)
         return tip_description
 
     def compute_kpis_actions(self, company, user):
@@ -181,19 +182,16 @@ class Digest(models.Model):
         return margin
 
     def _format_currency_amount(self, amount, currency_id):
-        pre = post = u''
-        if currency_id.position == 'before':
-            pre = u'{symbol}\N{NO-BREAK SPACE}'.format(symbol=currency_id.symbol or '')
-        else:
-            post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=currency_id.symbol or '')
-        return u'{pre}{0}{post}'.format(amount, pre=pre, post=post)
+        pre = currency_id.position == 'before'
+        symbol = u'{symbol}'.format(symbol=currency_id.symbol or '')
+        return u'{pre}{0}{post}'.format(amount, pre=symbol if pre else '', post=symbol if not pre else '')
 
     def _format_human_readable_amount(self, amount, suffix=''):
         for unit in ['', 'K', 'M', 'G']:
             if abs(amount) < 1000.0:
-                return "%3.1f%s%s" % (amount, unit, suffix)
+                return "%3.2f%s%s" % (amount, unit, suffix)
             amount /= 1000.0
-        return "%.1f%s%s" % (amount, 'T', suffix)
+        return "%.2f%s%s" % (amount, 'T', suffix)
 
     @api.model
     def _cron_send_digest_email(self):

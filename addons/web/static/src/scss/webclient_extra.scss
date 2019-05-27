@@ -24,17 +24,11 @@ select {
 //------------------------------------------------------------------------------
 // Loading
 //------------------------------------------------------------------------------
+
 .o_loading {
-    position: fixed;
-    top: 0;
-    right: 50%;
-    padding: 4px 12px;
-    background-color: $o-enterprise-color; // FIXME probably supposed to be primary to be auto-adapted in enterprise ?
+    background-color: $o-brand-odoo;
     color: white;
-    text-align: center;
-    border-top: none;
-    border-bottom-right-radius: 8px;
-    border-bottom-left-radius: 8px;
+    padding: 4px;
 }
 
 //------------------------------------------------------------------------------
@@ -43,4 +37,15 @@ select {
 #oe_main_menu_navbar .oe_user_menu_placeholder .o_user_menu .oe_topbar_name {
     @include o-text-overflow;
     max-width: 150px;
+}
+
+.o_rtl {
+    .navbar-right {
+        padding: 0; // fix for user agent stylesheet -webkit-padding-start: 40px in rtl language
+    }
+}
+
+.btn-secondary {
+    // Bootstrap variables do not control the color for btn-secondary border
+    border-color: $border-color;
 }

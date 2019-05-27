@@ -3,7 +3,7 @@
 import time
 
 from .common import TestPurchase
-
+from odoo.tests.common import Form
 
 class TestFifoReturns(TestPurchase):
 
@@ -22,12 +22,12 @@ class TestFifoReturns(TestPurchase):
             'standard_price': 0.0,
             'uom_id': self.env.ref('uom.product_uom_kgm').id,
             'uom_po_id': self.env.ref('uom.product_uom_kgm').id,
-            'cost_method': 'fifo',
-            'valuation': 'real_time',
-            'property_stock_account_input': self.ref('purchase.o_expense'),
-            'property_stock_account_output': self.ref('purchase.o_income'),
             'description': 'FIFO Ice Cream',
         })
+        product_fiforet_icecream.categ_id.property_cost_method = 'fifo'
+        product_fiforet_icecream.categ_id.property_valuation = 'real_time'
+        product_fiforet_icecream.categ_id.property_stock_account_input_categ_id = self.ref('purchase.o_expense')
+        product_fiforet_icecream.categ_id.property_stock_account_output_categ_id = self.ref('purchase.o_income')
 
         # I create a draft Purchase Order for first in move for 10 kg at 50 euro
         purchase_order_1 = self.env['purchase.order'].create({
@@ -72,8 +72,10 @@ class TestFifoReturns(TestPurchase):
 
         # Return the goods of purchase order 2
         picking = purchase_order_2.picking_ids[0]
-        return_pick_wiz = self.env['stock.return.picking'].with_context(
-            active_model='stock.picking', active_id=picking.id).create({})
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking.ids, active_id=picking.ids[0],
+            active_model='stock.picking'))
+        return_pick_wiz = stock_return_picking_form.save()
         return_picking_id, dummy = return_pick_wiz.with_context(active_id=picking.id)._create_returns()
 
         # Important to pass through confirmation and assignation

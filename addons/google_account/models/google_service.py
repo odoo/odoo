@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
+from pprint import pformat
 import json
 import logging
 
@@ -25,6 +26,7 @@ GOOGLE_API_BASE_URL = 'https://www.googleapis.com'
 # FIXME : this needs to become an AbstractModel, to be inhereted by google_calendar_service and google_drive_service
 class GoogleService(models.TransientModel):
     _name = 'google.service'
+    _description = 'Google Service'
 
     @api.model
     def generate_refresh_token(self, service, authorization_code):
@@ -182,13 +184,16 @@ class GoogleService(models.TransientModel):
             except:
                 pass
         except requests.HTTPError as error:
+            # https://developers.google.com/calendar/v3/errors
             if error.response.status_code in (204, 404):
                 status = error.response.status_code
                 response = ""
             else:
-                _logger.exception("Bad google request : %s !", error.response.content)
+                req = json.loads(error.request.body)
+                res = error.response.json()
+                _logger.exception("Error while requesting Google Services\nRequest:\n%s\nResponse:\n%s", pformat(req), pformat(res))
                 if error.response.status_code in (400, 401, 410):
-                    raise error
+                    raise UserError(_("Error while requesting Google Services: %s" % res['error']['message']))
                 raise self.env['res.config.settings'].get_config_warning(_("Something went wrong with your request to google"))
         return (status, response, ask_time)
 

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,12 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:auth_oauth.providers
+msgid "- or -"
+msgstr ""
+
+#. module: auth_oauth
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
 msgstr ""
 
@@ -32,7 +37,7 @@ msgid "Allow users to sign in with Google"
 msgstr ""
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Allow users to sign in with their Google account"
 msgstr ""
 
@@ -63,8 +68,13 @@ msgid "Client ID"
 msgstr ""
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Client ID:"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.model,name:auth_oauth.model_res_config_settings
+msgid "Config Settings"
 msgstr ""
 
 #. module: auth_oauth
@@ -88,7 +98,7 @@ msgid "Display Name"
 msgstr ""
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Google Authentication"
 msgstr ""
 
@@ -124,7 +134,7 @@ msgstr ""
 
 #. module: auth_oauth
 #: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
-#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "OAuth Providers"
 msgstr ""
 
@@ -144,7 +154,7 @@ msgid "OAuth2 provider"
 msgstr ""
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_users_form
+#: model_terms:ir.ui.view,arch_db:auth_oauth.view_users_form
 msgid "Oauth"
 msgstr ""
 
@@ -185,6 +195,11 @@ msgid "Sign up is not allowed on this database."
 msgstr ""
 
 #. module: auth_oauth
+#: model:ir.model,name:auth_oauth.model_ir_config_parameter
+msgid "System Parameter"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
 msgid "Users"
 msgstr ""
@@ -201,23 +216,13 @@ msgid "You do not have access to this database or your invitation has expired. P
 msgstr ""
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
-#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_tree
+#: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
+#: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_tree
 msgid "arch"
 msgstr ""
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "e.g. 1234-xyz.apps.googleusercontent.com"
-msgstr ""
-
-#. module: auth_oauth
-#: model:ir.model,name:auth_oauth.model_ir_config_parameter
-msgid "ir.config_parameter"
-msgstr ""
-
-#. module: auth_oauth
-#: model:ir.model,name:auth_oauth.model_res_config_settings
-msgid "res.config.settings"
 msgstr ""
 

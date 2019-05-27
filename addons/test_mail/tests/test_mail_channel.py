@@ -3,6 +3,7 @@ from email.utils import formataddr
 
 from odoo.tests import tagged
 from odoo.addons.test_mail.tests import common
+from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.exceptions import AccessError, except_orm, ValidationError, UserError
 from odoo.tools import mute_logger
 
@@ -12,19 +13,10 @@ class TestChannelAccessRights(common.BaseFunctionalTest, common.MockEmails):
     @classmethod
     def setUpClass(cls):
         super(TestChannelAccessRights, cls).setUpClass()
-        Channel = cls.env['mail.channel'].with_context(cls._quick_create_ctx)
+        Channel = cls.env['mail.channel'].with_context(common.BaseFunctionalTest._test_context)
 
-        Users = cls.env['res.users'].with_context(cls._quick_create_user_ctx)
-        cls.user_public = Users.create({
-            'name': 'Bert Tartignole',
-            'login': 'bert',
-            'email': 'b.t@example.com',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_public').id])]})
-        cls.user_portal = Users.create({
-            'name': 'Chell Gladys',
-            'login': 'chell',
-            'email': 'chell@gladys.portal',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_portal').id])]})
+        cls.user_public = mail_new_test_user(cls.env, login='bert', groups='base.group_public', name='Bert Tartignole')
+        cls.user_portal = mail_new_test_user(cls.env, login='chell', groups='base.group_portal', name='Chell Gladys')
 
         # Pigs: base group for tests
         cls.group_pigs = Channel.create({
@@ -118,13 +110,13 @@ class TestChannelFeatures(common.BaseFunctionalTest, common.MockEmails):
     @classmethod
     def setUpClass(cls):
         super(TestChannelFeatures, cls).setUpClass()
-        cls.test_channel = cls.env['mail.channel'].with_context(cls._quick_create_ctx).create({
+        cls.test_channel = cls.env['mail.channel'].with_context(common.BaseFunctionalTest._test_context).create({
             'name': 'Test',
             'description': 'Description',
             'alias_name': 'test',
             'public': 'public',
         })
-        cls.test_partner = cls.env['res.partner'].with_context(cls._quick_create_ctx).create({
+        cls.test_partner = cls.env['res.partner'].with_context(common.BaseFunctionalTest._test_context).create({
             'name': 'Test Partner',
             'email': 'test@example.com',
         })
@@ -163,7 +155,15 @@ class TestChannelFeatures(common.BaseFunctionalTest, common.MockEmails):
         """ Posting a message on a mailing list should send one email to all recipients """
         self.env['ir.config_parameter'].set_param('mail.catchall.domain', 'schlouby.fr')
         self.test_channel.write({'email_send': True})
-        self._join_channel(self.test_channel, self.user_employee.partner_id | self.test_partner)
+
+        # Subscribe an user without email. We shouldn't try to send email to them.
+        nomail = self.env['res.users'].create({
+            "login": "nomail",
+            "name": "No Mail",
+            "email": False,
+            "notification_type": "email",
+        })
+        self._join_channel(self.test_channel, self.user_employee.partner_id | self.test_partner | nomail.partner_id)
         self.test_channel.message_post(body="Test", message_type='comment', subtype='mt_comment')
 
         self.assertEqual(len(self._mails), 1)
@@ -195,6 +195,19 @@ class TestChannelFeatures(common.BaseFunctionalTest, common.MockEmails):
             self.assertIn(
                 email['email_to'][0],
                 [formataddr((self.user_employee.name, self.user_employee.email)), formataddr((self.test_partner.name, self.test_partner.email))])
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_channel_out_of_office(self):
+        self.user_employee.out_of_office_message = 'Out'
+        test_chat = self.env['mail.channel'].with_context(common.BaseFunctionalTest._test_context).create({
+            'channel_partner_ids': [(4, self.user_employee.partner_id.id), (4, self.user_admin.partner_id.id)],
+            'public': 'private',
+            'channel_type': 'chat',
+            'email_send': False,
+            'name': 'test'
+        })
+        infos = test_chat.sudo(self.user_admin).channel_info()
+        self.assertEqual(infos[0]['direct_partner'][0]['out_of_office_message'], 'Out')
 
 
 @tagged('moderation')
@@ -235,7 +248,7 @@ class TestChannelModeration(common.Moderation):
         self._init_mock_build_email()
         self.channel_1.sudo(self.user_employee).send_guidelines()
         self.env['mail.mail'].process_email_queue()
-        self.assertEmails(False, self.partner_employee | self.partner_employee_2, email_from=self.env.user.company_id.catchall or self.env.user.company_id.email)
+        self.assertEmails(False, self.partner_employee | self.partner_employee_2, email_from=self.env.company_id.catchall or self.env.company_id.email)
 
     def test_send_guidelines_crash(self):
         with self.assertRaises(UserError):

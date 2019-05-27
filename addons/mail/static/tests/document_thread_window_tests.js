@@ -1,4 +1,4 @@
-odoo.define('mail.document_thread_window_tests', function (require) {
+odoo.define('mail.documentThreadWindowTests', function (require) {
 "use strict";
 
 var mailTestUtils = require('mail.testUtils');
@@ -7,8 +7,8 @@ var MessagingMenu = require('mail.systray.MessagingMenu');
 var testUtils = require('web.test_utils');
 
 QUnit.module('mail', {}, function () {
-
-QUnit.module('DocumentThreadWindow', {
+QUnit.module('Thread Window', {}, function () {
+QUnit.module('Document Thread', {
     beforeEach: function () {
         var partnerID = 44;
         this.data = {
@@ -87,11 +87,11 @@ QUnit.module('DocumentThreadWindow', {
     },
 });
 
-QUnit.test('open a document thread in a thread window', function (assert) {
+QUnit.test('open a document thread in a thread window', async function (assert) {
     assert.expect(6);
 
     var messagingMenu = new MessagingMenu();
-    testUtils.addMockEnvironment(messagingMenu, {
+    testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
         session: this.session,
@@ -107,13 +107,13 @@ QUnit.test('open a document thread in a thread window', function (assert) {
             return this._super.apply(this, arguments);
         },
     });
-    messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo($('#qunit-fixture'));
 
     // toggle the messaging menu and open the documentThread
-    messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 1,
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsOnce(messagingMenu, '.o_mail_preview',
         "should display one preview");
-    messagingMenu.$('.o_mail_preview').click();
+    await testUtils.dom.click(messagingMenu.$('.o_mail_preview'));
 
     assert.strictEqual($('.o_thread_window').length, 1,
         "should have open the DocumentThread in a thread window");
@@ -125,11 +125,11 @@ QUnit.test('open a document thread in a thread window', function (assert) {
     messagingMenu.destroy();
 });
 
-QUnit.test('expand a document thread window', function (assert) {
+QUnit.test('expand a document thread window', async function (assert) {
     assert.expect(4);
 
     var messagingMenu = new MessagingMenu();
-    testUtils.addMockEnvironment(messagingMenu, {
+    testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
         session: this.session,
@@ -144,26 +144,26 @@ QUnit.test('expand a document thread window', function (assert) {
             },
         },
     });
-    messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo($('#qunit-fixture'));
 
     // toggle the messaging menu and open the documentThread
-    messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 1,
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsOnce(messagingMenu, '.o_mail_preview',
         "should display one preview");
-    messagingMenu.$('.o_mail_preview').click();
+    await testUtils.dom.click(messagingMenu.$('.o_mail_preview'));
     assert.strictEqual($('.o_thread_window').length, 1,
         "should have open the DocumentThread in a thread window");
 
-    assert.strictEqual($('.o_thread_window .o_thread_window_expand').attr('title'),
+    assert.hasAttrValue($('.o_thread_window .o_thread_window_expand'), 'title',
         'Open document', "button should have correct title");
 
     // click to expand
-    $('.o_thread_window .o_thread_window_expand').click();
+    await testUtils.dom.click($('.o_thread_window .o_thread_window_expand'));
 
     messagingMenu.destroy();
 });
 
-QUnit.test('post messages in a document thread window', function (assert) {
+QUnit.test('post messages in a document thread window', async function (assert) {
     assert.expect(8);
 
     var newMessageBody = 'Some message';
@@ -177,7 +177,7 @@ QUnit.test('post messages in a document thread window', function (assert) {
         res_id: 1,
     };
     var messagingMenu = new MessagingMenu();
-    testUtils.addMockEnvironment(messagingMenu, {
+    testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
         session: this.session,
@@ -193,84 +193,116 @@ QUnit.test('post messages in a document thread window', function (assert) {
                 // add the message to the fake DB
                 this.data['mail.message'].records.push(newMessage);
                 this.data['some.res.model'].records[0].message_ids.push(6783);
-                return $.when(6783);
+                return Promise.resolve(6783);
             }
             return this._super.apply(this, arguments);
         },
     });
-    testUtils.intercept(messagingMenu, 'call_service', function (ev) {
+    testUtils.mock.intercept(messagingMenu, 'call_service', function (ev) {
         if (ev.data.service === 'local_storage' && ev.data.method === 'setItem' &&
             ev.data.args[0] === 'mail.document_threads_last_message') {
             assert.deepEqual(ev.data.args[1], newMessage,
                 "should write sent message in local storage, to share info with other tabs");
         }
     }, true);
-    messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo($('#qunit-fixture'));
 
     // toggle the messaging menu and open the documentThread
-    messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 1,
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsOnce(messagingMenu, '.o_mail_preview',
         "should display one preview");
-    messagingMenu.$('.o_mail_preview').click();
+    await testUtils.dom.click(messagingMenu.$('.o_mail_preview'));
     assert.strictEqual($('.o_thread_window').length, 1,
         "should have open the DocumentThread in a thread window");
     assert.strictEqual($('.o_thread_window .o_thread_message').length, 2,
         "should display 2 messages in the thread window");
 
     // post a message
-    $('.o_thread_window .o_composer_text_field')
-        .val(newMessageBody)
-        .trigger($.Event('keydown', {which: $.ui.keyCode.ENTER}));
-
+    await testUtils.fields.editAndTrigger($('.o_thread_window .o_composer_text_field'), newMessageBody,
+        [$.Event('keydown', {which: $.ui.keyCode.ENTER})]);
     assert.strictEqual($('.o_thread_window .o_thread_message').length, 3,
         "should display 3 messages in the thread window");
 
     messagingMenu.destroy();
 });
 
-QUnit.test('open, fold, unfold and close a document thread window', function (assert) {
+QUnit.test('open, fold, unfold and close a document thread window', async function (assert) {
     assert.expect(8);
-
     var messagingMenu = new MessagingMenu();
-    testUtils.addMockEnvironment(messagingMenu, {
+    testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
         session: this.session,
     });
-    testUtils.intercept(messagingMenu, 'call_service', function (ev) {
+    await testUtils.nextTick();
+    testUtils.mock.intercept(messagingMenu, 'call_service', function (ev) {
         if (ev.data.service === 'local_storage' && ev.data.method === 'setItem') {
-            assert.step(ev.data.args);
+            assert.step(JSON.stringify(ev.data.args));
         }
     }, true);
-    messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo($('#qunit-fixture'));
 
     // toggle the messaging menu and open the documentThread
-    messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 1,
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsOnce(messagingMenu, '.o_mail_preview',
         "should display one preview");
-    messagingMenu.$('.o_mail_preview').click();
+    await testUtils.dom.click(messagingMenu.$('.o_mail_preview'));
     assert.strictEqual($('.o_thread_window').length, 1,
         "should have open the DocumentThread in a thread window");
     assert.strictEqual($('.o_thread_window .o_thread_message').length, 2,
         "should display 2 messages in the thread window");
 
     // fold and unfold thread window
-    $('.o_thread_window .o_thread_window_title').click();
-    $('.o_thread_window .o_thread_window_title').click();
+    await testUtils.dom.click($('.o_thread_window .o_thread_window_title'));
+    await testUtils.nextTick();
+    await testUtils.dom.click($('.o_thread_window .o_thread_window_title'));
+    await testUtils.nextTick();
 
     // close thread window
-    $('.o_thread_window .o_thread_window_close').click();
+    await testUtils.dom.click($('.o_thread_window .o_thread_window_close'));
+    await testUtils.nextTick();
 
     assert.verifySteps([
-        ['mail.document_threads_state', {"some.res.model_1": {"name": "Some Record", "windowState": "open"}}],
-        ['mail.document_threads_state', {"some.res.model_1": {"name": "Some Record", "windowState": "folded"}}],
-        ['mail.document_threads_state', {"some.res.model_1": {"name": "Some Record", "windowState": "open"}}],
-        ['mail.document_threads_state', {"some.res.model_1": {"name": "Some Record", "windowState": "closed"}}],
+        '["mail.document_threads_state",{"some.res.model_1":{"name":"Some Record","windowState":"open"}}]',
+        '["mail.document_threads_state",{"some.res.model_1":{"name":"Some Record","windowState":"folded"}}]',
+        '["mail.document_threads_state",{"some.res.model_1":{"name":"Some Record","windowState":"open"}}]',
+        '["mail.document_threads_state",{"some.res.model_1":{"name":"Some Record","windowState":"closed"}}]',
     ]);
 
     messagingMenu.destroy();
 });
 
+QUnit.test('do not open thread window on fetch message failure', async function (assert) {
+    // this may happen when the user receives a notification from a document
+    // that he does not have access rights at the moment.
+    assert.expect(4);
+
+    var messagingMenu = new MessagingMenu();
+    testUtils.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+        session: this.session,
+        mockRPC: function (route, args) {
+            if (args.method === 'read' && args.model === 'some.res.model' && args.args[0][0] === 1) {
+                assert.step('some.res.model/1/read');
+                return Promise.reject(); // simulate failure
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+    await messagingMenu.appendTo($('#qunit-fixture'));
+
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsOnce(messagingMenu, '.o_mail_preview');
+
+    await testUtils.dom.click(messagingMenu.$('.o_mail_preview'));
+    assert.verifySteps(['some.res.model/1/read']);
+    assert.strictEqual($('.o_thread_window').length, 0,
+        "should not have open the DocumentThread in a thread window on fetch messages failure");
+
+    messagingMenu.destroy();
 });
 
+});
+});
 });

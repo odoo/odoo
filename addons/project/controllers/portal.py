@@ -5,9 +5,9 @@ from collections import OrderedDict
 from operator import itemgetter
 
 from odoo import http, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
-from odoo.addons.portal.controllers.portal import get_records_pager, CustomerPortal, pager as portal_pager
+from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
 from odoo.tools import groupby as groupbyelem
 
 from odoo.osv.expression import OR
@@ -17,12 +17,8 @@ class CustomerPortal(CustomerPortal):
 
     def _prepare_portal_layout_values(self):
         values = super(CustomerPortal, self)._prepare_portal_layout_values()
-        Project = request.env['project.project']
-        Task = request.env['project.task']
-        # portal users can't view projects they don't follow
-        projects = Project.sudo().search([('privacy_visibility', '=', 'portal')])
-        values['project_count'] = Project.search_count([('id', 'in', projects.ids)])
-        values['task_count'] = Task.search_count([('project_id', 'in', projects.ids)])
+        values['project_count'] = request.env['project.project'].search_count([])
+        values['task_count'] = request.env['project.task'].search_count([])
         return values
 
     # ------------------------------------------------------------
@@ -39,7 +35,7 @@ class CustomerPortal(CustomerPortal):
     def portal_my_projects(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
         Project = request.env['project.project']
-        domain = [('privacy_visibility', '=', 'portal')]
+        domain = []
 
         searchbar_sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
@@ -85,7 +81,7 @@ class CustomerPortal(CustomerPortal):
     def portal_my_project(self, project_id=None, access_token=None, **kw):
         try:
             project_sudo = self._document_check_access('project.project', project_id, access_token)
-        except AccessError:
+        except (AccessError, MissingError):
             return request.redirect('/my')
 
         values = self._project_get_page_view_values(project_sudo, access_token, **kw)
@@ -125,13 +121,23 @@ class CustomerPortal(CustomerPortal):
             'none': {'input': 'none', 'label': _('None')},
             'project': {'input': 'project', 'label': _('Project')},
         }
+
+        # extends filterby criteria with project the customer has access to
+        projects = request.env['project.project'].search([])
+        for project in projects:
+            searchbar_filters.update({
+                str(project.id): {'label': project.name, 'domain': [('project_id', '=', project.id)]}
+            })
+
         # extends filterby criteria with project (criteria name is the project id)
         # Note: portal users can't view projects they don't follow
-        projects = request.env['project.project'].sudo().search([('privacy_visibility', '=', 'portal')])
-        domain = [('project_id', 'in', projects.ids)]
-        for proj in projects:
+        project_groups = request.env['project.task'].read_group([('project_id', 'not in', projects.ids)],
+                                                                ['project_id'], ['project_id'])
+        for group in project_groups:
+            proj_id = group['project_id'][0] if group['project_id'] else False
+            proj_name = group['project_id'][1] if group['project_id'] else _('Others')
             searchbar_filters.update({
-                str(proj.id): {'label': proj.name, 'domain': [('project_id', '=', proj.id)]}
+                str(proj_id): {'label': proj_name, 'domain': [('project_id', '=', proj_id)]}
             })
 
         # default sort by value
@@ -141,7 +147,7 @@ class CustomerPortal(CustomerPortal):
         # default filter by value
         if not filterby:
             filterby = 'all'
-        domain += searchbar_filters[filterby]['domain']
+        domain = searchbar_filters[filterby]['domain']
 
         # archive groups - Default Group By 'create_date'
         archive_groups = self._get_archive_groups('project.task', domain)
@@ -174,7 +180,7 @@ class CustomerPortal(CustomerPortal):
         # content according to pager and archive selected
         if groupby == 'project':
             order = "project_id, %s" % order  # force sort on project first to group by project in view
-        tasks = request.env['project.task'].search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        tasks = request.env['project.task'].search(domain, order=order, limit=self._items_per_page, offset=(page - 1) * self._items_per_page)
         request.session['my_tasks_history'] = tasks.ids[:100]
         if groupby == 'project':
             grouped_tasks = [request.env['project.task'].concat(*g) for k, g in groupbyelem(tasks, itemgetter('project_id'))]
@@ -184,7 +190,6 @@ class CustomerPortal(CustomerPortal):
         values.update({
             'date': date_begin,
             'date_end': date_end,
-            'projects': projects,
             'grouped_tasks': grouped_tasks,
             'page_name': 'task',
             'archive_groups': archive_groups,
@@ -205,7 +210,7 @@ class CustomerPortal(CustomerPortal):
     def portal_my_task(self, task_id, access_token=None, **kw):
         try:
             task_sudo = self._document_check_access('project.task', task_id, access_token)
-        except AccessError:
+        except (AccessError, MissingError):
             return request.redirect('/my')
 
         values = self._task_get_page_view_values(task_sudo, access_token, **kw)

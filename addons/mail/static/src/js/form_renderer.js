@@ -29,7 +29,8 @@ FormRenderer.include({
      */
     confirmChange: function (state, id, fields) {
         if (this.chatter) {
-            var updatedMailFields = _.intersection(fields, _.values(this.mailFields));
+            var chatterFields = ['message_attachment_count'].concat(_.values(this.mailFields));
+            var updatedMailFields = _.intersection(fields, chatterFields);
             if (updatedMailFields.length) {
                 this.chatter.update(state, updatedMailFields);
             }
@@ -49,17 +50,24 @@ FormRenderer.include({
      * @private
      */
     _renderNode: function (node) {
+        var self = this;
         if (node.tag === 'div' && node.attrs.class === 'oe_chatter') {
             if (!this.chatter) {
                 this.chatter = new Chatter(this, this.state, this.mailFields, {
                     isEditable: this.activeActions.edit,
+                    viewType: 'form',
                 });
-                this.chatter.appendTo($('<div>'));
-                this._handleAttributes(this.chatter.$el, node);
+
+                var $temporaryParentDiv = $('<div>');
+                this.defs.push(this.chatter.appendTo($temporaryParentDiv).then(function () {
+                    self.chatter.$el.unwrap();
+                    self._handleAttributes(self.chatter.$el, node);
+                }));
+                return $temporaryParentDiv;
             } else {
                 this.chatter.update(this.state);
+                return this.chatter.$el;
             }
-            return this.chatter.$el;
         } else {
             return this._super.apply(this, arguments);
         }

@@ -1,23 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import logging
 import pytz
 import werkzeug
-
-from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-
-_logger = logging.getLogger(__name__)
-
-try:
-    import vobject
-except ImportError:
-    _logger.warning("`vobject` Python module not found, iCal file generation disabled. Consider installing this module if you want to generate iCal files")
-    vobject = None
 
 GOOGLE_CALENDAR_URL = 'https://www.google.com/calendar/render?'
 
@@ -32,9 +20,9 @@ class EventType(models.Model):
 
 class Event(models.Model):
     _name = 'event.event'
-    _inherit = ['event.event', 'website.seo.metadata', 'website.published.mixin']
+    _inherit = ['event.event', 'website.seo.metadata', 'website.published.multi.mixin']
 
-    website_published = fields.Boolean(track_visibility='onchange')
+    is_published = fields.Boolean(tracking=True)
 
     is_participating = fields.Boolean("Is Participating", compute="_compute_is_participating")
 
@@ -45,7 +33,7 @@ class Event(models.Model):
 
     def _compute_is_participating(self):
         # we don't allow public user to see participating label
-        if self.env.user != self.env.ref('base.public_user'):
+        if self.env.user != self.env['website'].get_current_website().user_id:
             email = self.env.user.partner_id.email
             for event in self:
                 domain = ['&', '|', ('email', '=', email), ('partner_id', '=', self.env.user.partner_id.id), ('event_id', '=', event.id)]
@@ -75,19 +63,28 @@ class Event(models.Model):
             (_('Register'), '/event/%s/register' % slug(self), False),
         ]
 
-    @api.multi
-    def write(self, vals):
-        res = super(Event, self).write(vals)
+    def _toggle_create_website_menus(self, vals):
         for event in self:
             if 'website_menu' in vals:
                 if event.menu_id and not event.website_menu:
                     event.menu_id.unlink()
                 elif event.website_menu:
                     if not event.menu_id:
-                        root_menu = self.env['website.menu'].create({'name': event.name})
+                        root_menu = self.env['website.menu'].create({'name': event.name, 'website_id': event.website_id.id})
                         event.menu_id = root_menu
                     for sequence, (name, url, xml_id) in enumerate(event._get_menu_entries()):
                         event._create_menu(sequence, name, url, xml_id)
+
+    @api.model
+    def create(self, vals):
+        res = super(Event, self).create(vals)
+        res._toggle_create_website_menus(vals)
+        return res
+
+    @api.multi
+    def write(self, vals):
+        res = super(Event, self).write(vals)
+        self._toggle_create_website_menus(vals)
         return res
 
     def _create_menu(self, sequence, name, url, xml_id):
@@ -99,6 +96,7 @@ class Event(models.Model):
             'url': url,
             'parent_id': self.menu_id.id,
             'sequence': sequence,
+            'website_id': self.website_id.id,
         })
         return menu
 
@@ -119,10 +117,10 @@ class Event(models.Model):
     @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
-        if 'website_published' in init_values and self.website_published:
-            return 'website_event.mt_event_published'
-        elif 'website_published' in init_values and not self.website_published:
-            return 'website_event.mt_event_unpublished'
+        if 'is_published' in init_values and self.is_published:
+            return self.env.ref('website_event.mt_event_published')
+        elif 'is_published' in init_values and not self.is_published:
+            return self.env.ref('website_event.mt_event_unpublished')
         return super(Event, self)._track_subtype(init_values)
 
     @api.multi
@@ -135,34 +133,9 @@ class Event(models.Model):
             'url': '/report/html/%s/%s?enable_editor' % ('event.event_event_report_template_badge', self.id),
         }
 
-    @api.multi
-    def _get_ics_file(self):
-        """ Returns iCalendar file for the event invitation.
-            :returns a dict of .ics file content for each event
-        """
-        result = {}
-        if not vobject:
-            return result
-
-        for event in self:
-            cal = vobject.iCalendar()
-            cal_event = cal.add('vevent')
-
-            if not event.date_begin or not event.date_end:
-                raise UserError(_("No date has been specified for the event, no file will be generated."))
-            cal_event.add('created').value = fields.Datetime.now().replace(tzinfo=pytz.timezone('UTC'))
-            cal_event.add('dtstart').value = fields.Datetime.from_string(event.date_begin).replace(tzinfo=pytz.timezone('UTC'))
-            cal_event.add('dtend').value = fields.Datetime.from_string(event.date_end).replace(tzinfo=pytz.timezone('UTC'))
-            cal_event.add('summary').value = event.name
-            if event.address_id:
-                cal_event.add('location').value = event.sudo().address_id.contact_address
-
-            result[event.id] = cal.serialize().encode('utf-8')
-        return result
-
     def _get_event_resource_urls(self, attendees):
-        url_date_start = datetime.strptime(self.date_begin, DEFAULT_SERVER_DATETIME_FORMAT).strftime('%Y%m%dT%H%M%SZ')
-        url_date_stop = datetime.strptime(self.date_end, DEFAULT_SERVER_DATETIME_FORMAT).strftime('%Y%m%dT%H%M%SZ')
+        url_date_start = self.date_begin.strftime('%Y%m%dT%H%M%SZ')
+        url_date_stop = self.date_end.strftime('%Y%m%dT%H%M%SZ')
         params = {
             'action': 'TEMPLATE',
             'text': self.name,
@@ -173,5 +146,13 @@ class Event(models.Model):
             params.update(location=self.sudo().address_id.contact_address.replace('\n', ' '))
         encoded_params = werkzeug.url_encode(params)
         google_url = GOOGLE_CALENDAR_URL + encoded_params
-        iCal_url = '/event/%s/ics?%s' % (slug(self), encoded_params)
+        iCal_url = '/event/%d/ics?%s' % (self.id, encoded_params)
         return {'google_url': google_url, 'iCal_url': iCal_url}
+
+    def _default_website_meta(self):
+        res = super(Event, self)._default_website_meta()
+        res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
+        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.date_begin
+        res['default_twitter']['twitter:card'] = 'summary'
+        res['default_meta_description'] = self.date_begin
+        return res

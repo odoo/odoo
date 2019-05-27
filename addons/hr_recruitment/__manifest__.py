@@ -4,7 +4,7 @@
 {
     'name': 'Recruitment',
     'version': '1.0',
-    'category': 'Human Resources',
+    'category': 'Human Resources/Recruitment',
     'sequence': 90,
     'summary': 'Track your recruitment pipeline',
     'description': "",
@@ -14,7 +14,7 @@
         'calendar',
         'fetchmail',
         'utm',
-        'document',
+        'attachment_indexation',
         'web_tour',
         'digest',
     ],
@@ -29,7 +29,6 @@
         'views/hr_department_views.xml',
         'views/hr_job_views.xml',
         'views/mail_activity_views.xml',
-        'views/res_users_views.xml',
         'views/digest_views.xml',
     ],
     'demo': [

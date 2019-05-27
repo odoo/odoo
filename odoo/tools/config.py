@@ -13,7 +13,7 @@ import os
 import sys
 import odoo
 from .. import release, conf, loglevels
-from . import appdirs, pycompat
+from . import appdirs
 
 from passlib.context import CryptContext
 crypt_context = CryptContext(schemes=['pbkdf2_sha512', 'plaintext'],
@@ -156,18 +156,17 @@ class configmanager(object):
         group = optparse.OptionGroup(parser, "Testing Configuration")
         group.add_option("--test-file", dest="test_file", my_default=False,
                          help="Launch a python test file.")
-        group.add_option("--test-enable", action="store_true", dest="test_enable",
-                         my_default=False, help="Enable unit tests.")
+        group.add_option("--test-enable", action="callback", callback=self._test_enable_callback,
+                         dest='test_enable',
+                         help="Enable unit tests.")
         group.add_option("--test-tags", dest="test_tags",
-                         default=('+standard'),
-                         help="Comma separated list of tags to filter which tests to excute")
+                         help="Comma separated list of tags to filter which tests to execute. Enable unit tests if set.")
 
         parser.add_option_group(group)
 
         # Logging Group
         group = optparse.OptionGroup(parser, "Logging Configuration")
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
-        group.add_option("--logrotate", dest="logrotate", action="store_true", my_default=False, help="enable logfile rotation")
         group.add_option("--syslog", action="store_true", dest="syslog", my_default=False, help="Send the log to the syslog server")
         group.add_option('--log-handler', action="append", default=[], my_default=DEFAULT_LOG_HANDLER, metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "odoo.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
         group.add_option('--log-request', action="append_const", dest="log_handler", const="odoo.http.rpc.request:DEBUG", help='shortcut for --log-handler=odoo.http.rpc.request:DEBUG')
@@ -220,7 +219,7 @@ class configmanager(object):
                          choices=['disable', 'allow', 'prefer', 'require', 'verify-ca', 'verify-full'],
                          help="specify the database ssl connection mode (see PostgreSQL documentation)")
         group.add_option("--db_maxconn", dest="db_maxconn", type='int', my_default=64,
-                         help="specify the the maximum number of physical connections to PostgreSQL")
+                         help="specify the maximum number of physical connections to PostgreSQL")
         group.add_option("--db-template", dest="db_template", my_default="template0",
                          help="specify a custom database template to create a new database")
         parser.add_option_group(group)
@@ -286,10 +285,12 @@ class configmanager(object):
                              help="Specify the number of workers, 0 disable prefork mode.",
                              type="int")
             group.add_option("--limit-memory-soft", dest="limit_memory_soft", my_default=2048 * 1024 * 1024,
-                             help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request (default 671088640 aka 640MB).",
+                             help="Maximum allowed virtual memory per worker, when reached the worker be "
+                             "reset after the current request (default 2048MiB).",
                              type="int")
             group.add_option("--limit-memory-hard", dest="limit_memory_hard", my_default=2560 * 1024 * 1024,
-                             help="Maximum allowed virtual memory per worker, when reached, any memory allocation will fail (default 805306368 aka 768MB).",
+                             help="Maximum allowed virtual memory per worker, when reached, any memory "
+                             "allocation will fail (default 2560MiB).",
                              type="int")
             group.add_option("--limit-time-cpu", dest="limit_time_cpu", my_default=60,
                              help="Maximum allowed CPU time per request (default 60).",
@@ -392,6 +393,9 @@ class configmanager(object):
         # the same for the pidfile
         if self.options['pidfile'] in ('None', 'False'):
             self.options['pidfile'] = False
+        # the same for the test_tags
+        if self.options['test_tags'] == 'None':
+            self.options['test_tags'] = None
         # and the server_wide_modules
         if self.options['server_wide_modules'] in ('', 'None', 'False'):
             self.options['server_wide_modules'] = 'base,web'
@@ -413,10 +417,10 @@ class configmanager(object):
             if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
             # ... or keep, but cast, the config file value.
-            elif isinstance(self.options[arg], pycompat.string_types) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
+            elif isinstance(self.options[arg], str) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
                 self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
-        if isinstance(self.options['log_handler'], pycompat.string_types):
+        if isinstance(self.options['log_handler'], str):
             self.options['log_handler'] = self.options['log_handler'].split(',')
         self.options['log_handler'].extend(opt.log_handler)
 
@@ -424,9 +428,9 @@ class configmanager(object):
         keys = [
             'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
             'dev_mode', 'shell_interface', 'smtp_ssl', 'load_language',
-            'stop_after_init', 'logrotate', 'without_demo', 'http_enable', 'syslog',
+            'stop_after_init', 'without_demo', 'http_enable', 'syslog',
             'list_db', 'proxy_mode',
-            'test_file', 'test_enable', 'test_tags',
+            'test_file', 'test_tags',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
             'server_wide_modules',
@@ -448,7 +452,7 @@ class configmanager(object):
             if getattr(opt, arg) is not None:
                 self.options[arg] = getattr(opt, arg)
             # ... or keep, but cast, the config file value.
-            elif isinstance(self.options[arg], pycompat.string_types) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
+            elif isinstance(self.options[arg], str) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
                 self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
         self.options['root_path'] = os.path.abspath(os.path.expanduser(os.path.expandvars(os.path.join(os.path.dirname(__file__), '..'))))
@@ -466,6 +470,8 @@ class configmanager(object):
                     os.path.abspath(os.path.expanduser(os.path.expandvars(x.strip())))
                       for x in self.options['addons_path'].split(','))
 
+        self.options['data_dir'] = os.path.abspath(os.path.expanduser(os.path.expandvars(self.options['data_dir'].strip())))
+
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
         self.options['demo'] = (dict(self.options['init'])
                                 if not self.options['without_demo'] else {})
@@ -482,6 +488,8 @@ class configmanager(object):
         if self.options.get('language', False):
             if len(self.options['language']) > 5:
                 raise Exception('ERROR: The Lang name must take max 5 chars, Eg: -lfr_BE')
+
+        self.options['test_enable'] = bool(self.options['test_tags'])
 
         if opt.save:
             self.save()
@@ -515,6 +523,10 @@ class configmanager(object):
             ad_paths.append(res)
 
         setattr(parser.values, option.dest, ",".join(ad_paths))
+
+    def _test_enable_callback(self, option, opt, value, parser):
+        if not parser.values.test_tags:
+            parser.values.test_tags = "+standard"
 
     def load(self):
         outdated_options_map = {
@@ -550,7 +562,7 @@ class configmanager(object):
 
     def save(self):
         p = ConfigParser.RawConfigParser()
-        loglevelnames = dict(pycompat.izip(self._LOGLEVELS.values(), self._LOGLEVELS))
+        loglevelnames = dict(zip(self._LOGLEVELS.values(), self._LOGLEVELS))
         p.add_section('options')
         for opt in sorted(self.options):
             if opt in ('version', 'language', 'translate_out', 'translate_in', 'overwrite_existing_translations', 'init', 'update'):
@@ -596,7 +608,7 @@ class configmanager(object):
 
     def __setitem__(self, key, value):
         self.options[key] = value
-        if key in self.options and isinstance(self.options[key], pycompat.string_types) and \
+        if key in self.options and isinstance(self.options[key], str) and \
                 key in self.casts and self.casts[key].type in optparse.Option.TYPE_CHECKER:
             self.options[key] = optparse.Option.TYPE_CHECKER[self.casts[key].type](self.casts[key], key, self.options[key])
 

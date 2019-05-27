@@ -3,7 +3,7 @@
     <data>
         <!-- Bill of Materials -->
         <record id="action_report_mrp_bom" model="ir.actions.client">
-            <field name="name">Cost &amp; Structure</field>
+            <field name="name">BoM Structure &amp; Cost</field>
             <field name="tag">mrp_bom_report</field>
             <field name="context" eval="{'model': 'report.mrp.report_bom_structure'}" />
         </record>
@@ -16,7 +16,7 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="%(action_report_mrp_bom)d" type="action"
-                                class="oe_stat_button" icon="fa-bars" string="Cost &amp; Structure" attrs="{'invisible': [('bom_line_ids', '=', [])]}"/>
+                                class="oe_stat_button" icon="fa-bars" string="Structure &amp; Cost" attrs="{'invisible': [('bom_line_ids', '=', [])]}"/>
                             <button name="toggle_active" type="object"
                                     class="oe_stat_button" icon="fa-archive">
                                 <field name="active" widget="boolean_button"
@@ -32,23 +32,19 @@
                                 <field name="product_qty"/>
                                 <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
                             </div>
-                            <field name="routing_id" attrs="{'invisible': [('type','=','phantom')]}" groups="mrp.group_mrp_routings"/>
+                            <field name="routing_id" attrs="{'invisible': [('type','not in',('normal','phantom'))]}" groups="mrp.group_mrp_routings"/>
                         </group>
                         <group>
                             <field name="code"/>
                             <field name="type" widget="radio"/>
-                            <p colspan="2" class="oe_grey oe_edit_only" attrs="{'invisible': [('type','=','normal')]}">
+                            <p colspan="2" class="oe_grey oe_edit_only" attrs="{'invisible': [('type','!=','phantom')]}">
                             <ul>
+                                A BoM of type kit is used to split the product into its components.
                                 <li>
-                                    If the product is a finished product: When processing a sales
-                                    order for this product, the delivery order will contain the raw
-                                    materials, instead of the finished product.
+                                    At the creation of a Manufacturing Order.
                                 </li>
                                 <li>
-                                    If the product is a semi-finished product: When processing a
-                                    manufacturing order that contains that product as component,
-                                    the raw materials of that product will be added to the
-                                    manufacturing order of the final product.
+                                    At the creation of a Stock Transfer.
                                 </li>
                             </ul>
                             </p>
@@ -57,28 +53,47 @@
                     </group>
                     <notebook>
                         <page string="Components">
-                            <field name="bom_line_ids" widget="one2many_list">
+                            <field name="bom_line_ids" widget="one2many" context="{'default_parent_product_tmpl_id': product_tmpl_id}">
                                 <tree string="Components" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" context="{'default_type': 'product'}"/>
-                                    <field name="has_attachments" invisible="1"/>
-                                    <button name="action_see_attachments" type="object" icon="fa-files-o" attrs="{'invisible': [('has_attachments', '=', False)]}" aria-label="No attachment" title="No attachment"/>
-                                    <button name="action_see_attachments" type="object" icon="fa-file" attrs="{'invisible': [('has_attachments', '=', True)]}" aria-label="Attachments" title="Attachments"/>
+                                    <button name="action_see_attachments" type="object" icon="fa-files-o" aria-label="attachment" title="attachment"
+                                    class="float-right"/>
+                                    <field name="attachments_count" class="text-left"
+                                    string=" "/>
                                     <field name="product_qty"/>
+                                    <field name="parent_product_tmpl_id" invisible="1" />
                                     <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
-                                    <field name="attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" domain="[('product_ids.product_tmpl_id', '=', parent.product_tmpl_id)]" attrs="{'column_invisible': [('parent.product_id', '!=', False)]}" groups="product.group_product_variant"/>
-                                    <field name="operation_id" groups="mrp.group_mrp_routings" domain="[('routing_id', '=', parent.routing_id)]" options="{'no_quick_create':True,'no_create_edit':True}" attrs="{'column_invisible': [('parent.type', '=', 'phantom')]}"/>
+                                    <field name="attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'column_invisible': [('parent.product_id', '!=', False)]}" groups="product.group_product_variant"/>
+                                    <field name="operation_id" groups="mrp.group_mrp_routings" attrs="{'column_invisible': [('parent.type','not in', ('normal', 'phantom'))]}" domain="[('routing_id', '=', parent.routing_id)]" options="{'no_quick_create':True,'no_create_edit':True}"/>
                                 </tree>
                             </field>
                         </page>
+                        <page string="By-products" attrs="{'invisible': [('type','!=','normal')]}" groups="mrp.group_mrp_byproducts">
+                            <field name="byproduct_ids">
+                                <tree string="By-products"  editable="top">
+                                    <field name="product_id" context="{'default_type': 'product'}"/>
+                                    <field name="product_qty"/>
+                                    <field name="product_uom_id" groups="uom.group_uom"/>
+                                    <field name="operation_id" groups="mrp.group_mrp_routings" domain="[('routing_id', '=', parent.routing_id)]" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                </tree>
+                                <form string="By-products">
+                                    <field name="product_id"/>
+                                    <field name="product_qty"/>
+                                    <field name="product_uom_id" groups="uom.group_uom"/>
+                                    <field name="operation_id" groups="mrp.group_mrp_routings" domain="[('routing_id', '=', parent.routing_id)]" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                </form>
+                           </field>
+                       </page>
                         <page string="Miscellaneous">
                             <group>
                                 <group>
                                     <field name="sequence"/>
+                                    <field name="consumption" attrs="{'invisible': [('type','!=','normal')]}"/>
                                 </group>
                                 <group>
-                                    <field name="ready_to_produce" string="Manufacturing Readiness"/>
-                                    <field name="picking_type_id" string="Operation"/>
+                                    <field name="ready_to_produce" attrs="{'invisible': [('type','!=','normal')]}" string="Manufacturing Readiness"/>
+                                    <field name="picking_type_id" attrs="{'invisible': [('type','!=','normal')]}" string="Operation"/>
                                 </group>
                             </group>
                         </page>

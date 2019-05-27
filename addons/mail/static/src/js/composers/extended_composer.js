@@ -3,7 +3,14 @@ odoo.define('mail.composer.Extended', function (require) {
 
 var BasicComposer = require('mail.composer.Basic');
 
+var core = require('web.core');
+
+var QWeb = core.qweb;
+
 var ExtendedComposer = BasicComposer.extend({
+    events: _.extend({}, BasicComposer.prototype.events, {
+        'click .o_composer_button_discard': '_onClickDiscard',
+    }),
     /**
      * @override
      */
@@ -67,6 +74,26 @@ var ExtendedComposer = BasicComposer.extend({
     setSubject: function (subject) {
         this.$('.o_composer_subject input').val(subject);
     },
+    /**
+     * Show the button 'discard' next to the send button. This is useful while
+     * replying to a message, when in the end we do not want to reply.
+     */
+    showDiscardButton: function () {
+        var $discard = this.$('.o_composer_button_discard');
+        $discard.removeClass('d-none');
+        $discard.addClass('d-md-inline-block');
+    },
+    /**
+     * Hide the button 'discard' next to the send button. This is useful when
+     * we were replying to a message from a certain thread, then we discard it
+     * with some other actions (i.e. switch thread). The discard button only
+     * makes sense during the selection of a message.
+     */
+    hideDiscardButton: function () {
+        var $discard = this.$('.o_composer_button_discard');
+        $discard.removeClass('d-md-inline-block');
+        $discard.addClass('d-none');
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -75,7 +102,7 @@ var ExtendedComposer = BasicComposer.extend({
     /**
      * @override
      * @private
-     * @returns {$.Deferred}
+     * @returns {Promise}
      */
     _preprocessMessage: function () {
         var self = this;
@@ -92,6 +119,17 @@ var ExtendedComposer = BasicComposer.extend({
      */
     _shouldSend: function () {
         return false;
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onClickDiscard: function () {
+        this.trigger_up('discard_extended_composer');
     },
 });
 

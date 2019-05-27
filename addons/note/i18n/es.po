@@ -3,28 +3,18 @@
 # * note
 # 
 # Translators:
-# oihane <oihanecruce@gmail.com>, 2016
-# Martin Trigaux, 2016
-# José Vicente <txusev@gmail.com>, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Alejandro Die Sanchis <marketing@domatix.com>, 2016
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Antonio Trueba, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2017
-# RGB Consulting <odoo@rgbconsulting.com>, 2017
-# Fernando San Martín Woerner <fsnmartin@gmail.com>, 2017
-# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
+# Martin Trigaux, 2018
+# Cristóbal Martí Oliver <info@moblesmarti.com>, 2018
+# Rubi Navarro <ren@odoo.com>, 2018
+# Cristopher Cravioto <ccr@odoo.com>, 2018
+# Miquel Torner <miq@odoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Christopher Ormaza <chris.ormaza@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Miquel Torner <miq@odoo.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,30 +23,93 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_needaction
+msgid "Action Needed"
+msgstr "Acción requerida"
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Active"
 msgstr "Activo"
 
 #. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_ids
+msgid "Activities"
+msgstr "Actividades"
+
+#. module: note
+#: model:ir.model,name:note.model_mail_activity
+msgid "Activity"
+msgstr "Actividad"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_state
+msgid "Activity State"
+msgstr "Estado de la actividad"
+
+#. module: note
+#: model:ir.model,name:note.model_mail_activity_type
+msgid "Activity Type"
+msgstr "Tipo de actividad"
+
+#. module: note
+#: model_terms:ir.actions.act_window,help:note.action_note_note
 msgid "Add a new personal note"
 msgstr ""
 
 #. module: note
-#: model:ir.actions.act_window,help:note.note_tag_action
+#: model_terms:ir.actions.act_window,help:note.note_tag_action
 msgid "Add a new tag"
+msgstr "Añadir nueva etiqueta"
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:14
+#, python-format
+msgid "Add a note"
+msgstr "Agregar nota"
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:6
+#, python-format
+msgid "Add new note"
 msgstr ""
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Archive"
 msgstr "Archivar"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model:ir.model.fields,field_description:note.field_note_note__message_attachment_count
+msgid "Attachment Count"
+msgstr "Conteo de archivos adjuntos"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
 msgstr "Por categoría de nota fijada"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_mail_activity_type__category
+msgid "Categories may trigger specific behavior like opening calendar view"
+msgstr ""
+"Las categorías pueden desencadenar eventos específicos como abrir una vista "
+"de calendario"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
+msgid "Category"
+msgstr "Categoría"
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:10
+#, python-format
+msgid "Channel"
+msgstr "Canal"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__color
@@ -89,7 +142,7 @@ msgid "Date done"
 msgstr "Fecha realización"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_kanban
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Delete"
 msgstr "Suprimir"
 
@@ -101,17 +154,42 @@ msgid "Display Name"
 msgstr "Nombre a mostrar"
 
 #. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "Dropdown menu"
+msgstr "Menú desplegable"
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__fold
 msgid "Folded by Default"
 msgstr "Replegado por defecto"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "Follower"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_follower_ids
+msgid "Followers"
+msgstr "Seguidores"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Seguidores (Canales)"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seguidores (Empresas)"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Future Activities"
 msgstr "Actividades futuras"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
 msgstr "Agrupar por"
 
@@ -121,6 +199,26 @@ msgstr "Agrupar por"
 #: model:ir.model.fields,field_description:note.field_note_tag__id
 msgid "ID"
 msgstr "ID"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Si está marcado hay nuevos mensajes que requieren su atención."
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Si se encuentra marcado, algunos mensajes tienen error de envío."
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_is_follower
+msgid "Is Follower"
+msgstr "Es un seguidor"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note____last_update
@@ -144,17 +242,37 @@ msgid "Last Updated on"
 msgstr "Última actualización el"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Late Activities"
 msgstr "Actividades tardías"
 
 #. module: note
-#: model:note.stage,name:note.note_stage_03
-msgid "Later"
-msgstr "Más tarde"
+#: model:ir.model.fields,field_description:note.field_note_note__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Adjuntos principales"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: selection:mail.activity.type,category:0
+msgid "Meeting"
+msgstr "Reunión"
+
+#. module: note
+#: model:note.stage,name:note.note_stage_01
+msgid "Meeting Minutes"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_has_error
+msgid "Message Delivery error"
+msgstr "Error de Envío de Mensaje"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_ids
+msgid "Messages"
+msgstr "Mensajes"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "My Activities"
 msgstr "Mis actividades"
 
@@ -164,9 +282,24 @@ msgid "New"
 msgstr "Nuevo"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Siguiente plazo de actividad"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_summary
+msgid "Next Activity Summary"
+msgstr "Resumen de la siguiente actividad"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_type_id
+msgid "Next Activity Type"
+msgstr "Siguiente tipo de actividad"
+
+#. module: note
 #: model:ir.model,name:note.model_note_note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
-#: model:ir.ui.view,arch_db:note.view_note_note_form
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Note"
 msgstr "Nota"
 
@@ -191,12 +324,56 @@ msgid "Note Tag"
 msgstr "Etiqueta de la nota"
 
 #. module: note
+#: code:addons/note/models/res_users.py:61
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
-#: model:note.stage,name:note.note_stage_04
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+#: model:note.stage,name:note.note_stage_02
+#, python-format
 msgid "Notes"
 msgstr "Notas"
+
+#. module: note
+#: model_terms:ir.actions.act_window,help:note.action_note_note
+msgid ""
+"Notes are private, unless you share them by inviting follower on a note.\n"
+"            (Useful for meeting minutes)."
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Número de acciones"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_has_error_counter
+msgid "Number of error"
+msgstr "Número de error"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Número de mensajes que requieren una acción"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Número de mensajes con error de envío"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Número de mensajes no leidos"
+
+#. module: note
+#: selection:mail.activity.type,category:0
+msgid "Other"
+msgstr "Otro"
+
+#. module: note
+#: selection:note.note,activity_state:0
+msgid "Overdue"
+msgstr "Vencidas"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__user_id
@@ -210,13 +387,55 @@ msgid "Owner of the note stage"
 msgstr "Propietario de la etapa de la nota"
 
 #. module: note
+#: selection:note.note,activity_state:0
+msgid "Planned"
+msgstr "Planificado"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity__note_id
+msgid "Related Note"
+msgstr ""
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:23
+#, python-format
+msgid "Remember..."
+msgstr ""
+
+#. module: note
+#: selection:mail.activity.type,category:0
+#: model:mail.activity.type,name:note.mail_activity_data_reminder
+msgid "Reminder"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_user_id
+msgid "Responsible User"
+msgstr "Usuario responsable"
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:25
+#, python-format
+msgid "SAVE"
+msgstr ""
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__sequence
 #: model:ir.model.fields,field_description:note.field_note_stage__sequence
 msgid "Sequence"
 msgstr "Secuencia"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:18
+#, python-format
+msgid "Set date and time"
+msgstr ""
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
 "Mostrar todos los registros que tienen la próxima fecha de acción antes de "
@@ -224,7 +443,7 @@ msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__stage_id
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Stage"
 msgstr "Etapa"
 
@@ -234,19 +453,19 @@ msgid "Stage Name"
 msgstr "Nombre de la etapa"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_stage_form
+#: model_terms:ir.ui.view,arch_db:note.view_note_stage_form
 msgid "Stage of Notes"
 msgstr "Estado de las notas"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.action_note_stage
 #: model:ir.ui.menu,name:note.menu_notes_stage
-#: model:ir.ui.view,arch_db:note.view_note_note_tree
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_tree
 msgid "Stages"
 msgstr "Etapas"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_stage_tree
+#: model_terms:ir.ui.view,arch_db:note.view_note_stage_tree
 msgid "Stages of Notes"
 msgstr "Fases de las notas"
 
@@ -254,6 +473,19 @@ msgstr "Fases de las notas"
 #: model:ir.model.fields,field_description:note.field_note_note__stage_ids
 msgid "Stages of Users"
 msgstr "Fases de usuarios"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Estado basado en actividades\n"
+"Vencida: la fecha tope ya ha pasado\n"
+"Hoy: La fecha tope es hoy\n"
+"Planificada: futuras actividades."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_tag__name
@@ -269,41 +501,39 @@ msgstr "¡El nombre de etiqueta ya existe!"
 #: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note__tag_ids
 #: model:ir.ui.menu,name:note.notes_tag_menu
-#: model:ir.ui.view,arch_db:note.note_tag_view_form
-#: model:ir.ui.view,arch_db:note.note_tag_view_tree
-#: model:ir.ui.view,arch_db:note.view_note_note_form
+#: model_terms:ir.ui.view,arch_db:note.note_tag_view_form
+#: model_terms:ir.ui.view,arch_db:note.note_tag_view_tree
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Etiquetas"
 
 #. module: note
-#: model:note.stage,name:note.note_stage_02
-msgid "This Week"
-msgstr "Esta semana"
-
-#. module: note
-#: model:note.stage,name:note.note_stage_01
+#. openerp-web
+#: code:addons/note/static/src/js/systray_activity_menu.js:97
+#: selection:note.note,activity_state:0
+#, python-format
 msgid "Today"
 msgstr "Hoy"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Today Activities"
 msgstr "Actividades de Hoy"
 
 #. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
-msgid ""
-"Use notes to organize personal tasks or notes. All\n"
-"            notes are private; no one else will be able to see them. However\n"
-"            you can share some notes with other people by inviting followers\n"
-"            on the note. (Useful for meeting minutes, especially if\n"
-"            you activate the pad feature for collaborative writings)."
-msgstr ""
-"Use notas para organizar tareas personales o notas. Todas\n"
-"            las notas son privadas; nadie más será capaz de verlas. Sin embargo\n"
-"            usted puede compartir algunas notas con otras personas invitando como seguidores\n"
-"            en la nota. (Útil para actas de reuniones, sobre todo si se\n"
-"            activa la función de bloc para la escritura colaborativa)."
+#: model:note.stage,name:note.note_stage_03
+msgid "Todo"
+msgstr "Por hacer"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_unread
+msgid "Unread Messages"
+msgstr "Mensajes sin leer"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Contador de mensajes sin leer"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage__sequence
@@ -316,10 +546,11 @@ msgid "Users"
 msgstr "Usuarios"
 
 #. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
-msgid ""
-"You can customize how you process your notes/tasks by adding,\n"
-"            removing or modifying columns."
-msgstr ""
-"Usted puede personalizar la forma de procesar sus notas / tareas añadiendo,\n"
-"            eliminando o modificando columnas.."
+#: model:ir.model.fields,field_description:note.field_note_note__website_message_ids
+msgid "Website Messages"
+msgstr "Mensajes del sitio web"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__website_message_ids
+msgid "Website communication history"
+msgstr "Historial de comunicaciones del sitio web"

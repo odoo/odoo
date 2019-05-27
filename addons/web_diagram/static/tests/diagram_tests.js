@@ -5,7 +5,7 @@ var DiagramView = require('web_diagram.DiagramView');
 
 var testUtils = require('web.test_utils');
 
-var createAsyncView = testUtils.createAsyncView;
+var createView = testUtils.createView;
 
 QUnit.module('Views', {
     beforeEach: function () {
@@ -73,7 +73,7 @@ QUnit.module('Views', {
             var transition_records = _.filter(data.transition_model.records, function (record) {
                 return _.findWhere(node_records, {id: record.source_id});
             });
-            return $.when({
+            return Promise.resolve({
                 parent_field: 'workflow_id',
                 display_name: _.findWhere(data.workflow.records, {id: args.id}).name,
                 nodes: _.map(node_records, function (record) {
@@ -97,47 +97,41 @@ QUnit.module('Views', {
                 }),
             });
         };
-    }
+    },
 }, function () {
 
     QUnit.module('DiagramView');
 
-    QUnit.test('simple diagram rendering', function (assert) {
+    QUnit.test('simple diagram rendering', async function (assert) {
         assert.expect(6);
 
-        var done = assert.async();
-
-        createAsyncView({
+        var diagram = await createView({
             View: DiagramView,
             model: 'workflow',
             data: this.data,
             arch: this.arch,
             res_id: 1,
             mockRPC: this.mockRPC,
-        }).then(function (diagram) {
-            assert.strictEqual(diagram.$('.o_diagram svg').length, 1,
-                "draw the diagram inside the .o_diagram div");
-            assert.strictEqual(diagram.$('.o_diagram path:not(#raphael-marker-block)').length, 3,
-                "diagram should contain 3 transitions");
-            assert.strictEqual(diagram.$('.o_diagram ellipse').length, 2,
-                "diagram should contain 2 'ellipse' nodes (nodes 2 and 3)");
-            assert.strictEqual(diagram.$('.o_diagram rect').length - 1, 1, // -1 because the lib always generates a rect tag that isn't a node
-                "diagram should contain 1 'rectangle' node (node 1)");
-            assert.strictEqual(diagram.$('.o_diagram_header span').length, 2,
-                "diagram should contain 2 header rows");
-            assert.strictEqual(diagram.$('.o_diagram_header span:eq(0)').text(), 'A first label',
-                "diagram label is correctly inserted");
-            diagram.destroy();
-            done();
         });
+        assert.containsOnce(diagram, '.o_diagram svg',
+            "draw the diagram inside the .o_diagram div");
+        assert.strictEqual(diagram.$('.o_diagram path:not(#raphael-marker-block)').length, 3,
+            "diagram should contain 3 transitions");
+        assert.containsN(diagram, '.o_diagram ellipse', 2,
+            "diagram should contain 2 'ellipse' nodes (nodes 2 and 3)");
+        assert.strictEqual(diagram.$('.o_diagram rect').length - 1, 1, // -1 because the lib always generates a rect tag that isn't a node
+            "diagram should contain 1 'rectangle' node (node 1)");
+        assert.containsN(diagram, '.o_diagram_header span', 2,
+            "diagram should contain 2 header rows");
+        assert.strictEqual(diagram.$('.o_diagram_header span:eq(0)').text(), 'A first label',
+            "diagram label is correctly inserted");
+        diagram.destroy();
     });
 
-    QUnit.test('node creation', function (assert) {
+    QUnit.test('node creation', async function (assert) {
         assert.expect(4);
 
-        var done = assert.async();
-
-        createAsyncView({
+        var diagram = await createView({
             View: DiagramView,
             model: 'workflow',
             data: this.data,
@@ -145,33 +139,30 @@ QUnit.module('Views', {
             archs: this.archs,
             res_id: 1,
             mockRPC: this.mockRPC,
-        }).then(function (diagram) {
-            assert.strictEqual(diagram.$('.o_diagram ellipse').length, 2,
-                "diagram should contain 2 'ellipse' nodes (nodes 2 and 3)");
-            assert.strictEqual(diagram.$('text:contains(a new node)').length, 0,
-                "diagram should only have the default nodes at start");
-
-            diagram.$buttons.find('.o_diagram_new_button').click();
-            $('.modal-body input:first').val('a new node').trigger('input');
-            $('.modal-body input:last').val(1).trigger('input');
-            $('.modal-footer button.btn-primary').click();  // save
-
-            assert.strictEqual(diagram.$('.o_diagram ellipse').length, 3,
-                "diagram should contain 3 'ellipse' nodes now (nodes 2, 3 and the new one)");
-            assert.strictEqual(diagram.$('text:contains(a new node)').length, 1,
-                "diagram should only have the default nodes at start");
-
-            diagram.destroy();
-            done();
         });
+
+        assert.containsN(diagram, '.o_diagram ellipse', 2,
+            "diagram should contain 2 'ellipse' nodes (nodes 2 and 3)");
+        assert.strictEqual(diagram.$('text:contains(a new node)').length, 0,
+            "diagram should only have the default nodes at start");
+
+        await testUtils.dom.click(diagram.$buttons.find('.o_diagram_new_button'));
+        await testUtils.fields.editInput($('.modal-body input:first'), 'a new node');
+        await testUtils.fields.editInput($('.modal-body input:last'), 1);
+        await testUtils.dom.click($('.modal-footer button.btn-primary'));
+
+        assert.containsN(diagram, '.o_diagram ellipse', 3,
+            "diagram should contain 3 'ellipse' nodes now (nodes 2, 3 and the new one)");
+        assert.strictEqual(diagram.$('text:contains(a new node)').length, 1,
+            "diagram should only have the default nodes at start");
+
+        diagram.destroy();
     });
 
-    QUnit.test('node edition', function (assert) {
+    QUnit.test('node edition', async function (assert) {
         assert.expect(2);
 
-        var done = assert.async();
-
-        createAsyncView({
+         var diagram = await createView({
             View: DiagramView,
             model: 'workflow',
             data: this.data,
@@ -179,55 +170,51 @@ QUnit.module('Views', {
             archs: this.archs,
             res_id: 1,
             mockRPC: this.mockRPC,
-        }).then(function (diagram) {
-            assert.strictEqual(diagram.$('.o_diagram text').first().text(), 'A first node',
-                "diagram first node should have default name at first");
-
-            CuteNode.double_click_callback({id: 1});
-            $('.modal-body input:first').val('An edited node').trigger('input');
-            $('.modal-footer button.btn-primary').click();  // save
-
-            assert.strictEqual(diagram.$('text').first().text(), 'An edited node',
-                "diagram first node should now have new name");
-
-            diagram.destroy();
-            done();
         });
+
+        assert.strictEqual(diagram.$('.o_diagram text').first().text(), 'A first node',
+            "diagram first node should have default name at first");
+
+        CuteNode.double_click_callback({id: 1});
+        await testUtils.nextTick();
+        await testUtils.fields.editInput($('.modal-body input:first'), 'An edited node');
+        await testUtils.dom.click($('.modal-footer button.btn-primary'));
+
+        assert.strictEqual(diagram.$('text').first().text(), 'An edited node',
+            "diagram first node should now have new name");
+
+        diagram.destroy();
     });
 
-    QUnit.test('node deletion', function (assert) {
+    QUnit.test('node deletion', async function (assert) {
         assert.expect(2);
 
-        var done = assert.async();
-
-        createAsyncView({
+         var diagram = await createView({
             View: DiagramView,
             model: 'workflow',
             data: this.data,
             arch: this.arch,
             res_id: 1,
             mockRPC: this.mockRPC,
-        }).then(function (diagram) {
-            assert.strictEqual(diagram.$('.o_diagram ellipse').length, 2,
-                "diagram should contain 2 'ellipse' nodes (nodes 2 and 3)");
-
-            CuteNode.destruction_callback({id: 2});
-            $('.modal-footer button.btn-primary').click();  // Confirm
-
-            assert.strictEqual(diagram.$('.o_diagram ellipse').length, 1,
-                "diagram should contain 1 'ellipse' nodes (node 2)");
-
-            diagram.destroy();
-            done();
         });
+
+        assert.containsN(diagram, '.o_diagram ellipse', 2,
+            "diagram should contain 2 'ellipse' nodes (nodes 2 and 3)");
+
+        CuteNode.destruction_callback({id: 2});
+        await testUtils.nextTick();
+        await testUtils.dom.click($('.modal-footer button.btn-primary'));
+
+        assert.containsOnce(diagram, '.o_diagram ellipse',
+            "diagram should contain 1 'ellipse' nodes (node 2)");
+
+        diagram.destroy();
     });
 
-    QUnit.test('edge creation', function (assert) {
+    QUnit.test('edge creation', async function (assert) {
         assert.expect(4);
 
-        var done = assert.async();
-
-        createAsyncView({
+         var diagram = await createView({
             View: DiagramView,
             model: 'workflow',
             data: this.data,
@@ -235,35 +222,33 @@ QUnit.module('Views', {
             archs: this.archs,
             res_id: 1,
             mockRPC: this.mockRPC,
-        }).then(function (diagram) {
-            assert.strictEqual(diagram.$('.o_diagram path').length, 4,
-                "diagram should contain 4 'path' nodes (#raphael-marker-block, and transitions 1, 2 and 3)");
-            assert.strictEqual(diagram.$('text:contains(a transition from 1 to 3)').length, 0,
-                "diagram should not have a transition from 1 to 3 at start");
-
-            CuteEdge.new_edge_callback({
-                get_start: function () {return {id: 1};},
-                get_end: function () {return {id: 3};},
-            });
-            $('.modal-body input:first').val('a transition from 1 to 3').trigger('input');
-            $('.modal-footer button.btn-primary').click();  // Confirm
-
-            assert.strictEqual(diagram.$('.o_diagram path').length, 5,
-                "diagram should contain 4 'path' nodes (#raphael-marker-block, transitions 1, 2, 3, and the new one)");
-            assert.strictEqual(diagram.$('text:contains(a transition from 1 to 3)').length, 1,
-                "diagram should now have a transition from 1 to 3");
-
-            diagram.destroy();
-            done();
         });
+
+        assert.containsN(diagram, '.o_diagram path', 4,
+            "diagram should contain 4 'path' nodes (#raphael-marker-block, and transitions 1, 2 and 3)");
+        assert.strictEqual(diagram.$('text:contains(a transition from 1 to 3)').length, 0,
+            "diagram should not have a transition from 1 to 3 at start");
+
+        CuteEdge.new_edge_callback({
+            get_start: function () {return {id: 1};},
+            get_end: function () {return {id: 3};},
+        });
+        await testUtils.nextTick();
+        await testUtils.fields.editInput($('.modal-body input:first'), 'a transition from 1 to 3');
+        await testUtils.dom.click($('.modal-footer button.btn-primary'));
+
+        assert.containsN(diagram, '.o_diagram path', 5,
+            "diagram should contain 4 'path' nodes (#raphael-marker-block, transitions 1, 2, 3, and the new one)");
+        assert.strictEqual(diagram.$('text:contains(a transition from 1 to 3)').length, 1,
+            "diagram should now have a transition from 1 to 3");
+
+        diagram.destroy();
     });
 
-    QUnit.test('edge edition', function (assert) {
+    QUnit.test('edge edition', async function (assert) {
         assert.expect(4);
 
-        var done = assert.async();
-
-        createAsyncView({
+         var diagram = await createView({
             View: DiagramView,
             model: 'workflow',
             data: this.data,
@@ -271,55 +256,53 @@ QUnit.module('Views', {
             archs: this.archs,
             res_id: 1,
             mockRPC: this.mockRPC,
-        }).then(function (diagram) {
-            assert.strictEqual(diagram.$('text:contains(a transition from 1 to 2)').length, 1,
-                "diagram edge should have default name at start");
-            assert.strictEqual(diagram.$('text:contains(An edited edge)').length, 0,
-                "diagram should only have the default edges at start");
-
-            CuteEdge.double_click_callback({id: 1});
-            $('.modal-body input:first').val('An edited edge').trigger('input');
-            $('.modal-footer button.btn-primary').click();  // save
-
-            assert.strictEqual(diagram.$('text:contains(a transition from 1 to 2)').length, 0,
-                "diagram edge should not have default name anymore");
-            assert.strictEqual(diagram.$('text:contains(An edited edge)').length, 1,
-                "diagram should now have the new edge");
-
-            diagram.destroy();
-            done();
         });
+
+        assert.strictEqual(diagram.$('text:contains(a transition from 1 to 2)').length, 1,
+            "diagram edge should have default name at start");
+        assert.strictEqual(diagram.$('text:contains(An edited edge)').length, 0,
+            "diagram should only have the default edges at start");
+
+        CuteEdge.double_click_callback({id: 1});
+        await testUtils.nextTick();
+        await testUtils.fields.editInput($('.modal-body input:first'), 'An edited edge');
+        await testUtils.dom.click($('.modal-footer button.btn-primary'));
+
+        assert.strictEqual(diagram.$('text:contains(a transition from 1 to 2)').length, 0,
+            "diagram edge should not have default name anymore");
+        assert.strictEqual(diagram.$('text:contains(An edited edge)').length, 1,
+            "diagram should now have the new edge");
+
+        diagram.destroy();
     });
 
-    QUnit.test('edge deletion', function (assert) {
+    QUnit.test('edge deletion', async function (assert) {
         assert.expect(4);
 
-        var done = assert.async();
-
-        createAsyncView({
+         var diagram = await createView({
             View: DiagramView,
             model: 'workflow',
             data: this.data,
             arch: this.arch,
             res_id: 1,
             mockRPC: this.mockRPC,
-        }).then(function (diagram) {
-            assert.strictEqual(diagram.$('.o_diagram path').length, 4,
-                "diagram should contain 4 'path' nodes (#raphael-marker-block, and transitions 1, 2 and 3)");
-            assert.strictEqual(diagram.$('text:contains(a transition from 2 to 1)').length, 1,
-                "diagram edge should have default name at start");
-
-            CuteEdge.destruction_callback({id: 3});
-            $('.modal-footer button.btn-primary').click();  // Confirm
-
-            assert.strictEqual(diagram.$('.o_diagram path').length, 3,
-                "diagram should contain 3 'path' nodes (#raphael-marker-block, and transitions 1 and 2)");
-            assert.strictEqual(diagram.$('text:contains(a transition from 2 to 1)').length, 0,
-                "diagram edge label should have been deleted");
-
-            diagram.destroy();
-            done();
         });
+
+        assert.containsN(diagram, '.o_diagram path', 4,
+            "diagram should contain 4 'path' nodes (#raphael-marker-block, and transitions 1, 2 and 3)");
+        assert.strictEqual(diagram.$('text:contains(a transition from 2 to 1)').length, 1,
+            "diagram edge should have default name at start");
+
+        CuteEdge.destruction_callback({id: 3});
+        await testUtils.nextTick();
+        await testUtils.dom.click($('.modal-footer button.btn-primary'));
+
+        assert.containsN(diagram, '.o_diagram path', 3,
+            "diagram should contain 3 'path' nodes (#raphael-marker-block, and transitions 1 and 2)");
+        assert.strictEqual(diagram.$('text:contains(a transition from 2 to 1)').length, 0,
+            "diagram edge label should have been deleted");
+
+        diagram.destroy();
     });
 });
 });

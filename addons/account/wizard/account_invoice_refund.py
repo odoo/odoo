@@ -22,9 +22,9 @@ class AccountInvoiceRefund(models.TransientModel):
 
     date_invoice = fields.Date(string='Credit Note Date', default=fields.Date.context_today, required=True)
     date = fields.Date(string='Accounting Date')
-    description = fields.Char(string='Reason', required=True, default=_get_reason)
+    description = fields.Char(string='Reason', required=True, default=lambda self: self._get_reason())
     refund_only = fields.Boolean(string='Technical field to hide filter_refund in case invoice is partially paid', compute='_get_refund_only')
-    filter_refund = fields.Selection([('refund', 'Create a draft credit note'), ('cancel', 'Cancel: create credit note and reconcile'), ('modify', 'Modify: create credit note, reconcile and create a new draft invoice')],
+    filter_refund = fields.Selection([('refund', 'Create a draft credit note (partial refunding)'), ('cancel', 'Cancel: create credit note and reconcile (full refunding)'), ('modify', 'Modify: create credit note, reconcile and create a new draft invoice')],
         default='refund', string='Credit Method', required=True, help='Choose how you want to credit this invoice. You cannot Modify and Cancel if the invoice is already reconciled')
 
     @api.depends('date_invoice')
@@ -53,7 +53,7 @@ class AccountInvoiceRefund(models.TransientModel):
                 if inv.state in ['draft', 'cancel']:
                     raise UserError(_('Cannot create credit note for the draft/cancelled invoice.'))
                 if inv.reconciled and mode in ('cancel', 'modify'):
-                    raise UserError(_('Cannot create a credit note for the invoice which is already reconciled, invoice should be unreconciled first, then only you can add credit note for this invoice.'))
+                    raise UserError(_('The invoice is already paid or reconciled with a credit note so you cannot reconcile it with a new credit note. You should rather unreconcile the current invoice or create a draft credit note.'))
 
                 date = form.date or False
                 description = form.description or inv.name
@@ -80,7 +80,7 @@ class AccountInvoiceRefund(models.TransientModel):
                         invoice = invoice[0]
                         del invoice['id']
                         invoice_lines = inv_line_obj.browse(invoice['invoice_line_ids'])
-                        invoice_lines = inv_obj.with_context(mode='modify')._refund_cleanup_lines(invoice_lines)
+                        invoice_lines = inv_obj._refund_cleanup_lines(invoice_lines)
                         tax_lines = inv_tax_obj.browse(invoice['tax_line_ids'])
                         tax_lines = inv_obj._refund_cleanup_lines(tax_lines)
                         invoice.update({

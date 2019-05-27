@@ -25,8 +25,8 @@
         <field name="model">calendar.alarm</field>
         <field name="arch" type="xml">
             <tree string="Calendar Alarm" editable="bottom">
-                <field name="name"/>
-                <field name="type"/>
+                <field name="name" invisible="1"/>
+                <field name="alarm_type"/>
                 <field name="duration"/>
                 <field name="interval"/>
             </tree>
@@ -40,14 +40,14 @@
                 <form string="Calendar Alarm">
                  <group>
                     <group>
-                        <field name="name"/>
-                        <field name="type" groups="base.group_no_one"/>
+                        <field name="name" invisible="1"/>
+                        <field name="alarm_type"/>
                     </group>
                     <group>
                         <label for="duration"/>
-                        <div>
-                            <field name="duration" class="oe_inline"/>
-                            <field name="interval" class="oe_inline ml8"/>
+                        <div class="o_row">
+                            <field name="duration"/>
+                            <field name="interval"/>
                         </div>
                     </group>
                 </group>
@@ -139,6 +139,7 @@
                                     {'no_create_edit': True}"/>
                                     <field name="alarm_ids" widget="many2many_tags" />
                                     <field name="location" />
+                                    <field name="event_tz" attrs="{'invisible': [('recurrency', '=', False)]}"/>
                                 </group>
 
                             </group>
@@ -291,9 +292,7 @@
                 <field name="user_id"/>
                 <field name="show_as"/>
                 <field name="privacy" string="Privacy"/>
-                <filter string="My Events" name="myevents" domain="[('user_id','=',uid)]" help="My Events"/>
                 <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
-                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
                 <group expand="0" string="Group By">
                     <filter string="Responsible" name="responsible" domain="[]" context="{'group_by':'user_id'}"/>

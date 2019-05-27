@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     <record id="view_attachment_form_inherit_website" model="ir.ui.view">
+        <field name="name">ir.attachment.form.inherit.website</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="base.view_attachment_form"/>
+        <field name="arch" type="xml">
+            <field name="mimetype" position="after">
+                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+            </field>
+        </field>
+    </record>
+    <record id="view_attachment_tree_inherit_website" model="ir.ui.view">
+       <field name="name">ir.attachment.tree.inherit.website</field>
+       <field name="model">ir.attachment</field>
+       <field name="inherit_id" ref="base.view_attachment_tree"/>
+       <field name="arch" type="xml">
+           <field name="datas_fname" position="after">
+               <field name="website_id" groups="website.group_multi_website"/>
+           </field>
+       </field>
+   </record>
+</odoo>

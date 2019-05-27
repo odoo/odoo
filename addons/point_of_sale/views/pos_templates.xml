@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<template id="pos_assets_backend" name="POS UI Backend Assets" inherit_id="web.assets_backend" primary="True">
+    <xpath expr="//script[contains(@src, '/mail/static/src/js/services/mail_service.js')]" position="replace"></xpath>
+</template>
+
 <template id="index" name="POS Index">&lt;!DOCTYPE html&gt;
 <html>
     <head>
@@ -31,9 +35,7 @@
         </script>
 
         <t t-call-assets="web.assets_common" t-css="false"/>
-        <t t-call-assets="web.assets_backend" t-css="false"/>
-        <t t-call-assets="web_editor.summernote" t-css="false"/>
-        <t t-call-assets="web_editor.assets_editor" t-css="false"/>
+        <t t-call-assets="point_of_sale.pos_assets_backend" t-css="false"/>
         <t t-call-assets="point_of_sale.assets"/>
 
         <script type="text/javascript" id="loading-script" t-raw="init">
@@ -55,7 +57,6 @@
         </script>
     </head>
     <body>
-        <div class="o_main_content"/>
     </body>
 </html>
 </template>
@@ -72,13 +73,7 @@
     </script>
 </template>
 
-<template id="pos_editor_fieldtexthtml_assets" inherit_id="web.assets_backend">
-    <xpath expr="." position="inside">
-        <script type="text/javascript" src="/point_of_sale/static/src/js/field_text_html.js"/>
-    </xpath>
-</template>
-
-<template id="pos_editor_assets" inherit_id="web_editor.assets_editor">
+<template id="pos_editor_assets" inherit_id="web_editor.wysiwyg_snippets">
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/point_of_sale/static/src/js/pos.web_editor.js"/>
     </xpath>

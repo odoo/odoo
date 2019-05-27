@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stock_rules_report_sale" model="ir.ui.view">
+        <field name="name">Stock Rules Report Sale</field>
+        <field name="model">stock.rules.report</field>
+        <field name="inherit_id" ref="stock.view_stock_rules_report"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='warehouse_ids']" position="after">
+                <field name="so_route_ids" widget="many2many_tags" groups="sale_stock.group_route_so_lines"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -31,8 +31,7 @@
                 <i class="fa fa-ban"/>
             </div>
         </div>
-        <div class="o_colorpicker_sections">
-            <ul class="nav nav-pills flex-column o_colorpicker_section_menu"/>
+        <div class="o_colorpicker_sections px-1 pb8">
             <div class="tab-content o_colorpicker_section_tabs"/>
         </div>
     </div>
@@ -41,9 +40,9 @@
     <t t-name="web_editor.many2one.button">
         <div class="btn-group">
             <a role="button" href="#" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" title="Search Contact" aria-label="Search Contact"><i class="fa fa-search"></i></a>
-            <div class="dropdown-menu contact_menu" role="menu">
-                <a role="menuitem" class="dropdown-item"><input href="#" type="email" placeholder="Search"/></a>
-            </div>
+            <ul class="dropdown-menu contact_menu" role="menu">
+                <li><a role="menuitem" class="dropdown-item"><input href="#" type="email" placeholder="Search"/></a></li>
+            </ul>
         </div>
     </t>
 

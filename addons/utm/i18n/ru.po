@@ -3,20 +3,15 @@
 # * utm
 # 
 # Translators:
-# Максим Дронь <dronmax@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Collex100, 2017
-# Masha Koc <mariya.kos.ua@gmail.com>, 2017
-# Denis Trepalin <zekarious@gmail.com>, 2017
-# Viktor Pogrebniak <vp@aifil.ru>, 2017
-# Sergey Vilizhanin <sv@grimmette.ru>, 2017
+# Максим Дронь <dronmax@gmail.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>, 2017\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,15 +25,9 @@ msgid "Active"
 msgstr "Активно"
 
 #. module: utm
-#: model:ir.model,name:utm.model_utm_campaign
-#: model:ir.model.fields,field_description:utm.field_account_invoice__campaign_id
-#: model:ir.model.fields,field_description:utm.field_crm_lead__campaign_id
-#: model:ir.model.fields,field_description:utm.field_hr_applicant__campaign_id
-#: model:ir.model.fields,field_description:utm.field_link_tracker__campaign_id
-#: model:ir.model.fields,field_description:utm.field_sale_order__campaign_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__campaign_id
-#: model:ir.ui.view,arch_db:utm.utm_campaign_form
-#: model:ir.ui.view,arch_db:utm.utm_campaign_tree
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_tree
 msgid "Campaign"
 msgstr "Кампания"
 
@@ -54,8 +43,8 @@ msgid "Campaigns"
 msgstr "Кампании"
 
 #. module: utm
-#: model:ir.ui.view,arch_db:utm.utm_medium_view_form
-#: model:ir.ui.view,arch_db:utm.utm_source_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_form
 msgid "Channel"
 msgstr "Канал"
 
@@ -63,11 +52,6 @@ msgstr "Канал"
 #: model:ir.model.fields,field_description:utm.field_utm_medium__name
 msgid "Channel Name"
 msgstr "Название канала"
-
-#. module: utm
-#: model:ir.model,name:utm.model_utm_medium
-msgid "Channels"
-msgstr "Каналы"
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_christmas_special
@@ -89,12 +73,12 @@ msgid "Created on"
 msgstr "Создан"
 
 #. module: utm
-#: model:ir.actions.act_window,help:utm.utm_medium_action
+#: model_terms:ir.actions.act_window,help:utm.utm_medium_action
 msgid "Define a new medium"
 msgstr ""
 
 #. module: utm
-#: model:ir.actions.act_window,help:utm.utm_source_action
+#: model_terms:ir.actions.act_window,help:utm.utm_source_action
 msgid "Define a new source"
 msgstr ""
 
@@ -105,11 +89,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:utm.field_utm_source__display_name
 msgid "Display Name"
 msgstr "Отображаемое Имя"
-
-#. module: utm
-#: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
-msgid "Email Campaign - Products"
-msgstr "Кампания эл. почты - Продукция"
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_services
@@ -123,8 +102,8 @@ msgstr "Фейсбук"
 
 #. module: utm
 #: model:ir.model,name:utm.model_ir_http
-msgid "HTTP routing"
-msgstr "HTTP маршрутизация"
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__id
@@ -157,30 +136,26 @@ msgid "Last Updated on"
 msgstr "Последнее обновление"
 
 #. module: utm
+#: model:utm.source,name:utm.utm_source_mailing
+msgid "Lead Newsletter"
+msgstr ""
+
+#. module: utm
 #: model:ir.ui.menu,name:utm.menu_link_tracker_root
 msgid "Link Tracker"
 msgstr "Трекер ссылок"
 
 #. module: utm
-#: model:utm.source,name:utm.utm_source_mailing
-msgid "Mailing Partner"
-msgstr "Партнер по рассылке"
-
-#. module: utm
 #: model:ir.actions.act_window,name:utm.utm_medium_action
-#: model:ir.model.fields,field_description:utm.field_account_invoice__medium_id
-#: model:ir.model.fields,field_description:utm.field_crm_lead__medium_id
-#: model:ir.model.fields,field_description:utm.field_hr_applicant__medium_id
-#: model:ir.model.fields,field_description:utm.field_link_tracker__medium_id
-#: model:ir.model.fields,field_description:utm.field_sale_order__medium_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__medium_id
 #: model:ir.ui.menu,name:utm.menu_utm_medium
-#: model:ir.ui.view,arch_db:utm.utm_medium_view_tree
-#: model:ir.ui.view,arch_db:utm.utm_source_view_tree
+#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
+#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "Medium"
 msgstr "Средний"
 
 #. module: utm
+#: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
 #: model:utm.source,name:utm.utm_source_newsletter
 msgid "Newsletter"
 msgstr "Рассылка"
@@ -196,12 +171,6 @@ msgid "Search engine"
 msgstr "Система поиска"
 
 #. module: utm
-#: model:ir.model,name:utm.model_utm_source
-#: model:ir.model.fields,field_description:utm.field_account_invoice__source_id
-#: model:ir.model.fields,field_description:utm.field_crm_lead__source_id
-#: model:ir.model.fields,field_description:utm.field_hr_applicant__source_id
-#: model:ir.model.fields,field_description:utm.field_link_tracker__source_id
-#: model:ir.model.fields,field_description:utm.field_sale_order__source_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__source_id
 msgid "Source"
 msgstr "Источник"
@@ -218,11 +187,6 @@ msgid "Sources"
 msgstr "Источники"
 
 #. module: utm
-#: model:ir.model.fields,help:utm.field_account_invoice__campaign_id
-#: model:ir.model.fields,help:utm.field_crm_lead__campaign_id
-#: model:ir.model.fields,help:utm.field_hr_applicant__campaign_id
-#: model:ir.model.fields,help:utm.field_link_tracker__campaign_id
-#: model:ir.model.fields,help:utm.field_sale_order__campaign_id
 #: model:ir.model.fields,help:utm.field_utm_mixin__campaign_id
 msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
@@ -230,21 +194,11 @@ msgid ""
 msgstr ""
 
 #. module: utm
-#: model:ir.model.fields,help:utm.field_account_invoice__medium_id
-#: model:ir.model.fields,help:utm.field_crm_lead__medium_id
-#: model:ir.model.fields,help:utm.field_hr_applicant__medium_id
-#: model:ir.model.fields,help:utm.field_link_tracker__medium_id
-#: model:ir.model.fields,help:utm.field_sale_order__medium_id
 #: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
 
 #. module: utm
-#: model:ir.model.fields,help:utm.field_account_invoice__source_id
-#: model:ir.model.fields,help:utm.field_crm_lead__source_id
-#: model:ir.model.fields,help:utm.field_hr_applicant__source_id
-#: model:ir.model.fields,help:utm.field_link_tracker__source_id
-#: model:ir.model.fields,help:utm.field_sale_order__source_id
 #: model:ir.model.fields,help:utm.field_utm_mixin__source_id
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
@@ -257,11 +211,26 @@ msgid "Twitter"
 msgstr "Твиттер"
 
 #. module: utm
-#: model:ir.ui.menu,name:utm.marketing_utm
-msgid "UTMs"
-msgstr "UTM-ы"
+#: model:ir.model,name:utm.model_utm_campaign
+msgid "UTM Campaign"
+msgstr "UTM Кампания"
+
+#. module: utm
+#: model:ir.model,name:utm.model_utm_medium
+msgid "UTM Medium"
+msgstr ""
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_mixin
-msgid "utm.mixin"
-msgstr "utm.mixin"
+msgid "UTM Mixin"
+msgstr ""
+
+#. module: utm
+#: model:ir.model,name:utm.model_utm_source
+msgid "UTM Source"
+msgstr ""
+
+#. module: utm
+#: model:ir.ui.menu,name:utm.marketing_utm
+msgid "UTMs"
+msgstr "UTM-ы"

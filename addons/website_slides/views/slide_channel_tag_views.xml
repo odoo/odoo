@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <!-- SLIDE.CHANNEL.TAG -->
+    <record id="slide_channel_tag_view_search" model="ir.ui.view">
+        <field name="name">slide.channel.tag.view.search</field>
+        <field name="model">slide.channel.tag</field>
+        <field name="arch" type="xml">
+            <search string="Channel Tags">
+                <field name="name"/>
+                <field name="group_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="slide_channel_tag_view_form" model="ir.ui.view">
+        <field name="name">slide.channel.tag.view.form</field>
+        <field name="model">slide.channel.tag</field>
+        <field name="arch" type="xml">
+            <form string="Channel Tag">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="group_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="slide_channel_tag_view_tree" model="ir.ui.view">
+        <field name="name">slide.channel.tag.view.tree</field>
+        <field name="model">slide.channel.tag</field>
+        <field name="arch" type="xml">
+            <tree string="Channel Tags">
+                <field name="sequence" widget="handle"/>
+                <field name="group_sequence" invisible="1"/>
+                <field name="name"/>
+                <field name="group_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="slide_channel_tag_action" model="ir.actions.act_window">
+        <field name="name">Channel Tags</field>
+        <field name="res_model">slide.channel.tag</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- SLIDE.CHANNEL.TAG.GROUP -->
+    <record id="slide_channel_tag_group_view_search" model="ir.ui.view">
+        <field name="name">slide.channel.tag.group.view.search</field>
+        <field name="model">slide.channel.tag.group</field>
+        <field name="arch" type="xml">
+            <search string="Channel Tag Groups">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="slide_channel_tag_group_view_form" model="ir.ui.view">
+        <field name="name">slide.channel.tag.group.view.form</field>
+        <field name="model">slide.channel.tag.group</field>
+        <field name="arch" type="xml">
+            <form string="Channel Tag Group">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="website_published"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="slide_channel_tag_group_view_tree" model="ir.ui.view">
+        <field name="name">slide.channel.tag.group.view.tree</field>
+        <field name="model">slide.channel.tag.group</field>
+        <field name="arch" type="xml">
+            <tree string="Channel Tag Groups">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="website_published"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="slide_channel_tag_group_action" model="ir.actions.act_window">
+        <field name="name">Channel Tag Groups</field>
+        <field name="res_model">slide.channel.tag.group</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    </data>
+</odoo>

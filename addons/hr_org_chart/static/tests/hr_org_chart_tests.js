@@ -21,10 +21,10 @@ QUnit.module('hr_org_chart', {
         };
     },
 }, function () {
-    QUnit.test("hr org chart: empty render", function (assert) {
+    QUnit.test("hr org chart: empty render", async function (assert) {
         assert.expect(2);
 
-        var form = createView({
+        var form = await createView({
             View: FormView,
             model: 'hr_employee',
             data: this.data,
@@ -36,7 +36,7 @@ QUnit.module('hr_org_chart', {
             mockRPC: function (route, args) {
                 if (route === '/hr/get_org_chart') {
                     assert.ok('employee_id' in args, "it should have 'employee_id' as argument");
-                    return $.when({
+                    return Promise.resolve({
                         children: [],
                         managers: [],
                         managers_more: false,
@@ -45,13 +45,14 @@ QUnit.module('hr_org_chart', {
                 return this._super(route, args);
             }
         });
-        assert.strictEqual(form.$('[name="child_ids"]').children().length, 1, "the chart should have 1 child");
+        assert.strictEqual(form.$('[name="child_ids"]').children().length, 1,
+            "the chart should have 1 child");
         form.destroy();
     });
-    QUnit.test("hr org chart: basic render", function (assert) {
+    QUnit.test("hr org chart: basic render", async function (assert) {
         assert.expect(3);
 
-        var form = createView({
+        var form = await createView({
             View: FormView,
             model: 'hr_employee',
             data: this.data,
@@ -69,7 +70,7 @@ QUnit.module('hr_org_chart', {
             mockRPC: function (route, args) {
                 if (route === '/hr/get_org_chart') {
                     assert.ok('employee_id' in args, "it should have 'employee_id' as argument");
-                    return $.when({
+                    return Promise.resolve({
                         children: [{
                             direct_sub_count: 0,
                             indirect_sub_count: 0,
@@ -77,6 +78,7 @@ QUnit.module('hr_org_chart', {
                             job_name: 'Sub-Gooroo',
                             link: 'fake_link',
                             name: 'Michael Hawkins',
+                            id: 2,
                         }],
                         managers: [],
                         managers_more: false,
@@ -94,16 +96,16 @@ QUnit.module('hr_org_chart', {
                 return this._super(route, args);
             }
         });
-        assert.strictEqual(form.$('.o_org_chart_entry_sub').length, 1,
+        assert.containsOnce(form, '.o_org_chart_entry_sub',
             "the chart should have 1 subordinate");
-        assert.strictEqual(form.$('.o_org_chart_entry_self').length, 1,
+        assert.containsOnce(form, '.o_org_chart_entry_self',
             "the current employee should only be displayed once in the chart");
         form.destroy();
     });
-    QUnit.test("hr org chart: basic manager render", function (assert) {
+    QUnit.test("hr org chart: basic manager render", async function (assert) {
         assert.expect(4);
 
-        var form = createView({
+        var form = await createView({
             View: FormView,
             model: 'hr_employee',
             data: this.data,
@@ -121,7 +123,7 @@ QUnit.module('hr_org_chart', {
             mockRPC: function (route, args) {
                 if (route === '/hr/get_org_chart') {
                     assert.ok('employee_id' in args, "should have 'employee_id' as argument");
-                    return $.when({
+                    return Promise.resolve({
                         children: [{
                             direct_sub_count: 0,
                             indirect_sub_count: 0,
@@ -129,6 +131,7 @@ QUnit.module('hr_org_chart', {
                             job_name: 'Sub-Gooroo',
                             link: 'fake_link',
                             name: 'Michael Hawkins',
+                            id: 2,
                         }],
                         managers: [{
                             direct_sub_count: 1,
@@ -154,9 +157,9 @@ QUnit.module('hr_org_chart', {
                 return this._super(route, args);
             }
         });
-        assert.strictEqual(form.$('.o_org_chart_group_up .o_org_chart_entry_manager').length, 1, "the chart should have 1 manager");
-        assert.strictEqual(form.$('.o_org_chart_group_down .o_org_chart_entry_sub').length, 1, "the chart should have 1 subordinate");
-        assert.strictEqual(form.$('.o_org_chart_entry_self').length, 1, "the chart should have only once the current employee");
+        assert.containsOnce(form, '.o_org_chart_group_up .o_org_chart_entry_manager', "the chart should have 1 manager");
+        assert.containsOnce(form, '.o_org_chart_group_down .o_org_chart_entry_sub', "the chart should have 1 subordinate");
+        assert.containsOnce(form, '.o_org_chart_entry_self', "the chart should have only once the current employee");
         form.destroy();
     });
 });

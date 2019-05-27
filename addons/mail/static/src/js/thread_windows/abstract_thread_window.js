@@ -10,9 +10,6 @@ var Widget = require('web.Widget');
 var QWeb = core.qweb;
 var _t = core._t;
 
-var HEIGHT_OPEN = '400px';
-var HEIGHT_FOLDED = '34px';
-
 /**
  * This is an abstract widget for rendering thread windows.
  *
@@ -33,11 +30,14 @@ var AbstractThreadWindow = Widget.extend({
     events: {
         'click .o_thread_window_close': '_onClickClose',
         'click .o_thread_window_title': '_onClickFold',
-        'click .o_thread_composer': '_onComposerClick',
+        'click .o_composer_text_field': '_onComposerClick',
         'click .o_mail_thread': '_onThreadWindowClicked',
-        'keydown .o_thread_composer': '_onKeydown',
-        'keypress .o_thread_composer': '_onKeypress',
+        'keydown .o_composer_text_field': '_onKeydown',
+        'keypress .o_composer_text_field': '_onKeypress',
     },
+    FOLD_ANIMATION_DURATION: 200, // duration in ms for (un)fold transition
+    HEIGHT_OPEN: '400px', // height in px of thread window when open
+    HEIGHT_FOLDED: '34px', // height, in px, of thread window when folded
     /**
      * Children of this class must make use of `thread`, which is an object that
      * represent the thread that is linked to this thread window.
@@ -50,6 +50,7 @@ var AbstractThreadWindow = Widget.extend({
      *   thread window is linked to. If not set, it is the "blank" thread
      *   window.
      * @param {Object} [options={}]
+     * @param {mail.model.AbstractThread} [options.thread]
      */
     init: function (parent, thread, options) {
         this._super(parent);
@@ -65,31 +66,41 @@ var AbstractThreadWindow = Widget.extend({
         this._hidden = false;
         this._thread = thread || null;
 
+        this._debouncedOnScroll = _.debounce(this._onScroll.bind(this), 100);
+
         if (!this.hasThread()) {
             // internal fold state of thread window without any thread
             this._folded = false;
         }
     },
     start: function () {
+        var self = this;
         this.$input = this.$('.o_composer_text_field');
         this.$header = this.$('.o_thread_window_header');
+        var options = {
+           displayMarkAsRead: false,
+           displayStars: this.options.displayStars,
+        };
+        if (this._thread && this._thread._type === 'document_thread') {
+           options.displayDocumentLinks = false;
+        }
+        this._threadWidget = new ThreadWidget(this, options);
 
-        this.threadWidget = new ThreadWidget(this, {
-            displayDocumentLinks: false,
-            displayMarkAsRead: false,
-            displayStars: this.options.displayStars,
-        });
-
+        // animate the (un)folding of thread windows
+        this.$el.css({transition: 'height ' + this.FOLD_ANIMATION_DURATION + 'ms linear'});
         if (this.isFolded()) {
-            this.$el.css('height', HEIGHT_FOLDED);
+            this.$el.css('height', this.HEIGHT_FOLDED);
         } else if (this.options.autofocus) {
             this._focusInput();
         }
         if (!config.device.isMobile) {
-            this.$el.css('margin-right', $.position.scrollbarWidth());
+            var margin_dir = _t.database.parameters.direction === "rtl" ? "margin-left" : "margin-right";
+            this.$el.css(margin_dir, $.position.scrollbarWidth());
         }
-        var def = this.threadWidget.replace(this.$('.o_thread_window_content'));
-        return $.when(this._super(), def);
+        var def = this._threadWidget.replace(this.$('.o_thread_window_content')).then(function () {
+            self._threadWidget.$el.on('scroll', self, self._debouncedOnScroll);
+        });
+        return Promise.all([this._super(), def]);
     },
     /**
      * @override
@@ -124,8 +135,49 @@ var AbstractThreadWindow = Widget.extend({
      */
     close: function () {},
     /**
-     * Get the status of the thread, such as the im status of a DM ('online',
-     * 'offline', etc.). If this window has no thread, returns `undefined`.
+     * Get the ID of the thread window, which is equivalent to the ID of the
+     * thread related to this window
+     *
+     * @returns {integer|string}
+     */
+    getID: function () {
+        return this._getThreadID();
+    },
+    /**
+     * @returns {mail.model.Thread|undefined}
+     */
+    getThread: function () {
+        if (!this.hasThread) {
+            return undefined;
+        }
+        return this._thread;
+    },
+    /**
+    *Get out of office info
+    *
+    * @returns {string|undefined}
+    */
+    getOutOfOfficeInfo: function () {
+        if (!this.hasThread()) {
+            return undefined;
+        }
+        return this._thread.getOutOfOfficeInfo();
+    },
+    /**
+     * Get out of office user text
+     *
+     * @returns {string|undefined}
+     */
+    getOutOfOfficeMessage: function () {
+        if (!this.hasThread()) {
+            return undefined;
+        }
+        return this._thread.getOutOfOfficeMessage();
+    },
+    /**
+     * Get the status of the thread, such as the im status of a DM chat
+     * ('online', 'offline', etc.). If this window has no thread, returns
+     * `undefined`.
      *
      * @returns {string|undefined}
      */
@@ -172,6 +224,15 @@ var AbstractThreadWindow = Widget.extend({
         return !! this._thread;
     },
     /**
+     * Tells whether the bottom of the thread in the thread window is visible
+     * or not.
+     *
+     * @returns {boolean}
+     */
+    isAtBottom: function () {
+        return this._threadWidget.isAtBottom();
+    },
+    /**
      * State whether the related thread is folded or not. If there are no
      * thread related to this window, it means this is the "blank" thread
      * window, therefore we use the internal folded state.
@@ -202,12 +263,21 @@ var AbstractThreadWindow = Widget.extend({
         return this._hidden;
     },
     /**
+     * States whether the input of the thread window should be displayed or not.
+     * By default, any thread window with a thread needs a composer.
+     *
+     * @returns {boolean}
+     */
+    needsComposer: function () {
+        return this.hasThread();
+    },
+    /**
      * Render the thread window
      */
     render: function () {
         this.renderHeader();
         if (this.hasThread()) {
-            this.threadWidget.render(this._thread, { displayLoadMore: false });
+            this._threadWidget.render(this._thread, { displayLoadMore: false });
         }
     },
     /**
@@ -221,6 +291,12 @@ var AbstractThreadWindow = Widget.extend({
         var options = this._getHeaderRenderingOptions();
         this.$header.html(
             QWeb.render('mail.AbstractThreadWindow.HeaderContent', options));
+    },
+    /**
+     * Scroll to the bottom of the thread in the thread window
+     */
+    scrollToBottom: function () {
+        this._threadWidget.scrollToBottom();
     },
     /**
      * Toggle the fold state of this thread window. Also update the fold state
@@ -243,27 +319,19 @@ var AbstractThreadWindow = Widget.extend({
      */
     updateVisualFoldState: function () {
         if (!this.isFolded()) {
-            this.threadWidget.scrollToBottom();
-            this._focusInput();
+            this._threadWidget.scrollToBottom();
+            if (this.options.autofocus) {
+                this._focusInput();
+            }
         }
-        this._animateFold();
+        var height = this.isFolded() ? this.HEIGHT_FOLDED : this.HEIGHT_OPEN;
+        this.$el.css({height: height});
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * Called when there is a change of the fold state of the thread window.
-     * This method animates the change of fold state of this thread window.
-     *
-     * @private
-     */
-    _animateFold: function () {
-        this.$el.animate({
-            height: this.isFolded() ? HEIGHT_FOLDED : HEIGHT_OPEN
-        }, 200);
-    },
     /**
      * Set the focus on the composer of the thread window. This operation is
      * ignored in mobile context.
@@ -289,6 +357,7 @@ var AbstractThreadWindow = Widget.extend({
     _getHeaderRenderingOptions: function () {
         return {
             status: this.getThreadStatus(),
+            thread: this.getThread(),
             title: this.getTitle(),
             unreadCounter: this.getUnreadCounter(),
             widget: this,
@@ -310,15 +379,37 @@ var AbstractThreadWindow = Widget.extend({
         return this._thread.getID();
     },
     /**
-     * Post a message on this thread window
+     * Tells whether there is focus on this thread. Note that a thread that has
+     * the focus means the input has focus.
      *
-     * @abstract
+     * @private
+     * @returns {boolean}
+     */
+    _hasFocus: function () {
+        return this.$input.is(':focus');
+    },
+    /**
+     * Post a message on this thread window, and auto-scroll to the bottom of
+     * the thread.
+     *
      * @private
      * @param {Object} messageData
+     * @param {Function} callback
      */
-    _postMessage: function (messageData) {},
+    _postMessage: function (messageData, callback) {
+        var self = this;
+        if (!this.hasThread()) {
+            return;
+        }
+        this._thread.postMessage(messageData)
+            .then(function () {
+                self._threadWidget.scrollToBottom();
+                callback();
+            });
+    },
     /**
      * Update the fold state of the thread.
+     *
      * This function is called when toggling the fold state of this window.
      * If there is no thread linked to this window, it means this is the
      * "blank" thread window, therefore we use the internal state 'folded'
@@ -331,6 +422,7 @@ var AbstractThreadWindow = Widget.extend({
             this._thread.fold(folded);
         } else {
             this._folded = folded;
+            this.updateVisualFoldState();
         }
     },
 
@@ -339,7 +431,8 @@ var AbstractThreadWindow = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Close the thread
+     * Close the thread window.
+     * Mark the thread as read if the thread window was open.
      *
      * @private
      * @param {MouseEvent} ev
@@ -347,10 +440,18 @@ var AbstractThreadWindow = Widget.extend({
     _onClickClose: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
+        if (
+            this.hasThread() &&
+            this._thread.getUnreadCounter() > 0 &&
+            !this.isFolded()
+        ) {
+            this._thread.markAsRead();
+        }
         this.close();
     },
     /**
-     * Fold/unfold the thread window
+     * Fold/unfold the thread window.
+     * Also mark the thread as read.
      *
      * @private
      */
@@ -414,6 +515,14 @@ var AbstractThreadWindow = Widget.extend({
      */
     _onKeypress: function (ev) {
         ev.stopPropagation(); // to prevent jquery's blockUI to cancel event
+    },
+    /**
+     * @private
+     */
+    _onScroll: function () {
+        if (this.hasThread() && this.isAtBottom()) {
+            this._thread.markAsRead();
+        }
     },
     /**
      * When a thread window is clicked on, we want to give the focus to the main

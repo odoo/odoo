@@ -1,22 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, tools
+from odoo import api, fields, models, tools
 
 
 class LeaveReport(models.Model):
     _name = "hr.leave.report"
-    _description = 'Leave Summary / Report'
+    _description = 'Time Off Summary / Report'
     _auto = False
     _order = "date_from DESC, employee_id"
 
     employee_id = fields.Many2one('hr.employee', string="Employee", readonly=True)
     name = fields.Char('Description', readonly=True)
     number_of_days = fields.Float('Number of Days', readonly=True)
-    type = fields.Selection([
+    leave_type = fields.Selection([
         ('allocation', 'Allocation Request'),
-        ('request', 'Leave Request')
-        ], string='Request Type', readonly=True)
+        ('request', 'Time Off Request')
+        ], string='Request Type', readonly=True, oldname='type')
     department_id = fields.Many2one('hr.department', string='Department', readonly=True)
     category_id = fields.Many2one('hr.employee.category', string='Employee Tag', readonly=True)
     holiday_status_id = fields.Many2one("hr.leave.type", string="Leave Type", readonly=True)
@@ -38,11 +38,12 @@ class LeaveReport(models.Model):
 
     def init(self):
         tools.drop_view_if_exists(self._cr, 'hr_leave_report')
+
         self._cr.execute("""
             CREATE or REPLACE view hr_leave_report as (
                 SELECT row_number() over(ORDER BY leaves.employee_id) as id,
                 leaves.employee_id as employee_id, leaves.name as name,
-                leaves.number_of_days as number_of_days, leaves.type as type,
+                leaves.number_of_days as number_of_days, leaves.leave_type as leave_type,
                 leaves.category_id as category_id, leaves.department_id as department_id,
                 leaves.holiday_status_id as holiday_status_id, leaves.state as state,
                 leaves.holiday_type as holiday_type, leaves.date_from as date_from,
@@ -59,12 +60,12 @@ class LeaveReport(models.Model):
                     null as date_from,
                     null as date_to,
                     FALSE as payslip_status,
-                    'allocation' as type
+                    'allocation' as leave_type
                 from hr_leave_allocation as allocation
-                union select
+                union all select
                     request.employee_id as employee_id,
                     request.name as name,
-                    request.number_of_days as number_of_days,
+                    (request.number_of_days * -1) as number_of_days,
                     request.category_id as category_id,
                     request.department_id as department_id,
                     request.holiday_status_id as holiday_status_id,
@@ -73,7 +74,25 @@ class LeaveReport(models.Model):
                     request.date_from as date_from,
                     request.date_to as date_to,
                     request.payslip_status as payslip_status,
-                    'request' as type
+                    'request' as leave_type
                 from hr_leave as request) leaves
             );
         """)
+
+    def _read_from_database(self, field_names, inherited_field_names=[]):
+        if 'name' in field_names and 'employee_id' not in field_names:
+            field_names.append('employee_id')
+        super(LeaveReport, self)._read_from_database(field_names, inherited_field_names)
+        if 'name' in field_names:
+            if self.user_has_groups('hr_holidays.group_hr_holidays_user'):
+                return
+            current_employee = self.env['hr.employee'].sudo().search([('user_id', '=', self.env.uid)], limit=1)
+            for record in self:
+                emp_id = record._cache.get('employee_id', [False])[0]
+                if emp_id != current_employee.id:
+                    try:
+                        record._cache['name']
+                        record._cache['name'] = '*****'
+                    except Exception:
+                        # skip SpecialValue (e.g. for missing record or access right)
+                        pass

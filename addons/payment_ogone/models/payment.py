@@ -15,6 +15,7 @@ from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_ogone.controllers.main import OgoneController
 from odoo.addons.payment_ogone.data import ogone
+from odoo.http import request
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, ustr
 from odoo.tools.float_utils import float_compare, float_repr, float_round
 
@@ -283,7 +284,7 @@ class PaymentTxOgone(models.Model):
         return invalid_parameters
 
     def _ogone_form_validate(self, data):
-        if self.state != 'draft':
+        if self.state not in ['draft', 'pending']:
             _logger.info('Ogone: trying to validate an already validated tx (ref %s)', self.reference)
             return True
 
@@ -356,8 +357,13 @@ class PaymentTxOgone(models.Model):
             'ECI': 9,   # Recurring (from eCommerce)
             'ALIAS': self.payment_token_id.acquirer_ref,
             'RTIMEOUT': 30,
-            'PARAMPLUS' : url_encode(param_plus)
+            'PARAMPLUS': url_encode(param_plus),
+            'EMAIL': self.partner_id.email or '',
+            'CN': self.partner_id.name or '',
         }
+
+        if request:
+            data['REMOTE_ADDR'] = request.httprequest.remote_addr
 
         if kwargs.get('3d_secure'):
             data.update({
@@ -431,7 +437,7 @@ class PaymentTxOgone(models.Model):
         return self._ogone_s2s_validate_tree(tree)
 
     def _ogone_s2s_validate_tree(self, tree, tries=2):
-        if self.state != 'draft':
+        if self.state not in ['draft', 'pending']:
             _logger.info('Ogone: trying to validate an already validated tx (ref %s)', self.reference)
             return True
 
@@ -469,7 +475,7 @@ class PaymentTxOgone(models.Model):
             if status == 46: # HTML 3DS
                 vals['html_3ds'] = ustr(base64.b64decode(tree.HTML_ANSWER.text))
             self.write(vals)
-            self._set_transaction_done()
+            self._set_transaction_pending()
         elif status in self._ogone_wait_tx_status and tries > 0:
             time.sleep(0.5)
             self.write({'acquirer_reference': tree.get('PAYID')})
@@ -548,6 +554,7 @@ class PaymentToken(models.Model):
             }
 
             url = 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % (acquirer.environment,)
+            _logger.info("ogone_create: Creating new alias %s via url %s", alias, url)
             result = requests.post(url, data=data).content
 
             try:

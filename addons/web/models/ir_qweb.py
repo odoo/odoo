@@ -3,6 +3,7 @@
 
 import hashlib
 from collections import OrderedDict
+from werkzeug.urls import url_quote
 
 from odoo import api, models
 from odoo.tools import pycompat
@@ -17,6 +18,7 @@ class Image(models.AbstractModel):
         set as attribute on the generated <img> tag
     """
     _name = 'ir.qweb.field.image'
+    _description = 'Qweb Field Image'
     _inherit = 'ir.qweb.field.image'
 
     @api.model
@@ -31,7 +33,7 @@ class Image(models.AbstractModel):
 
         aclasses = ['img', 'img-fluid'] if options.get('qweb_img_responsive', True) else ['img']
         aclasses += options.get('class', '').split()
-        classes = ' '.join(pycompat.imap(escape, aclasses))
+        classes = ' '.join(map(escape, aclasses))
 
         max_size = None
         if options.get('resize'):
@@ -43,18 +45,26 @@ class Image(models.AbstractModel):
 
         sha = hashlib.sha1(str(getattr(record, '__last_update')).encode('utf-8')).hexdigest()[0:7]
         max_size = '' if max_size is None else '/%s' % max_size
-        avoid_if_small = '&avoid_if_small=true' if options.get('avoid_if_small') else ''
-        src = '/web/image/%s/%s/%s%s?unique=%s%s' % (record._name, record.id, field_name, max_size, sha, avoid_if_small)
 
-        alt = None
+        if options.get('filename-field') and getattr(record, options['filename-field'], None):
+            filename = record[options['filename-field']]
+        elif options.get('filename'):
+            filename = options['filename']
+        else:
+            filename = record.display_name
+
+        src = '/web/image/%s/%s/%s%s/%s?unique=%s' % (record._name, record.id, options.get('preview_image', field_name), max_size, url_quote(filename), sha)
+
         if options.get('alt-field') and getattr(record, options['alt-field'], None):
             alt = escape(record[options['alt-field']])
         elif options.get('alt'):
             alt = options['alt']
+        else:
+            alt = escape(record.display_name)
 
         src_zoom = None
         if options.get('zoom') and getattr(record, options['zoom'], None):
-            src_zoom = '/web/image/%s/%s/%s%s?unique=%s' % (record._name, record.id, options['zoom'], max_size, sha)
+            src_zoom = '/web/image/%s/%s/%s%s/%s?unique=%s' % (record._name, record.id, options['zoom'], max_size, url_quote(filename), sha)
         elif options.get('zoom'):
             src_zoom = options['zoom']
 
@@ -65,6 +75,7 @@ class Image(models.AbstractModel):
         atts["alt"] = alt
         atts["data-zoom"] = src_zoom and u'1' or None
         atts["data-zoom-image"] = src_zoom
+        atts["data-no-post-process"] = options.get('data-no-post-process')
 
         atts = self.env['ir.qweb']._post_processing_att('img', atts, options.get('template_options'))
 

@@ -89,11 +89,13 @@ en Odoo):
                 ],
     'data': [
         # Basic accounting data
+        'data/account_group.xml',
         'data/l10n_do_chart_data.xml',
         'data/account_account_tag_data.xml',
         'data/account.account.template.csv',
         'data/account_chart_template_data.xml',
         'data/account_data.xml',
+        'data/account_tax_report_data.xml',
         'data/account.tax.template.xml',
         # Country States
         'data/l10n_do_state_data.xml',

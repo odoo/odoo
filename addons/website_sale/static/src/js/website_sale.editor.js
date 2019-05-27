@@ -12,36 +12,37 @@ WebsiteNewMenu.include({
         new_product: '_createNewProduct',
     }),
 
-    //----------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Actions
-    //----------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
     /**
      * Asks the user information about a new product to create, then creates it
-     * and redirects the user to this new page.
+     * and redirects the user to this new product.
      *
      * @private
-     * @returns {Deferred} Unresolved if the product is created as there will be
-     *                     a redirection
+     * @returns {Promise} Unresolved if there is a redirection
      */
     _createNewProduct: function () {
         var self = this;
-        var def = $.Deferred();
-        wUtils.prompt({
+        return wUtils.prompt({
             id: "editor_new_product",
             window_title: _t("New Product"),
-            input: "Product Name",
-        }).then(function (name) {
-            self._rpc({
+            input: _t("Name"),
+        }).then(function (result) {
+            if (!result.val) {
+                return;
+            }
+            return self._rpc({
                 route: '/shop/add_product',
                 params: {
-                    name: name,
+                    name: result.val,
                 },
             }).then(function (url) {
                 window.location.href = url;
+                return new Promise(function () {});
             });
-        }, def.resolve.bind(def));
-        return def;
+        });
     },
 });
 });
@@ -51,15 +52,31 @@ WebsiteNewMenu.include({
 odoo.define('website_sale.editor', function (require) {
 'use strict';
 
-require('web.dom_ready');
+var core = require('web.core');
+var Dialog = require('web.Dialog');
 var options = require('web_editor.snippets.options');
+var publicWidget = require('web.public.widget');
 
-if (!$('.js_sale').length) {
-    return $.Deferred().reject("DOM doesn't contain '.js_sale'");
-}
+var _t = core._t;
+var qweb = core.qweb;
 
-$('.oe_website_sale').on('click', '.oe_currency_value:o_editable', function (ev) {
-    $(ev.currentTarget).selectContent();
+publicWidget.registry.websiteSaleCurrency = publicWidget.Widget.extend({
+    selector: '.oe_website_sale',
+    disabledInEditableMode: false,
+    edit_events: {
+        'click .oe_currency_value:o_editable': '_onCurrencyValueClick',
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onCurrencyValueClick: function (ev) {
+        $(ev.currentTarget).selectContent();
+    },
 });
 
 options.registry.website_sale = options.Class.extend({
@@ -73,7 +90,7 @@ options.registry.website_sale = options.Class.extend({
         var size_x = parseInt(this.$target.attr("colspan") || 1);
         var size_y = parseInt(this.$target.attr("rowspan") || 1);
 
-        var $size = this.$el.find('ul[name="size"]');
+        var $size = this.$el.find('div[name="size"]');
         var $select = $size.find('tr:eq(0) td:lt('+size_x+')');
         if (size_y >= 2) $select = $select.add($size.find('tr:eq(1) td:lt('+size_x+')'));
         if (size_y >= 3) $select = $select.add($size.find('tr:eq(2) td:lt('+size_x+')'));
@@ -84,11 +101,11 @@ options.registry.website_sale = options.Class.extend({
             model: 'product.style',
             method: 'search_read',
         }).then(function (data) {
-            var $ul = self.$el.find('ul[name="style"]');
+            var $ul = self.$el.find('div[name="style"]');
             for (var k in data) {
                 $ul.append(
-                    $('<li data-style="'+data[k]['id']+'" data-toggle-class="'+data[k]['html_class']+'" data-no-preview="true"/>')
-                        .append( $('<a/>').text(data[k]['name']) ));
+                    $('<a class="dropdown-item" role="menuitem" data-style="'+data[k]['id']+'" data-toggle-class="'+data[k]['html_class']+'" data-no-preview="true"/>')
+                        .append(data[k]['name']));
             }
             self._setActive();
         });
@@ -104,13 +121,13 @@ options.registry.website_sale = options.Class.extend({
     },
     bind_resize: function () {
         var self = this;
-        this.$el.on('mouseenter', 'ul[name="size"] table', function (event) {
+        this.$el.on('mouseenter', 'div[name="size"] table', function (event) {
             $(event.currentTarget).addClass("oe_hover");
         });
-        this.$el.on('mouseleave', 'ul[name="size"] table', function (event) {
+        this.$el.on('mouseleave', 'div[name="size"] table', function (event) {
             $(event.currentTarget).removeClass("oe_hover");
         });
-        this.$el.on('mouseover', 'ul[name="size"] td', function (event) {
+        this.$el.on('mouseover', 'div[name="size"] td', function (event) {
             var $td = $(event.currentTarget);
             var $table = $td.closest("table");
             var x = $td.index()+1;
@@ -126,7 +143,7 @@ options.registry.website_sale = options.Class.extend({
             $table.find("td").removeClass("select");
             $select_td.addClass("select");
         });
-        this.$el.on('click', 'ul[name="size"] td', function (event) {
+        this.$el.on('click', 'div[name="size"] td', function (event) {
             var $td = $(event.currentTarget);
             var x = $td.index()+1;
             var y = $td.parent().index()+1;
@@ -158,5 +175,65 @@ options.registry.website_sale = options.Class.extend({
             },
         }).then(this.reload);
     }
+});
+
+/**
+ * Handles the edition of products search bar snippet.
+ */
+options.registry.ProductsSearchBar = options.Class.extend({
+    xmlDependencies: ['/website_sale/static/src/xml/website_sale.editor.xml'],
+
+    /**
+     * @override
+     */
+    start: function () {
+        this.$searchProductsInput = this.$('.search-query');
+        this.$searchOrderField = this.$('.o_wsale_search_order_by');
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    openSearchbarSettings: function (previewMode, value, $opt) {
+        var self = this;
+        new Dialog(this, {
+            title: _t("Products Search Bar"),
+            $content: $(qweb.render('website_sale.dialog.productsSearchBar', {
+                currentOrderBy: this.$searchOrderField.val(),
+                currentLimit: parseInt(this.$searchProductsInput.attr('data-limit')),
+                currentDisplayDescription: this.$searchProductsInput.attr('data-display-description') === 'true',
+                currentDisplayPrice: this.$searchProductsInput.attr('data-display-price') === 'true',
+                currentDisplayImage: this.$searchProductsInput.attr('data-display-image') === 'true',
+            })),
+            buttons: [
+                {
+                    text: _t("Save"),
+                    classes: 'btn-primary',
+                    click: function () {
+                        self.$searchOrderField.attr({
+                            'value': this.$('#order_by').val(),
+                        });
+                        self.$searchProductsInput.attr({
+                            'data-limit': this.$('#use_autocomplete').is(':checked') ? this.$('#limit').val() : 0,
+                            'data-display-description': this.$('#display_description').is(':checked'),
+                            'data-display-price': this.$('#display_price').is(':checked'),
+                            'data-display-image': this.$('#display_image').is(':checked'),
+                        });
+                        self.$target.trigger('content_changed');
+                        this.close();
+                    },
+                },
+                {
+                    text: _t("Discard"),
+                    close: true,
+                },
+            ],
+        }).open();
+    },
 });
 });

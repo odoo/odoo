@@ -50,6 +50,7 @@ from .service.server import memory_info
 from .service import security, model as service_model
 from .tools.func import lazy_property
 from .tools import ustr, consteq, frozendict, pycompat, unique, date_utils
+from .tools.mimetypes import guess_mimetype
 
 from .modules.module import module_manifest
 
@@ -103,9 +104,9 @@ def dispatch_rpc(service_name, method, params):
         rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
         if rpc_request_flag or rpc_response_flag:
             start_time = time.time()
-            start_rss, start_vms = 0, 0
+            start_memory = 0
             if psutil:
-                start_rss, start_vms = memory_info(psutil.Process(os.getpid()))
+                start_memory = memory_info(psutil.Process(os.getpid()))
             if rpc_request and rpc_response_flag:
                 odoo.netsvc.log(rpc_request, logging.DEBUG, '%s.%s' % (service_name, method), replace_request_password(params))
 
@@ -121,10 +122,10 @@ def dispatch_rpc(service_name, method, params):
 
         if rpc_request_flag or rpc_response_flag:
             end_time = time.time()
-            end_rss, end_vms = 0, 0
+            end_memory = 0
             if psutil:
-                end_rss, end_vms = memory_info(psutil.Process(os.getpid()))
-            logline = '%s.%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (service_name, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
+                end_memory = memory_info(psutil.Process(os.getpid()))
+            logline = '%s.%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (service_name, method, end_time - start_time, start_memory / 1024, end_memory / 1024, (end_memory - start_memory)/1024)
             if rpc_response_flag:
                 odoo.netsvc.log(rpc_response, logging.DEBUG, logline, result)
             else:
@@ -302,7 +303,7 @@ class WebRequest(object):
     def _handle_exception(self, exception):
         """Called within an except block to allow converting exceptions
            to abitrary responses. Anything returned (except None) will
-           be used as response.""" 
+           be used as response."""
         self._failed = exception # prevent tx commit
         if not isinstance(exception, NO_POSTMORTEM) \
                 and not isinstance(exception, werkzeug.exceptions.HTTPException):
@@ -518,7 +519,7 @@ def route(route=None, **kw):
             if isinstance(response, Response) or f.routing_type == 'json':
                 return response
 
-            if isinstance(response, (bytes, pycompat.text_type)):
+            if isinstance(response, (bytes, str)):
                 return Response(response)
 
             if isinstance(response, werkzeug.exceptions.HTTPException):
@@ -579,33 +580,14 @@ class JsonRequest(WebRequest):
     def __init__(self, *args):
         super(JsonRequest, self).__init__(*args)
 
-        self.jsonp_handler = None
+        self.params = {}
 
         args = self.httprequest.args
-        jsonp = args.get('jsonp')
-        self.jsonp = jsonp
         request = None
         request_id = args.get('id')
-        
-        if jsonp and self.httprequest.method == 'POST':
-            # jsonp 2 steps step1 POST: save call
-            def handler():
-                self.session['jsonp_request_%s' % (request_id,)] = self.httprequest.form['r']
-                self.session.modified = True
-                headers=[('Content-Type', 'text/plain; charset=utf-8')]
-                r = werkzeug.wrappers.Response(request_id, headers=headers)
-                return r
-            self.jsonp_handler = handler
-            return
-        elif jsonp and args.get('r'):
-            # jsonp method GET
-            request = args.get('r')
-        elif jsonp and request_id:
-            # jsonp 2 steps step2 GET: run and return result
-            request = self.session.pop('jsonp_request_%s' % (request_id,), '{}')
-        else:
-            # regular jsonrpc2
-            request = self.httprequest.get_data().decode(self.httprequest.charset)
+
+        # regular jsonrpc2
+        request = self.httprequest.get_data().decode(self.httprequest.charset)
 
         # Read POST content or POST Form Data named "request"
         try:
@@ -629,16 +611,8 @@ class JsonRequest(WebRequest):
         if result is not None:
             response['result'] = result
 
-        if self.jsonp:
-            # If we use jsonp, that's mean we are called from another host
-            # Some browser (IE and Safari) do no allow third party cookies
-            # We need then to manage http sessions manually.
-            response['session_id'] = self.session.sid
-            mime = 'application/javascript'
-            body = "%s(%s);" % (self.jsonp, json.dumps(response, default=date_utils.json_default))
-        else:
-            mime = 'application/json'
-            body = json.dumps(response, default=date_utils.json_default)
+        mime = 'application/json'
+        body = json.dumps(response, default=date_utils.json_default)
 
         return Response(
             body, status=error and error.pop('http_status', 200) or 200,
@@ -673,8 +647,6 @@ class JsonRequest(WebRequest):
             return self._json_response(error=error)
 
     def dispatch(self):
-        if self.jsonp_handler:
-            return self.jsonp_handler()
         try:
             rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
             rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
@@ -685,9 +657,9 @@ class JsonRequest(WebRequest):
                 args = self.params.get('args', [])
 
                 start_time = time.time()
-                _, start_vms = 0, 0
+                start_memory = 0
                 if psutil:
-                    _, start_vms = memory_info(psutil.Process(os.getpid()))
+                    start_memory = memory_info(psutil.Process(os.getpid()))
                 if rpc_request and rpc_response_flag:
                     rpc_request.debug('%s: %s %s, %s',
                         endpoint, model, method, pprint.pformat(args))
@@ -696,11 +668,11 @@ class JsonRequest(WebRequest):
 
             if rpc_request_flag or rpc_response_flag:
                 end_time = time.time()
-                _, end_vms = 0, 0
+                end_memory = 0
                 if psutil:
-                    _, end_vms = memory_info(psutil.Process(os.getpid()))
+                    end_memory = memory_info(psutil.Process(os.getpid()))
                 logline = '%s: %s %s: time:%.3fs mem: %sk -> %sk (diff: %sk)' % (
-                    endpoint, model, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
+                    endpoint, model, method, end_time - start_time, start_memory / 1024, end_memory / 1024, (end_memory - start_memory)/1024)
                 if rpc_response_flag:
                     rpc_response.debug('%s, %s', logline, pprint.pformat(result))
                 else:
@@ -807,7 +779,7 @@ class HttpRequest(WebRequest):
 
 Odoo URLs are CSRF-protected by default (when accessed with unsafe
 HTTP methods). See
-https://www.odoo.com/documentation/11.0/reference/http.html#csrf for
+https://www.odoo.com/documentation/12.0/reference/http.html#csrf for
 more details.
 
 * if this endpoint is accessed through Odoo via py-QWeb form, embed a CSRF
@@ -1038,6 +1010,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
             uid = odoo.registry(db)['res.users'].authenticate(db, login, password, env)
         else:
             security.check(db, uid, password)
+        self.rotate = True
         self.db = db
         self.uid = uid
         self.login = login
@@ -1275,17 +1248,16 @@ class DisableCacheMiddleware(object):
             parsed = urls.url_parse(referer)
             debug = parsed.query.count('debug') >= 1
 
-            new_headers = []
-            unwanted_keys = ['Last-Modified']
             if debug:
                 new_headers = [('Cache-Control', 'no-cache')]
-                unwanted_keys += ['Expires', 'Etag', 'Cache-Control']
 
-            for k, v in headers:
-                if k not in unwanted_keys:
-                    new_headers.append((k, v))
+                for k, v in headers:
+                    if k.lower() != 'cache-control':
+                        new_headers.append((k, v))
 
-            start_response(status, new_headers)
+                start_response(status, new_headers)
+            else:
+                start_response(status, headers)
         return self.app(environ, start_wrapped)
 
 class Root(object):
@@ -1299,7 +1271,8 @@ class Root(object):
         # Setup http sessions
         path = odoo.tools.config.session_dir
         _logger.debug('HTTP sessions stored in: %s', path)
-        return werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
+        return werkzeug.contrib.sessions.FilesystemSessionStore(
+            path, session_class=OpenERPSession, renew_missing=True)
 
     @lazy_property
     def nodb_routing_map(self):
@@ -1327,7 +1300,7 @@ class Root(object):
                     path_static = opj(addons_path, module, 'static')
                     if manifest_path and os.path.isdir(path_static):
                         manifest_data = open(manifest_path, 'rb').read()
-                        manifest = ast.literal_eval(pycompat.to_native(manifest_data))
+                        manifest = ast.literal_eval(pycompat.to_text(manifest_data))
                         if not manifest.get('installable', True):
                             continue
                         manifest['addons_path'] = addons_path
@@ -1385,8 +1358,6 @@ class Root(object):
 
     def get_request(self, httprequest):
         # deduce type of request
-        if httprequest.args.get('jsonp'):
-            return JsonRequest(httprequest)
         if httprequest.mimetype in ("application/json", "application/json-rpc"):
             return JsonRequest(httprequest)
         else:
@@ -1402,7 +1373,7 @@ class Root(object):
                 else:
                     raise
 
-        if isinstance(result, (bytes, pycompat.text_type)):
+        if isinstance(result, (bytes, str)):
             response = Response(result, mimetype='text/html')
         else:
             response = result
@@ -1415,6 +1386,8 @@ class Root(object):
             if httprequest.session.rotate:
                 self.session_store.delete(httprequest.session)
                 httprequest.session.sid = self.session_store.generate_key()
+                if httprequest.session.uid:
+                    httprequest.session.session_token = security.compute_session_token(httprequest.session, request.env)
                 httprequest.session.modified = True
             self.session_store.save(httprequest.session)
         # We must not set the cookie if the session id was specified using a http header or a GET parameter.
@@ -1437,7 +1410,12 @@ class Root(object):
             httprequest = werkzeug.wrappers.Request(environ)
             httprequest.app = self
             httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
-            threading.current_thread().url = httprequest.url
+            
+            current_thread = threading.current_thread()
+            current_thread.url = httprequest.url
+            current_thread.query_count = 0
+            current_thread.query_time = 0
+            current_thread.perf_t0 = time.time()
 
             explicit_session = self.setup_session(httprequest)
             self.setup_db(httprequest)
@@ -1501,6 +1479,7 @@ def db_filter(dbs, httprequest=None):
     if d == "www" and r:
         d = r.partition('.')[0]
     if odoo.tools.config['dbfilter']:
+        d, h = re.escape(d), re.escape(h)
         r = odoo.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
         dbs = [i for i in dbs if re.match(r, i)]
     elif odoo.tools.config['db_name']:
@@ -1570,7 +1549,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
 
     :param cache_timeout: the timeout in seconds for the headers.
     """
-    if isinstance(filepath_or_fp, pycompat.string_types):
+    if isinstance(filepath_or_fp, str):
         if not filename:
             filename = os.path.basename(filepath_or_fp)
         file = open(filepath_or_fp, 'rb')
@@ -1620,7 +1599,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
             mtime,
             size,
             adler32(
-                filename.encode('utf-8') if isinstance(filename, pycompat.text_type)
+                filename.encode('utf-8') if isinstance(filename, str)
                 else filename
             ) & 0xffffffff
         ))
@@ -1638,15 +1617,39 @@ def content_disposition(filename):
 
     return "attachment; filename*=UTF-8''%s" % escaped
 
-#----------------------------------------------------------
-# RPC controller
-#----------------------------------------------------------
-class CommonController(Controller):
 
-    @route('/gen_session_id', type='json', auth="none")
-    def gen_session_id(self):
-        nsession = root.session_store.new()
-        return nsession.sid
+def set_safe_image_headers(headers, content):
+    """Return new headers based on `headers` but with `Content-Length` and
+    `Content-Type` set appropriately depending on the given `content` only if it
+    is safe to do."""
+    content_type = guess_mimetype(content)
+    safe_types = ['image/jpeg', 'image/png', 'image/gif', 'image/x-icon']
+    if content_type in safe_types:
+        headers = set_header_field(headers, 'Content-Type', content_type)
+    set_header_field(headers, 'Content-Length', len(content))
+    return headers
+
+
+def set_header_field(headers, name, value):
+    """ Return new headers based on `headers` but with `value` set for the
+    header field `name`.
+
+    :param headers: the existing headers
+    :type headers: list of tuples (name, value)
+
+    :param name: the header field name
+    :type name: string
+
+    :param value: the value to set for the `name` header
+    :type value: string
+
+    :return: the updated headers
+    :rtype: list of tuples (name, value)
+    """
+    dictheaders = dict(headers)
+    dictheaders[name] = value
+    return list(dictheaders.items())
+
 
 #  main wsgi handler
 root = Root()

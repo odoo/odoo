@@ -24,6 +24,7 @@ class TestAccountSupplierInvoice(AccountingTestCase):
             'account_id': invoice_account,
             'type': 'in_invoice',
         })
+        self.assertEquals(invoice.journal_id.type, 'purchase')
 
         self.env['account.invoice.line'].create({'product_id': self.env.ref('product.product_product_4').id,
             'quantity': 1.0,
@@ -79,6 +80,7 @@ class TestAccountSupplierInvoice(AccountingTestCase):
             'account_id': invoice_account,
             'type': 'in_invoice',
         })
+        self.assertEquals(invoice.journal_id.type, 'purchase')
 
         invoice_line = self.env['account.invoice.line'].create({'product_id': self.env.ref('product.product_product_4').id,
             'quantity': 5.0,
@@ -106,3 +108,38 @@ class TestAccountSupplierInvoice(AccountingTestCase):
         #I cancel the account move which is in posted state and verifies that it gives warning message
         with self.assertRaises(Warning):
             invoice.move_id.button_cancel()
+
+    def test_vendor_bill_refund(self):
+        invoice_account = self.env['account.account'].search(
+            [('user_type_id', '=', self.env.ref('account.data_account_type_receivable').id)], limit=1)
+        invoice_line_account = self.env['account.account'].search(
+            [('user_type_id', '=', self.env.ref('account.data_account_type_expenses').id)], limit=1)
+
+        if self.env.ref('base.main_partner').bank_account_count > 0:
+            bank = self.env['res.partner.bank'].search([('partner_id', '=', self.env.ref('base.main_partner').id)], limit=1)
+
+        else:
+            bank = self.env['res.partner.bank'].create({
+                'acc_number': '12345678910',
+                'partner_id': self.env.ref('base.main_partner').id,
+            })
+
+        invoice_id = self.env['account.invoice'].create({
+            'name': 'invoice test refund',
+            'partner_id': self.env.ref("base.res_partner_2").id,
+            'account_id': invoice_account.id,
+            'currency_id': self.env.ref('base.USD').id,
+            'type': 'in_invoice',
+        })
+        self.env['account.invoice.line'].create({
+            'product_id': self.env.ref("product.product_product_4").id,
+            'quantity': 1,
+            'price_unit': 15.0,
+            'invoice_id': invoice_id.id,
+            'name': 'something',
+            'account_id': invoice_line_account.id,
+        })
+
+        refund_invoices = invoice_id.refund()
+
+        self.assertEqual(refund_invoices.partner_bank_id, bank)

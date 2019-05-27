@@ -26,7 +26,7 @@
                             <field name="active_analytic_distribution" groups="analytic.group_analytic_accounting"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
-                        <field name="analytic_distribution_ids" nolabel="1" widget="one2many_list"
+                        <field name="analytic_distribution_ids" nolabel="1" widget="one2many"
                             attrs="{'invisible': [('active_analytic_distribution', '=', False)]}" groups="analytic.group_analytic_accounting">
                             <tree string="Analytic Distribution" editable="bottom">
                                 <field name="account_id"/>
@@ -278,6 +278,7 @@
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Analytic Entry">
+                <sheet>
                     <group>
                         <group name="analytic_entry" string="Analytic Entry">
                             <field name="name"/>
@@ -289,9 +290,11 @@
                         <group name="amount" string="Amount">
                             <field name="amount"/>
                             <field name="unit_amount"/>
+                            <field name="product_uom_id" class="oe_inline"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
                     </group>
+                </sheet>
                 </form>
             </field>
         </record>
@@ -351,7 +354,7 @@
                                     <div class="col-6">
                                         <strong><span><t t-esc="record.name.value"/></span></strong>
                                     </div>
-                                    <div class="col-6 float-right text-right">
+                                    <div class="col-6 text-right">
                                         <strong><t t-esc="record.date.value"/></strong>
                                     </div>
                                 </div>
@@ -373,7 +376,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="account_analytic_line_action_entries">
-            <field name="name">Analytic Entries</field>
+            <field name="name">Analytic Items</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_mode">tree,kanban,form,graph,pivot</field>
             <field name="view_id" ref="view_account_analytic_line_tree"/>

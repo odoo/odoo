@@ -7,6 +7,8 @@
 }
 
 .dropdown-toggle {
+  white-space: nowrap;
+
   // Generate the caret automatically
   @include caret;
 }
@@ -22,8 +24,8 @@
   min-width: $dropdown-min-width;
   padding: $dropdown-padding-y 0;
   margin: $dropdown-spacer 0 0; // override default ul
-  font-size: $font-size-base; // Redeclare because nesting can cause inheritance issues
-  color: $body-color;
+  @include font-size($dropdown-font-size);
+  color: $dropdown-color;
   text-align: left; // Ensures proper alignment if parent has it changed (e.g., modal footer)
   list-style: none;
   background-color: $dropdown-bg;
@@ -33,9 +35,20 @@
   @include box-shadow($dropdown-box-shadow);
 }
 
-.dropdown-menu-right {
-  right: 0;
-  left: auto;
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+    .dropdown-menu#{$infix}-left {
+      right: auto;
+      left: 0;
+    }
+
+    .dropdown-menu#{$infix}-right {
+      right: 0;
+      left: auto;
+    }
+  }
 }
 
 // Allow for dropdowns to go bottom up (aka, dropup-menu)
@@ -88,7 +101,7 @@
 }
 
 // When enabled Popper.js, reset basic dropdown position
-// stylelint-disable no-duplicate-selectors
+// stylelint-disable-next-line no-duplicate-selectors
 .dropdown-menu {
   &[x-placement^="top"],
   &[x-placement^="right"],
@@ -98,11 +111,10 @@
     bottom: auto;
   }
 }
-// stylelint-enable no-duplicate-selectors
 
 // Dividers (basically an `<hr>`) within the dropdown
 .dropdown-divider {
-  @include nav-divider($dropdown-divider-bg);
+  @include nav-divider($dropdown-divider-bg, $dropdown-divider-margin-y);
 }
 
 // Links, buttons, and more within the dropdown menu
@@ -120,6 +132,18 @@
   background-color: transparent; // For `<button>`s
   border: 0; // For `<button>`s
 
+  // Prevent dropdown overflow if there's no padding
+  // See https://github.com/twbs/bootstrap/pull/27703
+  @if $dropdown-padding-y == 0 {
+    &:first-child {
+      @include border-top-radius($dropdown-inner-border-radius);
+    }
+
+    &:last-child {
+      @include border-bottom-radius($dropdown-inner-border-radius);
+    }
+  }
+
   @include hover-focus {
     color: $dropdown-link-hover-color;
     text-decoration: none;
@@ -136,6 +160,7 @@
   &.disabled,
   &:disabled {
     color: $dropdown-link-disabled-color;
+    pointer-events: none;
     background-color: transparent;
     // Remove CSS gradients if they're enabled
     @if $enable-gradients {
@@ -153,7 +178,7 @@
   display: block;
   padding: $dropdown-padding-y $dropdown-item-padding-x;
   margin-bottom: 0; // for use with heading elements
-  font-size: $font-size-sm;
+  @include font-size($font-size-sm);
   color: $dropdown-header-color;
   white-space: nowrap; // as with > li > a
 }

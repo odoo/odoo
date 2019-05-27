@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-extend="mail.UserStatus">
+        <t t-jquery="i:last" t-operation="after">
+            <i t-if="status == 'leave_online'" class="o_mail_user_status o_user_online fa fa-plane" title="Online" role="img" aria-label="User is online"/>
+            <i t-if="status == 'leave_offline'" class="o_mail_user_status o_user_idle fa fa-plane" title="Out of office" role="img" aria-label="User is out of office"/>
+        </t>
+    </t>
+</templates>

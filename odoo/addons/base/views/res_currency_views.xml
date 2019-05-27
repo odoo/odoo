@@ -60,7 +60,6 @@
             <field name="arch" type="xml">
                 <search string="Currencies">
                     <field name="name" string="Currency"/>
-                    <field name="active"/>
                     <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active currencies"/>
                     <filter name="inactive" string="Inactive" domain="[('active','=',False)]" help="Show inactive currencies"/>
                 </search>
@@ -77,7 +76,7 @@
                     <field name="rate_ids" invisible="1"/>
                     <field name="date"/>
                     <field name="rate"/>
-                    <field name="active" widget="boolean_toggle"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -96,7 +95,7 @@
                                     <div class="col-6">
                                         <strong><span><t t-esc="record.name.value"/></span></strong>
                                     </div>
-                                    <div class="col-6 float-right text-right">
+                                    <div class="col-6 text-right">
                                         <span class="badge badge-pill"><t t-esc="record.symbol.value"/></span>
                                     </div>
                                 </div>

@@ -1,7 +1,6 @@
 odoo.define('web.base_import_tests', function (require) {
 "use strict";
 
-var config = require('web.config');
 var KanbanView = require('web.KanbanView');
 var ListView = require('web.ListView');
 var testUtils = require('web.test_utils');
@@ -23,31 +22,31 @@ QUnit.module('Base Import Tests', {
     }
 });
 
-QUnit.test('add import button in list', function(assert) {
+QUnit.test('add import button in list', async function(assert) {
     assert.expect(2);
 
-    var list = createView({
+    var list = await createView({
         View: ListView,
         model: 'foo',
         data: this.data,
         arch: '<tree><field name="foo"/></tree>',
     });
 
-    assert.ok(list.$buttons.find('.o_button_import:contains(Import)').is(':visible'),
+    assert.isVisible(list.$buttons.find('.o_button_import:contains(Import)'),
         "should have a visible Import button");
 
-    testUtils.intercept(list, 'do_action', function() {
+    testUtils.mock.intercept(list, 'do_action', function() {
         assert.ok(true, "should have triggered a do_action");
     });
 
-    list.$buttons.find('.o_button_import:contains(Import)').click();
+    await testUtils.dom.click(list.$buttons.find('.o_button_import:contains(Import)'));
     list.destroy();
 });
 
-QUnit.test('list without import button', function(assert) {
+QUnit.test('list without import button', async function(assert) {
     assert.expect(1);
 
-    var list = createView({
+    var list = await createView({
         View: ListView,
         model: 'foo',
         data: this.data,
@@ -57,14 +56,14 @@ QUnit.test('list without import button', function(assert) {
         }
     });
 
-    assert.ok(!list.$buttons.find('.o_button_import').length, "should not have an Import button");
+    assert.containsNone(list.$buttons, '.o_button_import', 'should not have an Import button');
     list.destroy();
 });
 
-QUnit.test('add import button in kanban', function(assert) {
+QUnit.test('add import button in kanban', async function(assert) {
     assert.expect(2);
 
-    var kanban = createView({
+    var kanban = await createView({
         View: KanbanView,
         model: 'foo',
         data: this.data,
@@ -75,21 +74,21 @@ QUnit.test('add import button in kanban', function(assert) {
                 '</t></templates></kanban>',
     });
 
-    assert.ok(kanban.$buttons.find('.o_button_import:contains(Import)').is(':visible'),
+    assert.isVisible(kanban.$buttons.find('.o_button_import:contains(Import)'),
         "should have a visible Import button");
 
-    testUtils.intercept(kanban, 'do_action', function() {
+    testUtils.mock.intercept(kanban, 'do_action', function() {
         assert.ok(true, "should have triggered a do_action");
     });
 
-    kanban.$buttons.find('.o_button_import:contains(Import)').click();
+    await testUtils.dom.click(kanban.$buttons.find('.o_button_import:contains(Import)'));
     kanban.destroy();
 });
 
-QUnit.test('kanban without import button', function(assert) {
+QUnit.test('kanban without import button', async function(assert) {
     assert.expect(1);
 
-    var kanban = createView({
+    var kanban = await createView({
         View: KanbanView,
         model: 'foo',
         data: this.data,
@@ -103,54 +102,39 @@ QUnit.test('kanban without import button', function(assert) {
         }
     });
 
-    assert.ok(!kanban.$buttons.find('.o_button_import').length, "should not have an Import button");
+    assert.containsNone(kanban.$buttons, '.o_button_import', "should not have an Import button");
     kanban.destroy();
 });
 
-QUnit.test('import button should be hidden in list on mobile screens', function (assert) {
+QUnit.test('import attrs in list views', async function (assert) {
     assert.expect(1);
 
-    var list = createView({
+    var list = await createView({
         View: ListView,
         model: 'foo',
         data: this.data,
-        arch: '<tree><field name="foo"/></tree>',
-        config: {
-            device: {
-                size_class: config.device.SIZES.XS,
-            },
-        },
+        arch: '<tree import="0"><field name="foo"/></tree>',
     });
 
-    assert.notOk(list.$buttons.find('.o_button_import').is(':visible'), "import button should be hidden");
+    assert.containsNone(list.$buttons, '.o_button_import');
     list.destroy();
 });
 
-QUnit.test('import button should be hidden in kanban on mobile screens', function (assert) {
+QUnit.test('import attrs in kanban views', async function (assert) {
     assert.expect(1);
-    var done = assert.async();
 
-    // the kanban view is async in mobile mode, because it has to load an
-    // external additional library
-    testUtils.createAsyncView({
+    var kanban = await createView({
         View: KanbanView,
         model: 'foo',
         data: this.data,
-        arch: '<kanban><templates><t t-name="kanban-box">' +
-                    '<div>' +
-                    '<field name="foo"/>' +
-                    '</div>' +
-                '</t></templates></kanban>',
-        config: {
-            device: {
-                size_class: config.device.SIZES.XS,
-            },
-        },
-    }).then(function (kanban){
-        assert.notOk(kanban.$buttons.find('.o_button_import').is(':visible'), "import button should be hidden");
-        kanban.destroy();
-        done();
+        arch: '<kanban import="0">' +
+                '<templates><t t-name="kanban-box">' +
+                    '<div><field name="foo"/></div>' +
+                '</t></templates>' +
+            '</kanban>',
     });
-});
 
+    assert.containsNone(kanban.$buttons, '.o_button_import');
+    kanban.destroy();
+});
 });

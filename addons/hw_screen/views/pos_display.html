@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="cache-control" content="no-cache" />
+        <meta http-equiv="pragma" content="no-cache" />
+        <title class="origin">{{ title or "Odoo's IoTBox" }}</title>
+        <script class="origin" type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+        <link class="origin" rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css">
+        <script class="origin" type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
+        <script type="text/javascript" class="origin">
+            {{ cust_js|safe }}
+        </script>
+        <style class="origin">
+            html, body {
+                height: 100%;
+            }
+        </style>
+        <style>
+            body {
+                background: linear-gradient(to right bottom, #77717e, #c9a8a9);
+                height: 100vh;
+            }
+            .pos-display-status {
+                padding: 10px 20px;
+                background: rgba(0, 0, 0, 0.17);
+                border: 1px solid rgba(0, 0, 0, 0.06);
+                box-shadow: 1px 1px 0px 0px rgba(60, 60, 60, 0.4);
+                color: #fff;
+                border-radius: 8px;
+                width: 500px;
+                position: absolute;
+                right: 20px;
+                bottom: 20px;
+            }
+            .info-text {
+                font-size: 15px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="text-center pt-5">
+                <img style="width: 150px;" src="/web/static/src/img/logo_inverse_white_206px.png">
+                <p class="mt-3" style="color: #fff;font-size: 30px;">IoTBox</p>
+            </div>
+            <div class="pos-display-status">
+            <h4 class="text-center mb-3">POS Client display</h4>
+            <table class="table table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th>Interface</th>
+                        <th>IP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for display_iface in display_ifaces -%}
+                        <tr>
+                            <td><i class="fa fa-{{ display_iface.icon }}"></i></td>
+                            <td>{{ display_iface.addr }}</td>
+                        </tr>
+                    {%- endfor %}
+                </tbody>
+            </table>
+            <p class="mb-2 info-text">
+                <i class="fa fa-info-circle mr-1"></i>The customer cart will be displayed here once a Point of Sale session is started.
+            </p>
+            <p class="mb-2 info-text">
+                <i class="fa fa-info-circle mr-1"></i>Odoo version 11 or above is required.
+            </p>
+            <div class="error-message alert alert-danger mb-2 d-none" role="alert" />
+            </div>
+        </div>
+    </body>
+</html>

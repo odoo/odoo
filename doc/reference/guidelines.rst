@@ -32,124 +32,204 @@ Module structure
 
 Directories
 -----------
-A module is organised in important directories. Those contain the business logic; having a look at them should make you understand the purpose of the module.
+A module is organized in important directories. Those contain the business logic;
+having a look at them should make you understand the purpose of the module.
 
 - *data/* : demo and data xml
 - *models/* : models definition
-- *controllers/* : contains controllers (HTTP routes).
+- *controllers/* : contains controllers (HTTP routes)
 - *views/* : contains the views and templates
 - *static/* : contains the web assets, separated into *css/, js/, img/, lib/, ...*
 
 Other optional directories compose the module.
 
-- *wizard/* : regroups the transient models (formerly *osv_memory*) and their views.
-- *report/* : contains the reports (RML report **[deprecated]**, models based on SQL views (for reporting) and other complex reports). Python objects and XML views are included in this directory.
-- *tests/* : contains the Python/YML tests
+- *wizard/* : regroups the transient models (``models.TransientModel``) and their views
+- *report/* : contains the printable reports and models based on SQL views. Python objects and XML views are included in this directory
+- *tests/* : contains the Python tests
 
 
 File naming
 -----------
-For *views* declarations, split backend views from (frontend)
-templates in 2 differents files.
 
-For *models*, split the business logic by sets of models, in each set
-select a main model, this model gives its name to the set. If there is
-only one model, its name is the same as the module name. For
-each set named <main_model> the following files may be created:
+File naming is important to quickly find information through all odoo addons.
+This section explains how to name files in a standard odoo module. As an
+example we use a plant nursery application. It holds two main models plant.nursery
+and plant.order.
 
-- :file:`models/{<main_model>}.py`
-- :file:`models/{<inherited_main_model>}.py`
-- :file:`views/{<main_model>}_templates.xml`
-- :file:`views/{<main_model>}_views.xml`
-
-For instance, *sale* module introduces ``sale_order`` and
-``sale_order_line`` where ``sale_order`` is dominant. So the
-``<main_model>`` files will be named :file:`models/sale_order.py` and
-:file:`views/sale_order_views.py`.
-
-For *data*, split them by purpose : demo or data. The filename will be
-the main_model name, suffixed by *_demo.xml* or *_data.xml*.
-
-For *controllers*, the only file should be named *main.py*. Otherwise, if you need to inherit an existing controller from another module, its name will be *<module_name>.py*. Unlike *models*, each controller class should be contained in a separated file.
-
-For *static files*, since the resources can be used in different contexts (frontend, backend, both), they will be included in only one bundle. So, CSS/Less, JavaScript and XML files should be suffixed with the name of the bundle type. i.e.: *im_chat_common.css*, *im_chat_common.js* for 'assets_common' bundle, and *im_chat_backend.css*, *im_chat_backend.js* for 'assets_backend' bundle.
-If the module owns only one file, the convention will be *<module_name>.ext* (i.e.: *project.js*).
-Don't link data (image, libraries) outside Odoo: do not use an
-URL to an image but copy it in our codebase instead.
-
-Regarding *data*, split them by purpose: data or demo. The filename will be
-the *main_model* name, suffixed by *_data.xml* or *_demo.xml*.
-
-Regarding *wizards*, naming convention is :
-
-- :file:`{<main_transient>}.py`
-- :file:`{<main_transient>}_views.xml`
-
-Where *<main_transient>* is the name of the dominant transient model, just like for *models*. <main_transient>.py can contains the models 'model.action' and 'model.action.line'.
-
-For *statistics reports*, their names should look like :
-
-- :file:`{<report_name_A>}_report.py`
-- :file:`{<report_name_A>}_report_views.py` (often pivot and graph views)
-
-For *printable reports*, you should have :
-
-- :file:`{<print_report_name>}_reports.py` (report actions, paperformat definition, ...)
-- :file:`{<print_report_name>}_templates.xml` (xml report templates)
-
-
-The complete tree should look like
+Concerning *models*, split the business logic by sets of models belonging to
+a same main model. Each set lies in a given file named based on its main model.
+If there is only one model, its name is the same as the module name. Each
+inherited model should be in its own file to help understanding of impacted
+models.
 
 .. code-block:: text
 
-    addons/<my_module_name>/
+    addons/plant_nursery/
+    |-- models/
+    |   |-- plant_nursery.py (first main model)
+    |   |-- plant_order.py (another main model)
+    |   |-- res_partner.py (inherited Odoo model)
+
+Concerning *security* and access rights and rules two main files should be used.
+First one is the definition of access rights done in a ``ir.model.access.csv``
+file. User groups are defined in ``<module>_groups.xml``. Access rules are
+defined in ``<model>_security.xml``.
+
+.. code-block:: text
+
+    addons/plant_nursery/
+    |-- security/
+    |   |-- ir.model.access.csv
+    |   |-- plant_nusery_groups.xml
+    |   |-- plant_nusery_security.xml
+    |   |-- plant_order_security.xml
+
+Concerning *views*, backend views should be split like models and suffixed
+by ``_views.xml``. Backend views are list, form, kanban, activity, graph, pivot, ..
+views. To ease split by model in views main menus not linked to specific actions
+may be extracted into an optional ``<module>_menus.xml`` file. Templates (QWeb
+pages used notably for portal / website display) and bundles (import of JS and
+CSS assets) are put in separate files. Those are respectively
+``<model>_templates.xml`` and ``assets.xml`` files.
+
+.. code-block:: text
+
+    addons/plant_nursery/
+    |-- views/
+    |   | -- assets.xml (import of JS / CSS)
+    |   | -- plant_nursery_menus.xml (optional definition of main menus)
+    |   | -- plant_nursery_views.xml (backend views)
+    |   | -- plant_nursery_templates.xml (portal templates)
+    |   | -- plant_order_views.xml
+    |   | -- plant_order_templates.xml
+    |   | -- res_partner_views.xml
+
+Concerning *data*, split them by purpose (demo or data) and main model. Filenames
+will be the main_model name suffixed by ``_demo.xml`` or ``_data.xml``. For instance
+for an application having demo and data for its main model as well as subtypes,
+activities and mail templates all related to mail module:
+
+.. code-block:: text
+
+    addons/plant_nursery/
+    |-- data/
+    |   |-- plant_nursery_data.xml
+    |   |-- plant_nursery_demo.xml
+    |   |-- mail_data.xml
+
+Concerning *controllers*, generally all controllers belong to a single controller
+contained in a file named ``<module_name>.py``. An old convention in Odoo is to
+name this file ``main.py`` but it is considered as outdated. If you need to inherit
+an existing controller from another module do it in ``<inherited_module_name>.py``.
+For example adding portal controller in an application is done in ``portal.py``.
+
+.. code-block:: text
+
+    addons/plant_nursery/
+    |-- controllers/
+    |   |-- plant_nursery.py
+    |   |-- portal.py (inheriting portal/controllers/portal.py)
+    |   |-- main.py (deprecated, replaced by plant_nursery.py)
+
+Concerning *static files*, Javascript files follow globally the same logic as
+python models. Each component should be in its own file with a meaningful name.
+For instance, the activity widgets are located in ``activity.js`` of mail module.
+Subdirectories can also be created to structure the 'package' (see web module
+for more details). The same logic should be applied for the templates of JS
+widgets (static XML files) and for their styles (scss files). Don't link
+data (image, libraries) outside Odoo: do not use an URL to an image but copy
+it in the codebase instead.
+
+Concerning *wizards*, naming convention is the same of for python models:
+``<transient>.py`` and ``<transient>_views.xml``. Both are put in the wizard
+directory. This naming comes from old odoo applications using the wizard
+keyword for transient models.
+
+.. code-block:: text
+
+    addons/plant_nursery/
+    |-- wizard/
+    |   |-- make_plant_order.py
+    |   |-- make_plant_order_views.xml
+
+Concerning *statistics reports* done with python / SQL views and classic views
+naming is the following :
+
+.. code-block:: text
+
+    addons/plant_nursery/
+    |-- report/
+    |   |-- plant_order_report.py
+    |   |-- plant_order_report_views.xml
+
+Concerning *printable reports* which contain mainly data preparation and Qweb
+templates naming is the following :
+
+.. code-block:: text
+
+    addons/plant_nursery/
+    |-- report/
+    |   |-- plant_order_reports.xml (report actions, paperformat, ...)
+    |   |-- plant_order_templates.xml (xml report templates)
+
+The complete tree of our Odoo module therefore looks like
+
+.. code-block:: text
+
+    addons/plant_nursery/
     |-- __init__.py
     |-- __manifest__.py
     |-- controllers/
     |   |-- __init__.py
-    |   |-- <inherited_module_name>.py
-    |   `-- main.py
+    |   |-- plant_nursery.py
+    |   |-- portal.py
     |-- data/
-    |   |-- <main_model>_data.xml
-    |   `-- <inherited_main_model>_demo.xml
+    |   |-- plant_nursery_data.xml
+    |   |-- plant_nursery_demo.xml
+    |   |-- mail_data.xml
     |-- models/
     |   |-- __init__.py
-    |   |-- <main_model>.py
-    |   `-- <inherited_main_model>.py
+    |   |-- plant_nursery.py
+    |   |-- plant_order.py
+    |   |-- res_partner.py
     |-- report/
     |   |-- __init__.py
-    |   |-- <main_stat_report_model>.py
-    |   |-- <main_stat_report_model>_views.xml
-    |   |-- <main_print_report>_reports.xml
-    |   `-- <main_print_report>_templates.xml
+    |   |-- plant_order_report.py
+    |   |-- plant_order_report_views.xml
+    |   |-- plant_order_reports.xml (report actions, paperformat, ...)
+    |   |-- plant_order_templates.xml (xml report templates)
     |-- security/
     |   |-- ir.model.access.csv
-    |   `-- <main_model>_security.xml
+    |   |-- plant_nusery_groups.xml
+    |   |-- plant_nusery_security.xml
+    |   |-- plant_order_security.xml
     |-- static/
     |   |-- img/
     |   |   |-- my_little_kitten.png
-    |   |   `-- troll.jpg
+    |   |   |-- troll.jpg
     |   |-- lib/
-    |   |   `-- external_lib/
-    |   `-- src/
-    |       |-- js/
-    |       |   `-- <my_module_name>.js
-    |       |-- css/
-    |       |   `-- <my_module_name>.css
-    |       |-- scss/
-    |       |   `-- <my_module_name>.scss
-    |       `-- xml/
-    |           `-- <my_module_name>.xml
+    |   |   |-- external_lib/
+    |   |-- src/
+    |   |   |-- js/
+    |   |   |   |-- widget_a.js
+    |   |   |   |-- widget_b.js
+    |   |   |-- scss/
+    |   |   |   |-- widget_a.scss
+    |   |   |   |-- widget_b.scss
+    |   |   |-- xml/
+    |   |   |   |-- widget_a.xml
+    |   |   |   |-- widget_a.xml
     |-- views/
-    |   |-- <main_model>_templates.xml
-    |   |-- <main_model>_views.xml
-    |   |-- <inherited_main_model>_templates.xml
-    |   `-- <inherited_main_model>_views.xml
-    `-- wizard/
-        |-- <main_transient_A>.py
-        |-- <main_transient_A>_views.xml
-        |-- <main_transient_B>.py
-        `-- <main_transient_B>_views.xml
+    |   |-- assets.xml
+    |   |-- plant_nursery_menus.xml
+    |   |-- plant_nursery_views.xml
+    |   |-- plant_nursery_templates.xml
+    |   |-- plant_order_views.xml
+    |   |-- plant_order_templates.xml
+    |   |-- res_partner_views.xml
+    |-- wizard/
+    |   |--make_plant_order.py
+    |   |--make_plant_order_views.xml
 
 .. note:: File names should only contain ``[a-z0-9_]`` (lowercase
           alphanumerics and ``_``)
@@ -200,22 +280,23 @@ Odoo supports custom tags acting as syntactic sugar:
 The 4 first tags are prefered over the *record* notation.
 
 
-Naming xml_id
--------------
+XML IDs and naming
+------------------
 
 Security, View and Action
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Use the following pattern :
 
-* For a menu: :samp:`{<model_name>}_menu`
+* For a menu: :samp:`{<model_name>}_menu`, or :samp:`{<model_name>}_menu_{do_stuff}` for submenus.
 * For a view: :samp:`{<model_name>}_view_{<view_type>}`, where *view_type* is
   ``kanban``, ``form``, ``tree``, ``search``, ...
 * For an action: the main action respects :samp:`{<model_name>}_action`.
   Others are suffixed with :samp:`_{<detail>}`, where *detail* is a
-  lowercase string briefly explaining the action.
-  This is used only if multiple actions are declared for the
-  model.
+  lowercase string briefly explaining the action. This is used only if
+  multiple actions are declared for the model.
+* For window actions: suffix the action name by the specific view information
+  like :samp:`{<model_name>}_action_view_{<view_type}`.
 * For a group: :samp:`{<model_name>}_group_{<group_name>}` where *group_name*
   is the name of the group, generally 'user', 'manager', ...
 * For a rule: :samp:`{<model_name>}_rule_{<concerned_group>}` where
@@ -223,17 +304,33 @@ Use the following pattern :
   for the 'model_name_group_user', 'public' for public user, 'company'
   for multi-company rules, ...).
 
+Name should be identical to xml id with dots replacing underscores. Actions
+should have a real naming as it is used as display name.
+
 .. code-block:: xml
 
-    <!-- views and menus -->
+    <!-- views  -->
     <record id="model_name_view_form" model="ir.ui.view">
+        <field name="name">model.name.view.form</field>
         ...
     </record>
 
     <record id="model_name_view_kanban" model="ir.ui.view">
+        <field name="name">model.name.view.kanban</field>
         ...
     </record>
 
+    <!-- actions -->
+    <record id="model_name_action" model="ir.act.window">
+        <field name="name">Model Main Action</field>
+        ...
+    </record>
+
+    <record id="model_name_action_child_list" model="ir.actions.act_window">
+        <field name="name">Model Access Childs</field>
+    </record>
+
+    <!-- menus and sub-menus -->
     <menuitem
         id="model_name_menu_root"
         name="Main Menu"
@@ -246,15 +343,6 @@ Use the following pattern :
         action="model_name_action"
         sequence="10"
     />
-
-    <!-- actions -->
-    <record id="model_name_action" model="ir.actions.act_window">
-        ...
-    </record>
-
-    <record id="model_name_action_child_list" model="ir.actions.act_window">
-        ...
-    </record>
 
     <!-- security -->
     <record id="module_name_group_user" model="res.groups">
@@ -269,29 +357,35 @@ Use the following pattern :
         ...
     </record>
 
+Inheriting XML
+~~~~~~~~~~~~~~
 
+Xml Ids of inheriting views should use the same ID as the original record.
+It helps finding all inheritance at a glance. As final Xml Ids are prefixed
+by the module that creates them there is no overlap.
 
-.. note:: View names use dot notation ``my.model.view_type`` or
-          ``my.model.view_type.inherit`` instead of *"This is the form view of
-          My Model"*.
-
-
-Inherited XML
-~~~~~~~~~~~~~
-
-The naming pattern of inherited view is
-:samp:`{<base_view>}_inherit_{<current_module_name>}`. A module may only
-extend a view once.  Suffix the orginal name with
-:samp:`_inherit_{<current_module_name>}` where *current_module_name* is the
-technical name of the module extending the view.
-
+Naming should contain an ``.inherit.{details}`` suffix to ease understanding
+the override purpose when looking at its name.
 
 .. code-block:: xml
 
-    <record id="inherited_model_view_form_inherit_my_module" model="ir.ui.view">
+    <record id="model_view_form" model="ir.ui.view">
+        <field name="name">model.view.form.inherit.module2</field>
+        <field name="inherit_id" ref="module1.model_view_form"/>
         ...
     </record>
 
+New primary views do not require the inherit suffix as those are new records
+based upon the first one.
+
+.. code-block:: xml
+
+    <record id="module2.model_view_form" model="ir.ui.view">
+        <field name="name">model.view.form.module2</field>
+        <field name="inherit_id" ref="module1.model_view_form"/>
+        <field name="mode">primary</field>
+        ...
+    </record>
 
 Python
 ======
@@ -305,11 +399,6 @@ source code tries to respect Python standard, but some of them can be ignored.
 - E501: line too long
 - E301: expected 1 blank line, found 0
 - E302: expected 2 blank lines, found 1
-- E126: continuation line over-indented for hanging indent
-- E123: closing bracket does not match indentation of opening bracket's line
-- E127: continuation line over-indented for visual indent
-- E128: continuation line under-indented for visual indent
-- E265: block comment should start with '# '
 
 Imports
 -------
@@ -333,7 +422,7 @@ Inside these 3 groups, the imported lines are alphabetically sorted.
     from odoo import api, fields, models # alphabetically ordered
     from odoo.tools.safe_eval import safe_eval as eval
     from odoo.tools.translate import _
-    # 3 :  imports from odoo modules
+    # 3 :  imports from odoo addons
     from odoo.addons.website.models.website import slug
     from odoo.addons.web.controllers.main import login_redirect
 
@@ -617,17 +706,47 @@ online documentation of pyscopg2 to learn of to use it properly:
 - Advanced parameter types (http://initd.org/psycopg/docs/usage.html#adaptation-of-python-values-to-sql-types)
 
 
-Keep your methods short/simple when possible
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Think extendable
+~~~~~~~~~~~~~~~~
 Functions and methods should not contain too much logic: having a lot of small
 and simple methods is more advisable than having few large and complex methods.
-A good rule of thumb is to split a method as soon as:
-- it has more than one responsibility (see http://en.wikipedia.org/wiki/Single_responsibility_principle)
-- it is too big to fit on one screen.
+A good rule of thumb is to split a method as soon as it has more than one
+responsibility (see http://en.wikipedia.org/wiki/Single_responsibility_principle).
 
-Also, name your functions accordingly: small and properly named functions are the starting point of readable/maintainable code and tighter documentation.
+Hardcoding a business logic in a method should be avoided as it prevents to be
+easily extended by a submodule.
 
-This recommendation is also relevant for classes, files, modules and packages. (See also http://en.wikipedia.org/wiki/Cyclomatic_complexity)
+.. code-block:: python
+
+    # do not do this
+    # modifying the domain or criteria implies overriding whole method
+    def action(self):
+        ...  # long method
+        partners = self.env['res.partner'].search(complex_domain)
+        emails = partners.filtered(lambda r: arbitrary_criteria).mapped('email')
+
+    # better but do not do this either
+    # modifying the logic forces to duplicate some parts of the code
+    def action(self):
+        ...
+        partners = self._get_partners()
+        emails = partners._get_emails()
+
+    # better
+    # minimum override
+    def action(self):
+        ...
+        partners = self.env['res.partner'].search(self._get_partner_domain())
+        emails = partners.filtered(lambda r: r._filter_partners()).mapped('email')
+
+The above code is over extendable for the sake of example but the readability
+must be taken into account and a tradeoff must be made.
+
+Also, name your functions accordingly: small and properly named functions are
+the starting point of readable/maintainable code and tighter documentation.
+
+This recommendation is also relevant for classes, files, modules and packages.
+(See also http://en.wikipedia.org/wiki/Cyclomatic_complexity)
 
 
 Never commit the transaction
@@ -791,12 +910,12 @@ Symbols and Conventions
       and *sale.order* instead of *res.partnerS* and *saleS.orderS*)
     - When defining an Odoo Transient (wizard) : use ``<related_base_model>.<action>``
       where *related_base_model* is the base model (defined in *models/*) related
-      to the transient, and *action* is the short name of what the transient do.
+      to the transient, and *action* is the short name of what the transient do. Avoid the *wizard* word.
       For instance : ``account.invoice.make``, ``project.task.delegate.batch``, ...
     - When defining *report* model (SQL views e.i.) : use
       ``<related_base_model>.report.<action>``, based on the Transient convention.
 
-- Odoo Python Class : use camelcase for code.
+- Odoo Python Class : use camelcase (Object-oriented style).
 
 
 .. code-block:: python
@@ -807,13 +926,12 @@ Symbols and Conventions
 - Variable name :
     - use camelcase for model variable
     - use underscore lowercase notation for common variable.
-    - Odoo works with a record or a recordset, don't suffix variable names with
-      *_id* or *_ids* if they don't contain an id or a list of ids.
+    - suffix your variable name with *_id* or *_ids* if it contains a record id or list of id. Don't use ``partner_id`` to contain a record of res.partner
 
 .. code-block:: python
 
-    ResPartner = self.env['res.partner']
-    partners = ResPartner.browse(ids)
+    Partner = self.env['res.partner']
+    partners = Partner.browse(ids)
     partner_id = partners[0].id
 
 - ``One2Many`` and ``Many2Many`` fields should always have *_ids* as suffix (example: sale_order_line_ids)
@@ -822,6 +940,7 @@ Symbols and Conventions
     - Compute Field : the compute method pattern is *_compute_<field_name>*
     - Search method : the search method pattern is *_search_<field_name>*
     - Default method : the default method pattern is *_default_<field_name>*
+    - Selection method: the selection method pattern is *_selection_<field_name>*
     - Onchange method : the onchange method pattern is *_onchange_<field_name>*
     - Constraint method : the constraint method pattern is *_check_<constraint_name>*
     - Action method : an object action method is prefix with *action_*. Its decorator is
@@ -832,7 +951,8 @@ Symbols and Conventions
     #. Private attributes (``_name``, ``_description``, ``_inherit``, ...)
     #. Default method and ``_default_get``
     #. Field declarations
-    #. Compute and search methods in the same order as field declaration
+    #. Compute, inverse and search methods in the same order as field declaration
+    #. Selection method (methods used to return computed values for selection fields)
     #. Constrains methods (``@api.constrains``) and onchange methods (``@api.onchange``)
     #. CRUD methods (ORM overrides)
     #. Action methods
@@ -856,12 +976,17 @@ Symbols and Conventions
         seats_available = fields.Integer(oldname='register_avail', string='Available Seats',
             store=True, readonly=True, compute='_compute_seats')
         price = fields.Integer(string='Price')
+        event_type = fields.Selection(string="Type", selection='_selection_type')
 
         # compute and search fields, in the same order of fields declaration
         @api.multi
         @api.depends('seats_max', 'registration_ids.state', 'registration_ids.nb_register')
         def _compute_seats(self):
             ...
+
+        @api.model
+        def _selection_type(self):
+            return []
 
         # Constraints and onchanges
         @api.constrains('seats_max', 'seats_available')
@@ -922,17 +1047,10 @@ Javascript coding guidelines
 - Use a linter (jshint, ...)
 - Never add minified Javascript Libraries
 - Use camelcase for class declaration
-- Unless your code is supposed to run on every page, target specific pages
-  using the ``if_dom_contains`` function of website module. Target an
-  element which is specific to the pages your code needs to run on
-  using JQuery.
 
-.. code-block:: javascript
-
-    odoo.website.if_dom_contains('.jquery_class_selector', function () {
-        /*your code here*/
-    });
-
+More precise JS guidelines are detailed at https://github.com/odoo/odoo/wiki/Javascript-coding-guidelines.
+You may also have a look at existing API in Javascript by looking Javascript
+References.
 
 CSS coding guidelines
 ---------------------
@@ -942,7 +1060,7 @@ CSS coding guidelines
   reserved by the module (for website module mainly, i.e. : 'o_forum' for
   *website_forum* module). The only exception for this rule is the
   webclient: it simply uses *o_* prefix.
-- Avoid using id
+- Avoid using *id* tag
 - Use Bootstrap native classes
 - Use underscore lowercase notation to name class
 
@@ -984,10 +1102,10 @@ description. Try to follow the preferred structure for your commit messages
 
   End the message with references, such as task or bug numbers, PR numbers, and
   OPW tickets, following the suggested format:
-  Related to task #taskId
-  Fixes #12345  (link and close issue on Github)
-  Closes #7865  (link and close PR on Github)
-  OPW-112233
+  task-123 (related to task)
+  Fixes #123  (close related issue on Github)
+  Closes #123  (close related PR on Github)
+  opw-123 (related to ticket)
 
 Tag and module name
 -------------------

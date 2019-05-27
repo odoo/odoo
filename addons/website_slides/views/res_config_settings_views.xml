@@ -5,10 +5,11 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="website.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <div id="languages_setting" position="after">
+            <div id="google_maps_setting" position="after">
                 <div class="col-12 col-lg-6 o_setting_box" id="slides_install_setting">
                     <div class="o_setting_right_pane">
                         <span class="o_form_label">Slides</span>
+                        <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
                         <div class="text-muted">
                             Google Drive API Key
                         </div>
@@ -22,6 +23,18 @@
                                     Create a Google Project and Get a Key
                                 </a>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6"></div>
+                <div class="col-12 col-lg-6 o_setting_box" id="slides_install_website_sale">
+                    <div class="o_setting_left_pane">
+                        <field name="module_website_sale_slides"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="module_website_sale_slides"/>
+                        <div class="text-muted">
+                            Sell courses on your website
                         </div>
                     </div>
                 </div>

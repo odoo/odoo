@@ -15,11 +15,13 @@ class TestReInvoice(TestCommonSaleTimesheetNoChart):
         cls.setUpAdditionalAccounts()
         cls.setUpAccountJournal()
 
+        cls.env.ref('product.list0').currency_id = cls.env.user.company_id.currency_id
+
         # patch expense products to make them services creating task/project
         service_values = {
             'type': 'service',
             'service_type': 'timesheet',
-            'service_tracking': 'task_new_project'
+            'service_tracking': 'task_in_project'
         }
         cls.product_ordered_cost.write(service_values)
         cls.product_deliver_cost.write(service_values)

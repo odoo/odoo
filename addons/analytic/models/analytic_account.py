@@ -9,11 +9,12 @@ from odoo.exceptions import ValidationError
 
 class AccountAnalyticDistribution(models.Model):
     _name = 'account.analytic.distribution'
+    _description = 'Analytic Account Distribution'
     _rec_name = 'account_id'
 
     account_id = fields.Many2one('account.analytic.account', string='Analytic Account', required=True)
     percentage = fields.Float(string='Percentage', required=True, default=100.0)
-    name = fields.Char(string='Name', related='account_id.name')
+    name = fields.Char(string='Name', related='account_id.name', readonly=False)
     tag_id = fields.Many2one('account.analytic.tag', string="Parent tag", required=True)
 
     _sql_constraints = [
@@ -92,7 +93,7 @@ class AccountAnalyticAccount(models.Model):
         if self._context.get('company_ids'):
             domain.append(('company_id', 'in', self._context['company_ids']))
 
-        user_currency = self.env.user.company_id.currency_id
+        user_currency = self.env.company_id.currency_id
         credit_groups = analytic_line_obj.read_group(
             domain=domain + [('amount', '>=', 0.0)],
             fields=['account_id', 'currency_id', 'amount'],
@@ -102,7 +103,7 @@ class AccountAnalyticAccount(models.Model):
         data_credit = defaultdict(float)
         for l in credit_groups:
             data_credit[l['account_id'][0]] += Curr.browse(l['currency_id'][0])._convert(
-                l['amount'], user_currency, self.env.user.company_id, fields.Date.today())
+                l['amount'], user_currency, self.env.company_id, fields.Date.today())
 
         debit_groups = analytic_line_obj.read_group(
             domain=domain + [('amount', '<', 0.0)],
@@ -113,25 +114,25 @@ class AccountAnalyticAccount(models.Model):
         data_debit = defaultdict(float)
         for l in debit_groups:
             data_debit[l['account_id'][0]] += Curr.browse(l['currency_id'][0])._convert(
-                l['amount'], user_currency, self.env.user.company_id, fields.Date.today())
+                l['amount'], user_currency, self.env.company_id, fields.Date.today())
 
         for account in self:
             account.debit = abs(data_debit.get(account.id, 0.0))
             account.credit = data_credit.get(account.id, 0.0)
             account.balance = account.credit - account.debit
 
-    name = fields.Char(string='Analytic Account', index=True, required=True, track_visibility='onchange')
-    code = fields.Char(string='Reference', index=True, track_visibility='onchange')
+    name = fields.Char(string='Analytic Account', index=True, required=True, tracking=True)
+    code = fields.Char(string='Reference', index=True, tracking=True)
     active = fields.Boolean('Active', help="If the active field is set to False, it will allow you to hide the account without removing it.", default=True)
 
     group_id = fields.Many2one('account.analytic.group', string='Group')
 
     line_ids = fields.One2many('account.analytic.line', 'account_id', string="Analytic Lines")
 
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company_id)
 
     # use auto_join to speed up name_search call
-    partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, track_visibility='onchange')
+    partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True)
 
     balance = fields.Monetary(compute='_compute_debit_credit_balance', string='Balance')
     debit = fields.Monetary(compute='_compute_debit_credit_balance', string='Debit')
@@ -156,11 +157,14 @@ class AccountAnalyticAccount(models.Model):
         if operator not in ('ilike', 'like', '=', '=like', '=ilike'):
             return super(AccountAnalyticAccount, self)._name_search(name, args, operator, limit, name_get_uid=name_get_uid)
         args = args or []
-        domain = ['|', ('code', operator, name), ('name', operator, name)]
-        partners_ids = self.env['res.partner']._search([('name', operator, name)], access_rights_uid=name_get_uid)
-        if partners_ids:
-            domain = ['|'] + domain + [('partner_id', 'in', partners_ids)]
-        analytic_account_ids = self._search(domain + args, limit=limit, access_rights_uid=name_get_uid)
+        if operator == 'ilike' and not (name or '').strip():
+            domain = []
+        else:
+            # `partner_id` is in auto_join and the searches using ORs with auto_join fields doesn't work
+            # we have to cut the search in two searches ... https://github.com/odoo/odoo/issues/25175
+            partner_ids = self.env['res.partner']._search([('name', operator, name)], limit=limit, access_rights_uid=name_get_uid)
+            domain = ['|', '|', ('code', operator, name), ('name', operator, name), ('partner_id', 'in', partner_ids)]
+        analytic_account_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         return self.browse(analytic_account_ids).name_get()
 
 
@@ -177,11 +181,12 @@ class AccountAnalyticLine(models.Model):
     date = fields.Date('Date', required=True, index=True, default=fields.Date.context_today)
     amount = fields.Monetary('Amount', required=True, default=0.0)
     unit_amount = fields.Float('Quantity', default=0.0)
+    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure')
     account_id = fields.Many2one('account.analytic.account', 'Analytic Account', required=True, ondelete='restrict', index=True)
     partner_id = fields.Many2one('res.partner', string='Partner')
     user_id = fields.Many2one('res.users', string='User', default=_default_user)
     tag_ids = fields.Many2many('account.analytic.tag', 'account_analytic_line_tag_rel', 'line_id', 'tag_id', string='Tags', copy=True)
-    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, default=lambda self: self.env.company_id)
     currency_id = fields.Many2one(related="company_id.currency_id", string="Currency", readonly=True, store=True, compute_sudo=True)
     group_id = fields.Many2one('account.analytic.group', related='account_id.group_id', store=True, readonly=True, compute_sudo=True)
 

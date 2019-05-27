@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-import functools
+import collections
 import imp
 import importlib
 import inspect
@@ -128,17 +128,17 @@ def initialize_sys_path():
     global ad_paths
     global hooked
 
-    dd = tools.config.addons_data_dir
+    dd = os.path.normcase(tools.config.addons_data_dir)
     if os.access(dd, os.R_OK) and dd not in ad_paths:
         ad_paths.append(dd)
 
     for ad in tools.config['addons_path'].split(','):
-        ad = os.path.abspath(tools.ustr(ad.strip()))
+        ad = os.path.normcase(os.path.abspath(tools.ustr(ad.strip())))
         if ad not in ad_paths:
             ad_paths.append(ad)
 
     # add base module path
-    base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons'))
+    base_path = os.path.normcase(os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons')))
     if base_path not in ad_paths and os.path.isdir(base_path):
         ad_paths.append(base_path)
 
@@ -324,13 +324,13 @@ def load_information_from_description_file(module, mod_path=None):
             'summary': '',
             'website': '',
         }
-        info.update(pycompat.izip(
+        info.update(zip(
             'depends data demo test init_xml update_xml demo_xml'.split(),
             iter(list, None)))
 
         f = tools.file_open(manifest_file, mode='rb')
         try:
-            info.update(ast.literal_eval(pycompat.to_native(f.read())))
+            info.update(ast.literal_eval(pycompat.to_text(f.read())))
         finally:
             f.close()
 
@@ -341,9 +341,23 @@ def load_information_from_description_file(module, mod_path=None):
                 readme_text = tools.file_open(readme_path[0]).read()
                 info['description'] = readme_text
 
-        if 'active' in info:
-            # 'active' has been renamed 'auto_install'
-            info['auto_install'] = info['active']
+        # auto_install is set to `False` if disabled, and a set of
+        # auto_install dependencies otherwise. That way, we can set
+        # auto_install: [] to always auto_install a module regardless of its
+        # dependencies
+        auto_install = info.get('auto_install', info.get('active', False))
+        if isinstance(auto_install, collections.Iterable):
+            info['auto_install'] = set(auto_install)
+            non_dependencies = info['auto_install'].difference(info['depends'])
+            assert not non_dependencies,\
+                "auto_install triggers must be dependencies, found " \
+                "non-dependencies [%s] for module %s" % (
+                    ', '.join(non_dependencies), module
+                )
+        elif auto_install:
+            info['auto_install'] = set(info['depends'])
+        else:
+            info['auto_install'] = False
 
         info['version'] = adapt_version(info['version'])
         return info
@@ -434,12 +448,8 @@ def get_test_modules(module):
         mod = importlib.import_module('.tests', modpath)
     except ImportError as e:  # will also catch subclass ModuleNotFoundError of P3.6
         # Hide ImportErrors on `tests` sub-module, but display other exceptions
-        if pycompat.PY2:
-            if e.message.startswith('No module named') and e.message.endswith("tests"):
-                return []
-        else:
-            if e.name == modpath + '.tests' and e.msg.startswith('No module named'):
-                return []
+        if e.name == modpath + '.tests' and e.msg.startswith('No module named'):
+            return []
         _logger.exception('Can not `import %s`.', module)
         return []
     except Exception as e:

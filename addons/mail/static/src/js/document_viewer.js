@@ -43,14 +43,29 @@ var DocumentViewer = Widget.extend({
     init: function (parent, attachments, activeAttachmentID) {
         this._super.apply(this, arguments);
         this.attachment = _.filter(attachments, function (attachment) {
-            var match = attachment.mimetype.match("(image|video|application/pdf)");
-
+            var match = attachment.type === 'url' ? attachment.url.match("(youtu|.png|.jpg|.gif)") : attachment.mimetype.match("(image|video|application/pdf|text)");
             if (match) {
-                attachment.type = match[1];
+                attachment.fileType = match[1];
+                if (match[1].match("(.png|.jpg|.gif)")) {
+                    attachment.fileType = 'image';
+                }
+                if (match[1] === 'youtu') {
+                    var youtube_array = attachment.url.split('/');
+                    var youtube_token = youtube_array[youtube_array.length-1];
+                    if (youtube_token.indexOf('watch') !== -1) {
+                        youtube_token = youtube_token.split('v=')[1];
+                        var amp = youtube_token.indexOf('&')
+                        if (amp !== -1){
+                            youtube_token = youtube_token.substring(0, amp);
+                        }
+                    }
+                    attachment.youtube = youtube_token;
+                }
                 return true;
             }
         });
         this.activeAttachment = _.findWhere(attachments, {id: activeAttachmentID});
+        this.modelName = 'ir.attachment';
         this._reset();
     },
     /**
@@ -60,9 +75,21 @@ var DocumentViewer = Widget.extend({
     start: function () {
         this.$el.modal('show');
         this.$el.on('hidden.bs.modal', _.bind(this._onDestroy, this));
-        this.$('.o_viewer_img').load(_.bind(this._onImageLoaded, this));
+        this.$('.o_viewer_img').on("load", _.bind(this._onImageLoaded, this));
         this.$('[data-toggle="tooltip"]').tooltip({delay: 0});
         return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        if (this.isDestroyed()) {
+            return;
+        }
+        this.trigger_up('document_viewer_closed');
+        this.$el.modal('hide');
+        this.$el.remove();
+        this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -104,7 +131,7 @@ var DocumentViewer = Widget.extend({
         this.$('.o_viewer_content').html(QWeb.render('DocumentViewer.Content', {
             widget: this
         }));
-        this.$('.o_viewer_img').load(_.bind(this._onImageLoaded, this));
+        this.$('.o_viewer_img').on("load", _.bind(this._onImageLoaded, this));
         this.$('[data-toggle="tooltip"]').tooltip({delay: 0});
         this._reset();
     },
@@ -116,7 +143,7 @@ var DocumentViewer = Widget.extend({
      * @param {float} angle
      */
     _getTransform: function(scale, angle) {
-        return 'scale3d(' + scale + ', ' + scale + ', 1) rotate(' + angle + 'deg)'
+        return 'scale3d(' + scale + ', ' + scale + ', 1) rotate(' + angle + 'deg)';
     },
     /**
      * Rotate image clockwise by provided angle
@@ -156,19 +183,15 @@ var DocumentViewer = Widget.extend({
      */
     _onClose: function (e) {
         e.preventDefault();
-        this.$el.modal('hide');
-        this.trigger_up('document_viewer_closed');
+        this.destroy();
     },
     /**
      * When popup close complete destroyed modal even DOM footprint too
+     *
      * @private
      */
     _onDestroy: function () {
-        if (this.isDestroyed()) {
-            return;
-        }
-        this.$el.modal('hide');
-        this.$el.remove();
+        this.destroy();
     },
     /**
      * @private
@@ -176,7 +199,7 @@ var DocumentViewer = Widget.extend({
      */
     _onDownload: function (e) {
         e.preventDefault();
-        window.location = '/web/content/' + this.activeAttachment.id + '?download=true';
+        window.location = '/web/content/' + this.modelName + '/' + this.activeAttachment.id + '/' + 'datas' + '?download=true';
     },
     /**
      * @private

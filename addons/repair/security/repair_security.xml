@@ -7,7 +7,7 @@
         <field name="name">repair multi-company</field>
         <field name="model_id" search="[('model','=','repair.order')]" model="ir.model"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+        <field name="domain_force">['|',('company_id', 'in', company_ids),('company_id','=',False)]</field>
     </record>
 
     </data>

@@ -7,13 +7,14 @@ from ldap.filter import filter_format
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import AccessDenied
-from odoo.tools.pycompat import to_native
+from odoo.tools.pycompat import to_text
 
 _logger = logging.getLogger(__name__)
 
 
 class CompanyLDAP(models.Model):
     _name = 'res.company.ldap'
+    _description = 'Company LDAP configuration'
     _order = 'sequence'
     _rec_name = 'ldap_server'
 
@@ -108,7 +109,7 @@ class CompanyLDAP(models.Model):
             if len(results) == 1:
                 dn = results[0][0]
                 conn = self._connect(conf)
-                conn.simple_bind_s(dn, to_native(password))
+                conn.simple_bind_s(dn, to_text(password))
                 conn.unbind()
                 entry = results[0]
         except ldap.INVALID_CREDENTIALS:
@@ -145,8 +146,8 @@ class CompanyLDAP(models.Model):
             conn = self._connect(conf)
             ldap_password = conf['ldap_password'] or ''
             ldap_binddn = conf['ldap_binddn'] or ''
-            conn.simple_bind_s(to_native(ldap_binddn), to_native(ldap_password))
-            results = conn.search_st(to_native(conf['ldap_base']), ldap.SCOPE_SUBTREE, filter, retrieve_attributes, timeout=60)
+            conn.simple_bind_s(to_text(ldap_binddn), to_text(ldap_password))
+            results = conn.search_st(to_text(conf['ldap_base']), ldap.SCOPE_SUBTREE, filter, retrieve_attributes, timeout=60)
             conn.unbind()
         except ldap.INVALID_CREDENTIALS:
             _logger.error('LDAP bind failed.')
@@ -191,7 +192,7 @@ class CompanyLDAP(models.Model):
         elif conf['create_user']:
             _logger.debug("Creating new Odoo user \"%s\" from LDAP" % login)
             values = self._map_ldap_attributes(conf, login, ldap_entry)
-            SudoUser = self.env['res.users'].sudo()
+            SudoUser = self.env['res.users'].sudo().with_context(no_reset_password=True)
             if conf['user']:
                 values['active'] = True
                 return SudoUser.browse(conf['user'][0]).copy(default=values).id

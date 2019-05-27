@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
-from odoo.tools import mute_logger, pycompat
+from odoo.tools import mute_logger
 from odoo.tests import common
 from odoo.exceptions import AccessError
 
@@ -69,8 +69,8 @@ class TestAPI(common.TransactionCase):
         self.cr.execute("SELECT COUNT(*) FROM res_partner WHERE active")
         count1 = self.cr.fetchone()[0]
         count2 = self.env['res.partner'].search([], count=True)
-        self.assertIsInstance(count1, pycompat.integer_types)
-        self.assertIsInstance(count2, pycompat.integer_types)
+        self.assertIsInstance(count1, int)
+        self.assertIsInstance(count2, int)
         self.assertEqual(count1, count2)
 
     @mute_logger('odoo.models')
@@ -287,11 +287,11 @@ class TestAPI(common.TransactionCase):
         self.assertTrue(len(partners) > 1)
 
         # all the records in partners are ready for prefetching
-        self.assertItemsEqual(partners.ids, partners._prefetch['res.partner'])
+        self.assertItemsEqual(partners.ids, partners._prefetch_ids)
 
         # reading ONE partner should fetch them ALL
         for partner in partners:
-            partner.state_id
+            state = partner.state_id
             break
         partner_ids_with_field = [partner.id
                                   for partner in partners
@@ -299,45 +299,42 @@ class TestAPI(common.TransactionCase):
         self.assertItemsEqual(partner_ids_with_field, partners.ids)
 
         # partners' states are ready for prefetching
-        state_ids = {sid
-                       for partner in partners
-                       for sid in partner._cache['state_id']}
+        state_ids = {sid for partner in partners for sid in partner._cache['state_id']}
         self.assertTrue(len(state_ids) > 1)
-        self.assertItemsEqual(state_ids, partners._prefetch['res.country.state'])
+        self.assertItemsEqual(state_ids, state._prefetch_ids)
 
         # reading ONE partner country should fetch ALL partners' countries
         for partner in partners:
             if partner.state_id:
                 partner.state_id.name
                 break
-        state_ids_with_field = [state.id
-                                  for state in partners.mapped('state_id')
-                                  if 'name' in state._cache]
+        state_ids_with_field = [st.id for st in partners.state_id if 'name' in st._cache]
         self.assertItemsEqual(state_ids_with_field, state_ids)
 
     @mute_logger('odoo.models')
-    def test_60_prefetch_object(self):
+    def test_60_prefetch_model(self):
         """ Check the prefetching model. """
         partners = self.env['res.partner'].search([], limit=models.PREFETCH_MAX)
         self.assertTrue(partners)
 
         def same_prefetch(a, b):
-            self.assertIs(a._prefetch, b._prefetch)
-        def diff_prefetch(a, b):
-            self.assertIsNot(a._prefetch, b._prefetch)
+            self.assertEqual(set(a._prefetch_ids), set(b._prefetch_ids))
 
-        # the recordset operations below should create new prefetch objects
+        def diff_prefetch(a, b):
+            self.assertNotEqual(set(a._prefetch_ids), set(b._prefetch_ids))
+
+        # the recordset operations below use different prefetch sets
         diff_prefetch(partners, partners.browse())
-        diff_prefetch(partners, partners.browse(partners.ids))
         diff_prefetch(partners, partners[0])
         diff_prefetch(partners, partners[:10])
 
-        # the recordset operations below should pass the prefetch object
+        # the recordset operations below share the prefetch set
+        same_prefetch(partners, partners.browse(partners.ids))
         same_prefetch(partners, partners.sudo(self.env.ref('base.user_demo')))
         same_prefetch(partners, partners.with_context(active_test=False))
-        same_prefetch(partners, partners[:10].with_prefetch(partners._prefetch))
+        same_prefetch(partners, partners[:10].with_prefetch(partners._prefetch_ids))
 
-        # iterating and reading relational fields should pass the prefetch object
+        # iteration and relational fields should use the same prefetch set
         self.assertEqual(type(partners).country_id.type, 'many2one')
         self.assertEqual(type(partners).bank_ids.type, 'one2many')
         self.assertEqual(type(partners).category_id.type, 'many2many')
@@ -356,16 +353,35 @@ class TestAPI(common.TransactionCase):
         }
         partners = partners.create(vals0) + partners.create(vals1)
         for partner in partners:
-            same_prefetch(partners, partner)
-            same_prefetch(partners, partner.country_id)
-            same_prefetch(partners, partner.bank_ids)
-            same_prefetch(partners, partner.category_id)
+            same_prefetch(partner, partners)
+            same_prefetch(partner.country_id, partners.country_id)
+            same_prefetch(partner.bank_ids, partners.bank_ids)
+            same_prefetch(partner.category_id, partners.category_id)
 
-        # same with empty recordsets
-        empty = partners.browse()
-        same_prefetch(empty, empty.country_id)
-        same_prefetch(empty, empty.bank_ids)
-        same_prefetch(empty, empty.category_id)
+    @mute_logger('odoo.models')
+    def test_60_prefetch_read(self):
+        """ Check that reading a field computes it on self only. """
+        Partner = self.env['res.partner']
+        field = type(Partner).company_type
+        self.assertTrue(field.compute and not field.store)
+
+        partner1 = Partner.create({'name': 'Foo'})
+        partner2 = Partner.create({'name': 'Bar', 'parent_id': partner1.id})
+        self.assertEqual(partner1.child_ids, partner2)
+
+        # reading partner1 should not prefetch 'company_type' on partner2
+        self.env.clear()
+        partner1 = partner1.with_prefetch()
+        partner1.read(['company_type'])
+        self.assertIn('company_type', partner1._cache)
+        self.assertNotIn('company_type', partner2._cache)
+
+        # reading partner1 should not prefetch 'company_type' on partner2
+        self.env.clear()
+        partner1 = partner1.with_prefetch()
+        partner1.read(['child_ids', 'company_type'])
+        self.assertIn('company_type', partner1._cache)
+        self.assertNotIn('company_type', partner2._cache)
 
     @mute_logger('odoo.models')
     def test_70_one(self):
@@ -466,11 +482,13 @@ class TestAPI(common.TransactionCase):
         """ Check map on recordsets. """
         ps = self.env['res.partner'].search([])
         parents = ps.browse()
-        for p in ps: parents |= p.parent_id
+        for p in ps:
+            parents |= p.parent_id
 
         # map a single field
         self.assertEqual(ps.mapped(lambda p: p.parent_id), parents)
         self.assertEqual(ps.mapped('parent_id'), parents)
+        self.assertEqual(ps.parent_id, parents)
 
         # map a sequence of fields
         self.assertEqual(
@@ -479,6 +497,10 @@ class TestAPI(common.TransactionCase):
         )
         self.assertEqual(
             ps.mapped('parent_id.name'),
+            [p.name for p in parents]
+        )
+        self.assertEqual(
+            ps.parent_id.mapped('name'),
             [p.name for p in parents]
         )
 

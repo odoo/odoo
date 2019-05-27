@@ -5,6 +5,9 @@
 }
 
 .oe_website_sale {
+    ul ul {
+        margin-left: 1.5rem;
+    }
     .o_payment_form .card {
         border-radius: 4px !important;
     }
@@ -25,68 +28,19 @@
         }
     }
 
-    ul ul {
-        margin-left: 1.5em;
-    }
-
-    .td-product_name,
-    h1[itemprop="name"],
-    .oe_product_cart form h5 {
+    h1[itemprop="name"], .oe_product_cart form h5 {
         word-wrap: break-word;
     }
 
-    .td-product_name {
-        min-width: 140px;
-    }
-
-    .td-img {
-        width: 100px;
-    }
-
-    .td-qty {
-        width: 130px;
-        a.input-group-addon {
-            background-color: transparent;
-            border: 0px;
-        }
-    }
-    .td-action {
-        width: 30px;
-    }
-
-    .td-price,
-    .td-price-total {
-        width: 100px;
-    }
-
     @include media-breakpoint-down(sm) {
-        .td-img,
-        .td-price-total {
+        .td-img {
             display: none;
-        }
-
-        .td-qty {
-            width: 60px;
-        }
-
-        .td-price {
-            width: 80px;
         }
     }
 
-    @media (max-width: 476px) {
-        .td-qty {
-            width: 60px;
-        }
-
-        #modal_optional_products table thead,
-        .oe_cart table thead {
-            display: none;
-        }
-
-        #modal_optional_products table td.td-img,
-        .oe_cart table td.td-img {
-            display: none;
+    .toggle_summary_div {
+        @include media-breakpoint-up(xl) {
+            max-width: 400px;
         }
     }
 }
@@ -126,7 +80,7 @@
         right: 0;
         bottom: 0;
         overflow: hidden;
-        padding: 0 15px 24px 10px;
+        padding: 0 15px 0 10px;
         min-height: 56px;
         border-top: 1px solid rgba(255,255,255,0.2);
         background: rgba(255, 255, 255, 0.75);
@@ -134,8 +88,6 @@
     }
 
     .product_price {
-        padding: 5px 0;
-        position: absolute;
         bottom: 0;
     }
 
@@ -406,6 +358,10 @@
             &.oe_list {
                 height: 200px;
 
+                .oe_subdescription {
+                    max-height: 40px;
+                }
+
                 section {
                     background: rgba(100, 100, 100, 0.2);
                 }
@@ -481,83 +437,6 @@ div#payment_method {
 .oe_website_sale .row .row .col-lg-12 {
     float: none;
 }
-/* product detail */
-
-.css_attribute_color {
-    display: inline-block;
-    border: 1px solid #999999;
-    text-align: center;
-
-    input {
-        margin: 8px;
-        height: 13px;
-        opacity: 0;
-    }
-
-    &.active {
-        border: 3px ridge #66ee66;
-    }
-
-    &.active input {
-        margin: 6px;
-    }
-}
-
-.css_not_available_msg {
-    display: none;
-}
-
-.css_not_available.js_product {
-    > *:nth-child(4) > * {
-        display: none;
-    }
-
-    .css_quantity,
-    .product_price {
-        display: none;
-    }
-
-    .css_not_available_msg {
-        display: block;
-    }
-}
-
-.css_quantity {
-    max-width: 125px;
-
-    input[name="add_qty"] {
-        text-align: center;
-    }
-}
-
-option.css_not_available {
-    color: #ccc;
-}
-
-label.css_not_available {
-    opacity: 0.6;
-}
-
-label.css_attribute_color.css_not_available {
-    opacity: 1;
-    background-image: url("/website_sale/static/src/img/redcross.png");
-    background-size: cover;
-}
-
-.product_detail_img {
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    max-height: 500px;
-}
-
-.oe_default_price {
-    display: none;
-}
-
-.discount .oe_default_price {
-    display: block;
-}
 
 .oe_website_sale input.js_quantity {
     min-width: 48px;
@@ -571,7 +450,7 @@ label.css_attribute_color.css_not_available {
 
 .oe_overlay_options {
     .dropdown {
-        ul[name="size"] {
+        div[name="size"] {
             table {
                 margin-left: 20px;
             }
@@ -683,6 +562,8 @@ ul.wizard {
 }
 /* Collapse category */
 #o_shop_collapse_category li {
+    width: 100%;
+
     a {
         display: inline-block;
         width: 80%;
@@ -712,7 +593,7 @@ td.noborder {
 }
 
 .border_primary {
-    border: 1px solid $o-brand-odoo;
+    border: 1px solid theme-color('primary');
 }
 
 .js_change_shipping {
@@ -725,46 +606,49 @@ a.no-decoration {
 }
 
 #o-carousel-product {
-    .carousel-inner div.item, .carousel-control-prev, .carousel-control-next {
-        height: 400px;
-    }
-    .carousel-inner div.item img {
-        max-height: 100%;
+
+    &.css_not_available {
+        opacity: 0.2;
     }
 
-    .carousel-control-prev, carousel-control-next {
-        background-image: none !important;
+    .carousel-outer {
+        height: 400px;
+        max-height: 90vh;
+    }
+
+    .carousel-control-prev, .carousel-control-next {
+        height: 70%;
+        top: 15%;
+        opacity: 0.5;
+        cursor: pointer;
+        &:focus {
+            opacity: 0.65;
+        }
+        &:hover {
+            opacity: 0.8;
+        }
+        > span {
+            background: rgba(0, 0, 0, 0.8);
+        }
     }
 
     .carousel-indicators {
-        background-color: transparent;
-        margin: 10px 0 0;
-        overflow-y: hidden;
-        position: static;
-        text-align: left;
-        white-space: nowrap;
-        width: 100%;
-        height: 100px !important;
-        text-align: center;
-        list-style-position: inside;
-
         li {
-            background-color: transparent !important;
-            border-radius: 0;
-            display: inline-block;
-            margin: 0 !important;
-            width: 54px !important;
-            height: 54px !important;
-            border: 0 !important;
-            box-shadow: none !important;
+            width: 64px;
+            height: 64px;
+            text-indent: unset;
+            border: 1px solid gray('600');
+            opacity: 0.5;
+            position: relative;
 
-            img {
-                display: block;
-                opacity: 0.5;
+            .o_product_video_thumb {
+                @include o-position-absolute($top: 50%, $left: 50%);
+                transform: translate(-50%, -50%);
+                color: gray('400');
             }
-
-            &.active img {
+            &.active {
                 opacity: 1;
+                border: 1px solid theme-color('primary');
             }
         }
     }
@@ -800,7 +684,7 @@ a.no-decoration {
 
 .o_website_sale_animate {
     opacity: 0.7;
-    position: absolute;
+    position: absolute !important;
     height: 150px;
     width: 150px;
     z-index: 1020;

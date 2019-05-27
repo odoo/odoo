@@ -86,8 +86,8 @@ class TestAccessRights(TestCommonSaleNoChart):
         })
         self.assertIn(india_channel.id, self.env['crm.team'].search([]).ids, 'Sales manager should be able to create a Sales Team')
         # Manager can edit a Sales Team
-        india_channel.sudo(self.user_manager).write({'dashboard_graph_group': 'week'})
-        self.assertEquals(india_channel.dashboard_graph_group, 'week', 'Sales manager should be able to edit a Sales Team')
+        india_channel.sudo(self.user_manager).write({'name': 'new_india'})
+        self.assertEquals(india_channel.name, 'new_india', 'Sales manager should be able to edit a Sales Team')
         # Manager can delete a Sales Team
         india_channel.sudo(self.user_manager).unlink()
         self.assertNotIn(india_channel.id, self.env['crm.team'].search([]).ids, 'Sales manager should be able to delete a Sales Team')

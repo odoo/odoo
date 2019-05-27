@@ -6,8 +6,8 @@ odoo.define('web.QuickCreateFormView', function (require) {
  * is used by the RecordQuickCreate in Kanban views.
  */
 
-var FormController = require('web.FormController');
 var BasicModel = require('web.BasicModel');
+var FormController = require('web.FormController');
 var FormRenderer = require('web.FormRenderer');
 var FormView = require('web.FormView');
 
@@ -56,10 +56,6 @@ var QuickCreateFormModel = BasicModel.extend({
 });
 
 var QuickCreateFormController = FormController.extend({
-    custom_events: _.extend({}, FormController.prototype.custom_events, {
-        env_updated: '_onEnvUpdated',
-    }),
-
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -68,12 +64,14 @@ var QuickCreateFormController = FormController.extend({
      * Asks all field widgets to notify the environment with their current value
      * (useful for instance for input fields that still have the focus and that
      * could have not notified the environment of their changes yet).
+     * Synchronizes with the controller's mutex in case there would already be
+     * pending changes being applied.
      *
-     * @return {Deferred}
+     * @return {Promise}
      */
     commitChanges: function () {
-        return this.mutex
-            .exec(this.renderer.commitChanges.bind(this.renderer, this.handle));
+        var mutexDef = this.mutex.getUnlockedDef();
+        return Promise.all([mutexDef, this.renderer.commitChanges(this.handle)]);
     },
     /**
      * @returns {Object} the changes done on the current record
@@ -81,23 +79,10 @@ var QuickCreateFormController = FormController.extend({
     getChanges: function () {
         return this.model.getChanges(this.handle);
     },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Stops the propagation of the 'env_updated' event to prevent interferences
-     * with the kanban controller.
-     *
-     * @private
-     */
-    _onEnvUpdated: function (ev) {
-        ev.stopPropagation();
-    },
 });
 
 var QuickCreateFormView = FormView.extend({
+    withControlPanel: false,
     config: _.extend({}, FormView.prototype.config, {
         Model: QuickCreateFormModel,
         Renderer: QuickCreateFormRenderer,

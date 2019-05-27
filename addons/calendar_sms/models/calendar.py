@@ -28,7 +28,7 @@ class CalendarEvent(models.Model):
 class CalendarAlarm(models.Model):
     _inherit = 'calendar.alarm'
 
-    type = fields.Selection(selection_add=[('sms', 'SMS Text Message')])
+    alarm_type = fields.Selection(selection_add=[('sms', 'SMS Text Message')])
 
 
 class AlarmManager(models.AbstractModel):

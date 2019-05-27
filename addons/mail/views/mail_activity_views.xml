@@ -16,27 +16,36 @@
                         <h1><field name="name"/></h1>
                     </div>
                     <group>
-                        <group>
-                            <field name="category" invisible="1"/>
+                        <group name="activity_details">
+                            <field name="category"/>
                             <field name="res_model_id" groups="base.group_no_one"/>
                             <field name="res_model_change" invisible="1"/>
                             <field name="initial_res_model_id" invisible="1"/>
                             <field name="summary"/>
                             <field name="icon" groups="base.group_no_one"/>
                             <field name="decoration_type" groups="base.group_no_one"/>
-                            <label for="days"/>
+                            <label for="delay_count"/>
                             <div>
-                                <field name="days" class="oe_inline"/>
-                                <span class="oe_inline ml4">days</span>
+                                <div class="o_row">
+                                    <field name="delay_count"/>
+                                    <field name="delay_unit"/>
+                                </div>
+                                <field name="delay_from"/>
                             </div>
+                            <field name="default_user_id" widget="selection"/>
                         </group>
-                        <group>
+                        <group name="activity_planning">
+                            <field name="force_next"/>
+                            <field name="default_next_type_id" attrs="{'required': [('force_next', '=', True)]}" context="{'default_res_model_id': res_model_id}"/>
                             <field name="next_type_ids" widget="many2many_tags"
-                                context="{'default_res_model_id': res_model_id}"/>
+                                attrs="{'invisible': ['|', ('force_next', '=', True), ('category', '=', 'upload_file')]}" context="{'default_res_model_id': res_model_id}"/>
                             <field name="mail_template_ids" widget="many2many_tags"
                                 domain="[('model_id', '=', res_model_id)]"
                                 attrs="{'invisible': [('res_model_id', '=', False)]}"
                                 context="{'default_model_id': res_model_id}"/>
+                        </group>
+                        <group>
+                            <field name="default_description"/>
                         </group>
                     </group>
                     <p class="alert alert-info" role="alert" attrs="{'invisible': [('res_model_change', '=', False)]}">Modifying the model can have an impact on existing activities using this activity type, be careful.</p>
@@ -64,7 +73,9 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="summary"/>
-                <field name="days" string="Planned in (days)"/>
+                <field name="delay_count" string="Planned in"/>
+                <field name="delay_unit" string="Unit"/>
+                <field name="delay_from" string="Type"/>
                 <field name="res_model_id" groups="base.group_no_one"/>
                 <field name="icon" groups="base.group_no_one"/>
             </tree>
@@ -84,6 +95,19 @@
       parent="base.menu_email"
     />
 
+    <record id="mail_activity_action" model="ir.actions.act_window">
+        <field name="name">Activities</field>
+        <field name="res_model">mail.activity</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+      id="menu_mail_activities"
+      action="mail_activity_action"
+      parent="base.menu_email"
+    />
+
     <record id="mail_activity_view_form_popup" model="ir.ui.view">
         <field name="name">mail.activity.view.form.popup</field>
         <field name="model">mail.activity</field>
@@ -96,6 +120,7 @@
                         <field name="res_model" invisible="1"/>
                         <field name="res_model_id" invisible="1"/>
                         <field name="res_id" invisible="1"/>
+                        <field name="force_next" invisible="1"/>
                         <field name="previous_activity_type_id"/>
                         <field name="has_recommended_activities"/>
                     </group>
@@ -119,12 +144,18 @@
                     </group>
                     <field name="note" placeholder="Log a note..."/>
                     <footer>
-                        <button string="Schedule" name="action_close_dialog"
-                            type="object" class="btn-primary"/>
-                        <button string="Mark as Done" name="action_done"
+                        <field name="id" invisible="1"/>
+                        <button string="Schedule" name="action_close_dialog" type="object" class="btn-primary"
+                            attrs="{'invisible': [('id', '!=', False)]}"/>
+                        <button string="Save" name="action_close_dialog" type="object" class="btn-primary"
+                            attrs="{'invisible': [('id', '=', False)]}"/>
+                        <button attrs="{'invisible': [('force_next', '=', True)]}" string="Mark as Done" name="action_done"
                             type="object" class="btn-secondary"
                             context="{'mail_activity_quick_update': True}"/>
-                        <button string="Done &amp; Schedule Next" name="action_done_schedule_next"
+                        <button attrs="{'invisible': [('force_next', '=', True)]}" string="Done &amp; Schedule Next" name="action_done_schedule_next"
+                            type="object" class="btn-secondary"
+                            context="{'mail_activity_quick_update': True}"/>
+                        <button attrs="{'invisible': [('force_next', '=', False)]}" string="Done &amp; Launch Next" name="action_done_schedule_next"
                             type="object" class="btn-secondary"
                             context="{'mail_activity_quick_update': True}"/>
                         <button string="Discard" class="btn-secondary" special="cancel" />
@@ -144,7 +175,7 @@
                 <field name="activity_type_id"/>
                 <separator/>
                 <filter string="My Activities" name="activities_my"
-                        domain="[('create_uid', '=', uid)]"/>
+                        domain="[('user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="Late Activities" name="activities_overdue"
                         domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
@@ -152,7 +183,7 @@
                 <filter string="Today Activities" name="activities_today"
                         domain="[('date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        domain="[('date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                 <separator/>
                 <group expand="0" string="Group By">
@@ -187,7 +218,7 @@
         <field name="arch" type="xml">
             <calendar string="Activity" date_start="date_deadline" color="activity_type_id">
                 <field name="res_name"/>
-                <field name="create_uid"/>
+                <field name="user_id"/>
                 <field name="summary"/>
             </calendar>
         </field>

@@ -1,14 +1,16 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <odoo>
 
-    <!-- Holidays status -->
     <record id="view_holidays_status_filter" model="ir.ui.view">
         <field name="name">hr.leave.type.filter</field>
         <field name="model">hr.leave.type</field>
         <field name="arch" type="xml">
-            <search string="Search Leave Type">
-                <field name="name" string="Leave Types"/>
+            <search string="Search Time Off Type">
+                <field name="name" string="Time Off Types"/>
+                <field name="code"/>
                 <field name="categ_id"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
             </search>
         </field>
     </record>
@@ -17,59 +19,64 @@
         <field name="name">hr.leave.type.form</field>
         <field name="model">hr.leave.type</field>
         <field name="arch" type="xml">
-            <form string="Leave Type">
+            <form string="Time Off Type">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_see_days_allocated" icon="fa-archive">
+                            <div class="o_stat_info">
+                                <field name="group_days_allocation"/>
+                                <span class="o_stat_text">Days Allocated</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" type="object" name="action_see_group_leaves" icon="fa-archive">
+                            <div class="o_stat_info">
+                                <field name="group_days_leave"/>
+                                <span class="o_stat_text">Group Time Off</span>
+                            </div>
+                        </button>
                         <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
                             <field name="active" widget="boolean_button"
                             options='{"terminology": "archive"}'/>
                         </button>
                     </div>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
                     <group>
-                        <group name="description" string="Description">
-                            <field name="name"/>
-                            <field name="unpaid"/>
-                            <field name="limit" attrs="{'invisible': [('accrual', '=', True)]}"/>
-                            <field name="request_unit"/>
-                            <field name="sequence" attrs="{'invisible': [('limit', '!=', False)]}" groups="base.group_no_one"/>
-                            <field name="time_type" groups="base.group_no_one"/>
+                        <group name="description" string="Options">
+                            <field name="code"/>
+                            <field name="request_unit" widget="radio"/>
+                            <field name="sequence" groups="base.group_no_one"/>
                         </group>
                         <group name="validation" string="Validation">
                             <field name="validation_type" widget="radio"/>
+                            <field name="responsible_id" attrs="{'invisible': [('validation_type', 'in', ['no_validation', 'manager'])], 'required': [('validation_type', 'in', ['hr', 'both'])]}"/>
                         </group>
-                        <group name="visibility" string="Visibility">
-                            <field name="employee_applicability" widget="radio" attrs="{'readonly': ['|', ('limit', '=', True), ('accrual', '=', True)]}" force_save="1"/>
+                        <group name="visibility" string="Allocation">
+                            <field name="allocation_type" widget="radio" force_save="1"/>
                         </group>
-                        <group name="validity" string="Validity" attrs="{'invisible': [('employee_applicability', '=', 'allocation')]}">
+                        <group name="validity" string="Validity">
                             <field name="validity_start"/>
                             <field name="validity_stop"/>
                         </group>
+                        <group name="notification" string="Notification" colspan="2" groups="base.group_no_one">
+                            <group>
+                                <field name="leave_notif_subtype_id"
+                                       domain="[('res_model','=','hr.leave')]"
+                                       context="{'default_name': name, 'default_res_model': 'hr.leave'}"/>
+                                <field name="allocation_notif_subtype_id"
+                                       domain="[('res_model','=','hr.leave.allocation')]"
+                                       context="{'default_name': name, 'default_res_model': 'hr.leave.allocation'}"/>
+                            </group>
+                         </group>
                         <group name="calendar" string="Calendar" groups="base.group_no_one">
                             <field name="categ_id"/>
                             <field name="color_name"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
-                        <group name="allocation_request" string="Allocation Type" attrs="{'invisible': [('unpaid', '=', True)]}">
-                            <field name="accrual"/>
-                            <field name="negative" attrs="{'invisible': [('accrual', '=', False)]}"/>
-                            <field name="balance_limit" attrs="{'invisible': [('accrual', '=', False)]}"/>
-                        </group>
                     </group>
                 </sheet>
             </form>
-        </field>
-    </record>
-
-    <record id="view_holiday_status_tree" model="ir.ui.view">
-        <field name="name">hr.leave.type.tree</field>
-        <field name="model">hr.leave.type</field>
-        <field name="arch" type="xml">
-            <tree string="Leave Type">
-                <field name="name"/>
-                <field name="max_leaves"/>
-                <field name="leaves_taken"/>
-                <field name="remaining_leaves"/>
-            </tree>
         </field>
     </record>
 
@@ -85,8 +92,8 @@
                                 <strong><field name="name"/></strong>
                             </div>
                             <div>
-                                <span>Max Leaves: <field name="max_leaves"/></span>
-                                <span class="float-right">Leaves Taken: <field name="leaves_taken"/></span>
+                                <span>Max Time Off: <field name="max_leaves"/></span>
+                                <span class="float-right">Time Off Taken: <field name="leaves_taken"/></span>
                             </div>
                         </div>
                     </t>
@@ -98,38 +105,25 @@
     <record id="view_holiday_status_normal_tree" model="ir.ui.view">
         <field name="name">hr.leave.type.normal.tree</field>
         <field name="model">hr.leave.type</field>
-        <field name="priority">35</field>
         <field name="arch" type="xml">
-            <tree string="Leave Type">
+            <tree string="Time Off Type">
                 <field name="sequence" widget="handle"/>
-                <field name="name"/>
-                <field name="limit"/>
-                <field name="validation_type" />
-                <field name="validity_start" />
-                <field name="validity_stop" />
+                <field name="display_name"/>
+                <field name="code"/>
+                <field name="allocation_type"/>
+                <field name="validation_type"/>
+                <field name="validity_start"/>
+                <field name="validity_stop"/>
             </tree>
         </field>
     </record>
 
-    <record id="view_hr_holidays_status_search" model="ir.ui.view">
-        <field name="name">hr.leave.type.search</field>
-        <field name="model">hr.leave.type</field>
-        <field name="arch" type="xml">
-            <search string="Leave Type">
-                <field name="name" string="Leave Types"/>
-                <field name="categ_id"/>
-            </search>
-        </field>
-    </record>
-
     <record id="open_view_holiday_status" model="ir.actions.act_window">
-        <field name="name">Leave Types</field>
+        <field name="name">Time Off Types</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">hr.leave.type</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
-        <field name="view_id" eval="view_holiday_status_normal_tree"/>
-        <field name="search_view_id" ref="view_hr_holidays_status_search"/>
     </record>
 
     <menuitem
@@ -141,7 +135,7 @@
     <menuitem
         id="hr_holidays_status_menu_configuration"
         action="open_view_holiday_status"
-        name="Leave Types"
+        name="Time Off Types"
         parent="menu_hr_holidays_configuration"
         groups="hr_holidays.group_hr_holidays_user"
         sequence="1"/>

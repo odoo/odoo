@@ -2,7 +2,7 @@
 <odoo>
 
     <template id="exception_on_po">
-        <div class="alert alert-warning" role="alert">
+        <div>
           Exception(s) occurred on the purchase order(s):
           <t t-foreach="purchase_order_ids" t-as="purchase_order">
               <a href="#" data-oe-model="purchase.order" t-att-data-oe-id="purchase_order.id"><t t-esc="purchase_order.name"/></a>.

@@ -3,8 +3,10 @@
 
 import base64
 from datetime import datetime, timedelta
+from unittest.mock import patch
 
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails, TestRecipients
+from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.tools import mute_logger, DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -84,7 +86,7 @@ class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_composer_w_template_mass_mailing(self):
-        test_record_2 = self.env['mail.test.simple'].with_context(self._quick_create_ctx).create({'name': 'Test2', 'email_from': 'laurie.poiret@example.com'})
+        test_record_2 = self.env['mail.test.simple'].with_context(BaseFunctionalTest._test_context).create({'name': 'Test2', 'email_from': 'laurie.poiret@example.com'})
 
         composer = self.env['mail.compose.message'].sudo(self.user_employee).with_context({
             'default_composition_mode': 'mass_mail',
@@ -201,3 +203,37 @@ class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
     #         self.env['mail.mail'].process_email_queue(ids=[mail_in_2_days.id])
     #         self.assertEqual(mail_in_2_days.state, 'outgoing')
     #         self.assertEqual(mail_now.exists() | mail_in_2_days.exists(), mail_in_2_days)
+
+    def test_create_partner_from_tracking_multicompany(self):
+        company1 = self.env['res.company'].create({'name': 'company1'})
+        self.env.user.write({'company_ids': [(4, company1.id, False)]})
+        self.assertNotEqual(self.env.company_id, company1)
+
+        email_new_partner = "diamonds@rust.com"
+        Partner = self.env['res.partner']
+        self.assertFalse(Partner.search([('email', '=', email_new_partner)]))
+
+        template = self.env['mail.template'].create({
+            'model_id': self.env['ir.model']._get('mail.test.track').id,
+            'name': 'AutoTemplate',
+            'subject': 'autoresponse',
+            'email_from': self.env.user.email_formatted,
+            'email_to': "${object.email_from}",
+            'body_html': "<div>A nice body</div>",
+        })
+
+        def patched_message_track_post_template(*args, **kwargs):
+            if args[0]._name == "mail.test.track":
+                args[0].message_post_with_template(template.id)
+            return True
+
+        with patch('odoo.addons.mail.models.mail_thread.MailThread._message_track_post_template', patched_message_track_post_template):
+            self.env['mail.test.track'].create({
+                'email_from': email_new_partner,
+                'company_id': company1.id,
+                'user_id': self.env.user.id, # trigger track template
+            })
+
+        new_partner = Partner.search([('email', '=', email_new_partner)])
+        self.assertTrue(new_partner)
+        self.assertEqual(new_partner.company_id, company1)

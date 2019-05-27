@@ -7,8 +7,8 @@
                 <t t-foreach="docs" t-as="o">
                     <t t-call="web.external_layout">
                         <div class="page">
-                            <div class="row mb16">
-                                <div class="col-4 float-right" name="right_box">
+                            <div class="row justify-content-end mb16">
+                                <div class="col-4" name="right_box">
                                     <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px;" alt="Barcode"/>
                                 </div>
                             </div>
@@ -38,7 +38,7 @@
                                     <div t-if="o.partner_id" name="partner_header">
                                         <div t-field="o.partner_id"
                                            t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                                        <p t-if="o.sudo().partner_id.vat"><t t-esc="o.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="o.sudo().partner_id.vat"/></p>
+                                        <p t-if="o.sudo().partner_id.vat"><t t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="o.sudo().partner_id.vat"/></p>
                                     </div>
                                 </div>
                             </div>
@@ -49,7 +49,7 @@
                             <thead>
                                 <tr>
                                     <th t-if="o.origin"><strong>Order</strong></th>
-                                    <th><strong>State</strong></th>
+                                    <th><strong>Status</strong></th>
                                     <th name="td_sched_date_h" width="20%"><strong>Scheduled Date</strong></th>
                                 </tr>
                             </thead>
@@ -146,7 +146,7 @@
                                 </thead>
                                 <tbody>
                                     <tr t-foreach="o.package_level_ids.sorted(key=lambda p: p.package_id.name)" t-as="package">
-                                        <t t-set="package" t-value="package.with_context({'picking_id':o.id})" />
+                                        <t t-set="package" t-value="package.with_context(picking_id=o.id)" />
                                         <td><span t-field="package.package_id.name"/></td>
                                         <td><img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', package.package_id.name, 600, 100)" style="width:300px    ;height:50px" alt="Barcode"/></td>
                                         <td><span t-field="package.location_id"/></td>
@@ -155,12 +155,37 @@
                                 </tbody>
                             </table>
                             <t t-set="no_reserved_product" t-value="o.move_lines.filtered(lambda x: x.product_uom_qty != x.reserved_availability and x.move_line_ids and x.state!='done')"/>
-                            <p t-if="o.state in ['draft', 'waiting', 'confirmed'] or no_reserved_product" class="fa fa-exclamation-triangle">
+                            <p t-if="o.state in ['draft', 'waiting', 'confirmed'] or no_reserved_product"><i class="fa fa-exclamation-triangle" />
                                 All products could not be reserved. Click on the "Check Availability" button to try to reserve products
                             </p>
                             <p t-field="o.note"/>
                         </div>
                     </t>
+                </t>
+            </t>
+        </template>
+        <template id="report_picking_type_label">
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <div class="oe_structure"/>
+                        <div class="row">
+                            <div class="col-8">
+                                <table class="table table-condensed" style="border-bottom: 0px solid white !important;width: 3in;">
+                                    <tr>
+                                      <th style="text-align: left;">
+                                        <span t-field="o.name"/>
+                                      </th>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center; vertical-align: middle;" class="col-5">
+                                            <img t-if="o.barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.barcode, 600, 150)" style="width:100%;height:20%;"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </t>
             </t>
         </template>

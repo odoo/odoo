@@ -6,7 +6,7 @@
     'website': 'https://www.odoo.com/page/e-commerce',
     'version': '1.0',
     'description': "",
-    'depends': ['website', 'sale_payment', 'website_payment', 'website_mail', 'website_form', 'website_rating', 'digest', 'account'],
+    'depends': ['website', 'sale', 'website_payment', 'website_mail', 'website_form', 'website_rating', 'digest'],
     'data': [
         'security/ir.model.access.csv',
         'security/website_sale.xml',
@@ -30,4 +30,5 @@
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
     'application': True,
+    'uninstall_hook': 'uninstall_hook',
 }

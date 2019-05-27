@@ -7,6 +7,12 @@
             <field name="model">product.category</field>
             <field name="inherit_id" ref="product.product_category_form_view" />
             <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button string="Putaway Rules"
+                        class="oe_stat_button"
+                        icon="fa-random" name="%(category_open_putaway)d" type="action"
+                        groups="stock.group_stock_multi_locations"/>
+                </div>
                 <group name="first" position="after">
                     <group string="Logistics">
                         <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location"/>
@@ -67,8 +73,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='pricelist_id']" position="after">
                     <separator/>
-                    <field name="location_id" widget="selection" context="{'location': self}"/>
-                    <field name="warehouse_id" widget="selection" context="{'warehouse': self}"/>
+                    <field name="location_id" context="{'location': self}"/>
+                    <field name="warehouse_id" context="{'warehouse': self}"/>
                     <separator/>
                     <filter name="real_stock_available" string="Available Products" domain="[('qty_available','&gt;',0)]"/>
                     <filter name="real_stock_negative" string="Negative Forecasted Quantity" domain="[('virtual_available','&lt;',0)]"/>
@@ -105,7 +111,8 @@
                             <field name="sale_delay" class="oe_inline" style="vertical-align:baseline"/> days
                         </div>
                     </group>
-                    <group string="Traceability" name="traceability" groups="stock.group_production_lot">
+                    <group string="Traceability" name="traceability" groups="stock.group_production_lot"
+                           attrs="{'invisible': [('type', '=', 'consu')]}">
                         <field name="tracking" widget="radio" attrs="{'invisible': [('type', 'in', ['service', 'digital'])]}"/>
                     </group>
                      <group string="Counterpart Locations" name="stock_property" groups="base.group_no_one">
@@ -117,12 +124,15 @@
                     <group string="Description for Delivery Orders">
                         <field name="description_pickingout" nolabel="1" placeholder="This note will show up on delivery orders."/>
                     </group>
-                    <group string="Description for Receptions">
+                    <group string="Description for Receipts">
                         <field name="description_pickingin" nolabel="1" placeholder="This note will show up on receipt orders (e.g. where to store the product in the warehouse)."/>
                     </group>
                     <group string="Description for Internal Transfers" groups="stock.group_stock_multi_locations">
                         <field name="description_picking" placeholder="This note will show up on internal transfer orders (e.g. where to pick the product in the warehouse)." nolabel="1"/>
                     </group>
+                </page>
+                <page name="inventory" position="attributes">
+                    <attribute name="groups">stock.group_stock_user,product.group_stock_packaging</attribute>
                 </page>
             </field>
         </record>
@@ -149,8 +159,8 @@
             <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
                 <field name="pricelist_id" position="before">
-                    <field name="location_id" widget="selection" context="{'location': self}"/>
-                    <field name="warehouse_id" widget="selection" context="{'warehouse': self}"/>
+                    <field name="location_id" options="{'no_create': True}" context="{'location': self}"/>
+                    <field name="warehouse_id" context="{'warehouse': self}"/>
                 </field>
             </field>
         </record>
@@ -170,6 +180,13 @@
                             attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
                 </sheet>
+                <button name="toggle_active" position="before">
+                    <button string="Putaway Rules" type="object"
+                        name="action_view_related_putaway_rules"
+                        class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
+                        attrs="{'invisible': [('type', '=', 'service')]}"
+                        context="{'invisible_handle': True, 'single_product': True}"/>
+                </button>
             </field>
         </record>
 
@@ -193,9 +210,9 @@
                     </header>
                     <button name="toggle_active" position="before">
                         <button class="oe_stat_button"
-                               name="%(product_open_quants)d"
+                               name="action_open_quants"
                                icon="fa-building-o"
-                               type="action" attrs="{'invisible':[('type', '!=', 'product')]}">
+                               type="object" attrs="{'invisible':[('type', '!=', 'product')]}">
                                <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value">
                                         <field name="qty_available" widget="statinfo" nolabel="1" class="mr4"/>
@@ -207,6 +224,7 @@
                         <button type="action"
                             name="%(stock.action_stock_level_forecast_report_product)d"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
+                            context="{'default_product_id': id}"
                             class="oe_stat_button" icon="fa-building-o">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
@@ -223,7 +241,7 @@
                             type="object"
                             name= "action_view_stock_move_lines"
                             attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
-                            class="oe_stat_button" icon="fa-arrows-v"
+                            class="oe_stat_button" icon="fa-exchange"
                             groups="stock.group_stock_user"/>
                        <button type="action"
                             name="%(product_open_orderpoint)d"
@@ -243,15 +261,25 @@
                                 <span class="o_stat_value"><field name="reordering_max_qty"/></span>
                             </div>
                         </button>
-                       <button string="Routes" type="object"
-                            name="action_view_routes"
-                            attrs="{'invisible':[('type', '!=', 'product')]}"
-                            class="oe_stat_button" icon="fa-cogs" groups="base.group_no_one"/>
+                       <button string="Routes" type="action"
+                            name="%(action_stock_rules_report)d"
+                            attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
+                            class="oe_stat_button" icon="fa-cogs"
+                            context="{'default_product_id': id}"
+                            groups="stock.group_stock_multi_locations"/>
+                        <button string="Putaway Rules" type="object"
+                            name="action_view_related_putaway_rules"
+                            class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
+                            attrs="{'invisible': [('type', '=', 'service')]}"
+                            context="{'invisible_handle': True, 'single_product': True}"/>
                         <button string="Lot/Serial Number" type="object"
                             name="action_open_product_lot"
                             attrs="{'invisible': [('tracking', '=', 'none')]}"
                             class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot"/>
                     </button>
+                    <xpath expr="//field[@name='product_tmpl_id']" position="attributes">
+                        <attribute name="context">{'quantity_available_locations_domain': ('internal',)}</attribute>
+                    </xpath>
                 </data>
             </field>
         </record>
@@ -287,6 +315,7 @@
                         <button type="action"
                             name="%(stock.action_stock_level_forecast_report_template)d"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
+                            context="{'default_product_tmpl_id': id}"
                             class="oe_stat_button" icon="fa-building-o">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
@@ -302,7 +331,7 @@
                         <button string="Product Moves" type="object"
                             name= "action_view_stock_move_lines"
                             attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
-                            class="oe_stat_button" icon="fa-arrows-v"
+                            class="oe_stat_button" icon="fa-exchange"
                             groups="stock.group_stock_user"/>
                         <button type="object"
                             name="action_view_orderpoints"
@@ -324,11 +353,20 @@
                                 <span class="o_stat_value"><field name="reordering_max_qty"/></span>
                             </div>
                         </button>
-                        <button string="Routes" type="object"
-                            name="action_view_routes"
-                            attrs="{'invisible':[('type', '!=', 'product')]}"
+                        <button string="Routes" type="action"
+                            name="%(action_stock_rules_report)d"
+                            attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
                             class="oe_stat_button" icon="fa-cogs"
-                            groups="base.group_no_one"/>
+                            context="{'default_product_tmpl_id': id}"
+                            groups="stock.group_stock_multi_locations"/>
+                        <button string="Putaway Rules" type="object"
+                            name="action_view_related_putaway_rules"
+                            class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
+                            attrs="{'invisible': [('type', '=', 'service')]}"
+                            context="{
+                                'invisible_handle': True,
+                                'single_product': product_variant_count == 1,
+                            }"/>
                         <button string="Lot/Serial Number" type="object"
                             name="action_open_product_lot"
                             attrs="{'invisible': [('tracking', '=', 'none')]}"
@@ -338,7 +376,7 @@
                     <!-- change attrs of fields added in view_template_property_form
                     to restrict the display for templates -->
                     <xpath expr="//group[@name='group_lots_and_weight']" position="attributes">
-                        <attribute name="attrs">{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}</attribute>
+                        <attribute name="attrs">{'invisible':['|', ('type', 'not in', ['product', 'consu'])]}</attribute>
                     </xpath>
 
                     <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
@@ -355,7 +393,7 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_type">form</field>
         <field name="search_view_id" ref="product_template_search_form_view_stock"/>
-        <field name="context">{"search_default_consumable": 1, 'default_type': 'product'}</field>
+        <field name="context">{"search_default_consumable": 1, 'default_type': 'product', 'quantity_available_locations_domain': ('internal',)}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new product
@@ -369,6 +407,7 @@
         <field name="res_model">product.product</field>
         <field name="view_mode">tree,form,kanban</field>
         <field name="view_type">form</field>
+        <field name="context">{'quantity_available_locations_domain': ('internal',)}</field>
         <field name="search_view_id" ref="stock_product_search_form_view"/>
     </record>
 
@@ -377,6 +416,7 @@
     <menuitem id="product_product_menu" name="Product Variants" action="stock_product_normal_action"
         parent="menu_stock_inventory_control" sequence="2" groups="product.group_product_variant"/>
     <menuitem id="menu_product_packagings" name="Product Packagings" parent="stock.menu_product_in_config_stock" action="product.action_packaging_view" groups="product.group_stock_packaging"/>
+    <menuitem id="menu_forecast_inventory" name="Forecasted Inventory" parent="stock.menu_warehouse_report" sequence="101" action="stock.action_stock_level_forecast_report_all_product"/>
 
     </data>
 </odoo>

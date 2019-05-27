@@ -2,8 +2,8 @@ odoo.define('bus.CrossTab', function (require) {
 "use strict";
 
 var Longpolling = require('bus.Longpolling');
-var session = require('web.session');
 
+var session = require('web.session');
 
 /**
  * CrossTab
@@ -44,7 +44,6 @@ var CrossTabBus = Longpolling.extend({
     init: function () {
         this._super.apply(this, arguments);
         var now = new Date().getTime();
-        var session = this.getSession();
         // used to prefix localStorage keys
         this._sanitizedOrigin = session.origin.replace(/:\/{0,2}/g, '_');
         // prevents collisions between different tabs and in tests
@@ -52,7 +51,7 @@ var CrossTabBus = Longpolling.extend({
         if (this._callLocalStorage('getItem', 'last_ts', 0) + 50000 < now) {
             this._callLocalStorage('removeItem', 'last');
         }
-        this._lastNotificationID = this._callLocalStorage('getItem', 'last', -1);
+        this._lastNotificationID = this._callLocalStorage('getItem', 'last', 0);
         this.call('local_storage', 'onStorage', this, this._onStorage);
     },
     destroy: function () {
@@ -106,7 +105,7 @@ var CrossTabBus = Longpolling.extend({
 
             $(window).on('unload.' + this._id, this._onUnload.bind(this));
 
-            if (!this._callLocalStorage('getItem', 'peers')) {
+            if (!this._callLocalStorage('getItem', 'master')) {
                 this._startElection();
             }
 
@@ -253,6 +252,7 @@ var CrossTabBus = Longpolling.extend({
             //we're next in queue. Electing as master
             this.lastHeartbeat = now;
             this._callLocalStorage('setItem', 'heartbeat', this.lastHeartbeat);
+            this._callLocalStorage('setItem', 'master', true);
             this._isMasterTab = true;
             this.startPolling();
             this.trigger('become_master');
@@ -298,35 +298,33 @@ var CrossTabBus = Longpolling.extend({
         var value = JSON.parse(e.newValue);
         var key = e.key;
 
-        if (this._isRegistered && key === this._generateKey('peers') && !value) {
+        if (this._isRegistered && key === this._generateKey('master') && !value) {
             //master was unloaded
             this._startElection();
         }
 
         // last notification id changed
         if (key === this._generateKey('last')) {
-            this._lastNotificationID = value;
+            this._lastNotificationID = value || 0;
         }
         // notifications changed
-
-        if (key === this._generateKey('notification')) {
+        else if (key === this._generateKey('notification')) {
             if (!this._isMasterTab) {
                 this.trigger("notification", value);
             }
-            return;
         }
         // update channels
-        if (key === this._generateKey('channels')) {
+        else if (key === this._generateKey('channels')) {
             var channels = value;
             _.each(_.difference(this._channels, channels), this.deleteChannel.bind(this));
             _.each(_.difference(channels, this._channels), this.addChannel.bind(this));
         }
         // update options
-        if (key === this._generateKey('options')) {
+        else if (key === this._generateKey('options')) {
             this._options = value;
         }
         // update focus
-        if (key === this._generateKey('focus')) {
+        else if (key === this._generateKey('focus')) {
             this._isOdooFocused = value;
             this.trigger('window_focus', this._isOdooFocused);
         }
@@ -344,7 +342,7 @@ var CrossTabBus = Longpolling.extend({
 
         // unload master
         if (this._isMasterTab) {
-            this._callLocalStorage('removeItem', 'peers');
+            this._callLocalStorage('removeItem', 'master');
         }
     },
 });

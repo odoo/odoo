@@ -3,6 +3,7 @@
 
 from datetime import datetime
 import random
+import json
 
 import itertools
 
@@ -15,7 +16,7 @@ from odoo.tools import html2plaintext
 class Blog(models.Model):
     _name = 'blog.blog'
     _description = 'Blogs'
-    _inherit = ['mail.thread', 'website.seo.metadata']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.multi.mixin']
     _order = 'name'
 
     name = fields.Char('Blog Name', required=True, translate=True)
@@ -35,7 +36,7 @@ class Blog(models.Model):
         return res
 
     @api.multi
-    @api.returns('self', lambda value: value.id)
+    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, parent_id=False, subtype=None, **kwargs):
         """ Temporary workaround to avoid spam. If someone replies on a channel
         through the 'Presentation Published' email, it should be considered as a
@@ -108,7 +109,7 @@ class BlogTag(models.Model):
 class BlogPost(models.Model):
     _name = "blog.post"
     _description = "Blog Post"
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin']
     _order = 'id DESC'
     _mail_post_access = 'read'
 
@@ -164,9 +165,11 @@ class BlogPost(models.Model):
     create_uid = fields.Many2one('res.users', 'Created by', index=True, readonly=True)
     write_date = fields.Datetime('Last Updated on', index=True, readonly=True)
     write_uid = fields.Many2one('res.users', 'Last Contributor', index=True, readonly=True)
-    author_avatar = fields.Binary(related='author_id.image_small', string="Avatar")
+    author_avatar = fields.Binary(related='author_id.image_small', string="Avatar", readonly=False)
     visits = fields.Integer('No of Views', copy=False)
     ranking = fields.Float(compute='_compute_ranking', string='Ranking')
+
+    website_id = fields.Many2one(related='blog_id.website_id', readonly=True)
 
     @api.multi
     @api.depends('content', 'teaser_manual')
@@ -264,3 +267,12 @@ class BlogPost(models.Model):
         if msg_type == 'comment':
             return {'needaction_partner_ids': []}
         return {}
+
+    def _default_website_meta(self):
+        res = super(BlogPost, self)._default_website_meta()
+        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.subtitle
+        blog_post_cover_properties = json.loads(self.cover_properties)
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = blog_post_cover_properties.get('background-image', 'none')[4:-1]
+        res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
+        res['default_meta_description'] = self.subtitle
+        return res

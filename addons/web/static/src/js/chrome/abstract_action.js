@@ -2,75 +2,126 @@ odoo.define('web.AbstractAction', function (require) {
 "use strict";
 
 /**
- * We define here the generic notion of Action (from the point of view of the
- * web client).  In short, an action is a widget which controls the main part
- * of the screen (everything below the control panel).
- *
- * More precisely, the action manager is the component that coordinates a stack
- * of actions.  Whenever the user navigates in the interface, switches views,
- * open different menus, the action manager creates/updates/destroys special
- * widgets which are actions.  These actions need to answer to a standardised
- * API, which is the reason for this AbstractAction class.
- *
- * In practice, most actions are view controllers (coming from a
- * ir.action.act_window).  However, some actions are 'client actions'.  They
- * also need to be an AbstractAction for a better cooperation with the action
- * manager.
+ * We define here the AbstractAction widget, which implements the ActionMixin.
+ * All client actions must extend this widget.
  *
  * @module web.AbstractAction
  */
 
+var ActionMixin = require('web.ActionMixin');
+var ControlPanelView = require('web.ControlPanelView');
 var Widget = require('web.Widget');
 
-var AbstractAction = Widget.extend({
+var AbstractAction = Widget.extend(ActionMixin, {
+    config: {
+        ControlPanelView: ControlPanelView,
+    },
 
     /**
-     * Called each time the action is attached into the DOM.
-     */
-    on_attach_callback: function () {},
-    /**
-     * Called each time the action is detached from the DOM.
-     */
-    on_detach_callback: function () {},
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * In some situations, we need confirmation from the controller that the
-     * current state can be destroyed without prejudice to the user.  For
-     * example, if the user has edited a form, maybe we should ask him if we
-     * can discard all his changes when we switch to another action.  In that
-     * case, the action manager will call this method.  If the returned
-     * deferred is succesfully resolved, then we can destroy the current action,
-     * otherwise, we need to stop.
+     * If this flag is set to true, the client action will create a control
+     * panel whenever it is created.
      *
-     * @returns {Deferred} resolved if the action can be removed, rejected otherwise
+     * @type boolean
      */
-    canBeRemoved: function () {
-        return $.when();
-    },
+    hasControlPanel: false,
+
     /**
-     * This function is called when the current context (~state) of the action
-     * should be known. For instance, if the action is a view controller,
-     * this may be useful to reinstantiate the view in the same state.
-     */
-    getContext: function () {
-    },
-    /**
-     * Gives the focus to the action
-     */
-    giveFocus: function () {
-    },
-    /**
-     * Renders the buttons to append, in most cases, to the control panel (in
-     * the bottom left corner). When the action is rendered in a dialog, those
-     * buttons might be moved to the dialog's footer.
+     * If true, this flag indicates that the client action should automatically
+     * fetch the <arch> of a search view (or control panel view).  Note that
+     * to do that, it also needs a specific modelName.
      *
-     * @param {jQuery Node} $node
+     * For example, the Discuss application adds the following line in its
+     * constructor::
+     *
+     *      this.controlPanelParams.modelName = 'mail.message';
+     *
+     * @type boolean
      */
-    renderButtons: function ($node) {
+    loadControlPanel: false,
+
+    /**
+     * A client action might want to use a search bar in its control panel, or
+     * it could choose not to use it.
+     *
+     * Note that it only makes sense if hasControlPanel is set to true.
+     *
+     * @type boolean
+     */
+    withSearchBar: false,
+
+    /**
+     * This parameter can be set to customize the available sub menus in the
+     * controlpanel (Filters/Group By/Favorites).  This is basically a list of
+     * the sub menus that we want to use.
+     *
+     * Note that it only makes sense if hasControlPanel is set to true.
+     *
+     * For example, set ['filter', 'favorite'] to enable the Filters and
+     * Favorites menus.
+     *
+     * @type string[]
+     */
+    searchMenuTypes: [],
+
+    /**
+     * @override
+     *
+     * @param {Widget} parent
+     * @param {Object} action
+     * @param {Object} [options]
+     */
+    init: function (parent, action, options) {
+        this._super(parent);
+        this._title = action.display_name || action.name;
+        this.controlPanelParams = {
+            actionId: action.id,
+            context: action.context,
+            breadcrumbs: options && options.breadcrumbs || [],
+            title: this.getTitle(),
+            viewId: action.search_view_id && action.search_view_id[0],
+            withSearchBar: this.withSearchBar,
+            searchMenuTypes: this.searchMenuTypes,
+        };
+    },
+    /**
+     * The willStart method is actually quite complicated if the client action
+     * has a controlPanel, because it needs to prepare it.
+     *
+     * @override
+     */
+    willStart: function () {
+        var self = this;
+        var proms = [this._super.apply(this, arguments)];
+        if (this.hasControlPanel) {
+            var params = this.controlPanelParams;
+            if (this.loadControlPanel) {
+                proms.push(this
+                    .loadFieldView(params.modelName, params.context || {}, params.viewId, 'search')
+                    .then(function (fieldsView) {
+                        params.viewInfo = {
+                            arch: fieldsView.arch,
+                            fields: fieldsView.fields,
+                        };
+                    }));
+            }
+            return Promise.all(proms).then(function () {
+                var controlPanelView = new self.config.ControlPanelView(params);
+                return controlPanelView.getController(self).then(function (controlPanel) {
+                    self._controlPanel = controlPanel;
+                    return self._controlPanel.appendTo(document.createDocumentFragment());
+                });
+            });
+        }
+        return Promise.all(proms);
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        if (this._controlPanel) {
+            this._controlPanel.$el.prependTo(this.$el);
+        }
+        return this._super.apply(this, arguments);
     },
 });
 

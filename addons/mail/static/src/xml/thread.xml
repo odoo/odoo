@@ -2,23 +2,24 @@
 <templates xml:space="preserve">
 
     <!--
+        extends the debug mode menu to allow access to the attachment list view of the current record.
+    -->
+    <t t-extend="WebClient.DebugManager.View">
+        <t t-jquery="a[data-action='get_metadata']" t-operation="after">
+            <a role="menuitem" href="#" data-action="getMailMessages" class="dropdown-item">Manage Messages</a>
+        </t>
+    </t>
+    <!--
         @param {mail.model.AbstractThread} thread
+        @param {Object} options
         @param {boolean} [options.displayEmptyThread]
-        @param {boolean} [options.displayLoadMore]
+        @param {boolean} [options.displayModerationCommands]
         @param {boolean} [options.displayNoMatchFound]
-        @param {integer} [options.displayOrder] 1 or -1
-        @param {Object} ORDER
-        @param {integer} ORDER.ASC=1
-        @param {integer} ORDER.DESC=-1
+        @param {Array} [options.domain=[]] the domain to restrict messages on the thread.
     -->
     <t t-name="mail.widget.Thread">
-        <t t-if="thread.hasMessages()">
-            <t t-set="messages" t-value="thread.getMessages()"/>
-            <t t-if="options.displayLoadMore and options.displayOrder == ORDER.ASC"
-               t-call="mail.widget.Thread.LoadMore"/>
+        <t t-if="thread.hasMessages({ 'domain': options.domain || [] })">
             <t t-call="mail.widget.Thread.Content"/>
-            <t t-if="options.displayLoadMore and options.displayOrder == ORDER.DESC"
-               t-call="mail.widget.Thread.LoadMore"/>
         </t>
         <t t-elif="options.displayEmptyThread">
             <t t-call="mail.widget.Thread.Empty" />
@@ -34,11 +35,12 @@
     -->
     <t t-name="DocumentViewer.Content">
         <div class="o_viewer_content">
+            <t t-set="model" t-value="widget.modelName"/>
             <div class="o_viewer-header">
                 <span class="o_image_caption">
-                    <i class="fa fa-picture-o mr8" t-if="widget.activeAttachment.type == 'image'" role="img" aria-label="Image" title="Image"/>
-                    <i class="fa fa-file-text mr8" t-if="widget.activeAttachment.type == 'application/pdf'" role="img" aria-label="PDF file" title="PDF file"/>
-                    <i class="fa fa-video-camera mr8" t-if="widget.activeAttachment.type == 'video'" role="img" aria-label="Video" title="Video"/>
+                    <i class="fa fa-picture-o mr8" t-if="widget.activeAttachment.fileType == 'image'" role="img" aria-label="Image" title="Image"/>
+                    <i class="fa fa-file-text mr8" t-if="widget.activeAttachment.fileType == 'application/pdf'" role="img" aria-label="PDF file" title="PDF file"/>
+                    <i class="fa fa-video-camera mr8" t-if="widget.activeAttachment.fileType == 'video'" role="img" aria-label="Video" title="Video"/>
                     <t t-esc="widget.activeAttachment.name"/>
                     <a role="button" href="#" class="o_download_btn ml8 small" data-toggle="tooltip" data-placement="right" title="Download"><i class="fa fa-fw fa-download" role="img" aria-label="Download"/></a>
                 </span>
@@ -46,26 +48,28 @@
             </div>
             <div class="o_viewer_img_wrapper">
                 <div class="o_viewer_zoomer">
-                    <div t-if="widget.activeAttachment.type == 'image'" class="o_loading_img text-center">
+                    <div t-if="widget.activeAttachment.fileType == 'image'" class="o_loading_img text-center">
                         <i class="fa fa-circle-o-notch fa-spin text-gray-light fa-3x fa-fw" role="img" aria-label="Loading" title="Loading"/>
                     </div>
-                    <img t-if="widget.activeAttachment.type == 'image'" class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=1" alt="Viewer"/>
-                    <iframe class="mt32 o_viewer_pdf" t-if="widget.activeAttachment.type == 'application/pdf'" t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}" />
-                    <video t-if="widget.activeAttachment.type == 'video'" class="o_viewer_video" controls="controls">
-                        <source t-attf-src="/web/image/#{widget.activeAttachment.id}" t-att-data-type="widget.activeAttachment.mimetype"/>
+                    <img t-if="widget.activeAttachment.fileType === 'image'" class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=1&amp;signature=#{widget.activeAttachment.checksum}&amp;model=#{model}" alt="Viewer"/>
+                    <iframe t-if="widget.activeAttachment.fileType == 'application/pdf'" class="mt32 o_viewer_pdf"  t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}?model%3D#{model}" />
+                    <iframe t-if="(widget.activeAttachment.fileType || '').indexOf('text') !== -1" class="mt32 o_viewer_text" t-attf-src="/web/content/#{widget.activeAttachment.id}?model%3D#{model}" />
+                    <iframe t-if="widget.activeAttachment.fileType == 'youtu'" class="mt32 o_viewer_text"  allow="autoplay; encrypted-media" width="560" height="315" t-attf-src="https://www.youtube.com/embed/#{widget.activeAttachment.youtube}"/>
+                    <video t-if="widget.activeAttachment.fileType == 'video'" class="o_viewer_video" controls="controls">
+                        <source t-attf-src="/web/image/#{widget.activeAttachment.id}?model=#{model}" t-att-data-type="widget.activeAttachment.mimetype"/>
                     </video>
                 </div>
             </div>
-            <div t-if="widget.activeAttachment.type == 'image'" class="o_viewer_toolbar btn-toolbar" role="toolbar">
-                <div class="btn-group ml0" role="group">
+            <div t-if="widget.activeAttachment.fileType == 'image'" class="o_viewer_toolbar btn-toolbar" role="toolbar">
+                <div class="btn-group" role="group">
                     <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_in" data-toggle="tooltip" title="Zoom In"><i class="fa fa-fw fa-plus" role="img" aria-label="Zoom In"/></a>
                     <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_reset disabled" data-toggle="tooltip" title="Reset Zoom"><i class="fa fa-fw fa-search" role="img" aria-label="Reset Zoom"/></a>
                     <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_out disabled" data-toggle="tooltip" title="Zoom Out"><i class="fa fa-fw fa-minus" role="img" aria-label="Zoom Out"/></a>
                 </div>
-                <div class="btn-group ml8" role="group">
+                <div class="btn-group" role="group">
                     <a role="button" href="#" class="o_viewer_toolbar_btn btn o_rotate" data-toggle="tooltip" title="Rotate"><i class="fa fa-fw fa-repeat" role="img" aria-label="Rotate"/></a>
                 </div>
-                <div class="btn-group ml8" role="group">
+                <div class="btn-group" role="group">
                     <a role="button" href="#" class="o_viewer_toolbar_btn btn o_print_btn" data-toggle="tooltip" title="Print"><i class="fa fa-fw fa-print" role="img" aria-label="Print"/></a>
                     <a role="button" href="#" class="o_viewer_toolbar_btn btn o_download_btn" data-toggle="tooltip" title="Download"><i class="fa fa-fw fa-download" role="img" aria-label="Download"/></a>
                 </div>
@@ -78,7 +82,7 @@
     -->
     <t t-name="DocumentViewer">
         <div class="modal o_modal_fullscreen" tabindex="-1" data-keyboard="false" role="dialog">
-            <t t-call="DocumentViewer.Content"/>
+            <t class="o_document_viewer_content_call" t-call="DocumentViewer.Content"/>
 
             <t t-if="widget.attachment.length !== 1">
                 <a class="arrow arrow-left move_previous" href="#">
@@ -134,14 +138,91 @@
     </div>
 
     <!--
-        @param {mail.model.AbstractMessage[]} messages messages ordered by increasing IDs
-        @param {string|integer} [options.messagesSeparatorPosition] 'top' or
-            message ID, the separator is placed just after this message.
+        @param {mail.model.AbstractThread} thread
+        @param {Object} options
+        @param {integer} [options.displayOrder] 1 or -1 ascending (respectively, descending) order for
+          the thread messages (from top to bottom)
+        @param {Array} [options.domain=[]] the domain to restrict messages on the thread.
+        @param {Object} ORDER
+        @param {integer} ORDER.ASC=1 messages are ordered by ascending order of IDs, (from top to bottom)
+        @param {integer} ORDER.DESC=-1 messages are ordered by descending IDs, (from top to bottom)
+
+                    _____________            _____________
+                   |             |          |             |
+                   |  message 1  |          |  message n  |
+                   |  message 2  |          |  ...        |
+                   |  ...        |          |  message 2  |
+                   |  message n  |          |  message 1  |
+                   |_____________|          |_____________|
+
+        ORDER:           ASC                     DESC
+
     -->
     <t t-name="mail.widget.Thread.Content">
-        <t t-if="options.messagesSeparatorPosition == 'top'" t-call="mail.MessagesSeparator"/>
+        <t t-set="messages" t-value="thread.getMessages({ 'domain': options.domain || [] })"/>
+        <t t-if="options.displayOrder === ORDER.ASC" t-call="mail.widget.Thread.Content.ASC"/>
+        <t t-else="" t-call="mail.widget.Thread.Content.DESC"/>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractThread} thread
+        @param {Object} options
+        @param {boolean} [options.displayBottomThreadFreeSpace=false]
+        @param {boolean} [options.displayLoadMore=false]
+
+                     _____________
+                    |             |
+                    |  message 1  |
+                    |  message 2  |
+                    |  ...        |
+                    |  message n  |
+                    |_____________|
+
+                      ASC Order
+    -->
+    <t t-name="mail.widget.Thread.Content.ASC">
+        <div class="o_mail_thread_content">
+            <t t-if="options.displayLoadMore" t-call="mail.widget.Thread.LoadMore"/>
+            <t t-call="mail.widget.Thread.Messages"/>
+            <t t-if="options.displayBottomThreadFreeSpace">
+                <div class="o_thread_bottom_free_space"/>
+            </t>
+        </div>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractThread} thread
+        @param {Object} options
+        @param {boolean} [options.displayLoadMore=false]
+        @param {string|integer} [options.messagesSeparatorPosition] 'top' or
+            message ID, the separator is placed just after this message.
+
+                     _____________
+                    |             |
+                    |  message n  |
+                    |  ...        |
+                    |  message 2  |
+                    |  message 1  |
+                    |_____________|
+
+                      DESC Order
+
+    -->
+    <t t-name="mail.widget.Thread.Content.DESC">
+        <div class="o_mail_thread_content">
+            <t t-if="options.messagesSeparatorPosition == 'top'" t-call="mail.MessagesSeparator"/>
+            <t t-set="messages" t-value="messages.slice().reverse()"/>
+            <t t-call="mail.widget.Thread.Messages"/>
+            <t t-if="options.displayLoadMore" t-call="mail.widget.Thread.LoadMore"/>
+        </div>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractMessage[]} messages messages are ordered based
+          on desired display order
+    -->
+    <t t-name="mail.widget.Thread.Messages">
         <t t-set="current_day" t-value="0"/>
-        <t t-if="options.displayOrder === ORDER.DESC" t-set="messages" t-value="messages.slice().reverse()"/>
         <t t-foreach="messages" t-as="message">
             <div t-if="current_day !== message.getDateDay()" class="o_thread_date_separator">
                 <span class="o_thread_date">
@@ -157,9 +238,6 @@
     <!--
         @param {mail.model.AbstractThread} thread
         @param {string} dateFormat
-        @param {Object[]} hideAuthorMessages dict where key is message ID and
-          value is boolean. It tells whether the message with this ID should
-          hide the author visually or not.
         @param {Object} options
         @param {mail.model.AbstractMessage} message
         @param {Object} options
@@ -167,6 +245,8 @@
         @param {boolean} [options.displayDocumentLinks]
         @param {boolean} [options.displayEmailIcons]
         @param {boolean} [options.displayMarkAsRead]
+        @param {boolean} [options.displayModerationCommands] when set, display the moderation commands on
+          the message. This includes the moderation checkboxes (needs a control panel such as in Discuss app).
         @param {boolean} [options.displayReplyIcons]
         @param {boolean} [options.displayStars]
         @param {boolean} [options.displaySubjectsOnMessages]
@@ -175,15 +255,21 @@
         @param {integer} [options.selectedMessageID]
     -->
     <t t-name="mail.widget.Thread.Message">
-        <div t-att-class="'o_thread_message' + (message.getID() === options.selectedMessageID ? 'o_thread_selected_message ' : ' ') + (message.isDiscussion() or message.isNotification() ? ' o_mail_discussion' : ' o_mail_not_discussion')" t-att-data-message-id="message.getID()">
+        <div t-if="!message.isEmpty()" t-att-class="'o_thread_message ' + (message.getID() === options.selectedMessageID ? 'o_thread_selected_message ' : ' ') + (message.isDiscussion() or message.isNotification() ? ' o_mail_discussion ' : ' o_mail_not_discussion ')" t-att-data-message-id="message.getID()">
             <div t-if="options.displayAvatars" class="o_thread_message_sidebar">
                 <t t-if="message.hasAuthor()">
-                    <img t-if="displayAuthorMessages[message.getID()]"
-                        alt=""
-                        t-att-src="message.getAvatarSource()"
-                        data-oe-model="res.partner"
-                        t-att-data-oe-id="message.shouldRedirectToAuthor() ? message.getAuthorID() : ''"
-                        t-attf-class="o_thread_message_avatar rounded-circle #{message.shouldRedirectToAuthor() ? 'o_mail_redirect' : ''}"/>
+                    <div t-if="displayAuthorMessages[message.getID()]" class="o_thread_message_sidebar_image">
+                        <img
+                            alt=""
+                            t-att-src="message.getAvatarSource()"
+                            data-oe-model="res.partner"
+                            t-att-data-oe-id="message.shouldRedirectToAuthor() ? message.getAuthorID() : ''"
+                            t-attf-class="o_thread_message_avatar rounded-circle #{message.shouldRedirectToAuthor() ? 'o_mail_redirect' : ''}"/>
+                        <t t-call="mail.UserStatus">
+                            <t t-set="status" t-value="message.getAuthorImStatus()"/>
+                            <t t-set="partnerID" t-value="message.getAuthorID()"/>
+                        </t>
+                    </div>
                 </t>
                 <t t-else="">
                     <img t-if="displayAuthorMessages[message.getID()]"
@@ -197,10 +283,11 @@
                 <i t-if="!displayAuthorMessages[message.getID()] and options.displayStars and message.getType() !== 'notification'"
                     t-att-class="'fa o_thread_message_star o_thread_icon ' + (message.isStarred() ? 'fa-star' : 'fa-star-o')"
                     t-att-data-message-id="message.getID()" title="Mark as Todo" role="img" aria-label="Mark as todo"/>
+                <t t-if="!displayAuthorMessages[message.getID()] and thread.hasSeenFeature()" t-call="mail.widget.Thread.Message.SeenIcon"/>
             </div>
             <div class="o_thread_message_core">
                 <p t-if="displayAuthorMessages[message.getID()]" class="o_mail_info text-muted">
-                    <input t-if="message.needsModeration() and message.needsModerationByUser()" type="checkbox" class="moderation_checkbox" t-att-data-message-id="message.getID()"/>
+                    <input t-if="message.needsModeration() and message.needsModerationByUser() and options.displayModerationCommands" type="checkbox" class="moderation_checkbox" t-att-data-message-id="message.getID()"/>
                     <t t-if="message.isNote()">
                         Note by
                     </t>
@@ -221,36 +308,25 @@
 
                     - <small class="o_mail_timestamp" t-att-title="message.getDate().format(dateFormat)"><t t-esc="message.getTimeElapsed()"/></small>
                     <t t-if="message.isLinkedToDocumentThread() and options.displayDocumentLinks">
-                        on <a t-att-href="message.getURL()" t-att-data-oe-model="message.getDocumentModel()" t-att-data-oe-id="message.getDocumentID()" class="o_document_link"><t t-esc="message.getDocumentName()"/></a>
+                        <small>on</small> <a t-att-href="message.getURL()" t-att-data-oe-model="message.getDocumentModel()" t-att-data-oe-id="message.getDocumentID()" class="o_document_link"><t t-esc="message.getDocumentName()"/></a>
                     </t>
                     <t t-if="message.originatesFromChannel() and (message.getOriginChannelID() !== thread.getID())">
-                        (from <a t-att-data-oe-id="message.getOriginChannelID()" href="#">#<t t-esc="message.getOriginChannelName()"/></a>)
+                        (<small>from</small> <a t-att-data-oe-id="message.getOriginChannelID()" href="#">#<t t-esc="message.getOriginChannelName()"/></a>)
                     </t>
-                    <span t-if="options.displayEmailIcons and message.hasCustomerEmailData()" class="o_thread_tooltip_container">
+                    <span t-if="options.displayEmailIcons and (message.hasCustomerEmailData() or ['exception', 'bounce'].indexOf(message._customerEmailStatus) > -1)" class="o_thread_tooltip_container">
+
                         <t t-set="fatype" t-value="''"/>
                         <t t-if="message.getCustomerEmailStatus() === 'sent' or message.getCustomerEmailStatus() === 'ready'">
                             <t t-set="fatype" t-value="'-o'"/>
                         </t>
                         <i t-att-class="'o_thread_tooltip o_thread_message_email o_thread_message_email_' + message.getCustomerEmailStatus() + ' fa fa-envelope-o'" t-att-data-message-id="message.getID()"/>
-                        <span class="o_thread_tooltip_content">
-                            <t t-foreach="message.getCustomerEmailData()" t-as="customerEmailData">
-                                <span>
-                                    <t t-if="customerEmailData[2] === 'sent'"><i class='fa fa-check' title="Sent" role="img" aria-label="Sent"/></t>
-                                    <t t-if="customerEmailData[2] === 'bounce'"><i class='fa fa-exclamation' title="Bounced" role="img" aria-label="Bounced"/></t>
-                                    <t t-if="customerEmailData[2] === 'exception'"><i class='fa fa-exclamation' title="Error" role="img" aria-label="Error"/></t>
-                                    <t t-if="customerEmailData[2] === 'ready'"><i class='fa fa-send-o' title="Ready" role="img" aria-label="Ready"/></t>
-                                    <t t-if="customerEmailData[2] === 'canceled'"><i class='fa fa-trash-o' title="Canceled" role="img" aria-label="Canceled"/></t>
-                                    <t t-esc="customerEmailData[1]"/>
-                                </span>
-                                <br />
-                            </t>
-                        </span>
                     </span>
                     <span t-attf-class="o_thread_icons">
+                        <t t-if="thread.hasSeenFeature()" t-call="mail.widget.Thread.Message.SeenIcon"/>
                         <i t-if="options.displayStars and !message.isSystemNotification() and !message.needsModeration()"
                             t-att-class="'fa fa-lg o_thread_icon o_thread_message_star ' + (message.isStarred() ? 'fa-star' : 'fa-star-o')"
                             t-att-data-message-id="message.getID()" title="Mark as Todo" role="img" aria-label="Mark as Todo"/>
-                       <i t-if="message.originatesFromChannel() and options.displayReplyIcons"
+                       <i t-if="message.isLinkedToDocumentThread() and options.displayReplyIcons"
                            class="fa fa-reply o_thread_icon o_thread_message_reply"
                            t-att-data-message-id="message.getID()" title="Reply" role="img" aria-label="Reply"/>
                         <i t-if="message.isNeedaction() and options.displayMarkAsRead"
@@ -258,16 +334,12 @@
                            t-att-data-message-id="message.getID()" title="Mark as Read" role="img" aria-label="Mark as Read"/>
 
                         <t t-if="message.needsModeration() and message.originatesFromChannel()">
-                            <t t-if="message.needsModerationByUser()">
-                                <t t-call="mail.MessageModerationDecision"/>
-                            </t>
-                            <t t-elif="message.isAuthor()">
-                                <t t-call="mail.MessageModerationFeedback"/>
-                            </t>
+                            <t t-call="mail.MessageModeration"/>
                         </t>
                     </span>
                 </p>
                 <div class="o_thread_message_content">
+                    <t t-raw="message.getBody()"/>
                     <t t-if="message.hasTrackingValues()">
                         <t t-if="message.hasSubtypeDescription()">
                             <p><t t-esc="message.getSubtypeDescription()"/></p>
@@ -275,9 +347,6 @@
                         <t t-call="mail.widget.Thread.MessageTracking"/>
                     </t>
                     <p t-if="options.displaySubjectOnMessages and message.shouldDisplaySubject()" class="o_mail_subject">Subject: <t t-esc="message.getSubject()"/></p>
-                    <t t-if="!(message.hasTrackingValues())">
-                        <t t-raw="message.getBody()"/>
-                    </t>
                     <t t-if="message.hasAttachments()">
                         <div t-if="message.hasImageAttachments()" class="o_attachments_previews">
                             <t t-foreach="message.getImageAttachments()" t-as="attachment">
@@ -299,6 +368,101 @@
     </t>
 
     <!--
+        Display the seen icon of a message in the thread.
+        It shows the fetch 'check' before the seen 'check'. We change the order in the template
+        so that fetch 'check' is on top of 'seen' check (z-index does not work with absolute positioning)
+
+        @param {mail.model.Thread} thread
+        @param {mail.model.Message} message
+    -->
+    <t t-name="mail.widget.Thread.Message.SeenIcon">
+        <t t-if="message.isMyselfAuthor() and message.getID() >= thread.getLastMessageIDSeenByEveryone()">
+            <span t-attf-class="o_mail_thread_message_seen_icon #{thread.hasEveryoneSeen(message) ? 'o_all_seen' : ''}" t-att-data-message-id="message.getID()">
+                <t t-if="thread.hasSomeoneFetched(message)">
+                    <i class="fa fa-check"/>
+                </t>
+                <t t-if="thread.hasSomeoneSeen(message)">
+                    <i class="fa fa-check"/>
+                </t>
+            </span>
+        </t>
+    </t>
+
+    <!--
+        Display the popover content when clicking the seen icion of a message in the thread.
+
+        List the members that have received the messages, and the members that have seen it.
+
+        @param {mail.model.Thread} thread
+        @param {mail.model.Message} message
+    -->
+    <t t-name="mail.widget.Thread.Message.SeenIconPopoverContent">
+        <div class="o_mail_thread_message_seen_icon_content">
+            <t t-if="thread.hasEveryoneSeen(message)">
+                <p>Seen by Everyone</p>
+            </t>
+            <t t-else="">
+                <t t-if="thread.hasSomeoneSeen(message)">
+                    <t t-set="seen_members" t-value="thread.getSeenMembers(message)"/>
+                    Seen by:
+                    <ul>
+                        <li t-foreach="seen_members" t-as="member">
+                            <t t-esc="member.name"/> (<t t-esc="member.email"/>)
+                        </li>
+                    </ul>
+                </t>
+                <t t-if="thread.hasSomeoneFetched(message)">
+                    <t t-if="thread.hasEveryoneFetched(message)">
+                        <p>Received by Everyone</p>
+                    </t>
+                    <t t-else="">
+                        <t t-set="fetched_members" t-value="thread.getFetchedNotSeenMembers(message)"/>
+                        <t t-if="!_.isEmpty(fetched_members)">
+                            Received by:
+                            <ul>
+                                <li t-foreach="fetched_members" t-as="member">
+                                    <t t-esc="member.name"/> (<t t-esc="member.email"/>)
+                                </li>
+                            </ul>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <!--
+        @param {Object[]|undefined} list of customer email data of a given message.
+           A customer email data is a list with the following format:
+           [partnerID, partnerName, emailStatus]
+    -->
+    <t t-name="mail.widget.Thread.Message.MailTooltip">
+        <div t-foreach="data" t-as="customerEmailData">
+            <span class="d-inline-block text-center o_thread_tooltip_icon">
+                <i t-if="customerEmailData[2] === 'sent'" class='fa fa-check' title="Sent" role="img" aria-label="Sent"/>
+                <i t-if="customerEmailData[2] === 'bounce'" class='fa fa-exclamation text-danger' title="Bounced" role="img" aria-label="Bounced"/>
+                <i t-if="customerEmailData[2] === 'exception'" class='fa fa-exclamation text-danger' title="Error" role="img" aria-label="Error"/>
+                <i t-if="customerEmailData[2] === 'ready'" class='fa fa-send-o' title="Ready" role="img" aria-label="Ready"/>
+                <i t-if="customerEmailData[2] === 'canceled'" class='fa fa-trash-o' title="Canceled" role="img" aria-label="Canceled"/>
+            </span>
+            <span t-esc="customerEmailData[1]"/>
+        </div>
+    </t>
+
+    <!--
+        @param {mail.model.Message} message
+        @param {Object} options
+        @param {boolean} [options.displayModerationCommands]
+    -->
+    <t t-name="mail.MessageModeration">
+        <i t-if="message.isMyselfAuthor()" class="text-danger" title="Your message is pending moderation"><b>Pending moderation</b></i>
+        <t t-elif="message.needsModerationByUser()">
+            <t t-if="options.displayModerationCommands" t-call="mail.MessageModerationDecision"/>
+            <i t-else="" class="text-danger" title="Open Channel in Discuss to moderate"><b>Pending moderation</b></i>
+        </t>
+    </t>
+
+    <!--
         @param {mail.model.Message} message
     -->
     <t t-name="mail.MessageModerationDecision">
@@ -312,10 +476,6 @@
            t-att-data-message-id="message.getID()" data-decision="allow" title="Add this email address to white list of people"><b>Always Allow |</b></i>
         <i class="o_thread_icon ml4 o_thread_message_moderation text-danger"
            t-att-data-message-id="message.getID()" data-decision="ban" title="Ban this email address"><b>Ban</b></i>
-    </t>
-
-    <t t-name="mail.MessageModerationFeedback">
-        <i class="text-danger" title="Your message is pending moderation"><b>Pending moderation</b></i>
     </t>
 
     <t t-name="mail.MessagesSeparator">
@@ -369,6 +529,7 @@
                 <div class="o_image_box">
                     <div class="o_attachment_image" t-attf-style="background-image:url('/web/image/#{attachment.id}/160x160/?crop=true')"/>
                     <div t-attf-class="o_image_overlay o_attachment_view"  t-att-data-id="attachment.id">
+                        <span class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
                         <span class="o_attachment_title text-white"><t t-esc="attachment.name"/></span>
                         <a class="o_attachment_download" t-att-href='attachment.url'>
                             <i t-attf-class="fa fa-download text-white" t-att-title="'Download ' + attachment.name" role="img" aria-label="Download"></i>
@@ -392,6 +553,7 @@
         <t t-set="type" t-value="attachment.mimetype and attachment.mimetype.split('/').shift()"/>
         <div t-attf-class="o_attachment #{ editable ? 'o_attachment_editable' : '' } #{attachment.upload ? 'o_attachment_uploading' : ''}" t-att-title="attachment.name">
             <div class="o_attachment_wrap">
+                <span t-if="!editable" class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
                 <t t-set="has_preview" t-value="type == 'image' or type == 'video' or attachment.mimetype == 'application/pdf'"/>
                 <t t-set="ext" t-value="attachment.filename.split('.').pop()"/>
 
@@ -442,4 +604,16 @@
             </t>
         </div>
     </t>
+
+    <!--
+        @param {mail.model.Thread} thread with typing feature
+    -->
+    <t t-name="mail.ThreadTypingIcon">
+        <span class="o_mail_thread_typing_icon" t-att-title="thread.getTypingMembersToText()">
+            <span class="o_mail_thread_typing_icon_dot"/>
+            <span class="o_mail_thread_typing_icon_dot"/>
+            <span class="o_mail_thread_typing_icon_dot"/>
+        </span>
+    </t>
+
 </templates>

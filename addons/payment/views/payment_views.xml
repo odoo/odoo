@@ -6,7 +6,8 @@
         <menuitem
             name='Payments'
             id='root_payment_menu'
-            parent='account.menu_finance_configuration'/>
+            parent='account.menu_finance_configuration'
+            groups='account.group_account_manager'/>
 
         <record id="acquirer_form" model="ir.ui.view">
             <field name="name">payment.acquirer.form</field>
@@ -91,6 +92,7 @@
                                     <field name="fees_int_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
                                     <field name="fees_int_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
                                     <field name="specific_countries"/>
+                                    <field name="qr_code" attrs="{'invisible': [('provider', '!=', 'transfer')]}"/>
                                     <field name="country_ids" widget="many2many_tags" attrs="{'invisible': [('specific_countries', '=', False)]}"/>
                                     <label for="view_template_id" groups="base.group_no_one"/>
                                     <div groups="base.group_no_one">
@@ -112,9 +114,10 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    <field name="registration_view_template_id" groups="base.group_no_one"/>
+                                    <field name="registration_view_template_id" groups="base.group_no_one" attrs="{'invisible': [('payment_flow', '!=', 's2s')]}"/>
                                     <field name="payment_icon_ids" widget="many2many_tags"/>
                                     <field name="payment_flow" widget="radio" attrs="{'invisible': [('token_implemented', '=', False)]}"/>
+                                    <field name="check_validity" attrs="{'invisible': [('payment_flow', '!=', 's2s')]}" groups="base.group_no_one"/>
                                 </group>
                             </page>
                         </notebook>
@@ -436,7 +439,7 @@
                         <div class="oe_title">
                             <h1><field name="name" placeholder="Name"/></h1>
                         </div>
-                        <group group="base.group_no_one">
+                        <group>
                             <notebook>
                                 <page string="Acquirers list">
                                     <field nolabel="1" name="acquirer_ids"/>

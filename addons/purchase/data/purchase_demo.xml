@@ -10,25 +10,26 @@
 
     <record id="purchase_order_1" model="purchase.order">
         <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="user_id" ref="base.user_admin"/>
         <field name="state">draft</field>
         <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
             (0, 0, {
                 'product_id': ref('product.product_delivery_01'),
-                'name': 'RAM SR3',
+                'name': obj().env.ref('product.product_delivery_01').partner_ref,
                 'price_unit': 79.80,
                 'product_qty': 15.0,
                 'product_uom': ref('uom.product_uom_unit'),
                 'date_planned': time.strftime('%Y-%m-%d')}),
             (0, 0, {
                 'product_id': ref('product.product_product_25'),
-                'name': 'Acoustic Bloc Screens',
+                'name': obj().env.ref('product.product_product_25').partner_ref,
                 'price_unit': 2868.70,
                 'product_qty': 5.0,
                 'product_uom': ref('uom.product_uom_unit'),
                 'date_planned': time.strftime('%Y-%m-%d')}),
             (0, 0, {
                 'product_id': ref('product.product_product_27'),
-                'name': 'Drawer',
+                'name': obj().env.ref('product.product_product_27').partner_ref,
                 'price_unit': 3297.20,
                 'product_qty': 4.0,
                 'product_uom': ref('uom.product_uom_unit'),
@@ -38,18 +39,19 @@
 
     <record id="purchase_order_2" model="purchase.order">
         <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="user_id" ref="base.user_admin"/>
         <field name="state">draft</field>
         <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
             (0, 0, {
                 'product_id': ref('product.product_delivery_02'),
-                'name': 'Multimedia Speakers',
+                'name': obj().env.ref('product.product_delivery_02').partner_ref,
                 'price_unit': 132.50,
                 'product_qty': 20.0,
                 'product_uom': ref('uom.product_uom_unit'),
                 'date_planned': time.strftime('%Y-%m-%d')}),
             (0, 0, {
                 'product_id': ref('product.product_delivery_01'),
-                'name': 'Pen drive, SP-2',
+                'name': obj().env.ref('product.product_delivery_01').partner_ref,
                 'price_unit': 89.0,
                 'product_qty': 5.0,
                 'product_uom': ref('uom.product_uom_unit'),
@@ -59,11 +61,12 @@
 
     <record id="purchase_order_3" model="purchase.order">
         <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="user_id" ref="base.user_admin"/>
         <field name="state">draft</field>
         <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
             (0, 0, {
                 'product_id': ref('product.product_product_2'),
-                'name': 'Support Services',
+                'name': obj().env.ref('product.product_product_2').partner_ref,
                 'price_unit': 25.50,
                 'product_qty': 10.0,
                 'product_uom': ref('uom.product_uom_hour'),
@@ -73,25 +76,26 @@
 
     <record id="purchase_order_4" model="purchase.order">
         <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="user_id" ref="base.user_admin"/>
         <field name="state">draft</field>
         <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
             (0, 0, {
                 'product_id': ref('product.product_delivery_02'),
-                'name': 'RAM SR2 (kit)',
+                'name': obj().env.ref('product.product_delivery_02').partner_ref,
                 'price_unit': 85.50,
                 'product_qty': 6.0,
                 'product_uom': ref('uom.product_uom_unit'),
                 'date_planned': time.strftime('%Y-%m-%d')}),
             (0, 0, {
                 'product_id': ref('product.product_product_20'),
-                'name': 'Flipover',
+                'name': obj().env.ref('product.product_product_20').partner_ref,
                 'price_unit': 1690.0,
                 'product_qty': 5.0,
                 'product_uom': ref('uom.product_uom_unit'),
                 'date_planned': time.strftime('%Y-%m-%d')}),
             (0, 0, {
                 'product_id': ref('product.product_product_6'),
-                'name': 'Large Cabinet',
+                'name': obj().env.ref('product.product_product_6').partner_ref,
                 'price_unit': 800.0,
                 'product_qty': 7.0,
                 'product_uom': ref('uom.product_uom_unit'),
@@ -101,18 +105,19 @@
 
     <record id="purchase_order_5" model="purchase.order">
         <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="user_id" ref="base.user_admin"/>
         <field name="state">draft</field>
         <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
             (0, 0, {
                 'product_id': ref('product.product_product_22'),
-                'name': 'Desk Stand with Screen',
+                'name': obj().env.ref('product.product_product_22').partner_ref,
                 'price_unit': 2010.0,
                 'product_qty': 3.0,
                 'product_uom': ref('uom.product_uom_unit'),
                 'date_planned': time.strftime('%Y-%m-%d')}),
             (0, 0, {
                 'product_id': ref('product.product_product_24'),
-                'name': 'Individual Workplace',
+                'name': obj().env.ref('product.product_product_24').partner_ref,
                 'price_unit': 876.0,
                 'product_qty': 3.0,
                 'product_uom': ref('uom.product_uom_unit'),
@@ -122,25 +127,26 @@
 
     <record id="purchase_order_6" model="purchase.order">
         <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="user_id" ref="base.user_admin"/>
         <field name="state">draft</field>
         <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
             (0, 0, {
                 'product_id': ref('product.product_delivery_02'),
-                'name': 'Ink Cartridge',
+                'name': obj().env.ref('product.product_delivery_02').partner_ref,
                 'price_unit': 58.0,
                 'product_qty': 9.0,
                 'product_uom': ref('uom.product_uom_unit'),
                 'date_planned': time.strftime('%Y-%m-%d')}),
             (0, 0, {
                 'product_id': ref('product.product_delivery_01'),
-                'name': 'Toner Cartridge',
+                'name': obj().env.ref('product.product_delivery_01').partner_ref,
                 'price_unit': 65.0,
                 'product_qty': 3.0,
                 'product_uom': ref('uom.product_uom_unit'),
                 'date_planned': time.strftime('%Y-%m-%d')}),
             (0, 0, {
                 'product_id': ref('product.consu_delivery_01'),
-                'name': 'Three-Seat Sofa',
+                'name': obj().env.ref('product.consu_delivery_01').partner_ref,
                 'price_unit': 154.5,
                 'product_qty': 4.0,
                 'product_uom': ref('uom.product_uom_unit'),
@@ -150,18 +156,19 @@
 
     <record id="purchase_order_7" model="purchase.order">
         <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="user_id" ref="base.user_admin"/>
         <field name="state">draft</field>
         <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
             (0, 0, {
                 'product_id': ref('product.product_product_12'),
-                'name': 'Mouse, Wireless',
+                'name': obj().env.ref('product.product_product_12').partner_ref,
                 'price_unit': 13.5,
                 'product_qty': 5.0,
                 'product_uom': ref('uom.product_uom_unit'),
                 'date_planned': time.strftime('%Y-%m-%d')}),
             (0, 0, {
                 'product_id': ref('product.product_delivery_02'),
-                'name': 'Webcam',
+                'name': obj().env.ref('product.product_delivery_02').partner_ref,
                 'price_unit': 38.0,
                 'product_qty': 15.0,
                 'product_uom': ref('uom.product_uom_unit'),

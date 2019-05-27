@@ -70,7 +70,9 @@ var data = {
     ":'-(":           "😭",
     ":\"(":           "😭", // alt.
     "<3":             "❤️",
+    "&lt;3":          "❤️",
     ":heart":         "❤️", // alt.
+    "</3":            "💔",
     ":heart_eyes":    "😍",
     ":turban":        "👳",
     ":+1":            "👍",
@@ -125,7 +127,8 @@ var data = {
     ":football":      "🏈",
     ":8ball":         "🎱",
     ":clapper":       "🎬",
-    ":microphone":    "🎤"
+    ":microphone":    "🎤",
+    ":cheese":        "🧀",
 };
 
 // list of emojis in a dictionary, indexed by emoji unicode

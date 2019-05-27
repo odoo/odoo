@@ -10,7 +10,7 @@ To do so, create the product and attach the file to share via the *Files* button
 Once the order is paid, the file is made available in the order confirmation page and in the customer portal.
     """,
     'depends': [
-        'document',
+        'attachment_indexation',
         'website_sale',
     ],
     'installable': True,

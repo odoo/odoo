@@ -3,7 +3,7 @@
 
 {
     'name': 'Website',
-    'category': 'Website',
+    'category': 'Website/Website',
     'sequence': 7,
     'summary': 'Enterprise website builder',
     'website': 'https://www.odoo.com/page/website-builder',
@@ -27,7 +27,8 @@
         'views/website_views.xml',
         'views/res_config_settings_views.xml',
         'views/ir_actions_views.xml',
-        'views/res_users_views.xml',
+        'views/ir_attachment_views.xml',
+        'views/res_partner_views.xml',
         'wizard/base_language_install_views.xml',
     ],
     'demo': [
@@ -35,4 +36,5 @@
     ],
     'qweb': ['static/src/xml/website.backend.xml'],
     'application': True,
+    'uninstall_hook': 'uninstall_hook',
 }

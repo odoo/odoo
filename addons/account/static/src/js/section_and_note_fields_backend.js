@@ -3,13 +3,14 @@ odoo.define('account.section_and_note_backend', function (require) {
 // The goal of this file is to contain JS hacks related to allowing
 // section and note on sale order and invoice.
 
+// [UPDATED] now also allows configuring products on sale order.
+
 "use strict";
-var ListRenderer = require('web.ListRenderer');
-var fieldRegistry = require('web.field_registry');
+var FieldChar = require('web.basic_fields').FieldChar;
 var FieldOne2Many = require('web.relational_fields').FieldOne2Many;
-var InputField = require('web.basic_fields').InputField;
-var TranslatableFieldMixin = require('web.basic_fields').TranslatableFieldMixin;
-var dom = require('web.dom');
+var fieldRegistry = require('web.field_registry');
+var ListFieldText = require('web.basic_fields').ListFieldText;
+var ListRenderer = require('web.ListRenderer');
 
 var SectionAndNoteListRenderer = ListRenderer.extend({
     /**
@@ -64,16 +65,18 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
      * @private
      */
     _renderView: function () {
-        var def = this._super();
-        this.$el.find('> table').addClass('o_section_and_note_list_view');
-        return def;
-    },
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self.$('> table').addClass('o_section_and_note_list_view');
+        });
+    }
 });
 
 // We create a custom widget because this is the cleanest way to do it:
 // to be sure this custom code will only impact selected fields having the widget
 // and not applied to any other existing ListRenderer.
 var SectionAndNoteFieldOne2Many = FieldOne2Many.extend({
+    description: "",
     /**
      * We want to use our custom renderer for the list.
      *
@@ -88,105 +91,13 @@ var SectionAndNoteFieldOne2Many = FieldOne2Many.extend({
 });
 
 // This is a merge between a FieldText and a FieldChar.
-// Indeed, we want a FieldChar for section, and a FieldText for the rest (product and note).
-var SectionAndNoteFieldText = InputField.extend(TranslatableFieldMixin, {
-    /**
-     * @constructor
-     */
-    init: function (parent, name, record, options) {
-        this.isSection = record.data.display_type === 'line_section';
-
-        if (!this.isSection) {
-            this.className = 'o_field_text';
-            this.supportedFieldTypes = ['text'];
-            this.tagName = 'span';
-        }
-        if (this.isSection) {
-            this.className = 'o_field_char';
-            this.tagName = 'span';
-            this.supportedFieldTypes = ['char'];
-        }
-
-        this._super.apply(this, arguments);
-
-        if (!this.isSection) {
-            if (this.mode === 'edit') {
-                this.tagName = 'textarea';
-            }
-        }
-    },
-    /**
-     * As it it done in the start function, the autoresize is done only once.
-     *
-     * @override
-     */
-    start: function () {
-        if (!this.isSection) {
-            if (this.mode === 'edit') {
-                dom.autoresize(this.$el, {parent: this});
-
-                this.$el = this.$el.add(this._renderTranslateButton());
-            }
-        }
-        return this._super.apply(this, arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Stops the enter navigation in a text area.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onKeydown: function (ev) {
-        if (!this.isSection) {
-            if (ev.which === $.ui.keyCode.ENTER) {
-                return;
-            }
-        }
-        this._super.apply(this, arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Add translation button
-     *
-     * @override
-     * @private
-     */
-    _renderEdit: function () {
-        var def = this._super.apply(this, arguments);
-        if (this.isSection) {
-            if (this.field.size && this.field.size > 0) {
-                this.$el.attr('maxlength', this.field.size);
-            }
-            this.$el = this.$el.add(this._renderTranslateButton());
-        }
-        return def;
-    },
-    /**
-     * Trim the value input by the user.
-     *
-     * @override
-     * @private
-     * @param {any} value
-     * @param {Object} [options]
-     */
-    _setValue: function (value, options) {
-        if (this.isSection) {
-            if (this.field.trim) {
-                value = value.trim();
-            }
-        }
-        return this._super(value, options);
-    },
-});
+// We want a FieldChar for section,
+// and a FieldText for the rest (product and note).
+var SectionAndNoteFieldText = function (parent, name, record, options) {
+    var isSection = record.data.display_type === 'line_section';
+    var Constructor = isSection ? FieldChar : ListFieldText;
+    return new Constructor(parent, name, record, options);
+};
 
 fieldRegistry.add('section_and_note_one2many', SectionAndNoteFieldOne2Many);
 fieldRegistry.add('section_and_note_text', SectionAndNoteFieldText);

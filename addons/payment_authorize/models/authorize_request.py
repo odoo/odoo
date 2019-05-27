@@ -7,7 +7,7 @@ from uuid import uuid4
 import pprint
 import logging
 
-from odoo import _
+from odoo.addons.payment.models.payment_acquirer import _partner_split_name
 from odoo.exceptions import ValidationError, UserError
 from odoo import _
 
@@ -148,11 +148,18 @@ class AuthorizeAPI():
         """
         root = self._base_tree('createCustomerProfileRequest')
         profile = etree.SubElement(root, "profile")
-        etree.SubElement(profile, "merchantCustomerId").text = 'ODOO-%s-%s' % (partner.id, uuid4().hex[:8])
-        etree.SubElement(profile, "email").text = partner.email
+        # merchantCustomerId is ODOO-{partner.id}-{random hex string} truncated to maximum 20 characters
+        etree.SubElement(profile, "merchantCustomerId").text = ('ODOO-%s-%s' % (partner.id, uuid4().hex[:8]))[:20]
+        etree.SubElement(profile, "email").text = partner.email or ''
         payment_profile = etree.SubElement(profile, "paymentProfiles")
         etree.SubElement(payment_profile, "customerType").text = 'business' if partner.is_company else 'individual'
         billTo = etree.SubElement(payment_profile, "billTo")
+        if partner.is_company:
+            etree.SubElement(billTo, "firstName").text = ' '
+            etree.SubElement(billTo, "lastName").text = partner.name
+        else:
+            etree.SubElement(billTo, "firstName").text = _partner_split_name(partner.name)[0]
+            etree.SubElement(billTo, "lastName").text = _partner_split_name(partner.name)[1]
         etree.SubElement(billTo, "address").text = (partner.street or '' + (partner.street2 if partner.street2 else '')) or None
         
         missing_fields = [partner._fields[field].string for field in ['city', 'country_id'] if not partner[field]]
@@ -214,7 +221,8 @@ class AuthorizeAPI():
         root = self._base_tree('createCustomerProfileFromTransactionRequest')
         etree.SubElement(root, "transId").text = transaction_id
         customer = etree.SubElement(root, "customer")
-        etree.SubElement(customer, "merchantCustomerId").text = 'ODOO-%s-%s' % (partner.id, uuid4().hex[:8])
+        # merchantCustomerId is ODOO-{partner.id}-{random hex string} truncated to maximum 20 characters
+        etree.SubElement(customer, "merchantCustomerId").text = ('ODOO-%s-%s' % (partner.id, uuid4().hex[:8]))[:20]
         etree.SubElement(customer, "email").text = partner.email or ''
         response = self._authorize_request(root)
         res = dict()

@@ -8,18 +8,19 @@ class Partner(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
 
+    # NOT A REAL PROPERTY !!!!
     property_product_pricelist = fields.Many2one(
         'product.pricelist', 'Pricelist', compute='_compute_product_pricelist',
-        inverse="_inverse_product_pricelist", company_dependent=False,  # NOT A REAL PROPERTY
+        inverse="_inverse_product_pricelist", company_dependent=False,
         help="This pricelist will be used, instead of the default one, for sales to the current partner")
 
     @api.multi
     @api.depends('country_id')
     def _compute_product_pricelist(self):
+        company = self.env.context.get('force_company', False)
+        res = self.env['product.pricelist']._get_partner_pricelist_multi(self.ids, company_id=company)
         for p in self:
-            if not isinstance(p.id, models.NewId):  # if not onchange
-                company = self.env.context.get('force_company', False)
-                p.property_product_pricelist = self.env['product.pricelist'].sudo()._get_partner_pricelist(p.id, company_id=company)
+            p.property_product_pricelist = res.get(p.id)
 
     @api.one
     def _inverse_product_pricelist(self):
@@ -33,7 +34,7 @@ class Partner(models.Model):
         # update at each change country, and so erase old pricelist
         if self.property_product_pricelist or (actual and default_for_country and default_for_country.id != actual.id):
             # keep the company of the current user before sudo
-            self.env['ir.property'].with_context(force_company=self.env.user.company_id.id).sudo().set_multi(
+            self.env['ir.property'].with_context(force_company=self.env.company_id.id).sudo().set_multi(
                 'property_product_pricelist',
                 self._name,
                 {self.id: self.property_product_pricelist or default_for_country.id},

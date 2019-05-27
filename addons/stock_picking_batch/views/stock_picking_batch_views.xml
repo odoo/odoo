@@ -38,6 +38,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
             </form>
@@ -69,7 +70,7 @@
                                 <div class="o_kanban_record_headings">
                                     <strong class="o_kanban_record_title"><field name="name"/></strong>
                                 </div>
-                                <field name="state" widget="kanban_label_selection"/>
+                                <field name="state" widget="label_selection"/>
                             </div>
                             <div class="o_kanban_record_bottom">
                                 <div class="oe_kanban_bottom_left"/>
@@ -89,10 +90,18 @@
         <field name="arch" type="xml">
             <search string="Search Batch Picking">
                 <field name="name" string="Batch Picking"/>
-                <filter name="in_progress" string="In Progress" domain="[('state','=', 'in_progress')]" help="Batch Pickings not finished"/>
+                <filter name="in_progress" string="Running" domain="[('state', '=', 'in_progress')]" help="Batch Pickings not finished"/>
                 <field name="user_id"/>
+                <separator/>
+                <filter string="Late Activities" name="activities_overdue"
+                    domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records which has next action date is before today"/>
+                <filter string="Today Activities" name="activities_today"
+                    domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Future Activities" name="activities_upcoming_all"
+                    domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <group expand="0" string="Group By">
-                    <filter string="User" name="user" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Responsible" name="user" domain="[]" context="{'group_by': 'user_id'}"/>
                     <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>
                 </group>
            </search>
@@ -134,9 +143,6 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_internal_search"/>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='picking_type']" position="after">
-                <filter string="Batch" name="batch" domain="[]" context="{'group_by':'batch_id'}"/>
-            </xpath>
             <xpath expr="//field[@name='picking_type_id']" position="after">
                 <field name="batch_id"/>
             </xpath>

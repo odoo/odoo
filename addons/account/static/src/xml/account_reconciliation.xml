@@ -19,6 +19,10 @@
             <t t-else="">
                 <h1 class="statement_name" />
             </t>
+            <div class="o_filter_input_wrapper">
+                <span class="searchIcon"><i class="fa fa-search" role="img" aria-label="Search" title="Search"></i></span>
+                <input class="reconciliation_search_input o_filter_input" type="text" placeholder="Search..." />
+            </div>
             <h1 class="statement_name_edition" style="display: none;"/>
             <div class="progress progress-striped">
                 <div class="progress-text">
@@ -26,14 +30,12 @@
                 </div>
                 <div aria-valuemin="0" t-att-aria-valuenow="widget._initialState.valuenow" class="progress-bar" role="progressbar" style="width: 0%;" t-att-aria-valuemax="widget._initialState.valuemax"></div>
             </div>
-            <button class="btn btn-secondary o_automatic_reconciliation float-right" title="Let odoo try to reconcile entries for the user">Automatic reconciliation</button>
             <div class="notification_area"/>
         </div>
         <div class="o_reconciliation_lines"/>
         <div t-if="widget._initialState.valuemax &gt; widget._initialState.defaultDisplayQty">
             <button class="btn btn-secondary js_load_more">Load more</button>
         </div>
-        <div class="float-right text-muted">Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet.</div>
     </div>
     <div t-else="" class="o_view_noreconciliation">
         <p>Nothing to do!</p>
@@ -43,10 +45,10 @@
 
 <t t-name="reconciliation.manual.statement" t-extend="reconciliation.statement">
     <t t-jquery="div:first" t-operation="attributes">
-        <attribute name="class">o_manual_statement</attribute>
+        <attribute name="class" value="o_manual_statement" />
     </t>
-    <t t-jquery="h1:last, .progress, .o_automatic_reconciliation" t-operation="replace"></t>
     <t t-jquery=".o_view_noreconciliation p" t-operation="replace"></t>
+    <t t-jquery=".o_filter_input_wrapper" t-operation="replace"></t>
     <t t-jquery=".o_view_noreconciliation" t-operation="append">
         <p><b>Good Job!</b> There is nothing to reconcile.</p>
         <p>All invoices and payments have been matched, your accounts' balances are clean.</p>
@@ -55,13 +57,17 @@
 
 <div t-name="reconciliation.done" class="done_message">
     <h2>Congrats, you're all done!</h2>
-    <p>You reconciled <strong><t t-esc="number"/></strong> transactions in <strong><t t-esc="duration"/></strong>.<br/>That's on average <t t-esc="timePerTransaction"/> seconds per transaction.</p>
+    <p>You reconciled <strong><t t-esc="number"/></strong> transactions in <strong><t t-esc="duration"/></strong>.
+        <t t-if="number > 1">
+            <br/>That's on average <t t-esc="timePerTransaction"/> seconds per transaction.
+        </t>
+    </p>
     <t t-if="context &amp;&amp; context.active_model">
-        <p t-if="context['active_model'] === 'account.journal' || context['active_model'] === 'account.bank.statement'" class="actions_buttons">
+        <p t-if="context['active_model'] === 'account.journal' || context['active_model'] === 'account.bank.statement' || context['active_model'] === 'account.bank.statement.import'" class="actions_buttons">
             <t t-if="context.journal_id">
                 <button class="button_back_to_statement btn btn-secondary" t-att-data_journal_id='context.journal_id'>Go to bank statement(s)</button>
             </t>
-            <t t-if="context['active_model'] === 'account.bank.statement'">
+            <t t-if="context['active_model'] === 'account.bank.statement.line'">
                 <button class="button_close_statement btn btn-primary" style="display: inline-block;">Close statement</button>
             </t>
         </p>
@@ -72,7 +78,7 @@
     <t t-set="state" t-value="widget._initialState"/>
     <div class="o_reconciliation_line" t-att-data-mode="state.mode">
         <table class="accounting_view">
-            <caption>
+            <caption style="caption-side: top;">
                 <div class="float-right o_buttons">
                     <button t-attf-class="o_validate btn btn-secondary #{!state.balance.type ? '' : 'd-none'}">Validate</button>
                     <button t-attf-class="o_reconcile btn btn-primary #{state.balance.type &gt; 0 ? '' : 'd-none'}">Reconcile</button>
@@ -129,7 +135,7 @@
 </t>
 
 <t t-name="reconciliation.line.balance">
-    <tr t-if="state.balance.amount_currency &amp;&amp; !(state.reconciliation_proposition[0] || {}).partial_reconcile">
+    <tr t-if="state.balance.show_balance">
         <td class="cell_action"><span role="img" class="toggle_create fa fa-play" aria-label="Run" title="Run"></span></td>
         <td class="cell_account_code"><t t-esc="state.balance.account_code"/></td>
         <td class="cell_due_date"></td>
@@ -143,14 +149,16 @@
 
 <div t-name="reconciliation.line.match">
     <div class="match_controls">
-        <input class="filter" placeholder="Filter..." type="text" value=""/>
-        <span class="float-right fa fa-chevron-right disabled" role="img" aria-label="Previous" title="Previous"></span>
-        <span class="float-right fa fa-chevron-left disabled" role="img" aria-label="Next" title="Next"></span>
+        <input class="filter o_input" placeholder="Filter..." type="text" value=""/>
+        <button class="btn btn-secondary btn-sm fa fa-search" type="button"></button>
     </div>
     <table>
         <tbody>
         </tbody>
     </table>
+    <div class="load-more text-center">
+        <a href="#">Load more... (<span></span> remaining)</a>
+    </div>
 </div>
 
 
@@ -158,7 +166,11 @@
     <div class="quick_add">
         <div class="btn-group o_reconcile_models" t-if="state.reconcileModels">
             <t t-foreach="state.reconcileModels" t-as="reconcileModel">
-                <button class="btn btn-primary" t-att-data-reconcile-model-id="reconcileModel.id"><t t-esc="reconcileModel.name"/></button>
+                <button class="btn btn-primary"
+                        t-if="reconcileModel.rule_type === 'writeoff_button' &amp;&amp; (reconcileModel.match_journal_ids.length == 0 || reconcileModel.match_journal_ids.includes(state.st_line.journal_id))"
+                        t-att-data-reconcile-model-id="reconcileModel.id">
+                    <t t-esc="reconcileModel.name"/>
+                </button>
             </t>
             <p t-if="!state.reconcileModels.length" style="color: #bbb;">To speed up reconciliation, define <a style="cursor: pointer;" class="reconcile_model_create">reconciliation models</a>.</p>
         </div>
@@ -176,7 +188,7 @@
             <td class="o_td_field"></td>
         </tr>
         <tr class="create_tax_id">
-            <td class="o_td_label">Tax</td>
+            <td class="o_td_label">Taxes</td>
             <td class="o_td_field"></td>
         </tr>
         <tr class="create_analytic_account_id" groups="analytic.group_analytic_accounting">
@@ -206,6 +218,14 @@
                 <td class="o_td_label">Tax Included in Price</td>
                 <td class="o_td_field"></td>
             </tr>
+            <tr class="create_date d-none">
+                <td class="o_td_label">Writeoff Date</td>
+                <td class="o_td_field"></td>
+            </tr>
+            <tr class="create_to_check"> <!--TODO d-none maybe see with avw-->
+                <td class="o_td_label">To Check</td>
+                <td class="o_td_field"></td>
+            </tr>
         </tbody>
     </table>
     <div class="add_line_container">
@@ -214,11 +234,40 @@
 </div>
 
 
+<t t-name="reconciliation.line.mv_line.amount">
+    <span t-att-class="(line.is_move_line &amp;&amp; proposition == true) ? 'cell' : ''">
+
+        <span class="line_amount">
+            <span t-if="line.amount_currency_str"
+                  t-attf-class="o_multi_currency o_multi_currency_color_#{line.currency_id%8} line_info_button fa fa-money"
+                  t-att-data-content="line.amount_currency_str"/>
+            <span t-if="line.partial_amount &amp;&amp; line.partial_amount != line.amount" class="strike_amount text-muted">
+                <t t-raw="line.amount_str"/>
+                <br/>
+            </span>
+        </span>
+        <t t-if="line.is_move_line &amp;&amp; proposition == true">
+            <i class="fa fa-pencil edit_amount"></i>
+            <input class="edit_amount_input text-right d-none"/>
+        </t>
+        <span class="line_amount">
+            <t t-if="!line.partial_amount_str" t-raw="line.amount_str"/>
+            <t t-if="line.partial_amount_str &amp;&amp; line.partial_amount != line.amount" t-raw="line.partial_amount_str"/>
+        </span>
+    </span>
+</t>
+
+
 <t t-name="reconciliation.line.mv_line">
     <tr t-if="line.display !== false" t-attf-class="mv_line #{line.already_paid ? ' already_reconciled' : ''} #{line.__invalid ? 'invalid' : ''} #{line.is_tax ? 'is_tax' : ''}" t-att-data-line-id="line.id" t-att-data-selected="selected">
         <td class="cell_action"><span class="fa fa-add-remove" role="img" aria-label="Set" title="Set"/></td>
         <td class="cell_account_code"><t t-esc="line.account_code"/></td>
-        <td class="cell_due_date"><t t-esc="line.date_maturity === false ? line.date : line.date_maturity"/></td>
+        <td class="cell_due_date">
+            <t t-if="typeof(line.id) != 'number' &amp;&amp; line.amount">
+                <span class="badge badge-secondary">New</span>
+            </t>
+            <t t-else="" t-esc="line.date_maturity === false ? line.date : line.date_maturity"/>
+        </td>
         <td class="cell_label">
             <t t-if="line.partner_id &amp;&amp; line.partner_id !== state.st_line.partner_id">
                 <t t-if="line.partner_name.length">
@@ -229,8 +278,16 @@
             <t t-if="line.ref &amp;&amp; line.ref.length"> : </t>
             <t t-esc="line.ref"/>
         </td>
-        <td class="cell_left"><t t-if="line.amount &lt; 0"><span role="img" t-if="line.amount_currency_str" t-attf-class="o_multi_currency o_multi_currency_color_#{line.currency_id%8} line_info_button fa fa-money" t-att-data-content="line.amount_currency_str" t-att-aria-label="line.amount_currency_str" t-att-title="line.amount_currency_str"/><t t-raw="line.amount_str"/></t></td>
-        <td class="cell_right"><t t-if="line.amount &gt; 0"><span role="img" t-if="line.amount_currency_str" t-attf-class="o_multi_currency o_multi_currency_color_#{line.currency_id%8} line_info_button fa fa-money" t-att-data-content="line.amount_currency_str" t-att-aria-label="line.amount_currency_str" t-att-title="line.amount_currency_str"/><t t-raw="line.amount_str"/></t></td>
+        <td class="cell_left">
+            <t t-if="line.amount &lt; 0">
+                <t t-call="reconciliation.line.mv_line.amount"/>
+            </t>
+        </td>
+        <td class="cell_right">
+            <t t-if="line.amount &gt; 0">
+                <t t-call="reconciliation.line.mv_line.amount"/>
+            </t>
+        </td>
         <td class="cell_info_popover"></td>
     </tr>
 </t>
@@ -268,16 +325,41 @@
     </table>
 </t>
 
+
+<t t-name="reconciliation.notification.reconciled">
+    <t t-if="details !== undefined">
+        <a rel="do_action" href="#" aria-label="External link" title="External link"
+            t-att-data-action_name="details.name"
+            t-att-data-model="details.model"
+            t-att-data-ids="details.ids">
+            <t t-esc="nb_reconciled_lines"/>
+            statement lines
+        </a>
+        have been reconciled automatically.
+    </t>
+</t>
+
+
+<t t-name="reconciliation.notification.default">
+    <t t-esc="message"/>
+    <t t-if="details !== undefined">
+        <a class="fa fa-external-link" rel="do_action" href="#" aria-label="External link" title="External link"
+            t-att-data-action_name="details.name"
+            t-att-data-model="details.model"
+            t-att-data-ids="details.ids">
+        </a>
+    </t>
+</t>
+
+
 <t t-name="reconciliation.notification">
     <div t-att-class="'notification alert-dismissible alert alert-' + type" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span title="Close" class="fa fa-times"></span></button>
-        <t t-esc="message" />
-        <t t-if="details !== undefined">
-            <a class="fa fa-external-link" rel="do_action" href="#" aria-label="External link" title="External link"
-                t-att-data-action_name="details.name"
-                t-att-data-model="details.model"
-                t-att-data-ids="details.ids">
-            </a>
+        <t t-if="template">
+            <t t-call="{{template}}"/>
+        </t>
+        <t t-else="">
+            <t t-call="reconciliation.notification.default"/>
         </t>
     </div>
 </t>

@@ -11,6 +11,7 @@ NEW_LANG_KEY = '__new__'
 
 class BaseLanguageExport(models.TransientModel):
     _name = "base.language.export"
+    _description = 'Language Export'
 
     @api.model
     def _get_languages(self):
@@ -24,7 +25,7 @@ class BaseLanguageExport(models.TransientModel):
                               string='File Format', required=True, default='csv')
     modules = fields.Many2many('ir.module.module', 'rel_modules_langexport', 'wiz_id', 'module_id',
                                string='Apps To Export', domain=[('state','=','installed')])
-    data = fields.Binary('File', readonly=True)
+    data = fields.Binary('File', readonly=True, attachment=False)
     state = fields.Selection([('choose', 'choose'), ('get', 'get')], # choose language or get the file
                              default='choose')
 

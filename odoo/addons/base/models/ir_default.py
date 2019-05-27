@@ -10,6 +10,7 @@ from odoo.exceptions import ValidationError
 class IrDefault(models.Model):
     """ User-defined default values for fields. """
     _name = 'ir.default'
+    _description = 'Default Values'
     _rec_name = 'field_id'
 
     field_id = fields.Many2one('ir.model.fields', string="Field", required=True,
@@ -56,7 +57,7 @@ class IrDefault(models.Model):
         if user_id is True:
             user_id = self.env.uid
         if company_id is True:
-            company_id = self.env.user.company_id.id
+            company_id = self.env.company_id.id
 
         # check consistency of model_name, field_name, and value
         try:
@@ -106,7 +107,7 @@ class IrDefault(models.Model):
         if user_id is True:
             user_id = self.env.uid
         if company_id is True:
-            company_id = self.env.user.company_id.id
+            company_id = self.env.company_id.id
 
         field = self.env['ir.model.fields']._get(model_name, field_name)
         default = self.search([

@@ -37,8 +37,8 @@
                 <search string="Search modules">
                     <field name="name" filter_domain="['|', '|', ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('name',
                         'ilike', self)]" string="Module"/>
-                    <filter name="app" string="Apps" domain="[('application', '=', 1)]"/>
-                    <filter name="extra" string="Extra" domain="[('application', '=', 0)]"/>
+                    <filter name="app" string="Apps" domain="[('application', '=', True)]"/>
+                    <filter name="extra" string="Extra" domain="[('application', '=', False)]"/>
                     <separator/>
                     <filter name="installed" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
                     <filter name="not_installed" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
@@ -46,6 +46,7 @@
                     <group expand="0" string="Group By">
                         <filter string="Author" name="author" domain="[]" context="{'group_by':'author'}"/>
                         <filter string="Category" name="category" domain="[]" context="{'group_by':'category_id'}"/>
+                        <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                </search>
             </field>
@@ -56,7 +57,7 @@
             <field name="name">ir.module.module.form</field>
             <field name="model">ir.module.module</field>
             <field name="arch" type="xml">
-                <form create="0" edit="0" string="Module">
+                <form create="0" edit="0" string="Module" class="o_module_form">
                     <link rel="stylesheet" href="/base/static/src/css/description.css"></link>
                     <sheet>
                     <field name="icon_image" widget="image" class="oe_avatar"/>
@@ -66,14 +67,13 @@
                             By <field name="author" class="oe_inline" placeholder="Author Name"/>
                         </h3>
                         <div>
-                            <button name="button_immediate_install" string="Install" attrs="{'invisible': ['|', ('to_buy','=',True), ('state','!=', 'uninstalled')]}" type="object" class="btn btn-primary"/>
-                            <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" class="btn btn-primary" states="uninstalled" attrs="{'invisible': [('to_buy','=',False)]}" role="button">Upgrade</a>
-                            <button name="button_immediate_upgrade" states="installed" string="Upgrade" type="object" class="btn btn-primary"/>
-                            <button name="button_discover" string="Learn More" type="object" attrs="{'invisible':['|', ('website', '=', False), ('application', '=', False)]}" class="btn btn-secondary"/>
-                            <button name="button_uninstall_wizard" states="installed" string="Uninstall" type="object"  class="btn btn-secondary"/>
-                            <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" type="object" class="btn btn-secondary"/>
-                            <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" type="object" class="btn btn-secondary"/>
-                            <button name="button_install_cancel" states="to install" string="Cancel Install" type="object" class="btn btn-secondary"/>
+                            <button name="button_immediate_install" string="Install" attrs="{'invisible': ['|', ('to_buy','=',True), ('state','!=', 'uninstalled')]}" type="object" class="btn btn-primary mr-1"/>
+                            <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module#hosting=on_premise" class="btn btn-primary mr-1" states="uninstalled,uninstallable" attrs="{'invisible': [('to_buy','=',False)]}" role="button">Upgrade</a>
+                            <button name="button_immediate_upgrade" states="installed" string="Upgrade" type="object" class="btn btn-primary mr-1"/>
+                            <button name="button_uninstall_wizard" states="installed" string="Uninstall" type="object"  class="btn btn-secondary mr-1"/>
+                            <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" type="object" class="btn btn-secondary mr-1"/>
+                            <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" type="object" class="btn btn-secondary mr-1"/>
+                            <button name="button_install_cancel" states="to install" string="Cancel Install" type="object" class="btn btn-secondary mr-1"/>
                         </div>
                     </div>
                     <div class="oe_clear"/>
@@ -152,7 +152,7 @@
             <field name="name">Apps Kanban</field>
             <field name="model">ir.module.module</field>
             <field name="arch" type="xml">
-                <kanban create="false">
+                <kanban create="false" class="o_modules_kanban">
                   <field name="icon"/>
                   <field name="to_buy"/>
                   <field name="name"/>
@@ -179,20 +179,19 @@
                         <div class="oe_module_desc" t-att-title="record.shortdesc.value">
                           <h4 class="o_kanban_record_title">
                             <field name="shortdesc"/>&amp;nbsp;
-                            <code groups="base.group_no_one"><field name="name"/></code>
                           </h4>
                           <p class="oe_module_name">
-                             <field name="summary"/>
+                            <field groups="!base.group_no_one" name="summary"/>
+                            <code groups="base.group_no_one"><field name="name"/></code>
                           </p>
                           <div class="oe_module_action">
-
-                            <button name="button_discover" type="object" attrs="{'invisible':[('website', '=', '')]}" class="btn btn-secondary float-right">Learn More</button>
-                            <a type="edit" class="btn btn-secondary float-right" role="button" attrs="{'invisible': [('website', '&lt;&gt;', '')]}">Module Info</a>
-                            <button type="object" class="btn btn-primary" name="button_immediate_install" states="uninstalled" t-if="! record.to_buy.raw_value">Install</button>
-                            <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" class="btn btn-info" states="uninstalled" t-if="record.to_buy.raw_value" role="button">Upgrade</a>
-                            <div t-if="installed" class="text-muted mt8 float-left">Installed</div>
-                            <button states="to remove" type="object" class="btn btn-primary" name="button_uninstall_cancel">Cancel UnInstall</button>
-                            <button states="to install" type="object" class="btn btn-primary" name="button_install_cancel">Cancel Install</button>
+                            <a t-att-href="record.website.raw_value" target="_blank" attrs="{'invisible':[('website', '=', '')]}" class="btn btn-sm btn-secondary float-right" role="button">Learn More</a>
+                            <a type="edit" class="btn btn-secondary btn-sm float-right" role="button" attrs="{'invisible': [('website', '&lt;&gt;', '')]}">Module Info</a>
+                            <button type="object" class="btn btn-primary btn-sm" name="button_immediate_install" states="uninstalled" t-if="! record.to_buy.raw_value">Install</button>
+                            <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module#hosting=on_premise" class="btn btn-info btn-sm" states="uninstalled,uninstallable" t-if="record.to_buy.raw_value" role="button">Upgrade</a>
+                            <div t-if="installed" class="text-muted float-left">Installed</div>
+                            <button states="to remove" type="object" class="btn btn-sm btn-primary" name="button_uninstall_cancel">Cancel Uninstall</button>
+                            <button states="to install" type="object" class="btn btn-sm btn-primary" name="button_install_cancel">Cancel Install</button>
                           </div>
                         </div>
                       </div>
@@ -210,7 +209,7 @@
             <field name="search_view_id" ref="view_module_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">
-                No website module found!
+                No module found!
               </p><p>
                 You should try other search criteria.
               </p>

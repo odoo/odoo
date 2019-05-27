@@ -4,10 +4,21 @@ import re
 from collections import OrderedDict
 
 from odoo import models
+from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.http import request
-
+from odoo.addons.base.models.assetsbundle import AssetsBundle
+from odoo.tools import html_escape as escape
 
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
+
+
+class AssetsBundleMultiWebsite(AssetsBundle):
+    def _get_asset_url_values(self, id, unique, extra, name, sep, type):
+        website_id = self.env.context.get('website_id')
+        website_id_path = website_id and ('%s/' % website_id) or ''
+        extra = website_id_path + extra
+        res = super(AssetsBundleMultiWebsite, self)._get_asset_url_values(id, unique, extra, name, sep, type)
+        return res
 
 
 class QWeb(models.AbstractModel):
@@ -23,6 +34,9 @@ class QWeb(models.AbstractModel):
         'img':    'src',
     }
 
+    def get_asset_bundle(self, xmlid, files, remains=None, env=None):
+        return AssetsBundleMultiWebsite(xmlid, files, remains=remains, env=env)
+
     def _post_processing_att(self, tagName, atts, options):
         if atts.get('data-no-post-process'):
             return atts
@@ -37,10 +51,16 @@ class QWeb(models.AbstractModel):
         if not website and options.get('website_id'):
             website = self.env['website'].browse(options['website_id'])
 
-        if not website or not website.cdn_activated:
+        if not website:
             return atts
 
         name = self.URL_ATTRS.get(tagName)
+        if request and name and name in atts:
+            atts[name] = url_for(atts[name])
+
+        if not website.cdn_activated:
+            return atts
+
         if name and name in atts:
             atts = OrderedDict(atts)
             atts[name] = website.get_cdn_url(atts[name])

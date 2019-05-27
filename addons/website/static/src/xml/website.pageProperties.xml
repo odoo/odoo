@@ -45,11 +45,11 @@
             <li class="nav-item"><a aria-controls="advances_page_info" role="tab" data-toggle="tab" class="nav-link" href="#advances_page_info">Publish</a></li>
         </ul>
         <div class="tab-content mt16">
-            <div role="tabpanel" id="basic_page_info" class="tab-pane fade in active">
+            <div role="tabpanel" id="basic_page_info" class="tab-pane fade show active">
                 <div class="form-group row">
                     <label class="col-form-label col-md-3" for="page_name">Page Name</label>
                     <div class="col-md-9">
-                        <input type="text" class="form-control form-control-sm" id="page_name" t-att-value="widget.page.name" />
+                        <input type="text" class="form-control" id="page_name" t-att-value="widget.page.name" />
                     </div>
                 </div>
                 <div class="form-group warn_about_call"></div>
@@ -60,7 +60,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" t-att-title="widget.serverUrl"><small><t t-esc="widget.serverUrlTrunc"/></small></span>
                             </div>
-                            <input type="text" class="form-control form-control-sm" id="page_url" t-att-value="widget.page.url" />
+                            <input type="text" class="form-control" id="page_url" t-att-value="widget.page.url" />
                         </div>
                     </div>
                 </div>
@@ -82,15 +82,15 @@
                     <label class="col-form-label col-md-3 redirect_type" for="redirect_type">Type</label>
                     <div class="col-md-6 redirect_type">
                         <select class="form-control" id="redirect_type">
-                            <option t-foreach="widget.fields.type.selection" t-as="field" t-att-value="field[0]"><t t-esc="field[0] + ': ' + field[1]" /></option>
+                            <option t-foreach="widget.fields.redirect_type.selection" t-as="field" t-att-value="field[0]"><t t-esc="field[0] + ': ' + field[1]" /></option>
                         </select>
                     </div>
                 </div>
             </div>
             <div role="tabpanel" id="advances_page_info" class="tab-pane fade">
                 <div class="form-group row">
-                    <label class="col-form-label col-md-3" for="is_menu">Show in Top Menu</label>
-                    <div class="col-md-2">
+                    <label class="control-label col-md-5" for="is_menu">Show in Top Menu</label>
+                    <div class="col-sm-2">
                         <label class="o_switch" for="is_menu" >
                             <input type="checkbox" t-att-checked="widget.page.menu_ids.length > 0 ? true : undefined" id="is_menu"/>
                             <span/>
@@ -98,8 +98,8 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-form-label col-md-3" for="is_homepage">Use as Homepage</label>
-                    <div class="col-md-2">
+                    <label class="control-label col-md-5" for="is_homepage">Use as Homepage</label>
+                    <div class="col-sm-2">
                         <label class="o_switch" for="is_homepage" >
                             <input type="checkbox" t-att-checked="widget.page.is_homepage ? true : undefined" id="is_homepage"/>
                             <span/>
@@ -107,7 +107,7 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-form-label col-md-3" for="is_indexed">
+                    <label class="control-label col-md-5" for="is_indexed">
                         Indexed
                         <i class="fa fa-question-circle-o" title="Hide this page from search results" role="img" aria-label="Info"></i>
                     </label>
@@ -119,8 +119,8 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-form-label col-md-3" for="is_published">Publish</label>
-                    <div class="col-md-2">
+                    <label class="control-label col-md-5" for="is_published">Publish</label>
+                    <div class="col-sm-2">
                         <label class="o_switch js_publish_btn" for="is_published">
                             <input type="checkbox" t-att-checked="widget.page.website_published ? true : undefined" id="is_published"/>
                             <span/>
@@ -128,14 +128,12 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-form-label col-md-3" for="date_publish">Publishing Date</label>
-                    <div class="col-md-9">
-                        <div class='input-group date' id='date_publish_container'>
-                            <input type='text' class="form-control" name="date_publish" id="date_publish" />
-                            <div class="input-group-append">
-                                <span class="input-group-text">
-                                    <span class="fa fa-calendar" role="img" aria-label="Publish date" title="Publish date"></span>
-                                </span>
+                    <label class="control-label col-md-5" for="date_publish">Publishing Date</label>
+                    <div class="col-md-7">
+                        <div class="input-group date" id="date_publish_container" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#date_publish_container" id="date_publish"/>
+                            <div class="input-group-append" data-target="#date_publish_container" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
                         </div>
                     </div>

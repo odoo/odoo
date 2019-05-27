@@ -10,14 +10,15 @@ var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
 var _t = core._t;
+var _lt = core._lt;
 
 var ORDER = {
-    ASC: 1,
-    DESC: -1,
+    ASC: 1, // visually, ascending order of message IDs (from top to bottom)
+    DESC: -1, // visually, descending order of message IDs (from top to bottom)
 };
 
-var READ_MORE = _t("read more");
-var READ_LESS = _t("read less");
+var READ_MORE = _lt("read more");
+var READ_LESS = _lt("read less");
 
 /**
  * This is a generic widget to render a thread.
@@ -34,6 +35,7 @@ var ThreadWidget = Widget.extend({
         'click .o_thread_show_more': '_onClickShowMore',
         'click .o_attachment_download': '_onAttachmentDownload',
         'click .o_attachment_view': '_onAttachmentView',
+        'click .o_attachment_delete_cross': '_onDeleteAttachment',
         'click .o_thread_message_needaction': '_onClickMessageNeedaction',
         'click .o_thread_message_star': '_onClickMessageStar',
         'click .o_thread_message_reply': '_onClickMessageReply',
@@ -41,6 +43,7 @@ var ThreadWidget = Widget.extend({
         'click .o_thread_message': '_onClickMessage',
         'click': '_onClick',
         'click .o_thread_message_email_exception': '_onClickEmailException',
+        'click .o_thread_message_email_bounce': '_onClickEmailException',
         'click .o_thread_message_moderation': '_onClickMessageModeration',
         'change .moderation_checkbox': '_onChangeModerationCheckbox',
     },
@@ -57,6 +60,7 @@ var ThreadWidget = Widget.extend({
         this._enabledOptions = _.defaults(options || {}, {
             displayOrder: ORDER.ASC,
             displayMarkAsRead: true,
+            displayModerationCommands: false,
             displayStars: true,
             displayDocumentLinks: true,
             displayAvatars: true,
@@ -69,6 +73,7 @@ var ThreadWidget = Widget.extend({
         this._disabledOptions = {
             displayOrder: this._enabledOptions.displayOrder,
             displayMarkAsRead: false,
+            displayModerationCommands: false,
             displayStars: false,
             displayDocumentLinks: false,
             displayAvatars: this._enabledOptions.displayAvatars,
@@ -78,34 +83,54 @@ var ThreadWidget = Widget.extend({
             loadMoreOnScroll: this._enabledOptions.loadMoreOnScroll,
         };
         this._selectedMessageID = null;
+        this._currentThreadID = null;
+        this._messageMailPopover = null;
+        this._messageSeenPopover = null;
+        // used to track popover IDs to destroy on re-rendering of popovers
+        this._openedSeenPopoverIDs = [];
     },
-
     /**
+     * The message mail popover may still be shown at this moment. If we do not
+     * remove it, it stays visible on the page until a page reload.
+     *
      * @override
      */
     destroy: function () {
         clearInterval(this._updateTimestampsInterval);
+        if (this._messageMailPopover) {
+            this._messageMailPopover.popover('hide');
+        }
+        if (this._messageSeenPopover) {
+            this._messageSeenPopover.popover('hide');
+        }
+        this._destroyOpenSeenPopoverIDs();
+        this._super();
     },
-
     /**
-     * @param {mail.model.AbstractMessage[]} messages list of messages of the
-     *   thread, ordered by increasing IDs (a higher ID means a more recent
-     *   message).
-     * @param {}
+     * @param {mail.model.AbstractThread} thread the thread to render.
      * @param {Object} [options]
      * @param {integer} [options.displayOrder=ORDER.ASC] order of displaying
      *    messages in the thread:
      *      - ORDER.ASC: last message is at the bottom of the thread
      *      - ORDER.DESC: last message is at the top of the thread
      * @param {boolean} [options.displayLoadMore]
+     * @param {Array} [options.domain=[]] the domain for the messages in the
+     *    thread.
      * @param {boolean} [options.isCreateMode]
+     * @param {boolean} [options.scrollToBottom=false]
      * @param {boolean} [options.squashCloseMessages]
      */
     render: function (thread, options) {
         var self = this;
 
+        var shouldScrollToBottomAfterRendering = false;
+        if (this._currentThreadID === thread.getID() && this.isAtBottom()) {
+            shouldScrollToBottomAfterRendering = true;
+        }
+        this._currentThreadID = thread.getID();
+
         // copy so that reverse do not alter order in the thread object
-        var messages = _.clone(thread.getMessages());
+        var messages = _.clone(thread.getMessages({ domain: options.domain || [] }));
 
         var modeOptions = options.isCreateMode ? this._disabledOptions :
                                                  this._enabledOptions;
@@ -115,9 +140,6 @@ var ThreadWidget = Widget.extend({
             return message.getAttachments();
         })));
 
-        if (modeOptions.displayOrder === ORDER.DESC) {
-            messages.reverse();
-        }
         options = _.extend({}, modeOptions, options, {
             selectedMessageID: this._selectedMessageID,
         });
@@ -160,6 +182,11 @@ var ThreadWidget = Widget.extend({
             }
             prevMessage = message;
         });
+
+        if (modeOptions.displayOrder === ORDER.DESC) {
+            messages.reverse();
+        }
+
         this.$el.html(QWeb.render('mail.widget.Thread', {
             thread: thread,
             displayAuthorMessages: displayAuthorMessages,
@@ -175,10 +202,19 @@ var ThreadWidget = Widget.extend({
             self._insertReadMore($message);
         });
 
+        if (shouldScrollToBottomAfterRendering) {
+            this.scrollToBottom();
+        }
+
         if (!this._updateTimestampsInterval) {
             this.updateTimestampsInterval = setInterval(function () {
                 self._updateTimestamps();
             }, 1000*60);
+        }
+
+        this._renderMessageMailPopover(messages);
+        if (thread.hasSeenFeature()) {
+            this._renderMessageSeenPopover(thread, messages);
         }
     },
 
@@ -213,16 +249,16 @@ var ThreadWidget = Widget.extend({
      */
     removeMessageAndRender: function (messageID, thread, options) {
         var self = this;
-        var done = $.Deferred();
-        this.$('.o_thread_message[data-message-id="' + messageID + '"]')
+        return new Promise(function (resolve, reject) {
+            self.$('.o_thread_message[data-message-id="' + messageID + '"]')
             .fadeOut({
                 done: function () {
                     self.render(thread, options);
-                    done.resolve();
+                    resolve();
                 },
                 duration: 200,
             });
-        return done;
+        });
     },
     /**
      * Scroll to the bottom of the thread
@@ -233,7 +269,7 @@ var ThreadWidget = Widget.extend({
     /**
      * Scrolls the thread to a given message
      *
-     * @param {integer} options.messageID the ID of the message to scroll to
+     * @param {integer} options.msgID the ID of the message to scroll to
      * @param {integer} [options.duration]
      * @param {boolean} [options.onlyIfNecessary]
      */
@@ -286,6 +322,15 @@ var ThreadWidget = Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _destroyOpenSeenPopoverIDs: function () {
+        _.each(this._openedSeenPopoverIDs, function (popoverID) {
+            $('#' + popoverID).remove();
+        });
+        this._openedSeenPopoverIDs = [];
+    },
     /**
      * Modifies $element to add the 'read more/read less' functionality
      * All element nodes with 'data-o-mail-quote' attribute are concerned.
@@ -368,11 +413,18 @@ var ThreadWidget = Widget.extend({
             });
         });
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
+    /**
+    * @private
+    * @param {MouseEvent} ev
+    */
+    _onDeleteAttachment: function (ev) {
+        ev.stopPropagation();
+        var $target = $(ev.currentTarget);
+        this.trigger_up('delete_attachment', {
+            attachmentId: $target.data('id'),
+            attachmentName: $target.data('name')
+        });
+     },
     /**
      * @private
      * @param {Object} options
@@ -387,6 +439,79 @@ var ThreadWidget = Widget.extend({
             this.trigger('redirect', options.model, options.id);
         }
     }, 500, true),
+    /**
+     * Render the popover when mouse-hovering on the mail icon of a message
+     * in the thread. There is at most one such popover at any given time.
+     *
+     * @private
+     * @param {mail.model.AbstractMessage[]} messages list of messages in the
+     *   rendered thread, for which popover on mouseover interaction is
+     *   permitted.
+     */
+    _renderMessageMailPopover: function (messages) {
+        if (this._messageMailPopover) {
+            this._messageMailPopover.popover('hide');
+        }
+        if (!this.$('.o_thread_tooltip').length) {
+            return;
+        }
+        this._messageMailPopover = this.$('.o_thread_tooltip').popover({
+            html: true,
+            boundary: 'viewport',
+            placement: 'auto',
+            trigger: 'hover',
+            offset: '0, 1',
+            content: function () {
+                var messageID = $(this).data('message-id');
+                var message = _.find(messages, function (message) {
+                    return message.getID() === messageID;
+                });
+                return QWeb.render('mail.widget.Thread.Message.MailTooltip', {
+                    data: message.hasCustomerEmailData() ? message.getCustomerEmailData() : [],
+                });
+            },
+        });
+    },
+    /**
+     * Render the popover when mouse hovering on the seen icon of a message
+     * in the thread. Only seen icons in non-squashed message have popover,
+     * because squashed messages hides this icon on message mouseover.
+     *
+     * @private
+     * @param {mail.model.AbstractThread} thread with thread seen mixin,
+     *   @see {mail.model.ThreadSeenMixin}
+     * @param {mail.model.Message[]} messages list of messages in the
+     *   rendered thread.
+     */
+    _renderMessageSeenPopover: function (thread, messages) {
+        var self = this;
+        this._destroyOpenSeenPopoverIDs();
+        if (this._messageSeenPopover) {
+            this._messageSeenPopover.popover('hide');
+        }
+        if (!this.$('.o_thread_message_core .o_mail_thread_message_seen_icon').length) {
+            return;
+        }
+        this._messageSeenPopover = this.$('.o_thread_message_core .o_mail_thread_message_seen_icon').popover({
+            html: true,
+            boundary: 'viewport',
+            placement: 'auto',
+            trigger: 'hover',
+            offset: '0, 1',
+            content: function () {
+                var $this = $(this);
+                self._openedSeenPopoverIDs.push($this.attr('aria-describedby'));
+                var messageID = $this.data('message-id');
+                var message = _.find(messages, function (message) {
+                    return message.getID() === messageID;
+                });
+                return QWeb.render('mail.widget.Thread.Message.SeenIconPopoverContent', {
+                    thread: thread,
+                    message: message,
+                });
+            },
+        });
+    },
     /**
      * @private
      */

@@ -6,13 +6,13 @@ from odoo import api, fields, models
 
 class BaseModuleUninstall(models.TransientModel):
     _name = "base.module.uninstall"
-    _description = "Module Uninstallation"
+    _description = "Module Uninstall"
 
     show_all = fields.Boolean()
     module_id = fields.Many2one(
         'ir.module.module', string="Module", required=True,
         domain=[('state', 'in', ['installed', 'to upgrade', 'to install'])],
-        ondelete='cascade'
+        ondelete='cascade', readonly=True,
     )
     module_ids = fields.Many2many('ir.module.module', string="Impacted modules",
                                   compute='_compute_module_ids')
@@ -40,10 +40,12 @@ class BaseModuleUninstall(models.TransientModel):
         for wizard in self:
             if wizard.module_id:
                 module_names = set(wizard._get_modules().mapped('name'))
-                # find the models that have all their XIDs in the given modules
+
                 def lost(model):
-                    return all(xid.split('.')[0] in module_names
-                               for xid in ir_models_xids.get(model.id, ()))
+                    xids = ir_models_xids.get(model.id, ())
+                    return xids and all(xid.split('.')[0] in module_names for xid in xids)
+
+                # find the models that have all their XIDs in the given modules
                 self.model_ids = ir_models.filtered(lost).sorted('name')
 
     @api.onchange('module_id')
@@ -54,5 +56,5 @@ class BaseModuleUninstall(models.TransientModel):
 
     @api.multi
     def action_uninstall(self):
-        modules = self.mapped('module_id')
+        modules = self.module_id
         return modules.button_immediate_uninstall()

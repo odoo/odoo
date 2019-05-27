@@ -4,9 +4,9 @@
 
         <record id="sale_line_services" model="sale.order.line">
             <field name="order_id" ref="sale.sale_order_3"/>
-            <field name="name">Advance</field>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('sale.advance_product_0').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="sale.advance_product_0"/>
-            <field name="product_uom" ref="uom.product_uom_day"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">150.0</field>
             <field name="product_uom_qty">5.0</field>
         </record>
@@ -35,7 +35,7 @@
         <!-- Project Task -->
         <record id="project_task_internal" model="project.task">
             <field name="name">Internal training</field>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="project_id" ref="project.project_project_1"/>
         </record>
 
@@ -74,7 +74,7 @@
             <field name="uom_id" ref="uom.product_uom_hour"/>
             <field name="uom_po_id" ref="uom.product_uom_hour"/>
             <field name="service_policy">delivered_timesheet</field>
-            <field name="service_tracking">task_new_project</field>
+            <field name="service_tracking">task_in_project</field>
         </record>
 
         <record id="product_service_deliver_timesheet_2" model="product.product">
@@ -87,7 +87,7 @@
             <field name="uom_id" ref="uom.product_uom_hour"/>
             <field name="uom_po_id" ref="uom.product_uom_hour"/>
             <field name="service_policy">delivered_timesheet</field>
-            <field name="service_tracking">task_new_project</field>
+            <field name="service_tracking">task_in_project</field>
         </record>
 
         <record id="product_service_deliver_manual" model="product.product">
@@ -103,19 +103,11 @@
             <field name="service_tracking">no</field>
         </record>
 
-        <!-- Employee -->
-        <record id="hr.employee_root" model="hr.employee">
-            <field name="timesheet_cost">100</field>
-        </record>
-
-        <record id="hr.employee_qdp" model="hr.employee">
-            <field name="timesheet_cost">75</field>
-            <field name="parent_id" ref="hr.employee_root"/>
-        </record>
-
+        <!-- Sales orders -->
         <record id="sale_order_1" model="sale.order">
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="client_order_ref">AGR</field>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <record id="sale_line_11" model="sale.order.line">
@@ -164,6 +156,7 @@
         <record id="sale_order_2" model="sale.order">
             <field name="partner_id" ref="base.res_partner_4"/>
             <field name="client_order_ref">DPC</field>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <record id="sale_line_21" model="sale.order.line">
@@ -186,7 +179,7 @@
         <!-- Timesheets on sale_order_1 -->
         <record id="timesheet_1" model="account.analytic.line">
             <field name="name">Design</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=3,weeks=-2)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">5.00</field>
             <field name="task_id" search="[('sale_line_id', '=', ref('sale_line_13'))]"/>
@@ -194,7 +187,7 @@
         </record>
         <record id="timesheet_2" model="account.analytic.line">
             <field name="name">Fine tuning</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=2,weeks=-2)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">5.00</field>
             <field name="task_id" search="[('sale_line_id', '=', ref('sale_line_13'))]"/>
@@ -202,7 +195,7 @@
         </record>
         <record id="timesheet_3" model="account.analytic.line">
             <field name="name">Assembling</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">5.00</field>
             <field name="task_id" search="[('sale_line_id', '=', ref('sale_line_13'))]"/>
@@ -210,7 +203,7 @@
         </record>
         <record id="timesheet_4" model="account.analytic.line">
             <field name="name">Delivery</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=1,weeks=-2)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">5.00</field>
             <field name="task_id" search="[('sale_line_id', '=', ref('sale_line_13'))]"/>
@@ -219,7 +212,7 @@
 
         <record id="timesheet_5" model="account.analytic.line">
             <field name="name">Requirements analysis</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=0,weeks=-2)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">1.00</field>
             <field name="project_id" ref="project_support"/>
@@ -227,7 +220,7 @@
         </record>
         <record id="timesheet_6" model="account.analytic.line">
             <field name="name">Client meeting</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=1,weeks=-2)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">1.00</field>
             <field name="project_id" ref="project_support"/>
@@ -251,7 +244,7 @@
         </record>
         <record id="timesheet_9" model="account.analytic.line">
             <field name="name">Building</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=4,weeks=-2)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">1.00</field>
             <field name="project_id" ref="project_support"/>
@@ -259,7 +252,7 @@
         </record>
         <record id="timesheet_10" model="account.analytic.line">
             <field name="name">Research</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=0,weeks=-3)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">1.00</field>
             <field name="project_id" ref="project_support"/>
@@ -267,7 +260,7 @@
         </record>
         <record id="timesheet_11" model="account.analytic.line">
             <field name="name">Assembling</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=1,weeks=-3)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">1.00</field>
             <field name="project_id" ref="project_support"/>
@@ -291,7 +284,7 @@
         </record>
         <record id="timesheet_14" model="account.analytic.line">
             <field name="name">Wood chopping</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=4,weeks=-3)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">1.00</field>
             <field name="project_id" ref="project_support"/>
@@ -342,7 +335,7 @@
         </record>
         <record id="timesheet_20" model="account.analytic.line">
             <field name="name">Document analysis</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=0,weeks=-4)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">4.00</field>
             <field name="project_id" ref="project_support"/>
@@ -350,7 +343,7 @@
         </record>
         <record id="timesheet_21" model="account.analytic.line">
             <field name="name">Design analysis</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=0,weeks=-3)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">4.00</field>
             <field name="project_id" ref="project_support"/>
@@ -368,7 +361,7 @@
         <!-- Non billable Timesheets in project_support -->
         <record id="timesheet_23" model="account.analytic.line">
             <field name="name">Technical training</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(months=-4, days=-10)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">8.00</field>
             <field name="project_id" ref="project.project_project_1"/>
@@ -376,7 +369,7 @@
         </record>
         <record id="timesheet_24" model="account.analytic.line">
             <field name="name">Internal training</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(months=-4, days=-12)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">8.00</field>
             <field name="project_id" ref="project.project_project_1"/>
@@ -384,7 +377,7 @@
         </record>
         <record id="timesheet_25" model="account.analytic.line">
             <field name="name">Internal discussion</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(months=-4, days=-13)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">8.00</field>
             <field name="project_id" ref="project.project_project_1"/>
@@ -401,7 +394,7 @@
 
         <!-- Vendor bill for sale_order_1 -->
         <record id="account_analytic_line_inv_1" model="account.analytic.line">
-            <field name="name">[PCSC234] Computer SC234</field>
+            <field name="name" model="account.analytic.line" eval="obj().env.ref('product.product_product_3').get_product_multiline_description_sale()"/>
             <field name="account_id" search="[('partner_id', '=', ref('base.res_partner_2'))]"/>
             <field name="partner_id" ref="base.partner_root"/>
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
@@ -413,7 +406,7 @@
 
         <!-- Expense bill for sale_order_1 -->
         <record id="account_analytic_line_exp_1" model="account.analytic.line">
-            <field name="name">[EXP] General Expenses</field>
+            <field name="name" model="account.analytic.line" eval="obj().env.ref('product.expense_product').get_product_multiline_description_sale()"/>
             <field name="account_id" search="[('partner_id', '=', ref('base.res_partner_2'))]"/>
             <field name="partner_id" ref="base.partner_root"/>
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
@@ -425,7 +418,7 @@
 
         <!-- Vendor bill for sale_order_2 -->
         <record id="account_analytic_line_inv_2" model="account.analytic.line">
-            <field name="name">[PCSC234] Computer SC234</field>
+            <field name="name" model="account.analytic.line" eval="obj().env.ref('product.product_product_3').get_product_multiline_description_sale()"/>
             <field name="account_id" search="[('partner_id', '=', ref('base.res_partner_4'))]"/>
             <field name="partner_id" ref="base.partner_root"/>
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
@@ -437,7 +430,7 @@
 
         <!-- Expense bill for sale_order_2 -->
         <record id="account_analytic_line_exp_2" model="account.analytic.line">
-            <field name="name">[HA0] Hotel Accommodation</field>
+            <field name="name" model="account.analytic.line" eval="obj().env.ref('product.expense_hotel').get_product_multiline_description_sale()"/>
             <field name="account_id" search="[('partner_id', '=', ref('base.res_partner_4'))]"/>
             <field name="partner_id" ref="base.partner_demo"/>
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>

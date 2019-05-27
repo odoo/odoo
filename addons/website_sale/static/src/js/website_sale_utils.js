@@ -1,39 +1,38 @@
 odoo.define('website_sale.utils', function (require) {
-    "use strict";
+'use strict';
 
-    var animate_clone =  function(cart, $elem, offset_top, offset_left) {
-        cart.find('.o_animate_blink').addClass('o_red_highlight o_shadow_animation').delay(500).queue(function(){
-            $(this).removeClass("o_shadow_animation").dequeue();
-        }).delay(2000).queue(function(){
-            $(this).removeClass("o_red_highlight").dequeue();
-        });
-        var imgtodrag = $elem.find('img').eq(0);
-        if (imgtodrag.length) {
-            var imgclone = imgtodrag.clone()
+function animateClone($cart, $elem, offsetTop, offsetLeft) {
+    $cart.find('.o_animate_blink').addClass('o_red_highlight o_shadow_animation').delay(500).queue(function(){
+        $(this).removeClass("o_shadow_animation").dequeue();
+    }).delay(2000).queue(function(){
+        $(this).removeClass("o_red_highlight").dequeue();
+    });
+    var $imgtodrag = $elem.find('img').eq(0);
+    if ($imgtodrag.length) {
+        var $imgclone = $imgtodrag.clone()
             .offset({
-                top: imgtodrag.offset().top,
-                left: imgtodrag.offset().left
+                top: $imgtodrag.offset().top,
+                left: $imgtodrag.offset().left
             })
             .addClass('o_website_sale_animate')
-            .appendTo($('body'))
+            .appendTo(document.body)
             .animate({
-                'top': cart.offset().top + offset_top,
-                'left': cart.offset().left + offset_left,
-                'width': 75,
-                'height': 75
+                top: $cart.offset().top + offsetTop,
+                left: $cart.offset().left + offsetLeft,
+                width: 75,
+                height: 75,
             }, 1000, 'easeInOutExpo');
 
-            imgclone.animate({
-                'width': 0,
-                'height': 0
-            }, function () {
-                $(this).detach();
-            });
-        }
-    };
+        $imgclone.animate({
+            width: 0,
+            height: 0,
+        }, function () {
+            $(this).detach();
+        });
+    }
+}
 
-    return {
-        animate_clone: animate_clone,
-    };
-
+return {
+    animateClone: animateClone,
+};
 });

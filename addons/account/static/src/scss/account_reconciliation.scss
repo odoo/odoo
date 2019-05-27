@@ -18,6 +18,23 @@
         }
     }
 
+    .o_filter_input_wrapper {
+        position: relative;
+        float: right;
+        width: 150px;
+        margin-top: 0px;
+        margin-bottom: 20px;
+        float: right;
+        .searchIcon {
+            position: absolute;
+            right: 10px;
+        }
+        .o_filter_input {
+            border: none;
+            border-bottom: 1px black solid;
+        }
+    }
+    
     .progress {
         width: 100%;
         margin: 10px 0 2px 0;
@@ -58,14 +75,17 @@
             border-right: 1px solid #333;
             padding-right: 5px;
         }
-        .do_partial_reconcile_true {
-            color: $o-community-color; // FIXME probably supposed to be primary to be auto-adapted in enterprise ?
-            padding-right: 5px;
+        .edit_amount {
+            margin-left: 20px;
+            color: #bbb;
         }
-        .do_partial_reconcile_false {
-            color: #f0eeee;
-            padding-right: 5px;
+        .cell:hover .edit_amount {
+            color: #00A09D;
         }
+        .strike_amount {
+            text-decoration: line-through;
+        }
+
     }
 
     .o_multi_currency {
@@ -289,6 +309,10 @@
             overflow: auto;
             border: 1px solid #ddd;
             border-radius: 0 0 5px 5px;
+            > div.quick_add > .o_reconcile_models {
+                max-height: 54px;
+                overflow: auto;
+            }
         }
         .quick_add {
             margin-bottom: 7px;
@@ -339,6 +363,22 @@
         }
         .do_partial_reconcile_true {
             display: none;
+        }
+    }
+}
+
+// This is rtl language specific fix
+// It will flip the fa-fa play icon in left direction
+.o_rtl {
+    .o_reconciliation {
+        .o_reconciliation_line {
+            .toggle_match, .toggle_create {
+                transform: rotate(180deg);
+                transition: transform 300ms;
+            }
+            .visible_toggle, &[data-mode="match"] .toggle_match, &[data-mode="create"] .toggle_create {
+                transform: rotate(270deg);
+            }
         }
     }
 }

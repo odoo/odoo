@@ -5,7 +5,6 @@
             <field name="name">Purchase Order: Send RFQ</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
-            <field name="email_from">${object.create_uid.email_formatted | safe}</field>
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
@@ -14,19 +13,15 @@
         % if object.partner_id.parent_id:
             (${object.partner_id.parent_id.name})
         % endif
-        <br /><br />
-        Here is in attachment a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order'} <strong>${object.name}</strong>
+        <br/><br/>
+        Here is in attachment a request for quotation <strong>${object.name}</strong>
         % if object.partner_ref:
             with reference: ${object.partner_ref}
         % endif
-        % if object.origin:
-            (RFQ origin: ${object.origin})
-        % endif
-        amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>
         from ${object.company_id.name}.
-        <br /><br />
-        Do not hesitate to contact us if you have any question.
-        <br /><br />
+        <br/><br/>
+        If you have any questions, please do not hesitate to contact us.
+        <br/><br/>
         Best regards,
     </p>
 </div></field>
@@ -41,7 +36,6 @@
             <field name="name">Purchase Order: Send PO</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
-            <field name="email_from">${object.create_uid.email_formatted | safe}</field>
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
@@ -50,19 +44,16 @@
         % if object.partner_id.parent_id:
             (${object.partner_id.parent_id.name})
         % endif
-        <br /><br />
-        Here is in attachment a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order'} <strong>${object.name}</strong>
+        <br/><br/>
+        Here is in attachment a purchase order <strong>${object.name}</strong>
         % if object.partner_ref:
             with reference: ${object.partner_ref}
         % endif
-        % if object.origin:
-            (RFQ origin: ${object.origin})
-        % endif
         amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>
         from ${object.company_id.name}.
-        <br /><br />
-        Do not hesitate to contact us if you have any question.
-        <br /><br />
+        <br/><br/>
+        If you have any questions, please do not hesitate to contact us.
+        <br/><br/>
         Best regards,
     </p>
 </div></field>

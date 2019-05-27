@@ -17,7 +17,7 @@ class AccountingTestTemplConsistency(HttpCase):
         def get_fields(model, extra_domain=None):
             # Retrieve fields to compare
             domain = [('model', '=', model), ('state', '=', 'base'), ('related', '=', False),
-                      ('compute', '=', False)]
+                      ('compute', '=', False), ('store', '=', True)]
             if extra_domain:
                 domain += extra_domain
             return self.env['ir.model.fields'].search(domain)
@@ -34,13 +34,15 @@ class AccountingTestTemplConsistency(HttpCase):
         self.check_fields_consistency(
             'account.account.template', 'account.account', exceptions=['chart_template_id', 'nocreate'])
         self.check_fields_consistency(
-            'account.account', 'account.account.template', exceptions=['company_id', 'deprecated', 'last_time_entries_checked', 'opening_debit', 'opening_credit'])
+            'account.account', 'account.account.template', exceptions=['company_id', 'deprecated', 'opening_debit', 'opening_credit'])
 
     def test_account_tax_fields(self):
         '''Test fields consistency for ('account.tax', 'account.tax.template')
         '''
         self.check_fields_consistency('account.tax.template', 'account.tax', exceptions=['chart_template_id'])
         self.check_fields_consistency('account.tax', 'account.tax.template', exceptions=['company_id'])
+        self.check_fields_consistency('account.tax.repartition.line.template', 'account.tax.repartition.line', exceptions=['plus_report_line_ids', 'minus_report_line_ids'])
+        self.check_fields_consistency('account.tax.repartition.line', 'account.tax.repartition.line.template', exceptions=['tag_ids', 'country_id', 'company_id', 'sequence'])
 
     def test_fiscal_position_fields(self):
         '''Test fields consistency for ('account.fiscal.position', 'account.fiscal.position.template')

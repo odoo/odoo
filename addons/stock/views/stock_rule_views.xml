@@ -17,7 +17,7 @@
                         <group>
                             <field name="name"/>
                             <field name="move_type"/>
-                        </group>                        
+                        </group>
                     </sheet>
                 </form>
             </field>
@@ -33,7 +33,7 @@
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand='0' string='Group by...'>
                         <filter string='Route' name="groupby_route" context="{'group_by': 'route_id'}"/>
-                        <filter string='Warehouse' name="groupby_warehouse" context="{'group_by': 'warehouse_id'}" groups="base.group_stock_multi_warehouses"/>
+                        <filter string='Warehouse' name="groupby_warehouse" context="{'group_by': 'warehouse_id'}" groups="stock.group_stock_multi_warehouses"/>
                    </group>
                 </search>
             </field>
@@ -45,10 +45,9 @@
             <field name="model">stock.rule</field>
             <field name="arch" type="xml">
                 <tree string="Rules">
-                    <field name="sequence"/>
-                    <field name="location_src_id"/>
-                    <field name="location_id"/>
                     <field name="action"/>
+                    <field name="location_src_id" options="{'no_create': True}"/>
+                    <field name="location_id" options="{'no_create': True}"/>
                     <field name="route_id"/>
                 </tree>
             </field>
@@ -73,8 +72,8 @@
                             <group>
                                 <field name="action"/>
                                 <field name="picking_type_id"/>
-                                <field name="location_src_id" attrs="{'required': [('action', 'in', ['pull', 'push', 'pull_push'])]}"/>
-                                <field name="location_id"/>
+                                <field name="location_src_id" options="{'no_create': True}" attrs="{'required': [('action', 'in', ['pull', 'push', 'pull_push'])]}"/>
+                                <field name="location_id" options="{'no_create': True}"/>
                                 <field name="auto" attrs="{'invisible': [('action', 'not in', ['push', 'pull_push'])]}"/>
                                 <field name="procure_method" attrs="{'invisible': [('action', 'not in', ['pull', 'pull_push'])]}"/>
                             </group>

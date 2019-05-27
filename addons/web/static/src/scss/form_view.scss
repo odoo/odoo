@@ -42,7 +42,7 @@
             min-width: 50px;
             margin: 0 (-$o-form-spacing-unit/2);
 
-            > div, > span, > button, > label, > a, > input { // > * did not add a level of priority to the rule
+            > div, > span, > button, > label, > a, > input, > select { // > * did not add a level of priority to the rule
                 flex: 0 0 auto;
                 width: auto!important;
                 margin-right: $o-form-spacing-unit/2;
@@ -72,22 +72,28 @@
             display: none!important;
         }
 
-        .o_row, .o_row > div {
-            display: inline-block;
+        .o_row:not(.o_row_readonly) {
+            &, & > div {
+                display: inline-block;
+            }
         }
-
     }
 
     .o_form_uri {
         display: inline-block;
-
-        color: $o-main-text-color;
-        &:first-line {
-            color: $link-color;
-        }
+        color: $link-color;
         &:hover {
-            color: darken($o-main-text-color, 1%); // hack required on chrome
-            &:first-line {
+            color: darken($link-color, 15%);
+        }
+        > span {
+            color: $o-main-text-color;
+            &:hover {
+                color: $o-main-text-color;
+            }
+        }
+        > span:first-child {
+            color: $link-color;
+            &:hover {
                 color: darken($link-color, 15%);
             }
         }
@@ -133,7 +139,7 @@
         position: relative;
 
         > .o_form_sheet {
-            margin: $o-sheet-vpadding auto;
+            margin: $o-sheet-vpadding*0.5 auto;
         }
     }
 
@@ -174,7 +180,6 @@
             flex-flow: row-reverse wrap-reverse;
             align-self: stretch;
             align-items: stretch;
-            overflow-x: hidden; // to prevent horizontal scroll due to last arrow
 
             > .o_arrow_button {
                 min-height: $o-statusbar-height;
@@ -189,6 +194,7 @@
 
                 &:first-child {
                     padding-right: $o-horizontal-padding; // Compensate container padding
+                    overflow-x: hidden; // to prevent horizontal scroll due to last arrow
                 }
                 &:last-child {
                     padding-left: $o-horizontal-padding - 1;
@@ -206,7 +212,7 @@
                     border-left: 1px solid gray('300');
                 }
 
-                &:before, &:after {
+                &:not(:first-child):before, &:not(:first-child):after {
                     content: " ";
                     display: block;
                     @include o-position-absolute(0, -$o-statusbar-arrow-width + 1);
@@ -230,7 +236,7 @@
                     }
                 }
 
-                &:before {
+                &:not(:first-child):before {
                     right: -$o-statusbar-arrow-width;
                     border-left-color: gray('300');
                 }
@@ -245,20 +251,8 @@
                         border-left-color: gray('200');
                     }
                 }
-
-                .caret {
-                    margin-top: -2px;
-                }
             }
 
-            .o-status-more {
-                @include o-position-absolute(100%, 0);
-                min-width: 100px;
-                > li > button {
-                    width: 100%;
-                    text-align: left;
-                }
-            }
         }
 
         // Touch device mode
@@ -354,13 +348,13 @@
             }
         }
 
-        :not(.o_row) > .o_field_widget,
+        :not(.o_row):not(.o_data_cell) > .o_field_widget,
         .o_row > .o_field_widget:last-child { // Note: this does not take care
                                               // of an invisible last-child but
                                               // it does not really matter
             // Makes extra buttons (e.g. m2o external button) overflow on the
             // right padding of the parent element
-            .o_input_dropdown {
+            > .o_input_dropdown {
                 flex: 1 0 auto;
             }
         }
@@ -389,8 +383,8 @@
         clear: both; // For the notebook not to have alongside floating elements
         margin-top: $o-form-spacing-unit * 2;
 
-        .nav-tabs > .tab-pane {
-            min-height: 100px;
+        .tab-content > .tab-pane {
+            padding: $o-horizontal-padding 0;
         }
     }
 
@@ -587,13 +581,8 @@
     &.o_form_readonly .o_field_widget .o_list_view .o_row_handle {
         display: none;  // Hide the handler in non-edit mode
     }
-
-    // Attachments
-    .oe_attachment {
-        display: inline-block;
-        border: 1px solid $o-brand-lightsecondary;
-        margin: 0 $o-form-spacing-unit $o-form-spacing-unit 0;
-        padding: $o-form-spacing-unit;
+    .o_field_widget.o_readonly_modifier .o_list_view .o_row_handle {
+        display: none;  // Hide the handler on readonly fields
     }
 
     &.oe_form_configuration {
@@ -605,19 +594,18 @@
         }
     }
     &.o_company_document_layout {
-        .image_selection_container {
+        .report_layout_container {
+            display: inline-block;
             div {
-                width: 50%;
+                display: inline-block;
                 img {
                     margin-left: 0 !important;
                 }
             }
         }
-        td {
-            padding: 0 45px 0 0;
-        }
         img[name="logo"] {
-            max-height: 300px;
+            max-height: 100px;
+            max-width: 300px;
         }
     }
 }
@@ -646,6 +634,12 @@
     &:not(.modal-lg) .o_form_view {
         .o_group {
             width: 100%;
+        }
+    }
+    .o_onboarding_payment_acquirer_wizard {
+        a[type="action"] {
+            color: $link-color;
+            cursor: pointer;
         }
     }
 }
@@ -689,6 +683,11 @@
 
                 .o_field_widget {
                     margin-bottom: $o-form-spacing-unit * 2;
+
+                    > .o_field_widget {
+                        margin-bottom: 0;
+                    }
+
                     &.o_field_boolean {
                         margin-right: 0;
                     }
@@ -749,6 +748,11 @@
             }
             .o_field_widget {
                 width: 50%;
+                flex: 0 0 auto;
+
+                &.o_field_many2manytags > .o_field_widget {
+                    flex: 1 0 50px;
+                }
             }
             button.btn-link:first-child {
                 padding-left: 0;

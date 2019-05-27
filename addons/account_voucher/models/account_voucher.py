@@ -16,7 +16,7 @@ class AccountVoucher(models.Model):
     @api.model
     def _default_journal(self):
         voucher_type = self._context.get('voucher_type', 'sale')
-        company_id = self._context.get('company_id', self.env.user.company_id.id)
+        company_id = self._context.get('company_id', self.env.company_id.id)
         domain = [
             ('type', '=', voucher_type),
             ('company_id', '=', company_id),
@@ -25,7 +25,7 @@ class AccountVoucher(models.Model):
 
     @api.model
     def _default_payment_journal(self):
-        company_id = self._context.get('company_id', self.env.user.company_id.id)
+        company_id = self._context.get('company_id', self.env.company_id.id)
         domain = [
             ('type', 'in', ('bank', 'cash')),
             ('company_id', '=', company_id),
@@ -65,7 +65,7 @@ class AccountVoucher(models.Model):
         ('cancel', 'Cancelled'),
         ('proforma', 'Pro-forma'),
         ('posted', 'Posted')
-        ], 'Status', readonly=True, track_visibility='onchange', copy=False, default='draft',
+        ], 'Status', readonly=True, tracking=True, copy=False, default='draft',
         help=" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.\n"
              " * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
              " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
@@ -96,11 +96,11 @@ class AccountVoucher(models.Model):
         journal = self.env['account.journal'].browse(self.env.context.get('default_journal_id', False))
         if journal.currency_id:
             return journal.currency_id.id
-        return self.env.user.company_id.currency_id.id
+        return self.env.company_id.currency_id.id
 
     @api.model
     def _get_company(self):
-        return self._context.get('company_id', self.env.user.company_id.id)
+        return self._context.get('company_id', self.env.company_id.id)
 
     @api.constrains('company_id', 'currency_id')
     def _check_company_id(self):
@@ -129,7 +129,7 @@ class AccountVoucher(models.Model):
             for line in voucher.line_ids:
                 tax_info = line.tax_ids.compute_all(line.price_unit, voucher.currency_id, line.quantity, line.product_id, voucher.partner_id)
                 total += tax_info.get('total_included', 0.0)
-                tax_amount += sum([t.get('amount',0.0) for t in tax_info.get('taxes', False)]) 
+                tax_amount += sum([t.get('amount',0.0) for t in tax_info.get('taxes', False)])
             voucher.amount = total + voucher.tax_correction
             voucher.tax_amount = tax_amount
 
@@ -274,6 +274,8 @@ class AccountVoucher(models.Model):
         :return: Tuple build as (remaining amount not allocated on voucher lines, list of account_move_line created in this method)
         :rtype: tuple(float, list of int)
         '''
+        tax_calculation_rounding_method = self.env.company_id.tax_calculation_rounding_method
+        tax_lines_vals = []
         for line in self.line_ids:
             #create one move line per voucher line where amount is not 0.0
             if not line.price_subtotal:
@@ -288,10 +290,11 @@ class AccountVoucher(models.Model):
                 'name': line.name or '/',
                 'account_id': line.account_id.id,
                 'move_id': move_id,
+                'quantity': line.quantity,
+                'product_id': line.product_id.id,
                 'partner_id': self.partner_id.commercial_partner_id.id,
                 'analytic_account_id': line.account_analytic_id and line.account_analytic_id.id or False,
                 'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
-                'quantity': 1,
                 'credit': abs(amount) if self.voucher_type == 'sale' else 0.0,
                 'debit': abs(amount) if self.voucher_type == 'purchase' else 0.0,
                 'date': self.account_date,
@@ -317,8 +320,8 @@ class AccountVoucher(models.Model):
                             'move_id': move_id,
                             'date': self.account_date,
                             'partner_id': self.partner_id.id,
-                            'debit': tax_vals['amount'] > 0 and tax_vals['amount'] or 0.0,
-                            'credit': tax_vals['amount'] < 0 and -tax_vals['amount'] or 0.0,
+                            'debit': self.voucher_type != 'sale' and tax_vals['amount'] or 0.0,
+                            'credit': self.voucher_type == 'sale' and tax_vals['amount'] or 0.0,
                             'analytic_account_id': line.account_analytic_id and line.account_analytic_id.id or False,
                         }
                         if company_currency != current_currency:
@@ -330,6 +333,33 @@ class AccountVoucher(models.Model):
                         self.env['account.move.line'].create(temp)
 
             self.env['account.move.line'].create(move_line)
+            # When global rounding is activated, we must wait until all tax lines are computed to
+            # merge them.
+            if tax_calculation_rounding_method == 'round_globally':
+                tax_lines_vals += self.env['account.move.line'].with_context(round=False)._apply_taxes(
+                    move_line,
+                    move_line.get('debit', 0.0) - move_line.get('credit', 0.0)
+                )
+
+        # When round globally is set, we merge the tax lines
+        if tax_calculation_rounding_method == 'round_globally':
+            tax_lines_vals_merged = {}
+            for tax_line_vals in tax_lines_vals:
+                key = (
+                    tax_line_vals['tax_line_id'],
+                    tax_line_vals['account_id'],
+                    tax_line_vals['analytic_account_id'],
+                )
+                if key not in tax_lines_vals_merged:
+                    tax_lines_vals_merged[key] = tax_line_vals
+                else:
+                    tax_lines_vals_merged[key]['debit'] += tax_line_vals['debit']
+                    tax_lines_vals_merged[key]['credit'] += tax_line_vals['credit']
+            currency = self.env['res.currency'].browse(company_currency)
+            for vals in tax_lines_vals_merged.values():
+                vals['debit'] = currency.round(vals['debit'])
+                vals['credit'] = currency.round(vals['credit'])
+                self.env['account.move.line'].create(vals)
         return line_total
 
     @api.multi
@@ -362,12 +392,12 @@ class AccountVoucher(models.Model):
             line_total = voucher.with_context(ctx).voucher_move_line_create(line_total, move.id, company_currency, current_currency)
 
             # Create a payment to allow the reconciliation when pay_now = 'pay_now'.
-            if self.pay_now == 'pay_now':
-                payment_id = self.env['account.payment'].create(self.voucher_pay_now_payment_create())
+            if voucher.pay_now == 'pay_now':
+                payment_id = self.env['account.payment'].create(voucher.voucher_pay_now_payment_create())
                 payment_id.post()
 
                 # Reconcile the receipt with the payment
-                lines_to_reconcile = (payment_id.move_line_ids + move.line_ids).filtered(lambda l: l.account_id == self.account_id)
+                lines_to_reconcile = (payment_id.move_line_ids + move.line_ids).filtered(lambda l: l.account_id == voucher.account_id)
                 lines_to_reconcile.reconcile()
 
             # Add tax correction to move line if any tax correction specified
@@ -389,13 +419,13 @@ class AccountVoucher(models.Model):
     @api.multi
     def _track_subtype(self, init_values):
         if 'state' in init_values:
-            return 'account_voucher.mt_voucher_state_change'
+            return self.env.ref('account_voucher.mt_voucher_state_change')
         return super(AccountVoucher, self)._track_subtype(init_values)
 
 
 class AccountVoucherLine(models.Model):
     _name = 'account.voucher.line'
-    _description = 'Voucher Lines'
+    _description = 'Accounting Voucher Line'
 
     name = fields.Text(string='Description', required=True)
     sequence = fields.Integer(default=10,
@@ -415,7 +445,7 @@ class AccountVoucherLine(models.Model):
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     company_id = fields.Many2one('res.company', related='voucher_id.company_id', string='Company', store=True, readonly=True)
     tax_ids = fields.Many2many('account.tax', string='Tax', help="Only for tax excluded from price")
-    currency_id = fields.Many2one('res.currency', related='voucher_id.currency_id')
+    currency_id = fields.Many2one('res.currency', related='voucher_id.currency_id', readonly=False)
 
     @api.one
     @api.depends('price_unit', 'tax_ids', 'quantity', 'product_id', 'voucher_id.currency_id')

@@ -10,10 +10,8 @@ except ImportError:
     from urllib import url2pathname  # pylint: disable=deprecated-module
 
 from docutils import nodes
-from sphinx import addnodes, util
+from sphinx import addnodes, util, builders
 from sphinx.locale import admonitionlabels
-
-from odoo.tools import pycompat
 
 
 def _parents(node):
@@ -43,7 +41,12 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         '<meta name="viewport" content="width=device-width, initial-scale=1">'
     ]
 
-    def __init__(self, builder, document):
+    def __init__(self, document, builder):
+        # order of parameter swapped between Sphinx 1.x and 2.x, check if
+        # we're running 1.x and swap back
+        if not isinstance(builder, builders.Builder):
+            builder, document = document, builder
+
         super(BootstrapTranslator, self).__init__(document)
         self.builder = builder
         self.body = []
@@ -66,7 +69,7 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         self.param_separator = ','
 
     def encode(self, text):
-        return pycompat.text_type(text).translate({
+        return str(text).translate({
             ord('&'): u'&amp;',
             ord('<'): u'&lt;',
             ord('"'): u'&quot;',
@@ -75,7 +78,7 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         })
 
     def starttag(self, node, tagname, **attributes):
-        tagname = pycompat.text_type(tagname).lower()
+        tagname = str(tagname).lower()
 
         # extract generic attributes
         attrs = {name.lower(): value for name, value in attributes.items()}
@@ -110,7 +113,7 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
     # only "space characters" SPACE, CHARACTER TABULATION, LINE FEED,
     # FORM FEED and CARRIAGE RETURN should be collapsed, not al White_Space
     def attval(self, value, whitespace=re.compile(u'[ \t\n\f\r]+')):
-        return self.encode(whitespace.sub(u' ', pycompat.text_type(value)))
+        return self.encode(whitespace.sub(' ', str(value)))
 
     def astext(self):
         return u''.join(self.body)
@@ -190,6 +193,18 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
     def depart_compact_paragraph(self, node):
         pass
 
+    def visit_problematic(self, node):
+        if node.hasattr('refid'):
+            self.body.append('<a href="#%s">' % node['refid'])
+            self.context.append('</a>')
+        else:
+            self.context.append('')
+        self.body.append(self.starttag(node, 'span', CLASS='problematic'))
+
+    def depart_problematic(self, node):
+        self.body.append('</span>')
+        self.body.append(self.context.pop())
+
     def visit_literal_block(self, node):
         if node.rawsource != node.astext():
             # most probably a parsed-literal block -- don't highlight
@@ -208,7 +223,7 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         else:
             opts = {}
 
-        def warner(msg):
+        def warner(msg, **kw):
             self.builder.warn(msg, (self.builder.current_docname, node.line))
         highlighted = self.builder.highlighter.highlight_block(
             node.rawsource, lang, opts=opts, warn=warner, linenos=linenos,

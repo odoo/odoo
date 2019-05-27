@@ -41,11 +41,11 @@ class Product(models.Model):
 
     @api.multi
     def _compute_attachment_count(self):
-        IrAttachment = self.env['ir.attachment']
         for product in self:
-            prod_tmpl_attach_count = IrAttachment.search_count([('res_model', '=', 'product.template'), ('res_id', 'in', product.product_tmpl_id.ids), ('product_downloadable', '=', True)])
-            prod_attach_count = IrAttachment.search_count([('res_model', '=', 'product.product'), ('res_id', 'in', product.ids), ('product_downloadable', '=', True)])
-            product.attachment_count = prod_tmpl_attach_count + prod_attach_count
+            product.attachment_count = self.env['ir.attachment'].search_count([
+                '|',
+                ('res_model', '=', 'product.template'), ('res_id', '=', product.product_tmpl_id.id), ('product_downloadable', '=', True),
+                ('res_model', '=', 'product.product'), ('res_id', '=', product.id), ('product_downloadable', '=', True)])
 
     @api.multi
     def action_open_attachments(self):

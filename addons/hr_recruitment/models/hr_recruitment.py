@@ -44,7 +44,7 @@ class RecruitmentSource(models.Model):
 
 class RecruitmentStage(models.Model):
     _name = "hr.recruitment.stage"
-    _description = "Stage of Recruitment"
+    _description = "Recruitment Stages"
     _order = 'sequence'
 
     name = fields.Char("Stage name", required=True, translate=True)
@@ -79,7 +79,7 @@ class RecruitmentStage(models.Model):
 
 class RecruitmentDegree(models.Model):
     _name = "hr.recruitment.degree"
-    _description = "Degree of Recruitment"
+    _description = "Applicant Degree"
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The name of the Degree of Recruitment must be unique!')
     ]
@@ -92,18 +92,16 @@ class Applicant(models.Model):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "priority desc, id desc"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin']
+    _inherit = ['mail.thread.cc', 'mail.activity.mixin', 'utm.mixin']
 
     def _default_stage_id(self):
         if self._context.get('default_job_id'):
-            ids = self.env['hr.recruitment.stage'].search([
+            return self.env['hr.recruitment.stage'].search([
                 '|',
                 ('job_id', '=', False),
                 ('job_id', '=', self._context['default_job_id']),
                 ('fold', '=', False)
-            ], order='sequence asc', limit=1).ids
-            if ids:
-                return ids[0]
+            ], order='sequence asc', limit=1).id
         return False
 
     def _default_company_id(self):
@@ -112,20 +110,17 @@ class Applicant(models.Model):
             department = self.env['hr.department'].browse(self._context['default_department_id'])
             company_id = department.company_id.id
         if not company_id:
-            company_id = self.env['res.company']._company_default_get('hr.applicant')
+            company_id = self.env.company_id
         return company_id
 
     name = fields.Char("Subject / Application Name", required=True)
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
     description = fields.Text("Description")
-    email_from = fields.Char("Email", size=128, help="These people will receive email.")
-    email_cc = fields.Text("Watchers Emails", size=252,
-                           help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma")
+    email_from = fields.Char("Email", size=128, help="Applicant email")
     probability = fields.Float("Probability")
     partner_id = fields.Many2one('res.partner', "Contact")
     create_date = fields.Datetime("Creation Date", readonly=True, index=True)
-    write_date = fields.Datetime("Update Date", readonly=True)
-    stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', ondelete='restrict', track_visibility='onchange',
+    stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', ondelete='restrict', tracking=True,
                                domain="['|', ('job_id', '=', False), ('job_id', '=', job_id)]",
                                copy=False, index=True,
                                group_expand='_read_group_stage_ids',
@@ -134,7 +129,7 @@ class Applicant(models.Model):
                                     help="Stage of the applicant before being in the current stage. Used for lost cases analysis.")
     categ_ids = fields.Many2many('hr.applicant.category', string="Tags")
     company_id = fields.Many2one('res.company', "Company", default=_default_company_id)
-    user_id = fields.Many2one('res.users', "Responsible", track_visibility="onchange", default=lambda self: self.env.uid)
+    user_id = fields.Many2one('res.users', "Responsible", tracking=True, default=lambda self: self.env.uid)
     date_closed = fields.Datetime("Closed", readonly=True, index=True)
     date_open = fields.Datetime("Assigned", readonly=True, index=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
@@ -155,20 +150,21 @@ class Applicant(models.Model):
     day_close = fields.Float(compute='_compute_day', string="Days to Close")
     delay_close = fields.Float(compute="_compute_day", string='Delay to Close', readonly=True, group_operator="avg", help="Number of days to close", store=True)
     color = fields.Integer("Color Index", default=0)
-    emp_id = fields.Many2one('hr.employee', string="Employee", track_visibility="onchange", help="Employee linked to the applicant.")
+    emp_id = fields.Many2one('hr.employee', string="Employee", tracking=True, help="Employee linked to the applicant.")
     user_email = fields.Char(related='user_id.email', type="char", string="User Email", readonly=True)
     attachment_number = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
-    employee_name = fields.Char(related='emp_id.name', string="Employee Name")
+    employee_name = fields.Char(related='emp_id.name', string="Employee Name", readonly=False)
     attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.applicant')], string='Attachments')
     kanban_state = fields.Selection([
         ('normal', 'Grey'),
         ('done', 'Green'),
         ('blocked', 'Red')], string='Kanban State',
         copy=False, default='normal', required=True)
-    legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked')
-    legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid')
-    legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing')
-    
+    legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked', readonly=False)
+    legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid', readonly=False)
+    legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing', readonly=False)
+    application_count = fields.Integer(compute='_compute_application_count', help='Applications with the same email')
+
 
     @api.depends('date_open', 'date_closed')
     @api.one
@@ -183,6 +179,14 @@ class Applicant(models.Model):
             date_closed = self.date_closed
             self.day_close = (date_closed - date_create).total_seconds() / (24.0 * 3600)
             self.delay_close = self.day_close - self.day_open
+
+    @api.depends('email_from')
+    def _compute_application_count(self):
+        application_data = self.env['hr.applicant'].read_group([
+            ('email_from', 'in', list(set(self.mapped('email_from'))))], ['email_from'], ['email_from'])
+        application_data_mapped = dict((data['email_from'], data['email_from_count']) for data in application_data)
+        for applicant in self.filtered(lambda applicant: applicant.email_from):
+            applicant.application_count = application_data_mapped.get(applicant.email_from, 0)
 
     @api.multi
     def _get_attachment_number(self):
@@ -216,12 +220,12 @@ class Applicant(models.Model):
     def _onchange_job_id_internal(self, job_id):
         department_id = False
         user_id = False
-        stage_id = self.stage_id.id
+        stage_id = self.stage_id.id or self._context.get('default_stage_id')
         if job_id:
             job = self.env['hr.job'].browse(job_id)
             department_id = job.department_id.id
             user_id = job.user_id.id
-            if not self.stage_id:
+            if not stage_id:
                 stage_ids = self.env['hr.recruitment.stage'].search([
                     '|',
                     ('job_id', '=', False),
@@ -269,7 +273,7 @@ class Applicant(models.Model):
             vals['date_open'] = fields.Datetime.now()
         if 'stage_id' in vals:
             vals.update(self._onchange_stage_id_internal(vals.get('stage_id'))['value'])
-        return super(Applicant, self.with_context(mail_create_nolog=True)).create(vals)
+        return super(Applicant, self).create(vals)
 
     @api.multi
     def write(self, vals):
@@ -331,10 +335,20 @@ class Applicant(models.Model):
         return action
 
     @api.multi
-    def _track_template(self, tracking):
-        res = super(Applicant, self)._track_template(tracking)
+    def action_applications_email(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Applications'),
+            'res_model': self._name,
+            'view_type': 'kanban',
+            'view_mode': 'kanban,tree,form,pivot,graph,calendar,activity',
+            'domain': [('email_from', 'in', self.mapped('email_from'))],
+        }
+
+    @api.multi
+    def _track_template(self, changes):
+        res = super(Applicant, self)._track_template(changes)
         applicant = self[0]
-        changes, dummy = tracking[applicant.id]
         if 'stage_id' in changes and applicant.stage_id.template_id:
             res['stage_id'] = (applicant.stage_id.template_id, {
                 'auto_delete_message': True,
@@ -344,14 +358,16 @@ class Applicant(models.Model):
         return res
 
     @api.multi
+    def _creation_subtype(self):
+        return self.env.ref('hr_recruitment.mt_applicant_new')
+
+    @api.multi
     def _track_subtype(self, init_values):
         record = self[0]
         if 'emp_id' in init_values and record.emp_id and record.emp_id.active:
-            return 'hr_recruitment.mt_applicant_hired'
-        elif 'stage_id' in init_values and record.stage_id and record.stage_id.sequence <= 1:
-            return 'hr_recruitment.mt_applicant_new'
-        elif 'stage_id' in init_values and record.stage_id and record.stage_id.sequence > 1:
-            return 'hr_recruitment.mt_applicant_stage_changed'
+            return self.env.ref('hr_recruitment.mt_applicant_hired')
+        elif 'stage_id' in init_values and record.stage_id:
+            return self.env.ref('hr_recruitment.mt_applicant_stage_changed')
         return super(Applicant, self)._track_subtype(init_values)
 
     @api.multi
@@ -365,8 +381,8 @@ class Applicant(models.Model):
         return res
 
     @api.multi
-    def message_get_suggested_recipients(self):
-        recipients = super(Applicant, self).message_get_suggested_recipients()
+    def _message_get_suggested_recipients(self):
+        recipients = super(Applicant, self)._message_get_suggested_recipients()
         for applicant in self:
             if applicant.partner_id:
                 applicant._message_add_suggested_recipient(recipients, partner=applicant.partner_id, reason=_('Contact'))
@@ -390,7 +406,6 @@ class Applicant(models.Model):
             'name': msg.get('subject') or _("No Subject"),
             'partner_name': val,
             'email_from': msg.get('from'),
-            'email_cc': msg.get('cc'),
             'partner_id': msg.get('author_id', False),
         }
         if msg.get('priority'):
@@ -420,7 +435,7 @@ class Applicant(models.Model):
             contact_name = False
             if applicant.partner_id:
                 address_id = applicant.partner_id.address_get(['contact'])['contact']
-                contact_name = applicant.partner_id.name_get()[0][1]
+                contact_name = applicant.partner_id.display_name
             else :
                 new_partner_id = self.env['res.partner'].create({
                     'is_company': False,
@@ -453,6 +468,7 @@ class Applicant(models.Model):
         employee_action = self.env.ref('hr.open_view_employee_list')
         dict_act_window = employee_action.read([])[0]
         dict_act_window['context'] = {'form_view_initial_mode': 'edit'}
+        dict_act_window['res_id'] = employee.id
         return dict_act_window
 
     @api.multi

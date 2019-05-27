@@ -1,26 +1,30 @@
 odoo.define('website_mail.follow', function (require) {
 'use strict';
 
-var sAnimation = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimation.registry.follow = sAnimation.Class.extend({
+publicWidget.registry.follow = publicWidget.Widget.extend({
     selector: '.js_follow',
+    disabledInEditableMode: false,
 
     start: function () {
         var self = this;
         this.is_user = false;
+
+        var always = function (data) {
+            self.is_user = data.is_user;
+            self.email = data.email;
+            self.toggle_subscription(data.is_follower, data.email);
+            self.$target.removeClass('d-none');
+        };
+
         this._rpc({
             route: '/website_mail/is_follower',
             params: {
                 model: this.$target.data('object'),
                 res_id: this.$target.data('id'),
             },
-        }).always(function (data) {
-            self.is_user = data.is_user;
-            self.email = data.email;
-            self.toggle_subscription(data.is_follower, data.email);
-            self.$target.removeClass('d-none');
-        });
+        }).then(always).guardedCatch(always);
 
         // not if editable mode to allow designer to edit
         if (!this.editableMode) {

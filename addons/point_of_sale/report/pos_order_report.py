@@ -6,11 +6,11 @@ from odoo import api, fields, models, tools
 
 class PosOrderReport(models.Model):
     _name = "report.pos.order"
-    _description = "Point of Sale Orders Statistics"
+    _description = "Point of Sale Orders Report"
     _auto = False
     _order = 'date desc'
 
-    date = fields.Datetime(string='Date Order', readonly=True)
+    date = fields.Datetime(string='Order Date', readonly=True)
     order_id = fields.Many2one('pos.order', string='Order', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
@@ -19,7 +19,7 @@ class PosOrderReport(models.Model):
         [('draft', 'New'), ('paid', 'Paid'), ('done', 'Posted'),
          ('invoiced', 'Invoiced'), ('cancel', 'Cancelled')],
         string='Status')
-    user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
+    user_id = fields.Many2one('res.users', string='User', readonly=True)
     price_total = fields.Float(string='Total Price', readonly=True)
     price_sub_total = fields.Float(string='Subtotal w/o discount', readonly=True)
     total_discount = fields.Float(string='Total Discount', readonly=True)
@@ -34,7 +34,6 @@ class PosOrderReport(models.Model):
     invoiced = fields.Boolean(readonly=True)
     config_id = fields.Many2one('pos.config', string='Point of Sale', readonly=True)
     pos_categ_id = fields.Many2one('pos.category', string='PoS Category', readonly=True)
-    stock_location_id = fields.Many2one('stock.location', string='Warehouse', readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', readonly=True)
     session_id = fields.Many2one('pos.session', string='Session', readonly=True)
 
@@ -62,7 +61,6 @@ class PosOrderReport(models.Model):
                 p.product_tmpl_id,
                 ps.config_id,
                 pt.pos_categ_id,
-                pc.stock_location_id,
                 s.pricelist_id,
                 s.session_id,
                 s.invoice_id IS NOT NULL AS invoiced
@@ -76,7 +74,6 @@ class PosOrderReport(models.Model):
                 LEFT JOIN product_template pt ON (p.product_tmpl_id=pt.id)
                 LEFT JOIN uom_uom u ON (u.id=pt.uom_id)
                 LEFT JOIN pos_session ps ON (s.session_id=ps.id)
-                LEFT JOIN pos_config pc ON (ps.config_id=pc.id)
         """
 
     def _group_by(self):
@@ -88,8 +85,7 @@ class PosOrderReport(models.Model):
                 l.product_id,
                 pt.categ_id, pt.pos_categ_id,
                 p.product_tmpl_id,
-                ps.config_id,
-                pc.stock_location_id
+                ps.config_id
         """
 
     def _having(self):

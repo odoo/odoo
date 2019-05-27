@@ -10,7 +10,6 @@ from werkzeug import urls
 import odoo
 import re
 
-from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 

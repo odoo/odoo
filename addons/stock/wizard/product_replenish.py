@@ -4,10 +4,12 @@
 import datetime
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools.misc import clean_context
 
 
 class ProductReplenish(models.TransientModel):
     _name = 'product.replenish'
+    _description = 'Product Replenish'
 
     product_id = fields.Many2one('product.product', string='Product', required=True)
     product_tmpl_id = fields.Many2one('product.template', String='Product Template', required=True)
@@ -15,7 +17,7 @@ class ProductReplenish(models.TransientModel):
     product_uom_category_id = fields.Many2one('uom.category', related='product_id.uom_id.category_id', readonly=True, required=True)
     product_uom_id = fields.Many2one('uom.uom', string='Unity of measure', required=True)
     quantity = fields.Float('Quantity', default=1, required=True)
-    date_planned = fields.Datetime('Scheduled Date', help="Date at which the replenishment should take place.")
+    date_planned = fields.Datetime('Scheduled Date', required=True, help="Date at which the replenishment should take place.")
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', required=True)
     route_ids = fields.Many2many('stock.location.route', string='Preferred Routes',
         help="Apply specific route(s) for the replenishment instead of product's default routes.")
@@ -23,7 +25,7 @@ class ProductReplenish(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super(ProductReplenish, self).default_get(fields)
-        company_user = self.env.user.company_id
+        company_user = self.env.company_id
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
         product_tmpl_id = False
         if 'product_id' in fields:
@@ -50,15 +52,18 @@ class ProductReplenish(models.TransientModel):
         uom_reference = self.product_id.uom_id
         self.quantity = self.product_uom_id._compute_quantity(self.quantity, uom_reference)
         try:
-            self.env['procurement.group'].run(
-                self.product_id,
-                self.quantity,
-                uom_reference,
-                self.warehouse_id.lot_stock_id, # Location
-                "Manual Replenishment", # Name
-                "Manual Replenishment", # Origin
-                self._prepare_run_values() # Values
-            )
+            self.env['procurement.group'].with_context(clean_context(self.env.context)).run([
+                self.env['procurement.group'].Procurement(
+                    self.product_id,
+                    self.quantity,
+                    uom_reference,
+                    self.warehouse_id.lot_stock_id,  # Location
+                    "Manual Replenishment",  # Name
+                    "Manual Replenishment",  # Origin
+                    self.warehouse_id.company_id,
+                    self._prepare_run_values()  # Values
+                )
+            ])
         except UserError as error:
             raise UserError(error)
 

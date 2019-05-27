@@ -8,6 +8,18 @@
         <template id="assets_backend" name="im_livechat assets backend" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat_backend.js"></script>
+                <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat_history.scss"/>
+            </xpath>
+        </template>
+
+        <template id="qunit_suite" name="livechat_tests" inherit_id="web.qunit_suite">
+            <xpath expr="//t[@t-set='head']" position="inside">
+                <script type="text/javascript" src="/im_livechat/static/src/js/website_livechat_window.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/js/models/website_livechat.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/js/models/website_livechat_message.js"></script>
+
+                <script type="text/javascript" src="/im_livechat/static/tests/discuss_livechat_tests.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/tests/website_livechat_window_tests.js"></script>
             </xpath>
         </template>
 
@@ -111,7 +123,10 @@
             <!-- Qweb2 lib -->
             <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
             <!-- Odoo JS Framework -->
+            <script type="text/javascript" src="/web/static/src/js/promise_extension.js"></script>
             <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/libs/download.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/libs/content-disposition.js"></script>
             <script type="text/javascript" src="/web/static/src/js/services/config.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/abstract_service.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/class.js"></script>
@@ -127,12 +142,17 @@
             <script type="text/javascript" src="/web/static/src/js/core/session.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/concurrency.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/utils.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/dom.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/qweb.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/bus.js"></script>
             <script type="text/javascript" src="/web/static/src/js/services/core.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/local_storage.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/ram_storage.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/abstract_storage_service.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/public/public_root.js"/>
+            <script type="text/javascript" src="/web/static/src/js/public/public_root_instance.js"/>
+            <script type="text/javascript" src="/web/static/src/js/public/public_widget.js"/>
+            <script type="text/javascript" src="/web/static/src/js/services/ajax_service.js"></script>
             <script type="text/javascript" src="/web/static/src/js/services/local_storage_service.js"></script>
             <!-- Bus, Mail, Livechat -->
                 <!-- thread windows -->
@@ -151,9 +171,14 @@
                     <!-- threads -->
                     <script type="text/javascript" src="/mail/static/src/js/models/threads/abstract_thread.js"></script>
                     <script type="text/javascript" src="/im_livechat/static/src/js/models/website_livechat.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/models/threads/mixins/thread_typing_mixin.js"></script>
                     <!-- messages -->
                     <script type="text/javascript" src="/mail/static/src/js/models/messages/abstract_message.js"></script>
                     <script type="text/javascript" src="/im_livechat/static/src/js/models/website_livechat_message.js"></script>
+                    <!-- utils -->
+                    <script type="text/javascript" src="/mail/static/src/js/models/utils/timer.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/models/utils/timers.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/models/utils/cc_throttle_function.js"></script>
             <t t-call="web._assets_helpers"/>
             <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat_bootstrap.scss"/>
             <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/abstract_thread_window.scss"></link>
@@ -164,25 +189,21 @@
         <!-- the js code to initialize the LiveSupport object -->
         <template id="loader" name="Livechat : Javascript appending the livechat button">
             <t t-translation="off">
-
-            <t t-if="not info">
-                <t t-set="info" t-value="request.env['im_livechat.channel'].get_livechat_info(channel)"/>
-            </t>
                 document.addEventListener("DOMContentLoaded", function(event) {
                     <t t-if="web_session_required">
                     odoo.define('web.session', function (require) {
                         var Session = require('web.Session');
                         var modules = odoo._modules;
-                        return new Session(undefined, "<t t-esc="info['server_url']"/>", {modules:modules, use_cors: false});
+                        return new Session(undefined, "<t t-esc="info['server_url']"/>", {modules:modules, use_cors: true});
                     });
                     </t>
 
                     odoo.define('im_livechat.livesupport', function (require) {
             <t t-if="info['available']" t-translation="off">
-                        var websiteRoot = require('root.widget');
+                        var rootWidget = require('root.widget');
                         var im_livechat = require('im_livechat.im_livechat');
                         var button = new im_livechat.LivechatButton(
-                            websiteRoot,
+                            rootWidget,
                             "<t t-esc="info['server_url']"/>",
                             <t t-raw="json.dumps(info.get('options', {}))"/>
                         );

@@ -164,7 +164,7 @@ class AccountFiscalPosition(models.Model):
 
 class AccountFiscalPositionTax(models.Model):
     _name = 'account.fiscal.position.tax'
-    _description = 'Taxes Fiscal Position'
+    _description = 'Tax Mapping of Fiscal Position'
     _rec_name = 'position_id'
 
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
@@ -175,13 +175,13 @@ class AccountFiscalPositionTax(models.Model):
     _sql_constraints = [
         ('tax_src_dest_uniq',
          'unique (position_id,tax_src_id,tax_dest_id)',
-         'A tax fiscal position could be defined only once time on same taxes.')
+         'A tax fiscal position could be defined only one time on same taxes.')
     ]
 
 
 class AccountFiscalPositionAccount(models.Model):
     _name = 'account.fiscal.position.account'
-    _description = 'Accounts Fiscal Position'
+    _description = 'Accounts Mapping of Fiscal Position'
     _rec_name = 'position_id'
 
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
@@ -194,7 +194,7 @@ class AccountFiscalPositionAccount(models.Model):
     _sql_constraints = [
         ('account_src_dest_uniq',
          'unique (position_id,account_src_id,account_dest_id)',
-         'An account fiscal position could be defined only once time on same accounts.')
+         'An account fiscal position could be defined only one time on same accounts.')
     ]
 
 
@@ -204,7 +204,7 @@ class ResPartner(models.Model):
 
     @api.multi
     def _credit_debit_get(self):
-        tables, where_clause, where_params = self.env['account.move.line']._query_get()
+        tables, where_clause, where_params = self.env['account.move.line'].with_context(company_id=self.env.company_id.id)._query_get()
         where_params = [tuple(self.ids)] + where_params
         if where_clause:
             where_clause = 'AND ' + where_clause
@@ -263,7 +263,7 @@ class ResPartner(models.Model):
             self.total_invoiced = 0.0
             return True
 
-        user_currency_id = self.env.user.company_id.currency_id.id
+        user_currency_id = self.env.company_id.currency_id.id
         all_partners_and_children = {}
         all_partner_ids = []
         for partner in self:
@@ -309,7 +309,7 @@ class ResPartner(models.Model):
             partner.contracts_count = AccountAnalyticAccount.search_count([('partner_id', '=', partner.id)])
 
     def get_followup_lines_domain(self, date, overdue_only=False, only_unblocked=False):
-        domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable'), '|', ('debit', '!=', 0), ('credit', '!=', 0), ('company_id', '=', self.env.user.company_id.id)]
+        domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable'), '|', ('debit', '!=', 0), ('credit', '!=', 0), ('company_id', '=', self.env.company_id.id)]
         if only_unblocked:
             domain += [('blocked', '=', False)]
         if self.ids:
@@ -362,14 +362,14 @@ class ResPartner(models.Model):
     @api.multi
     def mark_as_reconciled(self):
         self.env['account.partial.reconcile'].check_access_rights('write')
-        return self.sudo().with_context(company_id=self.env.user.company_id.id).write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        return self.sudo().with_context(company_id=self.env.company_id.id).write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
     @api.one
     def _get_company_currency(self):
         if self.company_id:
             self.currency_id = self.sudo().company_id.currency_id
         else:
-            self.currency_id = self.env.user.company_id.currency_id
+            self.currency_id = self.env.company_id.currency_id
 
     credit = fields.Monetary(compute='_credit_debit_get', search=_credit_search,
         string='Total Receivable', help="Total amount this customer owes you.")
@@ -394,7 +394,7 @@ class ResPartner(models.Model):
         required=True)
     property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent=True,
         string="Fiscal Position",
-        help="The fiscal position will determine taxes and accounts used for the partner.", oldname="property_account_position")
+        help="The fiscal position determines the taxes/accounts used for this contact.", oldname="property_account_position")
     property_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string='Customer Payment Terms',
         help="This payment term will be used instead of the default one for sales orders and customer invoices", oldname="property_payment_term")
@@ -448,7 +448,7 @@ class ResPartner(models.Model):
         if self.company_id:
             company = self.company_id
         else:
-            company = self.env.user.company_id
+            company = self.env.company_id
         return {'domain': {'property_account_position_id': [('company_id', 'in', [company.id, False])]}}
 
     def can_edit_vat(self):

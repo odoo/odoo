@@ -51,7 +51,6 @@ var BasicView = AbstractView.extend({
 
         this.loadParams.fieldsInfo = this.fieldsInfo;
         this.loadParams.fields = this.fields;
-        this.loadParams.context = params.context || {};
         this.loadParams.limit = parseInt(this.arch.attrs.limit, 10) || params.limit;
         this.loadParams.viewType = this.viewType;
         this.loadParams.parentID = params.parentID;
@@ -94,21 +93,19 @@ var BasicView = AbstractView.extend({
      *
      * @override
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
-    _loadData: function () {
+    _loadData: function (model) {
         if (this.recordID) {
-            var self = this;
-
             // Add the fieldsInfo of the current view to the given recordID,
             // as it will be shared between two views, and it must be able to
             // handle changes on fields that are only on this view.
-            this.model.addFieldsInfo(this.recordID, {
+            model.addFieldsInfo(this.recordID, {
                 fields: this.fields,
                 fieldsInfo: this.fieldsInfo,
             });
 
-            var record = this.model.get(this.recordID);
+            var record = model.get(this.recordID);
             var viewType = this.viewType;
             var viewFields = Object.keys(record.fieldsInfo[viewType]);
             var fieldNames = _.difference(viewFields, Object.keys(record.data));
@@ -148,6 +145,29 @@ var BasicView = AbstractView.extend({
                             if (_.difference(fieldViewTypes, recordViewTypes).length) {
                                 fieldNames.push(name);
                             }
+
+                            if (record.data[name].viewType === 'default') {
+                                // Use case: x2many (tags) in x2many list views
+                                // When opening the x2many record form view, the
+                                // x2many will be reloaded but it may not have
+                                // the same fields (ex: tags in list and list in
+                                // form) so we need to merge the fieldsInfo to
+                                // avoid losing the initial fields (display_name)
+                                var defaultFieldInfo = record.data[name].fieldsInfo.default;
+                                _.each(fieldViews, function (fieldView) {
+                                    _.each(fieldView.fieldsInfo, function (x2mFieldInfo) {
+                                        _.defaults(x2mFieldInfo, defaultFieldInfo);
+                                    });
+                                });
+                            }
+                        }
+                    }
+                    // Many2one: context is not the same between the different views
+                    // this means the result of a name_get could differ
+                    if (fieldType === 'many2one') {
+                        if (JSON.stringify(record.data[name].context) !==
+                                JSON.stringify(fieldInfo.context)) {
+                            fieldNames.push(name);
                         }
                     }
                 }
@@ -160,14 +180,14 @@ var BasicView = AbstractView.extend({
                 // onchange RPCs), that we haven't been able to process earlier
                 // (because those fields were unknow at that time). So we ask
                 // the model to process them.
-                def = this.model.applyRawChanges(record.id, viewType).then(function () {
-                    if (self.model.isNew(record.id)) {
-                        return self.model.applyDefaultValues(record.id, {}, {
+                def = model.applyRawChanges(record.id, viewType).then(function () {
+                    if (model.isNew(record.id)) {
+                        return model.applyDefaultValues(record.id, {}, {
                             fieldNames: fieldNames,
                             viewType: viewType,
                         });
                     } else {
-                        return self.model.reload(record.id, {
+                        return model.reload(record.id, {
                             fieldNames: fieldNames,
                             keepChanges: true,
                             viewType: viewType,
@@ -175,8 +195,8 @@ var BasicView = AbstractView.extend({
                     }
                 });
             }
-            return $.when(def).then(function () {
-                return record.id;
+            return Promise.resolve(def).then(function () {
+                return model.get(record.id);
             });
         }
         return this._super.apply(this, arguments);
@@ -225,7 +245,7 @@ var BasicView = AbstractView.extend({
             attrs.options = attrs.options ? pyUtils.py_eval(attrs.options) : {};
         }
 
-        if (attrs.on_change && !field.onChange) {
+        if (attrs.on_change && attrs.on_change !== "0" && !field.onChange) {
             field.onChange = "1";
         }
 
@@ -373,10 +393,16 @@ var BasicView = AbstractView.extend({
                 for (var dependency_name in deps) {
                     var dependency_dict = {name: dependency_name, type: deps[dependency_name].type};
                     if (!(dependency_name in fieldsInfo)) {
-                        fieldsInfo[dependency_name] = _.extend({}, dependency_dict, {options: deps[dependency_name].options || {}});
+                        fieldsInfo[dependency_name] = _.extend({}, dependency_dict, {
+                            options: deps[dependency_name].options || {},
+                        });
                     }
                     if (!(dependency_name in fields)) {
                         fields[dependency_name] = dependency_dict;
+                    }
+
+                    if (fv.fields && !(dependency_name in fv.fields)) {
+                        fv.fields[dependency_name] = dependency_dict;
                     }
                 }
             }

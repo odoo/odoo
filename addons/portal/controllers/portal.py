@@ -1,20 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import math
+import os
+import re
 
 from werkzeug import urls
 
 from odoo import fields as odoo_fields, tools, _
-from odoo.osv import expression
-from odoo.exceptions import ValidationError, AccessError
-from odoo.http import Controller, request, route
+from odoo.exceptions import ValidationError, AccessError, MissingError, UserError
+from odoo.http import content_disposition, Controller, request, route
 from odoo.tools import consteq
-from odoo.addons.web.controllers.main import WebClient
 
 # --------------------------------------------------
 # Misc tools
 # --------------------------------------------------
+
 
 def pager(url, total, page=1, step=30, scope=5, url_args=None):
     """ Generate a dict with required value to render `website.pager` template. This method compute
@@ -53,6 +55,10 @@ def pager(url, total, page=1, step=30, scope=5, url_args=None):
             'url': get_url(page),
             'num': page
         },
+        "page_first": {
+            'url': get_url(1),
+            'num': 1
+        },
         "page_start": {
             'url': get_url(pmin),
             'num': pmin
@@ -68,6 +74,10 @@ def pager(url, total, page=1, step=30, scope=5, url_args=None):
         "page_end": {
             'url': get_url(pmax),
             'num': pmax
+        },
+        "page_last": {
+            'url': get_url(page_count),
+            'num': page_count
         },
         "pages": [
             {'url': get_url(page_num), 'num': page_num} for page_num in range(pmin, pmax+1)
@@ -232,7 +242,9 @@ class CustomerPortal(Controller):
 
     def _document_check_access(self, model_name, document_id, access_token=None):
         document = request.env[model_name].browse([document_id])
-        document_sudo = document.sudo()
+        document_sudo = document.sudo().exists()
+        if not document_sudo:
+            raise MissingError("This document does not exist.")
         try:
             document.check_access_rights('read')
             document.check_access_rule('read')
@@ -264,3 +276,23 @@ class CustomerPortal(Controller):
         values.update(get_records_pager(history, document))
 
         return values
+
+    def _show_report(self, model, report_type, report_ref, download=False):
+        if report_type not in ('html', 'pdf', 'text'):
+            raise UserError("Invalid report type: %s" % report_type)
+
+        report_sudo = request.env.ref(report_ref).sudo()
+
+        if not isinstance(report_sudo, type(request.env['ir.actions.report'])):
+            raise UserError("%s is not the reference of a report" % report_ref)
+
+        method_name = 'render_qweb_%s' % (report_type)
+        report = getattr(report_sudo, method_name)([model.id], data={'report_type': report_type})[0]
+        reporthttpheaders = [
+            ('Content-Type', 'application/pdf' if report_type == 'pdf' else 'text/html'),
+            ('Content-Length', len(report)),
+        ]
+        if report_type == 'pdf' and download:
+            filename = "%s.pdf" % (re.sub('\W+', '-', model._get_report_base_filename()))
+            reporthttpheaders.append(('Content-Disposition', content_disposition(filename)))
+        return request.make_response(report, headers=reporthttpheaders)

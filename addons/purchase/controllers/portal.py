@@ -1,26 +1,38 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 from collections import OrderedDict
 
 from odoo import http
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
+from odoo.tools import image_process
 from odoo.tools.translate import _
-from odoo.addons.portal.controllers.portal import get_records_pager, pager as portal_pager, CustomerPortal
+from odoo.addons.portal.controllers.portal import pager as portal_pager, CustomerPortal
+from odoo.addons.web.controllers.main import Binary
+
 
 
 class CustomerPortal(CustomerPortal):
 
     def _prepare_portal_layout_values(self):
         values = super(CustomerPortal, self)._prepare_portal_layout_values()
-        partner = request.env.user.partner_id
-        values['purchase_count'] = request.env['purchase.order'].search_count([])
+        values['purchase_count'] = request.env['purchase.order'].search_count([
+            ('state', 'in', ['purchase', 'done', 'cancel'])
+        ])
         return values
 
     def _purchase_order_get_page_view_values(self, order, access_token, **kwargs):
+        #
+        def resize_to_48(b64source):
+            if not b64source:
+                b64source = base64.b64encode(Binary().placeholder())
+            return image_process(b64source, size=(48, 48))
+
         values = {
             'order': order,
+            'resize_to_48': resize_to_48,
         }
         return self._get_page_view_values(order, access_token, values, 'my_purchases_history', True, **kwargs)
 
@@ -94,7 +106,7 @@ class CustomerPortal(CustomerPortal):
     def portal_my_purchase_order(self, order_id=None, access_token=None, **kw):
         try:
             order_sudo = self._document_check_access('purchase.order', order_id, access_token=access_token)
-        except AccessError:
+        except (AccessError, MissingError):
             return request.redirect('/my')
 
         values = self._purchase_order_get_page_view_values(order_sudo, access_token, **kw)

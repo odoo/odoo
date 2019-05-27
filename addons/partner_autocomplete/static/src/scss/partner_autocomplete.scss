@@ -1,0 +1,46 @@
+.o_field_partner_autocomplete.dropdown {
+    display: block;
+
+    > .o_partner_autocomplete_dropdown .dropdown-item {
+        min-width: 300px;
+        padding: 4px 8px;
+        > img {
+            float: left;
+            width: 36px;
+            height: 36px;
+        }
+        > .o_partner_autocomplete_info {
+            margin-left: 50px;
+            > * {
+                @include o-text-overflow(block);
+            }
+        }
+    }
+}
+
+.ui-autocomplete.o_partner_autocomplete_dropdown {
+    > .ui-menu-item:nth-of-type(1n+16) {
+        display: none;
+    }
+    > .o_partner_autocomplete_dropdown_item {
+        > a {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            position: relative;
+            padding-right: 50px;
+            padding-left: 40px;
+            max-width: 400px;
+            > img {
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                right: 20px;
+                top: 3px;
+            }
+        }
+    }
+    > .ui-menu-item > a.ui-state-active .text-muted {
+        color: white !important;
+    }
+}

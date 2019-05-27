@@ -12,17 +12,31 @@ from odoo.tools.float_utils import float_round, float_is_zero
 from odoo.tools import date_utils
 
 
+MONTH_SELECTION = [
+    ('1', 'January'),
+    ('2', 'February'),
+    ('3', 'March'),
+    ('4', 'April'),
+    ('5', 'May'),
+    ('6', 'June'),
+    ('7', 'July'),
+    ('8', 'August'),
+    ('9', 'September'),
+    ('10', 'October'),
+    ('11', 'November'),
+    ('12', 'December'),
+]
+
+
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    def _get_invoice_reference_types(self):
-        return [('invoice_number', _('Based on Invoice Number')), ('partner', _('Based on Partner')), ('none', _('Free Communication'))]
-
     #TODO check all the options/fields are in the views (settings + company form view)
     fiscalyear_last_day = fields.Integer(default=31, required=True)
-    fiscalyear_last_month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], default=12, required=True)
+    fiscalyear_last_month = fields.Selection(MONTH_SELECTION, default='12', required=True)
     period_lock_date = fields.Date(string="Lock Date for Non-Advisers", help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date. Use it for period locking inside an open fiscal year, for example.")
     fiscalyear_lock_date = fields.Date(string="Lock Date", help="No users, including Advisers, can edit accounts prior to and inclusive of this date. Use it for fiscal year locking for example.")
+    tax_lock_date = fields.Date("Tax Lock Date", help="No users can edit journal entries related to a tax prior and inclusive of this date.")
     transfer_account_id = fields.Many2one('account.account',
         domain=lambda self: [('reconcile', '=', True), ('user_type_id.id', '=', self.env.ref('account.data_account_type_current_assets').id), ('deprecated', '=', False)], string="Inter-Banks Transfer Account", help="Intermediary account used when moving money from a liquidity account to another")
     expects_chart_of_accounts = fields.Boolean(string='Expects a Chart of Accounts', default=True)
@@ -38,9 +52,9 @@ class ResCompany(models.Model):
         ('round_globally', 'Round Globally'),
         ], default='round_per_line', string='Tax Calculation Rounding Method')
     currency_exchange_journal_id = fields.Many2one('account.journal', string="Exchange Gain or Loss Journal", domain=[('type', '=', 'general')])
-    income_currency_exchange_account_id = fields.Many2one('account.account', related='currency_exchange_journal_id.default_credit_account_id',
+    income_currency_exchange_account_id = fields.Many2one('account.account', related='currency_exchange_journal_id.default_credit_account_id', readonly=False,
         string="Gain Exchange Rate Account", domain="[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', id)]")
-    expense_currency_exchange_account_id = fields.Many2one('account.account', related='currency_exchange_journal_id.default_debit_account_id',
+    expense_currency_exchange_account_id = fields.Many2one('account.account', related='currency_exchange_journal_id.default_debit_account_id', readonly=False,
         string="Loss Exchange Rate Account", domain="[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', id)]")
     anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
     property_stock_account_input_categ_id = fields.Many2one('account.account', string="Input Account for Stock Valuation", oldname="property_stock_account_input_categ")
@@ -63,41 +77,73 @@ Best Regards,'''))
 
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
         help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
-    invoice_reference_type = fields.Selection(string='Default Communication Type', selection='_get_invoice_reference_types',
-                                              default='none', help='You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.')
+
+    qr_code = fields.Boolean(string='Display SEPA QR code')
+
+    invoice_is_email = fields.Boolean('Email by default', default=True)
+    invoice_is_print = fields.Boolean('Print by default', default=True)
 
     #Fields of the setup step for opening move
     account_opening_move_id = fields.Many2one(string='Opening Journal Entry', comodel_name='account.move', help="The journal entry containing the initial balance of all this company's accounts.")
-    account_opening_journal_id = fields.Many2one(string='Opening Journal', comodel_name='account.journal', related='account_opening_move_id.journal_id', help="Journal where the opening entry of this company's accounting has been posted.")
-    account_opening_date = fields.Date(string='Opening Date', related='account_opening_move_id.date', help="Date at which the opening entry of this company's accounting has been posted.")
+    account_opening_journal_id = fields.Many2one(string='Opening Journal', comodel_name='account.journal', related='account_opening_move_id.journal_id', help="Journal where the opening entry of this company's accounting has been posted.", readonly=False)
+    account_opening_date = fields.Date(string='Opening Date', related='account_opening_move_id.date', help="Date at which the opening entry of this company's accounting has been posted.", readonly=False)
 
-    #Fields marking the completion of a setup step
-    account_setup_company_data_done = fields.Boolean(string='Company Setup Marked As Done', help="Technical field holding the status of the company setup step.")
-    account_setup_bank_data_done = fields.Boolean('Bank Setup Marked As Done', help="Technical field holding the status of the bank setup step.")
-    account_setup_fy_data_done = fields.Boolean('Financial Year Setup Marked As Done', help="Technical field holding the status of the financial year setup step.")
-    account_setup_coa_done = fields.Boolean(string='Chart of Account Checked', help="Technical field holding the status of the chart of account setup step.")
-    account_setup_bar_closed = fields.Boolean(string='Setup Bar Closed', help="Technical field set to True when setup bar has been closed by the user.")
-
-    # account invoice onboarding
-    account_invoice_onboarding_closed = fields.Boolean(
-        string="Account invoice onboarding panel closed",
-        help="Refers to the account invoice onboarding panel closed state.")
-    account_invoice_onboarding_folded = fields.Boolean(
-        string="Account invoice onboarding panel folded",
-        help="Refers to the account invoice onboarding panel folded state.")
-
-    account_onboarding_invoice_layout_done = fields.Boolean("Onboarding invoice layout step done",
-        compute="_compute_account_onboarding_invoice_layout_done")
-    account_onboarding_sample_invoice_sent = fields.Boolean(
-        "Onboarding sample invoice step completed", default=False)
+    # Fields marking the completion of a setup step
+    # YTI FIXME : The selection should be factorize as a static list in base, like ONBOARDING_STEP_STATES
+    account_setup_bank_data_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding bank data step", default='not_done')
+    account_setup_fy_data_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding fiscal year step", default='not_done')
+    account_setup_coa_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding charts of account step", default='not_done')
+    account_onboarding_invoice_layout_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding invoice layout step", default='not_done')
+    account_onboarding_sample_invoice_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding sample invoice step", default='not_done')
+    account_onboarding_sale_tax_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding sale tax step", default='not_done')
 
     # account dashboard onboarding
-    account_dashboard_onboarding_closed = fields.Boolean(
-        string="Account dashboard onboarding panel closed",
-        help="Refers to the account dashboard onboarding panel closed state.")
-    account_dashboard_onboarding_folded = fields.Boolean(
-        string="Account dashboard onboarding panel folded",
-        help="Refers to the account dashboard onboarding panel folded state.")
+    account_invoice_onboarding_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done"), ('closed', "Closed")], string="State of the account invoice onboarding panel", default='not_done')
+    account_dashboard_onboarding_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done"), ('closed', "Closed")], string="State of the account dashboard onboarding panel", default='not_done')
+    invoice_terms = fields.Text(string='Default Terms and Conditions', translate=True)
+
+    @api.constrains('account_opening_date', 'fiscalyear_last_day', 'fiscalyear_last_month')
+    def _check_fiscalyear_last_day(self):
+        # if the user explicitly chooses the 29th of February we allow it:
+        # there is no "fiscalyear_last_year" so we do not know his intentions.
+        if self.fiscalyear_last_day == 29 and self.fiscalyear_last_month == '2':
+            return
+
+        if self.account_opening_date:
+            year = self.account_opening_date.year
+        else:
+            year = datetime.now().year
+
+        max_day = calendar.monthrange(year, int(self.fiscalyear_last_month))[1]
+        if self.fiscalyear_last_day > max_day:
+            raise ValidationError(_("Invalid fiscal year last day"))
+
+    def get_and_update_account_invoice_onboarding_state(self):
+        """ This method is called on the controller rendering method and ensures that the animations
+            are displayed only one time. """
+        return self.get_and_update_onbarding_state(
+            'account_invoice_onboarding_state',
+            self.get_account_invoice_onboarding_steps_states_names()
+        )
+
+    # YTI FIXME: Define only one method that returns {'account': [], 'sale': [], ...}
+    def get_account_invoice_onboarding_steps_states_names(self):
+        """ Necessary to add/edit steps from other modules (payment acquirer in this case). """
+        return [
+            'base_onboarding_company_state',
+            'account_onboarding_invoice_layout_state',
+            'account_onboarding_sample_invoice_state',
+        ]
+
+    def get_and_update_account_dashboard_onboarding_state(self):
+        """ This method is called on the controller rendering method and ensures that the animations
+            are displayed only one time. """
+        return self.get_and_update_onbarding_state('account_dashboard_onboarding_state', [
+            'base_onboarding_company_state',
+            'account_setup_bank_data_state',
+            'account_setup_fy_data_state',
+            'account_setup_coa_state',
+        ])
 
     @api.multi
     def _check_lock_dates(self, vals):
@@ -153,15 +199,6 @@ Best Regards,'''))
             if period_lock_date < fiscalyear_lock_date:
                 raise ValidationError(_('You cannot define stricter conditions on advisors than on users. Please make sure that the lock date on advisor is set before the lock date for users.'))
 
-    @api.model
-    def _verify_fiscalyear_last_day(self, company_id, last_day, last_month):
-        company = self.browse(company_id)
-        last_day = last_day or (company and company.fiscalyear_last_day) or 31
-        last_month = last_month or (company and company.fiscalyear_last_month) or 12
-        current_year = datetime.now().year
-        last_day_of_month = calendar.monthrange(current_year, last_month)[1]
-        return last_day > last_day_of_month and last_day_of_month or last_day
-
     @api.multi
     def compute_fiscalyear_dates(self, current_date):
         '''Computes the start and end dates of the fiscal year where the given 'date' belongs to.
@@ -190,7 +227,7 @@ Best Regards,'''))
             }
 
         date_from, date_to = date_utils.get_fiscal_year(
-            current_date, day=self.fiscalyear_last_day, month=self.fiscalyear_last_month)
+            current_date, day=self.fiscalyear_last_day, month=int(self.fiscalyear_last_month))
 
         date_from_str = date_from.strftime(DEFAULT_SERVER_DATE_FORMAT)
         date_to_str = date_to.strftime(DEFAULT_SERVER_DATE_FORMAT)
@@ -261,20 +298,6 @@ Best Regards,'''))
         return super(ResCompany, self).write(values)
 
     @api.model
-    def setting_init_company_action(self):
-        """ Called by the 'Company Data' button of the setup bar."""
-        company = self.env.user.company_id
-        view_id = self.env.ref('account.setup_view_company_form').id
-        return {'type': 'ir.actions.act_window',
-                'name': _('Company Data'),
-                'res_model': 'res.company',
-                'target': 'new',
-                'view_mode': 'form',
-                'res_id': company.id,
-                'views': [[view_id, 'form']],
-        }
-
-    @api.model
     def setting_init_bank_account_action(self):
         """ Called by the 'Bank Accounts' button of the setup bar."""
         view_id = self.env.ref('account.setup_bank_account_wizard').id
@@ -290,7 +313,8 @@ Best Regards,'''))
     @api.model
     def setting_init_fiscal_year_action(self):
         """ Called by the 'Fiscal Year Opening' button of the setup bar."""
-        company = self.env.user.company_id
+        company = self.env.company_id
+        company.create_op_move_if_non_existant()
         new_wizard = self.env['account.financial.year.op'].create({'company_id': company.id})
         view_id = self.env.ref('account.setup_financial_year_opening_form').id
 
@@ -307,8 +331,8 @@ Best Regards,'''))
     @api.model
     def setting_chart_of_accounts_action(self):
         """ Called by the 'Chart of Accounts' button of the setup bar."""
-        company = self.env.user.company_id
-        company.account_setup_coa_done = True
+        company = self.env.company_id
+        company.set_onboarding_step_done('account_setup_coa_state')
 
         # If an opening move has already been posted, we open the tree view showing all the accounts
         if company.opening_move_posted():
@@ -333,11 +357,6 @@ Best Regards,'''))
         }
 
     @api.model
-    def setting_hide_setup_bar(self):
-        """ Called by the cross button of the setup bar, to close it."""
-        self.env.user.company_id.account_setup_bar_closed = True
-
-    @api.model
     def create_op_move_if_non_existant(self):
         """ Creates an empty opening move in 'draft' state for the current company
         if there wasn't already one defined. For this, the function needs at least
@@ -350,19 +369,17 @@ Best Regards,'''))
             if not default_journal:
                 raise UserError(_("Please install a chart of accounts or create a miscellaneous journal before proceeding."))
 
+            today = datetime.today().date()
+            opening_date = today.replace(month=int(self.fiscalyear_last_month), day=self.fiscalyear_last_day) + timedelta(days=1)
+            if opening_date > today:
+                opening_date = opening_date + relativedelta(years=-1)
+
             self.account_opening_move_id = self.env['account.move'].create({
                 'name': _('Opening Journal Entry'),
                 'company_id': self.id,
                 'journal_id': default_journal.id,
+                'date': opening_date,
             })
-
-    def mark_company_setup_as_done_action(self):
-        """ Marks the 'company' setup step as completed."""
-        self.account_setup_company_data_done = True
-
-    def unmark_company_setup_as_done_action(self):
-        """ Marks the 'company' setup step as uncompleted."""
-        self.account_setup_company_data_done = False
 
     def opening_move_posted(self):
         """ Returns true if this company has an opening account move and this move is posted."""
@@ -377,8 +394,13 @@ Best Regards,'''))
                                                       ('user_type_id', '=', unaffected_earnings_type.id)])
         if account:
             return account[0]
+        # Do not assume '999999' doesn't exist since the user might have created such an account
+        # manually.
+        code = 999999
+        while self.env['account.account'].search([('code', '=', str(code)), ('company_id', '=', self.id)]):
+            code -= 1
         return self.env['account.account'].create({
-                'code': '999999',
+                'code': str(code),
                 'name': _('Undistributed Profits/Losses'),
                 'user_type_id': unaffected_earnings_type.id,
                 'company_id': self.id,
@@ -430,42 +452,28 @@ Best Regards,'''))
                         'credit': debit_diff,
                     })
 
-    @api.depends('logo', 'account_invoice_onboarding_closed')
-    def _compute_account_onboarding_invoice_layout_done(self):
-        """ The invoice onboarding step is marked as done if logo is filled
-            and different from the default one. """
-        for record in self:
-            record.account_onboarding_invoice_layout_done = \
-                record.account_invoice_onboarding_closed or (
-                    bool(record.logo) and record.logo != record._get_logo())
-
-    @api.model
-    def action_toggle_fold_account_invoice_onboarding(self):
-        """ Toggle the onboarding panel `folded` state. """
-        self.env.user.company_id.account_invoice_onboarding_folded =\
-            not self.env.user.company_id.account_invoice_onboarding_folded
-
     @api.model
     def action_close_account_invoice_onboarding(self):
-        """ Mark the onboarding panel as closed. """
-        self.env.user.company_id.account_invoice_onboarding_closed = True
-
-    @api.model
-    def action_toggle_fold_account_dashboard_onboarding(self):
-        """ Toggle the dashboard onboarding panel `folded` state. """
-        self.env.user.company_id.account_dashboard_onboarding_folded =\
-            not self.env.user.company_id.account_dashboard_onboarding_folded
+        """ Mark the invoice onboarding panel as closed. """
+        self.env.company_id.account_invoice_onboarding_state = 'closed'
 
     @api.model
     def action_close_account_dashboard_onboarding(self):
         """ Mark the dashboard onboarding panel as closed. """
-        self.env.user.company_id.account_dashboard_onboarding_closed = True
+        self.env.company_id.account_dashboard_onboarding_state = 'closed'
 
     @api.model
     def action_open_account_onboarding_invoice_layout(self):
         """ Onboarding step for the invoice layout. """
         action = self.env.ref('account.action_open_account_onboarding_invoice_layout').read()[0]
-        action['res_id'] = self.env.user.company_id.id
+        action['res_id'] = self.env.company_id.id
+        return action
+
+    @api.model
+    def action_open_account_onboarding_sale_tax(self):
+        """ Onboarding step for the invoice layout. """
+        action = self.env.ref('account.action_open_account_onboarding_sale_tax').read()[0]
+        action['res_id'] = self.env.company_id.id
         return action
 
     @api.model
@@ -474,7 +482,7 @@ Best Regards,'''))
         # use current user as partner
         partner = self.env.user.partner_id
 
-        company_id = self.env.user.company_id.id
+        company_id = self.env.company_id.id
         # try to find an existing sample invoice
         sample_invoice = self.env['account.invoice'].search(
             [('company_id', '=', company_id),
@@ -482,13 +490,7 @@ Best Regards,'''))
 
         if len(sample_invoice) == 0:
             # If there are no existing accounts or no journal, fail
-            account = self.env['account.account'].search([('company_id', '=', company_id)], limit=1)
-            if len(account) == 0:
-                action = self.env.ref('account.action_account_config')
-                msg = _(
-                    "We cannot find a chart of accounts for this company, you should configure it. \n"
-                    "Please go to Account Configuration and select or install a fiscal localization.")
-                raise RedirectWarning(msg, action.id, _("Go to the configuration panel"))
+            account = self.env.company_id.get_chart_of_accounts_or_fail()
 
             journal = self.env['account.journal'].search([('company_id', '=', company_id)], limit=1)
             if len(journal) == 0:
@@ -535,5 +537,27 @@ Best Regards,'''))
             'mark_invoice_as_sent': True,
             'custom_layout': 'mail.mail_notification_borders',
             'force_email': True,
+            'mail_notify_author': True,
         }
         return action
+
+    @api.multi
+    def action_save_onboarding_invoice_layout(self):
+        """ Set the onboarding step as done """
+        if bool(self.logo) and self.logo != self._get_logo():
+            self.set_onboarding_step_done('account_onboarding_invoice_layout_state')
+
+    @api.multi
+    def action_save_onboarding_sale_tax(self):
+        """ Set the onboarding step as done """
+        self.set_onboarding_step_done('account_onboarding_sale_tax_state')
+
+    def get_chart_of_accounts_or_fail(self):
+        account = self.env['account.account'].search([('company_id', '=', self.id)], limit=1)
+        if len(account) == 0:
+            action = self.env.ref('account.action_account_config')
+            msg = _(
+                "We cannot find a chart of accounts for this company, you should configure it. \n"
+                "Please go to Account Configuration and select or install a fiscal localization.")
+            raise RedirectWarning(msg, action.id, _("Go to the configuration panel"))
+        return account

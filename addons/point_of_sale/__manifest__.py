@@ -4,9 +4,9 @@
 {
     'name': 'Point of Sale',
     'version': '1.0.1',
-    'category': 'Point Of Sale',
+    'category': 'Sales/Point Of Sale',
     'sequence': 20,
-    'summary': 'Tablet POS: shops and restaurants',
+    'summary': 'User-friendly PoS interface for shops and restaurants',
     'description': "",
     'depends': ['stock_account', 'barcodes', 'web_editor', 'digest'],
     'data': [
@@ -16,7 +16,6 @@
         'data/digest_data.xml',
         'wizard/pos_box.xml',
         'wizard/pos_details.xml',
-        'wizard/pos_discount.xml',
         'wizard/pos_open_statement.xml',
         'wizard/pos_payment.xml',
         'views/pos_templates.xml',
@@ -36,7 +35,6 @@
         'views/account_statement_view.xml',
         'views/account_statement_report.xml',
         'views/res_config_settings_views.xml',
-        'views/res_users_views.xml',
         'views/digest_views.xml',
         'views/res_partner_view.xml',
         'views/report_statement.xml',

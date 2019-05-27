@@ -8,11 +8,12 @@
                 <field name="date"/>
                 <field name="reference" string="Reference"/>
                 <field name="product_id"/>
-                <field name="location_id"/>
-                <field name="location_dest_id"/>
+                <field name="location_id" options="{'no_create': True}"/>
+                <field name="location_dest_id" options="{'no_create': True}"/>
                 <field name="qty_done" string="Quantity Done"/>
                 <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                 <field name="state"/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>
@@ -30,9 +31,10 @@
                         <group>
                             <field name="date"/>
                             <field name="reference" string="Reference"/>
+                            <field name="origin"/>
                             <field name="product_id"/>
-                            <field name="location_id" groups="stock.group_stock_multi_locations"/>
-                            <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
+                            <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                            <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                         </group>
                         <group>
                             <label for="product_uom_qty" string="Quantity Reserved" attrs="{'invisible': [('state', '=', 'done')]}"/>
@@ -78,6 +80,7 @@
                 <separator/>
                 <group expand="0" string="Group By">
                     <filter string="Status" name="by_state" domain="[]"  context="{'group_by':'state'}"/>
+                    <filter string="Product" name="groupby_product_id" domain="[]" context="{'group_by': 'product_id'}"/>
                 </group>
             </search>
         </field>
@@ -118,7 +121,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,pivot,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
-            <field name="context">{'search_default_done': 1}</field>
+            <field name="context">{'search_default_done': 1, 'search_default_groupby_product_id': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">
                 There's no product move yet

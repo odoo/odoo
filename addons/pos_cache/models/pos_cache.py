@@ -9,6 +9,7 @@ from odoo import models, fields, api
 
 class pos_cache(models.Model):
     _name = 'pos.cache'
+    _description = 'Point of Sale Cache'
 
     cache = fields.Binary(attachment=True)
     product_domain = fields.Text(required=True)

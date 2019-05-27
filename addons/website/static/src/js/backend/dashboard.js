@@ -3,25 +3,37 @@ odoo.define('website.backend.dashboard', function (require) {
 
 var AbstractAction = require('web.AbstractAction');
 var ajax = require('web.ajax');
-var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var field_utils = require('web.field_utils');
 var session = require('web.session');
+var time = require('web.time');
 var web_client = require('web.web_client');
 
 var _t = core._t;
 var QWeb = core.qweb;
 
-var Dashboard = AbstractAction.extend(ControlPanelMixin, {
-    template: 'website.WebsiteDashboardMain',
-    cssLibs: [
-        '/web/static/lib/nvd3/nv.d3.css'
-    ],
+var DATE_FORMAT = time.getLangDateFormat();
+var COLORS = ["#1f77b4", "#aec7e8"];
+var FORMAT_OPTIONS = {
+    // allow to decide if utils.human_number should be used
+    humanReadable: function (value) {
+        return Math.abs(value) >= 1000;
+    },
+    // with the choices below, 1236 is represented by 1.24k
+    minDigits: 1,
+    decimals: 2,
+    // avoid comma separators for thousands in numbers when human_number is used
+    formatterCallback: function (str) {
+        return str;
+    },
+};
+
+var Dashboard = AbstractAction.extend({
+    hasControlPanel: true,
+    contentTemplate: 'website.WebsiteDashboardMain',
     jsLibs: [
-        '/web/static/lib/nvd3/d3.v3.js',
-        '/web/static/lib/nvd3/nv.d3.js',
-        '/web/static/src/js/libs/nvd3.js'
+        '/web/static/lib/Chart/Chart.js',
     ],
     events: {
         'click .js_link_analytics_settings': 'on_link_analytics_settings',
@@ -33,17 +45,21 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         this._super(parent, context);
 
         this.date_range = 'week';  // possible values : 'week', 'month', year'
-        this.date_from = moment().subtract(1, 'week');
-        this.date_to = moment();
+        this.date_from = moment.utc().subtract(1, 'week');
+        this.date_to = moment.utc();
 
         this.dashboards_templates = ['website.dashboard_header', 'website.dashboard_content'];
         this.graphs = [];
+        this.chartIds = {};
     },
 
     willStart: function() {
         var self = this;
-        return $.when(ajax.loadLibs(this), this._super()).then(function() {
+        return Promise.all([ajax.loadLibs(this), this._super()]).then(function() {
             return self.fetch_data();
+        }).then(function(){
+            var website = _.findWhere(self.websites, {selected: true});
+            self.website_id = website ? website.id : false;
         });
     },
 
@@ -52,27 +68,39 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         return this._super().then(function() {
             self.update_cp();
             self.render_graphs();
-            self.$el.parent().addClass('oe_background_grey');
         });
     },
 
+    on_attach_callback: function () {
+        this._isInDom = true;
+        this.render_graphs();
+        this._super.apply(this, arguments);
+    },
+    on_detach_callback: function () {
+        this._isInDom = false;
+        this._super.apply(this, arguments);
+    },
     /**
      * Fetches dashboard data
      */
     fetch_data: function() {
         var self = this;
-        return this._rpc({
+        var prom = this._rpc({
             route: '/website/fetch_dashboard_data',
             params: {
+                website_id: this.website_id || false,
                 date_from: this.date_from.year()+'-'+(this.date_from.month()+1)+'-'+this.date_from.date(),
                 date_to: this.date_to.year()+'-'+(this.date_to.month()+1)+'-'+this.date_to.date(),
             },
-        }).done(function(result) {
+        });
+        prom.then(function (result) {
             self.data = result;
             self.dashboards_data = result.dashboards;
             self.currency_id = result.currency_id;
             self.groups = result.groups;
+            self.websites = result.websites;
         });
+        return prom;
     },
 
     on_link_analytics_settings: function(ev) {
@@ -81,7 +109,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         var self = this;
         var dialog = new Dialog(this, {
             size: 'medium',
-            title: _t('Google Analytics'),
+            title: _t('Connect Google Analytics'),
             $content: QWeb.render('website.ga_dialog_content', {
                 ga_key: this.dashboards_data.visits.ga_client_id,
                 ga_analytics_key: this.dashboards_data.visits.ga_analytics_key,
@@ -110,6 +138,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         return this._rpc({
             route: '/website/dashboard/set_ga_data',
             params: {
+                'website_id': self.website_id,
                 'ga_client_id': ga_client_id,
                 'ga_analytics_key': ga_analytics_key,
             },
@@ -129,60 +158,110 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         });
     },
 
-    render_graph: function(div_to_display, chart_values) {
-        this.$(div_to_display).empty();
-
+    render_graph: function(div_to_display, chart_values, chart_id) {
         var self = this;
-        nv.addGraph(function() {
-            var chart = nv.models.lineChart()
-                .x(function(d) { return self.getDate(d); })
-                .y(function(d) { return self.getValue(d); })
-                .forceY([0]);
-            chart
-                .useInteractiveGuideline(true)
-                .showLegend(false)
-                .showYAxis(true)
-                .showXAxis(true);
 
-            var tick_values = self.getPrunedTickValues(chart_values[0].values, 5);
+        this.$(div_to_display).empty();
+        var $canvasContainer = $('<div/>', {class: 'o_graph_canvas_container'});
+        this.$canvas = $('<canvas/>').attr('id', chart_id);
+        $canvasContainer.append(this.$canvas);
+        this.$(div_to_display).append($canvasContainer);
 
-            chart.xAxis
-                .tickFormat(function(d) { return d3.time.format("%m/%d/%y")(new Date(d)); })
-                .tickValues(_.map(tick_values, function(d) { return self.getDate(d); }))
-                .rotateLabels(-45);
+        var labels = chart_values[0].values.map(function (date) {
+            return moment(date[0], "YYYY-MM-DD", 'en');
+        });
 
-            chart.interactiveLayer.tooltip.contentGenerator(function(data) {
-                return QWeb.render('website.SalesChartTooltip', {
-                    format: field_utils.format,
-                    chartData: data,
-                    dateRange: self.date_range
-                });
-            });
+        var datasets = chart_values.map(function (group, index) {
+            return {
+                label: group.key,
+                data: group.values.map(function (value) {
+                    return value[1];
+                }),
+                dates: group.values.map(function (value) {
+                    return value[0];
+                }),
+                fill: false,
+                borderColor: COLORS[index],
+            };
+        });
 
-            chart.yAxis
-                .tickFormat(d3.format('.02f'));
-
-            var svg = d3.select(div_to_display)
-                .append("svg");
-
-            svg
-                .attr("height", '24em')
-                .datum(chart_values)
-                .call(chart);
-
-            nv.utils.windowResize(chart.update);
-            return chart;
+        var ctx = document.getElementById(chart_id);
+        this.chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: datasets,
+            },
+            options: {
+                legend: {
+                    display: false,
+                },
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{
+                        type: 'linear',
+                        ticks: {
+                            beginAtZero: true,
+                            callback: this.formatValue.bind(this),
+                        },
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            callback: function (moment) {
+                                return moment.format(DATE_FORMAT);
+                            },
+                        }
+                    }],
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                    bodyFontColor: 'rgba(0,0,0,1)',
+                    titleFontSize: 13,
+                    titleFontColor: 'rgba(0,0,0,1)',
+                    backgroundColor: 'rgba(255,255,255,0.6)',
+                    borderColor: 'rgba(0,0,0,0.2)',
+                    borderWidth: 2,
+                    callbacks: {
+                        title: function (tooltipItems, data) {
+                            return data.datasets[0].label;
+                        },
+                        label: function (tooltipItem, data) {
+                            var moment = data.labels[tooltipItem.index];
+                            var date = tooltipItem.datasetIndex === 0 ?
+                                        moment :
+                                        moment.subtract(1, self.date_range);
+                            return date.format(DATE_FORMAT) + ': ' + self.formatValue(tooltipItem.yLabel);
+                        },
+                        labelColor: function (tooltipItem, chart) {
+                            var dataset = chart.data.datasets[tooltipItem.datasetIndex];
+                            return {
+                                borderColor: dataset.borderColor,
+                                backgroundColor: dataset.borderColor,
+                            };
+                        },
+                    }
+                }
+            }
         });
     },
 
     render_graphs: function() {
         var self = this;
-        _.each(this.graphs, function(e) {
-            if (self.groups[e.group]) {
-                self.render_graph('.o_graph_' + e.name, self.dashboards_data[e.name].graph);
-            }
-        });
-        this.render_graph_analytics(this.dashboards_data.visits.ga_client_id);
+        if (this._isInDom) {
+            _.each(this.graphs, function(e) {
+                var renderGraph = self.groups[e.group] &&
+                                    self.dashboards_data[e.name].summary.order_count;
+                if (!self.chartIds[e.name]) {
+                    self.chartIds[e.name] = _.uniqueId('chart_' + e.name);
+                }
+                var chart_id = self.chartIds[e.name];
+                if (renderGraph) {
+                    self.render_graph('.o_graph_' + e.name, self.dashboards_data[e.name].graph, chart_id);
+                }
+            });
+            this.render_graph_analytics(this.dashboards_data.visits.ga_client_id);
+        }
     },
 
     render_graph_analytics: function(client_id) {
@@ -224,25 +303,35 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
     on_date_range_button: function(date_range) {
         if (date_range === 'week') {
             this.date_range = 'week';
-            this.date_from = moment().subtract(1, 'weeks');
+            this.date_from = moment.utc().subtract(1, 'weeks');
         } else if (date_range === 'month') {
             this.date_range = 'month';
-            this.date_from = moment().subtract(1, 'months');
+            this.date_from = moment.utc().subtract(1, 'months');
         } else if (date_range === 'year') {
             this.date_range = 'year';
-            this.date_from = moment().subtract(1, 'years');
+            this.date_from = moment.utc().subtract(1, 'years');
         } else {
             console.log('Unknown date range. Choose between [week, month, year]');
             return;
         }
 
         var self = this;
-        $.when(this.fetch_data()).then(function() {
+        Promise.resolve(this.fetch_data()).then(function () {
             self.$('.o_website_dashboard').empty();
             self.render_dashboards();
             self.render_graphs();
         });
 
+    },
+
+    on_website_button: function(website_id) {
+        var self = this;
+        this.website_id = website_id;
+        Promise.resolve(this.fetch_data()).then(function () {
+            self.$('.o_website_dashboard').empty();
+            self.render_dashboards();
+            self.render_graphs();
+        });
     },
 
     on_reverse_breadcrumb: function() {
@@ -293,13 +382,18 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
             this.$searchview = $(QWeb.render("website.DateRangeButtons", {
                 widget: this,
             }));
-            this.$searchview.click('button.js_date_range', function(ev) {
-                self.on_date_range_button($(ev.target).data('date'));
-                $(this).find('button.js_date_range.active').removeClass('active');
+            this.$searchview.find('button.js_date_range').click(function(ev) {
+                self.$searchview.find('button.js_date_range.active').removeClass('active');
                 $(ev.target).addClass('active');
+                self.on_date_range_button($(ev.target).data('date'));
+            });
+            this.$searchview.find('button.js_website').click(function(ev) {
+                self.$searchview.find('button.js_website.active').removeClass('active');
+                $(ev.target).addClass('active');
+                self.on_website_button($(ev.target).data('website-id'));
             });
         }
-        this.update_control_panel({
+        this.updateControlPanel({
             cp_content: {
                 $searchview: this.$searchview,
                 $buttons: QWeb.render("website.GoToButtons"),
@@ -377,7 +471,8 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
                 container: $analytics_chart_2[0],
                 options: {
                     title: 'All',
-                    width: '100%'
+                    width: '100%',
+                    tooltip: {isHtml: true},
                 }
             }
         });
@@ -577,22 +672,18 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         var loader = '<span class="fa fa-3x fa-spin fa-spinner fa-pulse"/>';
         selector.html("<div class='o_loader'>" + loader + "</div>");
     },
-    getDate: function(d) { return new Date(d[0]); },
     getValue: function(d) { return d[1]; },
-    getPrunedTickValues: function(ticks, nb_desired_ticks) {
-        var nb_values = ticks.length;
-        var keep_one_of = Math.max(1, Math.floor(nb_values / nb_desired_ticks));
-
-        return _.filter(ticks, function(d, i) {
-            return i % keep_one_of === 0;
-        });
-    },
     format_number: function(value, type, digits, symbol) {
         if (type === 'currency') {
             return this.render_monetary_field(value, this.currency_id);
         } else {
             return field_utils.format[type](value || 0, {digits: digits}) + ' ' + symbol;
         }
+    },
+    formatValue: function (value) {
+        var formatter = field_utils.format.float;
+        var formatedValue = formatter(value, undefined, FORMAT_OPTIONS);
+        return formatedValue;
     },
     render_monetary_field: function(value, currency_id) {
         var currency = session.get_currency(currency_id);

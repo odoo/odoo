@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Productivity',
+    'name': 'Notes',
     'version': '1.0',
     'category': 'Tools',
     'description': "",
@@ -20,7 +20,6 @@
         'data/res_users_data.xml',
         'views/note_views.xml',
         'views/note_templates.xml',
-        'views/mail_activity_views.xml',
     ],
     'demo': [
         'data/note_demo.xml',

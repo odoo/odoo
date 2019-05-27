@@ -44,6 +44,19 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-6 o_setting_box col-xs-12">
+                                <div class="o_setting_left_pane" title="Allow the recipient to manage himself his state in the blacklist via the unsubscription page.
+                                If the option is active, the 'Blacklist Me' button is hidden on the unsubscription page.  
+                                The 'come Back' button will always be visible in any case to allow leads and partners to re-subscribe.">
+                                    <field name="show_blacklist_buttons"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="show_blacklist_buttons"/>
+                                    <div class="text-muted">
+                                        Allow the recipient to manage himself his state in the blacklist via the unsubscription page.
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <h2>Mailing Lists</h2>
                         <div id="mailing_list" class="row mt16 o_settings_container"/>
@@ -61,8 +74,6 @@
             <field name="context">{'module' : 'mass_mailing'}</field>
         </record>
 
-        <menuitem id="menu_mass_mailing_configuration" name="Configuration" parent="mass_mailing_menu_root"
-            sequence="100"/>
         <menuitem id="menu_mass_mailing_global_settings" name="Settings"
-            parent="menu_mass_mailing_configuration" sequence="0" action="action_mass_mailing_configuration" groups="base.group_system"/>
+            parent="mass_mailing_configuration" sequence="0" action="action_mass_mailing_configuration" groups="base.group_system"/>
 </odoo>

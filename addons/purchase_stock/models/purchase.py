@@ -15,7 +15,7 @@ class PurchaseOrder(models.Model):
     @api.model
     def _default_picking_type(self):
         type_obj = self.env['stock.picking.type']
-        company_id = self.env.context.get('company_id') or self.env.user.company_id.id
+        company_id = self.env.context.get('company_id') or self.env.company_id.id
         types = type_obj.search([('code', '=', 'incoming'), ('warehouse_id.company_id', '=', company_id)])
         if not types:
             types = type_obj.search([('code', '=', 'incoming'), ('warehouse_id', '=', False)])
@@ -98,20 +98,24 @@ class PurchaseOrder(models.Model):
             if order.state in ('draft', 'sent', 'to approve'):
                 for order_line in order.order_line:
                     if order_line.move_dest_ids:
-                        siblings_states = (order_line.move_dest_ids.mapped('move_orig_ids')).mapped('state')
+                        move_dest_ids = order_line.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
+                        siblings_states = (move_dest_ids.mapped('move_orig_ids')).mapped('state')
                         if all(state in ('done', 'cancel') for state in siblings_states):
-                            order_line.move_dest_ids.write({'procure_method': 'make_to_stock'})
-                            order_line.move_dest_ids._recompute_state()
+                            move_dest_ids.write({'procure_method': 'make_to_stock'})
+                            move_dest_ids._recompute_state()
 
             for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel'):
                 pick.action_cancel()
+
+            order.order_line.write({'move_dest_ids':[(5,0,0)]})
+
         return super(PurchaseOrder, self).button_cancel()
 
     @api.multi
     def action_view_picking(self):
         """ This function returns an action that display existing picking orders of given purchase order ids. When only one found, show the picking immediately.
         """
-        action = self.env.ref('stock.action_picking_tree')
+        action = self.env.ref('stock.action_picking_tree_all')
         result = action.read()[0]
         # override the context to get rid of the default filtering on operation type
         result['context'] = {}
@@ -183,6 +187,7 @@ class PurchaseOrder(models.Model):
         return {
             'picking_type_id': self.picking_type_id.id,
             'partner_id': self.partner_id.id,
+            'user_id': False,
             'date': self.date_order,
             'origin': self.name,
             'location_dest_id': self._get_destination_location(),
@@ -217,9 +222,40 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
+    qty_received_method = fields.Selection(selection_add=[('stock_moves', 'Stock Moves')])
+
     move_ids = fields.One2many('stock.move', 'purchase_line_id', string='Reservation', readonly=True, ondelete='set null', copy=False)
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Orderpoint')
     move_dest_ids = fields.One2many('stock.move', 'created_purchase_line_id', 'Downstream Moves')
+
+    @api.multi
+    def _compute_qty_received_method(self):
+        super(PurchaseOrderLine, self)._compute_qty_received_method()
+        for line in self:
+            if line.product_id.type in ['consu', 'product']:
+                line.qty_received_method = 'stock_moves'
+
+    @api.multi
+    @api.depends('move_ids.state', 'move_ids.product_uom_qty', 'move_ids.product_uom')
+    def _compute_qty_received(self):
+        super(PurchaseOrderLine, self)._compute_qty_received()
+        for line in self:
+            if line.qty_received_method == 'stock_moves':
+                total = 0.0
+                for move in line.move_ids:
+                    if move.state == 'done':
+                        if move.location_dest_id.usage == "supplier":
+                            if move.to_refund:
+                                total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
+                        elif move.origin_returned_move_id._is_dropshipped() and not move._is_dropshipped_returned():
+                            # Edge case: the dropship is returned to the stock, no to the supplier.
+                            # In this case, the received quantity on the PO is set although we didn't
+                            # receive the product physically in our stock. To avoid counting the
+                            # quantity twice, we do nothing.
+                            pass
+                        else:
+                            total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
+                line.qty_received = total
 
     @api.model
     def create(self, values):
@@ -286,7 +322,7 @@ class PurchaseOrderLine(models.Model):
         if line.taxes_id:
             price_unit = line.taxes_id.with_context(round=False).compute_all(
                 price_unit, currency=line.order_id.currency_id, quantity=1.0, product=line.product_id, partner=line.order_id.partner_id
-            )['total_excluded']
+            )['total_void']
         if line.product_uom.id != line.product_id.uom_id.id:
             price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
         if order.currency_id != order.company_id.currency_id:
@@ -325,45 +361,31 @@ class PurchaseOrderLine(models.Model):
             'picking_type_id': self.order_id.picking_type_id.id,
             'group_id': self.order_id.group_id.id,
             'origin': self.order_id.name,
+            'description_picking': self.product_id._get_description(self.order_id.picking_type_id),
             'route_ids': self.order_id.picking_type_id.warehouse_id and [(6, 0, [x.id for x in self.order_id.picking_type_id.warehouse_id.route_ids])] or [],
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
         }
         diff_quantity = self.product_qty - qty
         if float_compare(diff_quantity, 0.0,  precision_rounding=self.product_uom.rounding) > 0:
+            po_line_uom = self.product_uom
             quant_uom = self.product_id.uom_id
-            get_param = self.env['ir.config_parameter'].sudo().get_param
-            if self.product_uom.id != quant_uom.id and get_param('stock.propagate_uom') != '1':
-                product_qty = self.product_uom._compute_quantity(diff_quantity, quant_uom, rounding_method='HALF-UP')
-                template['product_uom'] = quant_uom.id
-                template['product_uom_qty'] = product_qty
-            else:
-                template['product_uom_qty'] = diff_quantity
+            product_uom_qty, product_uom = po_line_uom._adjust_uom_quantities(diff_quantity, quant_uom)
+            template['product_uom_qty'] = product_uom_qty
+            template['product_uom'] = product_uom.id
             res.append(template)
         return res
 
     @api.multi
     def _create_stock_moves(self, picking):
-        moves = self.env['stock.move']
-        done = self.env['stock.move'].browse()
+        values = []
         for line in self:
             for val in line._prepare_stock_moves(picking):
-                done += moves.create(val)
-        return done
+                values.append(val)
+        return self.env['stock.move'].create(values)
 
-    def _update_received_qty(self):
-        for line in self:
-            total = 0.0
-            for move in line.move_ids:
-                if move.state == 'done':
-                    if move.location_dest_id.usage == "supplier":
-                        if move.to_refund:
-                            total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
-                    else:
-                        total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
-            line.qty_received = total
-
-    def _merge_in_existing_line(self, product_id, product_qty, product_uom, location_id, name, origin, values):
-        """ This function purpose is to be override with the purpose to forbide _run_buy  method
-        to merge a new po line in an existing one.
+    def _find_candidate(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
+        """ Return the record in self where the procument with values passed as
+        args can be merged. If it returns an empty record then a new line will
+        be created.
         """
-        return True
+        return self and self[0] or self.env['purchase.order.line']

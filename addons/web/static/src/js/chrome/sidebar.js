@@ -11,7 +11,7 @@ var _t = core._t;
 
 var Sidebar = Widget.extend({
     events: {
-        "click .dropdown-item": "_onDropdownClicked"
+        "click a.dropdown-item": "_onDropdownClicked"
     },
     /**
      * @override
@@ -153,7 +153,7 @@ var Sidebar = Widget.extend({
                         action_id: item.action.id,
                         context: context,
                     },
-                }).done(function (result) {
+                }).then(function (result) {
                     result.context = new Context(
                         result.context || {}, activeIdsContext)
                             .set_eval_context(context);

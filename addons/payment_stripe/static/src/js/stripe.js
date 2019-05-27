@@ -21,9 +21,13 @@ odoo.define('payment_stripe.stripe', function(require) {
         $.blockUI.defaults.css["background-color"] = '';
         $.blockUI.defaults.overlayCSS["opacity"] = '0.9';
     }
+    var stripeHandler;
     function getStripeHandler()
     {
-        var handler = StripeCheckout.configure({
+        if (stripeHandler) {
+            return stripeHandler;
+        }
+        var handler = stripeHandler = StripeCheckout.configure({
             key: $("input[name='stripe_key']").val(),
             image: $("input[name='stripe_image']").val(),
             locale: 'auto',
@@ -47,17 +51,19 @@ odoo.define('payment_stripe.stripe', function(require) {
                     invoice_num: $("input[name='invoice_num']").val(),
                     tx_ref: $("input[name='invoice_num']").val(),
                     return_url: $("input[name='return_url']").val()
-                }).always(function(){
+                }).then(function(data){
+                    handler.isTokenGenerate = false;
+                    window.location.href = data;
                     if ($.blockUI) {
                         $.unblockUI();
                     }
-                }).done(function(data){
-                    handler.isTokenGenerate = false;
-                    window.location.href = data;
-                }).fail(function(data){
+                }).guardedCatch(function(data){
                     var msg = data && data.data && data.data.message;
                     var wizard = $(qweb.render('stripe.error', {'msg': msg || _t('Payment error')}));
                     wizard.appendTo($('body')).modal({'keyboard': true});
+                    if ($.blockUI) {
+                        $.unblockUI();
+                    }
                 });
             },
         });
@@ -66,7 +72,7 @@ odoo.define('payment_stripe.stripe', function(require) {
 
     require('web.dom_ready');
     if (!$('.o_payment_form').length) {
-        return $.Deferred().reject("DOM doesn't contain '.o_payment_form'");
+        return Promise.reject("DOM doesn't contain '.o_payment_form'");
     }
 
     var observer = new MutationObserver(function(mutations, observer) {
@@ -105,8 +111,11 @@ odoo.define('payment_stripe.stripe', function(require) {
             acquirer_id: acquirer_id,
             access_token: access_token,
         }).then(function(data) {
-            try { provider_form[0].innerHTML = data; } catch (e) {};
-        }).done(function () {
+            var $pay_stripe = $('#pay_stripe').detach();
+            try { provider_form[0].innerHTML = data; } catch (e) {}
+            // Restore 'Pay Now' button HTML since data might have changed it.
+            $(provider_form[0]).find('#pay_stripe').replaceWith($pay_stripe);
+        }).then(function () {
             getStripeHandler().open({
                 name: merchant,
                 description: invoice_num,

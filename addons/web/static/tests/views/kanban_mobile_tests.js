@@ -55,10 +55,10 @@ QUnit.module('Views', {
 
     QUnit.module('KanbanView Mobile');
 
-    QUnit.test('mobile grouped rendering', function (assert) {
-        assert.expect(9);
+    QUnit.test('mobile grouped rendering', async function (assert) {
+        assert.expect(13);
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -72,42 +72,57 @@ QUnit.module('Views', {
         });
 
         // basic rendering tests
-        assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have 2 columns" );
-        assert.ok(kanban.$('.o_kanban_mobile_tab:first').hasClass('o_current'),
+        assert.containsN(kanban, '.o_kanban_group', 2, "should have 2 columns");
+        assert.hasClass(kanban.$('.o_kanban_mobile_tab:first'), 'o_current',
             "first tab is the active tab with class 'o_current'");
-        assert.strictEqual(kanban.$('.o_kanban_group:first > div.o_kanban_record').length, 2,
+        assert.hasClass(kanban.$('.o_kanban_group:first'),'o_current',
+            "first column is the active column with class 'o_current'");
+        assert.containsN(kanban, '.o_kanban_group:first > div.o_kanban_record', 2,
             "there are 2 records in active tab");
         assert.strictEqual(kanban.$('.o_kanban_group:nth(1) > div.o_kanban_record').length, 0,
             "there is no records in next tab. Records will be loaded when it will be opened");
 
         // quick create in first column
-        kanban.$buttons.find('.o-kanban-button-new').click();
-        assert.ok(kanban.$('.o_kanban_group:nth(0) > div:nth(1)').hasClass('o_kanban_quick_create'),
+        await testUtils.dom.click(kanban.$buttons.find('.o-kanban-button-new'));
+        assert.hasClass(kanban.$('.o_kanban_group:nth(0) > div:nth(1)'),'o_kanban_quick_create',
             "clicking on create should open the quick_create in the first column");
 
         // move to second column
-        kanban.$('.o_kanban_mobile_tab:nth(1)').trigger('click');
-        assert.ok(kanban.$('.o_kanban_mobile_tab:nth(1)').hasClass('o_current'),
+        await testUtils.dom.click(kanban.$('.o_kanban_mobile_tab:nth(1)'));
+        assert.hasClass(kanban.$('.o_kanban_mobile_tab:nth(1)'),'o_current',
             "second tab is now active with class 'o_current'");
+        assert.hasClass(kanban.$('.o_kanban_group:nth(1)'),'o_current',
+            "second column is now active with class 'o_current'");
         assert.strictEqual(kanban.$('.o_kanban_group:nth(1) > div.o_kanban_record').length, 2,
             "the 2 records of the second group have now been loaded");
 
         // quick create in second column
-        kanban.$buttons.find('.o-kanban-button-new').click();
-        assert.ok(kanban.$('.o_kanban_group:nth(1) >  div:nth(1)').hasClass('o_kanban_quick_create'),
+        await testUtils.dom.click(kanban.$buttons.find('.o-kanban-button-new'));
+        assert.hasClass(kanban.$('.o_kanban_group:nth(1) >  div:nth(1)'),'o_kanban_quick_create',
             "clicking on create should open the quick_create in the second column");
 
         // kanban column should match kanban mobile tabs
-        var column_ids = kanban.$('.o_kanban_group').map(function(){ return $(this).data('id') }).get();
-        var tab_ids = kanban.$('.o_kanban_mobile_tab').map(function(){ return $(this).data('id') }).get();
+        var column_ids = kanban.$('.o_kanban_group').map(function () {
+            return $(this).data('id');
+        }).get();
+        var tab_ids = kanban.$('.o_kanban_mobile_tab').map(function () {
+            return $(this).data('id');
+        }).get();
         assert.deepEqual(column_ids, tab_ids, "all columns data-id should match mobile tabs data-id");
+
+        // kanban tabs with tab with lower width then available with have justify-content-around class
+        assert.containsN(kanban, '.o_kanban_mobile_tabs.justify-content-around', 1,
+            "should have justify-content-around class");
+        assert.hasClass(kanban.$('.o_kanban_mobile_tabs'), 'justify-content-around',
+            "the mobile tabs have the class 'justify-content-around'");
 
         kanban.destroy();
     });
-    QUnit.test('mobile grouped with undefined column', function (assert) {
-        assert.expect(3);
 
-        var kanban = createView({
+    QUnit.test('mobile grouped with undefined column', async function (assert) {
+        assert.expect(5);
+
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -120,21 +135,32 @@ QUnit.module('Views', {
         });
 
         // first column should be undefined with framework unique identifier
-        assert.strictEqual(kanban.$('.o_kanban_group').length, 3, "should have 3 columns" );
-        assert.strictEqual(kanban.$('.o_kanban_group:first-child[data-id^="partner_"]').length, 1,
-            "Undefined column should be first and have unique framework identifier as data-id")
+        assert.containsN(kanban, '.o_kanban_group', 3, "should have 3 columns");
+        assert.containsOnce(kanban, '.o_kanban_mobile_tabs + .o_kanban_group[data-id^="partner_"]',
+            "Undefined column should be first and have unique framework identifier as data-id");
 
         // kanban column should match kanban mobile tabs
-        var column_ids = kanban.$('.o_kanban_group').map(function(){ return $(this).data('id') }).get();
-        var tab_ids = kanban.$('.o_kanban_mobile_tab').map(function(){ return $(this).data('id') }).get();
+        var column_ids = kanban.$('.o_kanban_group').map(function () {
+            return $(this).data('id');
+        }).get();
+        var tab_ids = kanban.$('.o_kanban_mobile_tab').map(function () {
+            return $(this).data('id');
+        }).get();
         assert.deepEqual(column_ids, tab_ids, "all columns data-id should match mobile tabs data-id");
+
+        // kanban tabs with tab with lower width then available with have justify-content-around class
+        assert.containsN(kanban, '.o_kanban_mobile_tabs.justify-content-around', 1,
+            "should have justify-content-around class");
+        assert.hasClass(kanban.$('.o_kanban_mobile_tabs'), 'justify-content-around',
+            "the mobile tabs have the class 'justify-content-around'");
 
         kanban.destroy();
     });
-    QUnit.test('mobile grouped on many2one rendering', function (assert) {
-        assert.expect(3);
 
-        var kanban = createView({
+    QUnit.test('mobile grouped on many2one rendering', async function (assert) {
+        assert.expect(5);
+
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -147,14 +173,24 @@ QUnit.module('Views', {
         });
 
         // basic rendering tests
-        assert.strictEqual(kanban.$('.o_kanban_group').length, 4, "should have 4 columns" );
-        assert.strictEqual(kanban.$('.o_kanban_group[data-id^="partner_"]').length, 4,
+        assert.containsN(kanban, '.o_kanban_group', 4, "should have 4 columns");
+        assert.containsN(kanban, '.o_kanban_group[data-id^="partner_"]', 4,
             "all column should have framework unique identifiers");
 
         // kanban column should match kanban mobile tabs
-        var column_ids = kanban.$('.o_kanban_group').map(function(){ return $(this).data('id') }).get();
-        var tab_ids = kanban.$('.o_kanban_mobile_tab').map(function(){ return $(this).data('id') }).get();
+        var column_ids = kanban.$('.o_kanban_group').map(function () {
+            return $(this).data('id');
+        }).get();
+        var tab_ids = kanban.$('.o_kanban_mobile_tab').map(function () {
+            return $(this).data('id');
+        }).get();
         assert.deepEqual(column_ids, tab_ids, "all columns data-id should match mobile tabs data-id");
+
+        // kanban tabs with tab with lower width then available with have justify-content-around class
+        assert.containsN(kanban, '.o_kanban_mobile_tabs.justify-content-around', 1,
+            "should have justify-content-around class");
+        assert.hasClass(kanban.$('.o_kanban_mobile_tabs'), 'justify-content-around',
+            "the mobile tabs have the class 'justify-content-around'");
 
         kanban.destroy();
     });

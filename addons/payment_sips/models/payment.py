@@ -5,6 +5,7 @@
 import json
 import logging
 import re
+import time
 from hashlib import sha256
 
 from werkzeug import urls
@@ -98,7 +99,7 @@ class AcquirerSips(models.Model):
 
         return_context = {}
         if sips_tx_values.get('return_url'):
-            return_context[u'return_url'] = u'%s' % sips_tx_values.pop('return_url')
+            return_context[u'return_url'] = u'%s' % urls.url_quote(sips_tx_values.pop('return_url'))
         return_context[u'reference'] = u'%s' % sips_tx_values['reference']
         sips_tx_values['Data'] += u'|returnContext=%s' % (json.dumps(return_context))
 
@@ -124,13 +125,11 @@ class TxSips(models.Model):
 
     @api.model
     def _compute_reference(self, values=None, prefix=None):
-        acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
+        res = super(TxSips, self)._compute_reference(values=values, prefix=prefix)
+        acquirer = self.env['payment.acquirer'].browse(values.get('acquirer_id'))
         if acquirer and acquirer.provider == 'sips':
-            if not prefix and values:
-                prefix = self._compute_reference_prefix(values)
-                prefix = re.sub(r'[^0-9a-zA-Z-]+', 'x', prefix)
-
-        return super(TxSips, self)._compute_reference(values=values, prefix=prefix)
+            return re.sub(r'[^0-9a-zA-Z]+', 'x', res) + 'x' + str(int(time.time()))
+        return res
 
     # --------------------------------------------------
     # FORM RELATED METHODS

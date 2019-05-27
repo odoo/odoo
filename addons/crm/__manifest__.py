@@ -4,7 +4,7 @@
 {
     'name': 'CRM',
     'version': '1.0',
-    'category': 'Sales',
+    'category': 'Sales/CRM',
     'sequence': 5,
     'summary': 'Track leads and close opportunities',
     'description': "",
@@ -44,7 +44,6 @@
         'report/crm_activity_report_views.xml',
         'report/crm_opportunity_report_views.xml',
         'views/crm_team_views.xml',
-        'views/res_users_views.xml',
         'views/digest_views.xml',
     ],
     'demo': [
@@ -55,6 +54,5 @@
     'css': ['static/src/css/crm.css'],
     'installable': True,
     'application': True,
-    'auto_install': False,
-    'uninstall_hook': 'uninstall_hook',
+    'auto_install': False
 }

@@ -4,19 +4,19 @@
         <field name="name">Package Level</field>
         <field name="model">stock.package_level</field>
         <field name="arch" type="xml">
-            <form>
+            <form create="false" edit="false">
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" />
                 </header>
                 <group>
                     <field name="picking_id" invisible="1"/>
-                    <field name="picking_source_location" invisible="1"/>
                     <field name="show_lots_m2o" invisible="1"/>
                     <field name="show_lots_text" invisible="1"/>
+                    <field name="picking_type_code" invisible="1"/>
                     <group>
                         <field name="package_id"/>
-                        <field name="location_id" groups="stock.group_stock_multi_locations"/>
-                        <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
+                        <field name="location_id" options="{'no_create': True}" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}" groups="stock.group_stock_multi_locations"/>
+                        <field name="location_dest_id" options="{'no_create': True}" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}" groups="stock.group_stock_multi_locations"/>
                         <field name="is_done"/>
                     </group>
                     <field name="move_ids" attrs="{'invisible': [('state', 'in', ('new', 'draft', 'assigned', 'done'))]}">
@@ -53,10 +53,11 @@
             <tree editable="bottom" decoration-muted="state == 'done'">
                 <field name="is_fresh_package" invisible="1"/>
                 <field name="package_id" attrs="{'readonly': [('state', 'in', ('confirmed', 'assigned', 'done', 'cancel'))]}" domain="[('location_id', 'child_of', parent.location_id)]" options="{'no_create': True}"/>
-                <field name="location_id" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'incoming')]}" groups="stock.group_stock_multi_locations"/>
-                <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'outgoing')]}" groups="stock.group_stock_multi_locations"/>
+                <field name="location_id" options="{'no_create': True}" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'incoming')]}" groups="stock.group_stock_multi_locations"/>
+                <field name="location_dest_id" options="{'no_create': True}" domain="[('id', 'child_of', parent.location_dest_id)]" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'outgoing')]}" groups="stock.group_stock_multi_locations"/>
                 <field name="state"/>
                 <field name="is_done" attrs="{'readonly': ['|', ('parent.state', 'in', ('draft', 'new', 'done')), ('is_fresh_package', '=', True)]}"/>
+                <button name="action_show_package_details" string="Display package content" type="object" icon="fa-list" />
             </tree>
         </field>
     </record>

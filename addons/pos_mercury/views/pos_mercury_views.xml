@@ -20,7 +20,7 @@
                                 configuration you should associate it with a Point Of Sale payment method.
                             </p><p>
                                 We currently support the MagTek Dynamag card reader device. It can be connected
-                                directly to the Point Of Sale device or it can be connected to the POSBox.
+                                directly to the Point Of Sale device or it can be connected to the IoTBox.
                             </p><p>
                                 Using the Mercury integration in the Point Of Sale is easy: just press the
                                 associated payment method. After that the amount can be adjusted (eg. for cashback)
@@ -77,16 +77,6 @@
                     <group  attrs="{'invisible': [('type', '!=', 'bank')]}">
                         <field name="pos_mercury_config_id"/>
                     </group>
-                </xpath>
-            </field>
-        </record>
-        <record id="view_account_bank_journal_form_inherited_pos_mercury" model="ir.ui.view">
-            <field name="name">account.bank.journal.form.inherited.pos.mercury</field>
-            <field name="model">account.journal</field>
-            <field name="inherit_id" ref="point_of_sale.view_account_bank_journal_form_inherited_pos"></field>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='journal_user']" position="after">
-                    <field name="pos_mercury_config_id" attrs="{'invisible': [('journal_user', '=', False)]}"/>
                 </xpath>
             </field>
         </record>

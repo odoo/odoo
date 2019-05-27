@@ -16,8 +16,12 @@ var _t = core._t;
  */
 var ThreadWindow = AbstractThreadWindow.extend({
     template: 'mail.ThreadWindow',
+    custom_events: AbstractThreadWindow.prototype.custom_events,
     events: _.extend({}, AbstractThreadWindow.prototype.events, {
+        'click .o_mail_thread': '_onThreadWindowFocus',
+        'click .o_thread_composer': '_onThreadWindowFocus',
         'click .o_thread_window_expand': '_onClickExpand',
+        'click .o_out_of_office_read_more_less_button': '_onClickOutOfOfficeReadMoreLess',
     }),
     /**
      * Version of thread window that supports {mail.model.Thread}
@@ -25,7 +29,8 @@ var ThreadWindow = AbstractThreadWindow.extend({
      * @override
      * @param {mail.Manager} parent
      * @param {mail.model.Thread} [thread = null] if not set, this is a "blank"
-     *   thread window. It lets us open a DM by providing the name of a chat.
+     *   thread window. It lets us open a DM chat by providing the name of a
+     *   user.
      * @param {Object} [options={}]
      * @param {boolean} [options.passively=false]
      */
@@ -34,11 +39,11 @@ var ThreadWindow = AbstractThreadWindow.extend({
 
         // don't automatically mark unread messages as seen when at the bottom
         // of the thread
-        this._passive = this.options.passively;
+        this._passive = this.options.passively || false;
 
         if (!this.hasThread()) {
             // remembered partner ID of "blank" thread window in order to be
-            // replaced with newly opened DM window
+            // replaced with newly opened DM chat window
             this.directPartnerID = null;
         }
     },
@@ -51,13 +56,18 @@ var ThreadWindow = AbstractThreadWindow.extend({
 
         var superDef = this._super().then(this._listenThreadWidget.bind(this));
 
+        this.call('mail_service', 'getMailBus')
+            .on('update_typing_partners', this, this._onUpdateTypingPartners)
+            .on('update_channel', this, this._onUpdateChannel);
+
         var composerDef;
         if (!this.hasThread()) {
             this._startWithoutThread();
-        } else if (this._needsComposer()) {
+        } else if (this.needsComposer()) {
             var basicComposer = new BasicComposer(this, {
                 mentionPartnersRestricted: this._thread.getType() !== 'document_thread',
-                isMini: true
+                isMini: true,
+                thread: this._thread,
             });
             basicComposer.on('post_message', this, this._postMessage);
             basicComposer.once('input_focused', this, function () {
@@ -71,8 +81,9 @@ var ThreadWindow = AbstractThreadWindow.extend({
                 self.$input = self.$('.o_composer_text_field');
             });
         }
+        this._updateOutOfOfficeReadMoreLessButton();
 
-        return $.when(superDef, composerDef);
+        return Promise.all([superDef, composerDef]);
     },
 
     //--------------------------------------------------------------------------
@@ -85,6 +96,8 @@ var ThreadWindow = AbstractThreadWindow.extend({
     close: function () {
         if (this.hasThread()) {
             this._thread.close();
+        } else {
+            this.trigger_up('close_blank_thread_window');
         }
     },
     /**
@@ -92,15 +105,6 @@ var ThreadWindow = AbstractThreadWindow.extend({
      */
     focusInput: function () {
         this._focusInput();
-    },
-    /**
-     * Get the ID of the thread window, which is equivalent to the ID of the
-     * thread related to this window
-     *
-     * @returns {integer|string}
-     */
-    getID: function () {
-        return this._getThreadID();
     },
     /**
      * Overrides so that if this thread window is not linked to any thread
@@ -125,11 +129,57 @@ var ThreadWindow = AbstractThreadWindow.extend({
         return this._passive;
     },
     /**
+     * States whether the input of the thread window should be displayed or not.
+     * This is based on the type of the thread:
+     *
+     * Do not display the input in the following cases:
+     *
+     * - no thread related to this window
+     * - window of a mailbox (temp: let us have mailboxes in window mode)
+     * - window of a thread with mass mailing
+     *
+     * Any other threads show the input in the window.
+     *
+     * @override
+     * @returns {boolean}
+     */
+    needsComposer: function () {
+        return this._super() && !this._thread.isMassMailing();
+    },
+    /**
      * Turn the thread window in active mode, so that when the bottom of the
      * thread is visible, it is automatically marked as read.
      */
     removePassive: function () {
         this._passive = false;
+    },
+    /**
+     * Update this thread window
+     *
+     * @param {Object} options
+     * @param {boolean} [options.keepBottom=false] if set, this thread window
+     *   should scroll to the bottom if it was at the bottom before update
+     * @param {boolean} [options.passively=false] if set, this thread window
+     *   becomes passive, so that it is marked as read only when the focus is
+     *   on it. Ignore this option if the focus is already on the thread window.
+     */
+    update: function (options) {
+        var self = this;
+        if (options.passively && !this._hasFocus()) {
+            this._setPassive();
+        }
+        var bottomVisible = !this.isFolded() &&
+                            !this.isHidden() &&
+                            this.isAtBottom();
+        if (bottomVisible && !this.isPassive()) {
+            this._thread.markAsRead();
+        }
+        this._thread.fetchMessages().then(function () {
+            self.render();
+            if (bottomVisible && options.keepBottom) {
+                self.scrollToBottom();
+            }
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -155,30 +205,10 @@ var ThreadWindow = AbstractThreadWindow.extend({
      * @private
      */
     _listenThreadWidget: function () {
-        this.threadWidget
+        this._threadWidget
             .on('redirect', this, this._onRedirect)
             .on('redirect_to_channel', this, this._onRedirectToChannel)
             .on('toggle_star_status', this, this._onToggleStarStatus);
-    },
-    /**
-     * States whether the input of the thread window should be displayed or not.
-     * This is based on the type of the thread:
-     *
-     * Do not display the input in the following cases:
-     *
-     *      - no thread related to this window
-     *      - window of a mailbox (temp: let us have mailboxes in window mode)
-     *      - window of a thread with mass mailing
-     *
-     * Any other threads show the input in the window.
-     *
-     * @private
-     * @returns {boolean}
-     */
-    _needsComposer: function () {
-        return this.hasThread() &&
-                (this._thread.getType() !== 'mailbox') &&
-                !this._thread.isMassMailing();
     },
     /**
      * Open this thread window.
@@ -191,22 +221,14 @@ var ThreadWindow = AbstractThreadWindow.extend({
         this.call('mail_service', 'openThreadWindow', this.getID());
     },
     /**
-     * Post a message in the thread related to this window.
-     * If this window has no thread, do nothing
+     * Set the thread window in passive mode, so that new received message will
+     * keep the thread window as unread until there is focus on the thread
+     * window.
      *
-     * @override
      * @private
-     * @param {Object} messageData
      */
-    _postMessage: function (messageData) {
-        var self = this;
-        if (!this.hasThread()) {
-            return;
-        }
-        this._thread.postMessage(messageData)
-            .then(function () {
-                self.threadWidget.scrollToBottom();
-            });
+    _setPassive: function () {
+        this._passive = true;
     },
     /**
      * @private
@@ -216,19 +238,33 @@ var ThreadWindow = AbstractThreadWindow.extend({
         this.$el.addClass('o_thread_less');
         this.$('.o_thread_search_input input')
             .autocomplete({
+                autoFocus: true,
                 source: function (request, response) {
                     self.call('mail_service', 'searchPartner', request.term, 10)
-                        .done(response);
+                        .then(response);
                 },
                 select: function (event, ui) {
                     // remember partner ID so that we can replace this window
-                    // with new DM window
+                    // with new DM chat window
                     var partnerID = ui.item.id;
                     self.directPartnerID = partnerID;
-                    self.call('mail_service', 'openDmWindow', partnerID);
+                    self.call('mail_service', 'openDMChatWindowFromBlankThreadWindow', partnerID);
                 },
             })
             .focus();
+    },
+    /**
+     * @private
+     */
+    _updateOutOfOfficeReadMoreLessButton: function () {
+        var $readMore = this.$('.o_out_of_office_text');
+        var isOverflowing = $readMore.prop('scrollWidth') > $readMore.width();
+        var isOverflowShown = !$readMore.hasClass('o_text_wrap');
+        if (isOverflowing || isOverflowShown) {
+            var $button = this.$('.o_out_of_office_read_more_less_button');
+            $button.show();
+            $button.text(isOverflowing ? _t('Read more') : _t('Read less'));
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -248,7 +284,7 @@ var ThreadWindow = AbstractThreadWindow.extend({
     _onClickExpand: _.debounce(function (ev) {
         var self = this;
         ev.preventDefault();
-        if (this._thread.getType() === 'document_thread') {
+        if (this.hasThread() && this._thread.getType() === 'document_thread') {
             this.do_action({
                 type: 'ir.actions.act_window',
                 res_model: this._thread.getDocumentModel(),
@@ -256,16 +292,27 @@ var ThreadWindow = AbstractThreadWindow.extend({
                 res_id: this._thread.getDocumentID(),
             });
         } else {
-            this.do_action('mail.mail_channel_action_client_chat', {
+            this.do_action('mail.action_discuss', {
                 clear_breadcrumbs: false,
                 active_id: this.hasThread() ? this._getThreadID() : undefined,
                 on_reverse_breadcrumb: function () {
-                    self.call('mail_service', 'getMailBus')
-                        .trigger('discuss_open', false);
+                    var mailBus = self.call('mail_service', 'getMailBus');
+                    if (mailBus) {
+                        mailBus.trigger('discuss_open', false);
+                    }
                 },
             });
         }
     }, 1000, true),
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickOutOfOfficeReadMoreLess: function (ev) {
+        ev.preventDefault();
+        this.$('.o_out_of_office_text').toggleClass('o_text_wrap');
+        this._updateOutOfOfficeReadMoreLessButton();
+    },
     /**
      * @override
      * @private
@@ -306,6 +353,30 @@ var ThreadWindow = AbstractThreadWindow.extend({
         }
     },
     /**
+     * Override it so that passive thread windows do not mark thread as read
+     * on scroll
+     *
+     * @override
+     * @private
+     */
+    _onScroll: function () {
+        if (this.isPassive()) {
+            return;
+        }
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * Called when focusing the thread window (click on thread or composer)
+     *
+     * @private
+     */
+    _onThreadWindowFocus: function () {
+        if (this.isPassive()) {
+            this.removePassive();
+            this._thread.markAsRead();
+        }
+    },
+    /**
      * @private
      * @param {integer} messageID
      */
@@ -313,7 +384,32 @@ var ThreadWindow = AbstractThreadWindow.extend({
         var message = this.call('mail_service', 'getMessage', messageID);
         message.toggleStarStatus();
     },
-
+    /**
+     * @private
+     * @param {integer|string} threadID
+     */
+    _onUpdateTypingPartners: function (threadID) {
+        if (!this.hasThread()) {
+            return;
+        }
+        if (this._thread.getID() !== threadID) {
+            return;
+        }
+        this.renderHeader();
+    },
+    /**
+     * @private
+     * @param {integer} channelID
+     */
+    _onUpdateChannel: function (channelID) {
+        if (!this.hasThread()) {
+            return;
+        }
+        if (this._thread.getID() !== channelID) {
+            return;
+        }
+        this.render();
+    },
 });
 
 return ThreadWindow;

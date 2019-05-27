@@ -34,7 +34,7 @@ class MailChatController(BusController):
     # --------------------------
     # Anonymous routes (Common Methods)
     # --------------------------
-    @route('/mail/chat_post', type="json", auth="none")
+    @route('/mail/chat_post', type="json", auth="none", cors="*")
     def mail_chat_post(self, uuid, message_content, **kwargs):
         # find the author from the user session, which can be None
         author_id = False  # message_post accept 'False' author_id, but not 'None'
@@ -46,7 +46,7 @@ class MailChatController(BusController):
         message = mail_channel.sudo().with_context(mail_create_nosubscribe=True).message_post(author_id=author_id, email_from=False, body=body, message_type='comment', subtype='mail.mt_comment')
         return message and message.id or False
 
-    @route(['/mail/chat_history'], type="json", auth="none")
+    @route(['/mail/chat_history'], type="json", auth="none", cors="*")
     def mail_chat_history(self, uuid, last_id=False, limit=20):
         channel = request.env["mail.channel"].sudo().search([('uuid', '=', uuid)], limit=1)
         if not channel:

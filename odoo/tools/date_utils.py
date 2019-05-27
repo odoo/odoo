@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-
 import math
 import calendar
 from datetime import date, datetime, time
-
+import pytz
 from dateutil.relativedelta import relativedelta
 from . import ustr
 
@@ -56,13 +55,28 @@ def get_fiscal_year(date, day=31, month=12):
     '''
     max_day = calendar.monthrange(date.year, month)[1]
     date_to = type(date)(date.year, month, min(day, max_day))
+
+    # Force at 29 February instead of 28 in case of leap year.
+    if date_to.month == 2 and date_to.day == 28 and max_day == 29:
+        date_to = type(date)(date.year, 2, 29)
+
     if date <= date_to:
         date_from = date_to - relativedelta(years=1)
+        max_day = calendar.monthrange(date_from.year, date_from.month)[1]
+
+        # Force at 29 February instead of 28 in case of leap year.
+        if date_from.month == 2 and date_from.day == 28 and max_day == 29:
+            date_from = type(date)(date_from.year, 2, 29)
+
         date_from += relativedelta(days=1)
     else:
         date_from = date_to + relativedelta(days=1)
         max_day = calendar.monthrange(date_to.year + 1, date_to.month)[1]
         date_to = type(date)(date.year + 1, month, min(day, max_day))
+
+        # Force at 29 February instead of 28 in case of leap year.
+        if date_to.month == 2 and date_to.day == 28 and max_day == 29:
+            date_to += relativedelta(days=1)
     return date_from, date_to
 
 
@@ -178,3 +192,43 @@ def json_default(obj):
             return fields.Datetime.to_string(obj)
         return fields.Date.to_string(obj)
     return ustr(obj)
+
+def date_range(start, end, step=relativedelta(months=1)):
+    """Date range generator with a step interval.
+
+    :param start datetime: begining date of the range.
+    :param end datetime: ending date of the range.
+    :param step relativedelta: interval of the range.
+    :return: a range of datetime from start to end.
+    :rtype: Iterator[datetime]
+    """
+
+    are_naive = start.tzinfo is None and end.tzinfo is None
+    are_utc = start.tzinfo == pytz.utc and end.tzinfo == pytz.utc
+
+    # Cases with miscellenous timezone are more complexe because of DST.
+    are_others = start.tzinfo and end.tzinfo and not are_utc
+
+    if are_others:
+        if start.tzinfo.zone != end.tzinfo.zone:
+            raise ValueError("Timezones of start argument and end argument seem inconsistent")
+
+    if not are_naive and not are_utc and not are_others:
+        raise ValueError("Timezones of start argument and end argument mismatch")
+
+    if start > end:
+        raise ValueError("start > end, start date must be before end")
+
+    if start == start + step:
+        raise ValueError("Looks like step is null")
+
+    if start.tzinfo:
+        localize = start.tzinfo.localize
+    else:
+        localize = lambda dt: dt
+
+    dt = start.replace(tzinfo=None)
+    end = end.replace(tzinfo=None)
+    while dt <= end:
+        yield localize(dt)
+        dt = dt + step

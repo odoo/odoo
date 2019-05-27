@@ -5,7 +5,7 @@
 
 {
     'name': 'Japan - Accounting',
-    'version': '2.0',
+    'version': '2.1',
     'category': 'Localization',
     'description': """
 
@@ -33,7 +33,8 @@ need to use these at all under normal circumstances.
         'data/l10n_jp_chart_data.xml',
         'data/account.account.template.csv',
         'data/account.tax.group.csv',
-        'data/account.tax.template.csv',
+        'data/account_tax_report_data.xml',
+        'data/account_tax_template_data.xml',
         'data/account_chart_template_data.xml',
         'data/account.fiscal.position.template.csv',
         'data/account.fiscal.position.tax.template.csv',

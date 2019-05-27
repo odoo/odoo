@@ -5,6 +5,7 @@
 #                         维智众源 oldrev@gmail.com  <states data>
 # Copyright (C) 2012-2012 南京盈通 ccdos@intoerp.com <small business chart>
 # Copyright (C) 2008-now  开阖软件 jeff@osbzr.com    < PM and LTS >
+# Copyright (C) 2018-now  jeffery9@gmail.com
 
 {
     'name': 'China - Accounting',
@@ -14,12 +15,12 @@
     'maintainer': 'jeff@osbzr.com',
     'website': 'http://openerp-china.org',
     'description': """
-Include those data/包含以下数据
-===============================
+Includes the following data for the Chinese localization
+========================================================
 
-    Account Type/科目类型
+Account Type/科目类型
 
-    State Data/省份数据
+State Data/省份数据
 
     """,
     'depends': ['base', 'account', 'l10n_multilang'],

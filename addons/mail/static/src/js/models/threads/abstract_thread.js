@@ -2,6 +2,7 @@ odoo.define('mail.model.AbstractThread', function (require) {
 "use strict";
 
 var Class = require('web.Class');
+var Mixins = require('web.mixins');
 
 /**
  * Abstract thread is the super class of all threads, either backend threads
@@ -9,19 +10,24 @@ var Class = require('web.Class');
  *
  * Abstract threads contain abstract messages
  */
-var AbstractThread = Class.extend({
+var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
     /**
      * @param {Object} params
      * @param {Object} params.data
      * @param {integer|string} params.data.id the ID of this thread
      * @param {string} params.data.name the name of this thread
-     * @param {string} params.data.status the status of this thread
+     * @param {string} [params.data.status=''] the status of this thread
+     * @param {Object} params.parent Object with the event-dispatcher mixin
+     *   (@see {web.mixins.EventDispatcherMixin})
      */
     init: function (params) {
+        Mixins.EventDispatcherMixin.init.call(this, arguments);
+        this.setParent(params.parent);
+
         this._folded = false; // threads are unfolded by default
         this._id = params.data.id;
         this._name = params.data.name;
-        this._status = params.data.status;
+        this._status = params.data.status || '';
         this._unreadCounter = 0; // amount of messages not yet been read
     },
 
@@ -29,6 +35,15 @@ var AbstractThread = Class.extend({
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * Add a message to this thread.
+     *
+     * @param {mail.model.AbstractMessage} message
+     */
+    addMessage: function (message) {
+        this._addMessage.apply(this, arguments);
+        this.trigger('message_added', message);
+    },
     /**
      * Updates the folded state of the thread
      *
@@ -60,6 +75,22 @@ var AbstractThread = Class.extend({
         return this._name;
     },
     /**
+     * By default, threads do not have out-of-office feature
+     *
+     * @return {string|undefined}
+     */
+    getOutOfOfficeInfo: function () {
+        return undefined;
+    },
+    /**
+     * By default, threads do not have out-of-office feature
+     *
+     * @return {string|undefined}
+     */
+    getOutOfOfficeMessage: function () {
+        return undefined;
+    },
+    /**
      * Get the status of the thread (e.g. 'online', 'offline', etc.)
      *
      * @returns {string}
@@ -88,10 +119,24 @@ var AbstractThread = Class.extend({
         return !_.isEmpty(this.getMessages());
     },
     /**
-     * Increments the unread counter of this thread by 1 unit.
+     * States whether this thread is compatible with the 'seen' feature.
+     * By default, threads do not have thsi feature active.
+     * @see {mail.model.ThreadSeenMixin} to enable this feature on a thread.
+     *
+     * @returns {boolean}
      */
-    incrementUnreadCounter: function () {
-        this._unreadCounter++;
+    hasSeenFeature: function () {
+        return false;
+    },
+    /**
+     * States whether this thread is compatible with the 'is typing...' feature.
+     * By default, threads do not have this feature active.
+     * @see {mail.model.ThreadTypingMixin} to enable this feature on a thread.
+     *
+     * @returns {boolean}
+     */
+    hasTypingNotification: function () {
+        return false;
     },
     /**
      * States whether this thread is folded or not.
@@ -102,11 +147,84 @@ var AbstractThread = Class.extend({
         return this._folded;
     },
     /**
+     * Mark the thread as read, which resets the unread counter to 0. This is
+     * only performed if the unread counter is not 0.
+     *
+     * @returns {Promise}
+     */
+    markAsRead: function () {
+        if (this._unreadCounter > 0) {
+            return this._markAsRead();
+        }
+        return Promise.resolve();
+    },
+    /**
+     * Post a message on this thread
+     *
+     * @returns {Promise} resolved with the message object to be sent to the
+     *   server
+     */
+    postMessage: function () {
+        return this._postMessage.apply(this, arguments)
+                                .then(this.trigger.bind(this, 'message_posted'));
+    },
+    /**
      * Resets the unread counter of this thread to 0.
      */
     resetUnreadCounter: function () {
         this._unreadCounter = 0;
+        this._warnUpdatedUnreadCounter();
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Add a message to this thread.
+     *
+     * @abstract
+     * @private
+     * @param {mail.model.AbstractMessage} message
+     */
+    _addMessage: function (message) {},
+    /**
+     * Increments the unread counter of this thread by 1 unit.
+     *
+     * @private
+     */
+    _incrementUnreadCounter: function () {
+        this._unreadCounter++;
+    },
+    /**
+     * Mark the thread as read
+     *
+     * @private
+     * @returns {Promise}
+     */
+    _markAsRead: function () {
+        this.resetUnreadCounter();
+        return Promise.resolve();
+    },
+    /**
+     * Post a message on this thread
+     *
+     * @abstract
+     * @private
+     * @returns {Promise} resolved with the message object to be sent to the
+     *   server
+     */
+    _postMessage: function () {
+        return Promise.resolve();
+    },
+    /**
+     * Warn views (e.g. discuss app, thread window, etc.) to update visually
+     * the unread counter of this thread.
+     *
+     * @abstract
+     * @private
+     */
+    _warnUpdatedUnreadCounter: function () {},
 });
 
 return AbstractThread;

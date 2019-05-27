@@ -3,15 +3,17 @@
 # * sale_expense
 # 
 # Translators:
-# Martin Trigaux, 2017
-# krnkris, 2017
+# Martin Trigaux, 2018
+# krnkris, 2018
+# gezza <geza.nagy@oregional.hu>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: krnkris, 2017\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:24+0000\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2018\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,9 +27,19 @@ msgid "# of Expenses"
 msgstr ""
 
 #. module: sale_expense
+#: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
+msgid "<strong style=\"font-size: 16px;\">Submit expenses by email</strong>"
+msgstr ""
+
+#. module: sale_expense
+#: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
+msgid "Activate Expense Emails"
+msgstr ""
+
+#. module: sale_expense
 #: model:ir.model,name:sale_expense.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analitikus/elemző tételsor"
+msgstr "Analitikus tétel"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
@@ -37,12 +49,12 @@ msgstr "Költség"
 #. module: sale_expense
 #: model:ir.actions.act_window,name:sale_expense.hr_expense_action_from_sale_order
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_ids
-#: model:ir.ui.view,arch_db:sale_expense.sale_order_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:sale_expense.sale_order_form_view_inherit
 msgid "Expenses"
 msgstr "Kiadások"
 
 #. module: sale_expense
-#: model:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
+#: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
 msgid "Invoicing"
 msgstr "Számlázás"
 
@@ -55,3 +67,9 @@ msgstr "Árajánlat"
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
 msgid "Sale Order"
 msgstr "Vásárlói megrendelés"
+
+#. module: sale_expense
+#: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
+msgid ""
+"Take a snapshot of your expenses and submit your expenses by email.<br>"
+msgstr ""

@@ -53,38 +53,34 @@ QUnit.module('ActionManager', {
         };
     },
 }, function () {
-    QUnit.test('uses a mobile-friendly view by default (if possible)', function (assert) {
+    QUnit.test('uses a mobile-friendly view by default (if possible)', async function (assert) {
         assert.expect(4);
 
-        var actionManager = createActionManager({
+        var actionManager = await createActionManager({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
         });
 
         // should default on a mobile-friendly view (kanban) for action 1
-        actionManager.doAction(1);
+        await actionManager.doAction(1);
 
-        assert.strictEqual(actionManager.$('.o_list_view').length, 0,
-            "should not have rendered the list view");
-        assert.strictEqual(actionManager.$('.o_kanban_view').length, 1,
-            "should have rendered the kanban view");
+        assert.containsNone(actionManager, '.o_list_view');
+        assert.containsOnce(actionManager, '.o_kanban_view');
 
         // there is no mobile-friendly view for action 2, should use the first one (list)
-        actionManager.doAction(2);
+        await actionManager.doAction(2);
 
-        assert.strictEqual(actionManager.$('.o_list_view').length, 1,
-            "should have rendered the list view");
-        assert.strictEqual(actionManager.$('.o_kanban_view').length, 0,
-            "there should be no kanban view in the DOM");
+        assert.containsOnce(actionManager, '.o_list_view');
+        assert.containsNone(actionManager, '.o_kanban_view');
 
         actionManager.destroy();
     });
 
-    QUnit.test('lazy load mobile-friendly view', function (assert) {
+    QUnit.test('lazy load mobile-friendly view', async function (assert) {
         assert.expect(11);
 
-        var actionManager = createActionManager({
+        var actionManager = await createActionManager({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
@@ -93,26 +89,20 @@ QUnit.module('ActionManager', {
                 return this._super.apply(this, arguments);
             },
         });
-        actionManager.loadState({
+        await actionManager.loadState({
             action: 1,
             view_type: 'form',
         });
 
-        assert.strictEqual(actionManager.$('.o_list_view').length, 0,
-            "should not have rendered a list view");
-        assert.strictEqual(actionManager.$('.o_kanban_view').length, 0,
-            "should not have rendered a kanban view either");
-        assert.strictEqual(actionManager.$('.o_form_view').length, 1,
-            "should have rendered a form view");
+        assert.containsNone(actionManager, '.o_list_view');
+        assert.containsNone(actionManager, '.o_kanban_view');
+        assert.containsOnce(actionManager, '.o_form_view');
 
         // go back to lazy loaded view
-        $('.o_control_panel .breadcrumb a').click();
-        assert.strictEqual(actionManager.$('.o_form_view').length, 0,
-            "should not display the form view anymore");
-        assert.strictEqual(actionManager.$('.o_list_view').length, 0,
-            "should not display the list view either");
-        assert.strictEqual(actionManager.$('.o_kanban_view').length, 1,
-            "should have lazy loaded the kanban view");
+        await testUtils.dom.click(actionManager.$('.o_control_panel .breadcrumb .breadcrumb-item:first'));
+        assert.containsNone(actionManager, '.o_form_view');
+        assert.containsNone(actionManager, '.o_list_view');
+        assert.containsOnce(actionManager, '.o_kanban_view');
 
         assert.verifySteps([
             '/web/action/load',
@@ -124,23 +114,20 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
-    QUnit.test('view switcher button should be displayed in dropdown on mobile screens', function (assert) {
+    QUnit.test('view switcher button should be displayed in dropdown on mobile screens', async function (assert) {
         assert.expect(3);
 
-        var actionManager = createActionManager({
+        var actionManager = await createActionManager({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
         });
 
-        actionManager.doAction(1);
+        await actionManager.doAction(1);
 
-        assert.ok($('.o_control_panel .o_cp_switch_buttons button.dropdown-toggle').length, 1,
-            "view switcher button should be displayed");
-        assert.ok($('.o_cp_switch_buttons .o_cp_switch_kanban').hasClass('active'),
-            "kanban should be the active view");
-        assert.ok($('.o_cp_switch_buttons .o_switch_view_button_icon').hasClass('fa-th-large'),
-            "view switcher button icon should be an icon of the kanban");
+        assert.containsOnce(actionManager.$('.o_control_panel'), '.o_cp_switch_buttons button[data-toggle="dropdown"]');
+        assert.hasClass(actionManager.$('.o_cp_switch_buttons .o_cp_switch_kanban'), 'active');
+        assert.hasClass(actionManager.$('.o_cp_switch_buttons .o_switch_view_button_icon'), 'fa-th-large');
 
         actionManager.destroy();
     });

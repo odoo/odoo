@@ -7,7 +7,7 @@ class AccountCommonReport(models.TransientModel):
     _name = "account.common.report"
     _description = "Account Common Report"
 
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company_id)
     journal_ids = fields.Many2many('account.journal', string='Journals', required=True, default=lambda self: self.env['account.journal'].search([('company_id', '=', self.company_id.id)]))
     date_from = fields.Date(string='Start Date')
     date_to = fields.Date(string='End Date')
@@ -45,4 +45,4 @@ class AccountCommonReport(models.TransientModel):
         data['form'] = self.read(['date_from', 'date_to', 'journal_ids', 'target_move', 'company_id'])[0]
         used_context = self._build_contexts(data)
         data['form']['used_context'] = dict(used_context, lang=self.env.context.get('lang') or 'en_US')
-        return self._print_report(data)
+        return self.with_context(discard_logo_check=True)._print_report(data)

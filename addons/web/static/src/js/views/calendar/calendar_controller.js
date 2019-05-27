@@ -19,6 +19,10 @@ var QuickCreate = require('web.CalendarQuickCreate');
 var _t = core._t;
 var QWeb = core.qweb;
 
+function dateToServer (date) {
+    return date.clone().utc().locale('en').format('YYYY-MM-DD HH:mm:ss');
+}
+
 var CalendarController = AbstractController.extend({
     custom_events: _.extend({}, AbstractController.prototype.custom_events, {
         changeDate: '_onChangeDate',
@@ -75,7 +79,7 @@ var CalendarController = AbstractController.extend({
      * @returns {string}
      */
     getTitle: function () {
-        return this.get('title');
+        return this._title;
     },
     /**
      * Render the buttons according to the CalendarView.buttons template and
@@ -143,7 +147,7 @@ var CalendarController = AbstractController.extend({
      *
      * @private
      * @param {string} to either 'prev', 'next' or 'today'
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _move: function (to) {
         this.model[to]();
@@ -153,10 +157,10 @@ var CalendarController = AbstractController.extend({
      * @private
      * @param {Object} record
      * @param {integer} record.id
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _updateRecord: function (record) {
-        return this.model.updateRecord(record).then(this.reload.bind(this));
+        return this.model.updateRecord(record).then(this.reload.bind(this, {}));
     },
 
     //--------------------------------------------------------------------------
@@ -200,7 +204,9 @@ var CalendarController = AbstractController.extend({
      * @param {OdooEvent} event
      */
     _onDropRecord: function (event) {
-        this._updateRecord(event.data);
+        this._updateRecord(_.extend({}, event.data, {
+            'drop': true,
+        }));
     },
     /**
      * @private
@@ -236,7 +242,7 @@ var CalendarController = AbstractController.extend({
 
         for (var k in context) {
             if (context[k] && context[k]._isAMomentObject) {
-                context[k] = context[k].clone().utc().format('YYYY-MM-DD HH:mm:ss');
+                context[k] = dateToServer(context[k]);
             }
         }
 
@@ -268,6 +274,7 @@ var CalendarController = AbstractController.extend({
                 res_model: this.modelName,
                 context: context,
                 title: title,
+                view_id: this.formViewId || false,
                 disable_multiple_selection: true,
                 on_saved: function () {
                     if (event.data.on_save) {
@@ -300,7 +307,8 @@ var CalendarController = AbstractController.extend({
                 model: self.modelName,
                 method: 'get_formview_id',
                 //The event can be called by a view that can have another context than the default one.
-                args: [[id], event.context || self.context],
+                args: [[id]],
+                context: event.context || self.context,
             }).then(function (viewId) {
                 self.do_action({
                     type:'ir.actions.act_window',
@@ -388,18 +396,18 @@ var CalendarController = AbstractController.extend({
                 self.quick.destroy();
                 self.quick = null;
                 self.reload();
+                self.quickCreating = false;
             })
-            .fail(function (error, errorEvent) {
+            .guardedCatch(function (result) {
+                var errorEvent = result.event;
                 // This will occurs if there are some more fields required
                 // Preventdefaulting the error event will prevent the traceback window
                 errorEvent.preventDefault();
                 event.data.options.disableQuickCreate = true;
                 event.data.data.on_save = self.quick.destroy.bind(self.quick);
                 self._onOpenCreate(event.data);
-            })
-            .always(function () {
                 self.quickCreating = false;
-            });
+            })
     },
     /**
      * Called when we want to open or close the sidebar.
@@ -430,7 +438,7 @@ var CalendarController = AbstractController.extend({
             this.$buttons.find('.active').removeClass('active');
             this.$buttons.find('.o_calendar_button_' + this.mode).addClass('active');
         }
-        this.set({title: this.displayName + ' (' + event.data.title + ')'});
+        this._setTitle(this.displayName + ' (' + event.data.title + ')');
     },
 });
 

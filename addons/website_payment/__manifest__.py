@@ -14,7 +14,7 @@ This is a bridge module which integrates payment acquirers with Website app.
         'portal',
     ],
     'data': [
-        'views/website_payment_view.xml',
+        'views/payment_acquirer.xml',
     ],
     'auto_install': False,
 }

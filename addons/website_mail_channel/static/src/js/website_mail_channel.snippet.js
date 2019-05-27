@@ -1,22 +1,17 @@
 odoo.define('website_mail_channel.snippet', function (require) {
 'use strict';
 
-var sAnimation = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimation.registry.follow_alias = sAnimation.Class.extend({
+publicWidget.registry.follow_alias = publicWidget.Widget.extend({
     selector: ".js_follow_alias",
+    disabledInEditableMode: false,
     start: function () {
         var self = this;
         this.is_user = false;
         var unsubscribePage = window.location.search.slice(1).split('&').indexOf("unsubscribe") >= 0;
-        this._rpc({
-            route: '/groups/is_member',
-            params: {
-                model: this.$target.data('object'),
-                channel_id: this.$target.data('id'),
-                get_alias_info: true,
-            },
-        }).always(function (data) {
+
+        var always = function (data) {
             self.is_user = data.is_user;
             self.email = data.email;
             self.$target.find('.js_mg_link').attr('href', '/groups/' + self.$target.data('id'));
@@ -25,7 +20,16 @@ sAnimation.registry.follow_alias = sAnimation.Class.extend({
             }
             self.toggle_subscription(data.is_member ? 'on' : 'off', data.email);
             self.$target.removeClass('d-none');
-        });
+        };
+
+        this._rpc({
+            route: '/groups/is_member',
+            params: {
+                model: this.$target.data('object'),
+                channel_id: this.$target.data('id'),
+                get_alias_info: true,
+            },
+        }).then(always).guardedCatch(always);
 
         // not if editable mode to allow designer to edit alert field
         if (!this.editableMode) {
@@ -98,12 +102,12 @@ sAnimation.registry.follow_alias = sAnimation.Class.extend({
             .val(email ? email : "")
             .attr("disabled", follow === "on" || (email.length && this.is_user) ? "disabled" : false);
         this.$target.attr("data-follow", follow);
-        return $.when(alias_done);
+        return Promise.resolve(alias_done);
     },
     get_alias_info: function () {
         var self = this;
         if (! this.$target.data('id')) {
-            return $.Deferred().resolve();
+            return Promise.resolve();
         }
         return this._rpc({route: '/groups/' + this.$target.data('id') + '/get_alias_info'}).then(function (data) {
             if (data.alias_name) {

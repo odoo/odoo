@@ -7,11 +7,8 @@
         <field name="inherit_id" ref="sales_team.crm_team_salesteams_view_kanban"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="//templates" position="before">
-                    <field name="team_type"/>
-                </xpath>
                 <xpath expr="//t[@name='third_options']" position="after">
-                    <div class="row" t-if="record.team_type.raw_value == 'website' &amp;&amp; record.abandoned_carts_count.raw_value">
+                    <div class="row" t-if="record.abandoned_carts_count.raw_value">
                         <div class="col-8">
                             <div>
                                 <a name="get_abandoned_carts" type="object">

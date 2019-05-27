@@ -76,6 +76,14 @@ var AbstractMessage =  Class.extend({
         return this._serverAuthorID[0];
     },
     /**
+     * Threads do not have an im status by default
+     *
+     * @return {undefined}
+     */
+    getAuthorImStatus: function () {
+        return undefined;
+    },
+    /**
      * Get the relative url of the avatar to display next to the message
      *
      * @abstract
@@ -241,6 +249,16 @@ var AbstractMessage =  Class.extend({
         return false;
     },
     /**
+     * State whether this message is empty
+     *
+     * @return {boolean}
+     */
+    isEmpty: function () {
+        return !this.hasTrackingValues() &&
+        !this.hasAttachments() &&
+        !this.getBody();
+    },
+    /**
      * By default, messages do not have any subtype description
      *
      * @return {boolean}
@@ -336,6 +354,14 @@ var AbstractMessage =  Class.extend({
         return false;
     },
     /**
+     * @params {integer[]} attachmentIDs
+     */
+    removeAttachments: function (attachmentIDs) {
+        this._attachmentIDs = _.reject(this._attachmentIDs, function (attachment) {
+            return _.contains(attachmentIDs, attachment.id);
+        });
+    },
+    /**
      * State whether this message should redirect to the author
      * when clicking on the author of this message.
      *
@@ -344,7 +370,7 @@ var AbstractMessage =  Class.extend({
      * @return {boolean}
      */
     shouldRedirectToAuthor: function () {
-        return !this._isAuthor();
+        return !this._isMyselfAuthor();
     },
 
     //--------------------------------------------------------------------------
@@ -370,7 +396,7 @@ var AbstractMessage =  Class.extend({
      * @private
      * @return {boolean}
      */
-    _isAuthor: function () {
+    _isMyselfAuthor: function () {
         return this.hasAuthor() && (this.getAuthorID() === session.partner_id);
     },
     /**

@@ -8,8 +8,14 @@ from pytz import utc
 from odoo import api, fields, models
 from odoo.tools import float_utils
 
-# This will generate eights of days
-ROUNDING_FACTOR = 8
+# This will generate 16th of days
+ROUNDING_FACTOR = 16
+
+
+def timezone_datetime(time):
+    if not time.tzinfo:
+        time = time.replace(tzinfo=utc)
+    return time
 
 
 class ResourceMixin(models.AbstractModel):
@@ -21,14 +27,14 @@ class ResourceMixin(models.AbstractModel):
         auto_join=True, index=True, ondelete='restrict', required=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get(),
-        index=True, related='resource_id.company_id', store=True)
+        default=lambda self: self.env.company_id,
+        index=True, related='resource_id.company_id', store=True, readonly=False)
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Working Hours',
-        default=lambda self: self.env['res.company']._company_default_get().resource_calendar_id,
-        index=True, related='resource_id.calendar_id', store=True)
+        default=lambda self: self.env.company_id.resource_calendar_id,
+        index=True, related='resource_id.calendar_id', store=True, readonly=False)
     tz = fields.Selection(
-        string='Timezone', related='resource_id.tz',
+        string='Timezone', related='resource_id.tz', readonly=False,
         help="This field is used in order to define in which timezone the resources will work.")
 
     @api.model
@@ -53,7 +59,42 @@ class ResourceMixin(models.AbstractModel):
         default['resource_calendar_id'] = resource.calendar_id.id
         return super(ResourceMixin, self).copy_data(default)
 
-    def get_work_days_data(self, from_datetime, to_datetime, compute_leaves=True, calendar=None, domain=None):
+    def _get_days_data(self, intervals, day_total):
+        """
+        helper function to compute duration of `intervals`
+        expressed in days and hours.
+        `day_total` is a dict {date: n_hours} with the number of hours for each day.
+        """
+        day_hours = defaultdict(float)
+        for start, stop, meta in intervals:
+            day_hours[start.date()] += (stop - start).total_seconds() / 3600
+
+        # compute number of days as quarters
+        days = sum(
+            float_utils.round(ROUNDING_FACTOR * day_hours[day] / day_total[day]) / ROUNDING_FACTOR
+            for day in day_hours
+        )
+        return {
+            'days': days,
+            'hours': sum(day_hours.values()),
+        }
+
+    def _get_day_total(self, from_datetime, to_datetime, calendar, resource):
+        """
+        :return: dict with hours of attendance in each day between `from_datetime` and `to_datetime`
+        """
+
+        # total hours per day:  retrieve attendances with one extra day margin,
+        # in order to compute the total hours on the first and last days
+        from_full = from_datetime - timedelta(days=1)
+        to_full = to_datetime + timedelta(days=1)
+        intervals = calendar._attendance_intervals(from_full, to_full, resource)
+        day_total = defaultdict(float)
+        for start, stop, meta in intervals:
+            day_total[start.date()] += (stop - start).total_seconds() / 3600
+        return day_total
+
+    def _get_work_days_data(self, from_datetime, to_datetime, compute_leaves=True, calendar=None, domain=None):
         """
             By default the resource calendar is used, but it can be
             changed using the `calendar` argument.
@@ -68,40 +109,20 @@ class ResourceMixin(models.AbstractModel):
         calendar = calendar or self.resource_calendar_id
 
         # naive datetimes are made explicit in UTC
-        if not from_datetime.tzinfo:
-            from_datetime = from_datetime.replace(tzinfo=utc)
-        if not to_datetime.tzinfo:
-            to_datetime = to_datetime.replace(tzinfo=utc)
+        from_datetime = timezone_datetime(from_datetime)
+        to_datetime = timezone_datetime(to_datetime)
 
-        # total hours per day: retrieve attendances with one extra day margin,
-        # in order to compute the total hours on the first and last days
-        from_full = from_datetime - timedelta(days=1)
-        to_full = to_datetime + timedelta(days=1)
-        intervals = calendar._attendance_intervals(from_full, to_full, resource)
-        day_total = defaultdict(float)
-        for start, stop, meta in intervals:
-            day_total[start.date()] += (stop - start).total_seconds() / 3600
+        day_total = self._get_day_total(from_datetime, to_datetime, calendar, resource)
 
         # actual hours per day
         if compute_leaves:
             intervals = calendar._work_intervals(from_datetime, to_datetime, resource, domain)
         else:
             intervals = calendar._attendance_intervals(from_datetime, to_datetime, resource)
-        day_hours = defaultdict(float)
-        for start, stop, meta in intervals:
-            day_hours[start.date()] += (stop - start).total_seconds() / 3600
 
-        # compute number of days as quarters
-        days = sum(
-            float_utils.round(ROUNDING_FACTOR * day_hours[day] / day_total[day]) / ROUNDING_FACTOR
-            for day in day_hours
-        )
-        return {
-            'days': days,
-            'hours': sum(day_hours.values()),
-        }
+        return self._get_days_data(intervals, day_total)
 
-    def get_leave_days_data(self, from_datetime, to_datetime, calendar=None, domain=None):
+    def _get_leave_days_data(self, from_datetime, to_datetime, calendar=None, domain=None):
         """
             By default the resource calendar is used, but it can be
             changed using the `calendar` argument.
@@ -116,36 +137,17 @@ class ResourceMixin(models.AbstractModel):
         calendar = calendar or self.resource_calendar_id
 
         # naive datetimes are made explicit in UTC
-        if not from_datetime.tzinfo:
-            from_datetime = from_datetime.replace(tzinfo=utc)
-        if not to_datetime.tzinfo:
-            to_datetime = to_datetime.replace(tzinfo=utc)
+        from_datetime = timezone_datetime(from_datetime)
+        to_datetime = timezone_datetime(to_datetime)
 
-        # total hours per day:  retrieve attendances with one extra day margin,
-        # in order to compute the total hours on the first and last days
-        from_full = from_datetime - timedelta(days=1)
-        to_full = to_datetime + timedelta(days=1)
-        intervals = calendar._attendance_intervals(from_full, to_full, resource)
-        day_total = defaultdict(float)
-        for start, stop, meta in intervals:
-            day_total[start.date()] += (stop - start).total_seconds() / 3600
+        day_total = self._get_day_total(from_datetime, to_datetime, calendar, resource)
 
         # compute actual hours per day
         attendances = calendar._attendance_intervals(from_datetime, to_datetime, resource)
         leaves = calendar._leave_intervals(from_datetime, to_datetime, resource, domain)
-        day_hours = defaultdict(float)
-        for start, stop, meta in (attendances & leaves):
-            day_hours[start.date()] += (stop - start).total_seconds() / 3600
 
-        # compute number of days as quarters
-        days = sum(
-            float_utils.round(ROUNDING_FACTOR * day_hours[day] / day_total[day]) / ROUNDING_FACTOR
-            for day in day_hours
-        )
-        return {
-            'days': days,
-            'hours': sum(day_hours.values()),
-        }
+        return self._get_days_data(attendances & leaves, day_total)
+
 
     def list_work_time_per_day(self, from_datetime, to_datetime, calendar=None, domain=None):
         """

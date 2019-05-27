@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- SLIDE.CATEGORY -->
+        <record model="ir.ui.view" id="view_slides_category_form">
+            <field name="name">slide.category.form</field>
+            <field name="model">slide.category</field>
+            <field name="arch" type="xml">
+                <form string="Category">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="channel_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_slides_category_tree" model="ir.ui.view">
+            <field name="name">slide.category.tree</field>
+            <field name="model">slide.category</field>
+            <field name="arch" type="xml">
+                <tree string="Category">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="channel_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_ir_slide_category" model="ir.actions.act_window">
+            <field name="name">Categories</field>
+            <field name="res_model">slide.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new category
+                </p>
+            </field>
+        </record>
+
+        <!-- SLIDE.CHANNEL VIEWS -->
+        <record model="ir.ui.view" id="view_slide_channel_form">
+            <field name="name">slide.channel.form</field>
+            <field name="model">slide.channel</field>
+            <field name="arch" type="xml">
+                <form string="Channels">
+                    <header>
+                        <button name="action_channel_invite" string="Invite" type="object" class="oe_highlight"  attrs="{'invisible': [('enroll', '!=', 'invite')]}"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_redirect_to_members"
+                                type="object"
+                                icon="fa-users"
+                                class="oe_stat_button"
+                                groups="website.group_website_publisher">
+                                <field name="members_count" string="Attendees" widget="statinfo"/>
+                            </button>
+                            <button class="oe_stat_button" name="website_publish_button"
+                                    type="object" icon="fa-globe">
+                                <field name="is_published" widget="website_button"/>
+                            </button>
+                            <button name="toggle_active" type="object" confirm="(Un)archiving a channel automatically (un)archives its slides. Do you want to proceed?" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium'}"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only" string="Name"/>
+                            <h1><field name="name" default_focus="1" placeholder="Name"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="enroll" widget="radio" options="{'horizontal': true}"/>
+                                <field name="category_ids" widget="many2many_tags" placeholder="Categories"
+                                    context="{'default_channel_id': active_id}"
+                                    domain="[('channel_id','=', active_id)]"/>
+                                <field name="tag_ids" widget="many2many_tags" placeholder="Tags"/>
+                                <field name="user_id"/>
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Description">
+                                <field name="description" colspan="4" nolabel="1"/>
+                            </page>
+                            <page string="Options">
+                                <group>
+                                    <group>
+                                        <field name="channel_type" widget="radio"/>
+                                        <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                                        <field name="promote_strategy" widget="radio"/>
+                                    </group>
+                                    <group>
+                                        <field name="upload_group_ids" widget="many2many_tags"/>
+                                        <field name="enroll_group_ids" widget="many2many_tags" groups="base.group_no_one"/>
+                                        <field name="visibility"  widget="radio" groups="base.group_no_one"/>
+                                        <field name="publish_template_id" domain="[('model','=','slide.slide')]"/>
+                                        <field name="share_template_id" domain="[('model','=','slide.slide')]"/>
+                                    </group>
+                                </group>
+                                <group colspan="4">
+                                    <label for="enroll_msg"/>
+                                    <field name="enroll_msg" colspan="4" nolabel="1"/>
+                                </group>
+                            </page>
+                            <page string="Communication">
+                                <group>
+                                    <field name="allow_comment"/>
+                                </group>
+                            </page>
+                            <page string="Karma Rules" name="karma_rules">
+                                <group>
+                                    <group string="Karma generation">
+                                        <field name="karma_gen_slide_vote"/>
+                                        <field name="karma_gen_channel_rank"/>
+                                        <field name="karma_gen_channel_finish"/>
+                                    </group>
+                                    <group string="Karma based actions">
+                                        <field name="karma_review"/>
+                                        <field name="karma_slide_comment"/>
+                                        <field name="karma_slide_vote"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Statistics" groups="base.group_no_one">
+                                <group>
+                                    <group>
+                                        <field name="nbr_presentation"/>
+                                        <field name="nbr_document"/>
+                                        <field name="nbr_video"/>
+                                        <field name="nbr_infographic"/>
+                                        <field name="nbr_webpage"/>
+                                        <field name="total_slides"/>
+                                    </group>
+                                    <group>
+                                        <field name="total_views"/>
+                                        <field name="total_votes"/>
+                                        <field name="total_time"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="slide_channel_view_tree" model="ir.ui.view">
+            <field name="name">slide.channel.tree</field>
+            <field name="model">slide.channel</field>
+            <field name="arch" type="xml">
+                <tree string="Channel">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="website_id" groups="website.group_multi_website"/>
+                    <field name="active" invisible="1"/>
+                    <field name="enroll"/>
+                    <field name="promote_strategy"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="slide_channel_view_search" model="ir.ui.view">
+            <field name="name">slide.channel.search</field>
+            <field name="model">slide.channel</field>
+            <field name="arch" type="xml">
+                <search string="Courses">
+                    <field name="name" string="Course"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_slide_channels" model="ir.actions.act_window">
+            <field name="name">Channels</field>
+            <field name="res_model">slide.channel</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="website_slides.slide_channel_view_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a channel
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

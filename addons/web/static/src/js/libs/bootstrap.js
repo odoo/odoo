@@ -6,10 +6,11 @@ odoo.define('web.bootstrap.extensions', function () {
  * patching in place.
  */
 
-/* Bootstrap defaults overwrite */
+/* Bootstrap tooltip defaults overwrite */
 $.fn.tooltip.Constructor.Default.placement = 'auto';
 $.fn.tooltip.Constructor.Default.fallbackPlacement = ['bottom', 'right', 'left', 'top'];
 $.fn.tooltip.Constructor.Default.html = true;
+$.fn.tooltip.Constructor.Default.sanitize = false;
 $.fn.tooltip.Constructor.Default.trigger = 'hover';
 $.fn.tooltip.Constructor.Default.container = 'body';
 $.fn.tooltip.Constructor.Default.boundary = 'window';
@@ -23,4 +24,8 @@ $.fn.tooltip.Constructor.prototype.show = function () {
 
     return bootstrapShowFunction.call(this);
 };
+
+/* Bootstrap popover defaults overwrite */
+$.fn.popover.Constructor.Default.sanitize = false;
+
 });

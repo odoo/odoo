@@ -5,7 +5,6 @@ import logging
 
 from odoo import exceptions
 from odoo.tests.common import TransactionCase, tagged
-from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -46,8 +45,8 @@ class TestResConfig(TransactionCase):
         # Check types
         self.assertIsInstance(res, tuple)
         self.assertEqual(len(res), 2, "The result should contain 2 elements")
-        self.assertIsInstance(res[0], pycompat.string_types)
-        self.assertIsInstance(res[1], pycompat.integer_types)
+        self.assertIsInstance(res[0], str)
+        self.assertIsInstance(res[1], int)
 
         # Check returned values
         self.assertEqual(res[0], self.expected_path)
@@ -58,7 +57,7 @@ class TestResConfig(TransactionCase):
         res = self.ResConfig.get_option_name(self.full_field_name)
 
         # Check type
-        self.assertIsInstance(res, pycompat.string_types)
+        self.assertIsInstance(res, str)
 
         # Check returned value
         self.assertEqual(res, self.expected_name)

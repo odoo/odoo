@@ -4,7 +4,7 @@
 {
     'name': 'Purchase',
     'version': '1.2',
-    'category': 'Purchases',
+    'category': 'Operations/Purchase',
     'sequence': 60,
     'summary': 'Purchase orders, tenders and agreements',
     'description': "",
@@ -25,7 +25,6 @@
         'report/purchase_report_views.xml',
         'data/mail_template_data.xml',
         'views/portal_templates.xml',
-        'views/res_users_views.xml',
         'report/purchase_order_templates.xml',
         'report/purchase_quotation_templates.xml',
     ],

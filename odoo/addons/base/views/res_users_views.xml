@@ -124,7 +124,7 @@
                 <form string="Users">
                     <sheet>
                         <field name="id" invisible="1"/>
-                        <div class="oe_form_box_info bg-info oe_text_center" style="margin-bottom: 10px" attrs="{'invisible': [('id', '>', 0)]}">
+                        <div class="alert alert-info text-center mb-3" attrs="{'invisible': [('id', '>', 0)]}" role="alert">
                             You are inviting a new user.
                         </div>
                         <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
@@ -141,6 +141,11 @@
                             <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
                         </div>
                         <group>
+                            <label for="groups_id" string="Access Rights"
+                                    attrs="{'invisible': [('id', '>', 0)]}" groups="base.group_no_one"/>
+                            <div attrs="{'invisible': [('id', '>', 0)]}" groups="base.group_no_one">
+                                <field name="groups_id" readonly="1" widget="many2many_tags" options="{'color_field': 'color'}" style="display: inline;"/> You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
+                            </div>
                             <field name="phone" widget="phone"/>
                             <field name="mobile" widget="phone"/>
                         </group>
@@ -158,11 +163,28 @@
                     <sheet>
                         <field name="id" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
+                            <button name="action_show_groups" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-users">
+                                <field string="Groups" name="groups_count" widget="statinfo"/>
+                            </button>
+                            <button name="action_show_accesses" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-list">
+                                <field string="Access Rights" name="accesses_count" widget="statinfo"/>
+                            </button>
+                            <button name="action_show_rules" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-list-ul">
+                                <field string="Record Rules" name="rules_count" widget="statinfo"/>
+                            </button>
                             <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
                                 <field name="active" widget="boolean_button" options='{"terminology": "active"}'/>
                             </button>
                         </div>
-                        <div class="alert alert-info text-center o_form_header" attrs="{'invisible': [('active', '=', True)]}" role="alert">
+                        <field name="active_partner" required="0" readonly="1" invisible="1"/>
+                        <div class="alert alert-info text-center o_form_header"
+                            attrs="{'invisible': [
+                                '|', '|',
+                                '&amp;', ('active', '=', True), ('active_partner', '=', True),
+                                '&amp;', ('active', '=', False), ('active_partner', '=', False),
+                                '&amp;', ('active', '=', True), ('active_partner', '=', False),
+                            ]}"
+                            role="alert">
                           <a class="close" data-dismiss="alert" href="#">x</a>
                           <div>
                             <strong>The contact linked to this user is still active</strong>
@@ -185,40 +207,12 @@
                         </div>
                         <notebook colspan="4">
                             <page name="access_rights" string="Access Rights">
-                                <group string="User Type" name="user_type" groups="base.group_no_one">
-                                    <field name="group_base_user" groups="base.group_no_one"/>
-                                </group>
                                 <group string="Multi Companies" attrs="{'invisible': [('companies_count', '&lt;=', 1)]}">
                                     <field string="Allowed Companies" name="company_ids" widget="many2many_tags" options="{'no_create': True}"/>
-                                    <field string="Current Company" name="company_id" context="{'user_preference': 0}"/>
+                                    <field string="Default Company" name="company_id" context="{'user_preference': 0}"/>
                                     <field string="Companies count" name="companies_count" invisible="1"/>
                                 </group>
-                                <group string="Application Accesses" name="applications"/>
-                                <group string="Technical Settings" name="technical" groups="base.group_no_one" col="8">
-                                    <!-- TODO: Hide the no_one group -->
-                                    <label for="has_group_no_one" colspan="3"/>
-                                    <div>
-                                        <field name='has_group_no_one' colspan="1" class="oe_inline"/>
-                                    </div>
-                                </group>
-                                <group string="Extra Rights" name="extra" groups="base.group_no_one" col="8">
-                                    <label for="has_group_multi_company" colspan="3"/>
-                                    <div>
-                                        <field name='has_group_multi_company' colspan="1" class="oe_inline"/>
-                                    </div>
-                                    <label for="has_group_multi_currency" colspan="3"/>
-                                    <div>
-                                        <field name='has_group_multi_currency' colspan="1" class="oe_inline"/>
-                                    </div>
-                                    <label for="has_group_partner_manager" colspan="3"/>
-                                    <div>
-                                        <field name='has_group_partner_manager' colspan="1" class="oe_inline"/>
-                                    </div>
-                                    <label for="has_group_private_addresses" colspan="3"/>
-                                    <div>
-                                        <field name="has_group_private_addresses" colspan="1" class="oe_inline"/>
-                                    </div>
-                                </group>
+                                <field name="groups_id"/>
                             </page>
                             <page string="Preferences">
                                 <group>
@@ -235,27 +229,12 @@
                                     <field name="signature"/>
                                 </group>
                             </page>
-                            <page string="Groups" groups="base.group_no_one">
-                                <group>
-                                    <field name="groups_id"/>
-                                </group>
-                            </page>
                         </notebook>
                     </sheet>
                 </form>
             </field>
         </record>
-        <record id="res_users_view_form_administation" model="ir.ui.view">
-            <field name="name">res.users.view.form.administration</field>
-            <field name="model">res.users</field>
-            <field name="inherit_id" ref="view_users_form"/>
-            <field name="priority">1000</field>
-            <field name="arch" type="xml">
-                <group name="applications" position="inside">
-                    <field name="group_administration_user"/>
-                </group>
-            </field>
-        </record>
+
         <record id="view_users_tree" model="ir.ui.view">
             <field name="name">res.users.tree</field>
             <field name="model">res.users</field>
@@ -315,6 +294,16 @@
                 </search>
             </field>
         </record>
+        <record id="user_groups_view" model="ir.ui.view">
+            <field name="name">res.users.groups</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="view_users_form"/>
+            <field name="arch" type="xml">
+                <!-- dummy, will be modified by groups -->
+                <field name="groups_id" position="after"/>
+            </field>
+        </record>
+        <!-- dummy update on group, to force the view above to be update -->
         <record model="res.groups" id="group_no_one"/>
         <record id="action_res_users" model="ir.actions.act_window">
             <field name="name">Users</field>
@@ -351,23 +340,23 @@
                     <h1>
                         <field name="name" readonly="1" class="oe_inline"/>
                     </h1>
-                    <button name="preference_change_password" type="object" string="Change password" class="oe_link"/>
-                    <group name="preferences" col="4">
-                        <field name="lang" readonly="0"/>
-                        <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
-                        <field name="tz_offset" invisible="1"/>
-                        <field name="company_id" options="{'no_create': True}" readonly="0"
-                            groups="base.group_multi_company"/>
-                    </group>
-                    <group string="Email Preferences">
-                        <group name="preference_email">
+                    <group name="preferences">
+                        <group>
                             <field name="email" widget="email" readonly="0"/>
+                            <field name="company_id" options="{'no_create': True}" readonly="0"
+                                groups="base.group_multi_company"/>
                         </group>
-                        <group name="preference_contact"></group>
+                        <group>
+                            <field name="lang" readonly="0" placeholder="System (English)"/>
+                            <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
+                            <field name="tz_offset" invisible="1"/>
+                        </group>
                     </group>
-                    <group>
+                    <group name="preference_contact"></group>
+                    <group name="signature">
                         <field name="signature" readonly="0"/>
                     </group>
+                    <button name="preference_change_password" type="object" string="Change password" class="oe_link"/>
                     <footer>
                         <button name="preference_save" type="object" string="Save" class="btn-primary"/>
                         <button name="preference_cancel" string="Cancel" special="cancel" class="btn-secondary"/>

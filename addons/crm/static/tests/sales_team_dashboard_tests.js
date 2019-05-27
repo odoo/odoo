@@ -1,6 +1,8 @@
 odoo.define('crm.dashboard_tests', function (require) {
 "use strict";
 
+// this file is no longer loaded in the test suite, so i guess we can remove it
+
 var testUtils = require('web.test_utils');
 var view_registry = require('web.view_registry');
 
@@ -50,7 +52,7 @@ QUnit.test('dashboard basic rendering', function (assert) {
         mockRPC: function (route, args) {
             if (args.method === 'retrieve_sales_dashboard') {
                 assert.ok(true, "should call /retrieve_sales_dashboard");
-                return $.when(dashboard_data);
+                return Promise.resolve(dashboard_data);
             }
             return this._super(route, args);
         },
@@ -77,18 +79,18 @@ QUnit.test('dashboard set a new target', function (assert) {
             if (args.method === 'retrieve_sales_dashboard') {
                 // should be called twice: for the first rendering, and after the target update
                 assert.ok(true, "should call /retrieve_sales_dashboard");
-                return $.when(dashboard_data);
+                return Promise.resolve(dashboard_data);
             }
             if (args.method === 'modify_target_sales_dashboard') {
                 assert.ok(true, "should call /modify_target_sales_dashboard");
                 dashboard_data[args.args[0]].target = args.args[1];
-                return $.when();
+                return Promise.resolve();
             }
             return this._super(route, args);
         },
     });
 
-    kanban.$('.o_target_to_set').first().click(); // click on the target to set
+    testUtils.dom.click(kanban.$('.o_target_to_set').first());
     kanban.$('.o_sales_dashboard input')
         .val('20000')
         .trigger($.Event('keyup', {which: $.ui.keyCode.ENTER})); // set the target
@@ -115,21 +117,21 @@ QUnit.test('dashboard: click on a button to execute an action', function (assert
               '</kanban>',
         mockRPC: function (route, args) {
             if (args.method === 'retrieve_sales_dashboard') {
-                return $.when(dashboard_data);
+                return Promise.resolve(dashboard_data);
             }
             return this._super(route, args);
         },
     });
 
 
-    testUtils.intercept(kanban, 'execute_action', function (event) {
+    testUtils.mock.intercept(kanban, 'execute_action', function (event) {
         assert.strictEqual(event.data.action_data.name, 'func_name',
             'execute_action should have been triggered with the correct data');
         assert.strictEqual(event.data.action_data.type, 'object',
             'execute_action should have been triggered with the correct data');
     });
 
-    kanban.$('.my_button:first()').click(); // click on the button of the first card
+    testUtils.dom.click(kanban.$('.my_button:first()'));
     kanban.destroy();
 });
 
@@ -149,7 +151,7 @@ QUnit.test('dashboard should be displayed even if there is no content', function
         domain: [['id', '=', 239]], // no record will match this domain
         mockRPC: function (route, args) {
             if (args.method === 'retrieve_sales_dashboard') {
-                return $.when(dashboardData);
+                return Promise.resolve(dashboardData);
             }
             return this._super(route, args);
         },
@@ -160,7 +162,7 @@ QUnit.test('dashboard should be displayed even if there is no content', function
         },
     });
 
-    assert.strictEqual(kanban.$('div.o_sales_dashboard').length, 1,
+    assert.containsOnce(kanban, 'div.o_sales_dashboard',
         "should render the dashboard");
     assert.strictEqual(kanban.$('.o_view_nocontent:contains(A help message)').length, 1,
         "should correctly render the nocontent helper");

@@ -49,7 +49,7 @@ Single Page Application
 -----------------------
 
 In short, the *webClient*, instance of *WebClient* is the root component of the
-whole user interface.  Its responsability is to orchestrate all various
+whole user interface.  Its responsibility is to orchestrate all various
 subcomponents, and to provide services, such as rpcs, local storage and more.
 
 In runtime, the web client is a single page application. It does not need to
@@ -129,9 +129,8 @@ Here is what happens when a template is rendered by the server with these direct
       be replaced by a list of script tags pointing to the js files
 
 - if we are not in *debug=assets* mode,
-    - the css files will be concatenated and minified, then splits into files
-      with no more than 4096 rules (to get around an old limitation of IE9). Then,
-      we generate as many stylesheet tags as necessary
+    - the css files will be concatenated and minified, then a stylesheet tag is
+      generated
     - the js files are concatenated and minified, then a script tag is generated
 
 Note that the assets files are cached, so in theory, a browser should only load
@@ -259,7 +258,7 @@ As an example, it may look like this:
         return B;
     });
 
-An alternative way to define a module is to give explicitely a list of dependencies
+An alternative way to define a module is to give explicitly a list of dependencies
 in the second argument.
 
 .. code-block:: javascript
@@ -296,9 +295,20 @@ The *odoo.define* method is given three arguments:
 - *dependencies*: the second argument is optional. If given, it should be a list
   of strings, each corresponding to a javascript module.  This describes the
   dependencies that are required to be loaded before the module is executed. If
-  the dependencies are not explicitely given here, then the module system will
+  the dependencies are not explicitly given here, then the module system will
   extract them from the function by calling toString on it, then using a regexp
   to find all *require* statements.
+
+.. code-block:: javascript
+
+      odoo.define('module.Something', ['web.ajax'], function (require) {
+        "use strict";
+
+        var ajax = require('web.ajax');
+
+        // some code here
+        return something;
+    });
 
 - finally, the last argument is a function which defines the module. Its return
   value is the value of the module, which may be passed to other modules requiring
@@ -313,7 +323,7 @@ If an error happens, it will be logged (in debug mode) in the console:
 * ``Failed modules``:
   A javascript error is detected
 * ``Rejected modules``:
-  The module returns a rejected deferred. It (and its dependent modules) is not
+  The module returns a rejected Promise. It (and its dependent modules) is not
   loaded.
 * ``Rejected linked modules``:
   Modules who depend on a rejected module
@@ -327,12 +337,12 @@ Asynchronous modules
 
 It can happen that a module needs to perform some work before it is ready.  For
 example, it could do a rpc to load some data.  In that case, the module can
-simply return a deferred (promise).  In that case, the module system will simply
-wait for the deferred to complete before registering the module.
+simply return a promise.  In that case, the module system will simply
+wait for the promise to complete before registering the module.
 
 .. code-block:: javascript
 
-    odoo.define('module.Something', ['web.ajax'], function (require) {
+    odoo.define('module.Something', function (require) {
         "use strict";
 
         var ajax = require('web.ajax');
@@ -352,11 +362,11 @@ Best practices
 - declare all your dependencies at the top of the module. Also, they should be
   sorted alphabetically by module name. This makes it easier to understand your module.
 - declare all exported values at the end
-- try to avoid exporting too much things from one module.  It is usually better
+- try to avoid exporting too many things from one module.  It is usually better
   to simply export one thing in one (small/smallish) module.
-- asynchronous modules can be used to simplify some use cases.  For example,
-  the *web.dom_ready* module returns a deferred which will be resolved when the
-  dom is actually ready.  So, another module that needs the DOM could simply have
+- asynchronous modules can be used to simplify some use cases. For example,
+  the *web.dom_ready* module returns a promise which will be resolved when the
+  dom is actually ready. So, another module that needs the DOM could simply have
   a *require('web.dom_ready')* statement somewhere, and the code will only be
   executed when the DOM is ready.
 - try to avoid defining more than one module in one file.  It may be convenient
@@ -366,7 +376,7 @@ Best practices
 Class System
 ============
 
-Odoo was developped before ECMAScript 6 classes were available.  In Ecmascript 5,
+Odoo was developed before ECMAScript 6 classes were available.  In Ecmascript 5,
 the standard way to define a class is to define a function and to add methods
 on its prototype object.  This is fine, but it is slightly complex when we want
 to use inheritance, mixins.
@@ -446,7 +456,7 @@ of them in the new class.
         },
     };
 
-    var Hamster = Hamster.extend(DanceMixin, {
+    var Hamster = Animal.extend(DanceMixin, {
         sleep: function () {
             console.log('sleeping');
         },
@@ -563,10 +573,10 @@ rendering takes place, then *start* and finally *destroy*.
 
     this method will be called once by the framework when a widget is created
     and in the process of being appended to the DOM.  The *willStart* method is a
-    hook that should return a deferred.  The JS framework will wait for this deferred
+    hook that should return a promise.  The JS framework will wait for this promise
     to complete before moving on to the rendering step.  Note that at this point,
     the widget does not have a DOM root element.  The *willStart* hook is mostly
-    useful to perfom some asynchronous work, such as fetching data from the server
+    useful to perform some asynchronous work, such as fetching data from the server
 
 .. function:: [Rendering]
 
@@ -586,9 +596,9 @@ rendering takes place, then *start* and finally *destroy*.
     the *start* method.  This is useful to perform some specialized post-rendering
     work.  For example, setting up a library.
 
-    Must return a deferred to indicate when its work is done.
+    Must return a promise to indicate when its work is done.
 
-    :returns: deferred object
+    :returns: promise
 
 .. function:: Widget.destroy()
 
@@ -616,33 +626,33 @@ Widget API
     generated DOM root with the following attributes:
 
 
-    .. attribute:: Widget.id
+.. attribute:: Widget.id
 
-        Used to generate an ``id`` attribute on the generated DOM
-        root. Note that this is rarely needed, and is probably not a good idea
-        if a widget can be used more than once.
+    Used to generate an ``id`` attribute on the generated DOM
+    root. Note that this is rarely needed, and is probably not a good idea
+    if a widget can be used more than once.
 
-    .. attribute:: Widget.className
+.. attribute:: Widget.className
 
-        Used to generate a ``class`` attribute on the generated DOM root. Note
-        that it can actually contain more than one css class:
-        *'some-class other-class'*
+    Used to generate a ``class`` attribute on the generated DOM root. Note
+    that it can actually contain more than one css class:
+    *'some-class other-class'*
 
-    .. attribute:: Widget.attributes
+.. attribute:: Widget.attributes
 
-        Mapping (object literal) of attribute names to attribute
-        values. Each of these k:v pairs will be set as a DOM attribute
-        on the generated DOM root.
+    Mapping (object literal) of attribute names to attribute
+    values. Each of these k:v pairs will be set as a DOM attribute
+    on the generated DOM root.
 
 .. attribute:: Widget.el
 
     raw DOM element set as root to the widget (only available after the start
-    lifecyle method)
+    lifecycle method)
 
 .. attribute:: Widget.$el
 
     jQuery wrapper around :attr:`~Widget.el`. (only available after the start
-    lifecyle method)
+    lifecycle method)
 
 .. attribute:: Widget.template
 
@@ -651,13 +661,21 @@ Widget API
     initialized but before it has been started. The root element generated by
     the template will be set as the DOM root of the widget.
 
-.. attribute:: xmlDependencies
+.. attribute:: Widget.xmlDependencies
 
     List of paths to xml files that need to be loaded before the
     widget can be rendered. This will not induce loading anything that has already
-    been loaded.
+    been loaded. This is useful when you want to load your templates lazily,
+    or if you want to share a widget between the website and the web client
+    interface.
 
-.. attribute:: events
+    .. code-block:: javascript
+
+        var EditorMenuBar = Widget.extend({
+            xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
+            ...
+
+.. attribute:: Widget.events
 
     Events are a mapping of an event selector (an event name and an optional
     CSS selector separated by a space) to a callback. The callback can
@@ -682,7 +700,7 @@ Widget API
     Note: the use of an inline function is discouraged, and will probably be
     removed sometimes in the future.
 
-.. attribute:: custom_events
+.. attribute:: Widget.custom_events
 
     this is almost the same as the *events* attribute, but the keys
     are arbitrary strings.  They represent business events triggered by
@@ -748,7 +766,7 @@ Inserting a widget in the DOM
     uses `.insertBefore()`_
 
 All of these methods accept whatever the corresponding jQuery method accepts
-(CSS selectors, DOM nodes or jQuery objects). They all return a deferred_
+(CSS selectors, DOM nodes or jQuery objects). They all return a promise
 and are charged with three tasks:
 
 * rendering the widget's root element via
@@ -798,6 +816,34 @@ Widget Guidelines
   or intercepting DOM events) must inherit from :class:`~Widget`
   and correctly implement and use its API and life cycle.
 
+* Make sure to wait for start to be finished before using $el e.g.:
+
+    .. code-block:: javascript
+
+        var Widget = require('web.Widget');
+
+        var AlmostCorrectWidget = Widget.extend({
+            start: function () {
+                this.$el.hasClass(....) // in theory, $el is already set, but you don't know what the parent will do with it, better call super first
+                return this._super.apply(arguments);
+            },
+        });
+
+        var IncorrectWidget = Widget.extend({
+            start: function () {
+                this._super.apply(arguments); // the parent promise is lost, nobody will wait for the start of this widget
+                this.$el.hasClass(....)
+            },
+        });
+
+        var CorrectWidget = Widget.extend({
+            start: function () {
+                var self = this;
+                return this._super.apply(arguments).then(function() {
+                    self.$el.hasClass(....) // this works, no promise is lost and the code executes in a controlled order: first super, then our code.
+                });
+            },
+        });
 
 .. _reference/javascript_reference/qweb:
 
@@ -872,7 +918,7 @@ Here is an example on how this event system could be used:
             this.counter = new Counter(this);
             this.counter.on('valuechange', this, this._onValueChange);
             var def = this.counter.appendTo(this.$el);
-            return $.when(def, this._super.apply(this, arguments);
+            return Promise.all([def, this._super.apply(this, arguments)]);
         },
         _onValueChange: function (val) {
             // do something with val
@@ -919,7 +965,7 @@ The previous example can be updated to use the custom event system:
         start: function () {
             this.counter = new Counter(this);
             var def = this.counter.appendTo(this.$el);
-            return $.when(def, this._super.apply(this, arguments);
+            return Promise.all([def, this._super.apply(this, arguments)]);
         },
         _onValueChange: function(event) {
             // do something with event.data.val
@@ -1168,7 +1214,7 @@ The notification system in Odoo is designed with the following components:
 - a *Notification* widget: this is a simple widget that is meant to be created
   and displayed with the desired information
 
-- a *NotificationService*: a service whose responsability is to create and
+- a *NotificationService*: a service whose responsibility is to create and
   destroy notifications whenever a request is done (with a custom_event). Note
   that the web client is a service provider.
 
@@ -1220,6 +1266,49 @@ Here are two examples on how to use these methods:
     this.do_warn(_t("Error"), _t("Filter name is required."));
 
 
+Systray
+=======
+
+The Systray is the right part of the menu bar in the interface, where the web
+client displays a few widgets, such as a messaging menu.
+
+When the SystrayMenu is created by the menu, it will look for all registered
+widgets and add them as a sub widget at the proper place.
+
+There is currently no specific API for systray widgets.  They are supposed to
+be simple widgets, and can communicate with their environment just like other
+widgets with the *trigger_up* method.
+
+Adding a new Systray Item
+-------------------------
+
+There is no systray registry.  The proper way to add a widget is to add it to
+the class variable SystrayMenu.items.
+
+.. code-block:: javascript
+
+    var SystrayMenu = require('web.SystrayMenu');
+
+    var MySystrayWidget = Widget.extend({
+        ...
+    });
+
+    SystrayMenu.Items.push(MySystrayWidget);
+
+
+Ordering
+--------
+
+Before adding the widget to himself, the Systray Menu will sort the items by
+a sequence property. If that property is not present on the prototype, it will
+use 50 instead.  So, to position a systray item to be on the right, one can
+set a very high sequence number (and conversely, a low number to put it on the
+left).
+
+.. code-block:: javascript
+
+    MySystrayWidget.prototype.sequence = 100;
+
 
 Translation management
 ======================
@@ -1264,6 +1353,55 @@ when the module is loaded.
 
 Note that translation functions need some care.  The string given in argument
 should not be dynamic.
+
+Session
+=======
+
+There is a specific module provided by the web client which contains some
+information specific to the user current *session*.  Some notable keys are
+
+- uid: the current user ID (its ID as a *res.users*)
+- user_name: the user name, as a string
+- the user context (user ID, language and timezone)
+- partner_id: the ID of the partner associated to the current user
+- db: the name of the database currently being in use
+
+Adding information to the session
+---------------------------------
+
+When the /web route is loaded, the server will inject some session information
+in the template a script tag. The information will be read from the method
+*session_info* of the model *ir.http*.  So, if one wants to add a specific
+information, it can be done by overriding the session_info method and adding it
+to the dictionary.
+
+.. code-block:: python
+
+    from odoo import models
+    from odoo.http import request
+
+
+    class IrHttp(models.AbstractModel):
+        _inherit = 'ir.http'
+
+        def session_info(self):
+            result = super(IrHttp, self).session_info()
+            result['some_key'] = get_some_value_from_db()
+            return result
+
+Now, the value can be obtained in javascript by reading it in the session:
+
+.. code-block:: javascript
+
+    var session = require('web.session');
+    var myValue = session.some_key;
+    ...
+
+Note that this mechanism is designed to reduce the amount of communication
+needed by the web client to be ready.  It is more appropriate for data which is
+cheap to compute (a slow session_info call will delay the loading for the web
+client for everyone), and for data which is required early in the initialization
+process.
 
 Views
 ======
@@ -1397,6 +1535,24 @@ order.
 
     - Supported field types: *integer*
 
+    Options:
+
+    - type: setting the input type (*text* by default, can be set on *number*)
+
+    On edit mode, the field is rendered as an input with the HTML attribute type
+    setted on *number* (so user can benefit the native support, especially on
+    mobile). In this case, the default formatting is disabled to avoid incompability.
+
+    .. code-block:: xml
+
+        <field name="int_value" options='{"type": "number"}'/>
+
+    - step: set the step to the value up and down when the user click on buttons
+        (only for input of type number, 1 by default)
+
+    .. code-block:: xml
+
+        <field name="int_value" options='{"type": "number", "step": 100}'/>
 
 - float (FieldFloat)
     This is the default field type for fields of type *float*.
@@ -1411,12 +1567,51 @@ order.
 
         <field name="factor" digits="[42,5]"/>
 
+    Options:
+
+    - type: setting the input type (*text* by default, can be set on *number*)
+
+    On edit mode, the field is rendered as an input with the HTML attribute type
+    setted on *number* (so user can benefit the native support, especially on
+    mobile). In this case, the default formatting is disabled to avoid incompability.
+
+    .. code-block:: xml
+
+        <field name="int_value" options='{"type": "number"}'/>
+
+    - step: set the step to the value up and down when the user click on buttons
+        (only for input of type number, 1 by default)
+
+    .. code-block:: xml
+
+        <field name="int_value" options='{"type": "number", "step": 0.1}'/>
+
 - float_time (FieldFloatTime)
     The goal of this widget is to display properly a float value that represents
     a time interval (in hours).  So, for example, 0.5 should be formatted as 0:30,
     or 4.75 correspond to 4:45.
 
     - Supported field types: *float*
+
+- float_factor (FieldFloatFactor)
+    This widget aims to display properly a float value that converted using a factor
+    given in its options. So, for example, the value saved in database is 0.5 and the
+    factor is 3, the widget value should be formatted as 1.5.
+
+    - Supported field types: *float*
+
+- float_toggle (FieldFloatToggle)
+    The goal of this widget is to replace the input field by a button containing a
+    range of possible values (given in the options). Each click allows the user to loop
+    in the range. The purpose here is to restrict the field value to a predefined selection.
+    Also, the widget support the factor conversion as the *float_factor* widget (Range values
+    should be the result of the conversion).
+
+    - Supported field types: *float*
+
+    .. code-block:: xml
+
+        <field name="days_to_close" widget="float_toggle" options='{"factor": 2, "range": [0, 4, 8]}'/>
 
 - boolean (FieldBoolean)
     This is the default field type for fields of type *boolean*.
@@ -1454,7 +1649,7 @@ order.
 
     .. code-block:: xml
 
-        <field name="datefield" options='{"datepicker": {"daysOfWeekDisabled": [0, 6]}}'/>
+        <field name="datetimefield" options='{"datepicker": {"daysOfWeekDisabled": [0, 6]}}'/>
 
 - monetary (FieldMonetary)
     This is the default field type for fields of type 'monetary'. It is used to
@@ -1478,9 +1673,10 @@ order.
 
 
 - handle (HandleWidget)
-    This field's job is to be displayed as a *handle* in a list view, and allows
-    reordering the various records by drag and dropping lines.
+    This field's job is to be displayed as a *handle*, and allows reordering the
+    various records by drag and dropping them.
 
+    .. warning:: It has to be specified on the field by which records are sorted.
     .. warning:: Having more than one field with a handle widget on the same list is not supported.
 
     - Supported field types: *integer*
@@ -1795,7 +1991,7 @@ Relational fields
 
     Options:
 
-    - horizontal: if true, radio buttons will be diplayed horizontally.
+    - horizontal: if true, radio buttons will be displayed horizontally.
 
     .. code-block:: xml
 
@@ -1849,6 +2045,17 @@ Relational fields
 
     - Supported field types: *many2one*
 
+- many2one_barcode (FieldMany2OneBarcode)
+    Widget for many2one fields allows to open the camera from a mobile device (Android/iOS) to scan a barcode.
+
+    Specialization of many2one field where the user is allowed to use the native camera to scan a barcode.
+    Then it uses name_search to search this value.
+
+    If this widget is set and user is not using the mobile application,
+    it will fallback to regular many2one (FieldMany2One)
+
+    - Supported field types: *many2one*
+
 - kanban.many2one (KanbanFieldMany2One)
     Default widget for many2one fields (in kanban view). We need to disable all
     edition in kanban views.
@@ -1856,7 +2063,7 @@ Relational fields
     - Supported field types: *many2one*
 
 - many2many (FieldMany2Many)
-    Defaut widget for many2many fields.
+    Default widget for many2many fields.
 
     - Supported field types: *many2many*
 
@@ -1910,7 +2117,7 @@ Relational fields
     - Supported field types: *many2many*
 
 - one2many (FieldOne2Many)
-    Defaut widget for one2many fields.
+    Default widget for one2many fields.
 
     It usually displays data in a sub list view, or a sub kanban view.
 
@@ -1937,9 +2144,121 @@ Relational fields
 
     - Supported field types: *char, reference*
 
-- one2many_list (FieldOne2Many)
-    This widget is exactly the same as a FieldOne2Many.  It is registered at this
-    key only for backward compatibility reasons.  Please avoid using this.
+
+Client actions
+==============
+
+The idea of a client action is a customized widget that is integrated in the
+web client interface, just like a *act_window_action*.  This is useful when
+you need a component that is not closely linked to an existing view or a
+specific model.  For example, the Discuss application is actually a client
+action.
+
+A client action is a term that has various meanings, depending on the context:
+
+- from the perspective of the server, it is a record of the model *ir_action*,
+  with a field *tag* of type char
+- from the perspective of the web client, it is a widget, which inherit from
+  the class AbstractAction, and is supposed to be registered in the
+  action registry under the corresponding key (from the field char)
+
+Whenever a menu item is associated to a client action, opening it will simply
+fetch the action definition from the server, then lookup into its action
+registry to get the Widget definition at the appropriate key, and finally, it
+will instantiate and append the widget to the proper place in the DOM.
+
+Adding a client action
+----------------------
+
+A client action is a widget which will control the part of the screen below the
+menu bar.  It can have a control panel, if necessary.  Defining a client action
+can be done in two steps: implementing a new widget, and registering the widget
+in the action registry.
+
+- Implementing a new client action:
+    This is done by creating a widget:
+
+    .. code-block:: javascript
+
+        var ControlPanelMixin = require('web.ControlPanelMixin');
+        var AbstractAction = require('web.AbstractAction');
+
+        var ClientAction = AbstractAction.extend(ControlPanelMixin, {
+            ...
+        });
+
+    Do not add the controlpanel mixin if you do not need it.  Note that some
+    code is needed to interact with the control panel (via the
+    ``update_control_panel`` method given by the mixin).
+
+- Registering the client action:
+    As usual, we need to make the web client aware of the mapping between
+    client actions and the actual class:
+
+    .. code-block:: javascript
+
+        var core = require('web.core');
+
+        core.action_registry.add('my-custom-action', ClientAction);
+
+
+    Then, to use the client action in the web client, we need to create a client
+    action record (a record of the model ``ir.actions.client``) with the proper
+    ``tag`` attribute:
+
+    .. code-block:: xml
+
+        <record id="my_client_action" model="ir.actions.client">
+            <field name="name">Some Name</field>
+            <field name="tag">my-custom-action</field>
+        </record>
+
+
+Using the control panel mixin
+-----------------------------
+
+By default, the AbstractAction class does not include the control panel mixin.
+This means that a client action does not display a control panel.  In order to
+do that, several steps should be done.
+
+- add ControlPanelMixin in the widget:
+
+    .. code-block:: javascript
+
+        var ControlPanelMixin = require('web.ControlPanelMixin');
+
+        var MyClientAction = AbstractAction.extend(ControlPanelMixin, {
+            ...
+        });
+
+- call the method *update_control_panel* whenever we need to update the control
+  panel. For example:
+
+    .. code-block:: javascript
+
+        var SomeClientAction = Widget.extend(ControlPanelMixin, {
+            ...
+            start: function () {
+                this._renderButtons();
+                this._updateControlPanel();
+                ...
+            },
+            do_show: function () {
+                 ...
+                 this._updateControlPanel();
+            },
+            _renderButtons: function () {
+                this.$buttons = $(QWeb.render('SomeTemplate.Buttons'));
+                this.$buttons.on('click', ...);
+            },
+            _updateControlPanel: function () {
+                this.update_control_panel({
+                    cp_content: {
+                       $buttons: this.$buttons,
+                    },
+             });
+
+For more information, look into the *control_panel.js* file.
 
 .. _.appendTo():
     http://api.jquery.com/appendTo/
@@ -1957,5 +2276,3 @@ Relational fields
     http://api.jquery.com/delegate/
 
 .. _datepicker: https://github.com/Eonasdan/bootstrap-datetimepicker
-
-.. _deferred: http://api.jquery.com/category/deferred-object/

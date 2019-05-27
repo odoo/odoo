@@ -1,42 +1,41 @@
 # -*- coding: utf-8 -*-
 
 import json
+import time
 
 from contextlib import contextmanager
 from email.utils import formataddr
+from functools import partial
 
 from odoo import api
 from odoo.addons.bus.models.bus import json_dump
-from odoo.tests import common, tagged
+from odoo.tests import common, tagged, new_test_user
+
+mail_new_test_user = partial(new_test_user, context={'mail_create_nolog': True, 'mail_create_nosubscribe': True, 'mail_notrack': True, 'no_reset_password': True})
 
 
 class BaseFunctionalTest(common.SavepointCase):
 
+    _test_context = {
+        'mail_create_nolog': True,
+        'mail_create_nosubscribe': True,
+        'mail_notrack': True,
+        'no_reset_password': True
+    }
+
     @classmethod
     def setUpClass(cls):
         super(BaseFunctionalTest, cls).setUpClass()
-        cls._quick_create_ctx = {
-            'mail_create_nolog': True,
-            'mail_create_nosubscribe': True,
-            'mail_notrack': True,
-        }
-        cls._quick_create_user_ctx = dict(cls._quick_create_ctx, no_reset_password=True)
 
-        user_group_employee = cls.env.ref('base.group_user')
-        cls.user_employee = cls.env['res.users'].with_context(cls._quick_create_user_ctx).create({
-            'name': 'Ernest Employee',
-            'login': 'ernest',
-            'email': 'e.e@example.com',
-            'signature': '--\nErnest',
-            'notification_type': 'email',
-            'groups_id': [(6, 0, [user_group_employee.id])]})
+        cls.user_employee = mail_new_test_user(cls.env, login='ernest', groups='base.group_user', signature='--\nErnest', name='Ernest Employee')
         cls.partner_employee = cls.user_employee.partner_id
-        cls.user_admin = cls.env.user
-        cls.partner_admin = cls.user_admin.partner_id
 
-        cls.channel_listen = cls.env['mail.channel'].with_context(cls._quick_create_ctx).create({'name': 'Listener'})
+        cls.user_admin = cls.env.ref('base.user_admin')
+        cls.partner_admin = cls.env.ref('base.partner_admin')
 
-        cls.test_record = cls.env['mail.test.simple'].with_context(cls._quick_create_ctx).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+        cls.channel_listen = cls.env['mail.channel'].with_context(cls._test_context).create({'name': 'Listener'})
+
+        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
 
     @contextmanager
     def assertNotifications(self, **counters):
@@ -50,7 +49,7 @@ class BaseFunctionalTest(common.SavepointCase):
             for partner in partners:
                 if partner.user_ids:
                     init[partner] = {
-                        'na_counter': len([n for n in init_notifs if n.res_partner_id == partner]),
+                        'na_counter': len([n for n in init_notifs if n.res_partner_id == partner and not n.is_read]),
                     }
             yield
         finally:
@@ -256,11 +255,12 @@ class MockEmails(common.SingleTransactionCase):
                cc='', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>'):
         return template.format(to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id)
 
-    def format_and_process(self, template, to='groups@example.com, other@gmail.com', subject='Frogs',
-                           extra='', email_from='Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>',
-                           cc='', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>',
-                           model=None, target_model='mail.test.simple', target_field='name'):
+    def format_and_process(self, template, email_from, to, subject='Frogs', extra='',  cc='', msg_id=False,
+                           model=None, target_model='mail.test.gateway', target_field='name'):
         self.assertFalse(self.env[target_model].search([(target_field, '=', subject)]))
+        if not msg_id:
+            msg_id = "<%.7f-test@iron.sky>" % (time.time())
+
         mail = self.format(template, to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id)
         self.env['mail.thread'].with_context(mail_channel_noautofollow=True).message_process(model, mail)
         return self.env[target_model].search([(target_field, '=', subject)])
@@ -273,7 +273,6 @@ class Moderation(MockEmails, BaseFunctionalTest):
     def setUpClass(cls):
         super(Moderation, cls).setUpClass()
         Channel = cls.env['mail.channel']
-        Users = cls.env['res.users'].with_context(cls._quick_create_user_ctx)
 
         cls.channel_moderation_1 = Channel.create({
             'name': 'Moderation_1',
@@ -290,13 +289,7 @@ class Moderation(MockEmails, BaseFunctionalTest):
 
         cls.user_employee.write({'moderation_channel_ids': [(6, 0, [cls.channel_1.id])]})
 
-        cls.user_employee_2 = Users.create({
-            'name': 'Roboute',
-            'login': 'roboute',
-            'email': 'roboute@guilliman.com',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
-            'moderation_channel_ids': [(6, 0, [cls.channel_2.id])]
-            })
+        cls.user_employee_2 = mail_new_test_user(cls.env, login='roboute', groups='base.group_user', moderation_channel_ids=[(6, 0, [cls.channel_2.id])])
         cls.partner_employee_2 = cls.user_employee_2.partner_id
 
         cls.channel_moderation_1.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': cls.partner_employee.id})]})

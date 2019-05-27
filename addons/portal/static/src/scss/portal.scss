@@ -3,37 +3,63 @@
 /// rules.
 ///
 
-// Resize and vertically align navbar’s items relative to navbar
-@mixin o-w-fill-navbar($ratio: 1) {
-    height: round($nav-link-height * $ratio * 100) / 100;
-    margin-top: round($nav-link-height * (1 - $ratio) / 2 * 100) / 100;
-}
+// ======  Variables =========
+$o-theme-navbar-logo-height: $nav-link-height !default;
+
+// Portal toolbar (filters, search bar)
+$o-portal-mobile-toolbar: true; // Enable/Disable custom design
+$o-portal-mobile-toolbar-border: $border-color;
+$o-portal-mobile-toolbar-bg: $gray-200;
+
+// Portal Tables
+$o-portal-table-th-pt: map-get($spacers, 2) !default; // bts4 pt-2
+$o-portal-table-th-pb: map-get($spacers, 2) !default; // bts4 pb-2
+$o-portal-table-td-pt: map-get($spacers, 1) !default; // bts4 pt-1
+$o-portal-table-td-pb: map-get($spacers, 1) !default; // bts4 pb-1
+
+// Portal custom bg color
+$o-portal-bg-color: desaturate($gray-200, 100%);
+
+// Check if portal uses default colors
+$o-portal-use-default-colors: $body-bg == $o-portal-default-body-bg;
 
 // Frontend general
 #wrapwrap {
     position: relative;
-    display: table;
-    table-layout: fixed;
+    display: flex;
+    flex-flow: column nowrap;
     width: 100%;
-    height: 100%;
+    min-height: 100%;
 
     > * {
-        display: table-row;
+        flex: 0 0 auto;
     }
     > main {
-        height: 100%;
+        flex: 1 0 auto;
     }
 }
 
 header {
-    .navbar-brand.logo {
-        padding-top: 0;
-        padding-bottom: 0;
+    .navbar-brand {
+        flex: 0 0 auto;
+        max-width: 75%;
 
-        img {
-            @include o-w-fill-navbar;
-            width: auto;
-            max-width: none;
+        &.logo {
+            padding-top: 0;
+            padding-bottom: 0;
+
+            img {
+                // object-fit does not work on IE but is only used as a fallback
+                object-fit: contain;
+                display: block;
+                width: auto;
+                height: $o-theme-navbar-logo-height;
+
+                @include media-breakpoint-down(sm) {
+                    height: auto;
+                    max-height: min($o-theme-navbar-logo-height, 5rem);
+                }
+            }
         }
     }
     .nav-link {
@@ -42,13 +68,11 @@ header {
 }
 .navbar {
     margin-bottom: 0;
+
     ul.nav > li {
         &.divider {
-            @include o-w-fill-navbar;
+            display: none;
             border-right: 1px solid $nav-divider-color;
-            @include media-breakpoint-down(sm) {
-                display: none;
-            }
         }
 
         &.active + .divider {
@@ -61,12 +85,20 @@ header {
         }
     }
 }
+@include media-breakpoint-up(md) {
+    .navbar-expand-md ul.nav > li.divider {
+        display: list-item;
+    }
+}
 ul.flex-column > li > a {
     padding: 2px 15px;
 }
 
-footer {
-    background-color: #F8F8F8;
+// Link without text but an icon
+a, .btn-link {
+    &.fa:hover {
+        text-decoration: $o-theme-btn-icon-hover-decoration;
+    }
 }
 
 // Odoo options classes
@@ -78,50 +110,47 @@ footer {
 ul {
     list-style-type: disc;
 }
-li > ul {
+ul ul {
     list-style-type: circle;
 }
-li > * > li > ul {
+ul ul ul {
     list-style-type: square;
 }
-li > * > li > * > li > ul {
+ul ul ul ul {
     list-style-type: disc;
 }
-li > * > li > * > li > * > li > ul {
+ul ul ul ul ul {
     list-style-type: circle;
 }
-li > * > li > * > li > * > li > * > li > ul {
+ul ul ul ul ul ul {
     list-style-type: square;
 }
-li > * > li > * > li > * > li > * > li > * > li > ul {
+ul ul ul ul ul ul ul {
     list-style-type: disc;
 }
 ol {
     list-style-type: decimal;
 }
-li > ol {
+ol ol {
     list-style-type: lower-alpha;
 }
-li > * > li > ol {
+ol ol ol {
     list-style-type: lower-greek;
 }
-li > * > li > * > li > ol {
+ol ol ol ol {
     list-style-type: decimal;
 }
-li > * > li > * > li > * > li > ol {
+ol ol ol ol ol {
     list-style-type: lower-alpha;
 }
-li > * > li > * > li > * > li > * > li > ol {
+ol ol ol ol ol ol {
     list-style-type: lower-greek;
 }
-li > * > li > * > li > * > li > * > li > * > li > ol {
+ol ol ol ol ol ol ol {
     list-style-type: decimal;
 }
 li > p {
     margin: 0;
-}
-hr {
-    padding: 4px 0;
 }
 
 // Bootstrap hacks
@@ -137,16 +166,44 @@ hr {
 .container-fluid .container-fluid {
     @extend %o-double-container-no-padding;
 }
+#wrap {
+    > .container, > .container-fluid {
+        // BS3 used to do this on all containers so that margins and floats are
+        // cleared inside containers. As lots of current odoo layouts may rely
+        // on this for some alignments, this is restored (at least for a while)
+        // here only for main containers of the frontend.
+        &::before, &::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    }
+}
 [class^="col-lg-"] {
     min-height: 24px;
 }
 .input-group {
     flex-flow: row nowrap;
 }
+.list-group-item:not([class*="list-group-item-"]):not(.active) {
+    color: color-yiq($list-group-bg);
+}
 
-// Force table to their minimum width for fitting their col-*-auto parent
-.table.o_table_column_fit {
-    width: 1px;
+%o-portal-breadcrumbs {
+    background-color: inherit;
+}
+
+// Replaces old BS3 page-header class
+%o-page-header {
+    margin-bottom: $headings-margin-bottom * 2;
+    padding-bottom: $headings-margin-bottom;
+    border-bottom-width: $border-width;
+    border-bottom-style: solid;
+    border-bottom-color: $border-color;
+    line-height: 2.1rem;
+}
+.o_page_header {
+    @extend %o-page-header;
 }
 
 // Images spacing
@@ -170,24 +227,6 @@ img.o_we_custom_image {
 }
 ::selection {
     background: rgba(150, 150, 220, 0.3);
-}
-.oe_demo {
-    position: relative;
-    img {
-        width: 100%;
-    }
-    div {
-        @include o-position-absolute($left: 0, $bottom: 0);
-        background-color: rgba(0, 0, 0, 0.4);
-        opacity: 0.85;
-        width: 100%;
-        padding: 7px;
-        color: white;
-        font-weight: bold;
-        a {
-            color: white;
-        }
-    }
 }
 .oe_search_box {
     padding-right: 23px;
@@ -271,15 +310,17 @@ img.o_we_custom_image {
 }
 
 // Portal specific
+// ===  Page custom bg ===
+// To be applied to all portal pages if bg-color is white (default).
+@if ($o-portal-use-default-colors) {
+    #wrapwrap.o_portal {
+        @include o-bg-color($o-portal-bg-color);
+    }
+}
+
 .o_portal {
     .breadcrumb {
-        background-color: rgba(0, 0, 0, 0);
-        margin-bottom: 0px;
-        display: inline-block;
-    }
-
-    .record_pager {
-        padding: 8px 0px;
+        @extend %o-portal-breadcrumbs;
     }
 
     > tbody.o_portal_report_tbody {
@@ -288,81 +329,81 @@ img.o_we_custom_image {
 }
 
 .o_portal_wrap {
-    .o_portal_my_home > .page-header > a:hover {
+    .o_portal_my_home > .o_page_header > a:hover {
         text-decoration: none;
     }
 
-    .o_portal_my_doc_table {
-        td, th {
-            text-align: right;
+    .o_portal_navbar {
+        .breadcrumb {
+            padding-left: 0;
+            padding-right: 0;
+            @extend %o-portal-breadcrumbs;
         }
-        tr > :first-child {
-            text-align: left;
+
+        @if ($o-portal-use-default-colors) {
+            background-color: white!important;
         }
     }
 
-    .o_portal_navbar {
-        .navbar-brand {
-            margin: 0;
-
-            @include media-breakpoint-up(md) {
-                padding: $navbar-padding-y $navbar-padding-x 0 0;
-            }
+    .o_portal_my_doc_table {
+        th {
+            padding-top: $o-portal-table-th-pt;
+            padding-bottom: $o-portal-table-th-pb;
         }
 
-        // ===== Default portal navbar design =====
-        &.o_portal_navbar_default {
-            margin-bottom: 8px;
+        td {
+            padding-top: $o-portal-table-td-pt;
+            padding-bottom: $o-portal-table-td-pb;
 
-            .navbar-brand {
-                padding: $navbar-padding-y $navbar-padding-x 0 0;
+        }
+
+        tr:last-child td {
+            padding-bottom: $o-portal-table-td-pb * 1.5;
+        }
+
+        td, th {
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+    }
+
+    address {
+        span[itemprop="name"] {
+            margin-bottom: 0.3em;
+        }
+
+        div[itemprop="address"] > div {
+            position: relative;
+
+            span[itemprop="streetAddress"] {
+                line-height: 1.2;
+                margin-bottom: 0.3em;
             }
 
-            .navbar-header .dropdown-menu {
-                right: 0;
-                left: auto;
-            }
+            .fa {
+                @include o-position-absolute(0, $left: 0);
+                line-height: $line-height-base;
 
-            .navbar-toggle {
-                margin-right: 0;
-                margin-bottom: 0;
-                background-color: $table-active-bg;
-                padding: 6px 10px $navbar-padding-y;
-                border-width: 1px 1px 0 1px;
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
-                z-index: 1;
-
-                &.collapsed {
-                    padding:6px 10px;
-                    border-width: 1px;
-                    border-radius: $btn-border-radius;
-                    background-color: transparent;
+                + span {
+                    display: block;
+                    // FontAwesome '.fa-fw' fixed-with + margin
+                    padding-left: 1.28571429em + 0.5em;
                 }
             }
+        }
+    }
 
-            @include media-breakpoint-down(sm) {
-                .navbar-collapse {
-                    z-index: 0;
-                    background-color: $table-active-bg;
-                    border-radius: $btn-border-radius;
-                    border-top-right-radius: 0;
-                    transform: translateY(-2px);
+    .o_my_sidebar div[itemprop="address"] > div {
+        margin-top: 0.5em;
+    }
 
-                    &.in {
-                        overflow: visible;
-                    }
-                }
-            }
-
-            @include media-breakpoint-up(md) {
-                > .container-fluid {
-                    padding: 0;
-
-                    .navbar-form {
-                        padding-right: 0;
-                    }
-                }
+    @if ($o-portal-mobile-toolbar) {
+        #o_portal_navbar_content {
+            @include media-breakpoint-down(md) {
+                margin: $navbar-padding-y (-$navbar-padding-x) 0;
+                padding: $navbar-padding-y $navbar-padding-x ;
+                border-top: $border-width solid $o-portal-mobile-toolbar-border;
+                background-color: $o-portal-mobile-toolbar-bg;
             }
         }
     }
@@ -383,6 +424,7 @@ img.o_we_custom_image {
     .o_portal_chatter_avatar{
         width: 45px;
         height: 45px;
+        margin-right: 1rem;
     }
 
     .o_portal_chatter_header {
@@ -410,28 +452,54 @@ img.o_we_custom_image {
     }
 }
 
-.o_portal_signature_form .o_portal_sign_error_msg {
-    color: $danger;
+form label {
+    font-weight: $font-weight-bold;
+    &.label-optional {
+        font-weight: $font-weight-normal;
+    }
 }
 
-.label-optional {
-    font-weight: normal;
+.o_portal_contact_img {
+    width: 2.3em;
+    height: 2.3em;
 }
 
 .o_portal_sidebar {
-    .bs-sidebar {
-        position: relative;
+    #sidebar_content.card {
+        border-left: 0;
+        border-bottom: 0;
+
+        > div.card-body {
+            border-left: $border-width solid $border-color;
+        }
+
+        > ul > li {
+            border-left: $border-width solid $border-color;
+            margin-bottom: -1px;
+        }
+
+        > div.card-footer {
+            border-left: $border-width solid $border-color;
+            border-bottom: $border-width solid $border-color;
+        }
+    }
+
+    .o_portal_page_size {
         width: 100%;
-        border-radius: 5px;
-        background-color: $light;
+        max-width: 210mm; // A4 page's width
     }
-    .o_portal_contact_img {
-        width: 3.7em;
-        height: 3.7em;
-    }
+
     .o_portal_html_view {
-        border: 1px solid gray('300');
-        border-radius: 5px;
-        padding-right: 1px;
+        overflow: hidden;
+        background: white;
+        position: relative;
+
+        .o_portal_html_loader {
+            @include o-position-absolute(45%, 0, auto, 0);
+        }
+
+        iframe {
+            position: relative;
+        }
     }
 }

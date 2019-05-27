@@ -62,7 +62,7 @@ def encode_header(header_text):
         return ""
     header_text = ustr(header_text) # FIXME: require unicode higher up?
     if is_ascii(header_text):
-        return pycompat.to_native(header_text)
+        return pycompat.to_text(header_text)
     return Header(header_text, 'utf-8')
 
 def encode_header_param(param_text):
@@ -83,7 +83,7 @@ def encode_header_param(param_text):
         return ""
     param_text = ustr(param_text) # FIXME: require unicode higher up?
     if is_ascii(param_text):
-        return pycompat.to_native(param_text) # TODO: is that actually necessary?
+        return pycompat.to_text(param_text) # TODO: is that actually necessary?
     return Charset("utf-8").header_encode(param_text)
 
 address_pattern = re.compile(r'([^ ,<@]+@[^> ,]+)')
@@ -121,13 +121,15 @@ def encode_rfc2822_address_header(header_text):
         name = Header(pycompat.to_text(name)).encode()
         return formataddr((name, email))
 
-    addresses = getaddresses([pycompat.to_native(ustr(header_text))])
+    addresses = getaddresses([pycompat.to_text(ustr(header_text))])
     return COMMASPACE.join(encode_addr(a) for a in addresses)
 
 
 class IrMailServer(models.Model):
     """Represents an SMTP server, able to send outgoing emails, with SSL and TLS capabilities."""
     _name = "ir.mail_server"
+    _description = 'Mail Server'
+    _order = 'sequence'
 
     NO_VALID_RECIPIENT = ("At least one valid recipient address should be "
                           "specified for outgoing emails (To/Cc/Bcc)")
@@ -266,8 +268,8 @@ class IrMailServer(models.Model):
             # The user/password must be converted to bytestrings in order to be usable for
             # certain hashing schemes, like HMAC.
             # See also bug #597143 and python issue #5285
-            smtp_user = pycompat.to_native(ustr(smtp_user))
-            smtp_password = pycompat.to_native(ustr(smtp_password))
+            smtp_user = pycompat.to_text(ustr(smtp_user))
+            smtp_password = pycompat.to_text(ustr(smtp_password))
             connection.login(smtp_user, smtp_password)
         return connection
 
@@ -342,7 +344,7 @@ class IrMailServer(models.Model):
         msg['Date'] = formatdate()
         # Custom headers may override normal headers or provide additional ones
         for key, value in headers.items():
-            msg[pycompat.to_native(ustr(key))] = encode_header(value)
+            msg[pycompat.to_text(ustr(key))] = encode_header(value)
 
         if subtype == 'html' and not body_alternative:
             # Always provide alternative text body ourselves if possible.
@@ -481,6 +483,8 @@ class IrMailServer(models.Model):
             # do not quit() a pre-established smtp_session
             if not smtp_session:
                 smtp.quit()
+        except smtplib.SMTPServerDisconnected:
+            raise
         except Exception as e:
             params = (ustr(smtp_server), e.__class__.__name__, ustr(e))
             msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s") % params

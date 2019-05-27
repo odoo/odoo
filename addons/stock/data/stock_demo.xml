@@ -7,36 +7,6 @@
         </record>
 
 
-        <!-- Resource: stock.location -->
-
-        <record id="stock_location_3" model="stock.location">
-            <field name="name">IT Vendors</field>
-            <field name="location_id" ref="stock_location_suppliers"/>
-            <field name="usage">supplier</field>
-            <field name="barcode">2601985</field>
-        </record>
-        <record id="stock_location_4" model="stock.location">
-            <field name="name">Big Vendors</field>
-            <field name="location_id" ref="stock_location_3"/>
-            <field name="usage">supplier</field>
-        </record>
-        <record id="stock_location_5" model="stock.location">
-            <field name="name">Generic IT Vendors</field>
-            <field name="location_id" ref="stock_location_3"/>
-            <field name="usage">supplier</field>
-        </record>
-        <record id="stock_location_7" model="stock.location">
-            <field name="name">European Customers</field>
-            <field name="location_id" ref="stock_location_customers"/>
-            <field name="usage">customer</field>
-        </record>
-        <record id="stock_location_8" model="stock.location">
-            <field name="name">Non European Customers</field>
-            <field name="location_id" ref="stock_location_customers"/>
-            <field name="usage">customer</field>
-        </record>
-
-
         <!-- Resource: stock.inventory -->
 
         <record id="stock_inventory_0" model="stock.inventory">
@@ -93,6 +63,41 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">26.0</field>
+            <field name="location_id" ref="stock_location_components"/>
+        </record>
+        <record id="stock_inventory_line_6b" model="stock.inventory.line">
+            <field name="product_id" ref="product.product_product_11b"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_0"/>
+            <field name="product_qty">30.0</field>
+            <field name="location_id" ref="stock_location_components"/>
+        </record>
+        <record id="stock_inventory_line_7" model="stock.inventory.line">
+            <field name="product_id" ref="product.product_product_4"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_0"/>
+            <field name="product_qty">45.0</field>
+            <field name="location_id" ref="stock_location_components"/>
+        </record>
+        <record id="stock_inventory_line_7b" model="stock.inventory.line">
+            <field name="product_id" ref="product.product_product_4b"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_0"/>
+            <field name="product_qty">50.0</field>
+            <field name="location_id" ref="stock_location_components"/>
+        </record>
+        <record id="stock_inventory_line_7c" model="stock.inventory.line">
+            <field name="product_id" ref="product.product_product_4c"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_0"/>
+            <field name="product_qty">55.0</field>
+            <field name="location_id" ref="stock_location_components"/>
+        </record>
+        <record id="stock_inventory_line_7d" model="stock.inventory.line">
+            <field name="product_id" ref="product.product_product_4d"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_0"/>
+            <field name="product_qty">60.0</field>
             <field name="location_id" ref="stock_location_components"/>
         </record>
         <record id="stock_inventory_line_11" model="stock.inventory.line">
@@ -152,8 +157,12 @@
         <record id="res_company_1" model="res.company">
             <field name="currency_id" ref="base.USD"/>
             <field name="partner_id" ref="res_partner_company_1"/>
-            <field name="parent_id" ref="base.main_company"/>
-            <field name="name">My Company, Chicago</field>
+            <field name="name">My Company (Chicago)</field>
+            <field name="user_ids" eval="[(4, ref('base.user_admin')), (4, ref('base.user_demo'))]"/>
+        </record>
+
+        <record id="base.main_company" model="res.company">
+            <field name="name">My Company (San Francisco)</field>
         </record>
 
         <record id="stock_warehouse_shop0" model="stock.warehouse">

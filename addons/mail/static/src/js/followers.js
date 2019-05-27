@@ -28,7 +28,9 @@ var Followers = AbstractField.extend({
         'click .o_remove_follower': '_onRemoveFollower',
         'click .o_mail_redirect': '_onRedirect',
     },
-    supportedFieldTypes: ['one2many'],
+    // this widget only supports one2many but is not generic enough to claim
+    // that it supports all one2many fields
+    // supportedFieldTypes: ['one2many'],
 
     // inherited
     init: function (parent, name, record, options) {
@@ -53,14 +55,14 @@ var Followers = AbstractField.extend({
         // note: the rendering of this widget is asynchronous as it needs to
         // fetch the details of the followers, but it performs a first rendering
         // synchronously (_displayGeneric), and updates its rendering once it
-        // has fetched the required data, so this function doesn't return a deferred
+        // has fetched the required data, so this function doesn't return a promise
         // as we don't want to wait to the data to be loaded to display the widget
         var self = this;
         var fetch_def = this.dp.add(this._readFollowers());
 
         concurrency.rejectAfter(concurrency.delay(0), fetch_def).then(this._displayGeneric.bind(this));
 
-        fetch_def.then(function () {
+        return fetch_def.then(function () {
             self._displayButtons();
             self._displayFollowers(self.followers);
             if (self.subtypes) { // current user is follower
@@ -93,6 +95,7 @@ var Followers = AbstractField.extend({
             this.$('.o_subtypes_list > .dropdown-toggle').attr('disabled', true);
             this.$('.o_followers_actions .dropdown-toggle').removeClass('o_followers_following');
         }
+        this.$('button.o_followers_follow_button').attr("aria-pressed", this.is_follower);
     },
     _displayGeneric: function () {
         // only display the number of followers (e.g. if read failed)
@@ -110,6 +113,12 @@ var Followers = AbstractField.extend({
         $(QWeb.render('mail.Followers.add_more', {widget: this})).appendTo($followers_list);
         var $follower_li;
         _.each(this.followers, function (record) {
+            if(!record.active) {
+                record.title = _.str.sprintf(_t('%s \n(inactive)'), record.name);
+            } else {
+                record.title = record.name;
+            }
+
             $follower_li = $(QWeb.render('mail.Followers.partner', {
                 'record': _.extend(record, {'avatar_url': '/web/image/' + record.res_model + '/' + record.res_id + '/image_small'}),
                 'widget': self})
@@ -200,10 +209,12 @@ var Followers = AbstractField.extend({
                     params: { follower_ids: missing_ids, res_model: this.model }
                 });
         }
-        return $.when(def).then(function (results) {
+        return Promise.resolve(def).then(function (results) {
             if (results) {
                 self.followers = _.uniq(results.followers.concat(self.followers), 'id');
-                self.subtypes = results.subtypes;
+                if (results.subtypes) { //read_followers will return False if current user is not in the list
+                    self.subtypes = results.subtypes;
+                }
             }
             // filter out previously fetched followers that are no longer following
             self.followers = _.filter(self.followers, function (follower) {
@@ -236,27 +247,28 @@ var Followers = AbstractField.extend({
      */
     _unfollow: function (ids) {
         var self = this;
-        var def = $.Deferred();
-        var text = _t("Warning! \n If you remove a follower, he won't be notified of any email or discussion on this document.\n Do you really want to remove this follower ?");
-        Dialog.confirm(this, text, {
-            confirm_callback: function () {
-                var args = [
-                    [self.res_id],
-                    ids.partner_ids,
-                    ids.channel_ids,
-                    {}, // FIXME
-                ];
-                self._rpc({
+        return new Promise(function (resolve, reject) {
+            var follower = _.find(self.followers, { res_id: ids.partner_ids ? ids.partner_ids[0] : ids.channel_ids[0] });
+            var text = _.str.sprintf(_t("If you remove a follower, he won't be notified of any email or discussion on this document. Do you really want to remove %s?"), follower.name);
+            Dialog.confirm(this, text, {
+                title: _t("Warning"),
+                confirm_callback: function () {
+                    var args = [
+                        [self.res_id],
+                        ids.partner_ids,
+                        ids.channel_ids,
+                    ];
+                    self._rpc({
                         model: self.model,
                         method: 'message_unsubscribe',
                         args: args
                     })
                     .then(self._reload.bind(self));
-                def.resolve();
-            },
-            cancel_callback: def.reject.bind(def),
+                    resolve();
+                },
+                cancel_callback: reject,
+            });
         });
-        return def;
     },
     _updateSubscription: function (event, followerID, isChannel) {
         var ids = {};
@@ -285,11 +297,20 @@ var Followers = AbstractField.extend({
 
         // If no more subtype followed, unsubscribe the follower
         if (!checklist.length) {
-            this._unfollow(ids).fail(function () {
+            this._unfollow(ids).guardedCatch(function () {
                 $(event.currentTarget).find('input').addBack('input').prop('checked', true);
             });
         } else {
             var kwargs = _.extend({}, ids);
+            if (followerID === undefined || followerID === this.partnerID) {
+                //this.subtypes will only be updated if the current user
+                //just added himself to the followers. We need to update
+                //the subtypes manually when editing subtypes
+                //for current user
+                _.each(this.subtypes, function (subtype) {
+                    subtype.followed = checklist.indexOf(subtype.id) > -1;
+                });
+            }
             kwargs.subtype_ids = checklist;
             kwargs.context = {}; // FIXME
             this._rpc({
