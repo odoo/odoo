@@ -17,7 +17,6 @@ from functools import partial
 from difflib import HtmlDiff
 from operator import itemgetter
 
-import json
 import werkzeug
 from lxml import etree
 from lxml.etree import LxmlError
@@ -30,7 +29,7 @@ from odoo.modules.module import get_resource_from_path, get_resource_path
 from odoo.osv import orm
 from odoo.tools import config, graph, ConstantMapping, SKIPPED_ELEMENT_TYPES, pycompat
 from odoo.tools.convert import _fix_multiple_roots
-from odoo.tools.parse_version import parse_version
+from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.view_validation import valid_view
 from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
@@ -1358,7 +1357,7 @@ actual arch.
             request=request,  # might be unbound if we're not in an httprequest context
             debug=request.session.debug if request else '',
             test_mode_enabled=bool(config['test_enable'] or config['test_file']),
-            json=json,
+            json=json_scriptsafe,
             quote_plus=werkzeug.url_quote_plus,
             time=time,
             datetime=datetime,

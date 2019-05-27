@@ -833,7 +833,7 @@
         <t t-call="web.layout">
             <t t-set="head_web">
                 <script type="text/javascript">
-                    odoo.session_info = <t t-raw="session_info"/>;
+                    odoo.session_info = <t t-raw="json.dumps(session_info)"/>;
                     odoo.reloadMenus = function () {
                         return new Promise(function(resolve, reject) {
                             function onLoaded() {
