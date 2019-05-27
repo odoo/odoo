@@ -128,6 +128,53 @@ QUnit.module('LunchKanbanView', {
         kanban.destroy();
     });
 
+    QUnit.test('no flickering at reload', function (assert) {
+        assert.expect(2);
+
+        const self = this;
+        let infosProm = $.when();
+        const kanban = createLunchKanbanView({
+            View: LunchKanbanView,
+            model: 'product',
+            data: this.data,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="name"/></div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+            mockRPC: function (route, args) {
+                if (route === '/lunch/user_location_get') {
+                    return $.when(self.data['lunch.location'].records[0].id);
+                }
+                if (route === '/lunch/infos') {
+                    return $.when(self.regularInfos);
+                }
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'xmlid_to_res_id') {
+                    // delay the rendering of the lunch widget
+                    return infosProm.then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        infosProm = $.Deferred();
+        kanban.reload();
+
+        assert.strictEqual(kanban.$('.o_lunch_widget').length, 1,
+            "old widget should still be present");
+
+        infosProm.resolve();
+
+        assert.strictEqual(kanban.$('.o_lunch_widget').length, 1);
+
+        kanban.destroy();
+    });
+
     QUnit.module('LunchKanbanWidget', function () {
 
         QUnit.test('empty cart', function (assert) {
@@ -814,7 +861,6 @@ QUnit.module('LunchKanbanView', {
 
             kanban.destroy();
         });
-
     });
 });
 
