@@ -5,6 +5,7 @@ import io
 import logging
 import os.path
 import re
+import subprocess
 import sys
 import time
 
@@ -13,6 +14,10 @@ from dateutil.relativedelta import relativedelta
 
 import pytz
 from lxml import etree, builder
+try:
+    import jingtrang
+except ImportError:
+    jingtrang = None
 
 import odoo
 from . import assertion_report, pycompat
@@ -771,13 +776,19 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
 
 def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=False, report=None):
     doc = etree.parse(xmlfile)
-    relaxng = etree.RelaxNG(
-        etree.parse(os.path.join(config['root_path'],'import_xml.rng' )))
+    schema = os.path.join(config['root_path'], 'import_xml.rng')
+    relaxng = etree.RelaxNG(etree.parse(schema))
     try:
         relaxng.assert_(doc)
     except Exception:
-        _logger.info("The XML file '%s' does not fit the required schema !", xmlfile.name, exc_info=True)
-        _logger.info(ustr(relaxng.error_log.last_error))
+        _logger.exception("The XML file '%s' does not fit the required schema !", xmlfile.name)
+        if jingtrang:
+            p = subprocess.run(['pyjing', schema, xmlfile.name], stdout=subprocess.PIPE)
+            _logger.warn(p.stdout.decode())
+        else:
+            for e in relaxng.error_log:
+                _logger.warn(e)
+            _logger.info("Install 'jingtrang' for more precise and useful validation messages.")
         raise
 
     if isinstance(xmlfile, str):
