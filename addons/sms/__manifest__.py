@@ -23,6 +23,10 @@ The service is provided by the In App Purchase Odoo platform.
         'views/sms_template_views.xml',
         'security/ir.model.access.csv',
     ],
+    'demo': [
+        'data/sms_demo.xml',
+        'data/mail_demo.xml',
+    ],
     'qweb': [
         'static/src/xml/thread.xml',
     ],
