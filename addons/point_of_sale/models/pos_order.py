@@ -1193,7 +1193,7 @@ class ReportSaleDetails(models.AbstractModel):
         domain = [('state', 'in', ['paid','invoiced','done'])]
 
         if (session_ids):
-            AND(domain, [('session_id', 'in', session_ids)])
+            AND([domain, [('session_id', 'in', session_ids)]])
         else:
             if date_start:
                 date_start = fields.Datetime.from_string(date_start)
