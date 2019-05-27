@@ -349,6 +349,21 @@ var BaseSettingController = FormController.extend({
         this.renderer.activeSettingTab = this.initialState.context.module;
     },
     /**
+     * @override
+     * @returns {Promise}
+     */
+    start: function () {
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            var storedClickedEventData = self.call('local_storage', 'getItem', 'buttonClickedEvent');
+            if (storedClickedEventData) {
+                storedClickedEventData['execute_action_force'] = true;
+                self.trigger_up('button_clicked', storedClickedEventData);
+                self.call('local_storage', 'removeItem', 'buttonClickedEvent');
+            }
+        });
+    },
+    /**
      * Settings view should always be in edit mode, so we have to override
      * default behaviour
      *
@@ -357,19 +372,15 @@ var BaseSettingController = FormController.extend({
     willRestore: function () {
         this.mode = 'edit';
     },
-    start: function () {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            var previousButtonClickedEventData = self.call('local_storage', 'getItem', 'buttonClickedEvent');
-            if (previousButtonClickedEventData) {
-                previousButtonClickedEventData['execute_action_force'] = true;
-                self.trigger_up('button_clicked', previousButtonClickedEventData);
-                self.call('local_storage', 'removeItem', 'buttonClickedEvent');
-            }
-        });
-    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
     _onButtonClicked: function (ev) {
-        var self = this;
         if (ev.data.attrs.name !== 'execute' && ev.data.attrs.name !== 'cancel'
             && !ev.data.execute_action_force && this.$('button[name="execute"]').length) {
             this.call('local_storage', 'setItem', 'buttonClickedEvent', ev.data);
