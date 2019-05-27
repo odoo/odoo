@@ -23,7 +23,7 @@ Featuring
         'website',
         'website_mail',
         'website_profile',
-        'website_rating'],
+        'portal_rating'],
     'data': [
         'views/assets.xml',
         'views/res_config_settings_views.xml',

@@ -1,4 +1,4 @@
-odoo.define('website_rating.thread', function (require) {
+odoo.define('portal_rating.thread', function (require) {
 'use strict';
 
 var core = require('web.core');
@@ -136,8 +136,8 @@ PortalChatter.include({
     }),
     xmlDependencies: (PortalChatter.prototype.xmlDependencies || [])
         .concat([
-            '/website_rating/static/src/xml/website_mail.xml',
-            '/website_rating/static/src/xml/portal_chatter.xml'
+            '/portal_rating/static/src/xml/portal_mail.xml',
+            '/portal_rating/static/src/xml/portal_chatter.xml'
         ]),
 
     /**
@@ -299,11 +299,11 @@ PortalChatter.include({
  * a popup with the portal composer when clicking on it.
  **/
 var RatingPopupComposer = publicWidget.Widget.extend({
-    template: 'website_rating.PopupComposer',
+    template: 'portal_rating.PopupComposer',
     xmlDependencies: [
         '/portal/static/src/xml/portal_chatter.xml',
-        '/website_rating/static/src/xml/website_mail.xml',
-        '/website_rating/static/src/xml/portal_chatter.xml',
+        '/portal_rating/static/src/xml/portal_mail.xml',
+        '/portal_rating/static/src/xml/portal_chatter.xml',
     ],
 
     init: function (parent, options) {
