@@ -54,12 +54,13 @@
                     </group>
                     <notebook>
                         <page string="Questions">
-                            <field name="question_and_page_ids" mode="tree" context="{'default_survey_id': active_id, 'default_questions_selection': questions_selection}" class="o_survey_questions_and_pages">
-                                <tree decoration-bf="is_page==True">
+                            <field name="question_and_page_ids" nolabel="1" widget="section_one2many" mode="tree" context="{'default_survey_id': active_id, 'default_questions_selection': questions_selection}" class="o_survey_questions_and_pages">
+                                <tree decoration-bf="is_page==True" editable="bottom">
                                     <control>
-                                        <create string="Add a section" context="{'default_is_page': True, 'default_questions_selection': questions_selection}"/>
-                                        <create string="Add a question" context="{'default_is_page': False}"/>
+                                        <create name="add_section_control" string="Add a section" context="{'default_is_page': True, 'default_questions_selection': 'all', 'default_display_type': 'line_section'}"/>
+                                        <create name="add_question_control" string="Add a question" context="{'default_is_page': False}"/>
                                     </control>
+                                    <field name="display_type" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="title"/>
                                     <field name="question_type" attrs="{'invisible': [('is_page', '=', True)]}"/>
