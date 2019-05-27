@@ -54,18 +54,18 @@
                     </group>
                     <notebook>
                         <page string="Questions">
-                            <field name="question_and_page_ids" mode="tree" context="{'default_survey_id': active_id, 'default_questions_selection': questions_selection}" class="o_survey_questions_and_pages">
-                                <tree decoration-bf="is_page==True">
-                                    <control>
-                                        <create string="Add a section" context="{'default_is_page': True, 'default_questions_selection': questions_selection}"/>
-                                        <create string="Add a question" context="{'default_is_page': False}"/>
-                                    </control>
+                            <field name="question_and_page_ids" nolabel="1" widget="question_page_one2many" context="{'default_survey_id': active_id, 'default_questions_selection': questions_selection}">
+                                <tree decoration-bf="is_page" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="title"/>
                                     <field name="question_type" attrs="{'invisible': [('is_page', '=', True)]}"/>
                                     <field name="is_page" invisible="1"/>
                                     <field name="questions_selection" invisible="1"/>
                                     <field name="random_questions_count" attrs="{'column_invisible': [('parent.questions_selection', '=', 'all')], 'invisible': [('is_page', '=', False)]}" />
+                                    <control>
+                                        <create name="add_section_control" string="Add a section" context="{'default_is_page': True, 'default_questions_selection': 'all'}"/>
+                                        <create name="add_question_control" string="Add a question"/>
+                                    </control>
                                 </tree>
                             </field>
                         </page>
