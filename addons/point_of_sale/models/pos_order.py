@@ -934,10 +934,13 @@ class PosOrder(models.Model):
 
     def _prepare_bank_statement_line_payment_values(self, data):
         """Create a new payment for the order"""
+        payment_name = '%s - %s' % (self.name, self.pos_reference)
+        if data.get('payment_name'):
+            payment_name += ': ' + data['payment_name']
         args = {
             'amount': data['amount'],
             'date': data.get('payment_date', fields.Date.context_today(self)),
-            'name': self.name + ': ' + (data.get('payment_name', '') or ''),
+            'name': payment_name,
             'partner_id': self.env["res.partner"]._find_accounting_partner(self.partner_id).id or False,
         }
 
