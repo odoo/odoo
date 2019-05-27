@@ -11,14 +11,12 @@ MARGINS USED FOR IMAGE PROCESSING
 Thos are arbitrary and can be tweaked for better results
 
 WHITE_THRESHOLD is used to discard colors having all bands higher than the provided value
-MITIGATION is the maximum value a band can reach
-    => HARD_MITIGATION is used when the color is too bright
-DEFAULT_MARGIN is used to group similar colors (sames band values are within <margin> of each other)
+MITIGATE is the maximum value a band can reach
+    => HARD_MITIGATE is used when the color is too bright
 """
 WHITE_THRESHOLD = 225
-MITIGATION = 200
-HARD_MITIGATION = 160
-DEFAULT_MARGIN = 40
+MITIGATE = 200
+HARD_MITIGATE = 160
 
 def process_rgb(rgb):
     """
@@ -26,7 +24,7 @@ def process_rgb(rgb):
     then converts the tuple to a hex value
     """
     hex_list = []
-    threshold = MITIGATION if sum(rgb) < 650 else HARD_MITIGATION
+    threshold = MITIGATE if sum(rgb) < 650 else HARD_MITIGATE
     brightest = max(rgb)
     for color in range(3):
         value = rgb[color] / (brightest /
@@ -41,12 +39,12 @@ def average_dominant_color(colors):
 
     There are 4 steps :
         1) Select dominant colors (highest count), isolate its values and remove
-            it from the current color set.
-        2) Set margins according to its R, G and B bands (full margin for dominant band).
+           it from the current color set.
+        2) Set margins according to the prevalence of the dominant color.
         3) Evaluate the colors. Similar colors are grouped in the dominant set
-            while others are put in the "remaining" list.
-        4) Calculate the average color for the dominant set. This is simply done by
-            averaging each band and joining them into a tuple.
+           while others are put in the "remaining" list.
+        4) Calculate the average color for the dominant set. This is done by
+           averaging each band and joining them into a tuple.
 
     :param colors: list of tuples having:
         [0] color count in the image
@@ -56,13 +54,12 @@ def average_dominant_color(colors):
         [1] list of remaining colors, used to evaluate subsequent dominant colors
     """
     dominant_color = max(colors)
-    dominant_rgb = dominant_color[1]
+    dominant_rgb = dominant_color[1][:3]
     dominant_set = [dominant_color]
-    colors.remove(dominant_color)
     remaining = []
 
-    margins = [DEFAULT_MARGIN] * 3
-    margins[dominant_rgb.index(max(dominant_rgb[:3]))] = 255
+    margins = [140 * (1 - dominant_color[0] / sum([col[0] for col in colors]))] * 3
+    colors.remove(dominant_color)
 
     for color in colors:
         rgb = color[1]
@@ -130,8 +127,8 @@ class BaseDocumentLayout(models.TransientModel):
                 'default': [wizard.report_layout_id.primary_color, wizard.report_layout_id.secondary_color],
                 'values': [primary, secondary],
             })
-            wizard.previous_default = ','.join((
-                wizard.report_layout_id.primary_color, wizard.report_layout_id.secondary_color))
+            wizard.previous_default = ','.join([
+                wizard.report_layout_id.primary_color, wizard.report_layout_id.secondary_color])
 
     @api.depends('logo', 'font')
     def _compute_preview(self):
@@ -172,11 +169,15 @@ class BaseDocumentLayout(models.TransientModel):
         else:
             # In onchange
             logo = logo + '==='
-        image = tools.base64_to_image(logo).resize((40, 40))
+        try:
+            # Catches exceptions caused by logo not being an image
+            image = tools.base64_to_image(logo)
+        except:
+            return None, None
 
         base_w, base_h = image.size
-        w = int(40 * base_w / base_h)
-        h = 40
+        w = int(50 * base_w / base_h)
+        h = 50
 
         # Converts to RGBA if no alpha detected
         image_converted = image.convert(
