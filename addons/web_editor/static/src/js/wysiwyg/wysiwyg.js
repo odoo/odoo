@@ -127,6 +127,17 @@ var Wysiwyg = Widget.extend({
         return this._summernote.layoutInfo.editable;
     },
     /**
+     * Returns true if the editable code view is activated
+     *
+     * @returns {boolean}
+     */
+    isCodeViewActivated: function () {
+        if ((this._summernote.invoke('HelperPlugin.hasJinja', this._summernote.code()))
+            || (this._summernote.invoke('codeview.isActivated'))) {
+            return true;
+        }
+    },
+    /**
      * Perform undo or redo in the editor.
      *
      * @param {integer} step
