@@ -2,7 +2,7 @@ odoo.define('web_editor.wysiwyg.plugin.font', function (require) {
 'use strict';
 
 var core = require('web.core');
-var ColorpickerDialog = require('wysiwyg.widgets.ColorpickerDialog');
+var ColorpickerDialog = require('web.ColorpickerDialog');
 var AbstractPlugin = require('web_editor.wysiwyg.plugin.abstract');
 var registry = require('web_editor.wysiwyg.plugin.registry');
 var wysiwygTranslation = require('web_editor.wysiwyg.translation');

@@ -6,7 +6,7 @@ var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var weWidgets = require('wysiwyg.widgets');
 var FontPlugin = require('web_editor.wysiwyg.plugin.font');
-var ColorpickerDialog = require('wysiwyg.widgets.ColorpickerDialog');
+var ColorpickerDialog = require('web.ColorpickerDialog');
 
 var qweb = core.qweb;
 var _t = core._t;

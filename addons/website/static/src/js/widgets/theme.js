@@ -6,7 +6,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var weWidgets = require('wysiwyg.widgets');
-var ColorpickerDialog = require('wysiwyg.widgets.ColorpickerDialog');
+var ColorpickerDialog = require('web.ColorpickerDialog');
 var websiteNavbarData = require('website.navbar');
 
 var _t = core._t;
