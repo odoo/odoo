@@ -30,6 +30,15 @@
     &:last-child {
         @include border-bottom-radius($card-inner-border-radius);
     }
+
+    &.row {
+        // The 'row' class should not be used on a 'card-body' element but if
+        // it is done, our custom bg color would overflow the card. As a fix
+        // for those cases (normally only one at the time this fix is made),
+        // remove the background color.
+        // TODO remove me in master.
+        background-color: transparent !important;
+    }
 }
 .accordion {
     .collapsing, .collapse.show {
