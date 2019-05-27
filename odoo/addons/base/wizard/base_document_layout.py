@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import logging
-import base64
 import json
 
-from PIL import Image
 from odoo import api, fields, models, tools
-from odoo.tools.image import image_data_uri
+
 
 """
 MARGINS USED FOR IMAGE PROCESSING

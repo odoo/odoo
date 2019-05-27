@@ -69,28 +69,7 @@
         <field name="view_id" ref="sale_onboarding_order_confirmation_form" />
         <field name="target">new</field>
     </record>
-    <!-- QUOTATION LAYOUT -->
-    <record id="sale_onboarding_quotation_layout_form" model="ir.ui.view">
-        <field name="name">sale.onboarding.quotation.layout.form</field>
-        <field name="model">base.document.layout</field>
-        <field name="inherit_id" ref="base.view_base_document_layout" />
-        <field name="mode">primary</field>
-        <field name="priority">1000</field>
-        <field name="arch" type="xml">
-            <xpath expr="//button[@special='save']" position="replace">
-                <button string="Apply" class="btn btn-primary" type="object" name="action_save_onboarding_quotation_layout" />
-            </xpath>
-        </field>
-    </record>
-    <record id="action_open_sale_onboarding_quotation_layout" model="ir.actions.act_window">
-        <field name="name">Configure your document layout</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">base.document.layout</field>
-        <field name="view_mode">form</field>
-        <field name="view_type">form</field>
-        <field name="view_id" ref="sale_onboarding_quotation_layout_form" />
-        <field name="target">new</field>
-    </record>
+
     <!-- SAMPLE QUOTATION -->
     <record model="ir.ui.view" id="sale_onboarding_sample_quotation_form">
         <field name="name">mail.compose.message.sale.onboarding.sample.quotation.form</field>

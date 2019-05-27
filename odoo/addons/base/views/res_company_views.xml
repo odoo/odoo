@@ -166,37 +166,5 @@
                 </xpath>
             </field>
         </record>
-        <record id="view_company_document_template_form" model="ir.ui.view">
-            <field name="name">res.company.document.template.form</field>
-            <field name="model">res.company</field>
-            <field name="mode">primary</field>
-            <field name="priority">2048</field>
-            <field name="arch" type="xml">
-                <form class="o_company_document_layout">
-                    <group>
-                        <label for="external_report_layout_id" string="Template" colspan="2" />
-                        <field name="external_report_layout_id" colspan="2" nolabel="1"
-                                class="report_layout_container"
-                                widget="report_layout" options="{
-                                    'field_image': 'preview_image',
-                                    'field_binary': 'preview_pdf'
-                                }"/>
-                    </group>
-                    <group>
-                        <field name="logo" widget="image" style="width: 50%"/>
-                        <field name="report_header"  widget="char"
-                            placeholder="e.g. Global Business Solutions" />
-                        <field name="report_footer" string="Footer"
-                            placeholder="e.g. Bank accounts (one per line)" />
-                        <field name="paperformat_id" widget="selection" required="1"/>
-                    </group>
-                    <footer>
-                        <button special="save" string="Save"
-                                class="btn btn-primary" type="object" />
-                        <button special="cancel" string="Cancel" />
-                    </footer>
-                </form>
-            </field>
-        </record>
     </data>
 </odoo>
