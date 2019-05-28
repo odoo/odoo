@@ -107,10 +107,11 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_language_ids(self):
         # If current default language is removed from language_ids
         # update the website_default_lang_id
-        if not self.language_ids:
+        language_ids = self.language_ids._origin
+        if not language_ids:
             self.website_default_lang_id = False
-        elif self.website_default_lang_id not in self.language_ids:
-            self.website_default_lang_id = self.language_ids[0]
+        elif self.website_default_lang_id not in language_ids:
+            self.website_default_lang_id = language_ids[0]
 
     @api.depends('language_ids')
     def _compute_language_count(self):

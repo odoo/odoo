@@ -119,8 +119,9 @@ class Website(models.Model):
 
     @api.onchange('language_ids')
     def _onchange_language_ids(self):
-        if self.language_ids and self.default_lang_id not in self.language_ids:
-            self.default_lang_id = self.language_ids[0]
+        language_ids = self.language_ids._origin
+        if language_ids and self.default_lang_id not in language_ids:
+            self.default_lang_id = language_ids[0]
 
     @api.multi
     def _compute_menu(self):
