@@ -117,11 +117,11 @@ class StockRule(models.Model):
 
     @api.model
     def _get_procurements_to_merge_groupby(self, procurement):
-        return procurement.product_id, procurement.product_uom, procurement.values.get('propagate_date'), procurement.values.get('propagate_date_minimum_delta')
+        return procurement.product_id, procurement.product_uom, procurement.values['propagate_date'], procurement.values['propagate_date_minimum_delta']
 
     @api.model
     def _get_procurements_to_merge_sorted(self, procurement):
-        return procurement.product_id.id, procurement.product_uom.id, procurement.values.get('propagate_date'), procurement.values.get('propagate_date_minimum_delta')
+        return procurement.product_id.id, procurement.product_uom.id, procurement.values['propagate_date'], procurement.values['propagate_date_minimum_delta']
 
     @api.model
     def _get_procurements_to_merge(self, procurements):
@@ -233,8 +233,8 @@ class StockRule(models.Model):
             'product_uom': product_id.uom_po_id.id,
             'price_unit': price_unit,
             'date_planned': date_planned,
-            'propagate_date': values.get('propagate_date'),
-            'propagate_date_minimum_delta': values.get('propagate_date_minimum_delta'),
+            'propagate_date': values['propagate_date'],
+            'propagate_date_minimum_delta': values['propagate_date_minimum_delta'],
             'orderpoint_id': values.get('orderpoint_id', False) and values.get('orderpoint_id').id,
             'taxes_id': [(6, 0, taxes_id.ids)],
             'order_id': po.id,
