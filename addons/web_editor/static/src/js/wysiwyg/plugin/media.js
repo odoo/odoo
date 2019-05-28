@@ -67,8 +67,8 @@ var MediaPlugin = AbstractPlugin.extend({
             $(media).clone()[0]
         );
 
-        mediaDialog.on('saved', this, function (data) {
-            this.insertMedia(media, data);
+        mediaDialog.on('save', this, function (element) {
+            this.insertMedia(media, element);
         });
         mediaDialog.on('closed', this, function () {
             this.context.invoke('editor.restoreRange');
@@ -157,13 +157,12 @@ var MediaPlugin = AbstractPlugin.extend({
      * Insert or replace a media.
      *
      * @param {Node} previous the media to replace, if any
-     * @param {Object} data contains the media to insert
+     * @param {Node} newMedia contains the media to insert
      */
-    insertMedia: function (previous, data) {
-        if (!data.media) {
+    insertMedia: function (previous, newMedia) {
+        if (!newMedia) {
             return;
         }
-        var newMedia = data.media;
         this._wrapCommand(function () {
             this.$editable.focus();
             var rng = this.context.invoke('editor.createRange');
@@ -689,17 +688,17 @@ var ImagePlugin = AbstractMediaPlugin.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Open the crop image dialog and listen to its saved/closed events.
+     * Open the crop image dialog and listen to its save/closed events.
      */
     cropImageDialog: function () {
         this.context.invoke('editor.saveRange');
 
         var media = this.context.invoke('editor.restoreTarget');
         var cropImageDialog = new weWidgets.CropImageDialog(this.options.parent, {},
-            $(media).clone()
+            $(media).clone()[0]
         );
-        cropImageDialog.on('saved', this, function (data) {
-            this.context.invoke('MediaPlugin.insertMedia', media, data);
+        cropImageDialog.on('save', this, function (img) {
+            this.context.invoke('MediaPlugin.insertMedia', media, img);
         });
         cropImageDialog.on('closed', this, function () {
             this.context.invoke('editor.restoreRange');
@@ -708,18 +707,18 @@ var ImagePlugin = AbstractMediaPlugin.extend({
         cropImageDialog.open();
     },
     /**
-     * Open the alt dialog (change image title and alt) and listen to its saved/closed events.
+     * Open the alt dialog (change image title and alt) and listen to its save/closed events.
      */
     altDialg: function () {
         this.context.invoke('editor.saveRange');
 
         var media = this.context.invoke('editor.restoreTarget');
         var altDialog = new weWidgets.AltDialog(this.options.parent, {},
-            $(media).clone()
+            $(media).clone()[0]
         );
-        altDialog.on('saved', this, this._wrapCommand(function (data) {
-            $(media).attr('alt', $(data.media).attr('alt'))
-                .attr('title', $(data.media).attr('title'))
+        altDialog.on('save', this, this._wrapCommand(function (img) {
+            $(media).attr('alt', img.alt)
+                .attr('title', img.title)
                 .trigger('content_changed');
         }));
         altDialog.on('closed', this, function () {

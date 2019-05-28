@@ -182,8 +182,8 @@ options.registry.blog_cover = options.Class.extend({
             onlyImages: true,
             firstFilters: ['background']
         }, $image[0]).open();
-        editor.on('save', this, function (event, img) {
-            var src = $image.attr('src');
+        editor.on('save', this, function (image) {
+            var src = image.src;
             this.$image.css('background-image', src ? ('url(' + src + ')') : '');
             if (!this.$target.hasClass('cover')) {
                 var $opt = this.$el.find('[data-select-class]').first();
