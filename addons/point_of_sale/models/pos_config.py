@@ -39,6 +39,9 @@ class PosConfig(models.Model):
     _name = 'pos.config'
     _description = 'Point of Sale Configuration'
 
+    def _default_picking_type_id(self):
+        return self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).pos_type_id.id
+
     def _default_sale_journal(self):
         journal = self.env.ref('point_of_sale.pos_sale_journal', raise_if_not_found=False)
         if journal and journal.sudo().company_id == self.env.company:
@@ -70,7 +73,11 @@ class PosConfig(models.Model):
         'account.journal', 'pos_config_journal_rel',
         'pos_config_id', 'journal_id', string='Available Payment Methods',
         domain="[('journal_user', '=', True ), ('type', 'in', ['bank', 'cash'])]",)
-    picking_type_id = fields.Many2one('stock.picking.type', string='Operation Type')
+    picking_type_id = fields.Many2one(
+        'stock.picking.type',
+        string='Operation Type',
+        default=_default_picking_type_id,
+        domain="[('code', '=', 'outgoing'), ('warehouse_id.company_id', '=', company_id)]")
     use_existing_lots = fields.Boolean(related='picking_type_id.use_existing_lots', readonly=False)
     stock_location_id = fields.Many2one(
         'stock.location', string='Stock Location',
