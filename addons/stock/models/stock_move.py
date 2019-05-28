@@ -407,7 +407,6 @@ class StockMove(models.Model):
 
         #propagation of expected date:
         propagated_date_field = False
-        new_move_date = False
         if vals.get('date_expected'):
             #propagate any manual change of the expected date
             propagated_date_field = 'date_expected'
@@ -423,12 +422,9 @@ class StockMove(models.Model):
                     new_date = fields.Datetime.from_string(vals.get(propagated_date_field))
                     delta_days = (new_date - current_date).total_seconds() / 86400
                     if abs(delta_days) >= move.propagate_date_minimum_delta:
-                        old_move_date = move.move_dest_ids[0].date_expected
-                        new_move_date = (old_move_date + relativedelta.relativedelta(days=delta_days))
-                    #For pushed moves as well as for pulled moves, propagate by recursive call of write().
-                    #Note that, for pulled moves we intentionally don't propagate on the procurement.
-                    if new_move_date:
-                        move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel')).write({'date_expected': new_move_date})
+                        for move_dest in move.move_dest_ids:
+                            if move_dest.state not in ('done', 'cancel'):
+                                move_dest.date_expected += relativedelta.relativedelta(days=delta_days)
         track_pickings = not self._context.get('mail_notrack') and any(field in vals for field in ['state', 'picking_id', 'partially_available'])
         if track_pickings:
             to_track_picking_ids = set([move.picking_id.id for move in self if move.picking_id])
@@ -532,7 +528,7 @@ class StockMove(models.Model):
     def _prepare_merge_move_sort_method(self, move):
         move.ensure_one()
         return [
-            move.product_id.id, move.price_unit, move.product_packaging.id, move.procure_method, 
+            move.product_id.id, move.price_unit, move.product_packaging.id, move.procure_method,
             move.product_uom.id, move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id,
             move.package_level_id.id
         ]
