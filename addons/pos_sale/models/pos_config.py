@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.exceptions import AccessError
 
 
 class PosConfig(models.Model):
@@ -9,9 +10,9 @@ class PosConfig(models.Model):
 
     def _get_default_pos_team(self):
         try:
-            team = self.env.ref('sales_team.pos_sales_team')
+            team = self.env.ref('sales_team.pos_sales_team', raise_if_not_found=False)
             return team if team.active else None
-        except ValueError:
+        except AccessError:
             return None 
 
     crm_team_id = fields.Many2one(
