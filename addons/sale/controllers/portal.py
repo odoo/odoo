@@ -287,7 +287,15 @@ class CustomerPortal(CustomerPortal):
         }
 
         transaction = order._create_payment_transaction(vals)
+
+        # store the new transaction into the transaction list and if there's an old one, we remove it
+        last_tx_id = request.session.get('__website_last_tx_id')
+        last_tx = request.env['payment.transaction'].browse(last_tx_id).sudo().exists()
+        if last_tx:
+            PaymentProcessing.remove_payment_transaction(last_tx)
         PaymentProcessing.add_payment_transaction(transaction)
+        request.session['__website_last_tx_id'] = transaction.id
+
         return transaction.render_sale_button(
             order,
             submit_txt=_('Pay & Confirm'),

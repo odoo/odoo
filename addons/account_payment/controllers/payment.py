@@ -39,7 +39,14 @@ class PaymentPortal(http.Controller):
             vals['type'] = 'form_save'
 
         transaction = invoice_sudo._create_payment_transaction(vals)
+
+        # store the new transaction into the transaction list and if there's an old one, we remove it
+        last_tx_id = request.session.get('__website_invoice_last_tx_id')
+        last_tx = request.env['payment.transaction'].browse(last_tx_id).sudo().exists()
+        if last_tx:
+            PaymentProcessing.remove_payment_transaction(last_tx)
         PaymentProcessing.add_payment_transaction(transaction)
+        request.session['__website_invoice_last_tx_id'] = transaction.id
 
         return transaction.render_invoice_button(
             invoice_sudo,

@@ -100,14 +100,18 @@ class PaypalController(http.Controller):
     def paypal_dpn(self, **post):
         """ Paypal DPN """
         _logger.info('Beginning Paypal DPN form_feedback with post data %s', pprint.pformat(post))  # debug
-        try:
-            res = self.paypal_validate_data(**post)
-        except ValidationError:
-            _logger.exception('Unable to validate the Paypal payment')
+        if post:
+            try:
+                res = self.paypal_validate_data(**post)
+            except ValidationError:
+                _logger.exception('Unable to validate the Paypal payment')
         return werkzeug.utils.redirect('/payment/process')
 
     @http.route('/payment/paypal/cancel', type='http', auth="none", csrf=False)
     def paypal_cancel(self, **post):
         """ When the user cancels its Paypal payment: GET on this route """
         _logger.info('Beginning Paypal cancel with post data %s', pprint.pformat(post))  # debug
-        return werkzeug.utils.redirect('/payment/process')
+        tx_id = request.session.get("__payment_tx_ids__", [])
+        payment_transaction_ids = request.env['payment.transaction'].sudo().browse(tx_id).exists()
+        return_url = payment_transaction_ids.return_url if payment_transaction_ids else '/payment/process'
+        return werkzeug.utils.redirect(return_url)
