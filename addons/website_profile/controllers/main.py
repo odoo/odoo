@@ -219,27 +219,35 @@ class WebsiteProfile(http.Controller):
             dom = expression.AND([['|', ('name', 'ilike', search_term), ('company_id.name', 'ilike', search_term)], dom])
 
         user_count = User.sudo().search_count(dom)
-        page_count = math.ceil(user_count / self._users_per_page)
-        pager = request.website.pager(url="/profile/users", total=user_count, page=page, step=self._users_per_page,
-                                      scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages)
 
-        users = User.sudo().search(dom, limit=self._users_per_page, offset=pager['offset'], order='karma DESC')
-        user_values = [self._prepare_all_users_values(user) for user in users]
+        if user_count:
+            page_count = math.ceil(user_count / self._users_per_page)
+            pager = request.website.pager(url="/profile/users", total=user_count, page=page, step=self._users_per_page,
+                                          scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages)
 
-        # Get karma position for users (only website_published)
-        position_domain = [('karma', '>', 1), ('website_published', '=', True)]
-        position_map = self._get_users_karma_position(position_domain, users.ids)
-        for user in user_values:
-            user['position'] = position_map.get(user['id'], 0)
+            users = User.sudo().search(dom, limit=self._users_per_page, offset=pager['offset'], order='karma DESC')
+            user_values = [self._prepare_all_users_values(user) for user in users]
 
-        values = {
-            'top3_users': user_values[:3] if not search_term and page == 1 else None,
-            'users': user_values[3:] if not search_term and page == 1 else user_values,
-            'pager': pager
-        }
+            # Get karma position for users (only website_published)
+            position_domain = [('karma', '>', 1), ('website_published', '=', True)]
+            position_map = self._get_users_karma_position(position_domain, users.ids)
+            for user in user_values:
+                user['position'] = position_map.get(user['id'], 0)
+
+            values = {
+                'top3_users': user_values[:3] if not search_term and page == 1 else None,
+                'users': user_values[3:] if not search_term and page == 1 else user_values,
+                'pager': pager
+            }
+        else:
+            values = {'top3_users': [], 'users': [], 'pager': dict(page_count=0)}
+
         return request.render("website_profile.users_page_main", values)
 
     def _get_users_karma_position(self, domain, user_ids):
+        if not user_ids:
+            return {}
+
         Users = request.env['res.users']
         where_query = Users._where_calc(domain)
         Users._apply_ir_rules(where_query, 'read')
