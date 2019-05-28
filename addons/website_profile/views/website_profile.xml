@@ -478,11 +478,14 @@
                     <t t-call="website_profile.top3_user_card"></t>
                 </div>
             </div>
-            <table class="table table-sm">
+            <table class="table table-sm" t-if='users'>
                 <tr t-foreach="users" t-as="user" t-attf-onclick="location.href='/profile/user/#{user['id']}';" class="o_wprofile_pointer bg-white">
                     <t t-call="website_profile.all_user_card"/>
                 </tr>
             </table>
+            <t else=''>
+                <div class='alert alert-warning'>No results matched</div>
+            </t>
             <div class="form-inline justify-content-center">
                 <t t-call="website_profile.pager_nobox"/>
             </div>
