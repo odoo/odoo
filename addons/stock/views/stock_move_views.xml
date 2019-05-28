@@ -88,6 +88,7 @@
                     <field name="additional" invisible="1"/>
                     <field name="has_move_lines" invisible="1"/>
                     <field name="is_locked" invisible="1"/>
+                    <field name="product_uom_category_id" invisible="1"/>
                     <field name="product_id" required="1" attrs="{'readonly': ['|', '&amp;', ('state', '!=', 'draft'), ('additional', '=', False), ('has_move_lines', '=', True)]}"/>
                     <field name="is_initial_demand_editable" invisible="1"/>
                     <field name="is_quantity_done_editable" invisible="1"/>
@@ -146,6 +147,7 @@
                 <tree decoration-muted="scrapped == True" string="Stock Moves" editable="bottom">
                     <field name="product_id"/>
                     <field name="name" invisible="1"/>
+                    <field name="product_uom_category_id" invisible="1"/>
                     <field name="product_uom_qty"/>
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                     <field name="location_id" options="{'no_create': True}" invisible="1"/>
@@ -249,6 +251,7 @@
                             </group>
                             <group name="main_grp_col2">
                                 <field name="product_id"/>
+                                <field name="product_uom_category_id" invisible="1"/>
                                 <label for="product_uom_qty"/>
                                 <div class="o_row">
                                     <field name="product_uom_qty"/>
@@ -305,6 +308,7 @@
                         <field name="product_id"/>
                         <field name="picking_type_id" invisible="1"/>
                         <field name="group_id" invisible="1"/>
+                        <field name="product_uom_category_id" invisible="1"/>
                         <label for="product_uom_qty"/>
                         <div>
                             <field name="product_uom_qty"/>
