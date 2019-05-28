@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons.product.tests import common
 
@@ -313,3 +313,95 @@ class TestCreatePicking(common.TestProductCommon):
         purchase_order_2.picking_ids.button_validate()
 
         self.assertEqual(sum(customer_picking.move_lines.mapped('reserved_availability')), 100.0, 'The total quantity for the customer move should be available and reserved.')
+
+    def create_delivery_order(self, propagate_date, propagate_date_minimum_delta):
+        stock_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_stock')
+        customer_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_customers')
+        unit = self.ref("uom.product_uom_unit")
+        picking_type_out = self.env['ir.model.data'].xmlid_to_object('stock.picking_type_out')
+        partner = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
+        supplier_info1 = self.env['product.supplierinfo'].create({
+            'name': partner.id,
+            'price': 50,
+        })
+
+        warehouse1 = self.env.ref('stock.warehouse0')
+        route_buy = warehouse1.buy_pull_id.route_id
+        route_mto = warehouse1.mto_pull_id.route_id
+
+        # change propagete date and Reschedule if Higher Than on rules
+        route_buy.rule_ids.write({'propagate_date': propagate_date,
+            'propagate_date_minimum_delta': propagate_date_minimum_delta})
+
+        product = self.env['product.product'].create({
+            'name': 'Usb Keyboard',
+            'type': 'product',
+            'uom_id': unit,
+            'uom_po_id': unit,
+            'seller_ids': [(6, 0, [supplier_info1.id])],
+            'route_ids': [(6, 0, [route_buy.id, route_mto.id])]
+        })
+
+        delivery_order = self.env['stock.picking'].create({
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'partner_id': partner.id,
+            'picking_type_id': picking_type_out.id,
+        })
+
+        customer_move = self.env['stock.move'].create({
+            'name': 'move out',
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_uom_qty': 10.0,
+            'procure_method': 'make_to_order',
+            'picking_id': delivery_order.id,
+        })
+
+        customer_move._action_confirm()
+        # find created po the product
+        purchase_order = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
+
+        return delivery_order, purchase_order
+
+    def test_05_if_propagate_date(self):
+        """ In order to check scheduled date of the delivery order is changed based
+            stock rules with propagate date and minimum delta.
+        """
+
+        # Create Delivery Order and with propagate date and minimum delta
+        delivery_order, purchase_order = self.create_delivery_order(True, 5)
+
+        # check po is created or not
+        self.assertTrue(purchase_order, 'No purchase order created.')
+
+        purchase_order_line = purchase_order.order_line
+
+        # change scheduled date of po line.
+        purchase_order_line.write({'date_planned': purchase_order_line.date_planned + timedelta(days=5)})
+
+        # Now check scheduled date of delivery order is changed or not.
+        self.assertEquals(purchase_order_line.date_planned, delivery_order.scheduled_date,
+            'Delivery order schedule date should be changed as we have set date propagate.')
+
+    def test_06_no_propagate_date(self):
+        """ In order to check scheduled date of the delivery order is changed based
+            stock rules without propagate date and minimum delta.
+        """
+
+        # Create Delivery Order and without propagate date and minimum delta
+        delivery_order, purchase_order = self.create_delivery_order(False, 5)
+
+        # check po is created or not
+        self.assertTrue(purchase_order, 'No purchase order created.')
+
+        purchase_order_line = purchase_order.order_line
+
+        # change scheduled date of po line.
+        purchase_order_line.write({'date_planned': purchase_order_line.date_planned + timedelta(days=5)})
+
+        # Now check scheduled date of delivery order is changed or not.
+        self.assertNotEquals(purchase_order_line.date_planned, delivery_order.scheduled_date,
+            'Delivery order schedule date should not changed.')
