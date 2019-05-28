@@ -70,6 +70,46 @@ class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
             body_content=self.test_record.email_from,
             attachments=[('first.txt', b'My first attachment', 'text/plain'), ('second.txt', b'My second attachment', 'text/plain')])
 
+    def test_composer_template_onchange_attachments(self):
+        """Tests that all attachments are added to the composer,
+        static attachments are not duplicated and while reports are re-generated,
+        and that intermediary attachments are dropped."""
+
+        composer = self.env['mail.compose.message'].create({})
+        report_template = self.env.ref('web.action_report_externalpreview')
+        template_1 = self.email_template.copy({
+            'report_template': report_template.id,
+        })
+        template_2 = self.email_template.copy({
+            'attachment_ids': False,
+            'report_template': report_template.id,
+        })
+
+        onchange_templates = [template_1, template_2, template_1]
+        attachments_onchange = []
+        # template_1 has two static attachments and one dynamically generated report,
+        # template_2 only has the report, so we should get 3, 1, 3 attachments
+        attachment_numbers = [3, 1, 3]
+
+        for template in onchange_templates:
+            onchange = composer.onchange_template_id(
+                template.id, 'comment', 'mail.test', self.test_record.id
+            )
+            values = composer._convert_to_record(composer._convert_to_cache(onchange['value']))
+            attachments = values['attachment_ids']
+            composer.attachment_ids = attachments  # we apply the onchange
+            attachments_onchange.append(attachments)
+
+        self.assertEqual(
+            [len(attachments) for attachments in attachments_onchange],
+            attachment_numbers,
+        )
+
+        self.assertTrue(
+            len(attachments_onchange[0] & attachments_onchange[2]) == 2,
+            "The two static attachments on the template should be common to the two onchanges"
+        )
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_post_w_template(self):
         self.test_record.sudo(self.user_employee).message_post_with_template(self.email_template.id, composition_mode='comment')
