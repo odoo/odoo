@@ -864,7 +864,8 @@ class HttpCase(TransactionCase):
 
         db = get_db_name()
         uid = self.registry['res.users'].authenticate(db, user, password, None)
-        env = api.Environment(self.cr, uid, {})
+        self.cr.execute("""SELECT company_id FROM res_users WHERE id=%s""" , (uid,))
+        env = api.Environment(self.cr, uid, {'allowed_company_ids': list(self.cr.fetchone())})
 
         # self.session.authenticate(db, user, password, uid=uid)
         # OpenERPSession.authenticate accesses the current request, which we
