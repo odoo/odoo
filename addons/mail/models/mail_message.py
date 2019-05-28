@@ -1088,6 +1088,9 @@ class Message(models.Model):
                 if active is False:
                     # avoid to notify inactive partner by email (odoobot)
                     continue
+                if record._name == 'mail.channel' and not record.email_send:
+                    # ignore in case the message has been posted from a channel without mass-mailing feature
+                    continue
                 pdata = {'id': pid, 'active': active, 'share': pshare, 'groups': groups}
                 if notif == 'inbox':
                     recipient_data['partners'].append(dict(pdata, notif=notif, type='user'))
