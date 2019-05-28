@@ -206,11 +206,9 @@ class BaseDocumentLayout(models.TransientModel):
             default = [wizard.report_layout_id.primary_color,
                        wizard.report_layout_id.secondary_color]
 
-            print("Before", wizard.previous_default)
             if wizard.previous_default.split(',') == values:
                 values = default
             wizard.previous_default = ','.join(default)
-            print("After", wizard.previous_default)
             wizard.company_colors = json.dumps({
                 'default': default,
                 'values': values,

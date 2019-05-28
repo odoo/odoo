@@ -20,7 +20,7 @@ var session = require('web.session');
 var utils = require('web.utils');
 var view_dialogs = require('web.view_dialogs');
 var field_utils = require('web.field_utils');
-var ColorpickerDialog = require('wysiwyg.widgets.ColorpickerDialog');
+var ColorpickerDialog = require('web.ColorpickerDialog');
 
 var qweb = core.qweb;
 var _t = core._t;
