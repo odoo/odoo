@@ -146,7 +146,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         'change select[name="country_id"]': '_onChangeCountry',
         'change #shipping_use_same': '_onChangeShippingUseSame',
         'click .toggle_summary': '_onToggleSummary',
-        'click #add_to_cart, #buy_now, #products_grid .product_price .a-submit': 'async _onClickAdd',
+        'click #add_to_cart, #buy_now, #products_grid .o_wsale_product_btn .a-submit': 'async _onClickAdd',
         'click input.js_product_change': 'onChangeVariant',
         // dirty fix: prevent options modal events to be triggered and bubbled
         'change oe_optional_products_modal [data-attribute_exclusions]': 'onChangeVariant',
@@ -421,11 +421,6 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         $carousel.toggleClass('css_not_available',
             $productContainer.find('.js_main_product').hasClass('css_not_available'));
     },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
     /**
      * @private
      * @param {MouseEvent} ev
@@ -435,7 +430,6 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         this.isBuyNow = $(ev.currentTarget).attr('id') === 'buy_now';
         return this._handleAdd($(ev.currentTarget).closest('form'));
     },
-
     /**
      * Initializes the optional products modal
      * and add handlers to the modal events (confirm, back, ...)
@@ -695,6 +689,43 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     },
 });
 
+publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
+    selector: '.oe_website_sale',
+    disabledInEditableMode: false,
+    events: {
+        'change .o_wsale_apply_layout': '_onApplyShopLayoutChange',
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onApplyShopLayoutChange: function (ev) {
+        var switchToList = $(ev.currentTarget).find('.o_wsale_apply_list input').is(':checked');
+        if (!this.editableMode) {
+            this._rpc({
+                route: '/shop/save_shop_layout_mode',
+                params: {
+                    'layout_mode': switchToList ? 'list' : 'grid',
+                },
+            });
+        }
+        var $grid = this.$('#products_grid');
+        // Disable transition on all list elements, then switch to the new
+        // layout then reenable all transitions after having forced a redraw
+        // TODO should probably be improved to allow disabling transitions
+        // altogether with a class/option.
+        $grid.find('*').css('transition', 'none');
+        $grid.toggleClass('o_wsale_layout_list', switchToList);
+        void $grid[0].offsetWidth;
+        $grid.find('*').css('transition', '');
+    },
+});
+
 publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
     selector: '.oe_website_sale .oe_cart',
     events: {
@@ -712,15 +743,15 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onClickChangeShipping: function (ev) {
-        var $old = $('.all_shipping').find('.card.border_primary');
+        var $old = $('.all_shipping').find('.card.border.border-primary');
         $old.find('.btn-ship').toggle();
         $old.addClass('js_change_shipping');
-        $old.removeClass('border_primary');
+        $old.removeClass('border border-primary');
 
         var $new = $(ev.currentTarget).parent('div.one_kanban').find('.card');
         $new.find('.btn-ship').toggle();
         $new.removeClass('js_change_shipping');
-        $new.addClass('border_primary');
+        $new.addClass('border border-primary');
 
         var $form = $(ev.currentTarget).parent('div.one_kanban').find('form.d-none');
         $.post($form.attr('action'), $form.serialize()+'&xhr=1');

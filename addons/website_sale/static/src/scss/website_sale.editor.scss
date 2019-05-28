@@ -1,0 +1,27 @@
+.o_wsale_soptions_menu_sizes {
+    table {
+        margin-left: 20px;
+
+        td {
+            margin: 0;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            border: 1px #dddddd solid;
+            cursor: pointer;
+
+            &.selected {
+                background-color: #B1D4F1;
+            }
+        }
+
+        &.oe_hover td {
+            &.selected {
+                background-color: transparent;
+            }
+            &.select {
+                background-color: #B1D4F1;
+            }
+        }
+    }
+}
