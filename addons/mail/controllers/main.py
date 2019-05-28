@@ -73,7 +73,7 @@ class MailController(http.Controller):
                 # We need here to extend the "allowed_company_ids" to allow a redirection
                 # to any record that the user can access, regardless of currently visible
                 # records based on the "currently allowed companies".
-                cids = request.httprequest.cookies.get('cids', str(request.env.user.company_id))
+                cids = request.httprequest.cookies.get('cids', str(user.company_id.id))
                 cids = [int(cid) for cid in cids.split(',')]
                 try:
                     record_sudo.sudo(uid).with_context(allowed_company_ids=cids).check_access_rule('read')
@@ -93,9 +93,9 @@ class MailController(http.Controller):
                     if not suggested_company:
                         raise AccessError()
                     if user.has_group('base.group_toggle_company'):
-                        cids += [suggested_company]
+                        cids += [suggested_company.id]
                     else:
-                        cids = [suggested_company]
+                        cids = [suggested_company.id]
                     record_sudo.sudo(uid).with_context(allowed_company_ids=cids).check_access_rule('read')
             except AccessError:
                 return cls._redirect_to_messaging()
