@@ -12,7 +12,6 @@ odoo.define('survey.section_backend', function(require){
             var isSection = record.data.display_type === 'line_section';
 
             if(isSection){
-                this.editable = "bottom";
                 if(node.attrs.widget === "handle"){
                     return $cell;
                 } else if(node.attrs.name === "title"){
@@ -23,14 +22,13 @@ odoo.define('survey.section_backend', function(require){
                     if(this.addTrashIcon){
                         nbrColumns--;
                     }
-                    $cell.attr('colSpan', nbrColumns-1);
+                    $cell.attr('colspan', nbrColumns);
                 } else {
+                    $cell.removeClass('o_invisible_modifier');
                     return $cell.addClass('o_hidden');
                 }
-            }else{
-                this.editable = false;
             }
-            return $cell
+            return $cell;
         },
         _renderRow: function(record, index){
             var $row = this._super.apply(this, arguments);
@@ -43,6 +41,21 @@ odoo.define('survey.section_backend', function(require){
             var def = this._super();
             this.$el.find('> table').addClass('o_section_list_view');
             return def;
+        },
+        _onRowClicked: function(ev){
+            if(ev.currentTarget.className.includes('line_section')){
+                if(this.__parentedParent.mode == "edit"){
+                    this.editable = "bottom";
+                }else{
+                    delete this.editable;
+                }
+            }else{
+                delete this.editable;
+            }
+            this._super.apply(this, arguments);
+            if(this.__parentedParent.mode == "edit"){
+                this.editable = "bottom";
+            }
         },
     });
 
