@@ -228,6 +228,7 @@ class BaseDocumentLayout(models.TransientModel):
             wizard.logo = logo
             if not logo or (logo_same and company.primary_color and company.secondary_color):
                 continue
+
             primary, secondary = wizard._parse_logo_colors()
 
             wizard.company_colors = json.dumps({
