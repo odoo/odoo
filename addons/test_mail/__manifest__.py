@@ -12,6 +12,7 @@ tests independently to functional aspects of other models. """,
     'depends': ['test_performance', 'mail', 'mail_bot'],
     'data': [
         'security/ir.model.access.csv',
+        'security/test_mail_security.xml',
         'data/data.xml',
     ],
     'demo': [
