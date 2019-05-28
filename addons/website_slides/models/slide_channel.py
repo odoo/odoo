@@ -478,7 +478,7 @@ class Channel(models.Model):
     def _rating_domain(self):
         """ Only take the published rating into account to compute avg and count """
         domain = super(Channel, self)._rating_domain()
-        return expression.AND([domain, [('website_published', '=', True)]])
+        return expression.AND([domain, [('message_id.website_published', '=', True)]])
 
     # ---------------------------------------------------------
     # Data / Misc
