@@ -1,5 +1,5 @@
 from math import floor, log10
-from odoo import api, models
+from odoo import api, models, _
 
 
 class CRMHelpers(models.Model):

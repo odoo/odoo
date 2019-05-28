@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <odoo>
-    <template id="lead_message_template">
-        <p>Opportunity created by Odoo Lead Generation</p>
+    <template id="mail_message_lead_enrich_notfound">
+        <p>Lead Enrichment based on email address</p>
+        <div style="background-color:#ffffff;padding:15px;">
+            <span> No company data found based on the email address or email address is one of an email provider. No credit was consumed. </span>
+        </div>
+    </template>
+
+    <template id="mail_message_lead_enrich_no_email">
+        <p>Lead Enrichment based on email address</p>
+        <div style="background-color:#ffffff;padding:15px;">
+            <span>Enrichment could not be done as no email address was provided.</span>
+        </div>
+    </template>
+
+    <template id="mail_message_lead_enrich_no_credit">
+        <p>Lead enriched based on email address</p>
+        <div style="background-color:#ffffff;padding:15px;">
+            <span>Your balance for Lead Enrichment is insufficient. Please go to your <a t-attf-href="{{url}}" target="_blank">iap account</a> to buy credits.</span>
+        </div>
+    </template>
+
+    <template id="mail_message_lead_enrich_with_data">
+        <p>
+            <span>Lead enriched based on email address</span>
+        </p>
         <div style="background-color:#ffffff;padding:15px;">
             <table style="width:100%">
                 <tr valign="top">
@@ -13,7 +37,7 @@
                 <tr>
                     <td style="padding: 0 0 5px 0;">
                         <span style="font-size:25px;vertical-align: middle;">
-                            <b><t t-esc="name"/></b>
+                            <b><t t-esc="lead.partner_name"/></b>
                         </span>
                         <span style="">
                             <a t-if="twitter" style="margin: 0 0 0 8px;" target="_blank" t-attf-href="http://www.twitter.com/{{twitter}}">
@@ -33,7 +57,7 @@
                 </tr>
                 <tr>
                     <td style="padding: 0 0 5px 0;">
-                        <span><t t-esc="description"/></span>
+                        <span><t t-esc="lead.description"/></span>
                     </td>
                 </tr>
                 <tr>
@@ -67,55 +91,6 @@
                         </t>
                     </td>
                 </tr>
-            </table>
-            <div t-if="people_data" style="font-size:16px;margin: 9px 0;">
-                <b>Contacts</b>
-            </div>
-            <table style="width:100%;
-                border-top-style: solid;border-top-color: #eeeeee;border-top-width: 1px;
-                border-bottom-style: solid;border-bottom-color: #eeeeee;border-bottom-width: 1px;
-                border-left-style: solid;border-left-color: #eeeeee;border-left-width: 1px;
-                border-right-style: solid;border-right-color: #eeeeee;border-right-width: 1px;" t-if="people_data">
-                <thead>
-                    <tr style="background-color: #eeeeee">
-                        <th style="padding: 5px">
-                            Name
-                        </th>
-                        <th style="padding: 5px">
-                            Title
-                        </th>
-                        <th style="padding: 5px">
-                            <img src="web_editor/font_to_img/61664/rgb(102,102,102)/13"/>
-                            Email
-                        </th>
-                        <th style="padding: 5px">
-                            <img src="web_editor/font_to_img/61589/rgb(102,102,102)/13"/>
-                            Phone
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <t t-foreach="people_data" t-as="people">
-                        <tr t-att-style="people_odd and 'background-color:#eeeeee' or None">
-                            <td style="padding: 5px">
-                                <t t-esc="people['full_name'] or ''"/>
-                            </td>
-                            <td style="padding: 5px">
-                                <t t-esc="people['title'] or ''"/>
-                            </td>
-                            <td style="padding: 5px">
-                                <a t-if="people['email']" t-attf-href="mailto:{{people['email']}}" target="_top">
-                                    <t t-esc="people['email']"/>
-                                </a>
-                            </td>
-                            <td style="padding: 5px">
-                                <a t-if="people['phone']" t-attf-href="tel:{{people['phone']}}">
-                                    <t t-esc="people['phone']"/>
-                                </a>
-                            </td>
-                        </tr>
-                    </t>
-                </tbody>
             </table>
         </div>
     </template>
