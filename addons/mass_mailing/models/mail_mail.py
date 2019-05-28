@@ -103,5 +103,5 @@ class MailMail(models.Model):
                     mail.statistics_ids.write({'sent': fields.Datetime.now(), 'exception': False})
                 elif mail_sent is False and mail.statistics_ids:
                     mail.statistics_ids.write({'exception': fields.Datetime.now()})
-        return super(MailMail, self)._postprocess_sent_message(failure_type=failure_type, **kwargs)
-    
+        return super(MailMail, self)._postprocess_sent_message(success_pids=[], failure_type=failure_type, **kwargs)
+
