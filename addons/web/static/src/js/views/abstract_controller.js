@@ -458,6 +458,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      * @param ev
      */
     _onActionClicked: function (ev) { // FIXME: maybe this should also work on <button> tags?
+        ev.preventDefault();
         var $target = $(ev.currentTarget);
         var self = this;
         var data = $target.data();
