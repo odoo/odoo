@@ -1,4 +1,4 @@
-odoo.define('web_mobile.relational_fields', function (require) {
+odoo.define('web.relational_fields_mobile', function (require) {
 "use strict";
 
 var config = require('web.config');

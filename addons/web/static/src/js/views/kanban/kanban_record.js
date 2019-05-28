@@ -223,6 +223,23 @@ var KanbanRecord = Widget.extend({
         });
     },
     /**
+     *
+     */
+    _postProcessForM2O: function () {
+        this.$("button.oe_kanban_action").addClass('d-none');
+        // TODO: MSH: clicking on anchor tag still not working, it doesn't select record
+        // need to remove href else globalClick will avoid if there is anchor with href
+        this.$("a.oe_kanban_action").removeAttr('href');
+        // need to remove event else globalClick will avoid click if there is click event bind on any child element
+        this.$("a.oe_kanban_action").off('.widget_events');
+        // .removeClass('oe_kanban_action');
+        this.$(".o_kanban_manage_button_section").addClass('d-none');
+        this.$(".dropdown").addClass('d-none');
+        // for instance hide following clickable widget, need to check if we have better way to handle
+        this.$(".o_progressbar,.o_priority,.o_mail_activity,.o_selection").addClass('d-none');
+        // this.$("[widget='priority'],[widget='kanban_activity'],[widget='progressbar'],[widget='state_selection']").attr('invisible', 1);
+    },
+    /**
      * Processes each 'field' tag and replaces it by the specified widget, if
      * any, or directly by the formatted value
      *
@@ -341,6 +358,7 @@ var KanbanRecord = Widget.extend({
      * @returns {Promise}
      */
     _render: function () {
+        var self = this;
         this.defs = [];
         this._replaceElement(this.qweb.render('kanban-box', this.qweb_context));
         this.$el.addClass('o_kanban_record').attr("tabindex", 0);
@@ -363,10 +381,18 @@ var KanbanRecord = Widget.extend({
         this._setupColorPicker();
         this._attachTooltip();
 
+        // if (this.opensFromM2O) {
+        //     this._postProcessForM2O();
+        // }
+
         // We use boostrap tooltips for better and faster display
         this.$('span.o_tag').tooltip({ delay: { 'show': 50 } });
 
-        return Promise.all(this.defs);
+        return Promise.all(this.defs).then(function () {
+            if (self.opensFromM2O) {
+                self._postProcessForM2O();
+            }
+        });
     },
     /**
      * Sets cover image on a kanban card through an attachment dialog.
@@ -657,6 +683,10 @@ var KanbanRecord = Widget.extend({
 
         var $action = $(event.currentTarget);
         var type = $action.data('type') || 'button';
+
+        if (this.opensFromM2O && $action[0].tagName === 'A') {
+            return;
+        }
 
         switch (type) {
             case 'edit':
