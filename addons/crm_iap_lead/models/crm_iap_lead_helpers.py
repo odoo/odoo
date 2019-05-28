@@ -1,5 +1,5 @@
 from math import floor, log10
-from odoo import api, models
+from odoo import api, models, _
 
 
 class CRMHelpers(models.Model):
@@ -101,6 +101,7 @@ class CRMHelpers(models.Model):
     @api.model
     def format_data_for_message_post(self, company_data, people_data):
         log_data = {
+            'message_title': _("Opportunity created by Odoo Lead Generation"),
             'twitter': company_data['twitter'],
             'description': company_data['description'],
             'logo': company_data['logo'],
