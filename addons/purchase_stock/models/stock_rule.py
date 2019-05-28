@@ -51,6 +51,8 @@ class StockRule(models.Model):
             partner = supplier.name
             # we put `supplier_info` in values for extensibility purposes
             procurement.values['supplier'] = supplier
+            procurement.values['propagate_date'] = rule.propagate_date
+            procurement.values['propagate_date_minimum_delta'] = rule.propagate_date_minimum_delta
 
             domain = rule._make_po_get_domain(procurement.company_id, procurement.values, partner)
             procurements_by_po_domain[domain].append((procurement, rule))
@@ -115,11 +117,11 @@ class StockRule(models.Model):
 
     @api.model
     def _get_procurements_to_merge_groupby(self, procurement):
-        return procurement.product_id, procurement.product_uom
+        return procurement.product_id, procurement.product_uom, procurement.values['propagate_date'], procurement.values['propagate_date_minimum_delta']
 
     @api.model
     def _get_procurements_to_merge_sorted(self, procurement):
-        return procurement.product_id.id, procurement.product_uom.id
+        return procurement.product_id.id, procurement.product_uom.id, procurement.values['propagate_date'], procurement.values['propagate_date_minimum_delta']
 
     @api.model
     def _get_procurements_to_merge(self, procurements):
@@ -231,6 +233,8 @@ class StockRule(models.Model):
             'product_uom': product_id.uom_po_id.id,
             'price_unit': price_unit,
             'date_planned': date_planned,
+            'propagate_date': values['propagate_date'],
+            'propagate_date_minimum_delta': values['propagate_date_minimum_delta'],
             'orderpoint_id': values.get('orderpoint_id', False) and values.get('orderpoint_id').id,
             'taxes_id': [(6, 0, taxes_id.ids)],
             'order_id': po.id,
