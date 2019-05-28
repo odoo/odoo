@@ -382,6 +382,24 @@ var MockServer = Class.extend({
         }
 
         if (domain.length) {
+            // 'child_of' operator isn't supported by domain.js, so we replace
+            // in by the 'in' operator (with the ids of children)
+            domain = domain.map(function (criterion) {
+                if (criterion[1] === 'child_of') {
+                    var oldLength = 0;
+                    var childIDs = [criterion[2]];
+                    while (childIDs.length > oldLength) {
+                        oldLength = childIDs.length;
+                        _.each(records, function (r) {
+                            if (childIDs.indexOf(r.parent_id) >= 0) {
+                                childIDs.push(r.id);
+                            }
+                        });
+                    }
+                    criterion = [criterion[0], 'in', childIDs];
+                }
+                return criterion;
+            });
             records = _.filter(records, function (record) {
                 var fieldValues = _.mapObject(record, function (value) {
                     return value instanceof Array ? value[0] : value;
