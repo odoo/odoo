@@ -91,6 +91,9 @@
         display: table-cell;
         cursor: pointer;
     }
+    .o_data_row.o_selected_row > .o_list_record_remove {
+            border-bottom: 1px solid $table-border-color;
+    }
 
     // Contextual classes
     @each $color, $value in $theme-colors {
