@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import timedelta
 
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
@@ -133,3 +134,65 @@ class TestProcurement(TestMrpCommon):
             production_form.product_qty = 1
             production_product_4 = production_form.save()
             production_product_4.action_confirm()
+
+    def test_date_propagation(self):
+        """ Check propagation of shedule date for manufaturing route."""
+
+        # create a product with manufacture route
+        product_1 = self.env['product.product'].create({
+            'name': 'AAA',
+            'route_ids': [(4, self.ref('mrp.route_warehouse0_manufacture'))]
+        })
+
+        component_1 = self.env['product.product'].create({
+            'name': 'component',
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': product_1.id,
+            'product_tmpl_id': product_1.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component_1.id, 'product_qty': 1}),
+            ]})
+
+        # create a move for product_1 from stock to output and reserve to trigger the
+        # rule
+        move_dest = self.env['stock.move'].create({
+            'name': 'move_orig',
+            'product_id': product_1.id,
+            'product_uom': self.ref('uom.product_uom_unit'),
+            'propagate_date': True,
+            'propagate_date_minimum_delta': 1,
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_output'),
+            'product_uom_qty': 10,
+            'procure_method': 'make_to_order'
+        })
+
+        move_dest._action_confirm()
+        mo = self.env['mrp.production'].search([
+            ('product_id', '=', product_1.id),
+            ('state', '=', 'confirmed')
+        ])
+        self.assertEqual(len(mo), 1, 'the manufacture order is not created')
+
+        mo_form = Form(mo)
+        self.assertEqual(mo_form.product_qty, 10, 'the quantity to produce is not good relative to the move')
+
+        mo = mo_form.save()
+
+        # Confirming mo create finished move
+        move_orig = self.env['stock.move'].search([
+            ('move_dest_ids', 'in', move_dest.ids)
+        ], limit=1)
+
+        self.assertEqual(len(move_orig), 1, 'the move orig is not created')
+        self.assertEqual(move_orig.product_qty, 10, 'the quantity to produce is not good relative to the move')
+
+        move_dest_scheduled_date = move_dest.date_expected
+        mo.date_planned_start += timedelta(days=5)
+
+        self.assertAlmostEqual(move_dest.date_expected, move_dest_scheduled_date + timedelta(days=5), delta=timedelta(seconds=1), msg='date is not propagated')
