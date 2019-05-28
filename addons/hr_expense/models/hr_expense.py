@@ -195,7 +195,7 @@ class HrExpense(models.Model):
         """
         self.ensure_one()
         journal = self.sheet_id.bank_journal_id if self.payment_mode == 'company_account' else self.sheet_id.journal_id
-        account_date = expense.sheet_id.accounting_date or expense.date
+        account_date = self.sheet_id.accounting_date or self.date
         move_values = {
             'journal_id': journal.id,
             'company_id': self.env.user.company_id.id,
@@ -208,8 +208,6 @@ class HrExpense(models.Model):
         return move_values
 
     @api.multi
-
-    @api.multi
     def _get_account_move_by_sheet(self):
         """ Return a mapping between the expense sheet of current expense and its account move
             :returns dict where key is a sheet id, and value is an account move record
@@ -217,7 +215,7 @@ class HrExpense(models.Model):
         move_grouped_by_sheet = {}
         for expense in self:
             # create the move that will contain the accounting entries
-            if expense.sheet_id.id not in move_group_by_sheet:
+            if expense.sheet_id.id not in move_grouped_by_sheet:
                 move = self.env['account.move'].create(expense._prepare_move_values())
                 move_grouped_by_sheet[expense.sheet_id.id] = move
             else:
