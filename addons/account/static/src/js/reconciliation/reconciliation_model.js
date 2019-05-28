@@ -1387,11 +1387,8 @@ var ManualModel = StatementModel.extend({
                             return self.loadData(lines);
                         });
                 default:
-                    var partner_ids = context.partner_ids;
-                    var account_ids = context.account_ids || self.account_ids;
-                    if (partner_ids && !account_ids) account_ids = [];
-                    if (!partner_ids && account_ids) partner_ids = [];
-                    account_ids = null; // TOFIX: REMOVE ME
+                    var partner_ids = context.partner_ids || null;
+                    var account_ids = context.account_ids || self.account_ids || null;
                     return self._rpc({
                             model: 'account.reconciliation.widget',
                             method: 'get_all_data_for_manual_reconciliation',
