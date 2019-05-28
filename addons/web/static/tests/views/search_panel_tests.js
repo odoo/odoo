@@ -298,8 +298,8 @@ QUnit.module('Views', {
 
         assert.verifySteps([
             '[["bar","=",true]]',
-            '[["bar","=",true],["company_id","=",3]]',
-            '[["bar","=",true],["company_id","=",5]]',
+            '[["bar","=",true],["company_id","child_of",3]]',
+            '[["bar","=",true],["company_id","child_of",5]]',
             '[["bar","=",true]]',
         ]);
 
@@ -399,7 +399,7 @@ QUnit.module('Views', {
                 '</kanban>',
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
-                    assert.deepEqual(args.domain, [['company_id', '=', expectedActiveId]]);
+                    assert.deepEqual(args.domain, [['company_id', 'child_of', expectedActiveId]]);
                 }
                 return this._super.apply(this, arguments);
             },
@@ -523,9 +523,9 @@ QUnit.module('Views', {
 
         assert.verifySteps([
             '[["bar","=",true]]',
-            '[["bar","=",true],["company_id","=",3]]',
-            '[["bar","=",true],["company_id","=",3],["state","=","abc"]]',
-            '[["bar","=",true],["company_id","=",3],["state","=","ghi"]]',
+            '[["bar","=",true],["company_id","child_of",3]]',
+            '[["bar","=",true],["company_id","child_of",3],["state","=","abc"]]',
+            '[["bar","=",true],["company_id","child_of",3],["state","=","ghi"]]',
             '[["bar","=",true],["state","=","ghi"]]',
             '[["bar","=",true]]',
         ]);
@@ -610,8 +610,8 @@ QUnit.module('Views', {
 
         assert.verifySteps([
             '[]',
-            '[["company_id","=",40]]',
-            '[["company_id","=",5]]',
+            '[["company_id","child_of",40]]',
+            '[["company_id","child_of",5]]',
         ]);
 
         kanban.destroy();
@@ -772,8 +772,8 @@ QUnit.module('Views', {
 
         assert.verifySteps([
             '[["bar","=",true]]',
-            '[["bar","=",true],["company_id","=",3]]',
-            '[["bar","=",true],["company_id","=",5]]',
+            '[["bar","=",true],["company_id","child_of",3]]',
+            '[["bar","=",true],["company_id","child_of",5]]',
         ]);
 
         kanban.destroy();
@@ -1438,9 +1438,9 @@ QUnit.module('Views', {
         assert.verifySteps([
             '[]', // category_domain (All)
             '[["category_id","=",false]]', // comodel_domain (All)
-            '[["category_id","=",6]]', // category_domain ('gold')
+            '[["category_id","child_of",6]]', // category_domain ('gold')
             '[["category_id","=",6]]', // comodel_domain ('gold')
-            '[["category_id","=",7]]', // category_domain ('silver')
+            '[["category_id","child_of",7]]', // category_domain ('silver')
             '[["category_id","=",7]]', // comodel_domain ('silver')
             '[]', // category_domain (All)
             '[["category_id","=",false]]', // comodel_domain (All)
