@@ -422,7 +422,8 @@ class GettextAlias(object):
                 (cr, dummy) = self._get_cr(frame, allow_create=False)
                 uid = self._get_uid(frame)
                 if cr and uid:
-                    env = odoo.api.Environment(cr, uid, {})
+                    cr.execute("""SELECT company_id FROM res_users WHERE id=%s""" , (uid,))
+                    env = odoo.api.Environment(cr, uid, {'allowed_company_ids': list(cr.fetchone())})
                     lang = env['res.users'].context_get()['lang']
         return lang
 
