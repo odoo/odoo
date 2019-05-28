@@ -6,4 +6,5 @@ class BaseDocumentLayout(models.TransientModel):
 
     def document_layout_save(self):
         super(BaseDocumentLayout, self).document_layout_save()
-        return self.company_id.action_save_onboarding_invoice_layout()
+        for wizard in self:
+            wizard.company_id.action_save_onboarding_invoice_layout()

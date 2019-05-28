@@ -218,7 +218,18 @@ class BaseDocumentLayout(models.TransientModel):
     @api.onchange('logo')
     def onchange_logo(self):
         for wizard in self:
+            # Trick to:
+            # - test the new logo is different from company's
+            # - Avoid the cache miss on company.logo to erase the new logo
+            # It is admitted that if the user puts the original image back, it won't change colors
+            logo = wizard.logo
+            company = wizard.company_id
+            logo_same = company.logo == logo  # at that point wizard.logo has been assigned the value present in DB
+            wizard.logo = logo
+            if not logo or (logo_same and company.primary_color and company.secondary_color):
+                continue
             primary, secondary = wizard._parse_logo_colors()
+
             wizard.company_colors = json.dumps({
                 'default': [wizard.report_layout_id.primary_color, wizard.report_layout_id.secondary_color],
                 'values': [primary, secondary]
