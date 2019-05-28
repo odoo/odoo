@@ -86,7 +86,7 @@ class LunchOrderWizard(models.TransientModel):
                                                     sum((wizard.topping_ids_1 | wizard.topping_ids_2 | wizard.topping_ids_3).mapped('price')))
 
     def _get_matching_lines(self):
-        domain = [('product_id', '=', self.product_id.id), ('date', '=', fields.Date.today()), ('note', '=', self._get_note())]
+        domain = [('user_id', '=', self.user_id.id), ('product_id', '=', self.product_id.id), ('date', '=', fields.Date.today()), ('note', '=', self._get_note())]
         lines = self.env['lunch.order'].search(domain)
         return lines.filtered(lambda line: (line.topping_ids_1 | line.topping_ids_2 | line.topping_ids_3) == self.topping_ids_1)
 
