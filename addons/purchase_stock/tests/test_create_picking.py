@@ -4,7 +4,6 @@
 from datetime import datetime, timedelta
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons.product.tests import common
-from odoo import fields
 
 
 class TestCreatePicking(common.TestProductCommon):

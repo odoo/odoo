@@ -269,11 +269,10 @@ class PurchaseOrderLine(models.Model):
     @api.multi
     def write(self, values):
         for line in self:
-            if values.get('date_planned'):
-                current_date = line.date_planned
+            if values.get('date_planned') and line.propagate_date:
                 new_date = fields.Datetime.from_string(values['date_planned'])
-                delta_days = (new_date - current_date).total_seconds() / 86400
-                if line.propagate_date and abs(delta_days) >= line.propagate_date_minimum_delta:
+                delta_days = (new_date - line.date_planned).total_seconds() / 86400
+                if abs(delta_days) >= line.propagate_date_minimum_delta:
                     moves_to_update = line.move_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
                     if not moves_to_update:
                         moves_to_update = line.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
