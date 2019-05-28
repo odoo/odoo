@@ -40,31 +40,57 @@
 
 <template id="snippet_options" inherit_id="website.snippet_options" name="e-commerce snippet options">
     <xpath expr="." position="inside">
-        <div data-js='website_sale'
-            data-selector=".oe_product.oe_grid"
+        <div data-js="WebsiteSaleGridLayout"
+            data-selector="#products_grid .o_wsale_products_grid_table_wrapper > table"
+            data-no-check="true">
+            <a href="#" class="dropdown-item" role="menuitem" data-no-preview="true" data-choose-ppg="1">
+                <i class="fa fa-cart-plus"/>Choose number of products
+            </a>
+            <div class="dropdown-submenu o_wsale_ppr_submenu" role="menuitem" aria-haspopup="true">
+                <a tabindex="-1" href="#" class="dropdown-item" role="menuitem">
+                    <i class="fa fa-columns"/>Number of Columns
+                </a>
+                <div class="dropdown-menu" role="menu" data-no-preview="true">
+                    <a href="#" class="dropdown-item" role="menuitem" data-set-ppr="2">2</a>
+                    <a href="#" class="dropdown-item" role="menuitem" data-set-ppr="3">3</a>
+                    <a href="#" class="dropdown-item" role="menuitem" data-set-ppr="4">4</a>
+                </div>
+            </div>
+        </div>
+
+        <div data-js="WebsiteSaleProductsItem"
+            data-selector="#products_grid .oe_product"
             data-no-check="true">
             <div class="dropdown-submenu">
                 <a tabindex="-1" href="#" class="dropdown-item">Size</a>
-                <div class="dropdown-menu" role="menu" name="size">
+                <div class="dropdown-menu o_wsale_soptions_menu_sizes" role="menu">
                     <table>
-                      <tr><td class="selected"></td><td></td><td></td><td></td></tr>
-                      <tr><td></td><td></td><td></td><td></td></tr>
-                      <tr><td></td><td></td><td></td><td></td></tr>
-                      <tr><td></td><td></td><td></td><td></td></tr>
+                        <tr>
+                            <td/><td/><td/><td/>
+                        </tr>
+                        <tr>
+                            <td/><td/><td/><td/>
+                        </tr>
+                        <tr>
+                            <td/><td/><td/><td/>
+                        </tr>
+                        <tr>
+                            <td/><td/><td/><td/>
+                        </tr>
                     </table>
                 </div>
             </div>
             <div class='dropdown-submenu' role="menuitem" aria-haspopup="true">
                 <a tabindex="-1" href="#" class="dropdown-item">Styles</a>
-                <div class="dropdown-menu" role="menu" name="style"/>
+                <div class="dropdown-menu" role="menu" data-no-preview="true" name="style"/>
             </div>
             <div class='dropdown-submenu' role="menuitem" aria-haspopup="true">
                 <a tabindex="-1" href="#" class="dropdown-item">Promote</a>
                 <div class="dropdown-menu" role="menu" data-no-preview="true">
-                    <a href="#" class="dropdown-item" role="menuitem" data-go_to="top">Push to top</a>
-                    <a href="#" class="dropdown-item" role="menuitem" data-go_to="up">Push up</a>
-                    <a href="#" class="dropdown-item" role="menuitem" data-go_to="down">Push down</a>
-                    <a href="#" class="dropdown-item" role="menuitem" data-go_to="bottom">Push to bottom</a>
+                    <a href="#" class="dropdown-item" role="menuitem" data-change-sequence="top">Push to top</a>
+                    <a href="#" class="dropdown-item" role="menuitem" data-change-sequence="up">Push up</a>
+                    <a href="#" class="dropdown-item" role="menuitem" data-change-sequence="down">Push down</a>
+                    <a href="#" class="dropdown-item" role="menuitem" data-change-sequence="bottom">Push to bottom</a>
                 </div>
             </div>
         </div>
