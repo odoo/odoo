@@ -1081,6 +1081,11 @@ class Message(models.Model):
         }
         res = self.env['mail.followers']._get_recipient_data(record, subtype_id, pids, cids)
         author_id = msg_vals.get('author_id') or self.author_id.id if res else False
+
+        all_partner_channel = None
+        if record._name == 'mail.channel' and not record.email_send:
+            all_partner_channel = self.env['mail.channel.partner'].search([('channel_id', '=', record.id)])
+
         for pid, cid, active, pshare, ctype, notif, groups in res:
             if pid and pid == author_id and not self.env.context.get('mail_notify_author'):  # do not notify the author of its own messages
                 continue
@@ -1088,6 +1093,10 @@ class Message(models.Model):
                 if active is False:
                     # avoid to notify inactive partner by email (odoobot)
                     continue
+                if all_partner_channel:
+                    partner_channel = all_partner_channel.filtered(lambda pc: pid == pc.partner_id.id)
+                    if notif == 'email' and partner_channel and not partner_channel.send_email_without_channel_email_send:
+                        continue
                 pdata = {'id': pid, 'active': active, 'share': pshare, 'groups': groups}
                 if notif == 'inbox':
                     recipient_data['partners'].append(dict(pdata, notif=notif, type='user'))

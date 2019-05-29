@@ -33,6 +33,7 @@ class ChannelPartner(models.Model):
     fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='open')
     is_minimized = fields.Boolean("Conversation is minimized")
     is_pinned = fields.Boolean("Is pinned on the interface", default=True)
+    send_email_without_channel_email_send = fields.Boolean("Send email without channel's email send", default=True)
 
 
 class Moderation(models.Model):
