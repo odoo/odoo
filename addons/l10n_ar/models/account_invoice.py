@@ -407,43 +407,6 @@ class AccountInvoice(models.Model):
                     ', '.join(zero_alicuot.mapped('display_name'))
             ))
 
-        # Check except vat invoice
-        afip_exempt_codes = ['Z', 'X', 'E', 'N', 'C']
-        for invoice in argentinian_invoices:
-            special_vat_taxes = invoice.tax_line_ids.filtered(
-                lambda r: r.tax_id.tax_group_id.l10n_ar_afip_code in [1, 2, 3])
-            if (
-                    special_vat_taxes and
-                    invoice.fiscal_position_id.l10n_ar_afip_code
-                    not in afip_exempt_codes):
-                raise UserError(_(
-                    "If you have choose a 0, exempt or untaxed 'tax', or "
-                    "you must choose a fiscal position with afip code in %s.\n"
-                    "* Invoice [%i] %s") % (
-                        afip_exempt_codes,
-                        invoice.id,
-                        invoice.display_name))
-
-            # esto es, por eje, si hay un producto con 100% de descuento para
-            # única alicuota, entonces el impuesto liquidado da cero y se
-            # obliga reportar con alicuota 0, entonces se exige tmb cod de op.
-            # esta restriccion no es de FE si no de aplicativo citi
-            zero_vat_lines = invoice.tax_line_ids.filtered(
-                lambda r: ((
-                    r.tax_id.tax_group_id.l10n_ar_afip_code in [4, 5, 6, 8, 9] and
-                    r.currency_id.is_zero(r.amount))))
-            if (
-                    zero_vat_lines and
-                    invoice.fiscal_position_id.l10n_ar_afip_code
-                    not in afip_exempt_codes):
-                raise UserError(_(
-                    "Si hay líneas con IVA declarado 0, entonces debe elegir "
-                    "una posición fiscal con código de afip '%s'.\n"
-                    "* Invoice [%i] %s") % (
-                        afip_exempt_codes,
-                        invoice.id,
-                        invoice.display_name))
-
     @api.constrains('date_invoice')
     def set_date_afip(self):
         for rec in self.filtered('date_invoice'):
