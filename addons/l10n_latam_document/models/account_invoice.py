@@ -96,7 +96,7 @@ class AccountInvoice(models.Model):
         for invoice in self:
             taxes_included = (
                 invoice.l10n_latam_document_type_id and
-                invoice.l10n_latam_document_type_id.get_taxes_included() or False)
+                invoice.l10n_latam_document_type_id._get_taxes_included() or False)
             if not taxes_included:
                 l10n_latam_amount_tax = invoice.amount_tax
                 l10n_latam_amount_untaxed = invoice.amount_untaxed

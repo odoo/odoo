@@ -13,11 +13,10 @@ class AccountInvoiceRefund(models.TransientModel):
         if isinstance(res, dict):
             domain = res.get('domain', [])
             refund_invoices = self.env['account.invoice'].search(domain)
-            # invoice = self.env['account.invoice'].browse(invoice_ids)
-            invoice = self.l10n_ar_invoice_id
+            invoice = self.l10n_latam_invoice_id
             refund_invoices.write({
-                # TODO this origin should be set on l10n_latam_document module
-                'origin': invoice.l10n_latam_document_number or invoice.number,
+                # TODO we should set same currency_rate as original invoice
+                'origin': invoice.number,
                 'l10n_ar_afip_service_start': invoice.l10n_ar_afip_service_start,
                 'l10n_ar_afip_service_end': invoice.l10n_ar_afip_service_end,
             })

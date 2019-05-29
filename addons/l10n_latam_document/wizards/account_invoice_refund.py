@@ -10,22 +10,19 @@ class AccountInvoiceRefund(models.TransientModel):
     _inherit = "account.invoice.refund"
 
     @api.model
-    def _get_l10n_ar_invoice_id(self):
-        invoice = self.env['account.invoice'].browse(
-            self._context.get('active_ids', False))
-        # we dont force one for compatibility with already running dsbs
-        if len(invoice) > 1:
-            raise UserError(_(
-                'Refund wizard must be call only from one invoice'))
-        return invoice
+    def _get_l10n_latam_invoice_id(self):
+        context = dict(self._context or {})
+        active_id = context.get('active_id', False)
+        if active_id:
+            return self.env['account.invoice'].browse(active_id)
 
-    l10n_ar_invoice_id = fields.Many2one(
+    l10n_latam_invoice_id = fields.Many2one(
         'account.invoice',
         'Invoice',
-        default=_get_l10n_ar_invoice_id,
+        default=_get_l10n_latam_invoice_id,
     )
     l10n_latam_use_documents = fields.Boolean(
-        related='l10n_ar_invoice_id.journal_id.l10n_latam_use_documents',
+        related='l10n_latam_invoice_id.journal_id.l10n_latam_use_documents',
         readonly=True,
     )
     l10n_latam_document_type_id = fields.Many2one(
@@ -46,17 +43,17 @@ class AccountInvoiceRefund(models.TransientModel):
         string='Available Journal Document Types',
     )
 
-    @api.depends('l10n_ar_invoice_id')
+    @api.depends('l10n_latam_invoice_id')
     def _compute_l10n_latam_available_document_types(self):
-        for rec in self.filtered('l10n_ar_invoice_id'):
-            invoice = rec.l10n_ar_invoice_id
+        for rec in self.filtered('l10n_latam_invoice_id'):
+            invoice = rec.l10n_latam_invoice_id
             invoice_type = TYPE2REFUND[invoice.type]
             res = invoice._get_available_document_types(
                 invoice.journal_id, invoice_type, invoice.partner_id)
             rec.l10n_latam_available_document_type_ids = res[
-                'l10n_latam_available_document_type_ids']
+                'available_document_types']
             rec.l10n_latam_document_type_id = res[
-                'l10n_latam_document_type_id']
+                'document_type']
 
     @api.multi
     def compute_refund(self, mode='refund'):
@@ -69,4 +66,13 @@ class AccountInvoiceRefund(models.TransientModel):
     def _compute_l10n_latam_sequence(self):
         for rec in self:
             rec.l10n_latam_sequence_id = \
-                rec.l10n_ar_invoice_id.get_document_type_sequence(rec)
+                rec.l10n_latam_invoice_id.journal_id.get_document_type_sequence(rec)
+
+    @api.onchange('l10n_latam_document_number', 'l10n_latam_document_type_id')
+    def _onchange_l10n_latam_document_number(self):
+        if self.l10n_latam_document_type_id:
+            l10n_latam_document_number = \
+                self.l10n_latam_document_type_id._format_document_number(
+                    self.l10n_latam_document_number)
+            if self.l10n_latam_document_number != l10n_latam_document_number:
+                self.l10n_latam_document_number = l10n_latam_document_number

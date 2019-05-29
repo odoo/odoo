@@ -31,7 +31,7 @@ class AccountInvoiceLine(models.Model):
             invoice = line.invoice_id
             taxes_included = (
                 invoice.l10n_latam_document_type_id and
-                invoice.l10n_latam_document_type_id.get_taxes_included() or False)
+                invoice.l10n_latam_document_type_id._get_taxes_included() or False)
             if not taxes_included:
                 l10n_latam_price_unit = line.price_unit
                 l10n_latam_price_subtotal = line.price_subtotal
