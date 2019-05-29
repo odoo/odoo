@@ -13,8 +13,7 @@ class ResPartnerBank(models.Model):
 
     @api.model
     def _get_supported_account_types(self):
-        """ Add new account type named cbu used in Argentina
-        """
+        """ Add new account type named cbu used in Argentina """
         res = super(ResPartnerBank, self)._get_supported_account_types()
         res.append(('cbu', _('CBU')))
         return res

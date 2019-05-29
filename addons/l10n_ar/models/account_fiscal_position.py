@@ -8,7 +8,7 @@ class AccountFiscalPosition(models.Model):
 
     l10n_ar_afip_responsability_type_codes = fields.Char(
         'AFIP Responsability Type Codes',
-        help='List of AFIP responsability codes where this fiscal positon '
+        help='List of AFIP responsability codes where this fiscal position '
         'should be auto-detected',
     )
 

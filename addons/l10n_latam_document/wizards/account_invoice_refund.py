@@ -66,7 +66,8 @@ class AccountInvoiceRefund(models.TransientModel):
     def _compute_l10n_latam_sequence(self):
         for rec in self:
             rec.l10n_latam_sequence_id = \
-                rec.l10n_latam_invoice_id.journal_id.get_document_type_sequence(rec)
+                rec.l10n_latam_invoice_id.journal_id.\
+                    get_document_type_sequence(rec)
 
     @api.onchange('l10n_latam_document_number', 'l10n_latam_document_type_id')
     def _onchange_l10n_latam_document_number(self):

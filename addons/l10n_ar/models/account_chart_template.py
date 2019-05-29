@@ -4,6 +4,7 @@ from odoo import models, api, fields
 
 
 class AccountChartTemplate(models.Model):
+
     _inherit = 'account.chart.template'
 
     @api.multi

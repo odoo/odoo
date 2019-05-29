@@ -34,7 +34,8 @@ class ResCompany(models.Model):
         """ Argentinian companies use round_globally as
         tax_calculation_rounding_method
         """
-        for rec in self.filtered(lambda x: x.country_id == self.env.ref('base.ar')):
+        for rec in self.filtered(
+                lambda x: x.country_id == self.env.ref('base.ar')):
             rec.tax_calculation_rounding_method = 'round_globally'
 
     @api.depends('l10n_ar_afip_responsability_type')

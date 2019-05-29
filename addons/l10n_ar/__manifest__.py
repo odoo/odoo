@@ -11,16 +11,15 @@ Argentinian accounting chart and tax localization.
   * Responsable Inscripto (RI)
   * Exento (EX)
   * Monotributo (Mono)
-* Argentinian Taxes
-* Fiscal Positions
+
+* Define Argentinian Taxes
+* Define Fiscal Positions
 * AFIP Legal Documents
 * Add AFIP Codes for models
     * Currency
     * Country
     * Product Unit of Measure
     * Tax Group
-    * Fiscal Position
-    * Fiscal Position Template
 
 Follow the next configuration steps
 
@@ -29,7 +28,7 @@ Follow the next configuration steps
    to use.
 3. Create your sale journals taking into account AFIP info if needed.
 """,
-    'author': ['ADHOC SA'],
+    'author': 'ADHOC SA',
     'category': 'Localization',
     'depends': [
         'l10n_latam_document',
@@ -45,11 +44,11 @@ Follow the next configuration steps
         'data/account_fiscal_template.xml',
         'data/uom_uom_data.xml',
         'data/l10n_latam.document.type.csv',
+        # NOTE: we load as csv but we made them not update True with a hook
         'data/res_partner_data.xml',
         'data/res_currency_data.xml',
         'data/res_country_data.xml',
         'data/product_product_data.xml',
-        # los cargamos con csv pero los hacemos no actualizables con un hook
         'views/account_move_line_view.xml',
         'views/account_move_view.xml',
         'views/res_partner_view.xml',

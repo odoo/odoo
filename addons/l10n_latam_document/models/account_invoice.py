@@ -2,8 +2,6 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
-import logging
-_logger = logging.getLogger(__name__)
 
 
 class AccountInvoice(models.Model):
@@ -91,12 +89,14 @@ class AccountInvoice(models.Model):
                 rec.journal_id.get_document_type_sequence(rec)
 
     @api.depends(
-        'amount_untaxed', 'amount_tax', 'tax_line_ids', 'l10n_latam_document_type_id')
+        'amount_untaxed', 'amount_tax', 'tax_line_ids',
+        'l10n_latam_document_type_id')
     def _compute_l10n_latam_amount_and_taxes(self):
         for invoice in self:
             taxes_included = (
                 invoice.l10n_latam_document_type_id and
-                invoice.l10n_latam_document_type_id._get_taxes_included() or False)
+                invoice.l10n_latam_document_type_id._get_taxes_included() or
+                False)
             if not taxes_included:
                 l10n_latam_amount_tax = invoice.amount_tax
                 l10n_latam_amount_untaxed = invoice.amount_untaxed
@@ -106,7 +106,8 @@ class AccountInvoice(models.Model):
                     lambda x: x.tax_id in taxes_included)
                 not_included_taxes = (
                     invoice.tax_line_ids - included_taxes)
-                l10n_latam_amount_tax = sum(not_included_taxes.mapped('amount'))
+                l10n_latam_amount_tax = sum(
+                    not_included_taxes.mapped('amount'))
                 l10n_latam_amount_untaxed = invoice.amount_untaxed + sum(
                     included_taxes.mapped('amount'))
             invoice.l10n_latam_amount_tax = l10n_latam_amount_tax

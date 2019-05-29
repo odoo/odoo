@@ -81,8 +81,8 @@ class L10nLatamDocumentType(models.Model):
         """ In argentina we include taxes depending on document letter
         """
         self.ensure_one()
-        if self.country_id == self.env.ref('base.ar') and self.l10n_ar_letter in [
-           'B', 'C', 'X', 'R']:
+        if self.country_id == self.env.ref('base.ar') and \
+           self.l10n_ar_letter in ['B', 'C', 'X', 'R']:
             return self.env['account.tax'].search(
                 [('tax_group_id.l10n_ar_tax', '=', 'vat'),
                  ('tax_group_id.l10n_ar_type', '=', 'tax')])

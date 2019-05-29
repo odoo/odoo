@@ -12,9 +12,8 @@
         <field name="code_digits">13</field>
     </record>
 
-        <!-- 1.1.04.01 (iva) --> 
+        <!-- 1.1.04.01 (iva) -->
 
-            <!-- ex saldo libre disponibilidad, vimos que este saldo libre dispniilidad es exclusivo de iva y no se mezcla con ganancias si bien se puede usar para pagar ganancias -->
             <record model="account.account.template" id="ri_saldo_2do_parrafo_iva">
                 <field name="chart_template_id" ref="l10nar_base_chart_template"/>
                 <field name="code">1.1.04.00.010</field>
@@ -46,7 +45,6 @@
                 <field name="tag_ids" eval="[(6, 0, [ref('l10n_ar.tag_iva_primer_parrafo')])]"/>
             </record>
 
-            <!-- cambiamos el nombre a primer parrafo porque seria mas claro y se mantiene similar al de 2do parrafo -->
             <record model="account.account.template" id="ri_iva_saldo_tecnico_favor">
                 <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
                 <field name="code">1.1.04.01.040</field>
@@ -56,7 +54,7 @@
             </record>
 
 
-        <!-- (IVA) --> 
+        <!-- (IVA) -->
 
         <record model="account.account.template" id="ri_iva_debito_fiscal">
             <field name="chart_template_id" ref="l10nar_ri_chart_template"/>

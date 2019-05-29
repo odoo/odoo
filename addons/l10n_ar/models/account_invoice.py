@@ -19,6 +19,7 @@ class AccountInvoice(models.Model):
         readonly=True,
         string="Currency Rate",
     )
+
     # Mostly used on reports
     l10n_ar_letter = fields.Selection(
         related='l10n_latam_document_type_id.l10n_ar_letter',
@@ -115,8 +116,8 @@ class AccountInvoice(models.Model):
     )
     def _compute_l10n_ar_afip_concept(self):
         for rec in self.filtered(
-                lambda x: x.company_id.country_id == self.env.ref('base.ar') and
-                x.l10n_latam_use_documents):
+                lambda x: x.company_id.country_id == self.env.ref('base.ar')
+                and x.l10n_latam_use_documents):
             afip_concept = False
             if rec.l10n_ar_force_afip_concept:
                 afip_concept = rec.l10n_ar_force_afip_concept
@@ -209,7 +210,8 @@ class AccountInvoice(models.Model):
     def _compute_l10n_ar_invoice_number(self):
         for rec in self.filtered('l10n_latam_document_number'):
             str_number = rec.l10n_latam_document_number
-            if rec.l10n_latam_document_type_id.code in ['33', '99', '331', '332']:
+            if rec.l10n_latam_document_type_id.code in [
+                    '33', '99', '331', '332']:
                 point_of_sale = '0'
                 # leave only numbers and convert to integer
                 # otherwise use date as a number
@@ -322,8 +324,8 @@ class AccountInvoice(models.Model):
                 lambda x: x.company_id.l10n_ar_company_requires_vat).mapped(
                     'invoice_line_ids'):
             vat_taxes = inv_line.invoice_line_tax_ids.filtered(
-                lambda x:
-                x.tax_group_id.l10n_ar_tax == 'vat' and x.tax_group_id.l10n_ar_type == 'tax')
+                lambda x: x.tax_group_id.l10n_ar_tax == 'vat' and
+                x.tax_group_id.l10n_ar_type == 'tax')
             if len(vat_taxes) != 1:
                 raise UserError(_(
                     'Debe haber un y solo un impuesto de IVA por línea. '
@@ -383,7 +385,8 @@ class AccountInvoice(models.Model):
         not_zero_alicuot = argentinian_invoices.filtered(
             lambda x: x.type in ['in_invoice', 'in_refund'] and
             x.l10n_latam_document_type_id.purchase_alicuots == 'zero' and
-            any([t.tax_id.tax_group_id.l10n_ar_afip_code != 0 for t in x.l10n_ar_vat_tax_ids]))
+            any([t.tax_id.tax_group_id.l10n_ar_afip_code != 0
+                 for t in x.l10n_ar_vat_tax_ids]))
         if not_zero_alicuot:
             raise UserError(_(
                 'Las siguientes facturas tienen configurados IVA incorrecto. '
@@ -395,7 +398,8 @@ class AccountInvoice(models.Model):
         zero_alicuot = argentinian_invoices.filtered(
             lambda x: x.type in ['in_invoice', 'in_refund'] and
             x.l10n_latam_document_type_id.purchase_alicuots == 'not_zero' and
-            any([t.tax_id.tax_group_id.l10n_ar_afip_code == 0 for t in x.l10n_ar_vat_tax_ids]))
+            any([t.tax_id.tax_group_id.l10n_ar_afip_code == 0
+                 for t in x.l10n_ar_vat_tax_ids]))
         if zero_alicuot:
             raise UserError(_(
                 'Las siguientes facturas tienen IVA no corresponde pero debe '
