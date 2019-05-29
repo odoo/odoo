@@ -792,7 +792,7 @@ class Task(models.Model):
             res['stage_id'] = (test_task.stage_id.mail_template_id, {
                 'auto_delete_message': True,
                 'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
-                'notif_layout': 'mail.mail_notification_light'
+                'email_layout_xmlid': 'mail.mail_notification_light'
             })
         return res
 
@@ -812,12 +812,12 @@ class Task(models.Model):
         return super(Task, self)._track_subtype(init_values)
 
     @api.multi
-    def _notify_get_groups(self, message, groups):
+    def _notify_get_groups(self):
         """ Handle project users and managers recipients that can assign
         tasks and create new one directly from notification emails. Also give
         access button to portal users and portal customers. If they are notified
         they should probably have access to the document. """
-        groups = super(Task, self)._notify_get_groups(message, groups)
+        groups = super(Task, self)._notify_get_groups()
 
         self.ensure_one()
 
@@ -836,9 +836,8 @@ class Task(models.Model):
         groups = [new_group] + groups
 
         for group_name, group_method, group_data in groups:
-            if group_name == 'customer':
-                continue
-            group_data['has_button_access'] = True
+            if group_name != 'customer':
+                group_data['has_button_access'] = True
 
         return groups
 
@@ -907,22 +906,17 @@ class Task(models.Model):
         return recipients
 
     @api.multi
-    def _notify_specific_email_values(self, message):
-        res = super(Task, self)._notify_specific_email_values(message)
-        try:
-            headers = safe_eval(res.get('headers', dict()))
-        except Exception:
-            headers = {}
+    def _notify_email_header_dict(self):
+        headers = super(Task, self)._notify_email_header_dict()
         if self.project_id:
             current_objects = [h for h in headers.get('X-Odoo-Objects', '').split(',') if h]
             current_objects.insert(0, 'project.project-%s, ' % self.project_id.id)
             headers['X-Odoo-Objects'] = ','.join(current_objects)
         if self.tag_ids:
             headers['X-Odoo-Tags'] = ','.join(self.tag_ids.mapped('name'))
-        res['headers'] = repr(headers)
-        return res
+        return headers
 
-    def _message_post_after_hook(self, message, *args, **kwargs):
+    def _message_post_after_hook(self, message, msg_vals):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -933,7 +927,7 @@ class Task(models.Model):
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
                     ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Task, self)._message_post_after_hook(message, *args, **kwargs)
+        return super(Task, self)._message_post_after_hook(message, msg_vals)
 
     def action_assign_to_me(self):
         self.write({'user_id': self.env.user.id})

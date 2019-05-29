@@ -246,7 +246,7 @@ class SaleOrder(models.Model):
                 self.message_post_with_template(
                     template.id, composition_mode='comment',
                     model='sale.coupon', res_id=coupon.id,
-                    notif_layout='mail.mail_notification_light',
+                    email_layout_xmlid='mail.mail_notification_light',
                 )
 
     def _get_applicable_programs(self):
