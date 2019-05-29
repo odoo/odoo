@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import contextlib
 import logging
 import logging.handlers
 import os
 import platform
 import pprint
-from . import release
+import select
 import sys
 import threading
 import time
 
 import psycopg2
+import psycopg2.extensions
 
-import odoo
+from . import release
 from . import sql_db
 from . import tools
 
@@ -28,8 +30,32 @@ def log(logger, level, prefix, msg, depth=None):
 
 path_prefix = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
 
+def wait(conn, timeout=None):
+    """ Waits until the connection is in POLL_OK state.
+
+    :type conn: psycopg2.extensions.connection
+    :param timeout: duration (in seconds) to wait before breaking out of the
+                    wait loop, forever if `None`
+    :returns: the input connection if the wait reaches POLL_OK, None if the
+              timeout is hit
+    """
+    end = timeout and time.time() + timeout
+    while timeout is None or (time.time() < end):
+        state = conn.poll()
+        if state == psycopg2.extensions.POLL_OK:
+            return conn
+        elif state == psycopg2.extensions.POLL_WRITE:
+            select.select([], [conn.fileno()], [], timeout and (end - time.time()))
+        elif state == psycopg2.extensions.POLL_READ:
+            select.select([conn.fileno()], [], [], timeout and (end - time.time()))
+        else:
+            raise psycopg2.OperationalError("poll() returned %s" % state)
+
+# arbitrary timeout from the creation of the log record to being done with the
+# emission
+PG_EMIT_TIMEOUT = 1.0
 class PostgreSQLHandler(logging.Handler):
-    """ PostgreSQL Loggin Handler will store logs in the database, by default
+    """ PostgreSQL Logging Handler will store logs in the database, by default
     the current database, can be set using --log-db=DBNAME
     """
     def emit(self, record):
@@ -38,22 +64,40 @@ class PostgreSQLHandler(logging.Handler):
         dbname = tools.config['log_db'] if tools.config['log_db'] and tools.config['log_db'] != '%d' else ct_db
         if not dbname:
             return
-        with tools.ignore(Exception), tools.mute_logger('odoo.sql_db'), sql_db.db_connect(dbname, allow_uri=True).cursor() as cr:
-            cr.autocommit(True)
-            msg = tools.ustr(record.msg)
-            if record.args:
-                msg = msg % record.args
-            traceback = getattr(record, 'exc_text', '')
-            if traceback:
-                msg = "%s\n%s" % (msg, traceback)
-            # we do not use record.levelname because it may have been changed by ColoredFormatter.
-            levelname = logging.getLevelName(record.levelno)
 
-            val = ('server', ct_db, record.name, levelname, msg, record.pathname[len(path_prefix)+1:], record.lineno, record.funcName)
+        msg = tools.ustr(record.msg)
+        if record.args:
+            msg = msg % record.args
+        traceback = getattr(record, 'exc_text', '')
+        if traceback:
+            msg = "%s\n%s" % (msg, traceback)
+        # we do not use record.levelname because it may have been changed by ColoredFormatter.
+        levelname = logging.getLevelName(record.levelno)
+
+        val = ('server', ct_db, record.name, levelname, msg, record.pathname[len(path_prefix)+1:], record.lineno, record.funcName)
+
+        db, conf = sql_db.connection_info_for(dbname)
+        # for P2 (can't have both ** and kwarg) and 3.7 (async keyword)
+        conf['async'] = 1
+        with tools.ignore(Exception), tools.mute_logger('odoo.sql_db'), \
+             contextlib.closing(wait(psycopg2.connect(**conf))) as conn:
+            # psycopg2 < 2.8 forbids closing a cursor while an async query is
+            # in flight. However >= 2.8 only forbids it for named cursor so
+            # the issue is likely the need to clean up server-side resources
+            # (not a concern for client-side cursor) => we can ignore
+            # un-closed cursors, not use a context manager, and directly close
+            # the connection from under the cursor
+            cr = conn.cursor()
             cr.execute("""
                 INSERT INTO ir_logging(create_date, type, dbname, name, level, message, path, line, func)
                 VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s)
             """, val)
+            # always wait at least until we're done sending the query
+            while conn.poll() == psycopg2.extensions.POLL_WRITE:
+                select.select([], [conn.fileno()], [])
+            # if we can wait for the entire thing to finish we're better off,
+            # otherwise close the connection
+            wait(conn, record.created + PG_EMIT_TIMEOUT - time.time())
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
 #The background is set with 40 plus the number of the color, and the foreground with 30
