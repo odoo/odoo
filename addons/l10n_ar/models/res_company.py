@@ -26,7 +26,10 @@ class ResCompany(models.Model):
     )
     l10n_ar_company_requires_vat = fields.Boolean(
         compute='_compute_l10n_ar_company_requires_vat',
-        string="Company Requires Vat?",
+        string='Company Requires Vat?',
+    )
+    l10n_ar_afip_start_date = fields.Date(
+        'Activities start',
     )
 
     @api.onchange('country_id')

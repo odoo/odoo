@@ -61,6 +61,7 @@ Follow the next configuration steps
         'views/account_invoice_view.xml',
         'views/l10n_latam_document_type_view.xml',
         'views/ir_sequence_view.xml',
+        'views/report_invoice.xml',
     ],
     'demo': [
         'demo/exento_demo.xml',

@@ -2,6 +2,8 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
+from functools import partial
+from odoo.tools.misc import formatLang
 
 
 class AccountInvoice(models.Model):
@@ -264,3 +266,23 @@ class AccountInvoice(models.Model):
         return super(
             AccountInvoice,
             self.filtered(lambda x: not x.l10n_latam_use_documents))
+
+    def _amount_by_group(self):
+        invoice_with_doc_type = self.filtered('l10n_latam_document_type_id')
+        for invoice in invoice_with_doc_type:
+            currency = invoice.currency_id or invoice.company_id.currency_id
+            fmt = partial(formatLang, invoice.with_context(lang=invoice.partner_id.lang).env, currency_obj=currency)
+            res = {}
+            for line in invoice.l10n_latam_tax_line_ids:
+                tax = line.tax_id
+                group_key = (tax.tax_group_id, tax.amount_type, tax.amount)
+                res.setdefault(group_key, {'base': 0.0, 'amount': 0.0})
+                res[group_key]['amount'] += line.amount_total
+                res[group_key]['base'] += line.base
+            res = sorted(res.items(), key=lambda l: l[0][0].sequence)
+            invoice.amount_by_group = [(
+                r[0][0].name, r[1]['amount'], r[1]['base'],
+                fmt(r[1]['amount']), fmt(r[1]['base']),
+                len(res),
+            ) for r in res]
+        super(AccountInvoice, self - invoice_with_doc_type)._amount_by_group()
