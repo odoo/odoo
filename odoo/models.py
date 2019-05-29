@@ -1522,6 +1522,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return {
             'type': 'ir.actions.act_window',
             'res_model': self._name,
+            'view_type': 'form',
             'view_mode': 'form',
             'views': [(view_id, 'form')],
             'target': 'current',
@@ -5644,6 +5645,9 @@ Fields:
                 for name in nametree
                 if name not in done and snapshot0.has_changed(name)
             ]
+
+            if not env.context.get('recursive_onchanges', True):
+                todo = []
 
         # make the snapshot with the final values of record
         snapshot1 = Snapshot(record, nametree)

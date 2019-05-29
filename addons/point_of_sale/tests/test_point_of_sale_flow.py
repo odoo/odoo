@@ -304,7 +304,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_unit': 450,
                 'discount': 5.0,
                 'qty': 2.0,
-                'tax_ids': [(6, 0, self.product3.taxes_id.ids)],
+                'tax_ids': [(6, 0, self.product3.taxes_id.filtered(lambda t: t.company_id.id == self.company_id).ids)],
                 'price_subtotal': untax1,
                 'price_subtotal_incl': untax1 + atax1,
             }), (0, 0, {
@@ -313,7 +313,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_unit': 300,
                 'discount': 5.0,
                 'qty': 3.0,
-                'tax_ids': [(6, 0, self.product4.taxes_id.ids)],
+                'tax_ids': [(6, 0, self.product4.taxes_id.filtered(lambda t: t.company_id.id == self.company_id).ids)],
                 'price_subtotal': untax2,
                 'price_subtotal_incl': untax2 + atax2,
             })],
@@ -335,14 +335,14 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         # I check that the order is marked as paid and there is no invoice
         # attached to it
         self.assertEqual(self.pos_order_pos1.state, 'paid', "Order should be in paid state.")
-        self.assertFalse(self.pos_order_pos1.invoice_id, 'Invoice should not be attached to order.')
+        self.assertFalse(self.pos_order_pos1.account_move, 'Invoice should not be attached to order.')
 
         # I generate an invoice from the order
         res = self.pos_order_pos1.action_pos_order_invoice()
         self.assertIn('res_id', res, "No invoice created")
 
         # I test that the total of the attached invoice is correct
-        invoice = self.env['account.invoice'].browse(res['res_id'])
+        invoice = self.env['account.move'].browse(res['res_id'])
         self.assertAlmostEqual(
             invoice.amount_total, self.pos_order_pos1.amount_total, places=2, msg="Invoice not correct")
 
@@ -713,16 +713,16 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         # I check that the order is marked as paid and there is no invoice
         # attached to it
         self.assertEqual(self.pos_order_pos1.state, 'paid', "Order should be in paid state.")
-        self.assertFalse(self.pos_order_pos1.invoice_id, 'Invoice should not be attached to order.')
+        self.assertFalse(self.pos_order_pos1.account_move, 'Invoice should not be attached to order.')
 
         # I generate an invoice from the order
         res = self.pos_order_pos1.action_pos_order_invoice()
         self.assertIn('res_id', res, "No invoice created")
 
         # I test that the total of the attached invoice is correct
-        invoice = self.env['account.invoice'].browse(res['res_id'])
+        invoice = self.env['account.move'].browse(res['res_id'])
         self.assertAlmostEqual(
             invoice.amount_total, self.pos_order_pos1.amount_total, places=2, msg="Invoice not correct")
 
         for iline in invoice.invoice_line_ids:
-            self.assertFalse(iline.invoice_line_tax_ids)
+            self.assertFalse(iline.tax_ids)

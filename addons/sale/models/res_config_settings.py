@@ -68,7 +68,7 @@ class ResConfigSettings(models.TransientModel):
                                             "This mode is advised if you issue the final invoice at the order and not after the delivery.",
                                        config_parameter='sale.automatic_invoice')
     template_id = fields.Many2one('mail.template', 'Email Template',
-                                  domain="[('model', '=', 'account.invoice')]",
+                                  domain="[('model', '=', 'account.move')]",
                                   config_parameter='sale.default_email_template',
                                   default=lambda self: self.env.ref('account.email_template_edi_invoice', False))
     confirmation_template_id = fields.Many2one('mail.template', string='Confirmation Email',

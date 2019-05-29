@@ -21,21 +21,16 @@ class MembershipInvoice(models.TransientModel):
 
     @api.multi
     def membership_invoice(self):
-        if self:
-            datas = {
-                'membership_product_id': self.product_id.id,
-                'amount': self.member_price
-            }
-        invoice_list = self.env['res.partner'].browse(self._context.get('active_ids')).create_membership_invoice(datas=datas)
+        invoice_list = self.env['res.partner'].browse(self._context.get('active_ids')).create_membership_invoice(self.product_id, self.member_price)
 
         search_view_ref = self.env.ref('account.view_account_invoice_filter', False)
-        form_view_ref = self.env.ref('account.invoice_form', False)
-        tree_view_ref = self.env.ref('account.invoice_tree', False)
+        form_view_ref = self.env.ref('account.view_move_form', False)
+        tree_view_ref = self.env.ref('account.view_move_tree', False)
 
         return  {
-            'domain': [('id', 'in', invoice_list)],
+            'domain': [('id', 'in', invoice_list.ids)],
             'name': 'Membership Invoices',
-            'res_model': 'account.invoice',
+            'res_model': 'account.move',
             'type': 'ir.actions.act_window',
             'views': [(tree_view_ref.id, 'tree'), (form_view_ref.id, 'form')],
             'search_view_id': search_view_ref and search_view_ref.id,

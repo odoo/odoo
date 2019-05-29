@@ -24,7 +24,7 @@ class CrmPartnerReportAssign(models.Model):
     date = fields.Date('Invoice Account Date', readonly=True)
 
     _depends = {
-        'account.invoice.report': ['date', 'partner_id', 'price_total', 'state', 'type'],
+        'account.invoice.report': ['invoice_date', 'partner_id', 'price_subtotal', 'state', 'type'],
         'crm.lead': ['partner_assigned_id'],
         'res.partner': ['activation', 'country_id', 'date_partnership', 'date_review',
                         'grade_id', 'parent_id', 'team_id', 'user_id'],
@@ -50,8 +50,8 @@ class CrmPartnerReportAssign(models.Model):
                     p.user_id,
                     p.team_id,
                     (SELECT count(id) FROM crm_lead WHERE partner_assigned_id=p.id) AS nbr_opportunities,
-                    i.price_total as turnover,
-                    i.date
+                    i.price_subtotal as turnover,
+                    i.invoice_date
                 FROM
                     res_partner p
                     left join account_invoice_report i

@@ -58,13 +58,17 @@ class StockMoveInvoice(AccountingTestCase):
         # I confirm the invoice
 
         self.invoice = self.sale_prepaid.invoice_ids
-        self.invoice.action_invoice_open()
+        self.invoice.post()
 
         # I pay the invoice.
         self.invoice = self.sale_prepaid.invoice_ids
-        self.invoice.action_invoice_open()
+        self.invoice.post()
         self.journal = self.AccountJournal.search([('type', '=', 'cash'), ('company_id', '=', self.sale_prepaid.company_id.id)], limit=1)
-        self.invoice.pay_and_reconcile(self.journal, self.invoice.amount_total)
+
+        register_payments = self.env['account.payment.register'].with_context(active_ids=self.invoice.ids).create({
+            'journal_id': self.journal.id,
+        })
+        register_payments.create_payments()
 
         # Check the SO after paying the invoice
         self.assertNotEqual(self.sale_prepaid.invoice_count, 0, 'order not invoiced')

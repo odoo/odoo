@@ -79,7 +79,6 @@ class TestSaleOrder(TestCommonSaleNoChart):
             - Invoice repeatedly while varrying delivered quantities and check that invoice are always what we expect
         """
         # DBO TODO: validate invoice and register payments
-        Invoice = self.env['account.invoice']
         self.sale_order.order_line.read(['name', 'price_unit', 'product_uom_qty', 'price_total'])
 
         self.assertEqual(self.sale_order.amount_total, sum([2 * p.list_price for p in self.product_map.values()]), 'Sale: total amount is wrong')
@@ -99,8 +98,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         self.assertTrue(self.sale_order.invoice_status == 'to invoice')
 
         # create invoice: only 'invoice on order' products are invoiced
-        inv_id = self.sale_order._create_invoices()
-        invoice = Invoice.browse(inv_id)
+        invoice = self.sale_order._create_invoices()
         self.assertEqual(len(invoice.invoice_line_ids), 2, 'Sale: invoice is missing lines')
         self.assertEqual(invoice.amount_total, sum([2 * p.list_price if p.invoice_policy == 'order' else 0 for p in self.product_map.values()]), 'Sale: invoice total amount is wrong')
         self.assertTrue(self.sale_order.invoice_status == 'no', 'Sale: SO status after invoicing should be "nothing to invoice"')
@@ -112,8 +110,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         for line in self.sale_order.order_line:
             line.qty_delivered = 2 if line.product_id.expense_policy == 'no' else 0
         self.assertTrue(self.sale_order.invoice_status == 'to invoice', 'Sale: SO status after delivery should be "to invoice"')
-        inv_id = self.sale_order._create_invoices()
-        invoice2 = Invoice.browse(inv_id)
+        invoice2 = self.sale_order._create_invoices()
         self.assertEqual(len(invoice2.invoice_line_ids), 2, 'Sale: second invoice is missing lines')
         self.assertEqual(invoice2.amount_total, sum([2 * p.list_price if p.invoice_policy == 'delivery' else 0 for p in self.product_map.values()]), 'Sale: second invoice total amount is wrong')
         self.assertTrue(self.sale_order.invoice_status == 'invoiced', 'Sale: SO status after invoicing everything should be "invoiced"')
@@ -126,8 +123,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         # upsell and invoice
         self.sol_serv_order.write({'product_uom_qty': 10})
 
-        inv_id = self.sale_order._create_invoices()
-        invoice3 = Invoice.browse(inv_id)
+        invoice3 = self.sale_order._create_invoices()
         self.assertEqual(len(invoice3.invoice_line_ids), 1, 'Sale: third invoice is missing lines')
         self.assertEqual(invoice3.amount_total, 8 * self.product_map['serv_order'].list_price, 'Sale: second invoice total amount is wrong')
         self.assertTrue(self.sale_order.invoice_status == 'invoiced', 'Sale: SO status after invoicing everything (including the upsel) should be "invoiced"')
@@ -187,19 +183,21 @@ class TestSaleOrder(TestCommonSaleNoChart):
         so.action_confirm()
         so._create_analytic_account()
 
-        company = self.env.ref('base.main_company')
-        journal = self.env['account.journal'].create({'name': 'Purchase Journal - Test', 'code': 'STPJ', 'type': 'purchase', 'company_id': company.id})
-        invoice_vals = {
-            'name': '',
+        inv = self.env['account.move'].with_context(default_type='in_invoice').create({
             'type': 'in_invoice',
             'partner_id': self.partner_customer_usd.id,
-            'invoice_line_ids': [(0, 0, {'name': serv_cost.name, 'product_id': serv_cost.id, 'quantity': 2, 'uom_id': serv_cost.uom_id.id, 'price_unit': serv_cost.standard_price, 'account_analytic_id': so.analytic_account_id.id, 'account_id': self.account_income.id})],
-            'account_id': self.account_payable.id,
-            'journal_id': journal.id,
-            'currency_id': company.currency_id.id,
-        }
-        inv = self.env['account.invoice'].create(invoice_vals)
-        inv.action_invoice_open()
+            'invoice_line_ids': [
+                (0, 0, {
+                    'name': serv_cost.name,
+                    'product_id': serv_cost.id,
+                    'product_uom_id': serv_cost.uom_id.id,
+                    'quantity': 2,
+                    'price_unit': serv_cost.standard_price,
+                    'analytic_account_id': so.analytic_account_id.id,
+                }),
+            ],
+        })
+        inv.post()
         sol = so.order_line.filtered(lambda l: l.product_id == serv_cost)
         self.assertTrue(sol, 'Sale: cost invoicing does not add lines when confirming vendor invoice')
         self.assertEquals((sol.price_unit, sol.qty_delivered, sol.product_uom_qty, sol.qty_invoiced), (160, 2, 0, 0), 'Sale: line is wrong after confirming vendor invoice')

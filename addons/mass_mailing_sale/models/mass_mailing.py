@@ -27,9 +27,9 @@ class MassMailing(models.Model):
                 invoices = self.env['sale.order'].search(self._get_sale_utm_domain()).mapped('invoice_ids')
                 res = self.env['account.invoice.report'].search_read(
                     [('invoice_id', 'in', invoices.ids), ('state', 'not in', ['draft', 'cancel'])],
-                    ['user_currency_price_total']
+                    ['price_subtotal']
                 )
-                mass_mailing.sale_invoiced_amount = sum(r['user_currency_price_total'] for r in res)
+                mass_mailing.sale_invoiced_amount = sum(r['price_subtotal'] for r in res)
             else:
                 mass_mailing.sale_invoiced_amount = 0
 
@@ -42,11 +42,13 @@ class MassMailing(models.Model):
 
     @api.multi
     def action_redirect_to_invoiced(self):
-        action = self.env.ref('account.action_invoice_refund_out_tree').read()[0]
+        action = self.env.ref('account.view_move_form').read()[0]
         invoices = self.env['sale.order'].search(self._get_sale_utm_domain()).mapped('invoice_ids')
         action['domain'] = [
             ('id', 'in', invoices.ids),
-            ('state', 'not in', ['draft', 'cancel'])
+            ('type', 'in', ('out_invoice', 'out_refund')),
+            ('type', '=', 'posted'),
+            ('partner_id', 'child_of', self.id),
         ]
         return action
 

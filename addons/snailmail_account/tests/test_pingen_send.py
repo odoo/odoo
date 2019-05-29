@@ -16,7 +16,7 @@ class TestPingenSend(AccountingTestCase):
         self.sample_invoice.partner_id.vat = "BE000000000"
         self.letter = self.env['snailmail.letter'].create({
             'partner_id': self.sample_invoice.partner_id.id,
-            'model': 'account.invoice',
+            'model': 'account.move',
             'res_id': self.sample_invoice.id,
             'user_id': self.env.user.id,
             'company_id': self.sample_invoice.company_id.id,
@@ -49,25 +49,22 @@ class TestPingenSend(AccountingTestCase):
             'user_type_id': self.env.ref('account.data_account_type_direct_costs').id
         })
 
-        invoice = self.env['account.invoice'].create({
+        invoice = self.env['account.move'].with_context(default_type='out_invoice').create({
+            'type': 'out_invoice',
             'partner_id': partner_agrolait.id,
             'currency_id': currency.id,
             'name': 'invoice to client',
             'account_id': account_receivable.id,
-            'type': 'out_invoice',
-            'date_invoice': '2018-12-11',
+            'invoice_date': '2018-12-11',
+            'invoice_line_ids': [(0, 0, {
+                'product_id': product.id,
+                'quantity': 1,
+                'price_unit': 42,
+                'account_id': account_income.id,
+            })],
         })
 
-        self.env['account.invoice.line'].create({
-            'product_id': product.id,
-            'quantity': 1,
-            'price_unit': 42,
-            'invoice_id': invoice.id,
-            'name': 'something',
-            'account_id': account_income.id,
-        })
-
-        invoice.action_invoice_open()
+        invoice.post()
 
         return invoice
 

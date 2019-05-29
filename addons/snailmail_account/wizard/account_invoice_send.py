@@ -14,7 +14,7 @@ class AccountInvoiceSend(models.TransientModel):
     snailmail_is_letter = fields.Boolean('Send by Post', help='Allows to send the document by Snailmail (coventional posting delivery service)', default=lambda self: self.env.company.invoice_is_snailmail)
     snailmail_cost = fields.Float(string='Stamp(s)', compute='_compute_snailmail_cost', readonly=True)
     invalid_addresses = fields.Integer('Invalid Addresses Count', compute='_compute_invalid_addresses')
-    invalid_invoice_ids = fields.Many2many('account.invoice', string='Invalid Addresses', compute='_compute_invalid_addresses')
+    invalid_invoice_ids = fields.Many2many('account.move', string='Invalid Addresses', compute='_compute_invalid_addresses')
 
     @api.multi
     @api.depends('invoice_ids')
@@ -44,7 +44,7 @@ class AccountInvoiceSend(models.TransientModel):
         for invoice in self.invoice_ids:
             letter = self.env['snailmail.letter'].create({
                 'partner_id': invoice.partner_id.id,
-                'model': 'account.invoice',
+                'model': 'account.move',
                 'res_id': invoice.id,
                 'user_id': self.env.user.id,
                 'company_id': invoice.company_id.id,
@@ -52,7 +52,7 @@ class AccountInvoiceSend(models.TransientModel):
             })
             letters |= letter
 
-        self.invoice_ids.filtered(lambda inv: not inv.sent).write({'sent': True})
+        self.invoice_ids.filtered(lambda inv: not inv.invoice_sent).write({'invoice_sent': True})
         if len(self.invoice_ids) == 1:
             letters._snailmail_print()
         else:
@@ -82,6 +82,6 @@ class AccountInvoiceSend(models.TransientModel):
             'name': _('Invalid Addresses'),
             'type': 'ir.actions.act_window',
             'view_mode': 'kanban,tree,form',
-            'res_model': 'account.invoice',
+            'res_model': 'account.move',
             'domain': [('id', 'in', self.mapped('invalid_invoice_ids').ids)],
         }
