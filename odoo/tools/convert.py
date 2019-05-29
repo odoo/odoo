@@ -207,8 +207,7 @@ class Evaluator:
 
     def _substitute_xids(self, s):
         """ Looks for all matches for %(xxx)s in the text (an HTML or XML
-        view), and replaces each unique match *in the entire document* at once
-        hence the odd `done` set.
+        view), and replaces them with the actual id.
         """
         return re.sub(
             r'%%|%\((\w+)\)[ds]',
@@ -565,7 +564,7 @@ form: module.record_id""" % (xml_id,)
 
         res = {}
         for field in rec.findall('./field'):
-            #TODO: most of this code is duplicated above (in _eval_xml)...
+            # FIXME: most of this code is duplicated above (in Evaluator.evaluate), but there are various differences to reconcile
             field_name = field.get("name")
             target = model.get(field_name)
             target_type = target and target.type
