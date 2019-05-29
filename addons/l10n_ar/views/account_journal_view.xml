@@ -6,22 +6,25 @@
         <field name="name">account.journal.form</field>
         <field name="inherit_id" ref="l10n_latam_document.view_account_journal_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='code']/.." position="after">
+                <group attrs="{'invisible': [('l10n_latam_use_documents', '=', False)]}" >
+                    <field name="l10n_ar_sequence_ids" nolabel="1" colspan="2">
+                        <tree create="false" delete="false" editable="top">
+                            <field name="name" readonly="True" string="Sequence"/>
+                            <field name="number_next_actual" string="Next Number"/>
+                        </tree>
+                    </field>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='code']/.." position="attributes">
+                <attribute name="attrs">{'invisible': [('l10n_latam_use_documents', '=', True)]}</attribute>
+            </xpath>
             <field name="l10n_latam_use_documents" position="after">
                 <field name="l10n_ar_afip_pos_number" attrs="{'invisible':['|', '|', ('l10n_latam_country_code', '!=', 'AR'), ('l10n_latam_use_documents', '=', False), ('type', '!=', 'sale')], 'required':[('l10n_latam_country_code', '=', 'AR'), ('l10n_latam_use_documents', '=', True), ('type', '=', 'sale')]}"/>
                 <field name="l10n_ar_afip_pos_system" attrs="{'invisible':['|', '|', ('l10n_latam_country_code', '!=', 'AR'), ('l10n_latam_use_documents', '=', False), ('type', '!=', 'sale')], 'required':[('l10n_latam_country_code', '=', 'AR'), ('l10n_latam_use_documents', '=', True), ('type', '=', 'sale')]}"/>
                 <field name="l10n_ar_afip_pos_partner_id" attrs="{'invisible':['|', '|', ('l10n_latam_country_code', '!=', 'AR'), ('l10n_latam_use_documents', '=', False), ('type', '!=', 'sale')], 'required':[('l10n_latam_country_code', '=', 'AR'), ('l10n_latam_use_documents', '=', True), ('type', '=', 'sale')]}"/>
                 <field name="l10n_ar_share_sequences" attrs="{'invisible':[('l10n_ar_afip_pos_system', '!=', 'II_IM')]}"/>
             </field>
-            <notebook>
-                <page string="Document Types Sequences" name="l10n_ar_sequences" attrs="{'invisible':['|', '|', ('l10n_latam_country_code', '!=', 'AR'), ('l10n_latam_use_documents', '=', False), ('type', '!=', 'sale')]}">
-                    <field name="l10n_ar_sequence_ids">
-                        <tree create="false" unlink="false" editable="top">
-                            <field name="name" readonly="True"/>
-                            <field name="number_next_actual"/>
-                        </tree>
-                    </field>
-                </page>
-            </notebook>
         </field>
     </record>
 

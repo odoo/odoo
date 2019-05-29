@@ -238,21 +238,18 @@ class AccountInvoice(models.Model):
                 re.sub("[^0-9]", "", point_of_sale))
 
     @api.multi
-    def get_localization_invoice_vals(self):
-        self.ensure_one()
-        if self.company_id.country_id != self.env.ref('base.ar'):
-            return super(AccountInvoice, self).get_localization_invoice_vals()
-
-        if self.company_id.currency_id == self.currency_id:
-            l10n_ar_currency_rate = 1.0
-        else:
-            currency = self.currency_id.with_context(
-                date=self.date_invoice or fields.Date.context_today(self))
-            l10n_ar_currency_rate = currency.compute(
-                1., self.company_id.currency_id, round=False)
-        return {
-            'l10n_ar_currency_rate': l10n_ar_currency_rate,
-        }
+    def action_invoice_open(self):
+        for rec in self.filtered(
+                lambda x: x.company_id.country_id == self.env.ref('base.ar')):
+            if rec.company_id.currency_id == rec.currency_id:
+                l10n_ar_currency_rate = 1.0
+            else:
+                currency = rec.currency_id.with_context(
+                    date=rec.date_invoice or fields.Date.context_today(rec))
+                l10n_ar_currency_rate = currency.compute(
+                    1.0, rec.company_id.currency_id, round=False)
+            rec.l10n_ar_currency_rate = l10n_ar_currency_rate
+        return super(AccountInvoice, self).action_invoice_open()
 
     @api.model
     def _get_available_document_types(self, journal, invoice_type, partner):
@@ -425,9 +422,9 @@ class AccountInvoice(models.Model):
     def check_afip_responsability_set(self):
         if self.company_id.country_id == self.env.ref('base.ar') and \
            self.l10n_latam_use_documents and self.partner_id and \
-               not self.partner_id.l10n_ar_afip_responsability_type:
-                return {'warning': {
-                    'title': 'Missing Partner Configuration',
-                    'message': 'Please configure the AFIP Responsability for '
-                    '"%s" in order to continue' % self.partner_id.name,
-                }}
+           not self.partner_id.l10n_ar_afip_responsability_type:
+            return {'warning': {
+                'title': 'Missing Partner Configuration',
+                'message': 'Please configure the AFIP Responsability for '
+                '"%s" in order to continue' % self.partner_id.name,
+            }}

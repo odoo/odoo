@@ -6,26 +6,8 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <field name="journal_id" position="before">
-                <field name="display_name"/>
-            </field>
             <field name="ref" position="before">
                 <field name="l10n_latam_document_type_id"/>
-                <field name="l10n_latam_document_number"/>
-            </field>
-        </field>
-    </record>
-
-    <record id="view_move_tree" model="ir.ui.view">
-        <field name="name">account.move.tree</field>
-        <field name="model">account.move</field>
-        <field name="inherit_id" ref="account.view_move_tree"/>
-        <field name="arch" type="xml">
-            <field name="name" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </field>
-            <field name="name" position="after">
-                <field name="display_name"/>
             </field>
         </field>
     </record>
@@ -35,9 +17,6 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_account_move_filter"/>
         <field name="arch" type="xml">
-            <field name="name" position="attributes">
-                <attribute name="filter_domain">['|', '|', ('display_name','ilike',self), ('name','ilike',self), ('ref','ilike',self)]</attribute>
-            </field>
             <field name="partner_id" position="after">
                 <field name="l10n_latam_document_type_id"/>
             </field>
@@ -46,4 +25,5 @@
             </group>
         </field>
     </record>
+
 </odoo>
