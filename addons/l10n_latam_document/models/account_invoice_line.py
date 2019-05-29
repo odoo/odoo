@@ -6,19 +6,15 @@ class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
 
     l10n_latam_price_unit = fields.Monetary(
-        string='Unit Price',
         compute='compute_l10n_latam_prices_and_taxes',
     )
     l10n_latam_price_subtotal = fields.Monetary(
-        string='Amount',
         compute='compute_l10n_latam_prices_and_taxes',
     )
     l10n_latam_price_net = fields.Monetary(
-        string='Net Amount',
         compute='compute_l10n_latam_prices_and_taxes',
     )
     l10n_latam_invoice_line_tax_ids = fields.One2many(
-        string='Taxes',
         compute="compute_l10n_latam_prices_and_taxes",
         comodel_name='account.tax',
     )

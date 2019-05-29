@@ -9,22 +9,18 @@ class AccountInvoice(models.Model):
     _inherit = "account.invoice"
 
     l10n_latam_amount_tax = fields.Monetary(
-        string='Tax',
         compute='_compute_l10n_latam_amount_and_taxes'
     )
     l10n_latam_amount_untaxed = fields.Monetary(
-        string='Untaxed Amount',
         compute='_compute_l10n_latam_amount_and_taxes'
     )
     l10n_latam_tax_line_ids = fields.One2many(
         compute="_compute_l10n_latam_amount_and_taxes",
         comodel_name='account.invoice.tax',
-        string='Taxes'
     )
     l10n_latam_available_document_type_ids = fields.Many2many(
         'l10n_latam.document.type',
         compute='_compute_l10n_latam_available_document_types',
-        string='Available Document Types',
     )
     l10n_latam_document_type_id = fields.Many2one(
         'l10n_latam.document.type',
@@ -42,11 +38,8 @@ class AccountInvoice(models.Model):
         compute='_compute_l10n_latam_document_number',
         inverse='_inverse_l10n_latam_document_number',
         string='Document Number',
-        copy=False,
         readonly=True,
         states={'draft': [('readonly', False)]},
-        track_visibility='onchange',
-        index=True,
     )
     l10n_latam_use_documents = fields.Boolean(
         related='journal_id.l10n_latam_use_documents',
