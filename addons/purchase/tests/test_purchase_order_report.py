@@ -56,11 +56,11 @@ class TestPurchaseOrderReport(common.TransactionCase):
         })
         po.button_confirm()
 
-        f = Form(self.env['account.invoice'])
+        f = Form(self.env['account.move'])
         f.partner_id = po.partner_id
         f.purchase_id = po
         invoice = f.save()
-        invoice.action_invoice_open()
+        invoice.post()
 
         res_product1 = self.PurchaseReport.search([
             ('order_id', '=', po.id), ('product_id', '=', self.product1.id)])

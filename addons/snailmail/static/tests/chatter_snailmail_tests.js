@@ -25,7 +25,7 @@ QUnit.module('Chatter', {
     before: function () {
         this.services = mailTestUtils.getMailServices();
         this.data = {
-            'account.invoice': {
+            'account.move': {
                 fields: {
                     display_name: { string: "Displayed name", type: "char" },
                     foo: {string: "Foo", type: "char", default: "My little Foo Value"},
@@ -88,7 +88,7 @@ QUnit.module('Chatter', {
                     author_id: ["1", "John Doe"],
                     body: 'Message Body',
                     date: "2018-12-11 12:34:00",
-                    model: 'account.invoice',
+                    model: 'account.move',
                     res_id: 1,
                     message_type: 'snailmail',
                 }],
@@ -113,7 +113,7 @@ QUnit.test('Sent', async function (assert) {
 
     var form = await createView({
         View: FormView,
-        model: 'account.invoice',
+        model: 'account.move',
         res_id: 1,
         data: this.data,
         services: this.services,
@@ -148,7 +148,7 @@ QUnit.test('Canceled', async function (assert) {
 
     var form = await createView({
         View: FormView,
-        model: 'account.invoice',
+        model: 'account.move',
         res_id: 1,
         data: this.data,
         services: this.services,
@@ -184,7 +184,7 @@ QUnit.test('Pending', async function (assert) {
 
     var form = await createView({
         View: FormView,
-        model: 'account.invoice',
+        model: 'account.move',
         res_id: 1,
         data: this.data,
         services: this.services,
@@ -220,7 +220,7 @@ QUnit.test('No Price Available', async function (assert) {
 
     var form = await createView({
         View: FormView,
-        model: 'account.invoice',
+        model: 'account.move',
         res_id: 1,
         data: this.data,
         services: this.services,
@@ -280,7 +280,7 @@ QUnit.test('Format Error', async function (assert) {
 
     var form = await createView({
         View: FormView,
-        model: 'account.invoice',
+        model: 'account.move',
         res_id: 1,
         data: this.data,
         services: this.services,
@@ -324,7 +324,7 @@ QUnit.test('Credit Error', async function (assert) {
 
     var form = await createView({
         View: FormView,
-        model: 'account.invoice',
+        model: 'account.move',
         res_id: 1,
         data: this.data,
         services: this.services,
@@ -392,7 +392,7 @@ QUnit.test('Trial Error', async function (assert) {
 
     var form = await createView({
         View: FormView,
-        model: 'account.invoice',
+        model: 'account.move',
         res_id: 1,
         data: this.data,
         services: this.services,
@@ -467,7 +467,7 @@ QUnit.test('Missing Required Fields', async function (assert) {
 
     var form = await createView({
         View: FormView,
-        model: 'account.invoice',
+        model: 'account.move',
         res_id: 1,
         data: this.data,
         services: this.services,

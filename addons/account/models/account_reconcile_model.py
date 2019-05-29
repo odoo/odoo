@@ -102,18 +102,25 @@ class AccountReconcileModel(models.Model):
     second_analytic_account_id = fields.Many2one('account.analytic.account', string='Second Analytic Account', ondelete='set null')
     second_analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Second Analytic Tags',
                                                relation='account_reconcile_model_second_analytic_tag_rel')
-    
+
     number_entries = fields.Integer(string='Number of entries related to this model', compute='_compute_number_entries')
 
     @api.multi
     def action_reconcile_stat(self):
+        self.ensure_one()
         action = self.env.ref('account.action_move_journal_line').read()[0]
+        self._cr.execute('''
+            SELECT ARRAY_AGG(DISTINCT move_id)
+            FROM account_move_line
+            WHERE reconcile_model_id = %s
+        ''', [self.id])
         action.update({
-            'context': {'search_default_reconcile_model_id': self.name},
+            'context': {},
+            'domain': [('id', 'in', self._cr.fetchone()[0])],
             'help': """<p class="o_view_nocontent_empty_folder">{}</p>""".format(_('No move from this reconciliation model')),
         })
         return action
-        
+
     @api.multi
     def _compute_number_entries(self):
         data = self.env['account.move.line'].read_group([('reconcile_model_id', 'in', self.ids)], ['reconcile_model_ids'], 'reconcile_model_id')
@@ -438,10 +445,11 @@ class AccountReconcileModel(models.Model):
             LEFT JOIN res_company company           ON company.id = st_line.company_id
             LEFT JOIN partners_table line_partner   ON line_partner.line_id = st_line.id
             , account_move_line aml
-            LEFT JOIN account_move move             ON move.id = aml.move_id
+            LEFT JOIN account_move move             ON move.id = aml.move_id AND move.state = 'posted'
             LEFT JOIN account_account account       ON account.id = aml.account_id
             WHERE st_line.id IN %s
                 AND aml.company_id = st_line.company_id
+                AND move.state = 'posted'
                 AND (
                         -- the field match_partner of the rule might enforce the second part of
                         -- the OR condition, later in _apply_conditions()
@@ -456,7 +464,7 @@ class AccountReconcileModel(models.Model):
 
                 -- if there is a partner, propose all aml of the partner, otherwise propose only the ones
                 -- matching the statement line communication
-                AND 
+                AND
                 (
                     (
                         line_partner.partner_id != 0

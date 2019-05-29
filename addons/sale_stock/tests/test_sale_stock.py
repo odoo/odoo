@@ -13,7 +13,7 @@ class TestSaleStock(TestSale):
         Test SO's changes when playing around with stock moves, quants, pack operations, pickings
         and whatever other model there is in stock with "invoice on delivery" products
         """
-        inv_obj = self.env['account.invoice']
+        inv_obj = self.env['account.move']
         self.so = self.env['sale.order'].create({
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
@@ -41,8 +41,7 @@ class TestSaleStock(TestSale):
         del_qties_truth = [1.0 if sol.product_id.type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
         self.assertEqual(del_qties, del_qties_truth, 'Sale Stock: delivered quantities are wrong after partial delivery')
         # invoice on delivery: only storable products
-        inv_id = self.so._create_invoices()
-        inv_1 = inv_obj.browse(inv_id)
+        inv_1 = self.so._create_invoices()
         self.assertTrue(all([il.product_id.invoice_policy == 'delivery' for il in inv_1.invoice_line_ids]),
                         'Sale Stock: invoice should only contain "invoice on delivery" products')
 
@@ -93,7 +92,7 @@ class TestSaleStock(TestSale):
             'product_id': self.env.ref('sale.advance_product_0').id,
         })
         act = adv_wiz.with_context(open_invoices=True).create_invoices()
-        inv = self.env['account.invoice'].browse(act['res_id'])
+        inv = self.env['account.move'].browse(act['res_id'])
         self.assertEqual(inv.amount_untaxed, self.so.amount_untaxed * 5.0 / 100.0, 'Sale Stock: deposit invoice is wrong')
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so should be to invoice after invoicing deposit')
         # invoice on order: everything should be invoiced
@@ -151,12 +150,11 @@ class TestSaleStock(TestSale):
 
         # Check invoice
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" instead of "%s" before invoicing' % self.so.invoice_status)
-        inv_1_id = self.so._create_invoices()
+        self.inv_1 = self.so._create_invoices()
         self.assertEqual(self.so.invoice_status, 'invoiced', 'Sale Stock: so invoice_status should be "invoiced" instead of "%s" after invoicing' % self.so.invoice_status)
-        self.assertEqual(len(inv_1_id), 1, 'Sale Stock: only one invoice instead of "%s" should be created' % len(inv_1_id))
-        self.inv_1 = self.env['account.invoice'].browse(inv_1_id)
+        self.assertEqual(len(self.inv_1), 1, 'Sale Stock: only one invoice instead of "%s" should be created' % len(self.inv_1))
         self.assertEqual(self.inv_1.amount_untaxed, self.inv_1.amount_untaxed, 'Sale Stock: amount in SO and invoice should be the same')
-        self.inv_1.action_invoice_open()
+        self.inv_1.post()
 
         # Create return picking
         stock_return_picking_form = Form(self.env['stock.return.picking']
@@ -226,10 +224,9 @@ class TestSaleStock(TestSale):
 
         # Check invoice
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" before invoicing')
-        inv_1_id = self.so._create_invoices()
+        self.inv_1 = self.so._create_invoices()
         self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "no" after invoicing')
-        self.assertEqual(len(inv_1_id), 1, 'Sale Stock: only one invoice should be created')
-        self.inv_1 = self.env['account.invoice'].browse(inv_1_id)
+        self.assertEqual(len(self.inv_1), 1, 'Sale Stock: only one invoice should be created')
         self.assertEqual(self.inv_1.amount_untaxed, self.inv_1.amount_untaxed, 'Sale Stock: amount in SO and invoice should be the same')
 
         self.so.action_done()

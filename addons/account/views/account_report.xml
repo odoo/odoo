@@ -4,24 +4,24 @@
         <!-- QWeb Reports -->
         <report
             id="account_invoices"
-            model="account.invoice"
+            model="account.move"
             string="Invoices"
             report_type="qweb-pdf"
             name="account.report_invoice_with_payments"
             file="account.report_invoice_with_payments"
-            attachment="(object.state in ('open','in_payment','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+            attachment="(object.state == 'posted') and ('INV'+(object.name or '').replace('/','')+'.pdf')"
             print_report_name="(object._get_report_base_filename())"
             groups="account.group_account_invoice"
         />
 
         <report
             id="account_invoices_without_payment"
-            model="account.invoice"
+            model="account.move"
             string="Invoices without Payment"
             report_type="qweb-pdf"
             name="account.report_invoice"
             file="account.report_invoice"
-            attachment="(object.state in ('open','in_payment','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+            attachment="(object.state == 'posted') and ('INV'+(object.name or '').replace('/','')+'.pdf')"
             print_report_name="(object._get_report_base_filename())"
         />
 

@@ -145,7 +145,7 @@ class AccountPayment(models.Model):
 
         multi_stub = self.company_id.account_check_printing_multi_stub
 
-        invoices = self.reconciled_invoice_ids.sorted(key=lambda r: r.date_due)
+        invoices = self.reconciled_invoice_ids.sorted(key=lambda r: r.invoice_date_due)
         debits = invoices.filtered(lambda r: r.type == 'in_invoice')
         credits = invoices.filtered(lambda r: r.type == 'in_refund')
 
@@ -183,21 +183,21 @@ class AccountPayment(models.Model):
         # Find the account.partial.reconcile which are common to the invoice and the payment
         if invoice.type in ['in_invoice', 'out_refund']:
             invoice_sign = 1
-            invoice_payment_reconcile = invoice.move_id.line_ids.mapped('matched_debit_ids').filtered(lambda r: r.debit_move_id in self.move_line_ids)
+            invoice_payment_reconcile = invoice.line_ids.mapped('matched_debit_ids').filtered(lambda r: r.debit_move_id in self.move_line_ids)
         else:
             invoice_sign = -1
-            invoice_payment_reconcile = invoice.move_id.line_ids.mapped('matched_credit_ids').filtered(lambda r: r.credit_move_id in self.move_line_ids)
+            invoice_payment_reconcile = invoice.line_ids.mapped('matched_credit_ids').filtered(lambda r: r.credit_move_id in self.move_line_ids)
 
         if self.currency_id != self.journal_id.company_id.currency_id:
             amount_paid = abs(sum(invoice_payment_reconcile.mapped('amount_currency')))
         else:
             amount_paid = abs(sum(invoice_payment_reconcile.mapped('amount')))
 
-        amount_residual = invoice_sign * invoice.residual
+        amount_residual = invoice_sign * invoice.amount_residual
 
         return {
-            'due_date': format_date(self.env, invoice.date_due),
-            'number': invoice.reference and invoice.number + ' - ' + invoice.reference or invoice.number,
+            'due_date': format_date(self.env, invoice.invoice_date_due),
+            'number': invoice.ref and invoice.name + ' - ' + invoice.ref or invoice.name,
             'amount_total': formatLang(self.env, invoice_sign * invoice.amount_total, currency_obj=invoice.currency_id),
             'amount_residual': formatLang(self.env, amount_residual, currency_obj=invoice.currency_id) if amount_residual * 10**4 != 0 else '-',
             'amount_paid': formatLang(self.env, invoice_sign * amount_paid, currency_obj=invoice.currency_id),

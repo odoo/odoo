@@ -408,7 +408,7 @@
                                         <a t-att-href="report_url">
                                             <span t-esc="i.number"/>
                                         </a>
-                                        <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.date_invoice"/></div>
+                                        <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
                                     </div>
                                     <span t-if="i.state == 'paid'" class="small badge badge-success orders_label_text_align"><i class="fa fa-fw fa-check"/> <b>Paid</b></span>
                                     <span t-else="" class="small badge badge-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> <b>Waiting Payment</b></span>

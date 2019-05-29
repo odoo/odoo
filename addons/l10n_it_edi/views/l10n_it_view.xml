@@ -106,12 +106,12 @@
 
     <record id="invoice_supplier_tree_l10n_it" model="ir.ui.view">
         <field name="name">account.invoice.supplier.tree.l10n.it</field>
-        <field name="model">account.invoice</field>
+        <field name="model">account.move</field>
         <field name="priority">20</field>
-        <field name="inherit_id" ref="account.invoice_tree"/>
+        <field name="inherit_id" ref="account.view_move_tree"/>
         <field name="arch" type="xml">
         <data>
-            <xpath expr="//field[@name='type']" position="after">
+            <xpath expr="//field[@name='currency_id']" position="after">
                 <field name="l10n_it_send_state" invisible="1" widget="label_selection" options="{'classes': {'to_send': 'default', 'invalid': 'danger', 'sent': 'warning',
                                             'delivered': 'success', 'delivered_accepted': 'success', 'delivered_refused': 'success', 'delivered_expired': 'success', 'failed_delivery': 'success'}}"/>
 
@@ -125,9 +125,9 @@
 
     <record id="invoice_kanban_l10n_it" model="ir.ui.view">
         <field name="name">account.invoice.kanban.l10n.it</field>
-        <field name="model">account.invoice</field>
+        <field name="model">account.move</field>
         <field name="priority">20</field>
-        <field name="inherit_id" ref="account.invoice_kanban"/>
+        <field name="inherit_id" ref="account.view_account_move_kanban"/>
         <field name="arch" type="xml">
         <data>
             <xpath expr="//field[@name='currency_id']" position="after">
@@ -145,58 +145,39 @@
     </record>
 
     <record id="account_invoice_form_l10n_it" model="ir.ui.view">
-        <field name="name">account.invoice.form.l10n.it</field>
-        <field name="model">account.invoice</field>
+        <field name="name">account.move.form.l10n.it</field>
+        <field name="model">account.move</field>
         <field name="priority">20</field>
-        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
         <data>
             <xpath expr="//button[@name='preview_invoice']" position="after">
-                <button name="invoice_validate" type="object" icon="fa-envelope-o" attrs="{'invisible': [('l10n_it_send_state', '!=', 'invalid')]}" class="btn btn-primary" string="Resend"/>
-                <button name="invoice_validate" type="object" icon="fa-envelope-o" attrs="{'invisible': ['|',('state', 'in', ['draft', 'cancel']),('l10n_it_send_state', 'not in', ['to_send', False])]}" class="btn btn-primary" string="Send"/>
+                <button name="post" type="object" icon="fa-envelope-o" class="btn btn-primary" string="Resend"
+                        attrs="{'invisible': ['|', ('type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', '!=', 'invalid')]}"/>
+                <button name="post" type="object" icon="fa-envelope-o" class="btn btn-primary" string="Send"
+                        attrs="{'invisible': ['|', '|', ('type', 'not in', ('out_invoice', 'out_refund')), ('state', 'in', ['draft', 'cancel']),('l10n_it_send_state', 'not in', ['to_send', False])]}"/>
             </xpath>
             <xpath expr="//field[@name='type']" position="before">
-                <div class="alert alert-success" role="alert" attrs="{'invisible': [('l10n_it_send_state', 'not in', ['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'])]}">
+                <div class="alert alert-success" role="alert"
+                     attrs="{'invisible': ['|', ('type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', 'not in', ['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'])]}">
                     <i class="fa fa-check" aria-label="Delivered" title="Delivered"></i> <field name="l10n_it_send_state" readonly="1"/>
                 </div>
-                <div class="alert alert-warning" role="alert" attrs="{'invisible': [('l10n_it_send_state', '!=', 'sent')]}">
+                <div class="alert alert-warning" role="alert"
+                     attrs="{'invisible': ['|', ('type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', '!=', 'sent')]}">
                     <i class="fa fa-paper-plane-o"/> E-Invoice sent, waiting for a response
                 </div>
-                <div class="alert alert-danger" role="alert" attrs="{'invisible': [('l10n_it_send_state', '!=', 'invalid')]}">
+                <div class="alert alert-danger" role="alert"
+                     attrs="{'invisible': ['|', ('type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', '!=', 'invalid')]}">
                     <i class="fa fa-exclamation-triangle"/> E-Invoice check failed. You can modify the invoice, and resend it.
                 </div>
             </xpath>
             <xpath expr="//page[@name='other_info']" position="after">
-                <page string="Electronic Invoicing">
+                <page string="Electronic Invoicing" attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}">
                     <group>
                         <group>
                             <field name="l10n_it_stamp_duty"/>
-                        </group>
-                        <group>
-                            <field name="l10n_it_ddt_id"/>
-                        </group>
-                    </group>
-                </page>
-            </xpath>
-        </data>
-        </field>
-    </record>
-
-    <record id="account_invoice_supplier_form_l10n_it" model="ir.ui.view">
-        <field name="name">account.invoice.supplier.form.l10n.it</field>
-        <field name="model">account.invoice</field>
-        <field name="priority">20</field>
-        <field name="inherit_id" ref="account.invoice_supplier_form"/>
-        <field name="arch" type="xml">
-        <data>
-            <xpath expr="//field[@name='date_due']" position="replace">
-                <field name="date_due" attrs="{'readonly': [('state', 'in', ['open', 'in_payment', 'paid'])]}" force_save="1"/>
-            </xpath>
-            <xpath expr="//page[@name='other_info']" position="after">
-                <page string="Electronic Invoicing">
-                    <group>
-                        <group>
-                            <field name="l10n_it_stamp_duty"/>
+                            <field name="l10n_it_ddt_id"
+                                   attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}"/>
                         </group>
                     </group>
                 </page>
@@ -207,7 +188,7 @@
 
     <record id="view_account_invoice_filter_l10n_it" model="ir.ui.view">
         <field name="name">account.invoice.select.l10n.it</field>
-        <field name="model">account.invoice</field>
+        <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_account_invoice_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='late']" position="after">

@@ -209,7 +209,7 @@ class ResPartner(models.Model):
         if where_clause:
             where_clause = 'AND ' + where_clause
         self._cr.execute("""SELECT account_move_line.partner_id, act.type, SUM(account_move_line.amount_residual)
-                      FROM account_move_line
+                      FROM """ + tables + """
                       LEFT JOIN account_account a ON (account_move_line.account_id=a.id)
                       LEFT JOIN account_account_type act ON (a.user_type_id=act.id)
                       WHERE act.type IN ('receivable','payable')
@@ -286,7 +286,7 @@ class ResPartner(models.Model):
 
         # price_total is in the company currency
         query = """
-                  SELECT SUM(price_total) as total, partner_id
+                  SELECT SUM(price_subtotal) as total, partner_id
                     FROM account_invoice_report account_invoice_report
                    WHERE %s
                    GROUP BY partner_id
@@ -410,7 +410,7 @@ class ResPartner(models.Model):
         help='Last time the invoices & payments matching was performed for this partner. '
              'It is set either if there\'s not at least an unreconciled debit and an unreconciled credit '
              'or if you click the "Done" button.')
-    invoice_ids = fields.One2many('account.invoice', 'partner_id', string='Invoices', readonly=True, copy=False)
+    invoice_ids = fields.One2many('account.move', 'partner_id', string='Invoices', readonly=True, copy=False)
     contract_ids = fields.One2many('account.analytic.account', 'partner_id', string='Partner Contracts', readonly=True)
     bank_account_count = fields.Integer(compute='_compute_bank_count', string="Bank")
     trust = fields.Selection([('good', 'Good Debtor'), ('normal', 'Normal Debtor'), ('bad', 'Bad Debtor')], string='Degree of trust you have in this debtor', default='normal', company_dependent=True)
@@ -437,14 +437,16 @@ class ResPartner(models.Model):
     @api.multi
     def action_view_partner_invoices(self):
         self.ensure_one()
-        action = self.env.ref('account.action_invoice_refund_out_tree').read()[0]
-        action['domain'] = literal_eval(action['domain'])
-        action['domain'].append(('partner_id', 'child_of', self.id))
+        action = self.env.ref('account.action_move_out_invoice_type').read()[0]
+        action['domain'] = [
+            ('type', 'in', ('out_invoice', 'out_refund')),
+            ('type', '=', 'posted'),
+            ('partner_id', 'child_of', self.id),
+        ]
         return action
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
-        company = self.env['res.company']
         if self.company_id:
             company = self.company_id
         else:
@@ -455,10 +457,9 @@ class ResPartner(models.Model):
         can_edit_vat = super(ResPartner, self).can_edit_vat()
         if not can_edit_vat:
             return can_edit_vat
-        Invoice = self.env['account.invoice']
-        has_invoice = Invoice.search([
+        has_invoice = self.env['account.move'].search([
             ('type', 'in', ['out_invoice', 'out_refund']),
             ('partner_id', 'child_of', self.commercial_partner_id.id),
-            ('state', 'not in', ['draft', 'cancel'])
+            ('state', '=', 'posted')
         ], limit=1)
         return can_edit_vat and not (bool(has_invoice))

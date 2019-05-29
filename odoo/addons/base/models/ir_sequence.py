@@ -190,16 +190,16 @@ class IrSequence(models.Model):
             number_next = _update_nogap(self, self.number_increment)
         return self.get_next_char(number_next)
 
-    def _get_prefix_suffix(self):
+    def _get_prefix_suffix(self, date=None, date_range=None):
         def _interpolate(s, d):
             return (s % d) if s else ''
 
         def _interpolation_dict():
             now = range_date = effective_date = datetime.now(pytz.timezone(self._context.get('tz') or 'UTC'))
-            if self._context.get('ir_sequence_date'):
-                effective_date = fields.Datetime.from_string(self._context.get('ir_sequence_date'))
-            if self._context.get('ir_sequence_date_range'):
-                range_date = fields.Datetime.from_string(self._context.get('ir_sequence_date_range'))
+            if date or self._context.get('ir_sequence_date'):
+                effective_date = fields.Datetime.from_string(date or self._context.get('ir_sequence_date'))
+            if date_range or self._context.get('ir_sequence_date_range'):
+                range_date = fields.Datetime.from_string(date_range or self._context.get('ir_sequence_date_range'))
 
             sequences = {
                 'year': '%Y', 'month': '%m', 'day': '%d', 'y': '%y', 'doy': '%j', 'woy': '%W',
@@ -242,27 +242,25 @@ class IrSequence(models.Model):
         })
         return seq_date_range
 
-    def _next(self):
+    def _next(self, sequence_date=None):
         """ Returns the next number in the preferred sequence in all the ones given in self."""
         if not self.use_date_range:
             return self._next_do()
         # date mode
-        dt = fields.Date.today()
-        if self._context.get('ir_sequence_date'):
-            dt = self._context.get('ir_sequence_date')
+        dt = sequence_date or self._context.get('ir_sequence_date', fields.Date.today())
         seq_date = self.env['ir.sequence.date_range'].search([('sequence_id', '=', self.id), ('date_from', '<=', dt), ('date_to', '>=', dt)], limit=1)
         if not seq_date:
             seq_date = self._create_date_range_seq(dt)
         return seq_date.with_context(ir_sequence_date_range=seq_date.date_from)._next()
 
     @api.multi
-    def next_by_id(self):
+    def next_by_id(self, sequence_date=None):
         """ Draw an interpolated string using the specified sequence."""
         self.check_access_rights('read')
-        return self._next()
+        return self._next(sequence_date=sequence_date)
 
     @api.model
-    def next_by_code(self, sequence_code):
+    def next_by_code(self, sequence_code, sequence_date=None):
         """ Draw an interpolated string using a sequence with the requested code.
             If several sequences with the correct code are available to the user
             (multi-company cases), the one from the user's current company will
@@ -283,7 +281,7 @@ class IrSequence(models.Model):
             _logger.debug("No ir.sequence has been found for code '%s'. Please make sure a sequence is set for current company." % sequence_code)
             return False
         seq_id = seq_ids[0]
-        return seq_id._next()
+        return seq_id._next(sequence_date=sequence_date)
 
     @api.model
     def get_id(self, sequence_code_or_id, code_or_id='id'):

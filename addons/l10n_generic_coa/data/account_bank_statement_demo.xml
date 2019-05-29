@@ -72,6 +72,10 @@
                 ('company_id', '=', obj().env.company.id)]"/>
             <field name="amount">102.78</field>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
+            <field name="account_id" model="account.account" search="[
+              ('user_type_id', '=', ref('account.data_account_type_revenue')),
+              ('tag_ids', 'in', [ref('account.account_tag_financing')]),
+              ('company_id', '=', obj().env.company.id)]"/>
         </record>
 
         <record id="demo_bank_statement_line_6" model="account.bank.statement.line">
@@ -86,6 +90,10 @@
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
             <field name="partner_id" ref="base.res_partner_2"/>
         </record>
+
+        <function model="account.bank.statement.line" name="fast_counterpart_creation">
+            <value eval="[ref('demo_bank_statement_line_5')]"/>
+        </function>
 
     </data>
 </odoo>
