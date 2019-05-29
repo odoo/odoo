@@ -27,9 +27,9 @@ dc_b_rg1415,250,35,"COMPROBANTES B DEL ANEXO I, APARTADO A, INC. F), RG N° 1415
 dc_c_rg1415,260,36,"COMPROBANTES C DEL Anexo I, Apartado A, INC.F), R.G. N° 1415",C,,invoice,,base.ar,True,zero,False
 dc_nd_rg1415,270,37,NOTAS DE DEBITO O DOCUMENTO EQUIVALENTE QUE CUMPLAN CON LA R.G. N° 1415,,,debit_note,,base.ar,True,not_zero,False
 dc_nc_rg1415,280,38,NOTAS DE CREDITO O DOCMENTO EQUIVALENTE QUE CUMPLAN CON LA R.G. N° 1415,,,credit_note,,base.ar,True,not_zero,False
-dc_a_o_rg1415,290,39,OTROS COMPROBANTES A QUE CUMPLEN CON LA R G  1415,A,,invoice,,base.ar,True,not_zero,True
-dc_b_o_rg1415,300,40,OTROS COMPROBANTES B QUE CUMPLAN CON LA R.G. N° 1415,B,,invoice,,base.ar,True,zero,True
-dc_c_o_rg1415,310,41,OTROS COMPROBANTES C QUE CUMPLAN CON LA R.G. N° 1415,C,,invoice,,base.ar,True,zero,True
+dc_a_o_rg1415,290,39,OTROS COMPROBANTES A QUE CUMPLEN CON LA R G  1415,A,,invoice,OC-A,base.ar,True,not_zero,True
+dc_b_o_rg1415,300,40,OTROS COMPROBANTES B QUE CUMPLAN CON LA R.G. N° 1415,B,,invoice,OC-B,base.ar,True,zero,True
+dc_c_o_rg1415,310,41,OTROS COMPROBANTES C QUE CUMPLAN CON LA R.G. N° 1415,C,,invoice,OC-C,base.ar,True,zero,True
 dc_a_rf,320,50,RECIBO FACTURA A  REGIMEN DE FACTURA DE CREDITO,A,,,,base.ar,True,not_zero,False
 dc_m_f,330,51,FACTURAS M,M,FACTURA,invoice,FA-M ,base.ar,True,not_zero,True
 dc_m_nd,340,52,NOTAS DE DEBITO M,M,NOTA DE DEBITO,debit_note,ND-C ,base.ar,True,not_zero,True
@@ -45,8 +45,8 @@ dc_b_cvl,430,61,CUENTAS DE VENTA Y LIQUIDO PRODUCTO B,B,,invoice,,base.ar,True,z
 dc_a_l,440,63,LIQUIDACIONES A,A,,invoice,,base.ar,True,not_zero,False
 dc_b_l,450,64,LIQUIDACIONES B,B,,invoice,,base.ar,True,zero,False
 dc_nc,460,65,"NOTAS DE CREDITO DE COMPROBANTES CON COD. 34, 39, 58, 59, 60, 63, 96, 97,",,,credit_note,,base.ar,,,False
-dc_desp_imp,470,66,DESPACHO DE IMPORTACION,,,invoice,,base.ar,True,not_zero,True
-dc_imp_serv,480,67,IMPORTACION DE SERVICIOS,,,invoice,,base.ar,,,True
+dc_desp_imp,470,66,DESPACHO DE IMPORTACION,,,invoice,DI,base.ar,True,not_zero,True
+dc_imp_serv,480,67,IMPORTACION DE SERVICIOS,,,invoice,IS,base.ar,,,True
 dc_c_l,490,68,LIQUIDACION C,C,,invoice,,base.ar,True,not_zero,False
 dc_rfc,500,70,RECIBOS FACTURA DE CREDITO,,,,,base.ar,True,not_zero,False
 dc_cfcp,510,71,CREDITO FISCAL POR CONTRIBUCIONES PATRONALES,,,,,base.ar,,,False
@@ -71,29 +71,29 @@ dc_ac_inc_cf,690,94,AJUSTES CONTABLES QUE INCREMENTAN EL CREDITO FISCAL,,,,,base
 dc_ac_dis_cf,700,95,AJUSTES CONTABLES QUE DISMINUYEN EL CREDITO FISCAL,,,,,base.ar,,,False
 dc_f1116b,710,96,FORMULARIO 1116 B,,,,,base.ar,,,False
 dc_f1116c,720,97,FORMULARIO 1116 C,,,,,base.ar,,,False
-dc_oc_ncrg3419,730,99,OTROS COMP  QUE NO CUMPLEN CON LA R G  3419 Y SUS MODIF,,,invoice,,base.ar,True,not_zero,True
+dc_oc_ncrg3419,730,99,OTROS COMP  QUE NO CUMPLEN CON LA R G  3419 Y SUS MODIF,,,invoice,OC-X,base.ar,True,not_zero,True
 dc_aa_dj_pos,740,101,AJUSTE ANUAL PROVENIENTE DE LA  D J  DEL IVA  POSITIVO,,,,,base.ar,,,False
 dc_aa_dj_neg,750,102,AJUSTE ANUAL PROVENIENTE DE LA  D J  DEL IVA  NEGATIVO,,,,,base.ar,,,False
 dc_na,760,103,NOTA DE ASIGNACION,,,invoice,,base.ar,,,False
 dc_nca,770,104,NOTA DE CREDITO DE ASIGNACION,,,credit_note,,base.ar,,,False
 dc_remito_x,790,94,REMITOS X,X,REMITO,,RM-X ,base.ar,,,False
-dc_liq_s_a,800,17,LIQUIDACION DE SERVICIOS PUBLICOS CLASE A,A,,invoice,,base.ar,True,not_zero,True
-dc_liq_s_b,810,18,LIQUIDACION DE SERVICIOS PUBLICOS CLASE B,B,,invoice,,base.ar,False,zero,True
+dc_liq_s_a,800,17,LIQUIDACION DE SERVICIOS PUBLICOS CLASE A,A,,invoice,LS-A,base.ar,True,not_zero,True
+dc_liq_s_b,810,18,LIQUIDACION DE SERVICIOS PUBLICOS CLASE B,B,,invoice,LS-B,base.ar,False,zero,True
 dc_com_a_m,820,23,COMPROBANTES “A” DE COMPRA PRIMARIA PARA EL SECTOR PESQUERO MARITIMO,,,,,base.ar,,,False
 dc_con_a_m,830,24,COMPROBANTES “A” DE CONSIGNACION PRIMARIA PARA EL SECTOR PESQUERO MARITIMO,,,,,base.ar,,,False
 dc_com_b_m,840,25,COMPROBANTES “B” DE COMPRA PRIMARIA PARA EL SECTOR PESQUERO MARITIMO,,,,,base.ar,,,False
 dc_con_b_m,850,26,COMPROBANTES “B” DE CONSIGNACION PRIMARIA PARA EL SECTOR PESQUERO MARITIMO,,,,,base.ar,,,False
-dc_liq_uci_a,860,27,LIQUIDACION UNICA COMERCIAL IMPOSITIVA CLASE A,A,,invoice,,base.ar,True,not_zero,True
-dc_liq_uci_b,870,28,LIQUIDACION UNICA COMERCIAL IMPOSITIVA CLASE B,B,,invoice,,base.ar,True,zero,True
-dc_liq_uci_c,880,29,LIQUIDACION UNICA COMERCIAL IMPOSITIVA CLASE C,C,,invoice,,base.ar,,,True
+dc_liq_uci_a,860,27,LIQUIDACION UNICA COMERCIAL IMPOSITIVA CLASE A,A,,invoice,LU-A,base.ar,True,not_zero,True
+dc_liq_uci_b,870,28,LIQUIDACION UNICA COMERCIAL IMPOSITIVA CLASE B,B,,invoice,LU-B,base.ar,True,zero,True
+dc_liq_uci_c,880,29,LIQUIDACION UNICA COMERCIAL IMPOSITIVA CLASE C,C,,invoice,LU-C,base.ar,,,True
 dc_liq_prim_gr,890,33,LIQUIDACION PRIMARIA DE GRANOS,,,,,base.ar,,,False
-dc_nc_liq_uci_a,900,43,NOTA DE CREDITO LIQUIDACION UNICA COMERCIAL IMPOSITIVA CLASE B,B,,credit_note,,base.ar,True,zero,True
-dc_nc_liq_uci_b,910,44,NOTA DE CREDITO LIQUIDACION UNICA COMERCIAL IMPOSITIVA CLASE C,C,,credit_note,,base.ar,,,True
-dc_nd_liq_uci_a,920,45,NOTA DE DEBITO LIQUIDACION UNICA COMERCIAL IMPOSITIVA CLASE A,A,,debit_note,,base.ar,True,not_zero,True
-dc_nd_liq_uci_b,930,46,NOTA DE DEBITO LIQUIDACION UNICA COMERCIAL IMPOSITIVA CLASE B,B,,debit_note,,base.ar,True,zero,True
-dc_nd_liq_uci_c,940,47,NOTA DE DEBITO LIQUIDACION UNICA COMERCIAL IMPOSITIVA CLASE C,C,,debit_note,,base.ar,,,True
-dc_nc_liq_uci_c,950,48,NOTA DE CREDITO LIQUIDACION UNICA COMERCIAL IMPOSITIVA CLASE A,A,,credit_note,,base.ar,True,not_zero,True
-dc_bs_no_reg,960,49,COMPROBANTES DE COMPRA DE BIENES NO REGISTRABLES A CONSUMIDORES FINALES,,,,,base.ar,,,True
+dc_nc_liq_uci_a,900,43,NOTA DE CREDITO LIQUIDACION UNICA COMERCIAL IMPOSITIVA CLASE B,B,,credit_note,NCLU-B,base.ar,True,zero,True
+dc_nc_liq_uci_b,910,44,NOTA DE CREDITO LIQUIDACION UNICA COMERCIAL IMPOSITIVA CLASE C,C,,credit_note,NCLU-C,base.ar,,,True
+dc_nd_liq_uci_a,920,45,NOTA DE DEBITO LIQUIDACION UNICA COMERCIAL IMPOSITIVA CLASE A,A,,debit_note,NDLU-A,base.ar,True,not_zero,True
+dc_nd_liq_uci_b,930,46,NOTA DE DEBITO LIQUIDACION UNICA COMERCIAL IMPOSITIVA CLASE B,B,,debit_note,NDLU-B,base.ar,True,zero,True
+dc_nd_liq_uci_c,940,47,NOTA DE DEBITO LIQUIDACION UNICA COMERCIAL IMPOSITIVA CLASE C,C,,debit_note,NDLU-C,base.ar,,,True
+dc_nc_liq_uci_c,950,48,NOTA DE CREDITO LIQUIDACION UNICA COMERCIAL IMPOSITIVA CLASE A,A,,credit_note,NCLU-A,base.ar,True,not_zero,True
+dc_bs_no_reg,960,49,COMPROBANTES DE COMPRA DE BIENES NO REGISTRABLES A CONSUMIDORES FINALES,,,,BNR,base.ar,,,True
 dc_t_nc,970,110,TIQUE NOTA DE CREDITO ,,,credit_note,TC-X,base.ar,True,not_zero,True
 dc_t_c,980,111,TIQUE FACTURA C,C,,invoice,TF-C,base.ar,True,zero,True
 dc_t_nc_a,990,112,TIQUE NOTA DE CREDITO A,A,,credit_note,TN-A,base.ar,True,not_zero,True
