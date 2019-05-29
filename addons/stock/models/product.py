@@ -136,6 +136,12 @@ class Product(models.Model):
         res = dict()
         for product in self.with_context(prefetch_fields=False):
             product_id = product.id
+            if not product_id:
+                res[product_id] = dict.fromkeys(
+                    ['qty_available', 'incoming_qty', 'outgoing_qty', 'virtual_available'],
+                    0.0,
+                )
+                continue
             rounding = product.uom_id.rounding
             res[product_id] = {}
             if dates_in_the_past:
@@ -325,9 +331,10 @@ class Product(models.Model):
             res[data['product_id'][0]]['reordering_min_qty'] = data['product_min_qty']
             res[data['product_id'][0]]['reordering_max_qty'] = data['product_max_qty']
         for product in self:
-            product.nbr_reordering_rules = res[product.id].get('nbr_reordering_rules', 0)
-            product.reordering_min_qty = res[product.id].get('reordering_min_qty', 0)
-            product.reordering_max_qty = res[product.id].get('reordering_max_qty', 0)
+            product_res = res.get(product.id) or {}
+            product.nbr_reordering_rules = product_res.get('nbr_reordering_rules', 0)
+            product.reordering_min_qty = product_res.get('reordering_min_qty', 0)
+            product.reordering_max_qty = product_res.get('reordering_max_qty', 0)
 
     @api.onchange('tracking')
     def onchange_tracking(self):
@@ -595,6 +602,11 @@ class ProductTemplate(models.Model):
             res[product_tmpl_id]['reordering_min_qty'] = data['product_min_qty']
             res[product_tmpl_id]['reordering_max_qty'] = data['product_max_qty']
         for template in self:
+            if not template.id:
+                template.nbr_reordering_rules = 0
+                template.reordering_min_qty = 0
+                template.reordering_max_qty = 0
+                continue
             template.nbr_reordering_rules = res[template.id]['nbr_reordering_rules']
             template.reordering_min_qty = res[template.id]['reordering_min_qty']
             template.reordering_max_qty = res[template.id]['reordering_max_qty']

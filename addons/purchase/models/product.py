@@ -62,13 +62,16 @@ class ProductProduct(models.Model):
         date_from = fields.Datetime.to_string(fields.datetime.now() - timedelta(days=365))
         domain = [
             ('state', 'in', ['purchase', 'done']),
-            ('product_id', 'in', self.mapped('id')),
+            ('product_id', 'in', self.ids),
             ('date_order', '>', date_from)
         ]
         PurchaseOrderLines = self.env['purchase.order.line'].search(domain)
         order_lines = self.env['purchase.order.line'].read_group(domain, ['product_id', 'product_uom_qty'], ['product_id'])
         purchased_data = dict([(data['product_id'][0], data['product_uom_qty']) for data in order_lines])
         for product in self:
+            if not product.id:
+                product.purchased_product_qty = 0.0
+                continue
             product.purchased_product_qty = float_round(purchased_data.get(product.id, 0), precision_rounding=product.uom_id.rounding)
 
     @api.multi
