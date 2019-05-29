@@ -1,4 +1,4 @@
-odoo.define('website.content.zoomodoo', function (require) {
+odoo.define('web.zoomodoo', function (require) {
 'use strict';
 
 /**
@@ -48,7 +48,10 @@ var defaults = {
     onHide: $.noop,
 
     // Callback function to execute when the cursor is moved while over the image.
-    onMove: $.noop
+    onMove: $.noop,
+
+    // Callback function to execute when the flyout is attached to the target.
+    beforeAttach: $.noop
 
 };
 
@@ -87,6 +90,9 @@ ZoomOdoo.prototype._init = function () {
 
         if (this.opts.preventClicks) {
             this.$target.on('click.zoomodoo', function (e) { e.preventDefault(); });
+        } else {
+            var self = this;
+            this.$target.on('click.zoomodoo', function () { self.hide(); self.$target.unbind(); });
         }
     }
 };
@@ -114,7 +120,50 @@ ZoomOdoo.prototype.show = function (e, testMouseOver) {
     if (this.opts.attach !== undefined && this.$target.parents(this.opts.attach).length) {
         $attach = this.$target.parents(this.opts.attach);
     }
+
+    // Prevents having multiple zoom flyouts
+    $attach.parent().find('.zoomodoo-flyout').remove();
+    this.$flyout.removeAttr('style');
     $attach.parent().append(this.$flyout);
+
+    if (this.opts.attachToTarget) {
+        this.opts.beforeAttach.call(this);
+
+        if(this.$zoom.height() < this.$flyout.height()) {
+             this.$flyout.css('height', this.$zoom.height() + 'px');
+        }
+        if(this.$zoom.width() < this.$flyout.width()) {
+             this.$flyout.css('width', this.$zoom.width() + 'px');
+        }
+
+        var offset = this.$target.offset();
+        var left = offset.left - this.$flyout.width();
+        var top = offset.top;
+
+        // Position the zoom on the right side of the target
+        // if there's not enough room on the left
+        if(left < 0) {
+            if(offset.left < ($(document).width() / 2)) {
+                left = offset.left + this.$target.width();
+            } else {
+                left = 0;
+            }
+        }
+
+        // Prevents the flyout to overflow 
+        if(left + this.$flyout.width() > $(document).width()) {
+            this.$flyout.css('width',  $(document).width() - left + 'px');
+        } else if(left === 0) { // Limit the max width if displayed on the left
+            this.$flyout.css('width', offset.left + 'px');
+        }
+
+        // Prevents the zoom to be displayed outside the current viewport
+        if((top + this.$flyout.height()) > $(document).height()) {
+            top = $(document).height() - this.$flyout.height();
+        }
+
+        this.$flyout.css('transform', 'translate3d(' + left + 'px, ' + top + 'px, 0px)');
+    }
 
     w1 = this.$target.width();
     h1 = this.$target.height();
@@ -235,7 +284,7 @@ ZoomOdoo.prototype._move = function (e) {
     var xl = Math.ceil(pl * rw);
 
     // Close if outside
-    if (xl < 0 || xt < 0 || xl > dw || xt > dh) {
+    if (xl < 0 || xt < 0 || xl > dw || xt > dh || lx > (offset.left + this.$target.width())) {
         this.hide();
     } else {
         var top = xt * -1;

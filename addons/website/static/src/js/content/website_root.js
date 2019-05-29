@@ -4,7 +4,7 @@ odoo.define('website.root', function (require) {
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var publicRootData = require('web.public.root');
-require('website.content.zoomodoo');
+require("web.zoomodoo");
 
 var _t = core._t;
 

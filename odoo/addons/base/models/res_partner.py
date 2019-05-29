@@ -225,8 +225,7 @@ class Partner(models.Model):
     company_name = fields.Char('Company Name')
 
     # image: all image fields are base64 encoded and PIL-supported
-    image = fields.Binary("Image",
-        help="This field holds the image used as avatar for this contact, limited to 1024x1024px",)
+    image = fields.Binary("Image")
     image_medium = fields.Binary("Medium-sized image",
         help="Medium-sized image of this contact. It is automatically "\
              "resized as a 128x128px image, with aspect ratio preserved. "\
