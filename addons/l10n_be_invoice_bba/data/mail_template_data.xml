@@ -12,21 +12,22 @@
         <br /><br />
         Here is, in attachment, your 
         % if object.number:
-            invoice <strong>${object.number}</strong>
+            invoice <strong>${object.name}</strong>
         % else:
             invoice
-        %endif
-        % if object.origin:
-            (with reference: ${object.origin} )
+        % endif
+        % if object.invoice_origin:
+            (with reference: ${object.invoice_origin} )
         % endif
         amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>
         from ${object.company_id.name}.
-        % if object.state=='paid':
+        % if object.invoice_payment_state=='paid':
             This invoice is already paid.
         % else:
             Please remit payment at your earliest convenience.
-            % if object.invoice_reference_type=='structured' and object.reference:
-            Please use the following communication for your payment: <strong>${object.reference}</strong>.
+            % if object.invoice_reference_type=='structured' and object.ref:
+                Please use the following communication for your payment: <strong>${object.ref}</strong>.
+            % endif
         % endif
         <br /><br />
         Do not hesitate to contact us if you have any question.

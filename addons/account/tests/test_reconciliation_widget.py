@@ -41,7 +41,7 @@ class TestReconciliationWidget(TestReconciliation):
         bank_stmt = self.acc_bank_stmt_model.create({
             'journal_id': self.bank_journal_usd.id,
             'date': time.strftime('%Y-07-15'),
-            'name': 'payment %s' % invoice.number,
+            'name': 'payment %s' % invoice.name,
         })
 
         bank_stmt_line = self.acc_bank_stmt_line_model.create({'name': 'payment',

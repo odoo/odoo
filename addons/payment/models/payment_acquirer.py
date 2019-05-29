@@ -624,8 +624,9 @@ class PaymentTransaction(models.Model):
                                        domain="[('acquirer_id', '=', acquirer_id)]")
 
     payment_id = fields.Many2one('account.payment', string='Payment', readonly=True)
-    invoice_ids = fields.Many2many('account.invoice', 'account_invoice_transaction_rel', 'transaction_id', 'invoice_id',
-                                   string='Invoices', copy=False, readonly=True)
+    invoice_ids = fields.Many2many('account.move', 'account_invoice_transaction_rel', 'transaction_id', 'invoice_id',
+        string='Invoices', copy=False, readonly=True,
+        domain=[('type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))])
     invoice_ids_nbr = fields.Integer(compute='_compute_invoice_ids_nbr', string='# of Invoices')
 
     _sql_constraints = [
@@ -750,7 +751,7 @@ class PaymentTransaction(models.Model):
     def _reconcile_after_transaction_done(self):
         # Validate invoices automatically upon the transaction is posted.
         invoices = self.mapped('invoice_ids').filtered(lambda inv: inv.state == 'draft')
-        invoices.action_invoice_open()
+        invoices.post()
 
         # Create & Post the payments.
         payments = defaultdict(lambda: self.env['account.payment'])
@@ -870,7 +871,7 @@ class PaymentTransaction(models.Model):
         action = {
             'name': _('Invoices'),
             'type': 'ir.actions.act_window',
-            'res_model': 'account.invoice',
+            'res_model': 'account.move',
             'target': 'current',
         }
         invoice_ids = self.invoice_ids.ids
@@ -878,7 +879,7 @@ class PaymentTransaction(models.Model):
             invoice = invoice_ids[0]
             action['res_id'] = invoice
             action['view_mode'] = 'form'
-            action['views'] = [(self.env.ref('account.invoice_form').id, 'form')]
+            action['views'] = [(self.env.ref('account.view_move_form').id, 'form')]
         else:
             action['view_mode'] = 'tree,form'
             action['domain'] = [('id', 'in', invoice_ids)]

@@ -64,7 +64,7 @@ class L10nInPaymentReport(models.AbstractModel):
             tax.id as l10n_in_tax_id,
             tax.amount AS tax_rate,
             am.partner_id,
-            am.amount AS payment_amount,
+            am.amount_total AS payment_amount,
             ap.journal_id,
             aml.currency_id,
             (CASE WHEN ps.l10n_in_tin IS NOT NULL
@@ -143,7 +143,7 @@ class AdvancesPaymentReport(models.Model):
                 WHERE (apr.credit_move_id = aml.id OR apr.debit_move_id = aml.id)
                 AND (to_char(apr.max_date, 'MM-YYYY') = to_char(aml.date_maturity, 'MM-YYYY'))
             ) AS reconcile_amount,
-            (am.amount - (SELECT (CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END) FROM account_partial_reconcile AS apr
+            (am.amount_total - (SELECT (CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END) FROM account_partial_reconcile AS apr
                 WHERE (apr.credit_move_id = aml.id OR apr.debit_move_id = aml.id)
                 AND (to_char(apr.max_date, 'MM-YYYY') = to_char(aml.date_maturity, 'MM-YYYY'))
             )) AS amount"""

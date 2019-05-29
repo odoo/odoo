@@ -397,6 +397,7 @@ class AccountBankStatementLine(models.Model):
             aml_to_cancel.remove_move_reconcile()
             moves_to_cancel = aml_to_cancel.mapped('move_id')
             moves_to_cancel.button_cancel()
+            moves_to_cancel.button_draft()
             moves_to_cancel.unlink()
         if payment_to_cancel:
             payment_to_cancel.unlink()
@@ -434,7 +435,9 @@ class AccountBankStatementLine(models.Model):
         if self.ref:
             ref = move_ref + ' - ' + self.ref if move_ref else self.ref
         data = {
+            'type': 'entry',
             'journal_id': self.statement_id.journal_id.id,
+            'currency_id': self.statement_id.currency_id.id,
             'date': self.statement_id.accounting_date or self.date,
             'ref': ref,
         }
@@ -624,7 +627,7 @@ class AccountBankStatementLine(models.Model):
         """
         payable_account_type = self.env.ref('account.data_account_type_payable')
         receivable_account_type = self.env.ref('account.data_account_type_receivable')
-        edition_mode = self._context.get('edition_mode')
+        suspense_moves_mode = self._context.get('suspense_moves_mode')
         counterpart_aml_dicts = counterpart_aml_dicts or []
         payment_aml_rec = payment_aml_rec or self.env['account.move.line']
         new_aml_dicts = new_aml_dicts or []
@@ -641,7 +644,7 @@ class AccountBankStatementLine(models.Model):
         if any(rec.statement_id for rec in payment_aml_rec):
             raise UserError(_('A selected move line was already reconciled.'))
         for aml_dict in counterpart_aml_dicts:
-            if aml_dict['move_line'].reconciled and not edition_mode:
+            if aml_dict['move_line'].reconciled and not suspense_moves_mode:
                 raise UserError(_('A selected move line was already reconciled.'))
             if isinstance(aml_dict['move_line'], int):
                 aml_dict['move_line'] = aml_obj.browse(aml_dict['move_line'])
@@ -655,7 +658,7 @@ class AccountBankStatementLine(models.Model):
             user_type_id = self.env['account.account'].browse(aml_dict.get('account_id')).user_type_id
             if user_type_id in [payable_account_type, receivable_account_type] and user_type_id not in account_types:
                 account_types |= user_type_id
-        if edition_mode:
+        if suspense_moves_mode:
             if any(not line.journal_entry_ids for line in self):
                 raise UserError(_('Some selected statement line were not already reconciled with an account move.'))
         else:
@@ -688,9 +691,9 @@ class AccountBankStatementLine(models.Model):
             # Create the move
             self.sequence = self.statement_id.line_ids.ids.index(self.id) + 1
             move_vals = self._prepare_reconciliation_move(self.statement_id.name)
-            if edition_mode:
+            if suspense_moves_mode:
                 self.button_cancel_reconciliation()
-            move = self.env['account.move'].create(move_vals)
+            move = self.env['account.move'].with_context(default_journal_id=move_vals['journal_id']).create(move_vals)
             counterpart_moves = (counterpart_moves | move)
 
             # Create The payment
@@ -732,7 +735,7 @@ class AccountBankStatementLine(models.Model):
 
                 (new_aml | counterpart_move_line).reconcile()
 
-                self._check_invoice_state(counterpart_move_line.invoice_id)
+                self._check_invoice_state(counterpart_move_line.move_id)
 
             # Balance the move
             st_line_amount = -sum([x.balance for x in move.line_ids])
@@ -758,7 +761,7 @@ class AccountBankStatementLine(models.Model):
                 })
             self.bank_account_id = bank_account
 
-        counterpart_moves.assert_balanced()
+        counterpart_moves._check_balanced()
         return counterpart_moves
 
     @api.multi
@@ -792,5 +795,4 @@ class AccountBankStatementLine(models.Model):
             aml_dict['currency_id'] = statement_currency.id
 
     def _check_invoice_state(self, invoice):
-        if invoice.state == 'in_payment' and all([payment.state == 'reconciled' for payment in invoice.mapped('payment_move_line_ids.payment_id')]):
-           invoice.write({'state': 'paid'})
+        invoice._compute_amount()

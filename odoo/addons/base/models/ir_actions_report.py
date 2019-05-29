@@ -177,6 +177,7 @@ class IrActionsReport(models.Model):
             'datas': base64.encodestring(buffer.getvalue()),
             'res_model': self.model,
             'res_id': record.id,
+            'type': 'binary',
         }
         try:
             self.env['ir.attachment'].create(attachment_vals)
