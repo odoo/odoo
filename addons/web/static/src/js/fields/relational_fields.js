@@ -1624,7 +1624,7 @@ var FieldMany2Many = FieldX2Many.extend({
             on_remove: function () {
                 self._setValue({operation: 'FORGET', ids: [ev.data.id]});
             },
-            readonly: this.mode === 'readonly' || !self.can_write,
+            readonly: this.mode === 'readonly',
             deletable: this.activeActions.delete,
             string: this.string,
         });
