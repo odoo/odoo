@@ -186,7 +186,7 @@ class AccountJournal(models.Model):
         """ IF AFIP Configuration change try to review if this can be done
         and then create / update the document sequences """
         invoices = self.env['account.invoice'].search([
-            ('journal_id', '=', self.ids),
+            ('journal_id', 'in', self.ids),
             ('state', 'in', ['open', 'in_payment', 'paid']),
         ])
         if invoices:
