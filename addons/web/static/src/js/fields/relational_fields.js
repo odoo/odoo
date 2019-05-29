@@ -120,8 +120,9 @@ var FieldMany2One = AbstractField.extend({
 
         // should normally also be set, except in standalone M20
         this.can_create = ('can_create' in this.attrs ? JSON.parse(this.attrs.can_create) : true) &&
-            !this.nodeOptions.no_create;
-        this.can_write = 'can_write' in this.attrs ? JSON.parse(this.attrs.can_write) : true;
+            !this.nodeOptions.no_create && !this.nodeOptions.no_create_edit;
+        this.can_write = ('can_write' in this.attrs ? JSON.parse(this.attrs.can_write) : true) &&
+            !this.nodeOptions.no_edit && !this.nodeOptions.no_create_edit;
 
         this.nodeOptions = _.defaults(this.nodeOptions, {
             quick_create: true,
@@ -517,7 +518,6 @@ var FieldMany2One = AbstractField.extend({
                         classname: 'o_m2o_dropdown_option',
                     });
                 }
-                var create_enabled = self.can_create && !self.nodeOptions.no_create;
                 // quick create
                 var raw_result = _.map(result, function (x) { return x[1]; });
                 if (create_enabled && !self.nodeOptions.no_quick_create &&
@@ -530,7 +530,7 @@ var FieldMany2One = AbstractField.extend({
                     });
                 }
                 // create and edit ...
-                if (create_enabled && !self.nodeOptions.no_create_edit) {
+                if (self.can_create) {
                     var createAndEditAction = function () {
                         // Clear the value in case the user clicks on discard
                         self.$('input').val('');
@@ -571,6 +571,7 @@ var FieldMany2One = AbstractField.extend({
             initial_view: view,
             disable_multiple_selection: true,
             no_create: !self.can_create,
+            no_edit: !self.can_write,
             on_selected: function (records) {
                 self.reinitialize(records[0]);
                 self.activate();
@@ -1623,7 +1624,7 @@ var FieldMany2Many = FieldX2Many.extend({
             on_remove: function () {
                 self._setValue({operation: 'FORGET', ids: [ev.data.id]});
             },
-            readonly: this.mode === 'readonly',
+            readonly: this.mode === 'readonly' || !self.can_write,
             deletable: this.activeActions.delete,
             string: this.string,
         });

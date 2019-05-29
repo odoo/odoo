@@ -874,8 +874,13 @@ actual arch.
                     attrs = {'views': views}
                     if field.comodel_name in self.env and field.type in ('many2one', 'many2many'):
                         Comodel = self.env[field.comodel_name]
-                        node.set('can_create', 'true' if Comodel.check_access_rights('create', raise_exception=False) else 'false')
-                        node.set('can_write', 'true' if Comodel.check_access_rights('write', raise_exception=False) else 'false')
+                        # If can create/write not explicitly set to false, check read and write access rights
+                        node_can_create = node.get('can_create')
+                        if not node_can_create or (node_can_create.lower() != 'false' and node_can_create != '0'):
+                            node.set('can_create', 'true' if Comodel.check_access_rights('create', raise_exception=False) else 'false')
+                        node_can_write = node.get('can_write')
+                        if not node_can_write or (node_can_write.lower() != 'false' and node_can_write != '0'):
+                            node.set('can_write', 'true' if Comodel.check_access_rights('write', raise_exception=False) else 'false')
                 fields[node.get('name')] = attrs
 
                 field = model_fields.get(node.get('name'))
