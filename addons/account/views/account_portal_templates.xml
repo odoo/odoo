@@ -2,8 +2,8 @@
     <template id="portal_my_home_menu_invoice" name="Portal layout : invoice menu entries" inherit_id="portal.portal_breadcrumbs" priority="30">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'invoice'" t-attf-class="breadcrumb-item #{'active ' if not invoice else ''}">
-                <a t-if="invoice" t-attf-href="/my/invoices?{{ keep_query() }}">Invoices</a>
-                <t t-else="">Invoices</t>
+                <a t-if="invoice" t-attf-href="/my/invoices?{{ keep_query() }}">Invoices &amp; Bills</a>
+                <t t-else="">Invoices &amp; Bills</t>
             </li>
             <li t-if="invoice" class="breadcrumb-item active">
                 <t t-esc="invoice.number" t-if="invoice.number"/>
@@ -15,7 +15,7 @@
     <template id="portal_my_home_invoice" name="Portal My Home : invoice entries" inherit_id="portal.portal_my_home" priority="30">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
             <t t-if="invoice_count" t-call="portal.portal_docs_entry">
-                <t t-set="title">Invoices</t>
+                <t t-set="title">Invoices &amp; Bills</t>
                 <t t-set="url" t-value="'/my/invoices'"/>
                 <t t-set="count" t-value="invoice_count"/>
             </t>
