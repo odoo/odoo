@@ -207,9 +207,9 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
         var combination = $container.find('input.js_product_change:checked')
             .data('combination');
 
-        if (combination) {
-            return JSON.parse(combination);
-        }
+        if (combination)
+            return combination;
+
         return ProductConfiguratorMixin.getSelectedVariantValues.apply(this, arguments);
     },
 
