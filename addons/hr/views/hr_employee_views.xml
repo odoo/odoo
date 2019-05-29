@@ -48,7 +48,7 @@
                         <div class="oe_button_box" name="button_box">
                          <!-- Used by other modules-->
                         </div>
-                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image":"image_medium"}'/>
+                    <field name="image" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"image_medium"}'/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
@@ -204,9 +204,9 @@
                        <t t-name="kanban-box">
                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
                            <!-- Medium employee's picture -->
-                           <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image: url(#{kanban_image('hr.employee', 'image_medium', record.id.raw_value)})" role="img"/>
+                           <field name="image" widget="image" class="o_kanban_image_fill_left d-none d-md-block" options="{'zoom': true, 'background': true, 'preventClicks': false}"/>
                            <!-- Employee's picture optimized for mobile -->
-                           <div class="o_kanban_image d-md-none rounded-circle" t-attf-style="background-image: url(#{kanban_image('hr.employee', 'image_small', record.id.raw_value)})" role="img"/>
+                           <field name="image_small" widget="image" class="o_kanban_image d-md-none rounded-circle" options="{'zoom': true, 'background': true, 'preventClicks': false}"/>
 
                             <div class="oe_kanban_details">
                                <div class="o_kanban_record_top">

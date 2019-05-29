@@ -123,7 +123,7 @@ var config = require('web.config');
 var concurrency = require('web.concurrency');
 var publicWidget = require('web.public.widget');
 var VariantMixin = require('sale.VariantMixin');
-require("website.content.zoomodoo");
+require("web.zoomodoo");
 
 var qweb = core.qweb;
 

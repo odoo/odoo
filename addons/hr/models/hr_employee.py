@@ -92,18 +92,11 @@ class HrEmployeePrivate(models.Model):
 
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary(
-        "Photo", default=_default_image,
-        help="This field holds the image used as photo for the employee, limited to 1024x1024px.")
+        "Photo", default=_default_image)
     image_medium = fields.Binary(
-        "Medium-sized photo",
-        help="Medium-sized photo of the employee. It is automatically "
-             "resized as a 128x128px image, with aspect ratio preserved. "
-             "Use this field in form views or some kanban views.")
+        "Medium-sized photo")
     image_small = fields.Binary(
-        "Small-sized photo",
-        help="Small-sized photo of the employee. It is automatically "
-             "resized as a 64x64px image, with aspect ratio preserved. "
-             "Use this field anywhere a small image is required.")
+        "Small-sized photo")
     phone = fields.Char(related='address_home_id.phone', related_sudo=False, string="Private Phone", groups="hr.group_hr_user")
     # employee in company
     parent_id = fields.Many2one('hr.employee', 'Manager')
