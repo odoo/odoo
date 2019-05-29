@@ -309,6 +309,7 @@
                                         TODO: at some point we want to fix this in the framework so that an invisible field is not required.
                                     -->
                                     <field name="sequence" invisible="1"/>
+                                    <field name="product_uom_category_id" invisible="1"/>
                                     <group>
                                         <group attrs="{'invisible': [('display_type', '!=', False)]}">
                                             <field name="product_updatable" invisible="1"/>
@@ -400,6 +401,7 @@
                                     <field name="sequence" widget="handle" />
                                     <!-- We do not display the type because we don't want the user to be bothered with that information if he has no section or note. -->
                                     <field name="display_type" invisible="1"/>
+                                    <field name="product_uom_category_id" invisible="1"/>
 
                                     <field name="product_updatable" invisible="1"/>
                                     <field

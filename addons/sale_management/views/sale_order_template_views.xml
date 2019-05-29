@@ -47,6 +47,7 @@
                                 -->
                                 <field name="sequence" invisible="1"/>
                                 <field name="display_type" invisible="1"/>
+                                <field name="product_uom_category_id" invisible="1"/>
                                 <group attrs="{'invisible': [('display_type', '!=', False)]}">
                                     <group>
                                         <field name="product_id" attrs="{'required': [('display_type', '=', False)]}"/>
@@ -85,6 +86,7 @@
                                 <field name="product_id"/>
                                 <field name="name" widget="section_and_note_text"/>
                                 <field name="product_uom_qty"/>
+                                <field name="product_uom_category_id" invisible="1"/>
                                 <field
                                     name="product_uom_id"
                                     groups="uom.group_uom"
@@ -101,6 +103,7 @@
                             <field name="product_id"/>
                             <field name="name"/>
                             <field name="quantity"/>
+                            <field name="product_uom_category_id" invisible="1"/>
                             <field name="uom_id" groups="uom.group_uom"/>
                             <field name="price_unit" invisible="1"/>
                             <field name="discount" groups="sale.group_discount_per_so_line"/>
