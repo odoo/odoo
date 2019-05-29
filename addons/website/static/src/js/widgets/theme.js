@@ -378,6 +378,20 @@ var ThemeCustomizeDialog = Dialog.extend({
                         _processItems($item.children(), $element.find('.o_theme_customize_selection'), true);
                         break;
 
+                    case 'FONTSELECTION':
+                        var $options = $();
+                        _.times(parseInt(self.style.getPropertyValue('--number-of-fonts')), function (font) {
+                            $options = $options.add($('<opt/>', {
+                                'data-widget': 'auto',
+                                'data-variable': $item.data('variable'),
+                                'data-value': font + 1,
+                                'data-font': font + 1,
+                            }));
+                        });
+                        $element = $(core.qweb.render('website.theme_customize_dropdown_option'));
+                        _processItems($options, $element.find('.o_theme_customize_selection'), true);
+                        break;
+
                     default:
                         _processItems($item.children(), $container, false);
                         return;
