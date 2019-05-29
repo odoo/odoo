@@ -337,9 +337,9 @@ class Slide(models.Model):
         return super(Slide, self).get_access_action(access_uid)
 
     @api.multi
-    def _notify_get_groups(self, message, groups):
+    def _notify_get_groups(self):
         """ Add access button to everyone if the document is active. """
-        groups = super(Slide, self)._notify_get_groups(message, groups)
+        groups = super(Slide, self)._notify_get_groups()
 
         if self.website_published:
             for group_name, group_method, group_data in groups:
@@ -361,7 +361,7 @@ class Slide(models.Model):
                 subject=subject,
                 body=html_body,
                 subtype='website_slides.mt_channel_slide_published',
-                notif_layout='mail.mail_notification_light',
+                email_layout_xmlid='mail.mail_notification_light',
             )
         return True
 

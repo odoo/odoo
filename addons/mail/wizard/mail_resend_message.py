@@ -63,26 +63,20 @@ class MailResendMessage(models.TransientModel):
             notif_to_cancel.sudo().write({'email_status': 'canceled'})
             if to_send:
                 message = wizard.mail_message_id
-                record = self.env[message.model].browse(message.res_id) if message.model and message.res_id else None
+                record = self.env[message.model].browse(message.res_id) if message.is_thread_message() else self.env['mail.thread']
 
-                rdata = []
+                email_partners_data = []
                 for pid, cid, active, pshare, ctype, notif, groups in self.env['mail.followers']._get_recipient_data(None, False, pids=to_send.ids):
                     if pid and notif == 'email' or not notif:
                         pdata = {'id': pid, 'share': pshare, 'active': active, 'notif': 'email', 'groups': groups or []}
                         if not pshare and notif:  # has an user and is not shared, is therefore user
-                            rdata.append(dict(pdata, type='user'))
+                            email_partners_data.append(dict(pdata, type='user'))
                         elif pshare and notif:  # has an user and is shared, is therefore portal
-                            rdata.append(dict(pdata, type='portal'))
+                            email_partners_data.append(dict(pdata, type='portal'))
                         else:  # has no user, is therefore customer
-                            rdata.append(dict(pdata, type='customer'))
+                            email_partners_data.append(dict(pdata, type='customer'))
 
-                self.env['res.partner']._notify(
-                    message,
-                    rdata,
-                    record,
-                    force_send=True,
-                    send_after_commit=False
-                )
+                record._notify_record_by_email(message, email_partners_data, send_after_commit=False)
 
             self.mail_message_id._notify_failure_update()
         return {'type': 'ir.actions.act_window_close'}

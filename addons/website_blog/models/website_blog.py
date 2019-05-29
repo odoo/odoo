@@ -248,9 +248,9 @@ class BlogPost(models.Model):
         }
 
     @api.multi
-    def _notify_get_groups(self, message, groups):
+    def _notify_get_groups(self):
         """ Add access button to everyone if the document is published. """
-        groups = super(BlogPost, self)._notify_get_groups(message, groups)
+        groups = super(BlogPost, self)._notify_get_groups()
 
         if self.website_published:
             for group_name, group_method, group_data in groups:
@@ -259,14 +259,14 @@ class BlogPost(models.Model):
         return groups
 
     @api.multi
-    def _notify_customize_recipients(self, message, msg_vals, recipients_vals):
+    def _notify_customize_recipients(self, message, msg_vals):
         """ Override to avoid keeping all notified recipients of a comment.
         We avoid tracking needaction on post comments. Only emails should be
         sufficient. """
         msg_type = msg_vals.get('message_type') or message.message_type
         if msg_type == 'comment':
             return {'needaction_partner_ids': []}
-        return {}
+        return super(BlogPost, self)._notify_customize_recipients(message, msg_vals)
 
     def _default_website_meta(self):
         res = super(BlogPost, self)._default_website_meta()

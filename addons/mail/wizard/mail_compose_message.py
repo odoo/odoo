@@ -184,9 +184,9 @@ class MailComposer(models.TransientModel):
                 result['model'] = parent.model
             if not values.get('res_id'):
                 result['res_id'] = parent.res_id
-            partner_ids = values.get('partner_ids', list()) + [(4, id) for id in parent.partner_ids.ids]
+            partner_ids = values.get('partner_ids', list()) + parent.partner_ids.ids
             if self._context.get('is_private') and parent.author_id:  # check message is private then add author also in partner list.
-                partner_ids += [(4, parent.author_id.id)]
+                partner_ids += [parent.author_id.id]
             result['partner_ids'] = partner_ids
         elif values.get('model') and values.get('res_id'):
             doc_name_get = self.env[values.get('model')].browse(values.get('res_id')).name_get()
@@ -274,14 +274,18 @@ class MailComposer(models.TransientModel):
                         post_params = dict(
                             message_type=wizard.message_type,
                             subtype_id=subtype_id,
-                            notif_layout=notif_layout,
+                            email_layout_xmlid=notif_layout,
                             add_sign=not bool(wizard.template_id),
                             mail_auto_delete=wizard.template_id.auto_delete if wizard.template_id else False,
-                            model_description=model_description,
-                            **mail_values)
-                        if ActiveModel._name == 'mail.thread' and wizard.model:
-                            post_params['model'] = wizard.model
-                        ActiveModel.browse(res_id).message_post(**post_params)
+                            model_description=model_description)
+                        post_params.update(mail_values)
+                        if ActiveModel._name == 'mail.thread':
+                            if wizard.model:
+                                post_params['model'] = wizard.model
+                                post_params['res_id'] = res_id
+                            ActiveModel.message_notify(**post_params)
+                        else:
+                            ActiveModel.browse(res_id).message_post(**post_params)
 
                 if wizard.composition_mode == 'mass_mail':
                     batch_mails.send(auto_commit=auto_commit)
@@ -332,7 +336,8 @@ class MailComposer(models.TransientModel):
 
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and self.model:
-                mail_values.update(self.env['mail.thread']._notify_specific_email_values_on_records(False, records=self.env[self.model].browse(res_id)))
+                record = self.env[self.model].browse(res_id)
+                mail_values['headers'] = record._notify_email_headers()
                 # keep a copy unless specifically requested, reset record name (avoid browsing records)
                 mail_values.update(notification=not self.auto_delete_message, model=self.model, res_id=res_id, record_name=False)
                 # auto deletion of mail_mail
@@ -362,7 +367,7 @@ class MailComposer(models.TransientModel):
                     mail_values.pop('attachments', []),
                     attachment_ids,
                     {'model': 'mail.message', 'res_id': 0}
-                )
+                )['attachment_ids']
                 # Filter out the blacklisted records by setting the mail state to cancel -> Used for Mass Mailing stats
                 if res_id in blacklisted_rec_ids:
                     mail_values['state'] = 'cancel'

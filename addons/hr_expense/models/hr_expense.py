@@ -532,7 +532,7 @@ class HrExpense(models.Model):
                 subject='Re: %s' % msg_dict.get('subject', ''),
                 body=body,
                 subtype_id=self.env.ref('mail.mt_note').id,
-                notif_layout='mail.mail_notification_light',
+                email_layout_xmlid='mail.mail_notification_light',
             )
         else:
             self.env['mail.mail'].create({

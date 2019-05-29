@@ -301,28 +301,24 @@ class Channel(models.Model):
         if not self.email_send:
             notification = _('<div class="o_mail_notification">left <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
             # post 'channel left' message as root since the partner just unsubscribed from the channel
-            self.sudo().message_post(body=notification, message_type="notification", subtype="mail.mt_comment", author_id=partner.id)
+            self.sudo().message_post(body=notification, subtype="mail.mt_comment", author_id=partner.id)
         return result
 
     @api.multi
-    def _notify_get_groups(self, message, groups):
+    def _notify_get_groups(self):
         """ All recipients of a message on a channel are considered as partners.
         This means they will receive a minimal email, without a link to access
         in the backend. Mailing lists should indeed send minimal emails to avoid
         the noise. """
-        groups = super(Channel, self)._notify_get_groups(message, groups)
+        groups = super(Channel, self)._notify_get_groups()
         for (index, (group_name, group_func, group_data)) in enumerate(groups):
             if group_name != 'customer':
                 groups[index] = (group_name, lambda partner: False, group_data)
         return groups
 
     @api.multi
-    def _notify_specific_email_values(self, message):
-        res = super(Channel, self)._notify_specific_email_values(message)
-        try:
-            headers = safe_eval(res.get('headers', dict()))
-        except Exception:
-            headers = {}
+    def _notify_email_header_dict(self):
+        headers = super(Channel, self)._notify_email_header_dict()
         headers['Precedence'] = 'list'
         # avoid out-of-office replies from MS Exchange
         # http://blogs.technet.com/b/exchange/archive/2006/10/06/3395024.aspx
@@ -334,8 +330,7 @@ class Channel(models.Model):
             # X-Forge-To: will replace To: after SMTP envelope is determined by ir.mail.server
             list_to = '"%s" <%s@%s>' % (self.name, self.alias_name, self.alias_domain)
             headers['X-Forge-To'] = list_to
-        res['headers'] = repr(headers)
-        return res
+        return headers
 
     @api.multi
     def _message_receive_bounce(self, email, partner, mail_id=None):
@@ -346,16 +341,16 @@ class Channel(models.Model):
         return super(Channel, self)._message_receive_bounce(email, partner, mail_id=mail_id)
 
     @api.multi
-    def _notify_email_recipients(self, message, recipient_ids):
+    def _notify_email_recipient_values(self, recipient_ids):
         # Excluded Blacklisted
-        whitelist = self.env['res.partner'].sudo().search([('id', 'in', recipient_ids)]).filtered(lambda p: not p.is_blacklisted)
+        whitelist = self.env['res.partner'].sudo().browse(recipient_ids).filtered(lambda p: not p.is_blacklisted)
         # real mailing list: multiple recipients (hidden by X-Forge-To)
         if self.alias_domain and self.alias_name:
             return {
                 'email_to': ','.join(formataddr((partner.name, partner.email_normalized)) for partner in whitelist if partner.email_normalized),
                 'recipient_ids': [],
             }
-        return super(Channel, self)._notify_email_recipients(message, whitelist.ids)
+        return super(Channel, self)._notify_email_recipient_values(whitelist.ids)
 
     def _extract_moderation_values(self, message_type, **kwargs):
         """ This method is used to compute moderation status before the creation
@@ -511,33 +506,31 @@ class Channel(models.Model):
                     notifications.append([(self._cr.dbname, 'res.partner', partner.id), channel_info])
         return notifications
 
-    @api.multi
-    def _notify(self, message):
-        """ Broadcast the given message on the current channels.
-            Send the message on the Bus Channel (uuid for public mail.channel, and partner private bus channel (the tuple)).
-            A partner will receive only on message on its bus channel, even if this message belongs to multiple mail channel. Then 'channel_ids' field
-            of the received message indicates on wich mail channel the message should be displayed.
-            :param : mail.message to broadcast
-        """
-        if not self:
-            return
-        message.ensure_one()
-        notifications = self._channel_message_notifications(message)
-        self.env['bus.bus'].sendmany(notifications)
+    def _notify_thread(self, message, msg_vals=False, model_description=False, mail_auto_delete=True):
+        # When posting a message on a mail channel, manage moderation and postpone notify users
+        if not msg_vals or msg_vals.get('moderation_status') != 'pending_moderation':
+            super(Channel, self)._notify_thread(
+                message,
+                msg_vals=msg_vals,
+                model_description=model_description,
+                mail_auto_delete=mail_auto_delete,
+            )
+        else:
+            message._notify_pending_by_chat()
 
     @api.multi
-    def _channel_message_notifications(self, message):
+    def _channel_message_notifications(self, message, message_format=False):
         """ Generate the bus notifications for the given message
             :param message : the mail.message to sent
             :returns list of bus notifications (tuple (bus_channe, message_content))
         """
-        message_values = message.message_format()[0]
+        message_format = message_format or message.message_format()[0]
         notifications = []
         for channel in self:
-            notifications.append([(self._cr.dbname, 'mail.channel', channel.id), dict(message_values)])
+            notifications.append([(self._cr.dbname, 'mail.channel', channel.id), dict(message_format)])
             # add uuid to allow anonymous to listen
             if channel.public == 'public':
-                notifications.append([channel.uuid, dict(message_values)])
+                notifications.append([channel.uuid, dict(message_format)])
         return notifications
 
     @api.model

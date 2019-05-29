@@ -567,7 +567,7 @@ class Challenge(models.Model):
                 body=body_html,
                 partner_ids=challenge.mapped('user_ids.partner_id.id'),
                 subtype='mail.mt_comment',
-                notif_layout='mail.mail_notification_light',
+                email_layout_xmlid='mail.mail_notification_light',
                 )
             if challenge.report_message_group_id:
                 challenge.report_message_group_id.message_post(
@@ -586,18 +586,18 @@ class Challenge(models.Model):
                     'gamification.challenge',
                     challenge.id)
 
-                # send message only to users, not on the challenge
-                self.env['gamification.challenge'].message_post(
+                # notify message only to users, do not post on the challenge
+                challenge.message_notify(
                     body=body_html,
-                    partner_ids=[(4, user.partner_id.id)],
+                    partner_ids=[user.partner_id.id],
                     subtype='mail.mt_comment',
-                    notif_layout='mail.mail_notification_light',
+                    email_layout_xmlid='mail.mail_notification_light',
                 )
                 if challenge.report_message_group_id:
                     challenge.report_message_group_id.message_post(
                         body=body_html,
                         subtype='mail.mt_comment',
-                        notif_layout='mail.mail_notification_light',
+                        email_layout_xmlid='mail.mail_notification_light',
                     )
         return challenge.write({'last_report_date': fields.Date.today()})
 

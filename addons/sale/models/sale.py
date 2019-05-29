@@ -667,7 +667,7 @@ class SaleOrder(models.Model):
         template_id = self._find_mail_template(force_confirmation_template=True)
         if template_id:
             for order in self:
-                order.with_context(force_send=True).message_post_with_template(template_id, composition_mode='comment', notif_layout="mail.mail_notification_paynow")
+                order.with_context(force_send=True).message_post_with_template(template_id, composition_mode='comment', email_layout_xmlid="mail.mail_notification_paynow")
 
     @api.multi
     def action_done(self):
@@ -782,18 +782,17 @@ class SaleOrder(models.Model):
         return (self.state == 'sent' or (self.state == 'draft' and include_draft)) and not self.is_expired and self.require_payment and transaction.state != 'done' and self.amount_total
 
     @api.multi
-    def _notify_get_groups(self, message, groups):
+    def _notify_get_groups(self):
         """ Give access button to users and portal customer as portal is integrated
         in sale. Customer and portal group have probably no right to see
         the document so they don't have the access button. """
-        groups = super(SaleOrder, self)._notify_get_groups(message, groups)
+        groups = super(SaleOrder, self)._notify_get_groups()
 
         self.ensure_one()
         if self.state not in ('draft', 'cancel'):
             for group_name, group_method, group_data in groups:
-                if group_name in ('customer', 'portal'):
-                    continue
-                group_data['has_button_access'] = True
+                if group_name not in ('customer', 'portal'):
+                    group_data['has_button_access'] = True
 
         return groups
 

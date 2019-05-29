@@ -73,4 +73,4 @@ class MailThread(models.AbstractModel):
             if max(stats) > min(stats) + datetime.timedelta(weeks=1):
                 blacklist_rec = self.env['mail.blacklist'].sudo()._add(email)
                 blacklist_rec._message_log(
-                    'This email has been automatically blacklisted because of too much bounced.')
+                    body='This email has been automatically blacklisted because of too much bounced.')

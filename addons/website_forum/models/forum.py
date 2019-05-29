@@ -422,12 +422,13 @@ class Post(models.Model):
         return post
 
     @api.model
-    def check_mail_message_access(self, res_ids, operation, model_name=None):
+    def get_mail_message_access(self, res_ids, operation, model_name=None):
+        # XDO FIXME: to be correctly fixed with new get_mail_message_access and filter access rule
         if operation in ('write', 'unlink') and (not model_name or model_name == 'forum.post'):
             # Make sure only author or moderator can edit/delete messages
             if any(not post.can_edit for post in self.browse(res_ids)):
                 raise KarmaError('Not enough karma to edit a post.')
-        return super(Post, self).check_mail_message_access(res_ids, operation, model_name=model_name)
+        return super(Post, self).get_mail_message_access(res_ids, operation, model_name=model_name)
 
     @api.multi
     def write(self, vals):
@@ -771,9 +772,9 @@ class Post(models.Model):
         }
 
     @api.multi
-    def _notify_get_groups(self, message, groups):
+    def _notify_get_groups(self):
         """ Add access button to everyone if the document is active. """
-        groups = super(Post, self)._notify_get_groups(message, groups)
+        groups = super(Post, self)._notify_get_groups()
 
         if self.state == 'active':
             for group_name, group_method, group_data in groups:
@@ -784,7 +785,6 @@ class Post(models.Model):
     @api.multi
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, message_type='notification', **kwargs):
-        question_followers = self.env['res.partner']
         if self.ids and message_type == 'comment':  # user comments have a restriction on karma
             # add followers of comments on the parent post
             if self.parent_id:
@@ -795,7 +795,7 @@ class Post(models.Model):
                     ('res_id', '=', self.parent_id.id),
                     ('partner_id', '!=', False),
                 ]).filtered(lambda fol: comment_subtype in fol.subtype_ids).mapped('partner_id')
-                partner_ids += [(4, partner.id) for partner in question_followers]
+                partner_ids += question_followers.ids
                 kwargs['partner_ids'] = partner_ids
 
             self.ensure_one()
@@ -806,14 +806,14 @@ class Post(models.Model):
         return super(Post, self).message_post(message_type=message_type, **kwargs)
 
     @api.multi
-    def _notify_customize_recipients(self, message, msg_vals, recipients_vals):
+    def _notify_customize_recipients(self, message, msg_vals):
         """ Override to avoid keeping all notified recipients of a comment.
         We avoid tracking needaction on post comments. Only emails should be
         sufficient. """
         msg_type = msg_vals.get('message_type') or message.message_type
         if msg_type == 'comment':
             return {'needaction_partner_ids': [], 'partner_ids': []}
-        return {}
+        return super(Post, self)._notify_customize_recipients(message, msg_vals)
 
 
 class PostReason(models.Model):
