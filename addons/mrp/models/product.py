@@ -82,6 +82,9 @@ class ProductProduct(models.Model):
         read_group_res = self.env['mrp.production'].read_group(domain, ['product_id', 'product_uom_qty'], ['product_id'])
         mapped_data = dict([(data['product_id'][0], data['product_uom_qty']) for data in read_group_res])
         for product in self:
+            if not product.id:
+                product.mrp_product_qty = 0.0
+                continue
             product.mrp_product_qty = float_round(mapped_data.get(product.id, 0), precision_rounding=product.uom_id.rounding)
 
     def _compute_quantities(self):

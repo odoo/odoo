@@ -73,8 +73,8 @@ class MrpWorkcenter(models.Model):
     @api.depends('order_ids.duration_expected', 'order_ids.workcenter_id', 'order_ids.state', 'order_ids.date_planned_start')
     def _compute_workorder_count(self):
         MrpWorkorder = self.env['mrp.workorder']
-        result = {wid: {} for wid in self.ids}
-        result_duration_expected = {wid: 0 for wid in self.ids}
+        result = {wid: {} for wid in self._ids}
+        result_duration_expected = {wid: 0 for wid in self._ids}
         #Count Late Workorder
         data = MrpWorkorder.read_group([('workcenter_id', 'in', self.ids), ('state', 'in', ('pending', 'ready')), ('date_planned_start', '<', datetime.datetime.now().strftime('%Y-%m-%d'))], ['workcenter_id'], ['workcenter_id'])
         count_data = dict((item['workcenter_id'][0], item['workcenter_id_count']) for item in data)
