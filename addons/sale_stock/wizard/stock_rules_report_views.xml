@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="stock.view_stock_rules_report"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='warehouse_ids']" position="after">
-                <field name="so_route_ids" widget="many2many_tags" groups="sale_stock.group_route_so_lines"/>
+                <field name="so_route_ids" widget="many2many_tags" groups="stock.group_adv_location"/>
             </xpath>
         </field>
     </record>

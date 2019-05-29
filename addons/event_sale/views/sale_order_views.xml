@@ -36,8 +36,8 @@
             </xpath>
             <xpath expr="//field[@name='order_line']//tree//field[@name='product_id']" position="after">
                 <field name="event_ok" invisible="1" />
-                <field name="event_id" invisible="1" />
-                <field name="event_ticket_id" invisible="1" />
+                <field name="event_id" optional="hide" />
+                <field name="event_ticket_id" optional="hide" />
             </xpath>
         </field>
     </record>

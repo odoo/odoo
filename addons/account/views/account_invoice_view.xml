@@ -343,22 +343,24 @@
                             <field context="{'type': type, 'journal_id': journal_id}" name="invoice_line_ids">
                                 <tree string="Bill lines" editable="bottom">
                                     <field name="sequence" widget="handle" />
-                                    <field name="product_id" groups="account.group_products_in_bills"
-                                        context="{'partner_id': parent.partner_id}" domain="[('purchase_ok','=',True)]"/>
+                                    <field name="product_id"
+                                        context="{'partner_id': parent.partner_id}" domain="[('purchase_ok','=',True)]"
+                                        optional="show"/>
                                     <field name="name"/>
                                     <field name="company_id" invisible="1"/>
                                     <field name="account_id" options="{'no_create': True}" groups="account.group_account_user"
                                         domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other'), ('deprecated', '=', False)]"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
                                         domain="[('company_id', '=', parent.company_id)]"
-                                        context="{'default_partner_id': parent.partner_id}"/>
+                                        context="{'default_partner_id': parent.partner_id}"
+                                        optional="show"/>
                                     <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <field name="quantity"/>
-                                    <field name="uom_id" string="UoM" groups="uom.group_uom"/>
+                                    <field name="uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
                                     <field name="price_unit"/>
-                                    <field name="discount" string="Disc.%" groups="base.group_no_one"/>
+                                    <field name="discount" string="Disc.%" groups="base.group_no_one" optional="show"/>
                                     <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'type':parent.type, 'tree_view_ref': 'account.account_tax_view_tree', 'search_view_ref': 'account.account_tax_view_search'}"
-                                        domain="[('type_tax_use','=','purchase'),('company_id', '=', parent.company_id)]"/>
+                                        domain="[('type_tax_use','=','purchase'),('company_id', '=', parent.company_id)]" optional="show"/>
                                     <field name="price_subtotal" string="Amount"/>
                                     <field name="currency_id" invisible="1"/>
                                 </tree>
@@ -514,7 +516,7 @@
                                     </control>
 
                                     <field name="sequence" widget="handle"/>
-                                    <field name="product_id" domain="[('sale_ok','=',True)]"/>
+                                    <field name="product_id" domain="[('sale_ok','=',True)]" optional="show"/>
                                     <field name="origin" invisible="1"/>
                                     <field name="is_rounding_line" invisible="1"/>
                                     <field name="name" widget="section_and_note_text"/>
@@ -529,14 +531,17 @@
                                     />
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
                                         domain="[('company_id', '=', parent.company_id)]"
-                                        context="{'default_partner_id': parent.partner_id}"/>
-                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                        context="{'default_partner_id': parent.partner_id}"
+                                        optional="show"/>
+                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}"
+                                     optional="show"/>
                                     <field name="quantity"/>
-                                    <field name="uom_id" string="UoM" groups="uom.group_uom"/>
+                                    <field name="uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
                                     <field name="price_unit" string="Price"/>
-                                    <field name="discount" groups="base.group_no_one" string="Disc.%"/>
+                                    <field name="discount" groups="base.group_no_one" string="Disc.%" optional="show"/>
                                     <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'type':parent.type, 'tree_view_ref': 'account.account_tax_view_tree', 'search_view_ref': 'account.account_tax_view_search'}"
-                                        domain="[('type_tax_use','=','sale'),('company_id', '=', parent.company_id)]"/>
+                                        domain="[('type_tax_use','=','sale'),('company_id', '=', parent.company_id)]"
+                                        optional="hide"/>
                                     <field name="price_subtotal" string="Subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
                                     <field name="price_total" string="Total" groups="account.group_show_line_subtotals_tax_included"/>
                                     <field name="currency_id" invisible="1"/>

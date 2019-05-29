@@ -168,12 +168,12 @@
                             <tree string="Products" editable="bottom">
                                 <field name="product_id" context="{'default_purchase_requisition': 'tenders'}"/>
                                 <field name="product_qty"/>
-                                <field name="qty_ordered"/>
+                                <field name="qty_ordered" optional="show"/>
                                 <field name="product_uom_category_id" invisible="1"/>
-                                <field name="product_uom_id" string="UoM" groups="uom.group_uom"/>
+                                <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
                                 <field name="schedule_date" groups="base.group_no_one"/>
-                                <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
-                                <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
+                                <field name="account_analytic_id" optional="hide" groups="analytic.group_analytic_accounting"/>
+                                <field name="analytic_tag_ids" optional="hide" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                 <field name="price_unit"/>
                             </tree>
                             <form string="Products">
