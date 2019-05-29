@@ -1,9 +1,11 @@
 import os
 from PIL import Image
 from functools import partial
+from collections import defaultdict
 
 from odoo.tests import TransactionCase, tagged, HttpCase, Form
 from odoo.tools import image_to_base64
+
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -12,12 +14,13 @@ class TestBaseDocumentLayoutHelpers(TransactionCase):
 
     def _get_images(self):
         if not hasattr(self, 'company_imgs'):
-            imgs = {}
-            for fname in self.file_names:
+            imgs = defaultdict(lambda: dict())
+            for fname, colors in self.img_colors.items():
+                fname_split = fname.split('.')
+                fformat = fname_split[1].upper() if len(fname_split) > 1 else 'JPEG'
                 with Image.open(os.path.join(dir_path, fname), 'r') as img:
-                    fname_split = fname.split('.')
-                    fformat = fname_split[1].upper()
-                    imgs[fname_split[0]] = image_to_base64(img, fformat)
+                    imgs[fname_split[0]]['img'] = image_to_base64(img, fformat)
+                    imgs[fname_split[0]]['colors'] = colors
             self.company_imgs = imgs
         return self.company_imgs
 
@@ -47,7 +50,7 @@ class TestBaseDocumentLayoutHelpers(TransactionCase):
         for i in range(len(color1)):
             self.assertAlmostEqual(color1[i], color2[i], delta=self.css_color_error)
 
-    def assert_colors(self, checked_obj, expected):
+    def assertColors(self, checked_obj, expected):
         _expected_getter = expected.get if isinstance(expected, dict) else partial(getattr, expected)
         for fname in self.color_fields:
             color1 = getattr(checked_obj, fname)
@@ -75,7 +78,16 @@ class TestBaseDocumentLayoutHelpers(TransactionCase):
 
     def setUp(self):
         super(TestBaseDocumentLayoutHelpers, self).setUp()
-        self.file_names = ['tommy_small.jpeg', 'fire_small.jpeg']
+        self.img_colors = {
+            'tommy_small.jpeg': {
+                'primary_color': '#7790af',
+                'secondary_color': '#141d21'
+            },
+            'fire_small.jpeg': {
+                'primary_color': '#c8864d',
+                'secondary_color': '#372422'
+            }
+        }
         self.color_fields = ['primary_color', 'secondary_color']
         self._get_images()
         self.company = self.env.company_id
@@ -95,40 +107,29 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
         })
         company_layout = self._get_report_layout_from_view(self.company.external_report_layout_id)
         with Form(self.env['base.document.layout']) as doc_layout:
-            self.assert_colors(doc_layout, company_layout)
+            self.assertColors(doc_layout, company_layout)
             self.assertEqual(doc_layout.company_id, self.company)
-            doc_layout.logo = self.company_imgs['tommy_small']
-            logo_colors = {
-                'primary_color': '#7790af',
-                'secondary_color': '#141d21'
-            }
-            self.assert_colors(doc_layout, logo_colors)
+            doc_layout.logo = self.company_imgs['tommy_small']['img']
+
+            self.assertColors(doc_layout, self.company_imgs['tommy_small']['colors'])
 
             doc_layout.logo = ''
-            self.assert_colors(doc_layout, logo_colors)
+            self.assertColors(doc_layout, self.company_imgs['tommy_small']['colors'])
             self.assertEqual(doc_layout.logo, '')
 
     def test_company_no_color_but_logo_change_logo(self):
         self.company.write({
             'primary_color': None,
             'secondary_color': None,
-            'logo': self.company_imgs['tommy_small'],
+            'logo': self.company_imgs['tommy_small']['img'],
         })
         # Don't why yet, but the second time the colors are computes
         # there is a ~2% error between expected colors and computes ones
         self.css_color_error = 2
         with Form(self.env['base.document.layout']) as doc_layout:
-            origin_colors = {
-                'primary_color': '#7790af',
-                'secondary_color': '#141d21'
-            }
-            self.assert_colors(doc_layout, origin_colors)
-            doc_layout.logo = self.company_imgs['fire_small']
-            logo_colors = {
-                'primary_color': '#c8864d',
-                'secondary_color': '#372422'
-            }
-            self.assert_colors(doc_layout, logo_colors)
+            self.assertColors(doc_layout, self.company_imgs['tommy_small']['colors'])
+            doc_layout.logo = self.company_imgs['fire_small']['img']
+            self.assertColors(doc_layout, self.company_imgs['fire_small']['colors'])
 
     def test_company_colors_change_logo(self):
         self.company.write({
@@ -138,29 +139,21 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
         })
 
         with Form(self.env['base.document.layout']) as doc_layout:
-            self.assert_colors(doc_layout, self.company)
-            doc_layout.logo = self.company_imgs['fire_small']
-            logo_colors = {
-                'primary_color': '#c8864d',
-                'secondary_color': '#372422'
-            }
-            self.assert_colors(doc_layout, logo_colors)
+            self.assertColors(doc_layout, self.company)
+            doc_layout.logo = self.company_imgs['fire_small']['img']
+            self.assertColors(doc_layout, self.company_imgs['fire_small']['colors'])
 
     def test_company_colors_and_logo_change_logo(self):
         self.company.write({
             'primary_color': '#7790af',
             'secondary_color': '#141d21',
-            'logo': self.company_imgs['fire_small'],
+            'logo': self.company_imgs['fire_small']['img'],
         })
 
         with Form(self.env['base.document.layout']) as doc_layout:
-            self.assert_colors(doc_layout, self.company)
-            doc_layout.logo = self.company_imgs['fire_small']
-            logo_colors = {
-                'primary_color': '#c8864d',
-                'secondary_color': '#372422'
-            }
-            self.assert_colors(doc_layout, logo_colors)
+            self.assertColors(doc_layout, self.company)
+            doc_layout.logo = self.company_imgs['fire_small']['img']
+            self.assertColors(doc_layout, self.company_imgs['fire_small']['colors'])
 
     def test_default_color_flag(self):
         """ use_default_colors should be false when both primary_color and secondary_color are set """
