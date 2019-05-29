@@ -1,233 +1,266 @@
 
 .o_list_view {
     position: relative;
-    cursor: pointer;
-    background-color: $o-view-background-color;
-    margin-bottom: 0px;
 
-    // Don't understand why but without those, the list view appears broken
-    // in both form views and standalone list views.
-    border-collapse: initial;
-    border-spacing: 0;
-
-    thead {
-        color: $o-main-text-color;
-        border-bottom: 1px solid #cacaca;
-        > tr > th:not(.o_list_record_selector) {
-            border-left: 1px solid #dfdfdf;
-            @include o-text-overflow(table-cell);
-            &:not(.o_column_sortable):hover {
-                cursor: default;
-            }
-        }
-    }
-    tbody > tr > td:not(.o_list_record_selector) {
-        @include o-text-overflow(table-cell);
-
-        &.o_list_number {
-            text-align: right;
-        }
-        &.o_list_text {
-            white-space: pre-wrap;
-        }
-    }
-
-    tfoot {
-        cursor: default;
-        color: $o-list-footer-color;
-        background-color: $o-list-footer-bg-color;
-        font-weight: $o-list-footer-font-weight;
-        border-top: 2px solid #cacaca;
-        border-bottom: 1px solid #cacaca;
-    }
-
-    .o_column_sortable {
+    .o_list_table {
         position: relative;
-        user-select: none;  // Prevent unwanted selection while sorting
-
-        &::after {
-            font-family: FontAwesome;
-            content: "\f0d7";
-            opacity: 0;
-        }
-        &:not(:empty)::after {
-            margin-left: 6px;
-        }
-        &.o-sort-up {
-            cursor: n-resize;
-            &::after {
-                content: "\f0d7";
-            }
-        }
-        &.o-sort-down {
-            cursor: s-resize;
-            &::after {
-                content: "\f0d8";
-            }
-        }
-        &:hover::after {
-            opacity: 0.3;
-        }
-        &.o-sort-up, &.o-sort-down {
-            color: $headings-color;
-            &::after {
-                opacity: 1;
-            }
-        }
-    }
-
-    .o_list_record_selector, .o_list_record_remove, .o_handle_cell {
-        width: 1px;  // to prevent the column to expand
-    }
-
-    .o_list_record_remove button {
-        padding: 0px;
-        background: none;
-        border-style: none;
-        display: table-cell;
         cursor: pointer;
-    }
+        background-color: $o-view-background-color;
+        margin-bottom: 0px;
 
-    // Contextual classes
-    @each $color, $value in $theme-colors {
-        $safe: saturate(theme-color-level($color, 2), 10%);
-        @include text-emphasis-variant(".text-#{$color}", $safe);
-    }
+        // Don't understand why but without those, the list view appears broken
+        // in both form views and standalone list views.
+        border-collapse: initial;
+        border-spacing: 0;
 
-    // Grouped list views
-    tbody > tr.o_group_header {
-        > th, > td {
-            vertical-align: middle;
-            padding-top: ($table-cell-padding-sm*2);
-            padding-bottom: ($table-cell-padding-sm*2);
-        }
-        .o_group_name {
-            white-space: nowrap;
-        }
-        .o_group_buttons {
-            display: inline-block;
-            margin-left: 10px;
-
-            > button {
-                @include o-hover-text-color($o-brand-primary, darken($o-brand-primary, 20%));
-                background-color: transparent;
-                border: none;
-                padding-top: 0;
-                padding-bottom: 0;
+        thead {
+            color: $o-main-text-color;
+            border-bottom: 1px solid #cacaca;
+            > tr > th:not(.o_list_record_selector) {
+                border-left: 1px solid #dfdfdf;
+                @include o-text-overflow(table-cell);
+                &:not(.o_column_sortable):hover {
+                    cursor: default;
+                }
             }
         }
-        .o_group_pager {
+        tbody > tr > td:not(.o_list_record_selector) {
+            @include o-text-overflow(table-cell);
+
+            &.o_list_number {
+                text-align: right;
+            }
+            &.o_list_text {
+                white-space: pre-wrap;
+            }
+        }
+
+        tfoot {
+            cursor: default;
+            color: $o-list-footer-color;
+            background-color: $o-list-footer-bg-color;
+            font-weight: $o-list-footer-font-weight;
+            border-top: 2px solid #cacaca;
+            border-bottom: 1px solid #cacaca;
+        }
+
+        .o_column_sortable {
             position: relative;
+            user-select: none;  // Prevent unwanted selection while sorting
 
-            .o_pager {
-                @include o-position-absolute(0, 16px);
-                cursor: text;
-                user-select: none;
-                padding-top: 3px !important;
-                padding-bottom: 0 !important;
+            &::after {
+                font-family: FontAwesome;
+                content: "\f0d7";
+                opacity: 0;
             }
-            .o_pager_previous, .o_pager_next {
-                max-height: 30px;
-                background-color: $o-list-group-header-color;
-                &:hover {
-                    background-color: darken($o-list-group-header-color, 10%);
+            &:not(:empty)::after {
+                margin-left: 6px;
+            }
+            &.o-sort-up {
+                cursor: n-resize;
+                &::after {
+                    content: "\f0d7";
+                }
+            }
+            &.o-sort-down {
+                cursor: s-resize;
+                &::after {
+                    content: "\f0d8";
+                }
+            }
+            &:hover::after {
+                opacity: 0.3;
+            }
+            &.o-sort-up, &.o-sort-down {
+                color: $headings-color;
+                &::after {
+                    opacity: 1;
                 }
             }
         }
-    }
-    tbody + tbody {
-        border-top: none;  // Override bootstrap for grouped list views
-    }
 
-    &, &.table-striped {
-        tr:focus-within {
-            background-color: lighten($o-form-lightsecondary, 10%);
-        }
-    }
-    thead th:focus-within, tbody td:focus-within {
-        background-color: $o-form-lightsecondary;
-        outline: none;
-    }
-
-    .o_data_cell.o_text_overflow,
-    .o_data_cell.o_invisible_modifier {
-        // Override display: none to keep table cells aligned. Note: cannot use
-        // 'initial' as it will force them to 'inline', not 'table-cell'.
-        display: table-cell!important;
-    }
-
-    //--------------------------------------------------------------------------
-    // Edition
-    //--------------------------------------------------------------------------
-
-    &.o_editable_list {
-        table-layout: fixed;
-
-        .o_list_record_selector {
-            width: 40px;
-        }
-        .o_list_record_remove_header, .o_handle_cell {
-            width: 32px;
+        .o_list_record_selector, .o_list_record_remove, .o_handle_cell {
+            width: 1px;  // to prevent the column to expand
         }
 
-        // checkboxes in editable lists should be clickable and activate the row
-        .o_data_row:not(.o_selected_row) .o_data_cell {
-            .custom-checkbox:not(.o_readonly_modifier) {
-                pointer-events: none;
+        .o_list_record_remove button {
+            padding: 0px;
+            background: none;
+            border-style: none;
+            display: table-cell;
+            cursor: pointer;
+        }
+
+        // Contextual classes
+        @each $color, $value in $theme-colors {
+            $safe: saturate(theme-color-level($color, 2), 10%);
+            @include text-emphasis-variant(".text-#{$color}", $safe);
+        }
+
+        // Grouped list views
+        tbody > tr.o_group_header {
+            > th, > td {
+                vertical-align: middle;
+                padding-top: ($table-cell-padding-sm*2);
+                padding-bottom: ($table-cell-padding-sm*2);
             }
-        }
-
-        .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier) {
-            position: relative; // for o_field_translate
-            background-color: white;
-
-            .o_input {
-                border: none;
-                padding: 0;
+            .o_group_name {
+                white-space: nowrap;
             }
-            > .o_field_text {
-                vertical-align: top;
-            }
-            > .o_field_widget {
-                width: 100%;
-                > .o_external_button {
-                    padding: 0;
+            .o_group_buttons {
+                display: inline-block;
+                margin-left: 10px;
+
+                > button {
+                    @include o-hover-text-color($o-brand-primary, darken($o-brand-primary, 20%));
+                    background-color: transparent;
                     border: none;
-                    background-color: inherit;
-                    margin-left: 5px;
-                    font-size: 12px;
+                    padding-top: 0;
+                    padding-bottom: 0;
                 }
             }
-            > .o_field_monetary input {
-                width: 0; // override width: 100px and let flex makes this input grow
-                margin: 0 4px;
-            }
-            > .o_field_many2manytags > .o_field_many2one {
-                // reduce basis to prevent many2one input from going to the next line to often
-                flex-basis: 40px;
-            }
-            .o_input_dropdown, .o_datepicker {
-                > .o_input {
-                    padding-right: 15px; // to prevent caret overlapping
+            .o_group_pager {
+                position: relative;
+
+                .o_pager {
+                    @include o-position-absolute(0, 16px);
+                    cursor: text;
+                    user-select: none;
+                    padding-top: 3px !important;
+                    padding-bottom: 0 !important;
                 }
-                > .o_dropdown_button, .o_datepicker_button {
-                    @include o-position-absolute(0, 0);
+                .o_pager_previous, .o_pager_next {
+                    max-height: 30px;
+                    background-color: $o-list-group-header-color;
+                    &:hover {
+                        background-color: darken($o-list-group-header-color, 10%);
+                    }
                 }
             }
-            > .o_field_translate {
-                @include o-position-absolute(0, 5px);
-                width: 16px; // to have some space on the right
+        }
+        tbody + tbody {
+            border-top: none;  // Override bootstrap for grouped list views
+        }
+
+        &, &.table-striped {
+            tr:focus-within {
+                background-color: lighten($o-form-lightsecondary, 10%);
             }
-            > .o_row_handle {
-                visibility: hidden; // hide sequence when editing
+        }
+        thead th:focus-within, tbody td:focus-within {
+            background-color: $o-form-lightsecondary;
+            outline: none;
+        }
+
+        .o_data_cell.o_text_overflow,
+        .o_data_cell.o_invisible_modifier {
+            // Override display: none to keep table cells aligned. Note: cannot use
+            // 'initial' as it will force them to 'inline', not 'table-cell'.
+            display: table-cell!important;
+        }
+
+        //--------------------------------------------------------------------------
+        // Edition
+        //--------------------------------------------------------------------------
+
+        &.o_editable_list {
+            table-layout: fixed;
+
+            .o_list_record_selector {
+                width: 40px;
+            }
+            .o_list_record_remove_header, .o_handle_cell {
+                width: 32px;
+            }
+
+            // checkboxes in editable lists should be clickable and activate the row
+            .o_data_row:not(.o_selected_row) .o_data_cell {
+                .custom-checkbox:not(.o_readonly_modifier) {
+                    pointer-events: none;
+                }
+            }
+
+            .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier) {
+                position: relative; // for o_field_translate
+                background-color: white;
+
+                .o_input {
+                    border: none;
+                    padding: 0;
+                }
+                > .o_field_text {
+                    vertical-align: top;
+                }
+                > .o_field_widget {
+                    width: 100%;
+                    > .o_external_button {
+                        padding: 0;
+                        border: none;
+                        background-color: inherit;
+                        margin-left: 5px;
+                        font-size: 12px;
+                    }
+                }
+                > .o_field_monetary input {
+                    width: 0; // override width: 100px and let flex makes this input grow
+                    margin: 0 4px;
+                }
+                > .o_field_many2manytags > .o_field_many2one {
+                    // reduce basis to prevent many2one input from going to the next line to often
+                    flex-basis: 40px;
+                }
+                .o_input_dropdown, .o_datepicker {
+                    > .o_input {
+                        padding-right: 15px; // to prevent caret overlapping
+                    }
+                    > .o_dropdown_button, .o_datepicker_button {
+                        @include o-position-absolute(0, 0);
+                    }
+                }
+                > .o_field_translate {
+                    @include o-position-absolute(0, 5px);
+                    width: 16px; // to have some space on the right
+                }
+                > .o_row_handle {
+                    visibility: hidden; // hide sequence when editing
+                }
+            }
+        }
+
+        .o_field_x2many_list_row_add, .o_group_field_row_add {
+            a:focus, a:active {
+                color: $link-hover-color;
+                outline: none;
             }
         }
     }
 
-    .o_field_x2many_list_row_add, .o_group_field_row_add {
-        a:focus, a:active {
-            color: $link-hover-color;
-            outline: none;
+    // Optional fields
+    &.o_list_optional_columns {
+        th:last-child {
+            padding-right: 15px;
+        }
+    }
+
+    .o_optional_columns_dropdown_toggle,.o_optional_columns {
+        @include o-position-absolute($top: 0, $right: 0);
+    }
+
+    .o_optional_columns_dropdown_toggle {
+        width: 10px;
+        text-align: center;
+        line-height: 30px;
+    }
+
+    .o_optional_columns {
+        .o_optional_columns_dropdown {
+            margin-top: 30px;
+            user-select: none;
+            .dropdown-item {
+                label {
+                    padding-left: 10px;
+                }
+            }
         }
     }
 }

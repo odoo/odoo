@@ -1,6 +1,7 @@
 odoo.define('web.list_tests', function (require) {
 "use strict";
 
+var AbstractStorageService = require('web.AbstractStorageService');
 var BasicModel = require('web.BasicModel');
 var config = require('web.config');
 var core = require('web.core');
@@ -9,6 +10,7 @@ var FormView = require('web.FormView');
 var ListView = require('web.ListView');
 var mixins = require('web.mixins');
 var NotificationService = require('web.NotificationService');
+var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
 var widgetRegistry = require('web.widget_registry');
 var Widget = require('web.Widget');
@@ -2295,7 +2297,7 @@ QUnit.module('Views', {
         });
 
         await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
-        await testUtils.dom.click(list.$('div.table-responsive'));
+        await testUtils.dom.click(list.$('.o_list_view'));
 
         assert.strictEqual(createCount, 1, "should have created a record");
 
@@ -6130,6 +6132,302 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('tbody:eq(3) .o_data_row:first .o_data_cell:eq(1)').text(), 'Value 2',
             "should have a column name with a value from the groupby");
         assert.verifySteps(['2']);
+
+        list.destroy();
+    });
+
+    QUnit.test('list view with optional fields rendering', async function (assert) {
+        assert.expect(9);
+
+        var RamStorageService = AbstractStorageService.extend({
+            storage: new RamStorage(),
+        });
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="m2o" optional="hide"/>' +
+                    '<field name="amount"/>' +
+                    '<field name="reference" optional="hide"/>' +
+                '</tree>',
+            services: {
+                local_storage: RamStorageService,
+            },
+        });
+
+        assert.containsN(list, 'th', 3,
+            "should have 3 th, 1 for selector, 2 for columns");
+
+        assert.containsOnce(list.$('table'), '.o_optional_columns_dropdown_toggle',
+            "should have the optional columns dropdown toggle inside the table");
+
+        // optional fields
+        await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
+        assert.containsN(list, 'div.o_optional_columns div.dropdown-item', 2,
+            "dropdown have 2 optional field foo with checked and bar with unchecked");
+
+        // enable optional field
+        await testUtils.dom.click(list.$('div.o_optional_columns div.dropdown-item:first input'));
+        // 5 th (1 for checkbox, 4 for columns)
+        assert.containsN(list, 'th', 4, "should have 4 th");
+        assert.ok(list.$('th:contains(M2O field)').is(':visible'),
+            "should have a visible m2o field"); //m2o field
+
+        // disable optional field
+        await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
+        assert.strictEqual(list.$('div.o_optional_columns div.dropdown-item:first input:checked')[0],
+            list.$('div.o_optional_columns div.dropdown-item [name="m2o"]')[0],
+            "m2o advanced field check box should be checked in dropdown");
+
+        await testUtils.dom.click(list.$('div.o_optional_columns div.dropdown-item:first input'));
+        // 3 th (1 for checkbox, 2 for columns)
+        assert.containsN(list, 'th', 3, "should have 3 th");
+        assert.notOk(list.$('th:contains(M2O field)').is(':visible'),
+            "should not have a visible m2o field"); //m2o field not displayed
+
+        await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
+        assert.notOk(list.$('div.o_optional_columns div.dropdown-item [name="m2o"]').is(":checked"));
+
+        list.destroy();
+    });
+
+    QUnit.test('optinal fields do not disappear even after listview reload', async function (assert) {
+        assert.expect(7);
+
+        var RamStorageService = AbstractStorageService.extend({
+            storage: new RamStorage(),
+        });
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="m2o" optional="hide"/>' +
+                    '<field name="amount"/>' +
+                    '<field name="reference" optional="hide"/>' +
+                '</tree>',
+            services: {
+                local_storage: RamStorageService,
+            },
+        });
+
+        assert.containsN(list, 'th', 3,
+            "should have 3 th, 1 for selector, 2 for columns");
+
+        // enable optional field
+        await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
+        assert.notOk(list.$('div.o_optional_columns div.dropdown-item [name="m2o"]').is(":checked"));
+        await testUtils.dom.click(list.$('div.o_optional_columns div.dropdown-item:first input'));
+        assert.containsN(list, 'th', 4,
+            "should have 4 th 1 for selector, 3 for columns");
+        assert.ok(list.$('th:contains(M2O field)').is(':visible'),
+            "should have a visible m2o field"); //m2o field
+
+        // reload listview
+        await list.reload();
+        assert.containsN(list, 'th', 4,
+            "should have 4 th 1 for selector, 3 for columns ever after listview reload");
+        assert.ok(list.$('th:contains(M2O field)').is(':visible'),
+            "should have a visible m2o field even after listview reload");
+
+        await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
+        assert.ok(list.$('div.o_optional_columns div.dropdown-item [name="m2o"]').is(":checked"));
+
+        list.destroy();
+    });
+
+    QUnit.test('change the viewType of the current action', async function (assert) {
+        assert.expect(25);
+
+        this.actions = [{
+            id: 1,
+            name: 'Partners Action 1',
+            res_model: 'foo',
+            type: 'ir.actions.act_window',
+            views: [[1, 'kanban']],
+        }, {
+            id: 2,
+            name: 'Partners',
+            res_model: 'foo',
+            type: 'ir.actions.act_window',
+            views: [[false, 'list'], [1, 'kanban']],
+        }];
+
+        this.archs = {
+            'foo,1,kanban': '<kanban><templates><t t-name="kanban-box">' +
+            '<div class="oe_kanban_global_click"><field name="foo"/></div>' +
+            '</t></templates></kanban>',
+
+            'foo,false,list': '<tree limit="3">' +
+            '<field name="foo"/>' +
+            '<field name="m2o" optional="hide"/>' +
+            '<field name="o2m" optional="show"/></tree>',
+
+            'foo,false,search': '<search><field name="foo" string="Foo"/></search>',
+        };
+
+        var RamStorageService = AbstractStorageService.extend({
+            storage: new RamStorage(),
+        });
+
+        var actionManager = await testUtils.createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            services: {
+                local_storage: RamStorageService,
+            },
+        });
+        await actionManager.doAction(2);
+
+        assert.containsOnce(actionManager, '.o_list_view',
+            "should have rendered a list view");
+
+        assert.containsN(actionManager, 'th', 3, "should display 3 th (selector + 2 fields)");
+
+        // enable optional field
+        await testUtils.dom.click(actionManager.$('table .o_optional_columns_dropdown_toggle'));
+        assert.notOk(actionManager.$('div.o_optional_columns div.dropdown-item [name="m2o"]').is(":checked"));
+        assert.ok(actionManager.$('div.o_optional_columns div.dropdown-item [name="o2m"]').is(":checked"));
+        await testUtils.dom.click(actionManager.$('div.o_optional_columns div.dropdown-item:first'));
+        assert.containsN(actionManager, 'th', 4, "should display 4 th (selector + 3 fields)");
+        assert.ok(actionManager.$('th:contains(M2O field)').is(':visible'),
+            "should have a visible m2o field"); //m2o field
+
+        // switch to kanban view
+        await actionManager.loadState({
+            action: 2,
+            view_type: 'kanban',
+        });
+
+        assert.containsNone(actionManager, '.o_list_view',
+            "should not display the list view anymore");
+        assert.containsOnce(actionManager, '.o_kanban_view',
+            "should have switched to the kanban view");
+
+        // switch back to list view
+        await actionManager.loadState({
+            action: 2,
+            view_type: 'list',
+        });
+
+        assert.containsNone(actionManager, '.o_kanban_view',
+            "should not display the kanban view anymoe");
+        assert.containsOnce(actionManager, '.o_list_view',
+            "should display the list view");
+
+        assert.containsN(actionManager, 'th', 4, "should display 4 th");
+        assert.ok(actionManager.$('th:contains(M2O field)').is(':visible'),
+            "should have a visible m2o field"); //m2o field
+        assert.ok(actionManager.$('th:contains(O2M field)').is(':visible'),
+            "should have a visible o2m field"); //m2o field
+
+        // disable optional field
+        await testUtils.dom.click(actionManager.$('table .o_optional_columns_dropdown_toggle'));
+        assert.ok(actionManager.$('div.o_optional_columns div.dropdown-item [name="m2o"]').is(":checked"));
+        assert.ok(actionManager.$('div.o_optional_columns div.dropdown-item [name="o2m"]').is(":checked"));
+        await testUtils.dom.click(actionManager.$('div.o_optional_columns div.dropdown-item:last input'));
+        assert.ok(actionManager.$('th:contains(M2O field)').is(':visible'),
+            "should have a visible m2o field"); //m2o field
+        assert.notOk(actionManager.$('th:contains(O2M field)').is(':visible'),
+            "should have a visible o2m field"); //m2o field
+        assert.containsN(actionManager, 'th', 3, "should display 3 th");
+
+        await actionManager.doAction(1);
+
+        assert.containsNone(actionManager, '.o_list_view',
+            "should not display the list view anymore");
+        assert.containsOnce(actionManager, '.o_kanban_view',
+            "should have switched to the kanban view");
+
+        await actionManager.doAction(2);
+
+        assert.containsNone(actionManager, '.o_kanban_view',
+            "should not havethe kanban view anymoe");
+        assert.containsOnce(actionManager, '.o_list_view',
+            "should display the list view");
+
+        assert.containsN(actionManager, 'th', 3, "should display 3 th");
+        assert.ok(actionManager.$('th:contains(M2O field)').is(':visible'),
+            "should have a visible m2o field"); //m2o field
+        assert.notOk(actionManager.$('th:contains(O2M field)').is(':visible'),
+            "should have a visible o2m field"); //m2o field
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('list view with optional fields rendering and local storage mock', async function (assert) {
+        assert.expect(12);
+
+        var forceLocalStorage = true;
+
+        var Storage = RamStorage.extend({
+            getItem: function (key) {
+                assert.step('getItem ' + key);
+                return forceLocalStorage ? '["m2o"]' : this._super.apply(this, arguments);
+            },
+            setItem: function (key, value) {
+                assert.step('setItem ' + key + ' to ' + value);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        var RamStorageService = AbstractStorageService.extend({
+            storage: new Storage(),
+        });
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                '<field name="foo"/>' +
+                '<field name="m2o" optional="hide"/>' +
+                '<field name="reference" optional="show"/>' +
+                '</tree>',
+            services: {
+                local_storage: RamStorageService,
+            },
+        });
+
+        assert.verifySteps(['getItem list_optional_fields,foo,list,foo:char,m2o:many2one,reference:reference']);
+
+        assert.containsN(list, 'th', 3,
+            "should have 3 th, 1 for selector, 2 for columns");
+
+        assert.ok(list.$('th:contains(M2O field)').is(':visible'),
+            "should have a visible m2o field"); //m2o field
+
+        assert.notOk(list.$('th:contains(Reference Field)').is(':visible'),
+            "should not have a visible reference field");
+
+        // optional fields
+        await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
+        assert.containsN(list, 'div.o_optional_columns div.dropdown-item', 2,
+            "dropdown have 2 optional fields");
+
+        forceLocalStorage = false;
+        // enable optional field
+        await testUtils.dom.click(list.$('div.o_optional_columns div.dropdown-item:eq(1) input'));
+
+        assert.verifySteps([
+            'setItem list_optional_fields,foo,list,foo:char,m2o:many2one,reference:reference to ["m2o","reference"]',
+            'getItem list_optional_fields,foo,list,foo:char,m2o:many2one,reference:reference',
+        ]);
+
+        // 4 th (1 for checkbox, 3 for columns)
+        assert.containsN(list, 'th', 4, "should have 4 th");
+
+        assert.ok(list.$('th:contains(M2O field)').is(':visible'),
+            "should have a visible m2o field"); //m2o field
+
+        assert.ok(list.$('th:contains(Reference Field)').is(':visible'),
+            "should have a visible reference field");
 
         list.destroy();
     });

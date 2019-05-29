@@ -245,18 +245,18 @@ QUnit.module('Views', {
         });
         assert.containsOnce(form, 'div.o_field_one2many:eq(0):not(.o_readonly_modifier)', "first one2many widget should not be readonly");
         assert.hasClass(form.$('div.o_field_one2many:eq(1)'),'o_readonly_modifier', "second one2many widget should be readonly");
-        await testUtils.dom.click(form.$('div.tab-content table.o_list_view:eq(0) tr.o_data_row td.o_data_cell:eq(0)'));
-        assert.strictEqual(form.$('div.tab-content table.o_list_view tr.o_selected_row input[name="foo"]').val(), "yop",
+        await testUtils.dom.click(form.$('div.tab-content table.o_list_table:eq(0) tr.o_data_row td.o_data_cell:eq(0)'));
+        assert.strictEqual(form.$('div.tab-content table.o_list_table tr.o_selected_row input[name="foo"]').val(), "yop",
             "first line in one2many of first tab contains yop");
-        assert.strictEqual(form.$('div.tab-content table.o_list_view:eq(1) tr.o_data_row td.o_data_cell:eq(0)').text(),
+        assert.strictEqual(form.$('div.tab-content table.o_list_table:eq(1) tr.o_data_row td.o_data_cell:eq(0)').text(),
             "yop", "first line in one2many of second tab contains yop");
-        await testUtils.fields.editInput(form.$('div.tab-content table.o_list_view tr.o_selected_row input[name="foo"]'), "hello");
-        assert.strictEqual(form.$('div.tab-content table.o_list_view:eq(1) tr.o_data_row td.o_data_cell:eq(0)').text(), "hello",
+        await testUtils.fields.editInput(form.$('div.tab-content table.o_list_table tr.o_selected_row input[name="foo"]'), "hello");
+        assert.strictEqual(form.$('div.tab-content table.o_list_table:eq(1) tr.o_data_row td.o_data_cell:eq(0)').text(), "hello",
             "first line in one2many of second tab contains hello");
-        await testUtils.dom.click(form.$('div.tab-content table.o_list_view:eq(0) a:contains(Add a line)'));
-        assert.strictEqual(form.$('div.tab-content table.o_list_view tr.o_selected_row input[name="foo"]').val(), "My little Foo Value",
+        await testUtils.dom.click(form.$('div.tab-content table.o_list_table:eq(0) a:contains(Add a line)'));
+        assert.strictEqual(form.$('div.tab-content table.o_list_table tr.o_selected_row input[name="foo"]').val(), "My little Foo Value",
             "second line in one2many of first tab contains 'My little Foo Value'");
-        assert.strictEqual(form.$('div.tab-content table.o_list_view:eq(1) tr.o_data_row:eq(1) td.o_data_cell:eq(0)').text(),
+        assert.strictEqual(form.$('div.tab-content table.o_list_table:eq(1) tr.o_data_row:eq(1) td.o_data_cell:eq(0)').text(),
             "My little Foo Value", "first line in one2many of second tab contains hello");
         form.destroy();
     });
