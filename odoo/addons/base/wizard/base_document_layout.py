@@ -110,10 +110,15 @@ class BaseDocumentLayout(models.TransientModel):
 
     @api.depends('company_id')
     def _compute_report_layout_id(self):
+        default_report_layout = self.env['report.layout']
         for wizard in self:
-            wizard.report_layout_id = wizard.env["report.layout"].search([
+            wizard_layout = wizard.env["report.layout"].search([
                 ('view_id.key', '=', wizard.company_id.external_report_layout_id.key)
             ])
+            if not wizard_layout:
+                default_report_layout = default_report_layout or default_report_layout.search([], limit=1)
+                wizard_layout = default_report_layout
+            wizard.report_layout_id = wizard_layout
             primary = wizard.primary_color or wizard.report_layout_id.primary_color
             secondary = wizard.secondary_color or wizard.report_layout_id.secondary_color
 
