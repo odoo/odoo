@@ -294,7 +294,7 @@ class WebsiteSlides(WebsiteProfile):
         domain = request.website.website_domain()
         domain = self._build_channel_domain(domain, slide_type=slide_type, my=my, **post)
 
-        order = self._channel_order_by_criterion.get(post.get('sorting', 'date'), 'create_date desc')
+        order = self._channel_order_by_criterion.get(post.get('sorting'))
 
         channels = request.env['slide.channel'].search(domain, order=order)
         # channels_layouted = list(itertools.zip_longest(*[iter(channels)] * 4, fillvalue=None))
