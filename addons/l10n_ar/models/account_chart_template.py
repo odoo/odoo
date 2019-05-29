@@ -25,5 +25,12 @@ class AccountChartTemplate(models.Model):
             acc_template_ref, company, journals_dict=journals_dict)
 
         if company.country_id == self.env.ref('base.ar'):
-            res = [item for item in res if item.get('type') != 'sale']
+            for vals in res:
+                if vals['type'] == 'sale':
+                    vals.update({
+                        'l10n_ar_afip_pos_number': 1,
+                        'l10n_ar_afip_pos_partner_id': company.partner_id.id,
+                        'l10n_ar_afip_pos_system': 'II_IM',
+                        'l10n_ar_share_sequences': True,
+                    })
         return res
