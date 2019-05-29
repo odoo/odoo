@@ -4,6 +4,7 @@
     <template id="assets_frontend" inherit_id="portal.assets_frontend" name="Website rating frontend assets">
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/portal_rating/static/src/js/portal.js"></script>
+            <script type="text/javascript" src="/portal_rating/static/src/js/portal_rating.js"></script>
             <link rel="stylesheet" type="text/scss" href="/portal_rating/static/src/scss/portal_rating.scss"/>
         </xpath>
     </template>
@@ -66,4 +67,61 @@
         </div>
     </template>
 
+    <!-- External page : thanks message -->
+    <template id="portal_rating_external_page_view" inherit_id="rating.rating_external_page_view">
+        <xpath expr="//t[@t-call='web.frontend_layout']" position="replace">
+            <t t-call="portal.frontend_layout">
+                <div class="container">
+                    <div class="text-center mt-5">
+                        <h1 class="d-inline">Thank you,</h1><h3 class="d-inline"> We appreciate your feedback!</h3>
+                    </div>
+                    <div class="text-center">
+                        <a role="button" t-att-href="web_base_url" class="btn btn-primary bg-success my-5 border-0 rounded-0 text-dark">Go back to the Homepage</a>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- External page: rate and submit feedback -->
+    <template id="portal_rating_external_page_submit" inherit_id="rating.rating_external_page_submit">
+        <xpath expr="//t[@t-call='web.frontend_layout']" position="replace">
+            <t t-call="portal.frontend_layout">
+                <div class="container o_portal_rating">
+                    <div class="mt-5">
+                        <h2>Thank you for rating our services!</h2>
+                        <table class="mt-5">
+                            <tr>
+                                <td>
+                                    <a class="o_rating" t-attf-href="/rating/#{token}/10/submit_feedback" id="10">
+                                        <img src='/rating/static/src/img/rating_10.png' alt="Satisfied" t-attf-class="o_portal_rating_smily mr-md-5 #{rate == 10 and 'o_poral_rating_active' or ''}"/>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class="o_rating" t-attf-href="/rating/#{token}/5/submit_feedback" id="5">
+                                        <img src='/rating/static/src/img/rating_5.png' alt="Not satisfied" t-attf-class="o_portal_rating_smily mr-md-5 #{rate == 5 and 'o_poral_rating_active' or ''}" />
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class="o_rating" t-attf-href="/rating/#{token}/1/submit_feedback" id="1">
+                                        <img src='/rating/static/src/img/rating_1.png' alt="Highly Dissatisfied" t-attf-class="o_portal_rating_smily #{rate == 1 and 'o_poral_rating_active' or ''}"/>
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="clearfix"></div>
+                        <p class="mt-5">
+                            Feel to write a feedback of your experience:
+                        </p>
+                        <form t-attf-action="/rating/#{token}/#{rate}/submit_feedback" method="post">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input type="hidden" name="rate" t-att-value="rate" id="rate_id"/>
+                            <textarea class="form-control" name="feedback" rows="8" t-att-value="rating.feedback"></textarea>
+                            <button type="submit" class="btn btn-primary bg-success mt-sm-5 border-0 rounded-0 text-dark">Send Feedback</button>
+                        </form>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
 </odoo>
