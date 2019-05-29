@@ -23,6 +23,7 @@ var ColorpickerDialog = Dialog.extend({
      * @param {Widget} parent
      * @param {Object} [options]
      * @param {string} [options.defaultColor='#FF0000']
+     * @param {string} [options.noTransparency=false]
      */
     init: function (parent, options) {
         options = options || {};
@@ -73,6 +74,10 @@ var ColorpickerDialog = Dialog.extend({
         this.$colorSliderPointer = this.$('.o_slider_pointer');
         this.$opacitySlider = this.$('.o_opacity_slider');
         this.$opacitySliderPointer = this.$('.o_opacity_pointer');
+        if (this.options.noTransparency) {
+            this.$opacitySlider.remove();
+            this.$('.o_opacity_input').parent('.form-group').remove();
+        }
 
         var defaultColor = this.options.defaultColor || '#FF0000';
         var rgba = ColorpickerDialog.convertColorToRgba(defaultColor);
@@ -125,13 +130,15 @@ var ColorpickerDialog = Dialog.extend({
         var y = this.colorComponents.hue * height / 360;
         this.$colorSliderPointer.css('top', Math.round(y - 2));
 
-        // Update opacity slider position
-        var heightOpacity = this.$opacitySlider.height();
-        var z = heightOpacity * (1 - this.colorComponents.opacity / 100.0);
-        this.$opacitySliderPointer.css('top', Math.round(z - 2));
-
-        // Add gradient color on opacity slider
-        this.$opacitySlider.css('background', 'linear-gradient(' + this.colorComponents.hex + ' 0%, transparent 100%)');
+        if (! this.options.noTransparency) {
+            // Update opacity slider position
+            var heightOpacity = this.$opacitySlider.height();
+            var z = heightOpacity * (1 - this.colorComponents.opacity / 100.0);
+            this.$opacitySliderPointer.css('top', Math.round(z - 2));
+    
+            // Add gradient color on opacity slider
+            this.$opacitySlider.css('background', 'linear-gradient(' + this.colorComponents.hex + ' 0%, transparent 100%)');
+        }
     },
     /**
      * Updates colors according to given hex value. Opacity is left unchanged.
@@ -300,7 +307,7 @@ var ColorpickerDialog = Dialog.extend({
      * @param {Event} ev
      */
     _onMouseMoveOpacitySlider: function (ev) {
-        if (!this.opacitySliderFlag) {
+        if (!this.opacitySliderFlag || this.options.noTransparency) {
             return;
         }
 
