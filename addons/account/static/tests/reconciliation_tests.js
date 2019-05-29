@@ -1041,7 +1041,7 @@ QUnit.module('account', {
         $('.ui-autocomplete .ui-menu-item a:contains(Search More):eq(1)').trigger('mouseenter').trigger('click');
         await testUtils.nextTick();
         assert.strictEqual($('.modal').length, 1, "should open a SelectCreateDialog");
-        await testUtils.dom.click($('.modal table.o_list_view td:contains(Camptocamp)'));
+        await testUtils.dom.click($('.modal table.o_list_table td:contains(Camptocamp)'));
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
 
         widget = clientAction.widgets[2];

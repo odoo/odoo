@@ -2889,7 +2889,7 @@ QUnit.module('ActionManager', {
         });
         await actionManager.doAction(3);
 
-        assert.doesNotHaveClass(actionManager.$('.o_list_view'), 'o_list_view_grouped',
+        assert.doesNotHaveClass(actionManager.$('.o_list_table'), 'o_list_table_grouped',
             "list view is not grouped");
 
         // open group by dropdown
@@ -2898,7 +2898,7 @@ QUnit.module('ActionManager', {
         // click on first link
         await testUtils.dom.click($('.o_control_panel .o_group_by_menu a:first'));
 
-        assert.hasClass(actionManager.$('.o_list_view'),'o_list_view_grouped',
+        assert.hasClass(actionManager.$('.o_list_table'),'o_list_table_grouped',
             'list view is now grouped');
 
         actionManager.destroy();
@@ -3110,7 +3110,7 @@ QUnit.module('ActionManager', {
         });
         await actionManager.doAction(3);
 
-        assert.containsOnce(actionManager, '.o_list_view_grouped',
+        assert.containsOnce(actionManager, '.o_list_table_grouped',
             "should be grouped");
         assert.containsN(actionManager, '.o_group_header', 2,
             "should be grouped by 'bar' (two groups) at first load");
@@ -3125,7 +3125,7 @@ QUnit.module('ActionManager', {
         // remove the groupby in the searchview
         await testUtils.dom.click($('.o_control_panel .o_searchview .o_facet_remove'));
 
-        assert.containsOnce(actionManager, '.o_list_view_grouped',
+        assert.containsOnce(actionManager, '.o_list_table_grouped',
             "should still be grouped");
         assert.containsN(actionManager, '.o_group_header', 2,
             "should be grouped by 'bar' (two groups) at reload");

@@ -152,7 +152,7 @@ tour.register('main_flow_tour', {
  {
 // Add second component
     trigger: ".o_field_x2many_list_row_add > a",
-    extra_trigger: "body:not(:has(table.o_list_view div.o_field_widget[name='product_id'] input))",
+    extra_trigger: "body:not(:has(table.o_list_table div.o_field_widget[name='product_id'] input))",
     content: _t("Click here to add some lines."),
     position: "bottom",
 },

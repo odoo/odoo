@@ -67,7 +67,7 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
     _renderView: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
-            self.$('> table').addClass('o_section_and_note_list_view');
+            self.$('.o_list_table').addClass('o_section_and_note_list_view');
         });
     }
 });

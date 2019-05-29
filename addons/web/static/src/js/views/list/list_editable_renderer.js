@@ -574,7 +574,7 @@ ListRenderer.include({
      * @returns {string} record dataPoint id
      */
     _getRecordID: function (rowIndex) {
-        var $tr = this.$('table.o_list_view > tbody tr').eq(rowIndex);
+        var $tr = this.$('table.o_list_table > tbody tr').eq(rowIndex);
         return $tr.data('id');
     },
     /**
@@ -996,6 +996,15 @@ ListRenderer.include({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Unselect the row before adding the optional column to the listview
+     *
+     * @override
+     * @private
+     */
+    _onToggleOptionalColumnDropdown: function (ev) {
+        this.unselectRow().then(this._super.bind(this, ev));
+    },
     /**
      * This method is called when we click on the 'Add a line' button in a groupby
      * list view.
