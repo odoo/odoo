@@ -2803,8 +2803,7 @@ var FieldSelectionFont = FieldSelection.extend({
     _renderEdit: function () {
         this._super.apply(this, arguments);
 
-        var options = [].slice.call(this.$('option'));
-        options.forEach(option => {
+        this.$('option').each(function (i, option) {
             if (! option.label) {
                 $(option).remove();
             }

@@ -38,8 +38,8 @@ QUnit.module('relational_fields', {
                         ["product", "Product"], ["partner_type", "Partner Type"], ["partner", "Partner"]]},
                     fonts: {
                         type: "selection",
-                        selection: [['Arial', "Arial"], ['Helvetica', "Helvetica"]],
-                        default: 'Arial',
+                        selection: [['Lato', "Lato"], ['Oswald', "Oswald"]],
+                        default: 'Lato',
                         string: "Fonts",
                     }
                 },
@@ -2137,8 +2137,8 @@ QUnit.module('relational_fields', {
 
     QUnit.module('FieldSelectionFont');
 
-    QUnit.test('FieldSelectionFont displays the correct font on options', async function (assert) {
-        assert.expect(3);
+    QUnit.test('FieldSelectionFont displays the correct fonts on options', async function (assert) {
+        assert.expect(4);
 
         var form = await createView({
             View: FormView,
@@ -2150,12 +2150,16 @@ QUnit.module('relational_fields', {
         });
         var options = form.$('.o_field_widget[name="fonts"] > option');
 
-        assert.strictEqual(form.$('.o_field_widget[name="fonts"]').css('fontFamily'), 'Arial',
-            "Widget font should be default (Arial)");
-        assert.strictEqual($(options[0]).css('fontFamily'), 'Arial',
-            "Option 0 should have the correct font (Arial)");
-        assert.strictEqual($(options[1]).css('fontFamily'), 'Helvetica',
-            "Option 1 should have the correct font (Helvetica)");
+        assert.strictEqual(form.$('.o_field_widget[name="fonts"]').css('fontFamily'), 'Lato',
+            "Widget font should be default (Lato)");
+        assert.strictEqual($(options[0]).css('fontFamily'), 'Lato',
+            "Option 0 should have the correct font (Lato)");
+        assert.strictEqual($(options[1]).css('fontFamily'), 'Oswald',
+            "Option 1 should have the correct font (Oswald)");
+            
+        await testUtils.fields.editSelect(form.$('.o_field_widget[name="fonts"]'), '"Oswald"');
+        assert.strictEqual(form.$('.o_field_widget[name="fonts"]').css('fontFamily'), 'Oswald',
+            "Widget font should be updated (Oswald)");
 
         form.destroy();
     });
