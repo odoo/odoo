@@ -307,7 +307,7 @@ class PurchaseOrderLine(models.Model):
                         'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
                         'note': _('The quantities on your purchase order indicate less than billed. You should ask for a refund. '),
                         'res_id': line.invoice_lines[0].invoice_id.id,
-                        'res_model_id': self.env.ref('account.model_account_invoice').id,
+                        'res_model_id': self.env.ref('account.model_account_move').id,
                     })
                     activity._onchange_activity_type_id()
 

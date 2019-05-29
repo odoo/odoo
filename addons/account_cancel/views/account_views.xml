@@ -5,31 +5,9 @@
             <field name="model">account.journal</field>
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="arch" type="xml">
-                <field name="group_invoice_lines" position="after">
+                <field name="loss_account_id" position="after">
                     <field name="update_posted" groups="base.group_no_one"/>
                 </field>
-            </field>
-        </record>
-
-        <record id="invoice_form_cancel_inherit" model="ir.ui.view">
-            <field name="name">invoice.form.cancel.inherit</field>
-            <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="account.invoice_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//button[@name='action_invoice_draft']" position="before">
-                    <button name="action_invoice_cancel" type="object" states="draft,open,in_payment,paid" string="Cancel" groups="account.group_account_invoice"/>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="invoice_supplier_cancel_form_inherit" model="ir.ui.view">
-            <field name="name">invoice.supplier.cancel.form.inherit</field>
-            <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="account.invoice_supplier_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//button[@name='action_invoice_draft']" position="before">
-                    <button name="action_invoice_cancel" type="object" states="draft,open,in_payment,paid" string="Cancel" groups="account.group_account_invoice"/>
-                </xpath>
             </field>
         </record>
 
@@ -77,6 +55,7 @@
             <field name="arch" type="xml">
                 <field name="state" position="before">
                     <button name="button_cancel" states="posted" string="Cancel Entry" type="object" groups="account.group_account_invoice"/>
+                    <button name="button_draft" states="cancel" string="Reset to Draft" type="object" groups="account.group_account_invoice"/>
                 </field>
             </field>
         </record>

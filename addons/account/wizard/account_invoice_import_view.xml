@@ -23,7 +23,7 @@
             <field name="res_model">account.invoice.import.wizard</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-            <field name="context">{'type': 'in_invoice', 'default_journal_id': active_id}</field>
+            <field name="context">{'default_type': 'in_invoice', 'default_journal_id': active_id}</field>
         </record>
     </data>
 </odoo>

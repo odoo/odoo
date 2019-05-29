@@ -78,19 +78,19 @@
         <!-- Account-related subtypes for messaging / Chatter -->
         <record id="mt_invoice_validated" model="mail.message.subtype">
             <field name="name">Validated</field>
-            <field name="res_model">account.invoice</field>
+            <field name="res_model">account.move</field>
             <field name="default" eval="False"/>
             <field name="description">Invoice validated</field>
         </record>
         <record id="mt_invoice_paid" model="mail.message.subtype">
             <field name="name">Paid</field>
-            <field name="res_model">account.invoice</field>
+            <field name="res_model">account.move</field>
             <field name="default" eval="False"/>
             <field name="description">Invoice paid</field>
         </record>
         <record id="mt_invoice_created" model="mail.message.subtype">
             <field name="name">Invoice Created</field>
-            <field name="res_model">account.invoice</field>
+            <field name="res_model">account.move</field>
             <field name="default" eval="False"/>
             <field name="hidden" eval="True"/>
             <field name="description">Invoice Created</field>
@@ -175,10 +175,10 @@
         </record>
 
         <!-- Share Button in action menu -->
-        <record id="model_account_invoice_action_share" model="ir.actions.server">
+        <record id="model_account_move_action_share" model="ir.actions.server">
             <field name="name">Share</field>
-            <field name="model_id" ref="account.model_account_invoice"/>
-            <field name="binding_model_id" ref="account.model_account_invoice"/>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
             <field name="state">code</field>
             <field name="code">action = records.action_share()</field>
         </record>

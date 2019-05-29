@@ -547,7 +547,7 @@ class ProductProduct(models.Model):
                 ]
         return []
 
-    def _get_anglo_saxon_price_unit(self, uom=False):
+    def _stock_account_get_anglo_saxon_price_unit(self, uom=False):
         price = self.standard_price
         if not self or not uom or self.uom_id.id == uom.id:
             return price or 0.0

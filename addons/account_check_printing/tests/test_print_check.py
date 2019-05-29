@@ -16,8 +16,8 @@ class TestPrintCheck(AccountingTestCase):
     def setUp(self):
         super(TestPrintCheck, self).setUp()
 
-        self.invoice_model = self.env['account.invoice']
-        self.invoice_line_model = self.env['account.invoice.line']
+        self.invoice_model = self.env['account.move']
+        self.invoice_line_model = self.env['account.move.line']
         self.payment_model = self.env['account.payment']
 
         self.partner_axelor = self.env.ref("base.res_partner_2")
@@ -31,26 +31,23 @@ class TestPrintCheck(AccountingTestCase):
         self.bank_journal.check_manual_sequencing = True
 
     def create_invoice(self, amount=100, is_refund=False):
-        invoice = self.invoice_model.create({
+        invoice = self.env['account.move'].with_context(default_type=is_refund and 'out_refund' or 'in_invoice').create({
             'partner_id': self.partner_axelor.id,
-            'name': is_refund and "Supplier Refund" or "Supplier Invoice",
-            'type': is_refund and "out_refund" or "in_invoice",
-            'account_id': self.account_payable.id,
-            'date_invoice': time.strftime('%Y') + '-06-26',
+            'invoice_date': time.strftime('%Y') + '-06-26',
+            'date': time.strftime('%Y') + '-06-26',
+            'invoice_line_ids': [
+                (0, 0, {
+                    'product_id': self.product.id,
+                    'quantity': 1,
+                    'price_unit': is_refund and amount / 4 or amount,
+                })
+            ]
         })
-        self.invoice_line_model.create({
-            'product_id': self.product.id,
-            'quantity': 1,
-            'price_unit': is_refund and amount / 4 or amount,
-            'invoice_id': invoice.id,
-            'name': 'something',
-            'account_id': self.account_expenses.id,
-        })
-        invoice.action_invoice_open()
+        invoice.post()
         return invoice
 
     def create_payment(self, invoices):
-        payment_register = Form(self.env['account.payment'].with_context(active_model='account.invoice', active_ids=invoices.ids))
+        payment_register = Form(self.env['account.payment'].with_context(active_model='account.move', active_ids=invoices.ids))
         payment_register.payment_date = time.strftime('%Y') + '-07-15'
         payment_register.journal_id = self.bank_journal
         payment_register.payment_method_id = self.payment_method_check
@@ -60,8 +57,8 @@ class TestPrintCheck(AccountingTestCase):
 
     def test_print_check(self):
         # Make a payment for 10 invoices and 5 credit notes
-        invoices = self.env['account.invoice']
-        for i in range(0, 42):
+        invoices = self.env['account.move']
+        for i in range(0, 15):
             invoices |= self.create_invoice(is_refund=(i % 3 == 0))
         payment = self.create_payment(invoices)
         self.assertEqual(all(payment.mapped('check_amount_in_words')), True, 'The amount in words is not set on all the payments')
@@ -76,7 +73,7 @@ class TestPrintCheck(AccountingTestCase):
         self.assertEqual(len(report_pages), 1)
 
     def test_from_register(self):
-        invoices = self.env['account.invoice']
+        invoices = self.env['account.move']
         for i in range(0, 3):
             invoices |= self.create_invoice(is_refund=(i % 3 == 0))
         payment = self.create_payment(invoices)

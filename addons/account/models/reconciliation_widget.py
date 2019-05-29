@@ -200,7 +200,7 @@ class AccountReconciliation(models.AbstractModel):
         """
         if not bank_statement_line_ids:
             return {}
-        edition_mode = self._context.get('edition_mode')
+        suspense_moves_mode = self._context.get('suspense_moves_mode')
         bank_statements = self.env['account.bank.statement.line'].browse(bank_statement_line_ids).mapped('statement_id')
 
         search_sql = '''
@@ -220,7 +220,7 @@ class AccountReconciliation(models.AbstractModel):
              {srch}
              GROUP BY line.id
         '''.format(
-            cond=not edition_mode and "AND NOT EXISTS (SELECT 1 from account_move_line aml WHERE aml.statement_line_id = line.id)" or "",
+            cond=not suspense_moves_mode and "AND NOT EXISTS (SELECT 1 from account_move_line aml WHERE aml.statement_line_id = line.id)" or "",
             srch=search_str and search_sql or "",
         )
         self.env.cr.execute(query, {'ids':tuple(bank_statement_line_ids), 'search_str':search_str})
@@ -503,7 +503,7 @@ class AccountReconciliation(models.AbstractModel):
         AccountMoveLine = self.env['account.move.line']
 
         #Always exclude the journal items that have been marked as 'to be checked' in a former bank statement reconciliation
-        to_check_excluded = AccountMoveLine.search(AccountMoveLine._get_domain_for_edition_mode()).ids
+        to_check_excluded = AccountMoveLine.search(AccountMoveLine._get_suspense_moves_domain()).ids
         excluded_ids.extend(to_check_excluded)
 
         domain_reconciliation = [

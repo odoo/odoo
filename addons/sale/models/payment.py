@@ -118,7 +118,7 @@ class PaymentTransaction(models.Model):
                 trans = trans.with_context(**ctx_company)
                 trans.sale_order_ids._force_lines_to_invoice_policy_order()
                 invoices = trans.sale_order_ids._create_invoices()
-                trans.invoice_ids = [(6, 0, invoices)]
+                trans.invoice_ids = [(6, 0, invoices.ids)]
 
     @api.model
     def _compute_reference_prefix(self, values):

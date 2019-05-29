@@ -27,138 +27,75 @@ class Partner(models.Model):
              '-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n'
              '-Invoiced Member: A member whose invoice has been created.\n'
              '-Paying member: A member who has paid the membership fee.')
-    membership_start = fields.Date(compute='_compute_membership_start',
+    membership_start = fields.Date(compute='_compute_membership_state',
         string ='Membership Start Date', store=True,
         help="Date from which membership becomes active.")
-    membership_stop = fields.Date(compute='_compute_membership_stop',
+    membership_stop = fields.Date(compute='_compute_membership_state',
         string ='Membership End Date', store=True,
         help="Date until which membership remains active.")
-    membership_cancel = fields.Date(compute='_compute_membership_cancel',
+    membership_cancel = fields.Date(compute='_compute_membership_state',
         string ='Cancel Membership Date', store=True,
         help="Date on which membership has been cancelled")
 
-    @api.depends('member_lines.account_invoice_line.invoice_id.state',
-                 'member_lines.account_invoice_line.invoice_id.invoice_line_ids',
-                 'member_lines.account_invoice_line.invoice_id.payment_ids',
-                 'member_lines.account_invoice_line.invoice_id.payment_move_line_ids',
-                 'member_lines.account_invoice_line.invoice_id.partner_id',
+    @api.depends('member_lines.account_invoice_line',
+                 'member_lines.account_invoice_line.move_id.state',
+                 'member_lines.account_invoice_line.move_id.invoice_payment_state',
+                 'member_lines.account_invoice_line.move_id.partner_id',
                  'free_member',
                  'member_lines.date_to', 'member_lines.date_from',
                  'associate_member')
     def _compute_membership_state(self):
-        values = self._membership_state()
+        today = fields.Date.today()
         for partner in self:
-            partner.membership_state = values[partner.id]
+            state = 'none'
 
-        # Do not depend directly on "associate_member.membership_state" or we might end up in an
-        # infinite loop. Since we still need this dependency somehow, we explicitly search for the
-        # "parent members" and trigger a recompute.
-        parent_members = self.search([('associate_member', 'in', self.ids)]) - self
-        if parent_members:
-            parent_members._recompute_todo(self._fields['membership_state'])
-
-    @api.depends('member_lines.account_invoice_line.invoice_id.state',
-                 'member_lines.account_invoice_line.invoice_id.invoice_line_ids',
-                 'member_lines.account_invoice_line.invoice_id.payment_ids',
-                 'free_member',
-                 'member_lines.date_to', 'member_lines.date_from', 'member_lines.date_cancel',
-                 'membership_state',
-                 'associate_member.membership_state')
-    def _compute_membership_start(self):
-        """Return  date of membership"""
-        for partner in self:
             partner.membership_start = self.env['membership.membership_line'].search([
                 ('partner', '=', partner.associate_member.id or partner.id), ('date_cancel','=',False)
             ], limit=1, order='date_from').date_from
-
-    @api.depends('member_lines.account_invoice_line.invoice_id.state',
-                 'member_lines.account_invoice_line.invoice_id.invoice_line_ids',
-                 'member_lines.account_invoice_line.invoice_id.payment_ids',
-                 'free_member',
-                 'member_lines.date_to', 'member_lines.date_from', 'member_lines.date_cancel',
-                 'membership_state',
-                 'associate_member.membership_state')
-    def _compute_membership_stop(self):
-        MemberLine = self.env['membership.membership_line']
-        for partner in self:
             partner.membership_stop = self.env['membership.membership_line'].search([
                 ('partner', '=', partner.associate_member.id or partner.id),('date_cancel','=',False)
             ], limit=1, order='date_to desc').date_to
-
-    @api.depends('member_lines.account_invoice_line.invoice_id.state',
-                 'member_lines.account_invoice_line.invoice_id.invoice_line_ids',
-                 'member_lines.account_invoice_line.invoice_id.payment_ids',
-                 'free_member',
-                 'member_lines.date_to', 'member_lines.date_from', 'member_lines.date_cancel',
-                 'membership_state',
-                 'associate_member.membership_state')
-    def _compute_membership_cancel(self):
-        for partner in self:
-            if partner.membership_state == 'canceled':
-                partner.membership_cancel = self.env['membership.membership_line'].search([
-                    ('partner', '=', partner.id)
-                ], limit=1, order='date_cancel').date_cancel
-            else:
-                partner.membership_cancel = False
-
-    def _membership_state(self):
-        """This Function return Membership State For Given Partner. """
-        res = {}
-        today = fields.Date.today()
-        for partner in self:
-            res[partner.id] = 'none'
+            partner.membership_cancel = self.env['membership.membership_line'].search([
+                ('partner', '=', partner.id)
+            ], limit=1, order='date_cancel').date_cancel
 
             if partner.membership_cancel and today > partner.membership_cancel:
-                res[partner.id] = 'free' if partner.free_member else 'canceled'
+                partner.membership_state = 'free' if partner.free_member else 'canceled'
                 continue
             if partner.membership_stop and today > partner.membership_stop:
-                res[partner.id] = 'free' if partner.free_member else 'old'
+                partner.membership_state = 'free' if partner.free_member else 'old'
                 continue
             if partner.associate_member:
-                res_state = partner.associate_member._membership_state()
-                res[partner.id] = res_state[partner.associate_member.id]
+                partner.associate_member._compute_membership_state()
+                partner.membership_state = partner.associate_member.membership_state
                 continue
 
-            s = 4
-            if partner.member_lines:
+            line_states = [mline.state for mline in partner.member_lines if \
+                           (mline.date_to or date.min) >= today and \
+                           (mline.date_from or date.min) <= today and \
+                           mline.account_invoice_line.move_id.partner_id == partner]
+
+            if 'paid' in line_states:
+                state = 'paid'
+            elif 'invoiced' in line_states:
+                state = 'invoiced'
+            elif 'waiting' in line_states:
+                state = 'waiting'
+            elif 'canceled' in line_states:
+                state = 'canceled'
+
+            if state == 'none':
                 for mline in partner.member_lines:
-                    if (mline.date_to or date.min) >= today and (mline.date_from or date.min) <= today:
-                        if mline.account_invoice_line.invoice_id.partner_id == partner:
-                            mstate = mline.account_invoice_line.invoice_id.state
-                            if mstate == 'paid':
-                                s = 0
-                                inv = mline.account_invoice_line.invoice_id
-                                for ml in inv.payment_move_line_ids:
-                                    if any(ml.invoice_id.filtered(lambda inv: inv.type == 'out_refund')):
-                                        s = 2
-                                break
-                            elif mstate == 'open' and s != 0:
-                                s = 1
-                            elif mstate == 'cancel' and s != 0 and s != 1:
-                                s = 2
-                            elif mstate == 'draft' and s != 0 and s != 1:
-                                s = 3
-                if s == 4:
-                    for mline in partner.member_lines:
-                        if (mline.date_from or date.min) < today and (mline.date_to or date.min) < today and (mline.date_from or date.min) <= (mline.date_to or date.min) and mline.account_invoice_line and mline.account_invoice_line.invoice_id.state == 'paid':
-                            s = 5
-                        else:
-                            s = 6
-                if s == 0:
-                    res[partner.id] = 'paid'
-                elif s == 1:
-                    res[partner.id] = 'invoiced'
-                elif s == 2:
-                    res[partner.id] = 'canceled'
-                elif s == 3:
-                    res[partner.id] = 'waiting'
-                elif s == 5:
-                    res[partner.id] = 'old'
-                elif s == 6:
-                    res[partner.id] = 'none'
-            if partner.free_member and s != 0:
-                res[partner.id] = 'free'
-        return res
+                    # if there is an old invoice paid, set the state to 'old'
+                    if ((mline.date_from or date.min) < today and (mline.date_to or date.min) < today and \
+                            (mline.date_from or date.min) <= (mline.date_to or date.min) and \
+                            mline.account_invoice_id and mline.account_invoice_id.state == 'paid'):
+                        state = 'old'
+                        break
+
+            if partner.free_member and state is not 'paid':
+                state = 'free'
+            partner.membership_state = state
 
     @api.one
     @api.constrains('associate_member')
@@ -178,36 +115,23 @@ class Partner(models.Model):
         self.recompute()
 
     @api.multi
-    def create_membership_invoice(self, product_id=None, datas=None):
+    def create_membership_invoice(self, product, amount):
         """ Create Customer Invoice of Membership for partners.
-        @param datas: datas has dictionary value which consist Id of Membership product and Cost Amount of Membership.
-                      datas = {'membership_product_id': None, 'amount': None}
         """
-        product_id = product_id or datas.get('membership_product_id')
-        amount = datas.get('amount', 0.0)
-        invoice_list = []
+        invoice_vals_list = []
         for partner in self:
             addr = partner.address_get(['invoice'])
             if partner.free_member:
                 raise UserError(_("Partner is a free Member."))
             if not addr.get('invoice', False):
                 raise UserError(_("Partner doesn't have an address to make the invoice."))
-            invoice = self.env['account.invoice'].create({
+
+            invoice_vals_list.append({
+                'type': 'out_invoice',
                 'partner_id': partner.id,
-                'account_id': partner.property_account_receivable_id.id,
-                'fiscal_position_id': partner.property_account_position_id.id
+                'invoice_line_ids': [
+                    (0, None, {'product_id': product.id, 'quantity': 1, 'price_unit': amount, 'tax_ids': [(6, 0, product.taxes_id.ids)]})
+                ]
             })
-            line_values = {
-                'product_id': product_id,
-                'price_unit': amount,
-                'invoice_id': invoice.id,
-            }
-            # create a record in cache, apply onchange then revert back to a dictionnary
-            invoice_line = self.env['account.invoice.line'].new(line_values)
-            invoice_line._onchange_product_id()
-            line_values = invoice_line._convert_to_write({name: invoice_line[name] for name in invoice_line._cache})
-            line_values['price_unit'] = amount
-            invoice.write({'invoice_line_ids': [(0, 0, line_values)]})
-            invoice_list.append(invoice.id)
-            invoice.compute_taxes()
-        return invoice_list
+
+        return self.env['account.move'].create(invoice_vals_list)

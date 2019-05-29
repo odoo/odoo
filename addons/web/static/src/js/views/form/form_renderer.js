@@ -568,7 +568,10 @@ var FormRenderer = BasicRenderer.extend({
             } else if (child.tag === 'label') {
                 $tds = self._renderInnerGroupLabel(child);
             } else {
-                $tds = $('<td/>').append(self._renderNode(child));
+                if (child.tag === 'div' && child.attrs.class !== undefined && child.attrs.class.includes('o_td_label'))
+                    $tds = $('<td class="o_td_label"/>').append(self._renderNode(child));
+                else
+                    $tds = $('<td/>').append(self._renderNode(child));
             }
             if (finalColspan > 1) {
                 $tds.last().attr('colspan', finalColspan);

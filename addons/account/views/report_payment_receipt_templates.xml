@@ -43,7 +43,7 @@
                     </thead>
                     <tbody>
                         <tr t-foreach="o.reconciled_invoice_ids" t-as="inv">
-                            <td><span t-field="inv.date_invoice"/></td>
+                            <td><span t-field="inv.invoice_date"/></td>
                             <td><span t-field="inv.number"/></td>
                             <td class="text-right"><span t-field="inv.amount_total"/></td>
                             <td class="text-right"><span t-esc="o._get_invoice_payment_amount(inv)" t-options="{'widget': 'monetary', 'display_currency': inv.currency_id}"/></td>
