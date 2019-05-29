@@ -4,7 +4,6 @@
 <!-- SOLO RI por ahora, si se necesita para ex o mono tenemos que hacer nuevas por mapeo de impuestos -->
     <!-- Exportaciones a la zona franca -->
         <record model='account.fiscal.position.template' id='fiscal_position_template_zona_franca'>
-            <field name='l10n_ar_afip_code'>Z</field>
             <field name='name'>Exportaciones a la zona franca</field>
             <field name="auto_apply" eval="True"/>
             <field name="vat_required" eval="True"/>
@@ -36,7 +35,6 @@
 
     <!-- Exportaciones a la zona franca -->
         <record model='account.fiscal.position.template' id='fiscal_position_template_exportaciones_al_exterior'>
-            <field name='l10n_ar_afip_code'>X</field>
             <field name='name'>Exportaciones al exterior</field>
             <field name="auto_apply" eval="True"/>
             <field name="vat_required" eval="True"/>
@@ -66,7 +64,6 @@
 
     <!-- Operaciones exentas -->
         <record model='account.fiscal.position.template' id='fiscal_position_template_operaciones_exentas'>
-            <field name='l10n_ar_afip_code'>E</field>
             <field name='name'>Operaciones exentas</field>
             <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         </record>
@@ -92,13 +89,11 @@
         </record>
 
         <record model='account.fiscal.position.template' id='fiscal_position_template_no_gravado'>
-            <field name='l10n_ar_afip_code'>N</field>
             <field name='name'>No gravado</field>
             <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         </record>
 
         <record model='account.fiscal.position.template' id='fiscal_position_template_operaciones_de_canje'>
-            <field name='l10n_ar_afip_code'>C</field>
             <field name='name'>Operaciones de Canje</field>
             <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         </record>

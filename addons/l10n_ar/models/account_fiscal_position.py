@@ -6,12 +6,6 @@ class AccountFiscalPosition(models.Model):
 
     _inherit = 'account.fiscal.position'
 
-    l10n_ar_afip_code = fields.Char(
-        'AFIP Code',
-        help='This code will be used on electronic invoice and citi '
-        'reports',
-    )
-
     def get_fiscal_position(self, partner_id, delivery_id=None):
         """ Fiscal position does not depends on the partner vat, it depends on
         the partner AFIP responsability """
