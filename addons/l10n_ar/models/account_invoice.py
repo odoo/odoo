@@ -429,6 +429,6 @@ class AccountInvoice(models.Model):
                not self.partner_id.l10n_ar_afip_responsability_type:
                 return {'warning': {
                     'title': 'Missing Partner Configuration',
-                    'message': 'Please configure the partners'
-                    ' AFIP Responsability in order to continue',
+                    'message': 'Please configure the AFIP Responsability for '
+                    '"%s" in order to continue' % self.partner_id.name,
                 }}
