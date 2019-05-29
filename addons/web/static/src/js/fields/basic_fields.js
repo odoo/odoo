@@ -3073,8 +3073,10 @@ var FieldColor = AbstractField.extend({
     */
     _onColorClick: function (ev) {
         this.selectedColor = ev.target;
-        new ColorpickerDialog(this, { defaultColor: $(ev.target).data('value') })
-            .open();
+        new ColorpickerDialog(this, {
+            defaultColor: $(ev.target).data('value'),
+            noTransparency: true,
+        }).open();
     },
 
     /**
