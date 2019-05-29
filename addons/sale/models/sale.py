@@ -1105,7 +1105,8 @@ class SaleOrderLine(models.Model):
     product_template_id = fields.Many2one('product.template', string='Product Template', related="product_id.product_tmpl_id", domain=[('sale_ok', '=', True)])
     product_updatable = fields.Boolean(compute='_compute_product_updatable', string='Can Edit Product', readonly=True, default=True)
     product_uom_qty = fields.Float(string='Quantity', digits='Product Unit of Measure', required=True, default=1.0)
-    product_uom = fields.Many2one('uom.uom', string='Unit of Measure')
+    product_uom = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True)
     product_custom_attribute_value_ids = fields.One2many('product.attribute.custom.value', 'sale_order_line_id', string='User entered custom product attribute values')
 
     # M2M holding the values of product.attribute with create_variant field set to 'no_variant'
@@ -1360,7 +1361,7 @@ class SaleOrderLine(models.Model):
     @api.onchange('product_id')
     def product_id_change(self):
         if not self.product_id:
-            return {'domain': {'product_uom': []}}
+            return
 
         # remove the is_custom values that don't belong to this template
         for pacv in self.product_custom_attribute_value_ids:
@@ -1373,7 +1374,6 @@ class SaleOrderLine(models.Model):
                 self.product_no_variant_attribute_value_ids -= ptav
 
         vals = {}
-        domain = {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
         if not self.product_uom or (self.product_id.uom_id.id != self.product_uom.id):
             vals['product_uom'] = self.product_id.uom_id
             vals['product_uom_qty'] = self.product_uom_qty or 1.0
@@ -1387,8 +1387,6 @@ class SaleOrderLine(models.Model):
             uom=self.product_uom.id
         )
 
-        result = {'domain': domain}
-
         vals.update(name=self.get_sale_order_line_multiline_description_sale(product))
 
         self._compute_tax_id()
@@ -1399,6 +1397,7 @@ class SaleOrderLine(models.Model):
 
         title = False
         message = False
+        result = {}
         warning = {}
         if product.sale_line_warn != 'no-message':
             title = _("Warning for %s") % product.name
