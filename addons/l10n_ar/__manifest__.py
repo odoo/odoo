@@ -19,6 +19,7 @@ Argentinian accounting chart and tax localization.
     * Country
     * Product Unit of Measure
     * Tax Group
+    * Fiscal Position
     * Fiscal Position Template
 
 Follow the next configuration steps
@@ -41,7 +42,6 @@ Follow the next configuration steps
         'data/account_chart_respinsc.xml',
         'data/account_tax_group.xml',
         'data/account_tax_template_data.xml',
-        'data/res_country_group_data.xml',
         'data/account_fiscal_template.xml',
         'data/uom_uom_data.xml',
         'data/l10n_latam.document.type.csv',
@@ -56,6 +56,7 @@ Follow the next configuration steps
         'views/res_company_view.xml',
         'views/afip_menuitem.xml',
         'views/res_currency_view.xml',
+        'views/account_fiscal_position_view.xml',
         'views/uom_uom_view.xml',
         'views/account_journal_view.xml',
         'views/account_invoice_view.xml',

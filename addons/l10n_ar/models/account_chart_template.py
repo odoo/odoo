@@ -1,10 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import models, api, fields
 
 
 class AccountChartTemplate(models.Model):
-
     _inherit = 'account.chart.template'
+
+    @api.multi
+    def _get_fp_vals(self, company, position):
+        res = super()._get_fp_vals(company, position)
+        if company.country_id == self.env.ref('base.ar'):
+            res['l10n_ar_afip_responsability_type_codes'] = \
+                position.l10n_ar_afip_responsability_type_codes
+        return res
 
     @api.multi
     def _prepare_all_journals(self, acc_template_ref, company,
