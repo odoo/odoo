@@ -6,6 +6,7 @@ from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 from odoo.tools import pycompat
 from odoo.tools.float_utils import float_round
+from odoo.osv import expression
 from datetime import datetime
 import operator as py_operator
 
@@ -597,23 +598,41 @@ class ProductUoM(models.Model):
     _inherit = 'product.uom'
 
     def write(self, values):
-        # Users can not update the factor if open stock moves are based on it
-        if 'factor' in values or 'factor_inv' in values or 'category_id' in values:
-            changed = self.filtered(
-                lambda u: any(u[f] != values[f] if f in values else False
-                              for f in {'factor', 'factor_inv'})) + self.filtered(
-                lambda u: any(u[f].id != int(values[f]) if f in values else False
-                              for f in {'category_id'}))
-            if changed:
-                stock_move_lines = self.env['stock.move.line'].search_count([
-                    ('product_uom_id.category_id', 'in', changed.mapped('category_id.id')),
-                    ('state', '!=', 'cancel'),
-                ])
+        # Reference Unit :
+        # it is not allowed to modify type or category if this unit is used
+        # or if any multiples units of this unit are used.
 
-                if stock_move_lines:
-                    raise UserError(_(
-                        "You cannot change the ratio of this unit of mesure as some"
-                        " products with this UoM have already been moved or are "
-                        "currently reserved."
-                    ))
+        # Multiple Unit :
+        # it is not allowed to modify factor, type or category if this unit is used.
+        changed_ref = self.browse()
+        changed_mult = self.browse()
+
+        if 'uom_type' in values:
+            changed_ref |= self.filtered(lambda u: u.uom_type != values['uom_type'] and u.uom_type == 'reference')
+            changed_mult |= self.filtered(lambda u: u.uom_type != values['uom_type'] and u.uom_type != 'reference')
+        if 'category_id' in values:
+            changed_ref |= self.filtered(lambda u: u.category_id.id != values['category_id'] and u.uom_type == 'reference')
+            changed_mult |= self.filtered(lambda u: u.category_id.id != values['category_id'] and u.uom_type != 'reference')
+        if 'factor' in values:
+            changed_mult |= self.filtered(lambda u: u.factor != values['factor'])
+        if 'factor_inv' in values:
+            changed_mult |= self.filtered(lambda u: u.factor_inv != values['factor_inv'])
+
+        if changed_ref or changed_mult:
+            dom_list = []
+            if changed_ref:
+                dom_list.append([('product_uom_id.category_id', 'in', changed_ref.mapped('category_id').ids)])
+            if changed_mult:
+                dom_list.append([('product_uom_id', 'in', changed_mult.ids)])
+
+            domain = [('state', '!=', 'cancel')]
+            domain.extend(expression.OR(dom_list))
+            uom_used = self.env['stock.move.line'].sudo().search(domain, limit=1)
+
+            if uom_used:
+                raise UserError(_(
+                    "You cannot change the ratio, the category or the type of this unit of mesure as some"
+                    " products with this UoM have already been moved or are "
+                    "currently reserved."
+                ))
         return super(ProductUoM, self).write(values)
