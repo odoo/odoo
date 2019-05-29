@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
+
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
 
@@ -64,3 +66,93 @@ class TestProcRule(TransactionCase):
             ('move_dest_ids', 'in', [pick_output.move_lines[0].id])
         ])
         self.assertEqual(len(moves.ids), 1, "It should have created a picking from Stock to Output with the original picking as destination")
+
+    def test_rule_propagate_1(self):
+        move_dest = self.env['stock.move'].create({
+            'name': 'move_dest',
+            'product_id': self.ref('product.product_product_3'),
+            'product_uom': self.ref('uom.product_uom_unit'),
+            'location_id': self.ref('stock.stock_location_output'),
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+        })
+
+        move_orig = self.env['stock.move'].create({
+            'name': 'move_orig',
+            'product_id': self.ref('product.product_product_3'),
+            'product_uom': self.ref('uom.product_uom_unit'),
+            'move_dest_ids': [(4, move_dest.id)],
+            'propagate_date': True,
+            'propagate_date_minimum_delta': 5,
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_output'),
+        })
+
+        move_dest_initial_date = move_dest.date_expected
+
+        # change above the minimum delta
+        move_orig.date_expected += timedelta(days=6)
+        self.assertEquals(move_dest.date_expected, move_dest_initial_date + timedelta(days=6), 'date should be propagated as the minimum delta is below')
+
+        # change below the minimum delta
+        move_dest_initial_date = move_dest.date_expected
+        move_orig.date_expected += timedelta(days=4)
+
+        self.assertAlmostEquals(move_dest.date_expected, move_dest_initial_date, delta=timedelta(seconds=1), msg='date should not be propagated as the minimum delta is above')
+
+    def test_rule_propagate_2(self):
+        move_dest = self.env['stock.move'].create({
+            'name': 'move_dest',
+            'product_id': self.ref('product.product_product_3'),
+            'product_uom': self.ref('uom.product_uom_unit'),
+            'location_id': self.ref('stock.stock_location_output'),
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+        })
+
+        move_orig = self.env['stock.move'].create({
+            'name': 'move_orig',
+            'product_id': self.ref('product.product_product_3'),
+            'product_uom': self.ref('uom.product_uom_unit'),
+            'move_dest_ids': [(4, move_dest.id)],
+            'propagate_date': False,
+            'propagate_date_minimum_delta': 5,
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_output'),
+        })
+
+        move_dest_initial_date = move_dest.date_expected
+
+        # change below the minimum delta
+        move_orig.date_expected += timedelta(days=4)
+        self.assertEquals(move_dest.date_expected, move_dest_initial_date, 'date should not be propagated')
+
+        # change above the minimum delta
+        move_orig.date_expected += timedelta(days=2)
+        self.assertEquals(move_dest.date_expected, move_dest_initial_date, 'date should not be propagated')
+
+    def test_rule_propagate_3(self):
+        move_dest = self.env['stock.move'].create({
+            'name': 'move_dest',
+            'product_id': self.ref('product.product_product_3'),
+            'product_uom': self.ref('uom.product_uom_unit'),
+            'location_id': self.ref('stock.stock_location_output'),
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+        })
+
+        move_orig = self.env['stock.move'].create({
+            'name': 'move_orig',
+            'product_id': self.ref('product.product_product_3'),
+            'product_uom': self.ref('uom.product_uom_unit'),
+            'move_dest_ids': [(4, move_dest.id)],
+            'propagate_date': True,
+            'propagate_date_minimum_delta': 5,
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_output'),
+            'quantity_done': 10,
+        })
+        move_orig.date_expected -= timedelta(days=6)
+        move_dest_initial_date = move_dest.date_expected
+        move_orig_initial_date = move_orig.date_expected
+        move_orig._action_done()
+        self.assertEquals(move_orig.date_expected, move_orig_initial_date, 'schedule date should not be impacted by action_done')
+        self.assertAlmostEquals(move_orig.date, datetime.now(), delta=timedelta(seconds=1), msg='date should be now')
+        self.assertEquals(move_dest.date_expected, move_dest_initial_date + timedelta(days=6), 'date should be propagated')

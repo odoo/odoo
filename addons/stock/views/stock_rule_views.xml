@@ -103,6 +103,13 @@
                                 <field name="partner_address_id" attrs="{'invisible': [('action', '=', 'push')]}"/>
                                 <field name="delay"/>
                             </group>
+                            <group name="scheduling_group" string="Scheduling" attrs="{'invisible': [('action', '=', 'push')]}" groups="base.group_no_one">
+                                <field name="propagate_date"/>
+                                <label for="propagate_date_minimum_delta" attrs="{'invisible': [('propagate_date', '=', False)]}"/>
+                                <div attrs="{'invisible': [('propagate_date', '=', False)]}">
+                                    <field name="propagate_date_minimum_delta" class="oe_inline"/> day(s)
+                                </div>
+                            </group>
                         </group>
                     </sheet>
                 </form>
