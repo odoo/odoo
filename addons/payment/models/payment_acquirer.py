@@ -897,7 +897,7 @@ class PaymentTransaction(models.Model):
 
         # custom create
         custom_method_name = '%s_create' % acquirer.provider
-        if hasattr(acquirer, custom_method_name):
+        if hasattr(self, custom_method_name):
             values.update(getattr(self, custom_method_name)(values))
 
         if not values.get('reference'):
