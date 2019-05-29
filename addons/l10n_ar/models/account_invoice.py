@@ -37,7 +37,7 @@ class AccountInvoice(models.Model):
     l10n_ar_vat_tax_ids = fields.One2many(
         compute="_compute_argentina_amounts",
         comodel_name='account.invoice.tax',
-        help='Vat Taxes and vat tax amounts. Is an ADHOC internal concept',
+        help='Vat Taxes and vat tax amounts',
     )
     l10n_ar_vat_taxable_ids = fields.One2many(
         compute="_compute_argentina_amounts",
