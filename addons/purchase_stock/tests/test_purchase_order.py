@@ -16,8 +16,6 @@ class TestPurchaseOrder(AccountingTestCase):
         # Useful models
         self.PurchaseOrder = self.env['purchase.order']
         self.PurchaseOrderLine = self.env['purchase.order.line']
-        self.AccountInvoice = self.env['account.invoice']
-        self.AccountInvoiceLine = self.env['account.invoice.line']
         self.partner_id = self.env.ref('base.res_partner_1')
         self.product_id_1 = self.env.ref('product.product_product_8')
         self.product_id_2 = self.env.ref('product.product_product_11')
@@ -80,13 +78,11 @@ class TestPurchaseOrder(AccountingTestCase):
         self.picking.button_validate()
         self.assertEqual(self.po.order_line.mapped('qty_received'), [5.0, 5.0], 'Purchase: all products should be received"')
 
-        self.invoice = self.AccountInvoice.create({
-            'partner_id': self.partner_id.id,
-            'purchase_id': self.po.id,
-            'account_id': self.partner_id.property_account_payable_id.id,
-            'type': 'in_invoice',
-        })
-        self.invoice.purchase_order_change()
+        move_form = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        move_form.partner_id = self.partner_id
+        move_form.purchase_id = self.po
+        self.invoice = move_form.save()
+
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [5.0, 5.0], 'Purchase: all products should be invoiced"')
 
     def test_02_po_return(self):
@@ -114,14 +110,12 @@ class TestPurchaseOrder(AccountingTestCase):
         self.assertEqual(self.po.order_line.mapped('qty_received'), [5.0, 5.0], 'Purchase: all products should be received"')
 
         #After Receiving all products create vendor bill.
-        self.invoice = self.AccountInvoice.create({
-            'partner_id': self.partner_id.id,
-            'purchase_id': self.po.id,
-            'account_id': self.partner_id.property_account_payable_id.id,
-            'type': 'in_invoice',
-        })
-        self.invoice.purchase_order_change()
-        self.invoice.action_invoice_open()
+        move_form = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        move_form.partner_id = self.partner_id
+        move_form.purchase_id = self.po
+        self.invoice = move_form.save()
+        self.invoice.post()
+
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [5.0, 5.0], 'Purchase: all products should be invoiced"')
 
         # Check quantity received
@@ -146,14 +140,16 @@ class TestPurchaseOrder(AccountingTestCase):
         # Check Received quantity
         self.assertEqual(self.po.order_line[0].qty_received, 3.0, 'Purchase: delivered quantity should be 3.0 instead of "%s" after picking return' % self.po.order_line[0].qty_received)
         #Create vendor bill for refund qty
-        self.invoice = self.AccountInvoice.create({
-            'partner_id': self.partner_id.id,
-            'purchase_id': self.po.id,
-            'account_id': self.partner_id.property_account_payable_id.id,
-            'type': 'in_refund',
-        })
-        self.invoice.purchase_order_change()
-        self.invoice.invoice_line_ids[0].quantity = 2.0
-        self.invoice.invoice_line_ids[1].quantity = 2.0
-        self.invoice.action_invoice_open()
+        move_form = Form(self.env['account.move'].with_context(default_type='in_refund'))
+        move_form.partner_id = self.partner_id
+        move_form.purchase_id = self.po
+        self.invoice = move_form.save()
+        move_form = Form(self.invoice)
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.quantity = 2.0
+        with move_form.invoice_line_ids.edit(1) as line_form:
+            line_form.quantity = 2.0
+        self.invoice = move_form.save()
+        self.invoice.post()
+
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [3.0, 3.0], 'Purchase: Billed quantity should be 3.0')

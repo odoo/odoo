@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <template id="account_invoice_line_it_FatturaPA">
-            <t t-set="taxes" t-value="line.invoice_line_tax_ids.compute_all(line.price_unit)"/>
+            <t t-set="taxes" t-value="line.tax_ids.compute_all(line.price_unit)"/>
             <DettaglioLinee>
                 <NumeroLinea t-esc="line_counter"/>
                 <CodiceArticolo t-if="line.product_id.barcode">
@@ -19,7 +19,7 @@
                     <t t-if="not line.name" t-esc="'NO NAME'"/>
                 </Descrizione>
                 <Quantita t-esc="format_numbers(line.quantity)"/>
-                <UnitaMisura t-if="line.uom_id.category_id.measure_type != 'unit'" t-esc="line.uom_id.name"/>
+                <UnitaMisura t-if="line.product_uom_id.category_id.measure_type != 'unit'" t-esc="line.product_uom_id.name"/>
                 <PrezzoUnitario t-esc="format_monetary(taxes['total_excluded'], currency)"/>
                 <ScontoMaggiorazione t-if="line.discount != 0">
                     <!-- [2.2.1.10] -->
@@ -28,9 +28,9 @@
                 </ScontoMaggiorazione>
                 <PrezzoTotale t-esc="format_monetary(line.price_subtotal, currency)"/>
                 <!-- without tax, must include any discounts and any extra charge-->
-                <AliquotaIVA t-if="line.invoice_line_tax_ids.amount_type == 'percent'" t-esc="format_numbers(line.invoice_line_tax_ids.amount)"/>
-                <AliquotaIVA t-if="line.invoice_line_tax_ids.amount_type != 'percent'" t-esc="'0.00'"/>
-                <Natura t-if="line.invoice_line_tax_ids.l10n_it_has_exoneration" t-esc="line.invoice_line_tax_ids.l10n_it_kind_exoneration"/>
+                <AliquotaIVA t-if="line.tax_ids.amount_type == 'percent'" t-esc="format_numbers(line.tax_ids.amount)"/>
+                <AliquotaIVA t-if="line.tax_ids.amount_type != 'percent'" t-esc="'0.00'"/>
+                <Natura t-if="line.tax_ids.l10n_it_has_exoneration" t-esc="line.tax_ids.l10n_it_kind_exoneration"/>
             </DettaglioLinee>
         </template>
 
@@ -46,7 +46,7 @@
 
         <template id="account_invoice_it_FatturaPA_export">
             <t t-set="currency" t-value="record.currency_id or record.company_currency_id"/>
-            <t t-set="bank" t-value="record.partner_bank_id"/>
+            <t t-set="bank" t-value="record.invoice_partner_bank_id"/>
                 <p:FatturaElettronica  t-att-versione="formato_trasmissione" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.2/Schema_del_file_xml_FatturaPA_versione_1.2.xsd">
                 <FatturaElettronicaHeader>
                     <DatiTrasmissione>
@@ -54,7 +54,7 @@
                             <IdPaese t-esc="get_vat_country(record.company_id.vat)"/>
                             <IdCodice t-esc="record.company_id.l10n_it_codice_fiscale"/>
                         </IdTrasmittente>
-                        <ProgressivoInvio t-esc="record.number.replace('/','')[-10:]"/>
+                        <ProgressivoInvio t-esc="record.name.replace('/','')[-10:]"/>
                         <FormatoTrasmissione t-esc="formato_trasmissione"/>
                         <CodiceDestinatario t-if="record.commercial_partner_id.l10n_it_pa_index and record.commercial_partner_id.country_id.code == 'IT'" t-esc="record.commercial_partner_id.l10n_it_pa_index.upper()"/>
                         <CodiceDestinatario t-if="not record.commercial_partner_id.l10n_it_pa_index and record.commercial_partner_id.country_id.code == 'IT'" t-esc="'0000000'"/>
@@ -129,8 +129,8 @@
                             <!--2.1.1-->
                             <TipoDocumento t-esc="document_type"/>
                             <Divisa t-esc="currency.name"/>
-                            <Data t-esc="format_date(record.date_invoice)"/>
-                            <Numero t-esc="record.number[-20:]"/>
+                            <Data t-esc="format_date(record.invoice_date)"/>
+                            <Numero t-esc="record.name[-20:]"/>
                             <DatiBollo t-if="record.l10n_it_stamp_duty">
                                 <!--2.1.1.6-->
                                 <BolloVirtuale>SI</BolloVirtuale>
@@ -150,15 +150,15 @@
                             <t t-set="line_counter" t-value="line_counter + 1"/>
                             <t t-call="l10n_it_edi.account_invoice_line_it_FatturaPA"/>
                         </t>
-                        <t t-foreach="record.tax_line_ids" t-as="tax_line">
+                        <t t-foreach="record.line_ids.filtered(lambda line: line.tax_line_id)" t-as="tax_line">
                             <DatiRiepilogo>
                                 <!--2.2.2-->
-                                <AliquotaIVA t-esc="format_numbers(tax_line.tax_id.amount)"/>
-                                <Natura t-if="tax_line.tax_id.l10n_it_has_exoneration" t-esc="tax_line.tax_id.l10n_it_kind_exoneration"/>
-                                <ImponibileImporto t-esc="format_monetary(tax_line.base, currency)"/>
-                                <Imposta t-esc="format_monetary(tax_line.amount, currency)"/>
-                                <EsigibilitaIVA t-if="not tax_line.tax_id.l10n_it_has_exoneration or tax_line.tax_id.l10n_it_kind_exoneration=='N6'" t-esc="tax_line.tax_id.l10n_it_vat_due_date"/>
-                                <RiferimentoNormativo t-if="tax_line.tax_id.l10n_it_has_exoneration" t-esc="tax_line.tax_id.l10n_it_law_reference"/>
+                                <AliquotaIVA t-esc="format_numbers(tax_line.tax_line_id.amount)"/>
+                                <Natura t-if="tax_line.tax_line_id.l10n_it_has_exoneration" t-esc="tax_line.tax_line_id.l10n_it_kind_exoneration"/>
+                                <ImponibileImporto t-esc="format_monetary(tax_line.tax_base_amount, currency)"/>
+                                <Imposta t-esc="format_monetary(tax_line.price_unit, currency)"/>
+                                <EsigibilitaIVA t-if="not tax_line.tax_line_id.l10n_it_has_exoneration or tax_line.tax_line_id.l10n_it_kind_exoneration=='N6'" t-esc="tax_line.tax_line_id.l10n_it_vat_due_date"/>
+                                <RiferimentoNormativo t-if="tax_line.tax_line_id.l10n_it_has_exoneration" t-esc="tax_line.tax_line_id.l10n_it_law_reference"/>
                             </DatiRiepilogo>
                         </t>
 

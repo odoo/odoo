@@ -135,6 +135,7 @@
                                     attrs="{'invisible':[('has_invoices','=',False)]}" icon="fa-bars"/>
                             <button class="oe_stat_button" name="open_payment_matching_screen"
                                     string="Payment Matching" type="object"
+                                    groups="account.group_account_user"
                                     attrs="{'invisible':[('move_reconciled','=',True)]}" icon="fa-university"/>
                             <field name="has_invoices" invisible="1"/>
                             <field name="move_reconciled" invisible="1"/>
@@ -145,7 +146,7 @@
                         </div>
                         <group>
                             <field name="invoice_ids" invisible="1"/>
-                            <group name="partner_group" invisible="context.get('active_model') == 'account.invoice'">
+                            <group name="partner_group" invisible="context.get('active_model') == 'account.move'">
                                 <field name="payment_type" widget="radio"/>
                                 <field name="partner_type" widget="selection" attrs="{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}"/>
                                 <field name="partner_id" attrs="{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}" context="{'default_is_company': True, 'default_supplier': payment_type == 'outbound', 'default_customer': payment_type == 'inbound'}"/>
@@ -301,7 +302,7 @@
         <record id="action_account_invoice_from_list" model="ir.actions.server">
             <field name="name">Register Payment</field>
             <field name="model_id" ref="account.model_account_payment"/>
-            <field name="binding_model_id" ref="account.model_account_invoice"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
             <field name="state">code</field>
             <field name="code">
                 action = model.action_register_payment()

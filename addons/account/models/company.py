@@ -2,7 +2,6 @@
 
 from datetime import timedelta, datetime
 import calendar
-import time
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models, api, _
@@ -10,6 +9,7 @@ from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.float_utils import float_round, float_is_zero
 from odoo.tools import date_utils
+from odoo.tests.common import Form
 
 
 MONTH_SELECTION = [
@@ -102,7 +102,7 @@ Best Regards,'''))
     account_dashboard_onboarding_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done"), ('closed', "Closed")], string="State of the account dashboard onboarding panel", default='not_done')
     invoice_terms = fields.Text(string='Default Terms and Conditions', translate=True)
 
-    @api.constrains('account_opening_date', 'fiscalyear_last_day', 'fiscalyear_last_month')
+    @api.constrains('account_opening_move_id', 'fiscalyear_last_day', 'fiscalyear_last_month')
     def _check_fiscalyear_last_day(self):
         # if the user explicitly chooses the 29th of February we allow it:
         # there is no "fiscalyear_last_year" so we do not know his intentions.
@@ -484,7 +484,7 @@ Best Regards,'''))
 
         company_id = self.env.company.id
         # try to find an existing sample invoice
-        sample_invoice = self.env['account.invoice'].search(
+        sample_invoice = self.env['account.move'].search(
             [('company_id', '=', company_id),
              ('partner_id', '=', partner.id)], limit=1)
 
@@ -499,25 +499,23 @@ Best Regards,'''))
                         "\nPlease go to Configuration > Journals.")
                 raise RedirectWarning(msg, action.id, _("Go to the journal configuration"))
 
-            sample_invoice = self.env['account.invoice'].create({
-                'name': _("Sample invoice"),
-                'journal_id': journal.id,
+            sample_invoice = self.env['account.move'].with_context(default_type='out_invoice', default_journal_id=journal.id).create({
+                'invoice_payment_ref': _('Sample invoice'),
                 'partner_id': partner.id,
-            })
-            # sample invoice lines
-            self.env['account.invoice.line'].create({
-                'name': _("Sample invoice line name"),
-                'invoice_id': sample_invoice.id,
-                'account_id': account.id,
-                'price_unit': 199.99,
-                'quantity': 2,
-            })
-            self.env['account.invoice.line'].create({
-                'name': _("Sample invoice line name 2"),
-                'invoice_id': sample_invoice.id,
-                'account_id': account.id,
-                'price_unit': 25,
-                'quantity': 1,
+                'invoice_line_ids': [
+                    (0, 0, {
+                        'name': _('Sample invoice line name'),
+                        'account_id': account.id,
+                        'quantity': 2,
+                        'price_unit': 199.99,
+                    }),
+                    (0, 0, {
+                        'name': _('Sample invoice line name 2'),
+                        'account_id': account.id,
+                        'quantity': 1,
+                        'price_unit': 25.0,
+                    }),
+                ],
             })
         return sample_invoice
 
@@ -532,7 +530,7 @@ Best Regards,'''))
             'default_res_id': sample_invoice.id,
             'default_use_template': bool(template),
             'default_template_id': template and template.id or False,
-            'default_model': 'account.invoice',
+            'default_model': 'account.move',
             'default_composition_mode': 'comment',
             'mark_invoice_as_sent': True,
             'custom_layout': 'mail.mail_notification_borders',

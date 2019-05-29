@@ -93,8 +93,8 @@ class L10nInProductHsnReport(models.Model):
             LEFT JOIN account_tax_report_line_tags_rel tag_rep_ln ON aat.id = tag_rep_ln.account_account_tag_id
             LEFT JOIN account_move_line_account_tax_rel mt ON mt.account_move_line_id = aml.id
             LEFT JOIN uom_uom uom ON uom.id = aml.product_uom_id
-            LEFT JOIN account_invoice ai ON ai.id = aml.invoice_id
-            WHERE aa.internal_type = 'other' AND (aml.tax_line_id IS NOT NULL OR mt.account_tax_id IS NULL) AND (ai.type IS NULL OR ai.type not in ('out_refund', 'in_refund'))
+            LEFT JOIN account_move ai ON ai.id = aml.move_id
+            WHERE aa.internal_type = 'other' AND (aml.tax_line_id IS NOT NULL OR mt.account_tax_id IS NULL) AND (ai.type IS NULL OR ai.type in ('in_invoice', 'out_invoice'))
         """
         return from_str
 

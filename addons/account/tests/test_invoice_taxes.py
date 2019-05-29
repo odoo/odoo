@@ -46,21 +46,18 @@ class TestInvoiceTaxes(AccountingTestCase):
 
         :param taxes_per_line: A list of tuple (price_unit, account.tax recordset)
         '''
-        self_ctx = self.env['account.invoice'].with_context(type=inv_type)
-        journal_id = self_ctx._default_journal().id
-        self_ctx = self_ctx.with_context(journal_id=journal_id)
+        self_ctx = self.env['account.move'].with_context(default_type=inv_type)
+        invoice_form = Form(self_ctx)
+        invoice_form.partner_id = self.env.ref('base.partner_demo')
 
-        with Form(self_ctx, view=(inv_type in ('out_invoice', 'out_refund') and 'account.invoice_form' or 'invoice_supplier_form')) as invoice_form:
-            invoice_form.partner_id = self.env.ref('base.partner_demo')
-
-            for amount, taxes in taxes_per_line:
-                with invoice_form.invoice_line_ids.new() as invoice_line_form:
-                    invoice_line_form.name = 'xxxx'
-                    invoice_line_form.quantity = 1
-                    invoice_line_form.price_unit = amount
-                    invoice_line_form.invoice_line_tax_ids.clear()
-                    for tax in taxes:
-                        invoice_line_form.invoice_line_tax_ids.add(tax)
+        for amount, taxes in taxes_per_line:
+            with invoice_form.invoice_line_ids.new() as invoice_line_form:
+                invoice_line_form.name = 'xxxx'
+                invoice_line_form.quantity = 1
+                invoice_line_form.price_unit = amount
+                invoice_line_form.tax_ids.clear()
+                for tax in taxes:
+                    invoice_line_form.tax_ids.add(tax)
         return invoice_form.save()
 
     def test_one_tax_per_line(self):
@@ -83,11 +80,11 @@ class TestInvoiceTaxes(AccountingTestCase):
             (121, self.percent_tax_1_incl),
             (100, self.percent_tax_2),
         ])
-        invoice.action_invoice_open()
-        self.assertRecordValues(invoice.tax_line_ids, [
-            {'name': self.percent_tax_1.name,       'base': 100, 'amount': 21, 'tax_ids': []},
-            {'name': self.percent_tax_1_incl.name,  'base': 100, 'amount': 21, 'tax_ids': []},
-            {'name': self.percent_tax_2.name,       'base': 100, 'amount': 12, 'tax_ids': []},
+        invoice.post()
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [
+            {'name': self.percent_tax_1.name,       'tax_base_amount': 100, 'price_unit': 21, 'tax_ids': []},
+            {'name': self.percent_tax_1_incl.name,  'tax_base_amount': 100, 'price_unit': 21, 'tax_ids': []},
+            {'name': self.percent_tax_2.name,       'tax_base_amount': 100, 'price_unit': 12, 'tax_ids': []},
         ])
 
     def test_affecting_base_amount(self):
@@ -108,10 +105,10 @@ class TestInvoiceTaxes(AccountingTestCase):
             (121, self.percent_tax_1_incl + self.percent_tax_2),
             (100, self.percent_tax_2),
         ])
-        invoice.action_invoice_open()
-        self.assertRecordValues(invoice.tax_line_ids.sorted(lambda x: x.amount), [
-            {'name': self.percent_tax_1_incl.name,      'base': 100, 'amount': 21,      'tax_ids': [self.percent_tax_2.id]},
-            {'name': self.percent_tax_2.name,           'base': 221, 'amount': 26.52,   'tax_ids': []},
+        invoice.post()
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id').sorted(lambda x: x.price_unit), [
+            {'name': self.percent_tax_1_incl.name,      'tax_base_amount': 100, 'price_unit': 21,      'tax_ids': [self.percent_tax_2.id]},
+            {'name': self.percent_tax_2.name,           'tax_base_amount': 221, 'price_unit': 26.52,   'tax_ids': []},
         ])
 
     def test_group_of_taxes(self):
@@ -132,10 +129,10 @@ class TestInvoiceTaxes(AccountingTestCase):
             (121, self.group_tax),
             (100, self.percent_tax_2),
         ])
-        invoice.action_invoice_open()
-        self.assertRecordValues(invoice.tax_line_ids.sorted(lambda x: x.amount), [
-            {'name': self.percent_tax_1_incl.name,      'base': 100, 'amount': 21,      'tax_ids': [self.percent_tax_2.id]},
-            {'name': self.percent_tax_2.name,           'base': 221, 'amount': 26.52,   'tax_ids': []},
+        invoice.post()
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id').sorted(lambda x: x.price_unit), [
+            {'name': self.percent_tax_1_incl.name,      'tax_base_amount': 100, 'price_unit': 21,      'tax_ids': [self.percent_tax_2.id]},
+            {'name': self.percent_tax_2.name,           'tax_base_amount': 221, 'price_unit': 26.52,   'tax_ids': []},
         ])
 
     def _create_tax_tag(self, tag_name):
@@ -205,15 +202,14 @@ class TestInvoiceTaxes(AccountingTestCase):
 
         # Test invoice repartition
         invoice = self._create_invoice([(100, tax)], inv_type='out_invoice')
-        invoice.action_invoice_open()
-        invoice_move = invoice.move_id
+        invoice.post()
 
-        self.assertEqual(len(invoice_move.line_ids), 4, "There should be 4 account move lines created for the invoice: payable, base and 2 tax lines")
-        inv_base_line = invoice_move.line_ids.filtered(lambda x: not x.tax_repartition_line_id and x.account_id.user_type_id.type != 'receivable')
+        self.assertEqual(len(invoice.line_ids), 4, "There should be 4 account move lines created for the invoice: payable, base and 2 tax lines")
+        inv_base_line = invoice.line_ids.filtered(lambda x: not x.tax_repartition_line_id and x.account_id.user_type_id.type != 'receivable')
         self.assertEqual(len(inv_base_line), 1, "There should be only one base line generated")
         self.assertEqual(abs(inv_base_line.balance), 100, "Base amount should be 100")
         self.assertEqual(inv_base_line.tag_ids, inv_base_tag, "Base line should have received base tag")
-        inv_tax_lines = invoice_move.line_ids.filtered(lambda x: x.tax_repartition_line_id.repartition_type == 'tax')
+        inv_tax_lines = invoice.line_ids.filtered(lambda x: x.tax_repartition_line_id.repartition_type == 'tax')
         self.assertEqual(len(inv_tax_lines), 2, "There should be two tax lines, one for each repartition line.")
         self.assertEqual(abs(inv_tax_lines.filtered(lambda x: x.account_id == account_1).balance), 4.2, "Tax line on account 1 should amount to 4.2 (10% of 42)")
         self.assertEqual(inv_tax_lines.filtered(lambda x: x.account_id == account_1).tag_ids, inv_tax_tag_10, "Tax line on account 1 should have 10% tag")
@@ -222,15 +218,14 @@ class TestInvoiceTaxes(AccountingTestCase):
 
         # Test refund repartition
         refund = self._create_invoice([(100, tax)], inv_type='out_refund')
-        refund.action_invoice_open()
-        refund_move = refund.move_id
+        refund.post()
 
-        self.assertEqual(len(refund_move.line_ids), 4, "There should be 4 account move lines created for the refund: payable, base and 2 tax lines")
-        ref_base_line = refund_move.line_ids.filtered(lambda x: not x.tax_repartition_line_id and x.account_id.user_type_id.type != 'receivable')
+        self.assertEqual(len(refund.line_ids), 4, "There should be 4 account move lines created for the refund: payable, base and 2 tax lines")
+        ref_base_line = refund.line_ids.filtered(lambda x: not x.tax_repartition_line_id and x.account_id.user_type_id.type != 'receivable')
         self.assertEqual(len(ref_base_line), 1, "There should be only one base line generated")
         self.assertEqual(abs(ref_base_line.balance), 100, "Base amount should be 100")
         self.assertEqual(ref_base_line.tag_ids, ref_base_tag, "Base line should have received base tag")
-        ref_tax_lines = refund_move.line_ids.filtered(lambda x: x.tax_repartition_line_id.repartition_type == 'tax')
+        ref_tax_lines = refund.line_ids.filtered(lambda x: x.tax_repartition_line_id.repartition_type == 'tax')
         self.assertEqual(len(ref_tax_lines), 2, "There should be two refund tax lines")
         self.assertEqual(abs(ref_tax_lines.filtered(lambda x: x.account_id == ref_base_line.account_id).balance), 4.2, "Refund tax line on base account should amount to 4.2 (10% of 42)")
         self.assertEqual(abs(ref_tax_lines.filtered(lambda x: x.account_id == account_1).balance), 37.8, "Refund tax line on account 1 should amount to 37.8 (90% of 42)")

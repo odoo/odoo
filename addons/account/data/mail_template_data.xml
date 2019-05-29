@@ -7,10 +7,10 @@
         <!--Email template -->
         <record id="email_template_edi_invoice" model="mail.template">
             <field name="name">Invoice: Send by email</field>
-            <field name="model_id" ref="account.model_account_invoice"/>
+            <field name="model_id" ref="account.model_account_move"/>
             <field name="email_from">${(object.user_id.email_formatted or user.email_formatted) |safe}</field>
             <field name="partner_to">${object.partner_id.id}</field>
-            <field name="subject">${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})</field>
+            <field name="subject">${object.company_id.name} Invoice (Ref ${object.name or 'n/a'})</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
@@ -22,17 +22,17 @@
         % endif
         <br /><br />
         Here is your 
-        % if object.number:
-            invoice <strong>${object.number}</strong>
+        % if object.name:
+            invoice <strong>${object.name}</strong>
         % else:
             invoice
         %endif
-        % if object.origin:
-            (with reference: ${object.origin})
+        % if object.invoice_origin:
+            (with reference: ${object.invoice_origin})
         % endif
         amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>
         from ${object.company_id.name}.
-        % if object.state=='paid':
+        % if object.invoice_payment_state == 'paid':
             This invoice is already paid.
         % else:
             Please remit payment at your earliest convenience.
@@ -43,7 +43,7 @@
 </div>
             </field>
             <field name="report_template" ref="account_invoices"/>
-            <field name="report_name">Invoice_${(object.number or '').replace('/','_')}${object.state == 'draft' and '_draft' or ''}</field>
+            <field name="report_name">Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and '_draft' or ''}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="user_signature" eval="False"/>
             <field name="auto_delete" eval="True"/>

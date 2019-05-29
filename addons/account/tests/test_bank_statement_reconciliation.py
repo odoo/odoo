@@ -7,8 +7,6 @@ class TestBankStatementReconciliation(AccountingTestCase):
 
     def setUp(self):
         super(TestBankStatementReconciliation, self).setUp()
-        self.i_model = self.env['account.invoice']
-        self.il_model = self.env['account.invoice.line']
         self.bs_model = self.env['account.bank.statement']
         self.bsl_model = self.env['account.bank.statement.line']
         self.reconciliation_widget = self.env['account.reconciliation.widget']
@@ -62,40 +60,24 @@ class TestBankStatementReconciliation(AccountingTestCase):
         self.assertTrue(rcv_mv_line.reconciled)
         self.assertTrue(counterpart_mv_line.reconciled)
         self.assertEqual(counterpart_mv_line.matched_credit_ids, rcv_mv_line.matched_debit_ids)
-        self.assertEqual(rcv_mv_line.invoice_id.state, 'paid', "The related invoice's state should now be 'paid'")
+        self.assertEqual(rcv_mv_line.move_id.invoice_payment_state, 'paid', "The related invoice's state should now be 'paid'")
 
     def test_reconcile_with_write_off(self):
         pass
 
     def create_invoice(self, amount):
         """ Return the move line that gets to be reconciled (the one in the receivable account) """
-        vals = {'partner_id': self.partner.id,
-                'type': 'out_invoice',
-                'name': '-',
-                'currency_id': self.env.company.currency_id.id,
-                }
-        # new creates a temporary record to apply the on_change afterwards
-        invoice = self.i_model.new(vals)
-        invoice._onchange_partner_id()
-        vals.update({'account_id': invoice.account_id.id})
-        invoice = self.i_model.create(vals)
-
-        self.il_model.create({
-            'quantity': 1,
-            'price_unit': amount,
-            'invoice_id': invoice.id,
-            'name': '.',
-            'account_id': self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1).id,
+        move = self.env['account.move'].create({
+            'type': 'out_invoice',
+            'partner_id': self.partner.id,
+            'invoice_line_ids': [(0, 0, {
+                'quantity': 1,
+                'price_unit': amount,
+                'name': 'test invoice',
+            })],
         })
-        invoice.action_invoice_open()
-
-        mv_line = None
-        for l in invoice.move_id.line_ids:
-            if l.account_id.id == vals['account_id']:
-                mv_line = l
-        self.assertIsNotNone(mv_line)
-
-        return mv_line
+        move.post()
+        return move.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
 
     def create_statement_line(self, st_line_amount):
         journal = self.bs_model.with_context(journal_type='bank')._default_journal()

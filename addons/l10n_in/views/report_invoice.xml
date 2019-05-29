@@ -9,15 +9,15 @@
                 <t t-set="tag_sgst_id" t-value="env.ref('l10n_in.sgst_tag_tax').id"/>
                 <t t-set="tag_igst_id" t-value="env.ref('l10n_in.igst_tag_tax').id"/>
                 <t t-set="tag_cess_id" t-value="env.ref('l10n_in.cess_tag_tax').id"/>
-                <t t-set="tax_map" t-value="o.tax_line_ids.mapped('tax_id.tag_ids.id')"/>
+                <t t-set="tax_map" t-value="o.invoice_line_ids.mapped('tax_ids.tag_ids.id')"/>
                 <t t-set="is_igst" t-value="tag_igst_id in tax_map"/>
                 <t t-set="is_cgst" t-value="tag_cgst_id in tax_map"/>
                 <t t-set="is_cess" t-value="tag_cess_id in tax_map"/>
-                <t t-set="tax_datas" t-value="o._invoice_line_tax_values()"/>
+                <t t-set="tax_datas" t-value="o.line_ids.filtered('tax_line_id')"/>
             </t>
         </xpath>
 
-        <xpath expr="//p[@t-if='o.comment']" position="before">
+        <xpath expr="//p[@t-if='o.narration']" position="before">
             <t t-if="o.company_id.country_id.code == 'IN'">
                 <p id="total_in_words" class="mb16">
                     <strong>Total (In Words): </strong>
@@ -82,7 +82,7 @@
                 <span t-if="o.type == 'out_refund'">Credit Note</span>
                 <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
                 <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
-                <span t-field="o.number"/>
+                <span t-field="o.name"/>
             </h2>
         </xpath>
 

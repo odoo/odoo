@@ -31,9 +31,9 @@ class MembershipLine(models.Model):
     member_price = fields.Float(string='Membership Fee',
         digits=dp.get_precision('Product Price'), required=True,
         help='Amount for the membership')
-    account_invoice_line = fields.Many2one('account.invoice.line', string='Account Invoice line', readonly=True, ondelete='cascade')
-    account_invoice_id = fields.Many2one('account.invoice', related='account_invoice_line.invoice_id', string='Invoice', readonly=True)
-    company_id = fields.Many2one('res.company', related='account_invoice_line.invoice_id.company_id', string="Company", readonly=True, store=True)
+    account_invoice_line = fields.Many2one('account.move.line', string='Account Invoice line', readonly=True, ondelete='cascade')
+    account_invoice_id = fields.Many2one('account.move', related='account_invoice_line.move_id', string='Invoice', readonly=True)
+    company_id = fields.Many2one('res.company', related='account_invoice_line.move_id.company_id', string="Company", readonly=True, store=True)
     state = fields.Selection(STATE, compute='_compute_state', string='Membership Status', store=True,
         help="It indicates the membership status.\n"
              "-Non Member: A member who has not applied for any membership.\n"
@@ -43,42 +43,37 @@ class MembershipLine(models.Model):
              "-Invoiced Member: A member whose invoice has been created.\n"
              "-Paid Member: A member who has paid the membership amount.")
 
-    @api.depends('account_invoice_line.invoice_id.state',
-                 'account_invoice_line.invoice_id.payment_ids',
-                 'account_invoice_line.invoice_id.payment_ids.invoice_ids.type')
+    @api.depends('account_invoice_id.state',
+                 'account_invoice_id.amount_residual',
+                 'account_invoice_id.invoice_payment_state')
     def _compute_state(self):
         """Compute the state lines """
-        Invoice = self.env['account.invoice']
+        if not self:
+            return
+
+        self._cr.execute('''
+            SELECT reversed_entry_id, COUNT(id)
+            FROM account_move
+            WHERE reversed_entry_id IN %s
+            GROUP BY reversed_entry_id
+        ''', [tuple(self.mapped('account_invoice_id.id'))])
+        reverse_map = dict(self._cr.fetchall())
         for line in self:
-            self._cr.execute('''
-            SELECT i.state, i.id FROM
-            account_invoice i
-            WHERE
-            i.id = (
-                SELECT l.invoice_id FROM
-                account_invoice_line l WHERE
-                l.id = (
-                    SELECT  ml.account_invoice_line FROM
-                    membership_membership_line ml WHERE
-                    ml.id = %s
-                    )
-                )
-            ''', (line.id,))
-            fetched = self._cr.fetchone()
-            if not fetched:
-                line.state = 'canceled'
-                continue
-            istate = fetched[0]
-            if istate == 'draft':
+            move_state = line.account_invoice_id.state
+            payment_state = line.account_invoice_id.invoice_payment_state
+
+            line.state = 'none'
+            if move_state == 'draft':
                 line.state = 'waiting'
-            elif istate == 'open':
-                line.state = 'invoiced'
-            elif istate == 'paid':
-                line.state = 'paid'
-                invoices = Invoice.browse(fetched[1]).payment_ids.mapped('invoice_ids')
-                if invoices.filtered(lambda invoice: invoice.type == 'out_refund'):
-                    line.state = 'canceled'
-            elif istate == 'cancel':
+            elif move_state == 'posted':
+                if payment_state == 'paid':
+                    if reverse_map.get(line.account_invoice_id.id):
+                        line.state = 'canceled'
+                    else:
+                        line.state = 'paid'
+                elif payment_state == 'in_payment':
+                    line.state = 'paid'
+                elif payment_state == 'not_paid':
+                    line.state = 'invoiced'
+            elif move_state == 'cancel':
                 line.state = 'canceled'
-            else:
-                line.state = 'none'

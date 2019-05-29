@@ -5,7 +5,6 @@
         <!-- VIEWS -->
 
         <!-- account.move.line (Journal items) -->
-
         <record id="view_move_line_form" model="ir.ui.view">
             <field name="name">account.move.line.form</field>
             <field name="model">account.move.line</field>
@@ -33,10 +32,9 @@
                                     <group string="Accounting Documents">
                                         <field name="move_id" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                                         <field name="statement_id" readonly="True" attrs="{'invisible': [('statement_id','=',False)]}"/>
-                                        <field name="invoice_id" attrs="{'invisible': [('invoice_id','=',False)]}"/>
                                     </group>
                                     <group string="Dates">
-                                        <field name="date"/>
+                                        <field name="date" groups="account.group_account_user"/>
                                         <field name="date_maturity"/>
                                     </group>
 
@@ -71,7 +69,6 @@
                                         <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                     </group>
                                 </group>
-                                <field name="narration" colspan="4" nolabel="1" placeholder="Add an internal note..."/>
                             </page>
                             <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
                                 <field name="date" invisible="1"/>
@@ -153,8 +150,7 @@
                     <field name="date_maturity"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
-                    <field name="parent_state" invisible="1"/>
-                </tree>
+                    <field name="parent_state" invisible="1"/></tree>
             </field>
         </record>
 
@@ -337,15 +333,43 @@
             <field name="name">account.move.tree</field>
             <field name="model">account.move</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" string="Journal Entries">
+                <tree decoration-info="state == 'draft'" string="Journal Entries" decoration-muted="state == 'cancel'">
                     <field name="date"/>
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="ref"/>
                     <field name="journal_id"/>
-                    <field name="amount" sum="Total Amount"/>
+                    <field name="amount_total_signed" sum="Total Amount"/>
                     <field name="state"/>
                     <field name="currency_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_invoice_tree" model="ir.ui.view">
+            <field name="name">account.invoice.tree</field>
+            <field name="model">account.move</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="state == 'draft'" string="Invoices" decoration-muted="state == 'cancel'" js_class="account_tree">
+                    <field name="partner_id" invisible="1"/>
+                    <field name="invoice_source_email" invisible="1"/>
+                    <field name="invoice_vendor_icon" string=" "/>
+                    <field name="invoice_vendor_display_name" groups="base.group_user" string="Vendor"/>
+                    <field name="invoice_date"/>
+                    <field name="name"/>
+                    <field name="invoice_payment_ref"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    <field name="invoice_date_due"/>
+                    <field name="invoice_origin"/>
+                    <field name="amount_untaxed_signed" string="Tax Excluded" sum="Total"/>
+                    <field name="amount_tax_signed" string="Tax" sum="Total"/>
+                    <field name="amount_total_signed" string="Total" sum="Total"/>
+                    <field name="amount_residual_signed" string="Amount Due" sum="Amount Due"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="company_currency_id" invisible="1"/>
+                    <field name="state"/>
+                    <field name="invoice_payment_state"/>
+                    <field name="type" invisible="context.get('default_type', True)"/>
                 </tree>
             </field>
         </record>
@@ -363,7 +387,7 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
                                 <div class="row mb4">
-                                    <div class="col-6">
+                                    <div class="col-6 o_kanban_record_headings">
                                         <strong><span><field name="journal_id"/></span></strong>
                                     </div>
                                     <div class="col-6 text-right">
@@ -377,7 +401,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-6">
-                                        <span><field name="amount" widget='monetary'/></span>
+                                        <span><field name="amount_total" widget='monetary'/></span>
                                         <span><field name="currency_id" invisible="1"/></span>
                                     </div>
                                     <div class="col-6">
@@ -397,89 +421,396 @@
             <field name="name">account.move.form</field>
             <field name="model">account.move</field>
             <field name="arch" type="xml">
-                <form string="Account Entry" duplicate="false">
+                <form string="Account Entry">
                     <header>
-                        <button name="action_post" states="draft" string="Post" type="object" class="oe_highlight" groups="account.group_account_invoice"/>
-                        <button name="%(action_view_account_move_reversal)d" states="posted" string="Reverse Entry" type="action" groups="account.group_account_invoice"/>
-                        <button name="action_duplicate" string="Duplicate" type="object" groups="account.group_account_invoice"/>
-                        <field name="state" widget="statusbar"/>
+                        <!-- Post -->
+                        <button name="action_post" string="Post" class="oe_highlight"
+                                type="object" groups="account.group_account_invoice"
+                                attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                        <button name="action_post" string="Validate" class="oe_highlight"
+                                type="object" groups="account.group_account_invoice"
+                                attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                        <!-- Send (only invoices) -->
+                        <button name="action_invoice_sent"
+                                type="object"
+                                string="Send &amp; Print"
+                                attrs="{'invisible':['|', '|', '|', ('state', '!=', 'posted'), ('invoice_sent', '=', True), ('invoice_payment_state', '!=', 'not_paid'), ('type', 'not in', ('out_invoice', 'out_refund'))]}"
+                                class="oe_highlight"
+                                groups="base.group_user"/>
+                        <button name="action_invoice_sent"
+                                type="object"
+                                string="Send &amp; Print"
+                                attrs="{'invisible':['|', '|', '|', ('state', '!=', 'posted'), ('invoice_sent', '=', False), ('invoice_payment_state', '!=', 'not_paid'), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"
+                                groups="base.group_user"/>
+                        <!-- Register Payment (only invoices / receipts) -->
+                        <button name="action_invoice_register_payment" id="account_invoice_payment_btn"
+                                type="object" class="oe_highlight"
+                                attrs="{'invisible': ['|', '|', ('state', '!=', 'posted'), ('invoice_payment_state', '!=', 'not_paid'), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"
+                                string="Register Payment"
+                                groups="account.group_account_invoice"/>
+                        <!-- Preview (only invoices) -->
+                        <button name="preview_invoice" type="object" string="Preview"
+                                attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
+                        <!-- Reverse -->
+                        <button name="%(action_view_account_move_reversal)d" string="Reverse Entry"
+                                type="action" groups="account.group_account_invoice"
+                                attrs="{'invisible': ['|', ('type', '!=', 'entry'), ('state', '!=', 'posted')]}"/>
+                        <button name="action_reverse" string='Add Credit Note'
+                                type='object' groups="account.group_account_invoice"
+                                attrs="{'invisible': ['|', ('type', 'not in', ('out_invoice', 'in_invoice')), ('state', '!=', 'posted')]}"/>
+                        <!-- Duplicate -->
+                        <button name="action_duplicate" string="Duplicate" type="object" groups="account.group_account_invoice"
+                                attrs="{'invisible': [('type', '!=', 'entry')]}"/>
+                        <!-- Cancel -->
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                     </header>
+                    <!-- Invoice outstanding credits -->
+                    <div groups="account.group_account_invoice"
+                         class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                         attrs="{'invisible': ['|', '|', ('type', 'not in', ('out_invoice', 'out_refund')), ('invoice_has_outstanding', '=', False), ('invoice_payment_state', '!=', 'not_paid')]}">
+                        You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding payments</a></bold> for this customer. You can allocate them to mark this invoice as paid.
+                    </div>
+                    <div groups="account.group_account_invoice"
+                         class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                         attrs="{'invisible': ['|', '|', ('type', 'not in', ('in_invoice', 'in_refund')), ('invoice_has_outstanding', '=', False), ('invoice_payment_state', '!=', 'not_paid')]}">
+                        You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding debits</a></bold> for this supplier. You can allocate them to mark this bill as paid.
+                    </div>
+                    <!-- Invoice suspense accounts -->
+                    <div groups="account.group_account_invoice" class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                         attrs="{'invisible': ['|', ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')), ('invoice_has_matching_supsense_amount','=',False)]}">
+                        You have suspense account moves that match this invoice. <bold><button class="alert-link" type="object" name="action_open_matching_suspense_moves" role="button" string="Check them" style="padding: 0;vertical-align: baseline;"/></bold> to mark this invoice as paid.
+                    </div>
                     <sheet>
-                        <field name="tax_type_domain" invisible="1"/>
-                        <field name="id" invisible="1"/>
-                        <div class="oe_button_box">
-                            <button name="action_view_reverse_entry"
-                                type="object"
-                                class="oe_stat_button"
-                                icon="fa-refresh"
-                                attrs="{'invisible': [('reverse_entry_id', '=', False)]}"
-                                string="Reversed entry">
-                            </button>
+                        <div name="button_box" class="oe_button_box">
                             <button name="open_reconcile_view"
-                                class="oe_stat_button"
-                                icon="fa-bars"
-                                type="object"
-                                string="Reconciled entries">
+                                    class="oe_stat_button"
+                                    icon="fa-bars"
+                                    type="object"
+                                    attrs="{'invisible': ['|', ('type', '!=', 'entry'), ('id', '=', False)]}"
+                                    string="Reconciled entries">
                             </button>
                         </div>
-                    <h1>
-                        <field name="name" readonly="True" attrs="{'invisible':[('name','=','/')]}"/>
-                    </h1>
-                    <group>
+
+                        <!-- Payment status for invoices / receipts -->
+                        <div>
+                            <span class="pull-right badge badge-success"
+                                  attrs="{'invisible': ['|', ('invoice_payment_state', '!=', 'paid'), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">Paid</span>
+                            <span class="pull-right badge badge-success"
+                                  attrs="{'invisible': ['|', ('invoice_payment_state', '!=', 'in_payment'), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">In Payment</span>
+                        </div>
+
+                        <!-- Invisible fields -->
+                        <field name="id" invisible="1"/>
+                        <field name="type" invisible="1"/>
+                        <field name="invoice_payment_state" invisible="1" force_save="1"/>
+                        <field name="invoice_filter_type_domain" invisible="1"/>
+                        <field name="company_currency_id" invisible="1"/>
+                        <field name="commercial_partner_id" invisible="1"/>
+                        <field name="bank_partner_id" invisible="1"/>
+
+                        <field name="invoice_has_outstanding" invisible="1"/>
+                        <field name="invoice_sent" invisible="1"/>
+                        <field name="invoice_sequence_number_next_prefix" invisible="1"/>
+                        <field name="invoice_sequence_number_next" invisible="1"/>
+                        <field name="invoice_has_matching_supsense_amount" invisible="1"/>
+
+                        <div>
+                            <!-- Invoice draft header -->
+                            <span class="o_form_label" attrs="{'invisible': ['|', '|', ('type', '!=', 'out_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Invoice</span>
+                            <span class="o_form_label" attrs="{'invisible': ['|', '|', ('type', '!=', 'out_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Credit Note</span>
+                            <span class="o_form_label" attrs="{'invisible': ['|', '|', ('type', '!=', 'in_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Bill</span>
+                            <span class="o_form_label" attrs="{'invisible': ['|', '|', ('type', '!=', 'in_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Refund</span>
+                            <span class="o_form_label" attrs="{'invisible': ['|', '|', ('type', '!=', 'out_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Sales Receipt</span>
+                            <span class="o_form_label" attrs="{'invisible': ['|', '|', ('type', '!=', 'in_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Purchase Receipt</span>
+
+                            <!-- Select next number header (only invoices) -->
+                            <span class="o_form_label" attrs="{'invisible': [('invoice_sequence_number_next_prefix', '=', False)]}">- First Number:</span>
+
+                            <!-- Number -->
+                            <h1 class="mt0">
+                                <field name="name" readonly="True" attrs="{'invisible':[('name', '=', '/')]}"/>
+
+                                <!-- Select next number header (only invoices) -->
+                                <div  attrs="{'invisible': [('invoice_sequence_number_next_prefix', '=', False)]}">
+                                    <field name="invoice_sequence_number_next_prefix" class="oe_inline"/>
+                                    <field name="invoice_sequence_number_next" class="oe_inline"/>
+                                </div>
+                            </h1>
+                        </div>
                         <group>
-                            <field name="date"/>
-                            <field name="ref" attrs="{'required': [('id', '==', False)]}"/>
-                        </group>
-                        <group>
-                            <field name="journal_id" options="{'no_open': True, 'no_create': True}"/>
-                            <field name="company_id" required="1" groups="base.group_multi_company"/>
-                            <field name="amount" invisible="1" readonly="1"/>
-                            <field name="currency_id" invisible="1"/>
-                        </group>
-                    </group>
-                    <notebook>
-                        <page string="Journal Items">
-                            <field name="line_ids" widget="one2many"
-                              context="{'line_ids': line_ids, 'journal_id': journal_id }">
-                                <tree editable="bottom" string="Journal Items">
-                                    <field name="tax_line_id" invisible="1"/>
-                                    <field name="account_id" options="{'no_create': True}" domain="[('company_id', '=', parent.company_id), ('deprecated', '=', False)]"/>
-                                    <field name="partner_id"
-                                        domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
-                                    <field name="name"/>
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
-                                    <field name="amount_currency" groups="base.group_multi_currency"/>
-                                    <field name="company_currency_id" invisible="1"/>
-                                    <field name="company_id" invisible="1"/>
-                                    <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
-                                    <field name="debit" sum="Total Debit"/>
-                                    <field name="credit" sum="Total Credit"/>
-                                    <field name="tax_ids" string="Taxes Applied" widget="many2many_tags"
-                                           domain="[('type_tax_use', '=?', parent.tax_type_domain)]"
-                                           context="{'append_type_to_tax_name': not parent.tax_type_domain}"
-                                           options="{'no_create': True}"/>
-                                    <field name="date_maturity" required="0" invisible="context.get('view_no_maturity', False)"/>
-                                    <field name="recompute_tax_line" invisible="1" readonly="1"/>
-                                    <field name="tax_line_grouping_key" invisible="1" readonly="1"/>
-                                    <field name="tax_repartition_line_id" invisible="1"/> <!--Not to be removed, we need it so that the call to new() takes it into account when autocompleting the lines of a tax-->
-                                    <field name="tax_base_amount" invisible="1"/> <!--Not to be removed, we need it so that the call to new() takes it into account when autocompleting the lines of a tax-->
-                                    <field name="tag_ids" invisible="1"/>
-                                </tree>
-                            </field>
-                            <field name="narration" colspan="4" placeholder="Add an internal note..." nolabel="1" height="50"/>
-                        </page>
-                        <page string="Other Info">
-                            <group>
-                                <field name="auto_post" attrs="{'readonly':[('reverse_entry_id', '!=', False)]}"/>
-                                <field name="reverse_entry_id" attrs="{'invisible':True}"/>
-                                <field name="to_check"/>
+                            <group id="header_left_group">
+                                <div class="o_td_label">
+                                    <label for="partner_id" string="Customer" style="font-weight:bold;"
+                                           attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
+                                    <label for="partner_id" string="Vendor" style="font-weight:bold;"
+                                           attrs="{'invisible': [('type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
+                                </div>
+                                <field name="partner_id" widget="res_partner_many2one" nolabel="1"
+                                       context="{
+                                            'search_default_customer': context.get('type', 'entry') in ('out_invoice', 'out_refund', 'out_receipt'),
+                                            'search_default_supplier': context.get('type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt'),
+                                            'default_customer': context.get('type', 'entry') in ('out_invoice', 'out_refund', 'out_receipt'),
+                                            'default_supplier': context.get('type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt'),
+                                            'show_address': 1, 'default_is_company': True, 'show_vat': True}"
+                                       options='{"always_reload": True, "no_quick_create": True}'
+                                       attrs="{
+                                           'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]
+                                       }"/>
+
+                                <!-- Invoice payment terms (only invoices) + due date (only invoices / receipts) -->
+                                <label for="invoice_payment_term_id"
+                                       attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                                <div attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
+                                    <field name="invoice_payment_term_id"
+                                           class="oe_inline"
+                                           attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                                    <span class="o_form_label oe_edit_only"
+                                          attrs="{'invisible': ['|', ('invoice_payment_term_id', '!=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"> or </span>
+                                    <field name="invoice_date_due" force_save="1"
+                                           class="oe_inline"
+                                           attrs="{'invisible': ['|', ('invoice_payment_term_id', '!=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                                </div>
+
+                                <field name="ref"
+                                       attrs="{'invisible': [('type', '=', 'out_invoice')]}"/>
+                                <field name="invoice_vendor_bill_id"
+                                       attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('type', '!=', 'in_invoice')]}"
+                                       domain="[('company_id', '=', company_id), ('partner_id','child_of', [partner_id]), ('type','=','in_invoice')]"
+                                       string="Auto-Complete" placeholder="Select an old vendor bill"
+                                       options="{'no_create': True}" context="{'show_total_amount': True}"/>
                             </group>
-                        </page>
-                    </notebook>
+                            <group id="header_right_group">
+                                <field name="journal_id"
+                                       invisible="context.get('default_journal_id') and context.get('type', 'entry') != 'entry'"
+                                       groups="account.group_account_user"
+                                       options="{'no_create': True}"
+                                       domain="[('type', '=?', invoice_filter_type_domain)]"/>
+                                <field name="date" string="Accounting Date"
+                                       attrs="{'invisible': [('type', 'in', ('out_invoice', 'out_refund', 'out_receipt')), ('state', '=', 'draft')]}"/>
+
+                                <!-- Invoice date (only invoices / receipts) -->
+                                <div class="o_td_label">
+                                    <label for="invoice_date" string="Invoice Date" style="font-weight:bold;"
+                                           attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
+                                    <label for="invoice_date" string="Bill Date" style="font-weight:bold;"
+                                           attrs="{'invisible': [('type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
+                                </div>
+                                <field name="invoice_date" nolabel="1"
+                                       attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+
+                                <field name="currency_id"
+                                       groups="base.group_multi_currency"
+                                       attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page id="invoice_tab"
+                                  string="Invoice Lines"
+                                  attrs="{'invisible': [('type', '=', 'entry')]}">
+                                <field name="invoice_line_ids"
+                                       widget="section_and_note_one2many"
+                                       mode="tree,kanban"
+                                       context="{'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id != company_currency_id and currency_id or False}">
+                                    <tree editable="bottom" string="Journal Items">
+                                        <control>
+                                            <create name="add_line_control" string="Add a line"/>
+                                            <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                            <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                                        </control>
+
+                                        <!-- Displayed fields -->
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="product_id"/>
+                                        <field name="name" widget="section_and_note_text"/>
+                                        <field name="account_id"
+                                               groups="account.group_account_user"
+                                               domain="[('deprecated', '=', False), ('user_type_id.type', 'not in', ('receivable', 'payable'))]"
+                                               attrs="{'required': [('display_type', '=', False)]}"/>
+                                        <field name="analytic_account_id"
+                                               groups="analytic.group_analytic_accounting"/>
+                                        <field name="analytic_tag_ids"
+                                               groups="analytic.group_analytic_tags"
+                                               widget="many2many_tags"/>
+                                        <field name="quantity"/>
+                                        <field name="product_uom_id" string="UoM" groups="uom.group_uom"/>
+                                        <field name="price_unit" string="Price"/>
+                                        <field name="discount" string="Disc.%" groups="base.group_no_one"/>
+                                        <field name="tax_ids" widget="many2many_tags"
+                                               domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain)]"
+                                               context="{'append_type_to_tax_name': not parent.invoice_filter_type_domain}"
+                                               options="{'no_create': True}"/>
+                                        <field name="price_subtotal"
+                                               string="Subtotal"
+                                               groups="account.group_show_line_subtotals_tax_excluded"/>
+                                        <field name="price_total"
+                                               string="Total"
+                                               groups="account.group_show_line_subtotals_tax_included"/>
+
+                                        <!-- Others fields -->
+                                        <field name="partner_id" invisible="1"/>
+                                        <field name="amount_currency" invisible="1"/>
+                                        <field name="currency_id" invisible="1"/>
+                                        <field name="debit" invisible="1"/>
+                                        <field name="credit" invisible="1"/>
+                                        <field name="date_maturity" invisible="1"/>
+
+                                        <field name="tax_line_id" invisible="1"/>
+                                        <field name="tax_repartition_line_id" invisible="1"/>
+                                        <field name="tag_ids" invisible="1"/>
+                                        <field name="tax_base_amount" invisible="1"/>
+                                        <field name="tax_exigible" invisible="1"/>
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="company_currency_id" invisible="1"/>
+                                        <field name="recompute_tax_line" invisible="1" force_save="1"/>
+                                        <field name="display_type" force_save="1" invisible="1"/>
+                                        <field name="is_rounding_line" invisible="1"/>
+                                        <field name="exclude_from_invoice_tab" invisible="1"/>
+                                        <field name="account_internal_type" invisible="1"/>
+                                    </tree>
+                                </field>
+
+                                <!-- Totals (only invoices / receipts) -->
+                                <group class="oe_subtotal_footer oe_right"
+                                       attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
+                                    <field name="amount_untaxed"/>
+                                    <field name="amount_tax"/>
+                                    <field name="amount_total" class="oe_subtotal_footer_separator"/>
+                                    <field name="invoice_payments_widget" colspan="2" nolabel="1" widget="payment"/>
+                                    <field name="amount_residual" class="oe_subtotal_footer_separator"
+                                           attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                    <field name="invoice_outstanding_credits_debits_widget"
+                                           colspan="2" nolabel="1" widget="payment"
+                                           attrs="{'invisible': ['|', ('state', '!=', 'posted'), ('type', 'in', ('out_receipt', 'in_receipt'))]}"/>
+                                </group>
+
+                                <!-- Internal note -->
+                                <field name="narration" placeholder="Add an internal note..." nolabel="1" height="50"/>
+                            </page>
+                            <page id="aml_tab" string="Journal Items" groups="account.group_account_user">
+                                <field name="line_ids" widget="one2many_list"
+                                       context="{'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id != company_currency_id and currency_id or False}">
+                                    <tree editable="bottom" string="Journal Items" decoration-muted="display_type in ('line_section', 'line_note')">
+                                        <!-- Displayed fields -->
+                                        <field name="account_id"
+                                               attrs="{
+                                                    'required': [('display_type', 'not in', ('line_section', 'line_note'))],
+                                                    'invisible': [('display_type', 'in', ('line_section', 'line_note'))],
+                                               }"/>
+                                        <field name="partner_id"
+                                               domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
+                                               attrs="{'column_invisible': [('parent.type', '!=', 'entry')]}"/>
+                                        <field name="name" widget="section_and_note_text"/>
+                                        <field name="analytic_account_id"
+                                               groups="analytic.group_analytic_accounting"
+                                               attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
+                                        <field name="analytic_tag_ids"
+                                               groups="analytic.group_analytic_tags"
+                                               widget="many2many_tags"
+                                               attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
+                                        <field name="amount_currency"
+                                               groups="base.group_multi_currency"/>
+                                        <field name="currency_id" options="{'no_create': True}"
+                                               groups="base.group_multi_currency"
+                                               attrs="{'column_invisible': [('parent.type', '!=', 'entry')]}"/>
+                                        <field name="debit"
+                                               sum="Total Debit"
+                                               attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
+                                        <field name="credit"
+                                               sum="Total Credit"
+                                               attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
+                                        <field name="tax_ids" string="Taxes Applied" widget="many2many_tags"
+                                               domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain)]"
+                                               context="{'append_type_to_tax_name': not parent.invoice_filter_type_domain}"
+                                               options="{'no_create': True}"
+                                               force_save="1"
+                                               attrs="{'readonly': [
+                                                    '|', '|',
+                                                    ('display_type', 'in', ('line_section', 'line_note')),
+                                                    ('tax_line_id', '!=', False),
+                                                    '&amp;',
+                                                    ('parent.type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')),
+                                                    ('account_internal_type', 'in', ('receivable', 'payable')),
+                                                ]}"/>
+                                        <field name="date_maturity"
+                                               invisible="context.get('view_no_maturity')"
+                                               attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
+
+                                        <!-- Others fields -->
+                                        <field name="payment_id" invisible="1"/>
+
+                                        <field name="product_id" invisible="1"/>
+                                        <field name="quantity" invisible="1"/>
+                                        <field name="product_uom_id" invisible="1"/>
+                                        <field name="price_unit" invisible="1"/>
+                                        <field name="discount" invisible="1"/>
+                                        <field name="price_subtotal" invisible="1"/>
+                                        <field name="price_total" invisible="1"/>
+
+                                        <field name="sequence" invisible="1"/>
+                                        <field name="tax_line_id" invisible="1"/>
+                                        <field name="tax_repartition_line_id" invisible="1"/>
+                                        <field name="tag_ids" invisible="1"/>
+                                        <field name="tax_base_amount" invisible="1"/>
+                                        <field name="tax_exigible" invisible="1"/>
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="company_currency_id" invisible="1"/>
+                                        <field name="recompute_tax_line" invisible="1" force_save="1"/>
+                                        <field name="display_type" force_save="1" invisible="1"/>
+                                        <field name="is_rounding_line" invisible="1"/>
+                                        <field name="exclude_from_invoice_tab" invisible="1"/>
+                                        <field name="account_internal_type" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page id="other_tab" string="Other Info" name="other_info"
+                                  attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}">
+                                <group id="other_tab_group">
+                                    <group string="Sales Information"
+                                           name="sale_info_group"
+                                           attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}">
+                                        <field name="company_id" groups="base.group_multi_company"/>
+                                        <field name="invoice_user_id"/>
+                                    </group>
+                                    <group string="Accounting Information"
+                                           name="accounting_info_group"
+                                           attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}">
+                                        <field name="invoice_incoterm_id"/>
+                                        <field name="fiscal_position_id"/>
+                                        <field name="invoice_cash_rounding_id" groups="account.group_cash_rounding"/>
+                                        <field name="invoice_source_email"
+                                               widget="email"
+                                               attrs="{'invisible': ['|', ('type', 'not in', ('in_invoice', 'in_refund')), ('invoice_source_email', '=', False)]}"/>
+                                    </group>
+                                    <group string="Payments Information"
+                                           name="payments_info_group"
+                                           attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}">
+                                        <field name="invoice_payment_ref"/>
+                                        <field name="invoice_partner_bank_id"
+                                               domain="[('partner_id', '=', bank_partner_id)]"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page id="other_tab_entry" string="Other Info" name="other_info"
+                                  attrs="{'invisible': [('type', '!=', 'entry')]}">
+                                <group id="other_tab_entry_group">
+                                    <group name="misc_group">
+                                        <field name="auto_post"
+                                               attrs="{'invisible': [('type', '!=', 'entry')], 'readonly': [('reversed_entry_id', '!=', False)]}"/>
+                                        <field name="reversed_entry_id"
+                                               attrs="{'invisible': [('type', '!=', 'entry')]}"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
+                    <!-- Attachment preview -->
+                    <div class="o_attachment_preview"
+                         attrs="{'invisible': ['|', '|',
+                                ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')),
+                                ('state', '!=', 'draft')]}" />
+                    <!-- Chatter -->
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
                         <field name="activity_ids" widget="mail_activity"/>
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
@@ -506,8 +837,6 @@
                     <separator/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
-                    <field name="dummy_account_id"/>
-                    <field name="reconcile_model_id"/>
                     <group expand="0" string="Group By">
                         <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" name="journal" domain="[]" context="{'group_by':'journal_id'}"/>
@@ -515,6 +844,49 @@
                         <filter string="Date" name="date" domain="[]" context="{'group_by':'date'}" help="Journal Entries by Date"/>
                     </group>
                 </search>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_filter" model="ir.ui.view">
+            <field name="name">account.invoice.select</field>
+            <field name="model">account.move</field>
+            <field name="arch" type="xml">
+                <search string="Search Invoice">
+                    <field name="name" string="Invoice"
+                           filter_domain="['|','|','|', '|', ('name','ilike',self), ('invoice_origin','ilike',self), ('ref', 'ilike', self), ('invoice_payment_ref', 'ilike', self), ('partner_id', 'child_of', self)]"/>
+                    <filter domain="[('invoice_user_id','=',uid)]" name="myinvoices" help="My Invoices"/>
+                    <field name="journal_id"/>
+                    <separator/>
+                    <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+                    <filter name="unpaid" string="Open" domain="[('state', '=', 'posted'), ('invoice_payment_state', '=', 'not_paid')]"/>
+                    <filter name="in_payment" string="In Payment" domain="[('invoice_payment_state', '=', 'in_payment')]"/>
+                    <filter name="paid" string="Paid" domain="[('invoice_payment_state', '=', 'paid')]"/>
+                    <filter name="late" string="Overdue" domain="['&amp;', ('invoice_date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'posted'), ('invoice_payment_state', '=', 'not_paid')]" help="Overdue invoices, maturity date passed"/>
+                    <separator/>
+                    <field name="partner_id" operator="child_of"/>
+                    <field name="invoice_user_id" string="Salesperson" domain="[('share','=', False)]"/>
+                    <field name="date" string="Period"/>
+                    <separator/>
+                    <filter string="My Activities" name="activities_my"
+                        domain="[('activity_ids.user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter string="Late Activities" name="activities_overdue"
+                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_partner_id" string="Partner" context="{'group_by':'commercial_partner_id'}"/>
+                        <filter string="Salesperson" name="salesperson" context="{'group_by':'invoice_user_id'}"/>
+                        <filter name="status" string="Status" context="{'group_by':'state'}"/>
+                        <separator/>
+                        <filter string="Invoice Date" name="invoicedate" context="{'group_by':'invoice_date'}"/>
+                        <filter string="Due Date" name="duedate" context="{'group_by':'invoice_date_due'}"/>
+                    </group>
+               </search>
             </field>
         </record>
 
@@ -557,9 +929,9 @@
             view_id="account.view_move_line_tax_audit_tree"/>
 
         <record id="action_account_moves_all_a" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'group_by':'move_id', 'search_default_posted':1, 'search_default_sales':1, 'name_groupby':1}</field>
-            <field name="name">Journal Items</field>
+            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'group_by':'move_id', 'search_default_posted':1, 'search_default_sales':1, 'name_groupby':1}</field>            <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
+            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped"/>
             <field name="view_mode">tree,pivot,graph,form,kanban</field>
         </record>
@@ -568,6 +940,7 @@
             <field name="context">{'journal_type':'sales', 'search_default_group_by_move': 1, 'group_by':'move_id', 'search_default_posted':1, 'search_default_sales':1, 'name_groupby':1}</field>
             <field name="name">Sales</field>
             <field name="res_model">account.move.line</field>
+            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_sales_purchases"/>
             <field name="view_mode">tree,pivot,graph,form,kanban</field>
         </record>
@@ -576,6 +949,7 @@
             <field name="context">{'journal_type':'purchase', 'search_default_group_by_move': 1, 'group_by':'move_id', 'search_default_posted':1, 'search_default_purchases':1, 'name_groupby':1}</field>
             <field name="name">Purchase</field>
             <field name="res_model">account.move.line</field>
+            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_sales_purchases"/>
             <field name="view_mode">tree,pivot,graph,form,kanban</field>
         </record>
@@ -584,6 +958,7 @@
             <field name="context">{'journal_type':'bank', 'search_default_group_by_move': 1, 'group_by':'move_id', 'search_default_posted':1, 'search_default_bank':1, 'search_default_cash':1, 'name_groupby':1}</field>
             <field name="name">Bank and Cash</field>
             <field name="res_model">account.move.line</field>
+            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_bank_cash"/>
             <field name="view_mode">tree,pivot,graph,form,kanban</field>
         </record>
@@ -592,6 +967,7 @@
             <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'group_by':'move_id', 'search_default_posted':1, 'search_default_misc_filter':1, 'name_groupby':1}</field>
             <field name="name">Miscellaneous</field>
             <field name="res_model">account.move.line</field>
+            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_misc"/>
             <field name="view_mode">tree,pivot,graph,form,kanban</field>
         </record>
@@ -600,6 +976,7 @@
             <field name="context">{'journal_type':'general', 'search_default_group_by_account': 1, 'group_by':'account_id', 'search_default_posted':1}</field>
             <field name="name">General Ledger</field>
             <field name="res_model">account.move.line</field>
+            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_general"/>
             <field name="view_mode">tree,pivot,graph,form,kanban</field>
         </record>
@@ -608,13 +985,50 @@
             <field name="context">{'journal_type':'general', 'search_default_group_by_partner': 1, 'group_by':'partner_id', 'search_default_posted':1, 'search_default_payable':1, 'search_default_receivable':1, 'search_default_unreconciled':1}</field>
             <field name="name">Partner Ledger</field>
             <field name="res_model">account.move.line</field>
+            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_partner"/>
             <field name="view_mode">tree,pivot,graph,form,kanban</field>
+        </record>
+
+        <record id="action_account_moves_journal_bank_cash" model="ir.actions.act_window">
+            <field name="context">{'journal_type':'bank', 'search_default_group_by_move': 1, 'group_by':'move_id', 'search_default_posted':1, 'search_default_bank':1, 'search_default_cash':1, 'name_groupby':1}</field>
+            <field name="name">Bank and Cash</field>
+            <field name="res_model">account.move.line</field>
+            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
+            <field name="view_id" ref="view_move_line_tree_grouped_bank_cash"/>
+            <field name="view_mode">tree,pivot,graph,form,kanban</field>
+        </record>
+
+        <record id="action_account_moves_journal_misc" model="ir.actions.act_window">
+            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'group_by':'move_id', 'search_default_posted':1, 'search_default_misc_filter':1, 'name_groupby':1}</field>
+            <field name="name">Miscellaneous</field>
+            <field name="res_model">account.move.line</field>
+            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
+            <field name="view_id" ref="view_move_line_tree_grouped_misc"/>
+            <field name="view_mode">tree,pivot,graph,form,kanban</field>
+        </record>
+
+        <record id="action_account_moves_ledger_general" model="ir.actions.act_window">
+            <field name="context">{'journal_type':'general', 'search_default_group_by_account': 1, 'group_by':'account_id', 'search_default_posted':1}</field>
+            <field name="name">General Ledger</field>
+            <field name="res_model">account.move.line</field>
+            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
+            <field name="view_id" ref="view_move_line_tree_grouped_general"/>
+            <field name="view_mode">tree,pivot,graph,form,kanban</field>
+        </record>
+
+        <record id="action_account_moves_ledger_partner" model="ir.actions.act_window">
+            <field name="context">{'journal_type':'general', 'search_default_group_by_partner': 1, 'group_by':'partner_id', 'search_default_posted':1, 'search_default_payable':1, 'search_default_receivable':1, 'search_default_unreconciled':1}</field>
+            <field name="name">Partner Ledger</field>
+            <field name="res_model">account.move.line</field>
+            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
+            <field name="view_id" ref="view_move_line_tree_grouped_partner"/>
         </record>
 
         <record id="action_account_moves_all_tree" model="ir.actions.act_window">
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
+            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="context">{'search_default_partner_id': [active_id], 'default_partner_id': active_id, 'search_default_posted':1}</field>
             <field name="view_id" ref="view_move_line_tree"/>
         </record>
@@ -623,6 +1037,7 @@
             <field name="context">{'journal_type':'general', 'search_default_posted':1}</field>
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
+            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="view_mode">tree,pivot,graph,form,kanban</field>
         </record>
@@ -631,6 +1046,7 @@
             <field name="name">Journal Items</field>
             <field name="view_mode">graph,pivot</field>
             <field name="view_id" ref="account_move_line_graph_date"/>
+            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="context">{'search_default_account_id': [active_id]}</field>
             <field name="res_model">account.move.line</field>
         </record>
@@ -639,6 +1055,7 @@
             <field name="name">Journal Items</field>
             <field name="view_mode">graph,pivot</field>
             <field name="view_id" ref="account_move_line_graph_date"/>
+            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="context">{'search_default_account_id': [active_id], 'search_default_posted': 1}</field>
             <field name="res_model">account.move.line</field>
         </record>
@@ -652,13 +1069,124 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_account_move_filter"/>
-            <field name="context">{'type': 'misc', 'search_default_misc_filter':1, 'view_no_maturity': True}</field>
+            <field name="context">{'default_type': 'entry', 'search_default_misc_filter':1, 'view_no_maturity': True}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a journal entry
               </p><p>
                 A journal entry consists of several journal items, each of
                 which is either a debit or a credit transaction.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_move_out_invoice_type" model="ir.actions.act_window">
+            <field name="name">Invoices</field>
+            <field name="res_model">account.move</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="view_invoice_tree"/>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="domain">[('type', '=', 'out_invoice')]</field>
+            <field name="context">{'default_type': 'out_invoice'}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a customer invoice
+              </p><p>
+                Create invoices, register payments and keep track of the discussions with your customers.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_move_out_refund_type" model="ir.actions.act_window">
+            <field name="name">Credit Notes</field>
+            <field name="res_model">account.move</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="view_invoice_tree"/>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="domain">[('type', '=', 'out_refund')]</field>
+            <field name="context">{'default_type': 'out_refund'}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a credit note
+              </p><p>
+                Note that the easiest way to create a credit note is to do it directly
+                from the customer invoice.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_move_in_invoice_type" model="ir.actions.act_window">
+            <field name="name">Bills</field>
+            <field name="res_model">account.move</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="view_invoice_tree"/>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="domain">[('type', '=', 'in_invoice')]</field>
+            <field name="context">{'default_type': 'in_invoice'}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a vendor bill
+              </p><p>
+                Create invoices, register payments and keep track of the discussions with your vendors.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_move_in_refund_type" model="ir.actions.act_window">
+            <field name="name">Refund</field>
+            <field name="res_model">account.move</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="view_invoice_tree"/>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="domain">[('type', '=', 'in_refund')]</field>
+            <field name="context">{'default_type': 'in_refund'}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a vendor credit note
+              </p><p>
+                Note that the easiest way to create a vendor credit note it to do it directly from the vendor bill.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_move_out_receipt_type" model="ir.actions.act_window">
+            <field name="name">Receipts</field>
+            <field name="res_model">account.move</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="view_invoice_tree"/>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="domain">[('type', '=', 'out_receipt')]</field>
+            <field name="context">{'default_type': 'out_receipt'}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new sales receipt
+              </p><p>
+                When the sale receipt is confirmed, you can record the customer
+                payment related to this sales receipt.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_move_in_receipt_type" model="ir.actions.act_window">
+            <field name="name">Receipts</field>
+            <field name="res_model">account.move</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="view_invoice_tree"/>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="domain">[('type', '=', 'in_receipt')]</field>
+            <field name="context">{'default_type': 'in_receipt'}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Register a new purchase receipt
+              </p><p>
+                When the purchase receipt is confirmed, you can record the
+                vendor payment related to this purchase receipt.
               </p>
             </field>
         </record>
@@ -681,6 +1209,42 @@
             view_mode="tree"/>
 
         <!-- MENUS -->
+
+        <menuitem
+            id="menu_action_move_out_invoice_type"
+            action="action_move_out_invoice_type"
+            parent="account.menu_finance_receivables"
+            sequence="1"/>
+
+        <menuitem
+            id="menu_action_move_out_refund_type"
+            action="action_move_out_refund_type"
+            parent="account.menu_finance_receivables"
+            sequence="1"/>
+
+        <menuitem
+            id="menu_action_move_out_receipt_type"
+            action="action_move_out_receipt_type"
+            parent="account.menu_finance_receivables"
+            sequence="1"/>
+
+        <menuitem
+            id="menu_action_move_in_invoice_type"
+            action="action_move_in_invoice_type"
+            parent="account.menu_finance_payables"
+            sequence="1"/>
+
+        <menuitem
+            id="menu_action_move_in_refund_type"
+            action="action_move_in_refund_type"
+            parent="account.menu_finance_payables"
+            sequence="1"/>
+
+        <menuitem
+            id="menu_action_move_in_receipt_type"
+            action="action_move_in_receipt_type"
+            parent="account.menu_finance_payables"
+            sequence="1"/>
 
         <menuitem
             id="menu_action_account_moves_all"

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_inherit_purchase" model="ir.ui.view">
+        <field name="name">account.move.inherit.purchase</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
+        <field name="arch" type="xml">
+            <!-- Auto-complete could be done from either a bill either a purchase order -->
+            <field name="invoice_vendor_bill_id" position="after">
+                <field name="purchase_id" invisible="1"/>
+                <field name="purchase_vendor_bill_id"
+                       attrs="{'invisible': ['|', '|', ('state','not in',['draft']), ('state', '=', 'purchase'), ('type', '!=', 'in_invoice')]}"
+                       class="oe_edit_only"
+                       domain="[('company_id', '=', company_id), ('partner_id','child_of', [partner_id])]"
+                       placeholder="Select a purchase order or an old bill"
+                       context="{'show_total_amount': True}"
+                       options="{'no_create': True, 'no_open': True}"/>
+            </field>
+            <field name="invoice_vendor_bill_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <!-- Add link to purchase_line_id to account.move.line -->
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='company_id']" position="after">
+                <field name="purchase_line_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='line_ids']/tree/field[@name='company_id']" position="after">
+                <field name="purchase_line_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

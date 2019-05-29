@@ -28,7 +28,7 @@ class MailTemplate(models.Model):
         for res_id in res_ids:
             related_model = self.env[self.model_id.model].browse(res_id)
 
-            if related_model._name == 'account.invoice' and related_model.l10n_ch_isr_valid:
+            if related_model._name == 'account.move' and related_model.l10n_ch_isr_valid:
                 #We add an attachment containing the ISR
                 template = res_ids_to_templates[res_id]
                 report_name = 'ISR-' + self._render_template(template.report_name, template.model, res_id) + '.pdf'

@@ -160,7 +160,7 @@ class SaleOrder(models.Model):
     @api.multi
     def _prepare_invoice(self):
         invoice_vals = super(SaleOrder, self)._prepare_invoice()
-        invoice_vals['incoterm_id'] = self.incoterm.id or False
+        invoice_vals['invoice_incoterm_id'] = self.incoterm.id
         return invoice_vals
 
     @api.model

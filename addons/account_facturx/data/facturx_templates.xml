@@ -26,13 +26,13 @@
                     <!-- Amounts. -->
                     <ram:SpecifiedLineTradeAgreement>
                         <t t-set="taxes"
-                           t-value="line.invoice_line_tax_ids.compute_all(
+                           t-value="line.tax_ids.compute_all(
                                 line.price_unit,
                                 currency=line.currency_id,
                                 quantity=line.quantity,
                                 product=line.product_id,
                                 partner=record.partner_id,
-                                is_refund=line.invoice_id.type in ('in_refund', 'out_refund'))"/>
+                                is_refund=line.move_id.type in ('in_refund', 'out_refund'))"/>
                         <ram:GrossPriceProductTradePrice>
                             <ram:ChargeAmount
                                 t-att-currencyID="currency.name"
@@ -55,7 +55,7 @@
                     </ram:SpecifiedLineTradeDelivery>
 
                     <ram:SpecifiedLineTradeSettlement>
-                        <t t-foreach="line.invoice_line_tax_ids" t-as="tax">
+                        <t t-foreach="line.tax_ids" t-as="tax">
                             <ram:ApplicableTradeTax t-if="tax.amount_type == 'percent'">
                                 <ram:RateApplicablePercent t-esc="tax.amount"/>
                             </ram:ApplicableTradeTax>
@@ -118,13 +118,13 @@
 
                 <!-- Document Headers. -->
                 <rsm:ExchangedDocument>
-                    <ram:ID t-esc="record.reference"/>
+                    <ram:ID t-esc="record.ref"/>
                     <ram:TypeCode t-esc="'381' if 'refund' in record.type else '380'"/>
                     <ram:IssueDateTime>
-                        <udt:DateTimeString format="102" t-esc="format_date(record.date_invoice)"/>
+                        <udt:DateTimeString format="102" t-esc="format_date(record.invoice_date)"/>
                     </ram:IssueDateTime>
-                    <ram:IncludedNote t-if="record.comment">
-                        <ram:Content t-esc="record.comment"/>
+                    <ram:IncludedNote t-if="record.narration">
+                        <ram:Content t-esc="record.narration"/>
                     </ram:IncludedNote>
                 </rsm:ExchangedDocument>
 
@@ -166,7 +166,7 @@
 
                         <!-- Reference. -->
                         <ram:BuyerOrderReferencedDocument>
-                            <ram:IssuerAssignedID t-esc="'%s: %s' % (record.number, record.name) if record.name else record.number"/>
+                            <ram:IssuerAssignedID t-esc="'%s: %s' % (record.name, record.invoice_payment_ref) if record.invoice_payment_ref else record.name"/>
                         </ram:BuyerOrderReferencedDocument>
                     </ram:ApplicableHeaderTradeAgreement>
 
@@ -184,32 +184,32 @@
                     <ram:ApplicableHeaderTradeSettlement>
 
                         <!-- Bank account. -->
-                        <ram:SpecifiedTradeSettlementPaymentMeans t-if="record.partner_bank_id.acc_type == 'iban'">
+                        <ram:SpecifiedTradeSettlementPaymentMeans t-if="record.invoice_partner_bank_id.acc_type == 'iban'">
                             <ram:PayeePartyCreditorFinancialAccount>
-                                <ram:IBANID t-esc="record.partner_bank_id.sanitized_acc_number"/>
+                                <ram:IBANID t-esc="record.invoice_partner_bank_id.sanitized_acc_number"/>
                             </ram:PayeePartyCreditorFinancialAccount>
                         </ram:SpecifiedTradeSettlementPaymentMeans>
 
                         <!-- Tax Summary. -->
-                        <t t-foreach="record.tax_line_ids" t-as="tax_line">
+                        <t t-foreach="record.line_ids.filtered(lambda line: line.tax_line_id)" t-as="tax_line">
                             <ram:ApplicableTradeTax>
                                 <ram:CalculatedAmount
                                     t-att-currencyID="currency.name"
-                                    t-esc="format_monetary(tax_line.amount, currency)"/>
+                                    t-esc="format_monetary(tax_line.price_unit, currency)"/>
                                 <ram:BasisAmount
                                     t-att-currencyID="currency.name"
-                                    t-esc="format_monetary(tax_line.base, currency)"/>
+                                    t-esc="format_monetary(tax_line.tax_base_amount, currency)"/>
                                 <ram:RateApplicablePercent
-                                    t-if="tax_line.tax_id.amount_type == 'percent'"
-                                    t-esc="tax_line.tax_id.amount"/>
+                                    t-if="tax_line.tax_line_id.amount_type == 'percent'"
+                                    t-esc="tax_line.tax_line_id.amount"/>
                             </ram:ApplicableTradeTax>
                         </t>
 
                         <!-- Payment Term. -->
                         <ram:SpecifiedTradePaymentTerms>
-                            <ram:Description t-if="record.payment_term_id" t-esc="record.payment_term_id.name"/>
-                            <ram:DueDateDateTime t-if="record.date_due">
-                                <udt:DateTimeString t-esc="format_date(record.date_due)"/>
+                            <ram:Description t-if="record.invoice_payment_term_id" t-esc="record.invoice_payment_term_id.name"/>
+                            <ram:DueDateDateTime t-if="record.invoice_date_due">
+                                <udt:DateTimeString t-esc="format_date(record.invoice_date_due)"/>
                             </ram:DueDateDateTime>
                         </ram:SpecifiedTradePaymentTerms>
 
@@ -220,7 +220,7 @@
                                 t-esc="format_monetary(record.amount_untaxed, currency)"/>
                             <ram:TaxBasisTotalAmount
                                 t-att-currencyID="currency.name"
-                                t-esc="format_monetary(sum(record.tax_line_ids.mapped('base')), currency)"/>
+                                t-esc="format_monetary(sum(record.line_ids.filtered(lambda line: line.tax_line_id).mapped('price_unit')), currency)"/>
                             <ram:TaxTotalAmount
                                 t-att-currencyID="currency.name"
                                 t-esc="format_monetary(record.amount_tax, currency)"/>
@@ -229,10 +229,10 @@
                                 t-esc="format_monetary(record.amount_total, currency)"/>
                             <ram:TotalPrepaidAmount
                                 t-att-currencyID="currency.name"
-                                t-esc="format_monetary(record.amount_total - record.residual, currency)"/>
+                                t-esc="format_monetary(record.amount_total - record.amount_residual, currency)"/>
                             <ram:DuePayableAmount
                                 t-att-currencyID="currency.name"
-                                t-esc="format_monetary(record.residual, currency)"/>
+                                t-esc="format_monetary(record.amount_residual, currency)"/>
                         </ram:SpecifiedTradeSettlementHeaderMonetarySummation>
                     </ram:ApplicableHeaderTradeSettlement>
                 </rsm:SupplyChainTradeTransaction>

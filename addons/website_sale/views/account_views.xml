@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="action_invoices_ecommerce" model="ir.actions.act_window">
-        <field name="name">Invoices</field>
-        <field name="res_model">account.invoice</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('team_id.website_ids', '!=', False)]</field>
-        <field name="view_id" ref="account.invoice_tree"/>
-        <field name="context">{'type':'out_invoice'}</field>
-        <field name="search_view_id" ref="account.view_account_invoice_filter"/>
-    </record>
-
     <record id="website_product_pricelist3" model="ir.actions.act_window">
         <field name="name">Pricelists</field>
         <field name="type">ir.actions.act_window</field>
@@ -22,13 +11,14 @@
         <field name="context">{"default_base":'list_price'}</field>
     </record>
 
-    <record id="account_invoice_view_form" model="ir.ui.view">
-        <field name="name">account.invoice.form</field>
-        <field name="model">account.invoice</field>
-        <field name="inherit_id" ref="account.invoice_form"/>
+    <record id="account_move_view_form" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.website_sale</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//page[@name='other_info']//field[@name='company_id']" position="after">
-                <field name="website_id" groups="website.group_multi_website"/>
+            <xpath expr="//group[@name='sale_info_group']" position="inside">
+                <field name="website_id"
+                       groups="website.group_multi_website"/>
             </xpath>
         </field>
     </record>

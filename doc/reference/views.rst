@@ -756,7 +756,7 @@ Some classes are defined to render subtotals like in invoice forms:
         <field name="amount_untaxed"/>
         <field name="amount_tax"/>
         <field name="amount_total" class="oe_subtotal_footer_separator"/>
-        <field name="residual" style="margin-top: 10px"/>
+        <field name="amount_residual" style="margin-top: 10px"/>
     </group>
 
 Placeholders and Inline Fields

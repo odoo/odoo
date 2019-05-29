@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
@@ -96,8 +94,9 @@ class Repair(models.Model):
         states={'draft': [('readonly', False)]},
         help='Selecting \'Before Repair\' or \'After Repair\' will allow you to generate invoice before or after the repair is done respectively. \'No invoice\' means you don\'t want to generate invoice for this repair order.')
     invoice_id = fields.Many2one(
-        'account.invoice', 'Invoice',
-        copy=False, readonly=True, tracking=True)
+        'account.move', 'Invoice',
+        copy=False, readonly=True, tracking=True,
+        domain=[('type', '=', 'out_invoice')])
     move_id = fields.Many2one(
         'stock.move', 'Move',
         copy=False, readonly=True, tracking=True,
@@ -289,96 +288,149 @@ class Repair(models.Model):
         @param group: It is set to true when group invoice is to be generated.
         @return: Invoice Ids.
         """
-        res = dict.fromkeys(self.ids, False)
-        invoices_group = {}
-        InvoiceLine = self.env['account.invoice.line']
-        Invoice = self.env['account.invoice']
-        for repair in self.filtered(lambda repair: repair.state not in ('draft', 'cancel') and not repair.invoice_id):
-            if not repair.partner_id.id and not repair.partner_invoice_id.id:
+        grouped_invoices_vals = {}
+        repairs = self.filtered(lambda repair: repair.state not in ('draft', 'cancel')
+                                               and not repair.invoice_id
+                                               and repair.invoice_method != 'none')
+        for repair in repairs:
+            partner_invoice = repair.partner_invoice_id or repair.partner_id
+            if not partner_invoice:
                 raise UserError(_('You have to select an invoice address in the repair form.'))
-            comment = repair.quotation_notes
-            if repair.invoice_method != 'none':
-                if group and repair.partner_invoice_id.id in invoices_group:
-                    invoice = invoices_group[repair.partner_invoice_id.id]
-                    invoice.write({
-                        'name': invoice.name + ', ' + repair.name,
-                        'origin': invoice.origin + ', ' + repair.name,
-                        'comment': (comment and (invoice.comment and invoice.comment + "\n" + comment or comment)) or (invoice.comment and invoice.comment or ''),
+
+            narration = repair.quotation_notes
+            currency = repair.pricelist_id.currency_id
+            # Fallback on the user company as the 'company_id' is not required.
+            company = repair.company_id or self.env.user.company_id
+
+            journal = self.env['account.move'].with_context(force_company=company.id, type='out_invoice')._get_default_journal()
+            if not journal:
+                raise UserError(_('Please define an accounting sales journal for the company %s (%s).') % (self.company_id.name, self.company_id.id))
+
+            if (partner_invoice.id, currency.id) not in grouped_invoices_vals:
+                grouped_invoices_vals[(partner_invoice.id, currency.id)] = []
+            current_invoices_list = grouped_invoices_vals[(partner_invoice.id, currency.id)]
+
+            if not group or len(current_invoices_list) == 0:
+                invoice_vals = {
+                    'name': repair.name,
+                    'type': 'out_invoice',
+                    'partner_id': partner_invoice.id,
+                    'currency_id': currency.id,
+                    'narration': narration,
+                    'line_ids': [],
+                    'invoice_origin': repair.name,
+                    'repair_ids': [(4, repair.id)],
+                    'invoice_line_ids': [],
+                }
+                current_invoices_list.append(invoice_vals)
+            else:
+                # if group == True: concatenate invoices by partner and currency
+                invoice_vals = current_invoices_list[0]
+                invoice_vals['name'] += ', ' + repair.name
+                invoice_vals['invoice_origin'] += ', ' + repair.name
+                invoice_vals['repair_ids'].append((4, repair.id))
+                if not invoice_vals['narration']:
+                    invoice_vals['narration'] = narration
+                else:
+                    invoice_vals['narration'] += '\n' + narration
+
+            # Create invoice lines from operations.
+            for operation in repair.operations.filtered(lambda op: op.type == 'add'):
+                if group:
+                    name = repair.name + '-' + operation.name
+                else:
+                    name = operation.name
+
+                account = operation.product_id.product_tmpl_id._get_product_accounts()['income']
+                if not account:
+                    raise UserError(_('No account defined for product "%s".') % operation.product_id.name)
+
+                invoice_line_vals = {
+                    'name': name,
+                    'account_id': account.id,
+                    'quantity': operation.product_uom_qty,
+                    'tax_ids': [(6, 0, operation.tax_id.ids)],
+                    'product_uom_id': operation.product_uom.id,
+                    'price_unit': operation.price_unit,
+                    'price_subtotal': operation.product_uom_qty * operation.price_unit,
+                    'product_id': operation.product_id.id,
+                    'repair_line_ids': [(4, operation.id)],
+                }
+
+                if currency == company.currency_id:
+                    balance = -invoice_line_vals['price_subtotal']
+                    invoice_line_vals.update({
+                        'debit': balance > 0.0 and balance or 0.0,
+                        'credit': balance < 0.0 and -balance or 0.0,
                     })
                 else:
-                    if not repair.partner_id.property_account_receivable_id:
-                        raise UserError(_('No account defined for partner "%s".') % repair.partner_id.name)
-                    invoice = Invoice.create({
-                        'name': repair.name,
-                        'origin': repair.name,
-                        'type': 'out_invoice',
-                        'account_id': repair.partner_id.property_account_receivable_id.id,
-                        'partner_id': repair.partner_invoice_id.id or repair.partner_id.id,
-                        'currency_id': repair.pricelist_id.currency_id.id,
-                        'comment': repair.quotation_notes,
-                        'fiscal_position_id': repair.partner_id.property_account_position_id.id
+                    amount_currency = -invoice_line_vals['price_subtotal']
+                    balance = currency._convert(amount_currency, self.company_id.currency_id, self.company_id, fields.Date.today())
+                    invoice_line_vals.update({
+                        'amount_currency': amount_currency,
+                        'debit': balance > 0.0 and balance or 0.0,
+                        'credit': balance < 0.0 and -balance or 0.0,
+                        'currency_id': currency.id,
                     })
-                    invoices_group[repair.partner_invoice_id.id] = invoice
-                repair.write({'invoiced': True, 'invoice_id': invoice.id})
+                invoice_vals['invoice_line_ids'].append((0, 0, invoice_line_vals))
 
-                for operation in repair.operations:
-                    if operation.type == 'add':
-                        if group:
-                            name = repair.name + '-' + operation.name
-                        else:
-                            name = operation.name
+            # Create invoice lines from fees.
+            for fee in repair.fees_lines:
+                if group:
+                    name = repair.name + '-' + fee.name
+                else:
+                    name = fee.name
 
-                        if operation.product_id.property_account_income_id:
-                            account_id = operation.product_id.property_account_income_id.id
-                        elif operation.product_id.categ_id.property_account_income_categ_id:
-                            account_id = operation.product_id.categ_id.property_account_income_categ_id.id
-                        else:
-                            raise UserError(_('No account defined for product "%s".') % operation.product_id.name)
+                if not fee.product_id:
+                    raise UserError(_('No product defined on fees.'))
 
-                        invoice_line = InvoiceLine.create({
-                            'invoice_id': invoice.id,
-                            'name': name,
-                            'origin': repair.name,
-                            'account_id': account_id,
-                            'quantity': operation.product_uom_qty,
-                            'invoice_line_tax_ids': [(6, 0, [x.id for x in operation.tax_id])],
-                            'uom_id': operation.product_uom.id,
-                            'price_unit': operation.price_unit,
-                            'price_subtotal': operation.product_uom_qty * operation.price_unit,
-                            'product_id': operation.product_id and operation.product_id.id or False
-                        })
-                        operation.write({'invoiced': True, 'invoice_line_id': invoice_line.id})
-                for fee in repair.fees_lines:
-                    if group:
-                        name = repair.name + '-' + fee.name
-                    else:
-                        name = fee.name
-                    if not fee.product_id:
-                        raise UserError(_('No product defined on fees.'))
+                account = fee.product_id.product_tmpl_id._get_product_accounts()['income']
+                if not account:
+                    raise UserError(_('No account defined for product "%s".') % fee.product_id.name)
 
-                    if fee.product_id.property_account_income_id:
-                        account_id = fee.product_id.property_account_income_id.id
-                    elif fee.product_id.categ_id.property_account_income_categ_id:
-                        account_id = fee.product_id.categ_id.property_account_income_categ_id.id
-                    else:
-                        raise UserError(_('No account defined for product "%s".') % fee.product_id.name)
+                invoice_line_vals = {
+                    'type': 'out_invoice',
+                    'name': name,
+                    'account_id': account.id,
+                    'quantity': fee.product_uom_qty,
+                    'tax_ids': [(6, 0, fee.tax_id.ids)],
+                    'product_uom_id': fee.product_uom.id,
+                    'price_unit': fee.price_unit,
+                    'product_id': fee.product_id.id,
+                    'repair_fee_ids': [(4, fee.id)],
+                    'invoice_line_ids': [],
+                }
 
-                    invoice_line = InvoiceLine.create({
-                        'invoice_id': invoice.id,
-                        'name': name,
-                        'origin': repair.name,
-                        'account_id': account_id,
-                        'quantity': fee.product_uom_qty,
-                        'invoice_line_tax_ids': [(6, 0, [x.id for x in fee.tax_id])],
-                        'uom_id': fee.product_uom.id,
-                        'product_id': fee.product_id and fee.product_id.id or False,
-                        'price_unit': fee.price_unit,
-                        'price_subtotal': fee.product_uom_qty * fee.price_unit
+                if currency == company.currency_id:
+                    balance = -invoice_line_vals['price_subtotal']
+                    invoice_line_vals.update({
+                        'debit': balance > 0.0 and balance or 0.0,
+                        'credit': balance < 0.0 and -balance or 0.0,
                     })
-                    fee.write({'invoiced': True, 'invoice_line_id': invoice_line.id})
-                invoice.compute_taxes()
-                res[repair.id] = invoice.id
-        return res
+                else:
+                    amount_currency = -invoice_line_vals['price_subtotal']
+                    balance = currency._convert(amount_currency, self.company_id.currency_id, self.company_id,
+                                                fields.Date.today())
+                    invoice_line_vals.update({
+                        'amount_currency': amount_currency,
+                        'debit': balance > 0.0 and balance or 0.0,
+                        'credit': balance < 0.0 and -balance or 0.0,
+                        'currency_id': currency.id,
+                    })
+                invoice_vals['invoice_line_ids'].append((0, 0, invoice_line_vals))
+
+        # Create invoices.
+        invoices_vals_list = []
+        for invoices in grouped_invoices_vals.values():
+            for invoice in invoices:
+                invoices_vals_list.append(invoice)
+        self.env['account.move'].with_context(default_type='out_invoice').create(invoices_vals_list)
+
+        repairs.write({'invoiced': True})
+        repairs.mapped('operations').filtered(lambda op: op.type == 'add').write({'invoiced': True})
+        repairs.mapped('fees_lines').write({'invoiced': True})
+
+        return dict((repair.id, repair.invoice_id.id) for repair in repairs)
 
     @api.multi
     def action_created_invoice(self):
@@ -387,8 +439,8 @@ class Repair(models.Model):
             'name': _('Invoice created'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
-            'res_model': 'account.invoice',
-            'view_id': self.env.ref('account.invoice_form').id,
+            'res_model': 'account.move',
+            'view_id': self.env.ref('account.view_move_form').id,
             'target': 'current',
             'res_id': self.invoice_id.id,
             }
@@ -522,7 +574,7 @@ class RepairLine(models.Model):
         required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     invoice_line_id = fields.Many2one(
-        'account.invoice.line', 'Invoice Line',
+        'account.move.line', 'Invoice Line',
         copy=False, readonly=True)
     location_id = fields.Many2one(
         'stock.location', 'Source Location',
@@ -636,7 +688,7 @@ class RepairFee(models.Model):
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     price_subtotal = fields.Float('Subtotal', compute='_compute_price_subtotal', store=True, digits=0)
     tax_id = fields.Many2many('account.tax', 'repair_fee_line_tax', 'repair_fee_line_id', 'tax_id', 'Taxes')
-    invoice_line_id = fields.Many2one('account.invoice.line', 'Invoice Line', copy=False, readonly=True)
+    invoice_line_id = fields.Many2one('account.move.line', 'Invoice Line', copy=False, readonly=True)
     invoiced = fields.Boolean('Invoiced', copy=False, readonly=True)
 
     @api.one

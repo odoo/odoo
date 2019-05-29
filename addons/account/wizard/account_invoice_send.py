@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.addons.mail.wizard.mail_compose_message import _reopen
+from odoo.exceptions import UserError
 
 
 class AccountInvoiceSend(models.TransientModel):
@@ -14,17 +15,22 @@ class AccountInvoiceSend(models.TransientModel):
     invoice_without_email = fields.Text(compute='_compute_invoice_without_email', string='invoice(s) that will not be sent')
     is_print = fields.Boolean('Print', default=lambda self: self.env.company.invoice_is_print)
     printed = fields.Boolean('Is Printed', default=False)
-    invoice_ids = fields.Many2many('account.invoice', 'account_invoice_account_invoice_send_rel', string='Invoices')
+    invoice_ids = fields.Many2many('account.move', 'account_move_account_invoice_send_rel', string='Invoices')
     composer_id = fields.Many2one('mail.compose.message', string='Composer', required=True, ondelete='cascade')
     template_id = fields.Many2one(
         'mail.template', 'Use template', index=True,
-        domain="[('model', '=', 'account.invoice')]"
+        domain="[('model', '=', 'account.move')]"
         )
 
     @api.model
     def default_get(self, fields):
         res = super(AccountInvoiceSend, self).default_get(fields)
         res_ids = self._context.get('active_ids')
+
+        invoices = self.env['account.move'].browse(res_ids).filtered(lambda move: move.is_invoice(include_receipts=True))
+        if not invoices:
+            raise UserError(_("You can only send invoices."))
+
         composer = self.env['mail.compose.message'].create({
             'composition_mode': 'comment' if len(res_ids) == 1 else 'mass_mail',
         })
@@ -38,7 +44,7 @@ class AccountInvoiceSend(models.TransientModel):
     @api.onchange('invoice_ids')
     def _compute_composition_mode(self):
         for wizard in self:
-            wizard.composition_mode = 'comment' if len(wizard.invoice_ids) == 1  else 'mass_mail'
+            wizard.composition_mode = 'comment' if len(wizard.invoice_ids) == 1 else 'mass_mail'
 
     @api.onchange('template_id')
     def onchange_template_id(self):
@@ -50,7 +56,7 @@ class AccountInvoiceSend(models.TransientModel):
     def _compute_invoice_without_email(self):
         for wizard in self:
             if wizard.is_email and len(wizard.invoice_ids) > 1:
-                invoices = self.env['account.invoice'].search([
+                invoices = self.env['account.move'].search([
                     ('id', 'in', self.env.context.get('active_ids')),
                     ('partner_id.email', '=', False)
                 ])
@@ -67,13 +73,13 @@ class AccountInvoiceSend(models.TransientModel):
         if self.is_email:
             self.composer_id.send_mail()
             if self.env.context.get('mark_invoice_as_sent'):
-                self.mapped('invoice_ids').write({'sent': True})
+                self.mapped('invoice_ids').write({'invoice_sent': True})
 
     @api.multi
     def _print_document(self):
         """ to override for each type of models that will use this composer."""
         self.ensure_one()
-        action = self.invoice_ids.invoice_print()
+        action = self.invoice_ids.action_invoice_print()
         action.update({'close_on_report_download': True})
         return action
 

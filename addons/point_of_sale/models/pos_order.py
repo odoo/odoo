@@ -155,39 +155,15 @@ class PosOrder(models.Model):
             })
         return order
 
-    def _prepare_analytic_account(self, line):
-        '''This method is designed to be inherited in a custom module'''
-        return False
-
     def _create_account_move(self):
         self.ensure_one()
         date_tz_user = fields.Datetime.context_timestamp(self, fields.Datetime.from_string(self.session_id.start_at))
         date_tz_user = fields.Date.to_string(date_tz_user)
-        return self.env['account.move'].sudo().create({
+        return self.env['account.move'].with_context(default_journal_id=self.sale_journal.id).sudo().create({
             'ref': self.name,
             'journal_id': self.sale_journal.id,
             'date': date_tz_user
         })
-
-    def _prepare_invoice(self):
-        """
-        Prepare the dict of values to create the new invoice for a pos order.
-        """
-        invoice_type = 'out_invoice' if self.amount_total >= 0 else 'out_refund'
-        return {
-            'name': self.name,
-            'origin': self.name,
-            'account_id': self.partner_id.property_account_receivable_id.id,
-            'journal_id': self.session_id.config_id.invoice_journal_id.id,
-            'company_id': self.company_id.id,
-            'type': invoice_type,
-            'reference': self.name,
-            'partner_id': self.partner_id.id,
-            'comment': self.note or '',
-            # considering partner's sale pricelist's currency
-            'currency_id': self.pricelist_id.currency_id.id,
-            'user_id': self.user_id.id,
-        }
 
     @api.model
     def _get_account_move_line_group_data_type_key(self, data_type, values, options={}):
@@ -202,7 +178,6 @@ class PosOrder(models.Model):
             return ('product',
                     values['partner_id'],
                     (values['product_id'], tuple(values['tax_ids'][0][2]), values['name']),
-                    values['analytic_account_id'],
                     values['debit'] > 0,
                     values.get('currency_id'))
         elif data_type == 'tax':
@@ -225,36 +200,17 @@ class PosOrder(models.Model):
                     values.get('currency_id'))
         return False
 
-    def _action_create_invoice_line(self, line=False, invoice_id=False):
-        InvoiceLine = self.env['account.invoice.line']
-        inv_name = line.product_id.display_name
-        inv_line = {
-            'invoice_id': invoice_id,
-            'product_id': line.product_id.id,
-            'quantity': line.qty if self.amount_total >= 0 else -line.qty,
-            'account_analytic_id': self._prepare_analytic_account(line),
-            'name': inv_name,
+    def _prepare_invoice_line(self, order_line):
+        return {
+            'product_id': order_line.product_id.id,
+            'quantity': order_line.qty if self.amount_total >= 0 else -order_line.qty,
+            'discount': order_line.discount,
+            'price_unit': order_line.price_unit,
+            'name': order_line.product_id.display_name,
+            'tax_ids': [(6, 0, order_line.tax_ids.ids)],
         }
-        # Oldlin trick
-        invoice_line = InvoiceLine.sudo().new(inv_line)
-        invoice_line._onchange_product_id()
-        invoice_line.invoice_line_tax_ids = [(6, False, line.tax_ids_after_fiscal_position.filtered(lambda t: t.company_id.id == line.order_id.company_id.id).ids)]
-        # We convert a new id object back to a dictionary to write to
-        # bridge between old and new api
-        inv_line = invoice_line._convert_to_write({name: invoice_line[name] for name in invoice_line._cache})
-        inv_line.update(price_unit=line.price_unit, discount=line.discount, name=inv_name)
-        return InvoiceLine.sudo().create(inv_line)
 
     def _prepare_account_move_line(self, line, partner_id, current_company, currency_id, rounding_method):
-        def _flatten_tax_and_children(taxes, group_done=None):
-            children = self.env['account.tax']
-            if group_done is None:
-                group_done = set()
-            for tax in taxes.filtered(lambda t: t.amount_type == 'group'):
-                if tax.id not in group_done:
-                    group_done.add(tax.id)
-                    children |= _flatten_tax_and_children(tax.children_tax_ids, group_done)
-            return taxes + children
         res = []
         order = line.order_id
         cur_company = order.company_id.currency_id
@@ -285,7 +241,7 @@ class PosOrder(models.Model):
         # Create a move for the line for the order line
         # Just like for invoices, a group of taxes must be present on this base line
         # As well as its children
-        base_line_tax_ids = _flatten_tax_and_children(line.tax_ids_after_fiscal_position).filtered(lambda tax: tax.type_tax_use in ['sale', 'none'])
+        base_line_tax_ids = line.tax_ids_after_fiscal_position.flatten_taxes_hierarchy().filtered(lambda tax: tax.type_tax_use in ['sale', 'none'])
         base_line_taxes_repartition = base_line_tax_ids.mapped(line.qty<0 and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids')
         base_line_tags = base_line_taxes_repartition.filtered(lambda x: x.repartition_type == 'base').mapped('tag_ids')
         data = {
@@ -293,7 +249,6 @@ class PosOrder(models.Model):
             'quantity': line.qty,
             'product_id': line.product_id.id,
             'account_id': income_account.id,
-            'analytic_account_id': self._prepare_analytic_account(line),
             'credit': ((amount_subtotal > 0) and amount_subtotal) or 0.0,
             'debit': ((amount_subtotal < 0) and -amount_subtotal) or 0.0,
             'tax_ids': [(6, 0, base_line_tax_ids.ids)],
@@ -366,23 +321,20 @@ class PosOrder(models.Model):
                             account_analytic=account_analytic)
                     if res:
                         line1, line2 = res
-                        line1 = Product._convert_prepared_anglosaxon_line(line1, line['partner_id'])
                         insert_data('counter_part', {
                             'name': line1['name'],
                             'account_id': line1['account_id'],
-                            'credit': line1['credit'] or 0.0,
-                            'debit': line1['debit'] or 0.0,
-                            'partner_id': line1['partner_id']
+                            'credit': line1['price'] < 0 and -line1['price'],
+                            'debit': line1['price'] > 0 and line1['price'],
+                            'partner_id': order.partner_id.id
 
                         })
-
-                        line2 = Product._convert_prepared_anglosaxon_line(line2, line['partner_id'])
                         insert_data('counter_part', {
                             'name': line2['name'],
                             'account_id': line2['account_id'],
-                            'credit': line2['credit'] or 0.0,
-                            'debit': line2['debit'] or 0.0,
-                            'partner_id': line2['partner_id']
+                            'credit': line2['price'] < 0 and -line2['price'],
+                            'debit': line2['price'] > 0 and line2['price'],
+                            'partner_id': order.partner_id.id
                         })
         move = False
         for order in self.filtered(lambda o: not o.account_move or o.state == 'paid'):
@@ -463,7 +415,7 @@ class PosOrder(models.Model):
             if cur != cur_company:
                 # 'amount_cur_company' contains the sum of the AML converted in the company
                 # currency. This makes the logic consistent with 'compute_invoice_totals' from
-                # 'account.invoice'. It ensures that the counterpart line is the same amount than
+                # 'account.move'. It ensures that the counterpart line is the same amount than
                 # the sum of the product and taxes lines.
                 amount_total = amount_cur_company
             else:
@@ -495,7 +447,7 @@ class PosOrder(models.Model):
         return True
 
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
-        price_unit = product._get_anglo_saxon_price_unit()
+        price_unit = product._stock_account_get_anglo_saxon_price_unit()
         if product._get_invoice_policy() == "delivery":
             moves = self.filtered(lambda o: o.partner_id.id == partner_id)\
                 .mapped('picking_id.move_lines')\
@@ -508,7 +460,7 @@ class PosOrder(models.Model):
 
     def _reconcile_payments(self):
         for order in self:
-            aml = order.statement_ids.mapped('journal_entry_ids') | order.account_move.line_ids | order.invoice_id.move_id.line_ids
+            aml = order.statement_ids.mapped('journal_entry_ids') | order.account_move.line_ids
             aml = aml.filtered(lambda r: not r.reconciled and r.account_id.internal_type == 'receivable' and r.partner_id == order.partner_id.commercial_partner_id)
 
             try:
@@ -575,7 +527,6 @@ class PosOrder(models.Model):
         [('draft', 'New'), ('cancel', 'Cancelled'), ('paid', 'Paid'), ('done', 'Posted'), ('invoiced', 'Invoiced')],
         'Status', readonly=True, copy=False, default='draft')
 
-    invoice_id = fields.Many2one('account.invoice', string='Invoice', copy=False)
     account_move = fields.Many2one('account.move', string='Journal Entry', readonly=True, copy=False)
     picking_id = fields.Many2one('stock.picking', string='Picking', readonly=True, copy=False)
     picking_type_id = fields.Many2one('stock.picking.type', related='session_id.config_id.picking_type_id', string="Operation Type", readonly=False)
@@ -649,7 +600,7 @@ class PosOrder(models.Model):
         if 'partner_id' in vals:
             for order in self:
                 partner_id = False
-                if order.invoice_id:
+                if order.account_move:
                     raise UserError(_("You cannot change the partner of a POS order for which an invoice has already been issued."))
                 if vals['partner_id']:
                     partner = Partner.browse(vals['partner_id'])
@@ -680,11 +631,11 @@ class PosOrder(models.Model):
         return {
             'name': _('Customer Invoice'),
             'view_mode': 'form',
-            'view_id': self.env.ref('account.invoice_form').id,
-            'res_model': 'account.invoice',
+            'view_id': self.env.ref('account.view_move_form').id,
+            'res_model': 'account.move',
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
-            'res_id': self.invoice_id.id,
+            'res_id': self.account_move.id,
         }
 
     @api.multi
@@ -696,49 +647,53 @@ class PosOrder(models.Model):
 
     @api.multi
     def action_pos_order_invoice(self):
-        Invoice = self.env['account.invoice']
+        moves = self.env['account.move']
 
         for order in self:
             # Force company for all SUPERUSER_ID action
-            local_context = dict(self.env.context, force_company=order.company_id.id, company_id=order.company_id.id)
-            if order.invoice_id:
-                Invoice += order.invoice_id
+            if order.account_move:
+                moves += order.account_move
                 continue
 
             if not order.partner_id:
                 raise UserError(_('Please provide a partner for the sale.'))
 
-            invoice = Invoice.new(order._prepare_invoice())
-            invoice._onchange_partner_id()
-            invoice.fiscal_position_id = order.fiscal_position_id
-
-            inv = invoice._convert_to_write({name: invoice[name] for name in invoice._cache})
-            new_invoice = Invoice.with_context(local_context).sudo().create(inv)
+            move_vals = {
+                'invoice_payment_ref': order.name,
+                'invoice_origin': order.name,
+                'journal_id': order.session_id.config_id.invoice_journal_id.id,
+                'type': 'out_invoice' if order.amount_total >= 0 else 'out_refund',
+                'ref': order.name,
+                'partner_id': order.partner_id.id,
+                'narration': order.note or '',
+                # considering partner's sale pricelist's currency
+                'currency_id': order.pricelist_id.currency_id.id,
+                'invoice_user_id': order.user_id.id,
+                'fiscal_position_id': order.fiscal_position_id.id,
+                'invoice_line_ids': [(0, None, order._prepare_invoice_line(line)) for line in order.lines],
+            }
+            new_move = moves.sudo()\
+                            .with_context(default_type=move_vals['type'], force_company=order.company_id.id)\
+                            .create(move_vals)
             message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
-            new_invoice.message_post(body=message)
-            order.write({'invoice_id': new_invoice.id, 'state': 'invoiced'})
-            Invoice += new_invoice
+            new_move.message_post(body=message)
+            order.write({'account_move': new_move.id, 'state': 'invoiced'})
+            moves += new_move
 
-            for line in order.lines:
-                self.with_context(local_context)._action_create_invoice_line(line, new_invoice.id)
-
-            new_invoice.with_context(local_context).sudo().compute_taxes()
-            order.sudo().write({'state': 'invoiced'})
-
-        if not Invoice:
+        if not moves:
             return {}
 
         return {
             'name': _('Customer Invoice'),
             'view_type': 'form',
             'view_mode': 'form',
-            'view_id': self.env.ref('account.invoice_form').id,
-            'res_model': 'account.invoice',
+            'view_id': self.env.ref('account.view_move_form').id,
+            'res_model': 'account.move',
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'current',
-            'res_id': Invoice and Invoice.ids[0] or False,
+            'res_id': moves and moves.ids[0] or False,
         }
 
     # this method is unused, and so is the state 'cancel'
@@ -778,8 +733,7 @@ class PosOrder(models.Model):
 
             if to_invoice:
                 pos_order.action_pos_order_invoice()
-                pos_order.invoice_id.sudo().with_context(force_company=self.env.user.company_id.id).action_invoice_open()
-                pos_order.account_move = pos_order.invoice_id.move_id
+                pos_order.account_move.sudo().with_context(force_company=self.env.user.company_id.id).post()
         return order_ids
 
     def test_paid(self):

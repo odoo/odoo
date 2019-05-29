@@ -13,7 +13,7 @@
     'data': [
         'security/purchase_security.xml',
         'security/ir.model.access.csv',
-        'views/account_invoice_views.xml',
+        'views/account_move_views.xml',
         'data/purchase_data.xml',
         'report/purchase_reports.xml',
         'views/purchase_views.xml',

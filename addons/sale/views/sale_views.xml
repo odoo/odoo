@@ -1068,11 +1068,11 @@
 
         <!-- Update account invoice search view!-->
         <record id="account_invoice_groupby_inherit" model="ir.ui.view">
-            <field name="name">account.invoice.groupby</field>
-            <field name="model">account.invoice</field>
+            <field name="name">account.move.groupby</field>
+            <field name="model">account.move</field>
             <field name="inherit_id" ref="account.view_account_invoice_filter"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='user_id']" position="after">
+                <xpath expr="//field[@name='invoice_user_id']" position="after">
                     <field name="team_id"/>
                 </xpath>
                 <xpath expr="//group/filter[@name='status']" position="after">
@@ -1084,64 +1084,30 @@
         <!-- Update account invoice !-->
         <record model="ir.ui.view" id="account_invoice_form">
             <field name="name">Account Invoice</field>
-            <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//field[@name='user_id']" position="after">
-                        <field name="team_id"/>
-                    </xpath>
                     <xpath expr="//field[@name='partner_id']" position="after">
-                       <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address"/>
+                       <field name="partner_shipping_id"
+                              groups="sale.group_delivery_invoice_address"
+                              attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
                    </xpath>
-                    <xpath expr="//field[@name='discount']" position="attributes">
+                    <xpath expr="//field[@name='invoice_line_ids']//field[@name='discount']" position="attributes">
                         <attribute name="groups">sale.group_discount_per_so_line</attribute>
                     </xpath>
-                    <xpath expr="//field[@name='partner_bank_id']/.." position="after">
-                        <group string="Marketing" name="utm_link" groups="base.group_no_one">
+                    <xpath expr="//group[@name='sale_info_group']" position="inside">
+                        <field name="team_id"/>
+                    </xpath>
+                    <xpath expr="//group[@id='other_tab_group']" position="inside">
+                        <group string="Marketing"
+                               name="utm_link"
+                               groups="base.group_no_one"
+                               attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}">
                             <field name="campaign_id"/>
                             <field name="medium_id"/>
                             <field name="source_id"/>
                         </group>
-                    </xpath>
-                </data>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="account_invoice_line_tree">
-            <field name="name">account.invoice.line.tree</field>
-            <field name="model">account.invoice.line</field>
-            <field name="inherit_id" ref="account.view_invoice_line_tree"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//field[@name='discount']" position="attributes">
-                        <attribute name="groups">sale.group_discount_per_so_line</attribute>
-                    </xpath>
-                </data>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="account_invoice_line_form">
-            <field name="name">account.invoice.line.form</field>
-            <field name="model">account.invoice.line</field>
-            <field name="inherit_id" ref="account.view_invoice_line_form"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//field[@name='discount']" position="attributes">
-                        <attribute name="groups">sale.group_discount_per_so_line</attribute>
-                    </xpath>
-                </data>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="account_invoice_supplier_form">
-            <field name="name">account.invoice.supplier.form</field>
-            <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="account.invoice_supplier_form"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//field[@name='discount']" position="attributes">
-                        <attribute name="groups">sale.group_discount_per_so_line</attribute>
                     </xpath>
                 </data>
             </field>
@@ -1246,12 +1212,12 @@
         </record>
         <record id="action_invoice_salesteams" model="ir.actions.act_window">
             <field name="name">Invoices</field>
-            <field name="res_model">account.invoice</field>
+            <field name="res_model">account.move</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
-            <field name="view_id" ref="account.invoice_tree"/>
+            <field name="view_id" ref="account.view_move_tree"/>
             <field name="domain">[
-                ('state', 'not in', ['draft', 'cancel']),
+                ('state', '=', 'posted'),
                 ('type', 'in', ['out_invoice', 'out_refund'])]</field>
             <field name="context">{
                     'search_default_team_id': [active_id],
@@ -1273,7 +1239,7 @@
         <record id="action_invoice_salesteams_view_form" model="ir.actions.act_window.view">
             <field name="sequence">2</field>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="account.invoice_form"/>
+            <field name="view_id" ref="account.view_move_form"/>
             <field name="act_window_id" ref="sale.action_invoice_salesteams"/>
         </record>
 
