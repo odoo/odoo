@@ -201,7 +201,8 @@ class AccountJournal(models.Model):
     @api.constrains('l10n_ar_afip_pos_number')
     def check_afip_pos_number(self):
         missing_pos_number = self.filtered(
-            lambda x: x.type == 'sale' and x.l10n_ar_afip_pos_number == 0)
+            lambda x: x.type == 'sale' and x.l10n_latam_use_documents and
+            x.l10n_ar_afip_pos_number == 0)
         if missing_pos_number:
             raise ValidationError(_('Please define a valid AFIP POS number'))
 

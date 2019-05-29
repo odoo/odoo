@@ -102,7 +102,7 @@ class L10nLatamDocumentType(models.Model):
             return super()._format_document_number()
 
         if not document_number:
-            return
+            return False
 
         msg = _("'%s' is not a valid value for '%s'.\n%s")
 

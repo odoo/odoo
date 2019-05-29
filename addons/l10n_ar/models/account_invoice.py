@@ -374,7 +374,7 @@ class AccountInvoice(models.Model):
         without_cuit = argentinian_invoices.filtered(
             lambda x: x.type in ['in_invoice', 'in_refund'] and
             x.l10n_latam_document_type_id.purchase_cuit_required and
-            not x.commercial_partner_id.cuit)
+            not x.commercial_partner_id.l10n_ar_cuit)
         if without_cuit:
             raise UserError(_(
                 'Las siguientes partners no tienen configurado CUIT: %s') % (
@@ -423,9 +423,8 @@ class AccountInvoice(models.Model):
 
     @api.onchange('partner_id')
     def check_afip_responsability_set(self):
-        if self.env.user.company_id.country_id == self.env.ref('base.ar') and \
-           self.env.user.company_id.l10n_latam_use_documents:
-            if self.partner_id and \
+        if self.company_id.country_id == self.env.ref('base.ar') and \
+           self.l10n_latam_use_documents and self.partner_id and \
                not self.partner_id.l10n_ar_afip_responsability_type:
                 return {'warning': {
                     'title': 'Missing Partner Configuration',
