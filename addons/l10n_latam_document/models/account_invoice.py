@@ -63,11 +63,14 @@ class AccountInvoice(models.Model):
         return super(AccountInvoice, self.filtered(
             lambda x: not x.l10n_latam_use_documents))._get_sequence_prefix()
 
-    @api.depends('number', 'move_name')
+    @api.depends('move_name')
     def _compute_l10n_latam_document_number(self):
         for rec in self:
-            number = rec.number or rec.move_name
-            rec.l10n_latam_document_number = number and number[6:]
+            move_name = rec.move_name
+            doc_code_prefix = rec.l10n_latam_document_type_id.doc_code_prefix
+            if doc_code_prefix and move_name:
+                move_name = move_name.replace(doc_code_prefix + " ", "")
+            rec.l10n_latam_document_number = move_name
 
     @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number')
     def _inverse_l10n_latam_document_number(self):
@@ -77,7 +80,7 @@ class AccountInvoice(models.Model):
                     rec.l10n_latam_document_number)
             if rec.l10n_latam_document_number != l10n_latam_document_number:
                 rec.l10n_latam_document_number = l10n_latam_document_number
-            rec.number = l10n_latam_document_number and "%s %s" % (
+            rec.move_name = l10n_latam_document_number and "%s %s" % (
                 rec.l10n_latam_document_type_id.doc_code_prefix,
                 l10n_latam_document_number)
 
@@ -152,8 +155,6 @@ class AccountInvoice(models.Model):
                         'document number.'))
                 rec.l10n_latam_document_number = \
                     rec.l10n_latam_sequence_id.next_by_id()
-            if not rec.move_name:
-                rec.move_name = rec.number
 
     @api.multi
     def _post_action_move_create(self):
