@@ -138,7 +138,7 @@ class BaseDocumentLayout(models.TransientModel):
             colors = json.loads(wizard.company_colors)
             wizard.primary_color = colors['values'][0]
             wizard.secondary_color = colors['values'][1]
-            wizard.preview = ir_qweb.render('web.layout_preview', {
+            wizard.preview = ir_qweb.render('base.layout_preview', {
                 'company': wizard,
             })
 

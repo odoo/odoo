@@ -8,8 +8,7 @@ from odoo.tools import image_to_base64
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
-@tagged('document_layout')
-class TestBaseDocumentLayout(TransactionCase):
+class TestBaseDocumentLayoutHelpers(TransactionCase):
 
     def _get_images(self):
         if not hasattr(self, 'company_imgs'):
@@ -55,19 +54,44 @@ class TestBaseDocumentLayout(TransactionCase):
             color2 = _expected_getter(fname)
             self._compare_colors_rgb(color1, color2)
 
+    def _make_templates_and_layouts(self):
+        self.layout_template1 = self.env['ir.ui.view'].create({
+            'name': 'layout_template1',
+            'type': 'qweb',
+            'arch': '''<div></div>''',
+        })
+        self.env['ir.model.data'].create({
+            'name': 'layout_template1',
+            'model': 'ir.ui.view',
+            'module': 'base',
+            'res_id': self.layout_template1.id,
+        })
+        self.env['report.layout'].create({
+            'view_id': self.layout_template1.id,
+            'name': 'report_%s' % self.layout_template1.name,
+            'primary_color': '#875A7B',
+            'secondary_color': '#875A7C',
+        })
+
     def setUp(self):
-        super(TestBaseDocumentLayout, self).setUp()
+        super(TestBaseDocumentLayoutHelpers, self).setUp()
         self.file_names = ['tommy_small.jpeg', 'fire_small.jpeg']
         self.color_fields = ['primary_color', 'secondary_color']
         self._get_images()
         self.company = self.env.company_id
-        self.css_color_error = 2
+        self.css_color_error = 0
+        self._make_templates_and_layouts()
+
+
+@tagged('document_layout')
+class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
 
     def test_company_no_color_change_logo(self):
         self.company.write({
             'primary_color': None,
             'secondary_color': None,
             'logo': None,
+            'external_report_layout_id': self.env.ref('base.layout_template1').id,
         })
         company_layout = self._get_report_layout_from_view(self.company.external_report_layout_id)
         with Form(self.env['base.document.layout']) as doc_layout:
@@ -90,6 +114,9 @@ class TestBaseDocumentLayout(TransactionCase):
             'secondary_color': None,
             'logo': self.company_imgs['tommy_small'],
         })
+        # Don't why yet, but the second time the colors are computes
+        # there is a ~2% error between expected colors and computes ones
+        self.css_color_error = 2
         with Form(self.env['base.document.layout']) as doc_layout:
             origin_colors = {
                 'primary_color': '#7790af',
