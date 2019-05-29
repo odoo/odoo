@@ -103,8 +103,7 @@ class IrActionsReport(models.Model):
         ' rendering method. HTML means the report will be opened directly in your'
         ' browser PDF means the report will be rendered using Wkhtmltopdf and'
         ' downloaded by the user.')
-    report_name = fields.Char(string='Template Name', required=True,
-                              help="For QWeb reports, name of the template used in the rendering. The method 'render_html' of the model 'report.template_name' will be called (if any) to give the html. For RML reports, this is the LocalService name.")
+    report_name = fields.Char(string='Template Name', required=True)
     report_file = fields.Char(string='Report File', required=False, readonly=False, store=True,
                               help="The path to the main report file (depending on Report Type) or empty if the content is in another field")
     groups_id = fields.Many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', string='Groups')
@@ -114,7 +113,7 @@ class IrActionsReport(models.Model):
     print_report_name = fields.Char('Printed Report Name', translate=True,
                                     help="This is the filename of the report going to download. Keep empty to not change the report filename. You can use a python expression with the 'object' and 'time' variables.")
     attachment_use = fields.Boolean(string='Reload from Attachment',
-                                    help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.')
+                                    help='If enabled, then the second time the user prints with same attachment name, it returns the previous report.')
     attachment = fields.Char(string='Save as Attachment Prefix',
                              help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.')
 
@@ -198,7 +197,7 @@ class IrActionsReport(models.Model):
                 ('res_id', '=', record.id)
         ], limit=1)
 
-    def postprocess_pdf_report(self, record, buffer):
+    def _postprocess_pdf_report(self, record, buffer):
         '''Hook to handle post processing during the pdf report generation.
         The basic behavior consists to create a new attachment containing the pdf
         base64 encoded.
@@ -461,6 +460,7 @@ class IrActionsReport(models.Model):
                         'Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file number of subprocess reached. Message : %s')
                 else:
                     message = _('Wkhtmltopdf failed (error code: %s). Message: %s')
+                _logger.warning(message, process.returncode, err[-1000:])
                 raise UserError(message % (str(process.returncode), err[-1000:]))
             else:
                 if err:
@@ -513,7 +513,7 @@ class IrActionsReport(models.Model):
     def render_template(self, template, values=None):
         """Allow to render a QWeb template python-side. This function returns the 'ir.ui.view'
         render but embellish it with some variables/methods used in reports.
-        :param values: additionnal methods/variables used in the rendering
+        :param values: additional methods/variables used in the rendering
         :returns: html representation of the template
         """
         if values is None:
@@ -566,7 +566,7 @@ class IrActionsReport(models.Model):
 
         # Create a list of streams representing all sub-reports part of the final result
         # in order to append the existing attachments and the potentially modified sub-reports
-        # by the postprocess_pdf_report calls.
+        # by the _postprocess_pdf_report calls.
         streams = []
 
         # In wkhtmltopdf has been called, we need to split the pdf in order to call the postprocess method.
@@ -582,7 +582,7 @@ class IrActionsReport(models.Model):
                 if len(res_ids) == 1:
                     # Only one record, so postprocess directly and append the whole pdf.
                     if res_ids[0] in record_map and not res_ids[0] in save_in_attachment:
-                        new_stream = self.postprocess_pdf_report(record_map[res_ids[0]], pdf_content_stream)
+                        new_stream = self._postprocess_pdf_report(record_map[res_ids[0]], pdf_content_stream)
                         # If the buffer has been modified, mark the old buffer to be closed as well.
                         if new_stream and new_stream != pdf_content_stream:
                             close_streams([pdf_content_stream])
@@ -617,7 +617,7 @@ class IrActionsReport(models.Model):
                             stream = io.BytesIO()
                             attachment_writer.write(stream)
                             if res_ids[i] and res_ids[i] not in save_in_attachment:
-                                new_stream = self.postprocess_pdf_report(record_map[res_ids[i]], stream)
+                                new_stream = self._postprocess_pdf_report(record_map[res_ids[i]], stream)
                                 # If the buffer has been modified, mark the old buffer to be closed as well.
                                 if new_stream and new_stream != stream:
                                     close_streams([stream])
@@ -680,12 +680,12 @@ class IrActionsReport(models.Model):
         # Disable the debug mode in the PDF rendering in order to not split the assets bundle
         # into separated files to load. This is done because of an issue in wkhtmltopdf
         # failing to load the CSS/Javascript resources in time.
-        # Without this, the header/footer of the reports randomly disapear
+        # Without this, the header/footer of the reports randomly disappear
         # because the resources files are not loaded in time.
         # https://github.com/wkhtmltopdf/wkhtmltopdf/issues/2083
         context['debug'] = False
 
-        # The test cursor prevents the use of another environnment while the current
+        # The test cursor prevents the use of another environment while the current
         # transaction is not finished, leading to a deadlock when the report requests
         # an asset bundle during the execution of test scenarios. In this case, return
         # the html version.
@@ -800,7 +800,7 @@ class IrActionsReport(models.Model):
     def report_action(self, docids, data=None, config=True):
         """Return an action of type ir.actions.report.
 
-        :param docids: id/ids/browserecord of the records to print (if not used, pass an empty list)
+        :param docids: id/ids/browse record of the records to print (if not used, pass an empty list)
         :param report_name: Name of the template to generate an action for
         """
         context = self.env.context
