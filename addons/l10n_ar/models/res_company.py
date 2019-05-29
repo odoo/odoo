@@ -40,7 +40,7 @@ class ResCompany(models.Model):
     @api.depends('l10n_ar_afip_responsability_type')
     def _compute_l10n_ar_company_requires_vat(self):
         for rec in self.filtered(
-                lambda x: x.l10n_ar_afip_responsability_type in ['1', '1FM']):
+                lambda x: x.l10n_ar_afip_responsability_type == '1'):
             rec.l10n_ar_company_requires_vat = True
 
     def _localization_use_documents(self):

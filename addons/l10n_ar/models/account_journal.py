@@ -56,7 +56,6 @@ class AccountJournal(models.Model):
         return {
             'issued': {
                 '1': ['A', 'B', 'E'],
-                '1FM': ['B', 'M'],
                 '3': [],
                 '4': ['C'],
                 '5': [],
@@ -68,7 +67,6 @@ class AccountJournal(models.Model):
             },
             'received': {
                 '1': ['A', 'C', 'M'],
-                '1FM': ['A', 'M'],
                 '3': ['B', 'C'],
                 '4': ['B', 'C'],
                 '5': ['B', 'C'],

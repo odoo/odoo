@@ -24,7 +24,6 @@ class ResPartner(models.Model):
         ' person or a legal entity could have and that impacts in the type of'
         ' operations and requirements they need. Possible values:\n'
         '1 - IVA Responsable Inscripto\n'
-        '1FM - IVA Responsable Inscripto Factura M\n'
         '4 - IVA Sujeto Exento\n'
         '5 - Consumidor Final\n'
         '6 - Responsable Monotributo\n'
@@ -45,7 +44,6 @@ class ResPartner(models.Model):
         """ Return the list of values of the selection field. """
         return [
             ('1', 'IVA Responsable Inscripto'),
-            ('1FM', 'IVA Responsable Inscripto Factura M'),
             ('3', 'IVA no Responsable'),
             ('4', 'IVA Sujeto Exento'),
             ('5', 'Consumidor Final'),
