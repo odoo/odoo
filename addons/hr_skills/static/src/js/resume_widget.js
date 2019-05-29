@@ -159,7 +159,7 @@ var ResumeLineRenderer = AbstractGroupedOne2ManyRenderer.extend({
     _render: function () {
         var self = this;
         return this._super().then(function () {
-            self.$el.find('table').removeClass('table-striped o_list_view_ungrouped');
+            self.$el.find('table').removeClass('table-striped o_list_table_ungrouped');
             self.$el.find('table').addClass('o_resume_table');
         });
     },
