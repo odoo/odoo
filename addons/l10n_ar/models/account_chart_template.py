@@ -42,5 +42,5 @@ class AccountChartTemplate(models.Model):
             acc_template_ref, company, journals_dict=journals_dict)
 
         if company.country_id == self.env.ref('base.ar'):
-            res = [item for item in res if item.get('type') == 'sale']
+            res = [item for item in res if item.get('type') != 'sale']
         return res
