@@ -249,6 +249,11 @@
         .o_composer_send .o_composer_button_send, .o_chatter_avatar {
             display: none !important;
         }
+        .o_attachment {
+            @include media-breakpoint-up(lg) {
+                width: 100%;
+            }
+        }
     }
 
     .o_file_drop_zone_container {
