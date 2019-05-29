@@ -283,7 +283,7 @@ class PosConfig(models.Model):
 
     @api.onchange('available_pricelist_ids')
     def _onchange_available_pricelist_ids(self):
-        if self.pricelist_id not in self.available_pricelist_ids:
+        if self.pricelist_id not in self.available_pricelist_ids._origin:
             self.pricelist_id = False
 
     @api.onchange('is_posbox')
