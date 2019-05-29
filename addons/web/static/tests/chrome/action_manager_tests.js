@@ -1143,6 +1143,30 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('state.sa should load action from session', function (assert) {
+        assert.expect(1);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/session/get_session_action') {
+                    return $.when(1);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        actionManager.loadState({
+            sa: 1,
+        });
+
+        assert.strictEqual(actionManager.$('.o_kanban_view').length, 1,
+            "should have rendered a kanban view");
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Concurrency management');
 
     QUnit.test('drop previous actions if possible', function (assert) {
