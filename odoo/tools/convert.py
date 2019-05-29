@@ -43,18 +43,6 @@ class ParseError(Exception):
         return '"%s" while parsing %s:%s, near\n%s' \
             % (self.msg, self.filename, self.lineno, self.text)
 
-class RecordDictWrapper(dict):
-    """
-    Used to pass a record as locals in eval:
-    records do not strictly behave like dict, so we force them to.
-    """
-    def __init__(self, record):
-        self.record = record
-    def __getitem__(self, key):
-        if key in self.record:
-            return self.record[key]
-        return dict.__getitem__(self, key)
-
 def _get_idref(self, env, model_str, idref):
     idref2 = dict(idref,
                   time=time,
@@ -92,7 +80,7 @@ def _fix_multiple_roots(node):
 def with_data(callback):
     @functools.wraps(callback)
     def _data(self, node, _env):
-        data = node.text # FIXME: don't we need to encode this?
+        data = node.text.encode()
         if node.get('file'):
             with file_open(node.get('file'), 'rb') as f:
                 data = f.read()
@@ -221,23 +209,12 @@ class Evaluator:
         """ Looks for all matches for %(xxx)s in the text (an HTML or XML
         view), and replaces each unique match *in the entire document* at once
         hence the odd `done` set.
-
-        TODO: bench compared to using a straight re.sub with a replacer, as the idrefs are memoized separately...
-
-        e.g. %(?:%|\(([^)]+)\)[ds]) and if group(0) == %% then % else id_get(group(1))
         """
-        matches = re.finditer(r'[^%]%\((.*?)\)[ds]', s)
-        done = set()
-        for m in matches:
-            found = m.group()[1:]
-            if found in done:
-                continue
-            done.add(found)
-            xid = m.groups()[0]
-            r = self.idref[xid] = self.id_get(xid)
-            s = s.replace(found, str(r))
-        s = s.replace('%%', '%') # Quite weird but it's for (somewhat) backward compatibility sake
-        return s
+        return re.sub(
+            r'%%|%\((\w+)\)[ds]',
+            lambda match: '%' if match[0] == '%%' else str(self.id_get(match[1])),
+            s
+        )
 
 
 def str2bool(value):
@@ -711,7 +688,10 @@ form: module.record_id""" % (xml_id,)
         if id_str in self.idref:
             return self.idref[id_str]
         res = self.model_id_get(id_str, raise_if_not_found)
-        return res and res[1]
+        if res:
+            self.idref[id_str] = res[1]
+            return res[1]
+        return False
 
     def model_id_get(self, id_str, raise_if_not_found=True):
         if '.' not in id_str:
