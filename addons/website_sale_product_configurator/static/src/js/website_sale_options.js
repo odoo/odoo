@@ -80,7 +80,7 @@ publicWidget.registry.WebsiteSale.include({
             },
             success: function (quantity) {
                 if (goToShop) {
-                    var path = window.location.pathname.replace(/shop([\/?].*)?$/, "shop/cart");
+                    var path = "/shop/cart";
                     window.location.pathname = path;
                 }
                 var $quantity = $(".my_cart_quantity");

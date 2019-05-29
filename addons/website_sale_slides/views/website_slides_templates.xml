@@ -1,36 +1,6 @@
 <?xml version="1.0" ?>
 <odoo><data>
 
-<template id='course_sidebar' inherit_id="website_slides.course_sidebar">
-    <!-- Channel main template: override button to join channel -->
-    <xpath expr="//div[hasclass('o_wslides_js_course_join')]" position="inside">
-        <t t-if="not channel.is_member and channel.enroll == 'payment'">
-            <t t-if="channel.product_id.website_published">
-                <div t-attf-class="text-center d-flex align-items-center text-center pb-1 #{'justify-content-between' if product_info['has_discounted_price'] else 'justify-content-around'}">
-                    <!-- real price -->
-                    <div class="oe_price font-weight-bold text-nowrap h2 my-2"
-                        t-esc="product_info['price']"
-                        t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
-                    <span itemprop="price" style="display:none;" t-esc="product_info['price']"/>
-                    <span itemprop="priceCurrency" style="display:none;" t-esc="product_info['currency_id'].name"/>
-                    <!-- original discounted price, if any -->
-                    <del t-att-class="'text-600 text-nowrap oe_default_price %s' % ('' if product_info['has_discounted_price'] else 'd-none')"
-                        t-esc="product_info['list_price']"
-                        t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
-                </div>
-                <a role="button" class="btn btn-primary btn-block" t-att-href="'/shop/cart/update?product_id=%s&amp;express=1' % channel.product_id.id">
-                    <span class="cta-title text_small_caps">Buy Course</span>
-                </a>
-            </t>
-            <t t-else="">
-                <div class="alert my-0 bg-200 text-center">
-                    Course Not Buyable
-                </div>
-            </t>
-        </t>
-    </xpath>
-</template>
-
 <template id="lesson_content_quiz" inherit_id="website_slides.lesson_content_quiz">
     <xpath expr="//div[hasclass('o_wslides_js_lesson_quiz')]" position="attributes">
         <attribute name="t-att-data-price">product_info['price'] if product_info else None</attribute>
@@ -53,4 +23,54 @@
     </xpath>
 </template>
 
+<template name="Join Channel: Product Button" id='course_sidebar' inherit_id="website_slides.course_sidebar">
+    <!-- Channel main template: override button to join channel -->
+    <xpath expr="//div[hasclass('o_wslides_js_course_join')]" position="inside">
+        <t t-if="not channel.is_member and channel.enroll == 'payment'">
+            <t t-if="channel.product_id.website_published">
+                <div t-attf-class="text-center d-flex align-items-center text-center pb-1 #{'justify-content-between' if product_info['has_discounted_price'] else 'justify-content-around'}">
+                    <!-- real price -->
+                    <div class="oe_price font-weight-bold text-nowrap h2 my-2"
+                        t-esc="product_info['price']"
+                        t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
+                    <span itemprop="price" style="display:none;" t-esc="product_info['price']"/>
+                    <span itemprop="priceCurrency" style="display:none;" t-esc="product_info['currency_id'].name"/>
+                    <!-- original discounted price, if any -->
+                    <del t-att-class="'text-600 text-nowrap oe_default_price %s' % ('' if product_info['has_discounted_price'] else 'd-none')"
+                        t-esc="product_info['list_price']"
+                        t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
+                </div>
+                <div class="oe_website_sale">
+                    <div class="add_to_cart_button">
+                        <form action="/shop/cart/update" method="POST">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                            <input type="hidden" class="product_id" name="product_id" t-att-value="channel.product_id.id"/>
+                            <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="channel.product_id.id"/>
+                            <a id="add_to_cart" role="button" class="btn btn-primary btn-block js_check_product o_js_add_to_cart a-submit" href="#">
+                                <i class="fa fa-shopping-cart"></i> Add to Cart
+                            </a>
+                            <div id="product_option_block"/>
+                        </form>
+                    </div>
+                    <div class="buy_now_button"/>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="alert my-0 bg-200 text-center">
+                    Course Not Buyable
+                </div>
+            </t>
+        </t>
+    </xpath>
+</template>
+
+<template name="Buy Now Button" id="course_sidebar_buy_now_course" inherit_id="website_sale_slides.course_sidebar" active="False" customize_show="True">
+    <xpath expr="//div[hasclass('buy_now_button')]" position="inside">
+        <div style="margin-top:5px;">
+            <a role="button" class="btn btn-outline-primary btn-block" t-att-href="'/shop/cart/update?product_id=%s&amp;express=1' % channel.product_id.id">
+                <i class="fa fa-bolt"></i> Buy Now
+            </a>
+        </div>
+    </xpath>
+</template>
 </data></odoo>
