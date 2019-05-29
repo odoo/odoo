@@ -59,6 +59,7 @@ var publicWidget = require('web.public.widget');
 
 var _t = core._t;
 var qweb = core.qweb;
+var showDialog = true;
 
 publicWidget.registry.websiteSaleCurrency = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
@@ -183,6 +184,8 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
 });
 
 options.registry.WebsiteSaleProductsItem = options.Class.extend({
+    xmlDependencies: ['/website_sale/static/src/xml/website_sale.editor.xml'],
+
     events: _.extend({}, options.Class.prototype.events || {}, {
         'mouseenter .o_wsale_soptions_menu_sizes table': '_onTableMouseEnter',
         'mouseleave .o_wsale_soptions_menu_sizes table': '_onTableMouseLeave',
@@ -246,13 +249,10 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      * @see this.selectClass for params
      */
     changeSequence: function (previewMode, value, $opt) {
-        this._rpc({
-            route: '/shop/change_sequence',
-            params: {
-                id: this.productTemplateID,
-                sequence: value,
-            },
-        }).then(reload);
+        this._openConfirmDialog('/shop/change_sequence', {
+            id: this.productTemplateID,
+            sequence: value,
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -274,6 +274,60 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         $size.find('tr td:nth-child(n + ' + parseInt(this.ppr + 1) + ')').hide();
 
         return this._super.apply(this, arguments);
+    },
+    /**
+     * update product grid size and sequence.
+     * @private
+     *
+     * @param {string} route
+     * @param {Object} params
+     *
+     */
+    _updateProductDetails: function (route, params) {
+        var self = this;
+        this._rpc({
+            route: route,
+            params: params,
+        }).then(function (result) {
+            if (result.template) {
+                self.$target.closest("#products_grid #product_table").replaceWith(result.template);
+                $('.oe_overlay').detach();
+            }
+        });
+    },
+    /**
+     * Displays confirmation dialog  if the user tries to change product grid size and sequence.
+     * @private
+     *
+     * @param {string} route
+     * @param {Object} params
+     *
+     */
+    _openConfirmDialog: function (route, params) {
+        var self = this;
+        var data = $('table#product_table').data();
+        _.extend(params, {
+            'page': data.page || 0,
+            'category': data.category,
+            'search': data.search,
+            'ppg': data.ppg,
+            'ppr': data.ppr,
+            'post': data.post,
+        });
+        if (showDialog) {
+            var $content = $(qweb.render('website_sale.dialog_confirmation'));
+            new Dialog(this, {
+                title: _t('Confirmation'),
+                size: 'medium',
+                buttons: [{text: _t('Confirm'), classes: 'btn-primary', close: true, click: function (ev) {
+                    showDialog = !this.$content.find('input#dialog_show').is(':checked');
+                    self._updateProductDetails(route, params);
+                }}, {text: _t('Cancel'), close: true}],
+                $content: $content,
+            }).open();
+        } else {
+            this._updateProductDetails(route, params);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -322,14 +376,11 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         var $td = $(ev.currentTarget);
         var x = $td.index() + 1;
         var y = $td.parent().index() + 1;
-        this._rpc({
-            route: '/shop/change_size',
-            params: {
-                id: this.productTemplateID,
-                x: x,
-                y: y,
-            },
-        }).then(reload);
+        this._openConfirmDialog('/shop/change_size', {
+            id: this.productTemplateID,
+            x: x,
+            y: y,
+        });
     },
 });
 

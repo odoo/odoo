@@ -225,44 +225,7 @@
                                 <t t-set='editor_msg'>Drag building blocks here to customize the header for "<t t-esc='category.name'/>" category.</t>
                                 <div class="mb16" id="category_header" t-att-data-editor-message="editor_msg" t-field="category.website_description"/>
                             </t>
-                            <div t-if="bins" class="o_wsale_products_grid_table_wrapper">
-                                <table class="table table-borderless m-0" t-att-data-ppg="ppg" t-att-data-ppr="ppr">
-                                    <colgroup t-ignore="true">
-                                        <!-- Force the number of columns (useful when only one row of (x < ppr) products) -->
-                                        <col t-foreach="ppr" t-as="p"/>
-                                    </colgroup>
-                                    <tbody>
-                                        <tr t-foreach="bins" t-as="tr_product">
-                                            <t t-foreach="tr_product" t-as="td_product">
-                                                <t t-if="td_product">
-                                                    <t t-set="product" t-value="td_product['product']" />
-                                                    <td t-att-colspan="td_product['x'] != 1 and td_product['x']"
-                                                        t-att-rowspan="td_product['y'] != 1 and td_product['y']"
-                                                        t-attf-class="oe_product #{td_product['class']}">
-                                                        <div t-attf-class="o_wsale_product_grid_wrapper o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
-                                                            <t t-call="website_sale.products_item">
-                                                                <t t-set="product_image_big" t-value="td_product['x'] + td_product['y'] &gt; 2"/>
-                                                            </t>
-                                                        </div>
-                                                    </td>
-                                                </t>
-                                                <td t-else=""/>
-                                            </t>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <t t-else="">
-                                <div class="text-center text-muted oe_product">
-                                    <h3 class="css_editable_display mt8">No product defined.</h3>
-                                    <t t-if="search">
-                                        <p>
-                                            No results found for "<strong t-esc='search'/>".
-                                        </p>
-                                    </t>
-                                    <p groups="sales_team.group_sale_manager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
-                                </div>
-                            </t>
+                            <t t-call="website_sale.product_table"/>
                         </div>
                     </div>
                     <div class="products_pager form-inline justify-content-center mt-3">
@@ -270,6 +233,47 @@
                     </div>
                 </div>
                 <div class="oe_structure mb32" id="oe_structure_website_sale_products_2"/>
+            </div>
+        </t>
+    </template>
+
+    <template id="product_table" name="ProductTable">
+        <div t-if="bins" class="o_wsale_products_grid_table_wrapper">
+            <table id="product_table" class="table table-borderless m-0" t-att-data-page="page" t-att-data-category="category" t-att-data-search="search" t-att-data-post="post" t-att-data-ppg="ppg" t-att-data-ppr="ppr">
+                <colgroup t-ignore="true">
+                    <!-- Force the number of columns (useful when only one row of (x < ppr) products) -->
+                    <col t-foreach="ppr" t-as="p"/>
+                </colgroup>
+                <tbody>
+                    <tr t-foreach="bins" t-as="tr_product">
+                        <t t-foreach="tr_product" t-as="td_product">
+                            <t t-if="td_product">
+                                <t t-set="product" t-value="td_product['product']" />
+                                <td t-att-colspan="td_product['x'] != 1 and td_product['x']"
+                                    t-att-rowspan="td_product['y'] != 1 and td_product['y']"
+                                    t-attf-class="oe_product #{td_product['class']}">
+                                    <div t-attf-class="o_wsale_product_grid_wrapper o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
+                                        <t t-call="website_sale.products_item">
+                                            <t t-set="product_image_big" t-value="td_product['x'] + td_product['y'] &gt; 2"/>
+                                        </t>
+                                    </div>
+                                </td>
+                            </t>
+                            <td t-else=""/>
+                        </t>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <t t-else="">
+            <div class="text-center text-muted oe_product">
+                <h3 class="css_editable_display mt8">No product defined.</h3>
+                <t t-if="search">
+                    <p>
+                        No results found for "<strong t-esc='search'/>".
+                    </p>
+                </t>
+                <p groups="sales_team.group_sale_manager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
             </div>
         </t>
     </template>

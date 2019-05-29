@@ -204,6 +204,14 @@ class WebsiteSale(http.Controller):
         '''/shop/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>/page/<int:page>'''
     ], type='http', auth="public", website=True)
     def shop(self, page=0, category=None, search='', ppg=False, **post):
+        values = self._prepare_bins(page, category, search, ppg, **post)
+        values['page'] = page
+        values['post'] = post
+        if category:
+            values['main_object'] = category
+        return request.render("website_sale.products", values)
+
+    def _prepare_bins(self, page=0, category=None, search='', ppg=False, **post):
         add_qty = int(post.get('add_qty', 1))
         if category:
             category = request.env['product.public.category'].search([('id', '=', int(category))], limit=1)
@@ -281,7 +289,7 @@ class WebsiteSale(http.Controller):
             else:
                 layout_mode = 'grid'
 
-        values = {
+        return {
             'search': search,
             'category': category,
             'attrib_values': attrib_values,
@@ -302,9 +310,6 @@ class WebsiteSale(http.Controller):
             'search_categories_ids': search_categories and search_categories.ids,
             'layout_mode': layout_mode,
         }
-        if category:
-            values['main_object'] = category
-        return request.render("website_sale.products", values)
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
     def product(self, product, category='', search='', **kwargs):
@@ -1077,8 +1082,8 @@ class WebsiteSale(http.Controller):
 
         return not active
 
-    @http.route(['/shop/change_sequence'], type='json', auth='user')
-    def change_sequence(self, id, sequence):
+    @http.route(['/shop/change_sequence'], type='json', auth='user', website=True)
+    def change_sequence(self, id, sequence, **post):
         product_tmpl = request.env['product.template'].browse(id)
         if sequence == "top":
             product_tmpl.set_sequence_top()
@@ -1088,11 +1093,19 @@ class WebsiteSale(http.Controller):
             product_tmpl.set_sequence_up()
         elif sequence == "down":
             product_tmpl.set_sequence_down()
+        values = self._prepare_bins(page=post.get('page'), category=post.get('category'), search=post.get('search'), ppg=post.get('ppg'), post=post.get('post'))
+        values['page'] = post.get('page')
+        values['post'] = post.get('post')
+        return {'template': request.env['ir.ui.view'].render_template("website_sale.product_table", values)}
 
-    @http.route(['/shop/change_size'], type='json', auth='user')
-    def change_size(self, id, x, y):
+    @http.route(['/shop/change_size'], type='json', auth='user', website=True)
+    def change_size(self, id, x, y, **post):
         product = request.env['product.template'].browse(id)
-        return product.write({'website_size_x': x, 'website_size_y': y})
+        product.write({'website_size_x': x, 'website_size_y': y})
+        values = self._prepare_bins(page=post.get('page'), category=post.get('category'), search=post.get('search'), ppg=post.get('ppg'), post=post.get('post'))
+        values['page'] = post.get('page')
+        values['post'] = post.get('post')
+        return {'template': request.env['ir.ui.view'].render_template("website_sale.product_table", values)}
 
     @http.route(['/shop/change_ppg'], type='json', auth='user')
     def change_ppg(self, ppg):
