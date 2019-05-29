@@ -177,6 +177,7 @@
     <template id="assets_frontend" inherit_id="website.assets_frontend" name="Survey assets">
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/website_crm_partner_assign/static/src/js/crm_partner_assign.js" />
+            <script type="text/javascript" src="/website_crm_partner_assign/static/src/js/opportunity_stages.js" />
         </xpath>
     </template>
     <template id="portal_my_home_menu_lead" name="Portal layout : lead menu entry" inherit_id="portal.portal_breadcrumbs" priority="15">
@@ -498,13 +499,13 @@
             <t t-call="portal.portal_record_layout">
                 <t t-set="card_header">
                     <div class="row no-gutters">
-                        <div class="col-md">
+                        <div class="col-md-6">
                             <h5 class="mb-2 mb-md-0">
                                 <small class="text-muted">Opportunity - </small>
                                 <span t-field="opportunity.name"/>
                             </h5>
                         </div>
-                        <div class="col-md text-md-right">
+                        <div id="stages" class="mt-2">
                             <div class="d-inline-block">
                                 <small class="mr-2 mt-1 float-left"><b>Stage:</b></small>
                                 <div t-foreach="stages[::-1]" t-as="stage" class="float-left">
