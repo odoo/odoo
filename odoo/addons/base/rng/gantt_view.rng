@@ -37,13 +37,6 @@
             </rng:optional>
 
             <rng:optional><rng:attribute name="precision"/></rng:optional>
-            <rng:optional>
-                <rng:element name="templates">
-                    <rng:oneOrMore>
-                        <rng:ref name="any"/>
-                    </rng:oneOrMore>
-                </rng:element>
-            </rng:optional>
 
             <rng:optional><rng:attribute name="color"/></rng:optional>
 
@@ -53,11 +46,17 @@
             <rng:optional><rng:attribute name="decoration-warning"/></rng:optional>
             <rng:optional><rng:attribute name="decoration-danger"/></rng:optional>
 
-            <rng:zeroOrMore>
-                <rng:choice>
-                    <rng:ref name="field"/>
-                </rng:choice>
-            </rng:zeroOrMore>
+            <rng:interleave>
+                <rng:zeroOrMore><rng:ref name="field"/></rng:zeroOrMore>
+                <rng:optional>
+                    <rng:element name="templates">
+                        <rng:oneOrMore>
+                            <rng:ref name="any"/>
+                        </rng:oneOrMore>
+                    </rng:element>
+                </rng:optional>
+            </rng:interleave>
+
             <rng:empty/>
         </rng:element>
     </rng:define>
