@@ -29,7 +29,7 @@ class StockWarehouse(models.Model):
         for warehouse in self:
             result[warehouse.id].update({
                 'subcontract': [
-                    self.Routing(warehouse.lot_stock_id, subcontract_location_id, warehouse.out_type_id, 'pull'),
+                    self.Routing(warehouse.lot_stock_id, subcontract_location_id, warehouse.out_type_id, 'pull', False),
                 ]
             })
         return result
