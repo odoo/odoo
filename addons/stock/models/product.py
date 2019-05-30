@@ -401,7 +401,7 @@ class Product(models.Model):
                 return {
                     'warning': {
                         'title': _('Warning!'),
-                        'message': _("You have products in stock that have no lot number.  You can assign serial numbers by doing an inventory.  ")}}
+                        'message': _("You have product(s) in stock that have no lot/serial number. You can assign lot/serial numbers by doing an inventory adjustment.")}}
 
     @api.model
     def view_header_get(self, view_id, view_type):
