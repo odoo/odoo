@@ -136,7 +136,7 @@ class IrModel(models.Model):
         cr = self.env.cr
         for model in self:
             records = self.env[model.model]
-            if not records._abstract:
+            if not records._abstract and records._auto:
                 cr.execute('SELECT COUNT(*) FROM "%s"' % records._table)
                 model.count = cr.fetchone()[0]
 
