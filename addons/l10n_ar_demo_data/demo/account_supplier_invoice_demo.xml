@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Invoice from gritti support service, auto fiscal position set tax no corresponde -->
+    <record id="demo_sup_invoice_1" model="account.invoice">
+        <field name="partner_id" ref="res_partner_gritti_agrimensura"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="payment_term_id" ref="account.account_payment_term"/>
+        <field name="type">in_invoice</field>
+        <field name="l10n_latam_document_number">0001-00000008</field>
+        <field name="date_invoice" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+        <record id="demo_sup_invoice_1_line_1" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_sup_invoice_1"/>
+            <field name="product_id" ref="product.product_product_2"/>
+            <field name="price_unit">642.0</field>
+            <field name="quantity">1</field>
+        </record>
+
+        <record id="demo_sup_invoice_1_line_2" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_sup_invoice_1"/>
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="price_unit">642.0</field>
+            <field name="quantity">5</field>
+        </record>
+
+        <record id="demo_sup_invoice_1_line_3" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_sup_invoice_1"/>
+            <field name="product_id" ref="product_product_telefonia"/>
+            <field name="price_unit">250.0</field>
+            <field name="quantity">1</field>
+        </record>
+
+        <record id="demo_sup_invoice_1_line_4" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_sup_invoice_1"/>
+            <field name="product_id" ref="product_product_no_gravado"/>
+            <field name="price_unit">50.0</field>
+            <field name="quantity">10</field>
+        </record>
+
+        <record id="demo_sup_invoice_1_line_5" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_sup_invoice_1"/>
+            <field name="product_id" ref="product_product_exento"/>
+            <field name="price_unit">100.0</field>
+            <field name="quantity">1</field>
+        </record>
+
+        <function model="account.invoice" name="compute_taxes">
+            <value eval="[ref('demo_sup_invoice_1')]"/>
+        </function>
+
+    <!-- Invoice from Asustek with vat 21, 27 and 10,5 -->
+    <record id="demo_sup_invoice_2" model="account.invoice">
+        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="payment_term_id" ref="account.account_payment_term"/>
+        <field name="type">in_invoice</field>
+        <field name="l10n_latam_document_number">0002-00000123</field>
+        <field name="date_invoice" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+        <record id="demo_sup_invoice_2_line_1" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_sup_invoice_2"/>
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="price_unit">543.0</field>
+            <field name="quantity">5</field>
+        </record>
+
+        <record id="demo_sup_invoice_2_line_2" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_sup_invoice_2"/>
+            <field name="product_id" ref="product_product_telefonia"/>
+            <field name="price_unit">180.0</field>
+            <field name="quantity">1</field>
+        </record>
+
+        <record id="demo_sup_invoice_2_line_3" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_sup_invoice_2"/>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="price_unit">2145.0</field>
+            <field name="quantity">2</field>
+        </record>
+
+        <function model="account.invoice" name="compute_taxes">
+            <value eval="[ref('demo_sup_invoice_2')]"/>
+        </function>
+
+
+    <!-- Invoice from Asustek with vat cero and 21 -->
+    <record id="demo_sup_invoice_3" model="account.invoice">
+        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="payment_term_id" ref="account.account_payment_term"/>
+        <field name="type">in_invoice</field>
+        <field name="l10n_latam_document_number">0003-00000312</field>
+        <field name="date_invoice" eval="time.strftime('%Y-%m')+'-11'"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+        <record id="demo_sup_invoice_3_line_1" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_sup_invoice_3"/>
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="price_unit">530.0</field>
+            <field name="quantity">5</field>
+        </record>
+
+        <record id="demo_sup_invoice_3_line_2" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_sup_invoice_3"/>
+            <field name="product_id" ref="product_product_cero"/>
+            <field name="price_unit">100.0</field>
+            <field name="quantity">1</field>
+        </record>
+
+        <function model="account.invoice" name="compute_taxes">
+            <value eval="[ref('demo_sup_invoice_3')]"/>
+        </function>
+
+    <!-- Invoice to Asustek with vat exempt and 21 -->
+    <record id="demo_sup_invoice_4" model="account.invoice">
+        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="payment_term_id" ref="account.account_payment_term"/>
+        <field name="type">in_invoice</field>
+        <field name="l10n_latam_document_number">0001-00000200</field>
+        <field name="date_invoice" eval="time.strftime('%Y-%m')+'-15'"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+        <record id="demo_sup_invoice_4_line_1" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_sup_invoice_4"/>
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="price_unit">530.0</field>
+            <field name="quantity">5</field>
+        </record>
+
+        <record id="demo_sup_invoice_4_line_2" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_sup_invoice_4"/>
+            <field name="product_id" ref="product_product_exento"/>
+            <field name="price_unit">60.0</field>
+            <field name="quantity">1</field>
+        </record>
+
+        <function model="account.invoice" name="compute_taxes">
+            <value eval="[ref('demo_sup_invoice_4')]"/>
+        </function>
+
+    <!-- Invoice to Asustek with all type of taxes  -->
+    <record id="demo_sup_invoice_5" model="account.invoice">
+        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="payment_term_id" ref="account.account_payment_term"/>
+        <field name="type">in_invoice</field>
+        <field name="l10n_latam_document_number">0001-00000222</field>
+        <field name="date_invoice" eval="time.strftime('%Y-%m')+'-18'"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+        <record id="demo_sup_invoice_5_line_1" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_sup_invoice_5"/>
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="price_unit">530.0</field>
+            <field name="quantity">5</field>
+        </record>
+
+        <record id="demo_sup_invoice_5_line_2" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_sup_invoice_5"/>
+            <field name="product_id" ref="product_product_telefonia"/>
+            <field name="price_unit">160.0</field>
+            <field name="quantity">1</field>
+        </record>
+
+        <record id="demo_sup_invoice_5_line_3" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_sup_invoice_5"/>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="price_unit">1845.0</field>
+            <field name="quantity">2</field>
+        </record>
+
+        <record id="demo_sup_invoice_5_line_4" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_sup_invoice_5"/>
+            <field name="product_id" ref="product_product_no_gravado"/>
+            <field name="price_unit">40.0</field>
+            <field name="quantity">1</field>
+        </record>
+
+        <record id="demo_sup_invoice_5_line_5" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_sup_invoice_5"/>
+            <field name="product_id" ref="product_product_cero"/>
+            <field name="price_unit">50.0</field>
+            <field name="quantity">1</field>
+        </record>
+
+        <record id="demo_sup_invoice_5_line_6" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_sup_invoice_5"/>
+            <field name="product_id" ref="product_product_exento"/>
+            <field name="price_unit">60.0</field>
+            <field name="quantity">1</field>
+        </record>
+
+        <function model="account.invoice" name="compute_taxes">
+            <value eval="[ref('demo_sup_invoice_5')]"/>
+        </function>
+
+    <!-- Importacion de servicios a odoo, fiscal position changes tax to no corresponde -->
+    <record id="demo_sup_invoice_6" model="account.invoice">
+        <field name="partner_id" ref="res_partner_odoo"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="payment_term_id" ref="account.account_payment_term"/>
+        <field name="type">in_invoice</field>
+        <field name="l10n_latam_document_number">0001-00000333</field>
+        <field name="date_invoice" eval="time.strftime('%Y-%m')+'-26'"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+        <record id="demo_sup_invoice_6_line_1" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_sup_invoice_6"/>
+            <field name="product_id" ref="product.product_product_2"/>
+            <field name="price_unit">2642.0</field>
+            <field name="quantity">1</field>
+        </record>
+
+        <function model="account.invoice" name="compute_taxes">
+            <value eval="[ref('demo_sup_invoice_6')]"/>
+        </function>
+
+    <!-- Factura simil dhl con linea no corresponde en negativo -->
+    <record id="demo_sup_invoice_7" model="account.invoice">
+        <field name="partner_id" ref="res_partner_odoo"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="payment_term_id" ref="account.account_payment_term"/>
+        <field name="type">in_invoice</field>
+        <field name="l10n_latam_document_number">0001-00000334</field>
+        <field name="date_invoice" eval="time.strftime('%Y-%m')+'-27'"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+        <record id="demo_sup_invoice_7_line_1" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_sup_invoice_7"/>
+            <field name="product_id" ref="product.product_product_2"/>
+            <field name="price_unit">2642.0</field>
+            <field name="quantity">1</field>
+        </record>
+
+        <record id="demo_sup_invoice_7_line_2" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_sup_invoice_7"/>
+            <field name="product_id" ref="product_product_no_gravado"/>
+            <field name="price_unit">-50.0</field>
+            <field name="quantity">1</field>
+        </record>
+
+        <function model="account.invoice" name="compute_taxes">
+            <value eval="[ref('demo_sup_invoice_7')]"/>
+        </function>
+
+    <!-- creamos despacho de importación -->
+    <record id="demo_despacho_1" model="account.invoice">
+        <field name="partner_id" ref="l10n_ar.partner_afip"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="payment_term_id" ref="account.account_payment_term"/>
+        <field name="type">in_invoice</field>
+        <field name="l10n_latam_document_number">16052IC04000605L</field>
+        <field name="date_invoice" eval="time.strftime('%Y-%m')+'-13'"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+        <record id="demo_despacho_1_line_1" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_despacho_1"/>
+            <field name="product_id" ref="l10n_ar.product_product_quote_despacho"/>
+            <field name="price_unit">5064.98</field>
+            <field name="quantity">1</field>
+        </record>
+
+        <record id="demo_despacho_1_line_2" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_despacho_1"/>
+            <field name="product_id" ref="l10n_ar.product_product_tasa_estadistica"/>
+            <field name="price_unit">152.08</field>
+            <field name="quantity">1</field>
+        </record>
+
+        <record id="demo_despacho_1_line_3" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_despacho_1"/>
+            <field name="product_id" ref="l10n_ar.product_product_arancel"/>
+            <field name="price_unit">10.00</field>
+            <field name="quantity">1</field>
+        </record>
+
+        <record id="demo_despacho_1_line_4" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_despacho_1"/>
+            <field name="product_id" ref="l10n_ar.product_product_servicio_de_guarda"/>
+            <field name="price_unit">28.00</field>
+            <field name="quantity">1</field>
+        </record>
+
+        <record id="demo_despacho_1_line_5" model="account.invoice.line">
+            <field name="name">FOB Total</field>
+            <field name="invoice_id" ref="demo_despacho_1"/>
+            <!-- TODO it would be better to use an specific product or not product at all -->
+            <field name="product_id" ref="product.product_product_2"/>
+            <field name="price_unit">28936.06</field>
+            <field name="quantity">1</field>
+        </record>
+
+        <record id="demo_despacho_1_line_6" model="account.invoice.line">
+            <field name="name">-FOB Total</field>
+            <field name="invoice_id" ref="demo_despacho_1"/>
+            <field name="product_id" ref="product.product_product_2"/>
+            <field name="price_unit">-28936.06</field>
+            <field name="quantity">1</field>
+            <field name="invoice_line_tax_ids" model="account.tax" eval="[(6, 0, obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'IVA Compras No Gravado'), ('type_tax_use', '=', 'purchase')], limit=1).ids)]"/>
+        </record>
+
+        <record id="demo_despacho_1_line_7" model="account.invoice.line">
+            <field name="name">Flete</field>
+            <field name="invoice_id" ref="demo_despacho_1"/>
+            <field name="product_id" ref="product.product_product_2"/>
+            <field name="price_unit">1350.00</field>
+            <field name="quantity">1</field>
+        </record>
+
+        <record id="demo_despacho_1_line_8" model="account.invoice.line">
+            <field name="name">-Flete</field>
+            <field name="invoice_id" ref="demo_despacho_1"/>
+            <field name="product_id" ref="product.product_product_2"/>
+            <field name="price_unit">-1350.00</field>
+            <field name="quantity">1</field>
+            <field name="invoice_line_tax_ids" model="account.tax" eval="[(6, 0, obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'IVA Compras No Gravado'), ('type_tax_use', '=', 'purchase')], limit=1).ids)]"/>
+        </record>
+
+        <record id="demo_despacho_1_line_9" model="account.invoice.line">
+            <field name="name">Seguro</field>
+            <field name="invoice_id" ref="demo_despacho_1"/>
+            <field name="product_id" ref="product.product_product_2"/>
+            <field name="price_unit">130.21</field>
+            <field name="quantity">1</field>
+        </record>
+
+        <record id="demo_despacho_1_line_10" model="account.invoice.line">
+            <field name="name">-Seguro</field>
+            <field name="invoice_id" ref="demo_despacho_1"/>
+            <field name="product_id" ref="product.product_product_2"/>
+            <field name="price_unit">-130.21</field>
+            <field name="quantity">1</field>
+            <field name="invoice_line_tax_ids" model="account.tax" eval="[(6, 0, obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'IVA Compras No Gravado'), ('type_tax_use', '=', 'purchase')], limit=1).ids)]"/>
+        </record>
+
+        <record id="demo_despacho_1_tax_line_1" model="account.invoice.tax">
+            <field name="amount">2138.0</field>
+            <field name="sequence">99</field>
+            <field name="manual" eval="True"/>
+            <field name="invoice_id" ref="demo_despacho_1"/>
+            <field name="tax_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'Percepción Ganancias Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).id"/>
+            <field name="name" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'Percepción Ganancias Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).name"/>
+            <field name="account_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'Percepción Ganancias Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).account_id.id"/>
+        </record>
+
+        <record id="demo_despacho_1_tax_line_2" model="account.invoice.tax">
+            <field name="amount">890.84</field>
+            <field name="sequence">99</field>
+            <field name="manual" eval="True"/>
+            <field name="invoice_id" ref="demo_despacho_1"/>
+            <field name="tax_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'Percepción IIBB CABA Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).id"/>
+            <field name="name" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'Percepción IIBB CABA Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).name"/>
+            <field name="account_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'Percepción IIBB CABA Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).account_id.id"/>
+        </record>
+
+        <record id="demo_despacho_1_tax_line_3" model="account.invoice.tax">
+            <field name="amount">7126.67</field>
+            <field name="sequence">99</field>
+            <field name="manual" eval="True"/>
+            <field name="invoice_id" ref="demo_despacho_1"/>
+            <field name="tax_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'IVA Adicional 20%'), ('type_tax_use', '=', 'purchase')], limit=1).id"/>
+            <field name="name" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'IVA Adicional 20%'), ('type_tax_use', '=', 'purchase')], limit=1).name"/>
+            <field name="account_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'IVA Adicional 20%'), ('type_tax_use', '=', 'purchase')], limit=1).account_id.id"/>
+        </record>
+
+        <function model="account.invoice" name="compute_taxes">
+            <value eval="[ref('demo_despacho_1')]"/>
+        </function>
+
+
+</odoo>

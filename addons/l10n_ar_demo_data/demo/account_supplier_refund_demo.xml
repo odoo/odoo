@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="True">
+
+    <!-- Create draft refund for invoice 3 -->
+    <record id="demo_sup_refund_invoice_3" model="account.invoice.refund">
+        <field name="description">Mercadería defectuosa</field>
+        <field name="filter_refund">refund</field>
+        <field name="l10n_latam_document_number">0001-01234567</field>
+        <field name="l10n_latam_invoice_id" ref="demo_sup_invoice_3"/>
+    </record>
+
+        <function model="account.invoice.refund" name="_compute_l10n_latam_available_document_types"
+           eval="[ref('demo_sup_refund_invoice_3')], {'active_ids': [ref('demo_sup_invoice_3')], 'active_model': 'account.invoice'}"/>
+
+        <function model="account.invoice.refund" name="invoice_refund"
+           eval="[ref('demo_sup_refund_invoice_3')], {'active_ids': [ref('demo_sup_invoice_3')], 'active_model': 'account.invoice'}"/>
+
+    <!-- Create draft refund for invoice 4 -->
+    <record id="demo_sup_refund_invoice_4" model="account.invoice.refund">
+        <field name="description">Venta cancelada</field>
+        <field name="l10n_latam_document_number">0001-01234566</field>
+        <field name="filter_refund">cancel</field>
+        <field name="l10n_latam_invoice_id" ref="demo_sup_invoice_4"/>
+    </record>
+
+        <function model="account.invoice.refund" name="_compute_l10n_latam_available_document_types"
+           eval="[ref('demo_sup_refund_invoice_4')], {'active_ids': [ref('demo_sup_invoice_4')], 'active_model': 'account.invoice'}"/>
+
+        <function model="account.invoice.refund" name="invoice_refund"
+           eval="[ref('demo_sup_refund_invoice_4')], {'active_ids': [ref('demo_sup_invoice_4')], 'active_model': 'account.invoice'}"/>
+
+</odoo>

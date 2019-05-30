@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="base.main_partner" model="res.partner">
+        <field name='l10n_ar_afip_responsability_type'>1</field>
+        <field name="street">Calle Falsa 123</field>
+        <field name="city">Rosario</field>
+        <field name="country_id" ref="base.ar"/>
+        <field name="state_id" ref="base.state_ar_s"/>
+        <field name="zip">2000</field>
+        <field name="phone">+1 555 123 8069</field>
+        <field name="email">info@yourcompany.example.com</field>
+        <field name="website">www.example.com</field>
+        <field name="supplier" eval="True"/>
+    </record>
+
+    <record id="base.main_company" model="res.company">
+        <field name='currency_id' ref='base.ARS'/>
+        <field name='l10n_ar_gross_income_type'>no_liquida</field>
+    </record>
+
+    <function model="account.chart.template" name="try_loading_for_current_company">
+        <value eval="[ref('l10n_ar.l10nar_ri_chart_template')]"/>
+    </function>
+
+</odoo>

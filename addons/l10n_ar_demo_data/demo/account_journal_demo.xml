@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="False">
+
+    <record id="account_journal_CF_Z" model="account.journal">
+        <field name="name">Comprobante diario de cierre (ZETA)</field>
+        <field name="code">V1234</field>
+        <field name="type">sale</field>
+        <field name="l10n_ar_afip_pos_number">1234</field>
+        <field name="l10n_ar_afip_pos_system">CF_Z</field>
+        <field name="l10n_latam_use_documents" eval="True"/>
+        <field name="sequence" eval="20"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="l10n_ar_afip_pos_partner_id" ref="base.main_partner"/>
+    </record>
+
+</odoo>
