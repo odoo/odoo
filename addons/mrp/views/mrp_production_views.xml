@@ -181,7 +181,7 @@
                                     <field name="product_id" readonly="1"/>
                                     <field name="lot_id" groups="stock.group_production_lot" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}" attrs="{'invisible': [('lots_visible', '=', False)]}"/>
                                     <field name="product_uom_id" groups="uom.group_uom"/>
-                                    <field name="qty_done"/>
+                                    <field name="qty_done" string="Produced"/>
                                     <field name="lots_visible" invisible="1"/>
                                     <field name="done_move" invisible="1"/>
                                     <field name="state" invisible="1"/>
