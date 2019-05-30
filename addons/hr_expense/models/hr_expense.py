@@ -869,6 +869,26 @@ class HrExpenseSheet(models.Model):
         self.activity_update()
         return True
 
+    def activity_custom_actions(self, activity):
+        self.ensure_one()
+        res = super(HrExpenseSheet, self).activity_custom_actions(activity)
+        if self.state in ['draft', 'post', 'done', 'cancel'] or not activity['automated']:
+            return res
+        if self.user_has_groups('hr_expense.group_hr_expense_team_approver'):
+            res.insert(0, {'text': 'Refuse', 'selector_class': 'o_activity_custom_action',
+                           'icon': 'fa-ban', 'action': 'open_refuse_expense_wizard', 'action_type': 'object'})
+            if self.state == 'submit':
+                res.insert(0, {'text': 'Approve', 'selector_class': 'o_activity_custom_action',
+                               'icon': 'fa-check', 'action': 'approve_expense_sheets', 'action_type': 'object'})
+        return res
+
+    def open_refuse_expense_wizard(self):
+        action = self.env.ref('hr_expense.hr_expense_refuse_wizard_action').read()[0]
+        ctx = self.env.context.copy()
+        ctx.update({'hr_expense_refuse_model': 'hr.expense.sheet'})
+        action['context'] = ctx
+        return action
+
     def _get_responsible_for_approval(self):
         if self.user_id:
             return self.user_id

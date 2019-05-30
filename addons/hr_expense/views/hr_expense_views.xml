@@ -554,6 +554,7 @@
             <field name="model">hr.expense.sheet</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
+                    <field name="activity_state"/>
                     <field name="name"/>
                     <field name="employee_id"/>
                     <field name="total_amount"/>
@@ -577,6 +578,7 @@
                                         <span class="float-right text-right">
                                             <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'submit': 'default', 'cancel': 'danger', 'post': 'warning',
                                             'done': 'success'}}"/>
+                                            <field name="activity_ids" widget="kanban_activity"/>
                                         </span>
                                     </div>
                                 </div>
