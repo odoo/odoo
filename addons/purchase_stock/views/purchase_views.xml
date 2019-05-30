@@ -27,6 +27,9 @@
             <xpath expr="//field[@name='order_line']/form//field[@name='invoice_lines']" position="after">
                 <field name="move_ids"/>
             </xpath>
+            <xpath expr="//field[@name='order_line']/form//field[@name='account_analytic_id']" position="before">
+                <field name="propagate" groups="base.group_no_one"/>
+            </xpath>
             <xpath expr="//field[@name='order_line']/tree//field[@name='qty_received']" position="attributes">
                 <attribute name="attrs">{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))], 'readonly': [('product_type', 'in', ('consu', 'product'))]}</attribute>
             </xpath>

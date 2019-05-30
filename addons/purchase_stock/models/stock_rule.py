@@ -53,6 +53,7 @@ class StockRule(models.Model):
             procurement.values['supplier'] = supplier
             procurement.values['propagate_date'] = rule.propagate_date
             procurement.values['propagate_date_minimum_delta'] = rule.propagate_date_minimum_delta
+            procurement.values['propagate'] = rule.propagate
 
             domain = rule._make_po_get_domain(procurement.company_id, procurement.values, partner)
             procurements_by_po_domain[domain].append((procurement, rule))
@@ -108,7 +109,6 @@ class StockRule(models.Model):
                     # If it does not exist a PO line for current procurement.
                     # Generate the create values for it and add it to a list in
                     # order to create it in batch.
-                    partner = procurement.values['supplier'].name
                     po_line_values.append(self._prepare_purchase_order_line(
                         procurement.product_id, procurement.product_qty,
                         procurement.product_uom, procurement.company_id,
@@ -117,11 +117,11 @@ class StockRule(models.Model):
 
     @api.model
     def _get_procurements_to_merge_groupby(self, procurement):
-        return procurement.product_id, procurement.product_uom, procurement.values['propagate_date'], procurement.values['propagate_date_minimum_delta']
+        return procurement.product_id, procurement.product_uom, procurement.values['propagate_date'], procurement.values['propagate_date_minimum_delta'], procurement.values['propagate']
 
     @api.model
     def _get_procurements_to_merge_sorted(self, procurement):
-        return procurement.product_id.id, procurement.product_uom.id, procurement.values['propagate_date'], procurement.values['propagate_date_minimum_delta']
+        return procurement.product_id.id, procurement.product_uom.id, procurement.values['propagate_date'], procurement.values['propagate_date_minimum_delta'], procurement.values['propagate']
 
     @api.model
     def _get_procurements_to_merge(self, procurements):
@@ -232,6 +232,7 @@ class StockRule(models.Model):
             'product_id': product_id.id,
             'product_uom': product_id.uom_po_id.id,
             'price_unit': price_unit,
+            'propagate': values.get('propagate', True),
             'date_planned': date_planned,
             'propagate_date': values['propagate_date'],
             'propagate_date_minimum_delta': values['propagate_date_minimum_delta'],
