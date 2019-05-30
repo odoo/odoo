@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.osv import expression
 from odoo import api, fields, tools, models, _
 from odoo.exceptions import UserError, ValidationError
 
@@ -95,6 +96,59 @@ class UoM(models.Model):
             if uom_data['uom_count'] > 1:
                 raise ValidationError(_("UoM category %s should only have one reference unit of measure.") % (self.env['uom.category'].browse(uom_data['category_id']).name,))
 
+    def _get_model_to_check(self):
+        # Return list of dict with those keys :
+        # 'model': exemple 'stock.move.line'
+        # 'field': the uom field of 'stock.move.line' is 'product_uom_id'
+        # 'domain': [('state', '!=', 'cancel')], don't check canceled 'stock.move.line'
+        # 'msg' : "Some products have already been moved or are currently reserved."
+        return []
+
+    def _check_allow_modify_uom(self, values):
+        # To prevent inconsistent data.
+
+        # Reference Unit :
+        # it is not allowed to modify type or category if this unit is used
+        # or if any multiples units of this unit are used.
+
+        # Multiple Unit :
+        # it is not allowed to modify factor, type or category if this unit is used.
+
+        check_models = self._get_model_to_check()
+        if not check_models:
+            return
+
+        changed_ref = self.browse()
+        changed_mult = self.browse()
+
+        if 'uom_type' in values:
+            changed_ref |= self.filtered(lambda u: u.uom_type != values['uom_type'] and u.uom_type == 'reference')
+            changed_mult |= self.filtered(lambda u: u.uom_type != values['uom_type'] and u.uom_type != 'reference')
+        if 'category_id' in values:
+            changed_ref |= self.filtered(lambda u: u.id != values['category_id'] and u.uom_type == 'reference')
+            changed_mult |= self.filtered(lambda u: u.id != values['category_id'] and u.uom_type != 'reference')
+        if 'factor' in values:
+            changed_mult |= self.filtered(lambda u: u.factor != values['factor'])
+
+        if changed_ref or changed_mult:
+            for check_model in check_models:
+                dom_list = []
+                field = check_model['field']
+                if changed_ref:
+                    dom_list.append([('%s.category_id' % (field), 'in', changed_ref.mapped('category_id').ids)])
+                if changed_mult:
+                    dom_list.append([(field, 'in', changed_mult.ids)])
+
+                args = check_model['domain']
+                args.extend(expression.OR(dom_list))
+
+                uom_used = self.env[check_model['model']].sudo().search(args, limit=1, order='id')
+
+                if uom_used:
+                    msg = _("You cannot change the ratio, the category or the type of this unit of mesure.\n")
+                    msg += check_model['msg']
+                    raise UserError(msg)
+
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
@@ -108,6 +162,7 @@ class UoM(models.Model):
         if 'factor_inv' in values:
             factor_inv = values.pop('factor_inv')
             values['factor'] = factor_inv and (1.0 / factor_inv) or 0.0
+        self._check_allow_modify_uom(values)
         return super(UoM, self).write(values)
 
     @api.multi
