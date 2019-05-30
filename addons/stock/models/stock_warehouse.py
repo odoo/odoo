@@ -20,7 +20,7 @@ class Warehouse(models.Model):
     _name = "stock.warehouse"
     _description = "Warehouse"
     # namedtuple used in helper methods generating values for routes
-    Routing = namedtuple('Routing', ['from_loc', 'dest_loc', 'picking_type', 'action'])
+    Routing = namedtuple('Routing', ['from_loc', 'dest_loc', 'picking_type', 'action', 'propagate'])
 
     name = fields.Char('Warehouse', index=True, required=True, default=lambda self: self.env.company.name)
     active = fields.Boolean('Active', default=True)
@@ -572,7 +572,7 @@ class Warehouse(models.Model):
             output_location = supplier_wh.lot_stock_id if supplier_wh.delivery_steps == 'ship_only' else supplier_wh.wh_output_stock_loc_id
             # Create extra MTO rule (only for 'ship only' because in the other cases MTO rules already exists)
             if supplier_wh.delivery_steps == 'ship_only':
-                routing = [self.Routing(output_location, transit_location, supplier_wh.out_type_id, 'pull')]
+                routing = [self.Routing(output_location, transit_location, supplier_wh.out_type_id, 'pull', True)]
                 mto_vals = supplier_wh._get_global_route_rules_values().get('mto_pull_id')
                 values = mto_vals['create_values']
                 mto_rule_val = supplier_wh._get_rule_values(routing, values, name_suffix='MTO')
@@ -581,10 +581,10 @@ class Warehouse(models.Model):
             inter_wh_route = Route.create(self._get_inter_warehouse_route_values(supplier_wh))
 
             pull_rules_list = supplier_wh._get_supply_pull_rules_values(
-                [self.Routing(output_location, transit_location, supplier_wh.out_type_id, 'pull')],
+                [self.Routing(output_location, transit_location, supplier_wh.out_type_id, 'pull', False)],
                 values={'route_id': inter_wh_route.id})
             pull_rules_list += self._get_supply_pull_rules_values(
-                [self.Routing(transit_location, input_location, self.in_type_id, 'pull')],
+                [self.Routing(transit_location, input_location, self.in_type_id, 'pull', self.reception_steps != 'one_step')],
                 values={'route_id': inter_wh_route.id, 'propagate_warehouse_id': supplier_wh.id})
             for pull_rule_vals in pull_rules_list:
                 Rule.create(pull_rule_vals)
@@ -628,21 +628,21 @@ class Warehouse(models.Model):
         return {
             warehouse.id: {
                 'one_step': [],
-                'two_steps': [self.Routing(warehouse.wh_input_stock_loc_id, warehouse.lot_stock_id, warehouse.int_type_id, 'pull_push')],
+                'two_steps': [self.Routing(warehouse.wh_input_stock_loc_id, warehouse.lot_stock_id, warehouse.int_type_id, 'pull_push', False)],
                 'three_steps': [
-                    self.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_qc_stock_loc_id, warehouse.int_type_id, 'pull_push'),
-                    self.Routing(warehouse.wh_qc_stock_loc_id, warehouse.lot_stock_id, warehouse.int_type_id, 'pull_push')],
+                    self.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_qc_stock_loc_id, warehouse.int_type_id, 'pull_push',True),
+                    self.Routing(warehouse.wh_qc_stock_loc_id, warehouse.lot_stock_id, warehouse.int_type_id, 'pull_push', False)],
                 'crossdock': [
-                    self.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.int_type_id, 'pull'),
-                    self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id, 'pull')],
-                'ship_only': [self.Routing(warehouse.lot_stock_id, customer_loc, warehouse.out_type_id, 'pull')],
+                    self.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.int_type_id, 'pull', True),
+                    self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id, 'pull', True)],
+                'ship_only': [self.Routing(warehouse.lot_stock_id, customer_loc, warehouse.out_type_id, 'pull', False)],
                 'pick_ship': [
-                    self.Routing(warehouse.lot_stock_id, warehouse.wh_output_stock_loc_id, warehouse.pick_type_id, 'pull'),
-                    self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id, 'pull')],
+                    self.Routing(warehouse.lot_stock_id, warehouse.wh_output_stock_loc_id, warehouse.pick_type_id, 'pull', False),
+                    self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id, 'pull', False)],
                 'pick_pack_ship': [
-                    self.Routing(warehouse.lot_stock_id, warehouse.wh_pack_stock_loc_id, warehouse.pick_type_id, 'pull'),
-                    self.Routing(warehouse.wh_pack_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.pack_type_id, 'pull'),
-                    self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id, 'pull')],
+                    self.Routing(warehouse.lot_stock_id, warehouse.wh_pack_stock_loc_id, warehouse.pick_type_id, 'pull', False),
+                    self.Routing(warehouse.wh_pack_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.pack_type_id, 'pull', False),
+                    self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id, 'pull', False)],
                 'company_id': warehouse.company_id.id,
             } for warehouse in self
         }
@@ -675,7 +675,7 @@ class Warehouse(models.Model):
                 'procure_method': first_rule and 'make_to_stock' or 'make_to_order',
                 'warehouse_id': self.id,
                 'company_id': self.company_id.id,
-                'propagate': routing.picking_type != self.pick_type_id,
+                'propagate': routing.propagate,
             }
             route_rule_values.update(values or {})
             rules_list.append(route_rule_values)
@@ -712,7 +712,7 @@ class Warehouse(models.Model):
             'procure_method': change_to_multiple and "make_to_order" or "make_to_stock"})
         if not change_to_multiple:
             # If single delivery we should create the necessary MTO rules for the resupply
-            routings = [self.Routing(self.lot_stock_id, location, self.out_type_id, 'pull') for location in rules.mapped('location_id')]
+            routings = [self.Routing(self.lot_stock_id, location, self.out_type_id, 'pull', True) for location in rules.mapped('location_id')]
             mto_rule_vals = self._get_rule_values(routings)
             for mto_rule_val in mto_rule_vals:
                 Rule.create(mto_rule_val)
@@ -734,7 +734,7 @@ class Warehouse(models.Model):
                 '&',
                     ('action', '!=', 'push'),
                     ('location_src_id.usage', '=', 'transit')
-        ]).write({'location_id': new_location.id})
+        ]).write({'location_id': new_location.id, 'propagate': self.lot_stock_id != new_location})
 
     def _update_name_and_code(self, new_name=False, new_code=False):
         if new_code:
