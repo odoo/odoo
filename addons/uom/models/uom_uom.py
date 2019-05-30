@@ -80,20 +80,18 @@ class UoM(models.Model):
             NOTE: this is a constraint on the all table. This might not be a good practice, but this is
             not possible to do it in SQL directly.
         """
-        category_ids = self.mapped('category_id').ids
-        self._cr.execute("""
-            SELECT C.id AS category_id, count(U.id) AS uom_count
-            FROM uom_category C
-            LEFT JOIN uom_uom U ON C.id = U.category_id AND uom_type = 'reference'
-            WHERE C.id IN %s
-                AND U.active = 't'
-            GROUP BY C.id
-        """, (tuple(category_ids),))
-        for uom_data in self._cr.dictfetchall():
-            if uom_data['uom_count'] == 0:
-                raise ValidationError(_("UoM category %s should have a reference unit of measure. If you just created a new category, please record the 'reference' unit first.") % (self.env['uom.category'].browse(uom_data['category_id']).name,))
-            if uom_data['uom_count'] > 1:
-                raise ValidationError(_("UoM category %s should only have one reference unit of measure.") % (self.env['uom.category'].browse(uom_data['category_id']).name,))
+        uom_datas = self.env['uom.uom'].sudo().read_group(
+            [('category_id', 'in', self.mapped('category_id').ids),
+             ('uom_type', '=', 'reference'), ('active', '=', True)],
+            ['category_id'], ['category_id'])
+
+        for uom_data in uom_datas:
+            if uom_data['category_id_count'] == 0:
+                raise ValidationError(_("UoM category %s should have a reference unit of measure. If you just created a new category, please record the 'reference' unit first.") % (
+                    self.env['uom.category'].browse(uom_data['category_id'][0]).name,))
+            if uom_data['category_id_count'] > 1:
+                raise ValidationError(_("UoM category %s should only have one reference unit of measure.") % (
+                    self.env['uom.category'].browse(uom_data['category_id'][0]).name,))
 
     @api.model_create_multi
     def create(self, vals_list):
