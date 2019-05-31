@@ -150,12 +150,12 @@ class StockRule(models.Model):
         for procurements in procurements_to_merge:
             quantity = 0
             move_dest_ids = self.env['stock.move']
-            order_point_id = self.env['stock.warehouse.orderpoint']
+            orderpoint_id = self.env['stock.warehouse.orderpoint']
             for procurement in procurements:
                 if procurement.values.get('move_dest_ids'):
                     move_dest_ids |= procurement.values['move_dest_ids']
-                if not order_point_id and procurement.values.get('order_point_id'):
-                    order_point_id = procurement.values['order_point_id']
+                if not orderpoint_id and procurement.values.get('orderpoint_id'):
+                    orderpoint_id = procurement.values['orderpoint_id']
                 quantity += procurement.product_qty
             # The merged procurement can be build from an arbitrary procurement
             # since they were mark as similar before. Only the quantity and
@@ -163,7 +163,7 @@ class StockRule(models.Model):
             values = dict(procurement.values)
             values.update({
                 'move_dest_ids': move_dest_ids,
-                'order_point_id': order_point_id
+                'orderpoint_id': orderpoint_id,
             })
             merged_procurement = self.env['procurement.group'].Procurement(
                 procurement.product_id, quantity, procurement.product_uom,
