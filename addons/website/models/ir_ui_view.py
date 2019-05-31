@@ -83,7 +83,8 @@ class View(models.Model):
                     # original tree. Indeed, the order of children 'id' fields
                     # must remain the same so that the inheritance is applied
                     # in the same order in the copied tree.
-                    inherit_child.copy({'inherit_id': website_specific_view.id, 'key': inherit_child.key})
+                    child = inherit_child.copy({'inherit_id': website_specific_view.id, 'key': inherit_child.key})
+                    inherit_child.inherit_children_ids.write({'inherit_id': child.id})
                     inherit_child.unlink()
                 else:
                     # Trigger COW on inheriting views
