@@ -19,7 +19,7 @@ from lxml import etree
 class AccountMove(models.Model):
     _name = "account.move"
     _description = "Journal Entries"
-    _order = 'date desc, id desc'
+    _order = 'date desc, name desc, id desc'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     @api.model
@@ -34,10 +34,11 @@ class AccountMove(models.Model):
     def name_get(self):
         result = []
         for move in self:
+            name = move.name
+            if self.env.context.get('name_groupby'):
+                name = "**{date}**, {name}       {partner}".format(date=format_date(self.env, move.date), name=move.name, partner=move.partner_id.name or "")
             if move.state == 'draft':
                 name = '* ' + str(move.id)
-            else:
-                name = move.name
             result.append((move.id, name))
         return result
 
@@ -510,7 +511,7 @@ class AccountMove(models.Model):
 class AccountMoveLine(models.Model):
     _name = "account.move.line"
     _description = "Journal Item"
-    _order = "date desc, id desc"
+    _order = "date desc, move_name desc, id desc"
 
     @api.onchange('debit', 'credit', 'tax_ids', 'analytic_account_id', 'analytic_tag_ids')
     def onchange_tax_ids_create_aml(self):
@@ -614,6 +615,7 @@ class AccountMoveLine(models.Model):
             record.parent_state = record.move_id.state
 
     name = fields.Char(string="Label")
+    move_name = fields.Char(string='Number', related='move_id.name', store=True, index=True)
     quantity = fields.Float(digits=dp.get_precision('Product Unit of Measure'),
         help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports.")
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure')
@@ -1532,7 +1534,7 @@ class AccountMoveLine(models.Model):
 
     @api.multi
     def open_reconcile_view(self):
-        [action] = self.env.ref('account.action_account_moves_all_a').read()
+        [action] = self.env.ref('account.action_account_moves_all').read()
         ids = []
         for aml in self:
             if aml.account_id.reconcile:
