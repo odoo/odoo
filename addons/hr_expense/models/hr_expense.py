@@ -732,12 +732,12 @@ class HrExpenseSheet(models.Model):
             return self.employee_id.parent_id.user_id
         elif self.employee_id.department_id.manager_id.user_id:
             return self.employee_id.department_id.manager_id.user_id
-        return self.env.user
+        return self.env['res.users']
 
     def activity_update(self):
         for expense_report in self.filtered(lambda hol: hol.state == 'submit'):
             self.activity_schedule(
                 'hr_expense.mail_act_expense_approval',
-                user_id=expense_report.sudo()._get_responsible_for_approval().id)
+                user_id=expense_report.sudo()._get_responsible_for_approval().id or self.env.user.id)
         self.filtered(lambda hol: hol.state == 'approve').activity_feedback(['hr_expense.mail_act_expense_approval'])
         self.filtered(lambda hol: hol.state == 'cancel').activity_unlink(['hr_expense.mail_act_expense_approval'])
