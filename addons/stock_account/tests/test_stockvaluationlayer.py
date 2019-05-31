@@ -3,7 +3,7 @@
 
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 from odoo.tests.common import SavepointCase, TransactionCase
 
 
@@ -535,4 +535,200 @@ class TestStockValuationFIFO(TestStockValuationCommon):
 
         self.assertEqual(self.product1.value_svl, 280)
         self.assertEqual(self.product1.quantity_svl, 18)
+
+
+class TestStockValuationChangeCostMethod(TestStockValuationCommon):
+    def test_standard_to_fifo_1(self):
+        """ The accounting impact of this cost method change is neutral.
+        """
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        self.product1.product_tmpl_id.standard_price = 10
+
+        move1 = self._make_in_move(self.product1, 10)
+        move2 = self._make_in_move(self.product1, 10)
+        move3 = self._make_out_move(self.product1, 1)
+
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.assertEqual(self.product1.value_svl, 190)
+        self.assertEqual(self.product1.quantity_svl, 19)
+
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids), 5)
+
+    def test_standard_to_fifo_2(self):
+        """ We want the same result as `test_standard_to_fifo_1` but by changing the category of
+        `self.product1` to another one, not changing the current one.
+        """
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        self.product1.product_tmpl_id.standard_price = 10
+
+        move1 = self._make_in_move(self.product1, 10)
+        move2 = self._make_in_move(self.product1, 10)
+        move3 = self._make_out_move(self.product1, 1)
+
+        cat2 = self.env['product.category'].create({'name': 'fifo'})
+        cat2.property_cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id = cat2
+        self.assertEqual(self.product1.value_svl, 190)
+        self.assertEqual(self.product1.quantity_svl, 19)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids), 5)
+
+    def test_avco_to_fifo(self):
+        """ The accounting impact of this cost method change is neutral.
+        """
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
+        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
+        move3 = self._make_out_move(self.product1, 1)
+
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.assertEqual(self.product1.value_svl, 285)
+        self.assertEqual(self.product1.quantity_svl, 19)
+
+    def test_fifo_to_standard(self):
+        """ The accounting impact of this cost method change is not neutral as we will use the last
+        fifo price as the new standard price.
+        """
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
+        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
+        move3 = self._make_out_move(self.product1, 1)
+
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
+        self.assertEqual(self.product1.value_svl, 380)
+        self.assertEqual(self.product1.quantity_svl, 19)
+
+    def test_fifo_to_avco(self):
+        """ The accounting impact of this cost method change is not neutral as we will use the last
+        fifo price as the new AVCO.
+        """
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
+        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
+        move3 = self._make_out_move(self.product1, 1)
+
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.assertEqual(self.product1.value_svl, 380)
+        self.assertEqual(self.product1.quantity_svl, 19)
+
+    def test_avco_to_standard(self):
+        """ The accounting impact of this cost method change is neutral.
+        """
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
+        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
+        move3 = self._make_out_move(self.product1, 1)
+
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
+        self.assertEqual(self.product1.value_svl, 285)
+        self.assertEqual(self.product1.quantity_svl, 19)
+
+    def test_standard_to_avco(self):
+        """ The accounting impact of this cost method change is neutral.
+        """
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        self.product1.product_tmpl_id.standard_price = 10
+
+        move1 = self._make_in_move(self.product1, 10)
+        move2 = self._make_in_move(self.product1, 10)
+        move3 = self._make_out_move(self.product1, 1)
+
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.assertEqual(self.product1.value_svl, 190)
+        self.assertEqual(self.product1.quantity_svl, 19)
+
+
+@tagged('post_install', '-at_install')
+class TestStockValuationChangeValuation(TestStockValuationCommon):
+    def test_standard_manual_to_auto_1(self):
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        self.product1.product_tmpl_id.standard_price = 10
+        move1 = self._make_in_move(self.product1, 10)
+
+        self.assertEqual(self.product1.value_svl, 100)
+        self.assertEqual(self.product1.quantity_svl, 10)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 0)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids), 1)
+
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+
+        self.assertEqual(self.product1.value_svl, 100)
+        self.assertEqual(self.product1.quantity_svl, 10)
+        # An accounting entry should only be created for the replenish now that the category is perpetual.
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 1)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids), 3)
+
+    def test_standard_manual_to_auto_2(self):
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        self.product1.product_tmpl_id.standard_price = 10
+        move1 = self._make_in_move(self.product1, 10)
+
+        self.assertEqual(self.product1.value_svl, 100)
+        self.assertEqual(self.product1.quantity_svl, 10)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 0)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids), 1)
+
+        cat2 = self.env['product.category'].create({'name': 'fifo'})
+        cat2.property_cost_method = 'standard'
+        cat2.property_valuation = 'real_time'
+        self.product1.categ_id = cat2
+
+        self.assertEqual(self.product1.value_svl, 100)
+        self.assertEqual(self.product1.quantity_svl, 10)
+        # An accounting entry should only be created for the replenish now that the category is perpetual.
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 1)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids), 3)
+
+    def test_standard_auto_to_manual_1(self):
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        self.product1.product_tmpl_id.standard_price = 10
+        move1 = self._make_in_move(self.product1, 10)
+
+        self.assertEqual(self.product1.value_svl, 100)
+        self.assertEqual(self.product1.quantity_svl, 10)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 1)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids), 1)
+
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+
+        self.assertEqual(self.product1.value_svl, 100)
+        self.assertEqual(self.product1.quantity_svl, 10)
+        # An accounting entry should only be created for the emptying now that the category is manual.
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 2)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids), 3)
+
+    def test_standard_auto_to_manual_2(self):
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        self.product1.product_tmpl_id.standard_price = 10
+        move1 = self._make_in_move(self.product1, 10)
+
+        self.assertEqual(self.product1.value_svl, 100)
+        self.assertEqual(self.product1.quantity_svl, 10)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 1)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids), 1)
+
+        cat2 = self.env['product.category'].create({'name': 'fifo'})
+        cat2.property_cost_method = 'standard'
+        cat2.property_valuation = 'manual_periodic'
+        self.product1.with_context(debug=True).categ_id = cat2
+
+        self.assertEqual(self.product1.value_svl, 100)
+        self.assertEqual(self.product1.quantity_svl, 10)
+        # An accounting entry should only be created for the emptying now that the category is manual.
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 2)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids), 3)
 
