@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo import SUPERUSER_ID
 from odoo.exceptions import AccessError
 from odoo.tests import common, TransactionCase
 
@@ -15,6 +16,64 @@ class Feedback(TransactionCase):
             'name': "Bob Bobman",
             'groups_id': [(6, 0, self.group2.ids)],
         })
+
+
+class TestSudo(Feedback):
+    """ Test the behavior of method sudo(). """
+    def test_sudo(self):
+        record = self.env['test_access_right.some_obj'].create({'val': 5})
+        user1 = self.user
+        user2 = self.env.ref('base.user_demo')
+
+        # with_user(user)
+        record1 = record.with_user(user1)
+        self.assertEqual(record1.env.uid, user1.id)
+        self.assertFalse(record1.env.su)
+
+        record2 = record1.with_user(user2)
+        self.assertEqual(record2.env.uid, user2.id)
+        self.assertFalse(record2.env.su)
+
+        # the superuser is always in superuser mode
+        record3 = record2.with_user(SUPERUSER_ID)
+        self.assertEqual(record3.env.uid, SUPERUSER_ID)
+        self.assertTrue(record3.env.su)
+
+        # sudo()
+        surecord1 = record1.sudo()
+        self.assertEqual(surecord1.env.uid, user1.id)
+        self.assertTrue(surecord1.env.su)
+
+        surecord2 = record2.sudo()
+        self.assertEqual(surecord2.env.uid, user2.id)
+        self.assertTrue(surecord2.env.su)
+
+        surecord3 = record3.sudo()
+        self.assertEqual(surecord3.env.uid, SUPERUSER_ID)
+        self.assertTrue(surecord3.env.su)
+
+        # sudo().sudo()
+        surecord1 = surecord1.sudo()
+        self.assertEqual(surecord1.env.uid, user1.id)
+        self.assertTrue(surecord1.env.su)
+
+        # sudo(False)
+        record1 = surecord1.sudo(False)
+        self.assertEqual(record1.env.uid, user1.id)
+        self.assertFalse(record1.env.su)
+
+        record2 = surecord2.sudo(False)
+        self.assertEqual(record2.env.uid, user2.id)
+        self.assertFalse(record2.env.su)
+
+        record3 = surecord3.sudo(False)
+        self.assertEqual(record3.env.uid, SUPERUSER_ID)
+        self.assertTrue(record3.env.su)
+
+        # sudo().with_user(user)
+        record2 = surecord1.with_user(user2)
+        self.assertEqual(record2.env.uid, user2.id)
+        self.assertFalse(record2.env.su)
 
 
 class TestACLFeedback(Feedback):
