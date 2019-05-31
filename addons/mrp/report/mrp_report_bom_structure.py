@@ -220,7 +220,9 @@ class ReportBomStructure(models.AbstractModel):
                     'prod_cost': bom_line['prod_cost'],
                     'bom_cost': bom_line['total'],
                     'level': bom_line['level'],
-                    'code': bom_line['code']
+                    'code': bom_line['code'],
+                    'child_bom': bom_line['child_bom'],
+                    'prod_id': bom_line['prod_id']
                 })
                 if bom_line['child_bom'] and (unfolded or bom_line['child_bom'] in child_bom_ids):
                     line = self.env['mrp.bom.line'].browse(bom_line['line_id'])
