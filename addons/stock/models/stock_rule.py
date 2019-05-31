@@ -56,9 +56,9 @@ class StockRule(models.Model):
         required=True)
     delay = fields.Integer('Delay', default=0, help="The expected date of the created transfer will be computed based on this delay.")
     partner_address_id = fields.Many2one('res.partner', 'Partner Address', help="Address where goods should be delivered. Optional.")
-    propagate = fields.Boolean(
-        'Propagate cancel and split', default=True,
-        help="When ticked, if the move is splitted or cancelled, the next move will be too.")
+    propagate_cancel = fields.Boolean(
+        'Cancel Next Move', default=False, oldname='propagate',
+        help="When ticked, if the move created by this rule is cancelled, the next move will be cancelled too.")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse')
     propagate_warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse to Propagate',
@@ -170,7 +170,7 @@ class StockRule(models.Model):
             'company_id': self.company_id.id,
             'picking_id': False,
             'picking_type_id': self.picking_type_id.id,
-            'propagate': self.propagate,
+            'propagate_cancel': self.propagate_cancel,
             'warehouse_id': self.warehouse_id.id,
         }
         return new_move_vals
@@ -265,7 +265,7 @@ class StockRule(models.Model):
             'warehouse_id': self.propagate_warehouse_id.id or self.warehouse_id.id,
             'date': date_expected,
             'date_expected': date_expected,
-            'propagate': self.propagate,
+            'propagate_cancel': self.propagate_cancel,
             'propagate_date': self.propagate_date,
             'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'description_picking': product_id._get_description(self.picking_type_id),
