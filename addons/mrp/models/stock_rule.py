@@ -86,7 +86,7 @@ class StockRule(models.Model):
             'date_planned_start': fields.Datetime.to_string(self._get_date_planned(product_id, company_id, values)),
             'date_planned_finished': values['date_planned'],
             'procurement_group_id': False,
-            'propagate': self.propagate,
+            'propagate_cancel': self.propagate_cancel,
             'propagate_date': self.propagate_date,
             'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'orderpoint_id': values.get('orderpoint_id', False) and values.get('orderpoint_id').id,

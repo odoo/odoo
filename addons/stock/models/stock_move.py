@@ -124,8 +124,8 @@ class StockMove(models.Model):
     scrap_ids = fields.One2many('stock.scrap', 'move_id')
     group_id = fields.Many2one('procurement.group', 'Procurement Group', default=_default_group_id)
     rule_id = fields.Many2one('stock.rule', 'Stock Rule', ondelete='restrict', help='The stock rule that created this stock move')
-    propagate = fields.Boolean(
-        'Propagate cancel and split', default=True,
+    propagate_cancel = fields.Boolean(
+        'Propagate cancel and split', default=True, oldname='propagate',
         help='If checked, when this move is cancelled, cancel the linked move too')
     propagate_date = fields.Boolean(string="Propagate Rescheduling",
         help='The rescheduling is propagated to the next move.')
@@ -537,7 +537,7 @@ class StockMove(models.Model):
 
     def _clean_merged(self):
         """Cleanup hook used when merging moves"""
-        self.write({'propagate': False})
+        self.write({'propagate_cancel': False})
 
     def _merge_moves(self, merge_into=False):
         """ This method will, for each move in `self`, go up in their linked picking and try to
@@ -1020,7 +1020,7 @@ class StockMove(models.Model):
 
         for move in moves_to_cancel:
             siblings_states = (move.move_dest_ids.mapped('move_orig_ids') - move).mapped('state')
-            if move.propagate:
+            if move.propagate_cancel:
                 # only cancel the next move if all my siblings are also cancelled
                 if all(state == 'cancel' for state in siblings_states):
                     move.move_dest_ids.filtered(lambda m: m.state != 'done')._action_cancel()
