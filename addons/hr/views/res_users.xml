@@ -18,6 +18,17 @@
             </field>
         </record>
 
+        <record id="view_users_form_simple_modif_resource" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.resource</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif" />
+            <field name="arch" type="xml">
+                <field name="tz" position="attributes">
+                    <attribute name="required">1</attribute>
+                </field>
+            </field>
+        </record>
+
         <record id="res_users_view_form_profile" model="ir.ui.view">
             <field name="name">res.users.preferences.form.inherit</field>
             <field name="model">res.users</field>

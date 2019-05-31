@@ -177,6 +177,52 @@
         </field>
     </record>
 
+    <record id="hr_employee_public_form_view_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.public.leave.form.inherit</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='coach_id']" position="after">
+                <field name="leave_manager_id"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="current_leave_id" invisible="1"/>
+                <field name="show_leaves" invisible="1"/>
+                <field name="is_absent" invisible="1"/>
+                <button name="%(hr_leave_action_new_request)d" type="action"
+                        class="oe_stat_button"
+                        attrs="{'invisible': [('is_absent', '=', False)]}">
+                    <div role="img" class="fa fa-fw fa-circle o_button_icon text-danger" aria-label="Absent Until" title="Absent Until"/>
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="leave_date_to"/>
+                        </span>
+                        <span class="o_stat_text">
+                            Absent Until
+                        </span>
+                    </div>
+                </button>
+                <button name="%(hr_leave_action_new_request)d"
+                        type="action"
+                        class="oe_stat_button"
+                        icon="fa-calendar"
+                        attrs="{'invisible': [('show_leaves','=', False)]}" 
+                        groups="base.group_user"
+                        help="Remaining leaves">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="allocation_used_count" digits="[42,1]"/>/
+                            <field name="allocation_count" digits="[42,1]"/>
+                        </span>
+                        <span class="o_stat_text">
+                            Time Off
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
     <record id="res_users_view_form" model="ir.ui.view">
         <field name="name">hr.user.preferences.view.form.leave.inherit</field>
         <field name="model">res.users</field>

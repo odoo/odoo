@@ -2,9 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from odoo import fields, models, _
-from odoo.exceptions import UserError
-from odoo.fields import Datetime
+
+from odoo import models
 
 _logger = logging.getLogger(__name__)
 

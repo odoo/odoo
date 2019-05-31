@@ -1,106 +1,28 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import base64
 from random import choice
 from string import digits
-import base64
-import logging
 from werkzeug import url_encode
 
-from odoo import api, fields, models, SUPERUSER_ID
-from odoo import tools, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import ValidationError, AccessError
 from odoo.modules.module import get_module_resource
 
-_logger = logging.getLogger(__name__)
 
-
-class EmployeeCategory(models.Model):
-
-    _name = "hr.employee.category"
-    _description = "Employee Category"
-
-    name = fields.Char(string="Employee Tag", required=True)
-    color = fields.Integer(string='Color Index')
-    employee_ids = fields.Many2many('hr.employee', 'employee_category_rel', 'category_id', 'emp_id', string='Employees')
-
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Tag name already exists !"),
-    ]
-
-
-class Job(models.Model):
-
-    _name = "hr.job"
-    _description = "Job Position"
-    _inherit = ['mail.thread']
-
-    name = fields.Char(string='Job Position', required=True, index=True, translate=True)
-    expected_employees = fields.Integer(compute='_compute_employees', string='Total Forecasted Employees', store=True,
-        help='Expected number of employees for this job position after new recruitment.')
-    no_of_employee = fields.Integer(compute='_compute_employees', string="Current Number of Employees", store=True,
-        help='Number of employees currently occupying this job position.')
-    no_of_recruitment = fields.Integer(string='Expected New Employees', copy=False,
-        help='Number of new employees you expect to recruit.', default=1)
-    no_of_hired_employee = fields.Integer(string='Hired Employees', copy=False,
-        help='Number of hired employees for this job position during recruitment phase.')
-    employee_ids = fields.One2many('hr.employee', 'job_id', string='Employees', groups='base.group_user')
-    description = fields.Text(string='Job Description')
-    requirements = fields.Text('Requirements')
-    department_id = fields.Many2one('hr.department', string='Department')
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
-    state = fields.Selection([
-        ('recruit', 'Recruitment in Progress'),
-        ('open', 'Not Recruiting')
-    ], string='Status', readonly=True, required=True, tracking=True, copy=False, default='recruit', help="Set whether the recruitment process is open or closed for this job position.")
-
-    _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id, department_id)', 'The name of the job position must be unique per department in company!'),
-    ]
-
-    @api.depends('no_of_recruitment', 'employee_ids.job_id', 'employee_ids.active')
-    def _compute_employees(self):
-        employee_data = self.env['hr.employee'].read_group([('job_id', 'in', self.ids)], ['job_id'], ['job_id'])
-        result = dict((data['job_id'][0], data['job_id_count']) for data in employee_data)
-        for job in self:
-            job.no_of_employee = result.get(job.id, 0)
-            job.expected_employees = result.get(job.id, 0) + job.no_of_recruitment
-
-    @api.model
-    def create(self, values):
-        """ We don't want the current user to be follower of all created job """
-        return super(Job, self.with_context(mail_create_nosubscribe=True)).create(values)
-
-    @api.multi
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
-        self.ensure_one()
-        default = dict(default or {})
-        if 'name' not in default:
-            default['name'] = _("%s (copy)") % (self.name)
-        return super(Job, self).copy(default=default)
-
-    @api.multi
-    def set_recruit(self):
-        for record in self:
-            no_of_recruitment = 1 if record.no_of_recruitment == 0 else record.no_of_recruitment
-            record.write({'state': 'recruit', 'no_of_recruitment': no_of_recruitment})
-        return True
-
-    @api.multi
-    def set_open(self):
-        return self.write({
-            'state': 'open',
-            'no_of_recruitment': 0,
-            'no_of_hired_employee': 0
-        })
-
-
-class Employee(models.Model):
+class HrEmployeePrivate(models.Model):
+    """
+    NB: Any field only available on the model hr.employee (i.e. not on the
+    hr.employee.public model) should have `groups="hr.group_hr_user"` on its
+    definition to avoid being prefetched when the user hasn't access to the
+    hr.employee model. Indeed, the prefetch loads the data for all the fields
+    that are available according to the group defined on them.
+    """
     _name = "hr.employee"
     _description = "Employee"
     _order = 'name'
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'resource.mixin']
-
+    _inherit = ['hr.employee.base', 'mail.thread', 'mail.activity.mixin', 'resource.mixin']
     _mail_post_access = 'read'
 
     @api.model
@@ -167,7 +89,6 @@ class Employee(models.Model):
     emergency_phone = fields.Char("Emergency Phone", groups="hr.group_hr_user", tracking=True)
     km_home_work = fields.Integer(string="Km home-work", groups="hr.group_hr_user", tracking=True)
     google_drive_link = fields.Char(string="Employee Documents", groups="hr.group_hr_user", tracking=True)
-    job_title = fields.Char("Job Title")
 
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary(
@@ -183,17 +104,8 @@ class Employee(models.Model):
         help="Small-sized photo of the employee. It is automatically "
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
-    # work
-    address_id = fields.Many2one(
-        'res.partner', 'Work Address')
-    work_phone = fields.Char('Work Phone')
-    mobile_phone = fields.Char('Work Mobile')
     phone = fields.Char(related='address_home_id.phone', related_sudo=False, string="Private Phone", groups="hr.group_hr_user")
-    work_email = fields.Char('Work Email')
-    work_location = fields.Char('Work Location')
     # employee in company
-    job_id = fields.Many2one('hr.job', 'Job Position')
-    department_id = fields.Many2one('hr.department', 'Department')
     parent_id = fields.Many2one('hr.employee', 'Manager')
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
     coach_id = fields.Many2one('hr.employee', 'Coach')
@@ -202,21 +114,79 @@ class Employee(models.Model):
         'emp_id', 'category_id',
         string='Tags')
     # misc
-    notes = fields.Text('Notes')
-    color = fields.Integer('Color Index', default=0)
-    barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", copy=False)
-    pin = fields.Char(string="PIN", help="PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration).", copy=False)
+    notes = fields.Text('Notes', groups="hr.group_hr_user")
+    color = fields.Integer('Color Index', default=0, groups="hr.group_hr_user")
+    barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", groups="hr.group_hr_user", copy=False)
+    pin = fields.Char(string="PIN", groups="hr.group_hr_user", copy=False,
+        help="PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration).")
     departure_reason = fields.Selection([
         ('fired', 'Fired'),
         ('resigned', 'Resigned'),
         ('retired', 'Retired')
-    ], string="Departure Reason", copy=False, tracking=True)
-    departure_description = fields.Text(string="Additional Information", copy=False, tracking=True)
+    ], string="Departure Reason", groups="hr.group_hr_user", copy=False, tracking=True)
+    departure_description = fields.Text(string="Additional Information", groups="hr.group_hr_user", copy=False, tracking=True)
+    message_main_attachment_id = fields.Many2one(groups="hr.group_hr_user")
 
     _sql_constraints = [
         ('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee."),
         ('user_uniq', 'unique (user_id, company_id)', "A user cannot be linked to multiple employees in the same company.")
     ]
+
+    @api.multi
+    def name_get(self):
+        if self.check_access_rights('read', raise_exception=False):
+            return super(HrEmployeePrivate, self).name_get()
+        return self.env['hr.employee.public'].browse(self.ids).name_get()
+
+    @api.multi
+    def read(self, fields, load='_classic_read'):
+        if self.check_access_rights('read', raise_exception=False):
+            return super(HrEmployeePrivate, self).read(fields, load=load)
+        private_fields = set(fields).difference(self.env['hr.employee.public']._fields.keys())
+        if private_fields:
+            raise AccessError(_('The fields "%s" you try to read is not available on the public employee profile.') % (','.join(private_fields)))
+        return self.env['hr.employee.public'].browse(self.ids).read(fields, load=load)
+
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+        """
+            We override the _search because it is the method that checks the access rights
+            This is correct to override the _search. That way we enforce the fact that calling
+            search on an hr.employee returns a hr.employee recordset, even if you don't have access
+            to this model, as the result of _search (the ids of the public employees) is to be
+            browsed on the hr.employee model. This can be trusted as the ids of the public
+            employees exactly match the ids of the related hr.employee. 
+        """
+        if self.check_access_rights('read', raise_exception=False):
+            return super(HrEmployeePrivate, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+        return self.env['hr.employee.public']._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+
+    @api.multi
+    def get_formview_id(self, access_uid=None):
+        """ Override this method in order to redirect many2one towards the right model depending on access_uid """
+        if access_uid:
+            self_sudo = self.sudo(access_uid)
+        else:
+            self_sudo = self
+
+        if self_sudo.check_access_rights('read', raise_exception=False):
+            return super(HrEmployeePrivate, self).get_formview_id(access_uid=access_uid)
+        # Hardcode the form view for public employee
+        return self.env.ref('hr.hr_employee_public_view_form').id
+
+    @api.multi
+    def get_formview_action(self, access_uid=None):
+        """ Override this method in order to redirect many2one towards the right model depending on access_uid """
+        res = super(HrEmployeePrivate, self).get_formview_action(access_uid=access_uid)
+        if access_uid:
+            self_sudo = self.sudo(access_uid)
+        else:
+            self_sudo = self
+
+        if not self_sudo.check_access_rights('read', raise_exception=False):
+            res['res_model'] = 'hr.employee.public'
+
+        return res
 
     @api.constrains('pin')
     def _verify_pin(self):
@@ -278,7 +248,7 @@ class Employee(models.Model):
             vals.update(self._sync_user(user))
             vals['name'] = vals.get('name', user.name)
         tools.image_resize_images(vals)
-        employee = super(Employee, self).create(vals)
+        employee = super(HrEmployeePrivate, self).create(vals)
         url = '/web#%s' % url_encode({'action': 'hr.plan_wizard_action', 'active_id': employee.id, 'active_model': 'hr.employee'})
         employee._message_log(body=_('<b>Congratulations !</b> May I recommand you to setup an <a href="%s">onboarding plan ?</a>') % (url))
         if employee.department_id:
@@ -296,7 +266,7 @@ class Employee(models.Model):
         if vals.get('user_id'):
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id'])))
         tools.image_resize_images(vals)
-        res = super(Employee, self).write(vals)
+        res = super(HrEmployeePrivate, self).write(vals)
         if vals.get('department_id') or vals.get('user_id'):
             department_id = vals['department_id'] if vals.get('department_id') else self[:1].department_id.id
             # When added to a department or changing user, subscribe to the channels auto-subscribed by department
@@ -308,11 +278,11 @@ class Employee(models.Model):
     @api.multi
     def unlink(self):
         resources = self.mapped('resource_id')
-        super(Employee, self).unlink()
+        super(HrEmployeePrivate, self).unlink()
         return resources.unlink()
 
     def toggle_active(self):
-        res = super(Employee, self).toggle_active()
+        res = super(HrEmployeePrivate, self).toggle_active()
         self.filtered(lambda employee: employee.active).write({
             'departure_reason': False,
             'departure_description': False,
@@ -331,7 +301,8 @@ class Employee(models.Model):
 
     @api.multi
     def generate_random_barcode(self):
-        for i in self: i.barcode = "".join(choice(digits) for i in range(8))
+        for employee in self:
+            employee.barcode = "".join(choice(digits) for i in range(8))
 
     @api.depends('address_home_id.parent_id')
     def _compute_is_address_home_a_company(self):
@@ -364,88 +335,9 @@ class Employee(models.Model):
         return self
 
     def _message_log(self, **kwargs):
-        return super(Employee, self._post_author())._message_log(**kwargs)
+        return super(HrEmployeePrivate, self._post_author())._message_log(**kwargs)
 
     @api.multi
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *args, **kwargs):
-        return super(Employee, self._post_author()).message_post(*args, **kwargs)
-
-
-class Department(models.Model):
-    _name = "hr.department"
-    _description = "HR Department"
-    _inherit = ['mail.thread']
-    _order = "name"
-    _rec_name = 'complete_name'
-
-    name = fields.Char('Department Name', required=True)
-    complete_name = fields.Char('Complete Name', compute='_compute_complete_name', store=True)
-    active = fields.Boolean('Active', default=True)
-    company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.company)
-    parent_id = fields.Many2one('hr.department', string='Parent Department', index=True)
-    child_ids = fields.One2many('hr.department', 'parent_id', string='Child Departments')
-    manager_id = fields.Many2one('hr.employee', string='Manager', tracking=True)
-    member_ids = fields.One2many('hr.employee', 'department_id', string='Members', readonly=True)
-    jobs_ids = fields.One2many('hr.job', 'department_id', string='Jobs')
-    note = fields.Text('Note')
-    color = fields.Integer('Color Index')
-
-    @api.multi
-    def name_get(self):
-        if not self.env.context.get('hierarchical_naming', True):
-            return [(record.id, record.name) for record in self]
-        return super(Department, self).name_get()
-
-    @api.depends('name', 'parent_id.complete_name')
-    def _compute_complete_name(self):
-        for department in self:
-            if department.parent_id:
-                department.complete_name = '%s / %s' % (department.parent_id.complete_name, department.name)
-            else:
-                department.complete_name = department.name
-
-    @api.constrains('parent_id')
-    def _check_parent_id(self):
-        if not self._check_recursion():
-            raise ValidationError(_('You cannot create recursive departments.'))
-
-    @api.model
-    def create(self, vals):
-        # TDE note: auto-subscription of manager done by hand, because currently
-        # the tracking allows to track+subscribe fields linked to a res.user record
-        # An update of the limited behavior should come, but not currently done.
-        department = super(Department, self.with_context(mail_create_nosubscribe=True)).create(vals)
-        manager = self.env['hr.employee'].browse(vals.get("manager_id"))
-        if manager.user_id:
-            department.message_subscribe(partner_ids=manager.user_id.partner_id.ids)
-        return department
-
-    @api.multi
-    def write(self, vals):
-        """ If updating manager of a department, we need to update all the employees
-            of department hierarchy, and subscribe the new manager.
-        """
-        # TDE note: auto-subscription of manager done by hand, because currently
-        # the tracking allows to track+subscribe fields linked to a res.user record
-        # An update of the limited behavior should come, but not currently done.
-        if 'manager_id' in vals:
-            manager_id = vals.get("manager_id")
-            if manager_id:
-                manager = self.env['hr.employee'].browse(manager_id)
-                # subscribe the manager user
-                if manager.user_id:
-                    self.message_subscribe(partner_ids=manager.user_id.partner_id.ids)
-            # set the employees's parent to the new manager
-            self._update_employee_manager(manager_id)
-        return super(Department, self).write(vals)
-
-    def _update_employee_manager(self, manager_id):
-        employees = self.env['hr.employee']
-        for department in self:
-            employees = employees | self.env['hr.employee'].search([
-                ('id', '!=', manager_id),
-                ('department_id', '=', department.id),
-                ('parent_id', '=', department.manager_id.id)
-            ])
-        employees.write({'parent_id': manager_id})
+        return super(HrEmployeePrivate, self._post_author()).message_post(*args, **kwargs)

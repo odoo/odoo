@@ -39,6 +39,6 @@ class GamificationBadge(models.Model):
             'name': 'Granted Employees',
             'view_mode': 'kanban,tree,form',
             'view_type': 'form',
-            'res_model': 'hr.employee',
+            'res_model': 'hr.employee.public',
             'domain': [('id', 'in', employee_ids)]
         }
