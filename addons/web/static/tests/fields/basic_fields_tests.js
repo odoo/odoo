@@ -5505,8 +5505,8 @@ QUnit.module('basic_fields', {
 
     QUnit.module('FieldColor');
 
-    QUnit.test('Field Color: pick a color', async function (assert) {
-        assert.expect(3);
+    QUnit.test('Field Color: default widget state', async function (assert) {
+        assert.expect(4);
 
         var form = await createView({
             View: FormView,
@@ -5528,20 +5528,20 @@ QUnit.module('basic_fields', {
             "Reset colors button should be visible");
 
         await testUtils.dom.click(form.$('.o_field_color:first'));
+
+        assert.containsNone($('.modal'), $('.o_opacity_slider'),
+            "Opacity slider should not be present");
+        assert.containsNone($('.modal'), $('.o_opacity_input'),
+            "Opacity input should not be present");
+
         await testUtils.nextTick();
-
-        await testUtils.fields.editInput($('.modal .o_hex_input'), '#00ff00');
-        await testUtils.dom.triggerEvents($('.modal .o_hex_input'), ['change']);
-        await testUtils.dom.click($('.modal .btn:contains("Choose")'));
-
-        assert.strictEqual($('.o_field_color:first').css('backgroundColor'), 'rgb(0, 255, 0)',
-            "Background of the first field should be updated to green");
+        await testUtils.dom.click($('.modal .btn:contains("Discard")'));
 
         form.destroy();
     });
 
-    QUnit.test('Field Color: reset colors', async function (assert) {
-        assert.expect(1);
+    QUnit.test('Field Color: pick and reset colors', async function (assert) {
+        assert.expect(2);
 
         var form = await createView({
             View: FormView,
@@ -5556,13 +5556,22 @@ QUnit.module('basic_fields', {
                 mode: 'edit',
             },
         });
+
+        await testUtils.dom.click(form.$('.o_field_color:first'));
+
+        await testUtils.fields.editAndTrigger($('.modal .o_hex_input'), '#00ff00', ['change']);
+        await testUtils.dom.click($('.modal .btn:contains("Choose")'));
+
+        assert.strictEqual($('.o_field_color:first').css('backgroundColor'), 'rgb(0, 255, 0)',
+            "Background of the first field should be updated to green");
+
         await testUtils.dom.click(form.$('.btn.o_reset_colors'));
+
         assert.strictEqual(form.$('.o_field_color:first').css('backgroundColor'), "rgb(0, 0, 0)",
             "Value of the fields should be reset to default");
 
         form.destroy();
     });
-
 });
 });
 });
