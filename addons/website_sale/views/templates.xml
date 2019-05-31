@@ -616,7 +616,7 @@
 
     <template id="product_quantity" inherit_id="website_sale.product" customize_show="True" name="Select Quantity">
       <xpath expr="//a[@id='add_to_cart']" position="before">
-        <div class="css_quantity input-group oe_website_spinner" contenteditable="false">
+        <div class="css_quantity input-group" contenteditable="false">
             <div class="input-group-prepend">
                 <a t-attf-href="#" class="btn btn-secondary js_add_cart_json" aria-label="Remove one" title="Remove one">
                     <i class="fa fa-minus"></i>
@@ -857,7 +857,7 @@
                             </t>
                         </td>
                         <td class="text-center td-qty">
-                            <div t-if="not line.linked_line_id" class="css_quantity input-group mx-auto oe_website_spinner">
+                            <div class="css_quantity input-group mx-auto">
                                 <div class="input-group-prepend">
                                     <a t-attf-href="#" class="btn btn-link js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
                                         <i class="fa fa-minus"></i>
@@ -870,9 +870,6 @@
                                     </a>
                                 </div>
                             </div>
-                            <t t-if="line.linked_line_id">
-                              <span class="js_quantity text-muted" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-esc="int(line.product_uom_qty)"/>
-                            </t>
                         </td>
                         <td class="text-center td-price" name="price">
                             <t t-set="combination" t-value="line.product_id.product_template_attribute_value_ids + line.product_no_variant_attribute_value_ids"/>

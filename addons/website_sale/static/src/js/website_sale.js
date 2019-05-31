@@ -706,7 +706,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      *
      * @override
      */
-    onChangeVariant: function (ev, data) {
+    onChangeVariant: function (ev) {
         var $component = $(ev.currentTarget).closest('.js_product');
         $component.find('input').each(function () {
             var $el = $(this);

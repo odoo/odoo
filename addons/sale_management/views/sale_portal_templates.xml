@@ -79,7 +79,7 @@
 
         <xpath expr="//section[@id='details']//div[@id='quote_qty']" position="replace">
             <t t-if="sale_order.state in ['draft', 'sent'] and line.sale_order_option_ids">
-                <div class="input-group oe_website_spinner w-50 pull-right">
+                <div class="input-group w-50 pull-right">
 
                     <div class="input-group-prepend d-print-none">
                         <span class="input-group-text">
