@@ -147,6 +147,9 @@ class SaleOrder(models.Model):
         product_context = dict(self.env.context)
         product_context.setdefault('lang', self.sudo().partner_id.lang)
         SaleOrderLineSudo = self.env['sale.order.line'].sudo().with_context(product_context)
+        # change lang to get correct name of attributes/values
+        product_with_context = self.env['product.product'].with_context(product_context)
+        product = product_with_context.browse(int(product_id))
 
         try:
             if add_qty:
@@ -168,9 +171,6 @@ class SaleOrder(models.Model):
 
         # Create line if no line with product_id can be located
         if not order_line:
-            # change lang to get correct name of attributes/values
-            product = self.env['product.product'].with_context(product_context).browse(int(product_id))
-
             if not product:
                 raise UserError(_("The given product does not exist therefore it cannot be added to cart."))
 
@@ -223,11 +223,6 @@ class SaleOrder(models.Model):
 
             # create the line
             order_line = SaleOrderLineSudo.create(values)
-            # Generate the description with everything. This is done after
-            # creating because the following related fields have to be set:
-            # - product_no_variant_attribute_value_ids
-            # - product_custom_attribute_value_ids
-            order_line.name = order_line.get_sale_order_line_multiline_description_sale(product)
 
             try:
                 order_line._compute_tax_id()
@@ -245,7 +240,12 @@ class SaleOrder(models.Model):
 
         # Remove zero of negative lines
         if quantity <= 0:
+            linked_line = order_line.linked_line_id
             order_line.unlink()
+            if linked_line:
+                # update description of the parent
+                linked_product = product_with_context.browse(linked_line.product_id.id)
+                linked_line.name = linked_line.get_sale_order_line_multiline_description_sale(linked_product)
         else:
             # update line
             no_variant_attributes_price_extra = [ptav.price_extra for ptav in order_line.product_no_variant_attribute_value_ids]
@@ -258,7 +258,8 @@ class SaleOrder(models.Model):
                     'date': order.date_order,
                     'pricelist': order.pricelist_id.id,
                 })
-                product = self.env['product.product'].with_context(product_context).browse(product_id)
+                product_with_context = self.env['product.product'].with_context(product_context)
+                product = product_with_context.browse(product_id)
                 values['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(
                     order_line._get_display_price(product),
                     order_line.product_id.taxes_id,
@@ -273,13 +274,17 @@ class SaleOrder(models.Model):
                 linked_line = SaleOrderLineSudo.browse(kwargs['linked_line_id'])
                 order_line.write({
                     'linked_line_id': linked_line.id,
-                    'name': order_line.name + "\n" + _("Option for:") + ' ' + linked_line.product_id.display_name,
                 })
-                linked_line.write({"name": linked_line.name + "\n" + _("Option:") + ' ' + order_line.product_id.display_name})
+                linked_product = product_with_context.browse(linked_line.product_id.id)
+                linked_line.name = linked_line.get_sale_order_line_multiline_description_sale(linked_product)
+            # Generate the description with everything. This is done after
+            # creating because the following related fields have to be set:
+            # - product_no_variant_attribute_value_ids
+            # - product_custom_attribute_value_ids
+            # - linked_line_id
+            order_line.name = order_line.get_sale_order_line_multiline_description_sale(product)
 
         option_lines = self.order_line.filtered(lambda l: l.linked_line_id.id == order_line.id)
-        for option_line_id in option_lines:
-            self._cart_update(option_line_id.product_id.id, option_line_id.id, add_qty, set_qty, **kwargs)
 
         return {'line_id': order_line.id, 'quantity': quantity, 'option_ids': list(set(option_lines.ids))}
 
@@ -356,6 +361,14 @@ class SaleOrderLine(models.Model):
 
     linked_line_id = fields.Many2one('sale.order.line', string='Linked Order Line', domain="[('order_id', '!=', order_id)]", ondelete='cascade')
     option_line_ids = fields.One2many('sale.order.line', 'linked_line_id', string='Options Linked')
+
+    def get_sale_order_line_multiline_description_sale(self, product):
+        description = super(SaleOrderLine, self).get_sale_order_line_multiline_description_sale(product)
+        if self.linked_line_id:
+            description += "\n" + _("Option for: %s") % self.linked_line_id.product_id.display_name
+        if self.option_line_ids:
+            description += "\n" + '\n'.join([_("Option: %s") % option_line.product_id.display_name for option_line in self.option_line_ids])
+        return description
 
     @api.depends('product_id.display_name')
     def _compute_name_short(self):

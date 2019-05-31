@@ -33,49 +33,32 @@ var VariantMixin = {
      * are not relevant
      *
      * @param {MouseEvent} ev
-     * @param {$.Element} [params.$container] force the used container
      */
-    onChangeVariant: function (ev, params) {
+    onChangeVariant: function (ev) {
         var $parent = $(ev.target).closest('.js_product');
         if (!$parent.data('uniqueId')) {
             $parent.data('uniqueId', _.uniqueId());
         }
-        this._throttledGetCombinationInfo($parent.data('uniqueId'))(ev, params);
+        this._throttledGetCombinationInfo($parent.data('uniqueId'))(ev);
     },
     /**
      * @see onChangeVariant
      *
      * @private
      * @param {Event} ev
-     * @param {$.Element} [params.$container] force the used container
      * @returns {Deferred}
      */
-    _getCombinationInfo: function (ev, params) {
+    _getCombinationInfo: function (ev) {
         var self = this;
 
         if ($(ev.target).hasClass('variant_custom_value')) {
             return Promise.resolve();
         }
 
-        var $component;
-        if (params && params.$container) {
-            $component = params.$container;
-        } else if ($(ev.currentTarget).closest('form').length > 0){
-            $component = $(ev.currentTarget).closest('form');
-        } else if ($(ev.currentTarget).closest('.oe_optional_products_modal').length > 0){
-            $component = $(ev.currentTarget).closest('.oe_optional_products_modal');
-        } else if ($(ev.currentTarget).closest('.o_product_configurator').length > 0) {
-            $component = $(ev.currentTarget).closest('.o_product_configurator');
-        } else {
-            $component = $(ev.currentTarget);
-        }
-        var qty = $component.find('input[name="add_qty"]').val();
-
         var $parent = $(ev.target).closest('.js_product');
-
+        var qty = $parent.find('input[name="add_qty"]').val();
         var combination = this.getSelectedVariantValues($parent);
         var parentCombination = $parent.find('ul[data-attribute_exclusions]').data('attribute_exclusions').parent_combination;
-
         var productTemplateId = parseInt($parent.find('.product_template_id').val());
 
         self._checkExclusions($parent, combination);
@@ -195,7 +178,7 @@ var VariantMixin = {
      */
     triggerVariantChange: function ($container) {
         var self = this;
-        $container.find('ul[data-attribute_exclusions]').trigger('change', {$container: $container});
+        $container.find('ul[data-attribute_exclusions]').trigger('change');
         $container.find('input.js_variant_change:checked, select.js_variant_change').each(function () {
             self.handleCustomValues($(this));
         });
