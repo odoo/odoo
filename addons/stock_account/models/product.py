@@ -15,6 +15,56 @@ class ProductTemplate(models.Model):
     cost_method = fields.Selection(related="categ_id.property_cost_method", readonly=True)
     valuation = fields.Selection(related="categ_id.property_valuation", readonly=True)
 
+    def write(self, vals):
+        impacted_templates = {}
+        move_vals_list = []
+        Product = self.env['product.product']
+        SVL = self.env['stock.valuation.layer']
+
+        if 'categ_id' in vals:
+            # When a change of category implies a change of cost method, we empty out and replenish
+            # the stock.
+            new_product_category = self.env['product.category'].browse(vals.get('categ_id'))
+
+            for product_template in self:
+                valuation_impacted = False
+                if product_template.cost_method != new_product_category.property_cost_method:
+                    valuation_impacted = True
+                if product_template.valuation != new_product_category.property_valuation:
+                    valuation_impacted = True
+                if valuation_impacted is False:
+                    continue
+
+                # Empty out the stock with the current cost method.
+                description = _("Due to a change of product category (from %s to %s), the costing method\
+                                has changed for product template %s: from %s to %s.") %\
+                    (product_template.categ_id.display_name, new_product_category.display_name, \
+                     product_template.display_name, product_template.cost_method, new_product_category.property_cost_method)
+                out_svl_vals_list, products_orig_quantity_svl, products = Product\
+                    ._svl_empty_stock(description, product_template=product_template)
+                out_stock_valuation_layers = SVL.create(out_svl_vals_list)
+                if product_template.valuation == 'real_time':
+                    move_vals_list += Product._svl_empty_stock_am(out_stock_valuation_layers)
+                impacted_templates[product_template] = (products, description, products_orig_quantity_svl)
+
+        res = super(ProductTemplate, self).write(vals)
+
+        for product_template, (products, description, products_orig_quantity_svl) in impacted_templates.items():
+            # Replenish the stock with the new cost method.
+            in_svl_vals_list = products._svl_replenish_stock(description, products_orig_quantity_svl)
+            in_stock_valuation_layers = SVL.create(in_svl_vals_list)
+            if product_template.valuation == 'real_time':
+                move_vals_list += Product._svl_replenish_stock_am(in_stock_valuation_layers)
+
+        # Create the account moves.
+        if move_vals_list:
+            account_moves = self.env['account.move'].create(move_vals_list)
+            account_moves.post()
+        return res
+
+    # -------------------------------------------------------------------------
+    # Misc.
+    # -------------------------------------------------------------------------
     def _is_cost_method_standard(self):
         return self.categ_id.property_cost_method == 'standard'
 
@@ -321,6 +371,122 @@ class ProductProduct(models.Model):
                 vacuum_svl.quantity, vacuum_svl.description, vacuum_svl.id, vacuum_svl.value
             )
 
+    @api.model
+    def _svl_empty_stock(self, description, product_category=None, product_template=None):
+        impacted_product_ids = []
+        impacted_products = self.env['product.product']
+        products_orig_quantity_svl = {}
+
+        # get the impacted products
+        domain = [('type', '=', 'product')]
+        if product_category is not None:
+            domain += [('categ_id', '=', product_category.id)]
+        elif product_template is not None:
+            domain += [('product_tmpl_id', '=', product_template.id)]
+        else:
+            raise ValueError()
+        products = self.env['product.product'].search_read(domain, ['quantity_svl'])
+        for product in products:
+            impacted_product_ids.append(product['id'])
+            products_orig_quantity_svl[product['id']] = product['quantity_svl']
+        impacted_products |= self.env['product.product'].browse(impacted_product_ids)
+
+        # empty out the stock for the impacted products
+        empty_stock_svl_list = []
+        for product in impacted_products:
+            # FIXME sle: why not use products_orig_quantity_svl here?
+            if float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
+                # FIXME: create an empty layer to track the change?
+                continue
+            svsl_vals = product._prepare_out_svl_vals(product.quantity_svl, self.env.company)
+            svsl_vals['description'] = description
+            svsl_vals['company_id'] = self.env.company.id
+            empty_stock_svl_list.append(svsl_vals)
+        return empty_stock_svl_list, products_orig_quantity_svl, impacted_products
+
+    def _svl_replenish_stock(self, description, products_orig_quantity_svl):
+        refill_stock_svl_list = []
+        for product in self:
+            quantity_svl = products_orig_quantity_svl[product.id]
+            if quantity_svl:
+                svl_vals = product._prepare_in_svl_vals(quantity_svl, product.standard_price)
+                svl_vals['description'] = description
+                svl_vals['company_id'] = self.env.company.id
+                refill_stock_svl_list.append(svl_vals)
+        return refill_stock_svl_list
+
+    @api.model
+    def _svl_empty_stock_am(self, stock_valuation_layers):
+        move_vals_list = []
+        product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in stock_valuation_layers.mapped('product_id')}
+        for out_stock_valuation_layer in stock_valuation_layers:
+            product = out_stock_valuation_layer.product_id
+            expense_account = product.property_account_expense_id or product.categ_id.property_account_expense_categ_id
+            if not expense_account:
+                raise UserError(_('Please define an expense account for this product: "%s" (id:%d) - or for its category: "%s".') % (product.name, product.id, self.name))
+            if not product_accounts[product.id].get('stock_valuation'):
+                raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
+
+            debit_account_id = expense_account.id
+            credit_account_id = product_accounts[product.id]['stock_valuation'].id
+            value = out_stock_valuation_layer.value
+            move_vals = {
+                'journal_id': product_accounts[product.id]['stock_journal'].id,
+                'company_id': self.env.company.id,
+                'ref': product.default_code,
+                'stock_valuation_layer_ids': [(6, None, [out_stock_valuation_layer.id])],
+                'line_ids': [(0, 0, {
+                    'name': out_stock_valuation_layer.description,
+                    'account_id': debit_account_id,
+                    'debit': abs(value),
+                    'credit': 0,
+                    'product_id': product.id,
+                }), (0, 0, {
+                    'name': out_stock_valuation_layer.description,
+                    'account_id': credit_account_id,
+                    'debit': 0,
+                    'credit': abs(value),
+                    'product_id': product.id,
+                })],
+            }
+            move_vals_list.append(move_vals)
+        return move_vals_list
+
+    def _svl_replenish_stock_am(self, stock_valuation_layers):
+        move_vals_list = []
+        product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in stock_valuation_layers.mapped('product_id')}
+        for out_stock_valuation_layer in stock_valuation_layers:
+            product = out_stock_valuation_layer.product_id
+            if not product_accounts[product.id].get('stock_input'):
+                raise UserError(_('You don\'t have any input valuation account defined on your product category. You must define one before processing this operation.'))
+            if not product_accounts[product.id].get('stock_valuation'):
+                raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
+
+            debit_account_id = product_accounts[product.id]['stock_valuation'].id
+            credit_account_id = product_accounts[product.id]['stock_input'].id
+            value = out_stock_valuation_layer.value
+            move_vals = {
+                'journal_id': product_accounts[product.id]['stock_journal'].id,
+                'company_id': self.env.company.id,
+                'ref': product.default_code,
+                'stock_valuation_layer_ids': [(6, None, [out_stock_valuation_layer.id])],
+                'line_ids': [(0, 0, {
+                    'name': out_stock_valuation_layer.description,
+                    'account_id': debit_account_id,
+                    'debit': abs(value),
+                    'credit': 0,
+                    'product_id': product.id,
+                }), (0, 0, {
+                    'name': out_stock_valuation_layer.description,
+                    'account_id': credit_account_id,
+                    'debit': 0,
+                    'credit': abs(value),
+                    'product_id': product.id,
+                })],
+            }
+            move_vals_list.append(move_vals)
+        return move_vals_list
+
     # -------------------------------------------------------------------------
     # Anglo saxon helpers
     # -------------------------------------------------------------------------
@@ -475,4 +641,51 @@ class ProductCategory(models.Model):
                 'message': _("Changing your cost method is an important change that will impact your inventory valuation. Are you sure you want to make that change?"),
             }
         }
+
+    def write(self, vals):
+        impacted_categories = {}
+        move_vals_list = []
+        Product = self.env['product.product']
+        SVL = self.env['stock.valuation.layer']
+
+        if 'property_cost_method' in vals or 'property_valuation' in vals:
+            # When the cost method or the valuation are changed on a product category, we empty
+            # out and replenish the stock for each impacted products.
+            new_cost_method = vals.get('property_cost_method')
+            new_valuation = vals.get('property_valuation')
+
+
+            for product_category in self:
+                valuation_impacted = False
+                if new_cost_method and new_cost_method != product_category.property_cost_method:
+                    valuation_impacted = True
+                if new_valuation and new_valuation != product_category.property_valuation:
+                    valuation_impacted = True
+                if valuation_impacted is False:
+                    continue
+
+                # Empty out the stock with the current cost method.
+                description = _("Costing method change for product category %s: from %s to %s.") \
+                    % (self.display_name, self.property_cost_method, new_cost_method)
+                out_svl_vals_list, products_orig_quantity_svl, products = Product\
+                    ._svl_empty_stock(description, product_category=product_category)
+                out_stock_valuation_layers = SVL.create(out_svl_vals_list)
+                if product_category.property_valuation == 'real_time':
+                    move_vals_list += Product._svl_empty_stock_am(out_stock_valuation_layers)
+                impacted_categories[product_category] = (products, description, products_orig_quantity_svl)
+
+        res = super(ProductCategory, self).write(vals)
+
+        for product_category, (products, description, products_orig_quantity_svl) in impacted_categories.items():
+            # Replenish the stock with the new cost method.
+            in_svl_vals_list = products._svl_replenish_stock(description, products_orig_quantity_svl)
+            in_stock_valuation_layers = SVL.create(in_svl_vals_list)
+            if product_category.property_valuation == 'real_time':
+                move_vals_list += Product._svl_replenish_stock_am(in_stock_valuation_layers)
+
+        # Create the account moves.
+        if move_vals_list:
+            account_moves = self.env['account.move'].create(move_vals_list)
+            account_moves.post()
+        return res
 
