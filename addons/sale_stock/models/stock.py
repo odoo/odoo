@@ -44,6 +44,13 @@ class StockMove(models.Model):
                 values={'self': self.picking_id, 'origin': self.sale_line_id.order_id},
                 subtype_id=self.env.ref('mail.mt_note').id)
 
+    def _prepare_procurement_values(self):
+        res = super(StockMove, self)._prepare_procurement_values()
+        res.update({
+            'sale_line_id': self.sale_line_id.id
+        })
+        return res
+
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
