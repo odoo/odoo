@@ -936,7 +936,10 @@ class AccountMoveLine(models.Model):
         debit_moves = debit_moves.sorted(key=lambda a: (a.date_maturity or a.date, a.currency_id))
         credit_moves = credit_moves.sorted(key=lambda a: (a.date_maturity or a.date, a.currency_id))
         # Compute on which field reconciliation should be based upon:
-        field = self[0].account_id.currency_id and 'amount_residual_currency' or 'amount_residual'
+        if self[0].account_id.currency_id and self[0].account_id.currency_id != self[0].account_id.company_id.currency_id:
+            field = 'amount_residual_currency'
+        else:
+            field = 'amount_residual'
         #if all lines share the same currency, use amount_residual_currency to avoid currency rounding error
         if self[0].currency_id and all([x.amount_currency and x.currency_id == self[0].currency_id for x in self]):
             field = 'amount_residual_currency'

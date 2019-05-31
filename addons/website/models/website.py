@@ -170,6 +170,8 @@ class Website(models.Model):
 
         self.homepage_id = self.env['website.page'].search([('website_id', '=', self.id),
                                                             ('key', '=', standard_homepage.key)])
+        # prevent /-1 as homepage URL
+        self.homepage_id.url = '/'
 
         # Bootstrap default menu hierarchy, create a new minimalist one if no default
         default_menu = self.env.ref('website.main_menu')

@@ -139,7 +139,7 @@ var Chatter = Widget.extend({
         if (this.fields.activity) {
             this.fields.activity.$el.detach();
         }
-        if (this.fields.thread) {
+        if (this.fields.thread && this.fields.thread.$el ) {
             this.fields.thread.$el.detach();
         }
 
@@ -398,7 +398,7 @@ var Chatter = Widget.extend({
                     self.fields.followers.$el.insertBefore(self.$('.o_chatter_button_attachment'));
                 }
             }
-            if (self.fields.thread) {
+            if (self.fields.thread && self.fields.thread.$el) {
                 self.fields.thread.$el.appendTo(self.$el);
             }
         }).always(function () {

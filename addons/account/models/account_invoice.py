@@ -832,7 +832,7 @@ class AccountInvoice(models.Model):
         domain = {}
         company_id = self.company_id.id
         p = self.partner_id if not company_id else self.partner_id.with_context(force_company=company_id)
-        type = self.type
+        type = self.type or self.env.context.get('type', 'out_invoice')
         if p:
             rec_account = p.property_account_receivable_id
             pay_account = p.property_account_payable_id
@@ -1848,7 +1848,7 @@ class AccountInvoiceLine(models.Model):
             self_lang = self
             if part.lang:
                 self_lang = self.with_context(lang=part.lang)
-   
+
             product = self_lang.product_id
             account = self.get_invoice_line_account(type, product, fpos, company)
             if account:

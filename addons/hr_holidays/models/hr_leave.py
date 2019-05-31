@@ -359,11 +359,17 @@ class HolidaysRequest(models.Model):
             self.mode_company_id = False
             self.department_id = False
 
+    @api.multi
+    def _sync_employee_details(self):
+        for holiday in self:
+            holiday.manager_id = holiday.employee_id.parent_id.id
+            if holiday.employee_id:
+                holiday.department_id = holiday.employee_id.department_id
+
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
-        self.manager_id = self.employee_id.parent_id.id
-        if self.employee_id:
-            self.department_id = self.employee_id.department_id
+        self._sync_employee_details()
+        self.holiday_status_id = False
 
     @api.onchange('date_from', 'date_to', 'employee_id')
     def _onchange_leave_dates(self):
@@ -427,7 +433,7 @@ class HolidaysRequest(models.Model):
     def _check_date(self):
         for holiday in self:
             domain = [
-                ('date_from', '<=', holiday.date_to),
+                ('date_from', '<', holiday.date_to),
                 ('date_to', '>', holiday.date_from),
                 ('employee_id', '=', holiday.employee_id.id),
                 ('id', '!=', holiday.id),
@@ -535,7 +541,7 @@ class HolidaysRequest(models.Model):
             if holiday.validation_type == 'hr':
                 holiday.message_subscribe(partner_ids=(holiday.employee_id.parent_id.user_id.partner_id | holiday.employee_id.leave_manager_id.partner_id).ids)
             if employee_id:
-                holiday._onchange_employee_id()
+                holiday._sync_employee_details()
             if 'number_of_days' not in values and ('date_from' in values or 'date_to' in values):
                 holiday._onchange_leave_dates()
             if leave_type.validation_type == 'no_validation':
@@ -574,7 +580,7 @@ class HolidaysRequest(models.Model):
             for holiday in self:
                 if employee_id:
                     holiday.add_follower(employee_id)
-                    holiday._onchange_employee_id()
+                    self._sync_employee_details()
                 if 'number_of_days' not in values and ('date_from' in values or 'date_to' in values):
                     holiday._onchange_leave_dates()
         return result

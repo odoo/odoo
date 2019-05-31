@@ -162,7 +162,7 @@ class IapAccount(models.Model):
 
     @api.model
     def get(self, service_name, force_create=True):
-        account = self.search([('service_name', '=', service_name), ('company_id', 'in', [self.env.user.company_id.id, False])])
+        account = self.search([('service_name', '=', service_name), ('company_id', 'in', [self.env.user.company_id.id, False])], limit=1, order='company_id desc, id desc')
         if not account and force_create:
             account = self.create({'service_name': service_name})
             # Since the account did not exist yet, we will encounter a NoCreditError,

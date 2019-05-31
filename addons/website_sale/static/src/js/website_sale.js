@@ -145,14 +145,13 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
         'change form.js_attributes input, form.js_attributes select': '_onChangeAttribute',
         'mouseup form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'touchend form.js_add_cart_json label': '_onMouseupAddCartLabel',
-        'change .css_attribute_color input': '_onChangeColorAttribute',
         'click .show_coupon': '_onClickShowCoupon',
         'submit .o_website_sale_search': '_onSubmitSaleSearch',
         'change select[name="country_id"]': '_onChangeCountry',
         'change #shipping_use_same': '_onChangeShippingUseSame',
         'click .toggle_summary': '_onToggleSummary',
         'click input.js_product_change': 'onChangeVariant',
-        // dirty fix: prevent options modal events to be triggered and bubbled
+        'change .js_main_product [data-attribute_exclusions]': 'onChangeVariant',
         'change oe_optional_products_modal [data-attribute_exclusions]': 'onChangeVariant',
     },
 
@@ -166,6 +165,9 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
         this._changeCountry = _.debounce(this._changeCountry.bind(this), 500);
 
         this.isWebsite = true;
+
+        delete this.events['change .main_product:not(.in_cart) input.js_quantity'];
+        delete this.events['change [data-attribute_exclusions]'];
     },
     /**
      * @override
@@ -379,9 +381,13 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
      * @override
      * @private
      */
-    _updateProductImage: function ($productContainer, productId, productTemplateId, new_carousel) {
+    _updateProductImage: function ($productContainer, productId, productTemplateId, new_carousel, isCombinationPossible) {
         var $img;
         var $carousel = $productContainer.find('#o-carousel-product');
+
+        if (isCombinationPossible === undefined) {
+            isCombinationPossible = this.isSelectedVariantAllowed;
+        }
 
         if (new_carousel) {
             // When using the web editor, don't reload this or the images won't
@@ -425,7 +431,7 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
             }
         }
 
-        $carousel.toggleClass('css_not_available', !this.isSelectedVariantAllowed);
+        $carousel.toggleClass('css_not_available', !isCombinationPossible);
     },
 
     //--------------------------------------------------------------------------
@@ -535,15 +541,6 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
      * @private
      * @param {Event} ev
      */
-    _onChangeColorAttribute: function (ev) { // highlight selected color
-        $('.css_attribute_color').removeClass("active")
-                                 .filter(':has(input:checked)')
-                                 .addClass("active");
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
     _onClickShowCoupon: function (ev) {
         $(ev.currentTarget).hide();
         $('.coupon_form').removeClass('d-none');
@@ -583,20 +580,22 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
         $('.ship_to_other').toggle(!$(ev.currentTarget).prop('checked'));
     },
     /**
-     * Dirty fix: prevent options modal events to be triggered and bubbled
-     * Also write the properties of the form elements in the DOM to prevent the
+     * Toggles the add to cart button depending on the possibility of the
+     * current combination.
+     *
+     * @override
+     */
+    _toggleDisable: function ($parent, isCombinationPossible) {
+        ProductConfiguratorMixin._toggleDisable.apply(this, arguments);
+        $parent.find("#add_to_cart").toggleClass('disabled', !isCombinationPossible);
+    },
+    /**
+     * Write the properties of the form elements in the DOM to prevent the
      * current selection from being lost when activating the web editor.
      *
      * @override
      */
     onChangeVariant: function (ev, data) {
-        var $originPath = ev.originalEvent && Array.isArray(ev.originalEvent.path) ? $(ev.originalEvent.path) : $();
-        var $container = data && data.$container ? data.$container : $();
-        if ($originPath.add($container).hasClass('oe_optional_products_modal')) {
-            ev.stopPropagation();
-            return;
-        }
-
         var $component = $(ev.currentTarget).closest('.js_product');
         $component.find('input').each(function () {
             var $el = $(this);
