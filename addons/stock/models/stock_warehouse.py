@@ -19,6 +19,7 @@ _logger = logging.getLogger(__name__)
 class Warehouse(models.Model):
     _name = "stock.warehouse"
     _description = "Warehouse"
+    _order = 'sequence,id'
     # namedtuple used in helper methods generating values for routes
     Routing = namedtuple('Routing', ['from_loc', 'dest_loc', 'picking_type', 'action'])
 
@@ -69,6 +70,8 @@ class Warehouse(models.Model):
         'stock.location.route', 'supplied_wh_id', 'Resupply Routes',
         help="Routes will be created for these resupply warehouses and you can select them on products and product categories")
     show_resupply = fields.Boolean(compute="_compute_show_resupply")
+    sequence = fields.Integer(default=10,
+        help="Gives the sequence of this line when displaying the warehouses.")
     _sql_constraints = [
         ('warehouse_name_uniq', 'unique(name, company_id)', 'The name of the warehouse must be unique per company!'),
         ('warehouse_code_uniq', 'unique(code, company_id)', 'The code of the warehouse must be unique per company!'),

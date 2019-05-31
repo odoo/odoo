@@ -82,6 +82,7 @@
             <field name="model">stock.warehouse</field>
             <field name="arch" type="xml">
                 <tree string="Warehouse" create="false">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="active" invisible="1"/>
                     <field name="lot_stock_id" groups="stock.group_stock_multi_locations"/>
