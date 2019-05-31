@@ -11,19 +11,17 @@
 # Nathan Noël <nathan070@me.com>, 2017
 # Bertrand LATOUR <divoir@gmail.com>, 2017
 # Valentin Thirion <valentin@medineo.be>, 2017
-# Nancy Bolognesi <nb@microcom.ca>, 2017
+# Lucas Deliege <lud@odoo.com>, 2017
 # Félix Desjardins <felixinx@gmail.com>, 2017
 # Loic <loic.richard2@gmail.com>, 2017
 # Fred Gilson <fgi@odoo.com>, 2017
 # Hamid Darabi, 2017
-# Lucas Deliege <lud@odoo.com>, 2017
 # Denis Leemann <denis.leemann@camptocamp.com>, 2017
 # Fabri Yohann <psn@fabri.pw>, 2017
 # Mohammed SK <medkamar@blutec.ma>, 2017
 # David Bertha <development@fonteynethekitchen.be>, 2017
 # Sylvain LE GAL <sylvain.legal@grap.coop>, 2017
 # f5f0a0dac17dde787a1d812a6989680e, 2017
-# Saad Thaifa <saad.thaifa@gmail.com>, 2017
 # Micky Jault <micky037@hotmail.fr>, 2017
 # Xavier Symons <xsy@openerp.com>, 2017
 # Hubert TETARD <htetard@apik-conseils.com>, 2017
@@ -45,7 +43,6 @@
 # Clo <clo@odoo.com>, 2017
 # Richard Mathot <rim@odoo.com>, 2017
 # Melanie Bernard <mbe@odoo.com>, 2017
-# Martin Trigaux, 2017
 # Florian Hatat, 2017
 # Fabrice Henrion, 2017
 # e2f <projects@e2f.com>, 2018
@@ -53,6 +50,9 @@
 # bb76cd9ac0cb7e20167a14728edb858b, 2018
 # Eloïse Stilmant <est@odoo.com>, 2018
 # nle_odoo, 2018
+# Martin Trigaux, 2019
+# Nancy Bolognesi <nb@microcom.ca>, 2019
+# Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -60,7 +60,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:21+0000\n"
-"Last-Translator: nle_odoo, 2018\n"
+"Last-Translator: Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -518,6 +518,8 @@ msgid ""
 "An error occurred when loading product prices. Make sure all pricelists are "
 "available in the POS."
 msgstr ""
+"Une erreur s'est produite durant le chargement des prix des Article. "
+"Assurez-vous que toutes les listes de prix sont disponibles dans le POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_name
@@ -596,7 +598,7 @@ msgstr "Disponible dans le PdV"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product_available_in_pos
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_available_in_pos
 msgid "Available in Point of Sale"
-msgstr "Disponible dans le pointe de vente"
+msgstr "Disponible dans le point de vente"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_average_price
@@ -1668,7 +1670,7 @@ msgstr "Regrouper les éléments du journal"
 #: code:addons/point_of_sale/static/src/js/models.js:135
 #, python-format
 msgid "HTTPS connection to IoT Box failed"
-msgstr ""
+msgstr "La connexion HTTPS au boitier IOT a échouée"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_uom_categ_is_pos_groupable
@@ -2058,6 +2060,8 @@ msgid ""
 "Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept "
 "the certificate of your IoT Box."
 msgstr ""
+"Assurez-vous d'utiliser la version v18.12 ou supérieur du boitier IoT. "
+"Rendez-vous sur %s afin d'accepter le certificat de votre boitier IoT."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_available_pricelist_ids
@@ -2702,7 +2706,7 @@ msgstr "Veuillez définir un compte de revenu pour cet article : \"%s\" (id. : %
 #: code:addons/point_of_sale/static/src/js/screens.js:2083
 #, python-format
 msgid "Please print the invoice from the backend"
-msgstr ""
+msgstr "Imprimer s'il vous plait la facture depuis le backend"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:653
@@ -2943,7 +2947,14 @@ msgstr "Imprimer"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:716
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1372
+#, python-format
+msgid "Print Invoice"
+msgstr "Imprimer la facture"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:719
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1375
 #, python-format
 msgid "Print Receipt"
 msgstr "Imprimer le ticket"
@@ -2982,7 +2993,7 @@ msgstr "Erreur d'impression :"
 #: code:addons/point_of_sale/static/src/js/screens.js:1569
 #, python-format
 msgid "Printing is not supported on some android browsers"
-msgstr ""
+msgstr "L'impression n'est pas supporté sur certains navigateurs android"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2993,6 +3004,9 @@ msgid ""
 "printing protocol is available. It is possible to print your tickets by "
 "making use of an IoT Box."
 msgstr ""
+"L'impression n'est pas supportée sur certains navigateurs android en raison "
+"de l'absence de protocole d'impression par défaut disponible. Il est "
+"possible d'imprimer vos tickets à l'aide du boitier IoT."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_product
@@ -3118,7 +3132,7 @@ msgstr "En-tête du ticket :"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Receipt Printer"
-msgstr "Imprimante du reçu"
+msgstr "Imprimante de reçu"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_pos_reference
@@ -3835,6 +3849,8 @@ msgid ""
 "The order has been synchronized earlier. Please make the invoice from the "
 "backend for the order: "
 msgstr ""
+"La commande a été synchronisée plus tôt. Veuillez établir la facture à "
+"partir du backend pour la commande : "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_precompute_cash
@@ -4133,7 +4149,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:690
 #, python-format
 msgid "Tip"
-msgstr "Conseil"
+msgstr "Pourboire"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_tip_product_id
@@ -4144,7 +4160,7 @@ msgstr "Produit pour pourboire"
 #: model:product.product,name:point_of_sale.product_product_tip
 #: model:product.template,name:point_of_sale.product_product_tip_product_template
 msgid "Tips"
-msgstr "Conseils"
+msgstr "Pourboires"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product_to_weight

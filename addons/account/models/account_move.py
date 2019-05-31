@@ -342,7 +342,7 @@ class AccountMoveLine(models.Model):
                         else:
                             date = partial_line.credit_move_id.date if partial_line.debit_move_id == line else partial_line.debit_move_id.date
                             rate = line.currency_id.with_context(date=date).rate
-                        amount_residual_currency += sign_partial_line * line.currency_id.round(partial_line.amount * rate)
+                        amount_residual_currency += sign_partial_line * partial_line.amount * rate
 
             #computing the `reconciled` field.
             reconciled = False
@@ -938,7 +938,7 @@ class AccountMoveLine(models.Model):
         if len(new_mv_line_dicts) > 0:
             writeoff_lines = self.env['account.move.line']
             company_currency = self[0].account_id.company_id.currency_id
-            writeoff_currency = self[0].currency_id or company_currency
+            writeoff_currency = self[0].account_id.currency_id or company_currency
             for mv_line_dict in new_mv_line_dicts:
                 if writeoff_currency != company_currency:
                     mv_line_dict['debit'] = writeoff_currency.compute(mv_line_dict['debit'], company_currency)
@@ -1107,7 +1107,7 @@ class AccountMoveLine(models.Model):
             vals['debit'] = amount < 0 and abs(amount) or 0.0
         vals['partner_id'] = self.env['res.partner']._find_accounting_partner(self[0].partner_id).id
         company_currency = self[0].account_id.company_id.currency_id
-        writeoff_currency = self[0].currency_id or company_currency
+        writeoff_currency = self[0].account_id.currency_id or company_currency
         if not self._context.get('skip_full_reconcile_check') == 'amount_currency_excluded' and 'amount_currency' not in vals and writeoff_currency != company_currency:
             vals['currency_id'] = writeoff_currency.id
             sign = 1 if vals['debit'] > 0 else -1
@@ -1751,6 +1751,9 @@ class AccountPartialReconcile(models.Model):
                                 'debit': abs(rounded_amt) if rounded_amt < 0 else 0.0,
                                 'credit': rounded_amt if rounded_amt > 0 else 0.0,
                                 'account_id': line.account_id.id,
+                                # DO NOT FORWARD-PORT!!! ONLY FOR v11
+                                'analytic_account_id': line.analytic_account_id.id,
+                                'analytic_tag_ids': line.analytic_tag_ids.ids,
                                 'tax_exigible': True,
                                 'amount_currency': line.amount_currency and line.currency_id.round(-line.amount_currency * amount / line.balance) or 0.0,
                                 'currency_id': line.currency_id.id,
@@ -1763,6 +1766,9 @@ class AccountPartialReconcile(models.Model):
                                 'debit': rounded_amt if rounded_amt > 0 else 0.0,
                                 'credit': abs(rounded_amt) if rounded_amt < 0 else 0.0,
                                 'account_id': line.tax_line_id.cash_basis_account.id,
+                                # DO NOT FORWARD-PORT!!! ONLY FOR v11
+                                'analytic_account_id': line.analytic_account_id.id,
+                                'analytic_tag_ids': line.analytic_tag_ids.ids,
                                 'tax_line_id': line.tax_line_id.id,
                                 'tax_exigible': True,
                                 'amount_currency': line.amount_currency and line.currency_id.round(line.amount_currency * amount / line.balance) or 0.0,

@@ -11,7 +11,6 @@
 # Olha Koshelieva <olha.koshelieva@gmail.com>, 2017
 # Dmytro Kriesovich <dimscoffer@bigmir.net>, 2017
 # Артём Инжиянц <artem.inzhyyants@gmail.com>, 2018
-# Vladimir Gumenyuk <vladimir.gumenyuk@gmail.com>, 2018
 # Zoriana Zaiats, 2018
 # Olga Lugova <trolka.olug@gmail.com>, 2018
 # Bohdan Lisnenko, 2018
@@ -1179,7 +1178,7 @@ msgstr "Останній рядок терміну оплати повинен �
 #: code:addons/account/models/account_invoice.py:1702
 #, python-format
 msgid "A Payment Terms should have only one line of type Balance."
-msgstr "Тільки один рядок терміну оплати повинен бути з типом оплати Баланс"
+msgstr "Термін оплати повинен мати тільки один рядок типу Балансу."
 
 #. module: account
 #: code:addons/account/models/account.py:722
@@ -1505,7 +1504,7 @@ msgstr "Теги рахунків"
 #: model:ir.ui.view,arch_db:account.view_tax_form
 #: model:ir.ui.view,arch_db:account.view_tax_tree
 msgid "Account Tax"
-msgstr "Рахунок податку"
+msgstr "Податок рахунку"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -2749,7 +2748,7 @@ msgstr "По країнах"
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_refund
 msgid "By Credit Note"
-msgstr "За стерно"
+msgstr "За сторно"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product
@@ -3431,7 +3430,7 @@ msgstr "Створити електронний лист"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Compute tax rates based on U.S. ZIP codes"
-msgstr "Розрахувати податки на підставі почтовогу індексу США"
+msgstr "Розрахувати податки на підставі поштового індексу США"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_counterpart
@@ -3869,7 +3868,7 @@ msgstr "Дата сторно"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence_id
 msgid "Credit Note Entry Sequence"
-msgstr "Послідовність запису кредитної примітки"
+msgstr "Послідовність запису сторно"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3879,7 +3878,7 @@ msgstr "Сторно"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence_number_next
 msgid "Credit Notes: Next Number"
-msgstr "Кредитна примітка: наступний номер"
+msgstr "Сторно: наступний номер"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_credit_account_id
@@ -6649,7 +6648,7 @@ msgid ""
 msgstr ""
 "Останнім часом для цього партнера виконано звірку рахунків-фактур та "
 "платежів. Вона виконується, якщо у вас немає принаймні неузгодженого дебету "
-"та невмотивованих кредитів, або якщо ви натискаєте кнопку \"Готово\"."
+"та кредиту, або якщо ви натискаєте кнопку \"Готово\"."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_last_time_entries_checked
@@ -6788,7 +6787,7 @@ msgstr "Рахунок витрат від курсових різниць"
 #: code:addons/account/models/chart_template.py:195
 #, python-format
 msgid "MISC"
-msgstr "ІНШ"
+msgstr "ІНШІ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form

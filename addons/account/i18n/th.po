@@ -11,6 +11,7 @@
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
 # Prawit Boonthue <prawit.boonthue@gmail.com>, 2018
 # Martin Trigaux, 2019
+# Panupong Jantapoon <panupong.jtp@gmail.com>, 2019
 # Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2019
 # 
 msgid ""
@@ -71,7 +72,7 @@ msgstr "${object.company_id.name} ใบแจ้งหนี้ (Ref ${object.n
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
 msgid ""
 "${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} ใบเสร็จ (Ref ${object.name or 'n/a' })"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_notification_email_account_invoice
@@ -101,7 +102,7 @@ msgstr "%s (สำเนา)"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "&amp;nbsp;<span>on</span>"
-msgstr ""
+msgstr "&amp;nbsp; <span>บน</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -158,7 +159,7 @@ msgstr ": บัญชีแยกประเภททั่วไป"
 #: code:addons/account/models/account.py:554
 #, python-format
 msgid ": Refund"
-msgstr ""
+msgstr "การคืนเงิน"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
@@ -3964,7 +3965,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_deprecated
 msgid "Deprecated"
-msgstr ""
+msgstr "เลิกใช้"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_depreciation
@@ -5398,7 +5399,7 @@ msgstr "โน้ตภายใน"
 #: selection:account.payment,payment_type:0
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Internal Transfer"
-msgstr ""
+msgstr "โอนย้ายภายใน"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_internal_type
@@ -6289,7 +6290,7 @@ msgstr "เชื่อมโยงไปยังรายการรายว
 #: selection:account.account.type,type:0
 #: model:ir.ui.view,arch_db:account.view_account_journal_search
 msgid "Liquidity"
-msgstr ""
+msgstr "สภาพคล่อง"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_tax_template_ids
@@ -6332,7 +6333,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_loss_account_id
 msgid "Loss Account"
-msgstr ""
+msgstr "บัญชีขาดทุน"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_expense_currency_exchange_account_id
@@ -7726,7 +7727,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_invoice_form
 msgid "Post Difference In"
-msgstr ""
+msgstr "บันทึกส่วนต่างลงใน"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_validate_account_move
@@ -8008,7 +8009,7 @@ msgstr ""
 #: selection:account.register.payments,payment_type:0
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Receive Money"
-msgstr ""
+msgstr "รับเงิน"
 
 #. module: account
 #. openerp-web
@@ -10443,7 +10444,7 @@ msgstr "ยกเลิกการพิสูจน์ยอด"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_unreconcile
 msgid "Unreconcile Entries"
-msgstr "พิสูจน์การบันทึก"
+msgstr "ยกเลิกการพิสูจน์ยอด"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_unreconcile_view
@@ -11122,6 +11123,8 @@ msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
 "Controls' on the related journal."
 msgstr ""
+"คุณไม่สามารถใช้บัญชีนี้ในสมุดบัญชีเล่มนี้ได้ "
+"โปรดตรวจสอบกับบัญชีที่อนุญาตของสมุดบัญชีที่เกี่ยวข้อง"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:74
