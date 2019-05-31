@@ -37,7 +37,7 @@ class AccountVoucher(models.Model):
         ('purchase', 'Purchase')
         ], string='Type', readonly=True, states={'draft': [('readonly', False)]}, oldname="type")
     name = fields.Char('Payment Memo',
-        readonly=True, states={'draft': [('readonly', False)]}, default='')
+        readonly=True, states={'draft': [('readonly', False)]}, default='',copy=False)
     date = fields.Date("Bill Date", readonly=True,
         index=True, states={'draft': [('readonly', False)]},
         copy=False, default=fields.Date.context_today)

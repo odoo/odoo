@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+import io
+from PIL import Image
+
 from . import common
 from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase
@@ -461,3 +465,72 @@ class TestVariantsManyAttributes(common.TestAttributesCommon):
         self.assertEqual(len(toto.attribute_line_ids.mapped('attribute_id')), 10)
         self.assertEqual(len(toto.attribute_line_ids.mapped('value_ids')), 100)
         self.assertEqual(len(toto.product_variant_ids), 0)
+
+class TestVariantsImages(common.TestProductCommon):
+
+    def setUp(self):
+        res = super(TestVariantsImages, self).setUp()
+
+        self.colors = {'red': '#FF0000', 'green': '#00FF00', 'blue': '#0000FF'}
+        self.images = {}
+
+        product_attribute = self.env['product.attribute'].create({'name': 'Color'})
+
+        self.template = self.env['product.template'].create({
+            'name': 'template',
+        })
+
+        for color in self.colors:
+            attr = self.env['product.attribute.value'].create({
+                'name': color,
+                'attribute_id': product_attribute.id,
+            })
+
+            f = io.BytesIO()
+            Image.new('RGB', (800, 500), self.colors[color]).save(f, 'PNG')
+            f.seek(0)
+            self.images.update({color: base64.b64encode(f.read())})
+
+            self.env['product.product'].create({
+                'image_variant': self.images[color],
+                'attribute_value_ids': [(6, 0, [attr.id])],
+                'product_tmpl_id': self.template.id,
+            })
+        # the first one has no image, no color
+        self.variants = self.template.product_variant_ids.sorted('id')
+
+        return res
+
+    def test_variant_images(self):
+        """Check that on variant, the image used is the image_variant if set,
+        and defaults to the template image otherwise.
+        """
+        f = io.BytesIO()
+        Image.new('RGB', (800, 500), '#000000').save(f, 'PNG')
+        f.seek(0)
+        image_black = base64.b64encode(f.read())
+
+        images = self.variants.mapped('image_variant')
+        self.assertEqual(len(set(images)), 4)
+
+        variant_no_image = self.variants[0]
+        self.assertFalse(variant_no_image.image)
+        self.template.image = image_black
+
+        # the first has no image variant, all the others do
+        self.assertFalse(variant_no_image.image_variant)
+        self.assertTrue(all(images[1:]))
+
+        # template image is the same as this one, since it has no image variant
+        self.assertEqual(variant_no_image.image, self.template.image)
+        # having changed the template image should not have changed these
+        self.assertEqual(images[1:], self.variants.mapped('image')[1:])
+
+
+    def test_update_images_with_archived_variants(self):
+        """Update images after variants have been archived"""
+        self.variants[1:].write({'active': False})
+        self.variants[0].image = self.images['red']
+        self.assertEqual(self.template.image, self.images['red'])
+        self.assertEqual(self.variants[0].image_variant, False)
+        self.assertEqual(self.variants[0].image, self.images['red'])
