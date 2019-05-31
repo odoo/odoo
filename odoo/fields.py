@@ -2070,6 +2070,13 @@ class _Relational(Field):
             _logger.warning("Field %s with unknown comodel_name %r", self, self.comodel_name)
             self.comodel_name = '_unknown'
 
+    def get_domain_list(self, model):
+        """ Return a list domain from the domain parameter. """
+        domain = self.domain
+        if callable(domain):
+            domain = domain(model)
+        return domain if isinstance(domain, list) else []
+
     @property
     def _related_domain(self):
         if callable(self.domain):
@@ -2493,8 +2500,7 @@ class One2many(_RelationalMulti):
         comodel = records.env[self.comodel_name].with_context(**self.context)
         inverse = self.inverse_name
         get_id = (lambda rec: rec.id) if comodel._fields[inverse].type == 'many2one' else int
-        domain = self.domain(records) if callable(self.domain) else self.domain
-        domain = domain + [(inverse, 'in', records.ids)]
+        domain = self.get_domain_list(records) + [(inverse, 'in', records.ids)]
         lines = comodel.search(domain, limit=self.limit)
 
         # group lines by inverse field (without prefetching other fields)
@@ -2568,8 +2574,7 @@ class One2many(_RelationalMulti):
                     elif act[0] in (5, 6):
                         flush()
                         ids = act[2] if act[0] == 6 else []
-                        domain = self.domain(model) if callable(self.domain) else self.domain
-                        domain = domain + [(inverse, 'in', records.ids)]
+                        domain = self.get_domain_list(model) + [(inverse, 'in', records.ids)]
                         if ids:
                             domain = domain + [('id', 'not in', ids)]
                         unlink(comodel.search(domain)._ids)
@@ -2726,11 +2731,7 @@ class Many2many(_RelationalMulti):
 
     def read(self, records):
         comodel = records.env[self.comodel_name].with_context(**self.context)
-
-        # String domains are supposed to be dynamic and evaluated on client-side
-        # only (thus ignored here).
-        domain = self.domain if isinstance(self.domain, list) else []
-
+        domain = self.get_domain_list(records)
         wquery = comodel._where_calc(domain)
         comodel._apply_ir_rules(wquery, 'read')
         order_by = comodel._generate_order_by(None, wquery)
