@@ -255,7 +255,7 @@ var ImageWidget = MediaWidget.extend({
             o.id = +o.url.match(/\/web\/content\/(\d+)/, '')[1];
         }
         if (o.url) {
-            self._toggleImage(_.find(self.records, function (record) { return record.url === o.url;}) || o, true);
+            self._toggleImage(_.find(self.records, function (record) { return record.src === o.url;}) || o, true);
         }
 
         return def;
