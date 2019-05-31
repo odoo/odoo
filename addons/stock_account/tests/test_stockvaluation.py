@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
-from unittest import skip
 
 from odoo.exceptions import UserError
 from odoo.fields import Datetime
@@ -59,11 +58,8 @@ class TestStockValuation(SavepointCase):
             'code': 'STJTEST',
             'type': 'general',
         })
-        cls.product1.categ_id.write({
-            'property_stock_account_input_categ_id': cls.stock_input_account.id,
-            'property_stock_account_output_categ_id': cls.stock_output_account.id,
-            'property_stock_valuation_account_id': cls.stock_valuation_account.id,
-            'property_stock_journal': cls.stock_journal.id,
+        cls.product1.write({
+            'property_account_expense_id': cls.expense_account.id,
         })
         cls.product1.categ_id.write({
             'property_stock_account_input_categ_id': cls.stock_input_account.id,
@@ -2678,7 +2674,6 @@ class TestStockValuation(SavepointCase):
         self.assertAlmostEqual(self.product1.quantity_svl, 0.0)
         self.assertAlmostEqual(self.product1.value_svl, 0.0)
 
-    @skip('waiting changing cost method')
     def test_change_cost_method_1(self):
         """ Change the cost method from FIFO to AVCO.
         """
@@ -2731,9 +2726,8 @@ class TestStockValuation(SavepointCase):
         move3.move_line_ids.qty_done = 1.0
         move3._action_done()
 
-        self.assertAlmostEqual(self.product1.qty_available, 19)
-        self.assertAlmostEqual(self.product1.qty_at_date, 19)
-        self.assertEqual(self.product1.stock_value, 240)
+        self.assertAlmostEqual(self.product1.quantity_svl, 19)
+        self.assertEqual(self.product1.value_svl, 240)
 
         # ---------------------------------------------------------------------
         # Change the production valuation to AVCO
@@ -2741,15 +2735,14 @@ class TestStockValuation(SavepointCase):
         self.product1.categ_id.property_cost_method = 'average'
 
         # valuation should stay to ~240
-        self.assertAlmostEqual(self.product1.stock_value, 240, delta=0.03)
+        self.assertAlmostEqual(self.product1.quantity_svl, 19)
+        self.assertAlmostEqual(self.product1.value_svl, 285, delta=0.03)
 
-        # no accounting entry should be created
+        # an accounting entry should be created
+        # FIXME sle check it
 
-        # the cost should now be 12,65
-        # (9 * 10) + (15 * 10) / 19
-        self.assertEqual(self.product1.standard_price, 12.63)
+        self.assertEqual(self.product1.standard_price, 15)
 
-    @skip('waiting changing cost method')
     def test_change_cost_method_2(self):
         """ Change the cost method from FIFO to standard.
         """
@@ -2802,9 +2795,8 @@ class TestStockValuation(SavepointCase):
         move3.move_line_ids.qty_done = 1.0
         move3._action_done()
 
-        self.assertAlmostEqual(self.product1.qty_available, 19)
-        self.assertAlmostEqual(self.product1.qty_at_date, 19)
-        self.assertEqual(self.product1.stock_value, 240)
+        self.assertAlmostEqual(self.product1.quantity_svl, 19)
+        self.assertEqual(self.product1.value_svl, 240)
 
         # ---------------------------------------------------------------------
         # Change the production valuation to AVCO
@@ -2812,13 +2804,13 @@ class TestStockValuation(SavepointCase):
         self.product1.categ_id.property_cost_method = 'standard'
 
         # valuation should stay to ~240
-        self.assertAlmostEqual(self.product1.stock_value, 240, delta=0.03)
+        self.assertAlmostEqual(self.product1.value_svl, 285, delta=0.03)
+        self.assertAlmostEqual(self.product1.quantity_svl, 19)
 
         # no accounting entry should be created
+        # FIXME sle check it
 
-        # the cost should now be 12,65
-        # (9 * 10) + (15 * 10) / 19
-        self.assertEqual(self.product1.standard_price, 12.63)
+        self.assertEqual(self.product1.standard_price, 15)
 
     def test_fifo_sublocation_valuation_1(self):
         """ Set the main stock as a view location. Receive 2 units of a
