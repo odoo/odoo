@@ -296,8 +296,8 @@ class Lead(models.Model):
         context = dict(self._context or {})
         if vals.get('type') and not self._context.get('default_type'):
             context['default_type'] = vals.get('type')
-        if vals.get('team_id') and not self._context.get('default_team_id'):
-            context['default_team_id'] = vals.get('team_id')
+        if not self._context.get('default_team_id'):
+            context['default_team_id'] = vals.get('team_id') or self.env.user.partner_id.team_id.id
 
         if vals.get('user_id') and 'date_open' not in vals:
             vals['date_open'] = fields.Datetime.now()
