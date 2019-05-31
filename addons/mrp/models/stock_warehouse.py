@@ -116,7 +116,8 @@ class StockWarehouse(models.Model):
                     'active': self.manufacture_to_resupply,
                     'name': self._format_rulename(location_id, False, 'Production'),
                     'location_id': location_id.id,
-                }
+                    'propagate_cancel': self.manufacture_steps == 'pbm_sam'
+                },
             },
             'pbm_mto_pull_id': {
                 'depends': ['manufacture_steps', 'manufacture_to_resupply'],
@@ -125,7 +126,6 @@ class StockWarehouse(models.Model):
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
-                    'propagate_cancel': True,
                     'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Make To Order')).id,
                     'name': self._format_rulename(self.lot_stock_id, self.pbm_loc_id, 'MTO'),
                     'location_id': self.pbm_loc_id.id,
@@ -149,7 +149,6 @@ class StockWarehouse(models.Model):
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
-                    'propagate_cancel': True,
                     'route_id': self._find_global_route('mrp.route_warehouse0_manufacture', _('Manufacture')).id,
                     'name': self._format_rulename(self.sam_loc_id, self.lot_stock_id, False),
                     'location_id': self.lot_stock_id.id,
