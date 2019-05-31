@@ -1,6 +1,29 @@
 <?xml version="1.0" ?>
 <odoo><data>
 
+<template id='courses_footer'>
+    <!-- 'users':  3 top users with picture (skip users without picture) -->
+    <section class="s_banner bg-900" style="background-image: url(/website_slides/static/src/img/banner_heroes_default.svg); background-size: cover; background-position: right bottom">
+        <div class="container py-5">
+            <div class="row align-items-center">
+                <div t-attf-class="col-12 #{'col-md' if top3_users else 'text-center'}">
+                    <h2 class="my-4 text-white">Meet The Heros Who Transformed Their Company!</h2>
+                    <a href="/profile/users" class="btn btn-primary btn-lg">Go meet them</a>
+                </div>
+                <div class="col-12 col-md-5" t-if="top3_users">
+                    <div class="ml-4">
+                        <t t-foreach="top3_users" t-as="user">
+                            <img class="rounded-circle img-fluid shadow ml-n4"
+                                style="border: 6px solid white"
+                                t-attf-src="/web/image/res.users/#{user['id']}/image_medium"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
 <!-- Channels home template -->
 <template id='courses_home' name="Odoo Courses Homepage">
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
@@ -146,18 +169,7 @@
                     </div>
                 </div>
             </div>
-            <section class="s_banner" style="background-image: url(/website_slides/static/src/img/banner_heroes_default.svg); background-size: cover; background-position: right bottom">
-                <div class="container py-5">
-                    <div class="row align-items-center">
-                        <div class="col-12 col-md">
-                            <h2 class="my-4 text-white">Meet the people who transformed their company</h2>
-                        </div>
-                        <div class="col-12 col-md-4">
-                            <a href="/profile/users" class="btn btn-primary btn-lg">Go meet them</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <t t-call="website_slides.courses_footer"></t>
         </div>
     </t>
 </template>
@@ -264,18 +276,7 @@
                 </div>
             </div>
 
-            <section class="s_banner bg-900" style="background-image: url(/website_slides/static/src/img/banner_heroes_default.svg); background-size: cover; background-position: right bottom">
-                <div class="container py-5">
-                    <div class="row align-items-center">
-                        <div class="col-12 col-md">
-                            <h2 class="my-4">Meet the people who transformed their company</h2>
-                        </div>
-                        <div class="col-12 col-md-4">
-                            <a href="/profile/users" class="btn btn-primary btn-lg">Go meet them</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <t t-call="website_slides.courses_footer"></t>
         </div>
     </t>
 </template>
