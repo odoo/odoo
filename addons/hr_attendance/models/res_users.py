@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api, _
+from odoo import models, fields
 
 
 class User(models.Model):
@@ -19,7 +19,6 @@ class User(models.Model):
             'hours_last_month',
             'attendance_state',
         ]
-        init_res = super(User, self).__init__(pool, cr)
+        super(User, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
         type(self).SELF_READABLE_FIELDS = type(self).SELF_READABLE_FIELDS + attendance_readable_fields
-        return init_res

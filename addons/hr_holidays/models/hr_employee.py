@@ -2,67 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
-from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo import api, fields, models
 from odoo.tools.float_utils import float_round
 
 
-# YTI TODO: Split into 2 files
-class Department(models.Model):
-
-    _inherit = 'hr.department'
-
-    absence_of_today = fields.Integer(
-        compute='_compute_leave_count', string='Absence by Today')
-    leave_to_approve_count = fields.Integer(
-        compute='_compute_leave_count', string='Time Off to Approve')
-    allocation_to_approve_count = fields.Integer(
-        compute='_compute_leave_count', string='Allocation to Approve')
-    total_employee = fields.Integer(
-        compute='_compute_total_employee', string='Total Employee')
-
-    @api.multi
-    def _compute_leave_count(self):
-        Requests = self.env['hr.leave']
-        Allocations = self.env['hr.leave.allocation']
-        today_date = datetime.datetime.utcnow().date()
-        today_start = fields.Datetime.to_string(today_date)  # get the midnight of the current utc day
-        today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
-
-        leave_data = Requests.read_group(
-            [('department_id', 'in', self.ids),
-             ('state', '=', 'confirm')],
-            ['department_id'], ['department_id'])
-        allocation_data = Allocations.read_group(
-            [('department_id', 'in', self.ids),
-             ('state', '=', 'confirm')],
-            ['department_id'], ['department_id'])
-        absence_data = Requests.read_group(
-            [('department_id', 'in', self.ids), ('state', 'not in', ['cancel', 'refuse']),
-             ('date_from', '<=', today_end), ('date_to', '>=', today_start)],
-            ['department_id'], ['department_id'])
-
-        res_leave = dict((data['department_id'][0], data['department_id_count']) for data in leave_data)
-        res_allocation = dict((data['department_id'][0], data['department_id_count']) for data in allocation_data)
-        res_absence = dict((data['department_id'][0], data['department_id_count']) for data in absence_data)
-
-        for department in self:
-            department.leave_to_approve_count = res_leave.get(department.id, 0)
-            department.allocation_to_approve_count = res_allocation.get(department.id, 0)
-            department.absence_of_today = res_absence.get(department.id, 0)
-
-    @api.multi
-    def _compute_total_employee(self):
-        emp_data = self.env['hr.employee'].read_group([('department_id', 'in', self.ids)], ['department_id'], ['department_id'])
-        result = dict((data['department_id'][0], data['department_id_count']) for data in emp_data)
-        for department in self:
-            department.total_employee = result.get(department.id, 0)
-
-
-class Employee(models.Model):
-    _inherit = "hr.employee"
+class HrEmployeeBase(models.AbstractModel):
+    _inherit = "hr.employee.base"
 
     def _group_hr_user_domain(self):
         group = self.env.ref('hr_holidays.group_hr_holidays_team_leader', raise_if_not_found=False)
@@ -173,7 +119,7 @@ class Employee(models.Model):
 
     @api.onchange('parent_id')
     def _onchange_parent_id(self):
-        super(Employee, self)._onchange_parent_id()
+        super(HrEmployeeBase, self)._onchange_parent_id()
         previous_manager = self._origin.parent_id.user_id
         manager = self.parent_id.user_id
         if manager and manager.has_group('hr.group_hr_user') and (self.leave_manager_id == previous_manager or not self.leave_manager_id):
@@ -199,7 +145,7 @@ class Employee(models.Model):
         return [('id', 'in', holidays.mapped('employee_id').ids)]
 
     def write(self, values):
-        res = super(Employee, self).write(values)
+        res = super(HrEmployeeBase, self).write(values)
         today_date = fields.Datetime.now()
         if 'parent_id' in values or 'department_id' in values:
             hr_vals = {}
@@ -207,7 +153,7 @@ class Employee(models.Model):
                 hr_vals['manager_id'] = values['parent_id']
             if values.get('department_id') is not None:
                 hr_vals['department_id'] = values['department_id']
-            holidays = self.env['hr.leave'].search(['|',('state', 'in', ['draft', 'confirm']),('date_from', '>', today_date), ('employee_id', 'in', self.ids)])
+            holidays = self.env['hr.leave'].search(['|', ('state', 'in', ['draft', 'confirm']), ('date_from', '>', today_date), ('employee_id', 'in', self.ids)])
             holidays.write(hr_vals)
             allocations = self.env['hr.leave.allocation'].search([('state', 'in', ['draft', 'confirm']), ('employee_id', 'in', self.ids)])
             allocations.write(hr_vals)

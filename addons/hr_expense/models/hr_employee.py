@@ -31,6 +31,12 @@ class Employee(models.Model):
             self.expense_manager_id = manager
 
 
+class EmployeePublic(models.Model):
+    _inherit = 'hr.employee.public'
+
+    expense_manager_id = fields.Many2one('res.users', readonly=True)
+
+
 class User(models.Model):
     _inherit = ['res.users']
 
