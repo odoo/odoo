@@ -603,7 +603,7 @@ class HolidaysRequest(models.Model):
         by creating a calendar event and a resource time off. """
         holidays = self.filtered(lambda request: request.holiday_type == 'employee')
         holidays._create_resource_leave()
-        for holiday in holidays:
+        for holiday in holidays.filtered(lambda l: l.holiday_status_id.create_calendar_meeting):
             meeting_values = holiday._prepare_holidays_meeting_values()
             meeting = self.env['calendar.event'].with_context(no_mail_to_attendees=True).create(meeting_values)
             holiday.write({'meeting_id': meeting.id})
@@ -614,8 +614,6 @@ class HolidaysRequest(models.Model):
         calendar = self.employee_id.resource_calendar_id or self.env.company.resource_calendar_id
         meeting_values = {
             'name': self.display_name,
-            'categ_ids': [(6, 0, [
-                self.holiday_status_id.categ_id.id])] if self.holiday_status_id.categ_id else [],
             'duration': self.number_of_days * (calendar.hours_per_day or HOURS_PER_DAY),
             'description': self.notes,
             'user_id': self.user_id.id,
