@@ -196,6 +196,7 @@ class ProductProduct(models.Model):
                     ('active', '=', True),
                 ]) <= 1
             ):
+                record.image_raw_original = False
                 record.product_tmpl_id.image_original = record.image_original
             else:
                 record.image_raw_original = record.image_original
@@ -335,7 +336,6 @@ class ProductProduct(models.Model):
         else:
             self.partner_ref = self.display_name
 
-            self.image_variant = False
     @api.depends('product_tmpl_id', 'attribute_value_ids')
     def _compute_product_template_attribute_value_ids(self):
         # Fetch and pre-map the values first for performance. It assumes there
