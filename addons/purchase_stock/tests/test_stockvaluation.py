@@ -1172,8 +1172,8 @@ class TestStockValuationWithCOA(AccountingTestCase):
              discount:    10
         """
         self.env.user.company_id.anglo_saxon_accounting = True
-        self.product1.product_tmpl_id.cost_method = 'fifo'
-        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
         self.product1.product_tmpl_id.invoice_policy = 'delivery'
         self.product1.property_account_creditor_price_difference = self.price_diff_account
 
@@ -1222,8 +1222,8 @@ class TestStockValuationWithCOA(AccountingTestCase):
              discount:    10
         """
         self.env.user.company_id.anglo_saxon_accounting = True
-        self.product1.product_tmpl_id.cost_method = 'fifo'
-        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
         self.product1.product_tmpl_id.invoice_policy = 'delivery'
         self.product1.property_account_creditor_price_difference = self.price_diff_account
 
@@ -1271,8 +1271,8 @@ class TestStockValuationWithCOA(AccountingTestCase):
              discount:    10
         """
         self.env.user.company_id.anglo_saxon_accounting = True
-        self.product1.product_tmpl_id.cost_method = 'fifo'
-        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
         self.product1.product_tmpl_id.invoice_policy = 'delivery'
         self.product1.property_account_creditor_price_difference = self.price_diff_account
 
