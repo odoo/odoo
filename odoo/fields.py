@@ -2360,6 +2360,7 @@ class _RelationalMulti(_Relational):
         return value.ids
 
     def convert_to_write(self, value, record):
+        inv_names = {field.name for field in record._field_inverses[self]}
         # make result with new and existing records
         result = [(6, 0, [])]
         for record in value:
@@ -2368,6 +2369,7 @@ class _RelationalMulti(_Relational):
                 values = record._convert_to_write({
                     name: record[name]
                     for name in record._cache
+                    if name not in inv_names
                 })
                 result.append((0, 0, values))
             else:
@@ -2376,7 +2378,7 @@ class _RelationalMulti(_Relational):
                     values = record._convert_to_write({
                         name: record[name]
                         for name in record._cache
-                        if record[name] != origin[name]
+                        if name not in inv_names and record[name] != origin[name]
                     })
                     if values:
                         result.append((1, origin.id, values))
