@@ -160,10 +160,13 @@ class TestUi(odoo.tests.HttpCase):
         if the main product does not have variants.
         """
 
-        # add an optional product to the office chair for test purposes
+        # add an optional product to the office chair and the custo desk for testing purposes
         office_chair = self.env.ref('product.product_product_12')
+        custo_desk = self.env.ref('product.product_product_4')
         office_chair.update({
             'optional_product_ids': [(6, 0, [self.env.ref('sale_product_configurator.product_product_1_product_template').id])]
         })
-
+        custo_desk.update({
+            'optional_product_ids': [(6, 0, [self.env.ref('product.product_product_12_product_template').id, self.env.ref('product.product_product_11_product_template').id])]
+        })
         self.start_tour("/web", 'sale_product_configurator_optional_products_tour', login="admin")
