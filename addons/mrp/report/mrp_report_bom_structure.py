@@ -20,7 +20,7 @@ class ReportBomStructure(models.AbstractModel):
                 if data and data.get('childs'):
                     doc = self._get_pdf_line(bom_id, product_id=product_variant_id, qty=float(data.get('quantity')), child_bom_ids=json.loads(data.get('childs')))
                 else:
-                    doc = self._get_pdf_line(bom_id, product_id=product_variant_id, unfolded=True)
+                    doc = self._get_pdf_line(bom_id, product_id=product_variant_id, qty=float(data.get('quantity')), unfolded=True)
                 doc['report_type'] = 'pdf'
                 doc['report_structure'] = data and data.get('report_type') or 'all'
                 docs.append(doc)
@@ -28,7 +28,7 @@ class ReportBomStructure(models.AbstractModel):
                 if data and data.get('childs'):
                     doc = self._get_pdf_line(bom_id, qty=float(data.get('quantity')), child_bom_ids=json.loads(data.get('childs')))
                 else:
-                    doc = self._get_pdf_line(bom_id, unfolded=True)
+                    doc = self._get_pdf_line(bom_id, qty=float(data.get('quantity')), unfolded=True)
                 doc['report_type'] = 'pdf'
                 doc['report_structure'] = data and data.get('report_type') or 'all'
                 docs.append(doc)
