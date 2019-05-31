@@ -53,6 +53,7 @@ class MailController(http.Controller):
         # to give access to the record to a recipient that has normally no access.
         uid = request.session.uid
         user = request.env['res.users'].sudo().browse(uid)
+        cids = False
 
         # no model / res_id, meaning no possible record -> redirect to login
         if not model or not res_id or model not in request.env:
@@ -125,7 +126,8 @@ class MailController(http.Controller):
         if view_id:
             url_params['view_id'] = view_id
 
-        url_params['cids'] = ','.join([str(cid) for cid in cids])
+        if cids:
+            url_params['cids'] = ','.join([str(cid) for cid in cids])
         url = '/web?#%s' % url_encode(url_params)
         return werkzeug.utils.redirect(url)
 
