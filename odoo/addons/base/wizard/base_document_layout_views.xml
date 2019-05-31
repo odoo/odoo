@@ -10,12 +10,17 @@
                         <group class="o_document_layout_company">
                             <field name="company_id" invisible="1"/>
                             <field name="external_report_layout_id" invisible="1" />
-                            <field name="primary_color" invisible="1" />
-                            <field name="secondary_color" invisible="1" />
-                            <field name="previous_default" invisible="1" />
+                            <field name="custom_colors" invisible="1" />
                             <field name="report_layout_id" widget="radio" string="Layout" />
                             <field name="logo" widget="image" />
-                            <field name="company_colors" widget="color" title="Change company colors" />
+                            <label for="primary_color" string="Colors" />
+                            <div class="o_document_layout_colors">
+                                <field name="primary_color" widget="color" />
+                                <field name="secondary_color" widget="color" />
+                                <button class="btn btn-link" attrs="{'invisible': [('custom_colors', '=', False)]}" title="Reset to default">
+                                    <label for="custom_colors" class="fa fa-refresh" string="" />
+                                </button>
+                            </div>
                             <field name="font" widget="font" />
                             <field name="report_header" widget="char" placeholder="e.g. Global Business Solutions" />
                             <field name="report_footer" string="Footer" placeholder="e.g. Opening hours, bank accounts (one per line)" />

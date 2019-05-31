@@ -8,14 +8,22 @@
         .o_document_layout_colors {
             vertical-align: middle;
             display: -webkit-flex;
-            .btn-link {
-                font-size: 18px;
-                padding-top: 0;
+            flex-direction: row;
+            align-items: center;
+            .o_field_widget {
+                width: 30px;
+                margin: 0 5px 0 0;
             }
-        }
-        .o_document_layout_colors .o_field_widget {
-            width: 30px;
-            margin-right: 5px;
+            .btn {
+                padding: 0;
+                margin-left: 10px;
+                .o_form_label {
+                    height: 30px;
+                    font-size: 18px;
+                    margin: 0;
+                    cursor: pointer;
+                }
+            }
         }
     }
     .o_document_layout_preview {

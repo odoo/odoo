@@ -1,43 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import json
-
 from odoo import api, fields, models, tools
 
 
-"""
-MARGINS USED FOR IMAGE PROCESSING
-
-Thos are arbitrary and can be tweaked for better results
-
-WHITE_THRESHOLD is used to discard colors having all bands higher than the provided value
-MITIGATE is the maximum value a band can reach
-    => HARD_MITIGATE is used when the color is too bright
-"""
-WHITE_THRESHOLD = 225
-MITIGATE = 200
-HARD_MITIGATE = 160
-
-def process_rgb(rgb):
-    """
-    Darkens the value if the value of a band is above a given threshold,
-    then converts the tuple to a hex value
-    """
-    hex_list = []
-    threshold = MITIGATE if sum(rgb) < 650 else HARD_MITIGATE
-    brightest = max(rgb)
-    for color in range(3):
-        value = rgb[color] / (brightest /
-                                threshold) if brightest > threshold else rgb[color]
-        hex_list.append(hex(int(value)).split('x')[-1].zfill(2))
-    return '#' + ''.join(hex_list)
-
-
-def average_dominant_color(colors):
+def average_dominant_color(colors, mitigate=200, hard_mitigate=160, max_margin=140):
     """
     This function is used to calculate the average dominant color
 
-    There are 4 steps :
+    There are 5 steps :
         1) Select dominant colors (highest count), isolate its values and remove
            it from the current color set.
         2) Set margins according to the prevalence of the dominant color.
@@ -45,10 +15,14 @@ def average_dominant_color(colors):
            while others are put in the "remaining" list.
         4) Calculate the average color for the dominant set. This is done by
            averaging each band and joining them into a tuple.
+        5) Mitigate final average and convert it to hex
 
     :param colors: list of tuples having:
         [0] color count in the image
         [1] actual color: tuple(R, G, B, A)
+    :param mitigate: maximum value a band can reach
+    :param hard_mitigate: used instead of mitigate when the color is too bright
+    :param max_margin: maximum difference from one of the dominant values
     :returns: a tuple with two items:
         [0] the average color of the dominant set as: tuple(R, G, B)
         [1] list of remaining colors, used to evaluate subsequent dominant colors
@@ -58,7 +32,9 @@ def average_dominant_color(colors):
     dominant_set = [dominant_color]
     remaining = []
 
-    margins = [140 * (1 - dominant_color[0] / sum([col[0] for col in colors]))] * 3
+    margins = [max_margin * (1 - dominant_color[0] /
+                             sum([col[0] for col in colors]))] * 3
+
     colors.remove(dominant_color)
 
     for color in colors:
@@ -78,12 +54,20 @@ def average_dominant_color(colors):
             total += color[0]
         dominant_avg.append(int(avg / total))
 
-    return tuple(dominant_avg), remaining
+    dominant_hex = []
+    threshold = mitigate if sum(dominant_avg) < 650 else hard_mitigate
+    brightest = max(dominant_avg)
+    for color in range(3):
+        value = dominant_avg[color] / (brightest /
+                                       threshold) if brightest > threshold else dominant_avg[color]
+        dominant_hex.append(hex(int(value)).split('x')[-1].zfill(2))
+
+    return '#' + ''.join(dominant_hex), remaining
 
 
 class BaseDocumentLayout(models.TransientModel):
     """
-        Customise the company document layout and display a live preview
+    Customise the company document layout and display a live preview
     """
 
     _name = 'base.document.layout'
@@ -102,8 +86,7 @@ class BaseDocumentLayout(models.TransientModel):
     primary_color = fields.Char(related='company_id.primary_color', readonly=False)
     secondary_color = fields.Char(related='company_id.secondary_color', readonly=False)
 
-    company_colors = fields.Char(compute="_compute_report_layout_id", string="Colors", readonly=False)
-    previous_default = fields.Char(compute="_compute_report_layout_id")
+    custom_colors = fields.Boolean(compute="_compute_custom_colors", readonly=False)
 
     report_layout_id = fields.Many2one('report.layout', compute="_compute_report_layout_id", readonly=False)
     preview = fields.Html(compute='_compute_preview')
@@ -128,40 +111,48 @@ class BaseDocumentLayout(models.TransientModel):
                     wizard_for_image = wizard.with_context(bin_size=False)
                 primary, secondary = wizard_for_image._parse_logo_colors()
 
-            wizard.company_colors = json.dumps({
-                'default': [wizard.report_layout_id.primary_color, wizard.report_layout_id.secondary_color],
-                'values': [primary, secondary],
-            })
-            wizard.previous_default = ','.join([
-                wizard.report_layout_id.primary_color, wizard.report_layout_id.secondary_color])
+            wizard.primary_color = primary
+            wizard.secondary_color = secondary
 
     @api.depends('logo', 'font')
     def _compute_preview(self):
         """ compute a qweb based preview to display on the wizard """
         for wizard in self:
             ir_qweb = wizard.env['ir.qweb']
-            colors = json.loads(wizard.company_colors)
-            wizard.primary_color = colors['values'][0]
-            wizard.secondary_color = colors['values'][1]
             wizard.preview = ir_qweb.render('base.layout_preview', {
                 'company': wizard,
             })
 
-    @api.onchange('company_colors')
+    @api.depends('primary_color', 'secondary_color')
+    def _compute_custom_colors(self):
+        for wizard in self:
+            wizard.custom_colors = wizard.primary_color and wizard.secondary_color and not(
+                wizard.primary_color.lower() == wizard.report_layout_id.primary_color.lower() and
+                wizard.secondary_color.lower() == wizard.report_layout_id.secondary_color.lower())
+
+    @api.onchange('custom_colors')
+    def onchange_custom_colors(self):
+        for wizard in self:
+            if not wizard.custom_colors:
+                wizard.primary_color = wizard.report_layout_id.primary_color
+                wizard.secondary_color = wizard.report_layout_id.secondary_color
+
+    @api.onchange('primary_color', 'secondary_color')
     def onchange_company_colors(self):
         for wizard in self:
-            values = json.loads(wizard.company_colors)['values']
-            wizard.primary_color = values[0]
-            wizard.secondary_color = values[1]
+            wizard._compute_custom_colors()
             wizard._compute_preview()
 
-    def _parse_logo_colors(self, logo=None):
+    def _parse_logo_colors(self, logo=None, white_threshold=225):
         """
         Identifies dominant colors
 
         First resizes the original image to improve performance, then discards
         transparent colors and white-ish colors, then calls the averaging
         method twice to evaluate both primary and secondary colors.
+
+        :param logo: alternate logo to process
+        :param white_threshold: arbitrary value defining the maximum value a color can reach
         """
         self.ensure_one()
         logo = logo or self.logo
@@ -191,33 +182,25 @@ class BaseDocumentLayout(models.TransientModel):
 
         colors = []
         for color in image_resized.getcolors(w * h):
-            if not(color[1][0] > WHITE_THRESHOLD and
-                   color[1][1] > WHITE_THRESHOLD and
-                   color[1][2] > WHITE_THRESHOLD) and color[1][3] > 0:
+            if not(color[1][0] > white_threshold and
+                color[1][1] > white_threshold and
+                color[1][2] > white_threshold) and color[1][3] > 0:
                 colors.append(color)
 
         primary, remaining = average_dominant_color(colors)
         secondary = average_dominant_color(
             remaining)[0] if len(remaining) > 0 else primary
 
-        return process_rgb(primary), process_rgb(secondary)
+        return primary, secondary
 
     @api.onchange('report_layout_id')
     def onchange_report_layout_id(self):
         for wizard in self:
             wizard.external_report_layout_id = wizard.report_layout_id.view_id
 
-            values = json.loads(wizard.company_colors)['values']
-            default = [wizard.report_layout_id.primary_color,
-                       wizard.report_layout_id.secondary_color]
-
-            if wizard.previous_default.split(',') == values:
-                values = default
-            wizard.previous_default = ','.join(default)
-            wizard.company_colors = json.dumps({
-                'default': default,
-                'values': values,
-            })
+            if not wizard.custom_colors:
+                wizard.primary_color = wizard.report_layout_id.primary_color
+                wizard.secondary_color = wizard.report_layout_id.secondary_color
             wizard._compute_preview()
 
     @api.onchange('logo')
@@ -234,12 +217,7 @@ class BaseDocumentLayout(models.TransientModel):
             if not logo or (logo_same and company.primary_color and company.secondary_color):
                 continue
 
-            primary, secondary = wizard._parse_logo_colors()
-
-            wizard.company_colors = json.dumps({
-                'default': [wizard.report_layout_id.primary_color, wizard.report_layout_id.secondary_color],
-                'values': [primary, secondary]
-            })
+            wizard.primary_color, wizard.secondary_color = wizard._parse_logo_colors()
 
     @api.model
     def action_open_base_document_layout(self, action_ref=None):
