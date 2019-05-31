@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import base64
 import json
+import locale
 import logging
 import os
 import shutil
@@ -102,7 +103,7 @@ def _create_empty_database(name):
             cr.autocommit(True)     # avoid transaction block
 
             # 'C' collate is only safe with template0, but provides more useful indexes
-            collate = "LC_COLLATE 'C'" if chosen_template == 'template0' else ""
+            collate = "LC_COLLATE '%s'" % (".".join(locale.getlocale())) if chosen_template == 'template0' else ""
             cr.execute(
                 """CREATE DATABASE "%s" ENCODING 'unicode' %s TEMPLATE "%s" """ %
                 (name, collate, chosen_template)
