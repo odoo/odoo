@@ -1052,6 +1052,9 @@ class TestFields(common.TransactionCase):
         self.assertEqual(new_email.message._origin, msg0)
         self.assertEqual(new_email.body, "XXX")
 
+        # check that this does not generate an infinite recursion
+        new_disc._convert_to_write(new_disc._cache)
+
     def test_40_new_ref_origin(self):
         """ Test the behavior of new records with ref/origin. """
         Discussion = self.env['test_new_api.discussion']
