@@ -26,9 +26,7 @@ class HolidaysType(models.Model):
     code = fields.Char('Code')
     sequence = fields.Integer(default=100,
                               help='The type with the smallest sequence is the default value in time off request')
-    categ_id = fields.Many2one(
-        'calendar.event.type', string='Meeting Type',
-        help='Once a time off is validated, Odoo will create a corresponding meeting of this type in the calendar.')
+    create_calendar_meeting = fields.Boolean(string="Display Time Off in Calendar", default=True)
     color_name = fields.Selection([
         ('red', 'Red'),
         ('blue', 'Blue'),

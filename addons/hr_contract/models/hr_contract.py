@@ -45,8 +45,6 @@ class Contract(models.Model):
     permit_no = fields.Char('Work Permit No', related="employee_id.permit_no", readonly=False)
     visa_no = fields.Char('Visa No', related="employee_id.visa_no", readonly=False)
     visa_expire = fields.Date('Visa Expire Date', related="employee_id.visa_expire", readonly=False)
-    reported_to_secretariat = fields.Boolean('Social Secretariat',
-        help='Green this button when the contract information has been transfered to the social secretariat.')
     hr_responsible_id = fields.Many2one('res.users', 'HR Responsible', tracking=True,
         help='Person responsible for validating the employee\'s contracts.')
 
