@@ -64,7 +64,7 @@ class IrConfigParameter(models.Model):
         return self._get_param(key) or default
 
     @api.model
-    @ormcache('self._uid', 'key')
+    @ormcache('self.env.uid', 'self.env.su', 'key')
     def _get_param(self, key):
         params = self.search_read([('key', '=', key)], fields=['value'], limit=1)
         return params[0]['value'] if params else None

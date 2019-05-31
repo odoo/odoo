@@ -437,7 +437,7 @@ class Users(models.Model):
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
-        if self._uid != SUPERUSER_ID and args:
+        if not self.env.su and args:
             domain_fields = {term[0] for term in args if isinstance(term, (tuple, list))}
             if domain_fields.intersection(USER_PRIVATE_FIELDS):
                 raise AccessError(_('Invalid search criterion'))

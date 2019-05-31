@@ -115,7 +115,7 @@ class IrRule(models.Model):
         if mode not in self._MODES:
             raise ValueError('Invalid mode: %r' % (mode,))
 
-        if self._uid == SUPERUSER_ID:
+        if self.env.su:
             return self.browse(())
 
         query = """ SELECT r.id FROM ir_rule r JOIN ir_model m ON (r.model_id=m.id)
@@ -132,7 +132,7 @@ class IrRule(models.Model):
     @api.model
     @tools.conditional(
         'xml' not in config['dev_mode'],
-        tools.ormcache('self._uid', 'model_name', 'mode',
+        tools.ormcache('self.env.uid', 'self.env.su', 'model_name', 'mode',
                        'tuple(self._compute_domain_context_values())'),
     )
     def _compute_domain(self, model_name, mode="read"):

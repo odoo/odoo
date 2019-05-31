@@ -659,7 +659,7 @@ class Field(MetaField('DummyField', (object,), {})):
         if 'force_company' not in context:
             company = records.env.company
             context = dict(context, force_company=company.id)
-        Property = records.env(user=SUPERUSER_ID, context=context)['ir.property']
+        Property = records.env(context=context, su=True)['ir.property']
         values = Property.get_multi(self.name, self.model_name, records.ids)
         for record in records:
             record[self.name] = values.get(record.id)
@@ -670,7 +670,7 @@ class Field(MetaField('DummyField', (object,), {})):
         if 'force_company' not in context:
             company = records.env.company
             context = dict(context, force_company=company.id)
-        Property = records.env(user=SUPERUSER_ID, context=context)['ir.property']
+        Property = records.env(context=context, su=True)['ir.property']
         values = {
             record.id: self.convert_to_write(record[self.name], record)
             for record in records
@@ -2929,6 +2929,5 @@ def prefetch_value_ids(record, field):
 
 
 # imported here to avoid dependency cycle issues
-from odoo import SUPERUSER_ID
 from .exceptions import AccessError, MissingError, UserError
 from .models import check_pg_name, BaseModel, NewId, IdType
