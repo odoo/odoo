@@ -126,9 +126,9 @@ class PortalChatter(http.Controller):
             domain = []
         # Only search into website_message_ids, so apply the same domain to perform only one search
         # extract domain from the 'website_message_ids' field
-        field_domain = request.env[res_model]._fields['website_message_ids'].domain
-        if callable(field_domain):
-            field_domain = field_domain(request.env[res_model])
+        model = request.env[res_model]
+        field = model._fields['website_message_ids']
+        field_domain = field.get_domain_list(model)
         domain = expression.AND([domain, field_domain, [('res_id', '=', res_id)]])
 
         # Check access
