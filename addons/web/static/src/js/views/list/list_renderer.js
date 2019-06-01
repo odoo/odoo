@@ -248,6 +248,9 @@ var ListRenderer = BasicRenderer.extend({
             }
             if (!reject && c.attrs.widget === 'handle') {
                 self.handleField = c.attrs.name;
+                if (self.isGrouped) {
+                    return true;
+                }
             }
             return reject;
         });
@@ -441,7 +444,6 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {jQuery} a <button> element
      */
     _renderGroupButton: function (list, node) {
-        var self = this;
         var $button = viewUtils.renderButtonFromNode(node, {
             extraClass: node.attrs.icon ? 'o_icon_button' : undefined,
             textAsTitle: !!node.attrs.icon,
@@ -449,20 +451,10 @@ var ListRenderer = BasicRenderer.extend({
         this._handleAttributes($button, node);
         this._registerModifiers(node, list.groupData, $button);
 
-        // TODO this should be moved to a handler
-        $button.on("click", function (e) {
-            e.stopPropagation();
-            if (node.attrs.type === 'edit') {
-                self.trigger_up('group_edit_button_clicked', {
-                    record: list.groupData,
-                });
-            } else {
-                self.trigger_up('button_clicked', {
-                    attrs: node.attrs,
-                    record: list.groupData,
-                });
-            }
-        });
+        // TODO this should be moved to event handlers
+        $button.on("click", this._onGroupButtonClicked.bind(this, list.groupData, node));
+        $button.on("keydown", this._onGroupButtonKeydown.bind(this));
+
         return $button;
     },
     /**
@@ -687,13 +679,12 @@ var ListRenderer = BasicRenderer.extend({
         if (!field) {
             return $th;
         }
-        var description;
+        var description = node.attrs.string || field.string;
         if (node.attrs.widget) {
             $th.addClass(' o_' + node.attrs.widget + '_cell');
-            description = this.state.fieldsInfo.list[name].Widget.prototype.description;
-        }
-        if (description === undefined) {
-            description = node.attrs.string || field.string;
+            if (this.state.fieldsInfo.list[name].Widget.prototype.noLabel) {
+                description = '';
+            }
         }
         $th.text(description)
             .attr('data-name', name)
@@ -716,7 +707,7 @@ var ListRenderer = BasicRenderer.extend({
                 name: name,
                 string: description || name,
                 record: this.state,
-                attrs: node.attrs,
+                attrs: _.extend({}, node.attrs, this.state.fieldsInfo.list[name]),
             };
             this._addFieldTooltip(fieldDescr, $th);
         } else {
@@ -890,6 +881,40 @@ var ListRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @private
+     * @param {Object} record a record dataPoint on which the button applies
+     * @param {Object} node arch node of the button
+     * @param {Object} node.attrs the attrs of the button in the arch
+     * @param {jQueryEvent} ev
+     */
+    _onGroupButtonClicked: function (record, node, ev) {
+        ev.stopPropagation();
+        if (node.attrs.type === 'edit') {
+            this.trigger_up('group_edit_button_clicked', {
+                record: record,
+            });
+        } else {
+            this.trigger_up('button_clicked', {
+                attrs: node.attrs,
+                record: record,
+            });
+        }
+    },
+    /**
+     * If the user presses ENTER on a group header button, we want to execute
+     * the button action. This is done automatically as the click handler is
+     * called. However, we have to stop the propagation of the event to prevent
+     * another handler from closing the group (see _onKeyDown).
+     *
+     * @private
+     * @param {jQueryEvent} ev
+     */
+    _onGroupButtonKeydown: function (ev) {
+        if (ev.keyCode === $.ui.keyCode.ENTER) {
+            ev.stopPropagation();
+        }
+    },
+    /**
      * Manages the keyboard events on the list. If the list is not editable, when the user navigates to
      * a cell using the keyboard, if he presses enter, enter the model represented by the line
      *
@@ -944,8 +969,11 @@ var ListRenderer = BasicRenderer.extend({
                 break;
         }
         if ($futureCell) {
-            // If the cell contains activable elements, focus them instead
-            var $activables = $futureCell.find(':focusable');
+            // If the cell contains activable elements, focus them instead (except if it is in a
+            // group header, in which case we want to activate the whole header, so that we can
+            // open/close it with RIGHT/LEFT keystrokes)
+            var isInGroupHeader = $futureCell.closest('tr').hasClass('o_group_header');
+            var $activables = !isInGroupHeader && $futureCell.find(':focusable');
             if ($activables.length) {
                 $activables[0].focus();
             } else {

@@ -28,9 +28,10 @@
     </record>
 
     <act_window id="stock_picking_to_batch_action_stock_picking"
-        multi="True"
-        key2="client_action_multi" name="Add to Batch"
-        res_model="stock.picking.to.batch" src_model="stock.picking"
+        name="Add to Batch"
+        res_model="stock.picking.to.batch"
+        binding_model="stock.picking"
+        binding_views="list"
         view_mode="form" target="new" view_type="form"
     />
 

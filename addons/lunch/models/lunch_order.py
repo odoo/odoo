@@ -36,7 +36,7 @@ class LunchOrder(models.Model):
                               ('confirmed', 'Received'),
                               ('cancelled', 'Cancelled')],
                              'Status', readonly=True, index=True, default='new')
-    company_id = fields.Many2one('res.company', related='user_id.company_id', store=True)
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True, store=True)
     quantity = fields.Float('Quantity', required=True, default=1)
 
@@ -51,7 +51,7 @@ class LunchOrder(models.Model):
     def _compute_display_toppings(self):
         for line in self:
             toppings = line.topping_ids_1 | line.topping_ids_2 | line.topping_ids_3
-            line.display_toppings = '+ '.join(toppings.mapped('name'))
+            line.display_toppings = ' + '.join(toppings.mapped('name'))
 
     def update_quantity(self, increment):
         for line in self.filtered(lambda line: line.state != 'confirmed'):

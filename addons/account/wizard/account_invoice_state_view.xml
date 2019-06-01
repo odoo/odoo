@@ -21,10 +21,10 @@
         </record>
 
         <act_window id="action_account_invoice_confirm"
-            multi="True"
-            key2="client_action_multi" name="Confirm Draft Invoices"
-            res_model="account.invoice.confirm" src_model="account.invoice"
-            view_mode="form" target="new" view_type="form" />
+            name="Confirm Draft Invoices"
+            res_model="account.invoice.confirm"
+            binding_model="account.invoice" binding_views="list"
+            view_mode="form" target="new" view_type="form"/>
 
     </data>
 </odoo>

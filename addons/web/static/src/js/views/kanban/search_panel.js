@@ -131,34 +131,29 @@ var SearchPanel = Widget.extend({
         var parentField = category.parentField;
 
         category.values = {};
-        values.forEach(function (value) {
+        _.each(values, function (value) {
             category.values[value.id] = _.extend({}, value, {
                 childrenIds: [],
                 folded: true,
                 parentId: value[parentField] && value[parentField][0] || false,
             });
         });
-        Object.keys(category.values).forEach(function (valueId) {
-            var value = category.values[valueId];
+        _.map(values, function (value) {
+            var value = category.values[value.id];
             if (value.parentId) {
                 category.values[value.parentId].childrenIds.push(value.id);
             }
         });
-        category.rootIds = Object.keys(category.values).filter(function (valueId) {
-            var value = category.values[valueId];
-            return value.parentId === false;
+        category.rootIds = _.filter(_.map(values, function (value) {
+                return value.id;
+            }), function (valueId) {
+                var value = category.values[valueId];
+                return value.parentId === false;
         });
 
         // set active value
         var validValues = _.pluck(category.values, 'id').concat([false]);
-        // set active value from context
-        var value = this.defaultValues[category.fieldName];
-        // if not set in context, or set to an unknown value, set active value
-        // from localStorage
-        if (!_.contains(validValues, value)) {
-            var storageKey = this._getLocalStorageKey(category);
-            value = this.call('local_storage', 'getItem', storageKey);
-        }
+        var value = this._getCategoryDefaultValue(category, validValues);
         // if not set in localStorage either, select 'All'
         category.activeValueId = _.contains(validValues, value) ? value : false;
 
@@ -295,6 +290,23 @@ var SearchPanel = Widget.extend({
             });
         });
         return Promise.all(proms);
+    },
+    /**
+     * @private
+     * @param {Object} category
+     * @param {Array} validValues
+     * @returns id of the default item of the category or false
+     */
+    _getCategoryDefaultValue: function (category, validValues) {
+        // set active value from context
+        var value = this.defaultValues[category.fieldName];
+        // if not set in context, or set to an unknown value, set active value
+        // from localStorage
+        if (!_.contains(validValues, value)) {
+            var storageKey = this._getLocalStorageKey(category);
+            return this.call('local_storage', 'getItem', storageKey);
+        }
+        return value;
     },
     /**
      * Compute and return the domain based on the current active categories.
@@ -488,6 +500,9 @@ var SearchPanel = Widget.extend({
         var category = this.categories[$item.data('categoryId')];
         var valueId = $item.data('id') || false;
         category.activeValueId = valueId;
+        if (category.values[valueId]) {
+            category.values[valueId].folded = !category.values[valueId].folded;
+        }
         var storageKey = this._getLocalStorageKey(category);
         this.call('local_storage', 'setItem', storageKey, valueId);
         this._notifyDomainUpdated();

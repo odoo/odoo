@@ -119,8 +119,24 @@ class WebsiteSlides(WebsiteProfile):
 
         return values
 
-    def _get_slide_quiz_info(self, slide, quiz_done=False):
+    def _get_slide_quiz_partner_info(self, slide, quiz_done=False):
         return slide._compute_quiz_info(request.env.user.partner_id, quiz_done=quiz_done)[slide.id]
+
+    def _get_slide_quiz_data(self, slide):
+        slide_completed = slide.user_membership_id.sudo().completed
+        values = {
+            'slide_questions': [{
+                'id': question.id,
+                'question': question.question,
+                'answers': [{
+                    'id': answer.id,
+                    'text_value': answer.text_value,
+                    'is_correct': answer.is_correct if slide_completed else None
+                } for answer in question.sudo().answer_ids],
+            } for question in slide.question_ids]
+        }
+        values.update(self._get_slide_quiz_partner_info(slide))
+        return values
 
     # CHANNEL UTILITIES
     # --------------------------------------------------
@@ -489,7 +505,7 @@ class WebsiteSlides(WebsiteProfile):
         values = self._get_slide_detail(slide)
         # quiz-specific: update with karma and quiz information
         if slide.question_ids:
-            values.update(self._get_slide_quiz_info(slide))
+            values.update(self._get_slide_quiz_data(slide))
         # sidebar: update with user channel progress
         values['channel_progress'] = self._get_channel_progress(slide.channel_id, include_quiz=True)
 
@@ -506,7 +522,7 @@ class WebsiteSlides(WebsiteProfile):
         return response
 
     @http.route('/slides/slide/<int:slide_id>/get_image', type='http', auth="public", website=True, sitemap=False)
-    def slide_get_image(self, slide_id, field='image_medium', width=0, height=0, crop=False, avoid_if_small=False, upper_limit=False):
+    def slide_get_image(self, slide_id, field='image_medium', width=0, height=0, crop=False):
         # Protect infographics by limiting access to 256px (large) images
         if field not in ('image_small', 'image_medium', 'image_large'):
             return werkzeug.exceptions.Forbidden()
@@ -515,23 +531,24 @@ class WebsiteSlides(WebsiteProfile):
         if not slide:
             raise werkzeug.exceptions.NotFound()
 
-        status, headers, content = request.env['ir.http'].sudo().binary_content(
+        status, headers, image_base64 = request.env['ir.http'].sudo().binary_content(
             model='slide.slide', id=slide.id, field=field,
             default_mimetype='image/png')
         if status == 301:
-            return request.env['ir.http']._response_by_status(status, headers, content)
+            return request.env['ir.http']._response_by_status(status, headers, image_base64)
         if status == 304:
             return werkzeug.wrappers.Response(status=304)
 
-        if not content:
-            content = self._get_default_avatar(field, headers, width, height)
+        if not image_base64:
+            image_base64 = self._get_default_avatar()
+            if not (width or height):
+                width, height = tools.image_guess_size_from_field_name(field)
 
-        content = tools.limited_image_resize(
-            content, width=width, height=height, crop=crop, upper_limit=upper_limit, avoid_if_small=avoid_if_small)
+        image_base64 = tools.image_process(image_base64, size=(int(width), int(height)), crop=crop)
 
-        image_base64 = base64.b64decode(content)
-        headers.append(('Content-Length', len(image_base64)))
-        response = request.make_response(image_base64, headers)
+        content = base64.b64decode(image_base64)
+        headers = http.set_safe_image_headers(headers, content)
+        response = request.make_response(content, headers)
         response.status_code = status
         return response
 
@@ -623,22 +640,7 @@ class WebsiteSlides(WebsiteProfile):
         if fetch_res.get('error'):
             return fetch_res
         slide = fetch_res['slide']
-        quiz_info = self._get_slide_quiz_info(slide)
-        slide_completed = slide.user_membership_id.sudo().completed
-        return {
-            'questions': [{
-                'id': question.id,
-                'question': question.question,
-                'answers': [{
-                    'id': answer.id,
-                    'text_value': answer.text_value,
-                    'is_correct': answer.is_correct if slide_completed else None
-                } for answer in question.answer_ids],
-            } for question in slide.question_ids],
-            'quizAttemptsCount': quiz_info['quiz_attempts_count'],
-            'quizKarmaGain': quiz_info['quiz_karma_gain'],
-            'quizKarmaWon': quiz_info['quiz_karma_won'],
-        }
+        return self._get_slide_quiz_data(slide)
 
     @http.route('/slides/slide/quiz/submit', type="json", auth="public", website=True)
     def slide_quiz_submit(self, slide_id, answer_ids):
@@ -662,7 +664,7 @@ class WebsiteSlides(WebsiteProfile):
         user_good_answers = user_answers - user_bad_answers
 
         self._set_viewed_slide(slide, quiz_attempts_inc=True)
-        quiz_info = self._get_slide_quiz_info(slide, quiz_done=True)
+        quiz_info = self._get_slide_quiz_partner_info(slide, quiz_done=True)
 
         rank_progress = {}
         if not user_bad_answers:

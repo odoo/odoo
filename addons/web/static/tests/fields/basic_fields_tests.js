@@ -1870,7 +1870,7 @@ QUnit.module('basic_fields', {
 
         testUtils.dom.click(form.$('a.o_field_widget[name="document"]'));
 
-        assert.verifySteps([]); // We shoudln't have passed through steps
+        assert.verifySteps([]); // We shouldn't have passed through steps
 
         form.destroy();
         session.get_file = oldGetFile;
@@ -1928,7 +1928,7 @@ QUnit.module('basic_fields', {
         assert.isVisible(form.$('.o_field_widget iframe.o_pdfview_iframe'),
             "there should be an visible iframe");
         assert.hasAttrValue(form.$('.o_field_widget iframe.o_pdfview_iframe'), 'data-src',
-            '/web/static/lib/pdfjs/web/viewer.html?file=%2Fweb%2Fimage%3Fmodel%3Dpartner%26field%3Ddocument%26id%3D1#page=1',
+            '/web/static/lib/pdfjs/web/viewer.html?file=%2Fweb%2Fcontent%3Fmodel%3Dpartner%26field%3Ddocument%26id%3D1#page=1',
             "the src attribute should be correctly set on the iframe");
 
         form.destroy();
@@ -2658,6 +2658,33 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('date field dropdown disappears on scroll', async function (assert) {
+        assert.expect(2);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<div class="scrollable" style="height: 2000px;">' +
+                        '<field name="date"/>' +
+                    '</div>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.dom.openDatepicker(form.$('.o_datepicker'));
+        
+        assert.containsOnce($('body'), '.bootstrap-datetimepicker-widget', "datepicker should be opened");
+
+        form.el.dispatchEvent(new Event('scroll'));
+        assert.containsNone($('body'), '.bootstrap-datetimepicker-widget', "datepicker should be closed");
+
+        form.destroy();
+    });
+
     QUnit.test('date field with warn_future option', async function (assert) {
         assert.expect(2);
 
@@ -2860,10 +2887,7 @@ QUnit.module('basic_fields', {
             View: FormView,
             model: 'partner',
             data: this.data,
-            arch:'<form string="Partners">' +
-                    '<field name="display_name" /> ' + // Do not focus on the date field right away
-                    '<field name="date" />' +
-                '</form>',
+            arch: '<form><field name="date"/></form>',
             res_id: 1,
             viewOptions: {
                 mode: 'edit',
@@ -2879,7 +2903,8 @@ QUnit.module('basic_fields', {
                 done();
             }
         });
-        form.$('.o_input[name="date"]').mouseenter().trigger('focus');
+
+        testUtils.dom.openDatepicker(form.$('.o_datepicker'));
 
         form.destroy();
     });
@@ -2928,13 +2953,13 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldDatetime');
 
     QUnit.test('datetime field in form view', async function (assert) {
-        assert.expect(6);
+        assert.expect(7);
 
         var form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
-            arch:'<form string="Partners"><field name="datetime"/></form>',
+            arch: '<form string="Partners"><field name="datetime"/></form>',
             res_id: 1,
             translateParameters: {  // Avoid issues due to localization formats
                 date_format: '%m/%d/%Y',
@@ -2955,8 +2980,14 @@ QUnit.module('basic_fields', {
         await testUtils.form.clickEdit(form);
         assert.strictEqual(form.$('.o_datepicker_input').val(), expectedDateString,
             'the datetime should be correct in edit mode');
+
+        // datepicker should not open on focus
+        assert.containsNone($('body'), '.bootstrap-datetimepicker-widget');
+
+        testUtils.dom.openDatepicker(form.$('.o_datepicker'));
+        assert.containsOnce($('body'), '.bootstrap-datetimepicker-widget');
+
         // select 22 February at 8:23:33
-        assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
         await testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch').first());
         await testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch:eq(1)'));
         await testUtils.dom.click($('.bootstrap-datetimepicker-widget .year:contains(2017)'));
@@ -3038,7 +3069,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('datetime field in editable list view', async function (assert) {
-        assert.expect(8);
+        assert.expect(9);
 
         var list = await createView({
             View: ListView,
@@ -3074,8 +3105,11 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('input.o_datepicker_input').val(), expectedDateString,
             'the date should be correct in edit mode');
 
+        assert.containsNone($('body'), '.bootstrap-datetimepicker-widget');
+        testUtils.dom.openDatepicker(list.$('.o_datepicker'));
+        assert.containsOnce($('body'), '.bootstrap-datetimepicker-widget');
+
         // select 22 February at 8:23:33
-        assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
         await testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch').first());
         await testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch:eq(1)'));
         await testUtils.dom.click($('.bootstrap-datetimepicker-widget .year:contains(2017)'));
@@ -3251,6 +3285,7 @@ QUnit.module('basic_fields', {
         });
 
         await testUtils.form.clickCreate(form);
+        testUtils.dom.openDatepicker(form.$('.o_datepicker'));
         $.each($('.day:last-child(),.day:nth-child(2)'), function (index, value) {
             assert.hasClass(value, 'disabled', 'first and last days must be disabled');
         });

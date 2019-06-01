@@ -42,7 +42,7 @@ class Location(models.Model):
              "\n* Internal Location: Physical locations inside your own warehouses,"
              "\n* Customer Location: Virtual location representing the destination location for products sent to your customers"
              "\n* Inventory Loss: Virtual location serving as counterpart for inventory operations used to correct stock levels (Physical inventories)"
-             "\n* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products"
+             "\n* Production: Virtual counterpart location for production operations: this location consumes the components and produces finished products"
              "\n* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations")
     location_id = fields.Many2one(
         'stock.location', 'Parent Location', index=True, ondelete='cascade',
@@ -55,7 +55,7 @@ class Location(models.Model):
     parent_path = fields.Char(index=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get('stock.location'), index=True,
+        default=lambda self: self.env.company, index=True,
         help='Let this field empty if this location is shared between companies')
     scrap_location = fields.Boolean('Is a Scrap Location?', default=False, help='Check this box to allow using this location to put scrapped/damaged goods.')
     return_location = fields.Boolean('Is a Return Location?', help='Check this box to allow using this location as a return location.')
@@ -191,7 +191,7 @@ class Route(models.Model):
     supplier_wh_id = fields.Many2one('stock.warehouse', 'Supplying Warehouse')
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get('stock.location.route'), index=True,
+        default=lambda self: self.env.company, index=True,
         help='Leave this field empty if this route is shared between all companies')
     product_ids = fields.Many2many('product.template', 'stock_route_product', 'route_id', 'product_id', 'Products', copy=False)
     categ_ids = fields.Many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories', copy=False)

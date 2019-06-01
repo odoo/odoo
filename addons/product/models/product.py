@@ -71,7 +71,7 @@ class ProductPriceHistory(models.Model):
     _description = 'Product Price List History'
 
     def _get_default_company_id(self):
-        return self._context.get('force_company', self.env.user.company_id.id)
+        return self._context.get('force_company', self.env.company.id)
 
     company_id = fields.Many2one('res.company', string='Company',
         default=_get_default_company_id, required=True)
@@ -168,7 +168,7 @@ class ProductProduct(models.Model):
         for record in self:
             images = tools.image_get_resized_images(record.image_raw_original, big_name=False)
             record.image_raw_big = tools.image_get_resized_images(record.image_raw_original,
-                large_name=False, medium_name=False, small_name=False, preserve_aspect_ratio=True)['image']
+                large_name=False, medium_name=False, small_name=False)['image']
             record.image_raw_large = images['image_large']
             record.image_raw_medium = images['image_medium']
             record.image_raw_small = images['image_small']
@@ -307,7 +307,7 @@ class ProductProduct(models.Model):
     def _compute_product_lst_price(self):
         to_uom = None
         if 'uom' in self._context:
-            to_uom = self.env['uom.uom'].browse([self._context['uom']])
+            to_uom = self.env['uom.uom'].browse(self._context['uom'])
 
         for product in self:
             if to_uom:
@@ -651,7 +651,7 @@ class ProductProduct(models.Model):
             # standard_price field can only be seen by users in base.group_user
             # Thus, in order to compute the sale price from the cost for users not in this group
             # We fetch the standard price as the superuser
-            products = self.with_context(force_company=company and company.id or self._context.get('force_company', self.env.user.company_id.id)).sudo()
+            products = self.with_context(force_company=company and company.id or self._context.get('force_company', self.env.company.id)).sudo()
 
         prices = dict.fromkeys(self.ids, 0.0)
         for product in products:
@@ -689,7 +689,7 @@ class ProductProduct(models.Model):
             PriceHistory.create({
                 'product_id': product.id,
                 'cost': value,
-                'company_id': self._context.get('force_company', self.env.user.company_id.id),
+                'company_id': self._context.get('force_company', self.env.company.id),
             })
 
     @api.multi
@@ -814,10 +814,10 @@ class SupplierInfo(models.Model):
         required=True, help="The price to purchase a product")
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env.user.company_id.id, index=1)
+        default=lambda self: self.env.company.id, index=1)
     currency_id = fields.Many2one(
         'res.currency', 'Currency',
-        default=lambda self: self.env.user.company_id.currency_id.id,
+        default=lambda self: self.env.company.currency_id.id,
         required=True)
     date_start = fields.Date('Start Date', help="Start date for this vendor price")
     date_end = fields.Date('End Date', help="End date for this vendor price")

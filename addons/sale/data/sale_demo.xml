@@ -4,7 +4,6 @@
 
         <!-- We want to activate pay and sign by default for easier demoing. -->
         <record id="base.main_company" model="res.company">
-            <field name="portal_confirmation_sign" eval="True"/>
             <field name="portal_confirmation_pay" eval="True"/>
         </record>
 
@@ -20,6 +19,10 @@
             <field name="invoiced_target">40000</field>
         </record>
 
+        <record id="utm_source_sale_order_0" model="utm.source">
+            <field name="name">Sale Promotion 1</field>
+        </record>
+
         <record id="sale_order_1" model="sale.order">
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="partner_invoice_id" ref="base.res_partner_2"/>
@@ -27,6 +30,9 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="sale.utm_source_sale_order_0"/>
             <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
@@ -64,6 +70,9 @@
             <field name="user_id" ref="base.user_admin"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="sale.utm_source_sale_order_0"/>
             <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
@@ -92,6 +101,9 @@
             <field name="user_id" ref="base.user_admin"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="sale.utm_source_sale_order_0"/>
         </record>
 
         <record id="sale_order_line_6" model="sale.order.line">
@@ -119,6 +131,9 @@
             <field name="user_id" ref="base.user_admin"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="sale.utm_source_sale_order_0"/>
         </record>
 
         <record id="sale_order_line_8" model="sale.order.line">
@@ -164,6 +179,9 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="sale.utm_source_sale_order_0"/>
             <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
@@ -183,6 +201,9 @@
             <field name="user_id" ref="base.user_admin"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="sale.utm_source_sale_order_0"/>
         </record>
 
         <record id="sale_order_line_15" model="sale.order.line">
@@ -201,6 +222,9 @@
             <field name="user_id" ref="base.user_admin"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="sale.utm_source_sale_order_0"/>
         </record>
 
         <record id="sale_order_line_16" model="sale.order.line">
@@ -247,6 +271,9 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="sale.utm_source_sale_order_0"/>
         </record>
 
         <record id="sale_order_line_20" model="sale.order.line">
@@ -276,6 +303,9 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="sale.utm_source_sale_order_0"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
@@ -304,6 +334,9 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="sale.utm_source_sale_order_0"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=14)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
@@ -333,6 +366,9 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="sale.utm_source_sale_order_0"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=21)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
@@ -361,6 +397,9 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="sale.utm_source_sale_order_0"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=28)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
@@ -389,6 +428,9 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="sale.utm_source_sale_order_0"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=35)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
@@ -417,6 +459,9 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="sale.utm_source_sale_order_0"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
@@ -445,6 +490,9 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="sale.utm_source_sale_order_0"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=14)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
@@ -473,6 +521,9 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="sale.utm_source_sale_order_0"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=21)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
@@ -501,6 +552,9 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="sale.utm_source_sale_order_0"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=28)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
@@ -529,6 +583,9 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="sale.utm_source_sale_order_0"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=35)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 

@@ -86,12 +86,18 @@ var AddToBoardMenu = Widget.extend({
         var context = new Context(this.action.context);
         context.add(searchQuery.context);
         context.add({
-            group_by: pyUtils.eval('groupbys', searchQuery.groupBys || [])
+            group_by: searchQuery.groupBy,
+            orderedBy: searchQuery.orderedBy,
         });
 
         this.trigger_up('get_controller_query_params', {
-            callback: function (controllerContext) {
-                context.add(controllerContext);
+            callback: function (controllerQueryParams) {
+                var queryContext = controllerQueryParams.context;
+                var allContext = _.extend(
+                    _.omit(controllerQueryParams, ['context']),
+                    queryContext
+                );
+                context.add(allContext);
             }
         });
 

@@ -473,8 +473,8 @@ actual arch.
 
     def unlink(self):
         # if in uninstall mode and has children views, emulate an ondelete cascade
-        if self.env.context.get('_force_unlink', False) and self.mapped('inherit_children_ids'):
-            self.mapped('inherit_children_ids').unlink()
+        if self.env.context.get('_force_unlink', False) and self.inherit_children_ids:
+            self.inherit_children_ids.unlink()
         super(View, self).unlink()
 
     @api.multi
@@ -1016,6 +1016,8 @@ actual arch.
             'context_today',
             'active_id',
             'active_ids',
+            'allowed_company_ids',
+            'current_company_id',
             'active_model',
             'time',
             'datetime',
@@ -1177,7 +1179,7 @@ actual arch.
                         not self._context.get("create", True) and is_base_model):
                     node.set("create", 'false')
 
-        if node.tag in ('kanban', 'tree', 'form', 'gantt'):
+        if node.tag in ('kanban', 'tree', 'form', 'gantt', 'activity'):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
                 if (not node.get(action) and
                         not Model.check_access_rights(operation, raise_exception=False) or
@@ -1351,7 +1353,7 @@ actual arch.
         qcontext = dict(
             env=self.env,
             user_id=self.env["res.users"].browse(self.env.user.id),
-            res_company=self.env.user.company_id.sudo(),
+            res_company=self.env.company.sudo(),
             keep_query=keep_query,
             request=request,  # might be unbound if we're not in an httprequest context
             debug=request.debug if request else False,

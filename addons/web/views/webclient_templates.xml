@@ -168,6 +168,7 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/dropdown.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/dropdown_extra.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/tooltip.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/switch_company_menu.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/debug_manager.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/control_panel.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/fields.scss"/>
@@ -351,6 +352,7 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/notification.scss"/>
 
         <script type="text/javascript" src="/web/static/src/js/services/session.js"/>
+        <script type="text/javascript" src="/web/static/src/js/public/public_notification.js"/>
         <script type="text/javascript" src="/web/static/src/js/public/public_root.js"/>
         <script type="text/javascript" src="/web/static/src/js/public/public_root_instance.js"/>
         <script type="text/javascript" src="/web/static/src/js/public/public_widget.js"/>
@@ -554,6 +556,7 @@
                 <script type="text/javascript" src="/web/static/tests/fields/relational_fields/field_many2many_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/fields/relational_fields/field_many2one_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/fields/relational_fields/field_one2many_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/fields/signature.js"></script>
                 <script type="text/javascript" src="/web/static/tests/fields/special_fields.js"></script>
                 <script type="text/javascript" src="/web/static/tests/fields/upgrade_fields_tests.js"></script>
 
@@ -744,8 +747,21 @@
             <t t-set="head_web">
                 <script type="text/javascript">
                     odoo.session_info = <t t-raw="session_info"/>;
+                    odoo.reloadMenus = function () {
+                        return new Promise(function(resolve, reject) {
+                            function onLoaded() {
+                                resolve(oReq.response);
+                            }
+                            var oReq = new XMLHttpRequest();
+                            oReq.responseType = "json";
+                            oReq.addEventListener("load", onLoaded);
+                            oReq.addEventListener("error", reject);
+                            oReq.open("GET", '/web/webclient/load_menus/' + odoo.session_info.cache_hashes.load_menus);
+                            oReq.send();
+                        });
+                    }
+                    odoo.loadMenusPromise = odoo.reloadMenus();
                 </script>
-
                 <t t-call-assets="web.assets_common" t-js="false"/>
                 <t t-call-assets="web.assets_backend" t-js="false"/>
                 <t t-call-assets="web.assets_common" t-css="false"/>

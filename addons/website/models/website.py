@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import inspect
 import logging
 import hashlib
@@ -14,6 +15,7 @@ from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import pager
 from odoo.http import request
+from odoo.modules.module import get_resource_path
 from odoo.osv.expression import FALSE_DOMAIN
 from odoo.tools.translate import _
 
@@ -100,7 +102,13 @@ class Website(models.Model):
     partner_id = fields.Many2one(related='user_id.partner_id', relation='res.partner', string='Public Partner', readonly=False)
     menu_id = fields.Many2one('website.menu', compute='_compute_menu', string='Main Menu')
     homepage_id = fields.Many2one('website.page', string='Homepage')
-    favicon = fields.Binary(string="Website Favicon", help="This field holds the image used to display a favicon on the website.")
+
+    def _default_favicon(self):
+        img_path = get_resource_path('web', 'static/src/img/favicon.ico')
+        with tools.file_open(img_path, 'rb') as f:
+            return base64.b64encode(f.read())
+
+    favicon = fields.Binary(string="Website Favicon", help="This field holds the image used to display a favicon on the website.", default=_default_favicon)
     theme_id = fields.Many2one('ir.module.module', help='Installed theme')
 
     specific_user_account = fields.Boolean('Specific User Account', help='If True, new accounts will be associated to the current website')
@@ -111,8 +119,9 @@ class Website(models.Model):
 
     @api.onchange('language_ids')
     def _onchange_language_ids(self):
-        if self.language_ids and self.default_lang_id not in self.language_ids:
-            self.default_lang_id = self.language_ids[0]
+        language_ids = self.language_ids._origin
+        if language_ids and self.default_lang_id not in language_ids:
+            self.default_lang_id = language_ids[0]
 
     @api.multi
     def _compute_menu(self):
@@ -122,6 +131,8 @@ class Website(models.Model):
 
     @api.model
     def create(self, vals):
+        self._handle_favicon(vals)
+
         if 'user_id' not in vals:
             company = self.env['res.company'].browse(vals.get('company_id'))
             vals['user_id'] = company._get_public_user().id if company else self.env.ref('base.public_user').id
@@ -138,6 +149,8 @@ class Website(models.Model):
 
     @api.multi
     def write(self, values):
+        self._handle_favicon(values)
+
         self._get_languages.clear_cache(self)
         if 'company_id' in values and 'user_id' not in values:
             company = self.env['res.company'].browse(values['company_id'])
@@ -148,6 +161,11 @@ class Website(models.Model):
             # invalidate the caches from static node at compile time
             self.env['ir.qweb'].clear_caches()
         return result
+
+    @api.model
+    def _handle_favicon(self, vals):
+        if 'favicon' in vals:
+            vals['favicon'] = tools.image_process(vals['favicon'], size=(256, 256), crop='center', output_format='ICO')
 
     # ----------------------------------------------------------
     # Page Management

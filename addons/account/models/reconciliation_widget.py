@@ -361,7 +361,7 @@ class AccountReconciliation(models.AbstractModel):
                 is_partner and ' ' or "AND at.type <> 'payable' AND at.type <> 'receivable'",
                 account_type and "AND at.type = %(account_type)s" or '',
                 res_ids and 'AND ' + res_alias + '.id in %(res_ids)s' or '',
-                self.env.user.company_id.id,
+                self.env.company.id,
                 is_partner and 'AND l.partner_id = p.id' or ' ',
                 aml_ids and 'AND l.id IN %(aml_ids)s' or '',
                 is_partner and 'l.partner_id, p.id,' or ' ',
@@ -689,10 +689,12 @@ class AccountReconciliation(models.AbstractModel):
             'company_id': st_line.company_id.id,
         }
         if st_line.partner_id:
-            if amount > 0:
+            if st_line.partner_id.supplier and not st_line.partner_id.customer:
+                data['open_balance_account_id'] = st_line.partner_id.property_account_payable_id.id
+            elif not st_line.partner_id.supplier and st_line.partner_id.customer:
                 data['open_balance_account_id'] = st_line.partner_id.property_account_receivable_id.id
             else:
-                data['open_balance_account_id'] = st_line.partner_id.property_account_payable_id.id
+                data['open_balance_account_id'] = amount > 0 and st_line.partner_id.property_account_receivable_id.id or st_line.partner_id.property_account_payable_id.id
 
         return data
 

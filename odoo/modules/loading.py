@@ -246,17 +246,15 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             # update made to the schema or data so the tests can run
             # (separately in their own transaction)
             cr.commit()
-            if demo_loaded:
-                # launch tests only in demo mode, allowing tests to use demo data.
-                if tools.config.options['test_enable']:
-                    # Yamel test
-                    report.record_result(load_test(idref, mode))
-                    # Python tests
-                    env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
-                    report.record_result(odoo.modules.module.run_unit_tests(module_name, cr.dbname))
-                    # tests may have reset the environment
-                    env = api.Environment(cr, SUPERUSER_ID, {})
-                    module = env['ir.module.module'].browse(module_id)
+
+            if tools.config.options['test_enable']:
+                report.record_result(load_test(idref, mode))
+                # Python tests
+                env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
+                report.record_result(odoo.modules.module.run_unit_tests(module_name, cr.dbname))
+                # tests may have reset the environment
+                env = api.Environment(cr, SUPERUSER_ID, {})
+                module = env['ir.module.module'].browse(module_id)
 
             processed_modules.append(package.name)
 
@@ -379,7 +377,22 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
             _check_module_names(cr, itertools.chain(tools.config['init'], tools.config['update']))
 
-            module_names = [k for k, v in tools.config['init'].items() if v]
+            # auto-install module second pass: recursive bit in db.py handles
+            # auto_install modules with no dependencies or where all
+            # dependencies are auto_install, couldn't get it to work with
+            # non-required auto_install deps so here
+            cr.execute("""
+            SELECT m.name FROM ir_module_module m
+            WHERE m.auto_install
+            AND m.state != 'installed'
+            AND NOT EXISTS (
+                SELECT 1 FROM ir_module_module_dependency d
+                JOIN ir_module_module mdep ON (d.name = mdep.name)
+                WHERE d.module_id = m.id
+                  AND d.auto_install_required
+                  AND mdep.state NOT IN ('installed', 'to install')
+            )""")
+            module_names = [k for k, v in tools.config['init'].items() if v] + [x[0] for x in cr.fetchall()]
             if module_names:
                 modules = Module.search([('state', '=', 'uninstalled'), ('name', 'in', module_names)])
                 if modules:

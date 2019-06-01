@@ -69,7 +69,7 @@
             </div>
         </t>
         <t t-foreach="activities" t-as="activity">
-            <div class="o_mail_preview" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='my'>
+            <div class="o_mail_preview o_systray_activity" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='my'>
                 <div t-if="activity.icon" class="o_mail_preview_image o_mail_preview_app">
                     <img t-att-src="activity.icon" alt="Activity"/>
                 </div>

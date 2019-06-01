@@ -295,6 +295,23 @@ QUnit.module('Views', {
         await testUtils.nextTick();
     });
 
+    QUnit.test('placeholder attribute on input', async function (assert) {
+        assert.expect(1);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<input placeholder="chimay"/>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        assert.containsOnce(form, 'input[placeholder="chimay"]');
+        form.destroy();
+    });
+
     QUnit.test('decoration works on widgets', async function (assert) {
         assert.expect(2);
 
@@ -6801,6 +6818,32 @@ QUnit.module('Views', {
         delete widgetRegistry.map.test;
     });
 
+    QUnit.test('attach document widget calls action with attachment ids', async function (assert) {
+        assert.expect(1);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'my_action') {
+                    assert.deepEqual(args.kwargs.attachment_ids, [5, 2]);
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+            arch: '<form>' +
+                    '<widget name="attach_document" action="my_action"/>' +
+                '</form>',
+        });
+
+        var onFileLoadedEventName = form.$('.o_form_binary_form').attr('target')
+        // trigger _onFileLoaded function
+        $(window).trigger(onFileLoadedEventName, [{id: 5}, {id:2}]);
+
+        form.destroy();
+    });
+
     QUnit.test('support header button as widgets on form statusbar', async function (assert) {
         assert.expect(2);
 
@@ -7762,6 +7805,31 @@ QUnit.module('Views', {
         assert.strictEqual($('.modal .modal-footer .o_btn_remove').length, 0,
             "shouldn't have a 'remove' button on new records");
 
+        form.destroy();
+    });
+
+    QUnit.test('"bare" buttons in template should not trigger button click', async function (assert) {
+        assert.expect(3);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<button string="Save" class="btn-primary" special="save"/>' +
+                '<button class="mybutton">westvleteren</button>' +
+              '</form>',
+            res_id: 2,
+            intercepts: {
+                execute_action: function () {
+                    assert.step('execute_action');
+                },
+            },
+        });
+        await testUtils.dom.click(form.$('.o_form_view button.btn-primary'));
+        assert.verifySteps(['execute_action']);
+        await testUtils.dom.click(form.$('.o_form_view button.mybutton'));
+        assert.verifySteps([]);
         form.destroy();
     });
 

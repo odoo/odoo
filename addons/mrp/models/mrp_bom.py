@@ -36,13 +36,15 @@ class MrpBom(models.Model):
         domain="['&', ('product_tmpl_id', '=', product_tmpl_id), ('type', 'in', ['product', 'consu'])]",
         help="If a product variant is defined the BOM is available only for this product.")
     bom_line_ids = fields.One2many('mrp.bom.line', 'bom_id', 'BoM Lines', copy=True)
+    byproduct_ids = fields.One2many('mrp.bom.byproduct', 'bom_id', 'By-products', copy=True)
     product_qty = fields.Float(
         'Quantity', default=1.0,
         digits=dp.get_precision('Unit of Measure'), required=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
         default=_get_default_product_uom_id, oldname='product_uom', required=True,
-        help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control")
+        help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control", domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of bills of material.")
     routing_id = fields.Many2one(
         'mrp.routing', 'Routing',
@@ -59,7 +61,7 @@ class MrpBom(models.Model):
              "to define stock rules which trigger different manufacturing orders with different BoMs.")
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get('mrp.bom'),
+        default=lambda self: self.env.company,
         required=True)
     consumption = fields.Selection([
         ('strict', 'Strict'),
@@ -232,7 +234,8 @@ class MrpBomLine(models.Model):
         'uom.uom', 'Product Unit of Measure',
         default=_get_default_product_uom_id,
         oldname='product_uom', required=True,
-        help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control")
+        help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control", domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     sequence = fields.Integer(
         'Sequence', default=1,
         help="Gives the sequence order when displaying.")
@@ -357,3 +360,33 @@ class MrpBomLine(models.Model):
             'limit': 80,
             'context': "{'default_res_model': '%s','default_res_id': %d}" % ('product.product', self.product_id.id)
         }
+
+
+class MrpByProduct(models.Model):
+    _name = 'mrp.bom.byproduct'
+    _description = 'Byproduct'
+
+    product_id = fields.Many2one('product.product', 'By-product', required=True)
+    product_qty = fields.Float(
+        'Quantity',
+        default=1.0, digits=dp.get_precision('Product Unit of Measure'), required=True)
+    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True)
+    bom_id = fields.Many2one('mrp.bom', 'BoM', ondelete='cascade')
+    operation_id = fields.Many2one('mrp.routing.workcenter', 'Produced in Operation')
+
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        """ Changes UoM if product_id changes. """
+        if self.product_id:
+            self.product_uom_id = self.product_id.uom_id.id
+
+    @api.onchange('product_uom_id')
+    def onchange_uom(self):
+        res = {}
+        if self.product_uom_id and self.product_id and self.product_uom_id.category_id != self.product_id.uom_id.category_id:
+            res['warning'] = {
+                'title': _('Warning'),
+                'message': _('The unit of measure you choose is in a different category than the product unit of measure.')
+            }
+            self.product_uom_id = self.product_id.uom_id.id
+        return res

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import hashlib
 import logging
 from lxml import etree
 import traceback
 import os
+import json
 import unittest
 
 import pytz
@@ -18,6 +19,7 @@ from odoo import SUPERUSER_ID
 from odoo.http import request
 from odoo.tools import config
 from odoo.tools.safe_eval import safe_eval
+from odoo.osv import expression
 from odoo.osv.expression import FALSE_DOMAIN, OR
 
 from odoo.addons.base.models.qweb import QWebException
@@ -107,6 +109,9 @@ class Http(models.AbstractModel):
 
         request.website = request.env['website'].get_current_website()  # can use `request.env` since auth methods are called
         context['website_id'] = request.website.id
+        # This is mainly to avoid access errors in website controllers where there is no
+        # context (eg: /shop), and it's not going to propagate to the global context of the tab
+        context['allowed_company_ids'] = [request.website.company_id.id]
 
         # modify bound context
         request.context = dict(request.context, **context)
@@ -310,6 +315,30 @@ class Http(models.AbstractModel):
                 return obj[0]
 
         return super(Http, cls)._xmlid_to_obj(env, xmlid)
+
+    @api.model
+    def get_website_session_info(self):
+        # see http_routing/main.py
+        Modules = request.env['ir.module.module'].sudo()
+        IrHttp = request.env['ir.http'].sudo()
+        domain = IrHttp._get_translation_frontend_modules_domain()
+        modules = Modules.search(
+            expression.AND([domain, [('state', '=', 'installed')]])
+        ).mapped('name')
+        user_context = request.session.get_context() if request.session.uid else {}
+        lang = user_context.get('lang')
+        translations, _ = request.env['ir.translation'].get_translations_for_webclient(modules, lang)
+        return {
+            'is_admin': request.env.user._is_admin(),
+            'is_system': request.env.user._is_system(),
+            'is_frontend': True,
+            'translationURL': '/website/translations',
+            'is_website_user': request.env.user.id == request.website.user_id.id,
+            'user_id': request.env.user.id,
+            'cache_hashes': {
+                'translations': hashlib.sha1(json.dumps(translations, sort_keys=True).encode()).hexdigest(),
+            },
+        }
 
 
 class ModelConverter(ModelConverter):

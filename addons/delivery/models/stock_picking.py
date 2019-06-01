@@ -42,7 +42,7 @@ class StockPicking(models.Model):
 
 
     @api.one
-    @api.depends('move_line_ids')
+    @api.depends('move_line_ids', 'move_line_ids.result_package_id')
     def _compute_packages(self):
         self.ensure_one()
         packs = set()
@@ -52,7 +52,7 @@ class StockPicking(models.Model):
         self.package_ids = list(packs)
 
     @api.one
-    @api.depends('move_line_ids')
+    @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.product_uom_id', 'move_line_ids.qty_done')
     def _compute_bulk_weight(self):
         weight = 0.0
         for move_line in self.move_line_ids:
@@ -74,7 +74,7 @@ class StockPicking(models.Model):
 
     carrier_price = fields.Float(string="Shipping Cost")
     delivery_type = fields.Selection(related='carrier_id.delivery_type', readonly=True)
-    carrier_id = fields.Many2one("delivery.carrier", string="Carrier")
+    carrier_id = fields.Many2one("delivery.carrier", string="Carrier", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     volume = fields.Float(copy=False)
     weight = fields.Float(compute='_cal_weight', digits=dp.get_precision('Stock Weight'), store=True, help="Total weight of the products in the picking.")
     carrier_tracking_ref = fields.Char(string='Tracking Reference', copy=False)

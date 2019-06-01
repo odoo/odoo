@@ -9,7 +9,7 @@
     'description': """
 This module contains all the common features of Sales Management and eCommerce.
     """,
-    'depends': ['sales_team', 'payment', 'portal'],
+    'depends': ['sales_team', 'payment', 'portal', 'utm'],
     'data': [
         'security/sale_security.xml',
         'security/ir.model.access.csv',
@@ -19,8 +19,8 @@ This module contains all the common features of Sales Management and eCommerce.
         'report/invoice_report_templates.xml',
         'report/report_all_channels_sales_views.xml',
         'data/ir_sequence_data.xml',
-        'data/sale_data.xml',
         'data/mail_data.xml',
+        'data/sale_data.xml',
         'wizard/sale_make_invoice_advance_views.xml',
         'views/sale_views.xml',
         'views/sales_team_views.xml',
@@ -41,7 +41,6 @@ This module contains all the common features of Sales Management and eCommerce.
     'qweb': [
         "static/src/xml/account_reconciliation.xml",
     ],
-    'uninstall_hook': "uninstall_hook",
     'installable': True,
     'auto_install': False
 }

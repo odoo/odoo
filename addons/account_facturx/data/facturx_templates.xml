@@ -31,7 +31,8 @@
                                 currency=line.currency_id,
                                 quantity=line.quantity,
                                 product=line.product_id,
-                                partner=record.partner_id)"/>
+                                partner=record.partner_id,
+                                is_refund=line.invoice_id.type in ('in_refund', 'out_refund'))"/>
                         <ram:GrossPriceProductTradePrice>
                             <ram:ChargeAmount
                                 t-att-currencyID="currency.name"

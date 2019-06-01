@@ -814,7 +814,7 @@ class Environment(Mapping):
 
     def __getitem__(self, model_name):
         """ Return an empty recordset from the given model. """
-        return self.registry[model_name]._browse((), self)
+        return self.registry[model_name]._browse(self, (), ())
 
     def __iter__(self):
         """ Return an iterator on model names. """
@@ -855,43 +855,62 @@ class Environment(Mapping):
         return self(user=SUPERUSER_ID)['res.users'].browse(self.uid)
 
     @property
+    def company(self):
+        """ return the company in which the user is logged in (as an instance) """
+        try:
+            company_id = int(self.context.get('allowed_company_ids')[0])
+            if company_id in self.user.company_ids.ids:
+                return self['res.company'].browse(company_id)
+            return self.user.company_id
+        except Exception:
+            return self.user.company_id
+
+    @property
+    def companies(self):
+        """ return a recordset of the enabled companies by the user """
+        try:  # In case the user tries to bidouille the url (eg: cids=1,foo,bar)
+            allowed_company_ids = self.context.get('allowed_company_ids')
+            # Prevent the user to enable companies for which he doesn't have any access
+            users_company_ids = self.user.company_ids.ids
+            allowed_company_ids = [company_id for company_id in allowed_company_ids if company_id in users_company_ids]
+        except Exception:
+            # By setting the default companies to all user companies instead of the main one
+            # we save a lot of potential trouble in all "out of context" calls, such as
+            # /mail/redirect or /web/image, etc. And it is not unsafe because the user does
+            # have access to these other companies. The risk of exposing foreign records
+            # (wrt to the context) is low because all normal RPCs will have a proper
+            # allowed_company_ids.
+            # Examples:
+            #   - when printing a report for several records from several companies
+            #   - when accessing to a record from the notification email template
+            #   - when loading an binary image on a template
+            allowed_company_ids = self.user.company_ids.ids
+        return self['res.company'].browse(allowed_company_ids)
+
+    @property
     def lang(self):
         """ return the current language code """
         return self.context.get('lang')
 
     @contextmanager
-    def _do_in_mode(self, mode):
-        if self.all.mode:
-            yield
-        else:
-            try:
-                self.all.mode = mode
-                yield
-            finally:
-                self.all.mode = False
-                self.dirty.clear()
-
     def do_in_draft(self):
         """ Context-switch to draft mode, where all field updates are done in
             cache only.
         """
-        return self._do_in_mode(True)
+        if self.all.in_draft:
+            yield
+        else:
+            try:
+                self.all.in_draft = True
+                yield
+            finally:
+                self.all.in_draft = False
+                self.dirty.clear()
 
     @property
     def in_draft(self):
         """ Return whether we are in draft mode. """
-        return bool(self.all.mode)
-
-    def do_in_onchange(self):
-        """ Context-switch to 'onchange' draft mode, which is a specialized
-            draft mode used during execution of onchange methods.
-        """
-        return self._do_in_mode('onchange')
-
-    @property
-    def in_onchange(self):
-        """ Return whether we are in 'onchange' draft mode. """
-        return self.all.mode == 'onchange'
+        return self.all.in_draft
 
     def clear(self):
         """ Clear all record caches, and discard all fields to recompute.
@@ -1005,7 +1024,7 @@ class Environments(object):
         self.envs = WeakSet()           # weak set of environments
         self.cache = Cache()            # cache for all records
         self.todo = {}                  # recomputations {field: [records]}
-        self.mode = False               # flag for draft/onchange
+        self.in_draft = False           # flag for draft
         self.recompute = True
 
     def add(self, env):
@@ -1064,6 +1083,14 @@ class Cache(object):
         key = record.env.cache_key(field)
         value = self._data[key][field].get(record.id, SpecialValue(None))
         return default if isinstance(value, SpecialValue) else value
+
+    def get_values(self, records, field, default=None):
+        """ Return the regular values of ``field`` for ``records``. """
+        key = records.env.cache_key(field)
+        field_cache = self._data[key][field]
+        for record_id in records._ids:
+            value = field_cache.get(record_id, SpecialValue(None))
+            yield default if isinstance(value, SpecialValue) else value
 
     def get_special(self, record, field, default=None):
         """ Return the special value of ``field`` for ``record``. """

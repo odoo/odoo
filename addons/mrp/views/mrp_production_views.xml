@@ -25,6 +25,7 @@
             <field name="name">Mrp: Plan Production Orders</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+            <field name="groups_id" eval="[(4, ref('mrp.group_mrp_routings'))]"/>
             <field name="state">code</field>
             <field name="code">records.button_plan()</field>
         </record>
@@ -118,7 +119,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Consumed Materials">
+                        <page string="Components">
                             <field name="move_raw_ids" context="{'final_lots': show_final_lots, 'form_view_ref': 'mrp.view_stock_move_lots', 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id}" attrs="{'readonly': ['&amp;', ('state', '!=', 'draft'), ('is_locked', '=', True)]}">
                                 <tree delete="0" default_order="is_done,sequence" decoration-muted="is_done" decoration-warning="quantity_done&gt;product_uom_qty" decoration-success="not is_done and quantity_done==product_uom_qty" decoration-danger="not is_done and reserved_availability &lt; product_uom_qty">
                                     <field name="product_id" required="1"/>
@@ -164,8 +165,8 @@
                             <group>
                                 <group groups="stock.group_stock_multi_locations">
                                     <field name="picking_type_id" domain="[('code', '=', 'mrp_operation')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                    <field name="location_src_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                    <field name="location_dest_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="location_src_id" options="{'no_create': True}" domain="[('usage','=','internal')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="location_dest_id" options="{'no_create': True}" domain="[('usage','=','internal')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </group>
                             </group>
                             <group>
@@ -283,7 +284,7 @@
                         domain="[('activity_ids.user_id', '=', uid)]"/>
                     <separator/>
                     <field name="product_id"/>
-                    <field name="move_raw_ids" string="Raw Material" filter_domain="[('move_raw_ids.product_id','ilike',self)]"/>
+                    <field name="move_raw_ids" string="Components" filter_domain="[('move_raw_ids.product_id','ilike',self)]"/>
                     <field name="name" string="Work Center" filter_domain="[('routing_id.operation_ids.workcenter_id','ilike',self)]"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
                     <separator/>

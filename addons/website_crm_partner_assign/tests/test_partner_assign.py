@@ -88,7 +88,7 @@ class TestPartnerLeadPortal(TestCrmCases):
             'name': 'Super Customer Odoo Intregrating Partner',
             'email': 'super.partner@ododo.com',
             'login': 'superpartner',
-            'groups_id': [(4, self.env.ref('base.group_portal').id)],
+            'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
             'user_id': self.crm_salesman.id,
             'grade_id': self.grade.id,
         })
@@ -133,7 +133,7 @@ class TestPartnerLeadPortal(TestCrmCases):
             'name': 'Poor Partner (not integrating one)',
             'email': 'poor.partner@ododo.com',
             'login': 'poorpartner',
-            'groups_id': [(4, self.env.ref('base.group_portal').id)],
+            'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
         })
         # try to accept a lead that is not mine
         with self.assertRaises(AccessError):

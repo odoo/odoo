@@ -81,11 +81,13 @@ def _message_post_helper(res_model, res_id, message, token='', nosubscribe=True,
     kw.pop('attachment_ids', None)
     kw.pop('hash', None)
     kw.pop('pid', None)
-    return record.with_context(mail_create_nosubscribe=nosubscribe).message_post(body=message,
-                                                                                   message_type=kw.pop('message_type', "comment"),
-                                                                                   subtype=kw.pop('subtype', "mt_comment"),
-                                                                                   author_id=author_id,
-                                                                                   **kw)
+    return record.with_context(mail_create_nosubscribe=nosubscribe).message_post(
+        body=message,
+        message_type=kw.pop('message_type', "comment"),
+        subtype=kw.pop('subtype', "mt_comment"),
+        author_id=author_id,
+        **kw
+    )
 
 
 class PortalChatter(http.Controller):
@@ -137,7 +139,7 @@ class PortalChatter(http.Controller):
                 raise Forbidden()
             # Non-employee see only messages with not internal subtype (aka, no internal logs)
             if not request.env['res.users'].has_group('base.group_user'):
-                domain = expression.AND([['&', ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)], domain])
+                domain = expression.AND([['&', '&', ('subtype_id', '!=', False), ('subtype_id.internal', '=', False), ('website_published', '=', True)], domain])
             Message = request.env['mail.message'].sudo()
         return {
             'messages': Message.search(domain, limit=limit, offset=offset).portal_message_format(),

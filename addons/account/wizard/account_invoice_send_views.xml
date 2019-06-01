@@ -74,13 +74,11 @@
        <act_window
             name="Send"
             id="invoice_send"
-            multi="True"
-            key2="client_action_multi"
             res_model="account.invoice.send"
-            src_model="account.invoice"
+            binding_model="account.invoice"
+            binding_views="list"
             view_mode="form"
             target="new"
-            view_type="form"
             context="{
                 'default_template_id': ref('account.email_template_edi_invoice'),
                 'mark_invoice_as_sent': True,

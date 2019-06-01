@@ -10,6 +10,7 @@ var FormRenderer = require('web.FormRenderer');
 var view_registry = require('web.view_registry');
 
 var QWeb = core.qweb;
+var _t = core._t;
 
 var BaseSettingRenderer = FormRenderer.extend({
     events: _.extend({}, FormRenderer.prototype.events, {
@@ -33,6 +34,19 @@ var BaseSettingRenderer = FormRenderer.extend({
         return prom;
     },
 
+    /**
+     * @override
+     * overridden to show a message, informing user that there are changes
+     */
+    confirmChange: function () {
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            if (!self.$(".o_dirty_warning").length) {
+                self.$('.o_statusbar_buttons')
+                    .append($('<span/>', {text: _t("Unsaved changes"), class: 'text-muted ml-2 o_dirty_warning'}))
+            }
+        });
+    },
     /**
      * @override
      */
@@ -179,19 +193,6 @@ var BaseSettingRenderer = FormRenderer.extend({
             imgurl: imgurl,
             string: string
         }));
-    },
-    /**
-     * add placeholder attr in input element
-     * @override
-     * @private
-     * @param {jQueryElement} $el
-     * @param {Object} node
-     */
-    _handleAttributes: function ($el, node) {
-        this._super.apply(this, arguments);
-        if (node.attrs.placeholder) {
-            $el.attr('placeholder', node.attrs.placeholder);
-        }
     },
     /**
      * move to selected setting

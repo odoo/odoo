@@ -45,8 +45,11 @@
             <field name="location_id" ref="stock.stock_location_components"/>
         </record>
 
-        <function model="stock.inventory" name="action_validate">
+        <function model="stock.inventory" name="action_start">
             <function eval="[[('state','=','draft'),('id', '=', ref('stock_inventory_customizable_desk_update'))]]" model="stock.inventory" name="search"/>
+        </function>
+        <function model="stock.inventory" name="action_validate">
+            <function eval="[[('state','=','confirm'),('id', '=', ref('stock_inventory_customizable_desk_update'))]]" model="stock.inventory" name="search"/>
         </function>
     </data>
 </odoo>

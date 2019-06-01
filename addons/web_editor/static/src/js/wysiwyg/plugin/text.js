@@ -85,7 +85,7 @@ var TextPlugin = AbstractPlugin.extend({
             return;
         }
         nodes = textOnly ? this.document.createTextNode($(nodes).text()) : nodes;
-        nodes = this._mergeAdjacentULs(nodes);
+        nodes = textOnly ? nodes : this._mergeAdjacentULs(nodes);
 
         var point = this._getPastePoint();
         // Prevent pasting HTML within a link:

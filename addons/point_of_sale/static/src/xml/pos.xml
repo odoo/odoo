@@ -89,7 +89,7 @@
     <t t-name="SaleDetailsButton">
         <div class="oe_status">
             <div class="js_connected oe_icon">
-                <i class='fa fa-fw fa-print' role="img" aria-label="Print" title="Print"></i>
+                <i class='fa fa-fw fa-print' role="img" aria-label="Print" title="Print a report with all the sales of the current PoS Session"></i>
             </div>
         </div>
     </t>
@@ -719,6 +719,9 @@
                     </span>
                 </div>
                 <div class="centered-content touch-scrollable">
+                    <div class="button print_invoice">
+                        <i class='fa fa-print'></i> Print Invoice
+                    </div>
                     <div class="button print">
                         <i class='fa fa-print'></i> Print Receipt
                     </div>
@@ -805,7 +808,7 @@
                                 </left>
                             </line>
                         </t>
-                        <t t-else='line.discount !== 0'>
+                        <t t-elif='line.discount !== 0'>
                             <line indent='1'>
                                 <left>
                                     <value t-att-value-decimals='pos.dp["Product Price"]'>

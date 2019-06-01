@@ -12,10 +12,10 @@ class StockScrap(models.Model):
     _description = 'Scrap'
 
     def _get_default_scrap_location_id(self):
-        return self.env['stock.location'].search([('scrap_location', '=', True), ('company_id', 'in', [self.env.user.company_id.id, False])], limit=1).id
+        return self.env['stock.location'].search([('scrap_location', '=', True), ('company_id', 'in', [self.env.company.id, False])], limit=1).id
 
     def _get_default_location_id(self):
-        company_user = self.env.user.company_id
+        company_user = self.env.company
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
         if warehouse:
             return warehouse.lot_stock_id.id
@@ -31,7 +31,8 @@ class StockScrap(models.Model):
         required=True, states={'done': [('readonly', True)]})
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
-        required=True, states={'done': [('readonly', True)]})
+        required=True, states={'done': [('readonly', True)]}, domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     tracking = fields.Selection('Product Tracking', readonly=True, related="product_id.tracking")
     lot_id = fields.Many2one(
         'stock.production.lot', 'Lot',

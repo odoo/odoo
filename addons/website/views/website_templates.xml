@@ -225,14 +225,7 @@
             </t>
 
             <script type="text/javascript">
-                odoo.session_info = {
-                    is_admin: <t t-esc="json.dumps(request.env.user._is_admin())"/>,
-                    is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,
-                    is_frontend: true,
-                    translationURL: '/website/translations',
-                    is_website_user: <t t-esc="json.dumps(request.env.user.id == request.website.user_id.id)" />,
-                    user_id: <t t-esc="json.dumps(request.env.user.id)" />
-                };
+                odoo.session_info = <t t-raw="json.dumps(request.env['ir.http'].get_website_session_info())"/>;
                 <t groups="website.group_website_publisher">
                     odoo.session_info.website_id = <t t-esc="json.dumps(request.website.id)" />;
                     odoo.session_info.website_company_id = <t t-esc="json.dumps(request.website.company_id.id)" />;
@@ -497,6 +490,10 @@
         -> string = list's title
         -> data-col (optional, default 6) = bootstrap column size for the list
 
+    <selection>: Declares a subset of options showed as a selection (dropdown)
+        -> data-col (optional, default 6) = bootstrap column size for the option
+                (ignored for options in a <list/>)
+
     Other elements will be ignored and their children will be processed as if
     that element was omitted, except that those children will be considered as
     in a new set of option. That allows to wrap an option in a fake element to
@@ -568,37 +565,45 @@
 
         <!-- Font options -->
         <content id="theme_customize_content_fonts" string="Fonts" title="Choose your fonts">
-            <list id="theme_customize_content_fonts_title" string="Title">
-                <opt data-xmlid="" data-font="1"/>
-                <opt data-xmlid="website.option_font_title_02_variables" data-font="2"/>
-                <opt data-xmlid="website.option_font_title_03_variables" data-font="3"/>
-                <opt data-xmlid="website.option_font_title_04_variables" data-font="4"/>
-                <opt data-xmlid="website.option_font_title_05_variables" data-font="5"/>
-                <opt data-xmlid="website.option_font_title_06_variables" data-font="6"/>
+            <list string="Title">
+                <selection id="theme_customize_content_fonts_title">
+                    <opt data-xmlid="" data-font="1"/>
+                    <opt data-xmlid="website.option_font_title_02_variables" data-font="2"/>
+                    <opt data-xmlid="website.option_font_title_03_variables" data-font="3"/>
+                    <opt data-xmlid="website.option_font_title_04_variables" data-font="4"/>
+                    <opt data-xmlid="website.option_font_title_05_variables" data-font="5"/>
+                    <opt data-xmlid="website.option_font_title_06_variables" data-font="6"/>
+                </selection>
             </list>
-            <list id="theme_customize_content_fonts_body" string="Body">
-                <opt data-xmlid="" data-font="1"/>
-                <opt data-xmlid="website.option_font_body_02_variables" data-font="2"/>
-                <opt data-xmlid="website.option_font_body_03_variables" data-font="3"/>
-                <opt data-xmlid="website.option_font_body_04_variables" data-font="4"/>
-                <opt data-xmlid="website.option_font_body_05_variables" data-font="5"/>
-                <opt data-xmlid="website.option_font_body_06_variables" data-font="6"/>
+            <list string="Body">
+                <selection id="theme_customize_content_fonts_body">
+                    <opt data-xmlid="" data-font="1"/>
+                    <opt data-xmlid="website.option_font_body_02_variables" data-font="2"/>
+                    <opt data-xmlid="website.option_font_body_03_variables" data-font="3"/>
+                    <opt data-xmlid="website.option_font_body_04_variables" data-font="4"/>
+                    <opt data-xmlid="website.option_font_body_05_variables" data-font="5"/>
+                    <opt data-xmlid="website.option_font_body_06_variables" data-font="6"/>
+                </selection>
             </list>
-            <list id="theme_customize_content_fonts_button" string="Button">
-                <opt data-xmlid="" data-font="1"/>
-                <opt data-xmlid="website.option_font_button_02_variables" data-font="2"/>
-                <opt data-xmlid="website.option_font_button_03_variables" data-font="3"/>
-                <opt data-xmlid="website.option_font_button_04_variables" data-font="4"/>
-                <opt data-xmlid="website.option_font_button_05_variables" data-font="5"/>
-                <opt data-xmlid="website.option_font_button_06_variables" data-font="6"/>
+            <list string="Button">
+                <selection id="theme_customize_content_fonts_button">
+                    <opt data-xmlid="" data-font="1"/>
+                    <opt data-xmlid="website.option_font_button_02_variables" data-font="2"/>
+                    <opt data-xmlid="website.option_font_button_03_variables" data-font="3"/>
+                    <opt data-xmlid="website.option_font_button_04_variables" data-font="4"/>
+                    <opt data-xmlid="website.option_font_button_05_variables" data-font="5"/>
+                    <opt data-xmlid="website.option_font_button_06_variables" data-font="6"/>
+                </selection>
             </list>
-            <list id="theme_customize_content_fonts_navbar" string="Navbar">
-                <opt data-xmlid="" data-font="1"/>
-                <opt data-xmlid="website.option_font_navbar_02_variables" data-font="2"/>
-                <opt data-xmlid="website.option_font_navbar_03_variables" data-font="3"/>
-                <opt data-xmlid="website.option_font_navbar_04_variables" data-font="4"/>
-                <opt data-xmlid="website.option_font_navbar_05_variables" data-font="5"/>
-                <opt data-xmlid="website.option_font_navbar_06_variables" data-font="6"/>
+            <list string="Navbar">
+                <selection id="theme_customize_content_fonts_navbar">
+                    <opt data-xmlid="" data-font="1"/>
+                    <opt data-xmlid="website.option_font_navbar_02_variables" data-font="2"/>
+                    <opt data-xmlid="website.option_font_navbar_03_variables" data-font="3"/>
+                    <opt data-xmlid="website.option_font_navbar_04_variables" data-font="4"/>
+                    <opt data-xmlid="website.option_font_navbar_05_variables" data-font="5"/>
+                    <opt data-xmlid="website.option_font_navbar_06_variables" data-font="6"/>
+                </selection>
             </list>
         </content>
     </div>

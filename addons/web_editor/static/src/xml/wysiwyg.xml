@@ -68,17 +68,17 @@
     <!-- Media Dialog (allows to choose an img/pictogram/video) -->
     <div t-name="wysiwyg.widgets.media">
         <ul class="nav nav-tabs" role="tablist">
-            <li class="nav-item"><a role="tab" href="#editor-media-image" aria-controls="editor-media-image" data-toggle="tab" t-attf-class="nav-link#{widget.noImages ? ' d-none' : ''}">Image</a></li>
-            <li class="nav-item"><a role="tab" href="#editor-media-document" aria-controls="editor-media-document" data-toggle="tab" t-attf-class="nav-link#{widget.noDocuments ? ' d-none' : ''}">Document</a></li>
-            <li class="nav-item"><a role="tab" href="#editor-media-icon" aria-controls="editor-media-icon" data-toggle="tab" t-attf-class="nav-link#{widget.noIcons ? ' d-none' : ''}">Pictogram</a></li>
-            <li class="nav-item"><a role="tab" href="#editor-media-video" aria-controls="editor-media-video" data-toggle="tab" t-attf-class="nav-link#{widget.noVideos ? ' d-none' : ''}">Video</a></li>
+            <li t-if="!widget.options.noImages" class="nav-item"><a t-attf-class="nav-link #{widget.isImageActive() ? 'active' : ''}" id="editor-media-image-tab" data-toggle="tab" href="#editor-media-image" role="tab" aria-controls="editor-media-image" t-att-aria-selected="widget.isImageActive().toString()">Image</a></li>
+            <li t-if="!widget.options.noDocuments" class="nav-item"><a t-attf-class="nav-link #{widget.isDocumentActive() ? 'active' : ''}" id="editor-media-document-tab" data-toggle="tab" href="#editor-media-document" role="tab" aria-controls="editor-media-document" t-att-aria-selected="widget.isDocumentActive().toString()">Document</a></li>
+            <li t-if="!widget.options.noIcons" class="nav-item"><a t-attf-class="nav-link #{widget.isIconActive() ? 'active' : ''}" id="editor-media-icon-tab" data-toggle="tab" href="#editor-media-icon" role="tab" aria-controls="editor-media-icon" t-att-aria-selected="widget.isIconActive().toString()">Pictogram</a></li>
+            <li t-if="!widget.options.noVideos" class="nav-item"><a t-attf-class="nav-link #{widget.isVideoActive() ? 'active' : ''}" id="editor-media-video-tab" data-toggle="tab" href="#editor-media-video" role="tab" aria-controls="editor-media-video" t-att-aria-selected="widget.isVideoActive().toString()">Video</a></li>
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane fade" id="editor-media-image"/>
-            <div role="tabpanel" class="tab-pane fade" id="editor-media-document"/>
-            <div role="tabpanel" class="tab-pane fade" id="editor-media-icon"/>
-            <div role="tabpanel" class="tab-pane fade" id="editor-media-video"/>
+            <div t-if="!widget.options.noImages" t-attf-class="tab-pane fade #{widget.isImageActive() ? 'show active': ''}" id="editor-media-image" role="tabpanel" aria-labelledby="editor-media-image-tab"/>
+            <div t-if="!widget.options.noDocuments" t-attf-class="tab-pane fade #{widget.isDocumentActive() ? 'show active': ''}" id="editor-media-document" role="tabpanel" aria-labelledby="editor-media-document-tab"/>
+            <div t-if="!widget.options.noIcons" t-attf-class="tab-pane fade #{widget.isIconActive() ? 'show active': ''}" id="editor-media-icon" role="tabpanel" aria-labelledby="editor-media-icon-tab"/>
+            <div t-if="!widget.options.noVideos" t-attf-class="tab-pane fade #{widget.isVideoActive() ? 'show active': ''}" id="editor-media-video" role="tabpanel" aria-labelledby="editor-media-video-tab"/>
         </div>
     </div>
 
@@ -93,22 +93,19 @@
         </div>
     </t>
 
-    <!-- Image choosing part of the Media Dialog -->
-    <t t-name="wysiwyg.widgets.image">
+    <!-- File choosing part of the Media Dialog -->
+    <t t-name="wysiwyg.widgets.file">
         <t t-set="iframeName" t-value="_.uniqueId('fileframe-')"/>
         <form method="POST"
             action="/web_editor/attachment/add"
             enctype="multipart/form-data"
             t-att-target="iframeName">
             <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
-            <input type="hidden" name="filters" t-att-value="widget.firstFilters.join('_')"/>
+            <input type="hidden" name="filters" t-att-value="widget.options.firstFilters.join('_')"/>
             <input t-if="widget.options.res_id" type="hidden" name="res_id" t-att-value="widget.options.res_id"/>
             <input t-if="widget.options.res_model" type="hidden" name="res_model" t-att-value="widget.options.res_model"/>
-            <t t-call="wysiwyg.widgets.files.submenu">
-                <t t-set="isDocument" t-value="widget.options.document"/>
-                <t t-set="accept" t-value="widget.accept"/>
-            </t>
-            <div class="form-text"/>
+            <t t-call="wysiwyg.widgets.files.submenu"/>
+            <div class="form-text o_we_error_text"/>
             <div class="existing-attachments"/>
             <div class="mt-4 text-center mx-auto">
                 <button class="btn btn-primary o_load_more" type="button">Load more...</button>
@@ -122,46 +119,60 @@
 
     <t t-name="wysiwyg.widgets.files.submenu">
         <div class="form-inline align-items-center py-4">
-            <input type="file" class="d-none o_file_input" name="upload" t-att-accept="accept" multiple="multiple"/>
+            <input type="file" class="d-none o_file_input" name="upload" t-att-accept="widget.options.accept" multiple="multiple"/>
             <input type="hidden" name="disable_optimization" value=""/>
 
             <div class="btn-group">
                 <button type="button" class="btn btn-primary o_upload_media_button">
-                    <t t-if="isDocument">Upload a document</t>
-                    <t t-else="">Upload an image</t>
+                    <t t-esc="uploadText"/>
                 </button>
-                <t t-if="!isDocument">
-                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split o_media_optimization" data-toggle="dropdown" type="button">
-                        <span class="sr-only">Alternate Upload</span>
-                    </button>
-                    <div class="dropdown-menu" role="menu">
-                        <button type="button" role="menuitem" class="dropdown-item o_upload_media_button_no_optimization">Upload image without optimization</button>
-                    </div>
-                </t>
+                <t t-raw="alternateUpload"/>
             </div>
 
             <div class="input-group align-items-center ml-2">
-                <input type="text" class="form-control o_we_url_input" name="url" t-attf-placeholder="https://www.odoo.com/#{isDocument ? 'mydocument' : 'logo.png'}"/>
+                <input type="text" class="form-control o_we_url_input" name="url" t-att-placeholder="urlPlaceholder"/>
                 <div class="input-group-append align-items-center">
                     <button type="button" class="btn btn-secondary o_upload_media_url_button" disabled="disabled">
-                        <t t-if="isDocument">Add document</t>
-                        <t t-else="">Add image</t>
+                        <t t-esc="addText"/>
                     </button>
                     <div class="ml-2">
-                        <span class="o_we_url_success text-success d-none fa fa-lg fa-check" title="The URL seems valid"/>
-                        <span class="o_we_url_warning text-warning d-none fa fa-lg fa-warning" title="The URL does not contain any image. The file will be added in the document section."/>
-                        <span class="o_we_url_error text-danger d-none fa fa-lg fa-times" title="The URL does not seem to work"/>
+                        <span class="o_we_url_success text-success d-none fa fa-lg fa-check" title="The URL seems valid."/>
+                        <span class="o_we_url_warning text-warning d-none fa fa-lg fa-warning" t-att-title="urlWarningTitle"/>
+                        <span class="o_we_url_error text-danger d-none fa fa-lg fa-times" title="The URL does not seem to work."/>
                     </div>
                 </div>
             </div>
 
-            <t t-call="wysiwyg.widgets.media.search">
-                <t t-set="searchPlaceholder">
-                    <t t-if="isDocument">Search a document</t>
-                    <t t-else="">Search an image</t>
-                </t>
-            </t>
+            <t t-call="wysiwyg.widgets.media.search"/>
         </div>
+    </t>
+
+    <t t-name="wysiwyg.widgets.image">
+        <t t-call="wysiwyg.widgets.file">
+            <t t-set="uploadText">Upload an image</t>
+            <t t-set="urlPlaceholder">https://www.odoo.com/logo.png</t>
+            <t t-set="addText">Add image</t>
+            <t t-set="searchPlaceholder">Search an image</t>
+            <t t-set="urlWarningTitle">The URL does not contain any image. The file will be added in the document section.</t>
+            <t t-set="alternateUpload">
+                <button class="btn btn-primary dropdown-toggle dropdown-toggle-split o_media_optimization" data-toggle="dropdown" type="button">
+                    <span class="sr-only">Alternate Upload</span>
+                </button>
+                <div class="dropdown-menu" role="menu">
+                    <button type="button" role="menuitem" class="dropdown-item o_upload_media_button_no_optimization">Upload image without optimization</button>
+                </div>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="wysiwyg.widgets.document">
+        <t t-call="wysiwyg.widgets.file">
+            <t t-set="uploadText">Upload a document</t>
+            <t t-set="urlPlaceholder">https://www.odoo.com/mydocument</t>
+            <t t-set="addText">Add document</t>
+            <t t-set="searchPlaceholder">Search a document</t>
+            <t t-set="urlWarningTitle">The URL contains an image. The file will be added in the image section.</t>
+        </t>
     </t>
 
     <t t-name="wysiwyg.widgets.image.existing">
@@ -183,19 +194,21 @@
             </div>
         </div>
     </t>
-    <t t-name="wysiwyg.widgets.files.existing.content">
+    <t t-name="wysiwyg.widgets.image.existing.attachments">
         <div class="existing-attachments">
             <div class="row mt16 ml-auto" t-as="row" t-foreach="rows">
                 <div class="col-2 o_existing_attachment_cell" t-as="attachment" t-foreach="row">
                     <i t-if="attachment.res_model === 'ir.ui.view'" class="fa fa-trash o_existing_attachment_remove" title="This file is a public view attachment" role="img" aria-label="This file is a public view attachment" t-att-data-id="attachment.id"/>
                     <i t-else="" class="fa fa-trash o_existing_attachment_remove" title="This file is attached to the current record" role="img" aria-label="This file is attached to the current record" t-att-data-id="attachment.id"/>
                     <div class="o_attachment_border" t-att-style="attachment.res_model === 'ir.ui.view' ? null : 'border: 1px solid #5cb85c;'"><div t-att-data-src="attachment.src" t-att-data-url="attachment.url" role="img" t-att-aria-label="attachment.name" t-att-title="attachment.name" t-att-data-id="attachment.id" t-att-data-mimetype="attachment.mimetype" t-attf-class="o_image {{withEffect ? 'o_image_loading' : ''}}"/></div>
-                    <t t-if="isDocument">
-                        <small class="o_file_name"><t t-esc="attachment.name"/></small>
-                    </t>
                 </div>
             </div>
         </div>
+    </t>
+    <t t-name="wysiwyg.widgets.document.existing.attachments" t-extend="wysiwyg.widgets.image.existing.attachments">
+        <t t-jquery=".o_existing_attachment_cell" t-operation="append">
+            <small class="o_file_name"><t t-esc="attachment.name"/></small>
+        </t>
     </t>
     <t t-name="wysiwyg.widgets.image.existing.error">
         <div class="form-text">

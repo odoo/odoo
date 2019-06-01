@@ -162,7 +162,7 @@ ListRenderer.include({
      * This is a specialized version of confirmChange, meant to be called when
      * the change may have affected more than one line (so, for example, an
      * onchange which add/remove a few lines in a x2many.  This does not occur
-     * in a normal list view)
+     * in a normal list view).
      *
      * The update is more difficult when other rows could have been changed. We
      * need to potentially remove some lines, add some other lines, update some
@@ -171,6 +171,9 @@ ListRenderer.include({
      * So, in the meantime, what we do is basically remove every current row
      * except the 'main' one (the row which caused the update), then rerender
      * every new row and add them before/after the main one.
+     *
+     * Note that this function assumes that the list isn't grouped, which is
+     * fine as it's never the case for x2many lists.
      *
      * @param {Object} state
      * @param {string} id
@@ -226,18 +229,17 @@ ListRenderer.include({
                     }
                 }
 
-                // remove all rows except the one being edited, and insert rows
-                // of the re-rendered body before and after it
+                // remove all data rows except the one being edited, and insert
+                // data rows of the re-rendered body before and after it
                 var $editedRow = self._getRow(id);
-                $editedRow.nextAll().remove();
-                $editedRow.prevAll().remove();
+                $editedRow.nextAll('.o_data_row').remove();
+                $editedRow.prevAll('.o_data_row').remove();
                 var $newRow = $newBody.find('.o_data_row[data-id="' + id + '"]');
-                var $tbody = self.$('tbody');
-                $newRow.prevAll().each(function (i, prevRow) {
-                    $tbody.prepend($(prevRow));
+                $newRow.prevAll('.o_data_row').get().reverse().forEach(function (row) {
+                    $(row).insertBefore($editedRow);
                 });
-                $newRow.nextAll().each(function (i, nextRow) {
-                    $tbody.append($(nextRow));
+                $newRow.nextAll('.o_data_row').get().reverse().forEach(function (row) {
+                    $(row).insertAfter($editedRow);
                 });
 
                 if (self.currentRow !== null) {
@@ -309,7 +311,16 @@ ListRenderer.include({
         if (this.state.count >= 4) {
             $row.remove();
         } else {
-            $row.replaceWith(this._renderEmptyRow());
+            // we want to always keep at least 4 (possibly empty) rows
+            var $emptyRow = this._renderEmptyRow();
+            $row.replaceWith($emptyRow);
+            if (this.editable === "top") {
+                // move the empty row we just inserted after data rows
+                var $lastDataRow = this.$('.o_data_row:last');
+                if ($lastDataRow.length) {
+                    $emptyRow.insertAfter($lastDataRow);
+                }
+            }
         }
     },
     /**

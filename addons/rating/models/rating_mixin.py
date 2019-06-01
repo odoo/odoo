@@ -155,12 +155,12 @@ class RatingMixin(models.AbstractModel):
         if subtype_id is False:
             subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
         if force_send:
-            self = self.with_context(mail_notify_force_send=True)
+            self = self.with_context(mail_notify_force_send=True)  # default value is True, should be set to false if not?
         for record in self:
             record.message_post_with_template(
                 template.id,
                 composition_mode=composition_mode,
-                notif_layout=notif_layout if notif_layout is not None else 'mail.mail_notification_light',
+                email_layout_xmlid=notif_layout if notif_layout is not None else 'mail.mail_notification_light',
                 subtype_id=subtype_id
             )
 

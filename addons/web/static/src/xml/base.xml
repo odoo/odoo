@@ -373,17 +373,17 @@
 
 <t t-name="ListView.buttons">
     <div class="o_list_buttons" role="toolbar" aria-label="Main actions">
-        <t t-if="widget.is_action_enabled('create')">
-            <button type="button" class="btn btn-primary o_list_button_add" accesskey="c">
-                Create
-            </button>
-        </t>
         <button type="button" class="btn btn-primary o_list_button_save" accesskey="s">
             Save
         </button>
         <button type="button" class="btn btn-secondary o_list_button_discard" accesskey="j">
             Discard
         </button>
+        <t t-if="widget.is_action_enabled('create')">
+            <button type="button" class="btn btn-primary o_list_button_add" accesskey="c">
+                Create
+            </button>
+        </t>
     </div>
 </t>
 
@@ -1368,13 +1368,14 @@
         <div role="menuitem" class="dropdown-item-text o_favorite_name">
             <input type="text" class="o_input"></input>
         </div>
+        <t t-set="favId" t-value="_.uniqueId('_checkbox_')" />
         <div class="custom-control custom-checkbox">
-            <input type="checkbox" id="o_favorite_use_by_default" class="custom-control-input"/>
-            <label for="o_favorite_use_by_default" class="custom-control-label">Use by default</label>
+            <input type="checkbox" t-attf-id="o_favorite_use_by_default#{favId}" class="custom-control-input"/>
+            <label t-attf-for="o_favorite_use_by_default#{favId}" class="custom-control-label">Use by default</label>
         </div>
         <div class="custom-control custom-checkbox">
-            <input type="checkbox" id="o_favorite_share_all_users" class="custom-control-input"/>
-            <label for="o_favorite_share_all_users" class="custom-control-label">Share with all users <span class="fa fa-users" role="img" aria-label="Users" title="Users"/></label>
+            <input type="checkbox" t-attf-id="o_favorite_share_all_users#{favId}" class="custom-control-input"/>
+            <label t-attf-for="o_favorite_share_all_users#{favId}" class="custom-control-label">Share with all users <span class="fa fa-users" role="img" aria-label="Users" title="Users"/></label>
         </div>
         <div class="dropdown-item-text o_save_favorite">
             <button type="button" class="btn btn-primary">Save</button>
@@ -1558,10 +1559,44 @@
 
 <t t-name="SwitchCompanyMenu">
     <li class="o_switch_company_menu">
-        <a role="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-            <span t-attf-class="#{widget.isMobile ? 'fa fa-building-o' : 'oe_topbar_name'}"/>
+        <a role="button" class="dropdown-toggle" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+            <span t-attf-class="#{widget.isMobile ? 'fa fa-building-o' : 'oe_topbar_name'}">
+                <t t-if="!widget.isMobile"><t t-raw="widget.current_company_name"/></t>
+            </span>
         </a>
-        <div class="dropdown-menu dropdown-menu-right" role="menu"/>
+        <div class="dropdown-menu dropdown-menu-right" role="menu">
+            <t t-if="widget.isMobile">
+                <li class="bg-info">Tap on the list to change company</li>
+            </t>
+            <t t-foreach="widget.user_companies" t-as="company">
+                <div role="menuitem" href="#" class="dropdown-item d-flex py-0 px-0" data-menu="company" t-att-data-company-id="company[0]">
+                    <div class="d-flex flex-grow-1 align-items-center py-0 log_into pl-3 o_py" t-att-style="company[0] === widget.current_company ? 'background-color: lightgrey;' : ''">
+                        <t t-if="widget.allowed_company_ids.includes(company[0].toString())">
+                            <span class='mr-3 company_label'>
+                                <t t-esc="company[1]"/>
+                            </span>
+                        </t>
+                        <t t-if="!widget.allowed_company_ids.includes(company[0].toString())">
+                            <span class='mr-3 company_label text-muted'>
+                                <t t-esc="company[1]"/>
+                            </span>
+                        </t>
+                    </div>
+                    <t t-if="widget.toggle_company">
+                        <div class="ml-auto pl-3 pr-3 border border-top-0 border-right-0 border-bottom-0 toggle_company o_py">
+                            <span style="height: 2rem;">
+                                <t t-if="widget.allowed_company_ids.includes(company[0].toString())">
+                                    <i class="fa fa-fw fa-check-square pt-2"></i>
+                                </t>
+                                <t t-if="!widget.allowed_company_ids.includes(company[0].toString())">
+                                    <i class="fa fa-fw fa-square-o pt-2"></i>
+                                </t>
+                            </span>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </div>
     </li>
 </t>
 

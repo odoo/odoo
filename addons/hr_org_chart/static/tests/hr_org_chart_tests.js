@@ -41,6 +41,8 @@ QUnit.module('hr_org_chart', {
                         managers: [],
                         managers_more: false,
                     });
+                } else if (route === '/hr/get_redirect_model') {
+                  return Promise.resolve('hr.employee');
                 }
                 return this._super(route, args);
             }
@@ -92,6 +94,8 @@ QUnit.module('hr_org_chart', {
                             name: 'Antoine Langlais',
                         }
                     });
+                } else if (route === '/hr/get_redirect_model') {
+                  return Promise.resolve('hr.employee');
                 }
                 return this._super(route, args);
             }
@@ -153,6 +157,8 @@ QUnit.module('hr_org_chart', {
                             name: 'John Smith',
                         }
                     });
+                } else if (route === '/hr/get_redirect_model') {
+                  return Promise.resolve('hr.employee');
                 }
                 return this._super(route, args);
             }

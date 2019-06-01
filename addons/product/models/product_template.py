@@ -45,7 +45,7 @@ class ProductTemplate(models.Model):
     description_purchase = fields.Text(
         'Purchase Description', translate=True)
     description_sale = fields.Text(
-        'Sale Description', translate=True,
+        'Customer/Vendor Description', translate=True,
         help="A description of the Product that you want to communicate to your customers. "
              "This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note")
     type = fields.Selection([
@@ -109,7 +109,7 @@ class ProductTemplate(models.Model):
         help="Default unit of measure used for purchase orders. It must be in the same category as the default unit of measure.")
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get('product.template'), index=1)
+        default=lambda self: self.env.company, index=1)
     packaging_ids = fields.One2many(
         'product.packaging', string="Product Packages", compute="_compute_packaging_ids", inverse="_set_packaging_ids",
         help="Gives the different ways to package the same product.")
@@ -168,7 +168,7 @@ class ProductTemplate(models.Model):
 
     def _compute_cost_currency_id(self):
         for template in self:
-            template.cost_currency_id = self.env.user.company_id.currency_id.id
+            template.cost_currency_id = self.env.company.currency_id.id
 
     @api.multi
     def _compute_template_price(self):
@@ -367,6 +367,9 @@ class ProductTemplate(models.Model):
                 related_vals['volume'] = vals['volume']
             if vals.get('weight'):
                 related_vals['weight'] = vals['weight']
+            # Please do forward port
+            if vals.get('packaging_ids'):
+                related_vals['packaging_ids'] = vals['packaging_ids']
             if related_vals:
                 template.write(related_vals)
 
@@ -450,12 +453,12 @@ class ProductTemplate(models.Model):
             # standard_price field can only be seen by users in base.group_user
             # Thus, in order to compute the sale price from the cost for users not in this group
             # We fetch the standard price as the superuser
-            templates = self.with_context(force_company=company and company.id or self._context.get('force_company', self.env.user.company_id.id)).sudo()
+            templates = self.with_context(force_company=company and company.id or self._context.get('force_company', self.env.company.id)).sudo()
         if not company:
             if self._context.get('force_company'):
                 company = self.env['res.company'].browse(self._context['force_company'])
             else:
-                company = self.env.user.company_id
+                company = self.env.company
         date = self.env.context.get('date') or fields.Date.today()
 
         prices = dict.fromkeys(self.ids, 0.0)
@@ -1090,7 +1093,7 @@ class ProductTemplate(models.Model):
         :rtype: recordset of one `res.company`
         """
         self.ensure_one()
-        return self.env.user.company_id
+        return self.env.company
 
     @api.model
     def get_empty_list_help(self, help):

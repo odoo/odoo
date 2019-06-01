@@ -80,13 +80,6 @@ class Project(models.Model):
         values['alias_defaults'] = {'project_id': self.id}
         return values
 
-    @api.multi
-    def unlink(self):
-        for project in self:
-            if project.tasks:
-                raise UserError(_('You cannot delete a project containing tasks. You can either archive it or first delete all of its tasks.'))
-        return super(Project, self).unlink()
-
     def _compute_attached_docs_count(self):
         Attachment = self.env['ir.attachment']
         for project in self:
@@ -178,8 +171,11 @@ class Project(models.Model):
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
     sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of Projects.")
     partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True)
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", string="Currency", readonly=True)
+    analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
+        help="Analytic account to which this project is linked for financial management. "
+             "Use an analytic account to record cost and revenue on your project.")
 
     favorite_user_ids = fields.Many2many(
         'res.users', 'project_favorite_user_rel', 'project_id', 'user_id',
@@ -191,7 +187,7 @@ class Project(models.Model):
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', string='Working Time',
-        default=lambda self: self.env.user.company_id.resource_calendar_id.id,
+        default=lambda self: self.env.company.resource_calendar_id.id,
         help="Timetable working hours to adjust the gantt diagram report")
     type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages')
     task_count = fields.Integer(compute='_compute_task_count', string="Task Count")
@@ -325,6 +321,21 @@ class Project(models.Model):
         return res
 
     @api.multi
+    def unlink(self):
+        # Check project is empty
+        for project in self:
+            if project.tasks:
+                raise UserError(_('You cannot delete a project containing tasks. You can either archive it or first delete all of its tasks.'))
+        # Delete the empty related analytic account
+        analytic_accounts_to_delete = self.env['account.analytic.account']
+        for project in self:
+            if project.analytic_account_id and not project.analytic_account_id.line_ids:
+                analytic_accounts_to_delete |= project.analytic_account_id
+        result = super(Project, self).unlink()
+        analytic_accounts_to_delete.unlink()
+        return result
+
+    @api.multi
     def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None):
         """ Subscribe to all existing active tasks when subscribing to a project """
         res = super(Project, self).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids)
@@ -365,6 +376,13 @@ class Project(models.Model):
         action = self.env['ir.actions.act_window'].for_xml_id('project', 'act_project_project_2_project_task_all')
         return dict(action, context=ctx)
 
+    def action_view_account_analytic_line(self):
+        """ return the action to see all the analytic lines of the project's analytic account """
+        action = self.env.ref('analytic.account_analytic_line_action').read()[0]
+        action['context'] = {'default_account_id': self.analytic_account_id.id}
+        action['domain'] = [('account_id', '=', self.analytic_account_id.id)]
+        return action
+
     @api.multi
     def action_view_all_rating(self):
         """ return the action to see all the rating of the project, and activate default filters """
@@ -382,6 +400,31 @@ class Project(models.Model):
         action_context['search_default_parent_res_name'] = self.name
         action_context.pop('group_by', None)
         return dict(action, context=action_context)
+
+    # ---------------------------------------------------
+    #  Business Methods
+    # ---------------------------------------------------
+
+    @api.model
+    def _create_analytic_account_from_values(self, values):
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': values.get('name', _('Unknown Analytic Account')),
+            'company_id': values.get('company_id', self.env.user.company_id.id),
+            'partner_id': values.get('partner_id'),
+            'active': True,
+        })
+        return analytic_account
+
+    @api.multi
+    def _create_analytic_account(self):
+        for project in self:
+            analytic_account = self.env['account.analytic.account'].create({
+                'name': project.name,
+                'company_id': project.company_id.id,
+                'partner_id': project.partner_id.id,
+                'active': True,
+            })
+            project.write({'analytic_account_id': analytic_account.id})
 
     # ---------------------------------------------------
     # Rating business
@@ -458,7 +501,6 @@ class Task(models.Model):
     date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, readonly=True)
     date_deadline = fields.Date(string='Deadline', index=True, copy=False, tracking=True)
     date_last_stage_update = fields.Datetime(string='Last Stage Update',
-        default=fields.Datetime.now,
         index=True,
         copy=False,
         readonly=True)
@@ -468,7 +510,6 @@ class Task(models.Model):
         index=True,
         tracking=True,
         change_default=True)
-    notes = fields.Text(string='Notes')
     planned_hours = fields.Float("Planned Hours", help='It is the time planned to achieve the task. If this document has sub-tasks, it means the time needed to achieve this tasks and its childs.',tracking=True)
     subtask_planned_hours = fields.Float("Subtasks", compute='_compute_subtask_planned_hours', help="Computed using sum of hours planned of all subtasks created from main task. Usually these hours are less or equal to the Planned Hours (of main task).")
     user_id = fields.Many2one('res.users',
@@ -481,7 +522,7 @@ class Task(models.Model):
     manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True, related_sudo=False)
     company_id = fields.Many2one('res.company',
         string='Company',
-        default=lambda self: self.env['res.company']._company_default_get())
+        default=lambda self: self.env.company)
     color = fields.Integer(string='Color Index')
     user_email = fields.Char(related='user_id.email', string='User Email', readonly=True, related_sudo=False)
     attachment_ids = fields.One2many('ir.attachment', compute='_compute_attachment_ids', string="Main Attachments",
@@ -669,9 +710,10 @@ class Task(models.Model):
         # user_id change: update date_assign
         if vals.get('user_id'):
             vals['date_assign'] = fields.Datetime.now()
-        # Stage change: Update date_end if folded stage
+        # Stage change: Update date_end if folded stage and date_last_stage_update
         if vals.get('stage_id'):
             vals.update(self.update_date_end(vals['stage_id']))
+            vals['date_last_stage_update'] = fields.Datetime.now()
         task = super(Task, self.with_context(context)).create(vals)
         return task
 
@@ -750,7 +792,7 @@ class Task(models.Model):
             res['stage_id'] = (test_task.stage_id.mail_template_id, {
                 'auto_delete_message': True,
                 'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
-                'notif_layout': 'mail.mail_notification_light'
+                'email_layout_xmlid': 'mail.mail_notification_light'
             })
         return res
 
@@ -770,12 +812,12 @@ class Task(models.Model):
         return super(Task, self)._track_subtype(init_values)
 
     @api.multi
-    def _notify_get_groups(self, message, groups):
+    def _notify_get_groups(self):
         """ Handle project users and managers recipients that can assign
         tasks and create new one directly from notification emails. Also give
         access button to portal users and portal customers. If they are notified
         they should probably have access to the document. """
-        groups = super(Task, self)._notify_get_groups(message, groups)
+        groups = super(Task, self)._notify_get_groups()
 
         self.ensure_one()
 
@@ -794,9 +836,8 @@ class Task(models.Model):
         groups = [new_group] + groups
 
         for group_name, group_method, group_data in groups:
-            if group_name == 'customer':
-                continue
-            group_data['has_button_access'] = True
+            if group_name != 'customer':
+                group_data['has_button_access'] = True
 
         return groups
 
@@ -841,7 +882,7 @@ class Task(models.Model):
 
         task = super(Task, self.with_context(create_context)).message_new(msg, custom_values=defaults)
         email_list = task.email_split(msg)
-        partner_ids = [p for p in task._find_partner_from_emails(email_list, force_create=False) if p]
+        partner_ids = [p.id for p in self.env['mail.thread']._mail_find_partner_from_emails(email_list, records=task, force_create=False) if p]
         task.message_subscribe(partner_ids)
         return task
 
@@ -849,13 +890,13 @@ class Task(models.Model):
     def message_update(self, msg, update_vals=None):
         """ Override to update the task according to the email. """
         email_list = self.email_split(msg)
-        partner_ids = [p for p in self._find_partner_from_emails(email_list, force_create=False) if p]
+        partner_ids = [p.id for p in self.env['mail.thread']._mail_find_partner_from_emails(email_list, records=self, force_create=False) if p]
         self.message_subscribe(partner_ids)
         return super(Task, self).message_update(msg, update_vals=update_vals)
 
     @api.multi
-    def message_get_suggested_recipients(self):
-        recipients = super(Task, self).message_get_suggested_recipients()
+    def _message_get_suggested_recipients(self):
+        recipients = super(Task, self)._message_get_suggested_recipients()
         for task in self:
             if task.partner_id:
                 reason = _('Customer Email') if task.partner_id.email else _('Customer')
@@ -865,22 +906,17 @@ class Task(models.Model):
         return recipients
 
     @api.multi
-    def _notify_specific_email_values(self, message):
-        res = super(Task, self)._notify_specific_email_values(message)
-        try:
-            headers = safe_eval(res.get('headers', dict()))
-        except Exception:
-            headers = {}
+    def _notify_email_header_dict(self):
+        headers = super(Task, self)._notify_email_header_dict()
         if self.project_id:
             current_objects = [h for h in headers.get('X-Odoo-Objects', '').split(',') if h]
             current_objects.insert(0, 'project.project-%s, ' % self.project_id.id)
             headers['X-Odoo-Objects'] = ','.join(current_objects)
         if self.tag_ids:
             headers['X-Odoo-Tags'] = ','.join(self.tag_ids.mapped('name'))
-        res['headers'] = repr(headers)
-        return res
+        return headers
 
-    def _message_post_after_hook(self, message, *args, **kwargs):
+    def _message_post_after_hook(self, message, msg_vals):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -891,7 +927,7 @@ class Task(models.Model):
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
                     ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Task, self)._message_post_after_hook(message, *args, **kwargs)
+        return super(Task, self)._message_post_after_hook(message, msg_vals)
 
     def action_assign_to_me(self):
         self.write({'user_id': self.env.user.id})

@@ -7,7 +7,6 @@ from odoo import api, fields, models, _
 class Company(models.Model):
     _inherit = "res.company"
 
-    propagation_minimum_delta = fields.Integer('Minimum Delta for Propagation of a Date Change on moves linked together', default=1)
     internal_transit_location_id = fields.Many2one(
         'stock.location', 'Internal Transit Location', ondelete="restrict",
         help="Technical field used for resupply routes between warehouses that belong to this company")

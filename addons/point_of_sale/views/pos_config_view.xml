@@ -471,7 +471,7 @@
                                     Stock location used for the inventory
                                 </div>
                                 <div>
-                                    <field name="stock_location_id"/>
+                                    <field name="stock_location_id" options="{'no_create': True}"/>
                                 </div>
                             </div>
                         </div>
@@ -509,7 +509,7 @@
         <field name="arch" type="xml">
             <tree string="Point of Sale Configuration">
                 <field name="name" />
-                <field name="stock_location_id" groups="stock.group_stock_multi_locations"/>
+                <field name="stock_location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
             </tree>
         </field>
     </record>
@@ -529,7 +529,8 @@
     <act_window
         id="act_pos_config_sessions"
         name="Sessions"
-        src_model="pos.config"
+        binding_model="pos.config"
+        binding_views="form"
         res_model="pos.session"
         domain="[('config_id', '=', active_id)]" />
 

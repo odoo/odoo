@@ -13,7 +13,7 @@ def post_init(cr, registry):
 
     env = api.Environment(cr, SUPERUSER_ID, {})
     for hr_leave_type in env['hr.leave.type'].search([('timesheet_generate', '=', True), ('timesheet_project_id', '=', False)]):
-        company = hr_leave_type.company_id or env.user.company_id
+        company = hr_leave_type.company_id or env.company
         hr_leave_type.write({
             'timesheet_project_id': company.leave_timesheet_project_id.id,
             'timesheet_task_id': company.leave_timesheet_task_id.id,

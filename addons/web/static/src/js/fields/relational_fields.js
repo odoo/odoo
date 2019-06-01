@@ -163,6 +163,15 @@ var FieldMany2One = AbstractField.extend({
         this.$external_button = this.$('.o_external_button');
         return this._super.apply(this, arguments);
     },
+    /**
+     * @override
+     */
+    destroy: function () {
+        if (this._onScroll) {
+            window.removeEventListener('scroll', this._onScroll, true);
+        }
+        this._super.apply(this, arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -288,11 +297,22 @@ var FieldMany2One = AbstractField.extend({
             focus: function (event) {
                 event.preventDefault(); // don't automatically select values on focus
             },
+            open: function (event) {
+                self._onScroll = function (ev) {
+                    if (ev.target !== self.$input.get(0) && self.$input.hasClass('ui-autocomplete-input')) {
+                        self.$input.autocomplete('close');
+                    }
+                };
+                window.addEventListener('scroll', self._onScroll, true);
+            },
             close: function (event) {
                 // it is necessary to prevent ESC key from propagating to field
                 // root, to prevent unwanted discard operations.
                 if (event.which === $.ui.keyCode.ESCAPE) {
                     event.stopPropagation();
+                }
+                if (self._onScroll) {
+                    window.removeEventListener('scroll', self._onScroll, true);
                 }
             },
             autoFocus: true,
@@ -355,6 +375,29 @@ var FieldMany2One = AbstractField.extend({
     */
     _getDisplayName: function (value) {
         return value.split('\n')[0];
+    },
+    /**
+     * Prepares and returns options for SelectCreateDialog
+     *
+     * @private
+     */
+    _getSearchCreatePopupOptions: function(view, ids, context, dynamicFilters) {
+        var self = this;
+        return {
+            res_model: this.field.relation,
+            domain: this.record.getDomain({fieldName: this.name}),
+            context: _.extend({}, this.record.getContext(this.recordParams), context || {}),
+            dynamicFilters: dynamicFilters || [],
+            title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + this.string,
+            initial_ids: ids,
+            initial_view: view,
+            disable_multiple_selection: true,
+            no_create: !self.can_create,
+            on_selected: function (records) {
+                self.reinitialize(records[0]);
+                self.activate();
+            }
+        };
     },
     /**
      * Listens to events 'field_changed' to keep track of the last event that
@@ -445,7 +488,10 @@ var FieldMany2One = AbstractField.extend({
      * @private
      */
     _renderReadonly: function () {
-        var value = _.escape((this.m2o_value || "").trim()).split("\n").join("<br/>");
+        var escapedValue = _.escape((this.m2o_value || "").trim());
+        var value = escapedValue.split('\n').map(function (line) {
+            return '<span>' + line + '</span>';
+        }).join('<br/>');
         this.$el.html(value);
         if (!this.noOpen && this.value) {
             this.$el.attr('href', _.str.sprintf('#id=%s&model=%s', this.value.res_id, this.field.relation));
@@ -590,21 +636,8 @@ var FieldMany2One = AbstractField.extend({
      */
     _searchCreatePopup: function (view, ids, context, dynamicFilters) {
         var self = this;
-        return new dialogs.SelectCreateDialog(this, _.extend({}, this.nodeOptions, {
-            res_model: this.field.relation,
-            domain: this.record.getDomain({fieldName: this.name}),
-            context: _.extend({}, this.record.getContext(this.recordParams), context || {}),
-            dynamicFilters: dynamicFilters || [],
-            title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + this.string,
-            initial_ids: ids,
-            initial_view: view,
-            disable_multiple_selection: true,
-            no_create: !self.can_create,
-            on_selected: function (records) {
-                self.reinitialize(records[0]);
-                self.activate();
-            }
-        })).open();
+        var options = this._getSearchCreatePopupOptions(view, ids, context, dynamicFilters);
+        return new dialogs.SelectCreateDialog(this, _.extend({}, this.nodeOptions, options)).open();
     },
     /**
      * @private
@@ -2095,6 +2128,19 @@ var FieldMany2ManyTags = AbstractField.extend({
 
         this.many2one._getSearchBlacklist = function () {
             return self.value.res_ids;
+        };
+        var _getSearchCreatePopupOptions = this.many2one._getSearchCreatePopupOptions;
+        this.many2one._getSearchCreatePopupOptions = function (view, ids, context, dynamicFilters) {
+            var options = _getSearchCreatePopupOptions.apply(this, arguments);
+            var domain = this.record.getDomain({fieldName: this.name});
+            return _.extend({}, options, {
+                domain: domain.concat(["!", ["id", "in", self.value.res_ids]]),
+                disable_multiple_selection: false,
+                on_selected: function (records) {
+                    self.many2one.reinitialize(records);
+                    self.many2one.activate();
+                }
+            });
         };
         return this.many2one.appendTo(this.$el);
     },

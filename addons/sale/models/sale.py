@@ -19,22 +19,22 @@ from werkzeug.urls import url_encode
 
 class SaleOrder(models.Model):
     _name = "sale.order"
-    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _description = "Sales Order"
     _order = 'date_order desc, id desc'
 
     def _default_validity_date(self):
         if self.env['ir.config_parameter'].sudo().get_param('sale.use_quotation_validity_days'):
-            days = self.env.user.company_id.quotation_validity_days
+            days = self.env.company.quotation_validity_days
             if days > 0:
                 return fields.Date.to_string(datetime.now() + timedelta(days))
         return False
 
     def _get_default_require_signature(self):
-        return self.env.user.company_id.portal_confirmation_sign
+        return self.env.company.portal_confirmation_sign
 
     def _get_default_require_payment(self):
-        return self.env.user.company_id.portal_confirmation_pay
+        return self.env.company.portal_confirmation_pay
 
     @api.depends('order_line.price_total')
     def _amount_all(self):
@@ -101,7 +101,7 @@ class SaleOrder(models.Model):
 
     @api.model
     def _default_note(self):
-        return self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.user.company_id.invoice_terms or ''
+        return self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company.invoice_terms or ''
 
     @api.model
     def _get_default_team(self):
@@ -175,7 +175,7 @@ class SaleOrder(models.Model):
 
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term', help="Payment terms applies to all invoices issued from this order.")
     fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position', help=" Fiscal positions are used to adapt taxes and accounts for particular customers or sales orders/invoices. The default value comes from the customer.")
-    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('sale.order'))
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     team_id = fields.Many2one('crm.team', 'Sales Team', change_default=True, default=_get_default_team, oldname='section_id')
 
     signature = fields.Binary('Signature', help='Signature received through the portal.', copy=False, attachment=True)
@@ -197,6 +197,10 @@ class SaleOrder(models.Model):
                                        string='Transactions', copy=False, readonly=True)
     authorized_transaction_ids = fields.Many2many('payment.transaction', compute='_compute_authorized_transaction_ids',
                                                   string='Authorized Transactions', copy=False, readonly=True)
+
+    _sql_constraints = [
+        ('confirmation_date_conditional_required', "CHECK( (state IN ('sale', 'done') AND confirmation_date IS NOT NULL) OR state NOT IN ('sale', 'done') )", "A confirmed sales order requires a confirmation date."),
+    ]
 
     @api.depends('pricelist_id', 'date_order', 'company_id')
     def _compute_currency_rate(self):
@@ -221,7 +225,7 @@ class SaleOrder(models.Model):
         """
         for order in self:
             dates_list = []
-            confirm_date = fields.Datetime.from_string((order.confirmation_date or order.write_date) if order.state == 'sale' else fields.Datetime.now())
+            confirm_date = fields.Datetime.from_string(order.confirmation_date if order.state in ['sale', 'done'] else fields.Datetime.now())
             for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery()):
                 dt = confirm_date + timedelta(days=line.customer_lead or 0.0)
                 dates_list.append(dt)
@@ -306,8 +310,8 @@ class SaleOrder(models.Model):
             'partner_shipping_id': addr['delivery'],
             'user_id': self.partner_id.user_id.id or self.partner_id.commercial_partner_id.user_id.id or self.env.uid
         }
-        if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.user.company_id.invoice_terms:
-            values['note'] = self.with_context(lang=self.partner_id.lang).env.user.company_id.invoice_terms
+        if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company.invoice_terms:
+            values['note'] = self.with_context(lang=self.partner_id.lang).env.company.invoice_terms
 
         # Use team of saleman before to fallback on team of partner.
         values['team_id'] = self.partner_id.user_id and self.partner_id.user_id.sale_team_id.id or self.partner_id.team_id.id
@@ -458,6 +462,9 @@ class SaleOrder(models.Model):
             'payment_term_id': self.payment_term_id.id,
             'fiscal_position_id': self.fiscal_position_id.id or self.partner_invoice_id.property_account_position_id.id,
             'company_id': self.company_id.id,
+            'campaign_id': self.campaign_id.id,
+            'medium_id': self.medium_id.id,
+            'source_id': self.source_id.id,
             'user_id': self.user_id and self.user_id.id,
             'team_id': self.team_id.id,
             'transaction_ids': [(6, 0, self.transaction_ids.ids)],
@@ -500,6 +507,9 @@ class SaleOrder(models.Model):
         invoices_origin = {}
         invoices_name = {}
 
+        # Keep track of the sequences of the lines
+        # To keep lines under their section
+        inv_line_sequence = 0
         for order in self:
             group_key = order.id if grouped else (order.partner_invoice_id.id, order.currency_id.id)
 
@@ -508,6 +518,7 @@ class SaleOrder(models.Model):
 
             # Create lines in batch to avoid performance problems
             line_vals_list = []
+            # sequence is the natural order of order_lines
             for line in order.order_line:
                 if line.display_type == 'line_section':
                     pending_section = line
@@ -529,14 +540,21 @@ class SaleOrder(models.Model):
 
                 if line.qty_to_invoice > 0 or (line.qty_to_invoice < 0 and final):
                     if pending_section:
-                        line_vals_list.extend(pending_section.invoice_line_create_vals(
+                        section_invoice = pending_section.invoice_line_create_vals(
                             invoices[group_key].id,
                             pending_section.qty_to_invoice
-                        ))
+                        )
+                        inv_line_sequence += 1
+                        section_invoice[0]['sequence'] = inv_line_sequence
+                        line_vals_list.extend(section_invoice)
                         pending_section = None
-                    line_vals_list.extend(line.invoice_line_create_vals(
+
+                    inv_line_sequence += 1
+                    inv_line = line.invoice_line_create_vals(
                         invoices[group_key].id, line.qty_to_invoice
-                    ))
+                    )
+                    inv_line[0]['sequence'] = inv_line_sequence
+                    line_vals_list.extend(inv_line)
 
             if references.get(invoices.get(group_key)):
                 if order not in references[invoices[group_key]]:
@@ -565,13 +583,15 @@ class SaleOrder(models.Model):
                     line.quantity = -line.quantity
             # Use additional field helper function (for account extensions)
             for line in invoice.invoice_line_ids:
-                line._set_additional_fields(invoice)
+                line._set_additional_fields()
             # Necessary to force computation of taxes. In account_invoice, they are triggered
             # by onchanges, which are not triggered when doing a create.
             invoice.compute_taxes()
             # Idem for partner
             so_payment_term_id = invoice.payment_term_id.id
+            fp_invoice = invoice.fiscal_position_id
             invoice._onchange_partner_id()
+            invoice.fiscal_position_id = fp_invoice
             # To keep the payment terms set on the SO
             invoice.payment_term_id = so_payment_term_id
             invoice.message_post_with_view('mail.message_origin_link',
@@ -593,21 +613,24 @@ class SaleOrder(models.Model):
     def action_cancel(self):
         return self.write({'state': 'cancel'})
 
+    def _find_mail_template(self, force_confirmation_template=False):
+        template_id = False
+
+        if force_confirmation_template or (self.state == 'sale' and not self.env.context.get('proforma', False)):
+            template_id = int(self.env['ir.config_parameter'].sudo().get_param('sale.default_confirmation_template'))
+            template_id = self.env['mail.template'].search([('id', '=', template_id)]).id
+            if not template_id:
+                template_id = self.env['ir.model.data'].xmlid_to_res_id('sale.mail_template_sale_confirmation', raise_if_not_found=False)
+        if not template_id:
+            template_id = self.env['ir.model.data'].xmlid_to_res_id('sale.email_template_edi_sale', raise_if_not_found=False)
+
+        return template_id
+
     @api.multi
     def action_quotation_send(self):
-        '''
-        This function opens a window to compose an email, with the edi sale template message loaded by default
-        '''
+        ''' Opens a wizard to compose an email, with relevant mail template loaded by default '''
         self.ensure_one()
-        ir_model_data = self.env['ir.model.data']
-        try:
-            template_id = ir_model_data.get_object_reference('sale', 'email_template_edi_sale')[1]
-        except ValueError:
-            template_id = False
-        try:
-            compose_form_id = ir_model_data.get_object_reference('mail', 'email_compose_message_wizard_form')[1]
-        except ValueError:
-            compose_form_id = False
+        template_id = self._find_mail_template()
         ctx = {
             'default_model': 'sale.order',
             'default_res_id': self.ids[0],
@@ -625,8 +648,8 @@ class SaleOrder(models.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
-            'views': [(compose_form_id, 'form')],
-            'view_id': compose_form_id,
+            'views': [(False, 'form')],
+            'view_id': False,
             'target': 'new',
             'context': ctx,
         }
@@ -636,25 +659,23 @@ class SaleOrder(models.Model):
     def message_post(self, **kwargs):
         if self.env.context.get('mark_so_as_sent'):
             self.filtered(lambda o: o.state == 'draft').with_context(tracking_disable=True).write({'state': 'sent'})
-            self.env.user.company_id.set_onboarding_step_done('sale_onboarding_sample_quotation_state')
+            self.env.company.set_onboarding_step_done('sale_onboarding_sample_quotation_state')
         return super(SaleOrder, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
 
     @api.multi
-    def force_quotation_send(self):
-        for order in self:
-            email_act = order.action_quotation_send()
-            if email_act and email_act.get('context'):
-                email_ctx = email_act['context']
-                email_ctx.update(default_email_from=order.company_id.email)
-                order.with_context(**email_ctx).message_post_with_template(email_ctx.get('default_template_id'))
-        return True
+    def _send_order_confirmation_mail(self):
+        template_id = self._find_mail_template(force_confirmation_template=True)
+        if template_id:
+            for order in self:
+                order.with_context(force_send=True).message_post_with_template(template_id, composition_mode='comment', email_layout_xmlid="mail.mail_notification_paynow")
 
     @api.multi
     def action_done(self):
-        tx = self.sudo().transaction_ids.get_last_transaction()
-        if tx and tx.state == 'pending' and tx.acquirer_id.provider == 'transfer':
-            tx._set_transaction_done()
-            tx.write({'is_processed': True})
+        for order in self:
+            tx = order.sudo().transaction_ids.get_last_transaction()
+            if tx and tx.state == 'pending' and tx.acquirer_id.provider == 'transfer':
+                tx._set_transaction_done()
+                tx.write({'is_processed': True})
         return self.write({'state': 'done'})
 
     @api.multi
@@ -667,9 +688,6 @@ class SaleOrder(models.Model):
             This method should be extended when the confirmation should generated
             other documents. In this method, the SO are in 'sale' state (not yet 'done').
         """
-        if self.env.context.get('send_email'):
-            self.force_quotation_send()
-
         # create an analytic account if at least an expense product
         for order in self:
             if any([expense_policy not in [False, 'no'] for expense_policy in order.order_line.mapped('product_id.expense_policy')]):
@@ -764,18 +782,17 @@ class SaleOrder(models.Model):
         return (self.state == 'sent' or (self.state == 'draft' and include_draft)) and not self.is_expired and self.require_payment and transaction.state != 'done' and self.amount_total
 
     @api.multi
-    def _notify_get_groups(self, message, groups):
+    def _notify_get_groups(self):
         """ Give access button to users and portal customer as portal is integrated
         in sale. Customer and portal group have probably no right to see
         the document so they don't have the access button. """
-        groups = super(SaleOrder, self)._notify_get_groups(message, groups)
+        groups = super(SaleOrder, self)._notify_get_groups()
 
         self.ensure_one()
         if self.state not in ('draft', 'cancel'):
             for group_name, group_method, group_data in groups:
-                if group_name in ('customer', 'portal'):
-                    continue
-                group_data['has_button_access'] = True
+                if group_name not in ('customer', 'portal'):
+                    group_data['has_button_access'] = True
 
         return groups
 
@@ -1099,7 +1116,7 @@ class SaleOrderLine(models.Model):
         result = super(SaleOrderLine, self).write(values)
         return result
 
-    order_id = fields.Many2one('sale.order', string='Order Reference', required=True, ondelete='cascade', index=True, copy=False, readonly=True)
+    order_id = fields.Many2one('sale.order', string='Order Reference', required=True, ondelete='cascade', index=True, copy=False)
     name = fields.Text(string='Description', required=True)
     sequence = fields.Integer(string='Sequence', default=10)
 
@@ -1551,7 +1568,7 @@ class SaleOrderLine(models.Model):
                 product_currency = pricelist_item.base_pricelist_id.currency_id
             currency_id = pricelist_item.pricelist_id.currency_id
 
-        product_currency = product_currency or(product.company_id and product.company_id.currency_id) or self.env.user.company_id.currency_id
+        product_currency = product_currency or(product.company_id and product.company_id.currency_id) or self.env.company.currency_id
         if not currency_id:
             currency_id = product_currency
             cur_factor = 1.0
@@ -1559,7 +1576,7 @@ class SaleOrderLine(models.Model):
             if currency_id.id == product_currency.id:
                 cur_factor = 1.0
             else:
-                cur_factor = currency_id._get_conversion_rate(product_currency, currency_id, self.company_id, self.order_id.date_order)
+                cur_factor = currency_id._get_conversion_rate(product_currency, currency_id, self.company_id or self.env.user.company_id, self.order_id.date_order or fields.Date.today())
 
         product_uom = self.env.context.get('uom') or product.uom_id.id
         if uom and uom.id != product_uom:

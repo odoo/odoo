@@ -535,7 +535,7 @@ class IrModelFields(models.Model):
             # check whether other fields use the same table
             others = self.search([('ttype', '=', 'many2many'),
                                   ('relation_table', '=', self.relation_table),
-                                  ('id', 'not in', self._origin.ids)])
+                                  ('id', 'not in', self.ids)])
             if others:
                 for other in others:
                     if (other.model, other.relation) == (self.relation, self.model):
@@ -639,11 +639,17 @@ class IrModelFields(models.Model):
             for view in views:
                 view._check_xml()
         except Exception:
-            raise UserError("\n".join([
-                _("Cannot rename/delete fields that are still present in views:"),
-                _("Fields: %s") % ", ".join(str(f) for f in fields),
-                _("View: %s") % view.name,
-            ]))
+            if not self._context.get(MODULE_UNINSTALL_FLAG):
+                raise UserError("\n".join([
+                    _("Cannot rename/delete fields that are still present in views:"),
+                    _("Fields: %s") % ", ".join(str(f) for f in fields),
+                    _("View: %s") % view.name,
+                ]))
+            else:
+                # uninstall mode
+                _logger.warn("The following fields were force-deleted to prevent a registry crash "
+                        + ", ".join(str(f) for f in fields)
+                        + " the following view might be broken %s" % view.name)
         finally:
             # the registry has been modified, restore it
             self.pool.setup_models(self._cr)
@@ -1211,7 +1217,7 @@ class IrModelAccess(models.Model):
     @api.model
     @tools.ormcache_context('self._uid', 'model', 'mode', 'raise_exception', keys=('lang',))
     def check(self, model, mode='read', raise_exception=True):
-        if self._uid == 1:
+        if self._uid == SUPERUSER_ID:
             # User root have all accesses
             return True
 

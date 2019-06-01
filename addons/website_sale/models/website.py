@@ -25,8 +25,8 @@ class Website(models.Model):
         except ValueError:
             return None
 
-    salesteam_id = fields.Many2one('crm.team', 
-        string='Sales Team', 
+    salesteam_id = fields.Many2one('crm.team',
+        string='Sales Team',
         default=_get_default_website_team)
     pricelist_ids = fields.One2many('product.pricelist', compute="_compute_pricelist_ids",
                                     string='Price list available for this Ecommerce/Website')
@@ -39,6 +39,9 @@ class Website(models.Model):
 
     cart_recovery_mail_template_id = fields.Many2one('mail.template', string='Cart Recovery Email', default=_default_recovery_mail_template, domain="[('model', '=', 'sale.order')]")
     cart_abandoned_delay = fields.Float("Abandoned Delay", default=1.0)
+
+    shop_ppg = fields.Integer(default=20, string="Number of products in the grid on the shop")
+    shop_ppr = fields.Integer(default=4, string="Number of grid columns on the shop")
 
     @api.one
     def _compute_pricelist_ids(self):

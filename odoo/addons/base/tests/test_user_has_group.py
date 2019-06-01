@@ -21,7 +21,7 @@ class TestHasGroup(TransactionCase):
             'partner_id': self.env['res.partner'].create({
                 'name': "Strawman Test User"
             }).id,
-            'groups_id': [(4, group0.id, 0)]
+            'groups_id': [(6, 0, [group0.id])]
         })
 
         self.grp_internal_xml_id = 'base.group_user'

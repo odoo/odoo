@@ -125,13 +125,13 @@
     </xpath>
 </template>
 
-<template id="event_left_column" active="True" inherit_id="website_event.index" customize_show="True" name="Filters Column on the Left">
+<template id="event_left_column" inherit_id="website_event.index" customize_show="True" name="Filters Column on the Left">
     <xpath expr="//div[@id='middle_column']" position="before">
         <div class="col-lg-3 css_noprint" id="left_column"/>
     </xpath>
 </template>
 
-<template id="event_time" active="True" customize_show="True" inherit_id="website_event.event_left_column" name="Filter by Date">
+<template id="event_time" customize_show="True" inherit_id="website_event.event_left_column" name="Filter by Date">
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills flex-column mb-3">
             <t t-foreach="dates" t-as="date">

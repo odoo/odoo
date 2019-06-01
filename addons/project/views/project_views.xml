@@ -140,6 +140,7 @@
                                 </group>
                                 <group>
                                     <field name="partner_id" string="Customer"/>
+                                    <field name="analytic_account_id" context="{'default_partner_id': partner_id}" groups="analytic.group_analytic_accounting"/>
                                     <label for="rating_status" groups="project.group_project_rating"/>
                                     <div groups="project.group_project_rating">
                                         <field name="rating_status" widget="radio"/>
@@ -303,6 +304,7 @@
                     <field name="is_favorite"/>
                     <field name="rating_percentage_satisfaction"/>
                     <field name="rating_status"/>
+                    <field name="analytic_account_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon">
@@ -357,6 +359,11 @@
                                         <div>
                                             <span class="o_value"><t t-esc="record.task_count.value"/></span>
                                             <span class="o_label"><t t-esc="record.label_tasks.value"/></span>
+                                        </div>
+                                    </a>
+                                    <a t-if="record.analytic_account_id.raw_value" class="o_project_kanban_box o_project_timesheet_box" name="action_view_account_analytic_line" type="object" groups="analytic.group_analytic_accounting">
+                                        <div>
+                                            <span class="o_label">Profitability</span>
                                         </div>
                                     </a>
                                 </div>
@@ -510,9 +517,9 @@
             id="portal_share_action"
             name="Share"
             res_model="portal.share"
-            src_model="project.task"
+            binding_model="project.task"
+            binding_views="form"
             view_type="form"
-            view_mode="form"
             target="new"
         />
 
@@ -541,6 +548,7 @@
                     <field name="stage_id" options='{"group_by_tooltip": {"legend_priority": "Use of stars"}}'/>
                     <field name="user_id"/>
                     <field name="user_email"/>
+                    <field name="partner_id"/>
                     <field name="sequence"/>
                     <field name="date_deadline"/>
                     <field name="message_needaction_counter"/>
@@ -565,7 +573,8 @@
                                             <field name="project_id" invisible="context.get('default_project_id', False)"/>
                                             <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
                                             <span t-attf-class="#{red || ''}"><i><field name="date_deadline"/></i></span>
-                                            <t t-if="record.email_from.raw_value"><span><field name="email_from"/></span></t>
+                                            <t t-if="record.partner_id.value"><span><field name="partner_id"/></span></t>
+                                            <t t-else="record.email_from.raw_value"><span><field name="email_from"/></span></t>
                                         </small>
                                     </div>
                                     <div class="o_dropdown_kanban dropdown" groups="base.group_user">
@@ -677,6 +686,25 @@
                     <field name="project_id"/>
                     <field name="stage_id"/>
                 </graph>
+            </field>
+        </record>
+
+        <record id="project_task_view_activity" model="ir.ui.view">
+            <field name="name">project.task.activity</field>
+            <field name="model">project.task</field>
+            <field name="arch" type="xml">
+                <activity string="Project Tasks">
+                    <field name="user_id"/>
+                    <templates>
+                        <div t-name="activity-box">
+                            <img t-att-src="activity_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value"/>
+                            <div>
+                                <field name="name" display="full"/>
+                                <field name="project_id" muted="1" display="full" invisible="context.get('default_project_id', False)"/>
+                            </div>
+                        </div>
+                    </templates>
+                </activity>
             </field>
         </record>
 
@@ -869,7 +897,8 @@
         <!-- User Form -->
         <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}"
                     id="act_res_users_2_project_task_opened" name="Assigned Tasks"
-                    res_model="project.task" src_model="res.users" view_mode="tree,form,calendar,graph" view_type="form"/>
+                    res_model="project.task" view_mode="tree,form,calendar,graph" view_type="form"
+                    binding_model="res.users" binding_views="form"/>
 
         <!-- Tags -->
         <record model="ir.ui.view" id="project_tags_search_view">

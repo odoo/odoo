@@ -13,16 +13,13 @@
                 <t t-foreach="activity.meetings" t-as="meeting">
                     <div>
                         <span t-att-class="!meeting.allday and is_next_meeting ? 'o_meeting_filter o_meeting_bold' : 'o_meeting_filter'" t-att-data-res_model="activity.model" t-att-data-res_id="meeting.id" t-att-data-model_name="activity.name" t-att-title="meeting.name">
-                            <span t-if="!meeting.allday">
-                                <t t-esc="moment(meeting.start).local().format('hh:mm A')"/>
-                            </span>
                             <span><t t-esc="meeting.name"/></span>
                         </span>
                         <span t-if="meeting.start" class="float-right">
                             <t t-if="meeting.allday">All Day</t>
                             <t t-else=''>
                                 <t t-set="is_next_meeting" t-value="false"/>
-                                <t t-esc="moment(meeting.start).fromNow()"/>
+                                <t t-esc="moment(meeting.start).local().format('hh:mm A')"/>
                             </t>
                         </span>
                     </div>

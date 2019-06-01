@@ -29,9 +29,9 @@ class StockWarehouse(models.Model):
         ('pbm', 'Pick components and then manufacture (2 steps)'),
         ('pbm_sam', 'Pick components, manufacture and then store products (3 steps)')],
         'Manufacture', default='mrp_one_step', required=True,
-        help="Produce : Move the raw materials to the production location\
+        help="Produce : Move the components to the production location\
         directly and start the manufacturing process.\nPick / Produce : Unload\
-        the raw materials from the Stock to Input location first, and then\
+        the components from the Stock to Input location first, and then\
         transfer it to the Production location.")
 
     pbm_route_id = fields.Many2one('stock.location.route', 'Picking Before Manufacturing Route', ondelete='restrict')
@@ -164,24 +164,25 @@ class StockWarehouse(models.Model):
         })
         return rules
 
-    def _get_locations_values(self, vals):
-        values = super(StockWarehouse, self)._get_locations_values(vals)
+    def _get_locations_values(self, vals, code=False):
+        values = super(StockWarehouse, self)._get_locations_values(vals, code=code)
         def_values = self.default_get(['manufacture_steps'])
         manufacture_steps = vals.get('manufacture_steps', def_values['manufacture_steps'])
-        code = vals.get('code') or self.code
+        code = vals.get('code') or code
         code = code.replace(' ', '').upper()
+        company_id = vals.get('company_id', self.company_id.id)
         values.update({
             'pbm_loc_id': {
                 'name': _('Pre-Production'),
                 'active': manufacture_steps in ('pbm', 'pbm_sam'),
                 'usage': 'internal',
-                'barcode': code + '-PREPRODUCTION'
+                'barcode': self._valid_barcode(code + '-PREPRODUCTION', company_id)
             },
             'sam_loc_id': {
                 'name': _('Post-Production'),
                 'active': manufacture_steps == 'pbm_sam',
                 'usage': 'internal',
-                'barcode': code + '-POSTPRODUCTION'
+                'barcode': self._valid_barcode(code + '-POSTPRODUCTION', company_id)
             },
         })
         return values

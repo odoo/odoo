@@ -118,7 +118,7 @@ class AccountInvoice(models.Model):
                 if elements[0].attrib.get('currencyID'):
                     currency_str = elements[0].attrib['currencyID']
                     currency = self.env.ref('base.%s' % currency_str.upper(), raise_if_not_found=False)
-                    if currency != self.env.user.company_id.currency_id and currency.active:
+                    if currency != self.env.company.currency_id and currency.active:
                         invoice_form.currency_id = currency
 
                     # Store xml total amount.
@@ -252,11 +252,12 @@ class AccountInvoice(models.Model):
             # Handle both _Attachment namedtuple in mail.thread or ir.attachment.
             return hasattr(attachment, 'content') and getattr(attachment, 'content') or base64.b64decode(attachment.datas)
         filename = _get_attachment_filename(attachment)
-        content = _get_attachment_content(attachment)
 
         # Check if the attachment is a pdf.
         if not filename.endswith('.pdf'):
             return
+
+        content = _get_attachment_content(attachment)
 
         with io.BytesIO(content) as buffer:
             try:

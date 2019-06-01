@@ -101,6 +101,27 @@
         </field>
     </record>
 
+    <record id="product_template_view_activity" model="ir.ui.view">
+        <field name="name">product.template.activity</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <activity string="Products">
+                <field name="id"/>
+                <templates>
+                    <div t-name="activity-box">
+                        <img t-att-src="activity_image('product.template', 'image_small', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
+                        <div>
+                            <field name="name" display="full"/>
+                            <div t-if="record.default_code.value" class="text-muted">
+                                [<field name="default_code"/>]
+                            </div>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
     <record id="product_template_action" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="type">ir.actions.act_window</field>

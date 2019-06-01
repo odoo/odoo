@@ -122,6 +122,18 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         }
     },
 
+    disableButton: function (button) {
+        $(button).attr('disabled', true);
+        $(button).children('.fa-lock').removeClass('fa-lock');
+        $(button).prepend('<span class="o_loader"><i class="fa fa-refresh fa-spin"></i>&nbsp;</span>');
+    },
+
+    enableButton: function (button) {
+        $(button).attr('disabled', false);
+        $(button).children('.fa').addClass('fa-lock');
+        $(button).find('span.o_loader').remove();
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -184,16 +196,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                     return;
                 }
 
-                $(button).attr('disabled', true);
-                $(button).children('.fa-plus-circle').removeClass('fa-plus-circle');
-                $(button).prepend('<span class="o_loader"><i class="fa fa-refresh fa-spin"></i>&nbsp;</span>');
-
-                var verify_validity = this.$el.find('input[name="verify_validity"]');
-
-                if (verify_validity.length>0) {
-                    form_data.verify_validity = verify_validity[0].value === "1";
-                }
-
+                this.disableButton(button);
                 // do the call to the route stored in the 'data_set' input of the acquirer form, the data must be called 'create-route'
                 return this._rpc({
                     route: ds.dataset.createRoute,
@@ -225,19 +228,15 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                         }
                     }
                     // here we remove the 'processing' icon from the 'add a new payment' button
-                    $(button).attr('disabled', false);
-                    $(button).children('.fa').addClass('fa-plus-circle');
-                    $(button).find('span.o_loader').remove();
+                    self.enableButton(button);
                 }).guardedCatch(function (error) {
                     // if the rpc fails, pretty obvious
-                    $(button).attr('disabled', false);
-                    $(button).children('.fa').addClass('fa-plus-circle');
-                    $(button).find('span.o_loader').remove();
+                    self.enableButton(button);
 
                     self.displayError(
                         _t('Server Error'),
                         _t("We are not able to add your payment method at the moment.") +
-                            error.data.message
+                            error.message.data.message
                     );
                 });
             }
@@ -287,7 +286,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                         self.displayError(
                             _t('Server Error'),
                             _t("We are not able to redirect you to the payment form. ") +
-                                error.data.message
+                                error.message.data.message
                         );
                     });
                 }
@@ -300,6 +299,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                 }
             }
             else {  // if the user is using an old payment then we just submit the form
+                this.disableButton(button);
                 form.submit();
                 return new Promise(function () {});
             }
@@ -366,9 +366,6 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             $(button).children('.fa-plus-circle').removeClass('fa-plus-circle');
             $(button).prepend('<span class="o_loader"><i class="fa fa-refresh fa-spin"></i>&nbsp;</span>');
 
-            // we force the check when adding a card trough here
-            form_data.verify_validity = true;
-
             // do the call to the route stored in the 'data_set' input of the acquirer form, the data must be called 'create-route'
             this._rpc({
                 route: ds.dataset.createRoute,
@@ -417,7 +414,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                 self.displayError(
                     _t('Server error'),
                     _t("We are not able to add your payment method at the moment.</p>") +
-                        error.data.message
+                        error.message.data.message
                 );
             });
         }

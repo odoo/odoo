@@ -266,7 +266,6 @@ class MailTemplate(models.Model):
                 'name': button_name,
                 'type': 'ir.actions.act_window',
                 'res_model': 'mail.compose.message',
-                'src_model': template.model_id.model,
                 'view_type': 'form',
                 'context': "{'default_composition_mode': 'mass_mail', 'default_template_id' : %d, 'default_use_template': True}" % (template.id),
                 'view_mode': 'form,tree',
@@ -384,7 +383,8 @@ class MailTemplate(models.Model):
         self.ensure_one()
 
         if self.use_default_to or self._context.get('tpl_force_default_to'):
-            default_recipients = self.env['mail.thread'].message_get_default_recipients(res_model=self.model, res_ids=res_ids)
+            records = self.env[self.model].browse(res_ids).sudo()
+            default_recipients = self.env['mail.thread']._message_get_default_recipients_on_records(records)
             for res_id, recipients in default_recipients.items():
                 results[res_id].pop('partner_to', None)
                 results[res_id].update(recipients)
@@ -481,9 +481,13 @@ class MailTemplate(models.Model):
                     report = template.report_template
                     report_service = report.report_name
 
-                    if report.report_type not in ['qweb-html', 'qweb-pdf']:
-                        raise UserError(_('Unsupported report type %s found.') % report.report_type)
-                    result, format = report.render_qweb_pdf([res_id])
+                    if report.report_type in ['qweb-html', 'qweb-pdf']:
+                        result, format = report.render_qweb_pdf([res_id])
+                    else:
+                        res = report.render([res_id])
+                        if not res:
+                            raise UserError(_('Unsupported report type %s found.') % report.report_type)
+                        result, format = res
 
                     # TODO in trunk, change return format to binary to match message_post expected format
                     result = base64.b64encode(result)
@@ -512,7 +516,7 @@ class MailTemplate(models.Model):
         :returns: id of the mail.mail that was created """
         self.ensure_one()
         Mail = self.env['mail.mail']
-        Attachment = self.env['ir.attachment']  # TDE FIXME: should remove dfeault_type from context
+        Attachment = self.env['ir.attachment']  # TDE FIXME: should remove default_type from context
 
         # create a mail_mail based on values, without attachments
         values = self.generate_email(res_id)
@@ -535,7 +539,7 @@ class MailTemplate(models.Model):
                 template_ctx = {
                     'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=record.display_name)),
                     'model_description': self.env['ir.model']._get(record._name).display_name,
-                    'company': 'company_id' in record and record['company_id'] or self.env.user.company_id,
+                    'company': 'company_id' in record and record['company_id'] or self.env.company,
                 }
                 body = template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
                 values['body_html'] = self.env['mail.thread']._replace_local_links(body)

@@ -12,7 +12,7 @@ var CustomizeMenu = Widget.extend({
     xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
     events: {
         'show.bs.dropdown': '_onDropdownShow',
-        'click .dropdown-item[data-view-id]': '_onCustomizeOptionClick',
+        'click .dropdown-item[data-view-key]': '_onCustomizeOptionClick',
     },
 
     /**
@@ -44,17 +44,18 @@ var CustomizeMenu = Widget.extend({
      * Enables/Disables a view customization whose id is given.
      *
      * @private
-     * @param {integer} viewID
+     * @param {string} viewKey
      * @returns {Promise}
      *          Unresolved if the customization succeeded as the page will be
      *          reloaded.
      *          Rejected otherwise.
      */
-    _doCustomize: function (viewID) {
+    _doCustomize: function (viewKey) {
         return this._rpc({
-            model: 'ir.ui.view',
-            method: 'toggle',
-            args: [[viewID]],
+            route: '/website/toggle_switchable_view',
+            params: {
+                'view_key': viewKey,
+            },
         }).then(function () {
             window.location.reload();
             return new Promise(function () {});
@@ -92,7 +93,7 @@ var CustomizeMenu = Widget.extend({
                     currentGroup = item.inherit_id[1];
                     $menu.append('<li class="dropdown-header">' + currentGroup + '</li>');
                 }
-                var $a = $('<a/>', {href: '#', class: 'dropdown-item', 'data-view-id': item.id, role: 'menuitem'})
+                var $a = $('<a/>', {href: '#', class: 'dropdown-item', 'data-view-key': item.key, role: 'menuitem'})
                             .append(qweb.render('website.components.switch', {id: 'switch-' + item.id, label: item.name}));
                 $a.find('input').prop('checked', !!item.active);
                 $menu.append($a);
@@ -113,8 +114,8 @@ var CustomizeMenu = Widget.extend({
      */
     _onCustomizeOptionClick: function (ev) {
         ev.preventDefault();
-        var viewID = parseInt($(ev.currentTarget).data('view-id'), 10);
-        this._doCustomize(viewID);
+        var viewKey = $(ev.currentTarget).data('viewKey');
+        this._doCustomize(viewKey);
     },
     /**
      * @private

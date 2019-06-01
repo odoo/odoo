@@ -7,8 +7,8 @@ import datetime
 import functools
 import glob
 import hashlib
-import imghdr
 import io
+import ipaddress
 import itertools
 import jinja2
 import json
@@ -35,13 +35,13 @@ import unicodedata
 import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
-from odoo.modules import get_resource_path
-from odoo.tools import limited_image_resize, topological_sort, html_escape, pycompat
+from odoo.modules import get_module_path, get_resource_path
+from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlwt, file_open
 from odoo.tools.safe_eval import safe_eval
-from odoo import http
+from odoo import http, tools
 from odoo.http import content_disposition, dispatch_rpc, request, \
     serialize_exception as _serialize_exception, Response
 from odoo.exceptions import AccessError, UserError, AccessDenied
@@ -62,6 +62,9 @@ env.filters["json"] = json.dumps
 
 # 1 week cache for asset bundles as advised by Google Page Speed
 BUNDLE_MAXAGE = 60 * 60 * 24 * 7
+
+# 1 year cache for content (menus, translations, static qweb)
+CONTENT_MAXAGE = 60 * 60 * 24 * 356
 
 DBNAME_PATTERN = '^[a-zA-Z0-9][a-zA-Z0-9_.-]+$'
 
@@ -424,6 +427,30 @@ def xml2json_from_elementtree(el, preserve_whitespaces=False):
     res["children"] = kids
     return res
 
+def _admin_password_warn(uid):
+    """ Admin still has `admin` password, flash a message via chatter.
+
+    Uses a private mail.channel from the system (/ odoobot) to the user, as
+    using a more generic mail.thread could send an email which is undesirable
+
+    Uses mail.channel directly because using mail.thread might send an email instead.
+    """
+    if request.params['password'] != 'admin':
+        return
+    if ipaddress.ip_address(request.httprequest.remote_addr).is_private:
+        return
+    admin = request.env.ref('base.partner_admin')
+    if uid not in admin.user_ids.ids:
+        return
+
+    MailChannel = request.env['mail.channel'].sudo()
+    MailChannel.browse(MailChannel.channel_get([admin.id])['id'])\
+        .message_post(
+            body=_("Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"),
+            message_type='comment',
+            subtype='mail.mt_comment'
+        )
+
 #----------------------------------------------------------
 # Odoo Web web Controllers
 #----------------------------------------------------------
@@ -450,6 +477,23 @@ class Home(http.Controller):
             return response
         except AccessError:
             return werkzeug.utils.redirect('/web/login?error=access')
+
+    @http.route('/web/webclient/load_menus/<string:unique>', type='http', auth='user', methods=['GET'])
+    def web_load_menus(self, unique):
+        """
+        Loads the menus for the webclient
+        :param unique: this parameters is not used, but mandatory: it is used by the HTTP stack to make a unique request
+        :return: the menus (including the images in Base64)
+        """
+        menus = request.env["ir.ui.menu"].load_menus(request.debug)
+        body = json.dumps(menus, default=ustr)
+        response = request.make_response(body, [
+            # this method must specify a content-type application/json instead of using the default text/html set because
+            # the type of the route is set to HTTP, but the rpc is made with a get and expects JSON
+            ('Content-Type', 'application/json'),
+            ('Cache-Control', 'public, max-age=' + str(CONTENT_MAXAGE)),
+        ])
+        return response
 
     @http.route('/web/dbredirect', type='http', auth="none")
     def web_db_redirect(self, redirect='/', **kw):
@@ -479,6 +523,7 @@ class Home(http.Controller):
             old_uid = request.uid
             try:
                 uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
+                _admin_password_warn(uid)
                 request.params['login_success'] = True
                 return http.redirect_with_hash(self._login_redirect(uid, redirect=redirect))
             except odoo.exceptions.AccessDenied as e:
@@ -549,18 +594,14 @@ class WebClient(http.Controller):
             ('Cache-Control', 'max-age=36000'),
         ])
 
-    @http.route('/web/webclient/qweb', type='http', auth="none", cors="*")
-    def qweb(self, mods=None, db=None):
+    @http.route('/web/webclient/qweb/<string:unique>', type='http', auth="none", cors="*")
+    def qweb(self, unique, mods=None, db=None):
         files = [f[0] for f in manifest_glob('qweb', addons=mods, db=db)]
-        last_modified = get_last_modified(files)
-        if request.httprequest.if_modified_since and request.httprequest.if_modified_since >= last_modified:
-            return werkzeug.wrappers.Response(status=304)
-
-        content, checksum = concat_xml(files)
-
-        return make_conditional(
-            request.make_response(content, [('Content-Type', 'text/xml')]),
-            last_modified, checksum)
+        content, _dummy = concat_xml(files)
+        return request.make_response(content, [
+                ('Content-Type', 'text/xml'),
+                ('Cache-Control','public, max-age=' + str(CONTENT_MAXAGE))
+            ])
 
     @http.route('/web/webclient/bootstrap_translations', type='json', auth="none")
     def bootstrap_translations(self, mods):
@@ -585,41 +626,34 @@ class WebClient(http.Controller):
         return {"modules": translations_per_module,
                 "lang_parameters": None}
 
-    @http.route('/web/webclient/translations', type='json', auth="none")
-    def translations(self, mods=None, lang=None):
-        request.disable_db = False
-        if mods is None:
-            mods = [x['name'] for x in request.env['ir.module.module'].sudo().search_read(
-                [('state', '=', 'installed')], ['name'])]
-        if lang is None:
-            lang = request.context["lang"]
-        langs = request.env['res.lang'].sudo().search([("code", "=", lang)])
-        lang_params = None
-        if langs:
-            lang_params = langs.read([
-                "name", "direction", "date_format", "time_format",
-                "grouping", "decimal_point", "thousands_sep", "week_start"])[0]
-            lang_params['week_start'] = int(lang_params['week_start'])
+    @http.route('/web/webclient/translations/<string:unique>', type='http', auth="none")
+    def translations(self, unique, mods=None, lang=None):
+        """
+        Load the translations for the specified language and modules
 
-        # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
-        # done server-side when the language is loaded, so we only need to load the user's lang.
-        translations_per_module = {}
-        messages = request.env['ir.translation'].sudo().search_read([
-            ('module', 'in', mods), ('lang', '=', lang),
-            ('comments', 'like', 'openerp-web'), ('value', '!=', False),
-            ('value', '!=', '')],
-            ['module', 'src', 'value', 'lang'], order='module')
-        for mod, msg_group in itertools.groupby(messages, key=operator.itemgetter('module')):
-            translations_per_module.setdefault(mod, {'messages': []})
-            translations_per_module[mod]['messages'].extend({
-                'id': m['src'],
-                'string': m['value']}
-                for m in msg_group)
-        return {
+        :param unique: this parameters is not used, but mandatory: it is used by the HTTP stack to make a unique request
+        :param mods: the modules, a comma separated list
+        :param lang: the language of the user
+        :return:
+        """
+        request.disable_db = False
+
+        if mods:
+            mods = mods.split(',')
+        translations_per_module, lang_params = request.env["ir.translation"].get_translations_for_webclient(mods, lang)
+
+        body = json.dumps({
             'lang_parameters': lang_params,
             'modules': translations_per_module,
             'multi_lang': len(request.env['res.lang'].sudo().get_installed()) > 1,
-        }
+        })
+        response = request.make_response(body, [
+            # this method must specify a content-type application/json instead of using the default text/html set because
+            # the type of the route is set to HTTP, but the rpc is made with a get and expects JSON
+            ('Content-Type', 'application/json'),
+            ('Cache-Control', 'public, max-age=' + str(CONTENT_MAXAGE)),
+        ])
+        return response
 
     @http.route('/web/webclient/version_info', type='json', auth="none")
     def version_info(self):
@@ -968,13 +1002,7 @@ class View(http.Controller):
 class Binary(http.Controller):
 
     def placeholder(self, image='placeholder.png'):
-        addons_path = http.addons_manifest['web']['addons_path']
-        return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', image), 'rb').read()
-
-    def force_contenttype(self, headers, contenttype='image/png'):
-        dictheaders = dict(headers)
-        dictheaders['Content-Type'] = contenttype
-        return list(dictheaders.items())
+        return tools.file_open(get_resource_path('web', 'static/src/img', image), 'rb').read()
 
     @http.route(['/web/content',
         '/web/content/<string:xmlid>',
@@ -1004,6 +1032,15 @@ class Binary(http.Controller):
             response.set_cookie('fileToken', token)
         return response
 
+    @http.route(['/web/partner_image',
+        '/web/partner_image/<int:rec_id>',
+        '/web/partner_image/<int:rec_id>/<string:field>',
+        '/web/partner_image/<int:rec_id>/<string:field>/<string:model>/'], type='http', auth="public")
+    def content_image_partner(self, rec_id, field='image_small', model='res.partner', **kwargs):
+        # other kwargs are ignored on purpose
+        return self._content_image(id=rec_id, model='res.partner', field=field,
+            placeholder='user_placeholder.jpg')
+
     @http.route(['/web/image',
         '/web/image/<string:xmlid>',
         '/web/image/<string:xmlid>/<string:filename>',
@@ -1023,30 +1060,34 @@ class Binary(http.Controller):
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
     def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                       filename_field='datas_fname', unique=None, filename=None, mimetype=None,
-                      download=None, width=0, height=0, crop=False, access_token=None, avoid_if_small=False,
-                      upper_limit=False, placeholder='placeholder.png', **kw):
-        status, headers, content = request.env['ir.http'].binary_content(
+                      download=None, width=0, height=0, crop=False, access_token=None,
+                      **kwargs):
+        # other kwargs are ignored on purpose
+        return self._content_image(xmlid=xmlid, model=model, id=id, field=field,
+            filename_field=filename_field, unique=unique, filename=filename, mimetype=mimetype,
+            download=download, width=width, height=height, crop=crop, access_token=access_token)
+
+    def _content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
+                       filename_field='datas_fname', unique=None, filename=None, mimetype=None,
+                       download=None, width=0, height=0, crop=False, access_token=None,
+                       placeholder='placeholder.png', **kwargs):
+        status, headers, image_base64 = request.env['ir.http'].binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
             default_mimetype='image/png', access_token=access_token)
 
         if status == 301 or (status != 200 and download):
-            return request.env['ir.http']._response_by_status(status, headers, content)
-        if not content:
-            content = base64.b64encode(self.placeholder(image=placeholder))
-            headers = self.force_contenttype(headers, contenttype='image/png')
+            return request.env['ir.http']._response_by_status(status, headers, image_base64)
+        if not image_base64:
+            image_base64 = base64.b64encode(self.placeholder(image=placeholder))
             if not (width or height):
-                suffix = 'big' if field == 'image' else field.split('_')[-1]
-                if suffix in ('small', 'medium', 'large', 'big'):
-                    content = getattr(odoo.tools, 'image_resize_image_%s' % suffix)(content)
+                width, height = odoo.tools.image_guess_size_from_field_name(field)
 
+        image_base64 = image_process(image_base64, size=(int(width), int(height)), crop=crop)
 
-        content = limited_image_resize(
-            content, width=width, height=height, crop=crop, upper_limit=upper_limit, avoid_if_small=avoid_if_small)
-
-        image_base64 = base64.b64decode(content)
-        headers.append(('Content-Length', len(image_base64)))
-        response = request.make_response(image_base64, headers)
+        content = base64.b64decode(image_base64)
+        headers = http.set_safe_image_headers(headers, content)
+        response = request.make_response(content, headers)
         response.status_code = status
         return response
 
@@ -1184,12 +1225,16 @@ class Binary(http.Controller):
 
         fonts = []
         if fontname:
-            font_path = get_resource_path('web', 'static/src/fonts/sign', fontname)
-            if not font_path:
-                return []
-            font_file = open(font_path, 'rb')
-            font = base64.b64encode(font_file.read())
-            fonts.append(font)
+            module_path = get_module_path('web')
+            fonts_folder_path = os.path.join(module_path, 'static/src/fonts/sign/')
+            module_resource_path = get_resource_path('web', 'static/src/fonts/sign/' + fontname)
+            if fonts_folder_path and module_resource_path:
+                fonts_folder_path = os.path.join(os.path.normpath(fonts_folder_path), '')
+                module_resource_path = os.path.normpath(module_resource_path)
+                if module_resource_path.startswith(fonts_folder_path):
+                    with file_open(module_resource_path, 'rb') as font_file:
+                        font = base64.b64encode(font_file.read())
+                        fonts.append(font)
         else:
             current_dir = os.path.dirname(os.path.abspath(__file__))
             fonts_directory = os.path.join(current_dir, '..', 'static', 'src', 'fonts', 'sign')

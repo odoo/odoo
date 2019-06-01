@@ -42,7 +42,7 @@ class ResConfigSettings(models.TransientModel):
         oldname='default_deposit_product_id',
         help='Default product used for payment advances')
     auto_done_setting = fields.Boolean("Lock Confirmed Sales", config_parameter='sale.auto_done_setting')
-    module_website_sale_digital = fields.Boolean("Sell digital products - provide downloadable content on your customer portal")
+    module_website_sale_digital = fields.Boolean("Digital Content")
 
     auth_signup_uninvited = fields.Selection([
         ('b2b', 'On invitation'),
@@ -71,6 +71,10 @@ class ResConfigSettings(models.TransientModel):
                                   domain="[('model', '=', 'account.invoice')]",
                                   config_parameter='sale.default_email_template',
                                   default=lambda self: self.env.ref('account.email_template_edi_invoice', False))
+    confirmation_template_id = fields.Many2one('mail.template', string='Confirmation Email',
+                                               domain="[('model', '=', 'sale.order')]",
+                                               config_parameter='sale.default_confirmation_template',
+                                               help="Email sent to the customer once the order is paid.")
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()

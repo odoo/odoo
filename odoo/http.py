@@ -50,6 +50,7 @@ from .service.server import memory_info
 from .service import security, model as service_model
 from .tools.func import lazy_property
 from .tools import ustr, consteq, frozendict, pycompat, unique, date_utils
+from .tools.mimetypes import guess_mimetype
 
 from .modules.module import module_manifest
 
@@ -1247,17 +1248,16 @@ class DisableCacheMiddleware(object):
             parsed = urls.url_parse(referer)
             debug = parsed.query.count('debug') >= 1
 
-            new_headers = []
-            unwanted_keys = ['Last-Modified']
             if debug:
                 new_headers = [('Cache-Control', 'no-cache')]
-                unwanted_keys += ['Expires', 'Etag', 'Cache-Control']
 
-            for k, v in headers:
-                if k not in unwanted_keys:
-                    new_headers.append((k, v))
+                for k, v in headers:
+                    if k.lower() != 'cache-control':
+                        new_headers.append((k, v))
 
-            start_response(status, new_headers)
+                start_response(status, new_headers)
+            else:
+                start_response(status, headers)
         return self.app(environ, start_wrapped)
 
 class Root(object):
@@ -1616,6 +1616,40 @@ def content_disposition(filename):
     escaped = urls.url_quote(filename, safe='')
 
     return "attachment; filename*=UTF-8''%s" % escaped
+
+
+def set_safe_image_headers(headers, content):
+    """Return new headers based on `headers` but with `Content-Length` and
+    `Content-Type` set appropriately depending on the given `content` only if it
+    is safe to do."""
+    content_type = guess_mimetype(content)
+    safe_types = ['image/jpeg', 'image/png', 'image/gif', 'image/x-icon']
+    if content_type in safe_types:
+        headers = set_header_field(headers, 'Content-Type', content_type)
+    set_header_field(headers, 'Content-Length', len(content))
+    return headers
+
+
+def set_header_field(headers, name, value):
+    """ Return new headers based on `headers` but with `value` set for the
+    header field `name`.
+
+    :param headers: the existing headers
+    :type headers: list of tuples (name, value)
+
+    :param name: the header field name
+    :type name: string
+
+    :param value: the value to set for the `name` header
+    :type value: string
+
+    :return: the updated headers
+    :rtype: list of tuples (name, value)
+    """
+    dictheaders = dict(headers)
+    dictheaders[name] = value
+    return list(dictheaders.items())
+
 
 #  main wsgi handler
 root = Root()

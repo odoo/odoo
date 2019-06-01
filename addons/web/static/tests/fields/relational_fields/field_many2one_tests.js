@@ -356,7 +356,7 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            assert.strictEqual($('a.o_form_uri').html(), 'aaa<br>Street<br>City ZIP',
+            assert.strictEqual(form.$('a.o_form_uri').html(), '<span>aaa</span><br><span>Street</span><br><span>City ZIP</span>',
                 "input should have a multi-line content in readonly due to show_address");
             await testUtils.form.clickEdit(form);
             assert.containsOnce(form, 'button.o_external_button:visible',
@@ -2685,6 +2685,35 @@ QUnit.module('fields', {}, function () {
                 "the modal should be closed");
             assert.equal(form.$('.o_data_cell:contains(test)').text(), 'test',
                 "the partner name should have been updated to 'test'");
+
+            form.destroy();
+        });
+
+        QUnit.test('many2one dropdown disappears on scroll', async function (assert) {
+            assert.expect(2);
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch:
+                    '<form>' +
+                        '<div style="height: 2000px;">' +
+                            '<field name="trululu"/>' +
+                        '</div>' +
+                    '</form>',
+                res_id: 1,
+            });
+
+            await testUtils.form.clickEdit(form);
+
+            var $input = form.$('.o_field_many2one input');
+
+            await testUtils.dom.click($input);
+            assert.isVisible($input.autocomplete('widget'), "dropdown should be opened");
+
+            form.el.dispatchEvent(new Event('scroll'));
+            assert.isNotVisible($input.autocomplete('widget'), "dropdown should be closed");
 
             form.destroy();
         });

@@ -26,21 +26,21 @@
                 </header>
                 <sheet>
                     <div class="oe_title">
-                        <h1><field name="display_name" readonly="1"/></h1>
+                        <h1><field name="display_name"/></h1>
                     </div>
                     <group>
-                        <field name="reference" widget="reference" readonly="1"/>
-                        <field name="attachment_datas" filename="attachment_fname" readonly="1" />
+                        <field name="reference" widget="reference"/>
+                        <field name="attachment_datas" filename="attachment_fname"/>
                         <field name="attachment_fname" invisible="1"/>
-                        <field name="partner_id" readonly="1"/> 
-                        <field name="user_id" readonly="1"/>
-                        <field name="info_msg" widget="html" readonly="1"/>
+                        <field name="partner_id"/>
+                        <field name="user_id"/>
+                        <field name="info_msg" widget="html"/>
                     </group>
                     <group groups="base.group_no_one">
-                        <field name="model" readonly="1"/>
-                        <field name="res_id" readonly="1"/>
-                        <field name="color" readonly="1"/>
-                        <field name="duplex" readonly="1"/>
+                        <field name="model"/>
+                        <field name="res_id"/>
+                        <field name="color"/>
+                        <field name="duplex"/>
                     </group>
                 </sheet>
             </form>
