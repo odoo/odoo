@@ -8,7 +8,7 @@
 # Martin Trigaux, 2016
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2016
 # Michal Veselý <michal@veselyberanek.net>, 2018
-# trendspotter <j.podhorecky@volny.cz>, 2018
+# trendspotter <j.podhorecky@volny.cz>, 2019
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2016-09-07 09:26+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2018\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -168,12 +168,12 @@ msgstr "<strong>Popis</strong>"
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Price List Name</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Název ceníku</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Print date</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Datum tisku</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -287,7 +287,7 @@ msgstr "Všechny produkty"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "All general settings about this product are managed on"
-msgstr ""
+msgstr "Všechna obecná nastavení tohoto produktu jsou spravována"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -342,7 +342,7 @@ msgstr "Archivováno"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_sequence
 msgid "Assigns the priority to the list of product vendor."
-msgstr ""
+msgstr "Přiřadí prioritu seznamu dodavatelů produktu."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_attribute_id
@@ -354,12 +354,12 @@ msgstr "Vlastnost"
 #: model:ir.ui.view,arch_db:product.product_attribute_line_form
 #: model:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Name"
-msgstr ""
+msgstr "Název atributu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_extra
 msgid "Attribute Price Extra"
-msgstr ""
+msgstr "Atribut Speciální Ceny"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_ids
@@ -453,7 +453,7 @@ msgstr "Krásný širokoúhlý displej."
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image
 msgid "Big-sized image"
-msgstr ""
+msgstr "Velký obrázek"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_factor_inv
@@ -555,13 +555,13 @@ msgstr "Typ kategorie"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "Category name"
-msgstr ""
+msgstr "Název Kategorie"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:427
 #, python-format
 msgid "Category: %s"
-msgstr ""
+msgstr "Kategorie: %s"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -587,6 +587,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_attribute_create_variant
 msgid "Check this if you want to create multiple variants for this attribute."
 msgstr ""
+"Zaškrtněte toto, pokud chcete pro tento atribut vytvořit více variant."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_child_id
@@ -665,7 +666,7 @@ msgstr "Firma"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Compute Price"
-msgstr ""
+msgstr "Výpočet ceny"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
@@ -1898,7 +1899,7 @@ msgstr "Výrobek"
 #: model:ir.model,name:product.model_product_attribute
 #: model:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Product Attribute"
-msgstr ""
+msgstr "Atribut produktu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_price_value_id
@@ -1908,7 +1909,7 @@ msgstr "Hodnota atributu produktu"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_attribute_line_form
 msgid "Product Attribute and Values"
-msgstr ""
+msgstr "Atributy a hodnoty produktu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_attribute_line_ids
@@ -2455,7 +2456,7 @@ msgstr ""
 msgid ""
 "The computed price is expressed in the default Unit of Measure of the "
 "product."
-msgstr ""
+msgstr "Vypočtená cena je vyjádřena ve výchozí měrné jednotce výrobku."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_rounding
@@ -2655,6 +2656,8 @@ msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
 msgstr ""
+"Toto pole obsahuje obrázek použitý jako obrázek pro variantu produktu, "
+"omezenou na 1024x1024px."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image
@@ -2668,7 +2671,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_price_extra
 msgid "This is the sum of the extra price of all attributes"
-msgstr ""
+msgstr "Toto je součet extra ceny všech atributů"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -3018,6 +3021,8 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
+"Musíte definovat konverzní poměr mezi několika měrnými jednotkami v rámci "
+"stejné kategorie."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -3103,7 +3108,7 @@ msgstr "např.: 1 * (tato jednotka) = poměr * (referenční jednotka)"
 #. module: product
 #: model:product.uom,name:product.product_uom_floz
 msgid "fl oz"
-msgstr ""
+msgstr "fl oz"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_foot
@@ -3181,7 +3186,7 @@ msgstr "lb(s)"
 #. module: product
 #: model:product.uom,name:product.product_uom_mile
 msgid "mile(s)"
-msgstr ""
+msgstr "míle(e)"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_oz
@@ -3211,7 +3216,7 @@ msgstr ""
 #. module: product
 #: model:product.uom,name:product.product_uom_qt
 msgid "qt"
-msgstr ""
+msgstr "qt"
 
 #. module: product
 #: model:product.product,description_sale:product.consu_delivery_02

@@ -298,7 +298,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Account used for deposits"
-msgstr ""
+msgstr "Účet používaný pro vklady"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_pagebreak
@@ -636,7 +636,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company_sale_note
 msgid "Default Terms and Conditions"
-msgstr ""
+msgstr "Výchozí podmínky"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_note
@@ -646,7 +646,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Default product used for payment advances"
-msgstr ""
+msgstr "Výchozí produkt používaný pro platby předem"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_delivered
@@ -679,7 +679,7 @@ msgstr "Dodací čekací lhůta"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_invoice_partner_shipping_id
 msgid "Delivery address for current invoice."
-msgstr ""
+msgstr "Dodací adresa pro aktuální fakturu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
@@ -827,7 +827,7 @@ msgstr "Rozšířené filtry"
 #: code:addons/sale/models/sale.py:688
 #, python-format
 msgid "Extra line with %s "
-msgstr ""
+msgstr "Další řádek s %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_fiscal_position_id
@@ -908,7 +908,7 @@ msgstr "Faktura"
 #: code:addons/sale/models/account_invoice.py:52
 #, python-format
 msgid "Invoice %s paid"
-msgstr ""
+msgstr "Faktura %s zaplacena"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_partner_invoice_id
@@ -918,7 +918,7 @@ msgstr "Fakturační adresa"
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
 msgid "Invoice Confirmed"
-msgstr ""
+msgstr "Faktura byla potvrzena"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_created
@@ -1004,7 +1004,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced
 msgid "Invoiced This Month"
-msgstr ""
+msgstr "Fakturováno tento měsíc"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
@@ -1128,12 +1128,12 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Lock"
-msgstr ""
+msgstr "Zamknout"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Locked"
-msgstr ""
+msgstr "Uzamčeno"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_contract
@@ -1281,7 +1281,7 @@ msgstr "Nic k fakturaci"
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr ""
+msgstr "Počet dnů mezi potvrzením objednávky a odesláním zboží zákazníkovi"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
@@ -1319,7 +1319,7 @@ msgstr "Objednávka"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order #"
-msgstr ""
+msgstr "Číslo objednávky"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_date_order
@@ -1956,7 +1956,7 @@ msgstr "Služby"
 #: code:addons/sale/static/src/js/sale.js:19
 #, python-format
 msgid "Set an invoicing target: "
-msgstr ""
+msgstr "Nastavit cíl fakturace:"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1993,7 +1993,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_pricelist_item
 msgid "Show pricelists to customers"
-msgstr ""
+msgstr "Zobrazit ceník zákazníkům"
 
 #. module: sale
 #: selection:product.pricelist,discount_policy:0
@@ -2147,6 +2147,8 @@ msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
 msgstr ""
+"Produkt používaný k fakturaci akontace by měl být typu „Služba“. Použijte "
+"jiný produkt nebo aktualizujte tento produkt."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:146
@@ -2156,6 +2158,9 @@ msgid ""
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
 msgstr ""
+"Produkt používaný k fakturaci akontace by měl mít zásadu faktury nastavenou "
+"na \"Objednané množství\". Aktualizujte svůj vkladový produkt, abyste mohli "
+"vytvořit vkladovou fakturu."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:78
@@ -2220,6 +2225,11 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"Tento přehled provádí analýzu vašich prodejních objednávek. Analýza "
+"kontroluje tržby z prodeje a třídí podle různých skupinových kritérií "
+"(prodavač, partner, produkt atd.) Pomocí tohoto přehledu můžete provést "
+"analýzu prodeje, která dosud nebyla fakturována. Pokud chcete analyzovat "
+"obrat, měli byste použít zprávu Analýza faktur v aplikaci Účetnictví."
 
 #. module: sale
 #: selection:product.template,track_service:0
@@ -2391,6 +2401,8 @@ msgid ""
 "Write the name of your customer to create one on the fly, or select an "
 "existing one."
 msgstr ""
+"Napište jméno svého zákazníka, který chcete vytvořit, nebo vyberte "
+"existující."
 
 #. module: sale
 #. openerp-web

@@ -99,7 +99,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Choose your date"
-msgstr ""
+msgstr "Zvolte datum"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
@@ -136,7 +136,7 @@ msgstr "Metoda nacenění"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
 msgid "Counter-Part Account"
-msgstr ""
+msgstr "Účet protistrany"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -334,7 +334,7 @@ msgstr ""
 #: selection:product.category,property_valuation:0
 #: selection:product.template,property_valuation:0
 msgid "Perpetual (automated)"
-msgstr ""
+msgstr "Trvalé (automatizované)"
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
@@ -526,6 +526,11 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Používá se pro oceňování zásob v reálném čase. Pokud je tento účet nastaven "
+"na virtuálním místě (bez interního typu), bude tento účet používán k udržení"
+" hodnoty produktů přesunutých z interního umístění do tohoto umístění "
+"namísto generického účtu Stock Output nastaveného na produktu. To nemá žádný"
+" vliv na vnitřní umístění."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_out_account_id
@@ -557,6 +562,10 @@ msgid ""
 "value for all products in this category. It can also directly be set on each"
 " product"
 msgstr ""
+"Při provádění oceňování zásob v reálném čase budou do tohoto účtu účtovány "
+"položky protějšků pro všechny příchozí pohyby zásob, pokud na místě zdroje "
+"není nastaven konkrétní účet ocenění. Toto je výchozí hodnota pro všechny "
+"produkty v této kategorii. Může být také přímo nastaven na každém produktu"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_input
