@@ -4,6 +4,7 @@
 import logging
 import re
 
+from binascii import Error as binascii_error
 from operator import itemgetter
 from email.utils import formataddr
 from openerp.http import request
@@ -927,7 +928,7 @@ class Message(models.Model):
     def _invalidate_documents(self):
         """ Invalidate the cache of the documents followed by ``self``. """
         for record in self:
-            if record.model and record.res_id and 'message_ids' in self.env[record.model]:
+            if record.model and record.res_id and issubclass(self.pool[record.model], self.pool['mail.thread']):
                 self.env[record.model].invalidate_cache(fnames=[
                     'message_ids',
                     'message_unread',
@@ -962,16 +963,21 @@ class Message(models.Model):
                 key = match.group(2)
                 if not data_to_url.get(key):
                     name = match.group(4) if match.group(4) else 'image%s' % len(data_to_url)
-                    attachment = Attachments.create({
-                        'name': name,
-                        'datas': match.group(2),
-                        'datas_fname': name,
-                        'res_model': values.get('model'),
-                        'res_id': values.get('res_id'),
-                    })
-                    attachment.generate_access_token()
-                    values['attachment_ids'].append((4, attachment.id))
-                    data_to_url[key] = ['/web/image/%s?access_token=%s' % (attachment.id, attachment.access_token), name]
+                    try:
+                        attachment = Attachments.create({
+                            'name': name,
+                            'datas': match.group(2),
+                            'datas_fname': name,
+                            'res_model': values.get('model'),
+                            'res_id': values.get('res_id'),
+                        })
+                    except binascii_error:
+                        _logger.warning("Impossible to create an attachment out of badly formated base64 embedded image. Image has been removed.")
+                        return match.group(3)  # group(3) is the url ending single/double quote matched by the regexp
+                    else:
+                        attachment.generate_access_token()
+                        values['attachment_ids'].append((4, attachment.id))
+                        data_to_url[key] = ['/web/image/%s?access_token=%s' % (attachment.id, attachment.access_token), name]
                 return '%s%s alt="%s"' % (data_to_url[key][0], match.group(3), data_to_url[key][1])
             values['body'] = _image_dataurl.sub(base64_to_boundary, tools.ustr(values['body']))
 

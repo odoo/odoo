@@ -992,10 +992,9 @@ class GroupsView(models.Model):
         """ Modify the view with xmlid ``base.user_groups_view``, which inherits
             the user form view, and introduces the reified group fields.
         """
-        if self._context.get('install_mode'):
-            # use installation/admin language for translatable names in the view
-            user_context = self.env['res.users'].context_get()
-            self = self.with_context(**user_context)
+
+        # remove the language to avoid translations, it will be handled at the view level
+        self = self.with_context(lang=None)
 
         # We have to try-catch this, because at first init the view does not
         # exist but we are already creating some basic groups.
@@ -1004,8 +1003,8 @@ class GroupsView(models.Model):
             group_no_one = view.env.ref('base.group_no_one')
             group_employee = view.env.ref('base.group_user')
             xml1, xml2, xml3 = [], [], []
-            xml1.append(E.separator(string=_('User Type'), colspan="2", groups='base.group_no_one'))
-            xml2.append(E.separator(string=_('Application Accesses'), colspan="2"))
+            xml1.append(E.separator(string='User Type', colspan="2", groups='base.group_no_one'))
+            xml2.append(E.separator(string='Application Accesses', colspan="2"))
 
             user_type_field_name = ''
             for app, kind, gs in self.get_groups_by_application():
@@ -1032,7 +1031,7 @@ class GroupsView(models.Model):
                     xml2.append(E.newline())
                 else:
                     # application separator with boolean fields
-                    app_name = app.name or _('Other')
+                    app_name = app.name or 'Other'
                     xml3.append(E.separator(string=app_name, colspan="4", **attrs))
                     for g in gs:
                         field_name = name_boolean_group(g.id)
@@ -1113,9 +1112,9 @@ class UsersView(models.Model):
         group_multi_company = self.env.ref('base.group_multi_company', False)
         if group_multi_company and 'company_ids' in values:
             if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
-                group_multi_company.write({'users': [(3, user.id)]})
+                user.write({'groups_id': [(3, group_multi_company.id)]})
             elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
-                group_multi_company.write({'users': [(4, user.id)]})
+                user.write({'groups_id': [(4, group_multi_company.id)]})
         return user
 
     @api.multi
@@ -1126,9 +1125,9 @@ class UsersView(models.Model):
         if group_multi_company and 'company_ids' in values:
             for user in self:
                 if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
-                    group_multi_company.write({'users': [(3, user.id)]})
+                    user.write({'groups_id': [(3, group_multi_company.id)]})
                 elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
-                    group_multi_company.write({'users': [(4, user.id)]})
+                    user.write({'groups_id': [(4, group_multi_company.id)]})
         return res
 
     def _remove_reified_groups(self, values):

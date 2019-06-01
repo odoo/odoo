@@ -969,6 +969,9 @@ class WebsiteSale(ProductConfiguratorController):
         if not order or (order.amount_total and not tx):
             return request.redirect('/shop')
 
+        if order and not order.amount_total and not tx:
+            return request.redirect(order.get_portal_url())
+
         # clean context and session, then redirect to the confirmation page
         request.website.sale_reset()
         if tx and tx.state == 'draft':

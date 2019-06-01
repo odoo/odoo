@@ -5,6 +5,7 @@ var BoardView = require('board.BoardView');
 
 var ListController = require('web.ListController');
 var testUtils = require('web.test_utils');
+var testUtilsDom = require('web.test_utils_dom');
 var ListRenderer = require('web.ListRenderer');
 var pyUtils = require('web.py_utils');
 
@@ -740,18 +741,33 @@ QUnit.test('save two searches to dashboard', function (assert) {
     $('.o_searchview_extended_prop_value .o_input').val('a')
     $('.o_apply_filter').click();
     // Add it to dashboard
-    $('.o_add_to_dashboard_button').click();
+    testUtilsDom.click($('.o_search_options button:contains(Favorites)'));
+    $('.o_search_options .dropdown-menu.o_favorites_menu').one('click', function (ev) {
+        // This handler is on the webClient
+        // But since the test suite doesn't have one
+        // We manually set it here
+        ev.stopPropagation();
+    });
+    testUtilsDom.click($('.o_search_options .o_add_to_dashboard_link'));
+    testUtilsDom.click($('.o_add_to_dashboard_button'));
     // Remove it
     $('.o_facet_remove').click();
 
     // Add the second filter
     $('span.fa-filter').click();
-    $('span.fa-filter').click();
     $('.o_add_custom_filter:visible').click();
     $('.o_searchview_extended_prop_value .o_input').val('b')
     $('.o_apply_filter').click();
     // Add it to dashboard
-    $('.o_add_to_dashboard_button').click();
+    testUtilsDom.click($('.o_search_options button:contains(Favorites)'));
+    $('.o_search_options .dropdown-menu.o_favorites_menu').one('click', function (ev) {
+        // This handler is on the webClient
+        // But since the test suite doesn't have one
+        // We manually set it here
+        ev.stopPropagation();
+    });
+    testUtilsDom.click($('.o_search_options .o_add_to_dashboard_link'));
+    testUtilsDom.click($('.o_add_to_dashboard_button'));
 
     actionManager.destroy();
 });

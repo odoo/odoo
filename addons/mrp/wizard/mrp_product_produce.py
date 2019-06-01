@@ -165,7 +165,7 @@ class MrpProductProduce(models.TransientModel):
                         'product_id': move.product_id.id,
                     })
 
-        self.produce_line_ids = [(0, 0, x) for x in lines]
+        self.produce_line_ids = [(5,)] + [(0, 0, x) for x in lines]
 
 class MrpProductProduceLine(models.TransientModel):
     _name = "mrp.product.produce.line"

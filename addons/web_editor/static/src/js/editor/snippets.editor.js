@@ -811,7 +811,7 @@ var SnippetsMenu = Widget.extend({
              && (float_next === 'left' || float_next === 'right')) {
                 zone.remove();
             } else if (disp_prev !== null && disp_next !== null
-             && disp_prev !== 'block' && disp_next !== 'block') {
+             && disp_prev.indexOf('inline') >= 0 && disp_next.indexOf('inline') >= 0) {
                 zone.remove();
             }
         });

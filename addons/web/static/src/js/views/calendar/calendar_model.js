@@ -60,10 +60,11 @@ return AbstractModel.extend({
             end.add(-1, 'days');
         }
 
+        var isDateEvent = this.fields[this.mapping.date_start].type === 'date';
         // An "allDay" event without the "all_day" option is not considered
         // as a 24h day. It's just a part of the day (by default: 7h-19h).
         if (event.allDay) {
-            if (!this.mapping.all_day) {
+            if (!this.mapping.all_day && !isDateEvent) {
                 if (event.r_start) {
                     start.hours(event.r_start.hours())
                          .minutes(event.r_start.minutes())
@@ -104,7 +105,9 @@ return AbstractModel.extend({
         }
 
         if (this.mapping.date_delay) {
-            data[this.mapping.date_delay] = (end.diff(start) <= 0 ? end.endOf('day').diff(start) : end.diff(start)) / 1000 / 3600;
+            if (this.data.scale !== 'month' || (this.data.scale === 'month' && !event.drop)) {
+                data[this.mapping.date_delay] = (end.diff(start) <= 0 ? end.endOf('day').diff(start) : end.diff(start)) / 1000 / 3600;
+            }
         }
 
         return data;
@@ -304,7 +307,7 @@ return AbstractModel.extend({
      * Toggle the sidebar (containing the mini calendar)
      */
     toggleFullWidth: function () {
-        var fullWidth = this.call('local_storage', 'getItem', 'calendar_fullWidth') !== 'true';
+        var fullWidth = this.call('local_storage', 'getItem', 'calendar_fullWidth') !== true;
         this.call('local_storage', 'setItem', 'calendar_fullWidth', fullWidth);
     },
     /**
@@ -436,7 +439,7 @@ return AbstractModel.extend({
      */
     _loadCalendar: function () {
         var self = this;
-        this.data.fullWidth = this.call('local_storage', 'getItem', 'calendar_fullWidth') === 'true';
+        this.data.fullWidth = this.call('local_storage', 'getItem', 'calendar_fullWidth') === true;
         this.data.fc_options = this._getFullCalendarOptions();
 
         var defs = _.map(this.data.filters, this._loadFilter.bind(this));

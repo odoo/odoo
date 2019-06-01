@@ -930,6 +930,10 @@ registry.gallerySlider = Animation.extend({
     destroy: function () {
         this._super.apply(this, arguments);
 
+        if (!this.$indicator) {
+            return;
+        }
+
         this.$prev.prependTo(this.$indicator);
         this.$next.appendTo(this.$indicator);
         this.$carousel.off('.gallery_slider');
@@ -1033,7 +1037,7 @@ registry.facebookPage = Animation.extend({
         if (!params.href) {
             return def;
         }
-        params.width = utils.confine(this.$el.width(), 180, 500);
+        params.width = utils.confine(Math.floor(this.$el.width()), 180, 500);
 
         var src = $.param.querystring('https://www.facebook.com/plugins/page.php', params);
         this.$iframe = $('<iframe/>', {

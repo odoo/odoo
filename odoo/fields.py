@@ -116,8 +116,8 @@ class Field(MetaField('DummyField', (object,), {})):
         :param required: whether the value of the field is required (boolean, by
             default ``False``)
 
-        :param index: whether the field is indexed in database (boolean, by
-            default ``False``)
+        :param index: whether the field is indexed in database. Note: no effect
+            on non-stored and virtual fields. (boolean, by default ``False``)
 
         :param default: the default value for the field; this is either a static
             value, or a function taking a recordset and returning a value; use
@@ -630,6 +630,7 @@ class Field(MetaField('DummyField', (object,), {})):
     _related_help = property(attrgetter('help'))
     _related_groups = property(attrgetter('groups'))
     _related_group_operator = property(attrgetter('group_operator'))
+    _related_context_dependent = property(attrgetter('context_dependent'))
 
     @property
     def base_field(self):
@@ -1068,6 +1069,8 @@ class Field(MetaField('DummyField', (object,), {})):
                 recs = record._recompute_check(self)
                 if recs:
                     # recompute the value (only in cache)
+                    if self.recursive:
+                        recs = record
                     self.compute_value(recs)
                     # HACK: if result is in the wrong cache, copy values
                     if recs.env != env:
@@ -2235,8 +2238,8 @@ class _RelationalMulti(_Relational):
         elif isinstance(value, (list, tuple)):
             # value is a list/tuple of commands, dicts or record ids
             comodel = record.env[self.comodel_name]
-            # determine the value ids; by convention empty on new records
-            ids = OrderedSet(record[self.name].ids if record.id else ())
+            # determine the value ids
+            ids = OrderedSet(record[self.name]._ids)
             # modify ids with the commands
             for command in value:
                 if isinstance(command, (tuple, list)):

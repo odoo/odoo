@@ -9,6 +9,7 @@
 # Martin Trigaux, 2019
 # Ermin Trevisan <trevi@twanda.com>, 2019
 # darenkster <inactive+darenkster@transifex.com>, 2019
+# Chris Egal <sodaswed@web.de>, 2019
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: darenkster <inactive+darenkster@transifex.com>, 2019\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +28,7 @@ msgstr ""
 #. module: base_automation
 #: model:mail.template,body_html:base_automation.test_mail_template_automation
 msgid "<div>Email automation</div>"
-msgstr ""
+msgstr "<div>E-Mail-Automatisierung</div>"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__website_published
@@ -77,7 +78,7 @@ msgstr "Aktivität"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_type
 msgid "Activity User Type"
-msgstr ""
+msgstr "Aktivität Benutzertyp"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__channel_ids
@@ -114,12 +115,12 @@ msgstr "Automatische Aktionen"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_line_test
 msgid "Automated Rule Line Test"
-msgstr ""
+msgstr "Automatisierter Regel position test"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_lead_test
 msgid "Automated Rule Test"
-msgstr ""
+msgstr "Automatischer Regeltest"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
@@ -178,7 +179,7 @@ msgstr "Basisautomatisierung: Testregel für Schreiben bei Kontextprüfung"
 #: model:base.automation,name:base_automation.test_rule_on_write_recompute_send_email
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_recompute_send_email_ir_actions_server
 msgid "Base Automation: test send an email"
-msgstr ""
+msgstr "Basisautomatisierung: Test senden Sie eine E-Mail"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -216,6 +217,8 @@ msgid ""
 "Check this box if this contact is a customer. It can be selected in sales "
 "orders."
 msgstr ""
+"Aktivieren Sie dieses Kontrollkästchen, wenn dieser Kontakt ein Kunde ist. "
+"Er kann in Kundenaufträgen ausgewählt werden."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__child_ids
@@ -565,7 +568,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Setup a new automated automation"
-msgstr ""
+msgstr "Richten Sie eine neue automatisierte Automatisierung ein"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__state
@@ -590,7 +593,7 @@ msgstr "Ziel-Modell"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
 msgid "Technical name of the user on the record"
-msgstr ""
+msgstr "Technischer Name des Benutzers im Datensatz"
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:87
@@ -599,6 +602,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
+"Der \"%(trigger_value)s\" %(trigger_label)s kann nur benutzt werden mit "
+"dem\"%(state_value)s\" Aktionstyp"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__website_url
@@ -648,6 +653,10 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
+"Verwenden Sie einen \"Bestimmten Benutzer\", um bei der nächsten Aktivität "
+"immer denselben Benutzer zugewiesen  zu bekommen.Verwenden Sie 'Generierter "
+"Benutzer aus Datensatz', um den Feldnamen des Benutzers anzugeben, der im "
+"Datensatz ausgewählt werden soll."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
@@ -663,6 +672,11 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"Verwenden Sie automatisierte Aktionen, um automatisch Aktionen auszulösen für \n"
+"                verschiedene Bildschirme. Beispiel: Ein Führung von einem bestimmten Benutzer erstelltet werden darf\n"
+"                automatisch auf ein bestimmtes Verkaufsteam eingestellt werden, oder eine\n"
+"                Gelegenheit, deren Status nach 14 Tagen noch aussteht, könnte\n"
+"                eine automatische Erinnerungs-E-Mail auslösen."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__user_id
@@ -672,7 +686,7 @@ msgstr "Benutzer"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
 msgid "User field name"
-msgstr ""
+msgstr "Benutzer Feld Name"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__fields_lines
@@ -735,3 +749,6 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
 msgstr ""
+"Schreiben Sie Python-Code, den die Aktion ausführen wird. Einige Variablen "
+"stehen zur Verfügung. Hilfe zum Python-Ausdruck finden Sie auf der "
+"Registerkarte \"Hilfe\"."

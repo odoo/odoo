@@ -44,8 +44,12 @@
         }
     }
 
-    // Main function that starts orchestration of tests
     function clickEverywhere(){
+        setTimeout(_clickEverywhere, 1000);
+    }
+
+    // Main function that starts orchestration of tests
+    function _clickEverywhere(){
         console.log("Starting ClickEverywhere test");
         var startTime = performance.now()
         createWebClientHooks();

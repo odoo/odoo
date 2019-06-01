@@ -8,6 +8,7 @@
 # Wolfgang Taferner, 2018
 # Marco Broscheit <marco.broscheit@posteo.de>, 2018
 # Joshua Streitz <joshua.streitz@streitzgroup.com>, 2019
+# Chris Egal <sodaswed@web.de>, 2019
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Joshua Streitz <joshua.streitz@streitzgroup.com>, 2019\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,6 +63,29 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hallo ${object.partner_id.name},<br/><br/>\n"
+"        Wir freuen uns, Ihnen mitteilen zu können, dass Ihre Bestellung versandt wurde.\n"
+"        %if object.carrier_tracking_ref:\n"
+"            Ihre Tracking-Referenz ist\n"
+"            <strong>\n"
+"            %if object.carrier_tracking_url:\n"
+"                <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"            %else:\n"
+"                ${object.carrier_tracking_ref}.\n"
+"            %endif\n"
+"            </strong>\n"
+"        %endif\n"
+"        <br/><br/>\n"
+"        Weitere Informationen finden Sie in der beigefügten Versandbestätigung.<br/><br/>\n"
+"        Vielen Dank,<br/>\n"
+"        % if user and user.signature:\n"
+"          ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
@@ -71,7 +95,7 @@ msgstr "<i class=\"fa fa-arrow-right\"/> Zur Bestellung hinzufügen"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "<i class=\"fa fa-arrow-right\"/> Get rate"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Bewertung aufrufen"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
@@ -94,6 +118,9 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"o_view_nocontent\">\n"
+"                    Kaufen Sie jetzt Odoo Enterprise, um weitere Anbieter zu erhalten.\n"
+"                </p>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -148,7 +175,7 @@ msgstr "Archiviert"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__available_carrier_ids
 msgid "Available Carriers"
-msgstr ""
+msgstr "Verfügbare Spediteure"
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -600,7 +627,7 @@ msgstr "Paketdetails"
 #: code:addons/delivery/wizard/choose_delivery_package.py:52
 #, python-format
 msgid "Package too heavy!"
-msgstr ""
+msgstr "Paket zu schwer!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
@@ -648,7 +675,7 @@ msgstr "Preisregeln"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "Produktbewegungen (Lagerbewegung)"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
@@ -773,12 +800,14 @@ msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
 msgstr ""
+"Das Gewicht Ihres Pakets ist höher als das für diesen Pakettyp zulässige "
+"Höchstgewicht. Bitte wählen Sie einen anderen Pakettyp."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:111
 #, python-format
 msgid "There is no matching delivery rule."
-msgstr ""
+msgstr "Es gibt keine passende Versand Regel."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -807,7 +836,7 @@ msgstr "Dieser Prozentsatz wird zu den Versandkosten hinzugefügt."
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "Trackers URL"
-msgstr ""
+msgstr "Verfolgung`s URL"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -886,6 +915,7 @@ msgstr "Gewicht * Volumen"
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__weight
 msgid "Weight computed based on the sum of the weights of the products."
 msgstr ""
+"Das berechnete Gewicht basiert auf der Summe der Gewichte der Produkte."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__shipping_weight
@@ -895,12 +925,12 @@ msgstr "Gewicht für den Versand"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr ""
+msgstr "Gewichtseinheit Etikett"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
 msgid "Weight used to compute the price of the delivery (if applicable)."
-msgstr ""
+msgstr "Gewicht zur Berechnung des Lieferpreises (falls zutreffend)."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
@@ -939,7 +969,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
-msgstr ""
+msgstr "Sie haben mehrere Tracker-Links, die im Chatter verfügbar sind."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:185
