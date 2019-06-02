@@ -1655,6 +1655,9 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
             this.$el.children().addClass('o_hidden');
             this.$('.o_select_file_button').first().removeClass('o_hidden');
         }
+        if (this.nodeOptions && this.nodeOptions.accept) {
+        	this.$('input[name="ufile"]').prop("accept", this.nodeOptions.accept);
+        }
     },
     set_filename: function (value) {
         this._super.apply(this, arguments);
