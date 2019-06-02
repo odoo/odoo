@@ -122,7 +122,7 @@ msgid ""
 "<i>Done,</i> Your online payment has been successfully processed. Thank you "
 "for your order."
 msgstr ""
-"<i>Виконано,</i> сВаш онлайн-платіж успішно оброблено. Дякуємо за ваше "
+"<i>Виконано,</i> Ваш онлайн-платіж успішно оброблено. Дякуємо за ваше "
 "замовлення."
 
 #. module: payment
@@ -176,7 +176,7 @@ msgid ""
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
 "<span class=\"o_warning_text\">Тест</span>\n"
-"                                    <span class=\"o_stat_text\">Навколишнє середовище</span>"
+"                                    <span class=\"o_stat_text\">Середовище</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -185,7 +185,7 @@ msgid ""
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
 "<span class=\"text-success\">Виробництво</span>\n"
-"                                    <span class=\"o_stat_text\">Навколишнє середовище</span>"
+"                                    <span class=\"o_stat_text\">Середовище</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_adyen
@@ -341,7 +341,7 @@ msgstr "Номер рахунку"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_id
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Acquirer"
-msgstr "Екваєр"
+msgstr "Еквайєр"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_id
@@ -537,7 +537,7 @@ msgstr "Сума отримання вручну"
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Capture Transaction"
-msgstr "Транзакція схоплення"
+msgstr "Транзакція отримання"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__capture_manually
@@ -625,7 +625,7 @@ msgstr "Відповідний модуль "
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users__payment_token_count
 msgid "Count Payment Token"
-msgstr "Підрахунок платежу Токена"
+msgstr "Токен підрахунку платежу"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__country_ids
@@ -1182,13 +1182,13 @@ msgid ""
 "Note: Subscriptions does not take this field in account, it uses server to "
 "server by default."
 msgstr ""
-"Примітка. Підписки не використовують це поле в обліковому записі, він за "
-"замовчуванням використовує сервер на сервер."
+"Примітка. Підписки не використовують це поле в обліковому записі, він "
+"використовує сервер на сервер за замовчуванням."
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
-msgstr "Огон"
+msgstr "Ogone"
 
 #. module: payment
 #. openerp-web
@@ -1245,7 +1245,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Or scan me with your banking app."
-msgstr "Або відскануйте мене через ваш банкіівський додаток."
+msgstr "Або відскануйте мене через ваш банківський додаток."
 
 #. module: payment
 #: selection:res.company,payment_onboarding_payment_method:0
@@ -1443,7 +1443,7 @@ msgid ""
 msgstr ""
 "Платежі будуть зареєстровані в цьому журналі. Якщо ви отримуєте платіж прямо на ваш банківський рахунок,\n"
 "                 виберіть свій банківський рахунок. Якщо ви отримуєте партію за декілька транзакцій, створіть конкретний\n"
-"                 журнал оплати для цього платіжного еквайера для простого управління банківського узгодження. Ви тримаєте\n"
+"                 журнал оплати для цього платіжного еквайєра для простого управління банківським узгодженням. Ви тримаєте\n"
 "                 суму в тимчасовому обліку переказу ваших книг (створюється автоматично при створенні\n"
 "                 платіжного журналу). Потім, коли ви отримуєте платіж на ваш банківський рахунок покупцем платежу, ви\n"
 "                 узгодите рядок банківської виписки з цим тимчасовим переказом рахунку. Використовуйте шаблони\n"
@@ -1754,7 +1754,7 @@ msgstr "Інформація QR-коду SEPA не встановлена пра
 #: code:addons/payment/models/payment_acquirer.py:652
 #, python-format
 msgid "The customer has selected %s to pay this document."
-msgstr "Клієнт обрав %s оплатити цей документ."
+msgstr "Клієнт обрав %s щоб оплатити цей документ."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:669
@@ -1880,7 +1880,7 @@ msgstr "Тип"
 #: code:addons/payment/static/src/xml/payment_processing.xml:138
 #, python-format
 msgid "Unable to contact the Odoo server."
-msgstr "Неможливо з Odoo server."
+msgstr "Неможливо зв'язатися із сервером Odoo."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__qr_code

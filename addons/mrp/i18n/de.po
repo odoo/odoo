@@ -42,6 +42,7 @@
 # Martin Trigaux, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
+# Leon Grill <leg@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -49,7 +50,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-20 13:49+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
+"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,6 +69,13 @@ msgid ""
 " * Done: The MO is closed, the stock moves are posted. \n"
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
+" * Entwurf: Die MO ist noch nicht bestätigt.\n"
+" * Bestätigt: Die MO wurde bestätigt, die Bestandsregeln und die Nachbestellung der Komponenten werden angestoßen.\n"
+" * Geplant: Die WO sind geplant.\n"
+" * In Bearbeitung: Die Produktion hat begonnen (auf der MO oder auf der WO).\n"
+" * Zum Schließen: Die Produktion ist abgeschlossen, die MO muss geschlossen werden.\n"
+" * Erledigt: Der MO ist geschlossen, die Bestandsbewegungen werden gebucht. \n"
+" * Abgebrochen: Die MO wurde storniert, kann nicht mehr bestätigt werden."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reservation_state
@@ -76,6 +84,9 @@ msgid ""
 "            * Waiting: The material is not available to start the production.\n"
 "            The material availability is impacted by the manufacturing readiness            defined on the BoM."
 msgstr ""
+" * Bereit: Das Material steht zur Verfügung, um die Produktion zu starten.\n"
+"            * Wartend: Das Material ist nicht verfügbar, um die Produktion zu starten.\n"
+"            Die Materialverfügbarkeit wird durch die auf dem BoM (Stückliste) definierte Fertigungsbereitschaft beeinflusst."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:20
@@ -145,17 +156,17 @@ msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Pause\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Pause\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "<i class=\"fa fa-play\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-play\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:338
@@ -179,6 +190,8 @@ msgid ""
 "<span class=\"fa fa-dropbox\" title=\"This is a BoM of type Kit!\" "
 "role=\"img\" aria-label=\"This is a BoM of type Kit!\"/>"
 msgstr ""
+"<span class=\"fa fa-dropbox\" title=\"This is a BoM of type Kit!\" "
+"role=\"img\" aria-label=\"This is a BoM of type Kit!\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -311,7 +324,7 @@ msgstr "<strong>Anzahl Minuten</strong>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Operation</strong>"
-msgstr ""
+msgstr "<strong>Vorgang</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -352,6 +365,8 @@ msgstr "Arbeitsplatz"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "A BoM of type kit is used to split the product into its components."
 msgstr ""
+"Ein BoM vom Typ Kit wird verwendet, um das Produkt in seine Komponenten "
+"aufzuteilen."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:353
@@ -414,7 +429,7 @@ msgstr "Beschreibung hinzufügen …"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 msgid "Add a work center"
-msgstr ""
+msgstr "Einen Arbeitsplatz hinzufügen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -474,6 +489,8 @@ msgid ""
 "An unbuild order is used to break down a finished product into its "
 "components."
 msgstr ""
+"Ein Demontageauftrag dient dazu, ein Fertigerzeugnis in seine Komponenten zu"
+" zerlegen."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__attribute_value_ids
@@ -495,12 +512,12 @@ msgstr "Archiviert"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "At the creation of a Manufacturing Order."
-msgstr ""
+msgstr "Bei der Erstellung eines Produktionsauftrags."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "At the creation of a Stock Transfer."
-msgstr ""
+msgstr "Bei der Erstellung einer Lagerbewegung."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_attachment_count
@@ -527,7 +544,7 @@ msgstr "Dateianhänge"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__attachments_count
 msgid "Attachments Count"
-msgstr ""
+msgstr "Anzahl der Anhänge"
 
 #. module: mrp
 #: selection:mrp.workcenter.productivity.loss.type,loss_type:0
@@ -556,11 +573,14 @@ msgid ""
 "Average lead time in days to manufacture this product. In the case of multi-"
 "level BOM, the manufacturing lead times of the components will be added."
 msgstr ""
+"Durchschnittliche Lieferzeit in Tagen für die Herstellung dieses Produkts. "
+"Bei mehrstufigen Stücklisten werden die Fertigungsdurchlaufzeiten der "
+"Komponenten addiert."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__variant_bom_ids
 msgid "BOM Product Variants"
-msgstr ""
+msgstr "Stückliste Produktvarianten"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__attribute_value_ids
@@ -570,7 +590,7 @@ msgstr "Anzuwendende Position für diese Produktvariante"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
 msgid "BOM Structure Report"
-msgstr ""
+msgstr "Stücklistenstrukturbericht"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_line_ids
@@ -639,6 +659,9 @@ msgid ""
 "                materials used to make a finished product; through a manufacturing\n"
 "                order or a pack of products."
 msgstr ""
+"Stücklisten ermöglichen es Ihnen, die Liste der benötigten Rohstoffe\n"
+"                zu definieren, die zur Herstellung eines Enderzeugnisses über einen Produktionsauftrag\n"
+"                oder ein Paket von Produkten verwendet werden."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -671,7 +694,7 @@ msgstr "Gesperrte Stunden im letzten Monat"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_tree_view
 msgid "Blocking Reasons"
-msgstr ""
+msgstr "Blockiergründe"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -840,6 +863,7 @@ msgstr "Farbe"
 #: model:ir.model,name:mrp.model_mrp_abstract_workorder
 msgid "Common code between produce wizards and workorders."
 msgstr ""
+"Gemeinsamer Code zwischen Produktionsassistenten und Arbeitsaufträgen."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_company
@@ -974,12 +998,12 @@ msgstr "Erstellen Sie einen neuen Arbeitsplatz"
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_report
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_workcenter_report
 msgid "Create a new work orders performance"
-msgstr ""
+msgstr "Erstellen einer neuen Arbeitsauftragsleistung"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid "Create an unbuild order"
-msgstr ""
+msgstr "Erstellen Sie einen Demontagauftrag"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__created_production_id
@@ -1031,7 +1055,7 @@ msgstr "Erstellt am"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "Creates a new serial/lot number"
-msgstr ""
+msgstr "Legt eine neue Serien-/Losnummer an."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -1563,7 +1587,7 @@ msgstr "Durch Deaktivierung können Sie den Arbeitsplan ausblenden."
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "Impacted Transfer(s):"
-msgstr ""
+msgstr "Betroffene Übertragung (en):"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:197
