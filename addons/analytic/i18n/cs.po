@@ -3,17 +3,18 @@
 # * analytic
 # 
 # Translators:
-# Martin Trigaux, 2017
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
-# trendspotter, 2018
+# Martin Trigaux, 2018
+# trendspotter <j.podhorecky@volny.cz>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: trendspotter, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:14+0000\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,7 +93,7 @@ msgstr "Analytická řádky"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_name
 msgid "Analytic Tag"
-msgstr ""
+msgstr "Analytická značka"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_tag
@@ -117,7 +118,7 @@ msgstr "Zůstatek"
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
 msgid "Balance:"
-msgstr ""
+msgstr "Zůstatek:"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
@@ -148,12 +149,12 @@ msgstr "Firma"
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "Cost/Revenue"
-msgstr ""
+msgstr "Náklady / výnosy"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action
 msgid "Costs & Revenues"
-msgstr ""
+msgstr "Náklady a výnosy"
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -162,6 +163,8 @@ msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
 msgstr ""
+"Náklady se vytvoří automaticky při registraci dodavatele\n"
+"faktur, nákladů nebo výkazů."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
@@ -244,6 +247,8 @@ msgid ""
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
+"V Odoo jsou realizovány analýzy zakázek a projektů prodejů\n"
+"přes analytické účty. Můžete sledovat náklady a výnosy a snadno analyzovat vaše marže."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
@@ -301,6 +306,10 @@ msgid ""
 "                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
+"Výnosy budou vytvořeny automaticky při vytvoření zákazníka\n"
+"faktur. Zákaznické faktury mohou být vytvořeny na základě prodejních objednávek\n"
+"(faktury s pevnou cenou), na časové rozvrhy (na základě provedené práce) nebo\n"
+"nákladů (např. přefakturování cestovních nákladů)."
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
@@ -311,6 +320,8 @@ msgstr "Hledat analytické řádky"
 #: model:ir.model.fields,help:analytic.field_account_analytic_tag_active
 msgid "Set active to false to hide the Analytic Tag without removing it."
 msgstr ""
+"Chcete-li skrýt analytickou značku bez odstranění, nastavte ji na hodnotu "
+"false."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
@@ -341,4 +352,4 @@ msgstr "Uživatel"
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
-msgstr ""
+msgstr "např. Projekt XYZ"
