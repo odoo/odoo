@@ -1189,6 +1189,7 @@ var LinkDialog = Dialog.extend({
                 }
 
                 this.data.range = range.create(sc, so, ec, eo);
+                $(editable).data("range", this.data.range);
                 this.data.range.select();
             } else {
                 nodes = dom.ancestor(sc, dom.isAnchor).childNodes;
