@@ -165,10 +165,10 @@ var BulletPlugin = AbstractPlugin.extend({
             // convert ul <-> ol
 
             var ul;
+            $(ol).removeClass('o_checklist');
             if (sorted === 'checklist' && current === "ul") {
                 ul = ol;
             } else if (sorted === 'ul' && current === 'checklist') {
-                $(ol).removeClass('o_checklist');
                 ul = ol;
             } else {
                 ul = this.document.createElement(sorted === "ol" ? "ol" : "ul");
@@ -321,7 +321,7 @@ var BulletPlugin = AbstractPlugin.extend({
         var self = this;
         var nodes = [];
         var isWithinElem;
-        var ancestor = range.commonAncestor();
+        var ancestor = range.commonAncestor() || this.editable;
         var $dom = $(ancestor);
 
         if (!dom.isList(ancestor)) {
@@ -344,7 +344,8 @@ var BulletPlugin = AbstractPlugin.extend({
             if (!$dom.length) {
                 // if the selection is contained in a single HTML node, we indent
                 // the first ancestor 'content block' (P, H1, PRE, ...) or TD
-                $dom = $(range.sc).closest(this.options.styleTags.join(',') + ',td');
+                var nodes = this.context.invoke('HelperPlugin.getSelectedNodes');
+                $dom = $(this._filterEditableFormatNodes(nodes));
             }
         }
 

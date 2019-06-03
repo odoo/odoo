@@ -487,6 +487,8 @@ class MrpProduction(models.Model):
         }
 
     def _generate_finished_moves(self):
+        if self.product_id in self.bom_id.byproduct_ids.mapped('product_id'):
+            raise UserError(_("You cannot have %s  as the finished product and in the Byproducts") % self.product_id.name)
         moves_values = [self._get_finished_move_value(self.product_id.id, self.product_qty, self.product_uom_id.id)]
         for byproduct in self.bom_id.byproduct_ids:
             product_uom_factor = self.product_uom_id._compute_quantity(self.product_qty, self.bom_id.product_uom_id)

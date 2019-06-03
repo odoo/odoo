@@ -41,7 +41,7 @@ publicWidget.registry.WebsiteSale.include({
      */
     _onOptionsUpdateQuantity: function (quantity) {
         this.$form
-            .find('input[name="add_qty"]')
+            .find('.js_main_product input[name="add_qty"]')
             .first()
             .val(quantity)
             .trigger('change');

@@ -148,14 +148,15 @@ class WebsiteEventController(http.Controller):
 
         values = {
             'event': event,
-            'main_object': event
         }
 
         if '.' not in page:
             page = 'website_event.%s' % page
 
         try:
-            request.website.get_template(page)
+            # Every event page view should have its own SEO.
+            values['seo_object'] = request.website.get_template(page)
+            values['main_object'] = event
         except ValueError:
             # page not found
             values['path'] = re.sub(r"^website_event\.", '', page)

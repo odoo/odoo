@@ -3,6 +3,9 @@
 
 from odoo import api, fields, models
 
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class Users(models.Model):
     _inherit = 'res.users'
@@ -18,26 +21,9 @@ class Users(models.Model):
 
     @api.depends('karma')
     def _compute_karma_position(self):
-        where_query = self._where_calc([])
-        self._apply_ir_rules(where_query, 'read')
-        from_clause, where_clause, where_clause_params = where_query.get_sql()
-
-        query = """
-            SELECT sub.id, sub.karma_position
-            FROM (
-                SELECT id, row_number() OVER (ORDER BY res_users.karma DESC) AS karma_position
-                FROM {from_clause}
-                WHERE {where_clause}
-            ) sub
-            WHERE sub.id IN %s
-            """.format(from_clause=from_clause, where_clause=where_clause)
-
-        self.env.cr.execute(query, where_clause_params + [tuple(self.ids)])
-
-        position_map = {item['id']: item['karma_position'] for item in self.env.cr.dictfetchall()}
-
+        _logger.warning("The field karma_position from res.users is deprecated. Don't use it anymore.")
         for user in self:
-            user.karma_position = position_map.get(user.id, 0)
+            user.karma_position = 0
 
     @api.multi
     @api.depends('badge_ids')

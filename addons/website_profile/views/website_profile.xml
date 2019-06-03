@@ -207,7 +207,7 @@
                     <div class="col-12 col-md-4 col-lg-3">
                         <div t-attf-class="d-flex align-items-start h-100 #{'justify-content-between' if (request.env.user == user) else 'justify-content-around' }">
                             <div class="o_wprofile_pict d-inline-block mb-3 mb-md-0" t-attf-style="background-image:url(/web/image/res.users/#{user.id}/image)"/>
-                            <a class="btn btn-primary d-inline-block d-md-none" t-if="request.env.user == user and validation_email_done" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
+                            <a class="btn btn-primary d-inline-block d-md-none" t-if="request.env.user == user and user.karma != 0" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
                                 <i class="fa fa-pencil mr-1"/>EDIT
                             </a>
                         </div>
@@ -219,14 +219,14 @@
                             <h1 class="o_card_people_name">
                                 <span t-field="user.name"/><small t-if="user.karma == 0"> (not verified)</small>
                             </h1>
-                            <a class="btn btn-primary d-none d-md-inline-block" t-if="request.env.user == user and validation_email_done or request.env.user._is_admin()" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
+                            <a class="btn btn-primary d-none d-md-inline-block" t-if="request.env.user == user and user.karma != 0 or request.env.user._is_admin()" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
                                 <i class="fa fa-pencil mr-2"/>EDIT PROFILE
                             </a>
                         </div>
 
                         <div class="d-flex flex-column justify-content-center flex-grow-1 mb-0 mb-md-5">
-                            <div t-if="user.company_id" class="lead mb-2">
-                                <i class="fa fa-building-o fa-fw mr-1"/><span t-field="user.company_id"/>
+                            <div t-if="user.partner_id.company_name" class="lead mb-2">
+                                <i class="fa fa-building-o fa-fw mr-1"/><span t-field="user.partner_id.company_name"/>
                             </div>
                             <div t-if="user.city or user.country_id" class="lead mb-2">
                                 <i class="fa fa-map-marker fa-fw mr-1"/>
@@ -478,11 +478,14 @@
                     <t t-call="website_profile.top3_user_card"></t>
                 </div>
             </div>
-            <table class="table table-sm">
+            <table class="table table-sm" t-if='users'>
                 <tr t-foreach="users" t-as="user" t-attf-onclick="location.href='/profile/user/#{user['id']}';" class="o_wprofile_pointer bg-white">
                     <t t-call="website_profile.all_user_card"/>
                 </tr>
             </table>
+            <t else=''>
+                <div class='alert alert-warning'>No results matched</div>
+            </t>
             <div class="form-inline justify-content-center">
                 <t t-call="website_profile.pager_nobox"/>
             </div>
@@ -497,6 +500,7 @@
                     <img class="position-absolute" t-attf-src="/website_profile/static/src/img/rank_#{user['position']}.svg" alt="User rank" style="bottom: 0; right: -10px"/>
                 </div>
                 <h3 class="mt-2 mb-0" t-esc="user['name']"></h3>
+                <span class="badge badge-danger font-weight-normal px-2" t-if="not user['website_published']">Unpublished</span>
                 <strong class="text-muted" t-esc="user['rank']"/>
             </div>
             <div class="row mx-0 o_wprofile_top3_card_footer text-nowrap">
@@ -516,6 +520,9 @@
         <td class="align-middle w-md-75">
             <span class="font-weight-bold" t-esc="user['name']"/><br/>
             <span class="text-muted font-weight-bold" t-esc="user['rank']"></span>
+        </td>
+         <td t-if="not user['website_published']" class="align-middle font-weight-bold text-right text-nowrap">
+            <span class="badge badge-danger font-weight-normal px-2 py-1 m-1">Unpublished</span>
         </td>
         <td class="align-middle font-weight-bold text-right text-nowrap">
             <b t-esc="user['karma']"/> <span class="text-muted small font-weight-bold">XP</span>

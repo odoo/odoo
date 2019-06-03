@@ -196,6 +196,7 @@ class ProductProduct(models.Model):
                     ('active', '=', True),
                 ]) <= 1
             ):
+                record.image_raw_original = False
                 record.product_tmpl_id.image_original = record.image_original
             else:
                 record.image_raw_original = record.image_original
@@ -391,6 +392,16 @@ class ProductProduct(models.Model):
                 product._set_standard_price(vals.get('standard_price') or 0.0)
         # `_get_variant_id_for_combination` depends on existing variants
         self.clear_caches()
+        self.env['product.template'].invalidate_cache(
+            fnames=[
+                'valid_archived_variant_ids',
+                'valid_existing_variant_ids',
+                'product_variant_ids',
+                'product_variant_id',
+                'product_variant_count'
+            ],
+            ids=products.mapped('product_tmpl_id').ids
+        )
         return products
 
     @api.multi

@@ -55,7 +55,12 @@ var SlideLikeWidget = publicWidget.Widget.extend({
                 self.$el.find('span.o_wslides_js_slide_like_down span').text(data.dislikes);
             } else {
                 if (data.error === 'public_user') {
-                    self._popoverAlert(self.$el, _.str.sprintf(_t('Please <a href="/web/login?redirect=%s">login</a> to vote this lesson'), (document.URL)));
+                    var message = _t('Please <a href="/web/login?redirect=%s">login</a> to vote this lesson');
+                    var signupAllowed = data.error_signup_allowed || false;
+                    if (signupAllowed) {
+                        message = _t('Please <a href="/web/signup?redirect=%s">create an account</a> to vote this lesson');
+                    }
+                    self._popoverAlert(self.$el, _.str.sprintf(message, (document.URL)));
                 } else if (data.error === 'vote_done') {
                     self._popoverAlert(self.$el, _t('You have already voted for this lesson'));
                 } else if (data.error === 'slide_access') {

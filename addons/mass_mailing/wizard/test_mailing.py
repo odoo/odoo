@@ -27,7 +27,7 @@ class TestMassMailing(models.TransientModel):
                 'email_from': mailing.email_from,
                 'reply_to': mailing.reply_to,
                 'email_to': test_mail,
-                'subject': mailing.name,
+                'subject': mailing.subject,
                 'body_html': mass_mail_layout.render({'body': body}, engine='ir.qweb', minimal_qcontext=True),
                 'notification': True,
                 'mailing_id': mailing.id,

@@ -193,6 +193,9 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
      * @returns {boolean} true if a tip was found and activated/updated
      */
     _check_for_tooltip: function (tip, tour_name) {
+        if (tip === undefined) {
+            return true;
+        }
 
         if ($('body').hasClass('o_ui_blocked')) {
             this._deactivate_tip(tip);

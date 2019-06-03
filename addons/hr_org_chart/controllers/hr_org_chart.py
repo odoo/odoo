@@ -45,7 +45,7 @@ class HrOrgChartController(http.Controller):
             return {}
 
         # compute employee data for org chart
-        ancestors, current = request.env['hr.employee'], employee
+        ancestors, current = request.env['hr.employee'].sudo(), employee.sudo()
         while current.parent_id and len(ancestors) < self._managers_level+1:
             ancestors += current.parent_id
             current = current.parent_id
