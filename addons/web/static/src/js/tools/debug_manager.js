@@ -83,7 +83,7 @@ var DebugManager = Widget.extend({
     },
     leave_debug_mode: function () {
         var qs = $.deparam.querystring();
-        delete qs.debug;
+        qs.debug = '';
         window.location.search = '?' + $.param(qs);
     }, /**
      * Calls the appropriate callback when clicking on a Debug option
@@ -219,6 +219,9 @@ var DebugManager = Widget.extend({
     },
     split_assets: function() {
         window.location = $.param.querystring(window.location.href, 'debug=assets');
+    },
+    tests_assets: function () {
+        window.location = $.param.querystring(window.location.href, 'debug=tests');
     },
     /**
      * Delete assets bundles to force their regeneration

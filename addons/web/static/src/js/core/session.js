@@ -305,9 +305,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         var self = this;
         options = _.clone(options || {});
         options.headers = _.extend({}, options.headers);
-        if (odoo.debug) {
-            options.headers["X-Debug-Mode"] = $.deparam($.param.querystring()).debug;
-        }
 
         // we add here the user context for ALL queries, mainly to pass
         // the allowed_company_ids key
