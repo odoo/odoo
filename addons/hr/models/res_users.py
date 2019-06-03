@@ -15,7 +15,7 @@ class User(models.Model):
     job_title = fields.Char(related='employee_id.job_title', readonly=False)
     work_phone = fields.Char(related='employee_id.work_phone', readonly=False)
     mobile_phone = fields.Char(related='employee_id.mobile_phone', readonly=False)
-    phone = fields.Char(related='employee_id.phone', readonly=False, related_sudo=False)
+    employee_phone = fields.Char(related='employee_id.phone', readonly=False, related_sudo=False)
     work_email = fields.Char(related='employee_id.work_email', readonly=False, related_sudo=False)
     category_ids = fields.Many2many(related='employee_id.category_ids', string="Employee Tags", readonly=False, related_sudo=False)
     department_id = fields.Many2one(related='employee_id.department_id', readonly=False, related_sudo=False)
@@ -90,7 +90,7 @@ class User(models.Model):
             'parent_id',
             'passport_id',
             'permit_no',
-            'phone',
+            'employee_phone',
             'pin',
             'place_of_birth',
             'spouse_birthdate',

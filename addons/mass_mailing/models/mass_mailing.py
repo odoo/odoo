@@ -457,7 +457,7 @@ class MassMailing(models.Model):
         return res
 
     active = fields.Boolean(default=True)
-    subject = fields.Char('Subject', help='Subject of emails to send', required=True)
+    subject = fields.Char('Subject', help='Subject of emails to send', required=True, translate=True)
     email_from = fields.Char(string='From', required=True,
         default=lambda self: self.env['mail.message']._get_default_from())
     sent_date = fields.Datetime(string='Sent Date', oldname='date', copy=False)

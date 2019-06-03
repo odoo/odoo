@@ -110,7 +110,7 @@ QUnit.test('Magic wand', async function (assert) {
 });
 
 QUnit.test('Font style', function (assert) {
-    assert.expect(56);
+    assert.expect(58);
 
     return weTestUtils.createWysiwyg({
         debug: false,
@@ -281,6 +281,19 @@ QUnit.test('Font style', function (assert) {
                     content: '<p><b>a</b>aa<span class="fa fa-heart"></span>bb<b>b</b></p>',
                     start: 'p:contents()[1]->0',
                     end: 'p:contents()[3]->2',
+                },
+            },
+            {
+                name: "Click BOLD: bold -> normal (at start of dom)",
+                content: '<p><b>abc</b></p>',
+                start: 'b:contents()[0]->0',
+                do: function () {
+                    $btnBold.mousedown().click();
+                },
+                test: {
+                    content: '<p>\u200B<b>abc</b></p>',
+                    start: 'p:contents()[0]->1',
+                    end: 'p:contents()[0]->1',
                 },
             },
             /* ITALIC */
@@ -2227,7 +2240,7 @@ QUnit.test('Align', function (assert) {
 });
 
 QUnit.test('Indent/outdent', function (assert) {
-    assert.expect(18);
+    assert.expect(20);
 
     return weTestUtils.createWysiwyg({
         debug: false,
@@ -2267,6 +2280,21 @@ QUnit.test('Indent/outdent', function (assert) {
                 test: {
                     content: '<ul><li><p>dom</p></li><li class="o_indent"><ul><li><p>to edit</p></li></ul></li></ul>',
                     start: 'p:eq(1):contents()[0]->1',
+                },
+            },
+            {
+                name: "Click INDENT: li -> indented li",
+                content: '<p>aaa</p><p>bbb</p><p>ccc</p><p>ddd</p>',
+                start: 'p:eq(1):contents()[0]->0',
+                end: 'p:eq(3):contents()[0]->3',
+                do: function () {
+                    $dropdownPara.mousedown().click();
+                    $btnIndent.mousedown().click();
+                },
+                test: {
+                    content: '<p>aaa</p><p style="margin-left: 1.5em;">bbb</p><p style="margin-left: 1.5em;">ccc</p><p style="margin-left: 1.5em;">ddd</p>',
+                    start: 'p:eq(1):contents()[0]->0',
+                    end: 'p:eq(3):contents()[0]->3',
                 },
             },
             /* OUTDENT */

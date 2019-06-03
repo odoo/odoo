@@ -96,12 +96,12 @@ class Contract(models.Model):
 
     @api.constrains('employee_id', 'state', 'date_start', 'date_end')
     def _check_current_contract(self):
-        """ Two contracts in state [incoming | pending | open | close] cannot overlap """
-        for contract in self.filtered(lambda c: c.state not in ['draft', 'cancel']):
+        """ Two contracts in state [incoming | pending | open] cannot overlap """
+        for contract in self.filtered(lambda c: c.state not in ['draft', 'cancel', 'close']):
             domain = [
                 ('id', '!=', contract.id),
                 ('employee_id', '=', contract.employee_id.id),
-                ('state', 'in', ['incoming', 'pending', 'open', 'close']),
+                ('state', 'in', ['incoming', 'pending', 'open']),
             ]
 
             if not contract.date_end:

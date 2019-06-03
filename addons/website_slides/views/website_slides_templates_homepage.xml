@@ -321,7 +321,6 @@
     <div class="o_wslides_home_aside">
         <div class="row o_wslides_home_aside_title">
             <div class="col">
-                <a href="/slides" class="float-right">View all</a>
                 <h5 class="m-0">Latest achievements</h5>
                 <hr class="mt-2"/>
             </div>
@@ -345,7 +344,7 @@
             <t t-set="user" t-value="achievement.user_id"/>
         </t>
         <div style="line-height: 1.3">
-            <span class="font-weight-bold" t-esc="achievement.user_id.name"/> achieved <a href="/slides"><span t-esc="achievement.badge_id.name"/></a>
+            <span class="font-weight-bold" t-esc="achievement.user_id.name"/> achieved <span class="font-weight-bold" t-esc="achievement.badge_id.name"/>
         </div>
     </div>
 </template>

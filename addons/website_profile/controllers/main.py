@@ -198,13 +198,13 @@ class WebsiteProfile(http.Controller):
     # ---------------------------------------------------
     def _prepare_all_users_values(self, user):
         return {
-            'position': user.karma_position,
             'id': user.id,
             'name': user.name,
-            'company_name': user.company_id.name,
+            'company_name': user.partner_id.company_name,
             'rank': user.rank_id.name,
             'karma': user.karma,
             'badge_count': len(user.badge_ids),
+            'website_published': user.website_published
         }
 
     @http.route(['/profile/users',
@@ -219,19 +219,55 @@ class WebsiteProfile(http.Controller):
             dom = expression.AND([['|', ('name', 'ilike', search_term), ('company_id.name', 'ilike', search_term)], dom])
 
         user_count = User.sudo().search_count(dom)
-        page_count = math.ceil(user_count / self._users_per_page)
-        pager = request.website.pager(url="/profile/users", total=user_count, page=page, step=self._users_per_page,
-                                      scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages)
 
-        users = User.sudo().search(dom, limit=self._users_per_page, offset=pager['offset'], order='karma DESC')
-        user_values = [self._prepare_all_users_values(user) for user in users]
+        if user_count:
+            page_count = math.ceil(user_count / self._users_per_page)
+            pager = request.website.pager(url="/profile/users", total=user_count, page=page, step=self._users_per_page,
+                                          scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages)
 
-        values = {
-            'top3_users': user_values[:3] if not search_term and page == 1 else None,
-            'users': user_values[3:] if not search_term and page == 1 else user_values,
-            'pager': pager
-        }
+            users = User.sudo().search(dom, limit=self._users_per_page, offset=pager['offset'], order='karma DESC')
+            user_values = [self._prepare_all_users_values(user) for user in users]
+
+            # Get karma position for users (only website_published)
+            position_domain = [('karma', '>', 1), ('website_published', '=', True)]
+            position_map = self._get_users_karma_position(position_domain, users.ids)
+            for user in user_values:
+                user['position'] = position_map.get(user['id'], 0)
+
+            values = {
+                'top3_users': user_values[:3] if not search_term and page == 1 else None,
+                'users': user_values[3:] if not search_term and page == 1 else user_values,
+                'pager': pager
+            }
+        else:
+            values = {'top3_users': [], 'users': [], 'pager': dict(page_count=0)}
+
         return request.render("website_profile.users_page_main", values)
+
+    def _get_users_karma_position(self, domain, user_ids):
+        if not user_ids:
+            return {}
+
+        Users = request.env['res.users']
+        where_query = Users._where_calc(domain)
+        Users._apply_ir_rules(where_query, 'read')
+        from_clause, where_clause, where_clause_params = where_query.get_sql()
+
+        # we search on every user in the DB to get the real positioning (not the one inside the subset)
+        # then, we filter to get only the subset.
+        query = """
+            SELECT sub.id, sub.karma_position
+            FROM (
+                SELECT "res_users"."id", row_number() OVER (ORDER BY res_users.karma DESC) AS karma_position
+                FROM {from_clause}
+                WHERE {where_clause}
+            ) sub
+            WHERE sub.id IN %s
+            """.format(from_clause=from_clause, where_clause=where_clause)
+
+        request.env.cr.execute(query, where_clause_params + [tuple(user_ids)])
+
+        return {item['id']: item['karma_position'] for item in request.env.cr.dictfetchall()}
 
     # User and validation
     # --------------------------------------------------

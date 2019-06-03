@@ -12,7 +12,7 @@ This is the module to manage the accounting chart for Mongolia.
     * the Mongolia Official Chart of Accounts,
     * the Tax Code Chart for Mongolia
     * the main taxes used in Mongolia
-    
+
 Financial requirement contributor: Baskhuu Lodoikhuu. BumanIT LLC
 """,
     "depends": ['account'],

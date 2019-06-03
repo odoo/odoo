@@ -294,7 +294,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                 resolver();
             };
 
-            this.$iframe.one('load', function onLoad() {
+            this.$iframe.on('load', function onLoad() {
                 var _avoidDoubleLoad = ++avoidDoubleLoad;
                 ajax.loadAsset(self.nodeOptions.cssReadonly).then(function (asset) {
                     if (_avoidDoubleLoad !== avoidDoubleLoad) {

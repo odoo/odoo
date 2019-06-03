@@ -36,11 +36,7 @@ tour.register('sale_product_configurator_tour', {
     run: 'click'
 }, {
     trigger: '.configurator_container span:contains("Steel")',
-    run: function () {
-        $('input.product_id').change(function () {
-            $('.o_sale_product_configurator_add').attr('request_count', 1);
-        });
-    }
+    run: function () {},
 }, {
     trigger: '.configurator_container span:contains("Aluminium")',
     run: 'click'
@@ -48,8 +44,11 @@ tour.register('sale_product_configurator_tour', {
     trigger: 'span.oe_currency_value:contains("800.40")',
     run: function (){} // check updated price
 }, {
-    trigger: '.o_sale_product_configurator_add[request_count="1"]',
-    run: function (){} // used to sync with "get_combination_info" completion
+    trigger: 'input[data-value_name="Black"]'
+}, {
+    trigger: '.o_sale_product_configurator_add.disabled'
+}, {
+    trigger: 'input[data-value_name="White"]'
 }, {
     trigger: '.o_sale_product_configurator_add:not(.disabled)'
 }, {

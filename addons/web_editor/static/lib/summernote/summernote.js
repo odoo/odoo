@@ -147,7 +147,7 @@ var dialog = renderer.create('<div class="modal" aria-hidden="false" tabindex="-
         (options.title
             ? '    <div class="modal-header">' +
                 '      <h4 class="modal-title">' + options.title + '</h4>' +
-                '      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+                '      <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
                 '    </div>' : ''),
         '    <div class="modal-body">' + options.body + '</div>',
         (options.footer
@@ -229,11 +229,16 @@ var ui = {
     onDialogHidden: function ($dialog, handler) {
         $dialog.one('hidden.bs.modal', handler);
     },
-    showDialog: function ($dialog) {
+    showDialog: function ($dialog, onClose) {
+        $dialog.find('.close').on('click', function (ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            onClose();
+        });
         $dialog.modal('show');
     },
     hideDialog: function ($dialog) {
-        $dialog.modal('hide');
+        $dialog.detach().modal('hide');
     },
     createLayout: function ($note, options) {
         var $editor = (options.airMode ? ui.airEditor([
@@ -5986,7 +5991,7 @@ var LinkDialog = /** @class */ (function () {
                     deferred.reject();
                 }
             });
-            _this.ui.showDialog(_this.$dialog);
+            _this.ui.showDialog(_this.$dialog, _this.destroy.bind(_this));
         }).promise();
     };
     /**
@@ -6174,7 +6179,7 @@ var ImageDialog = /** @class */ (function () {
                     deferred.reject();
                 }
             });
-            _this.ui.showDialog(_this.$dialog);
+            _this.ui.showDialog(_this.$dialog, _this.destroy.bind(_this));
         });
     };
     return ImageDialog;
@@ -6464,7 +6469,7 @@ var VideoDialog = /** @class */ (function () {
                     deferred.reject();
                 }
             });
-            _this.ui.showDialog(_this.$dialog);
+            _this.ui.showDialog(_this.$dialog, _this.destroy.bind(_this));
         });
     };
     return VideoDialog;
@@ -6530,7 +6535,7 @@ var HelpDialog = /** @class */ (function () {
                 _this.context.triggerEvent('dialog.shown');
                 deferred.resolve();
             });
-            _this.ui.showDialog(_this.$dialog);
+            _this.ui.showDialog(_this.$dialog, _this.destroy.bind(_this));
         }).promise();
     };
     HelpDialog.prototype.show = function () {

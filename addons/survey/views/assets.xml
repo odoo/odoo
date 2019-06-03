@@ -41,6 +41,12 @@
         </xpath>
     </template>
 
+    <template id="assets_common" name="tour" inherit_id="web.assets_common">
+      <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/survey/static/src/js/tour_test_survey.js"></script>
+      </xpath>
+    </template>
+
     <template id="assets_backend" name="survey assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
             <link rel="stylesheet" href="/survey/static/src/css/survey_result.css"/>

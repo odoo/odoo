@@ -20,6 +20,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
     }),
     custom_events: _.extend({}, publicRootData.PublicRoot.prototype.custom_events || {}, {
         'ready_to_clean_for_save': '_onWidgetsStopRequest',
+        seo_object_request: '_onSeoObjectRequest',
     }),
 
     /**
@@ -110,6 +111,36 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
             hash: encodeURIComponent(window.location.hash)
         };
         window.location.href = _.str.sprintf("/website/lang/%(lang)s?r=%(url)s%(hash)s", redirect);
+    },
+    /**
+    /**
+     * Checks information about the page SEO object.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSeoObjectRequest: function (ev) {
+        var res = this._unslugHtmlDataObject('seo-object');
+        ev.data.callback(res);
+    },
+    /**
+     * Returns a model/id object constructed from html data attribute.
+     *
+     * @private
+     * @param {string} dataAttr
+     * @returns {Object} an object with 2 keys: model and id, or null
+     * if not found
+     */
+    _unslugHtmlDataObject: function (dataAttr) {
+        var repr = $('html').data(dataAttr);
+        var match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
+        if (!match) {
+            return null;
+        }
+        return {
+            model: match[1],
+            id: match[2] | 0,
+        };
     },
     /**
      * @todo review

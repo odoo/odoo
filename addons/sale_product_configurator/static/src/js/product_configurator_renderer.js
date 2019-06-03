@@ -5,6 +5,11 @@ var FormRenderer = require('web.FormRenderer');
 var VariantMixin = require('sale.VariantMixin');
 
 var ProductConfiguratorFormRenderer = FormRenderer.extend(VariantMixin, {
+
+    events: _.extend({}, FormRenderer.prototype.events, VariantMixin.events, {
+        'click button.js_add_cart_json': 'onClickAddCartJSON',
+    }),
+
     /**
      * @override
      */
@@ -71,6 +76,17 @@ var ProductConfiguratorFormRenderer = FormRenderer.extend(VariantMixin, {
         } else if (this.state.context.configuratorMode === 'options') {
             this.trigger_up('handle_add');
         }
+    },
+
+    /**
+     * Toggles the add button depending on the possibility of the current
+     * combination.
+     *
+     * @override
+     */
+    _toggleDisable: function ($parent, isCombinationPossible) {
+        VariantMixin._toggleDisable.apply(this, arguments);
+        $parent.parents('.modal').find('.o_sale_product_configurator_add').toggleClass('disabled', !isCombinationPossible);
     },
 
     /**

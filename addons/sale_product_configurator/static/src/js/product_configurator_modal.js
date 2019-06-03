@@ -11,6 +11,7 @@ var optionalProductsMap = {};
 var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
     events:  _.extend({}, Dialog.prototype.events, VariantMixin.events, {
         'click a.js_add, a.js_remove': '_onAddOrRemoveOption',
+        'click button.js_add_cart_json': 'onClickAddCartJSON',
         'change .in_cart.main_product input.js_quantity': '_onChangeQuantity',
         'change .js_raw_price': '_computePriceTotal'
     }),
@@ -60,7 +61,6 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
         this.previousModalHeight = params.previousModalHeight;
         this.dialogClass = 'oe_optional_products_modal';
         this._productImageField = 'image_medium';
-
         // reset any previously populated properties maps
         optionalProductsMap = {};
 
@@ -153,6 +153,25 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * Computes and updates the total price, useful when a product is added or
+     * when the quantity is changed.
+     * TODO awa: add a container context to avoid global selectors ?
+     */
+    computePriceTotal: function () {
+        if ($('.js_price_total').length) {
+            var price = 0;
+            $('.js_product.in_cart').each(function () {
+                var quantity = parseInt($('input[name="add_qty"]').first().val());
+                price += parseFloat($(this).find('.js_raw_price').html()) * quantity;
+            });
+
+            $('.js_price_total .oe_currency_value').html(
+                this._priceToStr(parseFloat(price))
+            );
+        }
+        ProductConfiguratorMixin.computePriceTotal.apply(this, arguments);
+    },
     /**
      * Returns the list of selected products.
      * The root product is added on top of the list.
@@ -437,6 +456,8 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
             .text(combination.display_name);
 
         VariantMixin._onChangeCombination.apply(this, arguments);
+
+        this.computePriceTotal();
     },
     /**
      * When the quantity of the root product is updated, we need to update

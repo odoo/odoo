@@ -25,7 +25,7 @@ QUnit.module('base_settings_tests', {
     QUnit.module('BaseSetting');
 
     QUnit.test('change setting on nav bar click in base settings', async function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         var form = await createView({
             View: BaseSettingsView,
@@ -63,7 +63,7 @@ QUnit.module('base_settings_tests', {
                                             '<field name="foo"/>'+
                                         '</div>'+
                                         '<div class="o_setting_right_pane">'+
-                                            '<label for="foo"/>'+
+                                            '<span class="o_form_label">Foo</span>'+
                                             '<div class="text-muted">'+
                                                 'this is foo'+
                                             '</div>'+
@@ -79,9 +79,11 @@ QUnit.module('base_settings_tests', {
         assert.hasAttrValue(form.$('.selected'), 'data-key',"crm","crm setting selected");
         assert.isVisible(form.$(".settings .app_settings_block"), "project settings show");
         await testUtils.fields.editAndTrigger(form.$('.searchInput'), 'b', 'keyup');
-        assert.strictEqual($('.highlighter').html(),"B","b word hilited");
+        assert.strictEqual(form.$('.highlighter').html(), "B", "b word highlighted");
         await testUtils.fields.editAndTrigger(form.$('.searchInput'), 'bx', 'keyup');
         assert.isVisible(form.$('.notFound'), "record not found message shown");
+        form.$('.searchInput').val('f').trigger('keyup');
+        assert.strictEqual(form.$('span.o_form_label .highlighter').html(), "F", "F word highlighted");
         form.destroy();
     });
 
