@@ -1402,6 +1402,10 @@ var ManualModel = StatementModel.extend({
                         })
                         .then(function (result) {
                             // Flatten the result
+                            self.multiPartnerJournal = {
+                                id: result.default_rec_partner_journal_id,
+                                name: result.default_rec_partner_journal_name,
+                            }
                             self.manualLines = [].concat(result.accounts, result.customers, result.suppliers);
                             self.valuenow = 0;
                             self.valuemax = Object.keys(self.manualLines).length;

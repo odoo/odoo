@@ -101,6 +101,10 @@ Best Regards,'''))
     account_invoice_onboarding_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done"), ('closed', "Closed")], string="State of the account invoice onboarding panel", default='not_done')
     account_dashboard_onboarding_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done"), ('closed', "Closed")], string="State of the account dashboard onboarding panel", default='not_done')
     invoice_terms = fields.Text(string='Default Terms and Conditions', translate=True)
+    default_rec_partner_journal_id = fields.Many2one('account.journal',
+        string="Default partner reconciliation journal",
+        help="The default journal used when manually reconciling lines of different partners.",
+        default=lambda self: self.env['account.journal'].search([('type', '=', 'general')], limit=1))
 
     @api.constrains('account_opening_date', 'fiscalyear_last_day', 'fiscalyear_last_month')
     def _check_fiscalyear_last_day(self):

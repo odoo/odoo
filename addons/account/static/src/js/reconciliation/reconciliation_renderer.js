@@ -270,6 +270,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         'click .reconcile_model_edit': '_onEditReconcileModel',
         'keyup input': '_onInputKeyup',
         'blur input': '_onInputKeyup',
+        'click .alert .o_link_config_view': '_onClickConfig',
+        'click .alert .o_link_jump_view': '_onClickJumpView',
     },
     custom_events: _.extend({}, FieldManagerMixin.custom_events, {
         'field_changed': '_onFieldChanged',
@@ -835,6 +837,28 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      */
     _onValidate: function () {
         this.trigger_up('validate');
+    },
+    _onClickConfig: function(ev) {
+        ev.preventDefault();
+        var $target = $(ev.target);
+        this.do_action({
+            type: 'ir.actions.act_window',
+            target: 'inline',
+            res_model: 'res.config.settings',
+            views: [[false, 'form']],
+        });
+    },
+    _onClickJumpView: function(ev) {
+        ev.preventDefault();
+        var $target = $(ev.target);
+        this.do_action({
+            type: 'ir.actions.act_window',
+            view_type: 'form',
+            view_mode: 'form',
+            res_model: $target.data('oe-model'),
+            views: [[false, 'form']],
+            res_id: $target.data('oe-id'),
+        });
     }
 });
 
@@ -924,6 +948,20 @@ var ManualLineRenderer = LineRenderer.extend({
      */
     update: function (state) {
         this._super(state);
+
+        state.linesPartners = [];
+        _.each(state.reconciliation_proposition, function (prop) {
+            if (prop.display) {
+                state.linesPartners.push({id: prop.partner_id, name: prop.partner_name});
+            }
+        });
+        if (state.linesPartners.length > 1) {
+            $('.o_reconciliation_partner_warning').html(
+                qweb.render('reconciliation.manual.line.partner_warning', {state: state}));
+        } else {
+            $('.o_reconciliation_partner_warning').html('');
+        }
+
         var props = _.filter(state.reconciliation_proposition, {'display': true});
         if (!props.length) {
             var $line = $(qweb.render("reconciliation.line.mv_line", {'line': {}, 'state': state}));

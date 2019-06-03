@@ -110,8 +110,23 @@
     </div>
 </t>
 
+
+<t t-name="reconciliation.manual.line.partner_warning">
+    <div class="alert alert-warning p-3 o_reconciliation_partner_warning">
+        <p>
+            Selected journal items involve more than one partner. <br/>A journal entry will be created in
+            <a href="#" class="o_link_jump_view" data-oe-model="account.journal" t-att-data-oe-id="state.multiPartnerJournal.id"><t t-esc="state.multiPartnerJournal.name"/></a>
+            to transfer in partner
+            <a href="#" class="o_link_jump_view" data-oe-model="res.partner" t-att-data-oe-id="state.linesPartners[0].id"><t t-esc="state.linesPartners[0].name"/></a>
+            if you continue the reconciliation.
+        </p>
+        <p>Click <a href="#" class="o_link_config_view">here</a> to change the miscellaneous journal used by default for this kind of operation.</p>
+    </div>
+</t>
+
 <t t-name="reconciliation.manual.line" t-extend="reconciliation.line">
     <t t-jquery=".o_buttons" t-operation="replace">
+        <div class="o_reconciliation_partner_warning"/>
         <div class="float-right o_buttons">
             <button t-attf-class="o_validate btn btn-secondary #{!state.balance.type ? '' : 'd-none'}">Reconcile</button>
             <button t-attf-class="o_reconcile btn btn-primary #{state.balance.type &gt; 0 ? '' : 'd-none'}">Reconcile</button>

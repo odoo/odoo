@@ -294,12 +294,16 @@ class AccountReconciliation(models.AbstractModel):
                 }],
                 'customers': [],
                 'suppliers': [],
+                'default_rec_partner_journal_id': self.env.company.default_rec_partner_journal_id.id,
+                'default_rec_partner_journal_name': self.env.company.default_rec_partner_journal_id.name,
             }
 
         return {
             'customers': self.get_data_for_manual_reconciliation('partner', partner_ids, 'receivable'),
             'suppliers': self.get_data_for_manual_reconciliation('partner', partner_ids, 'payable'),
             'accounts': self.get_data_for_manual_reconciliation('account', account_ids),
+            'default_rec_partner_journal_id': self.env.company.default_rec_partner_journal_id.id,
+            'default_rec_partner_journal_name': self.env.company.default_rec_partner_journal_id.name,
         }
 
     @api.model
@@ -756,6 +760,89 @@ class AccountReconciliation(models.AbstractModel):
         return Account_move_line
 
     @api.model
+    def _transfer_partners_lines_to_moves(self, account_move_lines):
+        '''
+        Transfer all the lines to the first partner by grouping the lines by partner and
+        currency_id and creating move for each group.
+
+        For example
+        ===========
+          partner |  debit  | credit
+             A    |    0    |   10
+             A    |    0    |   20
+             B    |   30    |    0
+             C    |    0    |   40
+             D    |   50    |    0
+             D    |    0    |   60
+
+        Will create
+        ===========
+        move for patner B:
+          partner |  debit  | credit
+             B    |    0    |   30
+             A    |   30    |   10
+
+        move for patner C:
+          partner |  debit  | credit
+             C    |   40    |    0
+             A    |    0    |   40
+
+        move for patner D:
+          partner |  debit  | credit
+             D    |    0    |   50
+             D    |   60    |    0
+             A    |   50    |    0
+             A    |    0    |   60
+
+        :return: the moves created
+        '''
+        first_partner = account_move_lines[0].partner_id
+        first_account = account_move_lines[0].account_id
+        partners_dict = {}
+        for move_line in account_move_lines[1:]:
+            if move_line.partner_id == first_partner:
+                continue
+            if move_line.partner_id.id not in partners_dict:
+                partners_dict[(move_line.partner_id.id, move_line.currency_id.id)] = []
+            line_val = {
+                'partner_id': move_line.partner_id.id,
+                'account_id': move_line.account_id.id,
+                'debit': move_line.credit,
+                'credit': move_line.debit,
+                'currency_id': move_line.currency_id.id,
+                'amount_currency': move_line.amount_currency * -1,
+            }
+            partners_dict[(move_line.partner_id.id, move_line.currency_id.id)].append(line_val)
+            line_val = {
+                'partner_id': first_partner.id,
+                'account_id': first_account.id,
+                'debit': move_line.debit,
+                'credit': move_line.credit,
+                'currency_id': move_line.currency_id.id,
+                'amount_currency': move_line.amount_currency,
+            }
+            partners_dict[(move_line.partner_id.id, move_line.currency_id.id)].append(line_val)
+
+        moves_val = []
+        for partner_id, currency_id in partners_dict:
+            moves_val.append({
+                'ref': 'Partner transfer',
+                'journal_id': self.env.company.default_rec_partner_journal_id.id,
+                'revert_when_unreconcile': True,
+                'line_ids': [(0, _, line_val) for line_val in partners_dict[(partner_id, currency_id)]],
+                'currency_id': currency_id,
+            })
+        moves = self.env['account.move'].create(moves_val)
+        for move in moves:
+            move.post()
+            transfered_partner = move.line_ids.mapped('partner_id') - first_partner
+            move.message_post(body=_('This journal entry has been generated to transfer journal items of partner <a>%s</a> to <a>%s</a>.') % (
+                '<a href="#" data-oe-model="res.partner" data-oe-id="%s">%s</a>' % (transfered_partner.id, transfered_partner.name),
+                '<a href="#" data-oe-model="res.partner" data-oe-id="%s">%s</a>' % (first_partner.id, first_partner.name),
+            ))
+        return moves
+
+    @api.model
     def _process_move_lines(self, move_line_ids, new_mv_line_dicts):
         """ Create new move lines from new_mv_line_dicts (if not empty) then call reconcile_partial on self and new move lines
 
@@ -767,11 +854,21 @@ class AccountReconciliation(models.AbstractModel):
         account_move_line = self.env['account.move.line'].browse(move_line_ids)
         writeoff_lines = self.env['account.move.line']
 
+        partners = account_move_line.mapped('partner_id')
+        partners_moves = self.env['account.move']
+
+        if len(partners) > 1:
+            partners_moves = self._transfer_partners_lines_to_moves(account_move_line)
+            first_partner_lines = ((partners_moves.line_ids + account_move_line)
+                                    .filtered(lambda line: line.partner_id == partners[0]))
+        else:
+            first_partner_lines = account_move_line
+
         # Create writeoff move lines
         if len(new_mv_line_dicts) > 0:
-            company_currency = account_move_line[0].account_id.company_id.currency_id
+            company_currency = first_partner_lines[0].account_id.company_id.currency_id
             same_currency = False
-            currencies = list(set([aml.currency_id or company_currency for aml in account_move_line]))
+            currencies = list(set([aml.currency_id or company_currency for aml in first_partner_lines]))
             if len(currencies) == 1 and currencies[0] != company_currency:
                 same_currency = True
             # We don't have to convert debit/credit to currency as all values in the reconciliation widget are displayed in company currency
@@ -779,8 +876,17 @@ class AccountReconciliation(models.AbstractModel):
             for mv_line_dict in new_mv_line_dicts:
                 if not same_currency:
                     mv_line_dict['amount_currency'] = False
-                writeoff_lines += account_move_line._create_writeoff([mv_line_dict])
+                writeoff_lines += first_partner_lines._create_writeoff([mv_line_dict])
 
-            (account_move_line + writeoff_lines).reconcile()
+            (first_partner_lines + writeoff_lines).reconcile()
         else:
-            account_move_line.reconcile()
+            first_partner_lines.reconcile()
+
+        # reconcile lines of all generated moves except the line from the first partner that has
+        # already been reconciled above
+        for move in partners_moves:
+            account_move_line_filtered = (account_move_line
+                .filtered(lambda line: line.partner_id.id == move.line_ids[1].partner_id.id\
+                                    and line.currency_id.id == move.line_ids.currency_id.id))
+            new_lines_filtered = move.line_ids.filtered(lambda line: line.partner_id != partners[0])
+            (account_move_line_filtered + new_lines_filtered).reconcile()

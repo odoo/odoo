@@ -580,6 +580,9 @@ class AccountChartTemplate(models.Model):
         # Generate account operation template templates
         self.generate_account_reconcile_model(taxes_ref, account_ref, company)
 
+        for company in self.env['res.company'].search([('default_rec_partner_journal_id', '=', False)]):
+            company.default_rec_partner_journal_id = self.env['account.journal'].search([('type', '=', 'general')], limit=1)
+
         return account_ref, taxes_ref
 
     @api.multi

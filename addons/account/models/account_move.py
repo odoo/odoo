@@ -157,15 +157,11 @@ class AccountMove(models.Model):
     reconcile_model_id = fields.Many2many('account.reconcile.model', compute='_compute_reconcile_model', search='_search_reconcile_model', string="Reconciliation Model", readonly=True)
     # Dummy Account field to search on account.move by account_id
     dummy_account_id = fields.Many2one('account.account', related='line_ids.account_id', string='Account', store=False, readonly=True)
-    tax_cash_basis_rec_id = fields.Many2one(
-        'account.partial.reconcile',
-        string='Tax Cash Basis Entry of',
-        help="Technical field used to keep track of the tax cash basis reconciliation. "
-        "This is needed when cancelling the source: it will post the inverse journal entry to cancel that part too.")
     auto_post = fields.Boolean(string='Post Automatically', default=False, help='If this checkbox is ticked, this entry will be automatically posted at its date.')
     reverse_entry_id = fields.Many2one('account.move', String="Reverse entry", store=True, readonly=True)
     to_check = fields.Boolean(string='To Check', default=False, help='If this checkbox is ticked, it means that the user was not sure of all the related informations at the time of the creation of the move and that the move needs to be checked again.')
     tax_type_domain = fields.Char(store=False, help='Technical field used to have a dynamic taxes domain on the form view.')
+    revert_when_unreconcile = fields.Boolean(help="Technical field used to know if we need to revert the move once we unreconcile a line attached.", default=False)
 
     @api.constrains('line_ids', 'journal_id')
     def _validate_move_modification(self):
@@ -852,9 +848,7 @@ class AccountMoveLine(models.Model):
         total_amount_currency = 0
         maxdate = date.min
         to_balance = {}
-        cash_basis_partial = self.env['account.partial.reconcile']
         for aml in amls:
-            cash_basis_partial |= aml.move_id.tax_cash_basis_rec_id
             total_debit += aml.debit
             total_credit += aml.credit
             maxdate = max(aml.date, maxdate)
@@ -883,7 +877,7 @@ class AccountMoveLine(models.Model):
         digits_rounding_precision = amls[0].company_id.currency_id.rounding
         if (
                 (
-                    not cash_basis_partial or (cash_basis_partial and all([p >= 1.0 for p in amls._get_matched_percentage().values()]))
+                    not self.env.context.get('cash_basis_reconcile') or (all([p >= 1.0 for p in amls._get_matched_percentage().values()]))
                 ) and
                 (
                     currency and float_is_zero(total_amount_currency, precision_rounding=currency.rounding) or
@@ -1723,7 +1717,7 @@ class AccountPartialReconcile(models.Model):
                             if line.account_id.reconcile:
                                 #setting the account to allow reconciliation will help to fix rounding errors
                                 to_clear_aml |= line
-                                to_clear_aml.reconcile()
+                                to_clear_aml.with_context(cash_basis_reconcile=True).reconcile()
 
                         if any([tax.tax_exigibility == 'on_payment' for tax in line.tax_ids]):
                             if not newly_created_move:
@@ -1776,7 +1770,7 @@ class AccountPartialReconcile(models.Model):
                             (self.company_id.name))
         move_vals = {
             'journal_id': self.company_id.tax_cash_basis_journal_id.id,
-            'tax_cash_basis_rec_id': self.id,
+            'revert_when_unreconcile': True,
             'ref': self.credit_move_id.move_id.name if self.credit_move_id.payment_id else self.debit_move_id.move_id.name,
         }
         return self.env['account.move'].create(move_vals)
@@ -1788,15 +1782,19 @@ class AccountPartialReconcile(models.Model):
         for rec in self:
             if rec.full_reconcile_id:
                 full_to_unlink |= rec.full_reconcile_id
-        #reverse the tax basis move created at the reconciliation time
-        for move in self.env['account.move'].search([('tax_cash_basis_rec_id', 'in', self._ids)]):
+
+        move_to_reverse = (self.debit_move_id.move_id | self.credit_move_id.move_id).filtered(lambda move: move.revert_when_unreconcile)
+        self |= move_to_reverse.line_ids.matched_debit_ids + move_to_reverse.line_ids.matched_credit_ids
+        res = super(AccountPartialReconcile, self).unlink()
+        if full_to_unlink:
+            full_to_unlink.unlink()
+
+        for move in move_to_reverse:
             if move.date > (move.company_id.period_lock_date or date.min):
                 move.reverse_moves(date=move.date)
             else:
                 move.reverse_moves()
-        res = super(AccountPartialReconcile, self).unlink()
-        if full_to_unlink:
-            full_to_unlink.unlink()
+
         return res
 
 

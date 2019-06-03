@@ -90,6 +90,12 @@ class ResConfigSettings(models.TransientModel):
         string='Default Terms & Conditions',
         oldname='default_use_sale_note',
         config_parameter='account.use_invoice_terms')
+    # default_rec_partner_journal_id = fields.Many2one('account.journal', related='company_id.default_rec_partner_journal_id',
+    #     string="Default partner reconciliation journal")
+    account_default_rec_partner_journal_id = fields.Many2one(
+        'account.journal',
+        related='company_id.default_rec_partner_journal_id', readonly=False,
+        string="Default partner reconciliation journal")
 
     @api.multi
     def set_values(self):

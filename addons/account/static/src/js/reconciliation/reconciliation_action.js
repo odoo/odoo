@@ -213,6 +213,7 @@ var StatementAction = AbstractAction.extend({
         var linesToDisplay = this.model.getStatementLines();
         var linePromises = [];
         _.each(linesToDisplay, function (line, handle) {
+            line.multiPartnerJournal = self.model.multiPartnerJournal
             var widget = new self.config.LineRenderer(self, self.model, line);
             widget.handle = handle;
             self.widgets.push(widget);

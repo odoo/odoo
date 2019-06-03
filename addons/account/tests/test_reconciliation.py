@@ -34,6 +34,8 @@ class TestReconciliation(AccountingTestCase):
         self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [self.currency_euro_id, company.id])
         self.account_rcv = partner_agrolait.property_account_receivable_id or self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_receivable').id)], limit=1)
         self.account_rsa = partner_agrolait.property_account_payable_id or self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_payable').id)], limit=1)
+        self.account_revenue = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1)
+        self.account_liquidity = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_liquidity').id)], limit=1)
         self.product = self.env.ref("product.product_product_4")
 
         self.bank_journal_euro = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'BNK67'})
@@ -2052,7 +2054,6 @@ class TestReconciliationExec(TestReconciliation):
 
         pay_receivable_line0 = payment0.move_line_ids.filtered(lambda l: l.account_id == self.account_rcv)
         self.assertTrue(pay_receivable_line0.reconciled)
-        self.assertEqual(pay_receivable_line0.matched_debit_ids, move_caba0.tax_cash_basis_rec_id)
 
         # Second Payment
         payment1 = self.make_payment(invoice, journal, 0.01)
@@ -2066,7 +2067,6 @@ class TestReconciliationExec(TestReconciliation):
 
         pay_receivable_line1 = payment1.move_line_ids.filtered(lambda l: l.account_id == self.account_rcv)
         self.assertTrue(pay_receivable_line1.reconciled)
-        self.assertEqual(pay_receivable_line1.matched_debit_ids, move_caba1.tax_cash_basis_rec_id)
 
     def test_reconciliation_with_currency(self):
         #reconciliation on an account having a foreign currency being
@@ -2212,3 +2212,338 @@ class TestReconciliationExec(TestReconciliation):
 
         writeoff_line = self.env['account.move.line'].search([('name', '=', 'writeoff')])
         self.assertEquals(writeoff_line.credit, 15.0)
+
+    def test_reconciliation_with_multiple_partner(self):
+        '''
+        lines to reconcile:
+
+            partner_id  |  debit  |   credit
+        ----------------------------------------
+            partner A   |         |    150
+            partner A   |         |     10
+            partner B   |         |     10
+            partner C   |    50   |
+            partner D   |   120   |
+
+        must create this entry:
+
+
+            partner_id  |      account_id     |   debit   |   credit  |  matching number
+        ------------------------------------------------------------------------------------
+            partner B   | receivable account  |    10     |           |  2
+            partner A   | receivable account  |           |     10    |  1
+            partner C   | receivable account  |           |     50    |  3
+            partner A   | receivable account  |    50     |           |  1
+            partner D   | receivable account  |   120     |           |  4
+            partner A   | receivable account  |           |    120    |  1
+
+        original journal items should then have the following matching number attached:
+
+            partner_id  |      account_id     |   debit   |   credit  |  matching number
+        ------------------------------------------------------------------------------------
+            partner A   | receivable account  |   150     |           |  1
+            partner A   | receivable account  |    10     |           |  1
+            partner B   | receivable account  |           |    50     |  2
+            partner C   | receivable account  |    10     |           |  3
+            partner D   | receivable account  |           |   110     |  4
+        '''
+        partner_a = self.env['res.partner'].create({ 'name': 'partner_a' })
+        partner_b = self.env['res.partner'].create({ 'name': 'partner_b' })
+        partner_c = self.env['res.partner'].create({ 'name': 'partner_c' })
+        partner_d = self.env['res.partner'].create({ 'name': 'partner_d' })
+        company = self.env.ref('base.main_company')
+        default_journal = self.env['account.journal'].create({'name': 'misc_b', 'code': 'misc_b', 'type': 'general'})
+        company.default_rec_partner_journal_id = default_journal
+
+        move_invoice_partner_a_1 = self.env['account.move'].create({
+            'ref': 'move invoice_partner_a_1',
+        })
+        move_invoice_lines_partner_a_1 = self.env['account.move.line'].create([
+            {
+                'name': 'line product',
+                'partner_id': partner_a.id,
+                'move_id': move_invoice_partner_a_1.id,
+                'account_id': self.account_revenue.id,
+                'debit': 0,
+                'credit': 150.0,
+            },
+            {
+                'name': 'line receivable',
+                'partner_id': partner_a.id,
+                'move_id': move_invoice_partner_a_1.id,
+                'account_id': self.account_rcv.id,
+                'debit': 150.0,
+                'credit': 0,
+            }
+        ])
+        move_invoice_partner_a_1.post()
+        move_invoice_partner_a_2 = self.env['account.move'].create({
+            'ref': 'move invoice_partner_a_2',
+            'currency_id': self.currency_usd_id,
+        })
+        move_invoice_lines_partner_a_2 = self.env['account.move.line'].create([
+            {
+                'name': 'line product',
+                'partner_id': partner_a.id,
+                'move_id': move_invoice_partner_a_2.id,
+                'account_id': self.account_revenue.id,
+                'currency_id': self.currency_usd_id,
+                'debit': 0,
+                'credit': 10.0,
+                'amount_currency': -20,
+            },
+            {
+                'name': 'line receivable',
+                'partner_id': partner_a.id,
+                'move_id': move_invoice_partner_a_2.id,
+                'account_id': self.account_rcv.id,
+                'currency_id': self.currency_usd_id,
+                'debit': 10.0,
+                'credit': 0,
+                'amount_currency': 20,
+            }
+        ])
+        move_invoice_partner_a_2.post()
+        move_invoice_partner_b_usd = self.env['account.move'].create({
+            'ref': 'move invoice_partner_b_usd',
+            'currency_id': self.currency_usd_id,
+        })
+        move_invoice_lines_partner_b_usd = self.env['account.move.line'].create([
+            {
+                'name': 'line product',
+                'partner_id': partner_b.id,
+                'move_id': move_invoice_partner_b_usd.id,
+                'account_id': self.account_revenue.id,
+                'currency_id': self.currency_usd_id,
+                'debit': 0,
+                'credit': 10.0,
+                'amount_currency': -20,
+            },
+            {
+                'name': 'line receivable',
+                'partner_id': partner_b.id,
+                'move_id': move_invoice_partner_b_usd.id,
+                'account_id': self.account_rcv.id,
+                'currency_id': self.currency_usd_id,
+                'debit': 10.0,
+                'credit': 0,
+                'amount_currency': 20,
+            }
+        ])
+        move_invoice_partner_b_usd.post()
+        move_invoice_partner_b_swiss = self.env['account.move'].create({
+            'ref': 'move invoice_partner_b_swiss',
+            'currency_id': self.currency_swiss_id,
+        })
+        move_invoice_lines_partner_b_swiss = self.env['account.move.line'].create([
+            {
+                'name': 'line product',
+                'partner_id': partner_b.id,
+                'move_id': move_invoice_partner_b_swiss.id,
+                'account_id': self.account_revenue.id,
+                'currency_id': self.currency_swiss_id,
+                'debit': 0,
+                'credit': 10.0,
+                'amount_currency': -20,
+            },
+            {
+                'name': 'line receivable',
+                'partner_id': partner_b.id,
+                'move_id': move_invoice_partner_b_swiss.id,
+                'account_id': self.account_rcv.id,
+                'currency_id': self.currency_swiss_id,
+                'debit': 10.0,
+                'credit': 0,
+                'amount_currency': 20,
+            }
+        ])
+        move_invoice_partner_b_swiss.post()
+
+        # create payment for partner C and partner D
+        move_payment_partner_c = self.env['account.move'].create({
+            'ref': 'move_payment_partner_c',
+        })
+        move_payment_lines_partner_c = self.env['account.move.line'].create([
+            {
+                'name': 'line liquidity',
+                'partner_id': partner_c.id,
+                'move_id': move_payment_partner_c.id,
+                'account_id': self.account_liquidity.id,
+                'debit': 50.0,
+                'credit': 0,
+            },
+            {
+                'name': 'line product',
+                'partner_id': partner_c.id,
+                'move_id': move_payment_partner_c.id,
+                'account_id': self.account_rcv.id,
+                'debit': 0,
+                'credit': 50.0,
+            }
+        ])
+        move_payment_partner_c.post()
+        move_payment_partner_d = self.env['account.move'].create({
+            'ref': 'move_payment_partner_d',
+        })
+        move_payment_lines_partner_d = self.env['account.move.line'].create([
+            {
+                'name': 'line liquidity',
+                'partner_id': partner_d.id,
+                'move_id': move_payment_partner_d.id,
+                'account_id': self.account_liquidity.id,
+                'debit': 130.0,
+                'credit': 0,
+            },
+            {
+                'name': 'line product',
+                'partner_id': partner_d.id,
+                'move_id': move_payment_partner_d.id,
+                'account_id': self.account_rcv.id,
+                'debit': 0,
+                'credit': 130.0,
+            }
+        ])
+        move_payment_partner_d.post()
+
+        receivable_lines = (
+            move_invoice_lines_partner_a_1[1] +
+            move_invoice_lines_partner_a_2[1] +
+            move_invoice_lines_partner_b_usd[1] +
+            move_invoice_lines_partner_b_swiss[1] +
+            move_payment_lines_partner_c[1] +
+            move_payment_lines_partner_d[1])
+
+        ############################################################################################
+        # test full reconcile an no writeoff
+        ############################################################################################
+
+        self.env['account.reconciliation.widget'].process_move_lines([{
+            'id': False,
+            'type': False,
+            'mv_line_ids': receivable_lines.mapped('id'),
+            'new_mv_line_dicts': [],
+        }])
+
+        # must be 5 full_reconcile_id because of differents partners and currencies
+        self.assertEquals(len(receivable_lines.mapped('full_reconcile_id')), 5)
+
+        self.assertEquals(len(move_invoice_lines_partner_a_1.full_reconcile_id), 1)
+        self.assertEquals(len(move_invoice_lines_partner_a_2.full_reconcile_id), 1)
+        self.assertEquals(move_invoice_lines_partner_a_1.full_reconcile_id,
+                          move_invoice_lines_partner_a_2.full_reconcile_id)
+        self.assertEquals(len(move_invoice_lines_partner_b_usd.full_reconcile_id), 1)
+        self.assertEquals(len(move_invoice_lines_partner_b_swiss.full_reconcile_id), 1)
+        self.assertEquals(len(move_payment_lines_partner_c.full_reconcile_id), 1)
+        self.assertEquals(len(move_payment_lines_partner_d.full_reconcile_id), 1)
+
+        # test that 4 moves have been created, one for each partner except the first one
+        move_partner_b_usd = move_invoice_lines_partner_b_usd[1].matched_credit_ids[0].credit_move_id.move_id
+        move_partner_b_swiss = move_invoice_lines_partner_b_swiss[1].matched_credit_ids[0].credit_move_id.move_id
+        move_partner_c = move_payment_lines_partner_c[1].matched_debit_ids[0].debit_move_id.move_id
+        move_partner_d = move_payment_lines_partner_d[1].matched_debit_ids[0].debit_move_id.move_id
+        moves_created = (move_partner_b_usd | move_partner_b_swiss | move_partner_c | move_partner_d)
+        self.assertEquals(len(moves_created), 4)
+
+        # test that the move currency of partner b has been properly set
+        self.assertEquals(move_partner_b_usd.line_ids.mapped('currency_id').id, self.currency_usd_id)
+        self.assertEquals(move_partner_b_swiss.line_ids.mapped('currency_id').id, self.currency_swiss_id)
+
+        # test that the entries have the proper journal
+        self.assertEquals(moves_created.mapped('journal_id'), default_journal)
+
+        receivable_lines.remove_move_reconcile()
+
+        ############################################################################################
+        # test partial reconcile
+        ############################################################################################
+        move_invoice_partner_a_3 = self.env['account.move'].create({
+            'ref': 'move invoice_partner_a_1',
+        })
+        move_invoice_lines_partner_a_3 = self.env['account.move.line'].create([
+            {
+                'name': 'line product',
+                'partner_id': partner_a.id,
+                'move_id': move_invoice_partner_a_3.id,
+                'account_id': self.account_revenue.id,
+                'debit': 0,
+                'credit': 200.0,
+            },
+            {
+                'name': 'line receivable',
+                'partner_id': partner_a.id,
+                'move_id': move_invoice_partner_a_3.id,
+                'account_id': self.account_rcv.id,
+                'debit': 200.0,
+                'credit': 0,
+            }
+        ])
+
+        receivable_lines |= move_invoice_lines_partner_a_3[1]
+
+        self.env['account.reconciliation.widget'].process_move_lines([{
+            'id': False,
+            'type': False,
+            'mv_line_ids': receivable_lines.mapped('id'),
+            'new_mv_line_dicts': [],
+        }])
+
+        # the line for the first partner must not be reconcilied
+        self.assertEquals(len(receivable_lines.mapped('full_reconcile_id')), 4)
+
+        self.assertEquals(len(move_invoice_lines_partner_a_1.full_reconcile_id), 0)
+        self.assertEquals(len(move_invoice_lines_partner_a_2.full_reconcile_id), 0)
+        self.assertEquals(len(move_invoice_lines_partner_a_3.full_reconcile_id), 0)
+        self.assertEquals(move_invoice_lines_partner_a_1.full_reconcile_id,
+                          move_invoice_lines_partner_a_2.full_reconcile_id,
+                          move_invoice_lines_partner_a_3.full_reconcile_id)
+        self.assertEquals(len(move_invoice_lines_partner_b_usd.full_reconcile_id), 1)
+        self.assertEquals(len(move_invoice_lines_partner_b_swiss.full_reconcile_id), 1)
+        self.assertEquals(len(move_payment_lines_partner_c.full_reconcile_id), 1)
+        self.assertEquals(len(move_payment_lines_partner_d.full_reconcile_id), 1)
+
+        move_partner_b_usd = move_invoice_lines_partner_b_usd[1].matched_credit_ids[0].credit_move_id.move_id
+        move_partner_b_swiss = move_invoice_lines_partner_b_swiss[1].matched_credit_ids[0].credit_move_id.move_id
+        move_partner_c = move_payment_lines_partner_c[1].matched_debit_ids[0].debit_move_id.move_id
+        move_partner_d = move_payment_lines_partner_d[1].matched_debit_ids[0].debit_move_id.move_id
+        moves_created = (move_partner_b_usd | move_partner_b_swiss | move_partner_c | move_partner_d)
+
+        self.assertEquals(len(moves_created), 4)
+
+        receivable_lines.remove_move_reconcile()
+
+        # there must be one reverse entry per move.
+        self.assertEquals(len(moves_created.mapped('reverse_entry_id')), 4)
+
+        # test all the above with a writeoff
+        self.env['account.reconciliation.widget'].process_move_lines([{
+            'id': False,
+            'type': False,
+            'mv_line_ids': receivable_lines.mapped('id'),
+            'new_mv_line_dicts': [{
+                'account_id': self.account_liquidity.id,
+                'analytic_tag_ids': [6, None, []],
+                'credit': 200.0,
+                'date': time.strftime('%Y') + '-01-01',
+                'debit': 0,
+                'journal_id': self.env['account.journal'].search([('type', '=', 'sale')], limit=1).id,
+                'name': 'writeoff_partner_line',
+            }],
+        }])
+
+        writeoff_line = self.env['account.move.line'].search([('name', '=', 'writeoff_partner_line')], limit=1).move_id.line_ids[0]
+
+        self.assertEquals(len(receivable_lines.mapped('full_reconcile_id')), 5)
+
+        self.assertEquals(len(move_invoice_lines_partner_a_1.full_reconcile_id), 1)
+        self.assertEquals(len(move_invoice_lines_partner_a_2.full_reconcile_id), 1)
+        self.assertEquals(len(move_invoice_lines_partner_a_3.full_reconcile_id), 1)
+        self.assertEquals(len(move_invoice_lines_partner_a_3.full_reconcile_id), 1)
+        self.assertEquals(move_invoice_lines_partner_a_1.full_reconcile_id,
+                          move_invoice_lines_partner_a_2.full_reconcile_id)
+        self.assertEquals(move_invoice_lines_partner_a_1.full_reconcile_id,
+                          move_invoice_lines_partner_a_3.full_reconcile_id)
+        self.assertEquals(move_invoice_lines_partner_a_1.full_reconcile_id,
+                          writeoff_line.full_reconcile_id)
+        self.assertEquals(len(move_invoice_lines_partner_b_usd.full_reconcile_id), 1)
+        self.assertEquals(len(move_payment_lines_partner_c.full_reconcile_id), 1)
+        self.assertEquals(len(move_payment_lines_partner_d.full_reconcile_id), 1)
