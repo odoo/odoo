@@ -442,7 +442,7 @@
                     <t t-foreach="slide_type_keys" t-as="slide_type_key">
                         <t t-if="search_category">
                             <li t-if="search_category['nbr_%s' % slide_type_key] > 0" class="nav-item">
-                                <a t-att-href="'/slides/%s/category/%s?%s' % (slug(channel), slug(search_category), keep_query('debug', slide_type=slide_type_key))"
+                                <a t-att-href="'/slides/%s/category/%s?%s' % (slug(channel), slug(search_category), keep_query(slide_type=slide_type_key))"
                                    t-att-class="'nav-link d-flex align-items-center justify-content-between pl-0 mr-1 %s' % ('active' if search_slide_type == slide_type_key else '')">
                                    <t t-esc="slide_types[slide_type_key]"/>
                                    <span t-attf-class="badge badge-pill ml-1 #{'badge-info' if search_slide_type == slide_type_key else 'bg-400'}" t-esc="search_category['nbr_%s' % slide_type_key]"/>
@@ -451,7 +451,7 @@
                         </t>
                         <t t-else="">
                             <li t-if="channel['nbr_%s' % slide_type_key] > 0" class="nav-item">
-                                <a t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('debug', slide_type=slide_type_key))"
+                                <a t-att-href="'/slides/%s?%s' % (slug(channel), keep_query(slide_type=slide_type_key))"
                                    t-att-class="'nav-link d-flex align-items-center justify-content-between pl-0 mr-1 %s' % ('active' if search_slide_type == slide_type_key else '')">
                                    <t t-esc="slide_types[slide_type_key]"/>
                                    <span t-attf-class="badge badge-pill ml-1 #{'badge-info' if search_slide_type == slide_type_key else 'bg-400'}" t-esc="channel['nbr_%s' % slide_type_key]"/>
@@ -474,11 +474,11 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="slidesChannelDropdownSort" role="menu">
                             <h6 class="dropdown-header">Sort by</h6>
-                            <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('debug', 'slide_type', sorting='latest'))"
+                            <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('slide_type', sorting='latest'))"
                                t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'latest' else '')">Newest</a>
-                            <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('debug', 'slide_type', sorting='most_voted'))"
+                            <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('slide_type', sorting='most_voted'))"
                                t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'most_voted' else '')">Most Voted</a>
-                            <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('debug', 'slide_type', sorting='most_viewed'))"
+                            <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query(''slide_type', sorting='most_viewed'))"
                                t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'most_viewed' else '')">Most Viewed</a>
                         </div>
                     </li>

@@ -7,7 +7,7 @@
                     <div class="container">
                         <ul class="nav nav-tabs o_wprofile_nav_tabs mt-0 flex-nowrap" role="tablist" id="profile_extra_info_tablist">
                             <li class="nav-item">
-                                <a t-att-href="'/slides/%s%s?%s' % (slug(forum.slide_channel_id), '/%s' % slug(category) if category else '', keep_query('debug'))"
+                                <a t-att-href="'/slides/%s%s' % (slug(forum.slide_channel_id), '/%s' % slug(category) if category else '')"
                                     t-att-class="'nav-link o_wprofile_navlink'" style="border-left: 0px">
                                     <i class="fa fa-home"/> Home</a>
                             </li>
