@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-
         <!-- External page : thanks message -->
         <template id="rating_external_page_view" name="Rating Page Done">
-            <t t-call="web.layout">
-                <t t-set="head">
-                    <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
-                    <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
-                </t>
+            <t t-call="web.frontend_layout">
                 <div class="container">
                     <div class="text-center" style="margin-top:128px">
                         <i class="fa fa-check-circle fa-5x text-success" role="img" aria-label="Thank you!" title="Thank you!"/>
@@ -22,10 +17,7 @@
 
         <!-- External page: rate and submit feedback -->
         <template id="rating_external_page_submit" name="Rating Page Submit">
-            <t t-call="web.layout">
-                <t t-set="head">
-                    <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
-                </t>
+            <t t-call="web.frontend_layout">
                 <div class="container">
                     <div clas="row">
                         <h1 class="text-center">Thanks! We appreciate your feedback.</h1>
@@ -51,5 +43,4 @@
                 </div>
             </t>
         </template>
-
 </odoo>

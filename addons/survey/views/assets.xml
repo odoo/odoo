@@ -19,22 +19,6 @@
         <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"></link>
     </template>
 
-    <template id="survey_web_assets" name="Survey Web Assets">
-        <script type="text/javascript" src="/web/static/src/js/public/public_root.js"/>
-        <script type="text/javascript" src="/web/static/src/js/public/public_root_instance.js"/>
-        <script type="text/javascript" src="/web/static/src/js/public/public_widget.js"/>
-        <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
-
-        <t t-call="web._assets_helpers">
-            <t t-call="web._assets_frontend_helpers"/>
-        </t>
-        <t t-call="web._assets_bootstrap"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fonts.scss" />
-        <!-- Some helper classes (like mt- mb-) are required for survey templates  -->
-        <link rel="stylesheet" type="text/less" href="/web_editor/static/src/scss/web_editor.common.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/survey/static/src/scss/survey_templates.scss"/>
-    </template>
-
     <template id="survey_report_assets_pdf" inherit_id="web.report_assets_pdf">
         <xpath expr="link[last()]" position="after">
             <link rel="stylesheet" type="text/scss" href="/survey/static/src/scss/survey_reports.scss"/>

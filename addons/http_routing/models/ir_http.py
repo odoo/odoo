@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import hashlib
+import json
 import logging
 import os
 import re
@@ -16,6 +18,7 @@ import odoo
 from odoo import api, models
 from odoo.addons.base.models.ir_http import RequestUID, ModelConverter
 from odoo.http import request
+from odoo.osv import expression
 from odoo.tools import config, ustr, pycompat
 
 from ..geoipresolver import GeoIPResolver
@@ -235,6 +238,32 @@ class IrHttp(models.AbstractModel):
         if lang_code:
             return request.env['res.lang'].search([('code', '=', lang_code)], limit=1)
         return request.env['res.lang'].search([], limit=1)
+
+    @api.model
+    def get_frontend_session_info(self):
+        session_info = super(IrHttp, self).get_frontend_session_info()
+
+        IrHttpModel = request.env['ir.http'].sudo()
+        modules = IrHttpModel.get_translation_frontend_modules()
+        user_context = request.session.get_context() if request.session.uid else {}
+        lang = user_context.get('lang')
+        translations, _ = request.env['ir.translation'].get_translations_for_webclient(modules, lang)
+
+        session_info.update({
+            'translationURL': '/website/translations/',
+            'cache_hashes': {
+                'translations': hashlib.sha1(json.dumps(translations, sort_keys=True).encode()).hexdigest(),
+            },
+        })
+        return session_info
+
+    @api.model
+    def get_translation_frontend_modules(self):
+        Modules = request.env['ir.module.module'].sudo()
+        domain = self._get_translation_frontend_modules_domain()
+        return Modules.search(
+            expression.AND([domain, [('state', '=', 'installed')]])
+        ).mapped('name')
 
     @classmethod
     def _get_translation_frontend_modules_domain(cls):

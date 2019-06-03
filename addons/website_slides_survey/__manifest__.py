@@ -6,7 +6,7 @@
     'description': """This module lets you use the full power of certifications within your courses.""",
     'category': 'Hidden',
     'version': '1.0',
-    'depends': ['website_slides', 'website_survey'],
+    'depends': ['website_slides', 'survey'],
     'installable': True,
     'auto_install': True,
     'data': [
