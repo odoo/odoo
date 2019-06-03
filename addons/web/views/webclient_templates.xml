@@ -498,7 +498,7 @@
 
     <template id="web.login" name="Login">
         <t t-call="web.login_layout">
-            <form class="oe_login_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post" onsubmit="this.action = this.action + location.hash">
+            <form class="oe_login_form" role="form" t-attf-action="/web/login" method="post" onsubmit="this.action = this.action + location.hash">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
                 <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
@@ -530,7 +530,7 @@
 
                 <div t-attf-class="clearfix oe_login_buttons text-center mb-1 {{'pt-2' if form_small else 'pt-3'}}">
                     <button type="submit" class="btn btn-primary btn-block">Log in</button>
-                    <t t-if="debug">
+                    <t t-if="request.debug">
                         <button type="submit" name="redirect" value="/web/become" class="btn btn-link btn-sm btn-block">Log in as superuser</button>
                     </t>
                     <div class="o_login_auth"/>
