@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<!-- Recently Viewed Products Carousel -->
+<t t-name="website_tracking.productsRecentlyViewed">
+    <div id="o_carousel_recently_viewed_products" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+        <t t-foreach="products.length" t-as="_index">
+            <t t-if="_index % 3 === 0 || mobile">
+                <div t-attf-class="carousel-item #{ _index === 0 ? 'active' : ''}">
+                <t t-if="mobile">
+                    <t t-set="_toIndex" t-value="_index + 1"></t>
+                </t>
+                <t t-else="">
+                    <t t-set="_toIndex" t-value="_index + 3 > products.length ? products.length : _index + 3"></t>
+                </t>
+                <t t-foreach="products.slice(_index, _toIndex)" t-as="product">
+                    <div class="o-product-card-wrap col-md-4">
+                        <div class="o-product-card card ">
+                            <input type="hidden" name="product-id" t-att-data-product-id="product.id"/>
+                            <a t-att-href="product.website_url">
+                                <img class="o-product-card-img-top card-img-top" t-att-src="'/web/image/product.product/' + product.id + '/image_large'" alt="Product Image"/>
+                            </a>
+                            <div class="o-product-card-body card-body">
+                                <a t-att-href="product.website_url">
+                                    <h6 class="card-title text-truncate" t-raw="product.display_name"/>
+                                </a>
+                                <t t-if="product.has_discounted_price">
+                                    <span class="text-danger text-nowrap" style="text-decoration: line-through;">
+                                        <t t-raw="product.list_price"/>
+                                    </span>
+                                    <br/>
+                                </t>
+                                <b class="text-nowrap">
+                                    <t t-raw="product.price"/>
+                                </b>
+                                <button class="btn btn-secondary ml-1 js_add_cart">
+                                    <i class="fa fa-cart-plus"/> Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                </div>
+            </t>
+        </t>
+        </div>
+        <a class="o_carousel_control carousel-control-prev" href="#o_carousel_recently_viewed_products" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="o_carousel_control carousel-control-next" href="#o_carousel_recently_viewed_products" role="button" data-slide="next">
+            <span class="carousel-control-next-icon"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+</t>
+
+</templates>

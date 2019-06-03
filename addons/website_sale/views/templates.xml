@@ -538,6 +538,7 @@
                     </div>
                 </section>
                 <div itemprop="description" t-field="product.website_description" class="oe_structure mt16" id="product_full_description" />
+                <div id="open_chatter"/>
             </div>
         </t>
     </template>
@@ -583,7 +584,7 @@
 
     <!-- Product options: OpenChatter -->
     <template id="product_comment" inherit_id="website_sale.product" active="False" customize_show="True" name="Discussion and Rating">
-        <xpath expr="//div[@t-field='product.website_description']" position="after">
+        <xpath expr="//div[@id='open_chatter']" position="replace">
             <div class="o_shop_discussion_rating">
                 <section class="container mt16 mb16">
                     <hr/>
@@ -925,7 +926,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-xl-4">
+                        <div class="col-12 col-xl-4" id="o_cart_summary">
                             <t t-call="website_sale.short_cart_summary"/>
                             <div class="d-xl-none mt8">
                                 <a role="button" href="/shop" class="btn btn-secondary mb32">

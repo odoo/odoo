@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Layout and common templates -->
+    <template id="assets_frontend" inherit_id="website.assets_frontend">
+        <xpath expr="link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/website_tracking/static/src/scss/website_tracking.scss"/>
+        </xpath>
+        <xpath expr="script[last()]" position="after">
+            <script type="text/javascript" src="/website_tracking/static/src/js/website_tracking.js"></script>
+        </xpath>
+    </template>
+
+    <!-- website_sale related templates -->
+    <template id="recently_viewed_products_product" inherit_id="website_sale.product" active="False" customize_show="True" name="Recently Viewed Products">
+        <xpath expr="//div[@t-field='product.website_description']" position="after">
+            <t t-call="website_tracking.s_products_recently_viewed"/>
+        </xpath>
+    </template>
+
+    <template id="recently_viewed_products_cart" inherit_id="website_sale.cart" active="False" customize_show="True" name="Recently Viewed Products">
+        <xpath expr="//div[@id='o_cart_summary']" position="after">
+            <div class="col-12">
+                <t t-call="website_tracking.s_products_recently_viewed"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="recently_viewed_products_products" inherit_id="website_sale.products" active="False" customize_show="True" name="Recently Viewed Products">
+        <xpath expr="//div[@id='oe_structure_website_sale_products_2']" position="before">
+            <t t-call="website_tracking.s_products_recently_viewed"/>
+        </xpath>
+    </template>
+</odoo>

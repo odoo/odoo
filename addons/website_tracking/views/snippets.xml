@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="s_products_recently_viewed" name="Products Recently Viewed">
+        <section class="s_wtracking_products_recently_viewed bg-200 pt24 pb24">
+            <div class="container">
+                <h3>Recently viewed Products</h3>
+                <div class="slider"/>
+            </div>
+        </section>
+    </template>
+
+    <template id="snippets" inherit_id="website.snippets" name="tracking snippets">
+        <xpath expr="//div[@id='snippet_feature']//t[@t-snippet][last()]" position="after">
+            <t t-snippet="website_tracking.s_products_recently_viewed" t-thumbnail="/website/static/src/img/snippets_thumbs/s_products_recently_viewed.png"/>
+        </xpath>
+    </template>
+
+    <template id="remove_external_snippets" inherit_id="website.external_snippets">
+        <xpath expr="//t[@t-install='website_tracking'][@id='s_products_recently_viewed']" position="replace"/>
+    </template>
+</odoo>
