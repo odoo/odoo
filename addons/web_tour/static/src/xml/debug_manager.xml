@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-<t t-extend="WebClient.DebugManager.Global">
+<t t-extend="WebClient.DebugManager.Backend">
     <t t-jquery="a[data-action='select_view']" t-operation="after">
         <t t-if="manager._is_admin">
             <a t-if="manager.consume_tours_enabled" href="#" class="dropdown-item" data-action="consume_tours">Disable Tours</a>
