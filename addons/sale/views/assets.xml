@@ -7,7 +7,7 @@
         </xpath>
         <xpath expr="script[last()]" position="after">
             <script type="text/javascript" src="/sale/static/src/js/sale.js"></script>
-            <script type="text/javascript" src="/sale/static/src/js/tour.js"></script>
+            <script type="text/javascript" src="/sale/static/src/js/tours/sale.js"></script>
             <script type="text/javascript" src="/sale/static/src/js/account_reconciliation.js"></script>
         </xpath>
     </template>
@@ -17,7 +17,11 @@
         </xpath>
         <xpath expr="script[last()]" position="after">
             <script type="text/javascript" src="/sale/static/src/js/sale_portal_sidebar.js"></script>
-            <script type="text/javascript" src="/sale/static/src/js/sale_tour_sale_signature.js"></script>
+        </xpath>
+    </template>
+    <template id="assets_tests" name="Sale Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/sale/static/tests/tours/sale_signature.js"></script>
         </xpath>
     </template>
     <template id="qunit_suite" name="sale_tests" inherit_id="web.qunit_suite">

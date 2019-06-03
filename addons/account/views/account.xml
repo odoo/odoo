@@ -20,14 +20,13 @@
             <script type="text/javascript" src="/account/static/src/js/reconciliation/reconciliation_action.js"></script>
             <script type="text/javascript" src="/account/static/src/js/reconciliation/reconciliation_model.js"></script>
             <script type="text/javascript" src="/account/static/src/js/reconciliation/reconciliation_renderer.js"></script>
-            <script type="text/javascript" src="/account/static/src/js/reconciliation/tour_reconciliation.js"></script>
 
             <script type="text/javascript" src="/account/static/src/js/account_payment_field.js"></script>
             <script type="text/javascript" src="/account/static/src/js/mail_activity.js"></script>
 
             <script type="text/javascript" src="/account/static/src/js/bank_statement.js"></script>
             <script type="text/javascript" src="/account/static/src/js/section_and_note_fields_backend.js"></script>
-            <script type="text/javascript" src="/account/static/src/js/tour.js"></script>
+            <script type="text/javascript" src="/account/static/src/js/tours/account.js"></script>
 
             <script type="text/javascript" src="/account/static/src/js/bills_tree_upload.js"/>
         </xpath>
@@ -36,6 +35,12 @@
     <template id="assets_frontend" name="account assets" inherit_id="web.assets_frontend">
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/account/static/src/js/account_portal_sidebar.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_tests" name="Account Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/account/static/tests/tours/reconciliation.js"></script>
         </xpath>
     </template>
 
