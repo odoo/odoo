@@ -195,6 +195,7 @@ class SaleOrderLine(models.Model):
     product_packaging = fields.Many2one('product.packaging', string='Package', default=False)
     route_id = fields.Many2one('stock.location.route', string='Route', domain=[('sale_selectable', '=', True)], ondelete='restrict')
     move_ids = fields.One2many('stock.move', 'sale_line_id', string='Stock Moves')
+    is_storable_kit = fields.Boolean('is_storable_kit', default=False)
 
     @api.multi
     @api.depends('product_id')
@@ -256,6 +257,14 @@ class SaleOrderLine(models.Model):
                 line.product_updatable = False
 
     @api.onchange('product_id')
+    def _onchange_is_storable_kit(self):
+        if self.product_id:
+            is_storable = self.product_id.type == 'product'
+            if not is_storable:
+                is_storable = self.env['mrp.bom']._bom_find(product=self.product_id, bom_type='phantom')
+            self.is_storable_kit = is_storable
+
+    @api.onchange('product_id')
     def _onchange_product_id_set_customer_lead(self):
         self.customer_lead = self.product_id.sale_delay
 
@@ -275,44 +284,21 @@ class SaleOrderLine(models.Model):
         if not self.product_id or not self.product_uom_qty or not self.product_uom:
             self.product_packaging = False
             return {}
-        return self._check_availability(self.product_id)
-
-    def _check_availability(self, product_id):
-        """ The purpose of this method is only to be overriden if
-        'product_id' is a kit
-        """
-        product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id)
-        return self._check_availability_warning(product_id, product_qty)
 
     def _check_availability_warning(self, product_id, product_qty, ignore_warehouse=False):
-        if product_id.type == 'product':
-            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            product_by_wh = product_id.with_context(
-                warehouse=self.order_id.warehouse_id.id,
-                lang=self.order_id.partner_id.lang or self.env.user.lang or 'en_US'
-            )
-            if float_compare(product_by_wh.virtual_available, product_qty, precision_digits=precision) == -1:
-                is_available = self._check_routing(product_id)
-                if not is_available:
-                    message = _('You plan to sell %s %s of %s but you only have %s %s available in %s warehouse.') % \
-                              (self.product_uom_qty, self.product_uom.name, product_id.name,
-                               product_by_wh.virtual_available,
-                               product_by_wh.uom_id.name, self.order_id.warehouse_id.name)
-                    # We check if some products are available in other warehouses.
-                    if not ignore_warehouse and float_compare(product_by_wh.virtual_available, product_id.virtual_available,
-                                     precision_digits=precision) == -1:
-                        message += _('\nThere are %s %s available across all warehouses.\n\n') % \
-                                   (product_id.virtual_available, product_by_wh.uom_id.name)
-                        for warehouse in self.env['stock.warehouse'].search([]):
-                            quantity = product_id.with_context(warehouse=warehouse.id).virtual_available
-                            if quantity > 0:
-                                message += "%s: %s %s\n" % (warehouse.name, quantity, product_id.uom_id.name)
-                    warning_mess = {
-                        'title': _('Not enough inventory!'),
-                        'message': message
-                    }
-                    return {'warning': warning_mess}
-        return {}
+        stock_info = {}
+        forcaste_date = datetime.now().date() + timedelta(days=self.customer_lead)
+        # We check if some products are available in other warehouses.
+        for warehouse in self.env['stock.warehouse'].search([]):
+            quantity_onhand = product_id.with_context(warehouse=warehouse.id).qty_available
+            quants = self.env['stock.quant']._gather(product_id, warehouse.view_location_id)
+            quantity_available = quantity_onhand - sum(quants.mapped('reserved_quantity'))
+            quantity_forcasted = product_id.with_context(warehouse=warehouse.id, to_date=forcaste_date).virtual_available
+            stock_info.update({warehouse.name: {'quantity_onhand': str(quantity_onhand) + " " + product_id.uom_id.name, 'quantity_available': str(quantity_available) + " " + product_id.uom_id.name, 'quantity_forcasted': str(quantity_forcasted) + " " + product_id.uom_id.name}})
+        warning = {
+            'stock_info': stock_info
+        }
+        return warning
 
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):
@@ -481,3 +467,17 @@ class SaleOrderLine(models.Model):
             raise UserError(_('You cannot decrease the ordered quantity below the delivered quantity.\n'
                               'Create a return first.'))
         super(SaleOrderLine, self)._update_line_quantity(values)
+
+    @api.multi
+    def stock_kit_quantity_info(self):
+        product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id)
+
+        return {
+            'name': 'Stock details',
+            'res_model': 'sale.order.line.wizard',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_id': self.env.ref('sale_stock.view_storable_kit_product_qty_wizard').id,
+            'target': 'new',
+            'context': {'product_qty': product_qty}
+        }

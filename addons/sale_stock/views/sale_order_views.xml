@@ -52,5 +52,17 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="view_order_form_inherit_sale_stock_qty" model="ir.ui.view">
+            <field name="name">sale.order.line.tree.sale.stock.qty</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <xpath expr="//page/field[@name='order_line']/tree/field[@name='product_uom_qty']" position="after">
+                    <field name="is_storable_kit" invisible="1"/>
+                    <button icon="fa-info-circle" class="enabled" title="Stock details" name="stock_kit_quantity_info" type="object" attrs="{'invisible': ['|', ('is_storable_kit', '=', False), ('state', '!=', 'draft')]}"/>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>

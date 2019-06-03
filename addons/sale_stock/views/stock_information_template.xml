@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="stock_informations">
+        <table class="table table-bordered">
+            <tr>
+                <th>Warehouse</th>
+                <th>Quantity on Hand</th>
+                <th>Quantity Available</th>
+                <th>Quantity Forecasted</th>
+            </tr>
+            <t t-foreach="data" t-as="wh">
+                <tr>
+                    <td><t t-esc="wh"/></td>
+                    <td><t t-esc="data[wh]['quantity_onhand']"/></td>
+                    <td><t t-esc="data[wh]['quantity_available']"/></td>
+                    <td><t t-esc="data[wh]['quantity_forcasted']"/></td>
+                </tr>
+            </t>
+        </table>
+    </template>
+</odoo>

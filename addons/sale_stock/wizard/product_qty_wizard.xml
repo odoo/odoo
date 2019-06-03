@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     <record id="view_storable_kit_product_qty_wizard" model="ir.ui.view">
+        <field name="name">sale.order.line.wizard</field>
+        <field name="model">sale.order.line.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Stock details">
+                <field name="stock_information" readonly="True"/>
+                <footer>
+                    <button string="OK" class="btn-primary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
