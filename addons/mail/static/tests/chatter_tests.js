@@ -2638,7 +2638,7 @@ QUnit.test('chatter: suggested partner auto-follow on message post', async funct
         "should have a single follower (widget counter)");
     assert.containsOnce(form, '.o_followers_list > div.o_partner',
         "should have a single follower (listed partners)");
-    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a').text(), "Admin",
+    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a').text().trim(), "Admin",
         "should have 'Admin' as follower");
 
     // open composer
@@ -2665,10 +2665,10 @@ QUnit.test('chatter: suggested partner auto-follow on message post', async funct
         "should have a two followers (widget counter)");
     assert.containsN(form, '.o_followers_list > div.o_partner', 2,
         "should have two followers (listed partners)");
-    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a[data-oe-id="5"]').text(),
+    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a[data-oe-id="5"]').text().trim(),
         "Admin",
         "should have 'Admin' as follower");
-    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a[data-oe-id="8"]').text(),
+    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a[data-oe-id="8"]').text().trim(),
         "Demo User",
         "should have 'Demo User' as follower");
 
