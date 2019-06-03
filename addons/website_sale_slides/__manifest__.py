@@ -11,6 +11,7 @@
     'installable': True,
     'auto_install': True,
     'data': [
+        'views/assets.xml',
         'views/slide_channel_views.xml',
         'views/website_slides_templates.xml',
     ],

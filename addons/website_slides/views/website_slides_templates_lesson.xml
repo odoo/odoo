@@ -404,7 +404,10 @@
         t-att-data-quiz-karma-gain="quiz_karma_gain"
         t-att-data-quiz-karma-won="quiz_karma_won"
         t-att-data-has-next="1 if next_slide else 0"
-        t-att-data-next-slide-url="'/slides/slide/%s' % (slug(next_slide)) if next_slide else None">
+        t-att-data-next-slide-url="'/slides/slide/%s' % (slug(next_slide)) if next_slide else None"
+        t-att-data-channel-id="slide.channel_id.id"
+        t-att-data-channel-enroll="slide.channel_id.enroll"
+        t-att-data-signup-allowed="signup_allowed">
         <div t-foreach="slide_questions" t-as="question"
             t-att-class="'o_wslides_js_lesson_quiz_question my-5 %s' % ('completed-disabled' if slide_completed else ('disabled' if not slide.channel_id.is_member else ''))" t-att-data-question-id="question['id']" t-att-data-title="question['question']">
             <div class="h4">
