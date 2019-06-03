@@ -994,6 +994,7 @@ var StatementModel = BasicModel.extend({
                 prop.label = prop.name;
                 prop.account_id = self._formatNameGet(prop.account_id || line.account_id);
                 prop.is_partially_reconciled = prop.amount_str !== prop.total_amount_str;
+                prop.to_check = !!prop.to_check;
             });
         }
     },
@@ -1128,7 +1129,7 @@ var StatementModel = BasicModel.extend({
             'link': values.link,
             'display': true,
             'invalid': true,
-            'to_check': values.to_check,
+            'to_check': values.to_check || false,
             '__tax_to_recompute': true,
             'is_tax': values.is_tax,
             '__focus': '__focus' in values ? values.__focus : true,
@@ -1614,6 +1615,7 @@ var ManualModel = StatementModel.extend({
                 prop.debit = prop.debit !== 0 ? 0 : tmp_value;
                 prop.amount = -prop.amount;
                 prop.journal_id = self._formatNameGet(prop.journal_id || line.journal_id);
+                prop.to_check = !!prop.to_check;
             });
         }
     },
