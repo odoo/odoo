@@ -80,9 +80,9 @@ class AccountInvoice(models.Model):
             self.partner_id = self.purchase_id.partner_id.id
 
         vendor_ref = self.purchase_id.partner_ref
-        if vendor_ref:
-            self.reference = ", ".join([self.reference, vendor_ref]) if (
-                    self.reference and vendor_ref not in self.reference) else vendor_ref
+        if vendor_ref and (not self.reference or (
+                vendor_ref + ", " not in self.reference and not self.reference.endswith(vendor_ref))):
+            self.reference = ", ".join([self.reference, vendor_ref]) if self.reference else vendor_ref
 
         new_lines = self.env['account.invoice.line']
         for line in self.purchase_id.order_line - self.invoice_line_ids.mapped('purchase_line_id'):
