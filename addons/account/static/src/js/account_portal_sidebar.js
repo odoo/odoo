@@ -15,10 +15,19 @@ publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
      */
     start: function () {
         var def = this._super.apply(this, arguments);
+
         var $invoiceHtml = this.$el.find('iframe#invoice_html');
         var updateIframeSize = this._updateIframeSize.bind(this, $invoiceHtml);
-        $invoiceHtml.on('load', updateIframeSize);
+
         $(window).on('resize', updateIframeSize);
+
+        var iframeDoc = $invoiceHtml[0].contentDocument || $invoiceHtml[0].contentWindow.document;
+        if (iframeDoc.readyState === 'complete') {
+            updateIframeSize();
+        } else {
+            $invoiceHtml.on('load', updateIframeSize);
+        }
+
         return def;
     },
 
