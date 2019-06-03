@@ -22,5 +22,5 @@ NOTE: Delete this module before merge
     'demo': [
     ],
     'post_init_hook': 'post_init_hook',
-    'auto_install': True,
+    'auto_install': False,
 }

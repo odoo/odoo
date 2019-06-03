@@ -30,7 +30,6 @@
         'demo/account_supplier_invoice_demo.xml',
         'demo/account_supplier_invoice_validate_demo.xml',
         'demo/account_supplier_refund_demo.xml',
-        'demo/account_journal_demo.xml',
         # TODO waiting for l10n_ar_edi
         # '../l10n_ar_afipws_fe/demo/account_journal_expo_demo.yml',
         # '../l10n_ar_afipws_fe/demo/account_journal_demo.yml',

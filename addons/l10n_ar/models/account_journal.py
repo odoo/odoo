@@ -37,7 +37,6 @@ class AccountJournal(models.Model):
         return [
             ('II_IM', 'Factura Pre-impresa'),
             ('RLI_RLM', 'Factura en Linea'),
-            ('CF', 'Controlador Fiscal'),
             ('BFERCEL', 'Bonos Fiscales Electrónicos - Factura en Linea'),
             ('FEERCELP', 'Comprobantes de Exportacion - Facturador Plus'),
             ('FEERCEL', 'Comprobantes de Exportacion - Factura en Linea'),

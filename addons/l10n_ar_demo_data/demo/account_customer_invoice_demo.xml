@@ -445,27 +445,4 @@
             <value eval="[ref('demo_invoice_18')]"/>
         </function>
 
-    <!-- comprobante de ticket z -->
-    <record id="demo_invoice_9" model="account.invoice">
-        <field name="partner_id" ref="l10n_ar.par_cfa"/>
-        <field name="user_id" ref="base.user_demo"/>
-        <field name="payment_term_id" ref="account.account_payment_term"/>
-        <field name="type">out_invoice</field>
-        <field name="l10n_latam_document_number">0001-00000001</field>
-        <field name="date_invoice" eval="time.strftime('%Y-%m')+'-13'"/>
-        <field name="company_id" ref="base.main_company"/>
-    </record>
-
-        <record id="demo_invoice_line_18_1" model="account.invoice.line">
-            <field name="name">Support Services</field>
-            <field name="invoice_id" ref="demo_invoice_9"/>
-            <field name="product_id" ref="product.product_product_2"/>
-            <field name="price_unit">24.3</field>
-            <field name="quantity">3</field>
-        </record>
-
-        <function model="account.invoice" name="compute_taxes">
-            <value eval="[ref('demo_invoice_9')]"/>
-        </function>
-
 </odoo>
