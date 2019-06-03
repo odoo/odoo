@@ -435,7 +435,7 @@ var loadAsset = (function () {
         }
         var params = {
             args: [xmlId, {
-                debug: config.debug
+                debug: config.isDebug()
             }],
             kwargs: {
                 context: odoo.session_info.user_context,

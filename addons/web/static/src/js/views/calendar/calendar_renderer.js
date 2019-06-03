@@ -187,7 +187,7 @@ return AbstractRenderer.extend({
         this.color_map = {};
 
         if (params.eventTemplate) {
-            this.qweb = new QWeb(session.debug, {_s: session.origin});
+            this.qweb = new QWeb(config.isDebug(), {_s: session.origin});
             this.qweb.add_template(utils.json_node_to_xml(params.eventTemplate));
         }
     },

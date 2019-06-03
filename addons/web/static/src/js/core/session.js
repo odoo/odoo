@@ -3,7 +3,6 @@ odoo.define('web.Session', function (require) {
 
 var ajax = require('web.ajax');
 var concurrency = require('web.concurrency');
-var config = require('web.config');
 var core = require('web.core');
 var local_storage = require('web.local_storage');
 var mixins = require('web.mixins');
@@ -35,7 +34,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         this.avoid_recursion = false;
         this.use_cors = options.use_cors || false;
         this.setup(origin);
-        this.debug = config.debug;
 
         // for historic reasons, the session requires a name to properly work
         // (see the methods get_cookie and set_cookie).  We should perhaps

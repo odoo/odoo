@@ -677,7 +677,7 @@ var RequestDetails = Widget.extend({
     }
 });
 
-if (config.debug) {
+if (config.isDebug()) {
     SystrayMenu.Items.push(DebugManager);
 
     WebClient.include({

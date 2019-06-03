@@ -2,6 +2,7 @@ odoo.define('base_import.import', function (require) {
 "use strict";
 
 var AbstractAction = require('web.AbstractAction');
+var config = require('web.config');
 var core = require('web.core');
 var session = require('web.session');
 var time = require('web.time');
@@ -414,7 +415,7 @@ var DataImport = AbstractAction.extend({
 
             var $thing = $();
             var bind = function (d) {};
-            if (session.debug) {
+            if (config.isDebug()) {
                 $thing = $(QWeb.render('ImportView.create_record_option')).insertAfter(v).hide();
                 bind = function (data) {
                     switch (data.type) {

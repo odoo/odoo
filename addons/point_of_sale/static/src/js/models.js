@@ -45,7 +45,7 @@ exports.PosModel = Backbone.Model.extend({
 
         this.proxy_queue = new devices.JobQueue();           // used to prevent parallels communications to the proxy
         this.db = new PosDB();                       // a local database used to search trough products and categories & store pending orders
-        this.debug = config.debug; //debug mode
+        this.debug = config.isDebug(); //debug mode
 
         // Business data; loaded from the server at launch
         this.company_logo = null;
@@ -2251,7 +2251,7 @@ exports.Order = Backbone.Model.extend({
             } else {
                 subreceipt = subreceipt.split('\n').slice(1).join('\n');
                 var qweb = new QWeb2.Engine();
-                    qweb.debug = config.debug;
+                    qweb.debug = config.isDebug();
                     qweb.default_dict = _.clone(QWeb.default_dict);
                     qweb.add_template('<templates><t t-name="subreceipt">'+subreceipt+'</t></templates>');
 

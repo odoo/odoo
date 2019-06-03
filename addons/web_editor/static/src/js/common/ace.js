@@ -2,12 +2,12 @@ odoo.define('web_editor.ace', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');
+var config = require('web.config');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var localStorage = require('web.local_storage');
-var session = require('web.session');
 
 var _t = core._t;
 
@@ -716,8 +716,8 @@ var ViewEditor = Widget.extend({
         _.each(this.$lists, function ($list, _type) { $list.toggleClass('d-none', type !== _type); });
         this.$lists[type].change();
 
-        this.$includeBundlesArea.toggleClass('d-none', this.currentType !== 'xml' || !session.debug);
-        this.$includeAllSCSSArea.toggleClass('d-none', this.currentType !== 'scss' || !session.debug);
+        this.$includeBundlesArea.toggleClass('d-none', this.currentType !== 'xml' || !config.isDebug());
+        this.$includeAllSCSSArea.toggleClass('d-none', this.currentType !== 'scss' || !config.isDebug());
         this.$includeAllSCSSArea.find('[data-value="restricted"]').toggleClass('d-none', this.options.defaultBundlesRestriction.length === 0);
         this.$formatButton.toggleClass('d-none', this.currentType !== 'xml');
     },
@@ -824,7 +824,7 @@ var ViewEditor = Widget.extend({
                 }));
             }
 
-            if (!isSelected && session.debug && $elem.data('debug')) {
+            if (!isSelected && config.isDebug() && $elem.data('debug')) {
                 $div.append($('<span/>', {
                     text: ' (' + $elem.data('debug') + ')',
                     class: 'ml4 small text-muted',

@@ -3,6 +3,7 @@ odoo.define('mail.ActivityRenderer', function (require) {
 
 var AbstractRenderer = require('web.AbstractRenderer');
 var ActivityRecord = require('mail.ActivityRecord');
+var config = require('web.config');
 var core = require('web.core');
 var field_registry = require('web.field_registry');
 var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
@@ -32,7 +33,7 @@ var ActivityRenderer = AbstractRenderer.extend({
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
 
-        this.qweb = new qweb(session.debug, {_s: session.origin});
+        this.qweb = new qweb(config.isDebug(), {_s: session.origin});
         this.qweb.add_template(utils.json_node_to_xml(params.templates));
     },
 

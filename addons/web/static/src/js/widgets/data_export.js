@@ -1,6 +1,7 @@
 odoo.define('web.DataExport', function (require) {
 "use strict";
 
+var config = require('web.config');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var Dialog = require('web.Dialog');
@@ -240,11 +241,11 @@ var DataExport = Dialog.extend({
                 .find('.o_expand_parent')
                 .toggleClass('fa-chevron-right fa-chevron-down')
                 .next()
-                .after(QWeb.render('Export.TreeItems', {fields: records, debug: this.getSession().debug}));
+                .after(QWeb.render('Export.TreeItems', {fields: records, debug: config.isDebug()}));
         } else {
             this.$('.o_left_field_panel').empty().append(
                 $('<div/>').addClass('o_field_tree_structure')
-                           .append(QWeb.render('Export.TreeItems', {fields: records, debug: this.getSession().debug}))
+                           .append(QWeb.render('Export.TreeItems', {fields: records, debug: config.isDebug()}))
             );
         }
 
