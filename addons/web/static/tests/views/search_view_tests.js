@@ -1,7 +1,9 @@
 odoo.define('web.search_view_tests', function (require) {
 "use strict";
 
+var AbstractStorageService = require('web.AbstractStorageService');
 var FormView = require('web.FormView');
+var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
 var testUtilsDom = require('web.test_utils_dom');
 var createActionManager = testUtils.createActionManager;
@@ -1087,5 +1089,45 @@ QUnit.module('Search View', {
         form.destroy();
     });
 
+    QUnit.module('Misc');
+
+    QUnit.test('search buttons visibility is stored in/retrieved from local storage', async function (assert) {
+        assert.expect(9);
+
+        var RamStorageService = AbstractStorageService.extend({
+            storage: new RamStorage(),
+        });
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            services: {
+                local_storage: RamStorageService,
+            },
+        });
+
+       testUtils.intercept(actionManager, 'call_service', function (ev) {
+            if (ev.data.service === 'local_storage' && ev.data.args[0] === 'visible_search_menu') {
+                assert.step(`${ev.data.method} ${ev.data.args.length > 1 ? ev.data.args[1] : ''}`);
+            }
+        }, true);
+
+        await actionManager.doAction(1);
+
+        assert.isVisible($('.o_search_options .o_dropdown_toggler_btn:first'));
+
+        await testUtils.dom.click($('.o_searchview_more'));
+
+        assert.isNotVisible($('.o_search_options .o_dropdown_toggler_btn:first'));
+        assert.verifySteps(['getItem ', 'getItem ', 'setItem false']);
+
+        await actionManager.doAction(2);
+
+        assert.isNotVisible($('.o_search_options .o_dropdown_toggler_btn:first'));
+        assert.verifySteps(['getItem ', 'getItem ', 'setItem false', 'getItem ']);
+
+        actionManager.destroy();
+    });
 });
 });
