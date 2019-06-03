@@ -64,7 +64,7 @@ tour.register('account_render_report', {
         content: 'Primary color is correct',
         run: function () {
             if (this.$anchor.css('color') !== "rgb(18, 52, 86)") {
-                throw new Error(_('The primary color should be the one set on the company.'));
+                console.error('The primary color should be the one set on the company.');
             }
         },
     }, {
@@ -72,7 +72,7 @@ tour.register('account_render_report', {
         content: 'Secondary color is correct',
         run: function () {
             if (this.$anchor.css('color') !== "rgb(120, 145, 1)") {
-                throw new Error(_('The secondary color should be the one set on the company.'));
+               console.error('The secondary color should be the one set on the company.');
             }
         },
     }
