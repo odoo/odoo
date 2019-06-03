@@ -90,17 +90,19 @@ class PurchaseOrder(models.Model):
     @api.multi
     def button_cancel(self):
         for order in self:
-            for pick in order.picking_ids:
-                if pick.state == 'done':
+            for move in order.order_line.mapped('move_ids'):
+                if move.state == 'done':
                     raise UserError(_('Unable to cancel purchase order %s as some receptions have already been done.') % (order.name))
             # If the product is MTO, change the procure_method of the the closest move to purchase to MTS.
             # The purpose is to link the po that the user will manually generate to the existing moves's chain.
-            if order.state in ('draft', 'sent', 'to approve'):
+            if order.state in ('draft', 'sent', 'to approve', 'purchase'):
                 for order_line in order.order_line:
+                    order_line.move_ids._action_cancel()
                     if order_line.move_dest_ids:
-                        move_dest_ids = order_line.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
-                        siblings_states = (move_dest_ids.mapped('move_orig_ids')).mapped('state')
-                        if all(state in ('done', 'cancel') for state in siblings_states):
+                        move_dest_ids = order_line.move_dest_ids
+                        if order_line.propagate_cancel:
+                            move_dest_ids._action_cancel()
+                        else:
                             move_dest_ids.write({'procure_method': 'make_to_stock'})
                             move_dest_ids._recompute_state()
 
@@ -229,6 +231,7 @@ class PurchaseOrderLine(models.Model):
     move_dest_ids = fields.One2many('stock.move', 'created_purchase_line_id', 'Downstream Moves')
     propagate_date = fields.Boolean(string="Propagate Rescheduling", help='The rescheduling is propagated to the next move.')
     propagate_date_minimum_delta = fields.Integer(string='Reschedule if Higher Than', help='The change must be higher than this value to be propagated')
+    propagate_cancel = fields.Boolean('Propagate cancellation', default=True)
 
     @api.multi
     def _compute_qty_received_method(self):
@@ -374,6 +377,7 @@ class PurchaseOrderLine(models.Model):
             'propagate_date': self.propagate_date,
             'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'description_picking': self.product_id._get_description(self.order_id.picking_type_id),
+            'propagate_cancel': self.propagate_cancel,
             'route_ids': self.order_id.picking_type_id.warehouse_id and [(6, 0, [x.id for x in self.order_id.picking_type_id.warehouse_id.route_ids])] or [],
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
         }
@@ -400,5 +404,5 @@ class PurchaseOrderLine(models.Model):
         args can be merged. If it returns an empty record then a new line will
         be created.
         """
-        lines = self.filtered(lambda l: l.propagate_date == values['propagate_date'] and l.propagate_date_minimum_delta == values['propagate_date_minimum_delta'])
+        lines = self.filtered(lambda l: l.propagate_date == values['propagate_date'] and l.propagate_date_minimum_delta == values['propagate_date_minimum_delta'] and l.propagate_cancel == values['propagate_cancel'])
         return lines and lines[0] or self.env['purchase.order.line']
