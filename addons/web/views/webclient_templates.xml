@@ -154,6 +154,8 @@
         <script type="text/javascript" src="/web/static/src/js/services/notification_service.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/session_storage_service.js"></script>
 
+        <script type="text/javascript" src="/web/static/src/js/tools/debug_manager.js"></script>
+
         <script type="text/javascript" src="/web/static/src/js/widgets/name_and_signature.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/notification.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/rainbow_man.js"></script>
@@ -248,8 +250,8 @@
         <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/auto_complete.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/change_password.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/tools/debug_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/tools/test_menus_loader.js"/>
+        <script type="text/javascript" src="/web/static/src/js/tools/debug_manager_backend.js"></script>
         <script type="text/javascript" src="/web/static/src/js/tools/tools.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/data_export.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/date_picker.js"></script>
@@ -451,6 +453,7 @@
                         <div class="container py-3">
                             <div class="row">
                                 <div class="col-sm text-center text-sm-left text-muted">
+                                    <t t-call="web.debug_icon"/>
                                     <span>Copyright &amp;copy;</span> <span t-field="res_company.name" itemprop="name">Company name</span>
                                 </div>
                                 <div class="col-sm text-center text-sm-right">
@@ -530,7 +533,7 @@
 
                 <div t-attf-class="clearfix oe_login_buttons text-center mb-1 {{'pt-2' if form_small else 'pt-3'}}">
                     <button type="submit" class="btn btn-primary btn-block">Log in</button>
-                    <t t-if="request.debug">
+                    <t t-if="debug">
                         <button type="submit" name="redirect" value="/web/become" class="btn btn-link btn-sm btn-block">Log in as superuser</button>
                     </t>
                     <div class="o_login_auth"/>
@@ -872,6 +875,14 @@
             </t>
             <t t-set="head" t-value="head_web + (head or '')"/>
             <t t-set="body_classname" t-value="'o_web_client'"/>
+        </t>
+    </template>
+
+    <template id="debug_icon" name="Debug Icon">
+        <t t-if="debug">
+            <t t-set="debug_mode_help" t-value="' (%s)' % debug if debug != '1' else ''"/>
+            <a t-attf-href="?#{keep_query('*', debug='')}" t-attf-title="Debug mode is activated#{debug_mode_help}. Click here to exit debug mode."
+               class="o_debug_mode"><span class="fa fa-bug"/></a>
         </t>
     </template>
 
