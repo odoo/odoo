@@ -2903,7 +2903,7 @@ Fields:
         if not self.env.cache.contains_value(self, field):
             for values in result:
                 record = self.browse(values.pop('id'))
-                record._cache.update(record._convert_to_cache(values, validate=False))
+                record._update_cache(values, validate=False)
             if not self.env.cache.contains(self, field):
                 exc = AccessError("No value found for %s.%s" % (self, field.name))
                 self.env.cache.set_failed(self, [field], exc)
@@ -3409,9 +3409,7 @@ Fields:
                     inv_vals = {f.name: inverse_vals[f.name] for f in fields}
                     for records in batches:
                         for record in records:
-                            record._cache.update(
-                                record._convert_to_cache(inv_vals, update=True)
-                            )
+                            record._update_cache(inv_vals)
                         fields[0].determine_inverse(records)
 
                 self.modified(set(inverse_vals) - set(store_vals))
@@ -3659,7 +3657,7 @@ Fields:
 
                 for batch in batches:
                     for record, vals in batch:
-                        record._cache.update(record._convert_to_cache(vals))
+                        record._update_cache(vals)
                     batch_recs = self.concat(*(record for record, vals in batch))
                     fields[0].determine_inverse(batch_recs)
 
@@ -4866,20 +4864,23 @@ Fields:
             prefetch_ids = self._ids
         return self._browse(self.env, self._ids, prefetch_ids)
 
-    def _convert_to_cache(self, values, update=False, validate=True):
-        """ Convert the ``values`` dictionary into cached values.
+    def _update_cache(self, values, validate=True):
+        """ Update the cache of ``self`` with ``values``.
 
-            :param update: whether the conversion is made for updating ``self``;
-                this is necessary for interpreting the commands of *2many fields
+            :param values: dict of field values, in any format.
             :param validate: whether values must be checked
         """
+        def is_monetary(pair):
+            return pair[0].type == 'monetary'
+
+        self.ensure_one()
+        cache = self.env.cache
         fields = self._fields
-        target = self if update else self.browse()
-        return {
-            name: fields[name].convert_to_cache(value, target, validate=validate)
-            for name, value in values.items()
-            if name in fields
-        }
+        field_values = [(fields[name], value) for name, value in values.items()]
+
+        # convert monetary fields last in order to ensure proper rounding
+        for field, value in sorted(field_values, key=is_monetary):
+            cache.set(self, field, field.convert_to_cache(value, self, validate))
 
     def _convert_to_record(self, values):
         """ Convert the ``values`` dictionary from the cache format to the
@@ -5010,7 +5011,7 @@ Fields:
         if origin is not None:
             origin = origin.id
         record = self.browse([NewId(origin, ref)])
-        record._cache.update(record._convert_to_cache(values, update=True))
+        record._update_cache(values)
 
         # set inverse fields on new records in the comodel
         for name in values:

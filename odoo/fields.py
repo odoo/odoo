@@ -1100,7 +1100,7 @@ class Field(MetaField('DummyField', (object,), {})):
                         for source, target in zip(recs, recs.with_env(env)):
                             try:
                                 values = {f.name: source[f.name] for f in computed}
-                                target._cache.update(target._convert_to_cache(values, validate=False))
+                                target._update_cache(values, validate=False)
                             except MissingError as exc:
                                 target._cache.set_failed(target._fields, exc)
                     # the result is saved to database by BaseModel.recompute()
