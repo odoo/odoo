@@ -40,16 +40,17 @@ var VariantMixin = {
         if (!$parent.data('uniqueId')) {
             $parent.data('uniqueId', _.uniqueId());
         }
-        this._throttledGetCombinationInfo($parent.data('uniqueId'))(ev);
+        this._throttledGetCombinationInfo($parent.data('uniqueId'))(ev, params);
     },
     /**
      * @see onChangeVariant
      *
      * @private
      * @param {Event} ev
+     * @param {$.Element} [params.$container] force the used container
      * @returns {Deferred}
      */
-    _getCombinationInfo: function (ev) {
+    _getCombinationInfo: function (ev, params) {
         var self = this;
 
         if ($(ev.target).hasClass('variant_custom_value')) {
@@ -578,8 +579,8 @@ var VariantMixin = {
     _throttledGetCombinationInfo: _.memoize(function (uniqueId) {
         var dropMisordered = new concurrency.DropMisordered();
         var _getCombinationInfo = _.throttle(this._getCombinationInfo.bind(this), 500);
-        return function (ev) {
-            return dropMisordered.add(_getCombinationInfo(ev));
+        return function (ev, params) {
+            return dropMisordered.add(_getCombinationInfo(ev, params));
         };
     }),
     /**
