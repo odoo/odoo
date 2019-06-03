@@ -506,6 +506,17 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         self.assertEqual(self.product1.value_svl, 1375)
         self.assertEqual(self.product1.quantity_svl, 95)
 
+    def test_change_in_past_increase_out_1(self):
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        move1 = self._make_in_move(self.product1, 20, unit_cost=10)
+        move2 = self._make_out_move(self.product1, 10)
+        move3 = self._make_in_move(self.product1, 20, unit_cost=15)
+        move2.move_line_ids.qty_done = 25
+
+        self.assertEqual(self.product1.value_svl, 225)
+        self.assertEqual(self.product1.quantity_svl, 15)
+        self.assertEqual(sum(self.product1.stock_valuation_layer_ids.mapped('remaining_qty')), 15)
+
     def test_change_in_past_decrease_out_1(self):
         self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
         move1 = self._make_in_move(self.product1, 20, unit_cost=10)
@@ -516,6 +527,24 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         self.assertEqual(self.product1.value_svl, 450)
         self.assertEqual(self.product1.quantity_svl, 35)
         self.assertEqual(sum(self.product1.stock_valuation_layer_ids.mapped('remaining_qty')), 35)
+
+    def test_change_in_past_add_ml_out_1(self):
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        move1 = self._make_in_move(self.product1, 20, unit_cost=10)
+        move2 = self._make_out_move(self.product1, 10)
+        move3 = self._make_in_move(self.product1, 20, unit_cost=15)
+        self.env['stock.move.line'].create({
+            'move_id': move2.id,
+            'product_id': move2.product_id.id,
+            'qty_done': 5,
+            'product_uom_id': move2.product_uom.id,
+            'location_id': move2.location_id.id,
+            'location_dest_id': move2.location_dest_id.id,
+        })
+
+        self.assertEqual(self.product1.value_svl, 350)
+        self.assertEqual(self.product1.quantity_svl, 25)
+        self.assertEqual(sum(self.product1.stock_valuation_layer_ids.mapped('remaining_qty')), 25)
 
     def test_return_delivery_1(self):
         self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
@@ -535,6 +564,36 @@ class TestStockValuationFIFO(TestStockValuationCommon):
 
         self.assertEqual(self.product1.value_svl, 280)
         self.assertEqual(self.product1.quantity_svl, 18)
+
+    def test_rereturn_receipt_1(self):
+        move1 = self._make_in_move(self.product1, 1, unit_cost=10, create_picking=True)
+        move2 = self._make_in_move(self.product1, 1, unit_cost=20)
+        move3 = self._make_out_move(self.product1, 1)
+        move4 = self._make_return(move1, 1)
+        move5 = self._make_return(move4, 1)
+
+        self.assertEqual(self.product1.value_svl, 20)
+        self.assertEqual(self.product1.quantity_svl, 1)
+
+    def test_rereturn_delivery_1(self):
+        move1 = self._make_in_move(self.product1, 1, unit_cost=10)
+        move2 = self._make_in_move(self.product1, 1, unit_cost=20)
+        move3 = self._make_out_move(self.product1, 1, create_picking=True)
+        move4 = self._make_return(move3, 1)
+        move5 = self._make_return(move4, 1)
+
+        self.assertEqual(self.product1.value_svl, 10)
+        self.assertEqual(self.product1.quantity_svl, 1)
+
+    def test_dropship_1(self):
+        orig_standard_price = self.product1.standard_price
+        move1 = self._make_in_move(self.product1, 1, unit_cost=10)
+        move2 = self._make_in_move(self.product1, 1, unit_cost=20)
+        move3 = self._make_dropship_move(self.product1, 1, unit_cost=10)
+
+        self.assertEqual(self.product1.value_svl, 30)
+        self.assertEqual(self.product1.quantity_svl, 2)
+        self.assertEqual(orig_standard_price, self.product1.standard_price)
 
 
 class TestStockValuationChangeCostMethod(TestStockValuationCommon):
