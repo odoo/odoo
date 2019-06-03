@@ -547,6 +547,50 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('formviewdialog is not closed when button handlers return a rejected promise', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.poney_ids = { string: "Poneys", type: "one2many", relation: 'partner' };
+        this.data.partner.records[0].poney_ids = [];
+        var reject = true;
+
+        var parent = createParent({
+            data: this.data,
+            archs: {
+                'partner,false,form':
+                    '<form string="Partner">' +
+                    '<field name="poney_ids"><tree><field name="display_name"/></tree></field>' +
+                    '</form>',
+            },
+        });
+
+        new dialogs.FormViewDialog(parent, {
+            res_model: 'partner',
+            res_id: 1,
+            buttons: [{
+                text: 'Click me !',
+                classes: "btn-secondary o_form_button_magic",
+                close: true,
+                click: function () {
+                    return reject ? Promise.reject() : Promise.resolve();
+                },
+            }],
+        }).open();
+
+        await testUtils.nextTick();
+        assert.strictEqual($('.modal').length, 1, "should have a modal displayed");
+
+        await testUtils.dom.click($('.modal .o_form_button_magic'));
+        assert.strictEqual($('.modal').length, 1, "modal should still be opened");
+
+        reject = false;
+        await testUtils.dom.click($('.modal .o_form_button_magic'));
+        assert.strictEqual($('.modal').length, 0, "modal should be closed");
+
+        parent.destroy();
+    });
+
 });
 
 });

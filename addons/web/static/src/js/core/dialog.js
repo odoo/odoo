@@ -304,7 +304,7 @@ var Dialog = Widget.extend({
                 }
                 if (buttonData.close) {
                     self.onForceClose = false;
-                    Promise.resolve(def).then(self.close.bind(self)).guardedCatch(self.close.bind(self));
+                    Promise.resolve(def).then(self.close.bind(self));
                 }
             });
             if (self.technical) {
