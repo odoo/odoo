@@ -92,7 +92,7 @@ class WebsiteSaleDelivery(WebsiteSale):
                 'status': order.delivery_rating_success,
                 'error_message': order.delivery_message,
                 'carrier_id': carrier_id,
-                'is_free_delivery': not bool(delivery_price),
+                'is_free_delivery': not bool(order.amount_delivery),
                 'new_amount_delivery': Monetary.value_to_html(order.amount_delivery, {'display_currency': currency}),
                 'new_amount_untaxed': Monetary.value_to_html(order.amount_untaxed, {'display_currency': currency}),
                 'new_amount_tax': Monetary.value_to_html(order.amount_tax, {'display_currency': currency}),
