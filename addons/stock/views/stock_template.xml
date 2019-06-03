@@ -3,7 +3,6 @@
 
     <template id="stock_assets_backend" name="mrp_workorder assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
-            <script type="text/javascript" src="/stock/static/tests/route_tour.js"></script>
             <script type="text/javascript" src="/stock/static/src/js/inventory_singleton_list_controller.js"></script>
             <script type="text/javascript" src="/stock/static/src/js/inventory_singleton_list_view.js"></script>
             <script type="text/javascript" src="/stock/static/src/js/inventory_validate_button_controller.js"></script>
@@ -17,6 +16,12 @@
     <template id="qunit_suite" name="stock tests" inherit_id="web.qunit_suite">
         <xpath expr="//t[@t-set='head']" position="inside">
             <script type="text/javascript" src="/stock/static/tests/singleton_list_tests.js"/>
+        </xpath>
+    </template>
+
+   <template id="assets_tests" name="Stock Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/stock/static/tests/tours/route.js"></script>
         </xpath>
     </template>
 

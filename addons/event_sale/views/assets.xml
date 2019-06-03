@@ -9,7 +9,11 @@
         <script type="text/javascript" src="/event_sale/static/src/js/event_configurator_view.js"></script>
         <script type="text/javascript" src="/event_sale/static/src/js/event_configurator_widget_mixin.js"></script>
         <script type="text/javascript" src="/event_sale/static/src/js/event_configurator_widget.js"></script>
-        <script type="text/javascript" src="/event_sale/static/src/js/event_configurator_test_ui.js"></script>
+    </xpath>
+</template>
+<template id="assets_tests" name="Event Sale Assets Tests" inherit_id="web.assets_tests">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/event_sale/static/tests/tours/event_configurator_ui.js"></script>
     </xpath>
 </template>
 <template id="qunit_suite" inherit_id="web.qunit_suite" name="event_sale_tests">
