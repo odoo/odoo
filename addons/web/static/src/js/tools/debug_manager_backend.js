@@ -1,14 +1,13 @@
-odoo.define('web.DebugManager', function (require) {
+odoo.define('web.DebugManager.Backend', function (require) {
 "use strict";
 
 var ActionManager = require('web.ActionManager');
+var DebugManager = require('web.DebugManager');
 var dialogs = require('web.view_dialogs');
 var startClickEverywhere = require('web.clickEverywhere');
 var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var field_utils = require('web.field_utils');
-var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var utils = require('web.utils');
 var WebClient = require('web.WebClient');
@@ -18,128 +17,15 @@ var QWeb = core.qweb;
 var _t = core._t;
 
 /**
- * DebugManager base + general features (applicable to any context)
+ * DebugManager features depending on backend
  */
-var DebugManager = Widget.extend({
-    template: "WebClient.DebugManager",
-    events: {
-        "click a[data-action]": "perform_callback",
-        "mouseover .o_debug_dropdowns > li:not(.show)": function(e) {
-            // Open other dropdowns on mouseover
-            var $opened = this.$('.o_debug_dropdowns > li.show');
-            if($opened.length) {
-                $opened.removeClass('show');
-                $(e.currentTarget).addClass('show').find('> a').focus();
-            }
-        },
-    },
-    init: function () {
-        this._super.apply(this, arguments);
-        // 15 fps, only actually call after sequences of queries
-        this._update_stats = _.throttle(
-            this._update_stats.bind(this),
-            1000/15, {leading: false});
-        this._events = null;
-        if (document.querySelector('meta[name=debug]')) {
-            this._events = [];
-        }
-    },
-    start: function () {
-        core.bus.on('rpc:result', this, function (req, resp) {
-            this._debug_events(resp.debug);
-        });
-        this.on('update-stats', this, this._update_stats);
-        var init;
-        if ((init = document.querySelector('meta[name=debug]'))) {
-            this._debug_events(JSON.parse(init.getAttribute('value')));
-        }
-
-        this.$dropdown = this.$(".o_debug_dropdown");
-        // falsy if can't write to user or couldn't find technical features
-        // group, otherwise features group id
-        this._features_group = null;
-        // whether group is currently enabled for current user
-        this._has_features = false;
-        // whether the current user is an administrator
-        this._is_admin = session.is_system;
-        return Promise.resolve(
-            this._rpc({
-                    model: 'res.users',
-                    method: 'check_access_rights',
-                    kwargs: {operation: 'write', raise_exception: false},
-                }),
-            session.user_has_group('base.group_no_one'),
-            this._rpc({
-                    model: 'ir.model.data',
-                    method: 'xmlid_to_res_id',
-                    kwargs: {xmlid: 'base.group_no_one'},
-                }),
-            this._super()
-        ).then(function (can_write_user, has_group_no_one, group_no_one_id) {
-            this._features_group = can_write_user && group_no_one_id;
-            this._has_features = has_group_no_one;
-            return this.update();
-        }.bind(this));
-    },
-    leave_debug_mode: function () {
-        var qs = $.deparam.querystring();
-        qs.debug = '';
-        window.location.search = '?' + $.param(qs);
-    }, /**
-     * Calls the appropriate callback when clicking on a Debug option
-     */
-    perform_callback: function (evt) {
-        evt.preventDefault();
-        var params = $(evt.target).data();
-        var callback = params.action;
-
-        if (callback && this[callback]) {
-            // Perform the callback corresponding to the option
-            this[callback](params, evt);
-        } else {
-            console.warn("No handler for ", callback);
-        }
-    },
-
-    _debug_events: function (events) {
-        if (!this._events) { return; }
-        if (events && events.length) {
-            this._events.push(events);
-        }
-        this.trigger('update-stats', this._events);
-    },
+DebugManager.include({
     requests_clear: function () {
-        if (!this._events) { return; }
+        if (!this._events) {
+            return;
+        }
         this._events = [];
         this.trigger('update-stats', this._events);
-    },
-    _update_stats: function (rqs) {
-        var requests = 0, rtime = 0, queries = 0, qtime = 0;
-        for(var r = 0; r < rqs.length; ++r) {
-            for (var i = 0; i < rqs[r].length; i++) {
-                var event = rqs[r][i];
-                var query_start, request_start;
-                switch (event[0]) {
-                case 'request-start':
-                    request_start = event[3] * 1e3;
-                    break;
-                case 'request-end':
-                    ++requests;
-                    rtime += (event[3] * 1e3 - request_start) | 0;
-                    break;
-                case 'sql-start':
-                    query_start = event[3] * 1e3;
-                    break;
-                case 'sql-end':
-                    ++queries;
-                    qtime += (event[3] * 1e3 - query_start) | 0;
-                    break;
-                }
-            }
-        }
-        this.$('#debugmanager_requests_stats').text(
-            _.str.sprintf(_t("%d requests (%d ms) %d queries (%d ms)"),
-            requests, rtime, queries, qtime));
     },
     show_timelines: function () {
         if (this._overlay) {
@@ -152,15 +38,14 @@ var DebugManager = Widget.extend({
     },
 
     /**
-     * Update the debug manager: reinserts all "universal" controls
+     * Updates current action (action descriptor) on tag = action,
      */
-    update: function () {
-        this.$dropdown
-            .empty()
-            .append(QWeb.render('WebClient.DebugManager.Global', {
+    update: function (tag, descriptor) {
+        return this._super().then(function () {
+            this.$dropdown.find(".o_debug_split_assets").before(QWeb.render('WebClient.DebugManager.Backend', {
                 manager: this,
             }));
-        return Promise.resolve();
+        }.bind(this));
     },
     select_view: function () {
         var self = this;
@@ -217,35 +102,6 @@ var DebugManager = Widget.extend({
         $homeMenu.click();
         startClickEverywhere();
     },
-    split_assets: function() {
-        window.location = $.param.querystring(window.location.href, 'debug=assets');
-    },
-    tests_assets: function () {
-        window.location = $.param.querystring(window.location.href, 'debug=tests');
-    },
-    /**
-     * Delete assets bundles to force their regeneration
-     *
-     * @returns {void}
-     */
-    regenerateAssets: function () {
-        var self = this;
-        var domain = [
-            ['res_model', '=', 'ir.ui.view'],
-            ['name', 'like', 'assets_']
-        ];
-        this._rpc({
-            model: 'ir.attachment',
-            method: 'search',
-            args: [domain],
-        }).then(function (ids) {
-            self._rpc({
-                model: 'ir.attachment',
-                method: 'unlink',
-                args: [ids],
-            }).then(self.do_action('reload'));
-        });
-    }
 });
 
 /**
