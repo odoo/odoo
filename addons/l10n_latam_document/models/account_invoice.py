@@ -286,3 +286,18 @@ class AccountInvoice(models.Model):
                 len(res),
             ) for r in res]
         super(AccountInvoice, self - invoice_with_doc_type)._amount_by_group()
+
+    @api.multi
+    def unlink(self):
+        """ When using documents, on vendor bills the document_number is
+        setted manually by the number given from the vendor, the odoo sequence
+        is not used. In this case We allow to delete vendor bills with
+        document_number/move_name
+        """
+        self.filtered(lambda x:
+            x.type in ['in_refund', 'in_invoice'] and
+            x.state in ('draft', 'cancel') and
+            x.l10n_latam_use_documents and
+            x.move_name
+        ).write({'move_name': False})
+        return super(AccountInvoice, self).unlink()

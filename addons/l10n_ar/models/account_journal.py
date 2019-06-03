@@ -33,6 +33,7 @@ class AccountJournal(models.Model):
 
     def _get_l10n_ar_afip_pos_types_selection(self):
         """ Return the list of values of the selection field. """
+        # TODO add liquido producto
         return [
             ('II_IM', 'Factura Pre-impresa'),
             ('RLI_RLM', 'Factura en Linea'),
@@ -60,21 +61,21 @@ class AccountJournal(models.Model):
                 '4': ['C'],
                 '5': [],
                 '6': ['C', 'E'],
-                '8': [],
+                '8': ['I'],
                 '9': [],
                 '10': [],
                 '13': ['C', 'E'],
             },
             'received': {
-                '1': ['A', 'C', 'M'],
-                '3': ['B', 'C'],
-                '4': ['B', 'C'],
-                '5': ['B', 'C'],
-                '6': ['B', 'C'],
+                '1': ['A', 'C', 'M', 'I'],
+                '3': ['B', 'C', 'I'],
+                '4': ['B', 'C', 'I'],
+                '5': ['B', 'C', 'I'],
+                '6': ['B', 'C', 'I'],
                 '8': ['E'],
                 '9': ['E'],
                 '10': ['E'],
-                '13': ['B', 'C'],
+                '13': ['B', 'C', 'I'],
             },
         }
 
@@ -118,7 +119,9 @@ class AccountJournal(models.Model):
         expo_codes = ['19', '20', '21']
         if self.type != 'sale':
             return []
-        elif self.l10n_ar_afip_pos_system in ['RAW_MAW', 'RLI_RLM', 'II_IM']:
+        elif self.l10n_ar_afip_pos_system == 'II_IM':
+            return usual_codes + receipt_codes + expo_codes
+        elif self.l10n_ar_afip_pos_system in ['RAW_MAW', 'RLI_RLM']:
             return usual_codes + receipt_codes
         elif self.l10n_ar_afip_pos_system in ['BFERCEL', 'BFEWS']:
             return usual_codes
@@ -168,18 +171,18 @@ class AccountJournal(models.Model):
         documents = self.env['l10n_latam.document.type'].search(domain)
         sequence_obj = self.env['ir.sequence']
         for document in documents:
-            if self.l10n_ar_share_sequences:
-                letter_sequence = sequence_obj.search([
-                    ('l10n_ar_letter', '=', document.l10n_ar_letter)])
-                if letter_sequence:
-                    continue
+            if self.l10n_ar_share_sequences and \
+               self.l10n_ar_sequence_ids.filtered(
+                   lambda x: x.l10n_ar_letter == document.l10n_ar_letter):
+                continue
 
             sequences |= self.env['ir.sequence'].create(
                 document.get_document_sequence_vals(self))
         return sequences
 
     @api.constrains('type', 'l10n_ar_afip_pos_system',
-                    'l10n_ar_afip_pos_number', 'l10n_ar_share_sequences')
+                    'l10n_ar_afip_pos_number', 'l10n_ar_share_sequences',
+                    'l10n_latam_use_documents')
     def check_afip_configurations(self):
         """ IF AFIP Configuration change try to review if this can be done
         and then create / update the document sequences """

@@ -17,7 +17,8 @@ class L10nLatamDocumentType(models.Model):
         '* C\n'
         '* E\n'
         '* M\n'
-        '* T\n',
+        '* T\n'
+        '* I\n',
     )
     internal_type = fields.Selection(
         selection_add=[
@@ -46,6 +47,7 @@ class L10nLatamDocumentType(models.Model):
             ('T', 'T'),
             ('R', 'R'),
             ('X', 'X'),
+            ('I', 'I'), # used for mapping of imports
         ]
 
     @api.multi

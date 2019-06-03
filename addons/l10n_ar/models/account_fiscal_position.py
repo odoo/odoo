@@ -32,11 +32,15 @@ class AccountFiscalPosition(models.Model):
         """ Take into account the partner afip responsability in order to
         auto-detect the fiscal position """
         if 'partner_afip_responsability' in self._context:
-            res = self.search(
-                [('auto_apply', '=', True),
-                 ('l10n_ar_afip_responsability_type_codes', 'like',
-                  "'%s'" % self._context.get('partner_afip_responsability')),
-                ], limit=1)
+            domain = [
+                ('auto_apply', '=', True),
+                ('l10n_ar_afip_responsability_type_codes', 'like',
+                    "'%s'" % self._context.get('partner_afip_responsability')),
+            ]
+            if self.env.context.get('force_company'):
+                domain.append(
+                    ('company_id', '=', self.env.context.get('force_company')))
+            res = self.search(domain, limit=1)
             return res
 
         return super()._get_fpos_by_region(
