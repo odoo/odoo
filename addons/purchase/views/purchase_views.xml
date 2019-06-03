@@ -371,7 +371,7 @@
                     <field name="amount_total" sum="Total amount" widget="monetary"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="state"/>
-                    <field name="invoice_status" attrs="{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))]}"/>
+                    <field name="invoice_status" invisible="1"/>
                 </tree>
             </field>
         </record>
