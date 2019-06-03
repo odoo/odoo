@@ -4882,6 +4882,13 @@ Fields:
         for field, value in sorted(field_values, key=is_monetary):
             cache.set(self, field, field.convert_to_cache(value, self, validate))
 
+            # set inverse fields on new records in the comodel
+            if field.relational:
+                inv_recs = self[field.name].filtered(lambda r: not r.id)
+                if inv_recs:
+                    for invf in self._field_inverses[field]:
+                        invf._update(inv_recs, self)
+
     def _convert_to_record(self, values):
         """ Convert the ``values`` dictionary from the cache format to the
         record format.
@@ -5012,16 +5019,6 @@ Fields:
             origin = origin.id
         record = self.browse([NewId(origin, ref)])
         record._update_cache(values)
-
-        # set inverse fields on new records in the comodel
-        for name in values:
-            field = self._fields.get(name)
-            if field and field.relational:
-                inv_recs = record[name].filtered(lambda r: not r.id)
-                if inv_recs:
-                    for invf in self._field_inverses[field]:
-                        invf._update(inv_recs, record)
-
         return record
 
     @property
@@ -5599,8 +5596,7 @@ Fields:
 
         # store changed values in cache, and update snapshot0
         for name, value in changed_x2many.items():
-            field = self._fields[name]
-            record._cache[name] = field.convert_to_cache(value, record)
+            record._update_cache({name: value})
             snapshot0.fetch(name)
 
         # determine which field(s) should be triggered an onchange
