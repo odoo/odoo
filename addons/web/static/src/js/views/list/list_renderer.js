@@ -309,7 +309,7 @@ var ListRenderer = BasicRenderer.extend({
 
         return _.map(this.columns, function (column) {
             var $cell = $('<td>');
-            if (config.debug) {
+            if (config.isDebug()) {
                 $cell.addClass(column.attrs.name);
             }
             if (column.attrs.name in aggregateValues) {
@@ -742,7 +742,7 @@ var ListRenderer = BasicRenderer.extend({
             $th.css({ textAlign: 'right' });
         }
 
-        if (config.debug) {
+        if (config.isDebug()) {
             var fieldDescr = {
                 field: field,
                 name: name,
