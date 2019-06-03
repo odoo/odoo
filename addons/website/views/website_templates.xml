@@ -904,7 +904,7 @@
             <div class="oe_structure">
                 <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
             </div>
-            <t t-if="editable or request.debug">
+            <t t-if="editable or debug">
                 <t t-call="website.http_error_debug"/>
             </t>
         </div>
@@ -969,7 +969,7 @@
                     <li><a href="/contactus">Contact Us</a></li>
                 </ul>
             </div>
-            <t t-if="editable or request.debug">
+            <t t-if="editable or debug">
                 <t t-call="website.http_error_debug"/>
             </t>
         </div>
@@ -996,7 +996,7 @@
                 </div>
             </div>
 
-            <t t-if="request.debug">
+            <t t-if="debug">
                 <t t-call="website.http_error_debug"/>
             </t>
         </div>
@@ -1123,7 +1123,7 @@
                         </div>
                     </div>
 
-                    <t t-if="editable or request.debug">
+                    <t t-if="editable or debug">
                         <t t-call="website.http_error_debug"/>
                     </t>
                 </main>
