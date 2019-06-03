@@ -36,6 +36,13 @@
     height: $o-wysiwyg-toolbar-height;
 }
 
+@include media-breakpoint-down(sm) {
+    .note-editor .note-toolbar {
+        white-space: normal;
+        height: auto;
+    }
+}
+
 .note-popover.popover .popover-content,
 .note-editor .note-toolbar {
     font-family: $o-wysiwyg-font-family;
