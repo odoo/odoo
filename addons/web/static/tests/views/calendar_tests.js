@@ -2608,7 +2608,7 @@ QUnit.module('Views', {
     QUnit.test('calendar sidebar toggle', async function (assert) {
         assert.expect(5);
 
-        var calendar = await createView({
+        var calendar = await createCalendarView({
             View: CalendarView,
             model: 'event',
             data: this.data,
