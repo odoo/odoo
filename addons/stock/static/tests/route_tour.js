@@ -5,7 +5,7 @@ var tour = require('web_tour.tour');
 
 tour.register('stock', {
     test: true,
-    url: '/web?debug=assets#action=stock.action_stock_config_settings',
+    url: '/web#action=stock.action_stock_config_settings',
     },
      [
         {

@@ -1356,7 +1356,7 @@ actual arch.
             res_company=self.env.company.sudo(),
             keep_query=keep_query,
             request=request,  # might be unbound if we're not in an httprequest context
-            debug=request.debug if request else False,
+            debug=request.session.debug if request else '',
             json=json,
             quote_plus=werkzeug.url_quote_plus,
             time=time,

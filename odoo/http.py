@@ -64,6 +64,21 @@ STATIC_CACHE = 60 * 60 * 24 * 7
 # To remove when corrected in Babel
 babel.core.LOCALE_ALIASES['nb'] = 'nb_NO'
 
+""" Debug mode is stored in session and should always be a string.
+    It can be activated with an URL query string `debug=<mode>` where
+    mode is either:
+    - 'tests' to load tests assets
+    - 'assets' to load assets non minified
+    - any other truthy value to enable simple debug mode (to show some
+      technical feature, to show complete traceback in frontend error..)
+    - any falsy value to disable debug mode
+
+    You can use any truthy/falsy value from `str2bool` (eg: 'on', 'f'..)
+    Multiple debug modes can be activated simultaneously, separated with
+    a comma (eg: 'tests, assets').
+"""
+ALLOWED_DEBUG_MODES = ['', '1', 'assets', 'tests']
+
 #----------------------------------------------------------
 # RequestHandler
 #----------------------------------------------------------
@@ -143,15 +158,10 @@ def dispatch_rpc(service_name, method, params):
         odoo.tools.debugger.post_mortem(odoo.tools.config, sys.exc_info())
         raise
 
-def local_redirect(path, query=None, keep_hash=False, forward_debug=True, code=303):
+def local_redirect(path, query=None, keep_hash=False, code=303):
     url = path
     if not query:
         query = {}
-    if request and request.debug:
-        if forward_debug:
-            query['debug'] = ''
-        else:
-            query['debug'] = None
     if query:
         url += '?' + werkzeug.url_encode(query)
     if keep_hash:
@@ -344,22 +354,6 @@ class WebRequest(object):
         if self.db:
             return checked_call(self.db, *args, **kwargs)
         return self.endpoint(*args, **kwargs)
-
-    @property
-    def debug(self):
-        """ Indicates whether the current request is in "debug" mode
-        """
-        debug = 'debug' in self.httprequest.args
-        if debug and self.httprequest.args.get('debug') == 'assets':
-            debug = 'assets'
-
-        # check if request from rpc in debug mode
-        if not debug:
-            debug = self.httprequest.environ.get('HTTP_X_DEBUG_MODE')
-
-        if not debug and self.httprequest.referrer:
-            debug = 'debug' in urls.url_parse(self.httprequest.referrer).decode_query()
-        return debug
 
     @contextlib.contextmanager
     def registry_cr(self):
@@ -763,7 +757,7 @@ class HttpRequest(WebRequest):
         if request.httprequest.method == 'OPTIONS' and request.endpoint and request.endpoint.routing.get('cors'):
             headers = {
                 'Access-Control-Max-Age': 60 * 60 * 24,
-                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, X-Debug-Mode'
+                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
             }
             return Response(status=200, headers=headers)
 
@@ -1038,7 +1032,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
 
     def logout(self, keep_db=False):
         for k in list(self):
-            if not (keep_db and k == 'db'):
+            if not (keep_db and k == 'db') and k != 'debug':
                 del self[k]
         self._default_values()
         self.rotate = True
@@ -1049,6 +1043,9 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.setdefault("login", None)
         self.setdefault("session_token", None)
         self.setdefault("context", {})
+        # Force tests debug mode when test mode enabled to load 'assets_tests'
+        test_mode = odoo.tools.config['test_enable'] or odoo.tools.config['test_file']
+        self.setdefault("debug", 'tests' if test_mode else '')
 
     def get_context(self):
         """
@@ -1242,13 +1239,12 @@ class Response(werkzeug.wrappers.Response):
 class DisableCacheMiddleware(object):
     def __init__(self, app):
         self.app = app
+
     def __call__(self, environ, start_response):
         def start_wrapped(status, headers):
-            referer = environ.get('HTTP_REFERER', '')
-            parsed = urls.url_parse(referer)
-            debug = parsed.query.count('debug') >= 1
-
-            if debug:
+            req = werkzeug.wrappers.Request(environ)
+            root.setup_session(req)
+            if req.session and req.session.debug:
                 new_headers = [('Cache-Control', 'no-cache')]
 
                 for k, v in headers:

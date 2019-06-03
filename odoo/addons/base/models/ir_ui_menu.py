@@ -122,7 +122,7 @@ class IrUiMenu(models.Model):
             the menu hierarchy of the current user.
             Uses a cache for speeding up the computation.
         """
-        visible_ids = self._visible_menu_ids(request.debug if request else False)
+        visible_ids = self._visible_menu_ids(request.session.debug if request else False)
         return self.filtered(lambda menu: menu.id in visible_ids)
 
     @api.model
