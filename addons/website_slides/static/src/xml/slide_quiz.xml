@@ -45,28 +45,42 @@
     </t>
 
     <t t-name="slide.slide.quiz.validation">
-        <div t-if="widget.readonly" class="alert alert-info">
-            <b>Join course to take quiz</b>
-            <span class="my-0 h4" style="line-height: 1">
-                <span title="Succeed and gain karma" aria-label="Succeed and gain karma" class="badge badge-pill badge-warning text-white font-weight-bold ml-3 px-2 py-1">
-                    + <t t-esc="widget.quiz.quizKarmaGain"/> XP
-                </span>
-            </span>
-        </div>
-        <div t-else="" class="d-flex align-items-center justify-content-between">
-            <div t-att-class="'d-flex align-items-center' + (widget.slide.completed ? ' alert alert-success my-0 py-1 px-3' : '')">
-                <button t-if="! widget.slide.completed" role="button" title="Check answers" aria-label="Check answers"
-                    class="btn btn-primary text-uppercase font-weight-bold o_wslides_js_lesson_quiz_submit">Check your answers</button>
-                <b t-else="" class="my-0 h5">Done !</b>
-                <span class="my-0 h5" style="line-height: 1">
-                    <span role="button" title="Succeed and gain karma" aria-label="Succeed and gain karma" class="badge badge-pill badge-warning text-white font-weight-bold ml-3 px-2">
-                        + <t t-if="! widget.slide.completed" t-esc="widget.quiz.quizKarmaGain"/><t t-else="" t-esc="widget.quiz.quizKarmaWon"/> XP
-                    </span>
-                </span>
+        <div id="validation">
+            <div t-if="widget.readonly &amp;&amp; !widget.publicUser &amp;&amp; widget.channel.channelEnroll == 'public'" class="o_wslides_course_join_widget">
+                <!-- Here comes the Join button rendered by the widget -->
             </div>
-            <button t-if="widget.slide.completed &amp;&amp; widget.slide.hasNext" class="btn btn-primary o_wslides_quiz_continue">
-                Continue <i class="fa fa-chevron-right ml-1"/>
-            </button>
+            <div t-if="widget.readonly &amp;&amp; widget.publicUser &amp;&amp; widget.channel.channelEnroll == 'public'" class="alert alert-info d-flex align-items-center justify-content-between">
+                <div>
+                    <b class="h5 mb-0">Sign in and join the course to take the quiz!</b>
+                    <span class="my-0 h4" style="line-height: 1">
+                        <span title="Succeed and gain karma" aria-label="Succeed and gain karma" class="badge badge-pill badge-warning text-white font-weight-bold ml-3 px-2 py-1">
+                            + <t t-esc="widget.quiz.quizKarmaGain"/> XP
+                        </span>
+                    </span>
+                </div>
+                <div>
+                    <a t-att-href="'/web/login?redirect=' + widget.redirectURL" class="btn btn-primary font-weight-bold text-uppercase">Sign in</a>
+                    <span t-if="widget.channel.signupAllowed" class="d-block mt-2">Don't have an account ? <a class="font-weight-bold" t-att-href="'/web/signup?redirect=' + widget.url">Sign Up !</a></span>
+                </div>
+            </div>
+            <div t-if="widget.readonly &amp;&amp; widget.channel.channelEnroll == 'invite'" class="alert alert-info">
+                <b>This course is private. <a href="/contactus" class="font-weight-bold">Contact the website administrator</a>  to enroll.</b>
+            </div>
+            <div t-if="!widget.readonly" class="d-flex align-items-center justify-content-between">
+                <div t-att-class="'d-flex align-items-center' + (widget.slide.completed ? ' alert alert-success my-0 py-1 px-3' : '')">
+                    <button t-if="! widget.slide.completed" role="button" title="Check answers" aria-label="Check answers"
+                        class="btn btn-primary text-uppercase font-weight-bold o_wslides_js_lesson_quiz_submit">Check your answers</button>
+                    <b t-else="" class="my-0 h5">Done !</b>
+                    <span class="my-0 h5" style="line-height: 1">
+                        <span role="button" title="Succeed and gain karma" aria-label="Succeed and gain karma" class="badge badge-pill badge-warning text-white font-weight-bold ml-3 px-2">
+                            + <t t-if="!widget.slide.completed" t-esc="widget.quiz.quizKarmaGain"/><t t-else="" t-esc="widget.quiz.quizKarmaWon"/> XP
+                        </span>
+                    </span>
+                </div>
+                <button t-if="widget.slide.completed &amp;&amp; widget.slide.hasNext" class="btn btn-primary o_wslides_quiz_continue">
+                    Continue <i class="fa fa-chevron-right ml-1"/>
+                </button>
+            </div>
         </div>
     </t>
 

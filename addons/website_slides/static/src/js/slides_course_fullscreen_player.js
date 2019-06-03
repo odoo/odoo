@@ -299,14 +299,15 @@ odoo.define('website_slides.fullscreen', function (require) {
         * @param {Object} slides Contains the list of all slides of the course
         * @param {integer} defaultSlideId Contains the ID of the slide requested by the user
         */
-        init: function (el, slides, defaultSlideId){
+        init: function (parent, slides, defaultSlideId, channelData){
             var result = this._super.apply(this,arguments);
             this.initialSlideID = defaultSlideId;
             this.slides = this._preprocessSlideData(slides);
-
+            this.channel = channelData;
             var slide;
+            var urlParams = $.deparam.querystring();
             if (defaultSlideId) {
-                slide = findSlide(this.slides, {id: defaultSlideId});
+                slide = findSlide(this.slides, {id: defaultSlideId, isQuiz: urlParams.quiz === "1" });
             } else {
                 slide = this.slides[0];
             }
@@ -417,7 +418,11 @@ odoo.define('website_slides.fullscreen', function (require) {
             urlParts[urlParts.length-1] = this.get('slide').slug;
             var url =  urlParts.join('/');
             this.$('.o_wslides_fs_exit_fullscreen').attr('href', url);
-            var fullscreenUrl = _.str.sprintf('%s?fullscreen=1', url);
+            var params = {'fullscreen': 1 };
+            if (this.get('slide').isQuiz){
+                params.quiz = 1;
+            }
+            var fullscreenUrl = _.str.sprintf('%s?%s', url, $.param(params));
             history.pushState(null, '', fullscreenUrl);
         },
         /**
@@ -437,7 +442,7 @@ odoo.define('website_slides.fullscreen', function (require) {
             // display quiz slide, or quiz attached to a slide
             if (slide.type === 'quiz' || slide.isQuiz) {
                 $content.addClass('bg-white');
-                var QuizWidget = new Quiz(this, slide);
+                var QuizWidget = new Quiz(this, slide, this.channel);
                 return QuizWidget.appendTo($content);
             }
 
@@ -490,13 +495,13 @@ odoo.define('website_slides.fullscreen', function (require) {
         _onChangeSlide: function () {
             var self = this;
             var slide = this.get('slide');
+            self._pushUrlState();
             return this._fetchSlideContent().then(function() { // render content
                 return self._renderSlide();
             }).then(function() {
                 if (slide._autoSetDone && !session.is_website_user) {  // no useless RPC call
                     self._setCompleted(slide.id);
                 }
-                self._pushUrlState();
             });
         },
         /**
@@ -568,9 +573,12 @@ odoo.define('website_slides.fullscreen', function (require) {
         xmlDependencies: ['/website_slides/static/src/xml/website_slides_fullscreen.xml'],
         start: function (){
             var defs = [this._super.apply(this, arguments)];
-            var fullscreen = new Fullscreen(this, this._getSlides(), this._getCurrentSlideID());
+            var fullscreen = new Fullscreen(this, this._getSlides(), this._getCurrentSlideID(), this._extractChannelData());
             defs.push(fullscreen.attachTo(".o_wslides_fs_main"));
             return $.when.apply($, defs);
+        },
+        _extractChannelData: function (){
+            return this.$el.data();
         },
         _getCurrentSlideID: function (){
             return parseInt(this.$('.o_wslides_fs_sidebar_list_item.active').data('id'));

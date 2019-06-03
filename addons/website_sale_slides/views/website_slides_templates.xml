@@ -31,4 +31,26 @@
     </xpath>
 </template>
 
+<template id="lesson_content_quiz" inherit_id="website_slides.lesson_content_quiz">
+    <xpath expr="//div[hasclass('o_wslides_js_lesson_quiz')]" position="attributes">
+        <attribute name="t-att-data-price">product_info['price'] if product_info else None</attribute>
+        <attribute name="t-att-data-currency-name">product_info['currency_id'].name if product_info else None</attribute>
+        <attribute name="t-att-data-currency-symbol">product_info['currency_id'].symbol if product_info else None</attribute>
+        <attribute name="t-att-data-has-discounted-price">product_info['has_discounted_price'] if product_info else None</attribute>
+        <attribute name="t-att-data-product-id">slide.channel_id.product_id.id if slide.channel_id.product_id else None</attribute>
+        <attribute name="t-att-data-list-price">product_info['list_price'] if product_info else None</attribute>
+    </xpath>
+</template>
+
+<template id="slide_fullscreen" inherit_id="website_slides.slide_fullscreen">
+    <xpath expr="//div[hasclass('o_wslides_fs_main')]" position="attributes">
+        <attribute name="t-att-data-price">product_info['price'] if product_info else None</attribute>
+        <attribute name="t-att-data-currency-name">product_info['currency_id'].name if product_info else None</attribute>
+        <attribute name="t-att-data-currency-symbol">product_info['currency_id'].symbol if product_info else None</attribute>
+        <attribute name="t-att-data-has-discounted-price">product_info['has_discounted_price'] if product_info else None</attribute>
+        <attribute name="t-att-data-product-id">slide.channel_id.product_id.id if product_info else None</attribute>
+        <attribute name="t-att-data-list-price">product_info['list_price'] if product_info else None</attribute>
+    </xpath>
+</template>
+
 </data></odoo>
