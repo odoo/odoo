@@ -93,7 +93,10 @@ class MockRequest(object):
         if not routing:
             app.match = werkzeugRaiseNotFound
         self.request = MockObject(
-            env=env, context=context or {}, db=None, debug=False,
+            env=env, context=context or {}, db=None,
+            session=MockObject(
+                debug=False
+            ),
             website=website, httprequest=MockObject(
                 path='/hello/',
                 app=app

@@ -387,6 +387,14 @@
         <xpath expr="//t[@t-call='web._assets_frontend_minimal_js']" position="replace"/>
     </template>
 
+    <!-- Do not direcly call this template, call 'conditional_assets_tests' instead -->
+    <template id="assets_tests" name="Tests Assets">
+    </template>
+
+    <template id="conditional_assets_tests" name="Tests Assets Bundle">
+        <t t-call-assets="web.assets_tests" t-if="'tests' in debug" defer_load="True" />
+    </template>
+
     <template id="web.layout" name="Web layout">&lt;!DOCTYPE html&gt;
         <html t-att="html_data or {}">
             <head>
@@ -400,6 +408,7 @@
                 <script type="text/javascript">
                     var odoo = {
                         csrf_token: "<t t-esc="request.csrf_token(None)"/>",
+                        debug: "<t t-esc="debug"/>",
                     };
                 </script>
 
@@ -422,6 +431,7 @@
             </script>
             <t t-call-assets="web.assets_common_minimal_js" t-css="false" defer_load="True"/>
             <t t-call-assets="web.assets_frontend_minimal_js" t-css="false" defer_load="True"/>
+            <t t-call="web.conditional_assets_tests"/>
             <t t-call-assets="web.assets_common_lazy" t-css="false" lazy_load="True"/>
             <t t-call-assets="web.assets_frontend_lazy" t-css="false" lazy_load="True"/>
         </xpath>
@@ -840,6 +850,7 @@
                 <t t-call-assets="web.assets_backend" t-js="false"/>
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="web.assets_backend" t-css="false"/>
+                <t t-call="web.conditional_assets_tests"/>
 
                 <![CDATA[
                     <!--[if lt IE 10]>
