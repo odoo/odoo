@@ -10,13 +10,13 @@ from odoo.tools.translate import _
 
 class Rating(http.Controller):
 
-    @http.route('/rating/<string:token>/<int:rate>', type='http', auth="public")
+    @http.route('/rating/<string:token>/<int:rate>', type='http', auth="public", website=True)
     def open_rating(self, token, rate, **kwargs):
         assert rate in (1, 5, 10), "Incorrect rating"
         rating = request.env['rating.rating'].sudo().search([('access_token', '=', token)])
         if not rating:
             return request.not_found()
-        rate_names={
+        rate_names = {
             5: _("not satisfied"),
             1: _("highly dissatisfied"),
             10: _("satisfied")
@@ -28,7 +28,7 @@ class Rating(http.Controller):
             'rate_name': rate_names[rate], 'rate': rate
         })
 
-    @http.route(['/rating/<string:token>/<int:rate>/submit_feedback'], type="http", auth="public", methods=['post'])
+    @http.route(['/rating/<string:token>/<int:rate>/submit_feedback'], type="http", auth="public", methods=['post'], website=True)
     def submit_rating(self, token, rate, **kwargs):
         rating = request.env['rating.rating'].sudo().search([('access_token', '=', token)])
         if not rating:

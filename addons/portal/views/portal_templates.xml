@@ -1,67 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="frontend_layout" name="Main Frontend Layout">
-        <t t-call="web.layout">
-            <t t-set="head_website">
-                <script type="text/javascript">
-                    odoo.session_info = <t t-raw="json.dumps(request.env['ir.http'].get_portal_session_info())"/>;
-                </script>
-
-                <t t-call-assets="web.assets_common" t-js="false"/>
-                <t t-call-assets="web.assets_frontend" t-js="false"/>
-
-                <t t-call-assets="web.assets_common" t-css="false"/>
-                <t t-call-assets="web.assets_frontend" t-css="false"/>
-            </t>
-            <t t-set="head" t-value="head_website + (head or '')"/>
-
-            <t t-set="direction" t-value="request.env['res.lang'].search([('code', '=', request.env.lang)]).direction"/>
-            <div id="wrapwrap" t-attf-class="#{pageName or ''} #{direction == 'rtl' and 'o_rtl' or ''} #{'o_portal' if is_portal else ''}">
-                <header id="top" data-anchor="true" t-if="not hide_header">
-                    <nav class="navbar navbar-expand-md navbar-light bg-light">
-                        <div class="container">
-                            <a href="/" class="navbar-brand logo">
-                                <img t-att-src="'/logo.png?company=%s' % res_company.id" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
-                            </a>
-                            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#top_menu_collapse">
-                                <span class="navbar-toggler-icon"/>
-                            </button>
-                            <div class="collapse navbar-collapse" id="top_menu_collapse">
-                                <!-- FIXME We want menu to open to the right by default (except cases handled in JS) -->
-                                <ul class="nav navbar-nav ml-auto text-right" id="top_menu">
-                                    <li class="nav-item divider" t-ignore="true" t-if="not user_id._is_public()"/>
-                                    <li class="nav-item dropdown" t-ignore="true" t-if="not user_id._is_public()">
-                                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                                            <b>
-                                                <span t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
-                                            </b>
-                                        </a>
-                                        <div class="dropdown-menu js_usermenu" role="menu">
-                                            <a id="o_logout" class="dropdown-item" t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </nav>
-                </header>
-                <main>
-                    <div t-if="o_portal_fullwidth_alert" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
-                        <div class="container">
-                            <t t-raw="o_portal_fullwidth_alert"/>
-                        </div>
+    <template id="frontend_layout" name="Main Frontend Layout" inherit_id="web.frontend_layout">
+        <xpath expr="//div[@id='wrapwrap']" position="attributes">
+            <attribute name="t-attf-class" add="#{request.env['res.lang'].search([('code', '=', request.env.lang)]).direction == 'rtl' and 'o_rtl' or ''}" separator=" "/>
+            <attribute name="t-attf-class" add="#{'o_portal' if is_portal else ''}" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@id='wrapwrap']/header/img" position="replace">
+            <nav class="navbar navbar-expand-md navbar-light bg-light">
+                <div class="container">
+                    <a href="/" class="navbar-brand logo">
+                        <img t-att-src="'/logo.png?company=%s' % res_company.id" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
+                    </a>
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#top_menu_collapse">
+                        <span class="navbar-toggler-icon"/>
+                    </button>
+                    <div class="collapse navbar-collapse" id="top_menu_collapse">
+                        <!-- FIXME We want menu to open to the right by default (except cases handled in JS) -->
+                        <ul class="nav navbar-nav ml-auto text-right" id="top_menu">
+                            <li class="nav-item divider" t-ignore="true" t-if="not user_id._is_public()"/>
+                            <li class="nav-item dropdown" t-ignore="true" t-if="not user_id._is_public()">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                                    <b>
+                                        <span t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
+                                    </b>
+                                </a>
+                                <div class="dropdown-menu js_usermenu" role="menu">
+                                    <a id="o_logout" class="dropdown-item" t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
-                    <t t-raw="0"/>
-                </main>
-                <footer id="bottom" data-anchor="true" class="bg-light o_footer" t-if="not hide_footer">
-                    <div class="container mt16 mb16" id="footer">
-                        <div class="float-right mb16" t-ignore="true" t-if="not editable">
-                            Powered by <a target="_blank" href="http://www.odoo.com?utm_source=db&amp;utm_medium=portal">Odoo</a>
-                        </div>
-                    </div>
-                </footer>
+                </div>
+            </nav>
+        </xpath>
+        <xpath expr="//div[@id='wrapwrap']/main/t[@t-raw='0']" position="before">
+            <div t-if="o_portal_fullwidth_alert" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
+                <div class="container">
+                    <t t-raw="o_portal_fullwidth_alert"/>
+                </div>
             </div>
-        </t>
+        </xpath>
     </template>
 
     <template id="portal_breadcrumbs" name="Portal Breadcrumbs">
