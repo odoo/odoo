@@ -657,7 +657,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      * @override
      */
     _toggleDisable: function ($parent, isCombinationPossible) {
-        ProductConfiguratorMixin._toggleDisable.apply(this, arguments);
+        VariantMixin._toggleDisable.apply(this, arguments);
         $parent.find("#add_to_cart").toggleClass('disabled', !isCombinationPossible);
     },
     /**

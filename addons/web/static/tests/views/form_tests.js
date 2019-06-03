@@ -8133,7 +8133,7 @@ QUnit.module('Views', {
             form.$('.o_data_row').last(),
             {position: 'bottom'}
         );
-        assert.strictEqual(onchangeNum, 3, "one onchange happens when lines are resequenced")
+        assert.strictEqual(onchangeNum, 3, "one onchange happens when lines are resequenced");
         assert.strictEqual(form.$('[name="foo"]').val(), "1", "onchange worked there is 1 line");
 
         // Add a second line

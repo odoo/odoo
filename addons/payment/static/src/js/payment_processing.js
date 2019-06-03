@@ -70,7 +70,7 @@ odoo.define('payment.processing', function (require) {
                 self.displayContent("payment.rpc_error", {});
                 self.startPolling();
             });
-        },g
+        },
         processPolledData: function (transactions) {
             var render_values = {
                 'tx_draft': [],

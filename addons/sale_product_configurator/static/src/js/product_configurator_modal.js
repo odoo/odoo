@@ -170,7 +170,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
                 this._priceToStr(parseFloat(price))
             );
         }
-        ProductConfiguratorMixin.computePriceTotal.apply(this, arguments);
+        VariantMixin.computePriceTotal.apply(this, arguments);
     },
     /**
      * Returns the list of selected products.
