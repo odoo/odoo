@@ -794,7 +794,7 @@ class MrpProduction(models.Model):
             for move_raw_id in production.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
                 iterate_key = self._get_document_iterate_key(move_raw_id)
                 if iterate_key:
-                    document = self.env['stock.picking']._log_activity_get_documents({move_raw_id: (move_raw_id.product_uom_qty, 0)}, iterate_key, 'UP')
+                    document = self.env['stock.picking']._log_activity_get_documents({move_raw_id: (move_raw_id.product_uom_qty, 0)}, iterate_key, 'UP', log_activity=True)
                     for key, value in document.items():
                         if documents.get(key):
                             documents[key] += [value]
@@ -809,10 +809,10 @@ class MrpProduction(models.Model):
 
         if documents:
             filtered_documents = {}
-            for (parent, responsible), rendering_context in documents.items():
+            for (parent, responsible, log_activity), rendering_context in documents.items():
                 if not parent or parent._name == 'stock.picking' and parent.state == 'cancel' or parent == self:
                     continue
-                filtered_documents[(parent, responsible)] = rendering_context
+                filtered_documents[(parent, responsible, log_activity)] = rendering_context
             self._log_manufacture_exception(filtered_documents, cancel=True)
         return True
 
@@ -935,13 +935,13 @@ class MrpProduction(models.Model):
         documents = {}
         for move, (old_qty, new_qty) in moves_modification.items():
             document = self.env['stock.picking']._log_activity_get_documents(
-                {move: (old_qty, new_qty)}, 'move_dest_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
+                {move: (old_qty, new_qty)}, 'move_dest_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby, log_activity=True)
             for key, value in document.items():
                 if documents.get(key):
                     documents[key] += [value]
                 else:
                     documents[key] = [value]
-        self.env['stock.picking']._log_activity(_render_note_exception_quantity_mo, documents)
+        self.env['stock.picking']._log_activity_message(_render_note_exception_quantity_mo, documents)
 
     def _log_manufacture_exception(self, documents, cancel=False):
 

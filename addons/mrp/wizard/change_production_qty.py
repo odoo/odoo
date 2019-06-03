@@ -60,7 +60,7 @@ class ChangeProductionQty(models.TransientModel):
                 move, old_qty, new_qty = production._update_raw_move(line, line_data)
                 iterate_key = production._get_document_iterate_key(move)
                 if iterate_key:
-                    document = self.env['stock.picking']._log_activity_get_documents({move: (new_qty, old_qty)}, iterate_key, 'UP')
+                    document = self.env['stock.picking']._log_activity_get_documents({move: (new_qty, old_qty)}, iterate_key, 'UP', log_activity=True)
                     for key, value in document.items():
                         if documents.get(key):
                             documents[key] += [value]

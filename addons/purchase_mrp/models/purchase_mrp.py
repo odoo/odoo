@@ -29,8 +29,8 @@ class PurchaseOrderLine(models.Model):
                     }
                     line.qty_received = moves._compute_kit_quantities(line.product_id, order_qty, kit_bom, filters)
 
-    def _get_upstream_documents_and_responsibles(self, visited):
-        return [(self.order_id, self.order_id.user_id, visited)]
+    def _get_upstream_documents_and_responsibles(self, visited, log_activity=None):
+        return [(self.order_id, self.order_id.user_id, log_activity, visited)]
 
 class StockMove(models.Model):
     _inherit = 'stock.move'

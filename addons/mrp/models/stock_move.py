@@ -230,11 +230,11 @@ class StockMove(models.Model):
             return move
         return self.env['stock.move']
 
-    def _get_upstream_documents_and_responsibles(self, visited):
+    def _get_upstream_documents_and_responsibles(self, visited, log_activity=None):
             if self.created_production_id and self.created_production_id.state not in ('done', 'cancel'):
-                return [(self.created_production_id, self.created_production_id.user_id, visited)]
+                return [(self.created_production_id, self.created_production_id.user_id, visited, True)]
             else:
-                return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
+                return super(StockMove, self)._get_upstream_documents_and_responsibles(visited, log_activity)
 
     def _should_be_assigned(self):
         res = super(StockMove, self)._should_be_assigned()

@@ -58,5 +58,5 @@ class StockPicking(models.Model):
             """
             return (move.raw_material_production_id, move.product_id.responsible_id)
 
-        production_documents = self._log_activity_get_documents(moves, 'move_dest_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
+        production_documents = self._log_activity_get_documents(moves, 'move_dest_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby, log_activity=True)
         return {**documents, **production_documents}
