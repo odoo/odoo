@@ -972,7 +972,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(actionManager.$('.o_dropdown_toggler_btn:contains("Group By")'));
         await testUtils.dom.click(actionManager.$('.o_group_by_menu .o_menu_item a:contains("candle")'));
 
-        assert.isVisible(actionManager.$('.o_list_button_add'), "create button should be invisible");
+        assert.isNotVisible(actionManager.$('.o_list_button_add'), "create button should be invisible");
         assert.isNotVisible(actionManager.$('.o_list_button_save'),
             "save button should be invisible after applying groupby");
 
