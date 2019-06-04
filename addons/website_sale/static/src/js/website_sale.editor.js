@@ -250,21 +250,18 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      */
     changeSequence: function (previewMode, value, $opt) {
         var self = this;
-        var shop_context = _.pick($('table#product_table').data(), function (value) {
-            return _.isNumber(value) || _.isString(value);
-        });
         this._openConfirmationDialog().then(function() {
             self._rpc({
                 route: '/shop/change_sequence',
                 params: {
                     id: self.productTemplateID,
                     sequence: value,
-                    shop_context: shop_context,
+                    shop_context: self._getShopContext(),
                 },
             }).then(function (result) {
                 if (result.template) {
-                    self.$target.closest("#products_grid #product_table").replaceWith(result.template);
-                    $('.oe_overlay').detach();
+                    self.trigger_up('deactivate_snippet');
+                    self.$target.closest("#product_table").replaceWith(result.template);
                 }
             });
         });
@@ -289,26 +286,6 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         $size.find('tr td:nth-child(n + ' + parseInt(this.ppr + 1) + ')').hide();
 
         return this._super.apply(this, arguments);
-    },
-    /**
-     * update product grid size and sequence.
-     * @private
-     *
-     * @param {string} route
-     * @param {Object} params
-     *
-     */
-    _updateProductDetails: function (route, params) {
-        var self = this;
-        this._rpc({
-            route: route,
-            params: params,
-        }).then(function (result) {
-            if (result.template) {
-                self.$target.closest("#products_grid #product_table").replaceWith(result.template);
-                $('.oe_overlay').detach();
-            }
-        });
     },
     /**
      * Displays confirmation dialog  if the user tries to change product grid size and sequence.
@@ -343,7 +320,12 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
             }).open();
         });
     },
-
+    _getShopContext: function () {
+        var productGrid = this.$target.closest('#product_table');
+        return _.pick(productGrid.data(), function (value) {
+            return _.isNumber(value) || _.isString(value);
+        });
+    },
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -391,9 +373,6 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         var $td = $(ev.currentTarget);
         var x = $td.index() + 1;
         var y = $td.parent().index() + 1;
-        var shop_context = _.pick($('table#product_table').data(), function (value) {
-            return _.isNumber(value) || _.isString(value);
-        });
 
         this._openConfirmationDialog().then(function () {
             self._rpc({
@@ -402,12 +381,12 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
                     id: self.productTemplateID,
                     x: x,
                     y: y,
-                    shop_context: shop_context,
+                    shop_context: self._getShopContext(),
                 },
             }).then(function (result) {
                 if (result.template) {
-                    self.$target.closest("#products_grid #product_table").replaceWith(result.template);
-                    $('.oe_overlay').detach();
+                    self.trigger_up('deactivate_snippet');
+                    self.$target.closest("#product_table").replaceWith(result.template);
                 }
             });
         });

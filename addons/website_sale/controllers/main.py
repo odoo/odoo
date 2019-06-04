@@ -204,14 +204,15 @@ class WebsiteSale(http.Controller):
         '''/shop/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>/page/<int:page>'''
     ], type='http', auth="public", website=True)
     def shop(self, page=0, category=None, search='', ppg=False, **post):
-        values = self._prepare_bins(page, category, search, ppg, **post)
+        values = self._get_shop_qcontext(page, category, search, ppg, **post)
         if category:
             values['main_object'] = category
-
         return request.render("website_sale.products", values)
 
-    def _prepare_bins(self, page=0, category=None, search='', ppg=False, **post):
-
+    def _get_shop_qcontext(self, page=0, category=None, search='', ppg=False, **post):
+        """
+        Prepares values that used to render product grid/list in the shop.
+        """
         params = {
             'page': page,
             'category': category and category.id or None,
@@ -1106,7 +1107,7 @@ class WebsiteSale(http.Controller):
         shop_context = post.get('shop_context', {})
         if shop_context.get('category'):
             shop_context['category'] = request.env['product.public.category'].browse(shop_context['category'])
-        values = self._prepare_bins(**shop_context)
+        values = self._get_shop_qcontext(**shop_context)
         return {'template': request.env['ir.ui.view'].render_template("website_sale.product_table", values)}
 
     @http.route(['/shop/change_size'], type='json', auth='user', website=True)
@@ -1116,7 +1117,7 @@ class WebsiteSale(http.Controller):
         shop_context = post.get('shop_context', {})
         if shop_context.get('category'):
             shop_context['category'] = request.env['product.public.category'].browse(shop_context['category'])
-        values = self._prepare_bins(shop_context)
+        values = self._get_shop_qcontext(**shop_context)
         return {'template': request.env['ir.ui.view'].render_template("website_sale.product_table", values)}
 
     @http.route(['/shop/change_ppg'], type='json', auth='user')
