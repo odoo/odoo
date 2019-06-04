@@ -47,6 +47,7 @@ come with any additional paid permission for online use of 'private modules'.
     'depends': ['account'],
     'data': [
         'data/l10n_br_chart_data.xml',
+        'data/account_group_data.xml',
         'data/account.account.template.csv',
         'data/account_data.xml',
         'data/account_tax_template_data.xml',

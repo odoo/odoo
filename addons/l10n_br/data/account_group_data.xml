@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+		<record id="account_group_1" model="account.group">
+				<field name="code_prefix">1</field>
+				<field name="name">Ativo</field>
+		</record>
+
+		<record id="account_group_11" model="account.group">
+				<field name="code_prefix">1.1</field>
+				<field name="name">Ativo Circulante</field>
+				<field name="parent_id" ref="l10n_br.account_group_1"/>
+		</record>
+
+		<record id="account_group_111" model="account.group">
+				<field name="code_prefix">1.1.1</field>
+				<field name="name">Caixa e Equivalentes de Caixa</field>
+				<field name="parent_id" ref="l10n_br.account_group_11"/>
+		</record>
+
+		<record id="account_group_112" model="account.group">
+				<field name="code_prefix">1.1.2</field>
+				<field name="name">Contas a Receber</field>
+				<field name="parent_id" ref="l10n_br.account_group_11"/>
+		</record>
+
+		<record id="account_group_113" model="account.group">
+				<field name="code_prefix">1.1.3</field>
+				<field name="name">Estoque</field>
+				<field name="parent_id" ref="l10n_br.account_group_11"/>
+		</record>
+
+		<record id="account_group_114" model="account.group">
+				<field name="code_prefix">1.1.4</field>
+				<field name="name">Outros Créditos</field>
+				<field name="parent_id" ref="l10n_br.account_group_11"/>
+		</record>
+
+		<record id="account_group_13" model="account.group">
+				<field name="code_prefix">1.3</field>
+				<field name="name">Ativo Não Circulante</field>
+				<field name="parent_id" ref="l10n_br.account_group_1"/>
+		</record>
+
+		<record id="account_group_131" model="account.group">
+				<field name="code_prefix">1.3.1</field>
+				<field name="name">Realizável a Longo Prazo</field>
+				<field name="parent_id" ref="l10n_br.account_group_13"/>
+		</record>
+
+		<record id="account_group_132" model="account.group">
+				<field name="code_prefix">1.3.2</field>
+				<field name="name">Investimentos</field>
+				<field name="parent_id" ref="l10n_br.account_group_13"/>
+		</record>
+
+		<record id="account_group_133" model="account.group">
+				<field name="code_prefix">1.3.3</field>
+				<field name="name">Imobilizado</field>
+				<field name="parent_id" ref="l10n_br.account_group_13"/>
+		</record>
+
+		<record id="account_group_134" model="account.group">
+				<field name="code_prefix">1.3.4</field>
+				<field name="name">Intangível</field>
+				<field name="parent_id" ref="l10n_br.account_group_13"/>
+		</record>
+
+		<record id="account_group_2" model="account.group">
+				<field name="code_prefix">2</field>
+				<field name="name">Passivo e Patrimônio Líquido</field>
+		</record>
+
+		<record id="account_group_21" model="account.group">
+				<field name="code_prefix">2.1</field>
+				<field name="name">Passivo Circulante</field>
+				<field name="parent_id" ref="l10n_br.account_group_2"/>
+		</record>
+
+		<record id="account_group_211" model="account.group">
+				<field name="code_prefix">2.1.1</field>
+				<field name="name">Fornecedores Nacionais</field>
+				<field name="parent_id" ref="l10n_br.account_group_21"/>
+		</record>
+
+		<record id="account_group_212" model="account.group">
+				<field name="code_prefix">2.1.2</field>
+				<field name="name">Empréstimos e Financiamentos</field>
+				<field name="parent_id" ref="l10n_br.account_group_21"/>
+		</record>
+
+		<record id="account_group_213" model="account.group">
+				<field name="code_prefix">2.1.3</field>
+				<field name="name">Obrigações Fiscais</field>
+				<field name="parent_id" ref="l10n_br.account_group_21"/>
+		</record>
+
+		<record id="account_group_214" model="account.group">
+				<field name="code_prefix">2.1.4</field>
+				<field name="name">Obrigações Trabalhistas e Sociais</field>
+				<field name="parent_id" ref="l10n_br.account_group_21"/>
+		</record>
+
+		<record id="account_group_215" model="account.group">
+				<field name="code_prefix">2.1.5</field>
+				<field name="name">Contas a Pagar</field>
+				<field name="parent_id" ref="l10n_br.account_group_21"/>
+		</record>
+
+		<record id="account_group_216" model="account.group">
+				<field name="code_prefix">2.1.6</field>
+				<field name="name">Provisões</field>
+				<field name="parent_id" ref="l10n_br.account_group_21"/>
+		</record>
+
+		<record id="account_group_22" model="account.group">
+				<field name="code_prefix">2.2</field>
+				<field name="name">Passivo Não Circulante</field>
+				<field name="parent_id" ref="l10n_br.account_group_2"/>
+		</record>
+
+		<record id="account_group_221" model="account.group">
+				<field name="code_prefix">2.2.1</field>
+				<field name="name">Financiamentos</field>
+				<field name="parent_id" ref="l10n_br.account_group_22"/>
+		</record>
+
+		<record id="account_group_222" model="account.group">
+				<field name="code_prefix">2.2.2</field>
+				<field name="name">Outras Contas a Pagar</field>
+				<field name="parent_id" ref="l10n_br.account_group_22"/>
+		</record>
+
+		<record id="account_group_23" model="account.group">
+				<field name="code_prefix">2.3</field>
+				<field name="name">Patrimônio Líquido</field>
+				<field name="parent_id" ref="l10n_br.account_group_2"/>
+		</record>
+
+		<record id="account_group_231" model="account.group">
+				<field name="code_prefix">2.3.1</field>
+				<field name="name">Capital Social</field>
+				<field name="parent_id" ref="l10n_br.account_group_23"/>
+		</record>
+
+		<record id="account_group_232" model="account.group">
+				<field name="code_prefix">2.3.2</field>
+				<field name="name">Reservas</field>
+				<field name="parent_id" ref="l10n_br.account_group_23"/>
+		</record>
+
+		<record id="account_group_233" model="account.group">
+				<field name="code_prefix">2.3.3</field>
+				<field name="name">Passivo Circulante</field>
+				<field name="parent_id" ref="l10n_br.account_group_23"/>
+		</record>
+
+		<record id="account_group_3" model="account.group">
+				<field name="code_prefix">3</field>
+				<field name="name">Receitas, Custos e Despesas (Contas de Resultado)</field>
+		</record>
+
+		<record id="account_group_31" model="account.group">
+				<field name="code_prefix">3.1</field>
+				<field name="name">Receita</field>
+				<field name="parent_id" ref="l10n_br.account_group_3"/>
+		</record>
+
+		<record id="account_group_311" model="account.group">
+				<field name="code_prefix">3.1.1</field>
+				<field name="name">Receitas de Venda</field>
+				<field name="parent_id" ref="l10n_br.account_group_31"/>
+		</record>
+
+		<record id="account_group_312" model="account.group">
+				<field name="code_prefix">3.1.2</field>
+				<field name="name">Receitas Financeiras</field>
+				<field name="parent_id" ref="l10n_br.account_group_31"/>
+		</record>
+
+		<record id="account_group_313" model="account.group">
+				<field name="code_prefix">3.1.3</field>
+				<field name="name">Outras Receitas Operacionais</field>
+				<field name="parent_id" ref="l10n_br.account_group_31"/>
+		</record>
+
+		<record id="account_group_32" model="account.group">
+				<field name="code_prefix">3.2</field>
+				<field name="name">Custos e Despesas</field>
+				<field name="parent_id" ref="l10n_br.account_group_3"/>
+		</record>
+
+		<record id="account_group_321" model="account.group">
+				<field name="code_prefix">3.2.1</field>
+				<field name="name">Custos dos Produtos, Mercadorias e Serviços Vendidos</field>
+				<field name="parent_id" ref="l10n_br.account_group_32"/>
+		</record>
+
+		<record id="account_group_322" model="account.group">
+				<field name="code_prefix">3.2.2</field>
+				<field name="name">Despesas Operacionais</field>
+				<field name="parent_id" ref="l10n_br.account_group_32"/>
+		</record>
+
+		<record id="account_group_323" model="account.group">
+				<field name="code_prefix">3.2.3</field>
+				<field name="name">Despesas Financeiras</field>
+				<field name="parent_id" ref="l10n_br.account_group_32"/>
+		</record>
+
+		<record id="account_group_324" model="account.group">
+				<field name="code_prefix">3.2.4</field>
+				<field name="name">Outras Despesas Operacionais</field>
+				<field name="parent_id" ref="l10n_br.account_group_32"/>
+		</record>
+
+		<record id="account_group_325" model="account.group">
+				<field name="code_prefix">3.2.5</field>
+				<field name="name">Provisão para Imposto de Renda Pessoa Jurídica e Contribuição Social sobre o Lucro Líquido</field>
+				<field name="parent_id" ref="l10n_br.account_group_32"/>
+		</record>
+
+</odoo>
