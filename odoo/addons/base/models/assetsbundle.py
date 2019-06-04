@@ -111,8 +111,8 @@ class AssetsBundle(object):
                 self.javascripts.append(JavascriptAsset(self, url=f['url'], filename=f['filename'], inline=f['content']))
 
     # depreciated and will remove after v11
-    def to_html(self, sep=None, css=True, js=True, debug=False, async_load=False, url_for=(lambda url: url)):
-        nodes = self.to_node(css=css, js=js, debug=debug, async_load=async_load)
+    def to_html(self, sep=None, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, url_for=(lambda url: url)):
+        nodes = self.to_node(css=css, js=js, debug=debug, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load)
 
         if sep is None:
             sep = u'\n            '
@@ -130,7 +130,7 @@ class AssetsBundle(object):
 
         return sep + sep.join(response)
 
-    def to_node(self, css=True, js=True, debug=False, async_load=False):
+    def to_node(self, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False):
         """
         :returns [(tagName, attributes, content)] if the tag is auto close
         """
@@ -167,8 +167,9 @@ class AssetsBundle(object):
             if js and self.javascripts:
                 attr = OrderedDict([
                     ["async", "async" if async_load else None],
+                    ["defer", "defer" if defer_load or lazy_load else None],
                     ["type", "text/javascript"],
-                    ["src", self.js().url],
+                    ["data-src" if lazy_load else "src", self.js().url],
                 ])
                 response.append(("script", attr, None))
 
@@ -227,7 +228,8 @@ class AssetsBundle(object):
         url = self.get_asset_url(
             extra='%s' % ('rtl/' if type == 'css' and self.user_direction == 'rtl' else ''),
             name=self.name,
-            type=type
+            sep='',
+            type='.%s' % type
         )
         domain = [
             ('url', '=like', url),

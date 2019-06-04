@@ -81,11 +81,32 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         }
         this.tours[name] = tour;
     },
+    /**
+     * Returns a promise which is resolved once the tour can be started. This
+     * is when the DOM is ready and at the end of the execution stack so that
+     * all tours have potentially been extended by all apps.
+     *
+     * @private
+     * @returns {Promise}
+     */
+    _waitBeforeTourStart: function () {
+        return new Promise(function (resolve) {
+            $(function () {
+                setTimeout(resolve);
+            });
+        });
+    },
     _register_all: function (do_update) {
-        if (this._all_registered) return;
-        this._all_registered = true;
-
-        _.each(this.tours, this._register.bind(this, do_update));
+        var self = this;
+        if (this._allRegistered) {
+            return Promise.resolve();
+        }
+        this._allRegistered = true;
+        return self._waitBeforeTourStart().then(function () {
+            return Promise.all(_.map(self.tours, function (tour, name) {
+                return self._register(do_update, tour, name);
+            }));
+        });
     },
     _register: function (do_update, tour, name) {
         if (tour.ready) return Promise.resolve();
@@ -193,7 +214,6 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
      * @returns {boolean} true if a tip was found and activated/updated
      */
     _check_for_tooltip: function (tip, tour_name) {
-
         if ($('body').hasClass('o_ui_blocked')) {
             this._deactivate_tip(tip);
             this._log.push("blockUI is preventing the tip to be consumed");
