@@ -89,6 +89,7 @@
                             'readonly': ['|', ('id', '!=', False), ('tracking', 'not in', ['serial', 'lot'])],
                             'required': [('tracking', '!=', 'none')]
                        }"
+                       invisible="context.get('hide_lot', False)"
                        context="{'default_product_id': product_id}"
                        domain="[('product_id', '=', product_id)]"/>
                 <field name="package_id" groups="stock.group_tracking_lot"
