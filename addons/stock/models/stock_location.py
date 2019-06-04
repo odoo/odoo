@@ -169,7 +169,7 @@ class Route(models.Model):
     @api.onchange('warehouse_selectable')
     def _onchange_warehouse_selectable(self):
         if not self.warehouse_selectable:
-            self.warehouse_ids = []
+            self.warehouse_ids = [(5, 0, 0)]
 
     def toggle_active(self):
         for route in self:
