@@ -958,9 +958,9 @@ class TestFields(common.TransactionCase):
         # no value gives the default value
         new_disc = discussion.new({'name': "Foo"})
         self.assertEqual(new_disc.categories._origin, cat1)
-        # value is combined with default value
+        # value overrides default value
         new_disc = discussion.new({'name': "Foo", 'categories': [(4, cat2.id)]})
-        self.assertEqual(new_disc.categories._origin, cat1 + cat2)
+        self.assertEqual(new_disc.categories._origin, cat2)
 
     def test_40_new_fields(self):
         """ Test new records with relational fields. """

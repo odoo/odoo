@@ -2321,7 +2321,7 @@ class _RelationalMulti(_Relational):
             else:
                 browse = comodel.browse
             # determine the value ids
-            ids = OrderedSet(record[self.name]._ids)
+            ids = OrderedSet(record[self.name]._ids if validate else ())
             # modify ids with the commands
             for command in value:
                 if isinstance(command, (tuple, list)):
