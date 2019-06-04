@@ -51,16 +51,21 @@ var SwitchCompanyMenu = Widget.extend({
      * @param {MouseEvent} ev
      */
     _onSwitchCompanyClick: function (ev) {
-        ev.preventDefault();
-        var companyID = $(ev.currentTarget).parent().data('company-id');
+        ev.stopPropagation();
+        var dropdownItem = $(ev.currentTarget).parent()
+        var dropdownMenu = dropdownItem.parent()
+        var companyID = dropdownItem.data('company-id');
         var hash = $.bbq.getState()
         var allowed_company_ids = _.map(hash.cids.split(','), function(company_id) {return parseInt(company_id);});
-        if ($($(ev.currentTarget).parent()).find('.fa-square-o').length) {
+        if (dropdownItem.find('.fa-square-o').length) {
             // 1 enabled company: Stay in single company mode
             if (this.allowed_company_ids.length === 1) {
-                allowed_company_ids = [companyID]    
+                dropdownMenu.find('.fa-check-square').removeClass('fa-check-square').addClass('fa-square-o');
+                dropdownItem.find('.fa-square-o').removeClass('fa-square-o').addClass('fa-check-square');
+                allowed_company_ids = [companyID]
             } else { // Multi company mode
                 allowed_company_ids.push(companyID);
+                dropdownItem.find('.fa-square-o').removeClass('fa-square-o').addClass('fa-check-square');
             }
         }
         session.setCompanies(companyID, allowed_company_ids);
@@ -75,14 +80,19 @@ var SwitchCompanyMenu = Widget.extend({
      * @param {MouseEvent} ev
      */
     _onToggleCompanyClick: function (ev) {
-        var companyID = $(ev.currentTarget).parent().data('company-id');
+        ev.stopPropagation();
+        var dropdownItem = $(ev.currentTarget).parent()
+        var dropdownMenu = dropdownItem.parent()
+        var companyID = dropdownItem.data('company-id');
         var hash = $.bbq.getState()
         var allowed_company_ids = _.map(hash.cids.split(','), function(company_id) {return parseInt(company_id);});
         var current_company_id = allowed_company_ids[0];
-        if ($(ev.currentTarget).find('.fa-square-o').length) {
+        if (dropdownItem.find('.fa-square-o').length) {
             allowed_company_ids.push(companyID);
+            dropdownItem.find('.fa-square-o').removeClass('fa-square-o').addClass('fa-check-square');
         } else {
             allowed_company_ids.splice(allowed_company_ids.indexOf(companyID), 1);
+            dropdownItem.find('.fa-check-square').addClass('fa-square-o').removeClass('fa-check-square');
         }
         session.setCompanies(current_company_id, allowed_company_ids);
     },
