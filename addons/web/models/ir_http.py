@@ -56,7 +56,6 @@ class Http(models.AbstractModel):
             "web.base.url": self.env['ir.config_parameter'].sudo().get_param('web.base.url', default=''),
             "show_effect": True,
             "display_switch_company_menu": user.has_group('base.group_multi_company') and len(user.company_ids) > 1,
-            "toggle_company": user.has_group('base.group_toggle_company'),
             "cache_hashes": {
                 "load_menus": hashlib.sha1(menu_json_utf8).hexdigest(),
                 "qweb": qweb_checksum,
