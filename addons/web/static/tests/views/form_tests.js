@@ -8119,16 +8119,18 @@ QUnit.module('Views', {
         assert.strictEqual(form.$('[name="foo"]').val(), "0", "onchange worked there is 0 line");
 
         // Add one line
-        form.$('.o_field_x2many_list_row_add a').click();
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
         form.$('.o_field_one2many input:first').focus();
+        await testUtils.nextTick();
         form.$('.o_field_one2many input:first').val('first line').trigger('input');
-        form.$('input[name="foo"]').click();
+        await testUtils.nextTick();
+        await testUtils.dom.click(form.$('input[name="foo"]'));
         assert.strictEqual(onchangeNum, 2, "one onchange happens when a line is added");
         assert.strictEqual(form.$('[name="foo"]').val(), "1", "onchange worked there is 1 line");
 
         // Drag and drop second line before first one (with 1 draft and invalid line)
-        form.$('.o_field_x2many_list_row_add a').click();
-        await testUtils.dragAndDrop(
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        await testUtils.dom.dragAndDrop(
             form.$('.ui-sortable-handle').eq(0),
             form.$('.o_data_row').last(),
             {position: 'bottom'}
@@ -8137,10 +8139,12 @@ QUnit.module('Views', {
         assert.strictEqual(form.$('[name="foo"]').val(), "1", "onchange worked there is 1 line");
 
         // Add a second line
-        form.$('.o_field_x2many_list_row_add a').click();
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
         form.$('.o_field_one2many input:first').focus();
+        await testUtils.nextTick();
         form.$('.o_field_one2many input:first').val('second line').trigger('input');
-        form.$('input[name="foo"]').click();
+        await testUtils.nextTick();
+        await testUtils.dom.click(form.$('input[name="foo"]'));
         assert.strictEqual(onchangeNum, 4, "one onchange happens when a line is added");
         assert.strictEqual(form.$('[name="foo"]').val(), "2", "onchange worked there is 2 lines");
 
