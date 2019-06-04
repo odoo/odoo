@@ -110,4 +110,7 @@ class PaypalController(http.Controller):
     def paypal_cancel(self, **post):
         """ When the user cancels its Paypal payment: GET on this route """
         _logger.info('Beginning Paypal cancel with post data %s', pprint.pformat(post))  # debug
-        return werkzeug.utils.redirect('/payment/process')
+        tx_id = request.env['payment.transaction'].search([('reference', '=', post.get('reference'))])
+        if tx_id.return_url == '/shop/payment/validate':
+            return werkzeug.utils.redirect('/shop/payment/')
+        return werkzeug.utils.redirect(tx_id.return_url)

@@ -111,7 +111,7 @@ class AcquirerPaypal(models.Model):
             'last_name': values.get('partner_last_name'),
             'paypal_return': urls.url_join(base_url, PaypalController._return_url),
             'notify_url': urls.url_join(base_url, PaypalController._notify_url),
-            'cancel_return': urls.url_join(base_url, PaypalController._cancel_url),
+            'cancel_return': urls.url_join(base_url, PaypalController._cancel_url + '?reference=%s' % values['reference']),
             'handling': '%.2f' % paypal_tx_values.pop('fees', 0.0) if self.fees_active else False,
             'custom': json.dumps({'return_url': '%s' % paypal_tx_values.pop('return_url')}) if paypal_tx_values.get('return_url') else False,
         })
