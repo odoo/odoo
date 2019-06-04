@@ -414,7 +414,9 @@ class Product(models.Model):
     def action_open_quants(self):
         location_domain = self._get_domain_locations()[0]
         domain = expression.AND([[('product_id', 'in', self.ids)], location_domain])
-        self = self.with_context(hide_location=not self.user_has_groups('stock.group_stock_multi_locations'))
+        hide_location = not self.user_has_groups('stock.group_stock_multi_locations')
+        hide_lot = all([product.tracking == 'none' for product in self])
+        self = self.with_context(hide_location=hide_location, hide_lot=hide_lot)
 
         # If user have rights to write on quant, we define the view as editable.
         if self.user_has_groups('stock.group_stock_manager'):
