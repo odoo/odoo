@@ -76,7 +76,7 @@ widgetsMedia.ImageWidget.include({
     /**
      * @override
      */
-    save: function () {
+    _save: function () {
         if (!this._unsplash.query) {
             return this._super.apply(this, arguments);
         }
@@ -96,7 +96,8 @@ widgetsMedia.ImageWidget.include({
                 image.src = image.url;
                 image.isDocument = !(/gif|jpe|jpg|png/.test(image.mimetype));
             });
-            self.images = images;
+            self.attachments = images;
+            self.selectedAttachments = images;
             return _super.apply(self, args);
         });
     },
@@ -114,10 +115,9 @@ widgetsMedia.ImageWidget.include({
         var always = function () {
             if (!noRender) {
                 self._renderImages();
-                self._adaptLoadMore();
             }
         };
-        return this.unsplashAPI.getImages(needle, this.IMAGES_DISPLAYED_TOTAL).then(function (res) {
+        return this.unsplashAPI.getImages(needle, this.numberOfAttachmentsToDisplay).then(function (res) {
             self._unsplash.isMaxed = res.isMaxed;
             self._unsplash.records = res.images;
             self._unsplash.error = false;
@@ -131,20 +131,9 @@ widgetsMedia.ImageWidget.include({
     //--------------------------------------------------------------------------
 
     /**
-     * @private
-     */
-    _adaptLoadMore: function () {
-        if (!this._unsplash.isActive) {
-            return this._super.apply(this, arguments);
-        }
-
-        this.$('.o_load_more').toggleClass('d-none', !!this._unsplash.error || this._unsplash.isMaxed);
-        this.$('.o_load_done_msg').toggleClass('d-none', !!this._unsplash.error || !this._unsplash.isMaxed);
-    },
-    /**
      * @override
      */
-    _highlightSelectedImages: function () {
+    _highlightSelected: function () {
         var self = this;
         if (!this._unsplash.isActive) {
             return this._super.apply(this, arguments);
@@ -167,7 +156,6 @@ widgetsMedia.ImageWidget.include({
      * @override
      */
     _renderImages: function () {
-        var self = this;
         if (!this._unsplash.isActive) {
             return this._super.apply(this, arguments);
         }
@@ -181,13 +169,11 @@ widgetsMedia.ImageWidget.include({
             return;
         }
 
-        var rows = _(this._unsplash.records).chain()
-            .groupBy(function (a, index) { return Math.floor(index / self.IMAGES_PER_ROW); })
-            .values()
-            .value();
+        this.$('.unsplash_img_container').html(core.qweb.render('web_unsplash.dialog.image.content', {records: this._unsplash.records}));
+        this._highlightSelected();
 
-        this.$('.unsplash_img_container').html(core.qweb.render('web_unsplash.dialog.image.content', {rows: rows}));
-        this._highlightSelectedImages();
+        this.$('.o_load_more').toggleClass('d-none', !!this._unsplash.error || this._unsplash.isMaxed);
+        this.$('.o_load_done_msg').toggleClass('d-none', !!this._unsplash.error || !this._unsplash.isMaxed);
     },
     /**
      * @private
@@ -248,7 +234,7 @@ widgetsMedia.ImageWidget.include({
         } else {
             this._unsplash.selectedImages[imgid] = {url: url, download_url: downloadURL};
         }
-        this._highlightSelectedImages();
+        this._highlightSelected();
     },
     /**
      * @private

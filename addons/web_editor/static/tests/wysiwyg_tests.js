@@ -3412,6 +3412,9 @@ QUnit.module('Media', {
                 if (route.indexOf('youtube') !== -1) {
                     return Promise.resolve();
                 }
+                if (route.indexOf('/web_editor/static/src/img/') === 0) {
+                    return Promise.resolve();
+                }
                 return this._super(route, args);
             },
         };

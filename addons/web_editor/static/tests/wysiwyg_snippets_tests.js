@@ -330,6 +330,12 @@ QUnit.test('background-image', function (assert) {
                 '    </div>' +
                 '</section>',
         },
+        mockRPC: function (route, args) {
+            if (route.indexOf('/web_editor/static/src/img/') === 0) {
+                return Promise.resolve();
+            }
+            return this._super(route, args);
+        },
     }).then(function (wysiwyg) {
         var $editable = wysiwyg.getEditable();
 
@@ -352,7 +358,7 @@ QUnit.test('background-image', function (assert) {
             $('#oe_manipulators .oe_overlay_options a.snippet-option-background[data-choose-image]').click();
 
             defMediaDialogInit.then(function () {
-                $('.o_select_media_dialog .existing-attachments .o_image').click();
+                $('.o_select_media_dialog .existing-attachments .o_existing_attachment_cell').click();
                 $('.o_select_media_dialog .modal-footer .btn-primary').click();
             });
 

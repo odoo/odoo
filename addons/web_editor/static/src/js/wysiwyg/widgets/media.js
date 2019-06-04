@@ -103,19 +103,18 @@ var FileWidget = SearchableMediaWidget.extend({
     events: _.extend({}, SearchableMediaWidget.prototype.events || {}, {
         'click .o_upload_media_button': '_onUploadButtonClick',
         'click .o_upload_media_button_no_optimization': '_onUploadButtonNoOptimizationClick',
-        'change .o_file_input': '_onImageSelection',
+        'change .o_file_input': '_onFileInputChange',
         'click .o_upload_media_url_button': '_onUploadURLButtonClick',
         'input .o_we_url_input': '_onURLInputChange',
-        'click .o_existing_attachment_cell [data-src]': '_onImageClick',
-        'dblclick .o_existing_attachment_cell [data-src]': '_onImageDblClick',
+        'click .o_existing_attachment_cell': '_onAttachmentClick',
+        'dblclick .o_existing_attachment_cell': '_onAttachmentDblClick',
         'click .o_existing_attachment_remove': '_onRemoveClick',
         'click .o_load_more': '_onLoadMoreClick',
     }),
     existingAttachmentsTemplate: undefined,
 
     IMAGE_MIMETYPES: ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/gif', 'image/png'],
-    IMAGES_PER_ROW: 6,
-    IMAGES_ROWS: 5,
+    NUMBER_OF_ATTACHMENTS_TO_DISPLAY: 30,
 
     /**
      * @constructor
@@ -124,15 +123,15 @@ var FileWidget = SearchableMediaWidget.extend({
         this._super.apply(this, arguments);
         this._mutex = new concurrency.Mutex();
 
-        this.imagesRows = this.IMAGES_ROWS;
-        this.IMAGES_DISPLAYED_TOTAL = this.IMAGES_PER_ROW * this.imagesRows;
+        this.numberOfAttachmentsToDisplay = this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY;
 
         this.options = _.extend({
             firstFilters: [],
             lastFilters: [],
         }, options || {});
 
-        this.images = [];
+        this.attachments = [];
+        this.selectedAttachments = [];
     },
     /**
      * @override
@@ -159,8 +158,10 @@ var FileWidget = SearchableMediaWidget.extend({
         this.$urlError = this.$('.o_we_url_error');
         this.$errorText = this.$('.o_we_error_text');
 
-        this._renderImages(true);
+        this._renderImages();
 
+        // If there is already an attachment on the target, select by default
+        // that attachment if it is among the loaded images.
         var o = {
             url: null,
             alt: null,
@@ -172,7 +173,9 @@ var FileWidget = SearchableMediaWidget.extend({
             o.id = +o.url.match(/\/web\/content\/(\d+)/, '')[1];
         }
         if (o.url) {
-            self._toggleImage(_.find(self.records, function (record) { return record.url === o.url;}) || o, true);
+            self._toggleImage(_.find(self.attachments, function (attachment) {
+                return attachment.url === o.url;
+            }) || o, true);
         }
 
         return def;
@@ -193,12 +196,11 @@ var FileWidget = SearchableMediaWidget.extend({
     },
     /**
      * @override
+     * @param {boolean} noRender: if true, do not render the found attachments
      */
     search: function (needle, noRender) {
         var self = this;
-        if (!noRender) {
-            this.$urlInput.val('').trigger('input').trigger('change');
-        }
+
         return this._rpc({
             model: 'ir.attachment',
             method: 'search_read',
@@ -209,8 +211,8 @@ var FileWidget = SearchableMediaWidget.extend({
                 order: [{name: 'id', asc: false}],
                 context: this.options.context,
             },
-        }).then(function (records) {
-            self.records = _.chain(records)
+        }).then(function (attachments) {
+            self.attachments = _.chain(attachments)
                 .filter(function (r) {
                     return (r.type === "binary" || r.url && r.url.length > 0);
                 })
@@ -234,13 +236,13 @@ var FileWidget = SearchableMediaWidget.extend({
                 })
                 .value();
 
-            _.each(self.records, function (record) {
-                record.src = record.url || _.str.sprintf('/web/image/%s/%s', record.id, encodeURI(record.name));  // Name is added for SEO purposes
-                record.isDocument = !(/gif|jpe|jpg|png/.test(record.mimetype));
+            _.each(self.attachments, function (attachment) {
+                // Name is added for SEO purposes
+                attachment.src = attachment.url || _.str.sprintf('/web/image/%s/%s', attachment.id, encodeURI(attachment.name));
+                attachment.isDocument = !(/gif|jpe|jpg|png/.test(attachment.mimetype));
             });
             if (!noRender) {
                 self._renderImages();
-                self._adaptLoadMore();
             }
         });
     },
@@ -249,14 +251,6 @@ var FileWidget = SearchableMediaWidget.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     */
-    _adaptLoadMore: function () {
-        var noMoreImgToLoad = this.IMAGES_DISPLAYED_TOTAL >= this.records.length;
-        this.$('.o_load_more').toggleClass('d-none', noMoreImgToLoad);
-        this.$('.o_load_done_msg').toggleClass('d-none', !noMoreImgToLoad);
-    },
     /**
      * @override
      */
@@ -318,27 +312,20 @@ var FileWidget = SearchableMediaWidget.extend({
     /**
      * @private
      */
-    _highlightSelectedImages: function () {
+    _highlightSelected: function () {
         var self = this;
-        this.$('.o_existing_attachment_cell.o_selected').removeClass("o_selected");
-        var $select = this.$('.o_existing_attachment_cell [data-src]').filter(function () {
-            var $img = $(this);
-            return !!_.find(self.images, function (v) {
-                return (v.url === $img.data("src") || ($img.data("url") && v.url === $img.data("url")) || v.id === $img.data("id"));
-            });
+        this.$('.o_existing_attachment_cell.o_we_attachment_selected').removeClass("o_we_attachment_selected");
+        _.each(this.selectedAttachments, function (attachment) {
+            self.$('.o_existing_attachment_cell[data-id=' + attachment.id + ']').addClass("o_we_attachment_selected");
         });
-        $select.closest('.o_existing_attachment_cell').addClass("o_selected");
-        return $select;
     },
     /**
      * @private
      */
     _loadMoreImages: function (forceSearch) {
-        this.imagesRows += 2;
-        this.IMAGES_DISPLAYED_TOTAL = this.imagesRows * this.IMAGES_PER_ROW;
+        this.numberOfAttachmentsToDisplay += 10;
         if (!forceSearch) {
             this._renderImages();
-            this._adaptLoadMore();
         } else {
             this.search(this.$('.o_we_search').val() || '');
         }
@@ -346,58 +333,34 @@ var FileWidget = SearchableMediaWidget.extend({
     /**
      * Renders the existing attachments and returns the result as a string.
      *
-     * @param {Object[]} rows
-     * @param {boolean} withEffect
+     * @param {Object[]} attachments
      * @returns {string}
      */
-    _renderExisting: function (rows, withEffect) {
+    _renderExisting: function (attachments) {
         return QWeb.render(this.existingAttachmentsTemplate, {
-            rows: rows,
+            attachments: attachments,
             widget: this,
-            withEffect: withEffect,
         });
     },
     /**
      * @private
      */
-    _renderImages: function (withEffect) {
-        var self = this;
-        var rows = _(this.records).chain()
-            .slice(0, this.IMAGES_DISPLAYED_TOTAL)
-            .groupBy(function (a, index) { return Math.floor(index / self.IMAGES_PER_ROW); })
-            .values()
-            .value();
+    _renderImages: function () {
+        var attachments = this.attachments.slice(0, this.numberOfAttachmentsToDisplay);
 
         this.$errorText.empty();
 
-       // Render menu & content
+        // Render menu & content
         this.$('.existing-attachments').replaceWith(
-            this._renderExisting(rows, withEffect)
+            this._renderExisting(attachments)
         );
 
-        var $divs = this.$('.o_image');
-        var imageDefs = _.map($divs, function (el) {
-            var $div = $(el);
-            if (/gif|jpe|jpg|png/.test($div.data('mimetype'))) {
-                var $img = $('<img/>', {
-                    class: 'img-fluid',
-                    src: $div.data('url') || $div.data('src'),
-                });
-                var prom = new Promise(function (resolve, reject) {
-                    $img[0].onload = resolve();
-                    $div.addClass('o_webimage').append($img);
-                });
-                return prom;
-            }
-        });
-        if (withEffect) {
-            Promise.all(imageDefs).then(function () {
-                _.delay(function () {
-                    $divs.removeClass('o_image_loading');
-                }, 400);
-            });
-        }
-        this._highlightSelectedImages();
+        this._highlightSelected();
+
+        // adapt load more
+        var noMoreImgToLoad = this.numberOfAttachmentsToDisplay >= this.attachments.length;
+        this.$('.o_load_more').toggleClass('d-none', noMoreImgToLoad);
+        this.$('.o_load_done_msg').toggleClass('d-none', !noMoreImgToLoad);
     },
     /**
      * @private
@@ -407,10 +370,10 @@ var FileWidget = SearchableMediaWidget.extend({
         var self = this;
 
         if (this.options.multiImages) {
-            return Promise.resolve(this.images);
+            return Promise.resolve(this.selectedAttachments);
         }
 
-        var img = this.images[0];
+        var img = this.selectedAttachments[0];
         if (!img) {
             return Promise.resolve(this.media);
         }
@@ -475,24 +438,24 @@ var FileWidget = SearchableMediaWidget.extend({
     /**
      * @private
      */
-    _toggleImage: function (attachment, clearSearch, forceSelect) {
+    _toggleImage: function (attachment, doubleClick) {
         if (this.options.multiImages) {
-            var img = _.select(this.images, function (v) { return v.id === attachment.id; });
-            if (img.length) {
-                if (!forceSelect) {
-                    this.images.splice(this.images.indexOf(img[0]),1);
+            // if the clicked image is already selected, then unselect it
+            // unless it was a double click
+            var index = this.selectedAttachments.indexOf(attachment);
+            if (index !== -1) {
+                if (!doubleClick) {
+                    this.selectedAttachments.splice(index, 1);
                 }
             } else {
-                this.images.push(attachment);
+                // if the clicked image is not selected, then select it
+                this.selectedAttachments.push(attachment);
             }
         } else {
-            this.images = [attachment];
+            // select the clicked image
+            this.selectedAttachments = [attachment];
         }
-        this._highlightSelectedImages();
-
-        if (clearSearch) {
-            this.search('');
-        }
+        this._highlightSelected();
     },
     /**
      * Updates the add by URL UI.
@@ -536,14 +499,15 @@ var FileWidget = SearchableMediaWidget.extend({
 
                 self.$('.well > span').remove();
                 self.$('.well > div').show();
-                _.each(attachments, function (record) {
-                    record.src = record.url || _.str.sprintf('/web/image/%s/%s', record.id, encodeURI(record.name)); // Name is added for SEO purposes
-                    record.isDocument = !(/gif|jpe|jpg|png/.test(record.mimetype));
+                _.each(attachments, function (attachment) {
+                    // Name is added for SEO purposes
+                    attachment.src = attachment.url || _.str.sprintf('/web/image/%s/%s', attachment.id, encodeURI(attachment.name));
+                    attachment.isDocument = !(/gif|jpe|jpg|png/.test(attachment.mimetype));
                 });
                 if (error || !attachments.length) {
                     _processFile(null, error || !attachments.length);
                 }
-                self.images = attachments;
+                self.attachments = attachments;
                 for (var i = 0 ; i < attachments.length ; i++) {
                     _processFile(attachments[i], error);
                 }
@@ -584,24 +548,22 @@ var FileWidget = SearchableMediaWidget.extend({
     /**
      * @private
      */
-    _onImageClick: function (ev, force_select) {
-        var $img = $(ev.currentTarget);
-        var attachment = _.find(this.records, function (record) {
-            return record.id === $img.data('id');
-        });
-        this._toggleImage(attachment, false, force_select);
+    _onAttachmentClick: function (ev, doubleClick) {
+        var $attachment = $(ev.currentTarget);
+        var attachment = _.find(this.attachments, {id: $attachment.data('id')});
+        this._toggleImage(attachment, doubleClick);
     },
     /**
      * @private
      */
-    _onImageDblClick: function (ev) {
-        this._onImageClick(ev, true);
+    _onAttachmentDblClick: function (ev) {
+        this._onAttachmentClick(ev, true);
         this.trigger_up('save_request');
     },
     /**
      * @private
      */
-    _onImageSelection: function () {
+    _onFileInputChange: function () {
         this.$el.addClass('nosave');
         this.$form.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
         this.$errorText.empty();
@@ -616,9 +578,9 @@ var FileWidget = SearchableMediaWidget.extend({
         Dialog.confirm(this, _t("Are you sure you want to delete this file ?"), {
             confirm_callback: function () {
                 var $helpBlock = self.$errorText.empty();
-                var $a = $(ev.currentTarget);
+                var $a = $(ev.currentTarget).closest('.o_existing_attachment_cell');
                 var id = parseInt($a.data('id'), 10);
-                var attachment = _.findWhere(self.records, {id: id});
+                var attachment = _.findWhere(self.attachments, {id: id});
                  return self._rpc({
                     route: '/web_editor/attachment/remove',
                     params: {
@@ -626,7 +588,7 @@ var FileWidget = SearchableMediaWidget.extend({
                     },
                 }).then(function (prevented) {
                     if (_.isEmpty(prevented)) {
-                        self.records = _.without(self.records, attachment);
+                        self.attachments = _.without(self.attachments, attachment);
                         self._renderImages();
                         return;
                     }
@@ -683,8 +645,7 @@ var FileWidget = SearchableMediaWidget.extend({
      * @override
      */
     _onSearchInput: function () {
-        this.imagesRows = this.IMAGES_ROWS;
-        this.IMAGES_DISPLAYED_TOTAL = this.IMAGES_PER_ROW * this.imagesRows;
+        this.numberOfAttachmentsToDisplay = this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY;
         this._super.apply(this, arguments);
     },
 });
@@ -885,10 +846,10 @@ var IconWidget = SearchableMediaWidget.extend({
      */
     _highlightSelectedIcon: function () {
         var self = this;
-        this.$icons.removeClass('o_selected');
+        this.$icons.removeClass('o_we_attachment_selected');
         this.$icons.filter(function (i, el) {
             return _.contains($(el).data('alias').split(','), self.selectedIcon);
-        }).addClass('o_selected');
+        }).addClass('o_we_attachment_selected');
     },
 
     //--------------------------------------------------------------------------
