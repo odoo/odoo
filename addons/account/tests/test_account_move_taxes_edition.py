@@ -14,8 +14,10 @@ class TestAccountMoveTaxesEdition(AccountingTestCase):
             'amount_type': 'percent',
             'amount': 10,
         })
-        self.account = self.env['account.account'].search([('deprecated', '=', False)], limit=1)
         self.journal = self.env['account.journal'].search([], limit=1)
+        self.account = self.env['account.account'].search([
+            ('deprecated', '=', False), ('company_id', '=', self.journal.company_id.id)
+        ], limit=1)
 
     def test_onchange_taxes_1(self):
         '''

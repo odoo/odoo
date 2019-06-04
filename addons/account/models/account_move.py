@@ -308,6 +308,11 @@ class AccountMove(models.Model):
             res['fields']['line_ids']['views']['tree']['fields']['tax_line_id']['domain'] = [('tag_ids', 'in', [self.env.ref(self._context.get('vat_domain')).id])]
         return res
 
+    @api.constrains('company_id')
+    def _check_company_id(self):
+        if self.filtered(lambda record: any([x.company_id.id != record.company_id.id for x in record.line_ids])):
+            raise ValidationError(_("Cannot create moves for different companies."))
+
     @api.model
     def create(self, vals):
         move = super(AccountMove, self.with_context(mail_create_nolog=True, check_move_validity=False, partner_id=vals.get('partner_id'))).create(vals)
