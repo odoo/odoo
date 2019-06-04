@@ -28,9 +28,9 @@ class Users(models.Model):
                         return Ldap._get_or_create_user(conf, login, entry)
                 raise e
 
-    def _check_credentials(self, password):
+    def _check_credentials(self, password, env):
         try:
-            super(Users, self)._check_credentials(password)
+            return super(Users, self)._check_credentials(password, env)
         except AccessDenied:
             if self.env.user.active:
                 Ldap = self.env['res.company.ldap']

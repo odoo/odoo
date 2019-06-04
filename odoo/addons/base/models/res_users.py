@@ -296,7 +296,7 @@ class Users(models.Model):
         )
         self.invalidate_cache(['password'], [uid])
 
-    def _check_credentials(self, password):
+    def _check_credentials(self, password, env):
         """ Validates the current user's password.
 
         Override this method to plug additional authentication methods.
@@ -564,12 +564,6 @@ class Users(models.Model):
     def _get_login_domain(self, login):
         return [('login', '=', login)]
 
-    def _check_credentials_interactive(self, password, user_agent_env):
-        self._check_credentials(password)
-
-    def _check_credentials_api(self, password, user_agent_env):
-        self._check_credentials(password)
-
     @classmethod
     def _login(cls, db, login, password, user_agent_env):
         if not password:
@@ -583,10 +577,7 @@ class Users(models.Model):
                     if not user:
                         raise AccessDenied()
                     user = user.sudo(user.id)
-                    if not user_agent_env or user_agent_env.get('interactive', True):
-                        user._check_credentials_interactive(password, user_agent_env)
-                    else:
-                        user._check_credentials_api(password, user_agent_env)
+                    user._check_credentials(password, user_agent_env)
                     user._update_last_login()
         except AccessDenied:
             _logger.info("Login failed for db:%s login:%s from %s", db, login, ip)
@@ -637,7 +628,7 @@ class Users(models.Model):
             with self._assert_can_auth():
                 if not self.env.user.active:
                     raise AccessDenied()
-                self._check_credentials_api(passwd, {})
+                self._check_credentials(passwd, {'interactive': False})
 
     def _get_session_token_fields(self):
         return {'id', 'login', 'password', 'active'}
@@ -1391,10 +1382,13 @@ class APIKeysUser(models.Model):
         for u in self:
             u.api_keys_only |= u.api_keys_only_explicit
 
-    def _check_credentials_api(self, password, user_agent_env):
+    def _check_credentials(self, password, user_agent_env):
+        if user_agent_env['interactive']:
+            return super()._check_credentials(password, user_agent_env)
+
         if not self.env.user.api_keys_only:
             try:
-                return super()._check_credentials_api(password, user_agent_env)
+                return super()._check_credentials(password, user_agent_env)
             except AccessDenied:
                 pass
 
@@ -1403,9 +1397,9 @@ class APIKeysUser(models.Model):
         ''', [self.env.uid, password[:INDEX_SIZE]])
         for [key] in self.env.cr.fetchall():
             if KEY_CRYPT_CONTEXT.verify(password, key):
-                break
-        else:
-            raise AccessDenied()
+                return
+
+        raise AccessDenied()
 
 class APIKeys(models.Model):
     _name = _description = 'res.users.apikeys'
