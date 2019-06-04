@@ -45,7 +45,7 @@ class ProductTemplate(models.Model):
     description_purchase = fields.Text(
         'Purchase Description', translate=True)
     description_sale = fields.Text(
-        'Customer/Vendor Description', translate=True,
+        'Sales Description', translate=True,
         help="A description of the Product that you want to communicate to your customers. "
              "This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note")
     type = fields.Selection([
