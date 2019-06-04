@@ -119,6 +119,7 @@ class ImageProcess():
             opt['quality'] = quality
         if output_format == 'GIF':
             opt['optimize'] = True
+            opt['save_all'] = True
 
         if output_image.mode not in ["1", "L", "P", "RGB", "RGBA"] or (output_format == 'JPEG' and output_image.mode == 'RGBA'):
             output_image = output_image.convert("RGB")
@@ -136,6 +137,9 @@ class ImageProcess():
         If `max_width` or `max_height` is falsy, it will be computed from the
         other to keep the current ratio. If both are falsy, no resize is done.
 
+        It is currently not supported for GIF because we do not handle all the
+        frames properly.
+
         :param max_width: max width
         :type max_width: int
 
@@ -145,7 +149,7 @@ class ImageProcess():
         :return: self to allow chaining
         :rtype: ImageProcess
         """
-        if self.image and (max_width or max_height):
+        if self.image and self.image.format != 'GIF' and (max_width or max_height):
             w, h = self.image.size
             asked_width = max_width or (w * max_height) // h
             asked_height = max_height or (h * max_width) // w
@@ -168,6 +172,9 @@ class ImageProcess():
         original image. If the latter is what you want to do, you should create
         another method, or directly use the `crop` method from PIL.
 
+        It is currently not supported for GIF because we do not handle all the
+        frames properly.
+
         :param max_width: max width
         :type max_width: int
 
@@ -185,7 +192,7 @@ class ImageProcess():
         :return: self to allow chaining
         :rtype: ImageProcess
         """
-        if self.image and max_width and max_height:
+        if self.image and self.image.format != 'GIF' and max_width and max_height:
             w, h = self.image.size
             # We want to keep as much of the image as possible -> at least one
             # of the 2 crop dimensions always has to be the same value as the
