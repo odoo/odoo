@@ -116,7 +116,7 @@ class Web_Unsplash(http.Controller):
                 'res_model': res_model,
             })
             attachment.generate_access_token()
-            uploads.extend(attachment.read(['name', 'mimetype', 'checksum', 'res_id', 'res_model', 'access_token', 'url']))
+            uploads.extend(attachment.read(['name', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'access_token']))
 
             # Notifies Unsplash from an image download. (API requirement)
             self._notify_download(value.get('download_url'))

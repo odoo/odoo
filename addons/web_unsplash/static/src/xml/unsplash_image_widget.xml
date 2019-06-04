@@ -27,15 +27,15 @@
 </t>
 
 <t t-name="web_unsplash.dialog.image.content">
-    <div class="row mt16" t-as="row" t-foreach="rows">
-        <div class="col-sm-2 o_unsplash_img_cell text-center" t-as="img" t-foreach="row">
-            <div class="o_image o_webimage" t-att-data-imgid="img.id" t-att-data-url="img.urls.regular" t-att-data-download-url="img.links.download_location">
+    <div class="row mt16">
+        <div class="col-sm-2 o_unsplash_img_cell text-center" t-as="img" t-foreach="records">
+            <div class="o_image o_webimage text-center" t-att-data-imgid="img.id" t-att-data-url="img.urls.regular" t-att-data-download-url="img.links.download_location">
                 <img class="img-fluid" t-att-src="img.urls.thumb"/>
             </div>
             <div class="author_name"><a t-att-href="img.user.links.html" target="_blank"><t t-esc="img.user.name"/></a></div>
         </div>
     </div>
-    <div class="row mt16" t-if="rows.length == 0">
+    <div class="row mt16" t-if="records.length == 0">
         <div class="m-auto text-muted not-found">
             <i class="fa fa-camera mr8"/> Photos not found
         </div>

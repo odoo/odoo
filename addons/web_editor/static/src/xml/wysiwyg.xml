@@ -194,22 +194,47 @@
             </div>
         </div>
     </t>
+
     <t t-name="wysiwyg.widgets.image.existing.attachments">
-        <div class="existing-attachments">
-            <div class="row mt16 ml-auto" t-as="row" t-foreach="rows">
-                <div class="col-2 o_existing_attachment_cell" t-as="attachment" t-foreach="row">
-                    <i t-if="attachment.res_model === 'ir.ui.view'" class="fa fa-trash o_existing_attachment_remove" title="This file is a public view attachment" role="img" aria-label="This file is a public view attachment" t-att-data-id="attachment.id"/>
-                    <i t-else="" class="fa fa-trash o_existing_attachment_remove" title="This file is attached to the current record" role="img" aria-label="This file is attached to the current record" t-att-data-id="attachment.id"/>
-                    <div class="o_attachment_border" t-att-style="attachment.res_model === 'ir.ui.view' ? null : 'border: 1px solid #5cb85c;'"><div t-att-data-src="attachment.src" t-att-data-url="attachment.url" role="img" t-att-aria-label="attachment.name" t-att-title="attachment.name" t-att-data-id="attachment.id" t-att-data-mimetype="attachment.mimetype" t-attf-class="o_image {{withEffect ? 'o_image_loading' : ''}}"/></div>
-                </div>
+        <div class="o_we_images">
+            <ol class="existing-attachments d-flex flex-wrap mx-auto my-0 p-2">
+                <t t-foreach="attachments" t-as="attachment">
+                    <t t-call="wysiwyg.widgets.image.existing.attachment"/>
+                </t>
+            </ol>
+        </div>
+    </t>
+
+    <t t-name="wysiwyg.widgets.image.existing.attachment">
+        <li class="o_existing_attachment_cell position-relative m-2" t-att-data-id="attachment.id">
+            <t t-call="wysiwyg.widgets.file.existing.remove"/>
+            <div t-attf-class="d-flex align-items-center h-100">
+                <img class="img img-fluid o_we_attachment_highlight" t-att-src="attachment.src + '?width=256&amp;height=192'" t-att-alt="attachment.name" t-att-title="attachment.name"/>
+            </div>
+        </li>
+    </t>
+
+    <t t-name="wysiwyg.widgets.document.existing.attachments">
+        <div class="o_we_documents">
+            <div class="row mx-auto existing-attachments">
+                <t t-foreach="attachments" t-as="attachment">
+                    <div class="col-2 o_existing_attachment_cell o_we_attachment_highlight my-2" t-att-data-id="attachment.id">
+                        <t t-call="wysiwyg.widgets.file.existing.remove"/>
+
+                        <div t-att-data-url="attachment.url" role="img" t-att-aria-label="attachment.name" t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-class="o_image d-flex align-items-center justify-content-center"/>
+                        <small class="o_file_name" t-esc="attachment.name"/>
+                    </div>
+                </t>
             </div>
         </div>
     </t>
-    <t t-name="wysiwyg.widgets.document.existing.attachments" t-extend="wysiwyg.widgets.image.existing.attachments">
-        <t t-jquery=".o_existing_attachment_cell" t-operation="append">
-            <small class="o_file_name"><t t-esc="attachment.name"/></small>
-        </t>
+
+    <t t-name="wysiwyg.widgets.file.existing.remove">
+        <t t-set="removeTitle" t-if="attachment.res_model === 'ir.ui.view'">This file is a public view attachment.</t>
+        <t t-set="removeTitle" t-else="">This file is attached to the current record.</t>
+        <i class="fa fa-trash o_existing_attachment_remove p-2" t-att-title="removeTitle" role="img" t-att-aria-label="removeTitle"/>
     </t>
+
     <t t-name="wysiwyg.widgets.image.existing.error">
         <div class="form-text">
             <p>The image could not be deleted because it is used in the

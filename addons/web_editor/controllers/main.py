@@ -159,7 +159,7 @@ class Web_Editor(http.Controller):
     @http.route('/web_editor/add_image_base64', type='json', auth='user', methods=['POST'], website=True)
     def add_image_base64(self, res_model, res_id, image_base64, filename, disable_optimization=None, **kwargs):
         attachment = self._image_to_attachment(res_model, res_id, image_base64, filename, filename, disable_optimization=disable_optimization)
-        return attachment.read(['name', 'mimetype', 'checksum', 'url', 'res_id', 'res_model', 'access_token'])[0]
+        return attachment.read(['name', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'access_token'])[0]
 
     def _image_to_attachment(self, res_model, res_id, image_base64, name, datas_fname, disable_optimization=None):
         Attachments = request.env['ir.attachment']
@@ -209,7 +209,7 @@ class Web_Editor(http.Controller):
                 'res_model': res_model,
             })
             attachment.generate_access_token()
-            uploads += attachment.read(['name', 'mimetype', 'checksum', 'url', 'res_id', 'res_model', 'access_token'])
+            uploads += attachment.read(['name', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'access_token'])
         else:                                                  # images provided
             try:
                 attachments = request.env['ir.attachment']
@@ -220,7 +220,7 @@ class Web_Editor(http.Controller):
                     if filters:
                         datas_fname = filters + '_' + datas_fname
                     attachments += self._image_to_attachment(res_model, res_id, image_base64, name, datas_fname, disable_optimization=disable_optimization)
-                uploads += attachments.read(['name', 'mimetype', 'checksum', 'url', 'res_id', 'res_model', 'access_token'])
+                uploads += attachments.read(['name', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'access_token'])
             except Exception as e:
                 logger.exception("Failed to upload image to attachment")
                 message = str(e)
