@@ -911,6 +911,11 @@ ListRenderer.include({
     _resequence: function (event, ui) {
         var self = this;
         var movedRecordID = ui.item.data('id');
+        // update currentID taking moved line into account
+        if (this.currentRow !== null) {
+            var currentID = self.state.data[self.currentRow].id;
+            this.currentRow = this._getRow(currentID).index();
+        }
         self.unselectRow().then(function () {
             var rows = self.state.data;
             var row = self._getRecord(movedRecordID);
