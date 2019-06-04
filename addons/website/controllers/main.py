@@ -93,7 +93,7 @@ class Website(Home):
             if request.env['res.users'].browse(request.uid).has_group('base.group_user'):
                 redirect = b'/web?' + request.httprequest.query_string
             else:
-                redirect = '/'
+                redirect = '/my'
             return http.redirect_with_hash(redirect)
         return response
 
