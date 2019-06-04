@@ -55,10 +55,13 @@ var SignatureForm = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
+        var self = this;
         this.$confirm_btn = this.$('.o_portal_sign_submit');
         this.$controls = this.$('.o_portal_sign_controls');
-        this.nameAndSignature.replace(this.$('.o_web_sign_name_and_signature'));
-        return this._super.apply(this, arguments);
+        var subWidgetStart = this.nameAndSignature.replace(this.$('.o_web_sign_name_and_signature'));
+        return Promise.all([subWidgetStart, this._super.apply(this, arguments)]).then(function () {
+            self.nameAndSignature.resetSignature();
+        });
     },
 
     //----------------------------------------------------------------------
