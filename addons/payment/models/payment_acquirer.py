@@ -879,7 +879,7 @@ class PaymentTransaction(models.Model):
 
             values.update({
                 'partner_name': partner.name,
-                'partner_lang': partner.lang or 'en_US',
+                'partner_lang': partner.lang or self.env.user.lang,
                 'partner_email': partner.email,
                 'partner_zip': partner.zip,
                 'partner_address': _partner_format_address(partner.street or '', partner.street2 or ''),
