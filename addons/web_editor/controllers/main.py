@@ -153,18 +153,33 @@ class Web_Editor(http.Controller):
         return True
 
     @http.route('/web_editor/attachment/add_data', type='json', auth='user', methods=['POST'], website=True)
-    def add_data(self, name, data, disable_optimization=False, res_id=False, res_model='ir.ui.view', filters=False, **kwargs):
-        if not disable_optimization:
-            try:
-                data = tools.image_process(data, verify_resolution=True)
-            except OSError:
-                pass  # not an image
+    def add_data(self, name, data, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', filters=False, **kwargs):
+        try:
+            data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
+        except OSError:
+            pass  # not an image
         attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model, filters=filters)
         return attachment._get_media_info()
 
     @http.route('/web_editor/attachment/add_url', type='json', auth='user', methods=['POST'], website=True)
     def add_url(self, url, res_id=False, res_model='ir.ui.view', filters=False, **kwargs):
         attachment = self._attachment_create(url=url, res_id=res_id, res_model=res_model, filters=filters)
+        return attachment._get_media_info()
+
+    @http.route('/web_editor/attachment/<model("ir.attachment"):attachment>/update', type='json', auth='user', methods=['POST'], website=True)
+    def attachment_update(self, attachment, name=None, width=0, height=0, quality=0, copy=False, **kwargs):
+        if attachment.type == 'url':
+            raise UserError(_("You cannot change the quality, the width or the name of an URL attachment."))
+        if copy:
+            attachment = attachment.copy()
+        data = {}
+        if name:
+            data['name'] = name
+        try:
+            data['datas'] = tools.image_process(attachment.datas, size=(width, height), quality=quality)
+        except OSError:
+            pass  # not an image
+        attachment.write(data)
         return attachment._get_media_info()
 
     @http.route('/web_editor/attachment/remove', type='json', auth='user', website=True)

@@ -179,6 +179,7 @@ options.registry.blog_cover = options.Class.extend({
         }
 
         var editor = new weWidgets.MediaDialog(this, {
+            mediaWidth: 1920,
             onlyImages: true,
             firstFilters: ['background']
         }, $image[0]).open();

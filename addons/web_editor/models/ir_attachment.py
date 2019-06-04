@@ -3,7 +3,7 @@
 
 from werkzeug import url_quote
 
-from odoo import api, models, fields
+from odoo import api, models, fields, tools
 
 
 class IrAttachment(models.Model):
@@ -12,6 +12,8 @@ class IrAttachment(models.Model):
 
     local_url = fields.Char("Attachment URL", compute='_compute_local_url')
     image_src = fields.Char(compute='_compute_image_src')
+    image_width = fields.Integer(compute='_compute_image_size')
+    image_height = fields.Integer(compute='_compute_image_size')
 
     @api.one
     def _compute_local_url(self):
@@ -33,7 +35,19 @@ class IrAttachment(models.Model):
                 )
 
     @api.multi
+    @api.depends('datas')
+    def _compute_image_size(self):
+        for attachment in self:
+            try:
+                image = tools.base64_to_image(attachment.datas)
+                attachment.image_width = image.width
+                attachment.image_height = image.height
+            except Exception:
+                attachment.image_width = 0
+                attachment.image_height = 0
+
+    @api.multi
     def _get_media_info(self):
         """Return a dict with the values that we need on the media dialog."""
         self.ensure_one()
-        return self.read(['id', 'name', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src'])[0]
+        return self.read(['id', 'name', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src', 'image_width', 'image_height'])[0]

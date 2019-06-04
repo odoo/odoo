@@ -1065,11 +1065,12 @@ class Binary(http.Controller):
         # other kwargs are ignored on purpose
         return self._content_image(xmlid=xmlid, model=model, id=id, field=field,
             filename_field=filename_field, unique=unique, filename=filename, mimetype=mimetype,
-            download=download, width=width, height=height, crop=crop, access_token=access_token)
+            download=download, width=width, height=height, crop=crop,
+            quality=int(kwargs.get('quality', 0)), access_token=access_token)
 
     def _content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                        filename_field='datas_fname', unique=None, filename=None, mimetype=None,
-                       download=None, width=0, height=0, crop=False, access_token=None,
+                       download=None, width=0, height=0, crop=False, quality=0, access_token=None,
                        placeholder='placeholder.png', **kwargs):
         status, headers, image_base64 = request.env['ir.http'].binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
@@ -1083,7 +1084,7 @@ class Binary(http.Controller):
             if not (width or height):
                 width, height = odoo.tools.image_guess_size_from_field_name(field)
 
-        image_base64 = image_process(image_base64, size=(int(width), int(height)), crop=crop)
+        image_base64 = image_process(image_base64, size=(int(width), int(height)), crop=crop, quality=int(quality))
 
         content = base64.b64decode(image_base64)
         headers = http.set_safe_image_headers(headers, content)

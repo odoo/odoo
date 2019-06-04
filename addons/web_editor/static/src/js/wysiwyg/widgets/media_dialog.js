@@ -28,6 +28,8 @@ var MediaDialog = Dialog.extend({
     }),
     custom_events: _.extend({}, Dialog.prototype.custom_events || {}, {
         save_request: '_onSaveRequest',
+        show_parent_dialog_request: '_onShowRequest',
+        hide_parent_dialog_request: '_onHideRequest',
     }),
 
     /**
@@ -210,6 +212,18 @@ var MediaDialog = Dialog.extend({
         this.activeWidget = this.videoWidget;
     },
     /**
+     * Handles hide request from child widgets.
+     *
+     * This is for usability, to allow hiding the modal for example when another
+     * smaller modal would be displayed on top.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onHideRequest: function (ev) {
+        this.$modal.addClass('d-none');
+    },
+    /**
      * Handles save request from the child widgets.
      *
      * This is for usability, to allow the user to save from other ways than
@@ -221,6 +235,17 @@ var MediaDialog = Dialog.extend({
     _onSaveRequest: function (ev) {
         ev.stopPropagation();
         this.save();
+    },
+    /**
+     * Handles show request from the child widgets.
+     *
+     * This is for usability, it is the counterpart of @see _onHideRequest.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onShowRequest: function (ev) {
+        this.$modal.removeClass('d-none');
     },
 });
 
