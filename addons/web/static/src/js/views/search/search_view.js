@@ -395,7 +395,7 @@ var SearchView = Widget.extend({
         this.timeRanges = options.action && options.action.context ?
             options.action.context.time_ranges : undefined;
         var visibleSearchMenu = this.call('local_storage', 'getItem', 'visible_search_menu');
-        this.visible_filters = (visibleSearchMenu !== 'false');
+        this.visible_filters = (visibleSearchMenu !== false);
         this.input_subviews = []; // for user input in searchbar
         this.search_defaults = this.options.search_defaults || {};
         this.headless = this.options.hidden &&  _.isEmpty(this.search_defaults);
