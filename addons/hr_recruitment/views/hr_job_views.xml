@@ -82,6 +82,17 @@
         </field>
     </record>
 
+    <record id="hr_job_search_view" model="ir.ui.view">
+        <field name="name">hr.job.search</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_job_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <filter string="My Job Positions" name="my_positions" domain="[('user_id', '=', uid)]"/>
+            </xpath>
+        </field>
+    </record>
+
     <!-- hr related job position menu action -->
     <record model="ir.actions.act_window" id="action_hr_job">
         <field name="name">Job Positions</field>
@@ -97,6 +108,5 @@
           </p>
         </field>
     </record>
-
-    <menuitem parent="menu_hr_recruitment_root" id="menu_hr_job_position" action="action_hr_job" sequence="1"/>
+    <menuitem name="By Job Positions" parent="menu_crm_case_categ0_act_job" id="menu_hr_job_position" action="action_hr_job" sequence="1"/>
 </odoo>

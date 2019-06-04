@@ -646,26 +646,6 @@
             </xpath>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="hr_applicant_resumes">
-        <field name="name">Resumes and Letters</field>
-        <field name="res_model">ir.attachment</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="view_id" ref="mail.view_document_file_kanban"/>
-        <field name="search_view_id" ref="ir_attachment_view_search_inherit_hr_recruitment"/>
-        <field name="domain">[('res_model','=','hr.applicant')]</field>
-        <field name="context">{'create': False}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
-                No document yet
-            </p><p>
-                This menu helps you search through resumes and motivation
-                letters. Odoo automatically indexes .PDF, .DOC, DOCX, .TXT
-                files so that you can search keywords from the content of these
-                files.
-            </p>
-        </field>
-    </record>
-    <menuitem name="Resumes and Letters" parent="hr_recruitment.menu_hr_recruitment_root" id="menu_crm_case_categ0_act_job02" action="hr_applicant_resumes" sequence="3"/>
 
     <!-- Stage Tree View -->
     <record model="ir.ui.view" id="hr_recruitment_stage_tree">
@@ -971,8 +951,10 @@
             (0, 0, {'view_mode': 'graph', 'view_id': ref('hr_applicant_view_graph')})]"/>
         <field name="context">{}</field>  <!-- force empty -->
     </record>
-    <menuitem name="Reports" id="report_hr_recruitment" parent="menu_hr_recruitment_root"
-    sequence="99" action="hr_applicant_action_analysis"/>
+    <menuitem name="Reporting" id="report_hr_recruitment" parent="menu_hr_recruitment_root"
+    sequence="99"/>
+    <menuitem name="Recruitment Analysis" id="hr_applicant_report_menu" parent="report_hr_recruitment"
+    sequence="50" action="hr_applicant_action_analysis"/>
     <record id="action_hr_recruitment_report_filtered_department" model="ir.actions.act_window">
         <field name="name">Recruitment Analysis</field>
         <field name="res_model">hr.applicant</field>
