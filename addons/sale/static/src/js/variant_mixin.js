@@ -54,7 +54,7 @@ var VariantMixin = {
         var self = this;
 
         if ($(ev.target).hasClass('variant_custom_value')) {
-            return;
+            return Promise.resolve();
         }
 
         var $component;
@@ -80,7 +80,7 @@ var VariantMixin = {
 
         self._checkExclusions($parent, combination);
 
-        ajax.jsonRpc(this._getUri('/sale/get_combination_info'), 'call', {
+        return ajax.jsonRpc(this._getUri('/sale/get_combination_info'), 'call', {
             'product_template_id': productTemplateId,
             'product_id': this._getProductId($parent),
             'combination': combination,
@@ -469,7 +469,10 @@ var VariantMixin = {
         $price.text(self._priceToStr(combination.price));
         $default_price.text(self._priceToStr(combination.list_price));
 
-        var isCombinationPossible = combination.is_combination_possible;
+        var isCombinationPossible = true;
+        if (!_.isUndefined(combination.is_combination_possible)) {
+            isCombinationPossible = combination.is_combination_possible;
+        }
         this._toggleDisable($parent, isCombinationPossible);
 
 
