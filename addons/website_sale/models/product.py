@@ -441,7 +441,12 @@ class Product(models.Model):
     @api.multi
     def website_publish_button(self):
         self.ensure_one()
-        return self.product_tmpl_id.website_publish_button()
+        res = self.product_tmpl_id.website_publish_button()
+
+        # res can be the result of write() if not website_publisher
+        if type(res) == dict and res.get('type') == 'ir.actions.act_url':
+            res['url'] = self.website_url
+        return res
 
     @api.multi
     def _get_images(self):
