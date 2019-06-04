@@ -59,6 +59,7 @@ ActionManager.include({
      */
     loadState: function (state) {
         var callersArguments = arguments;
+        var _super = this._super.bind(this);
         var self = this;
         var action;
         var def;
@@ -128,7 +129,7 @@ ActionManager.include({
             if (action) {
                 return self.doAction(action, options);
             }
-            return self._super.apply(self, callersArguments);
+            return _super.apply(self, callersArguments);
         });
     },
 
