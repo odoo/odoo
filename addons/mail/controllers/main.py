@@ -85,18 +85,13 @@ class MailController(http.Controller):
                     # - Guess the supposed necessary company to access the record via the method
                     #   _get_mail_redirect_suggested_company
                     #   - If no company, then redirect to the messaging
-                    #   - If the multi company per tag group is activated, merge the suggested company
-                    #     withe the companies on the cookie
-                    #   - else, use this company as enabled company
+                    #   - Merge the suggested company with the companies on the cookie
                     # - Make a new access test if it succeeds, redirect to the record. Otherwise, 
                     #   redirect to the messaging.
                     suggested_company = record_sudo._get_mail_redirect_suggested_company()
                     if not suggested_company:
                         raise AccessError()
-                    if user.has_group('base.group_toggle_company'):
-                        cids += [suggested_company.id]
-                    else:
-                        cids = [suggested_company.id]
+                    cids += [suggested_company.id]
                     record_sudo.sudo(uid).with_context(allowed_company_ids=cids).check_access_rule('read')
             except AccessError:
                 return cls._redirect_to_messaging()

@@ -164,6 +164,10 @@
             <field name="user_ids" eval="[(4, ref('base.user_admin')), (4, ref('base.user_demo'))]"/>
         </record>
 
+        <record id="base.group_multi_company" model="res.groups">
+            <field name="users" eval="[(4, ref('base.user_admin')), (4, ref('base.user_demo'))]"/>
+        </record>
+
         <record id="base.main_company" model="res.company">
             <field name="name">My Company (San Francisco)</field>
         </record>
