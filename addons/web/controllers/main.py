@@ -3,6 +3,7 @@
 
 import babel.messages.pofile
 import base64
+import copy
 import datetime
 import functools
 import glob
@@ -19,16 +20,15 @@ import re
 import sys
 import tempfile
 import time
-import zlib
 
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 from werkzeug.urls import url_decode, iri_to_uri
-from xml.etree import ElementTree
+from lxml import etree
 import unicodedata
 
 
@@ -36,14 +36,14 @@ import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
 from odoo.modules import get_module_path, get_resource_path
-from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr
+from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr, apply_inheritance_specs
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlwt, file_open
 from odoo.tools.safe_eval import safe_eval
 from odoo import http, tools
 from odoo.http import content_disposition, dispatch_rpc, request, \
-    serialize_exception as _serialize_exception, Response
+    serialize_exception as _serialize_exception
 from odoo.exceptions import AccessError, UserError, AccessDenied
 from odoo.models import check_method_name
 from odoo.service import db, security
@@ -67,6 +67,8 @@ BUNDLE_MAXAGE = 60 * 60 * 24 * 7
 CONTENT_MAXAGE = 60 * 60 * 24 * 356
 
 DBNAME_PATTERN = '^[a-zA-Z0-9][a-zA-Z0-9_.-]+$'
+
+COMMENT_PATTERN = r'Modified by [\s\w\-.]+ from [\s\w\-.]+'
 
 #----------------------------------------------------------
 # Odoo Web helpers
@@ -196,37 +198,6 @@ def module_boot(db=None):
     addons = serverside + dbside
     return addons
 
-def concat_xml(file_list):
-    """Concatenate xml files
-
-    :param list(str) file_list: list of files to check
-    :returns: (concatenation_result, checksum)
-    :rtype: (str, str)
-    """
-    checksum = hashlib.new('sha1')
-    if not file_list:
-        return '', checksum.hexdigest()
-
-    root = None
-    for fname in file_list:
-        with open(fname, 'rb') as fp:
-            contents = fp.read()
-            checksum.update(contents)
-            fp.seek(0)
-            try:
-                xml = ElementTree.parse(fp).getroot()
-            except ElementTree.ParseError as e:
-                _logger.error("Could not parse file %s: %s" % (fname, e.msg))
-                raise e
-
-        if root is None:
-            root = ElementTree.Element(xml.tag)
-        #elif root.tag != xml.tag:
-        #    raise ValueError("Root tags missmatch: %r != %r" % (root.tag, xml.tag))
-
-        for child in xml.getchildren():
-            root.append(child)
-    return ElementTree.tostring(root, 'utf-8'), checksum.hexdigest()
 
 def fs2web(path):
     """convert FS path into web path"""
@@ -235,8 +206,7 @@ def fs2web(path):
 def manifest_glob(extension, addons=None, db=None, include_remotes=False):
     if addons is None:
         addons = module_boot(db=db)
-    else:
-        addons = addons.split(',')
+
     r = []
     for addon in addons:
         manifest = http.addons_manifest.get(addon, None)
@@ -248,11 +218,12 @@ def manifest_glob(extension, addons=None, db=None, include_remotes=False):
         for pattern in globlist:
             if pattern.startswith(('http://', 'https://', '//')):
                 if include_remotes:
-                    r.append((None, pattern))
+                    r.append((None, pattern, addon))
             else:
                 for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
-                    r.append((path, fs2web(path[len(addons_path):])))
+                    r.append((path, fs2web(path[len(addons_path):]), addon))
     return r
+
 
 def manifest_list(extension, mods=None, db=None, debug=None):
     """ list resources to load specifying either:
@@ -261,8 +232,9 @@ def manifest_list(extension, mods=None, db=None, debug=None):
     """
     if debug is not None:
         _logger.warning("odoo.addons.web.main.manifest_list(): debug parameter is deprecated")
+    mods = mods.split(',')
     files = manifest_glob(extension, addons=mods, db=db, include_remotes=True)
-    return [wp for _fp, wp in files]
+    return [wp for _fp, wp, addon in files]
 
 def get_last_modified(files):
     """ Returns the modification time of the most recently modified
@@ -451,6 +423,169 @@ def _admin_password_warn(uid):
             subtype='mail.mt_comment'
         )
 
+
+class HomeStaticTemplateHelpers(object):
+    """
+    Helper Class that wraps the reading of static qweb templates files
+    and xpath inheritance applied to those templates
+    /!\ Template inheritance order is defined by ir.module.module natural order
+        which is "sequence, name"
+        Then a topological sort is applied, which just puts dependencies
+        of a module before that module
+    """
+    NAME_TEMPLATE_DIRECTIVE = 't-name'
+    STATIC_INHERIT_DIRECTIVE = 't-inherit'
+    STATIC_INHERIT_MODE_DIRECTIVE = 't-inherit-mode'
+    STATIC_INHERIT_MODES = ['primary', 'extension']
+    DEFAULT_MODE = 'primary'
+
+    def __init__(self, checksum_only=False):
+        super(HomeStaticTemplateHelpers, self).__init__()
+        self.checksum_only = checksum_only
+        self.template_dict = OrderedDict()
+
+    def _get_parent_coordinates(self, addon, template):
+        """Computes the real addon name and the template name
+        of the parent template (the one that is inherited from)
+
+        :param: string; addon, the addon the template is declared in
+        :param: etree node: the current template we are are handling
+        :returns (str, str, str)
+        """
+        full_parent_name = template.attrib[self.STATIC_INHERIT_DIRECTIVE]
+        split_name_attempt = full_parent_name.split('.', 1)
+        src_addon, src_template = tuple(split_name_attempt) if len(split_name_attempt) == 2 else (addon, full_parent_name)
+        if src_addon not in self.template_dict:
+            if full_parent_name in self.template_dict[addon]:
+                src_addon = addon
+                src_template = full_parent_name
+            else:
+                raise ValueError(_('Module %s not loaded or inexistent, or templates of addon being loaded (%s) are misordered') % (src_addon, addon))
+
+        if src_template not in self.template_dict[src_addon]:
+            raise ValueError(_("No template found to inherit from. Module %s and template name %s") % (src_addon, src_template))
+
+        return full_parent_name, src_addon, src_template
+
+    def _compute_xml_tree(self, addon, file_name, source):
+        """Computes the xml tree that 'source' contains
+        Applies inheritance specs in the process
+
+        :param string: addon: the current addon we are reading files for
+        :param string: file_name: the current name of the file we are reading
+        :param string: source: the content of the file
+        :returns etree
+        """
+        try:
+            tree = etree.parse(io.BytesIO(source), parser=etree.XMLParser(remove_comments=True)).getroot()
+        except etree.ParseError as e:
+            _logger.error("Could not parse file %s: %s" % (file_name, e.msg))
+            raise e
+
+        self.template_dict.setdefault(addon, OrderedDict())
+        for child in list(tree):
+            name = child.attrib.get(self.NAME_TEMPLATE_DIRECTIVE)
+            if self.STATIC_INHERIT_DIRECTIVE in child.attrib:
+                src_mode = child.attrib.get(self.STATIC_INHERIT_MODE_DIRECTIVE, self.DEFAULT_MODE)
+                if not src_mode in self.STATIC_INHERIT_MODES:
+                    raise ValueError(_("Invalid inherit mode value"))
+
+                full_parent_name, src_addon, src_template = self._get_parent_coordinates(addon, child)
+
+                parent = copy.deepcopy(self.template_dict[src_addon][src_template])
+                parent_tag = parent.tag
+                parent.tag = 'NOTAG'
+                xpaths = list(child)
+                if src_mode == self.STATIC_INHERIT_MODES[1]:
+                    for xpath in xpaths:
+                        xpath.insert(0, etree.Comment(' Modified by %s from %s ' % (name or 'an anonymous template', addon)))
+                else:
+                    parent_tag = child.tag
+                new_elem = apply_inheritance_specs(parent, xpaths)
+                new_elem.tag = parent_tag
+
+                if src_mode == self.STATIC_INHERIT_MODES[0]:  # New template: A' = B(A)
+                    new_elem.set(self.NAME_TEMPLATE_DIRECTIVE, name)
+                    new_elem.set(self.STATIC_INHERIT_DIRECTIVE, full_parent_name)
+                    for comment in new_elem.xpath('//comment()'):
+                        if re.match(COMMENT_PATTERN, comment.text.strip()):
+                            new_elem.remove(comment)
+                    self.template_dict[addon][name] = new_elem
+
+                else:  # Modifies original: A = B(A)
+                    self.template_dict[src_addon][src_template] = new_elem
+            else:
+                if name is None:
+                    templates_count = len(self.template_dict[addon])
+                    name = 'template_%s_%s' % (addon, templates_count)
+                elif name in self.template_dict[addon]:
+                    raise ValueError(_("Template %s already exists in module %s") % (name, addon))
+                self.template_dict[addon][name] = child
+        return tree
+
+    def _manifest_glob(self, extension, addons=None, db=None, include_remotes=False):
+        '''Proxy for manifest_glob
+        Usefull to make 'self' testable'''
+        return manifest_glob(extension, addons, db, include_remotes)
+
+    def _read_addon_file(self, file_path):
+        """Reads the content of a file given by file_path
+        Usefull to make 'self' testable
+        :param dict file_path
+        :returns string
+        """
+        contents = None
+        with open(file_path, 'rb') as fp:
+            contents = fp.read()
+        return contents
+
+    def _concat_xml(self, file_dict):
+        """Concatenate xml files
+
+        :param dict(list)
+            key: addon name
+            value: list of files for an addon
+        :returns: (concatenation_result, checksum)
+        :rtype: (str, str)
+        """
+        checksum = hashlib.new('sha1')
+        if not file_dict:
+            return '', checksum.hexdigest()
+
+        root = None
+        for addon, fnames in file_dict.items():
+            for fname in fnames:
+                contents = self._read_addon_file(fname)
+                checksum.update(contents)
+                if not self.checksum_only:
+                    xml = self._compute_xml_tree(addon, fname, contents)
+
+                    if root is None:
+                        root = etree.Element(xml.tag)
+
+        for addon in self.template_dict.values():
+            for template in addon.values():
+                root.append(template)
+
+        return etree.tostring(root, encoding='utf-8') if root is not None else '', checksum.hexdigest()
+
+    def get_qweb_templates(self, addons, db=None):
+        """One and only entry point that gets and evaluates static qweb templates
+
+        :param: addons: list | comma separated string. List of addons to get static templates for
+        :param: db: the database currently being used
+        :returns: (concatenation_result, checksum)
+        :rtype: (str, str)
+        """
+        if isinstance(addons, str):
+            addons = addons.split(',')
+
+        files = OrderedDict([(addon, list()) for addon in addons])
+        [files[f[2]].append(f[0]) for f in self._manifest_glob('qweb', addons=addons, db=db)]
+        content, checksum = self._concat_xml(files)
+        return content, checksum
+
+
 #----------------------------------------------------------
 # Odoo Web web Controllers
 #----------------------------------------------------------
@@ -590,8 +725,8 @@ class WebClient(http.Controller):
 
     @http.route('/web/webclient/qweb/<string:unique>', type='http', auth="none", cors="*")
     def qweb(self, unique, mods=None, db=None):
-        files = [f[0] for f in manifest_glob('qweb', addons=mods, db=db)]
-        content, _dummy = concat_xml(files)
+        content, _dummy = HomeStaticTemplateHelpers().get_qweb_templates(mods, db)
+
         return request.make_response(content, [
                 ('Content-Type', 'text/xml'),
                 ('Cache-Control','public, max-age=' + str(CONTENT_MAXAGE))

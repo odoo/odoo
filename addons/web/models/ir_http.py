@@ -7,7 +7,7 @@ from odoo import api, models
 from odoo.http import request
 from odoo.tools import ustr
 
-from odoo.addons.web.controllers.main import concat_xml, manifest_glob, module_boot
+from odoo.addons.web.controllers.main import module_boot, HomeStaticTemplateHelpers
 
 import odoo
 
@@ -28,8 +28,7 @@ class Http(models.AbstractModel):
         user_context = request.session.get_context() if request.session.uid else {}
 
         mods = module_boot()
-        files = [f[0] for f in manifest_glob('qweb', addons=','.join(mods))]
-        _, qweb_checksum = concat_xml(files)
+        _, qweb_checksum = HomeStaticTemplateHelpers(checksum_only=True).get_qweb_templates(addons=mods)
 
         lang = user_context.get("lang")
         translations_per_module, _ = request.env['ir.translation'].get_translations_for_webclient(mods, lang)
