@@ -1,7 +1,6 @@
 odoo.define('web.singleton_list_tests', function (require) {
 "use strict";
 
-var core = require('web.core');
 var SingletonListView = require('stock.SingletonListView');
 var testUtils = require('web.test_utils');
 
@@ -105,10 +104,62 @@ QUnit.module('Views', {
         var age = '72';
         await testUtils.fields.editInput($input, age);
         await testUtils.fields.triggerKeydown($input, 'enter');
-        await testUtils.dom.click($('.o_list_button_save'));
 
         // Checks we have still only 3 records...
-        assert.containsN(list, '.o_data_row', 3, "should now have 4 records");
+        assert.containsN(list, '.o_data_row', 3, "should still have 3 records");
+        // ... and verify modification was occured.
+        var nameField = list.$('td[title="' + name + '"]');
+        var ageField = nameField.parent().find('.o_list_number');
+        assert.strictEqual(ageField.text(), age, "The age field must be updated");
+        list.destroy();
+    });
+
+    QUnit.test('Don\'t raise error when trying to create duplicate line', async function (assert) {
+        assert.expect(3);
+       /* In some condition, a list editable with the `singletonlist` js_class
+       can try to select a record at a line who isn't the same place anymore.
+       In this case, the list can try to find the id of an undefined record.
+       This test just insures we don't raise a traceback in this case.
+       */
+        var list = await createView({
+            View: SingletonListView,
+            model: 'person',
+            data: {
+                person: {
+                    fields: {
+                        name: {string: "Name", type: "char"},
+                        age: {string: "Age", type: "integer"},
+                    },
+                    records: [
+                        {id: 1, name: 'Bobby B. Bop', age: 18},
+                    ]
+                }
+            },
+            arch: '<tree editable="top" js_class="singleton_list">'+
+                    '<field name="name"/>'+
+                    '<field name="age"/>'+
+                   '</tree>',
+            mockRPC: this.mockRPC,
+        });
+        // Checks we have initially 1 record
+        assert.containsN(list, '.o_data_row', 1, "should have 1 records");
+
+        // Creates a new line...
+        await testUtils.dom.click($('.o_list_button_add'));
+        // ... and fills fields with already existing value
+        var $input = $('.o_selected_row input[name=name]');
+        var name = 'Bobby B. Bop';
+        await testUtils.fields.editInput($input, name);
+        await testUtils.fields.triggerKeydown($input, 'tab');
+
+        $input = $('.o_selected_row input[name=age]');
+        var age = '22';
+        await testUtils.fields.editInput($input, age);
+        // This operation causes list'll try to select undefined record.
+        await testUtils.fields.triggerKeydown($input, 'enter');
+
+        // Checks we have still only 1 record...
+        assert.containsN(list, '.o_data_row', 1, "should now have 1 records");
         // ... and verify modification was occured.
         var nameField = list.$('td[title="' + name + '"]');
         var ageField = nameField.parent().find('.o_list_number');

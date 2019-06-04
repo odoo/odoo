@@ -19,6 +19,8 @@ var _t = core._t;
 var SingletonListController = ListController.extend({
     /**
      * @override
+     * @return {Promise} rejected when update the list because we don't want
+     * anymore to select a cell who maybe doesn't exist anymore.
      */
     _confirmSave: function (id) {
         var newRecord = this.model.localData[id];
@@ -52,10 +54,11 @@ var SingletonListController = ListController.extend({
             var notification = _t("You tried to create a record who already exists."+
             "<br/>This last one has been modified instead.");
             this.do_notify(_t("This record already exists."), notification);
-            return this.reload();
+            this.reload();
+            return Promise.reject();
         }
         else {
-            return this._super(id);
+            return this._super.apply(this, arguments);
         }
     },
 });
