@@ -359,6 +359,14 @@ function wysiwygData(data) {
                     string: "image_src",
                     type: 'char',
                 },
+                image_width: {
+                    string: "image_width",
+                    type: 'integer',
+                },
+                image_height: {
+                    string: "image_height",
+                    type: 'integer',
+                },
             },
             records: [{
                 id: 1,
@@ -373,6 +381,8 @@ function wysiwygData(data) {
                 public: true,
                 access_token: false,
                 image_src: '/web_editor/static/src/img/transparent.png',
+                image_width: 256,
+                image_height: 256,
             }],
             generate_access_token: function () {
                 return;

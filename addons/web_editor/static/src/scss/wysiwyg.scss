@@ -301,25 +301,32 @@ body .modal {
                 cursor: pointer;
                 list-style: none;
 
-                // prevent hover/select border from flickering
-                border: 1px solid transparent;
-
-                .o_existing_attachment_remove {
-                    @include o-position-absolute(0, 0);
+                .o_existing_attachment_optimize, .o_existing_attachment_remove {
                     background-color: scale-color($card-border-color, $alpha: -50%);
                     text-shadow: 0 0 1px white;
-                    border-radius: 0 0 0 2px;
                     opacity: 0;
                     cursor: pointer;
 
                     &:hover {
                         background-color: $card-border-color;
+                    }
+                }
+
+                .o_existing_attachment_optimize {
+                    @include o-position-absolute($top: 0, $left: 0);
+                    border-radius: 0 0 2px 0;
+                }
+
+                .o_existing_attachment_remove {
+                    @include o-position-absolute($top: 0, $right: 0);
+                    border-radius: 0 0 0 2px;
+                    &:hover {
                         color: $o-wysiwyg-color-danger;
                     }
                 }
 
                 &:hover {
-                    .o_existing_attachment_remove {
+                    .o_existing_attachment_optimize, .o_existing_attachment_remove {
                         opacity: 1;
                     }
                     &.o_we_attachment_highlight, .o_we_attachment_highlight {
@@ -453,6 +460,16 @@ body .modal {
 
         .o_link_dialog_preview {
             border-left: 1px solid gray('200');
+        }
+    }
+
+    .o_we_image_optimize_dialog {
+        .o_we_title_label {
+            font-size: 1rem;
+        }
+        .o_we_preview_area {
+            max-height: 400px;
+            overflow: auto;
         }
     }
 }
