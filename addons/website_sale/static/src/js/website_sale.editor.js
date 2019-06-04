@@ -59,7 +59,7 @@ var publicWidget = require('web.public.widget');
 
 var _t = core._t;
 var qweb = core.qweb;
-var showDialog = true;
+var confirmDialog = true;
 
 publicWidget.registry.websiteSaleCurrency = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
@@ -249,9 +249,24 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      * @see this.selectClass for params
      */
     changeSequence: function (previewMode, value, $opt) {
-        this._openConfirmDialog('/shop/change_sequence', {
-            id: this.productTemplateID,
-            sequence: value,
+        var self = this;
+        var shop_context = _.pick($('table#product_table').data(), function (value) {
+            return _.isNumber(value) || _.isString(value);
+        });
+        this._openConfirmationDialog().then(function() {
+            self._rpc({
+                route: '/shop/change_sequence',
+                params: {
+                    id: self.productTemplateID,
+                    sequence: value,
+                    shop_context: shop_context,
+                },
+            }).then(function (result) {
+                if (result.template) {
+                    self.$target.closest("#products_grid #product_table").replaceWith(result.template);
+                    $('.oe_overlay').detach();
+                }
+            });
         });
     },
 
@@ -303,31 +318,30 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      * @param {Object} params
      *
      */
-    _openConfirmDialog: function (route, params) {
-        var self = this;
-        var data = $('table#product_table').data();
-        _.extend(params, {
-            'page': data.page || 0,
-            'category': data.category,
-            'search': data.search,
-            'ppg': data.ppg,
-            'ppr': data.ppr,
-            'post': data.post,
-        });
-        if (showDialog) {
-            var $content = $(qweb.render('website_sale.dialog_confirmation'));
+    _openConfirmationDialog: function () {
+        if (!confirmDialog) {
+            return Promise.resolve();
+        }
+        var $content = $(qweb.render('website_sale.dialog_confirmation'));
+        return new Promise(function (resolve) {
             new Dialog(this, {
                 title: _t('Confirmation'),
                 size: 'medium',
-                buttons: [{text: _t('Confirm'), classes: 'btn-primary', close: true, click: function (ev) {
-                    showDialog = !this.$content.find('input#dialog_show').is(':checked');
-                    self._updateProductDetails(route, params);
-                }}, {text: _t('Cancel'), close: true}],
+                buttons: [{
+                    text: _t('Confirm'),
+                    classes: 'btn-primary',
+                    close: true,
+                    click: function () {
+                        confirmDialog = !$content.find('#dialogShow').is(":checked");
+                        resolve();
+                    }
+                }, {
+                    text: _t('Cancel'),
+                    close: true
+                }],
                 $content: $content,
             }).open();
-        } else {
-            this._updateProductDetails(route, params);
-        }
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -373,13 +387,29 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      * @private
      */
     _onTableItemClick: function (ev) {
+        var self = this;
         var $td = $(ev.currentTarget);
         var x = $td.index() + 1;
         var y = $td.parent().index() + 1;
-        this._openConfirmDialog('/shop/change_size', {
-            id: this.productTemplateID,
-            x: x,
-            y: y,
+        var shop_context = _.pick($('table#product_table').data(), function (value) {
+            return _.isNumber(value) || _.isString(value);
+        });
+
+        this._openConfirmationDialog().then(function () {
+            self._rpc({
+                route: '/shop/change_size',
+                params: {
+                    id: self.productTemplateID,
+                    x: x,
+                    y: y,
+                    shop_context: shop_context,
+                },
+            }).then(function (result) {
+                if (result.template) {
+                    self.$target.closest("#products_grid #product_table").replaceWith(result.template);
+                    $('.oe_overlay').detach();
+                }
+            });
         });
     },
 });

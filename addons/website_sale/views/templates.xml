@@ -239,7 +239,7 @@
 
     <template id="product_table" name="ProductTable">
         <div t-if="bins" class="o_wsale_products_grid_table_wrapper">
-            <table id="product_table" class="table table-borderless m-0" t-att-data-page="page" t-att-data-category="category" t-att-data-search="search" t-att-data-post="post" t-att-data-ppg="ppg" t-att-data-ppr="ppr">
+            <table id="product_table" class="table table-borderless m-0" t-att="shop_context">
                 <colgroup t-ignore="true">
                     <!-- Force the number of columns (useful when only one row of (x < ppr) products) -->
                     <col t-foreach="ppr" t-as="p"/>

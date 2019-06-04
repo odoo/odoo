@@ -205,13 +205,22 @@ class WebsiteSale(http.Controller):
     ], type='http', auth="public", website=True)
     def shop(self, page=0, category=None, search='', ppg=False, **post):
         values = self._prepare_bins(page, category, search, ppg, **post)
-        values['page'] = page
-        values['post'] = post
         if category:
             values['main_object'] = category
+
         return request.render("website_sale.products", values)
 
     def _prepare_bins(self, page=0, category=None, search='', ppg=False, **post):
+
+        params = {
+            'page': page,
+            'category': category and category.id or None,
+            'search': search,
+            'ppg': ppg,
+            **post
+        }
+        shop_context = {'data-' + k: params[k] for k in params if params[k]}
+
         add_qty = int(post.get('add_qty', 1))
         if category:
             category = request.env['product.public.category'].search([('id', '=', int(category))], limit=1)
@@ -309,6 +318,7 @@ class WebsiteSale(http.Controller):
             'parent_category_ids': parent_category_ids,
             'search_categories_ids': search_categories and search_categories.ids,
             'layout_mode': layout_mode,
+            'shop_context': shop_context
         }
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
@@ -1093,18 +1103,20 @@ class WebsiteSale(http.Controller):
             product_tmpl.set_sequence_up()
         elif sequence == "down":
             product_tmpl.set_sequence_down()
-        values = self._prepare_bins(page=post.get('page'), category=post.get('category'), search=post.get('search'), ppg=post.get('ppg'), post=post.get('post'))
-        values['page'] = post.get('page')
-        values['post'] = post.get('post')
+        shop_context = post.get('shop_context', {})
+        if shop_context.get('category'):
+            shop_context['category'] = request.env['product.public.category'].browse(shop_context['category'])
+        values = self._prepare_bins(**shop_context)
         return {'template': request.env['ir.ui.view'].render_template("website_sale.product_table", values)}
 
     @http.route(['/shop/change_size'], type='json', auth='user', website=True)
     def change_size(self, id, x, y, **post):
         product = request.env['product.template'].browse(id)
         product.write({'website_size_x': x, 'website_size_y': y})
-        values = self._prepare_bins(page=post.get('page'), category=post.get('category'), search=post.get('search'), ppg=post.get('ppg'), post=post.get('post'))
-        values['page'] = post.get('page')
-        values['post'] = post.get('post')
+        shop_context = post.get('shop_context', {})
+        if shop_context.get('category'):
+            shop_context['category'] = request.env['product.public.category'].browse(shop_context['category'])
+        values = self._prepare_bins(shop_context)
         return {'template': request.env['ir.ui.view'].render_template("website_sale.product_table", values)}
 
     @http.route(['/shop/change_ppg'], type='json', auth='user')
