@@ -1191,7 +1191,7 @@ QUnit.module('ActionManager', {
                 return this._super.apply(this, arguments);
             },
         });
-        actionManager.loadState({
+        await actionManager.loadState({
             sa: 1,
         });
 
