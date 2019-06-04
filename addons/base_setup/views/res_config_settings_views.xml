@@ -117,20 +117,17 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="multi_company">
+                        <div id="multi_company" groups="base.group_multi_company">
                             <field name="company_id" invisible="1"/>
                             <h2>Multi-companies</h2>
                             <div class="row mt16 o_settings_container" name="multi_company">
                                 <div class="col-12 col-lg-6 o_setting_box">
-                                    <div class="o_setting_left_pane">
-                                        <field name="group_multi_company"/>
-                                    </div>
                                     <div class="o_setting_right_pane">
-                                        <label string="Multi-companies" for="group_multi_company"/>
+                                        <label string="Multi-companies" for="multi_company"/>
                                         <div class="text-muted">
                                             Manage multiple legal entities with separate accounting
                                         </div>
-                                        <div class="content-group" attrs="{'invisible': [('group_multi_company','=',False)]}">
+                                        <div class="content-group">
                                             <div class="mt16">
                                                 <button name="%(base.action_res_company_form)d" icon="fa-arrow-right" type="action" string="Companies" class="btn-link"/>
                                             </div>
@@ -141,7 +138,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12 col-lg-6 o_setting_box" title="Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company." attrs="{'invisible': [('group_multi_company', '=', False)]}" id="inter_company">
+                                <div class="col-12 col-lg-6 o_setting_box" title="Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company." id="inter_company">
                                     <div class="o_setting_left_pane">
                                         <field name="module_inter_company_rules" widget="upgrade_boolean"/>
                                     </div>
