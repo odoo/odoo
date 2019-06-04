@@ -1180,7 +1180,7 @@ var ListFieldText = FieldText.extend({
  */
 var HandleWidget = AbstractField.extend({
     className: 'o_row_handle fa fa-arrows ui-sortable-handle',
-    widthFactor: 0,
+    widthFactor: 0.6,
     tagName: 'span',
     description: "",
     supportedFieldTypes: ['integer'],
