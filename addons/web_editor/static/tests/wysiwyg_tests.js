@@ -3378,28 +3378,6 @@ var altDialogSaved;
 var cropDialogOpened;
 QUnit.module('Media', {
     beforeEach: function () {
-        $('body').on('submit.WysiwygTests', function (ev) {
-            ev.preventDefault();
-            var $from = $(ev.target);
-            var iframe = $from.find('iframe[name="' + $from.attr('target') + '"]')[0];
-            if (iframe) {
-                iframe.contentWindow.attachments = [{
-                    id: 1,
-                    public: true,
-                    name: 'image',
-                    datas_fname: 'image.png',
-                    mimetype: 'image/png',
-                    checksum: false,
-                    url: '/web_editor/static/src/img/transparent.png',
-                    type: 'url',
-                    res_id: 0,
-                    res_model: false,
-                    access_token: false
-                }];
-                $(iframe).trigger('load');
-            }
-        });
-
         this.data = {
             debug: false,
             wysiwygOptions: {
@@ -3414,6 +3392,21 @@ QUnit.module('Media', {
                 }
                 if (route.indexOf('/web_editor/static/src/img/') === 0) {
                     return Promise.resolve();
+                }
+                if (route === '/web_editor/attachment/add_url') {
+                    return Promise.resolve({
+                        id: 1,
+                        public: true,
+                        name: 'image',
+                        mimetype: 'image/png',
+                        checksum: false,
+                        url: '/web_editor/static/src/img/transparent.png',
+                        image_src: '/web_editor/static/src/img/transparent.png',
+                        type: 'url',
+                        res_id: 0,
+                        res_model: false,
+                        access_token: false,
+                    });
                 }
                 return this._super(route, args);
             },
