@@ -1008,7 +1008,7 @@ options.registry.gallery = options.Class.extend({
             for (var i = 0 ; i < attachments.length; i++) {
                 $('<img/>', {
                     class: 'img img-fluid',
-                    src: attachments[i].src,
+                    src: attachments[i].image_src,
                     'data-index': ++index,
                 }).appendTo($container);
             }

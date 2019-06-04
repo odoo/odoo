@@ -95,15 +95,7 @@
 
     <!-- File choosing part of the Media Dialog -->
     <t t-name="wysiwyg.widgets.file">
-        <t t-set="iframeName" t-value="_.uniqueId('fileframe-')"/>
-        <form method="POST"
-            action="/web_editor/attachment/add"
-            enctype="multipart/form-data"
-            t-att-target="iframeName">
-            <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
-            <input type="hidden" name="filters" t-att-value="widget.options.firstFilters.join('_')"/>
-            <input t-if="widget.options.res_id" type="hidden" name="res_id" t-att-value="widget.options.res_id"/>
-            <input t-if="widget.options.res_model" type="hidden" name="res_model" t-att-value="widget.options.res_model"/>
+        <form>
             <t t-call="wysiwyg.widgets.files.submenu"/>
             <div class="form-text o_we_error_text"/>
             <div class="existing-attachments"/>
@@ -113,13 +105,12 @@
                     <span><i>All images have been loaded</i></span>
                 </div>
             </div>
-            <iframe class="o_file_upload_iframe d-none" t-att-name="iframeName"/>
         </form>
     </t>
 
     <t t-name="wysiwyg.widgets.files.submenu">
         <div class="form-inline align-items-center py-4">
-            <input type="file" class="d-none o_file_input" name="upload" t-att-accept="widget.options.accept" multiple="multiple"/>
+            <input type="file" class="d-none o_file_input" name="upload" t-att-accept="widget.options.accept" t-att-multiple="widget.options.multiImages &amp;&amp; 'multiple'"/>
             <input type="hidden" name="disable_optimization" value=""/>
 
             <div class="btn-group">
@@ -209,7 +200,7 @@
         <li class="o_existing_attachment_cell position-relative m-2" t-att-data-id="attachment.id">
             <t t-call="wysiwyg.widgets.file.existing.remove"/>
             <div t-attf-class="d-flex align-items-center h-100">
-                <img class="img img-fluid o_we_attachment_highlight" t-att-src="attachment.src + '?width=256&amp;height=192'" t-att-alt="attachment.name" t-att-title="attachment.name"/>
+                <img class="img img-fluid o_we_attachment_highlight" t-att-src="attachment.image_src + '?width=256&amp;height=192'" t-att-alt="attachment.name" t-att-title="attachment.name"/>
             </div>
         </li>
     </t>

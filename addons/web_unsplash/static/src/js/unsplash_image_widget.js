@@ -92,10 +92,6 @@ widgetsMedia.ImageWidget.include({
                 query: self._unsplash.query,
             }
         }).then(function (images) {
-            _.each(images, function (image) {
-                image.src = image.url;
-                image.isDocument = !(/gif|jpe|jpg|png/.test(image.mimetype));
-            });
             self.attachments = images;
             self.selectedAttachments = images;
             return _super.apply(self, args);
