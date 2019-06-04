@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="slide.slide.quiz.new.question">
+        <div class="mt-3 col">
+            <t t-call="slide.slide.quiz.question.inputs"/>
+            <t t-call="slide.slide.quiz.new.question.buttons"/>
+        </div>
+    </t>
+
+    <t t-name="slide.slide.quiz.update.question">
+        <div class="mt-3">
+            <t t-call="slide.slide.quiz.question.inputs"/>
+            <t t-call="slide.slide.quiz.update.question.buttons"/>
+        </div>
+    </t>
+
+    <t t-name="slide.slide.quiz.question.inputs">
+        <form class="mb-3">
+            <div class="o_wslides_quiz_question row align-items-center mr-0 mb-2">
+                <small class="text-muted col-1 text-center">
+                    <span class="h4 o_wslides_quiz_question_sequence"><t t-esc="question.sequence"/></span>.
+                </small>
+                <input type="text" name="question-name" class="form-control col-11" placeholder="Enter your question"
+                       t-attf-value="#{question.question ? question.question : ''}" />
+
+            </div>
+            <div class="text-muted mb-2">
+                <span>Select the correct answer below :</span>
+            </div>
+            <div class="list-group">
+                <t t-if="question.answer_ids" >
+                    <t t-foreach="question.answer_ids" t-as="answer" >
+                        <t t-call="slide.slide.quiz.answer">
+                            <t t-set="answer" t-value="answer" />
+                        </t>
+                    </t>
+                </t>
+                <t t-else="" >
+                    <t t-foreach="[1, 2, 3]">
+                        <t t-call="slide.slide.quiz.answer" />
+                    </t>
+                </t>
+            </div>
+            <div class="alert alert-danger o_wslides_js_quiz_create_error mt-2 d-none" role="alert">
+                <span></span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span>&amp;times;</span>
+                </button>
+            </div>
+        </form>
+    </t>
+
+    <t t-name="slide.slide.quiz.answer">
+        <div class="o_wslides_js_quiz_answers row align-items-center mb-1" t-attf-data-answer-id="#{answer ? answer.id : ''}" >
+            <a class="o_wslides_js_quiz_is_correct col-1 text-center" title="Select one good answer" href="#" >
+                <label class="my-0">
+                    <input t-if="answer and answer.is_correct" class="d-none" type="radio" name="radio" checked="true" />
+                    <input t-else="" class="d-none" type="radio" name="radio" />
+                    <i class="fa fa-lg fa-check-circle-o" ></i>
+                </label>
+            </a>
+            <input type="text" class="form-control col-9" placeholder="Enter your answer" t-attf-value="#{answer ? answer.text_value : ''}"/>
+            <i class="o_wslides_js_quiz_add_answer fa fa-lg fa-plus-circle p-2" title="Add another answer"></i>
+            <i class="o_wslides_js_quiz_delete_answer fa fa-lg fa-trash-o p-2" title="Delete this answer"></i>
+        </div>
+    </t>
+
+    <t t-name="slide.slide.quiz.new.question.buttons">
+        <div class="d-flex">
+            <div class="">
+                <a class="o_wslides_js_quiz_add_question btn btn-light border" role="button" href="#">
+                    <i class="fa fa-plus mr-2"/>
+                    <span class="d-none d-sm-inline-block">Add Question</span>
+                </a>
+            </div>
+            <div class="ml-auto">
+                <a class="o_wslides_js_quiz_save btn btn-primary border" role="button" href="#">
+                    <span class="d-none d-sm-inline-block">Save</span>
+                </a>
+                <a class="o_wslides_js_quiz_cancel btn btn-light border ml-2" role="button" href="#">
+                    <span class="d-none d-sm-inline-block">Cancel</span>
+                </a>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="slide.slide.quiz.update.question.buttons">
+        <a class="o_wslides_js_quiz_update btn btn-primary border" role="button" href="#">
+            <span class="d-none d-sm-inline-block">Update</span>
+        </a>
+        <a class="o_wslides_js_quiz_update_cancel btn btn-light border ml-2" role="button" href="#">
+            <span class="d-none d-sm-inline-block">Cancel</span>
+        </a>
+    </t>
+
+    <t t-name="slide.slide.quiz.question.updated">
+        <t t-call="slide.slide.quiz.question.question"/>
+    </t>
+
+    <t t-name="slide.slide.quiz.question.created">
+        <div t-attf-class="o_wslides_js_lesson_quiz_question mt-3"
+             t-att-data-question-id="question.id" t-att-data-title="question.question">
+            <t t-call="slide.slide.quiz.question.question"/>
+        </div>
+    </t>
+
+    <t t-name="slide.slide.quiz.question.question">
+        <div class="row d-flex mb-2 mx-0">
+            <div class="h4 m-0">
+                <small class="text-muted"><span class="o_wslides_quiz_question_sequence" t-esc="question.sequence"/>. </small> <span t-esc="question.question"/>
+            </div>
+            <div class="ml-auto">
+                <i class="o_wslides_js_quiz_edit_question fa fa-pencil-square-o p-1"></i>
+                <i class="o_wslides_js_quiz_delete_question fa fa-trash p-1"></i>
+            </div>
+        </div>
+        <div class="list-group completed-disabled">
+            <t t-foreach="question.answer_ids" t-as="answer">
+                <a href="#" t-att-data-answer-id="answer.id" t-att-data-text="answer.text_value"
+                   t-attf-class="o_wslides_quiz_answer list-group-item d-flex align-items-center list-group-item-action #{answer.is_correct ? 'list-group-item-success' : '' }">
+                    <label class="my-0 d-flex align-items-center justify-content-center mr-2">
+                        <input type="radio" class="d-none"/>
+                        <i t-att-class="'fa fa-circle text-400' + ((!answer.is_correct) ? '' : ' d-none')"></i>
+                        <i t-att-class="'fa fa-check-circle text-success' + (answer.is_correct ? '' :  ' d-none')"></i>
+                    </label>
+                    <span t-esc="answer.text_value"/>
+                </a>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="slide.slide.quiz.new.quiz.button">
+        <a class="o_wslides_js_quiz_add btn btn-light border ml-2" role="button" href="#" t-att-data-slide-id="slide.id">
+            <i class="fa fa-plus mr-2"/>
+            <span class="d-none d-sm-inline-block">Add Quiz</span>
+        </a>
+    </t>
+
+    <t t-name="slide.slide.quiz.new.question.button">
+        <a class="o_wslides_js_quiz_add btn btn-light border ml-2" role="button" href="#" t-att-data-slide-id="slide.id">
+            <i class="fa fa-plus mr-2"/>
+            <span class="d-none d-sm-inline-block">Add Question</span>
+        </a>
+    </t>
+
+</templates>

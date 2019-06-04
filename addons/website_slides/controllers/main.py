@@ -8,7 +8,7 @@ import werkzeug
 import math
 
 from odoo import http, modules, tools, _
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.http import request
 from odoo.osv import expression
 
@@ -131,7 +131,7 @@ class WebsiteSlides(WebsiteProfile):
                 'answers': [{
                     'id': answer.id,
                     'text_value': answer.text_value,
-                    'is_correct': answer.is_correct if slide_completed else None
+                    'is_correct': answer.is_correct if slide_completed or request.website.is_publisher() else None
                 } for answer in question.sudo().answer_ids],
             } for question in slide.question_ids]
         }
@@ -669,6 +669,75 @@ class WebsiteSlides(WebsiteProfile):
     # QUIZZ SECTION
     # --------------------------------------------------
 
+    @http.route('/slides/slide/quiz/create', type='json', methods=['POST'], auth='user', website=True)
+    def slide_quiz_create(self, **post):
+        question = request.env['slide.question'].create({
+            'sequence': post['sequence'],
+            'question': post['question'],
+            'slide_id': post['slide_id'],
+        })
+        question.update({
+            'answer_ids': [(0, 0, {
+                'question_id': question.id,
+                'sequence': answer['sequence'],
+                'text_value': answer['text_value'],
+                'is_correct': answer['is_correct']
+            }) for answer in post['answer_ids']]
+        })
+        answers = request.env['slide.answer'].search([('question_id', '=', question.id)])
+        return {
+            'id': question.id,
+            'sequence': question.sequence,
+            'question': question.question,
+            'answer_ids': [{
+                'id': answer['id'],
+                'text_value': answer['text_value'],
+                'is_correct': answer['is_correct']
+            } for answer in answers]
+        }
+
+    @http.route('/slides/slide/quiz/update', type='json', methods=['POST'], auth='user', website=True)
+    def slide_quiz_update(self, **post):
+        question = request.env['slide.question'].browse(post['id'])
+        answers = []
+        for answer in post['answer_ids']:
+            if 'id' in answer.keys() and answer['action'] == 'update':
+                answers.append((1, answer['id'], {
+                    'question_id': post['id'],
+                    'sequence': answer['sequence'],
+                    'text_value': answer['text_value'],
+                    'is_correct': answer['is_correct']
+                }))
+            elif 'id' in answer.keys() and answer['action'] == 'delete':
+                answers.append((2, answer['id'], False))
+            else:
+                answers.append((0, 0, {
+                    'question_id': post['id'],
+                    'sequence': answer['sequence'],
+                    'text_value': answer['text_value'],
+                    'is_correct': answer['is_correct']
+                }))
+        question.write({
+            'question': post['question'],
+            'answer_ids': answers
+        })
+        answers = request.env['slide.answer'].search([('question_id', '=', question.id)])
+        return {
+            'id': question.id,
+            'question': post['question'],
+            'answer_ids': [{
+                'id': answer['id'],
+                'text_value': answer['text_value'],
+                'is_correct': answer['is_correct']
+            } for answer in answers]
+        }
+
+    @http.route('/slides/slide/quiz/delete', type='json', methods=['POST'], auth='user', website=True)
+    def slide_quiz_delete(self, **post):
+        # TODO: Ask if the ondelete='cascade' was a good option or if I have to unlink all answers and then unlink the question
+        request.env['slide.question'].browse(post['id']).unlink()
+        return
+
     @http.route('/slides/slide/quiz/get', type="json", auth="public", website=True)
     def slide_quiz_get(self, slide_id):
         fetch_res = self._fetch_slide(slide_id)
@@ -824,12 +893,12 @@ class WebsiteSlides(WebsiteProfile):
 
         redirect_url = "/slides/slide/%s" % (slide.id)
         if channel.channel_type == "training" and not slide.slide_type == "webpage":
+            redirect_url = "/slides/slide/%s" % (slide.id)
+            # redirect_url = "/slides/%s" % (slug(channel))
+        if slide.slide_type == 'certification':
             redirect_url = "/slides/%s" % (slug(channel))
         if slide.slide_type == 'webpage':
             redirect_url += "?enable_editor=1"
-        if slide.slide_type == "quiz":
-            action_id = request.env.ref('website_slides.action_slides_slides').id
-            redirect_url = '/web#id=%s&action=%s&model=slide.slide&view_type=form' %(slide.id,action_id)
         return {
             'url': redirect_url,
             'channel_type': channel.channel_type,

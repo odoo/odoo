@@ -9,6 +9,7 @@ class SlideQuestion(models.Model):
     _name = "slide.question"
     _rec_name = "question"
     _description = "Slide Quiz Question"
+    _order = "sequence"
 
     sequence = fields.Integer("Sequence", default=10)
     question = fields.Char("Question Name", required=True, translate=True)
@@ -42,8 +43,9 @@ class SlideAnswer(models.Model):
     _name = "slide.answer"
     _rec_name = "text_value"
     _description = "Answer for a slide question"
-    _order = 'question_id, id'
+    _order = 'question_id, sequence'
 
-    question_id = fields.Many2one('slide.question', string="Question", required=True)
+    sequence = fields.Integer("Sequence", default=10)
+    question_id = fields.Many2one('slide.question', string="Question", required=True, ondelete='cascade')
     text_value = fields.Char("Answer", required=True, translate=True)
     is_correct = fields.Boolean("Is correct answer")
