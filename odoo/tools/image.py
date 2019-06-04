@@ -58,6 +58,7 @@ class ImageProcess():
         :raise: OSError if the image can't be identified by PIL
         """
         self.base64_source = base64_source or False
+        self.operationsCount = 0
 
         if not base64_source or base64_source[:1] == b'P':
             # don't process empty source or SVG
@@ -69,18 +70,25 @@ class ImageProcess():
             if verify_resolution and w * h > IMAGE_MAX_RESOLUTION:
                 raise ValueError(_("Image size excessive, uploaded images must be smaller than %s million pixels.") % str(IMAGE_MAX_RESOLUTION / 10e6))
 
-            self.original_format = self.image.format
+            self.original_format = self.image.format.upper()
 
-    def image_base64(self, quality=80, output_format=None):
+    def image_base64(self, quality=0, output_format=''):
         """Return the base64 encoded image resulting of all the image processing
         operations that have been applied previously.
 
         Return False if the initialized `base64_source` was falsy, and return
         the initialized `base64_source` without change if it was SVG.
 
-        :param quality: quality setting to apply.
-            - Ignored if image is not JPEG.
-            - 1 is worse, 95 is best. Default to 80.
+        Also return the initialized `base64_source` if no operations have been
+        applied and the `output_format` is the same as the original format and
+        the quality is not specified.
+
+        :param quality: quality setting to apply. Default to 0.
+            - for JPEG: 1 is worse, 95 is best. Values above 95 should be
+                avoided. Fasly values will fallback to 95, but only if the image
+                was changed, otherwise the original image is returned.
+            - for PNG: set falsy to prevent conversion to a WEB palette.
+            - for other formats: no effect.
         :type quality: int
 
         :param output_format: the output format. Can be PNG, JPEG, GIF, or ICO.
@@ -96,27 +104,31 @@ class ImageProcess():
         if not output_image:
             return self.base64_source
 
-        output_format = (output_format or self.original_format).upper()
+        output_format = output_format.upper() or self.original_format
         if output_format == 'BMP':
             output_format = 'PNG'
         elif output_format not in ['PNG', 'JPEG', 'GIF', 'ICO']:
             output_format = 'JPEG'
 
+        if not self.operationsCount and output_format == self.original_format and not quality:
+            return self.base64_source
+
         opt = {'format': output_format}
 
         if output_format == 'PNG':
             opt['optimize'] = True
-            alpha = False
-            if output_image.mode in ('RGBA', 'LA') or (output_image.mode == 'P' and 'transparency' in output_image.info):
-                alpha = output_image.convert('RGBA').split()[-1]
-            if output_image.mode != 'P':
-                # Floyd Steinberg dithering by default
-                output_image = output_image.convert('RGBA').convert('P', palette=Image.WEB, colors=256)
-            if alpha:
-                output_image.putalpha(alpha)
+            if quality:
+                alpha = False
+                if output_image.mode in ('RGBA', 'LA') or (output_image.mode == 'P' and 'transparency' in output_image.info):
+                    alpha = output_image.convert('RGBA').split()[-1]
+                if output_image.mode != 'P':
+                    # Floyd Steinberg dithering by default
+                    output_image = output_image.convert('RGBA').convert('P', palette=Image.WEB, colors=256)
+                if alpha:
+                    output_image.putalpha(alpha)
         if output_format == 'JPEG':
             opt['optimize'] = True
-            opt['quality'] = quality
+            opt['quality'] = quality or 95
         if output_format == 'GIF':
             opt['optimize'] = True
             opt['save_all'] = True
@@ -153,7 +165,10 @@ class ImageProcess():
             w, h = self.image.size
             asked_width = max_width or (w * max_height) // h
             asked_height = max_height or (h * max_width) // w
-            self.image.thumbnail((asked_width, asked_height), Image.LANCZOS)
+            if asked_width != w or asked_height != h:
+                self.image.thumbnail((asked_width, asked_height), Image.LANCZOS)
+                if self.image.width != w or self.image.height != h:
+                    self.operationsCount += 1
         return self
 
     def crop_resize(self, max_width, max_height, center_x=0.5, center_y=0.5):
@@ -213,7 +228,10 @@ class ImageProcess():
             x_offset = (w - new_w) * center_x
             h_offset = (h - new_h) * center_y
 
-            self.image = self.image.crop((x_offset, h_offset, x_offset + new_w, h_offset + new_h))
+            if new_w != w or new_h != h:
+                self.image = self.image.crop((x_offset, h_offset, x_offset + new_w, h_offset + new_h))
+                if self.image.width != w or self.image.height != h:
+                    self.operationsCount += 1
 
         return self.resize(max_width, max_height)
 
@@ -229,17 +247,18 @@ class ImageProcess():
             self.image = Image.new('RGB', original.size)
             self.image.paste(color, box=(0, 0) + original.size)
             self.image.paste(original, mask=original)
+            self.operationsCount += 1
         return self
 
 
-def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=80, crop=None, colorize=False, output_format=None):
+def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=0, crop=None, colorize=False, output_format=''):
     """Process the `base64_source` image by executing the given operations and
     return the result as a base64 encoded image.
-
-    As this function is exposed to users through controllers, the quality is
-    limited to 95 as per recommandation from PIL. If needed the lower level
-    method image_base64 in ImageProcess does not enforce that limit.
     """
+    if (not size or (not size[0] and not size[1])) and not verify_resolution and not quality and not crop and not colorize and not output_format:
+        # for performance: don't do anything if no operations have been requested
+        return base64_source
+
     image = ImageProcess(base64_source, verify_resolution)
     if size:
         if crop:
@@ -254,7 +273,7 @@ def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=8
             image.resize(max_width=size[0], max_height=size[1])
     if colorize:
         image.colorize()
-    return image.image_base64(quality=min(quality, 95), output_format=output_format)
+    return image.image_base64(quality=quality, output_format=output_format)
 
 
 # ----------------------------------------
