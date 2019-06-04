@@ -476,7 +476,7 @@ class MrpProduction(models.Model):
             'unit_factor': product_uom_qty / self.product_qty,
             'name': self.name,
             'date': self.date_planned_start,
-            'date_expected': self.date_planned_start,
+            'date_expected': self.date_planned_finished,
             'picking_type_id': self.picking_type_id.id,
             'location_id': self.product_id.property_stock_production.id,
             'location_dest_id': self.location_dest_id.id,
