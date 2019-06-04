@@ -694,7 +694,7 @@ registry.colorpicker = SnippetOption.extend({
 
             // Remove excluded palettes
             _.each(excluded, function (exc) {
-                $clpicker.find('[data-name="' + exc + '"]').remove();
+                $clpicker.find('[data-group="' + exc + '"]').remove();
             });
 
             var $pt = $(qweb.render('web_editor.snippet.option.colorpicker'));
