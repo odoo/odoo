@@ -138,6 +138,7 @@ class SnailmailLetter(models.Model):
                 'letter_id': letter.id,
                 'res_model': letter.model,
                 'res_id': letter.res_id,
+                'contact_address': letter.partner_id.with_context(snailmail_layout=True, show_address=True).name_get()[0][1],
                 'address': {
                     'name': letter.partner_id.name,
                     'street': letter.partner_id.street,
