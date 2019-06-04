@@ -230,7 +230,7 @@
         <t t-call-assets="website.assets_editor" t-js="false" groups="website.group_website_publisher"/>
     </xpath>
     <xpath expr="//head/t[@t-css='false'][last()]" position="after">
-        <t t-call-assets="website.assets_editor" t-css="false" groups="website.group_website_publisher"/>
+        <t t-call-assets="website.assets_editor" t-css="false" groups="website.group_website_publisher" lazy_load="True"/>
     </xpath>
 
     <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">

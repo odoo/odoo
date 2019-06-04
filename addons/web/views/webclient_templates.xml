@@ -40,6 +40,20 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bootstrap_review.scss"/>
     </template>
 
+    <!-- The assets common minimal code should not require any library to work. -->
+    <!-- An exception is made for the promises polyfill and extensions that the -->
+    <!-- boot.js script needs to work -->
+    <template id="_assets_common_minimal_js">
+        <script type="text/javascript" src="/web/static/lib/es6-promise/es6-promise-polyfill.js"></script>
+        <script type="text/javascript" src="/web/static/lib/unhandled-rejection-polyfill/unhandled-rejection-polyfill.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/promise_extension.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
+    </template>
+
+    <template id="assets_common_minimal_js">
+        <t t-call="web._assets_common_minimal_js"/>
+    </template>
+
     <template id="assets_common" name="Common Assets (used in backend interface and website)">
         <t t-call="web._assets_helpers"/>
 
@@ -65,8 +79,8 @@
 
         <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fontawesome_overriden.scss"/>
 
-        <script type="text/javascript" src="/web/static/lib/es6-promise/es6-promise-polyfill.js"></script>
-        <script type="text/javascript" src="/web/static/lib/unhandled-rejection-polyfill/unhandled-rejection-polyfill.js"></script>
+        <t t-call="web._assets_common_minimal_js"/>
+
         <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
         <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
         <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
@@ -103,10 +117,6 @@
         <script type="text/javascript" src="/web/static/lib/jSignature/jSignatureCustom.js"></script>
 
         <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
-
-        <script type="text/javascript" src="/web/static/src/js/promise_extension.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
-
         <script type="text/javascript" src="/web/static/src/js/libs/autocomplete.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/bootstrap.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/jquery.js"></script>
@@ -147,6 +157,10 @@
         <script type="text/javascript" src="/web/static/src/js/widgets/name_and_signature.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/notification.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/rainbow_man.js"></script>
+    </template>
+
+    <template id="assets_common_lazy" inherit_id="web.assets_common" primary="True">
+        <xpath expr="//t[@t-call='web._assets_common_minimal_js']" position="replace"/>
     </template>
 
     <template id="assets_backend" name="Backend Assets (used in backend interface)">
@@ -342,20 +356,35 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/report_backend.scss"/>
     </template>
 
-    <template id="web.assets_frontend" name="Website Assets">
+    <template id="_assets_frontend_minimal_js">
+        <script type="text/javascript" src="/web/static/src/js/public/lazyloader.js"/>
+    </template>
+
+    <template id="assets_frontend_minimal_js">
+        <t t-call="web._assets_frontend_minimal_js"/>
+    </template>
+
+    <template id="assets_frontend" name="Website Assets">
         <t t-call="web._assets_helpers">
             <t t-call="web._assets_frontend_helpers"/>
         </t>
 
         <t t-call="web._assets_bootstrap"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/lazyloader.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/navbar_mobile.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/notification.scss"/>
+
+        <t t-call="web._assets_frontend_minimal_js"/>
 
         <script type="text/javascript" src="/web/static/src/js/services/session.js"/>
         <script type="text/javascript" src="/web/static/src/js/public/public_notification.js"/>
         <script type="text/javascript" src="/web/static/src/js/public/public_root.js"/>
         <script type="text/javascript" src="/web/static/src/js/public/public_root_instance.js"/>
         <script type="text/javascript" src="/web/static/src/js/public/public_widget.js"/>
+    </template>
+
+    <template id="assets_frontend_lazy" inherit_id="web.assets_frontend" primary="True">
+        <xpath expr="//t[@t-call='web._assets_frontend_minimal_js']" position="replace"/>
     </template>
 
     <template id="web.layout" name="Web layout">&lt;!DOCTYPE html&gt;
@@ -391,8 +420,10 @@
             <script type="text/javascript">
                 odoo.session_info = <t t-raw="json.dumps(request.env['ir.http'].get_frontend_session_info())"/>;
             </script>
-            <t t-call-assets="web.assets_common" t-css="false"/>
-            <t t-call-assets="web.assets_frontend" t-css="false"/>
+            <t t-call-assets="web.assets_common_minimal_js" t-css="false" defer_load="True"/>
+            <t t-call-assets="web.assets_frontend_minimal_js" t-css="false" defer_load="True"/>
+            <t t-call-assets="web.assets_common_lazy" t-css="false" lazy_load="True"/>
+            <t t-call-assets="web.assets_frontend_lazy" t-css="false" lazy_load="True"/>
         </xpath>
         <xpath expr="//t[@t-raw='0']" position="replace">
             <div id="wrapwrap" t-attf-class="#{pageName or ''}">
