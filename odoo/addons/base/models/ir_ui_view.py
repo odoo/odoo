@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import collections
-import copy
 import datetime
 import fnmatch
 import logging
@@ -24,7 +23,7 @@ from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.modules.module import get_resource_from_path, get_resource_path
 from odoo.osv import orm
-from odoo.tools import config, graph, ConstantMapping, SKIPPED_ELEMENT_TYPES, pycompat
+from odoo.tools import config, graph, ConstantMapping, pycompat, apply_inheritance_specs, locate_node
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.safe_eval import safe_eval
@@ -133,31 +132,7 @@ def get_view_arch_from_file(filename, xmlid):
     _logger.warning("Could not find view arch definition in file '%s' for xmlid '%s'", filename, xmlid_search)
     return None
 
-def add_text_before(node, text):
-    """ Add text before ``node`` in its XML tree. """
-    if text is None:
-        return
-    prev = node.getprevious()
-    if prev is not None:
-        prev.tail = (prev.tail or "") + text
-    else:
-        parent = node.getparent()
-        parent.text = (parent.text or "") + text
 
-def add_text_inside(node, text):
-    """ Add text inside ``node``. """
-    if text is None:
-        return
-    if len(node):
-        node[-1].tail = (node[-1].tail or "") + text
-    else:
-        node.text = (node.text or "") + text
-
-def remove_element(node):
-    """ Remove ``node`` but not its tail, from its XML tree. """
-    add_text_before(node, node.tail)
-    node.tail = None
-    node.getparent().remove(node)
 
 xpath_utils = etree.FunctionNamespace(None)
 xpath_utils['hasclass'] = _hasclass
@@ -562,28 +537,7 @@ actual arch.
         :param spec: a modifying node in an inheriting view
         :return: a node in the source matching the spec
         """
-        if spec.tag == 'xpath':
-            nodes = etree.ETXPath(spec.get('expr'))(arch)
-            return nodes[0] if nodes else None
-        elif spec.tag == 'field':
-            # Only compare the field name: a field can be only once in a given view
-            # at a given level (and for multilevel expressions, we should use xpath
-            # inheritance spec anyway).
-            for node in arch.iter('field'):
-                if node.get('name') == spec.get('name'):
-                    return node
-            return None
-
-        for node in arch.iter(spec.tag):
-            if isinstance(node, SKIPPED_ELEMENT_TYPES):
-                continue
-            if all(node.get(attr) == spec.get(attr) for attr in spec.attrib
-                   if attr not in ('position', 'version')):
-                # Version spec should match parent's root element's version
-                if spec.get('version') and spec.get('version') != arch.get('version'):
-                    return None
-                return node
-        return None
+        return locate_node(arch, spec)
 
     def inherit_branding(self, specs_tree, view_id, root_id):
         for node in specs_tree.iterchildren(tag=etree.Element):
@@ -613,103 +567,10 @@ actual arch.
         """
         # Queue of specification nodes (i.e. nodes describing where and
         # changes to apply to some parent architecture).
-        specs = [specs_tree]
-
-        def extract(spec):
-            """
-            Utility function that locates a node given a specification, remove
-            it from the source and returns it.
-            """
-            if len(spec):
-                self.raise_view_error(_("Invalid specification for moved nodes: '%s'") %
-                                      etree.tostring(spec), inherit_id)
-            to_extract = self.locate_node(source, spec)
-            if to_extract is not None:
-                remove_element(to_extract)
-                return to_extract
-            else:
-                self.raise_view_error(_("Element '%s' cannot be located in parent view") %
-                                      etree.tostring(spec), inherit_id)
-
-        while len(specs):
-            spec = specs.pop(0)
-            if isinstance(spec, SKIPPED_ELEMENT_TYPES):
-                continue
-            if spec.tag == 'data':
-                specs += [c for c in spec]
-                continue
-            node = self.locate_node(source, spec)
-            if node is not None:
-                pos = spec.get('position', 'inside')
-                if pos == 'replace':
-                    for loc in spec.xpath(".//*[text()='$0']"):
-                        loc.text = ''
-                        loc.append(copy.deepcopy(node))
-                    if node.getparent() is None:
-                        source = copy.deepcopy(spec[0])
-                    else:
-                        for child in spec:
-                            if child.get('position') == 'move':
-                                child = extract(child)
-                            node.addprevious(child)
-                        node.getparent().remove(node)
-                elif pos == 'attributes':
-                    for child in spec.getiterator('attribute'):
-                        attribute = child.get('name')
-                        value = child.text or ''
-                        if child.get('add') or child.get('remove'):
-                            assert not child.text
-                            separator = child.get('separator', ',')
-                            if separator == ' ':
-                                separator = None    # squash spaces
-                            to_add = (
-                                s for s in (s.strip() for s in child.get('add', '').split(separator))
-                                if s
-                            )
-                            to_remove = {s.strip() for s in child.get('remove', '').split(separator)}
-                            values = (s.strip() for s in node.get(attribute, '').split(separator))
-                            value = (separator or ' ').join(itertools.chain(
-                                (v for v in values if v not in to_remove),
-                                to_add
-                            ))
-                        if value:
-                            node.set(attribute, value)
-                        elif attribute in node.attrib:
-                            del node.attrib[attribute]
-                elif pos == 'inside':
-                    add_text_inside(node, spec.text)
-                    for child in spec:
-                        if child.get('position') == 'move':
-                            child = extract(child)
-                        node.append(child)
-                elif pos == 'after':
-                    # add a sentinel element right after node, insert content of
-                    # spec before the sentinel, then remove the sentinel element
-                    sentinel = E.sentinel()
-                    node.addnext(sentinel)
-                    add_text_before(sentinel, spec.text)
-                    for child in spec:
-                        if child.get('position') == 'move':
-                            child = extract(child)
-                        sentinel.addprevious(child)
-                    remove_element(sentinel)
-                elif pos == 'before':
-                    add_text_before(node, spec.text)
-                    for child in spec:
-                        if child.get('position') == 'move':
-                            child = extract(child)
-                        node.addprevious(child)
-                else:
-                    self.raise_view_error(_("Invalid position attribute: '%s'") % pos, inherit_id)
-
-            else:
-                attrs = ''.join([
-                    ' %s="%s"' % (attr, spec.get(attr))
-                    for attr in spec.attrib
-                    if attr != 'position'
-                ])
-                tag = "<%s%s>" % (spec.tag, attrs)
-                self.raise_view_error(_("Element '%s' cannot be located in parent view") % tag, inherit_id)
+        try:
+            source = apply_inheritance_specs(source, specs_tree)
+        except ValueError as e:
+            self.raise_view_error(str(e), inherit_id)
 
         return source
 
