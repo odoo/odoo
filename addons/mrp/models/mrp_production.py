@@ -606,7 +606,7 @@ class MrpProduction(models.Model):
                 move_raw.write({
                     'group_id': production.procurement_group_id.id,
                     'unit_factor': move_raw.product_uom_qty / production.product_qty,
-                    'reference': self.name,  # set reference when MO name is different than 'New'
+                    'reference': production.name,  # set reference when MO name is different than 'New'
                 })
             production._generate_finished_moves()
             production.move_raw_ids._adjust_procure_method()
