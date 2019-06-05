@@ -31,12 +31,14 @@
             var odoo = {
                 csrf_token: "<t t-esc="request.csrf_token(None)"/>",
                 session_info: <t t-raw="session_info"/>,
+                debug: "<t t-esc="debug"/>",
             };
         </script>
 
         <t t-call-assets="web.assets_common" t-css="false"/>
         <t t-call-assets="point_of_sale.pos_assets_backend" t-css="false"/>
         <t t-call-assets="point_of_sale.assets"/>
+        <t t-call="web.conditional_assets_tests"/>
 
         <script type="text/javascript" id="loading-script" t-raw="init">
             odoo.define('web.web_client', function (require) {

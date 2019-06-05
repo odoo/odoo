@@ -2,7 +2,6 @@ odoo.define('web_settings_dashboard', function (require) {
 "use strict";
 
 var AbstractAction = require('web.AbstractAction');
-var config = require('web.config');
 var core = require('web.core');
 var framework = require('web.framework');
 var Widget = require('web.Widget');
@@ -349,7 +348,6 @@ var DashboardShare = Widget.extend({
     _onClickForceDemo: function (ev) {
         ev.preventDefault();
         this.do_action('base.demo_force_install_action');
-        config.debug = false;
     },
 });
 

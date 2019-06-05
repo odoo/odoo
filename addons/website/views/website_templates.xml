@@ -17,9 +17,12 @@
     </xpath>
 </template>
 
-<template id="assets_common" name="Website Assets Common" inherit_id="web.assets_common">
+<template id="assets_tests" name="Website Assets Tests" inherit_id="web.assets_tests">
     <xpath expr="." position="inside">
-        <script type="text/javascript" src="/website/static/src/js/tours/website_tour_reset_password.js"></script>
+        <script type="text/javascript" src="/website/static/tests/tours/reset_password.js"></script>
+        <script type="text/javascript" src="/website/static/tests/tours/rte.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/html_editor.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/restricted_editor.js"/>
     </xpath>
 </template>
 
@@ -30,7 +33,6 @@
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/website/static/src/js/backend/button.js"/>
         <script type="text/javascript" src="/website/static/src/js/backend/dashboard.js"/>
-        <script type="text/javascript" src="/website/static/src/js/tours/rte.js"/>
     </xpath>
 </template>
 
@@ -73,8 +75,6 @@
 
         <script type="text/javascript" src="/website/static/src/js/menu/navbar.js"/>
 
-        <script type="text/javascript" src="/website/static/src/js/html_editor.test.js"/>
-
         <!-- Custom empty file for user javascript -->
         <script type="text/javascript" src="/website/static/src/js/user_custom_javascript.js"/>
     </xpath>
@@ -114,6 +114,7 @@
 
     <script type="text/javascript" src="/website/static/src/js/menu/content.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/customize.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/debug_manager.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/edit.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/mobile_view.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/new_content.js"/>
@@ -122,8 +123,6 @@
 
     <script type="text/javascript" src="/website/static/src/js/tours/banner.js"/>
     <script type="text/javascript" src="/website/static/src/js/tours/customize.js"/>
-    <script type="text/javascript" src="/website/static/src/js/tours/restricted_editor.js"/>
-    <script type="text/javascript" src="/website/static/src/js/tours/rte.js"/>
 
     <script type="text/javascript" src="/website/static/src/js/widgets/ace.js"/>
     <script type="text/javascript" src="/website/static/src/js/widgets/theme.js"/>
@@ -904,7 +903,7 @@
             <div class="oe_structure">
                 <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
             </div>
-            <t t-if="editable or request.debug">
+            <t t-if="editable or debug">
                 <t t-call="website.http_error_debug"/>
             </t>
         </div>
@@ -969,7 +968,7 @@
                     <li><a href="/contactus">Contact Us</a></li>
                 </ul>
             </div>
-            <t t-if="editable or request.debug">
+            <t t-if="editable or debug">
                 <t t-call="website.http_error_debug"/>
             </t>
         </div>
@@ -996,7 +995,7 @@
                 </div>
             </div>
 
-            <t t-if="request.debug">
+            <t t-if="debug">
                 <t t-call="website.http_error_debug"/>
             </t>
         </div>
@@ -1123,7 +1122,7 @@
                         </div>
                     </div>
 
-                    <t t-if="editable or request.debug">
+                    <t t-if="editable or debug">
                         <t t-call="website.http_error_debug"/>
                     </t>
                 </main>

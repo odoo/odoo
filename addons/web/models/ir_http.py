@@ -17,7 +17,7 @@ class Http(models.AbstractModel):
 
     def webclient_rendering_context(self):
         return {
-            'menu_data': request.env['ir.ui.menu'].load_menus(request.debug),
+            'menu_data': request.env['ir.ui.menu'].load_menus(request.session.debug),
             'session_info': json.dumps(self.session_info()),
         }
 
@@ -34,7 +34,7 @@ class Http(models.AbstractModel):
         lang = user_context.get("lang")
         translations_per_module, _ = request.env['ir.translation'].get_translations_for_webclient(mods, lang)
 
-        menu_json_utf8 = json.dumps(request.env['ir.ui.menu'].load_menus(request.debug), default=ustr, sort_keys=True).encode()
+        menu_json_utf8 = json.dumps(request.env['ir.ui.menu'].load_menus(request.session.debug), default=ustr, sort_keys=True).encode()
         translations_json_utf8 = json.dumps(translations_per_module,  sort_keys=True).encode()
 
         return {

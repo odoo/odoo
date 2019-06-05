@@ -42,7 +42,7 @@ return core.Class.extend({
         var self = this;
         var key = this._gen_key(action_id, additional_context || {});
 
-        if (config.debug === 'assets' || !this._cache.actions[key]) {
+        if (config.isDebug('assets') || !this._cache.actions[key]) {
             this._cache.actions[key] = rpc.query({
                 route: "/web/action/load",
                 params: {
@@ -82,7 +82,7 @@ return core.Class.extend({
         var views_descr = params.views_descr;
         var key = this._gen_key(model, views_descr, options || {}, context);
 
-        if (config.debug === 'assets' || !this._cache.views[key]) {
+        if (config.isDebug('assets') || !this._cache.views[key]) {
             // Don't load filters if already in cache
             var filters_key;
             if (options.load_filters) {
@@ -137,7 +137,7 @@ return core.Class.extend({
      */
     load_filters: function (params) {
         var key = this._gen_key(params.modelName, params.actionId);
-        if (config.debug === 'assets' || !this._cache.filters[key]) {
+        if (config.isDebug('assets') || !this._cache.filters[key]) {
             this._cache.filters[key] = rpc.query({
                 args: [params.modelName, params.actionId],
                 kwargs: {

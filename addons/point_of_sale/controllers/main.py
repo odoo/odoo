@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 class PosController(http.Controller):
 
     @http.route('/pos/web', type='http', auth='user')
-    def pos_web(self, debug=False, **k):
+    def pos_web(self, **k):
         # if user not logged in, log him in
         pos_sessions = request.env['pos.session'].search([
             ('state', '=', 'opened'),
