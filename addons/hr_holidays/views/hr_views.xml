@@ -137,7 +137,7 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='managers']" position="inside">
-                <field name="leave_manager_id"/>
+                <field name="leave_manager_id" help="User responsible for approving time off. This user should have the 'Time Off Team Approver' access or be the employee's department manager. If empty, this employee's time off will be approved by his Manager. If the Manager field is empty, this employee's time off will be approved by his department's manager."/>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="current_leave_id" invisible="1"/>
