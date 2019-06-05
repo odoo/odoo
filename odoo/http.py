@@ -977,10 +977,9 @@ class OpenERPSession(sessions.Session):
         """
         Authenticate the current user with the given db, login and
         password. If successful, store the authentication parameters in the
-        current session and request.
-
-        :param uid: If not None, that user id will be used instead the login
-                    to authenticate the user.
+        current session and request, unless multi-factor-authentication
+        is activated. In that case, that last part will be done by
+        :ref:`finalize`.
         """
 
         wsgienv = request.httprequest.environ

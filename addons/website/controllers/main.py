@@ -106,9 +106,11 @@ class Website(Home):
                 redirect = '/my'
         return super()._login_redirect(uid, redirect=redirect)
 
+    # Force website=True + auth='public', required for login form layout
     @http.route(website=True, auth="public", sitemap=False)
     def web_login(self, *args, **kw):
         return super().web_login(*args, **kw)
+
     # ------------------------------------------------------
     # Business
     # ------------------------------------------------------
