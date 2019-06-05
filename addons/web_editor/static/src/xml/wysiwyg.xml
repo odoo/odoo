@@ -95,15 +95,7 @@
 
     <!-- File choosing part of the Media Dialog -->
     <t t-name="wysiwyg.widgets.file">
-        <t t-set="iframeName" t-value="_.uniqueId('fileframe-')"/>
-        <form method="POST"
-            action="/web_editor/attachment/add"
-            enctype="multipart/form-data"
-            t-att-target="iframeName">
-            <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
-            <input type="hidden" name="filters" t-att-value="widget.options.firstFilters.join('_')"/>
-            <input t-if="widget.options.res_id" type="hidden" name="res_id" t-att-value="widget.options.res_id"/>
-            <input t-if="widget.options.res_model" type="hidden" name="res_model" t-att-value="widget.options.res_model"/>
+        <form>
             <t t-call="wysiwyg.widgets.files.submenu"/>
             <div class="form-text o_we_error_text"/>
             <div class="existing-attachments"/>
@@ -113,14 +105,12 @@
                     <span><i>All images have been loaded</i></span>
                 </div>
             </div>
-            <iframe class="o_file_upload_iframe d-none" t-att-name="iframeName"/>
         </form>
     </t>
 
     <t t-name="wysiwyg.widgets.files.submenu">
         <div class="form-inline align-items-center py-4">
-            <input type="file" class="d-none o_file_input" name="upload" t-att-accept="widget.options.accept" multiple="multiple"/>
-            <input type="hidden" name="disable_optimization" value=""/>
+            <input type="file" class="d-none o_file_input" name="upload" t-att-accept="widget.options.accept" t-att-multiple="widget.options.multiImages &amp;&amp; 'multiple'"/>
 
             <div class="btn-group">
                 <button type="button" class="btn btn-primary o_upload_media_button">
@@ -154,13 +144,11 @@
             <t t-set="addText">Add image</t>
             <t t-set="searchPlaceholder">Search an image</t>
             <t t-set="urlWarningTitle">The URL does not contain any image. The file will be added in the document section.</t>
-            <t t-set="alternateUpload">
-                <button class="btn btn-primary dropdown-toggle dropdown-toggle-split o_media_optimization" data-toggle="dropdown" type="button">
-                    <span class="sr-only">Alternate Upload</span>
+            <t t-if="widget.options.showQuickUpload" t-set="alternateUpload">
+                <button class="btn btn-primary o_we_quick_upload" type="button" title="Quick Upload">
+                    <i class="fa fa-fast-forward"/>
+                    <span class="sr-only">Quick Upload</span>
                 </button>
-                <div class="dropdown-menu" role="menu">
-                    <button type="button" role="menuitem" class="dropdown-item o_upload_media_button_no_optimization">Upload image without optimization</button>
-                </div>
             </t>
         </t>
     </t>
@@ -194,22 +182,107 @@
             </div>
         </div>
     </t>
-    <t t-name="wysiwyg.widgets.image.existing.attachments">
-        <div class="existing-attachments">
-            <div class="row mt16 ml-auto" t-as="row" t-foreach="rows">
-                <div class="col-2 o_existing_attachment_cell" t-as="attachment" t-foreach="row">
-                    <i t-if="attachment.res_model === 'ir.ui.view'" class="fa fa-trash o_existing_attachment_remove" title="This file is a public view attachment" role="img" aria-label="This file is a public view attachment" t-att-data-id="attachment.id"/>
-                    <i t-else="" class="fa fa-trash o_existing_attachment_remove" title="This file is attached to the current record" role="img" aria-label="This file is attached to the current record" t-att-data-id="attachment.id"/>
-                    <div class="o_attachment_border" t-att-style="attachment.res_model === 'ir.ui.view' ? null : 'border: 1px solid #5cb85c;'"><div t-att-data-src="attachment.src" t-att-data-url="attachment.url" role="img" t-att-aria-label="attachment.name" t-att-title="attachment.name" t-att-data-id="attachment.id" t-att-data-mimetype="attachment.mimetype" t-attf-class="o_image {{withEffect ? 'o_image_loading' : ''}}"/></div>
+
+    <t t-name="wysiwyg.widgets.image.optimize">
+        <form class="o_we_image_optimize_dialog">
+            <div class="row">
+                <div class="o_we_config_column col-lg-6">
+                    <div class="form-group">
+                        <label class="o_we_title_label" for="o_we_name_input">Name</label>
+                        <input type="text" class="form-control" id="o_we_name_input" name="filename" aria-describedby="nameHelp" t-att-value="widget.attachment.name" required="required"/>
+                        <small id="nameHelp" class="form-text text-muted">Give a relevant name to your file to optimize search engine results.</small>
+                    </div>
+
+                    <small t-if="widget.disableResize" class="form-text text-muted o_we_no_resize"><span class="fa fa-info-circle"/> Resizing is not supported for images of type <t t-esc="widget.attachment.mimetype"/>.</small>
+                    <div class="form-group" t-else="1">
+                        <div>
+                            <div class="btn-group btn-group-sm mt-2" role="group" aria-label="Sizes">
+                                <t t-foreach="widget.suggestedWidths" t-as="suggestedWidth">
+                                    <button t-attf-class="btn btn-link o_we_width_preset #{suggestedWidth.width === widget.attachment.image_width ? ' active' : ''}" t-att-data-width="suggestedWidth.width" t-esc="suggestedWidth.text"/>
+                                </t>
+                            </div>
+                        </div>
+                        <label class="o_we_title_label" for="o_we_width">Width (in px)</label>
+                        <input type="number" class="form-control" id="o_we_width" name="width" aria-describedby="sizeHelp" min="1" t-att-max="widget.attachment.image_width" t-att-value="widget.defaultWidth"/>
+                        <label class="o_we_title_label" for="o_we_height">Height (in px)</label>
+                        <input type="number" class="form-control" id="o_we_height" name="height" aria-describedby="sizeHelp" min="1" t-att-max="widget.attachment.image_height" t-att-value="widget.defaultHeight"/>
+                        <small id="sizeHelp" class="form-text text-muted">Reduce the size as much as possible to increase performance.</small>
+                    </div>
+
+                    <small t-if="widget.disableQuality" class="form-text text-muted o_we_no_quality"><span class="fa fa-info-circle"/> Changing the quality is not supported for images of type <t t-esc="widget.attachment.mimetype"/>.</small>
+                    <div class="form-group" t-else="1">
+                        <t t-if="widget.toggleQuality">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="o_we_optimize_quality" t-att-checked="widget.isExisting ? undefined : 'checked'" aria-describedby="toggleQualityHelp"/>
+                                <label class="custom-control-label" for="o_we_optimize_quality">Optimize</label>
+                            </div>
+                            <small id="toggleQualityHelp" class="form-text text-muted">This reduces the quality to increase performance.</small>
+                        </t>
+                        <t t-else="1">
+                            <label class="o_we_title_label" for="o_we_quality_input">Quality</label>
+                            <div class="form-row">
+                                <div class="col-sm-10">
+                                    <input type="range" class="custom-range o_we_quality_range" id="quality_range" name="quality_range" min="1" max="100" step="1" aria-describedby="rangeQualityHelp" t-att-value="widget.defaultQuality"/>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="number" class="form-control" id="o_we_quality_input" name="quality" min="1" max="100" step="1" aria-describedby="rangeQualityHelp" t-att-value="widget.defaultQuality"/>
+                                </div>
+                            </div>
+                            <small id="rangeQualityHelp" class="form-text text-muted">Reduce the quality as much as possible to increase performance.</small>
+                        </t>
+                    </div>
                 </div>
+                <div class="o_we_preview_column col-lg-6">
+                    <h4>Preview with the current settings</h4>
+                    <div class="mw-100 o_we_preview_area">
+                        <img class="img o_we_preview_image" alt="Image Preview"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </t>
+
+    <t t-name="wysiwyg.widgets.image.existing.attachments">
+        <div class="o_we_images">
+            <ol class="existing-attachments d-flex flex-wrap mx-auto my-0 p-2">
+                <t t-foreach="attachments" t-as="attachment">
+                    <t t-call="wysiwyg.widgets.image.existing.attachment"/>
+                </t>
+            </ol>
+        </div>
+    </t>
+
+    <t t-name="wysiwyg.widgets.image.existing.attachment">
+        <li class="o_existing_attachment_cell position-relative m-2" t-att-data-id="attachment.id">
+            <i t-if="!attachment.url" class="fa fa-cog o_existing_attachment_optimize p-2" title="Optimize" role="img" aria-label="Optimize"/>
+            <t t-call="wysiwyg.widgets.file.existing.remove"/>
+            <div t-attf-class="d-flex align-items-center h-100">
+                <img class="img img-fluid o_we_attachment_highlight" t-att-src="attachment.image_src + '?width=256&amp;height=192'" t-att-alt="attachment.name" t-att-title="attachment.name"/>
+            </div>
+        </li>
+    </t>
+
+    <t t-name="wysiwyg.widgets.document.existing.attachments">
+        <div class="o_we_documents">
+            <div class="row mx-auto existing-attachments">
+                <t t-foreach="attachments" t-as="attachment">
+                    <div class="col-2 o_existing_attachment_cell o_we_attachment_highlight my-2" t-att-data-id="attachment.id">
+                        <t t-call="wysiwyg.widgets.file.existing.remove"/>
+
+                        <div t-att-data-url="attachment.url" role="img" t-att-aria-label="attachment.name" t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-class="o_image d-flex align-items-center justify-content-center"/>
+                        <small class="o_file_name" t-esc="attachment.name"/>
+                    </div>
+                </t>
             </div>
         </div>
     </t>
-    <t t-name="wysiwyg.widgets.document.existing.attachments" t-extend="wysiwyg.widgets.image.existing.attachments">
-        <t t-jquery=".o_existing_attachment_cell" t-operation="append">
-            <small class="o_file_name"><t t-esc="attachment.name"/></small>
-        </t>
+
+    <t t-name="wysiwyg.widgets.file.existing.remove">
+        <t t-set="removeTitle" t-if="attachment.res_model === 'ir.ui.view'">This file is a public view attachment.</t>
+        <t t-set="removeTitle" t-else="">This file is attached to the current record.</t>
+        <i class="fa fa-trash o_existing_attachment_remove p-2" t-att-title="removeTitle" role="img" t-att-aria-label="removeTitle"/>
     </t>
+
     <t t-name="wysiwyg.widgets.image.existing.error">
         <div class="form-text">
             <p>The image could not be deleted because it is used in the
