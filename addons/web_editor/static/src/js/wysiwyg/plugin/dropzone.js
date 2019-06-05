@@ -148,12 +148,12 @@ var DropzonePlugin = Plugins.dropzone.extend({
         });
 
         return this._rpc({
-            route: '/web_editor/add_image_base64',
+            route: '/web_editor/attachment/add_data',
             params: {
-                res_model: options.res_model,
-                res_id: options.res_id || 0,
-                image_base64: imageBase64.split(';base64,').pop(),
-                filename: fileName,
+                'data': imageBase64.split(';base64,').pop(),
+                'name': fileName,
+                'res_id': options.res_id || 0,
+                'res_model': options.res_model,
             },
         });
     },

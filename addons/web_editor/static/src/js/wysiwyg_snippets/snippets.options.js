@@ -853,6 +853,7 @@ registry.background = SnippetOption.extend({
         var $editable = this.$target.closest('.o_editable');
         var _editor = new weWidgets.MediaDialog(this, {
             onlyImages: true,
+            mediaWidth: 1920,
             firstFilters: ['background'],
             res_model: $editable.data('oe-model'),
             res_id: $editable.data('oe-id'),
