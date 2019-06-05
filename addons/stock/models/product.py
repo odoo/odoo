@@ -429,14 +429,14 @@ class Product(models.Model):
                 )
                 if warehouse:
                     self = self.with_context(default_location_id=warehouse.lot_stock_id.id)
-            # Set default product id if quants concern only one product
-            if len(self) == 1:
-                self = self.with_context(
-                    default_product_id=self.id,
-                    single_product=True
-                )
-            else:
-                self = self.with_context(product_tmpl_id=self.product_tmpl_id.id)
+        # Set default product id if quants concern only one product
+        if len(self) == 1:
+            self = self.with_context(
+                default_product_id=self.id,
+                single_product=True
+            )
+        else:
+            self = self.with_context(product_tmpl_id=self.product_tmpl_id.id)
         return self.env['stock.quant']._get_quants_action(domain)
 
     @api.model
