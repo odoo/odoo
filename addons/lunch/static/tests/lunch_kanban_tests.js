@@ -132,7 +132,7 @@ QUnit.module('LunchKanbanView', {
         assert.expect(2);
 
         const self = this;
-        let infosProm = testUtils.makeTestPromise();
+        let infosProm = Promise.resolve();
         const kanban = await createLunchKanbanView({
             View: LunchKanbanView,
             model: 'product',
@@ -162,6 +162,7 @@ QUnit.module('LunchKanbanView', {
             },
         });
 
+        infosProm = testUtils.makeTestPromise();
         kanban.reload();
 
         assert.strictEqual(kanban.$('.o_lunch_widget').length, 1,
