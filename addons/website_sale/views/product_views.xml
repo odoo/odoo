@@ -29,7 +29,7 @@
         <field name="inherit_id" ref="product.product_product_tree_view"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="website_id" groups="website.group_multi_website"/>
+                <field name="website_id" groups="website.group_multi_website" optional="show"/>
             </field>
         </field>
     </record>
@@ -41,7 +41,7 @@
         <field name="inherit_id" ref="product.product_template_tree_view"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="website_id" groups="website.group_multi_website"/>
+                <field name="website_id" groups="website.group_multi_website" optional="show"/>
             </field>
         </field>
     </record>
