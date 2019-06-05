@@ -375,6 +375,7 @@
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
                     <field name="name" string="Reference"/>
+                    <field name="partner_ref" optional="hide"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="product_id"/>
                     <field name="create_uid"/>
@@ -454,19 +455,20 @@
             <field name="arch" type="xml">
                 <tree decoration-bf="message_unread==True" decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" string="Purchase Order">
                     <field name="message_unread" invisible="1"/>
+                    <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference"/>
-                    <field name="date_order" invisible="not context.get('quotation_only', False)"/>
-                    <field name="date_approve" invisible="context.get('quotation_only', False)"/>
+                    <field name="date_order" invisible="not context.get('quotation_only', False)" optional="show"/>
+                    <field name="date_approve" invisible="context.get('quotation_only', False)" optional="show"/>
                     <field name="partner_id"/>
-                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                    <field name="date_planned" invisible="context.get('quotation_only', False)"/>
-                    <field name="user_id"/>
-                    <field name="origin"/>
-                    <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary"/>
-                    <field name="amount_total" sum="Total amount" widget="monetary"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
+                    <field name="date_planned" invisible="context.get('quotation_only', False)" optional="show"/>
+                    <field name="user_id" optional="show"/>
+                    <field name="origin" optional="show"/>
+                    <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary" optional="hide"/>
+                    <field name="amount_total" sum="Total amount" widget="monetary" optional="show"/>
                     <field name="currency_id" invisible="1"/>
-                    <field name="state"/>
-                    <field name="invoice_status" invisible="1"/>
+                    <field name="state" optional="show"/>
+                    <field name="invoice_status" attrs="{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))]}"/>
                 </tree>
             </field>
         </record>
