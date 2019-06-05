@@ -327,6 +327,12 @@ class SaleOrderLine(models.Model):
                     map_so_project_templates[(so_line.order_id.id, so_line.product_id.project_template_id.id)] = project
                 else:
                     map_so_project[so_line.order_id.id] = project
+            elif not project:
+                # Attach subsequent SO lines to the created project
+                so_line.project_id = (
+                    map_so_project_templates.get((so_line.order_id.id, so_line.product_id.project_template_id.id))
+                    or map_so_project.get(so_line.order_id.id)
+                )
             if so_line.product_id.service_tracking == 'task_new_project':
                 if not project:
                     if so_line.product_id.project_template_id:
