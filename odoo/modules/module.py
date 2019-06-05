@@ -475,13 +475,8 @@ class TestStream(object):
     def write(self, s):
         if self.r.match(s):
             return
-        first = True
         level = logging.ERROR if s.startswith(('ERROR', 'FAIL', 'Traceback')) else logging.INFO
-        for c in s.splitlines():
-            if not first:
-                c = '` ' + c
-            first = False
-            self.logger.log(level, c)
+        self.logger.log(level, s)
 
 current_test = None
 
