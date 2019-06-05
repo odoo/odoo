@@ -51,7 +51,6 @@ NO_DATA.isNoData = true;
 
 // hide top legend when too many items for device size
 var MAX_LEGEND_LENGTH = 4 * (Math.max(1, config.device.size_class));
-var MAX_TOOLTIPS_LENGTH = 4 * (Math.max(1, config.device.size_class));
 
 return AbstractRenderer.extend({
     className: "o_graph_renderer",
@@ -72,12 +71,12 @@ return AbstractRenderer.extend({
 
         this.chart = null;
         this.chartId = _.uniqueId('chart');
+        this.$tooltip = null;
     },
     /**
      * @override
      */
     updateState: function  () {
-
         return this._super.apply(this, arguments);
     },
     /**
@@ -108,6 +107,98 @@ return AbstractRenderer.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * This function aims to remove a suitable number of lines from the tooltip in order to make it reasonably visible.
+     * A message indicating the number of lines is added if necessary. 
+     *
+     * @private
+     * @param {Number} maxTooltipHeight this the max height in pixels of the tooltip
+     */
+    _adjustTooltipHeight: function (maxTooltipHeight) {
+        var sizeOneLine = this.$tooltip.find('tbody tr')[0].clientHeight;
+        var tbodySize = this.$tooltip.find('tbody')[0].clientHeight;
+        var toKeep = Math.floor((maxTooltipHeight - (this.$tooltip[0].clientHeight - tbodySize)) / sizeOneLine) - 1;
+        var $lines = this.$tooltip.find('tbody tr');
+        var toRemove = $lines.length - toKeep;
+        if (toRemove > 0) {
+            $lines.slice(toKeep).remove();
+            var tr = document.createElement('tr');
+            var td = document.createElement('td');
+            tr.classList.add('o_show_more');
+            td.innerHTML = _t("...");
+            tr.appendChild(td);
+            this.$tooltip.find('tbody').append(tr);
+        }
+    },
+    /**
+     * This function creates a custom HTML tooltip.
+     *
+     * @private
+     * @param {Object} tooltipModel see chartjs documentation
+     */
+    _customTooltip: function (tooltipModel) {
+        if (this.$tooltip) {
+            this.$tooltip.remove();
+        }
+        if (tooltipModel.opacity === 0) {
+            return;
+        }
+        if (tooltipModel.dataPoints.length === 0) {
+            return;
+        }
+
+        const chartArea = this.chart.chartArea;
+        const chartAreaLeft = chartArea.left;
+        const chartAreaRight = chartArea.right;
+        const chartAreaTop = chartArea.top;
+        const rendererTop = this.$el[0].getBoundingClientRect().top;
+
+        const maxTooltipLabelWidth = Math.floor((chartAreaRight - chartAreaLeft) / 1.68) + 'px';
+
+        const tooltipItems = this._getTooltipItems(tooltipModel);
+
+        this.$tooltip = $(qweb.render('GraphView.CustomTooltip', {
+            measure: this.fields[this.state.measure].string,
+            tooltipItems: tooltipItems,
+            maxWidth: maxTooltipLabelWidth,
+        }));
+        const $container = this.$el.find('.o_graph_canvas_container');
+        $container.append(this.$tooltip);
+
+        let top;
+        const tooltipHeight = this.$tooltip[0].clientHeight;
+        const minTopAllowed = Math.floor(chartAreaTop);
+        const maxTopAllowed = Math.floor(window.innerHeight - rendererTop - tooltipHeight) - 2;
+        const y = Math.floor(tooltipModel.y);
+        if (minTopAllowed <= maxTopAllowed) {
+            // Here we know that the full tooltip can fit in the screen.
+            // We put it in the position where Chart.js would put it
+            // if two conditions are respected:
+            //  1: the tooltip is not cut (because we know it is possible to not cut it)
+            //  2: the tooltip does not hide the legend.
+            // If it is not possible to use the Chart.js proposition (y)
+            // we use the best approximated value.
+            if (y <= maxTopAllowed) {
+                if (y >= minTopAllowed) {
+                    top = y;
+                } else {
+                    top = minTopAllowed;
+                }
+            } else {
+                top = maxTopAllowed;
+            }
+        } else {
+            // Here we know that we cannot satisfy condition 1 above,
+            // so we position the tooltip at the minimal position and
+            // cut it the minimum possible.
+            top = minTopAllowed;
+            const maxTooltipHeight = window.innerHeight - (rendererTop + chartAreaTop) -2;
+            this._adjustTooltipHeight(maxTooltipHeight);
+        }
+        this.$tooltip[0].style.top = Math.floor(top) + 'px';
+
+        this._fixTooltipLeftPosition(this.$tooltip[0], tooltipModel.x);
+    },
     /**
      * Filter out some dataPoints because they would lead to bad graphics.
      * The filtering is done with respect to the graph view mode.
@@ -141,20 +232,28 @@ return AbstractRenderer.extend({
         return dataPoints;
     },
     /**
-     * Used to avoid too long legend items
+     * Sets best left position of a tooltip approaching the proposal x
      *
      * @private
-     * @param {string} label
-     * @returns {string} shortened version of the input label
+     * @param {DOMElement} tooltip
+     * @param {number} x, left offset proposed
      */
-    _shortenLabel: function (label) {
-        // string returned could be 'wrong' if a groupby value contain a '/'!
-        var groups = label.split("/");
-        var shortLabel = groups.slice(0,3).join("/");
-        if (groups.length > 3) {
-            shortLabel = shortLabel + '/...';
+    _fixTooltipLeftPosition: function (tooltip, x) {
+        let left;
+        const tooltipWidth = tooltip.clientWidth;
+        const minLeftAllowed = Math.floor(this.chart.chartArea.left + 2);
+        const maxLeftAllowed = Math.floor(this.chart.chartArea.right - tooltipWidth -2);
+        x = Math.floor(x);
+        if (x <= maxLeftAllowed) {
+            if (x >= minLeftAllowed) {
+                left = x;
+            } else {
+                left = minLeftAllowed;
+            }
+        } else {
+            left = maxLeftAllowed;
         }
-        return shortLabel;
+        tooltip.style.left = left + 'px';
     },
     /**
      * Used to format correctly the values in tooltips and yAxes
@@ -372,90 +471,90 @@ return AbstractRenderer.extend({
         return {};
     },
     /**
+     * Extracts the important information from a tooltipItem generated by Charts.js
+     * (a tooltip item corresponds to a line (different from measure name) of a tooltip)
+     *
+     * @private
+     * @param {Object} item
+     * @param {Object} data
+     * @returns {Object}
+     */
+    _getTooltipItemContent: function (item, data) {
+        var dataset = data.datasets[item.datasetIndex];
+        var label = data.labels[item.index];
+        var value;
+        var boxColor;
+        if (this.state.mode === 'bar') {
+            label = this._relabelling(label, dataset.originIndex);
+            if (this.state.groupBy.length > 1 || this.state.origins.length > 1) {
+                label = label + "/" + dataset.label;
+            }
+            value = this._formatValue(item.yLabel);
+            boxColor = dataset.backgroundColor;
+        } else if (this.state.mode === 'line') {
+            label = this._relabelling(label, dataset.originIndex);
+            if (this.state.groupBy.length > 1 || this.state.origins.length > 1) {
+                label = label + "/" + dataset.label;
+            }
+            value = this._formatValue(item.yLabel);
+            boxColor = dataset.borderColor;
+        } else {
+            if (label.isNoData) {
+                value = this._formatValue(0);
+            } else {
+                value = this._formatValue(dataset.data[item.index]);
+            }
+            label = this._relabelling(label, dataset.originIndex);
+            if (this.state.origins.length > 1) {
+                label = dataset.label + "/" + label;
+            }
+            boxColor = dataset.backgroundColor[item.index];
+        }
+        return {
+            label: label,
+            value: value,
+            boxColor: boxColor,
+        };
+    },
+    /**
+     * This function extracts the information from the data points in tooltipModel.dataPoints
+     * (corresponding to datapoints over a given label determined by the mouse position)
+     * that will be displayed in a custom tooltip.
+     *
+     * @private
+     * @param {Object} tooltipModel see chartjs documentation
+     * @return {Object[]}
+     */
+    _getTooltipItems: function (tooltipModel) {
+        var self = this;
+        var data = this.chart.config.data;
+
+        var orderedItems = tooltipModel.dataPoints.sort(function (dPt1, dPt2) {
+            return dPt2.yLabel - dPt1.yLabel;
+        });
+        return orderedItems.reduce(
+            function (acc, item) {
+                acc.push(self._getTooltipItemContent(item, data));
+                return acc;
+            },
+            []
+        );
+    },
+    /**
      * Returns the options used to generate chart tooltips.
      *
      * @private
-     * @param {number} datasetsCount
      * @returns {Object}
      */
-    _getTooltipOptions: function (datasetsCount) {
-        var self = this;
+    _getTooltipOptions: function () {
         var tooltipOptions = {
-            bodyFontColor: 'rgba(0,0,0,1)',
-            titleFontSize: 13,
-            titleFontColor: 'rgba(0,0,0,1)',
-            backgroundColor: 'rgba(255,255,255,0.6)',
-            borderColor: 'rgba(0,0,0,0.2)',
-            borderWidth: 1,
-            callbacks: {
-                title: function () {
-                    return self.fields[self.state.measure].string;
-                },
-            },
+            // disable Chart.js tooltips
+            enabled: false,
+            custom: this._customTooltip.bind(this),
         };
-        if (_.contains(['bar', 'line'], this.state.mode)) {
-            var referenceColor;
-            if (this.state.mode === 'bar') {
-                referenceColor = 'backgroundColor';
-            } else {
-                referenceColor = 'borderColor';
-                // avoid too long tooltips
-                var adaptMode = datasetsCount > MAX_TOOLTIPS_LENGTH || this.isEmbedded;
-                tooltipOptions = _.extend(tooltipOptions, {
-                    mode: adaptMode ? 'nearest' : 'index',
-                    intersect: false,
-                    toolitemSort: function (tooltipItem1, tooltipItem2) {
-                        return tooltipItem2.yLabel - tooltipItem1.yLabel;
-                    },
-                });
-            }
-            tooltipOptions.callbacks = _.extend(tooltipOptions.callbacks, {
-                label: function (tooltipItem, data) {
-                    var dataset = data.datasets[tooltipItem.datasetIndex];
-                    var label = data.labels[tooltipItem.index];
-                    label = self._relabelling(label, dataset.originIndex);
-                    if (self.state.groupBy.length > 1 || self.state.origins.length > 1) {
-                        label = label + "/" + dataset.label;
-                    }
-                    label = label + ': ' + self._formatValue(tooltipItem.yLabel);
-                    return label;
-                },
-                labelColor: function (tooltipItem, chart) {
-                    var dataset = chart.data.datasets[tooltipItem.datasetIndex];
-                    var tooltipBackgroundColor = dataset[referenceColor];
-                    var tooltipBorderColor = chart.tooltip._model.backgroundColor;
-                    return {
-                        borderColor: tooltipBorderColor,
-                        backgroundColor: tooltipBackgroundColor,
-                    };
-                },
-            });
-        } else {
-            tooltipOptions.callbacks = _.extend(tooltipOptions.callbacks, {
-                label: function (tooltipItem, data) {
-                    var dataset = data.datasets[tooltipItem.datasetIndex];
-                    var label = data.labels[tooltipItem.index];
-                    if (label === _t('No data')) {
-                        return dataset.label + "/" + label + ': ' + self._formatValue(0);
-                    } else {
-                        label = self._relabelling(label, dataset.originIndex);
-                    }
-                    if (self.state.origins.length > 1) {
-                        label = dataset.label + "/" + label;
-                    }
-                    label = label + ': ' + self._formatValue(dataset.data[tooltipItem.index]);
-                    return label;
-                },
-                labelColor: function (tooltipItem, chart) {
-                    var dataset = chart.data.datasets[tooltipItem.datasetIndex];
-                    var tooltipBackgroundColor = dataset.backgroundColor[tooltipItem.index];
-                    var tooltipBorderColor = chart.tooltip._model.backgroundColor;
-                    return {
-                        borderColor: tooltipBorderColor,
-                        backgroundColor: tooltipBackgroundColor,
-                    };
-                },
-            });
+        if (this.state.mode === 'line') {
+            tooltipOptions.mode = 'index';
+            tooltipOptions.intersect = false;
         }
         return tooltipOptions;
     },
@@ -562,7 +661,7 @@ return AbstractRenderer.extend({
             maintainAspectRatio: false,
             scales: this._getScaleOptions(),
             legend: this._getLegendOptions(datasetsCount),
-            tooltips: this._getTooltipOptions(datasetsCount),
+            tooltips: this._getTooltipOptions(),
         };
     },
     /**
@@ -721,7 +820,7 @@ return AbstractRenderer.extend({
         // center the points in the chart (whithout that code they are put on the left and the graph seems empty)
         data.labels = data.labels.length > 1 ?
                         data.labels :
-                        Array.prototype.concat.apply([], [[['']], data.labels ,[['']]]);
+                        Array.prototype.concat.apply([], [[['']], data.labels, [['']]]);
 
         // prepare options
         var options = this._prepareOptions(data.datasets.length);
@@ -838,6 +937,22 @@ return AbstractRenderer.extend({
                 text: this.title,
             }));
         }
+    },
+    /**
+     * Used to avoid too long legend items
+     *
+     * @private
+     * @param {string} label
+     * @returns {string} shortened version of the input label
+     */
+    _shortenLabel: function (label) {
+        // string returned could be 'wrong' if a groupby value contain a '/'!
+        var groups = label.split("/");
+        var shortLabel = groups.slice(0,3).join("/");
+        if (groups.length > 3) {
+            shortLabel = shortLabel + '/...';
+        }
+        return shortLabel;
     },
 });
 });
