@@ -82,3 +82,16 @@ class TestStockValuationLCFIFO(TestStockValuationLC):
 
         self.assertEqual(self.product1.value_svl, 70)
         self.assertEqual(self.product1.quantity_svl, 5)
+
+    def test_fifo_to_standard_1(self):
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
+        move2 = self._make_in_move(self.product1, 10, unit_cost=15)
+        move3 = self._make_out_move(self.product1, 5)
+        lc = self._make_lc(move1, 100)
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
+
+        out_svl = self.product1.stock_valuation_layer_ids[-2]
+        in_svl = self.product1.stock_valuation_layer_ids[-1]
+
+        self.assertEqual(out_svl.value, -250)
+        self.assertEqual(in_svl.value, 225)
