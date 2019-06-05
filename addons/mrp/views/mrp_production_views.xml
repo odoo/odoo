@@ -9,15 +9,18 @@
                 <tree decoration-bf="message_needaction==True" default_order="date_planned_start desc" decoration-info="state=='confirmed'" decoration-danger="date_planned_start&lt;current_date and state not in ('done','cancel')" decoration-muted="state in ('done','cancel')" string="Manufacturing Orders">
                     <field name="message_needaction" invisible="1"/>
                     <field name="name"/>
-                    <field name="date_planned_start"/>
-                    <field name="product_id"/>
-                    <field name="origin"/>
-                    <field name="product_qty" sum="Total Qty" string="Quantity"/>
-                    <field name="product_uom_id" string="Unit of Measure" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
-                    <field name="routing_id" groups="mrp.group_mrp_routings"/>
-                    <field name="state"/>
-                    <field name="reservation_state"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="date_start_wo" optional="hide"/>
+                    <field name="date_planned_start" optional="show"/>
+                    <field name="product_id" optional="show"/>
+                    <field name="product_qty" sum="Total Qty" string="Quantity" optional="show"/>
+                    <field name="product_uom_id" string="Unit of Measure" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" optional="show"/>
+                    <field name="bom_id" optional="hide"/>
+                    <field name="origin" optional="show"/>
+                    <field name="user_id" optional="hide"/>
+                    <field name="routing_id" groups="mrp.group_mrp_routings" optional="show"/>
+                    <field name="state" optional="show"/>
+                    <field name="reservation_state" optional="show"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
                 </tree>
             </field>
         </record>

@@ -106,7 +106,7 @@ class MrpProduction(models.Model):
     date_start = fields.Datetime('Start Date', copy=False, index=True, readonly=True)
     date_finished = fields.Datetime('End Date', copy=False, index=True, readonly=True)
     date_start_wo = fields.Datetime(
-        'Planning Start Date', copy=False, readonly=True,
+        'Planned Start Date', copy=False, readonly=True,
         states={'draft': [('readonly', False)], 'confirmed': [('readonly', False)]},
         help="The work orders will be planned based on the availability of the work centers starting from "
         "this date. If emtpy, the work orders are planned as soon as possible.")

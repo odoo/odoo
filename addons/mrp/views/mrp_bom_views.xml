@@ -114,12 +114,13 @@
                     <field name="active" invisible="1"/>
                     <field name="sequence" invisible="1"/>
                     <field name="product_tmpl_id"/>
-                    <field name="code"/>
-                    <field name="product_id" groups="product.group_product_variant"/>
-                    <field name="product_qty"/>
-                    <field name="product_uom_id" groups="uom.group_uom"/>
-                    <field name="routing_id" groups="mrp.group_mrp_routings"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="code" optional="show"/>
+                    <field name="product_id" groups="product.group_product_variant" optional="show"/>
+                    <field name="product_qty" optional="show"/>
+                    <field name="product_uom_id" groups="uom.group_uom" optional="show" string="Unit of Measure"/>
+                    <field name="type" optional="hide"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                    <field name="routing_id" groups="mrp.group_mrp_routings" optional="show"/>
                 </tree>
             </field>
         </record>
