@@ -13,7 +13,6 @@
                             <i class="fa fa-th-large"/> WEBSITE
                         </a>
                         <div class="dropdown-menu" role="menu">
-                            <t t-set="debug_param" t-value="'?&amp;debug=' if debug else ''"/>
                             <t t-as="menu" t-foreach="menu_data['children']">
                                 <a role="menuitem"
                                    t-attf-class="dropdown-item #{'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'}"
@@ -21,7 +20,7 @@
                                    t-att-data-action-model="menu['action'] and menu['action'].split(',')[0] or None"
                                    t-att-data-menu="menu['id']"
                                    t-att-data-menu-xmlid="menu.get('xmlid')"
-                                   t-att-href="'/web%s#menu_id=%s&amp;action=%s' % (debug_param, menu['id'], menu['action'] and menu['action'].split(',')[1] or '')">
+                                   t-att-href="'/web#menu_id=%s&amp;action=%s' % (menu['id'], menu['action'] and menu['action'].split(',')[1] or '')">
                                     <i t-attf-class="fa #{menu.get('icon')} fa-lg fa-fw" t-if="menu.get('icon')" role="img" aria-label="Menu" title="Menu"/>
                                     <span class="oe_menu_text">
                                         <t t-esc="menu['name']"/>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="assets_frontend" inherit_id="website.assets_frontend">
-        <xpath expr="script[last()]" position="after">
-             <script type="text/javascript" src="/test_website/static/src/js/reset_views.test.js"></script>
+    <template id="assets_tests" name="Test Website Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+             <script type="text/javascript" src="/test_website/static/tests/tours/reset_views.js"></script>
         </xpath>
     </template>
 </odoo>

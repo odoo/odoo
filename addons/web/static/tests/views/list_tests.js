@@ -3,7 +3,6 @@ odoo.define('web.list_tests', function (require) {
 
 var AbstractStorageService = require('web.AbstractStorageService');
 var BasicModel = require('web.BasicModel');
-var config = require('web.config');
 var core = require('web.core');
 var basicFields = require('web.basic_fields');
 var FormView = require('web.FormView');
@@ -1793,8 +1792,8 @@ QUnit.module('Views', {
     QUnit.test('display a tooltip on a field', async function (assert) {
         assert.expect(4);
 
-        var initialDebugMode = config.debug;
-        config.debug = false;
+        var initialDebugMode = odoo.debug;
+        odoo.debug = false;
 
         var list = await createView({
             View: ListView,
@@ -1813,7 +1812,7 @@ QUnit.module('Views', {
         list.$('th[data-name=foo]').trigger($.Event('mouseenter'));
         assert.strictEqual($('.tooltip .oe_tooltip_string').length, 0, "should not have rendered a tooltip");
 
-        config.debug = true;
+        odoo.debug = true;
         // it is necessary to rerender the list so tooltips can be properly created
         await list.reload();
         list.$('th[data-name=foo]').tooltip('show', false);
@@ -1828,7 +1827,7 @@ QUnit.module('Views', {
         assert.strictEqual($('.oe_tooltip_technical>li[data-item="widget"]')[0].lastChild.wholeText.trim(),
             'Button (toggle_button)', "widget description should be correct");
 
-        config.debug = initialDebugMode;
+        odoo.debug = initialDebugMode;
         list.destroy();
     });
 

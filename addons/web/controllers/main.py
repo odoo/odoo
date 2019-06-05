@@ -485,7 +485,7 @@ class Home(http.Controller):
         :param unique: this parameters is not used, but mandatory: it is used by the HTTP stack to make a unique request
         :return: the menus (including the images in Base64)
         """
-        menus = request.env["ir.ui.menu"].load_menus(request.debug)
+        menus = request.env["ir.ui.menu"].load_menus(request.session.debug)
         body = json.dumps(menus, default=ustr)
         response = request.make_response(body, [
             # this method must specify a content-type application/json instead of using the default text/html set because
@@ -541,12 +541,6 @@ class Home(http.Controller):
 
         if not odoo.tools.config['list_db']:
             values['disable_database_manager'] = True
-
-        # otherwise no real way to test debug mode in template as ?debug =>
-        # values['debug'] = '' but that's also the fallback value when
-        # missing variables in qweb
-        if 'debug' in values:
-            values['debug'] = True
 
         response = request.render('web.login', values)
         response.headers['X-Frame-Options'] = 'DENY'
@@ -1590,8 +1584,7 @@ class Apps(http.Controller):
             action['views'] = [(False, u'form')]
 
         sakey = Session().save_session_action(action)
-        debug = '?debug' if req.debug else ''
-        return werkzeug.utils.redirect('/web{0}#sa={1}'.format(debug, sakey))
+        return werkzeug.utils.redirect('/web#sa={0}'.format(sakey))
 
 
 class ReportController(http.Controller):

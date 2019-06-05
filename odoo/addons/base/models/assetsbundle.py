@@ -135,7 +135,7 @@ class AssetsBundle(object):
         :returns [(tagName, attributes, content)] if the tag is auto close
         """
         response = []
-        if debug == 'assets':
+        if debug and 'assets' in debug:
             if css and self.stylesheets:
                 is_css_preprocessed, old_attachments = self.is_css_preprocessed()
                 if not is_css_preprocessed:

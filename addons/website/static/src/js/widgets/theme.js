@@ -592,7 +592,7 @@ var ThemeCustomizeDialog = Dialog.extend({
         var $loading = $('<i/>', {class: 'fa fa-refresh fa-spin'});
         this.$modal.find('.modal-title').append($loading);
 
-        if (reload || config.debug === 'assets') {
+        if (reload || config.isDebug('assets')) {
             window.location.href = $.param.querystring('/website/theme_customize_reload', {
                 href: window.location.href,
                 enable: (enable || []).join(','),

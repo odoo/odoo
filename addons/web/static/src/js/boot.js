@@ -38,8 +38,6 @@
     var commentRegExp = /(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg;
     var cjsRequireRegExp = /[^.]\s*require\s*\(\s*["']([^'"\s]+)["']\s*\)/g;
 
-    var debug = /\bdebug\b/.test(window.location.search);
-
     if (!window.odoo) {
         window.odoo = {};
     }
@@ -51,7 +49,6 @@
     });
 
     odoo.testing = typeof QUnit === 'object';
-    odoo.debug = debug;
     odoo.remainingJobs = jobs;
     odoo.__DEBUG__ = {
         didLogInfo: didLogInfoPromise,

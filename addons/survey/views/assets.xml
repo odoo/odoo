@@ -10,10 +10,6 @@
         <script type="text/javascript" src="/survey/static/src/js/survey_result.js" />
         <script type="text/javascript" src="/survey/static/src/js/survey.js" />
         <script type="text/javascript" src="/survey/static/src/js/survey_timer.js" />
-        <script type="text/javascript" src="/survey/static/src/js/tour_test_survey.js"></script>
-        <script type="text/javascript" src="/survey/static/src/js/tour_test_certification_success.js"></script>
-        <script type="text/javascript" src="/survey/static/src/js/tour_test_certification_failure.js"></script>
-        <script type="text/javascript" src="/survey/static/src/js/tour_test_survey_prefill.js"></script>
 
         <link href="/survey/static/src/css/survey_print.css" rel="stylesheet" type="text/css"/>
         <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"></link>
@@ -34,6 +30,15 @@
     <template id="assets_backend_inherit_survey" inherit_id="web.assets_backend" name="Survey backend assets">
         <xpath expr="link[last()]" position="after">
             <link rel="stylesheet" type="text/scss" href="/survey/static/src/scss/survey_views.scss"/>
+        </xpath>
+    </template>
+
+    <template id="assets_tests" name="Survey Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/survey/static/tests/tours/certification_failure.js"></script>
+            <script type="text/javascript" src="/survey/static/tests/tours/certification_success.js"></script>
+            <script type="text/javascript" src="/survey/static/tests/tours/survey.js"></script>
+            <script type="text/javascript" src="/survey/static/tests/tours/survey_prefill.js"></script>
         </xpath>
     </template>
 </data>

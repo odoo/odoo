@@ -5,7 +5,12 @@
         <xpath expr="." position="inside">
             <link rel="stylesheet" type="text/scss" href="/website_sale_wishlist/static/src/scss/website_sale_wishlist.scss"/>
             <script type="text/javascript" src="/website_sale_wishlist/static/src/js/website_sale_wishlist.js"></script>
-            <script type="text/javascript" src="/website_sale_wishlist/static/src/js/website_sale_tour_wishlist.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_tests" name="Website Sale Wishlist Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/website_sale_wishlist/static/tests/tours/website_sale_wishlist.js"></script>
         </xpath>
     </template>
 

@@ -245,7 +245,7 @@ var KanbanRecord = Widget.extend({
                     if (Widget) {
                         widget = self._processWidget($field, field_name, Widget);
                         self.subWidgets[field_name] = widget;
-                    } else if (config.debug) {
+                    } else if (config.isDebug()) {
                         // the widget is not implemented
                         $field.replaceWith($('<span>', {
                             text: _.str.sprintf(_t('[No widget %s]'), field_widget),

@@ -2,6 +2,7 @@ odoo.define('web.Apps', function (require) {
 "use strict";
 
 var AbstractAction = require('web.AbstractAction');
+var config = require('web.config');
 var core = require('web.core');
 var framework = require('web.framework');
 var session = require('web.session');
@@ -111,8 +112,8 @@ var Apps = AbstractAction.extend({
                 self.client = client;
 
                 var qs = {db: client.dbname};
-                if (session.debug) {
-                    qs.debug = session.debug;
+                if (config.isDebug()) {
+                    qs.debug = odoo.debug;
                 }
                 var u = $.param.querystring(client.origin + "/apps/embed/client", qs);
                 var css = {width: '100%', height: '750px'};

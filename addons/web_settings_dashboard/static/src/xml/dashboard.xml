@@ -123,13 +123,13 @@
                 </div>
             </div>
             <hr/>
-            <a t-if="debug != true" class="oe_activate_debug_mode float-right" href="?debug" >Activate the developer mode</a>
-            <br t-if="debug != true"/>
-            <a t-if="debug != 'assets'" class="oe_activate_debug_mode float-right" href="?debug=assets" >Activate the developer mode (with assets)</a>
-            <br t-if="debug != 'assets'"/>
-            <a t-if="debug != false" class="oe_activate_debug_mode float-right" href="/web" >Deactivate the developer mode</a>
-            <br t-if="debug != false"/>
-            <a t-if="(debug) and !(demo_active)" class="oe_activate_debug_mode float-right o_web_settings_dashboard_force_demo" href="#">Load demo data</a>
+            <div class="text-right">
+                <a t-if="debug.indexOf('1') == -1" class="d-block" href="?debug=1">Activate the developer mode</a>
+                <a t-if="debug.indexOf('assets') == -1" class="d-block" href="?debug=assets">Activate the developer mode (with assets)</a>
+                <a t-if="debug.indexOf('tests') == -1" class="d-block" href="?debug=assets,tests">Activate the developer mode (with tests assets)</a>
+                <a t-if="debug" class="d-block" href="?debug=">Deactivate the developer mode</a>
+                <a t-if="debug and !demo_active" class="o_web_settings_dashboard_force_demo" href="#">Load demo data</a>
+            </div>
         </div>
     </t>
 
