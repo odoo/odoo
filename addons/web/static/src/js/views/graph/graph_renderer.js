@@ -82,13 +82,9 @@ return AbstractRenderer.extend({
         return this._super.apply(this, arguments);
     },
     /**
-     * The graph view uses the Chart.js lib to render the graph. This lib requires
-     * that the rendering is done directly into the DOM (so that it can correctly
-     * compute positions). However, the views are always rendered in fragments,
-     * and appended to the DOM once ready (to prevent them from flickering). We
-     * here use the on_attach_callback hook, called when the widget is attached
-     * to the DOM, to perform the rendering. This ensures that the rendering is
-     * always done in the DOM.
+     * Chart.js does not need the canevas to be in dom in order
+     * to be able to work well. We could avoid the calls to on_attach_callback
+     * and on_detach_callback.
      *
      * @override
      */
