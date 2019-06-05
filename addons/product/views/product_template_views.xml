@@ -6,13 +6,14 @@
         <field name="arch" type="xml">
             <tree string="Product">
                 <field name="sequence" widget="handle"/>
-                <field name="default_code"/>
+                <field name="default_code" optional="show"/>
+                <field name="barcode" optional="hide"/>
                 <field name="name"/>
-                <field name="list_price" string="Sales Price"/>
-                <field name="standard_price"/>
-                <field name="categ_id"/>
-                <field name="type"/>
-                <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
+                <field name="list_price" string="Sales Price" optional="show"/>
+                <field name="standard_price" optional="show"/>
+                <field name="categ_id" optional="hide"/>
+                <field name="type" optional="hide"/>
+                <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" optional="show"/>
                 <field name="active" invisible="1"/>
             </tree>
         </field>
