@@ -131,24 +131,24 @@
             <field eval="100" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Journal Items" create="false" editable="bottom">
-                    <field name="date"/>
+                    <field name="date" optional="show"/>
                     <field name="journal_id" options='{"no_open":True}'/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                    <field name="name"/>
-                    <field name="ref"/>
+                    <field name="name" optional="show"/>
+                    <field name="ref" optional="show"/>
                     <field name="statement_id" invisible="1"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" optional="show"/>
                     <field name="account_id" options="{'no_open': True, 'no_create': True}" domain="[('company_id', '=', company_id)]" groups="account.group_account_user" attrs="{'readonly':[('parent_state','=','posted')]}"/>
-                    <field name="analytic_account_id" groups="account.group_account_user"/>
+                    <field name="analytic_account_id" groups="account.group_account_user" optional="show"/>
                     <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                     <field name="reconciled" invisible="1"/>
-                    <field name="full_reconcile_id"/>
+                    <field name="full_reconcile_id" optional="show"/>
                     <field name="reconcile_model_id" invisible="1"/>
                     <field name="debit" sum="Total Debit"/>
                     <field name="credit" sum="Total Credit"/>
                     <field name="amount_currency" readonly="True" groups="base.group_multi_currency"/>
                     <field name="currency_id" readonly="True" invisible="1" />
-                    <field name="date_maturity"/>
+                    <field name="date_maturity" optional="hide"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="parent_state" invisible="1"/></tree>
@@ -337,10 +337,10 @@
                 <tree decoration-info="state == 'draft'" string="Journal Entries" decoration-muted="state == 'cancel'">
                     <field name="date"/>
                     <field name="name"/>
-                    <field name="partner_id"/>
-                    <field name="ref"/>
+                    <field name="partner_id" optional="show"/>
+                    <field name="ref" optional="show"/>
                     <field name="journal_id"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="amount_total_signed" sum="Total Amount"/>
                     <field name="state"/>
                     <field name="currency_id" invisible="1"/>
@@ -352,25 +352,26 @@
             <field name="name">account.invoice.tree</field>
             <field name="model">account.move</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" string="Invoices" decoration-muted="state == 'cancel'" js_class="account_tree" banner_route="/account/account_invoice_onboarding">
+                <tree decoration-info="state == 'draft'" string="Invoices" decoration-muted="state == 'cancel'" js_class="account_tree">
+                    <field name="name"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="invoice_source_email" invisible="1"/>
                     <field name="invoice_vendor_icon" string=" "/>
-                    <field name="invoice_vendor_display_name" groups="base.group_user" string="Vendor"/>
-                    <field name="invoice_date"/>
-                    <field name="name"/>
-                    <field name="invoice_payment_ref"/>
-                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                    <field name="invoice_date_due"/>
-                    <field name="invoice_origin"/>
-                    <field name="amount_untaxed_signed" string="Tax Excluded" sum="Total"/>
-                    <field name="amount_tax_signed" string="Tax" sum="Total"/>
-                    <field name="amount_total_signed" string="Total" sum="Total"/>
-                    <field name="amount_residual_signed" string="Amount Due" sum="Amount Due"/>
+                    <field name="invoice_vendor_display_name" invisible="context.get('default_type') not in ('in_invoice', 'in_refund','in_receipt')" groups="base.group_user" string="Vendor" />
+                    <field name="invoice_date" optional="show"/>
+                    <field name="invoice_payment_ref" optional="hide"/>
+                    <field name="invoice_user_id" optional="show" invisible="context.get('default_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Sales Person"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
+                    <field name="invoice_date_due" optional="show"/>
+                    <field name="invoice_origin" optional="show" string="Source Document"/>
+                    <field name="amount_untaxed_signed" string="Tax Excluded" sum="Total" optional="show"/>
+                    <field name="amount_tax_signed" string="Tax" sum="Total" optional="hide"/>
+                    <field name="amount_total_signed" string="Total" sum="Total" optional="show"/>
+                    <field name="amount_residual_signed" string="Amount Due" sum="Amount Due" optional="show"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
-                    <field name="state"/>
-                    <field name="invoice_payment_state"/>
+                    <field name="state" optional="show"/>
+                    <field name="invoice_payment_state" optional="hide"/>
                     <field name="type" invisible="context.get('default_type', True)"/>
                 </tree>
             </field>
