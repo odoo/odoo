@@ -351,8 +351,7 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                 self.fail(msg + _format_message(records, expected_values))
 
     def shortDescription(self):
-        doc = self._testMethodDoc
-        return doc and ' '.join(l.strip() for l in doc.splitlines() if not l.isspace()) or None
+        return None
 
     # turns out this thing may not be quite as useful as we thought...
     def assertItemsEqual(self, a, b, msg=None):
