@@ -1082,6 +1082,17 @@
             </field>
         </record>
 
+        <record id="account_invoice_view_tree" model="ir.ui.view">
+            <field name="name">account.move.tree.inherit.sale</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="arch" type="xml">
+                <field name="invoice_user_id" position="after">
+                    <field name="team_id" invisible="context.get('default_type') not in ('out_invoice', 'out_refund','out_receipt')" optional="hide"/>
+                </field>
+            </field>
+        </record>
+
         <!-- Update account invoice !-->
         <record model="ir.ui.view" id="account_invoice_form">
             <field name="name">Account Invoice</field>
