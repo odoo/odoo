@@ -658,6 +658,13 @@ class WebsiteSlides(WebsiteProfile):
 
         return False
 
+    @http.route('/slides/slide/toggle_is_preview', type='json', auth='user', website=True)
+    def slide_preview(self, slide_id):
+        slide = request.env['slide.slide'].browse(int(slide_id))
+        if slide.channel_id.can_publish:
+            slide.is_preview = not slide.is_preview
+        return slide.is_preview
+
     @http.route(['/slides/slide/send_share_email'], type='json', auth='user', website=True)
     def slide_send_share_email(self, slide_id, email):
         slide = request.env['slide.slide'].browse(int(slide_id))
