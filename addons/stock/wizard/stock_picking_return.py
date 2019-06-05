@@ -46,7 +46,7 @@ class ReturnPicking(models.TransientModel):
     @api.onchange('picking_id')
     def _onchange_picking_id(self):
         move_dest_exists = False
-        product_return_moves = []
+        product_return_moves = [(5,)]
         if self.picking_id and self.picking_id.state != 'done':
             raise UserError(_("You may only return Done pickings."))
         for move in self.picking_id.move_lines:
