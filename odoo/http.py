@@ -45,7 +45,6 @@ except ImportError:
     psutil = None
 
 import odoo
-from odoo import fields
 from .service.server import memory_info
 from .service import security, model as service_model
 from .tools.func import lazy_property
@@ -1002,17 +1001,28 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
             REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
         )
         uid = odoo.registry(db)['res.users'].authenticate(db, login, password, env)
+        user = request.env(user=uid)['res.users'].browse(uid)
+        self.pre_uid = uid
+        self.pre_session_token = user._compute_session_token(self.sid)
+
+        if not user._mfa_url():
+            self.finalize()
 
         self.rotate = True
         self.db = db
-        self.uid = uid
         self.login = login
-        self.session_token = security.compute_session_token(self, request.env)
-        request.uid = uid
         request.disable_db = False
 
-        self.get_context()
         return uid
+
+    def finalize(self):
+        """ Finalizes a partial session, should be called on MFA validation to
+        convert a partial / pre-session into a full-fledged "logged-in" one
+        """
+        self.rotate = True
+        request.uid = self.uid = self.pop('pre_uid')
+        self.session_token = self.pop('pre_session_token')
+        self.get_context()
 
     def check_security(self):
         """

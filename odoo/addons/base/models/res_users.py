@@ -880,6 +880,11 @@ class Users(models.Model):
     def _register_hook(self):
         if hasattr(self, 'check_credentials'):
             _logger.warn("The check_credentials method of res.users has been renamed _check_credentials. One of your installed modules defines one, but it will not be called anymore.")
+
+    def _mfa_url(self):
+        """ If an MFA method is enabled, returns the URL for its second
+        step.
+        """
 #
 # Implied groups
 #

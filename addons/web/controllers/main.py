@@ -501,7 +501,18 @@ class Home(http.Controller):
         return werkzeug.utils.redirect(redirect, 303)
 
     def _login_redirect(self, uid, redirect=None):
-        return redirect if redirect else '/web'
+        if request.session.uid: # fully logged
+            return redirect or '/web'
+
+        # partial session (MFA)
+        url = request.env(user=uid)['res.users'].browse(uid)._mfa_url()
+        if not redirect:
+            return url
+
+        parsed = werkzeug.urls.url_parse(url)
+        qs = parsed.decode_query()
+        qs['redirect'] = redirect
+        return parsed.replace(query=werkzeug.urls.url_encode(qs)).to_url()
 
     @http.route('/web/login', type='http', auth="none", sitemap=False)
     def web_login(self, redirect=None, **kw):
