@@ -51,8 +51,8 @@ QUnit.module('Services', {
         });
         await testUtils.nextMicrotaskTick();
         var $notification = $('body .o_notification_manager .o_notification');
-        assert.strictEqual(_.str.trim($notification.html().replace(/\s+/g, ' ')),
-            "<div class=\"toast-header\"> <span role=\"img\" aria-label=\"Notification undefined\" class=\"fa fa-2x mr-3 fa-lightbulb-o o_notification_icon\" title=\"Notification undefined\"></span> <div class=\"d-flex align-items-center mr-auto font-weight-bold o_notification_title\">a</div> </div> <div class=\"toast-body\"> <div class=\"o_notification_content\">b</div> </div>",
+        assert.strictEqual($notification.html().trim().replace(/\s+/g, ' '),
+            "<div class=\"toast-header\"> <span class=\"fa fa-2x mr-3 fa-lightbulb-o o_notification_icon\" role=\"img\" aria-label=\"Notification undefined\" title=\"Notification undefined\"></span> <div class=\"d-flex align-items-center mr-auto font-weight-bold o_notification_title\">a</div> </div> <div class=\"toast-body\"> <div class=\"o_notification_content\">b</div> </div>",
             "should display notification");
         assert.containsNone($notification, '.o_notification_close', "should not display the close button in ");
         await testUtils.nextTick();
@@ -72,8 +72,8 @@ QUnit.module('Services', {
         });
         await testUtils.nextMicrotaskTick();
         var $notification = $('body .o_notification_manager .o_notification');
-        assert.strictEqual(_.str.trim($notification.html().replace(/\s+/g, ' ')),
-            "<div class=\"toast-header\"> <span role=\"img\" aria-label=\"Notification undefined\" class=\"fa fa-2x mr-3 fa-exclamation o_notification_icon\" title=\"Notification undefined\"></span> <div class=\"d-flex align-items-center mr-auto font-weight-bold o_notification_title\">a</div> </div> <div class=\"toast-body\"> <div class=\"o_notification_content\">b</div> </div>",
+        assert.strictEqual($notification.html().trim().replace(/\s+/g, ' '),
+            "<div class=\"toast-header\"> <span class=\"fa fa-2x mr-3 fa-exclamation o_notification_icon\" role=\"img\" aria-label=\"Notification undefined\" title=\"Notification undefined\"></span> <div class=\"d-flex align-items-center mr-auto font-weight-bold o_notification_title\">a</div> </div> <div class=\"toast-body\"> <div class=\"o_notification_content\">b</div> </div>",
             "should display notification");
         view.destroy();
     });
@@ -180,8 +180,8 @@ QUnit.module('Services', {
         var $notification = $('body .o_notification_manager .o_notification');
         assert.containsOnce($notification.eq(0), '.o_notification_close',
             "should display the close button in notification");
-        assert.strictEqual(_.str.trim($notification.eq(0).html().replace(/\s+/g, ' ')),
-            "<div class=\"toast-header\"> <span role=\"img\" aria-label=\"Notification undefined\" class=\"fa fa-2x mr-3 fa-question-circle-o o_notification_icon\" title=\"Notification undefined\"></span> <div class=\"d-flex align-items-center mr-auto font-weight-bold o_notification_title\">a0</div> <button aria-label=\"Close\" class=\"mb-1 close o_notification_close\" data-dismiss=\"toast\" type=\"button\"> <span aria-hidden=\"true\" class=\"d-inline\">×</span> </button> </div> <div class=\"toast-body\"> <div class=\"o_notification_content\">b0</div> <div class=\"mt-2 o_notification_buttons\"> <button class=\"btn btn-primary\" type=\"button\"> <span>accept0</span> </button><button class=\"btn btn-secondary\" type=\"button\"> <span>refuse0</span> </button> </div> </div>",
+        assert.strictEqual($notification.html().trim().replace(/\s+/g, ' '),
+            "<div class=\"toast-header\"> <span class=\"fa fa-2x mr-3 fa-question-circle-o o_notification_icon\" role=\"img\" aria-label=\"Notification undefined\" title=\"Notification undefined\"></span> <div class=\"d-flex align-items-center mr-auto font-weight-bold o_notification_title\">a0</div> <button type=\"button\" class=\"mb-1 close o_notification_close\" data-dismiss=\"toast\" aria-label=\"Close\"> <span class=\"d-inline\" aria-hidden=\"true\">×</span> </button> </div> <div class=\"toast-body\"> <div class=\"o_notification_content\">b0</div> <div class=\"mt-2 o_notification_buttons\"> <button type=\"button\" class=\"btn btn-primary\"> <span>accept0</span> </button><button type=\"button\" class=\"btn btn-secondary\"> <span>refuse0</span> </button> </div> </div>",
             "should display notification");
 
         testUtils.dom.click($notification.find('.o_notification_buttons button:contains(accept0)'));
