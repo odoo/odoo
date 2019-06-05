@@ -266,6 +266,11 @@ class HolidaysRequest(models.Model):
         self.request_unit_hours = False
         self.request_unit_custom = False
 
+    @api.onchange('user_id')
+    def _onchange_user_id(self):
+        if not self.out_of_office_message:
+            self.out_of_office_message = self.user_id.out_of_office_message
+
     @api.onchange('request_date_from_period', 'request_hour_from', 'request_hour_to',
                   'request_date_from', 'request_date_to',
                   'employee_id')
