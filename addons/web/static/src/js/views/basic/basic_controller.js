@@ -21,6 +21,8 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         reload: '_onReload',
         resequence_records: '_onResequenceRecords',
         set_dirty: '_onSetDirty',
+        load_optional_fields: '_onLoadOptionalFields',
+        save_optional_fields: '_onSaveOptionalFields',
         sidebar_data_asked: '_onSidebarDataAsked',
         translate: '_onTranslate',
     }),
@@ -43,6 +45,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         // operations to complete before checking if there are changes to
         // discard when discardChanges is called
         this.savingDef = Promise.resolve();
+        this.viewId = params.viewId;
     },
     /**
      * @override
@@ -417,6 +420,46 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         });
     },
     /**
+     * Compute the optional fields local storage key using the given parts.
+     *
+     * @param {Object} keyParts
+     * @param {string} keyParts.viewType view type
+     * @param {string} [keyParts.relationalField] name of the field with subview
+     * @param {integer} [keyParts.subViewId] subview id
+     * @param {string} [keyParts.subViewType] type of the subview
+     * @param {Object} keyParts.fields fields
+     * @param {string} keyParts.fields.name field name
+     * @param {string} keyParts.fields.type field type
+     * @returns {string} local storage key for optional fields in this view
+     */
+    _getOptionalFieldsLocalStorageKey: function (keyParts) {
+        keyParts.model = this.modelName;
+        keyParts.viewType = this.viewType;
+        keyParts.viewId = this.viewId;
+
+        var parts = [
+            'model',
+            'viewType',
+            'viewId',
+            'relationalField',
+            'subViewType',
+            'subViewId',
+        ];
+
+        var viewIdentifier = parts.reduce(function (identifier, partName) {
+            if (partName in keyParts) {
+                return identifier + ',' + keyParts[partName];
+            }
+            return identifier;
+        }, 'optional_fields');
+
+        viewIdentifier = keyParts.fields.reduce(function (identifier, field) {
+            return identifier + ',' + field.name + ':' + field.type;
+        }, viewIdentifier);
+
+        return viewIdentifier;
+    },
+    /**
      * Return the params (current_min, limit and size) to pass to the pager,
      * according to the current state.
      *
@@ -672,6 +715,37 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                     });
             },
         });
+    },
+    /**
+     * Load the optional columns settings in local storage for this view
+     *
+     * @param {OdooEvent} ev
+     * @param {Object} ev.data.keyParts see _getLocalStorageKey
+     * @param {function} ev.data.callback function to call with the result
+     */
+    _onLoadOptionalFields: function (ev) {
+        var res = this.call(
+            'local_storage',
+            'getItem',
+            this._getOptionalFieldsLocalStorageKey(ev.data.keyParts),
+        );
+        ev.data.callback(res);
+    },
+    /**
+     * Save the optional columns settings in local storage for this view
+     *
+     * @param {OdooEvent} ev
+     * @param {Object} ev.data.keyParts see _getLocalStorageKey
+     * @param {Array<string>} ev.data.optionalColumnsEnabled list of optional
+     *   field names that have been enabled
+     */
+    _onSaveOptionalFields: function (ev) {
+        this.call(
+            'local_storage',
+            'setItem',
+            this._getOptionalFieldsLocalStorageKey(ev.data.keyParts),
+            ev.data.optionalColumnsEnabled
+        );
     },
     /**
      * @private

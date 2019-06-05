@@ -6392,9 +6392,12 @@ QUnit.module('Views', {
             services: {
                 local_storage: RamStorageService,
             },
+            view_id: 42,
         });
 
-        assert.verifySteps(['getItem list_optional_fields,foo,list,foo:char,m2o:many2one,reference:reference']);
+        var localStorageKey = 'optional_fields,foo,list,42,foo:char,m2o:many2one,reference:reference';
+
+        assert.verifySteps(['getItem ' + localStorageKey]);
 
         assert.containsN(list, 'th', 3,
             "should have 3 th, 1 for selector, 2 for columns");
@@ -6415,8 +6418,8 @@ QUnit.module('Views', {
         await testUtils.dom.click(list.$('div.o_optional_columns div.dropdown-item:eq(1) input'));
 
         assert.verifySteps([
-            'setItem list_optional_fields,foo,list,foo:char,m2o:many2one,reference:reference to ["m2o","reference"]',
-            'getItem list_optional_fields,foo,list,foo:char,m2o:many2one,reference:reference',
+            'setItem ' + localStorageKey + ' to ["m2o","reference"]',
+            'getItem ' + localStorageKey,
         ]);
 
         // 4 th (1 for checkbox, 3 for columns)
