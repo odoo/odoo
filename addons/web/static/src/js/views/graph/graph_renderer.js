@@ -72,6 +72,7 @@ return AbstractRenderer.extend({
         this.chartId = _.uniqueId('chart');
         // the bar charts are considered stackable a priori
         this.isStackable = true;
+        this.$legendTooltip = null;
         this.$tooltip = null;
     },
     /**
@@ -364,13 +365,15 @@ return AbstractRenderer.extend({
      * Returns the options used to generate the chart legend.
      *
      * @private
-     * @param {number} datasetsCount
+     * @param {Number} datasetsCount
      * @returns {Object}
      */
     _getLegendOptions: function (datasetsCount) {
         var legendOptions = {
             display: datasetsCount <= MAX_LEGEND_LENGTH,
             position: config.device.size_class > config.device.SIZES.VSM ? 'right' : 'top',
+            onHover: this._onlegendTooltipHover.bind(this),
+            onLeave: this._onLegendTootipLeave.bind(this),
         };
         var self = this;
         if (_.contains(['bar', 'line'], this.state.mode)) {
@@ -386,6 +389,7 @@ return AbstractRenderer.extend({
                     return data.datasets.map(function(dataset, i) {
                         return {
                             text: self._shortenLabel(dataset.label),
+                            fullText: dataset.label,
                             fillStyle: dataset[referenceColor],
                             hidden: !chart.isDatasetVisible(i),
                             lineCap: dataset.borderCapStyle,
@@ -417,9 +421,11 @@ return AbstractRenderer.extend({
                             },
                             false
                         );
-                        var text = self._shortenLabel(self._relabelling(label));
+                        var fullText = self._relabelling(label);
+                        var text = self._shortenLabel(fullText);
                         return {
                             text: text,
+                            fullText: fullText,
                             fillStyle: label.isNoData ? '#d3d3d3' : self._getColor(i),
                             hidden: hidden,
                             index: i,
@@ -975,10 +981,64 @@ return AbstractRenderer.extend({
         // string returned could be 'wrong' if a groupby value contain a '/'!
         var groups = label.split("/");
         var shortLabel = groups.slice(0,3).join("/");
-        if (groups.length > 3) {
+        if (shortLabel.length > 30) {
+            shortLabel = shortLabel.slice(0, 30) + '...';
+        } else if (groups.length > 3) {
             shortLabel = shortLabel + '/...';
         }
         return shortLabel;
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * If the text of a legend item has been shortened and the user mouse over
+     * that item (actually the event type is mousemove), a tooltip with the item
+     * full text is displayed.
+     *
+     * @private
+     * @param {MouseEvent} e
+     * @param {Object} legendItem
+     */
+    _onlegendTooltipHover: function (e, legendItem) {
+        // The string legendItem.text is an initial segment of legendItem.fullText.
+        // If the two coincide, no need to generate a tooltip.
+        // If a tooltip for the legend already exists, it is already good and don't need
+        // to be recreated.
+        if (legendItem.text === legendItem.fullText || this.$legendTooltip) {
+            return;
+        }
+
+        const chartAreaLeft = this.chart.chartArea.left;
+        const chartAreaRight = this.chart.chartArea.right;
+        const rendererTop = this.$el[0].getBoundingClientRect().top;
+
+        this.$legendTooltip = $('<div>', {
+            class: "o_tooltip_legend",
+            text: legendItem.fullText,
+            css: {
+                maxWidth: Math.floor((chartAreaRight - chartAreaLeft) / 1.68) + 'px',
+                top: (e.clientY - rendererTop) + 'px',
+            }
+        });
+        const $container = this.$el.find('.o_graph_canvas_container');
+        $container.append(this.$legendTooltip);
+
+        this._fixTooltipLeftPosition(this.$legendTooltip[0], e.clientX);
+    },
+    /**
+     * If there's a legend tooltip and the user mouse out of the corresponding
+     * legend item, the tooltip is removed.
+     *
+     * @private
+     */
+    _onLegendTootipLeave: function () {
+        if (this.$legendTooltip) {
+            this.$legendTooltip.remove();
+            this.$legendTooltip = null;
+        }
     },
 });
 });
