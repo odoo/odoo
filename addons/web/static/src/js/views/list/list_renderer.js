@@ -69,7 +69,16 @@ var ListRenderer = BasicRenderer.extend({
         this.editable = params.editable;
         this.isGrouped = this.state.groupedBy.length > 0;
         this.groupbys = params.groupbys;
+    },
+    /**
+     * Compute columns visilibity. This can't be done earlier as we need the
+     * controller to respond to the load_optional_fields call of processColumns.
+     *
+     * @override
+     */
+    willStart: function() {
         this._processColumns(this.columnInvisibleFields || {});
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -240,14 +249,13 @@ var ListRenderer = BasicRenderer.extend({
      * @private
      * @returns {string}
      */
-    _getOptionalColumnsStorageKey: function () {
+    _getOptionalColumnsStorageKeyParts: function () {
         var self = this;
-        var fields = [];
-        _.each(this.state.fieldsInfo[this.viewType], function (field, name) {
-            fields.push(name + ":" + self.state.fields[name].type);
-        });
-        fields.sort();
-        return "list_optional_fields," + this.state.model + "," + this.viewType + "," + fields.join(',');
+        return {
+            fields: _.map(this.state.fieldsInfo[this.viewType], function (_, fieldName) {
+                return {name: fieldName, type: self.state.fields[fieldName].type};
+            }),
+        }
     },
     /**
      * Removes the columns which should be invisible.
@@ -260,8 +268,13 @@ var ListRenderer = BasicRenderer.extend({
         this.columns = [];
         this.optionalColumns = [];
         this.optionalColumnsEnabled = [];
-        var localStorageKey = this._getOptionalColumnsStorageKey();
-        var storedOptionalColumns = this.call('local_storage', 'getItem', localStorageKey);
+        var storedOptionalColumns;
+        this.trigger_up('load_optional_fields', {
+            keyParts: this._getOptionalColumnsStorageKeyParts(),
+            callback: function(res) {
+                storedOptionalColumns = res;
+            },
+        });
         _.each(this.arch.children, function (c) {
             if (c.tag !== 'control' && c.tag !== 'groupby') {
                 var reject = c.attrs.modifiers.column_invisible;
@@ -1030,7 +1043,10 @@ var ListRenderer = BasicRenderer.extend({
         } else {
             this.optionalColumnsEnabled.push(input.name);
         }
-        this.call('local_storage', 'setItem', this._getOptionalColumnsStorageKey(), this.optionalColumnsEnabled);
+        this.trigger_up('save_optional_fields', {
+            keyParts: this._getOptionalColumnsStorageKeyParts(),
+            optionalColumnsEnabled: this.optionalColumnsEnabled,
+        });
         this._processColumns(this.columnInvisibleFields || {});
         this._renderView().then(function() {
             self._onToggleOptionalColumnDropdown(ev);

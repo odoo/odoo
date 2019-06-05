@@ -1,6 +1,7 @@
 odoo.define('web.form_tests', function (require) {
 "use strict";
 
+var AbstractStorageService = require('web.AbstractStorageService');
 var BasicModel = require('web.BasicModel');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
@@ -9,6 +10,7 @@ var FormView = require('web.FormView');
 var mixins = require('web.mixins');
 var NotificationService = require('web.NotificationService');
 var pyUtils = require('web.py_utils');
+var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
 var widgetRegistry = require('web.widget_registry');
 var Widget = require('web.Widget');
@@ -7921,6 +7923,161 @@ QUnit.module('Views', {
         assert.verifySteps(['execute_action']);
         await testUtils.dom.click(form.$('.o_form_view button.mybutton'));
         assert.verifySteps([]);
+        form.destroy();
+    });
+
+    QUnit.test('form view with inline tree view with optional fields and local storage mock', async function (assert) {
+        assert.expect(12);
+
+        var Storage = RamStorage.extend({
+            getItem: function (key) {
+                assert.step('getItem ' + key);
+                return this._super.apply(this, arguments);
+            },
+            setItem: function (key, value) {
+                assert.step('setItem ' + key + ' to ' + value);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        var RamStorageService = AbstractStorageService.extend({
+            storage: new Storage(),
+        });
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="qux"/>' +
+                    '<field name="p">' +
+                        '<tree>' +
+                            '<field name="foo"/>' +
+                            '<field name="bar" optional="hide"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            services: {
+                local_storage: RamStorageService,
+            },
+            view_id: 27,
+        });
+
+        var localStorageKey = 'optional_fields,partner,form,27,p,list,undefined,bar,foo';
+
+        assert.verifySteps(['getItem ' + localStorageKey]);
+
+        assert.containsN(form, 'th', 2,
+            "should have 2 th, 1 for selector, 1 for foo column");
+
+        assert.ok(form.$('th:contains(Foo)').is(':visible'),
+            "should have a visible foo field");
+
+        assert.notOk(form.$('th:contains(Bar)').is(':visible'),
+            "should not have a visible bar field");
+
+        // optional fields
+        await testUtils.dom.click(form.$('table .o_optional_columns_dropdown_toggle'));
+        assert.containsN(form, 'div.o_optional_columns div.dropdown-item', 1,
+            "dropdown have 1 optional field");
+
+        // enable optional field
+        await testUtils.dom.click(form.$('div.o_optional_columns div.dropdown-item input'));
+
+        assert.verifySteps([
+            'setItem ' + localStorageKey + ' to ["bar"]',
+            'getItem ' + localStorageKey,
+        ]);
+
+        assert.containsN(form, 'th', 3,
+            "should have 3 th, 1 for selector, 2 for columns");
+
+        assert.ok(form.$('th:contains(Foo)').is(':visible'),
+            "should have a visible foo field");
+
+        assert.ok(form.$('th:contains(Bar)').is(':visible'),
+            "should have a visible bar field");
+
+        form.destroy();
+    });
+
+    QUnit.test('form view with tree_view_ref with optional fields and local storage mock', async function (assert) {
+        assert.expect(12);
+
+        var Storage = RamStorage.extend({
+            getItem: function (key) {
+                assert.step('getItem ' + key);
+                return this._super.apply(this, arguments);
+            },
+            setItem: function (key, value) {
+                assert.step('setItem ' + key + ' to ' + value);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        var RamStorageService = AbstractStorageService.extend({
+            storage: new Storage(),
+        });
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="qux"/>' +
+                    '<field name="p" context="{\'tree_view_ref\': \'34\'}"/>' +
+                '</form>',
+            archs: {
+                "partner,nope_not_this_one,list": '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="bar"/>' +
+                    '</tree>',
+                "partner,34,list": '<tree>' +
+                        '<field name="foo" optional="hide"/>' +
+                        '<field name="bar"/>' +
+                    '</tree>',
+            },
+            services: {
+                local_storage: RamStorageService,
+            },
+            view_id: 27,
+        });
+
+        var localStorageKey = 'optional_fields,partner,form,27,p,list,34,bar,foo';
+
+        assert.verifySteps(['getItem ' + localStorageKey]);
+
+        assert.containsN(form, 'th', 2,
+            "should have 2 th, 1 for selector, 1 for foo column");
+
+        assert.notOk(form.$('th:contains(Foo)').is(':visible'),
+            "should have a visible foo field");
+
+        assert.ok(form.$('th:contains(Bar)').is(':visible'),
+            "should not have a visible bar field");
+
+        // optional fields
+        await testUtils.dom.click(form.$('table .o_optional_columns_dropdown_toggle'));
+        assert.containsN(form, 'div.o_optional_columns div.dropdown-item', 1,
+            "dropdown have 1 optional field");
+
+        // enable optional field
+        await testUtils.dom.click(form.$('div.o_optional_columns div.dropdown-item input'));
+
+        assert.verifySteps([
+            'setItem ' + localStorageKey + ' to ["foo"]',
+            'getItem ' + localStorageKey,
+        ]);
+
+        assert.containsN(form, 'th', 3,
+            "should have 3 th, 1 for selector, 2 for columns");
+
+        assert.ok(form.$('th:contains(Foo)').is(':visible'),
+            "should have a visible foo field");
+
+        assert.ok(form.$('th:contains(Bar)').is(':visible'),
+            "should have a visible bar field");
+
         form.destroy();
     });
 
