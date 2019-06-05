@@ -120,13 +120,6 @@ MailManager.include({
                 self._repositionThreadWindows();
                 threadWindow.render();
                 threadWindow.scrollToBottom();
-                if (
-                    !self._areAllThreadWindowsHidden() &&
-                    !thread.isFolded() &&
-                    !threadWindow.isPassive()
-                ) {
-                    thread.markAsRead();
-                }
                 thread.isCreatingWindow = false;
             }).guardedCatch(function () {
                 // thread window could not be open, which may happen due to
@@ -141,6 +134,14 @@ MailManager.include({
             }
         }
         return prom.then(function () {
+            if (
+               !self._areAllThreadWindowsHidden() &&
+               !thread.isFolded() &&
+               !threadWindow.isPassive() || 'passively' in options && !options.passively
+            ) {
+               thread.markAsRead();
+            }
+
             threadWindow.updateVisualFoldState();
         });
     },

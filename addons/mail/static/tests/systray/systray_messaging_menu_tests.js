@@ -920,5 +920,47 @@ QUnit.test('messaging menu widget: expand on thread preview', async function (as
     messagingMenu.destroy();
 });
 
+QUnit.test('mark as read on thread preview while thread is already opened', async function (assert) {
+    assert.expect(4);
+
+    var messagingMenu = new MessagingMenu();
+    testUtils.mock.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+    });
+    await messagingMenu.appendTo($('#qunit-fixture'));
+
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+
+    assert.containsOnce(messagingMenu, '.o_mail_preview',
+        "should display a single channel preview");
+    assert.strictEqual(messagingMenu.$('.o_preview_name').text().trim(), "general",
+        "should display correct name of channel in preview");
+
+    await testUtils.dom.click(messagingMenu.$('.o_mail_preview'));
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));  // used to focus out element otherwise it will read message
+
+    // simulate receiving a new message on the channel 'general' (id 1)
+    var data = {
+        id: 100,
+        author_id: [42, "Someone"],
+        body: "<p>A new message content</p>",
+        channel_ids: [1],
+    };
+
+    var notification = [[false, 'mail.channel', 1], data];
+    messagingMenu.call('bus_service', 'trigger', 'notification', [notification]);
+
+    await testUtils.nextTick();
+    assert.strictEqual($('.o_thread_window .o_thread_window_title span').text().trim(), "(1)",
+        "should be 1 unread message in threadWindow");
+
+    await testUtils.dom.click(messagingMenu.$('.o_mail_preview'));
+    assert.strictEqual($('.o_thread_window .o_thread_window_title span').text().trim(), "",
+        "a message should be read on open threadWindow even if it is opened already");
+
+    messagingMenu.destroy();
+});
+
 });
 });
