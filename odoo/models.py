@@ -2777,9 +2777,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     _('The requested operation cannot be completed due to record rules: Document type: %s, Operation: %s, Records: %s, User: %s') % \
                     (self._name, 'read', ','.join([str(r.id) for r in self][:6]), self._uid))
                 # store an access error exception in existing records
+                mc_info = self.env['ir.model']._has_multicompany_info(self._name)
                 exc = AccessError(
                     _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, 'read')
                     + ' - ({} {}, {} {})'.format(_('Records:'), self.ids[:6], _('User:'), self._uid)
+                    + '\n\n{}'.format(mc_info) if mc_info else ''
                 )
                 self.env.cache.set_failed(forbidden, self._fields.values(), exc)
 
@@ -2863,9 +2865,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 if self._uid == SUPERUSER_ID:
                     return
                 _logger.info('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, forbidden_ids, self._uid, self._name)
+                mc_info = self.env['ir.model']._has_multicompany_info(self._name)
                 raise AccessError(
                     _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation)
                     + ' - ({} {}, {}, {})'.format(_('Records:'), forbidden_ids[:6], _('User:'), self._uid)
+                    + '\n\n{}'.format(mc_info) if mc_info else ''
                 )
             else:
                 # If we get here, the missing_ids are not in the database

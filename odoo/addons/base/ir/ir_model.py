@@ -292,6 +292,21 @@ class IrModel(models.Model):
             model_class = self._instanciate(model_data)
             model_class._build_model(self.pool, cr)
 
+    @api.model
+    def _has_multicompany_info(self, model_name):
+        """ Check if the given model has a multi-company record rule which could cause access
+            errors. If a record rule is found, returns an info string.
+        """
+        self = self.sudo()
+        if self.env['res.company'].search_count([]) < 2:
+            return ''
+        model = self.search([('model', '=', model_name)], limit=1)
+        if self.env['ir.rule'].search_count([('domain_force', 'like', 'user.company_id'), ('model_id', '=', model.id)]):
+            return _(
+                'Hint: this might be due to multi-company access rules. '
+                'You might need to switch company to perform the operation.'
+            )
+        return ''
 
 # retrieve field types defined by the framework only (not extensions)
 FIELD_TYPES = [(key, key) for key in sorted(fields.Field.by_type)]

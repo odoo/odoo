@@ -594,9 +594,11 @@ class Message(models.Model):
                                 ON message.subtype_id = subtype.id
                                 WHERE message.message_type = %%s AND (message.subtype_id IS NULL OR subtype.internal IS TRUE) AND message.id = ANY (%%s)''' % (self._table), ('comment', self.ids,))
             if self._cr.fetchall():
+                mc_info = self.env['ir.model']._has_multicompany_info(self._name)
                 raise AccessError(
                     _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation)
                     + ' - ({} {}, {} {})'.format(_('Records:'), self.ids[:6], _('User:'), self._uid)
+                    + '\n\n{}'.format(mc_info) if mc_info else ''
                 )
 
         # Read mail_message.ids to have their values
@@ -695,9 +697,11 @@ class Message(models.Model):
         other_ids = other_ids.difference(set(document_related_ids))
         if not (other_ids and self.browse(other_ids).exists()):
             return
+        mc_info = self.env['ir.model']._has_multicompany_info(self._name)
         raise AccessError(
             _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation)
             + ' - ({} {}, {} {})'.format(_('Records:'), list(other_ids)[:6], _('User:'), self._uid)
+            + '\n\n{}'.format(mc_info) if mc_info else ''
         )
 
     @api.model

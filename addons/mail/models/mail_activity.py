@@ -177,9 +177,11 @@ class MailActivity(models.Model):
             try:
                 self.env[model].browse(res_ids).check_access_rule(doc_operation)
             except exceptions.AccessError:
+                mc_info = self.env['ir.model']._has_multicompany_info(self._name)
                 raise exceptions.AccessError(
                     _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation)
                     + ' - ({} {}, {} {})'.format(_('Records:'), res_ids[:6], _('User:'), self._uid)
+                    + '\n\n{}'.format(mc_info) if mc_info else ''
                 )
 
     @api.model
