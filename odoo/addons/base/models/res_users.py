@@ -998,6 +998,9 @@ class Users(models.Model):
             return 'base/static/img/user-slash.png'
         return super()._get_placeholder_filename(field=field)
 
+    def _mfa_url(self):
+        """ If an MFA method is enabled, returns the URL for its second step. """
+        return
 #
 # Implied groups
 #
