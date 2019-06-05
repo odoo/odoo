@@ -171,14 +171,10 @@ class HrLeave(models.Model):
 
         return days
 
-    @api.multi
-    @api.depends('number_of_days')
-    def _compute_number_of_hours_display(self):
-        """ Override for the same reason as _get_number_of_days()"""
-        super(HrLeave, self)._compute_number_of_hours_display()
-        for holiday in self:
-            if holiday.date_from and holiday.date_to:
-                contracts = holiday.employee_id.sudo()._get_contracts(holiday.date_from, holiday.date_to, states=['incoming', 'open', 'pending'])
-                contract_calendar = contracts[:1].resource_calendar_id if contracts else None
-                calendar = contract_calendar or holiday.employee_id.resource_calendar_id or self.env.user.company_id.resource_calendar_id
-                holiday.number_of_hours_display = holiday.number_of_days * (calendar.hours_per_day or HOURS_PER_DAY)
+    def _get_calendar(self):
+        self.ensure_one()
+        if self.date_from and self.date_to:
+            contracts = self.employee_id.sudo()._get_contracts(self.date_from, self.date_to, states=['incoming', 'open', 'pending'])
+            contract_calendar = contracts[:1].resource_calendar_id if contracts else None
+            return contract_calendar or self.employee_id.resource_calendar_id or self.env.user.company_id.resource_calendar_id
+        return super()._get_calendar()
