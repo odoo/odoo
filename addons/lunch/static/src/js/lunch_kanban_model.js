@@ -40,7 +40,7 @@ var LunchKanbanModel = KanbanModel.extend({
         });
     },
     reload: function (id, options) {
-        var domain = options.domain || this.localData[id].domain;
+        var domain = options && options.domain || this.localData[id].domain;
 
         this._addOrUpdate(domain, ['is_available_at', 'in', [this.locationId]]);
         options = _.extend(options, {domain: domain});
