@@ -409,7 +409,10 @@
                 <t t-esc="channel_progress[slide.id].get('quiz_karma_won', 0) if channel_progress[slide.id].get('completed') else channel_progress[slide.id].get('quiz_karma_gain', 0)"/> xp
             </span>
             <span class="badge badge-danger font-weight-normal px-2 py-1 m-1" t-if="not slide.website_published">Unpublished</span>
-            <span class="badge badge-success font-weight-normal px-2 py-1 m-1" t-if="slide.is_preview and not channel.is_member">Free preview</span>
+            <a t-if="channel.can_upload" href="#">
+                <span t-att-data-slide-id="slide.id" t-attf-class="o_wslides_js_slide_toggle_is_preview badge #{'badge-success' if slide.is_preview else 'badge-light badge-hide border'} font-weight-normal px-2 py-1 m-1">Free preview</span>
+            </a>
+            <span t-elif="slide.is_preview and not channel.is_member" class="badge badge-success font-weight-normal px-2 py-1 m-1">Free preview</span>
         </div>
 
         <div t-if="channel.is_member or channel.can_publish" class="pt-2 pb-2 border-left ml-2 mr-2 pl-2 d-flex align-items-center o_wslides_slides_list_slide_controls">
