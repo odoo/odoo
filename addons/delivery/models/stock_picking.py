@@ -134,6 +134,7 @@ class StockPicking(models.Model):
                 'context': dict(
                     self.env.context,
                     current_package_carrier_type=self.carrier_id.delivery_type,
+                    default_picking_id=self.id,  # DO NOT FORWARD PORT
                     default_stock_quant_package_id=res.id
                 ),
             }
