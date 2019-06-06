@@ -28,7 +28,7 @@ QUnit.module('Mail DebugManager', {}, function () {
             },
         });
 
-        debugManager.appendTo($('#qunit-fixture'));
+        await debugManager.appendTo($('#qunit-fixture'));
 
         // Simulate update debug manager from web client
         var action = {
