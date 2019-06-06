@@ -106,7 +106,7 @@ class ChangeProductionQty(models.TransientModel):
                 (moves_finished + moves_raw).write({'workorder_id': wo.id})
                 if wo.state not in ('done', 'cancel'):
                     line_values = wo._update_workorder_lines()
-                    self._workorder_line_ids().create(line_values['to_create'])
+                    wo._workorder_line_ids().create(line_values['to_create'])
                     if line_values['to_delete']:
                         line_values['to_delete'].unlink()
                     for line, vals in line_values['to_update'].items():

@@ -169,7 +169,8 @@
             'data-view-xmlid': xmlid if editable or translatable else None,
             'data-viewid': viewid if editable or translatable else None,
             'data-main-object': repr(main_object) if editable or translatable else None,
-            'data-oe-company-name': res_company.name
+            'data-seo-object': repr(seo_object) if seo_object else None,
+            'data-oe-company-name': res_company.name,
         }"/>
     </xpath>
     <xpath expr="//head" position="before">
@@ -178,8 +179,9 @@
                 <t t-set="additional_title" t-value="main_object.name"/>
             </t>
             <t t-set="default_title"> <t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-raw="(website or res_company).name"/> </t>
-            <t t-if="main_object and 'website_meta_title' in main_object and main_object.website_meta_title">
-                <t t-set="title" t-value="main_object.website_meta_title"/>
+            <t t-set="seo_object" t-value="seo_object or main_object"/>
+            <t t-if="seo_object and 'website_meta_title' in seo_object and seo_object.website_meta_title">
+                <t t-set="title" t-value="seo_object.website_meta_title"/>
             </t>
             <t t-else="">
                 <t t-set="title" t-value="default_title"></t>
@@ -189,17 +191,18 @@
     </xpath>
     <xpath expr="//head/meta[last()]" position="after">
         <meta name="generator" content="Odoo"/>
-        <t t-set="website_meta" t-value="main_object and main_object.get_website_meta() or {}"/>
+        <t t-set="website_meta" t-value="seo_object and seo_object.get_website_meta() or {}"/>
         <meta name="default_title" t-att-content="default_title" groups="website.group_website_designer"/>
         <meta t-if="main_object and 'website_indexed' in main_object
             and not main_object.website_indexed" name="robots" content="noindex"/>
-        <t t-set="meta_description" t-value="main_object and 'website_meta_description' in main_object
-            and main_object.website_meta_description or website_meta_description or website_meta.get('meta_description', '')"/>
-        <t t-set="meta_keywords" t-value="main_object and 'website_meta_keywords' in main_object
-            and main_object.website_meta_keywords or website_meta_keywords"/>
+            <t t-set="seo_object" t-value="seo_object or main_object"/>
+            <t t-set="meta_description" t-value="seo_object and 'website_meta_description' in seo_object
+                and seo_object.website_meta_description or website_meta_description or website_meta.get('meta_description', '')"/>
+            <t t-set="meta_keywords" t-value="seo_object and 'website_meta_keywords' in seo_object
+                and seo_object.website_meta_keywords or website_meta_keywords"/>
         <meta t-if="meta_description or editable" name="description" t-att-content="meta_description"/>
         <meta t-if="meta_keywords or editable" name="keywords" t-att-content="meta_keywords"/>
-        <t t-if="main_object">
+        <t t-if="seo_object">
             <meta name="default_description" t-att-content="website_meta_description or website_meta.get('meta_description')" groups="website.group_website_designer"/>
             <!-- OpenGraph tags for Facebook sharing -->
             <t t-set="opengraph_meta" t-value="website_meta.get('opengraph_meta')"/>
@@ -399,7 +402,7 @@
             </div>
         </li>
         <li groups="website.group_website_publisher" class="list-inline-item">
-            <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
+            <t t-set="url_return" t-value="quote_plus(url_for('', '[lang]') + '?' + keep_query())"/>
             <a class="d-none d-sm-block" t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{url_return}">
                 <i class="fa fa-plus-circle"/>
                 Add a language...

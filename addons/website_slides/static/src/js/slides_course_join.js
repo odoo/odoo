@@ -53,7 +53,12 @@ var CourseJoinWidget = publicWidget.Widget.extend({
                 location.reload();
             } else {
                 if (data.error === 'public_user') {
-                    self._popoverAlert(self.$el, _.str.sprintf(_t('Please <a href="/web/login?redirect=%s">login</a> to join this course.'), (document.URL)));
+                    var message = _t('Please <a href="/web/login?redirect=%s">login</a> to join this course');
+                    var signupAllowed = data.error_signup_allowed || false;
+                    if (signupAllowed) {
+                        message = _t('Please <a href="/web/signup?redirect=%s">create an account</a> to join this course');
+                    }
+                    self._popoverAlert(self.$el, _.str.sprintf(message, (document.URL)));
                 } else if (data.error === 'join_done') {
                     self._popoverAlert(self.$el, _t('You have already joined this channel'));
                 } else {

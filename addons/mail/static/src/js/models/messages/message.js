@@ -579,7 +579,8 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @return {boolean}
      */
     _isOdoobotAuthor: function () {
-        return this._serverAuthorID === this.call('mail_service', 'getOdoobotID');
+        return this._serverAuthorID &&
+            this._serverAuthorID[0] === this.call('mail_service', 'getOdoobotID')[0];
     },
     /**
      * State whether the message is transient or not

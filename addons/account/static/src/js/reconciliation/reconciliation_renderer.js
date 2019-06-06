@@ -938,10 +938,12 @@ var ManualLineRenderer = LineRenderer.extend({
      * @override
      */
     _renderCreate: function (state) {
-        var parentPromise = this._super(state);
-        this.$('.create .create_journal_id').show();
-        this.$('.create .create_date').removeClass('d-none');
-        this.$('.create .create_journal_id .o_input').addClass('o_required_modifier');
+        var self = this;
+        var parentPromise = this._super(state).then(function() {
+            self.$('.create .create_journal_id').show();
+            self.$('.create .create_date').removeClass('d-none');
+            self.$('.create .create_journal_id .o_input').addClass('o_required_modifier');
+        });
         return parentPromise;
     },
 

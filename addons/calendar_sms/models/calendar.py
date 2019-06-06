@@ -52,7 +52,7 @@ class AlarmManager(models.AbstractModel):
         }
 
         cron_interval = cron.interval_number * interval_to_second[cron.interval_type]
-        events_data = self.get_next_potential_limit_alarm('sms', seconds=cron_interval)
+        events_data = self._get_next_potential_limit_alarm('sms', seconds=cron_interval)
 
         for event in self.env['calendar.event'].browse(events_data):
             max_delta = events_data[event.id]['max_duration']

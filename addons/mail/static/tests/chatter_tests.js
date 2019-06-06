@@ -1034,6 +1034,8 @@ QUnit.test('chatter: receive notif when document is open', async function (asser
     assert.strictEqual(thread.getUnreadCounter(), 1,
         "document thread should now have one unread message");
 
+    // do not destroy form too early. wait rendering to avoid race condition in service call.
+    await testUtils.nextTick();
     form.destroy();
 });
 

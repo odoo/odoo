@@ -44,6 +44,7 @@ var MediaPlugin = AbstractPlugin.extend({
     },
 
     mousePosition: {},
+    _modalOpen: false,
 
     //--------------------------------------------------------------------------
     // Public
@@ -53,6 +54,10 @@ var MediaPlugin = AbstractPlugin.extend({
      * Open the image dialog and listen to its saved/closed events.
      */
     showImageDialog: function () {
+        if (this._modalOpen) {
+            return;
+        }
+        this._modalOpen = true;
         this.context.invoke('editor.saveRange');
         var media = this.context.invoke('editor.restoreTarget');
 
@@ -79,6 +84,7 @@ var MediaPlugin = AbstractPlugin.extend({
         });
         mediaDialog.on('closed', this, function () {
             this.context.invoke('editor.restoreRange');
+            this._modalOpen = false;
         });
         mediaDialog.open();
     },

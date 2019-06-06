@@ -384,6 +384,7 @@
                                                 <field name="amount_total" invisible="1"/>
                                                 <field name="currency_id" invisible="1" force_save="1"/>
                                                 <field name="tax_repartition_line_id" invisible="1"/> <!--Needed in order for the onchange computing the taxes to keep the repartition lines-->
+                                                <field name="tag_ids" invisible="1"/> <!--Needed in order for the onchange computing the taxes to keep the tags-->
                                                 <field name="base" invisible="1"/>
                                             </tree>
                                         </field>
@@ -655,6 +656,7 @@
                                     <field name="amount_total"/>
                                     <field name="currency_id" invisible="1" force_save="1"/>
                                     <field name="tax_repartition_line_id" invisible="1"/> <!--Needed in order for the onchange computing the taxes to keep the repartition lines-->
+                                    <field name="tag_ids" invisible="1"/> <!--Needed in order for the onchange computing the taxes to keep the tags-->
                                     <field name="base" invisible="1"/>
                                 </tree>
                             </field>

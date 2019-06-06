@@ -1067,18 +1067,20 @@ class AccountTax(models.Model):
 
     @api.model
     def default_get(self, vals):
-        rslt = super(AccountTax, self).default_get(vals)
+        # company_id is added so that we are sure to fetch a default value from it to use in repartition lines, below
+        rslt = super(AccountTax, self).default_get(vals + ['company_id'])
 
+        company_id = rslt.get('company_id')
         if 'refund_repartition_line_ids' in vals:
             rslt['refund_repartition_line_ids'] = [
-                (0, 0, { 'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': rslt.get('company_id')}),
-                (0, 0, { 'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': rslt.get('company_id')}),
+                (0, 0, { 'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id}),
+                (0, 0, { 'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id}),
             ]
 
         if 'invoice_repartition_line_ids' in vals:
             rslt['invoice_repartition_line_ids'] = [
-                (0, 0, { 'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': rslt.get('company_id')}),
-                (0, 0, { 'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': rslt.get('company_id')}),
+                (0, 0, { 'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id}),
+                (0, 0, { 'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id}),
             ]
 
         return rslt
@@ -1174,7 +1176,8 @@ class AccountTax(models.Model):
                str(invoice_tax_val['account_id']) + '-' + \
                str(invoice_tax_val['account_analytic_id']) + '-' + \
                str(invoice_tax_val.get('analytic_tag_ids', [])) + '-' + \
-               str(invoice_tax_val.get('tax_ids') or [])
+               str(invoice_tax_val.get('tax_ids') or []) + '-' + \
+               str(invoice_tax_val.get('tag_ids') or [])
 
     def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
         """ Returns the amount of a single tax. base_amount is the actual amount on which the tax is applied, which is
@@ -1234,6 +1237,10 @@ class AccountTax(models.Model):
             else:
                 all_taxes += tax
         return all_taxes
+
+    def get_tax_tags(self, is_refund, repartition_type):
+        rep_lines = self.mapped(is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids')
+        return rep_lines.filtered(lambda x: x.repartition_type == repartition_type).mapped('tag_ids')
 
     @api.multi
     def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, is_refund=False):
@@ -1392,12 +1399,23 @@ class AccountTax(models.Model):
             if tax.price_include and not total_included_checkpoints.get(i):
                 cumulated_tax_included_amount += tax_amount
 
+            # If the tax affects the base of subsequent taxes, its tax move lines must
+            # receive the base tags and tag_ids of these taxes, so that the tax report computes
+            # the right total
+            subsequent_taxes = self.env['account.tax']
+            subsequent_tags = self.env['account.account.tag']
+            if tax.include_base_amount:
+                subsequent_taxes = taxes[i+1:]
+                subsequent_tags = subsequent_taxes.get_tax_tags(is_refund, 'base')
+
+            # Compute the tax lines
             tax_repartition_lines = is_refund and tax.refund_repartition_line_ids or tax.invoice_repartition_line_ids
             repartition_lines_to_treat = len(tax_repartition_lines)
             total_amount = 0
             for repartition_line in tax_repartition_lines.filtered(lambda x: x.repartition_type == 'tax'):
                 # In case some rounding error occurs, we compensate for it on the last line
                 line_amount = round(sign * tax_amount * repartition_line.factor if repartition_lines_to_treat != 1 else tax_amount - total_amount, prec)
+
                 taxes_vals.append({
                     'id': tax.id,
                     'name': partner and tax.with_context(lang=partner.lang).name or tax.name,
@@ -1409,7 +1427,8 @@ class AccountTax(models.Model):
                     'price_include': tax.price_include,
                     'tax_exigibility': tax.tax_exigibility,
                     'tax_repartition_line_id': repartition_line.id,
-                    'tag_ids': [(6, False, repartition_line.tag_ids.ids)],
+                    'tag_ids': [(6, False, (repartition_line.tag_ids + subsequent_tags).ids)],
+                    'tax_ids': [(6, False, subsequent_taxes.ids)]
                 })
 
                 total_amount += line_amount

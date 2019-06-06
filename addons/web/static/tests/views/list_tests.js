@@ -15,6 +15,7 @@ var widgetRegistry = require('web.widget_registry');
 var Widget = require('web.Widget');
 
 var _t = core._t;
+var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
 
 
@@ -980,6 +981,47 @@ QUnit.module('Views', {
             "list buttons should be back to their readonly mode");
 
         list.destroy();
+    });
+
+    QUnit.test('editable list view: check that controlpanel buttons are updating when groupby applied', async function (assert) {
+        assert.expect(4);
+
+        this.data.foo.fields.foo = {string: "Foo", type: "char", required:true};
+
+        var actionManager = await createActionManager({
+            actions: [{
+               id: 11,
+               name: 'Partners Action 11',
+               res_model: 'foo',
+               type: 'ir.actions.act_window',
+               views: [[3, 'list']],
+               search_view_id: [9, 'search'],
+            }],
+            archs:  {
+               'foo,3,list': '<tree editable="top"><field name="display_name"/><field name="foo"/></tree>',
+
+               'foo,9,search': '<search>'+
+                                    '<filter string="candle" name="itsName" context="{\'group_by\': \'foo\'}"/>'  +
+                                    '</search>',
+            },
+            data: this.data,
+        });
+
+        await actionManager.doAction(11);
+        await testUtils.dom.click(actionManager.$('.o_list_button_add'));
+
+        assert.isNotVisible(actionManager.$('.o_list_button_add'),
+            "create button should be invisible");
+        assert.isVisible(actionManager.$('.o_list_button_save'), "save button should be visible");
+
+        await testUtils.dom.click(actionManager.$('.o_dropdown_toggler_btn:contains("Group By")'));
+        await testUtils.dom.click(actionManager.$('.o_group_by_menu .o_menu_item a:contains("candle")'));
+
+        assert.isNotVisible(actionManager.$('.o_list_button_add'), "create button should be invisible");
+        assert.isNotVisible(actionManager.$('.o_list_button_save'),
+            "save button should be invisible after applying groupby");
+
+        actionManager.destroy();
     });
 
     QUnit.test('selection changes are triggered correctly', async function (assert) {

@@ -471,12 +471,11 @@ MailManager.include({
      *
      * @private
      * @param {Object} data
-     * @param {string} data.author_id
      */
     _handlePartnerTransientMessageNotification: function (data) {
         var lastMessage = _.last(this._messages);
         data.id = (lastMessage ? lastMessage.getID() : 0) + 0.01;
-        data.author_id = data.author_id || this.getOdoobotID();
+        data.author_id = this.getOdoobotID();
         this.addMessage(data);
     },
     /**

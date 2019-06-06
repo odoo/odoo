@@ -492,6 +492,8 @@ class MrpProduction(models.Model):
         }
 
     def _generate_finished_moves(self):
+        if self.product_id in self.bom_id.byproduct_ids.mapped('product_id'):
+            raise UserError(_("You cannot have %s  as the finished product and in the Byproducts") % self.product_id.name)
         moves_values = [self._get_finished_move_value(self.product_id.id, self.product_qty, self.product_uom_id.id)]
         for byproduct in self.bom_id.byproduct_ids:
             product_uom_factor = self.product_uom_id._compute_quantity(self.product_qty, self.bom_id.product_uom_id)
@@ -835,6 +837,8 @@ class MrpProduction(models.Model):
             order._cal_price(moves_to_do)
             moves_to_finish = order.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             moves_to_finish = moves_to_finish._action_done()
+            order.workorder_ids.mapped('raw_workorder_line_ids').unlink()
+            order.workorder_ids.mapped('finished_workorder_line_ids').unlink()
             order.action_assign()
             consume_move_lines = moves_to_do.mapped('move_line_ids')
             for moveline in moves_to_finish.mapped('move_line_ids'):

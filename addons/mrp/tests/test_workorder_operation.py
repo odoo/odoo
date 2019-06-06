@@ -863,6 +863,29 @@ class TestWorkOrderProcess(TestMrpCommon):
         self.assertAlmostEqual(workorder.date_planned_start, date_start, delta=timedelta(seconds=1), msg="Workorder should be planned tomorrow.")
         self.assertAlmostEqual(workorder.date_planned_finished, date_start + timedelta(hours=1), delta=timedelta(seconds=1), msg="Workorder should be done one hour later.")
 
+    def test_change_production_1(self):
+        """Change the quantity to produce on the MO while workorders are already planned."""
+        dining_table = self.env.ref("mrp.product_product_computer_desk")
+        dining_table.tracking = 'lot'
+        production_table_form = Form(self.env['mrp.production'])
+        production_table_form.product_id = dining_table
+        production_table_form.bom_id = self.env.ref("mrp.mrp_bom_desk")
+        production_table_form.product_qty = 1.0
+        production_table_form.product_uom_id = dining_table.uom_id
+        production_table = production_table_form.save()
+        production_table.action_confirm()
+
+        # Create work order
+        production_table.button_plan()
+
+        context = {'active_id': production_table.id, 'active_model': 'mrp.production'}
+        change_qty_form = Form(self.env['change.production.qty'].with_context(context))
+        change_qty_form.product_qty = 2.00
+        change_qty = change_qty_form.save()
+        change_qty.change_prod_qty()
+
+        self.assertEqual(production_table.workorder_ids[0].qty_producing, 2, "Quantity to produce not updated")
+
     def test_planning_0(self):
         """ Test alternative conditions
         1. alternative relation is directionnal

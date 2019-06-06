@@ -1,26 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import hashlib
-
-from datetime import datetime
-
-from werkzeug import urls
-
 from odoo import api, fields, models
 
 
 class Users(models.Model):
     _inherit = 'res.users'
-
-    def __init__(self, pool, cr):
-        init_res = super(Users, self).__init__(pool, cr)
-        type(self).SELF_WRITEABLE_FIELDS = list(
-            set(
-                self.SELF_WRITEABLE_FIELDS +
-                ['country_id', 'city', 'website', 'website_description', 'website_published']))
-        type(self).SELF_READABLE_FIELDS = type(self).SELF_READABLE_FIELDS + ['karma']
-        return init_res
 
     create_date = fields.Datetime('Create Date', readonly=True, index=True)
     forum_waiting_posts_count = fields.Integer('Waiting post', compute="_get_user_waiting_post")

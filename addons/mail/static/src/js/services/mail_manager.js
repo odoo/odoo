@@ -46,7 +46,7 @@ var PREVIEW_MSG_MAX_SIZE = 350;  // optimal for native english speakers
 
 var MailManager =  AbstractService.extend({
     dependencies: ['ajax', 'bus_service', 'local_storage'],
-    _ODOOBOT_ID: "ODOOBOT", // default authorID for transient messages
+    _ODOOBOT_ID: ["ODOOBOT", "ODOOBOT"], // authorID for transient messages
 
     /**
      * @override
@@ -258,7 +258,7 @@ var MailManager =  AbstractService.extend({
     /**
      * Get the OdooBot ID, which is the default authorID for transient messages
      *
-     * @returns {string}
+     * @returns {Array<string>}
      */
     getOdoobotID: function () {
         return this._ODOOBOT_ID;

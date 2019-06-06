@@ -100,8 +100,8 @@ class TestInvoiceTaxes(AccountingTestCase):
         Expected:
         Tax         | Taxes     | Base      | Amount
         --------------------------------------------
-        21% incl    | /         | 100       | 21
-        12%         | 21% incl  | 121       | 14.52
+        21% incl    | 12%       | 100       | 21
+        12%         | /         | 121       | 14.52
         12%         | /         | 100       | 12
         '''
         invoice = self._create_invoice([
@@ -110,9 +110,8 @@ class TestInvoiceTaxes(AccountingTestCase):
         ])
         invoice.action_invoice_open()
         self.assertRecordValues(invoice.tax_line_ids.sorted(lambda x: x.amount), [
-            {'name': self.percent_tax_2.name,           'base': 100, 'amount': 12,      'tax_ids': []},
-            {'name': self.percent_tax_2.name,           'base': 121, 'amount': 14.52,   'tax_ids': [self.percent_tax_1_incl.id]},
-            {'name': self.percent_tax_1_incl.name,      'base': 100, 'amount': 21,      'tax_ids': []},
+            {'name': self.percent_tax_1_incl.name,      'base': 100, 'amount': 21,      'tax_ids': [self.percent_tax_2.id]},
+            {'name': self.percent_tax_2.name,           'base': 221, 'amount': 26.52,   'tax_ids': []},
         ])
 
     def test_group_of_taxes(self):
@@ -135,9 +134,8 @@ class TestInvoiceTaxes(AccountingTestCase):
         ])
         invoice.action_invoice_open()
         self.assertRecordValues(invoice.tax_line_ids.sorted(lambda x: x.amount), [
-            {'name': self.percent_tax_2.name,           'base': 100, 'amount': 12,      'tax_ids': []},
-            {'name': self.percent_tax_2.name,           'base': 121, 'amount': 14.52,   'tax_ids': [self.percent_tax_1_incl.id]},
-            {'name': self.percent_tax_1_incl.name,      'base': 100, 'amount': 21,      'tax_ids': []},
+            {'name': self.percent_tax_1_incl.name,      'base': 100, 'amount': 21,      'tax_ids': [self.percent_tax_2.id]},
+            {'name': self.percent_tax_2.name,           'base': 221, 'amount': 26.52,   'tax_ids': []},
         ])
 
     def _create_tax_tag(self, tag_name):

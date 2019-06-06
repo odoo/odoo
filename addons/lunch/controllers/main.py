@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import http, fields
+from odoo import _, http, fields
+from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import float_round, float_repr
@@ -10,6 +11,7 @@ from odoo.tools import float_round, float_repr
 class LunchController(http.Controller):
     @http.route('/lunch/infos', type='json', auth='user')
     def infos(self, user_id=None):
+        self._check_user_impersonification(user_id)
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 
         infos = self._make_infos(user, order=False)
@@ -35,6 +37,7 @@ class LunchController(http.Controller):
 
     @http.route('/lunch/trash', type='json', auth='user')
     def trash(self, user_id=None):
+        self._check_user_impersonification(user_id)
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 
         lines = self._get_current_lines(user.id)
@@ -43,6 +46,7 @@ class LunchController(http.Controller):
 
     @http.route('/lunch/pay', type='json', auth='user')
     def pay(self, user_id=None):
+        self._check_user_impersonification(user_id)
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 
         lines = self._get_current_lines(user.id)
@@ -60,13 +64,15 @@ class LunchController(http.Controller):
 
     @http.route('/lunch/user_location_set', type='json', auth='user')
     def set_user_location(self, location_id, user_id=None):
+        self._check_user_impersonification(user_id)
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 
-        user.last_lunch_location_id = request.env['lunch.location'].browse(location_id)
+        user.sudo().last_lunch_location_id = request.env['lunch.location'].browse(location_id)
         return True
 
     @http.route('/lunch/user_location_get', type='json', auth='user')
     def get_user_location(self, user_id=None):
+        self._check_user_impersonification(user_id)
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 
         return user.last_lunch_location_id.id
@@ -87,7 +93,9 @@ class LunchController(http.Controller):
             'currency': {'symbol': currency.symbol, 'position': currency.position},
         })
 
-        user_location = user.last_lunch_location_id if user.last_lunch_location_id else request.env['lunch.location'].search([], limit=1)
+        if not user.last_lunch_location_id:
+            user.last_lunch_location_id = request.env['lunch.location'].search([], limit=1)
+        user_location = user.last_lunch_location_id
 
         alert_domain = expression.AND([
             [('available_today', '=', True)],
@@ -100,6 +108,10 @@ class LunchController(http.Controller):
         })
 
         return res
+
+    def _check_user_impersonification(self, user_id=None):
+        if (user_id and request.env.uid != user_id and not request.env.user.has_group('lunch.group_lunch_manager')):
+            raise AccessError(_('You are trying to impersonate another user, but this can only be done by a lunch manager'))
 
     def _get_current_lines(self, user_id):
         return request.env['lunch.order'].search([('user_id', '=', user_id), ('date', '=', fields.Date.today()), ('state', '!=', 'cancelled')])

@@ -112,13 +112,13 @@ class AccountInvoiceReport(models.Model):
                     1 AS nbr,
                     ai.id AS invoice_id, ai.type, ai.state, pt.categ_id, ai.date_due, ai.account_id, ail.account_id AS account_line_id,
                     ai.partner_bank_id,
-                    SUM ((invoice_type.sign_qty * ail.quantity) / u.factor * u2.factor) AS product_qty,
+                    SUM ((invoice_type.sign_qty * ail.quantity) / COALESCE(u.factor,1) * COALESCE(u2.factor,1)) AS product_qty,
                     SUM(ail.price_subtotal_signed * invoice_type.sign) AS price_total,
-                    (ai.amount_total * invoice_type.sign) / (SELECT count(*) FROM account_invoice_line l where invoice_id = ai.id) *
+                    ai.amount_total_signed / (SELECT count(*) FROM account_invoice_line l where invoice_id = ai.id) *
                     count(*) * invoice_type.sign AS amount_total,
                     SUM(ABS(ail.price_subtotal_signed)) / CASE
-                            WHEN SUM(ail.quantity / u.factor * u2.factor) <> 0::numeric
-                               THEN SUM(ail.quantity / u.factor * u2.factor)
+                            WHEN SUM(ail.quantity / COALESCE(u.factor,1) * COALESCE(u2.factor,1)) <> 0::numeric
+                               THEN SUM(ail.quantity / COALESCE(u.factor,1) * COALESCE(u2.factor,1))
                                ELSE 1::numeric
                             END AS price_average,
                     ai.residual_company_signed / (SELECT count(*) FROM account_invoice_line l where invoice_id = ai.id) *

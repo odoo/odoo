@@ -87,14 +87,13 @@ class WebsiteSaleDelivery(WebsiteSale):
         Monetary = request.env['ir.qweb.field.monetary']
         carrier_id = int(post['carrier_id'])
         currency = order.currency_id
-        delivery_price = order.order_line.filtered(lambda line: line.is_delivery).price_unit
         if order:
             return {
                 'status': order.delivery_rating_success,
                 'error_message': order.delivery_message,
                 'carrier_id': carrier_id,
-                'is_free_delivery': not bool(delivery_price),
-                'new_amount_delivery': Monetary.value_to_html(delivery_price, {'display_currency': currency}),
+                'is_free_delivery': not bool(order.amount_delivery),
+                'new_amount_delivery': Monetary.value_to_html(order.amount_delivery, {'display_currency': currency}),
                 'new_amount_untaxed': Monetary.value_to_html(order.amount_untaxed, {'display_currency': currency}),
                 'new_amount_tax': Monetary.value_to_html(order.amount_tax, {'display_currency': currency}),
                 'new_amount_total': Monetary.value_to_html(order.amount_total, {'display_currency': currency}),
