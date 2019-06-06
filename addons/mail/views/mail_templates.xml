@@ -55,7 +55,7 @@
         </template>
 
         <template id="message_origin_link">
-            <p>This <t t-esc="self._description.lower()"/> has been <span t-if="edit">modified</span><span t-if="not edit">created</span> from:
+            <p>This <t t-esc="self.env['ir.model']._get(self._name).name.lower()"/> has been <span t-if="edit">modified</span><span t-if="not edit">created</span> from:
                 <t t-foreach="origin" t-as="o">
                     <a href="#" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id"> <t t-esc="o.display_name"/></a><span t-if="origin.ids[-1:] != o.ids">, </span>
                 </t>
@@ -64,11 +64,11 @@
 
         <template id="message_user_assigned">
             <p>Dear <t t-esc="object.user_id.sudo().name"/>,</p>
-            <p>You have been assigned to the <t t-esc="object._description.lower()"/> <t t-esc="object.name_get()[0][1]"/>.</p>
+            <p>You have been assigned to the <t t-esc="object.env['ir.model']._get(object._name).name.lower()"/> <t t-esc="object.name_get()[0][1]"/>.</p>
             <p>
                 <a t-att-href="'/mail/view?model=%s&amp;res_id=%s' % (object._name, object.id)"
                         style="background-color: #9E588B; margin-top: 10px; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;">
-                    View <t t-esc="object._description.lower()"/>
+                    View <t t-esc="object.env['ir.model']._get(object._name).name.lower()"/>
                 </a>
             </p>
             <p style="color:#9E588B;">Powered by <a target="_blank" href="https://www.odoo.com">Odoo</a>.</p>
