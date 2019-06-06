@@ -173,7 +173,8 @@
                 <sheet position="before">
                     <header>
                         <button string="Update Quantity" type="object"
-                            name="action_open_quants"
+                            groups="stock.group_stock_manager"
+                            name="action_update_quantity_on_hand"
                             attrs="{'invisible': [('type', '!=', 'product')]}"/>
                         <button string="Replenish" type="action"
                             name="%(action_product_replenish)d"
@@ -201,7 +202,8 @@
                 <data>
                     <header position="inside">
                         <button string="Update Quantity" type="object"
-                            name="action_open_quants"
+                            groups="stock.group_stock_manager"
+                            name="action_update_quantity_on_hand"
                             attrs="{'invisible': [('type', '!=', 'product')]}"/>
                         <button string="Replenish" type="action"
                             name="%(action_product_replenish)d"
@@ -294,7 +296,8 @@
                 <data>
                     <header position="inside" >
                         <button string="Update Quantity" type="object"
-                            name="action_open_quants"
+                            groups="stock.group_stock_manager"
+                            name="action_update_quantity_on_hand"
                             attrs="{'invisible': [('type', '!=', 'product')]}"/>
                         <button string="Replenish" type="action"
                             name="%(action_product_replenish)d"
