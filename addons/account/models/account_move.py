@@ -684,12 +684,12 @@ class AccountMoveLine(models.Model):
     @api.model
     def default_get(self, fields):
         rec = super(AccountMoveLine, self).default_get(fields)
-        if 'line_ids' not in self._context:
+        if 'line_ids' not in self._context or "account_move_line_default_get" in self._context:
             return rec
         if {'debit', 'credit', 'partner_id', 'account_id'}.isdisjoint(fields):
             return rec
-        #compute the default credit/debit of the next line in case of a manual entry
-        move = self.env['account.move'].new({'line_ids': self._context['line_ids']})
+        # compute the default credit/debit of the next line in case of a manual entry
+        move = self.env['account.move'].with_context(account_move_line_default_get=True).new({'line_ids': self._context['line_ids']})
         balance = 0
         for line in move.line_ids:
             balance += line.debit - line.credit
