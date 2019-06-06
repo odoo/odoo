@@ -644,7 +644,7 @@ var MockServer = Class.extend({
             var viewID = view_descr[0] || false;
             var viewType = view_descr[1];
             if (!viewID) {
-                var contextKey = viewType + '_view_ref';
+                var contextKey = (viewType === 'list' ? 'tree' : viewType) + '_view_ref';
                 if (contextKey in kwargs.context) {
                     viewID = kwargs.context[contextKey];
                 }
