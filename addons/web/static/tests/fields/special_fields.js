@@ -213,6 +213,40 @@ QUnit.module('special_fields', {
         form.destroy();
     });
 
+    QUnit.test('widget timezone_mismatch without value in a form view', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.tz_offset = {
+            string: "tz_offset",
+            type: "char"
+        };
+        this.data.partner.fields.tz = {
+            type: "selection",
+            selection: [['Europe/Brussels', "Europe/Brussels"], ['America/Los_Angeles', "America/Los_Angeles"]],
+        };
+        this.data.partner.records[0].tz_offset = '+0000';
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            res_id: 1,
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="tz_offset" invisible="True"/>' +
+                    '<field name="tz" widget="timezone_mismatch"/>' +
+                '</form>',
+        });
+        testUtils.form.clickEdit(form);
+        assert.containsOnce(form, 'select[name=tz]');
+        assert.strictEqual(form.$('select[name=tz]').val(), 'false',
+            'should have blank option selected');
+
+        var $timezoneMismatch = form.$('.o_tz_warning');
+        assert.containsNone($timezoneMismatch,
+            'timezone mismatch is not present as there is no value set for tz');
+        form.destroy();
+    });
+
     QUnit.test('widget timezone_mismatch in a form view edit mode with mismatch', function (assert) {
         assert.expect(3);
 
