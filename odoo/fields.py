@@ -2329,7 +2329,10 @@ class _RelationalMulti(_Relational):
                         ids.add(comodel.new(command[2], ref=command[1]).id)
                     elif command[0] == 1:
                         line = browse(command[1])
-                        line.update(command[2])
+                        if validate:
+                            line.update(command[2])
+                        else:
+                            line._update_cache(command[2], validate=False)
                         ids.add(line.id)
                     elif command[0] in (2, 3):
                         ids.discard(browse(command[1]).id)
