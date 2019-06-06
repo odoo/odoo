@@ -240,8 +240,9 @@ class MailActivity(models.Model):
                 self.env[model].browse(res_ids).check_access_rule(doc_operation)
             except exceptions.AccessError:
                 raise exceptions.AccessError(
-                    _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
-                    (self._description, operation))
+                    _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation)
+                    + ' - ({} {}, {} {})'.format(_('Records:'), res_ids[:6], _('User:'), self._uid)
+                )
 
     @api.multi
     def _check_access_assignation(self):
