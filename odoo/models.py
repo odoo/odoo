@@ -5481,14 +5481,20 @@ Fields:
                 """ Return whether a field on record has changed. """
                 record = self['<record>']
                 subnames = self['<tree>'][name]
-                if not subnames:
+                if record._fields[name].type not in ('one2many', 'many2many'):
                     return self[name] != record[name]
-                else:
-                    return len(self[name]) != len(record[name]) or any(
+                return (
+                    len(self[name]) != len(record[name])
+                    or (
+                        set(line_snapshot["<record>"].id for line_snapshot in self[name])
+                        != set(record[name]._ids)
+                    )
+                    or any(
                         line_snapshot.has_changed(subname)
                         for line_snapshot in self[name]
                         for subname in subnames
                     )
+                )
 
             def diff(self, other):
                 """ Return the values in ``self`` that differ from ``other``.
