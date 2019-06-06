@@ -83,6 +83,10 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
             if (modalContent){
                 var $modalContent = $(modalContent);
                 $modalContent = self._postProcessContent($modalContent);
+                if (self.isWebsite && !$('input[name="add_qty"]').first().val()) {
+                    $modalContent.find('th.td-qty').empty();
+                    $modalContent.find('td.td-qty .css_quantity').addClass('o_hidden');
+                }
                 self.$content = $modalContent;
             } else {
                 self.trigger('options_empty');
