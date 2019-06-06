@@ -707,7 +707,7 @@ class ChromeBrowser():
             if res and res.get('id') == ready_id:
                 if res.get('result') == awaited_result:
                     if has_exceeded:
-                        self._logger.warning('The ready code tooks too much time : %s', tdiff)
+                        self._logger.info('The ready code tooks too much time : %s', tdiff)
                     return True
                 else:
                     last_bad_res = res
