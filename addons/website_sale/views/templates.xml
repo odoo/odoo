@@ -109,7 +109,7 @@
         </t>
     </template>
 
-    <template id="search count" inherit_id="website.website_search_box" active="False" customize_show="True" name="Show # found">
+    <template id="search_count_box" inherit_id="website.website_search_box" active="False" customize_show="True" name="Show # found">
         <xpath expr="//button[hasclass('oe_search_button')]" position="inside">
             <span t-if='search' class='oe_search_found'> <small>(<t t-esc="search_count"/> found)</small></span>
         </xpath>

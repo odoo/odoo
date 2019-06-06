@@ -55,37 +55,6 @@ class IrTranslationImport(object):
         """ Feed a translation, as a dictionary, into the cursor """
         params = dict(trans_dict, state="translated")
 
-        if params['type'] == 'view':
-            # ugly hack for QWeb views - pending refactoring of translations in master
-            if params['imd_model'] == 'website':
-                params['imd_model'] = "ir.ui.view"
-            # non-QWeb views do not need a matching res_id in case they do not
-            # have an xml id -> force to 0 to avoid dropping them
-            elif params['res_id'] is None and not params['imd_name']:
-                # maybe we should insert this translation for all views of the
-                # given model?
-                params['res_id'] = 0
-
-        # backward compatibility: convert 'field', 'help', 'view' into 'model'
-        if params['type'] == 'field':
-            model, field = params['name'].split(',')
-            params['type'] = 'model'
-            params['name'] = 'ir.model.fields,field_description'
-            params['imd_model'] = 'ir.model.fields'
-            params['imd_name'] = 'field_%s__%s' % (model.replace('.', '_'), field)
-
-        elif params['type'] == 'help':
-            model, field = params['name'].split(',')
-            params['type'] = 'model'
-            params['name'] = 'ir.model.fields,help'
-            params['imd_model'] = 'ir.model.fields'
-            params['imd_name'] = 'field_%s__%s' % (model.replace('.', '_'), field)
-
-        elif params['type'] == 'view':
-            params['type'] = 'model'
-            params['name'] = 'ir.ui.view,arch_db'
-            params['imd_model'] = "ir.ui.view"
-
         self._rows.append((params['name'], params['lang'], params['res_id'],
                            params['src'], params['type'], params['imd_model'],
                            params['module'], params['imd_name'], params['value'],

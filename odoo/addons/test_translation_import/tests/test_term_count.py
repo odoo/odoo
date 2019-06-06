@@ -17,11 +17,32 @@ class TestTermCount(common.TransactionCase):
         Just make sure we have as many translation entries as we wanted.
         """
         odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', module_name='test_translation_import', verbose=False)
-        ids = self.env['ir.translation'].search([
+        translations = self.env['ir.translation'].search([
             ('lang', '=', 'fr_FR'),
             ('src', '=', '1XBUO5PUYH2RYZSA1FTLRYS8SPCNU1UYXMEYMM25ASV7JC2KTJZQESZYRV9L8CGB'),
-        ])
-        self.assertEqual(len(ids), 2)
+        ], order='type')
+        self.assertEqual(len(translations), 2)
+        self.assertEqual(translations[0].type, 'code')
+        self.assertEqual(translations[0].module, 'test_translation_import')
+        self.assertEqual(translations[0].name, 'addons/test_translation_import/models.py')
+        self.assertEqual(translations[0].comments, '')
+        self.assertEqual(translations[0].res_id, 15)
+        self.assertEqual(translations[1].type, 'model')
+        self.assertEqual(translations[1].module, 'test_translation_import')
+        self.assertEqual(translations[1].name, 'ir.model.fields,field_description')
+        self.assertEqual(translations[1].comments, '')
+        field = self.env['ir.model.fields'].search([('model', '=', 'test.translation.import'), ('name', '=', 'name')])
+        self.assertEqual(translations[1].res_id, field.id)
+
+        translations = self.env['ir.translation'].search([
+            ('lang', '=', 'fr_FR'),
+            ('type', '=', 'selection'),
+            ('module', '=', 'test_translation_import'),
+        ], order='src')
+        self.assertEqual(len(translations), 2)
+        self.assertEqual(translations[0].name, 'test.translation.import,import_type')
+        self.assertEqual(translations[0].res_id, 0)
+
 
     def test_count_term_module(self):
         """
@@ -34,6 +55,7 @@ class TestTermCount(common.TransactionCase):
             ('module', '=', 'test_translation_import'),
         ])
         self.assertEqual(len(translations), 1)
+        self.assertEqual(translations.res_id, 21)
 
     def test_noupdate(self):
         """
