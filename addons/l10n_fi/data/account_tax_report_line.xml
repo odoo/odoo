@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_financial_report_line_fi_1" model="account.tax.report.line">
+        <field name="name">Vero kotimaan myynneistä verokannoittain</field>
+        <field name="sequence">0</field>
+        <field name="country_id" ref="base.fi"/>
+    </record>
+    <record id="account_financial_report_line_fi_sale24_301" model="account.tax.report.line">
+        <field name="name">24%:n vero</field>
+        <field name="code">SALE24_301</field>
+        <field name="tag_name">301</field>
+        <field name="sequence">1</field>
+        <field name="country_id" ref="base.fi"/>
+        <field name="parent_id" ref="account_financial_report_line_fi_1"/>
+    </record>
+    <record id="account_financial_report_line_fi_sale14_302" model="account.tax.report.line">
+        <field name="name">14%:n vero</field>
+        <field name="code">SALE14_302</field>
+        <field name="tag_name">302</field>
+        <field name="sequence">2</field>
+        <field name="country_id" ref="base.fi"/>
+        <field name="parent_id" ref="account_financial_report_line_fi_1"/>
+    </record>
+    <record id="account_financial_report_line_fi_sale10_303" model="account.tax.report.line">
+        <field name="name">10%:n vero</field>
+          <field name="code">SALE10_303</field>
+        <field name="tag_name">303</field>
+        <field name="sequence">3</field>
+        <field name="country_id" ref="base.fi"/>
+        <field name="parent_id" ref="account_financial_report_line_fi_1"/>
+    </record>
+    <record id="account_financial_report_line_fi_purchase_material_eu_305" model="account.tax.report.line">
+        <field name="name">Vero tavaraostoista muista EU-maista</field>
+        <field name="code">PURCHASE_MATERIAL_EU_305</field>
+        <field name="tag_name">305</field>
+        <field name="sequence">4</field>
+        <field name="country_id" ref="base.fi"/>
+    </record>
+    <record id="account_financial_report_line_fi_purchase_service_eu_306" model="account.tax.report.line">
+        <field name="name">Vero palveluostoista muista EU-maista</field>
+        <field name="code">PURCHASE_SERVICE_EU_306</field>
+        <field name="tag_name">306</field>
+        <field name="sequence">5</field>
+        <field name="country_id" ref="base.fi"/>
+    </record>
+    <record id="account_financial_report_line_fi_import_payable_340" model="account.tax.report.line">
+        <field name="name">Vero tavaroiden maahantuonneista EU:n ulkopuolelta</field>
+        <field name="code">IMPORT_PAYABLE_340</field>
+        <field name="tag_name">340</field>
+        <field name="sequence">6</field>
+        <field name="country_id" ref="base.fi"/>
+    </record>
+    <record id="account_financial_report_line_fi_purchase_construct_318" model="account.tax.report.line">
+        <field name="name">Vero rakentamispalvelun ja metalliromun ostoista (käännetty verovelvollisuus)</field>
+        <field name="code">PURCHASE_CONSTRUCT_318</field>
+        <field name="tag_name">318</field>
+        <field name="sequence">7</field>
+        <field name="country_id" ref="base.fi"/>
+    </record>
+    <record id="account_financial_report_line_fi_purchase_307" model="account.tax.report.line">
+        <field name="name">Verokauden vähennettävä vero</field>
+        <field name="code">PURCHASE_307</field>
+        <field name="tag_name">307</field>
+        <field name="sequence">8</field>
+        <field name="country_id" ref="base.fi"/>
+    </record>
+    <record id="account_financial_report_line_fi_total_tax_payable" model="account.tax.report.line">
+        <field name="name">Maksettava vero / Palautukseen oikeuttava vero (-)</field>
+        <field name="sequence">9</field>
+        <field name="formula">SALE24_301 + SALE14_302 + SALE10_303 + PURCHASE_MATERIAL_EU_305 + PURCHASE_SERVICE_EU_306 + IMPORT_PAYABLE_340 + PURCHASE_CONSTRUCT_318 - PURCHASE_307</field>
+        <field name="country_id" ref="base.fi"/>
+    </record>
+    <record id="account_financial_report_line_fi_sale0_304" model="account.tax.report.line">
+        <field name="name">0-verokannan alainen liikevaihto</field>
+        <field name="tag_name">304</field>
+        <field name="sequence">11</field>
+        <field name="country_id" ref="base.fi"/>
+    </record>
+    <record id="account_financial_report_line_fi_sale_material_eu_311" model="account.tax.report.line">
+        <field name="name">Tavaroiden myynnit muihin EU-maihin</field>
+        <field name="tag_name">311</field>
+        <field name="sequence">12</field>
+        <field name="country_id" ref="base.fi"/>
+    </record>
+    <record id="account_financial_report_line_fi_sales_service_eu_312" model="account.tax.report.line">
+        <field name="name">Palvelujen myynnit muihin EU-maihin</field>
+        <field name="tag_name">312</field>
+        <field name="sequence">13</field>
+        <field name="country_id" ref="base.fi"/>
+    </record>
+    <record id="account_financial_report_line_fi_purchase_service_eu_base_306" model="account.tax.report.line">
+        <field name="name">Palveluostot muista EU-maista</field>
+        <field name="tag_name">BASE_306</field>
+        <field name="sequence">15</field>
+        <field name="country_id" ref="base.fi"/>
+    </record>
+    <record id="account_financial_report_line_fi_import_payable_base_340" model="account.tax.report.line">
+        <field name="name">Tavaroiden maahantuonnit EU: ulkopuolelta</field>
+        <field name="tag_name">BASE_340</field>
+        <field name="sequence">16</field>
+        <field name="country_id" ref="base.fi"/>
+    </record>
+    <record id="account_financial_report_line_fi_purchase_construct_base_318" model="account.tax.report.line">
+        <field name="name">Rakentamispalvelun ja metalliromun ostot (käännetty verovelvollisuus)</field>
+        <field name="tag_name">BASE_318</field>
+        <field name="sequence">17</field>
+        <field name="country_id" ref="base.fi"/>
+    </record>
+    <record id="account_financial_report_line_fi_sales_construct_319" model="account.tax.report.line">
+        <field name="name">Rakentamispalvelun ja metalliromun myynnit (käännetty verovelvollisuus)</field>
+        <field name="tag_name">319</field>
+        <field name="sequence">18</field>
+        <field name="country_id" ref="base.fi"/>
+    </record>
+</odoo>
