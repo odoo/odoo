@@ -813,7 +813,7 @@ var ListRenderer = BasicRenderer.extend({
         });
         this.optionalColumns.forEach(function (col) {
             var txt = (col.attrs.string || self.state.fields[col.attrs.name].string) +
-                (config.debug ? (' (' + col.attrs.name + ')') : '');
+                (config.isDebug() ? (' (' + col.attrs.name + ')') : '');
             var $checkbox = dom.renderCheckbox({
                 text: txt,
                 prop: {
