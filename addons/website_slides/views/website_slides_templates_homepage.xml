@@ -396,13 +396,13 @@
             <img t-attf-src="/web/image/gamification.karma.rank/#{user.rank_id.id}/image_small" height="16" alt="" class="mr-1"/>
             <a href="/profile/ranks_badges" t-field="user.rank_id"/>
         </div>
-        <t t-if="user.next_rank_id">
-            <div class="font-weight-bold text-muted mt-1">Next rank:</div>
+        <t t-if="user.rank_id">
+            <div t-if="user.next_rank_id" class="font-weight-bold text-muted mt-1">Next rank:</div>
             <t t-call="website_profile.profile_next_rank_card">
                 <t t-set="bg_class">bg-200</t>
                 <t t-set="img_max_width">50%</t>
             </t>
-            <div t-field="user.next_rank_id.description_motivational"/>
+            <div t-field="user.rank_id.description_motivational"/>
         </t>
     </div>
 </template>
