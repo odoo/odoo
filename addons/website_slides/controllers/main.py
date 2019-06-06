@@ -381,6 +381,7 @@ class WebsiteSlides(WebsiteProfile):
 
         values = {
             'channel': channel,
+            'active_tab': kw.get('active_tab', 'home'),
             # search
             'search_category': category,
             'search_tag': tag,
