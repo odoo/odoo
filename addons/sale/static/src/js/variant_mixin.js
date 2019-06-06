@@ -403,7 +403,6 @@ var VariantMixin = {
                 );
             });
         });
-        $parent.find("#buy_now").toggleClass('disabled', disable);
     },
     /**
      * Extracted to a method to be extendable by other modules
