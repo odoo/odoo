@@ -2,6 +2,7 @@
 
 from odoo.addons.stock.tests.common2 import TestStockCommon
 from odoo.tests import Form
+from odoo.exceptions import AccessError
 
 
 class TestWarehouse(TestStockCommon):
@@ -44,6 +45,46 @@ class TestWarehouse(TestStockCommon):
 
         self.assertEqual(self.env['stock.quant']._gather(self.product_1, self.warehouse_1.wh_input_stock_loc_id).quantity, 0.0)
         self.assertEqual(self.env['stock.quant']._gather(self.product_1, self.env.ref('stock.stock_location_stock')).quantity, 0.0)
+
+    def test_inventory_wizard_as_manager(self):
+        """ Using the "Update Quantity" wizard as stock manager.
+        """
+        self.product_1.type = 'product'
+        InventoryWizard = self.env['stock.change.product.qty'].sudo(self.user_stock_manager.id)
+        inventory_wizard = InventoryWizard.create({
+            'product_id': self.product_1.id,
+            'product_tmpl_id': self.product_1.product_tmpl_id.id,
+            'new_quantity': 50.0,
+        })
+        inventory_wizard.change_product_qty()
+        # Check quantity was updated
+        self.assertEqual(self.product_1.virtual_available, 50.0)
+        self.assertEqual(self.product_1.qty_available, 50.0)
+
+        # Check associated quants: 2 quants for the product and the quantity (1 in stock, 1 in inventory adjustment)
+        quant = self.env['stock.quant'].search([('id', 'not in', self.existing_quants.ids)])
+        self.assertEqual(len(quant), 2)
+
+    def test_inventory_wizard_as_user(self):
+        """ Using the "Update Quantity" wizard as stock user.
+        """
+        self.product_1.type = 'product'
+        InventoryWizard = self.env['stock.change.product.qty'].sudo(self.user_stock_user.id)
+        inventory_wizard = InventoryWizard.create({
+            'product_id': self.product_1.id,
+            'product_tmpl_id': self.product_1.product_tmpl_id.id,
+            'new_quantity': 50.0,
+        })
+        # User has no right on quant, must raise an AccessError
+        with self.assertRaises(AccessError):
+            inventory_wizard.change_product_qty()
+        # Check quantity wasn't updated
+        self.assertEqual(self.product_1.virtual_available, 0.0)
+        self.assertEqual(self.product_1.qty_available, 0.0)
+
+        # Check associated quants: 0 quant expected
+        quant = self.env['stock.quant'].search([('id', 'not in', self.existing_quants.ids)])
+        self.assertEqual(len(quant), 0)
 
     def test_basic_move(self):
         product = self.product_3.sudo(self.user_stock_manager)
