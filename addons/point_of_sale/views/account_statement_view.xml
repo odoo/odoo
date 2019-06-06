@@ -19,4 +19,15 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="view_bank_statement_pos_session" model="ir.ui.view">
+            <field name="name">view.bank.statement.pos.session</field>
+            <field name="model">account.bank.statement</field>
+            <field name="mode">primary</field>
+            <field name="priority">1000</field>
+            <field name="inherit_id" ref="account.view_bank_statement_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='check_confirm_bank']" position="replace"/>
+            </field>
+        </record>
 </odoo>
