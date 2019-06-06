@@ -998,6 +998,7 @@ var FieldX2Many = AbstractField.extend({
                 addCreateLine: !this.isReadonly && this.activeActions.create,
                 addTrashIcon: !this.isReadonly && this.activeActions.delete,
                 isMany2Many: this.isMany2Many,
+                hasSelectors: this.hasSelectors,
                 columnInvisibleFields: this.currentColInvisibleFields,
             });
         }
