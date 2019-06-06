@@ -281,7 +281,6 @@ var StatementModel = BasicModel.extend({
         if (last && !this._isValid(last)) {
             return $.Deferred().resolve(false);
         }
-
         prop = this._formatQuickCreate(line);
         line.reconciliation_proposition.push(prop);
         line.createForm = _.pick(prop, this.quickCreateFields);
@@ -493,13 +492,6 @@ var StatementModel = BasicModel.extend({
 
         var focus = this._formatQuickCreate(line, _.pick(reconcileModel, fields));
         focus.reconcileModelId = reconcileModelId;
-        if (!line.reconciliation_proposition.every(function(prop) {return prop.to_check == focus.to_check})) {
-            new CrashManager().show_warning({data: {
-                exception_type: _t("Incorrect Operation"),
-                message: _t("You cannot mix items with and without the 'To Check' checkbox ticked.")
-            }});
-            return $.when();
-        }
         line.reconciliation_proposition.push(focus);
 
         if (reconcileModel.has_second_line) {
@@ -620,17 +612,15 @@ var StatementModel = BasicModel.extend({
         var self = this;
         var line = this.getLine(handle);
         var prop = _.last(_.filter(line.reconciliation_proposition, '__focus'));
+        if ('to_check' in values && values.to_check === false) {
+            // check if we have another line with to_check and if yes don't change value of this proposition
+            prop.to_check = line.reconciliation_proposition.some(function(rec_prop, index) {
+                return rec_prop.id !== prop.id && rec_prop.to_check;
+            });
+        }
         if (!prop) {
             prop = this._formatQuickCreate(line);
             line.reconciliation_proposition.push(prop);
-        }
-        if ('to_check' in values && !line.reconciliation_proposition.slice(0,-1).every(function(prop) {return prop.to_check == values.to_check})) {
-            new CrashManager().show_warning({data: {
-                exception_type: _t("Incorrect Operation"),
-                message: _t("You cannot mix items with and without the 'To Check' checkbox ticked.")
-            }});
-            $('.create_to_check input:visible').prop('checked', !values.to_check).change();
-            return $.when();
         }
         _.each(values, function (value, fieldName) {
             if (fieldName === 'analytic_tag_ids') {
@@ -671,7 +661,6 @@ var StatementModel = BasicModel.extend({
                 prop.amount = prop.base_amount;
         }
         line.createForm = _.pick(prop, this.quickCreateFields);
-
         // If you check/uncheck the force_tax_included box, reset the createForm amount.
         if(prop.base_amount)
             line.createForm.amount = prop.base_amount;
@@ -724,16 +713,8 @@ var StatementModel = BasicModel.extend({
                 "new_aml_dicts": _.map(_.filter(props, function (prop) {
                     return isNaN(prop.id) && prop.display;
                 }), self._formatToProcessReconciliation.bind(self, line)),
+                "to_check": line.to_check,
             };
-            line.reconciliation_proposition.some(function(prop) {
-                if (prop.to_check) {
-                    values_dict['to_check'] = true;
-                    return true;
-                }
-            })
-            if (line.reconciliation_proposition[0].to_check) {
-                values_dict['to_check'] = true;
-            }
 
             // If the lines are not fully balanced, create an unreconciled amount.
             // line.st_line.currency_id is never false here because its equivalent to
@@ -845,7 +826,12 @@ var StatementModel = BasicModel.extend({
         var formatOptions = {
             currency_id: line.st_line.currency_id,
         };
+        line.to_check = false;
         _.each(line.reconciliation_proposition, function (prop) {
+            if (prop.to_check) {
+                // If one of the proposition is to_check, set the global to_check flag to true
+                line.to_check = true;
+            }
             if (prop.is_tax) {
                 if (!_.find(line.reconciliation_proposition, {'id': prop.link}).__tax_to_recompute) {
                     reconciliation_proposition.push(prop);
@@ -1129,7 +1115,7 @@ var StatementModel = BasicModel.extend({
             'link': values.link,
             'display': true,
             'invalid': true,
-            'to_check': values.to_check || false,
+            'to_check': !!values.to_check,
             '__tax_to_recompute': true,
             'is_tax': values.is_tax,
             '__focus': '__focus' in values ? values.__focus : true,
