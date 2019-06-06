@@ -118,14 +118,9 @@ class ImageProcess():
         if output_format == 'PNG':
             opt['optimize'] = True
             if quality:
-                alpha = False
-                if output_image.mode in ('RGBA', 'LA') or (output_image.mode == 'P' and 'transparency' in output_image.info):
-                    alpha = output_image.convert('RGBA').split()[-1]
                 if output_image.mode != 'P':
                     # Floyd Steinberg dithering by default
                     output_image = output_image.convert('RGBA').convert('P', palette=Image.WEB, colors=256)
-                if alpha:
-                    output_image.putalpha(alpha)
         if output_format == 'JPEG':
             opt['optimize'] = True
             opt['quality'] = quality or 95

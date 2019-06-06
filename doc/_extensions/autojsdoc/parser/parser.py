@@ -36,7 +36,7 @@ class ModuleMatcher(Visitor):
                 'property': {'name': 'define'},
             },
         }}):
-            [module, func] = node['expression']['arguments']
+            [module, *_, func] = node['expression']['arguments']
             mod = jsdoc.parse_comments(node.get('comments'), jsdoc.ModuleDoc)
             # set module name
             mod.set_name(module['value'])

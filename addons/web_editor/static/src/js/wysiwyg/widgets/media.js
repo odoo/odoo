@@ -10,6 +10,7 @@ var fonts = require('wysiwyg.fonts');
 var ImageOptimizeDialog = require('wysiwyg.widgets.image_optimize_dialog').ImageOptimizeDialog;
 var utils = require('web.utils');
 var Widget = require('web.Widget');
+var session = require('web.session');
 
 var QWeb = core.qweb;
 var _t = core._t;

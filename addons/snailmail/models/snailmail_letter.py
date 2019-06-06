@@ -10,7 +10,6 @@ from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 
 DEFAULT_ENDPOINT = 'https://iap-snailmail.odoo.com'
-ESTIMATE_ENDPOINT = '/iap/snailmail/1/estimate'
 PRINT_ENDPOINT = '/iap/snailmail/1/print'
 
 ERROR_CODES = [
@@ -345,69 +344,6 @@ class SnailmailLetter(models.Model):
     def cancel(self):
         self.write({'state': 'canceled', 'error_code': False})
         self.send_snailmail_update()
-
-    @api.multi
-    def _snailmail_estimate(self):
-        """
-        Send a request to estimate the cost of sending all the documents with
-        the differents options.
-
-        The JSON object sent is the one generated from self._snailmail_create()
-
-        arguments sent:
-        {
-            "documents":[{
-                pages: int,
-                res_id: int (client_side, optional),
-                res_model: int (client_side, optional),
-                address: {
-                    country_code: char (country name)
-                }
-            }],
-            'color': # color on the letter,
-            'duplex': # one/two side printing,
-        }
-
-        The answer of the server is the same JSON object with some additionnal fields:
-        {
-            "total_cost": integer,      //The cost of sending ALL the documents
-            body: JSON object (same as body param except new param 'cost' in each documents)
-        }
-        """
-        endpoint = self.env['ir.config_parameter'].sudo().get_param('snailmail.endpoint', DEFAULT_ENDPOINT)
-        params = self._snailmail_create('estimate')
-        req = jsonrpc(endpoint + '/iap/snailmail/1/estimate', params=params)
-
-        return req['total_cost']
-
-    @api.model
-    def _snailmail_estimate_from_documents(self, res_model, res_ids, partner_field=None):
-        endpoint = self.env['ir.config_parameter'].sudo().get_param('snailmail.endpoint', DEFAULT_ENDPOINT)
-        docs = self.env[res_model].browse(res_ids)
-        doc_list = []
-        for doc in docs:
-            if partner_field:
-                country_code = doc[partner_field].country_id.code
-            else:
-                country_code = doc.country_id.code
-            val = {
-            'pages': 1,
-            'address': {
-                'country_code': country_code,
-                },
-            }
-            doc_list.append(val)
-        params = {
-            'account_token': "",
-            'documents': doc_list,
-            'options': {
-                'color': self.env.company.snailmail_color,
-                'duplex': self.env.company.snailmail_duplex,
-                'currency_name': 'EUR',
-            },
-        }
-        req = jsonrpc(endpoint + '/iap/snailmail/1/estimate', params=params)
-        return req['total_cost']
 
     @api.model
     def _snailmail_cron(self):

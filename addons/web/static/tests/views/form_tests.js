@@ -8158,6 +8158,72 @@ QUnit.module('Views', {
         await testUtils.nextTick();
         form.destroy();
     });
+
+    QUnit.test('resequence list lines when discardable lines are present', async function (assert) {
+        assert.expect(8);
+
+        var onchangeNum = 0;
+
+        this.data.partner.onchanges = {
+            p: function (obj) {
+                onchangeNum++;
+                obj.foo = obj.p.length.toString();
+            },
+        };
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="foo"/>' +
+                    '<field name="p"/>' +
+                '</form>',
+            archs: {
+                'partner,false,list':
+                    '<tree editable="bottom">' +
+                        '<field name="int_field" widget="handle"/>' +
+                        '<field name="display_name" required="1"/>' +
+                    '</tree>',
+            },
+        });
+
+        assert.strictEqual(onchangeNum, 1, "one onchange happens when form is opened");
+        assert.strictEqual(form.$('[name="foo"]').val(), "0", "onchange worked there is 0 line");
+
+        // Add one line
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        form.$('.o_field_one2many input:first').focus();
+        await testUtils.nextTick();
+        form.$('.o_field_one2many input:first').val('first line').trigger('input');
+        await testUtils.nextTick();
+        await testUtils.dom.click(form.$('input[name="foo"]'));
+        assert.strictEqual(onchangeNum, 2, "one onchange happens when a line is added");
+        assert.strictEqual(form.$('[name="foo"]').val(), "1", "onchange worked there is 1 line");
+
+        // Drag and drop second line before first one (with 1 draft and invalid line)
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        await testUtils.dom.dragAndDrop(
+            form.$('.ui-sortable-handle').eq(0),
+            form.$('.o_data_row').last(),
+            {position: 'bottom'}
+        );
+        assert.strictEqual(onchangeNum, 3, "one onchange happens when lines are resequenced");
+        assert.strictEqual(form.$('[name="foo"]').val(), "1", "onchange worked there is 1 line");
+
+        // Add a second line
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        form.$('.o_field_one2many input:first').focus();
+        await testUtils.nextTick();
+        form.$('.o_field_one2many input:first').val('second line').trigger('input');
+        await testUtils.nextTick();
+        await testUtils.dom.click(form.$('input[name="foo"]'));
+        assert.strictEqual(onchangeNum, 4, "one onchange happens when a line is added");
+        assert.strictEqual(form.$('[name="foo"]').val(), "2", "onchange worked there is 2 lines");
+
+        form.destroy();
+    });
+
     QUnit.test('if the focus is on the discard button, hitting ESCAPE should discard', async function (assert) {
         assert.expect(1);
 

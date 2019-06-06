@@ -13,6 +13,7 @@ var ready = Promise.all([domReady, session.is_bound, ajax.loadXML()]);
 
 tour.register('rte_translator', {
     test: true,
+    url: '/',
     wait_for: ready,
     url: '/',
 }, [{

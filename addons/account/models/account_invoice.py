@@ -879,7 +879,7 @@ class AccountInvoice(models.Model):
         domain = {}
         company_id = self.company_id.id
         p = self.partner_id if not company_id else self.partner_id.with_context(force_company=company_id)
-        type = self.type
+        type = self.type or self.env.context.get('type', 'out_invoice')
         if p:
             rec_account = p.property_account_receivable_id
             pay_account = p.property_account_payable_id
@@ -1081,7 +1081,7 @@ class AccountInvoice(models.Model):
         else:
             return self.env.ref('account.invoice_form').id
 
-    def _prepare_tax_line_vals(self, line, tax, tax_ids):
+    def _prepare_tax_line_vals(self, line, tax):
         ''' Prepare values to create an account.invoice.tax line.
         :param line:    An account.invoice.line record.
         :param tax:     Tax values outputted by compute_all() in account.tax.
@@ -1099,8 +1099,9 @@ class AccountInvoice(models.Model):
             'account_analytic_id': tax['analytic'] and line.account_analytic_id.id or False,
             'account_id': tax['account_id'] or line.account_id.id,
             'analytic_tag_ids': tax['analytic'] and line.analytic_tag_ids.ids or False,
-            'tax_ids': tax_ids and [(6, None, tax_ids)] or False,
             'tax_repartition_line_id': tax.get('tax_repartition_line_id'), # For base amount, we let this field empty
+            'tag_ids': tax['tag_ids'],
+            'tax_ids': tax['tax_ids'],
         }
 
         # If the taxes generate moves on the same financial account as the invoice line,
@@ -1130,7 +1131,6 @@ class AccountInvoice(models.Model):
             price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             taxes = line.invoice_line_tax_ids._origin.compute_all(price_unit, self.currency_id, line.quantity, line.product_id, self.partner_id, is_refund=self.type in ('in_refund', 'out_refund'))['taxes']
 
-            affecting_base_tax_ids = []
             for tax_vals in taxes:
                 # Retrieve the tax record (not in tax_vals when dealing with group of taxes).
                 if tax_map.get(tax_vals['id']):
@@ -1138,7 +1138,7 @@ class AccountInvoice(models.Model):
                 else:
                     tax = tax_map[tax_vals['id']] = self.env['account.tax'].browse(tax_vals['id'])
 
-                val = self._prepare_tax_line_vals(line, tax_vals, affecting_base_tax_ids)
+                val = self._prepare_tax_line_vals(line, tax_vals)
                 key = tax.get_grouping_key(val)
 
                 if key not in tax_grouped:
@@ -1147,11 +1147,6 @@ class AccountInvoice(models.Model):
                 else:
                     for field in default_tax_group_fields:
                         tax_grouped[key][field] += round_curr(val.get(field)) or 0
-
-                if tax.amount_type == "group":
-                    affecting_base_tax_ids += tax.children_tax_ids.filtered(lambda t: is_tax_affecting_base_amount(t)).ids
-                elif is_tax_affecting_base_amount(tax):
-                    affecting_base_tax_ids.append(tax.id)
 
         return tax_grouped
 
@@ -1268,7 +1263,6 @@ class AccountInvoice(models.Model):
 
     def tax_line_move_line_get(self):
         self.ensure_one()
-
         res = []
         # loop the invoice.tax.line in reversal sequence
         for tax_line in sorted(self.tax_line_ids, key=lambda x: -x.sequence):
@@ -1288,7 +1282,8 @@ class AccountInvoice(models.Model):
                     'invoice_id': self.id,
                     'tax_ids': tax_line.tax_ids and [(6, 0, tax_line.tax_ids.ids)] or False, # We don't pass an empty recordset here, as it would reset the tax_exibility of the line, due to the condition in account.move.line's create
                     'tax_repartition_line_id': tax_line.tax_repartition_line_id.id,
-                    'tag_ids': [(6, 0, tax_line.tax_repartition_line_id.tag_ids.ids)],
+                    'tag_ids': [(6, 0, tax_line.tag_ids.ids)],
+                    'tax_base_amount': tax_line.base,
                 })
         return res
 
@@ -2146,8 +2141,8 @@ class AccountInvoiceTax(models.Model):
     company_id = fields.Many2one('res.company', string='Company', related='account_id.company_id', store=True, readonly=True)
     currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True, readonly=True)
     base = fields.Monetary(string='Base')
-    tax_ids = fields.Many2many('account.tax', string='Affecting Base Taxes',
-        help='Taxes affecting the tax base amount applied before this one.')
+    tax_ids = fields.Many2many('account.tax', string='Affecting Base Taxes', help='Taxes whose base amount needs has to be affected by this tax line.')
+    tag_ids = fields.Many2many(string="Tags", comodel_name='account.account.tag', help="The taxes that will be applied on the move line generated for this tax entry")
 
     @api.depends('amount', 'amount_rounding')
     def _compute_amount_total(self):

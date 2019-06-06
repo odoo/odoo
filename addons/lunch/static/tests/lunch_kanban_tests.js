@@ -128,6 +128,53 @@ QUnit.module('LunchKanbanView', {
         kanban.destroy();
     });
 
+    QUnit.test('no flickering at reload', async function (assert) {
+        assert.expect(2);
+
+        const self = this;
+        let infosProm = Promise.resolve();
+        const kanban = await createLunchKanbanView({
+            View: LunchKanbanView,
+            model: 'product',
+            data: this.data,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="name"/></div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+            mockRPC: function (route, args) {
+                if (route === '/lunch/user_location_get') {
+                    return Promise.resolve(self.data['lunch.location'].records[0].id);
+                }
+                if (route === '/lunch/infos') {
+                    return Promise.resolve(self.regularInfos);
+                }
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'xmlid_to_res_id') {
+                    // delay the rendering of the lunch widget
+                    return infosProm.then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        infosProm = testUtils.makeTestPromise();
+        kanban.reload();
+
+        assert.strictEqual(kanban.$('.o_lunch_widget').length, 1,
+            "old widget should still be present");
+
+        await infosProm.resolve();
+
+        assert.strictEqual(kanban.$('.o_lunch_widget').length, 1);
+
+        kanban.destroy();
+    });
+
     QUnit.module('LunchKanbanWidget', function () {
 
         QUnit.test('empty cart', async function (assert) {
@@ -814,7 +861,6 @@ QUnit.module('LunchKanbanView', {
 
             kanban.destroy();
         });
-
     });
 });
 

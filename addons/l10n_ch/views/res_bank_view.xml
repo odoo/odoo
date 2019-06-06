@@ -29,7 +29,7 @@
             <field name="model">account.journal</field>
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='bank_acc_number']" position="after">
+                <xpath expr="//field[@name='bank_account_id']" position="after">
                     <field name="l10n_ch_postal" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
                 </xpath>
             </field>

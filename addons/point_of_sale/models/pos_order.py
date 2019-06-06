@@ -327,6 +327,7 @@ class PosOrder(models.Model):
                     'partner_id': partner_id,
                     'order_id': order.id,
                     'tax_repartition_line_id': tax['tax_repartition_line_id'],
+                    'tax_base_amount': tax['base'],
                     'tag_ids': tax['tag_ids'],
                 }
                 if currency_id != cur_company:
@@ -904,7 +905,7 @@ class PosOrder(models.Model):
                             # a serialnumber always has a quantity of 1 product, a lot number takes the full quantity of the order line
                             qty = 1.0
                             if stock_production_lot.product_id.tracking == 'lot':
-                                qty = pos_pack_lot.pos_order_line_id.qty
+                                qty = abs(pos_pack_lot.pos_order_line_id.qty)
                             qty_done += qty
                             pack_lots.append({'lot_id': stock_production_lot.id, 'qty': qty})
                         else:

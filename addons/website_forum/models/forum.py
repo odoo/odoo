@@ -251,10 +251,11 @@ class Post(models.Model):
             operator = operator == "=" and '!=' or '='
             value = True
 
-        if self._uid == SUPERUSER_ID:
+        user = self.env.user
+        # Won't impact sitemap, search() in converter is forced as public user
+        if user._is_admin():
             return [(1, '=', 1)]
 
-        user = self.env['res.users'].browse(self._uid)
         req = """
             SELECT p.id
             FROM forum_post p

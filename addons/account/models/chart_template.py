@@ -894,7 +894,9 @@ class AccountTaxTemplate(models.Model):
                 'account_dict': dictionary containing a to-do list with all the accounts to assign on new taxes
             }
         """
-        ChartTemplate = self.env['account.chart.template']
+        # default_company_id is needed in context to allow creation of default
+        # repartition lines on taxes
+        ChartTemplate = self.env['account.chart.template'].with_context(default_company_id=company.id)
         todo_dict = {'account.tax': {}, 'account.tax.repartition.line': {}}
         tax_template_to_tax = {}
 
@@ -926,7 +928,7 @@ class AccountTaxTemplate(models.Model):
                 # We also have to delay the assignation of accounts to repartition lines
                 all_tax_rep_lines = tax.invoice_repartition_line_ids + tax.refund_repartition_line_ids
                 all_template_rep_lines = template.invoice_repartition_line_ids + template.refund_repartition_line_ids
-                for i in range(0, len(all_tax_rep_lines)):
+                for i in range(0, len(all_template_rep_lines)):
                     # We assume template and tax repartition lines are in the same order
                     template_account = all_template_rep_lines[i].account_id
                     if template_account:

@@ -44,7 +44,7 @@ class AccountInvoice(models.Model):
         inv_type = self.type or self.env.context.get('type', 'out_invoice')
         if inv_type == 'out_invoice':
             company = self.company_id or self.env.company
-            self.comment = company.with_context(lang=self.partner_id.lang).invoice_terms
+            self.comment = company.with_context(lang=self.partner_id.lang).invoice_terms or (self._origin.company_id == company and self.comment)
 
     @api.multi
     def _prepare_refund(self, invoice, date_invoice=None, date=None, description=None, journal_id=None):

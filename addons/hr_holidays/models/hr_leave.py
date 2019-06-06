@@ -13,6 +13,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.addons.resource.models.resource import float_to_time, HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_compare
+from odoo.tools.float_utils import float_round
 from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -146,6 +147,8 @@ class HolidaysRequest(models.Model):
     number_of_hours_display = fields.Float(
         'Duration in hours', compute='_compute_number_of_hours_display', copy=False, readonly=True,
         help='Number of hours of the time off request according to your working schedule. Used for interface.')
+    duration_display = fields.Char('Requested (Days/Hours)', compute='_compute_duration_display',
+        help="Field allowing to see the leave request duration in days or hours depending on the leave_type_request_unit")    # details
     # details
     meeting_id = fields.Many2one('calendar.event', string='Meeting')
     parent_id = fields.Many2one('hr.leave', string='Parent', copy=False)
@@ -355,11 +358,17 @@ class HolidaysRequest(models.Model):
             self.mode_company_id = False
             self.department_id = False
 
+    @api.multi
+    def _sync_employee_details(self):
+        for holiday in self:
+            holiday.manager_id = holiday.employee_id.parent_id.id
+            if holiday.employee_id:
+                holiday.department_id = holiday.employee_id.department_id
+
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
-        self.manager_id = self.employee_id.parent_id.id
-        if self.employee_id:
-            self.department_id = self.employee_id.department_id
+        self._sync_employee_details()
+        self.holiday_status_id = False
 
     @api.onchange('date_from', 'date_to', 'employee_id')
     def _onchange_leave_dates(self):
@@ -384,6 +393,16 @@ class HolidaysRequest(models.Model):
                 holiday.number_of_hours_display = number_of_hours or (holiday.number_of_days * HOURS_PER_DAY)
             else:
                 holiday.number_of_hours_display = 0
+
+    @api.multi
+    @api.depends('number_of_hours_display', 'number_of_days_display')
+    def _compute_duration_display(self):
+        for leave in self:
+            leave.duration_display = '%g %s' % (
+                (float_round(leave.number_of_hours_display, precision_digits=2)
+                if leave.leave_type_request_unit == 'hour'
+                else float_round(leave.number_of_days_display, precision_digits=2)),
+                _('hour(s)') if leave.leave_type_request_unit == 'hour' else _('day(s)'))
 
     @api.multi
     @api.depends('state', 'employee_id', 'department_id')
@@ -413,7 +432,7 @@ class HolidaysRequest(models.Model):
     def _check_date(self):
         for holiday in self:
             domain = [
-                ('date_from', '<=', holiday.date_to),
+                ('date_from', '<', holiday.date_to),
                 ('date_to', '>', holiday.date_from),
                 ('employee_id', '=', holiday.employee_id.id),
                 ('id', '!=', holiday.id),
@@ -456,7 +475,10 @@ class HolidaysRequest(models.Model):
         res = []
         for leave in self:
             if self.env.context.get('short_name'):
-                res.append((leave.id, _("%s : %.2f day(s)") % (leave.name or leave.holiday_status_id.name, leave.number_of_days)))
+                if leave.leave_type_request_unit == 'hour':
+                    res.append((leave.id, _("%s : %.2f hour(s)") % (leave.name or leave.holiday_status_id.name, leave.number_of_hours_display)))
+                else:
+                    res.append((leave.id, _("%s : %.2f day(s)") % (leave.name or leave.holiday_status_id.name, leave.number_of_days)))
             else:
                 if leave.holiday_type == 'company':
                     target = leave.mode_company_id.name
@@ -466,11 +488,18 @@ class HolidaysRequest(models.Model):
                     target = leave.category_id.name
                 else:
                     target = leave.employee_id.name
-                res.append(
-                    (leave.id,
-                     _("%s on %s: %.2f day(s)") %
-                     (target, leave.holiday_status_id.name, leave.number_of_days))
-                )
+                if leave.leave_type_request_unit == 'hour':
+                    res.append(
+                        (leave.id,
+                        _("%s on %s : %.2f hour(s)") %
+                        (target, leave.holiday_status_id.name, leave.number_of_hours_display))
+                    )
+                else:
+                    res.append(
+                        (leave.id,
+                        _("%s on %s: %.2f day(s)") %
+                        (target, leave.holiday_status_id.name, leave.number_of_days))
+                    )
         return res
 
     @api.multi
@@ -511,7 +540,7 @@ class HolidaysRequest(models.Model):
             if holiday.validation_type == 'hr':
                 holiday.message_subscribe(partner_ids=(holiday.employee_id.parent_id.user_id.partner_id | holiday.employee_id.leave_manager_id.partner_id).ids)
             if employee_id:
-                holiday._onchange_employee_id()
+                holiday._sync_employee_details()
             if 'number_of_days' not in values and ('date_from' in values or 'date_to' in values):
                 holiday._onchange_leave_dates()
             if leave_type.validation_type == 'no_validation':
@@ -550,7 +579,7 @@ class HolidaysRequest(models.Model):
             for holiday in self:
                 if employee_id:
                     holiday.add_follower(employee_id)
-                    holiday._onchange_employee_id()
+                    self._sync_employee_details()
                 if 'number_of_days' not in values and ('date_from' in values or 'date_to' in values):
                     holiday._onchange_leave_dates()
         return result
