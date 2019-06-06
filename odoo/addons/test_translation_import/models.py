@@ -11,8 +11,8 @@ class m(models.TransientModel):
                        size=32, help='Efgh')
     other_name = fields.Char('Test translation with two code type and model')
     import_type = fields.Selection([
-        ('foo', 'Foo'),
-        ('bar', 'Bar'),
+        ('foo', 'Foo Import Type'),
+        ('bar', 'Bar Import Type'),
     ])
 
     _('Ijkl')
