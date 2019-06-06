@@ -943,7 +943,7 @@ var SearchView = Widget.extend({
         this.groupbys.forEach(function (group) {
             var groupId = _.uniqueId('__group__');
             group.filters.forEach(function (groupby) {
-                if (!groupby.attrs.invisible) {
+                if (!groupby.attrs.invisible && self.fields[groupby.attrs.fieldName]) {
                     var groupbyId = _.uniqueId('__groupby__');
                     var fieldName = groupby.attrs.fieldName;
                     var isDate = groupby.attrs.isDate;
