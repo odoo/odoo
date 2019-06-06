@@ -706,6 +706,8 @@ class ChromeBrowser():
                 res = None
             if res and res.get('id') == ready_id:
                 if res.get('result') == awaited_result:
+                    if has_exceeded:
+                        self._logger.warning('The ready code tooks too much time : %s', tdiff)
                     return True
                 else:
                     last_bad_res = res
@@ -713,7 +715,6 @@ class ChromeBrowser():
             tdiff = time.time() - start_time
             if tdiff >= 2 and not has_exceeded:
                 has_exceeded = True
-                self._logger.warning('The ready code takes too much time : %s', tdiff)
 
         self.take_screenshot(prefix='failed_ready')
         self._logger.info('Ready code last try result: %s', last_bad_res or res)
@@ -1425,7 +1426,8 @@ class Form(object):
         if not any(spec[f] for f in fields):
             return
 
-        result = self._model.onchange(self._onchange_values(), fields, spec)
+        record = self._model.browse(self._values.get('id'))
+        result = record.onchange(self._onchange_values(), fields, spec)
         if result.get('warning'):
             _logger.getChild('onchange').warn("%(title)s %(message)s" % result.get('warning'))
         values = result.get('value', {})

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import logging
 from lxml import etree
 import traceback
@@ -107,6 +106,9 @@ class Http(models.AbstractModel):
 
         request.website = request.env['website'].get_current_website()  # can use `request.env` since auth methods are called
         context['website_id'] = request.website.id
+        # This is mainly to avoid access errors in website controllers where there is no
+        # context (eg: /shop), and it's not going to propagate to the global context of the tab
+        context['allowed_company_ids'] = [request.website.company_id.id]
 
         # modify bound context
         request.context = dict(request.context, **context)
@@ -285,7 +287,7 @@ class Http(models.AbstractModel):
             return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
 
     def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas',
-                       unique=False, filename=None, filename_field='datas_fname', download=False,
+                       unique=False, filename=None, filename_field='name', download=False,
                        mimetype=None, default_mimetype='application/octet-stream',
                        access_token=None):
         obj = None
@@ -310,6 +312,19 @@ class Http(models.AbstractModel):
                 return obj[0]
 
         return super(Http, cls)._xmlid_to_obj(env, xmlid)
+
+    @api.model
+    def get_frontend_session_info(self):
+        session_info = super(Http, self).get_frontend_session_info()
+        session_info.update({
+            'is_website_user': request.env.user.id == request.website.user_id.id,
+        })
+        if request.env.user.has_group('website.group_website_publisher'):
+            session_info.update({
+                'website_id': request.website.id,
+                'website_company_id': request.website.company_id.id,
+            })
+        return session_info
 
 
 class ModelConverter(ModelConverter):

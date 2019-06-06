@@ -140,15 +140,14 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         'change form.js_attributes input, form.js_attributes select': '_onChangeAttribute',
         'mouseup form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'touchend form.js_add_cart_json label': '_onMouseupAddCartLabel',
-        'change .css_attribute_color input': '_onChangeColorAttribute',
         'click .show_coupon': '_onClickShowCoupon',
         'submit .o_wsale_products_searchbar_form': '_onSubmitSaleSearch',
         'change select[name="country_id"]': '_onChangeCountry',
         'change #shipping_use_same': '_onChangeShippingUseSame',
         'click .toggle_summary': '_onToggleSummary',
-        'click #add_to_cart, #buy_now, #products_grid .product_price .a-submit': 'async _onClickAdd',
+        'click #add_to_cart, #buy_now, #products_grid .o_wsale_product_btn .a-submit': 'async _onClickAdd',
         'click input.js_product_change': 'onChangeVariant',
-        // dirty fix: prevent options modal events to be triggered and bubbled
+        'change .js_main_product [data-attribute_exclusions]': 'onChangeVariant',
         'change oe_optional_products_modal [data-attribute_exclusions]': 'onChangeVariant',
     }),
 
@@ -162,6 +161,9 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         this._changeCountry = _.debounce(this._changeCountry.bind(this), 500);
 
         this.isWebsite = true;
+
+        delete this.events['change .main_product:not(.in_cart) input.js_quantity'];
+        delete this.events['change [data-attribute_exclusions]'];
     },
     /**
      * @override
@@ -169,11 +171,29 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     start: function () {
         var def = this._super.apply(this, arguments);
 
+        var hash = window.location.hash.substring(1);
+        if (hash) {
+            var params = $.deparam(hash);
+            if (params['attr']) {
+                var attributeIds = params['attr'].split(',');
+                var $inputs = this.$('input.js_variant_change, select.js_variant_change option');
+                _.each(attributeIds, function (id) {
+                    var $toSelect = $inputs.filter('[data-value_id="' + id + '"]');
+                    if ($toSelect.is('input[type="radio"]')) {
+                        $toSelect.prop('checked', true);
+                    } else if ($toSelect.is('option')) {
+                        $toSelect.prop('selected', true);
+                    }
+                });
+                this._changeColorAttribute();
+            }
+        }
+
         _.each(this.$('div.js_product'), function (product) {
             $('input.js_product_change', product).first().trigger('change');
         });
 
-        // This has to be triggered to compute the "out of stock" feature
+        // This has to be triggered to compute the "out of stock" feature and the hash variant changes
         this.triggerVariantChange(this.$el);
 
         this.$('select[name="country_id"]').change();
@@ -209,6 +229,28 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Sets the url hash from the selected product options.
+     *
+     * @private
+     */
+    _setUrlHash: function ($parent) {
+        var $attributes = $parent.find('input.js_variant_change:checked, select.js_variant_change option:selected');
+        var attributeIds = _.map($attributes, function (elem) {
+            return $(elem).data('value_id');
+        });
+        history.replaceState(undefined, undefined, '#attr=' + attributeIds.join(','));
+    },
+    /**
+     * Set the checked color active.
+     *
+     * @private
+     */
+    _changeColorAttribute: function () {
+        $('.css_attribute_color').removeClass("active")
+                                 .filter(':has(input:checked)')
+                                 .addClass("active");
+    },
     /**
      * @private
      */
@@ -372,9 +414,13 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      * @override
      * @private
      */
-    _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId, new_carousel) {
+    _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId, new_carousel, isCombinationPossible) {
         var $img;
         var $carousel = $productContainer.find('#o-carousel-product');
+
+        if (isCombinationPossible === undefined) {
+            isCombinationPossible = this.isSelectedVariantAllowed;
+        }
 
         if (new_carousel) {
             // When using the web editor, don't reload this or the images won't
@@ -418,14 +464,8 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             }
         }
 
-        $carousel.toggleClass('css_not_available',
-            $productContainer.find('.js_main_product').hasClass('css_not_available'));
+        $carousel.toggleClass('css_not_available', !isCombinationPossible);
     },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
     /**
      * @private
      * @param {MouseEvent} ev
@@ -435,7 +475,6 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         this.isBuyNow = $(ev.currentTarget).attr('id') === 'buy_now';
         return this._handleAdd($(ev.currentTarget).closest('form'));
     },
-
     /**
      * Initializes the optional products modal
      * and add handlers to the modal events (confirm, back, ...)
@@ -459,7 +498,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             false
         );
 
-        productReady.then(function (productId){
+        return productReady.then(function (productId) {
             $form.find(productSelector.join(', ')).val(productId);
 
             self.rootProduct = {
@@ -472,12 +511,10 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
 
             return self._onProductReady();
         });
-
-        return productReady;
     },
 
     _onProductReady: function () {
-        this._submitForm();
+        return this._submitForm();
     },
 
     /**
@@ -485,6 +522,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      * in the form data and trigger submit.
      *
      * @private
+     * @returns {Promise} never resolved
      */
     _submitForm: function () {
         var $productCustomVariantValues = $('<input>', {
@@ -506,6 +544,8 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         }
 
         this.$form.trigger('submit', [true]);
+
+        return new Promise(function () {});
     },
 
     /**
@@ -611,15 +651,6 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      * @private
      * @param {Event} ev
      */
-    _onChangeColorAttribute: function (ev) { // highlight selected color
-        $('.css_attribute_color').removeClass("active")
-                                 .filter(':has(input:checked)')
-                                 .addClass("active");
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
     _onClickShowCoupon: function (ev) {
         $(ev.currentTarget).hide();
         $('.coupon_form').removeClass('d-none');
@@ -659,20 +690,22 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         $('.ship_to_other').toggle(!$(ev.currentTarget).prop('checked'));
     },
     /**
-     * Dirty fix: prevent options modal events to be triggered and bubbled
-     * Also write the properties of the form elements in the DOM to prevent the
+     * Toggles the add to cart button depending on the possibility of the
+     * current combination.
+     *
+     * @override
+     */
+    _toggleDisable: function ($parent, isCombinationPossible) {
+        VariantMixin._toggleDisable.apply(this, arguments);
+        $parent.find("#add_to_cart").toggleClass('disabled', !isCombinationPossible);
+    },
+    /**
+     * Write the properties of the form elements in the DOM to prevent the
      * current selection from being lost when activating the web editor.
      *
      * @override
      */
     onChangeVariant: function (ev, data) {
-        var $originPath = ev.originalEvent && Array.isArray(ev.originalEvent.path) ? $(ev.originalEvent.path) : $();
-        var $container = data && data.$container ? data.$container : $();
-        if ($originPath.add($container).hasClass('oe_optional_products_modal')) {
-            ev.stopPropagation();
-            return;
-        }
-
         var $component = $(ev.currentTarget).closest('.js_product');
         $component.find('input').each(function () {
             var $el = $(this);
@@ -683,6 +716,8 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             $el.attr('selected', $el.is(':selected'));
         });
 
+        this._setUrlHash($component);
+
         return VariantMixin.onChangeVariant.apply(this, arguments);
     },
     /**
@@ -691,6 +726,43 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     _onToggleSummary: function () {
         $('.toggle_summary_div').toggleClass('d-none');
         $('.toggle_summary_div').removeClass('d-xl-block');
+    },
+});
+
+publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
+    selector: '.oe_website_sale',
+    disabledInEditableMode: false,
+    events: {
+        'change .o_wsale_apply_layout': '_onApplyShopLayoutChange',
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onApplyShopLayoutChange: function (ev) {
+        var switchToList = $(ev.currentTarget).find('.o_wsale_apply_list input').is(':checked');
+        if (!this.editableMode) {
+            this._rpc({
+                route: '/shop/save_shop_layout_mode',
+                params: {
+                    'layout_mode': switchToList ? 'list' : 'grid',
+                },
+            });
+        }
+        var $grid = this.$('#products_grid');
+        // Disable transition on all list elements, then switch to the new
+        // layout then reenable all transitions after having forced a redraw
+        // TODO should probably be improved to allow disabling transitions
+        // altogether with a class/option.
+        $grid.find('*').css('transition', 'none');
+        $grid.toggleClass('o_wsale_layout_list', switchToList);
+        void $grid[0].offsetWidth;
+        $grid.find('*').css('transition', '');
     },
 });
 
@@ -711,15 +783,15 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onClickChangeShipping: function (ev) {
-        var $old = $('.all_shipping').find('.card.border_primary');
+        var $old = $('.all_shipping').find('.card.border.border-primary');
         $old.find('.btn-ship').toggle();
         $old.addClass('js_change_shipping');
-        $old.removeClass('border_primary');
+        $old.removeClass('border border-primary');
 
         var $new = $(ev.currentTarget).parent('div.one_kanban').find('.card');
         $new.find('.btn-ship').toggle();
         $new.removeClass('js_change_shipping');
-        $new.addClass('border_primary');
+        $new.addClass('border border-primary');
 
         var $form = $(ev.currentTarget).parent('div.one_kanban').find('form.d-none');
         $.post($form.attr('action'), $form.serialize()+'&xhr=1');

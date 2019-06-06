@@ -5,40 +5,40 @@
     #
     # SYSCOHADA : Définition des taux de TVA SYSCOHADA
     # Auteur : BAAMTU Sénégal
-    # Version du fichier : 1.0 
+    # Version du fichier : 1.0
     # Date : 02/2010
-    # 
+    #
     #
     -->
-
-    <!-- Account Tags -->
-    <record id="TVA_vente_18" model="account.account.tag">
-        <field name="name">TVA 18% (vente)</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="TVA_achat_18" model="account.account.tag">
-        <field name="name">TVA 18% (achat)</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="TVA_vente_exempt_0" model="account.account.tag">
-        <field name="name">Exonéré de TVA</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="TVA_achat_exempt_0" model="account.account.tag">
-        <field name="name">Exonéré de TVA</field>
-        <field name="applicability">taxes</field>
-    </record>
-
     <record model="account.tax.template" id="tva_sale_18">
         <field name="name">TVA 18% (vente)</field>
         <field name="chart_template_id" ref="syscohada_chart_template"/>
         <field name="amount">18</field>
         <field name="amount_type">percent</field>
-        <field name="account_id" ref="pcg_4441"/>
-        <field name="refund_account_id" ref="pcg_4449"/>
         <field name="type_tax_use">sale</field>
-        <field name="tag_ids" eval="[(6,0,[ref('TVA_vente_18')])]"/>
         <field name="tax_group_id" ref="tax_group_18"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4441'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4449'),
+            }),
+        ]"/>
     </record>
 
     <record model="account.tax.template" id="tva_purchase_18">
@@ -47,10 +47,29 @@
         <field name="amount">18</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
-        <field name="account_id" ref="pcg_4441"/>
-        <field name="refund_account_id" ref="pcg_4449"/>
-        <field name="tag_ids" eval="[(6,0,[ref('TVA_achat_18')])]"/>
         <field name="tax_group_id" ref="tax_group_18"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4441'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4449'),
+            }),
+        ]"/>
     </record>
 
     <record model="account.tax.template" id="tva_exonere">
@@ -58,8 +77,27 @@
         <field name="chart_template_id" ref="syscohada_chart_template"/>
         <field name="amount">0</field>
         <field name="type_tax_use">sale</field>
-        <field name="tag_ids" eval="[(6,0,[ref('TVA_vente_exempt_0')])]"/>
         <field name="tax_group_id" ref="tax_group_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
     </record>
 
     <record model="account.tax.template" id="tva_achat_exonere">
@@ -67,8 +105,27 @@
         <field name="chart_template_id" ref="syscohada_chart_template"/>
         <field name="amount">0</field>
         <field name="type_tax_use">purchase</field>
-        <field name="tag_ids" eval="[(6,0,[ref('TVA_achat_exempt_0')])]"/>
         <field name="tax_group_id" ref="tax_group_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
     </record>
 
 </odoo>

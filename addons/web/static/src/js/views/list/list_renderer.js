@@ -32,7 +32,10 @@ var FIELD_CLASSES = {
 };
 
 var ListRenderer = BasicRenderer.extend({
+    className: 'o_list_view',
     events: {
+        "click .o_optional_columns_dropdown .dropdown-item": "_onToggleOptionalColumn",
+        "click .o_optional_columns_dropdown_toggle": "_onToggleOptionalColumnDropdown",
         'click tbody tr': '_onRowClicked',
         'click tbody .o_list_record_selector': '_onSelectRecord',
         'click thead th.o_column_sortable': '_onSortColumn',
@@ -51,6 +54,7 @@ var ListRenderer = BasicRenderer.extend({
      */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
+        this.columnInvisibleFields = params.columnInvisibleFields;
         this.rowDecorations = _.chain(this.arch.attrs)
             .pick(function (value, key) {
                 return DECORATIONS.indexOf(key) >= 0;
@@ -63,7 +67,7 @@ var ListRenderer = BasicRenderer.extend({
         this.editable = params.editable;
         this.isGrouped = this.state.groupedBy.length > 0;
         this.groupbys = params.groupbys;
-        this._processColumns(params.columnInvisibleFields || {});
+        this._processColumns(this.columnInvisibleFields || {});
     },
 
     //--------------------------------------------------------------------------
@@ -229,6 +233,21 @@ var ListRenderer = BasicRenderer.extend({
         return this.hasSelectors ? n + 1 : n;
     },
     /**
+     * Returns the local storage key for stored enabled optional columns
+     *
+     * @private
+     * @returns {string}
+     */
+    _getOptionalColumnsStorageKey: function () {
+        var self = this;
+        var fields = [];
+        _.each(this.state.fieldsInfo[this.viewType], function (field, name) {
+            fields.push(name + ":" + self.state.fields[name].type);
+        });
+        fields.sort();
+        return "list_optional_fields," + this.state.model + "," + this.viewType + "," + fields.join(',');
+    },
+    /**
      * Removes the columns which should be invisible.
      *
      * @param  {Object} columnInvisibleFields contains the column invisible modifier values
@@ -236,20 +255,45 @@ var ListRenderer = BasicRenderer.extend({
     _processColumns: function (columnInvisibleFields) {
         var self = this;
         this.handleField = null;
-        this.columns = _.reject(this.arch.children, function (c) {
-            if (c.tag === 'control' || c.tag === 'groupby') {
-                return true;
+        this.columns = [];
+        this.optionalColumns = [];
+        this.optionalColumnsEnabled = [];
+        var localStorageKey = this._getOptionalColumnsStorageKey();
+        var storedOptionalColumns = this.call('local_storage', 'getItem', localStorageKey);
+        _.each(this.arch.children, function (c) {
+            if (c.tag !== 'control' && c.tag !== 'groupby') {
+                var reject = c.attrs.modifiers.column_invisible;
+                // If there is an evaluated domain for the field we override the node
+                // attribute to have the evaluated modifier value.
+                if (c.attrs.name in columnInvisibleFields) {
+                    reject = columnInvisibleFields[c.attrs.name];
+                }
+
+                if (!reject && c.attrs.widget === 'handle') {
+                    self.handleField = c.attrs.name;
+                    if (self.isGrouped) {
+                        reject = true;
+                    }
+                }
+
+                if (!reject && c.attrs.optional) {
+                    self.optionalColumns.push(c);
+                    var enabled;
+                    if (storedOptionalColumns === undefined) {
+                        enabled = c.attrs.optional === 'show'
+                    } else {
+                        enabled = _.contains(storedOptionalColumns, c.attrs.name);
+                    }
+                    if (enabled) {
+                        self.optionalColumnsEnabled.push(c.attrs.name);
+                    }
+                    reject = !enabled;
+                }
+
+                if (!reject) {
+                    self.columns.push(c);
+                }
             }
-            var reject = c.attrs.modifiers.column_invisible;
-            // If there is an evaluated domain for the field we override the node
-            // attribute to have the evaluated modifier value.
-            if (c.attrs.name in columnInvisibleFields) {
-                reject = columnInvisibleFields[c.attrs.name];
-            }
-            if (!reject && c.attrs.widget === 'handle') {
-                self.handleField = c.attrs.name;
-            }
-            return reject;
         });
     },
     /**
@@ -265,7 +309,7 @@ var ListRenderer = BasicRenderer.extend({
 
         return _.map(this.columns, function (column) {
             var $cell = $('<td>');
-            if (config.debug) {
+            if (config.isDebug()) {
                 $cell.addClass(column.attrs.name);
             }
             if (column.attrs.name in aggregateValues) {
@@ -441,7 +485,6 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {jQuery} a <button> element
      */
     _renderGroupButton: function (list, node) {
-        var self = this;
         var $button = viewUtils.renderButtonFromNode(node, {
             extraClass: node.attrs.icon ? 'o_icon_button' : undefined,
             textAsTitle: !!node.attrs.icon,
@@ -449,20 +492,10 @@ var ListRenderer = BasicRenderer.extend({
         this._handleAttributes($button, node);
         this._registerModifiers(node, list.groupData, $button);
 
-        // TODO this should be moved to a handler
-        $button.on("click", function (e) {
-            e.stopPropagation();
-            if (node.attrs.type === 'edit') {
-                self.trigger_up('group_edit_button_clicked', {
-                    record: list.groupData,
-                });
-            } else {
-                self.trigger_up('button_clicked', {
-                    attrs: node.attrs,
-                    record: list.groupData,
-                });
-            }
-        });
+        // TODO this should be moved to event handlers
+        $button.on("click", this._onGroupButtonClicked.bind(this, list.groupData, node));
+        $button.on("keydown", this._onGroupButtonKeydown.bind(this));
+
         return $button;
     },
     /**
@@ -709,7 +742,7 @@ var ListRenderer = BasicRenderer.extend({
             $th.css({ textAlign: 'right' });
         }
 
-        if (config.debug) {
+        if (config.isDebug()) {
             var fieldDescr = {
                 field: field,
                 name: name,
@@ -754,6 +787,46 @@ var ListRenderer = BasicRenderer.extend({
      */
     _renderRows: function () {
         return this.state.data.map(this._renderRow.bind(this));
+    },
+    /**
+    * Render a single <th> with dropdown menu to display optional columns of view.
+    *
+    * @private
+    * @returns {jQueryElement} a <th> element
+    */
+    _renderOptionalColumnsDropdown: function () {
+        var self = this;
+        var $optionalColumnsDropdown = $('<div>', {
+            class: 'o_optional_columns text-center dropdown',
+        });
+        var $a = $("<a>", {
+            class: "dropdown-toggle text-dark o-no-caret",
+            href: "#",
+            role: "button",
+            'data-toggle': "dropdown",
+            'aria-expanded': false,
+        });
+        $a.appendTo($optionalColumnsDropdown);
+        var $dropdown = $("<div>", {
+            class: 'dropdown-menu dropdown-menu-right o_optional_columns_dropdown',
+            role: 'menu',
+        });
+        this.optionalColumns.forEach(function (col) {
+            var txt = (col.attrs.string || self.state.fields[col.attrs.name].string) +
+                (config.debug ? (' (' + col.attrs.name + ')') : '');
+            var $checkbox = dom.renderCheckbox({
+                text: txt,
+                prop: {
+                    name: col.attrs.name,
+                    checked: _.contains(self.optionalColumnsEnabled, col.attrs.name),
+                }
+            })
+            $dropdown.append($("<div>", {
+                class: "dropdown-item",
+            }).append($checkbox));
+        });
+        $dropdown.appendTo($optionalColumnsDropdown);
+        return $optionalColumnsDropdown;
     },
     /**
      * A 'selector' is the small checkbox on the left of a record in a list
@@ -806,9 +879,9 @@ var ListRenderer = BasicRenderer.extend({
         this.hasHandle = orderedBy.length === 0 || orderedBy[0].name === this.handleField;
         this._computeAggregates();
 
-        var $table = $('<table>').addClass('o_list_view table table-sm table-hover table-striped');
-        $table.toggleClass('o_list_view_grouped', this.isGrouped);
-        $table.toggleClass('o_list_view_ungrouped', !this.isGrouped);
+        var $table = $('<table>').addClass('o_list_table table table-sm table-hover table-striped');
+        $table.toggleClass('o_list_table_grouped', this.isGrouped);
+        $table.toggleClass('o_list_table_ungrouped', !this.isGrouped);
         var defs = [];
         this.defs = defs;
         if (this.isGrouped) {
@@ -827,7 +900,16 @@ var ListRenderer = BasicRenderer.extend({
             // destroy the previously instantiated pagers, if any
             _.invoke(oldPagers, 'destroy');
 
-            self.$el.addClass('table-responsive').html($table);
+            self.$el.html($('<div>', {
+                class: 'table-responsive',
+                html: $table
+            }));
+
+            if (self.optionalColumns.length) {
+                self.$el.addClass('o_list_optional_columns')
+                self.$('table').append($('<i class="o_optional_columns_dropdown_toggle fa fa-ellipsis-v"/>'));
+                self.$el.append(self._renderOptionalColumnsDropdown());
+            }
 
             if (self.selection.length) {
                 var $checked_rows = self.$('tr').filter(function (index, el) {
@@ -889,6 +971,79 @@ var ListRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @private
+     * @param {Object} record a record dataPoint on which the button applies
+     * @param {Object} node arch node of the button
+     * @param {Object} node.attrs the attrs of the button in the arch
+     * @param {jQueryEvent} ev
+     */
+    _onGroupButtonClicked: function (record, node, ev) {
+        ev.stopPropagation();
+        if (node.attrs.type === 'edit') {
+            this.trigger_up('group_edit_button_clicked', {
+                record: record,
+            });
+        } else {
+            this.trigger_up('button_clicked', {
+                attrs: node.attrs,
+                record: record,
+            });
+        }
+    },
+    /**
+     * If the user presses ENTER on a group header button, we want to execute
+     * the button action. This is done automatically as the click handler is
+     * called. However, we have to stop the propagation of the event to prevent
+     * another handler from closing the group (see _onKeyDown).
+     *
+     * @private
+     * @param {jQueryEvent} ev
+     */
+    _onGroupButtonKeydown: function (ev) {
+        if (ev.keyCode === $.ui.keyCode.ENTER) {
+            ev.stopPropagation();
+        }
+    },
+    /**
+     * When the user clicks on the checkbox in optional fields dropdown the
+     * column is added to listview and displayed
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onToggleOptionalColumn: function (ev) {
+        var self = this;
+        ev.stopPropagation();
+        var input = ev.currentTarget.querySelector('input');
+        var fieldIndex = this.optionalColumnsEnabled.indexOf(input.name);
+        if (fieldIndex >= 0) {
+            this.optionalColumnsEnabled.splice(fieldIndex, 1);
+        } else {
+            this.optionalColumnsEnabled.push(input.name);
+        }
+        this.call('local_storage', 'setItem', this._getOptionalColumnsStorageKey(), this.optionalColumnsEnabled);
+        this._processColumns(this.columnInvisibleFields || {});
+        this._renderView().then(function() {
+            self._onToggleOptionalColumnDropdown(ev);
+        })
+    },
+    /**
+     * When the user clicks on the three dots (ellipsis), toggle the optional
+     * fields dropdown.
+     *
+     * @private
+     */
+    _onToggleOptionalColumnDropdown: function (ev) {
+        // The dropdown toggle is inside the overflow hidden container because
+        // the ellipsis is always in the last column, but we want the actual
+        // dropdown to be outside of the overflow hidden container since it
+        // could easily have a higher height than the table. However, separating
+        // the toggle and the dropdown itself is not supported by popper.js by
+        // default, which is why we need to toggle the dropdown manually.
+        ev.stopPropagation();
+        this.$('.o_optional_columns .dropdown-toggle').dropdown('toggle');
+    },
+    /**
      * Manages the keyboard events on the list. If the list is not editable, when the user navigates to
      * a cell using the keyboard, if he presses enter, enter the model represented by the line
      *
@@ -943,8 +1098,11 @@ var ListRenderer = BasicRenderer.extend({
                 break;
         }
         if ($futureCell) {
-            // If the cell contains activable elements, focus them instead
-            var $activables = $futureCell.find(':focusable');
+            // If the cell contains activable elements, focus them instead (except if it is in a
+            // group header, in which case we want to activate the whole header, so that we can
+            // open/close it with RIGHT/LEFT keystrokes)
+            var isInGroupHeader = $futureCell.closest('tr').hasClass('o_group_header');
+            var $activables = !isInGroupHeader && $futureCell.find(':focusable');
             if ($activables.length) {
                 $activables[0].focus();
             } else {

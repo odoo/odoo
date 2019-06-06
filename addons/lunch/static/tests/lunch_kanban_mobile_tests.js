@@ -29,6 +29,14 @@ QUnit.module('LunchKanbanView Mobile', {
                     return Promise.resolve();
                 },
             },
+            'lunch.product.category': {
+                fields: {},
+                records: [],
+            },
+            'lunch.supplier': {
+                fields: {},
+                records: [],
+            },
             'ir.model.data': {
                 fields: {},
                 xmlid_to_res_id() {
@@ -51,7 +59,7 @@ QUnit.module('LunchKanbanView Mobile', {
     },
 }, function () {
     QUnit.test('basic rendering', async function (assert) {
-        assert.expect(9);
+        assert.expect(7);
 
         const kanban = await createLunchKanbanView({
             View: LunchKanbanView,
@@ -76,10 +84,6 @@ QUnit.module('LunchKanbanView Mobile', {
             "should have 1 records in the renderer");
 
         // check view layout
-        assert.containsOnce(kanban, '.o_content > div',
-            "should have 1 column");
-        assert.containsNone(kanban, '.o_content > div.o_search_panel',
-            "shouldn't have a 'lunch filters' column");
         assert.containsOnce(kanban, '.o_content > .o_lunch_kanban',
             "should have a 'kanban lunch wrapper' column");
         assert.containsOnce(kanban, '.o_lunch_kanban > .o_kanban_view',

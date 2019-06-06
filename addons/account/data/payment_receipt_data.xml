@@ -34,10 +34,10 @@
 
         <act_window name="Send Receipt By Email"
             res_model="mail.compose.message"
-            src_model="account.payment"
+            binding_model="account.payment"
             view_mode="form"
             target="new"
-            key2="client_action_relate"
+            binding_views="form"
             id="account_send_payment_receipt_by_email_action"
             context="{
                 'default_model': 'account.payment',

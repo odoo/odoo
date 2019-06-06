@@ -1,11 +1,20 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import base64
+import io
+import logging
 import os
 import re
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, UserError
+from odoo.modules.module import get_resource_path
+
+from random import randrange
+from PIL import Image
+
+_logger = logging.getLogger(__name__)
 
 
 class Company(models.Model):
@@ -28,6 +37,32 @@ class Company(models.Model):
     def _get_user_currency(self):
         currency_id = self.env['res.users'].browse(self._uid).company_id.currency_id
         return currency_id or self._get_euro()
+
+    def _get_default_favicon(self, original=False):
+        img_path = get_resource_path('web', 'static/src/img/favicon.ico')
+        with tools.file_open(img_path, 'rb') as f:
+            if original:
+                return base64.b64encode(f.read())
+            # Modify the source image to add a colored bar on the bottom
+            # This could seem overkill to modify the pixels 1 by 1, but
+            # Pillow doesn't provide an easy way to do it, and this 
+            # is acceptable for a 16x16 image.
+            color = (randrange(32, 224, 24), randrange(32, 224, 24), randrange(32, 224, 24))
+            original = Image.open(f)
+            new_image = Image.new('RGBA', original.size)
+            height = original.size[1]
+            width = original.size[0]
+            bar_size = 1
+            for y in range(height):
+                for x in range(width):
+                    pixel = original.getpixel((x, y))
+                    if height - bar_size <= y + 1 <= height:
+                        new_image.putpixel((x, y), (color[0], color[1], color[2], 255))
+                    else:
+                        new_image.putpixel((x, y), (pixel[0], pixel[1], pixel[2], pixel[3]))
+            stream = io.BytesIO()
+            new_image.save(stream, format="ICO")
+            return base64.b64encode(stream.getvalue())
 
     name = fields.Char(related='partner_id.name', string='Company Name', required=True, store=True, readonly=False)
     sequence = fields.Integer(help='Used to order Companies in the company switcher', default=10)
@@ -57,12 +92,15 @@ class Company(models.Model):
     company_registry = fields.Char()
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format', default=lambda self: self.env.ref('base.paperformat_euro', raise_if_not_found=False))
     external_report_layout_id = fields.Many2one('ir.ui.view', 'Document Template')
+    base_onboarding_company_state = fields.Selection([
+        ('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding company step", default='not_done')
+    favicon = fields.Binary(string="Company Favicon", help="This field holds the image used to display a favicon for a given company.", default=_get_default_favicon)
+
+
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
 
-    base_onboarding_company_state = fields.Selection([
-        ('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding company step", default='not_done')
 
     @api.model_cr
     def init(self):
@@ -120,7 +158,7 @@ class Company(models.Model):
     @api.depends('partner_id', 'partner_id.image')
     def _compute_logo_web(self):
         for company in self:
-            company.logo_web = tools.image_process(company.partner_id.image, (180, None))
+            company.logo_web = tools.image_process(company.partner_id.image, size=(180, 0))
 
     @api.onchange('state_id')
     def _onchange_state(self):
@@ -154,7 +192,7 @@ class Company(models.Model):
             # select only the currently visible companies (according to rules,
             # which are probably to allow to see the child companies) even if
             # she belongs to some other companies.
-            companies = self.env.user.company_id + self.env.user.company_ids
+            companies = self.env.user.company_ids
             args = (args or []) + [('id', 'in', companies.ids)]
             newself = newself.sudo()
         return super(Company, newself.with_context(context))._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
@@ -162,36 +200,11 @@ class Company(models.Model):
     @api.model
     @api.returns('self', lambda value: value.id)
     def _company_default_get(self, object=False, field=False):
-        """ Returns the default company (usually the user's company).
-        The 'object' and 'field' arguments are ignored but left here for
-        backward compatibility and potential override.
+        """ Returns the user's company
+            - Deprecated
         """
-        return self.env['res.users']._get_company()
-
-    @api.model
-    @tools.ormcache('self.env.uid', 'company')
-    def _get_company_children(self, company=None):
-        if not company:
-            return []
-        return self.search([('parent_id', 'child_of', [company])]).ids
-
-    @api.multi
-    def _get_partner_hierarchy(self):
-        self.ensure_one()
-        parent = self.parent_id
-        if parent:
-            return parent._get_partner_hierarchy()
-        else:
-            return self._get_partner_descendance([])
-
-    @api.multi
-    def _get_partner_descendance(self, descendance):
-        self.ensure_one()
-        descendance.append(self.partner_id.id)
-        for child_id in self._get_company_children(self.id):
-            if child_id != self.id:
-                descendance = self.browse(child_id)._get_partner_descendance(descendance)
-        return descendance
+        _logger.warning(_("The method '_company_default_get' on res.company is deprecated and shouldn't be used anymore"))
+        return self.env.company
 
     # deprecated, use clear_caches() instead
     def cache_restart(self):
@@ -199,6 +212,8 @@ class Company(models.Model):
 
     @api.model
     def create(self, vals):
+        if not vals.get('favicon'):
+            vals['favicon'] = self._get_default_favicon()
         if not vals.get('name') or vals.get('partner_id'):
             self.clear_caches()
             return super(Company, self).create(vals)
@@ -248,25 +263,21 @@ class Company(models.Model):
         return self.env['res.config.settings'].open_company()
 
     @api.multi
-    def write_company_and_print_report(self, values):
-        res = self.write(values)
-
-        report_name = values.get('default_report_name')
-        active_ids = values.get('active_ids')
-        active_model = values.get('active_model')
+    def write_company_and_print_report(self):
+        context = self.env.context
+        report_name = context.get('default_report_name')
+        active_ids = context.get('active_ids')
+        active_model = context.get('active_model')
         if report_name and active_ids and active_model:
             docids = self.env[active_model].browse(active_ids)
             return (self.env['ir.actions.report'].search([('report_name', '=', report_name)], limit=1)
-                        .with_context(values)
                         .report_action(docids))
-        else:
-            return res
 
     @api.model
     def action_open_base_onboarding_company(self):
         """ Onboarding step for company basic information. """
         action = self.env.ref('base.action_open_base_onboarding_company').read()[0]
-        action['res_id'] = self.env.user.company_id.id
+        action['res_id'] = self.env.company.id
         return action
 
     def set_onboarding_step_done(self, step_name):

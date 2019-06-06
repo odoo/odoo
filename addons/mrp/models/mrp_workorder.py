@@ -49,11 +49,20 @@ class MrpWorkorder(models.Model):
         ('done', 'Finished'),
         ('cancel', 'Cancelled')], string='Status',
         default='pending')
+    leave_id = fields.Many2one(
+        'resource.calendar.leaves',
+        help='Slot into workcenter calendar once planned')
     date_planned_start = fields.Datetime(
         'Scheduled Date Start',
+        compute='_compute_dates_planned',
+        inverse='_set_dates_planned',
+        search='_search_date_planned_start',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     date_planned_finished = fields.Datetime(
         'Scheduled Date Finished',
+        compute='_compute_dates_planned',
+        inverse='_set_dates_planned',
+        search='_search_date_planned_finished',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     date_start = fields.Datetime(
         'Effective Start Date',
@@ -81,11 +90,15 @@ class MrpWorkorder(models.Model):
     worksheet = fields.Binary(
         'Worksheet', related='operation_id.worksheet', readonly=True)
     move_raw_ids = fields.One2many(
-        'stock.move', 'workorder_id', 'Moves')
+        'stock.move', 'workorder_id', 'Raw Moves',
+        domain=[('raw_material_production_id', '!=', False), ('production_id', '=', False)])
+    move_finished_ids = fields.One2many(
+        'stock.move', 'workorder_id', 'Finished Moves',
+        domain=[('raw_material_production_id', '=', False), ('production_id', '!=', False)])
     move_line_ids = fields.One2many(
         'stock.move.line', 'workorder_id', 'Moves to Track',
         help="Inventory moves for which you must scan a lot number at this work order")
-    final_lot_id = fields.Many2one(
+    finished_lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial Number', domain="[('product_id', '=', product_id)]",
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     time_ids = fields.One2many(
@@ -104,44 +117,72 @@ class MrpWorkorder(models.Model):
     capacity = fields.Float(
         'Capacity', default=1.0,
         help="Number of pieces that can be produced in parallel.")
-    workorder_line_ids = fields.One2many(
-        'mrp.workorder.line',
-        'workorder_id',
-        string='Workorder lines',
-        domain=[('is_finished', '=', False)]
-    )
-    finished_workorder_line_ids = fields.One2many(
-        'mrp.workorder.line',
-        'workorder_id',
-        string='Final Lot lines',
-        domain=[('is_finished', '=', True)]
-    )
+    raw_workorder_line_ids = fields.One2many('mrp.workorder.line',
+        'raw_workorder_id', string='Components')
+    finished_workorder_line_ids = fields.One2many('mrp.workorder.line',
+        'finished_workorder_id', string='By-products')
     allowed_lots_domain = fields.One2many(comodel_name='stock.production.lot', compute="_compute_allowed_lots_domain")
 
-    @api.onchange('final_lot_id')
-    def _onchange_final_lot_id(self):
+    # Both `date_planned_start` and `date_planned_finished` are related fields on `leave_id`. Let's say
+    # we slide a workorder on a gantt view, a single call to write is made with both
+    # fields Changes. As the ORM doesn't batch the write on related fields and instead
+    # makes multiple call, the constraint check_dates() is raised.
+    # That's why the compute and set methods are needed. to ensure the dates are updated
+    # in the same time. The two next search method are needed as the field are non stored and
+    # not direct related fields.
+    @api.depends('leave_id')
+    def _compute_dates_planned(self):
+        for workorder in self:
+            workorder.date_planned_start = workorder.leave_id.date_from
+            workorder.date_planned_finished = workorder.leave_id.date_to
+
+    def _set_dates_planned(self):
+        date_from = self.date_planned_start[0]
+        date_to = self.date_planned_finished[0]
+        self.mapped('leave_id').write({
+            'date_from': date_from,
+            'date_to': date_to,
+        })
+
+    def _search_date_planned_start(self, operator, value):
+        return [('leave_id.date_from', operator, value)]
+
+    def _search_date_planned_finished(self, operator, value):
+        return [('leave_id.date_to', operator, value)]
+
+    @api.onchange('finished_lot_id')
+    def _onchange_finished_lot_id(self):
         """When the user changes the lot being currently produced, suggest
         a quantity to produce consistent with the previous workorders. """
         previous_wo = self.env['mrp.workorder'].search([
             ('next_work_order_id', '=', self.id)
         ])
         if previous_wo:
-            line = previous_wo.finished_workorder_line_ids.filtered(lambda line: line.lot_id == self.final_lot_id)
+            line = previous_wo.finished_workorder_line_ids.filtered(lambda line: line.product_id == self.product_id and line.lot_id == self.finished_lot_id)
             if line:
                 self.qty_producing = line.qty_done
 
+    @api.depends('production_id.workorder_ids.finished_workorder_line_ids',
+    'production_id.workorder_ids.finished_workorder_line_ids.qty_done',
+    'production_id.workorder_ids.finished_workorder_line_ids.lot_id')
     def _compute_allowed_lots_domain(self):
-        """ browse already created lot and respective quantities"""
+        """ Check if all the finished products has been assigned to a serial
+        number or a lot in other workorders. If yes, restrict the selectable lot
+        to the lot/sn used in other workorders.
+        """
         productions = self.mapped('production_id')
         for production in productions:
             if production.product_id.tracking == 'none':
                 continue
 
             rounding = production.product_uom_id.rounding
-            finished_workorder_lines = production.workorder_ids.mapped('finished_workorder_line_ids')
+            finished_workorder_lines = production.workorder_ids.mapped('finished_workorder_line_ids').filtered(lambda wl: wl.product_id == production.product_id)
             qties_done_per_lot = defaultdict(list)
             for finished_workorder_line in finished_workorder_lines:
-                qties_done_per_lot[finished_workorder_line.lot_id.id].append(finished_workorder_line.qty_done)
+                # It is possible to have finished workorder lines without a lot (eg using the dummy
+                # test type). Ignore them when computing the allowed lots.
+                if finished_workorder_line.lot_id:
+                    qties_done_per_lot[finished_workorder_line.lot_id.id].append(finished_workorder_line.qty_done)
 
             qty_to_produce = production.product_qty
             allowed_lot_ids = self.env['stock.production.lot']
@@ -155,7 +196,7 @@ class MrpWorkorder(models.Model):
             workorders = production.workorder_ids.filtered(lambda wo: wo.state not in ('done', 'cancel'))
             for workorder in workorders:
                 if workorder.product_tracking == 'serial':
-                    workorder.allowed_lots_domain = allowed_lot_ids - workorder.finished_workorder_line_ids.mapped('lot_id')
+                    workorder.allowed_lots_domain = allowed_lot_ids - workorder.finished_workorder_line_ids.filtered(lambda wl: wl.product_id == production.product_id).mapped('lot_id')
                 else:
                     workorder.allowed_lots_domain = allowed_lot_ids
 
@@ -223,17 +264,13 @@ class MrpWorkorder(models.Model):
     def _generate_wo_lines(self):
         """ Generate workorder line """
         self.ensure_one()
-        raw_moves = self.move_raw_ids.filtered(
+        moves = (self.move_raw_ids | self.move_finished_ids).filtered(
             lambda move: move.state not in ('done', 'cancel')
         )
-        for move in raw_moves:
-            qty_to_consume = move.product_uom._compute_quantity(
-                self.qty_producing * move.unit_factor,
-                move.product_id.uom_id,
-                round=False
-            )
+        for move in moves:
+            qty_to_consume = self._prepare_component_quantity(move, self.qty_producing)
             line_values = self._generate_lines_values(move, qty_to_consume)
-            self.workorder_line_ids |= self.env['mrp.workorder.line'].create(line_values)
+            self.env['mrp.workorder.line'].create(line_values)
 
     def _apply_update_workorder_lines(self):
         """ update existing line on the workorder. It could be trigger manually
@@ -241,13 +278,18 @@ class MrpWorkorder(models.Model):
         """
         self.ensure_one()
         line_values = self._update_workorder_lines()
-        self.workorder_line_ids |= self.workorder_line_ids.create(line_values['to_create'])
+        self.env['mrp.workorder.line'].create(line_values['to_create'])
         if line_values['to_delete']:
             line_values['to_delete'].unlink()
         for line, vals in line_values['to_update'].items():
             line.write(vals)
 
     def _refresh_wo_lines(self):
+        """ Modify exisiting workorder line in order to match the reservation on
+        stock move line. The strategy is to remove the line that were not
+        processed yet then call _generate_lines_values that recreate workorder
+        line depending the reservation.
+        """
         for workorder in self:
             raw_moves = workorder.move_raw_ids.filtered(
                 lambda move: move.state not in ('done', 'cancel')
@@ -256,22 +298,18 @@ class MrpWorkorder(models.Model):
             for move in raw_moves:
                 rounding = move.product_uom.rounding
                 qty_already_consumed = 0.0
-                workorder_lines = workorder.workorder_line_ids.filtered(lambda w: w.move_id == move)
+                workorder_lines = workorder.raw_workorder_line_ids.filtered(lambda w: w.move_id == move)
                 for wl in workorder_lines:
                     if not wl.qty_done:
                         wl_to_unlink |= wl
                         continue
 
                     qty_already_consumed += wl.qty_done
-                qty_to_consume = move.product_uom._compute_quantity(
-                    workorder.qty_producing * move.unit_factor,
-                    move.product_id.uom_id,
-                    round=False
-                )
+                qty_to_consume = self._prepare_component_quantity(move, workorder.qty_producing)
                 wl_to_unlink.unlink()
                 if float_compare(qty_to_consume, qty_already_consumed, precision_rounding=rounding) > 0:
                     line_values = workorder._generate_lines_values(move, qty_to_consume - qty_already_consumed)
-                    workorder.workorder_line_ids |= self.env['mrp.workorder.line'].create(line_values)
+                    self.env['mrp.workorder.line'].create(line_values)
 
     def _defaults_from_finished_workorder_line(self, reference_lot_lines):
         for r_line in reference_lot_lines:
@@ -282,28 +320,17 @@ class MrpWorkorder(models.Model):
             rounding = self.product_uom_id.rounding
             if not candidates:
                 self.write({
-                    'final_lot_id': r_line.lot_id.id,
+                    'finished_lot_id': r_line.lot_id.id,
                     'qty_producing': r_line.qty_done,
                 })
                 return True
             elif float_compare(candidates.qty_done, r_line.qty_done, precision_rounding=rounding) < 0:
                 self.write({
-                    'final_lot_id': r_line.lot_id.id,
+                    'finished_lot_id': r_line.lot_id.id,
                     'qty_producing': r_line.qty_done - candidates.qty_done,
                 })
                 return True
         return False
-
-    def _get_byproduct_move_line(self, by_product_move, quantity):
-        return {
-            'move_id': by_product_move.id,
-            'product_id': by_product_move.product_id.id,
-            'product_uom_qty': quantity,
-            'product_uom_id': by_product_move.product_uom.id,
-            'qty_done': quantity,
-            'location_id': by_product_move.location_id.id,
-            'location_dest_id': by_product_move.location_dest_id.id,
-        }
 
     @api.multi
     def record_production(self):
@@ -319,17 +346,17 @@ class MrpWorkorder(models.Model):
             self._update_finished_move()
 
         # Transfer quantities from temporary to final move line or make them final
-        self._update_raw_moves()
+        self._update_moves()
 
-        # Transfert lot and quantity produced to a finished workorder line
-        if self.product_tracking != 'none' and self.final_lot_id:
+        # Transfer lot (if present) and quantity produced to a finished workorder line
+        if self.product_tracking != 'none':
             self._create_or_update_finished_line()
 
         # Update workorder quantity produced
         self.qty_produced += self.qty_producing
 
         # Suggest a finished lot on the next workorder
-        if self.next_work_order_id and self.production_id.product_id.tracking != 'none' and not self.next_work_order_id.final_lot_id:
+        if self.next_work_order_id and self.production_id.product_id.tracking != 'none' and not self.next_work_order_id.finished_lot_id:
             self.next_work_order_id._defaults_from_finished_workorder_line(self.finished_workorder_line_ids)
             # As we may have changed the quantity to produce on the next workorder,
             # make sure to update its wokorder lines
@@ -352,7 +379,7 @@ class MrpWorkorder(models.Model):
             if not candidate_found_in_previous_wo:
                 # self is the first workorder
                 self.qty_producing = self.qty_remaining
-                self.final_lot_id = False
+                self.finished_lot_id = False
                 if self.product_tracking == 'serial':
                     self.qty_producing = 1
 
@@ -361,6 +388,9 @@ class MrpWorkorder(models.Model):
             self.qty_producing = 0
             self.button_finish()
         return True
+
+    def _get_byproduct_move_to_update(self):
+        return self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id != self.production_id.product_id.id) and (x.state not in ('done', 'cancel')))
 
     def _create_or_update_finished_line(self):
         """
@@ -379,27 +409,29 @@ class MrpWorkorder(models.Model):
             # and it remains 2 units to product, it could produce 5 lot A.
             # In this case we select 4 since it would conflict with the first
             # workorder otherwise.
-            line = workorder.finished_workorder_line_ids.filtered(lambda line: line.lot_id == self.final_lot_id)
-            if line and float_compare(line.qty_done + workorder.qty_remaining, final_lot_quantity, precision_rounding=rounding) <= 0:
-                final_lot_quantity = line.qty_done + workorder.qty_remaining
-            elif float_compare(workorder.qty_remaining, final_lot_quantity, precision_rounding=rounding) < 0:
-                final_lot_quantity = workorder.qty_remaining
+            line = workorder.finished_workorder_line_ids.filtered(lambda line: line.lot_id == self.finished_lot_id)
+            line_without_lot = workorder.finished_workorder_line_ids.filtered(lambda line: line.product_id == workorder.product_id and not line.lot_id)
+            quantity_remaining = workorder.qty_remaining + line_without_lot.qty_done
+            quantity = line.qty_done + quantity_remaining
+            if line and float_compare(quantity, final_lot_quantity, precision_rounding=rounding) <= 0:
+                final_lot_quantity = quantity
+            elif float_compare(quantity_remaining, final_lot_quantity, precision_rounding=rounding) < 0:
+                final_lot_quantity = quantity_remaining
 
         # final lot line for this lot on this workorder.
-        current_lot_lines = self.finished_workorder_line_ids.filtered(lambda line: line.lot_id == self.final_lot_id)
+        current_lot_lines = self.finished_workorder_line_ids.filtered(lambda line: line.lot_id == self.finished_lot_id)
 
         # this lot has already been produced
         if float_compare(final_lot_quantity, current_lot_lines.qty_done + self.qty_producing, precision_rounding=rounding) < 0:
             raise UserError(_('You have produced %s %s of lot %s in the previous workorder. You are trying to produce %s in this one') %
-                (final_lot_quantity, self.product_id.uom_id.name, self.final_lot_id.name, current_lot_lines.qty_done + self.qty_producing))
+                (final_lot_quantity, self.product_id.uom_id.name, self.finished_lot_id.name, current_lot_lines.qty_done + self.qty_producing))
 
         # Update workorder line that regiter final lot created
         if not current_lot_lines:
             current_lot_lines = self.env['mrp.workorder.line'].create({
-                'workorder_id': self.id,
-                'is_finished': True,
+                'finished_workorder_id': self.id,
                 'product_id': self.product_id.id,
-                'lot_id': self.final_lot_id.id,
+                'lot_id': self.finished_lot_id.id,
                 'qty_done': self.qty_producing,
             })
         else:
@@ -548,11 +580,19 @@ class MrpWorkorderLine(models.Model):
     _inherit = ["mrp.abstract.workorder.line"]
     _description = "Workorder move line"
 
-    workorder_id = fields.Many2one('mrp.workorder', 'Workorder')
-    is_finished = fields.Boolean('Finished Lot Line', default=False)
+    raw_workorder_id = fields.Many2one('mrp.workorder', 'Component for Workorder')
+    finished_workorder_id = fields.Many2one('mrp.workorder', 'Finished Product for Workorder')
 
-    def _get_final_lot(self):
-        return self.workorder_id.final_lot_id
+    @api.model
+    def _get_raw_workorder_inverse_name(self):
+        return 'raw_workorder_id'
+
+    @api.model
+    def _get_finished_workoder_inverse_name(self):
+        return 'finished_workorder_id'
+
+    def _get_final_lots(self):
+        return (self.raw_workorder_id or self.finished_workorder_id).finished_lot_id
 
     def _get_production(self):
-        return self.workorder_id.production_id
+        return (self.raw_workorder_id or self.finished_workorder_id).production_id

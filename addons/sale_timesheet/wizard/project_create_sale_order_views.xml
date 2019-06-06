@@ -44,13 +44,11 @@
 
     <record id="project_project_action_multi_create_sale_order" model="ir.actions.act_window">
         <field name="name">Create a Sales Order</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">project.create.sale.order</field>
         <field name="view_type">form</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="project_create_sale_order_view_form"/>
         <field name="target">new</field>
-        <field name="multi" eval="False"/>
         <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
 

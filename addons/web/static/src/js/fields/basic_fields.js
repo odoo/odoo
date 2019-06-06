@@ -8,6 +8,7 @@ odoo.define('web.basic_fields', function (require) {
  */
 
 var AbstractField = require('web.AbstractField');
+var config = require('web.config');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var datepicker = require('web.datepicker');
@@ -808,7 +809,7 @@ var FieldBoolean = AbstractField.extend({
      * @returns {jQuery} the focusable checkbox input
      */
     getFocusableElement: function () {
-        return this.$input || $();
+        return this.mode === 'readonly' ? $() : this.$input;
     },
     /**
      * A boolean field is always set since false is a valid value.
@@ -1042,7 +1043,13 @@ var FieldFloatToggle = AbstractField.extend({
      * @returns {float} The current formatted value
      */
     _getDisplayedValue: function () {
-        return parseFloat(this._formatValue(this.value));
+        // this.value is a plain float
+        // Matches what is in Database
+        var usrFormatValue = this._formatValue(this.value);
+        // usrFormatValue is string
+        // contains a float represented in a user specific format
+        // the float is the fraction by [this.factor] of this.value
+        return field_utils.parse['float'](usrFormatValue);
     },
     /**
      * Formats the HTML input tag for edit mode and stores selection status.
@@ -1069,7 +1076,7 @@ var FieldFloatToggle = AbstractField.extend({
      * one is not in the range, the next value of the closest one will be chosen.
      *
      * @private
-     * @returns {number} The next formatted value in the range
+     * @returns {number} The next value in the range
      */
     _nextValue: function () {
         var range = this.nodeOptions.range;
@@ -1098,7 +1105,8 @@ var FieldFloatToggle = AbstractField.extend({
         if (this.mode === 'edit') {
             ev.stopPropagation(); // only stop propagation in edit mode
             var next_val = this._nextValue();
-            this._setValue(next_val.toString()); // will be parsed in _setValue
+            next_val = field_utils.format['float'](next_val);
+            this._setValue(next_val); // will be parsed in _setValue
         }
     },
 
@@ -1458,13 +1466,10 @@ var AbstractFieldBinary = AbstractField.extend({
                     this.do_warn(_t("File upload"), _.str.sprintf(msg, utils.human_size(this.max_upload_size)));
                     return false;
                 }
-                var filereader = new FileReader();
-                filereader.readAsDataURL(file);
-                filereader.onloadend = function (upload) {
-                    var data = upload.target.result;
+                utils.getDataURLFromFile(file).then(function (data) {
                     data = data.split(',')[1];
                     self.on_file_uploaded(file.size, file.name, file.type, data);
-                };
+                });
             } else {
                 this.$('form.o_form_binary_form').submit();
             }
@@ -1725,7 +1730,7 @@ var FieldPdfViewer = FieldBinaryFile.extend({
                 id: this.res_id,
             };
             var queryString = $.param(queryObj);
-            fileURI = '/web/image?' + queryString
+            fileURI = '/web/content?' + queryString;
         }
         fileURI = encodeURIComponent(fileURI);
         var viewerURL = '/web/static/lib/pdfjs/web/viewer.html?file=';
@@ -2766,7 +2771,7 @@ var FieldDomain = AbstractField.extend({
             this.domainSelector = new DomainSelector(this, this._domainModel, value, {
                 readonly: this.mode === "readonly" || this.inDialog,
                 filters: this.fsFilters,
-                debugMode: session.debug,
+                debugMode: config.isDebug(),
             });
             def = this.domainSelector.prependTo(this.$el);
         } else {
@@ -2855,7 +2860,7 @@ var FieldDomain = AbstractField.extend({
         new DomainSelectorDialog(this, this._domainModel, this.value || "[]", {
             readonly: this.mode === "readonly",
             filters: this.fsFilters,
-            debugMode: session.debug,
+            debugMode: config.isDebug(),
         }).open();
     },
     /**

@@ -174,39 +174,51 @@ class Product(models.Model):
         Warehouse = self.env['stock.warehouse']
 
         if self.env.context.get('company_owned', False):
-            company_id = self.env.user.company_id.id
+            company_id = self.env.company.id
             return (
                 [('location_id.company_id', '=', company_id), ('location_id.usage', 'in', ['internal', 'transit'])],
                 [('location_id.company_id', '=', False), ('location_dest_id.company_id', '=', company_id)],
                 [('location_id.company_id', '=', company_id), ('location_dest_id.company_id', '=', False),
             ])
-        location_ids = []
-        if self.env.context.get('location', False):
-            if isinstance(self.env.context['location'], int):
-                location_ids = [self.env.context['location']]
-            elif isinstance(self.env.context['location'], str):
-                domain = [('complete_name', 'ilike', self.env.context['location'])]
-                if self.env.context.get('force_company', False):
-                    domain += [('company_id', '=', self.env.context['force_company'])]
-                location_ids = self.env['stock.location'].search(domain).ids
-            else:
-                location_ids = self.env.context['location']
-        else:
-            if self.env.context.get('warehouse', False):
-                if isinstance(self.env.context['warehouse'], int):
-                    wids = [self.env.context['warehouse']]
-                elif isinstance(self.env.context['warehouse'], str):
-                    domain = [('name', 'ilike', self.env.context['warehouse'])]
-                    if self.env.context.get('force_company', False):
-                        domain += [('company_id', '=', self.env.context['force_company'])]
-                    wids = Warehouse.search(domain).ids
-                else:
-                    wids = self.env.context['warehouse']
-            else:
-                wids = Warehouse.search([]).ids
 
-            for w in Warehouse.browse(wids):
-                location_ids.append(w.view_location_id.id)
+        def _search_ids(model, values, force_company_id):
+            ids = set()
+            domain = []
+            for item in values:
+                if isinstance(item, int):
+                    ids.add(item)
+                else:
+                    domain = expression.OR([[('name', 'ilike', item)], domain])
+            if force_company_id:
+                domain = expression.AND([[('company_id', '=', force_company_id)], domain])
+            if domain:
+                ids |= set(self.env[model].search(domain).ids)
+            return ids
+
+        # We may receive a location or warehouse from the context, either by explicit
+        # python code or by the use of dummy fields in the search view.
+        # Normalize them into a list.
+        location = self.env.context.get('location')
+        if location and not isinstance(location, list):
+            location = [location]
+        warehouse = self.env.context.get('warehouse')
+        if warehouse and not isinstance(warehouse, list):
+            warehouse = [warehouse]
+        force_company = self.env.context.get('force_company', False)
+        # filter by location and/or warehouse
+        if warehouse:
+            w_ids = set(Warehouse.browse(_search_ids('stock.warehouse', warehouse, force_company)).mapped('view_location_id').ids)
+            if location:
+                l_ids = _search_ids('stock.location', location, force_company)
+                location_ids = w_ids & l_ids
+            else:
+                location_ids = w_ids
+        else:
+            if location:
+                location_ids = _search_ids('stock.location', location, force_company)
+            else:
+                location_ids = set(Warehouse.search([]).mapped('view_location_id').ids)
+
         return self._get_domain_locations_new(location_ids, company_id=self.env.context.get('force_company', False), compute_child=self.env.context.get('compute_child', True))
 
     def _get_domain_locations_new(self, location_ids, company_id=False, compute_child=True):
@@ -367,9 +379,6 @@ class Product(models.Model):
                         res['fields']['qty_available']['string'] = _('Produced Qty')
         return res
 
-    def action_update_quantity_on_hand(self):
-        return self.product_tmpl_id.with_context({'default_product_id': self.id}).action_update_quantity_on_hand()
-
     def action_view_routes(self):
         return self.mapped('product_tmpl_id').action_view_routes()
 
@@ -396,12 +405,30 @@ class Product(models.Model):
         return action
 
     def action_open_quants(self):
-        self.ensure_one()
-        self.env['stock.quant']._quant_tasks()
-        action = self.env.ref('stock.product_open_quants').read()[0]
         location_domain = self._get_domain_locations()[0]
-        action['domain'] = expression.AND([[('product_id', '=', self.id)], location_domain])
-        return action
+        domain = expression.AND([[('product_id', 'in', self.ids)], location_domain])
+        self = self.with_context(hide_location=not self.user_has_groups('stock.group_stock_multi_locations'))
+
+        # If user have rights to write on quant, we define the view as editable.
+        if self.user_has_groups('stock.group_stock_manager'):
+            self = self.with_context(inventory_mode=True)
+            # Set default location id if multilocations is inactive
+            if not self.user_has_groups('stock.group_stock_multi_locations'):
+                user_company = self.env.user.company_id
+                warehouse = self.env['stock.warehouse'].search(
+                    [('company_id', '=', user_company.id)], limit=1
+                )
+                if warehouse:
+                    self = self.with_context(default_location_id=warehouse.lot_stock_id.id)
+            # Set default product id if quants concern only one product
+            if len(self) == 1:
+                self = self.with_context(
+                    default_product_id=self.id,
+                    single_product=True
+                )
+            else:
+                self = self.with_context(product_tmpl_id=self.product_tmpl_id.id)
+        return self.env['stock.quant']._get_quants_action(domain)
 
     @api.model
     def get_theoretical_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, to_uom=None):
@@ -490,6 +517,10 @@ class ProductTemplate(models.Model):
     def _is_cost_method_standard(self):
         return True
 
+    @api.depends(
+        'product_variant_ids',
+        'product_variant_ids.stock_quant_ids',
+    )
     def _compute_quantities(self):
         res = self._compute_quantities_dict()
         for template in self:
@@ -597,37 +628,8 @@ class ProductTemplate(models.Model):
                 raise UserError(_("You can not change the type of a product that is currently reserved on a stock move. If you need to change the type, you should first unreserve the stock move."))
         return super(ProductTemplate, self).write(vals)
 
-    def action_update_quantity_on_hand(self):
-        default_product_id = self.env.context.get('default_product_id', self.product_variant_id.id)
-        if self.env.user.user_has_groups('stock.group_stock_multi_locations') or (self.env.user.user_has_groups('stock.group_production_lot') and self.tracking != 'none'):
-            product_ref_name = self.name + ' - ' + datetime.today().strftime('%m/%d/%y')
-            ctx = {'default_filter': 'product', 'default_product_id': default_product_id, 'default_name': product_ref_name}
-            return {
-                'type': 'ir.actions.act_window',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'stock.inventory',
-                'context': ctx,
-            }
-        else:
-            wiz = self.env['stock.change.product.qty'].create({'product_id': default_product_id})
-            return {
-                    'name': _('Update quantity on hand'),
-                    'type': 'ir.actions.act_window',
-                    'view_mode': 'form',
-                    'res_model': 'stock.change.product.qty',
-                    'target': 'new',
-                    'res_id': wiz.id,
-                    'context': {'default_product_id': self.env.context.get('default_product_id')}
-                }
-
     def action_open_quants(self):
-        self.env['stock.quant']._quant_tasks()
-        products = self.mapped('product_variant_ids')
-        action = self.env.ref('stock.product_open_quants').read()[0]
-        location_domain = products._get_domain_locations()[0]
-        action['domain'] = expression.AND([[('product_id', 'in', products.ids)], location_domain])
-        return action
+        return self.product_variant_ids.action_open_quants()
 
     def action_view_related_putaway_rules(self):
         self.ensure_one()

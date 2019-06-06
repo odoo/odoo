@@ -3,21 +3,19 @@
 from odoo.addons.stock.tests.common2 import TestStockCommon
 from odoo.tests import Form
 
-class TestWarehouse(TestStockCommon):
 
+class TestWarehouse(TestStockCommon):
     def test_inventory_product(self):
         self.product_1.type = 'product'
-        inventory_wizard = self.env['stock.change.product.qty'].create({
+        product_1_quant = self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': self.product_1.id,
-            'new_quantity': 50.0,
+            'inventory_quantity': 50.0,
             'location_id': self.warehouse_1.lot_stock_id.id,
         })
-        inventory_wizard.change_product_qty()
         inventory = self.env['stock.inventory'].sudo(self.user_stock_manager).create({
             'name': 'Starting for product_1',
-            'filter': 'product',
-            'location_id': self.warehouse_1.lot_stock_id.id,
-            'product_id': self.product_1.id,
+            'location_ids': [(4, self.warehouse_1.lot_stock_id.id)],
+            'product_ids': [(4, self.product_1.id)],
         })
         inventory.action_start()
         # As done in common.py, there is already an inventory line existing
@@ -46,32 +44,6 @@ class TestWarehouse(TestStockCommon):
 
         self.assertEqual(self.env['stock.quant']._gather(self.product_1, self.warehouse_1.wh_input_stock_loc_id).quantity, 0.0)
         self.assertEqual(self.env['stock.quant']._gather(self.product_1, self.env.ref('stock.stock_location_stock')).quantity, 0.0)
-
-    def test_inventory_wizard(self):
-        self.product_1.type = 'product'
-        inventory_wizard = self.env['stock.change.product.qty'].create({
-            'product_id': self.product_1.id,
-            'new_quantity': 50.0,
-            'location_id': self.warehouse_1.lot_stock_id.id,
-        })
-        inventory_wizard.change_product_qty()
-        # Check inventory performed in setup was effectivley performed
-        self.assertEqual(self.product_1.virtual_available, 50.0)
-        self.assertEqual(self.product_1.qty_available, 50.0)
-
-        # Check inventory obj details (1 inventory with 1 line, because 1 product change)
-        inventory = self.env['stock.inventory'].search([('id', 'not in', self.existing_inventories.ids)])
-        self.assertEqual(len(inventory), 1)
-        self.assertIn('INV: %s' % self.product_1.display_name, inventory.name)
-        self.assertEqual(len(inventory.line_ids), 1)
-        self.assertEqual(inventory.line_ids.product_id, self.product_1)
-        self.assertEqual(inventory.line_ids.product_qty, 50.0)
-
-        # Check associated quants: 2 quants for the product and the quantity (1 in stock, 1 in inventory adjustment)
-        quant = self.env['stock.quant'].search([('id', 'not in', self.existing_quants.ids)])
-        self.assertEqual(len(quant), 2)
-        # print quant.name, quant.product_id, quant.location_id
-        # TDE TODO: expand this test
 
     def test_basic_move(self):
         product = self.product_3.sudo(self.user_stock_manager)
@@ -202,9 +174,8 @@ class TestWarehouse(TestStockCommon):
         # Make an inventory adjustment to set the quantity to 0
         inventory = self.env['stock.inventory'].create({
             'name': 'Starting for product_1',
-            'filter': 'product',
-            'location_id': stock_location.id,
-            'product_id': productA.id,
+            'location_ids': [(4, stock_location.id)],
+            'product_ids': [(4, productA.id)],
         })
         inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1, "Wrong inventory lines generated.")
@@ -573,23 +544,3 @@ class TestWarehouse(TestStockCommon):
         self.assertTrue(warehouse.int_type_id.active)
         self.assertTrue(warehouse.pick_type_id.active)
         self.assertTrue(warehouse.pack_type_id.active)
-
-class TestResupply(TestStockCommon):
-    def setUp(self):
-        super(TestResupply, self).setUp()
-
-        self.warehouse_2 = self.env['stock.warehouse'].create({
-            'name': 'Small Warehouse',
-            'code': 'SWH',
-            'resupply_wh_ids': [(6, 0, [self.warehouse_1.id])]
-        })
-
-        # minimum stock rule for test product on this warehouse
-        self.env['stock.warehouse.orderpoint'].create({
-            'warehouse_id': self.warehouse_2.id,
-            'location_id': self.warehouse_2.lot_stock_id.id,
-            'product_id': self.product_1.id,
-            'product_min_qty': 10,
-            'product_max_qty': 100,
-            'product_uom': self.uom_unit.id,
-        })

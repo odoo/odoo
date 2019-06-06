@@ -564,9 +564,16 @@ var BasicModel = AbstractModel.extend({
                     }
                 } else if (field.type === 'one2many' || field.type === 'many2many') {
                     if (options.raw) {
-                        relDataPoint = this.localData[data[fieldName]];
-                        relDataPoint = this._applyX2ManyOperations(relDataPoint);
-                        data[fieldName] = relDataPoint.res_ids;
+                        if (typeof data[fieldName] === 'string') {
+                            relDataPoint = this.localData[data[fieldName]];
+                            relDataPoint = this._applyX2ManyOperations(relDataPoint);
+                            data[fieldName] = relDataPoint.res_ids;
+                        } else {
+                            // no datapoint has been created yet (because the loading of relational
+                            // data has been batched, and hasn't started yet), so the value is still
+                            // the list of ids in the relation
+                            data[fieldName] = data[fieldName] || [];
+                        }
                     } else {
                         data[fieldName] = this.get(data[fieldName]) || [];
                     }
@@ -3423,12 +3430,20 @@ var BasicModel = AbstractModel.extend({
                 evalContext.parent = this._getRecordEvalContext(parent, forDomain);
             }
         }
+        // Uses "current_company_id" because "company_id" would conflict with all the company_id fields
+        // in general, the actual "company_id" field of the form should be used for m2o domains, not this fallback
+        if (session.user_context.allowed_company_ids) {
+            var current_company = session.user_context.allowed_company_ids[0];
+        } else {
+            var current_company = session.user_companies ? session.user_companies.current_company[0] : false;
+        }
         return _.extend({
             active_id: evalContext.id || false,
             active_ids: evalContext.id ? [evalContext.id] : [],
             active_model: element.model,
             current_date: moment().format('YYYY-MM-DD'),
             id: evalContext.id || false,
+            current_company_id: current_company,
         }, session.user_context, element.context, evalContext);
     },
     /**

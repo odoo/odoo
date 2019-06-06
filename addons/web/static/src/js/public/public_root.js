@@ -2,6 +2,7 @@ odoo.define('web.public.root', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');
+var dom = require('web.dom');
 var ServiceProviderMixin = require('web.ServiceProviderMixin');
 var session = require('web.session');
 var utils = require('web.utils');
@@ -199,7 +200,7 @@ var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
 
         var defs = _.map(this._getPublicWidgetsRegistry(options), function (PublicWidget) {
             var selector = PublicWidget.prototype.selector || '';
-            var $target = $from.find(selector).addBack(selector);
+            var $target = dom.cssFind($from, selector, true);
 
             var defs = _.map($target, function (el) {
                 var widget = new PublicWidget(self, options);
@@ -293,8 +294,8 @@ var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
         var $buttons = $(ev.currentTarget).find('button[type="submit"], a.a-submit');
         _.each($buttons, function (btn) {
             var $btn = $(btn);
-            $btn.attr('data-loading-text', '<i class="fa fa-spinner fa-spin"></i> ' + $(btn).text());
-            $btn.button('loading');
+            $btn.html('<i class="fa fa-spinner fa-spin"></i> ' + $btn.text());
+            $btn.prop('disabled', true);
         });
     },
     /**

@@ -48,7 +48,7 @@ class FormatAddressMixin(models.AbstractModel):
 
     def _fields_view_get_address(self, arch):
         # consider the country of the user, not the country of the partner we want to display
-        address_view_id = self.env.user.company_id.country_id.address_view_id
+        address_view_id = self.env.company.country_id.address_view_id
         if address_view_id and not self._context.get('no_address_format'):
             #render the partner address accordingly to address_view_id
             doc = etree.fromstring(arch)
@@ -139,7 +139,7 @@ class Partner(models.Model):
         return self.env['res.partner.category'].browse(self._context.get('category_id'))
 
     def _default_company(self):
-        return self.env['res.company']._company_default_get('res.partner')
+        return self.env.company
 
     def _split_street_with_params(self, street_raw, street_format):
         return {'street': street_raw}
@@ -163,7 +163,7 @@ class Partner(models.Model):
     user_id = fields.Many2one('res.users', string='Salesperson',
       help='The internal user in charge of this contact.')
     vat = fields.Char(string='Tax ID', help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
-    same_vat_partner = fields.Html(string='Partner with same TIN', compute='_compute_same_vat_partner', store=False)  # this needs to be a html and not a m2o because the link needs to be created for unexisting records and the framework doenst manage that
+    same_vat_partner_id = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
     bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
     website = fields.Char('Website Link')
     comment = fields.Text(string='Notes')
@@ -248,7 +248,7 @@ class Partner(models.Model):
 
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name')
     def _compute_display_name(self):
-        diff = dict(show_address=None, show_address_only=None, show_email=None)
+        diff = dict(show_address=None, show_address_only=None, show_email=None, html_format=None, show_vat=False)
         names = dict(self.with_context(**diff).name_get())
         for partner in self:
             partner.display_name = names.get(partner.id)
@@ -264,17 +264,14 @@ class Partner(models.Model):
             partner.partner_share = not partner.user_ids or not any(not user.share for user in partner.user_ids)
 
     @api.depends('vat')
-    def _compute_same_vat_partner(self):
+    def _compute_same_vat_partner_id(self):
         for partner in self:
-            partner_id = partner.id
-            if isinstance(partner_id, models.NewId):
-                # deal with onchange(), which is always called on a single record
-                partner_id = self._origin.id
+            # use _origin to deal with onchange()
+            partner_id = partner._origin.id
             domain = [('vat', '=', partner.vat)]
             if partner_id:
                 domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]
-            same_vat_partner = self.env['res.partner'].search(domain, limit=1)
-            partner.same_vat_partner = partner.vat and not partner.parent_id and same_vat_partner and "<a href='/web#id={}&model=res.partner' target='_blank'>{}</a>".format(same_vat_partner.id, same_vat_partner.name) or False
+            partner.same_vat_partner_id = partner.vat and not partner.parent_id and self.env['res.partner'].search(domain, limit=1)
 
     @api.depends(lambda self: self._display_address_depends())
     def _compute_contact_address(self):
@@ -380,7 +377,7 @@ class Partner(models.Model):
         if not self.parent_id:
             return
         result = {}
-        partner = getattr(self, '_origin', self)
+        partner = self._origin
         if partner.parent_id and partner.parent_id != self.parent_id:
             result['warning'] = {
                 'title': _('Warning'),
@@ -457,6 +454,11 @@ class Partner(models.Model):
     def _address_fields(self):
         """Returns the list of address fields that are synced from the parent."""
         return list(ADDRESS_FIELDS)
+
+    @api.model
+    def _formatting_address_fields(self):
+        """Returns the list of address fields usable to format addresses."""
+        return self._address_fields()
 
     @api.multi
     def update_address(self, vals):
@@ -933,7 +935,7 @@ class Partner(models.Model):
             'country_name': self._get_country_name(),
             'company_name': self.commercial_company_name or '',
         }
-        for field in self._address_fields():
+        for field in self._formatting_address_fields():
             args[field] = getattr(self, field) or ''
         if without_company:
             args['company_name'] = ''
@@ -943,7 +945,7 @@ class Partner(models.Model):
 
     def _display_address_depends(self):
         # field dependencies of method _display_address()
-        return self._address_fields() + [
+        return self._formatting_address_fields() + [
             'country_id.address_format', 'country_id.code', 'country_id.name',
             'company_name', 'state_id.code', 'state_id.name',
         ]

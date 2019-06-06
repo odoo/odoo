@@ -3,7 +3,6 @@ odoo.define('web.form_tests', function (require) {
 
 var BasicModel = require('web.BasicModel');
 var concurrency = require('web.concurrency');
-var config = require('web.config');
 var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
 var FormView = require('web.FormView');
@@ -245,18 +244,18 @@ QUnit.module('Views', {
         });
         assert.containsOnce(form, 'div.o_field_one2many:eq(0):not(.o_readonly_modifier)', "first one2many widget should not be readonly");
         assert.hasClass(form.$('div.o_field_one2many:eq(1)'),'o_readonly_modifier', "second one2many widget should be readonly");
-        await testUtils.dom.click(form.$('div.tab-content table.o_list_view:eq(0) tr.o_data_row td.o_data_cell:eq(0)'));
-        assert.strictEqual(form.$('div.tab-content table.o_list_view tr.o_selected_row input[name="foo"]').val(), "yop",
+        await testUtils.dom.click(form.$('div.tab-content table.o_list_table:eq(0) tr.o_data_row td.o_data_cell:eq(0)'));
+        assert.strictEqual(form.$('div.tab-content table.o_list_table tr.o_selected_row input[name="foo"]').val(), "yop",
             "first line in one2many of first tab contains yop");
-        assert.strictEqual(form.$('div.tab-content table.o_list_view:eq(1) tr.o_data_row td.o_data_cell:eq(0)').text(),
+        assert.strictEqual(form.$('div.tab-content table.o_list_table:eq(1) tr.o_data_row td.o_data_cell:eq(0)').text(),
             "yop", "first line in one2many of second tab contains yop");
-        await testUtils.fields.editInput(form.$('div.tab-content table.o_list_view tr.o_selected_row input[name="foo"]'), "hello");
-        assert.strictEqual(form.$('div.tab-content table.o_list_view:eq(1) tr.o_data_row td.o_data_cell:eq(0)').text(), "hello",
+        await testUtils.fields.editInput(form.$('div.tab-content table.o_list_table tr.o_selected_row input[name="foo"]'), "hello");
+        assert.strictEqual(form.$('div.tab-content table.o_list_table:eq(1) tr.o_data_row td.o_data_cell:eq(0)').text(), "hello",
             "first line in one2many of second tab contains hello");
-        await testUtils.dom.click(form.$('div.tab-content table.o_list_view:eq(0) a:contains(Add a line)'));
-        assert.strictEqual(form.$('div.tab-content table.o_list_view tr.o_selected_row input[name="foo"]').val(), "My little Foo Value",
+        await testUtils.dom.click(form.$('div.tab-content table.o_list_table:eq(0) a:contains(Add a line)'));
+        assert.strictEqual(form.$('div.tab-content table.o_list_table tr.o_selected_row input[name="foo"]').val(), "My little Foo Value",
             "second line in one2many of first tab contains 'My little Foo Value'");
-        assert.strictEqual(form.$('div.tab-content table.o_list_view:eq(1) tr.o_data_row:eq(1) td.o_data_cell:eq(0)').text(),
+        assert.strictEqual(form.$('div.tab-content table.o_list_table:eq(1) tr.o_data_row:eq(1) td.o_data_cell:eq(0)').text(),
             "My little Foo Value", "first line in one2many of second tab contains hello");
         form.destroy();
     });
@@ -6576,8 +6575,8 @@ QUnit.module('Views', {
     QUnit.test('display tooltips for buttons', async function (assert) {
         assert.expect(2);
 
-        var initialDebugMode = config.debug;
-        config.debug = true;
+        var initialDebugMode = odoo.debug;
+        odoo.debug = true;
 
         var form = await createView({
             View: FormView,
@@ -6607,7 +6606,7 @@ QUnit.module('Views', {
             "should have rendered a tooltip");
         $secondButton.trigger($.Event('mouseleave'));
 
-        config.debug = initialDebugMode;
+        odoo.debug = initialDebugMode;
         form.destroy();
     });
 
@@ -6936,8 +6935,8 @@ QUnit.module('Views', {
     QUnit.test('proper stringification in debug mode tooltip', async function (assert) {
         assert.expect(6);
 
-        var initialDebugMode = config.debug;
-        config.debug = true;
+        var initialDebugMode = odoo.debug;
+        odoo.debug = true;
 
         var form = await createView({
             View: FormView,
@@ -6970,7 +6969,7 @@ QUnit.module('Views', {
         assert.strictEqual($('.oe_tooltip_technical>li[data-item="widget"]')[0].lastChild.wholeText.trim(),
             'Many2one (many2one)', "widget description should be correct");
 
-        config.debug = initialDebugMode;
+        odoo.debug = initialDebugMode;
         form.destroy();
     });
 
@@ -8159,6 +8158,72 @@ QUnit.module('Views', {
         await testUtils.nextTick();
         form.destroy();
     });
+
+    QUnit.test('resequence list lines when discardable lines are present', async function (assert) {
+        assert.expect(8);
+
+        var onchangeNum = 0;
+
+        this.data.partner.onchanges = {
+            p: function (obj) {
+                onchangeNum++;
+                obj.foo = obj.p.length.toString();
+            },
+        };
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="foo"/>' +
+                    '<field name="p"/>' +
+                '</form>',
+            archs: {
+                'partner,false,list':
+                    '<tree editable="bottom">' +
+                        '<field name="int_field" widget="handle"/>' +
+                        '<field name="display_name" required="1"/>' +
+                    '</tree>',
+            },
+        });
+
+        assert.strictEqual(onchangeNum, 1, "one onchange happens when form is opened");
+        assert.strictEqual(form.$('[name="foo"]').val(), "0", "onchange worked there is 0 line");
+
+        // Add one line
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        form.$('.o_field_one2many input:first').focus();
+        await testUtils.nextTick();
+        form.$('.o_field_one2many input:first').val('first line').trigger('input');
+        await testUtils.nextTick();
+        await testUtils.dom.click(form.$('input[name="foo"]'));
+        assert.strictEqual(onchangeNum, 2, "one onchange happens when a line is added");
+        assert.strictEqual(form.$('[name="foo"]').val(), "1", "onchange worked there is 1 line");
+
+        // Drag and drop second line before first one (with 1 draft and invalid line)
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        await testUtils.dom.dragAndDrop(
+            form.$('.ui-sortable-handle').eq(0),
+            form.$('.o_data_row').last(),
+            {position: 'bottom'}
+        );
+        assert.strictEqual(onchangeNum, 3, "one onchange happens when lines are resequenced");
+        assert.strictEqual(form.$('[name="foo"]').val(), "1", "onchange worked there is 1 line");
+
+        // Add a second line
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        form.$('.o_field_one2many input:first').focus();
+        await testUtils.nextTick();
+        form.$('.o_field_one2many input:first').val('second line').trigger('input');
+        await testUtils.nextTick();
+        await testUtils.dom.click(form.$('input[name="foo"]'));
+        assert.strictEqual(onchangeNum, 4, "one onchange happens when a line is added");
+        assert.strictEqual(form.$('[name="foo"]').val(), "2", "onchange worked there is 2 lines");
+
+        form.destroy();
+    });
+
     QUnit.test('if the focus is on the discard button, hitting ESCAPE should discard', async function (assert) {
         assert.expect(1);
 

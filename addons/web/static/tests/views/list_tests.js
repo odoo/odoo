@@ -1,19 +1,21 @@
 odoo.define('web.list_tests', function (require) {
 "use strict";
 
+var AbstractStorageService = require('web.AbstractStorageService');
 var BasicModel = require('web.BasicModel');
-var config = require('web.config');
 var core = require('web.core');
 var basicFields = require('web.basic_fields');
 var FormView = require('web.FormView');
 var ListView = require('web.ListView');
 var mixins = require('web.mixins');
 var NotificationService = require('web.NotificationService');
+var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
 var widgetRegistry = require('web.widget_registry');
 var Widget = require('web.Widget');
 
 var _t = core._t;
+var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
 
 
@@ -168,6 +170,25 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list with edit="0"', async function (assert) {
+        assert.expect(2);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            viewOptions: {hasSidebar: true},
+            arch: '<tree editable="top" edit="0"><field name="foo"/></tree>',
+        });
+
+        assert.ok(list.$('tbody td.o_list_record_selector').length, 'should have at least one record');
+
+        await testUtils.dom.click(list.$('tr td:not(.o_list_record_selector)').first());
+        assert.containsNone(list, 'tbody tr.o_selected_row', "should not have editable row");
+
+        list.destroy();
+    });
+
     QUnit.test('simple editable rendering', async function (assert) {
         assert.expect(12);
 
@@ -300,7 +321,7 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('editable list datetimepicker destroy widget', async function (assert) {
+    QUnit.test('editable list datetimepicker destroy widget (edition)', async function (assert) {
         assert.expect(7);
         var eventPromise = testUtils.makeTestPromise();
 
@@ -314,22 +335,60 @@ QUnit.module('Views', {
         });
         list.$el.on({
             'show.datetimepicker': async function () {
-                assert.equal($('.bootstrap-datetimepicker-widget').length, 1,
-                    'The datetimepicker is open');
-
-                assert.equal(list.$('.o_data_row').length, 5,
-                    'There should be 5 rows');
-
-                assert.equal(list.$('.o_selected_row').length, 1,
-                    'One row in edit mode');
+                assert.containsOnce(list, '.o_selected_row');
+                assert.containsOnce($('body'), '.bootstrap-datetimepicker-widget');
 
                 await testUtils.fields.triggerKeydown(list.$('.o_datepicker_input'), 'escape');
 
-                assert.equal(list.$('.o_data_row').length, 4,
-                    'There should be 4 rows');
+                assert.containsOnce(list, '.o_selected_row');
+                assert.containsNone($('body'), '.bootstrap-datetimepicker-widget');
 
-                assert.equal(list.$('.o_selected_row').length, 0,
-                    'No row should be in edit mode');
+                await testUtils.fields.triggerKeydown($(document.activeElement), 'escape');
+
+                assert.containsNone(list, '.o_selected_row');
+
+                eventPromise.resolve();
+            }
+        });
+
+        assert.containsN(list, '.o_data_row', 4);
+        assert.containsNone(list, '.o_selected_row');
+
+        await testUtils.dom.click(list.$('.o_data_cell:first'));
+        await testUtils.dom.openDatepicker(list.$('.o_datepicker'));
+
+        await eventPromise;
+        list.destroy();
+    });
+
+    QUnit.test('editable list datetimepicker destroy widget (new line)', async function (assert) {
+        assert.expect(10);
+        var eventPromise = testUtils.makeTestPromise();
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                    '<field name="date"/>' +
+                '</tree>',
+        });
+        list.$el.on({
+            'show.datetimepicker': async function () {
+                assert.containsOnce($('body'), '.bootstrap-datetimepicker-widget');
+                assert.containsN(list, '.o_data_row', 5);
+                assert.containsOnce(list, '.o_selected_row');
+
+                await testUtils.fields.triggerKeydown(list.$('.o_datepicker_input'), 'escape');
+
+                assert.containsNone($('body'), '.bootstrap-datetimepicker-widget');
+                assert.containsN(list, '.o_data_row', 5);
+                assert.containsOnce(list, '.o_selected_row');
+
+                await testUtils.fields.triggerKeydown($(document.activeElement), 'escape');
+
+                assert.containsN(list, '.o_data_row', 4);
+                assert.containsNone(list, '.o_selected_row');
 
                 eventPromise.resolve();
             }
@@ -341,6 +400,7 @@ QUnit.module('Views', {
             'No row should be in edit mode');
 
         await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
+        await testUtils.dom.openDatepicker(list.$('.o_datepicker'));
 
         await eventPromise;
         list.destroy();
@@ -361,6 +421,34 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('discard a new record in editable="top" list with less than 4 records', async function (assert) {
+        assert.expect(7);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="bar"/></tree>',
+            domain: [['bar', '=', true]],
+        });
+
+        assert.containsN(list, '.o_data_row', 3);
+        assert.containsN(list, 'tbody tr', 4);
+
+        await testUtils.dom.click(list.$('.o_list_button_add'));
+
+        assert.containsN(list, '.o_data_row', 4);
+        assert.hasClass(list.$('tbody tr:first'), 'o_selected_row');
+
+        await testUtils.dom.click(list.$('.o_list_button_discard'));
+
+        assert.containsN(list, '.o_data_row', 3);
+        assert.containsN(list, 'tbody tr', 4);
+        assert.hasClass(list.$('tbody tr:first'), 'o_data_row');
+
+        list.destroy();
+    });
+
     QUnit.test('basic grouped list rendering', async function (assert) {
         assert.expect(4);
 
@@ -376,6 +464,29 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('th:contains(Bar)').length, 1, "should contain Bar");
         assert.containsN(list, 'tr.o_group_header', 2, "should have 2 .o_group_header");
         assert.containsN(list, 'th.o_group_name', 2, "should have 2 .o_group_name");
+        list.destroy();
+    });
+
+    QUnit.test('basic grouped list rendering with widget="handle" col', async function (assert) {
+        assert.expect(5);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="int_field" widget="handle"/>' +
+                    '<field name="foo"/>' +
+                    '<field name="bar"/>' +
+                '</tree>',
+            groupBy: ['bar'],
+        });
+
+        assert.strictEqual(list.$('th:contains(Foo)').length, 1, "should contain Foo");
+        assert.strictEqual(list.$('th:contains(Bar)').length, 1, "should contain Bar");
+        assert.containsN(list, 'tr.o_group_header', 2, "should have 2 .o_group_header");
+        assert.containsN(list, 'th.o_group_name', 2, "should have 2 .o_group_name");
+        assert.containsNone(list, 'th:contains(int_field)', "Should not have int_field in grouped list");
         list.destroy();
     });
 
@@ -870,6 +981,47 @@ QUnit.module('Views', {
             "list buttons should be back to their readonly mode");
 
         list.destroy();
+    });
+
+    QUnit.test('editable list view: check that controlpanel buttons are updating when groupby applied', async function (assert) {
+        assert.expect(4);
+
+        this.data.foo.fields.foo = {string: "Foo", type: "char", required:true};
+
+        var actionManager = await createActionManager({
+            actions: [{
+               id: 11,
+               name: 'Partners Action 11',
+               res_model: 'foo',
+               type: 'ir.actions.act_window',
+               views: [[3, 'list']],
+               search_view_id: [9, 'search'],
+            }],
+            archs:  {
+               'foo,3,list': '<tree editable="top"><field name="display_name"/><field name="foo"/></tree>',
+
+               'foo,9,search': '<search>'+
+                                    '<filter string="candle" name="itsName" context="{\'group_by\': \'foo\'}"/>'  +
+                                    '</search>',
+            },
+            data: this.data,
+        });
+
+        await actionManager.doAction(11);
+        await testUtils.dom.click(actionManager.$('.o_list_button_add'));
+
+        assert.isNotVisible(actionManager.$('.o_list_button_add'),
+            "create button should be invisible");
+        assert.isVisible(actionManager.$('.o_list_button_save'), "save button should be visible");
+
+        await testUtils.dom.click(actionManager.$('.o_dropdown_toggler_btn:contains("Group By")'));
+        await testUtils.dom.click(actionManager.$('.o_group_by_menu .o_menu_item a:contains("candle")'));
+
+        assert.isNotVisible(actionManager.$('.o_list_button_add'), "create button should be invisible");
+        assert.isNotVisible(actionManager.$('.o_list_button_save'),
+            "save button should be invisible after applying groupby");
+
+        actionManager.destroy();
     });
 
     QUnit.test('selection changes are triggered correctly', async function (assert) {
@@ -1682,8 +1834,8 @@ QUnit.module('Views', {
     QUnit.test('display a tooltip on a field', async function (assert) {
         assert.expect(4);
 
-        var initialDebugMode = config.debug;
-        config.debug = false;
+        var initialDebugMode = odoo.debug;
+        odoo.debug = false;
 
         var list = await createView({
             View: ListView,
@@ -1702,7 +1854,7 @@ QUnit.module('Views', {
         list.$('th[data-name=foo]').trigger($.Event('mouseenter'));
         assert.strictEqual($('.tooltip .oe_tooltip_string').length, 0, "should not have rendered a tooltip");
 
-        config.debug = true;
+        odoo.debug = true;
         // it is necessary to rerender the list so tooltips can be properly created
         await list.reload();
         list.$('th[data-name=foo]').tooltip('show', false);
@@ -1717,7 +1869,7 @@ QUnit.module('Views', {
         assert.strictEqual($('.oe_tooltip_technical>li[data-item="widget"]')[0].lastChild.wholeText.trim(),
             'Button (toggle_button)', "widget description should be correct");
 
-        config.debug = initialDebugMode;
+        odoo.debug = initialDebugMode;
         list.destroy();
     });
 
@@ -2186,7 +2338,7 @@ QUnit.module('Views', {
         });
 
         await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
-        await testUtils.dom.click(list.$('div.table-responsive'));
+        await testUtils.dom.click(list.$('.o_list_view'));
 
         assert.strictEqual(createCount, 1, "should have created a record");
 
@@ -4628,6 +4780,50 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('readonly boolean in editable list is readonly', async function (assert) {
+        assert.expect(6);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                      '<field name="foo"/>' +
+                      '<field name="bar" attrs="{\'readonly\': [(\'foo\', \'!=\', \'yop\')]}"/>' +
+                  '</tree>',
+        });
+
+        // clicking on disabled checkbox with active row does not work
+        var $disabledCell = list.$('.o_data_row:eq(1) .o_data_cell:last-child');
+        await testUtils.dom.click($disabledCell.prev());
+        assert.containsOnce($disabledCell, ':disabled:checked');
+        var $disabledLabel = $disabledCell.find('.custom-control-label');
+        await testUtils.dom.click($disabledLabel);
+        assert.containsOnce($disabledCell, ':checked',
+            "clicking disabled checkbox did not work"
+        );
+        assert.ok(
+            $(document.activeElement).is('input[type="text"]'),
+            "disabled checkbox is not focused after click"
+        );
+
+        // clicking on enabled checkbox with active row toggles check mark
+        var $enabledCell = list.$('.o_data_row:eq(0) .o_data_cell:last-child');
+        await testUtils.dom.click($enabledCell.prev());
+        assert.containsOnce($enabledCell, ':checked:not(:disabled)');
+        var $enabledLabel = $enabledCell.find('.custom-control-label');
+        await testUtils.dom.click($enabledLabel);
+        assert.containsNone($enabledCell, ':checked',
+            "clicking enabled checkbox worked and unchecked it"
+        );
+        assert.ok(
+            $(document.activeElement).is('input[type="checkbox"]'),
+            "enabled checkbox is focused after click"
+        );
+
+        list.destroy();
+    });
+
     QUnit.test('grouped list with async widget', async function (assert) {
         assert.expect(4);
 
@@ -5744,6 +5940,78 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('execute group header button with keyboard navigation', async function (assert) {
+        assert.expect(13);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<groupby name="m2o">' +
+                        '<button type="object" name="some_method" string="Do this"/>' +
+                    '</groupby>' +
+                '</tree>',
+            groupBy: ['m2o'],
+            intercepts: {
+                execute_action: function (ev) {
+                    assert.strictEqual(ev.data.action_data.name, 'some_method');
+                },
+            },
+        });
+
+        assert.containsNone(list, '.o_data_row', "all groups should be closed");
+
+        // focus create button as a starting point
+        list.$('.o_list_button_add').focus();
+        assert.ok(document.activeElement.classList.contains('o_list_button_add'));
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'down');
+        assert.strictEqual(document.activeElement.tagName, 'INPUT',
+            'focus should now be on the record selector (list header)');
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'down');
+        assert.strictEqual(document.activeElement.textContent, 'Value 1 (3)',
+            'focus should be on first group header');
+
+        // unfold first group
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'enter');
+        assert.containsN(list, '.o_data_row', 3, "first group should be open");
+
+        // move to first record of opened group
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'down');
+        assert.strictEqual(document.activeElement.tagName, 'INPUT',
+            'focus should be in first row checkbox');
+
+        // move back to the group header
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'up');
+        assert.ok(document.activeElement.classList.contains('o_group_name'),
+            'focus should be back on first group header');
+
+        // fold the group
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'enter');
+        assert.ok(document.activeElement.classList.contains('o_group_name'),
+            'focus should still be on first group header');
+        assert.containsNone(list, '.o_data_row', "first group should now be folded");
+
+        // unfold the group
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'enter');
+        assert.ok(document.activeElement.classList.contains('o_group_name'),
+            'focus should still be on first group header');
+        assert.containsN(list, '.o_data_row', 3, "first group should be open");
+
+        // simulate a move to the group header button with tab (we can't trigger a native event
+        // programmatically, see https://stackoverflow.com/a/32429197)
+        list.$('.o_group_header .o_group_buttons button:first').focus();
+        assert.strictEqual(document.activeElement.tagName, 'BUTTON',
+            'focus should be on the group header button');
+
+        // click on the button by pressing enter
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'enter');
+        assert.containsN(list, '.o_data_row', 3, "first group should still be open");
+
+        list.destroy();
+    });
+
     QUnit.test('add a new row in grouped editable="top" list', async function (assert) {
         assert.expect(7);
 
@@ -5905,6 +6173,302 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('tbody:eq(3) .o_data_row:first .o_data_cell:eq(1)').text(), 'Value 2',
             "should have a column name with a value from the groupby");
         assert.verifySteps(['2']);
+
+        list.destroy();
+    });
+
+    QUnit.test('list view with optional fields rendering', async function (assert) {
+        assert.expect(9);
+
+        var RamStorageService = AbstractStorageService.extend({
+            storage: new RamStorage(),
+        });
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="m2o" optional="hide"/>' +
+                    '<field name="amount"/>' +
+                    '<field name="reference" optional="hide"/>' +
+                '</tree>',
+            services: {
+                local_storage: RamStorageService,
+            },
+        });
+
+        assert.containsN(list, 'th', 3,
+            "should have 3 th, 1 for selector, 2 for columns");
+
+        assert.containsOnce(list.$('table'), '.o_optional_columns_dropdown_toggle',
+            "should have the optional columns dropdown toggle inside the table");
+
+        // optional fields
+        await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
+        assert.containsN(list, 'div.o_optional_columns div.dropdown-item', 2,
+            "dropdown have 2 optional field foo with checked and bar with unchecked");
+
+        // enable optional field
+        await testUtils.dom.click(list.$('div.o_optional_columns div.dropdown-item:first input'));
+        // 5 th (1 for checkbox, 4 for columns)
+        assert.containsN(list, 'th', 4, "should have 4 th");
+        assert.ok(list.$('th:contains(M2O field)').is(':visible'),
+            "should have a visible m2o field"); //m2o field
+
+        // disable optional field
+        await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
+        assert.strictEqual(list.$('div.o_optional_columns div.dropdown-item:first input:checked')[0],
+            list.$('div.o_optional_columns div.dropdown-item [name="m2o"]')[0],
+            "m2o advanced field check box should be checked in dropdown");
+
+        await testUtils.dom.click(list.$('div.o_optional_columns div.dropdown-item:first input'));
+        // 3 th (1 for checkbox, 2 for columns)
+        assert.containsN(list, 'th', 3, "should have 3 th");
+        assert.notOk(list.$('th:contains(M2O field)').is(':visible'),
+            "should not have a visible m2o field"); //m2o field not displayed
+
+        await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
+        assert.notOk(list.$('div.o_optional_columns div.dropdown-item [name="m2o"]').is(":checked"));
+
+        list.destroy();
+    });
+
+    QUnit.test('optinal fields do not disappear even after listview reload', async function (assert) {
+        assert.expect(7);
+
+        var RamStorageService = AbstractStorageService.extend({
+            storage: new RamStorage(),
+        });
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="m2o" optional="hide"/>' +
+                    '<field name="amount"/>' +
+                    '<field name="reference" optional="hide"/>' +
+                '</tree>',
+            services: {
+                local_storage: RamStorageService,
+            },
+        });
+
+        assert.containsN(list, 'th', 3,
+            "should have 3 th, 1 for selector, 2 for columns");
+
+        // enable optional field
+        await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
+        assert.notOk(list.$('div.o_optional_columns div.dropdown-item [name="m2o"]').is(":checked"));
+        await testUtils.dom.click(list.$('div.o_optional_columns div.dropdown-item:first input'));
+        assert.containsN(list, 'th', 4,
+            "should have 4 th 1 for selector, 3 for columns");
+        assert.ok(list.$('th:contains(M2O field)').is(':visible'),
+            "should have a visible m2o field"); //m2o field
+
+        // reload listview
+        await list.reload();
+        assert.containsN(list, 'th', 4,
+            "should have 4 th 1 for selector, 3 for columns ever after listview reload");
+        assert.ok(list.$('th:contains(M2O field)').is(':visible'),
+            "should have a visible m2o field even after listview reload");
+
+        await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
+        assert.ok(list.$('div.o_optional_columns div.dropdown-item [name="m2o"]').is(":checked"));
+
+        list.destroy();
+    });
+
+    QUnit.test('change the viewType of the current action', async function (assert) {
+        assert.expect(25);
+
+        this.actions = [{
+            id: 1,
+            name: 'Partners Action 1',
+            res_model: 'foo',
+            type: 'ir.actions.act_window',
+            views: [[1, 'kanban']],
+        }, {
+            id: 2,
+            name: 'Partners',
+            res_model: 'foo',
+            type: 'ir.actions.act_window',
+            views: [[false, 'list'], [1, 'kanban']],
+        }];
+
+        this.archs = {
+            'foo,1,kanban': '<kanban><templates><t t-name="kanban-box">' +
+            '<div class="oe_kanban_global_click"><field name="foo"/></div>' +
+            '</t></templates></kanban>',
+
+            'foo,false,list': '<tree limit="3">' +
+            '<field name="foo"/>' +
+            '<field name="m2o" optional="hide"/>' +
+            '<field name="o2m" optional="show"/></tree>',
+
+            'foo,false,search': '<search><field name="foo" string="Foo"/></search>',
+        };
+
+        var RamStorageService = AbstractStorageService.extend({
+            storage: new RamStorage(),
+        });
+
+        var actionManager = await testUtils.createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            services: {
+                local_storage: RamStorageService,
+            },
+        });
+        await actionManager.doAction(2);
+
+        assert.containsOnce(actionManager, '.o_list_view',
+            "should have rendered a list view");
+
+        assert.containsN(actionManager, 'th', 3, "should display 3 th (selector + 2 fields)");
+
+        // enable optional field
+        await testUtils.dom.click(actionManager.$('table .o_optional_columns_dropdown_toggle'));
+        assert.notOk(actionManager.$('div.o_optional_columns div.dropdown-item [name="m2o"]').is(":checked"));
+        assert.ok(actionManager.$('div.o_optional_columns div.dropdown-item [name="o2m"]').is(":checked"));
+        await testUtils.dom.click(actionManager.$('div.o_optional_columns div.dropdown-item:first'));
+        assert.containsN(actionManager, 'th', 4, "should display 4 th (selector + 3 fields)");
+        assert.ok(actionManager.$('th:contains(M2O field)').is(':visible'),
+            "should have a visible m2o field"); //m2o field
+
+        // switch to kanban view
+        await actionManager.loadState({
+            action: 2,
+            view_type: 'kanban',
+        });
+
+        assert.containsNone(actionManager, '.o_list_view',
+            "should not display the list view anymore");
+        assert.containsOnce(actionManager, '.o_kanban_view',
+            "should have switched to the kanban view");
+
+        // switch back to list view
+        await actionManager.loadState({
+            action: 2,
+            view_type: 'list',
+        });
+
+        assert.containsNone(actionManager, '.o_kanban_view',
+            "should not display the kanban view anymoe");
+        assert.containsOnce(actionManager, '.o_list_view',
+            "should display the list view");
+
+        assert.containsN(actionManager, 'th', 4, "should display 4 th");
+        assert.ok(actionManager.$('th:contains(M2O field)').is(':visible'),
+            "should have a visible m2o field"); //m2o field
+        assert.ok(actionManager.$('th:contains(O2M field)').is(':visible'),
+            "should have a visible o2m field"); //m2o field
+
+        // disable optional field
+        await testUtils.dom.click(actionManager.$('table .o_optional_columns_dropdown_toggle'));
+        assert.ok(actionManager.$('div.o_optional_columns div.dropdown-item [name="m2o"]').is(":checked"));
+        assert.ok(actionManager.$('div.o_optional_columns div.dropdown-item [name="o2m"]').is(":checked"));
+        await testUtils.dom.click(actionManager.$('div.o_optional_columns div.dropdown-item:last input'));
+        assert.ok(actionManager.$('th:contains(M2O field)').is(':visible'),
+            "should have a visible m2o field"); //m2o field
+        assert.notOk(actionManager.$('th:contains(O2M field)').is(':visible'),
+            "should have a visible o2m field"); //m2o field
+        assert.containsN(actionManager, 'th', 3, "should display 3 th");
+
+        await actionManager.doAction(1);
+
+        assert.containsNone(actionManager, '.o_list_view',
+            "should not display the list view anymore");
+        assert.containsOnce(actionManager, '.o_kanban_view',
+            "should have switched to the kanban view");
+
+        await actionManager.doAction(2);
+
+        assert.containsNone(actionManager, '.o_kanban_view',
+            "should not havethe kanban view anymoe");
+        assert.containsOnce(actionManager, '.o_list_view',
+            "should display the list view");
+
+        assert.containsN(actionManager, 'th', 3, "should display 3 th");
+        assert.ok(actionManager.$('th:contains(M2O field)').is(':visible'),
+            "should have a visible m2o field"); //m2o field
+        assert.notOk(actionManager.$('th:contains(O2M field)').is(':visible'),
+            "should have a visible o2m field"); //m2o field
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('list view with optional fields rendering and local storage mock', async function (assert) {
+        assert.expect(12);
+
+        var forceLocalStorage = true;
+
+        var Storage = RamStorage.extend({
+            getItem: function (key) {
+                assert.step('getItem ' + key);
+                return forceLocalStorage ? '["m2o"]' : this._super.apply(this, arguments);
+            },
+            setItem: function (key, value) {
+                assert.step('setItem ' + key + ' to ' + value);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        var RamStorageService = AbstractStorageService.extend({
+            storage: new Storage(),
+        });
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                '<field name="foo"/>' +
+                '<field name="m2o" optional="hide"/>' +
+                '<field name="reference" optional="show"/>' +
+                '</tree>',
+            services: {
+                local_storage: RamStorageService,
+            },
+        });
+
+        assert.verifySteps(['getItem list_optional_fields,foo,list,foo:char,m2o:many2one,reference:reference']);
+
+        assert.containsN(list, 'th', 3,
+            "should have 3 th, 1 for selector, 2 for columns");
+
+        assert.ok(list.$('th:contains(M2O field)').is(':visible'),
+            "should have a visible m2o field"); //m2o field
+
+        assert.notOk(list.$('th:contains(Reference Field)').is(':visible'),
+            "should not have a visible reference field");
+
+        // optional fields
+        await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
+        assert.containsN(list, 'div.o_optional_columns div.dropdown-item', 2,
+            "dropdown have 2 optional fields");
+
+        forceLocalStorage = false;
+        // enable optional field
+        await testUtils.dom.click(list.$('div.o_optional_columns div.dropdown-item:eq(1) input'));
+
+        assert.verifySteps([
+            'setItem list_optional_fields,foo,list,foo:char,m2o:many2one,reference:reference to ["m2o","reference"]',
+            'getItem list_optional_fields,foo,list,foo:char,m2o:many2one,reference:reference',
+        ]);
+
+        // 4 th (1 for checkbox, 3 for columns)
+        assert.containsN(list, 'th', 4, "should have 4 th");
+
+        assert.ok(list.$('th:contains(M2O field)').is(':visible'),
+            "should have a visible m2o field"); //m2o field
+
+        assert.ok(list.$('th:contains(Reference Field)').is(':visible'),
+            "should have a visible reference field");
 
         list.destroy();
     });

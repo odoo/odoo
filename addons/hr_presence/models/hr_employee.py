@@ -16,7 +16,7 @@ class ResCompany(models.Model):
     hr_presence_state = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
-        ('to_define', 'To Define')], default='to_define')
+        ('to_define', 'To Define')], groups="hr.group_hr_user", default='to_define')
     last_activity = fields.Date(compute="_compute_last_activity")
 
     def _compute_last_activity(self):
@@ -28,7 +28,7 @@ class ResCompany(models.Model):
 
     @api.model
     def _check_presence(self):
-        company = self.env.user.company_id
+        company = self.env.company
         if not company.hr_presence_last_compute_date or \
                 company.hr_presence_last_compute_date.day != Datetime.now().day:
             self.env['hr.employee'].search([

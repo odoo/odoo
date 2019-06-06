@@ -184,7 +184,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         self.assertEqual(len(self._mails), 0, 'No notification / bounce should be sent')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
-    def test_message_process_partner_find(self):
+    def test_message_process_email_partner_find(self):
         """ Finding the partner based on email, based on partner / user / follower """
         self.alias.write({'alias_force_thread_id': self.test_record.id})
         from_1 = self.env['res.partner'].create({'name': 'Brice Denisse', 'email': 'from.test@example.com'})
@@ -204,6 +204,19 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
 
         self.format_and_process(MAIL_TEMPLATE, from_1.email_formatted, 'groups@test.com')
         self.assertEqual(self.test_record.message_ids[0].author_id, from_3)
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_message_process_email_author_exclude_alias(self):
+        """ Do not set alias as author to avoid including aliases in discussions """
+        from_1 = self.env['res.partner'].create({'name': 'Brice Denisse', 'email': 'from.test@test.com'})
+        self.env['mail.alias'].create({
+            'alias_name': 'from.test',
+            'alias_model_id': self.env['ir.model']._get('mail.test.gateway').id
+        })
+
+        record = self.format_and_process(MAIL_TEMPLATE, from_1.email_formatted, 'groups@test.com')
+        self.assertFalse(record.message_ids[0].author_id)
+        self.assertEqual(record.message_ids[0].email_from, from_1.email_formatted)
 
     # --------------------------------------------------
     # Alias configuration
@@ -582,45 +595,3 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         self.assertEqual(len(record), 1)
         self.assertEqual(record.name, 'Spammy')
         self.assertEqual(record._name, 'mail.test.gateway')
-
-    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models', 'odoo.addons.mail.models.mail_mail')
-    def test_private_discussion(self):
-        """ Testing private discussion between partners. """
-        self.partner_2 = self.env['res.partner'].with_context(BaseFunctionalTest._test_context).create({
-            'name': 'Admin',
-            'email': 'admin@agrolait.com',
-        })
-        msg1_pids = [self.partner_1.id, self.partner_2.id]
-
-        # Do: Raoul writes to Bert and Administrator, with a model specific by parameter that should not be taken into account
-        msg1 = self.env['mail.thread'].sudo(self.user_employee).message_post(partner_ids=msg1_pids, subtype='mail.mt_comment', model='mail.test')
-
-        # Test: message recipients
-        msg = self.env['mail.message'].browse(msg1.id)
-        self.assertEqual(msg.partner_ids, self.partner_2 | self.partner_1,
-                         'message_post: private discussion: incorrect recipients')
-        self.assertEqual(msg.model, False,
-                         'message_post: private discussion: parameter model not correctly ignored when having no res_id')
-        # Test: message-id
-        self.assertIn('openerp-private', msg.message_id.split('@')[0], 'message_post: private discussion: message-id should contain the private keyword')
-
-        # Do: Bert replies through mailgateway (is a customer)
-        self.format_and_process(MAIL_TEMPLATE, 'valid.lelitre@agrolait.com', 'not_important@mydomain.com', extra='In-Reply-To: %s' % msg.message_id)
-
-        # Test: last mail_message created
-        msg2 = self.env['mail.message'].search([], limit=1)
-        # Test: message recipients
-        self.assertEqual(msg2.author_id, self.partner_1,
-                         'message_post: private discussion: wrong author through mailgateway based on email')
-        self.assertEqual(msg2.partner_ids, self.user_employee.partner_id | self.partner_2,
-                         'message_post: private discussion: incorrect recipients when replying')
-
-        # Do: Bert replies through chatter (is a customer)
-        msg3 = self.env['mail.thread'].message_post(author_id=self.partner_1.id, parent_id=msg1.id, subtype='mail.mt_comment')
-
-        # Test: message recipients
-        msg = self.env['mail.message'].browse(msg3.id)
-        self.assertEqual(msg.partner_ids, self.user_employee.partner_id | self.partner_2,
-                         'message_post: private discussion: incorrect recipients when replying')
-        self.assertEqual(msg.needaction_partner_ids, self.user_employee.partner_id | self.partner_2,
-                         'message_post: private discussion: incorrect notified recipients when replying')

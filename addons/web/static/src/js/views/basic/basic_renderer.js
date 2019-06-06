@@ -235,7 +235,7 @@ var BasicRenderer = AbstractRenderer.extend({
         $node.tooltip({
             title: function () {
                 return qweb.render('WidgetLabel.tooltip', {
-                    debug: config.debug,
+                    debug: config.isDebug(),
                     widget: widget,
                 });
             }

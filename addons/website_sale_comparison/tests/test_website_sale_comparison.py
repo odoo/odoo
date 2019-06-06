@@ -55,3 +55,10 @@ class TestWebsiteSaleComparison(odoo.tests.TransactionCase):
         self.assertFalse(Website0.viewref(test_view_key, raise_if_not_found=False))
         # Check that the specific inherited view is correctly removed
         self.assertFalse(Website1.viewref(test_view_key, raise_if_not_found=False))
+
+
+@odoo.tests.tagged('post_install', '-at_install')
+class TestUi(odoo.tests.HttpCase):
+
+    def test_01_admin_tour_product_comparison(self):
+        self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('product_comparison')", "odoo.__DEBUG__.services['web_tour.tour'].tours.product_comparison.ready", login='admin')

@@ -527,9 +527,6 @@ var ActionManager = Widget.extend({
      */
     _executeURLAction: function (action, options) {
         var url = action.url;
-        if (config.debug && url && url.length && url[0] === '/') {
-            url = $.param.querystring(url, {debug: config.debug});
-        }
 
         if (action.target === 'self') {
             framework.redirect(url);

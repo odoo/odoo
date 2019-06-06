@@ -13,26 +13,33 @@ class LunchProductCategory(models.Model):
     _description = 'Lunch Product Category'
 
     name = fields.Char('Product Category', required=True)
-    company_id = fields.Many2one('res.company', default=lambda self: self.env['res.company']._company_default_get())
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
-    topping_label_1 = fields.Char('Topping Label 1', required=True, default='Supplements')
-    topping_label_2 = fields.Char('Topping Label 2', required=True, default='Beverages')
-    topping_label_3 = fields.Char('Topping Label 3', required=True, default='Topping Label 3')
+    topping_label_1 = fields.Char('Topping 1 Label', required=True, default='Supplements')
+    topping_label_2 = fields.Char('Topping 2 Label', required=True, default='Beverages')
+    topping_label_3 = fields.Char('Topping 3 Label', required=True, default='Topping Label 3')
     topping_ids_1 = fields.One2many('lunch.topping', 'category_id', domain=[('topping_category', '=', 1)], ondelete='cascade')
     topping_ids_2 = fields.One2many('lunch.topping', 'category_id', domain=[('topping_category', '=', 2)], ondelete='cascade')
     topping_ids_3 = fields.One2many('lunch.topping', 'category_id', domain=[('topping_category', '=', 3)], ondelete='cascade')
     topping_quantity_1 = fields.Selection([
         ('0_more', 'None or More'),
         ('1_more', 'One or More'),
-        ('1', 'Only One')], default='0_more', required=True)
+        ('1', 'Only One')], 'Topping 1 Quantity', default='0_more', required=True)
     topping_quantity_2 = fields.Selection([
         ('0_more', 'None or More'),
         ('1_more', 'One or More'),
-        ('1', 'Only One')], default='0_more', required=True)
+        ('1', 'Only One')], 'Topping 2 Quantity', default='0_more', required=True)
     topping_quantity_3 = fields.Selection([
         ('0_more', 'None or More'),
         ('1_more', 'One or More'),
-        ('1', 'Only One')], default='0_more', required=True)
+        ('1', 'Only One')], 'Topping 3 Quantity', default='0_more', required=True)
+    product_count = fields.Integer(compute='_compute_product_count', help="The number of products related to this category")
+
+    def _compute_product_count(self):
+        product_data = self.env['lunch.product'].read_group([('category_id', 'in', self.ids)], ['category_id'], ['category_id'])
+        data = {product['category_id'][0]: product['category_id_count'] for product in product_data}
+        for category in self:
+            category.product_count = data.get(category.id, 0)
 
     @api.model
     def create(self, vals):
@@ -60,14 +67,14 @@ class LunchTopping(models.Model):
     _description = 'Lunch Toppings'
 
     name = fields.Char('Name', required=True)
-    company_id = fields.Many2one('res.company', default=lambda self: self.env['res.company']._company_default_get())
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     price = fields.Float('Price', digits=dp.get_precision('Account'), required=True)
     category_id = fields.Many2one('lunch.product.category')
     topping_category = fields.Integer('Topping Category', help="This field is a technical field", required=True, default=1)
 
     def name_get(self):
-        currency_id = self.env.user.company_id.currency_id
+        currency_id = self.env.company.currency_id
         res = dict(super(LunchTopping, self).name_get())
         for topping in self:
             price = formatLang(self.env, topping.price, currency_obj=currency_id)
@@ -88,7 +95,7 @@ class LunchProduct(models.Model):
     supplier_id = fields.Many2one('lunch.supplier', 'Vendor', required=True)
     active = fields.Boolean(default=True)
 
-    company_id = fields.Many2one('res.company', default=lambda self: self.env['res.company']._company_default_get())
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
 
     # image: all image fields are base64 encoded and PIL-supported

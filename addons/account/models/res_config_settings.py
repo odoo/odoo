@@ -43,10 +43,6 @@ class ResConfigSettings(models.TransientModel):
         "Show line subtotals with taxes (B2C)",
         implied_group='account.group_show_line_subtotals_tax_included',
         group='base.group_portal,base.group_user,base.group_public')
-    group_products_in_bills = fields.Boolean(string="Use products in vendor bills",
-        implied_group='account.group_products_in_bills',
-        group='base.group_user',
-        help="Disable this option to use a simplified versions of vendor bills, where products are hidden.")
     show_line_subtotals_tax_selection = fields.Selection([
         ('tax_excluded', 'Tax-Excluded'),
         ('tax_included', 'Tax-Included')], string="Line Subtotals Tax Display",
@@ -142,7 +138,7 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_tax_exigibility(self):
         res = {}
         tax = self.env['account.tax'].search([
-            ('company_id', '=', self.env.user.company_id.id), ('tax_exigibility', '=', 'on_payment')
+            ('company_id', '=', self.env.company.id), ('tax_exigibility', '=', 'on_payment')
         ], limit=1)
         if not self.tax_exigibility and tax:
             self.tax_exigibility = True

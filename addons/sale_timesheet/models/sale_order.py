@@ -221,7 +221,7 @@ class SaleOrderLine(models.Model):
     ###########################################
 
     def _convert_qty_company_hours(self):
-        company_time_uom_id = self.env.user.company_id.project_time_mode_id
+        company_time_uom_id = self.env.company.project_time_mode_id
         if self.product_uom.id != company_time_uom_id.id and self.product_uom.category_id.id == company_time_uom_id.category_id.id:
             planned_hours = self.product_uom._compute_quantity(self.product_uom_qty, company_time_uom_id)
         else:
@@ -257,6 +257,10 @@ class SaleOrderLine(models.Model):
                 'sale_line_id': self.id,
                 'partner_id': self.order_id.partner_id.id,
                 'email_from': self.order_id.partner_id.email,
+            })
+            # duplicating a project doesn't set the SO on sub-tasks
+            project.tasks.filtered(lambda task: task.parent_id != False).write({
+                'sale_line_id': self.id,
             })
         else:
             project = self.env['project.project'].create(values)

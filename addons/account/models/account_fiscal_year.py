@@ -17,7 +17,7 @@ class AccountFiscalYear(models.Model):
     date_to = fields.Date(string='End Date', required=True,
         help='Ending Date, included in the fiscal year.')
     company_id = fields.Many2one('res.company', string='Company', required=True,
-        default=lambda self: self.env.user.company_id)
+        default=lambda self: self.env.company)
 
     @api.constrains('date_from', 'date_to', 'company_id')
     def _check_dates(self):

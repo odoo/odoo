@@ -84,6 +84,7 @@
 
     <!-- Edit Profile Page -->
     <template id="user_profile_edit_main" name="Edit Profile">
+        <t t-set="body_classname" t-value="'o_wprofile_body'"/>
         <t t-call="website.layout">
             <div id="wrap" class="o_wprofile_wrap">
                 <div class="container pt-4 pb-5">
@@ -169,7 +170,7 @@
                                 </div>
                                 <div class="form-group col-12">
                                     <label class="mb-1 text-primary" for="description"><span class="font-weight-bold">Biography</span></label>
-                                    <textarea name="description" id="description" style="min-height: 120px" required="True"
+                                    <textarea name="description" id="description" style="min-height: 120px"
                                         class="form-control load_editor"><t t-esc="user.partner_id.website_description"/></textarea>
                                 </div>
                                 <div class="col">
@@ -185,8 +186,9 @@
 
     <!-- Profile Page -->
     <template id="user_profile_main" name="Profile Page">
+        <t t-set="body_classname" t-value="'o_wprofile_body'"/>
         <t t-call="website.layout">
-            <div id="wrap" class="o_wprofile_wrap">
+            <div id="wrap" class="o_wprofile_wrap mt-0">
                 <t t-call="website_profile.user_profile_header"/>
                 <t t-call="website_profile.user_profile_content"/>
             </div>
@@ -203,9 +205,9 @@
                 <div class="row">
                     <!-- ==== Header Left ==== -->
                     <div class="col-12 col-md-4 col-lg-3">
-                        <div t-attf-class="d-flex align-items-start #{'justify-content-between' if (request.env.user == user) else 'justify-content-around' }">
+                        <div t-attf-class="d-flex align-items-start h-100 #{'justify-content-between' if (request.env.user == user) else 'justify-content-around' }">
                             <div class="o_wprofile_pict d-inline-block mb-3 mb-md-0" t-attf-style="background-image:url(/web/image/res.users/#{user.id}/image)"/>
-                            <a class="btn btn-primary d-inline-block d-md-none" t-if="request.env.user == user and validation_email_done" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
+                            <a class="btn btn-primary d-inline-block d-md-none" t-if="request.env.user == user and user.karma != 0" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
                                 <i class="fa fa-pencil mr-1"/>EDIT
                             </a>
                         </div>
@@ -217,14 +219,14 @@
                             <h1 class="o_card_people_name">
                                 <span t-field="user.name"/><small t-if="user.karma == 0"> (not verified)</small>
                             </h1>
-                            <a class="btn btn-primary d-none d-md-inline-block" t-if="request.env.user == user and validation_email_done" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
+                            <a class="btn btn-primary d-none d-md-inline-block" t-if="request.env.user == user and user.karma != 0 or request.env.user._is_admin()" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
                                 <i class="fa fa-pencil mr-2"/>EDIT PROFILE
                             </a>
                         </div>
 
                         <div class="d-flex flex-column justify-content-center flex-grow-1 mb-0 mb-md-5">
-                            <div t-if="user.company_id" class="lead mb-2">
-                                <i class="fa fa-building-o fa-fw mr-1"/><span t-field="user.company_id"/>
+                            <div t-if="user.partner_id.company_name" class="lead mb-2">
+                                <i class="fa fa-building-o fa-fw mr-1"/><span t-field="user.partner_id.company_name"/>
                             </div>
                             <div t-if="user.city or user.country_id" class="lead mb-2">
                                 <i class="fa fa-map-marker fa-fw mr-1"/>
@@ -246,10 +248,10 @@
 
                 <!-- ========== SIDEBAR ========== -->
                 <div class="col-12 col-md-4 col-lg-3 mt-3 mt-md-0">
-                    <div class="bg-white px-3 py-2 py-md-3 mb-3 mb-md-5">
-                        <div class="d-flex justify-content-between">
+                    <div class="o_wprofile_sidebar bg-white px-3 py-2 py-md-3 mb-3 mb-md-5">
+                        <div class="o_wprofile_sidebar_top d-flex justify-content-between">
                             <div t-if="user.rank_id" class="d-flex align-items-center">
-                                <small class="font-weight-bold mr-2">Rank:</small>
+                                <small class="font-weight-bold mr-2">Current rank:</small>
                                 <img t-attf-src="/web/image/gamification.karma.rank/#{user.rank_id.id}/image_small" height="16" alt="" class="mr-1"/>
                                 <a href="/profile/ranks_badges" t-field="user.rank_id"/>
                             </div>
@@ -320,7 +322,10 @@
                     <t t-set="user_points" t-value="0"/>
                 </t>
                 <path class="o_pc_circle_bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                <path class="o_pc_circle" t-attf-stroke-dasharray="#{user_points}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke="url(#gradient)" />
+                <path class="o_pc_circle" t-attf-stroke-dasharray="#{user_points}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke="url(#gradient)" mask="url(#mask)"/>
+                <mask id="mask">
+                    <polygon points="0,0 17.2,0 17.2,10 18,10 18,0 36,0 36,36 0,36" fill="white"/>
+                </mask>
                 <linearGradient id="gradient">
                     <stop offset="0%" stop-color="var(--o-pc-color-stop-1)"/>
                     <stop offset="100%" stop-color="var(--o-pc-color-stop-2)"/>
@@ -416,7 +421,9 @@
         <table class="table table-sm mb64">
             <tr t-foreach="badges" t-as="badge">
                 <td class="align-middle">
-                    <img t-attf-src="/website_profile/static/src/img/badge_#{badge.level}.svg" class="my-1" style="height:2.5em" t-att-alt="badge.level"/>
+                    <img t-if="not badge.image and badge.level" t-attf-src="/website_profile/static/src/img/badge_#{badge.level}.svg"
+                         class="my-1" style="height:2.5em" t-att-alt="badge.name"/>
+                    <img t-else="" t-attf-src="/web/image/gamification.badge/#{badge.id}/image" class="my-1" style="height:2.5em" t-att-alt="badge.name"/>
                     <h6 t-field="badge.name" class="d-inline my-0"/>
                 </td>
                 <td class="align-middle d-none d-md-table-cell">
@@ -446,8 +453,9 @@
     All Users Page
     -->
     <template id="users_page_main" name="Users Page">
+        <t t-set="body_classname" t-value="'o_wprofile_body'"/>
          <t t-call="website.layout">
-            <div id="wrap" class="o_wprofile_wrap pb-5">
+            <div id="wrap" class="o_wprofile_wrap mt-0 pb-5">
                 <t t-call="website_profile.users_page_header"/>
                 <t t-call="website_profile.users_page_content"/>
             </div>
@@ -470,11 +478,14 @@
                     <t t-call="website_profile.top3_user_card"></t>
                 </div>
             </div>
-            <table class="table table-sm">
+            <table class="table table-sm" t-if='users'>
                 <tr t-foreach="users" t-as="user" t-attf-onclick="location.href='/profile/user/#{user['id']}';" class="o_wprofile_pointer bg-white">
                     <t t-call="website_profile.all_user_card"/>
                 </tr>
             </table>
+            <t else=''>
+                <div class='alert alert-warning'>No results matched</div>
+            </t>
             <div class="form-inline justify-content-center">
                 <t t-call="website_profile.pager_nobox"/>
             </div>
@@ -489,6 +500,7 @@
                     <img class="position-absolute" t-attf-src="/website_profile/static/src/img/rank_#{user['position']}.svg" alt="User rank" style="bottom: 0; right: -10px"/>
                 </div>
                 <h3 class="mt-2 mb-0" t-esc="user['name']"></h3>
+                <span class="badge badge-danger font-weight-normal px-2" t-if="not user['website_published']">Unpublished</span>
                 <strong class="text-muted" t-esc="user['rank']"/>
             </div>
             <div class="row mx-0 o_wprofile_top3_card_footer text-nowrap">
@@ -508,6 +520,9 @@
         <td class="align-middle w-md-75">
             <span class="font-weight-bold" t-esc="user['name']"/><br/>
             <span class="text-muted font-weight-bold" t-esc="user['rank']"></span>
+        </td>
+         <td t-if="not user['website_published']" class="align-middle font-weight-bold text-right text-nowrap">
+            <span class="badge badge-danger font-weight-normal px-2 py-1 m-1">Unpublished</span>
         </td>
         <td class="align-middle font-weight-bold text-right text-nowrap">
             <b t-esc="user['karma']"/> <span class="text-muted small font-weight-bold">XP</span>

@@ -119,8 +119,24 @@ class WebsiteSlides(WebsiteProfile):
 
         return values
 
-    def _get_slide_quiz_info(self, slide, quiz_done=False):
+    def _get_slide_quiz_partner_info(self, slide, quiz_done=False):
         return slide._compute_quiz_info(request.env.user.partner_id, quiz_done=quiz_done)[slide.id]
+
+    def _get_slide_quiz_data(self, slide):
+        slide_completed = slide.user_membership_id.sudo().completed
+        values = {
+            'slide_questions': [{
+                'id': question.id,
+                'question': question.question,
+                'answers': [{
+                    'id': answer.id,
+                    'text_value': answer.text_value,
+                    'is_correct': answer.is_correct if slide_completed else None
+                } for answer in question.sudo().answer_ids],
+            } for question in slide.question_ids]
+        }
+        values.update(self._get_slide_quiz_partner_info(slide))
+        return values
 
     # CHANNEL UTILITIES
     # --------------------------------------------------
@@ -278,7 +294,7 @@ class WebsiteSlides(WebsiteProfile):
         domain = request.website.website_domain()
         domain = self._build_channel_domain(domain, slide_type=slide_type, my=my, **post)
 
-        order = self._channel_order_by_criterion.get(post.get('sorting', 'date'), 'create_date desc')
+        order = self._channel_order_by_criterion.get(post.get('sorting'))
 
         channels = request.env['slide.channel'].search(domain, order=order)
         # channels_layouted = list(itertools.zip_longest(*[iter(channels)] * 4, fillvalue=None))
@@ -444,7 +460,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route(['/slides/channel/join'], type='json', auth='public', website=True)
     def slide_channel_join(self, channel_id):
         if request.website.is_public_user():
-            return {'error': 'public_user'}
+            return {'error': 'public_user', 'error_signup_allowed': request.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'}
         success = request.env['slide.channel'].browse(channel_id).action_add_member()
         if not success:
             return {'error': 'join_done'}
@@ -489,7 +505,7 @@ class WebsiteSlides(WebsiteProfile):
         values = self._get_slide_detail(slide)
         # quiz-specific: update with karma and quiz information
         if slide.question_ids:
-            values.update(self._get_slide_quiz_info(slide))
+            values.update(self._get_slide_quiz_data(slide))
         # sidebar: update with user channel progress
         values['channel_progress'] = self._get_channel_progress(slide.channel_id, include_quiz=True)
 
@@ -528,7 +544,7 @@ class WebsiteSlides(WebsiteProfile):
             if not (width or height):
                 width, height = tools.image_guess_size_from_field_name(field)
 
-        image_base64 = tools.image_process(image_base64, (width, height), crop=crop)
+        image_base64 = tools.image_process(image_base64, size=(int(width), int(height)), crop=crop)
 
         content = base64.b64decode(image_base64)
         headers = http.set_safe_image_headers(headers, content)
@@ -571,7 +587,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route('/slides/slide/like', type='json', auth="public", website=True)
     def slide_like(self, slide_id, upvote):
         if request.website.is_public_user():
-            return {'error': 'public_user'}
+            return {'error': 'public_user', 'error_signup_allowed': request.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'}
         slide_partners = request.env['slide.slide.partner'].sudo().search([
             ('slide_id', '=', slide_id),
             ('partner_id', '=', request.env.user.partner_id.id)
@@ -624,22 +640,7 @@ class WebsiteSlides(WebsiteProfile):
         if fetch_res.get('error'):
             return fetch_res
         slide = fetch_res['slide']
-        quiz_info = self._get_slide_quiz_info(slide)
-        slide_completed = slide.user_membership_id.sudo().completed
-        return {
-            'questions': [{
-                'id': question.id,
-                'question': question.question,
-                'answers': [{
-                    'id': answer.id,
-                    'text_value': answer.text_value,
-                    'is_correct': answer.is_correct if slide_completed else None
-                } for answer in question.answer_ids],
-            } for question in slide.question_ids],
-            'quizAttemptsCount': quiz_info['quiz_attempts_count'],
-            'quizKarmaGain': quiz_info['quiz_karma_gain'],
-            'quizKarmaWon': quiz_info['quiz_karma_won'],
-        }
+        return self._get_slide_quiz_data(slide)
 
     @http.route('/slides/slide/quiz/submit', type="json", auth="public", website=True)
     def slide_quiz_submit(self, slide_id, answer_ids):
@@ -663,7 +664,7 @@ class WebsiteSlides(WebsiteProfile):
         user_good_answers = user_answers - user_bad_answers
 
         self._set_viewed_slide(slide, quiz_attempts_inc=True)
-        quiz_info = self._get_slide_quiz_info(slide, quiz_done=True)
+        quiz_info = self._get_slide_quiz_partner_info(slide, quiz_done=True)
 
         rank_progress = {}
         if not user_bad_answers:

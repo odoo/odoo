@@ -43,6 +43,7 @@
                                     <group string="Taxes" attrs="{'invisible': [('tax_line_id','=',False), ('tax_ids','=',[])]}">
                                         <field name="tax_line_id" readonly="1" attrs="{'invisible': [('tax_line_id','=',False)]}"/>
                                         <field name="tax_ids" widget="many2many_tags" readonly="1" attrs="{'invisible': [('tax_ids','=',[])]}"/>
+                                        <field name="tax_audit"/>
                                     </group>
                                     <group string="Matching" attrs="{'invisible':[('full_reconcile_id','=',False), ('matched_debit_ids', '=', []),('matched_credit_ids', '=', [])]}">
                                         <label for="full_reconcile_id"/>
@@ -134,13 +135,12 @@
             <field name="arch" type="xml">
                 <tree string="Journal Items" create="false" editable="bottom">
                     <field name="date"/>
-                    <field name="move_id" required="0" groups="account.group_account_user"/>
                     <field name="journal_id" options='{"no_open":True}'/>
                     <field name="name"/>
                     <field name="ref"/>
                     <field name="statement_id" invisible="1"/>
                     <field name="partner_id"/>
-                    <field name="account_id" options='{"no_open":True}' domain="[('company_id', '=', company_id)]" groups="account.group_account_user"/>
+                    <field name="account_id" options="{'no_open': True, 'no_create': True}" domain="[('company_id', '=', company_id)]" groups="account.group_account_user" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                     <field name="analytic_account_id" groups="account.group_account_user"/>
                     <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                     <field name="reconciled" invisible="1"/>
@@ -153,6 +153,7 @@
                     <field name="date_maturity"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
+                    <field name="parent_state" invisible="1"/>
                     <groupby name="move_id">
                         <field name="state" invisible="1"/>
                         <button name="edit" type="edit" string="Edit"/>
@@ -173,6 +174,7 @@
                 <field name="full_reconcile_id" position="after">
                     <field name="tax_line_id"/>
                     <field name="tax_base_amount" sum="Total Base Amount"/>
+                    <field name="tax_audit"/>
                 </field>
                 <field name="date_maturity" position="replace"/>
             </field>
@@ -189,19 +191,8 @@
             </field>
         </record>
 
-        <record id="account_move_line_graph_date_cash_basis" model="ir.ui.view">
-            <field name="name">account.move.line.graph</field>
-            <field name="model">account.move.line</field>
-            <field name="arch" type="xml">
-                <graph string="Account Statistics" type="bar">
-                    <field name="date"/>
-                    <field name="balance_cash_basis" operator="+" type='measure'/>
-                </graph>
-            </field>
-        </record>
-
         <record id="view_account_move_line_filter" model="ir.ui.view">
-            <field name="name">Journal Items</field>
+            <field name="name">account.move.line.search</field>
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
                 <search string="Search Journal Items">
@@ -336,7 +327,7 @@
                         <group>
                             <field name="journal_id" options="{'no_open': True, 'no_create': True}"/>
                             <field name="company_id" required="1" groups="base.group_multi_company"/>
-                            <field name="amount" invisible="1"/>
+                            <field name="amount" invisible="1" readonly="1"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
                     </group>
@@ -365,14 +356,16 @@
                                     <field name="date_maturity" required="0" invisible="context.get('view_no_maturity', False)"/>
                                     <field name="recompute_tax_line" invisible="1" readonly="1"/>
                                     <field name="tax_line_grouping_key" invisible="1" readonly="1"/>
+                                    <field name="tax_repartition_line_id" invisible="1"/> <!--Not to be removed, we need it so that the call to new() takes it into account when autocompleting the lines of a tax-->
+                                    <field name="tax_base_amount" invisible="1"/> <!--Not to be removed, we need it so that the call to new() takes it into account when autocompleting the lines of a tax-->
+                                    <field name="tag_ids" invisible="1"/>
                                 </tree>
                             </field>
                             <field name="narration" colspan="4" placeholder="Add an internal note..." nolabel="1" height="50"/>
                         </page>
                         <page string="Other Info">
                             <group>
-                                <field name="auto_reverse" attrs="{'readonly':[('reverse_entry_id', '!=', False)]}"/>
-                                <field name="reverse_date" attrs="{'invisible':[('auto_reverse', '=', False)], 'required':[('auto_reverse', '=', True)],'readonly':[('reverse_entry_id', '!=', False)]}"/>
+                                <field name="auto_post" attrs="{'readonly':[('reverse_entry_id', '!=', False)]}"/>
                                 <field name="reverse_entry_id" attrs="{'invisible':True}"/>
                                 <field name="to_check"/>
                             </group>
@@ -428,7 +421,7 @@
             name="Journal Items"
             context="{'search_default_account_id': [active_id]}"
             res_model="account.move.line"
-            src_model="account.account"/>
+            binding_model="account.account" binding_views="form"/>
 
         <act_window
             id="action_move_line_select_by_partner"
@@ -454,11 +447,11 @@
             name="Journal Items for Tax Audit"
             context="{'search_default_account_id': [active_id]}"
             res_model="account.move.line"
-            src_model="account.account"
+            binding_model="account.account" binding_views="form"
             view_id="account.view_move_line_tax_audit_tree"/>
 
         <record id="action_account_moves_all_a" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1}</field>
+            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'search_default_posted':1}</field>
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree"/>
@@ -468,7 +461,7 @@
         <record id="action_account_moves_all_tree" model="ir.actions.act_window">
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
-            <field name="context">{'search_default_partner_id': [active_id], 'default_partner_id': active_id}</field>
+            <field name="context">{'search_default_partner_id': [active_id], 'default_partner_id': active_id, 'search_default_posted':1}</field>
             <field name="view_id" ref="view_move_line_tree"/>
         </record>
 
@@ -484,22 +477,6 @@
             <field name="name">Journal Items</field>
             <field name="view_mode">graph,pivot</field>
             <field name="view_id" ref="account_move_line_graph_date"/>
-            <field name="context">{'search_default_account_id': [active_id], 'search_default_posted': 1}</field>
-            <field name="res_model">account.move.line</field>
-        </record>
-
-        <record id="action_move_line_graph_cash_basis" model="ir.actions.act_window">
-            <field name="name">Journal Items</field>
-            <field name="view_mode">graph,pivot</field>
-            <field name="view_id" ref="account_move_line_graph_date_cash_basis"/>
-            <field name="context">{'search_default_account_id': [active_id]}</field>
-            <field name="res_model">account.move.line</field>
-        </record>
-
-        <record id="action_move_line_graph_cash_basis_posted" model="ir.actions.act_window">
-            <field name="name">Journal Items</field>
-            <field name="view_mode">graph,pivot</field>
-            <field name="view_id" ref="account_move_line_graph_date_cash_basis"/>
             <field name="context">{'search_default_account_id': [active_id], 'search_default_posted': 1}</field>
             <field name="res_model">account.move.line</field>
         </record>
@@ -538,7 +515,7 @@
             name="Journal Items"
             context="{'search_default_move_id': active_id, 'default_move_id': active_id}"
             res_model="account.move.line"
-            src_model="account.move"
+            binding_model="account.move" binding_views="form"
             view_mode="tree"/>
 
         <!-- MENUS -->

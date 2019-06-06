@@ -222,12 +222,12 @@ var ThemeCustomizeDialog = Dialog.extend({
         var def = new Promise(function (resolve, reject) {
             var $image = $('<img/>');
             var editor = new weWidgets.MediaDialog(self, {
+                mediaWidth: 1920,
                 onlyImages: true,
                 firstFilters: ['background'],
             }, $image[0]);
 
             editor.on('save', self, function (media) { // TODO use scss customization instead (like for user colors)
-                var src = $(media).attr('src');
                 self._rpc({
                     model: 'ir.model.data',
                     method: 'get_object_reference',
@@ -238,7 +238,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                         method: 'save',
                         args: [
                             data[1],
-                            '#wrapwrap { background-image: url("' + src + '"); }',
+                            '#wrapwrap { background-image: url("' + media.src + '"); }',
                             '//style',
                         ],
                     });
@@ -592,7 +592,7 @@ var ThemeCustomizeDialog = Dialog.extend({
         var $loading = $('<i/>', {class: 'fa fa-refresh fa-spin'});
         this.$modal.find('.modal-title').append($loading);
 
-        if (reload || config.debug === 'assets') {
+        if (reload || config.isDebug('assets')) {
             window.location.href = $.param.querystring('/website/theme_customize_reload', {
                 href: window.location.href,
                 enable: (enable || []).join(','),

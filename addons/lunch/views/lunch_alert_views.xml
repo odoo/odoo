@@ -6,7 +6,9 @@
         <field name="arch" type="xml">
             <search string="Search">
                 <field name="message"/>
-                <filter name="inactive" string="Currently inactive" domain="[('available_today','=',False)]"/>
+                <filter name="inactive_today" string="Currently inactive" domain="[('available_today', '=', False)]"/>
+                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
             </search>
         </field>
     </record>
@@ -16,8 +18,9 @@
         <field name="model">lunch.alert</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="active"/>
-                <field name="message"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="name"/>
+                <field name="message" invisible="1"/>
                 <field name="available_today"/>
             </tree>
         </field>
@@ -35,6 +38,12 @@
                             <field name="active" widget="boolean_button"
                                 options='{"terminology": "archive"}'/>
                         </button>
+                    </div>
+                    <div class="oe_title" name="title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
                     </div>
                     <group>
                         <group>
@@ -65,5 +74,6 @@
         <field name="search_view_id" ref="lunch_alert_view_search"/>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="lunch_alert_view_tree"/>
+        <field name="context">{'search_default_inactive': 1, 'search_default_active': 1}</field>
     </record>
 </odoo>

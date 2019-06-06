@@ -50,11 +50,14 @@ class Lead(models.Model):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
     _order = "priority desc,activity_date_deadline,id desc"
-    _inherit = ['mail.thread.cc', 'mail.activity.mixin', 'utm.mixin', 'format.address.mixin', 'mail.blacklist.mixin']
+    _inherit = ['mail.thread.cc', 'mail.thread.blacklist', 'mail.activity.mixin', 'utm.mixin', 'format.address.mixin']
     _primary_email = 'email_from'
 
     def _default_probability(self):
-        stage_id = self._default_stage_id()
+        if 'default_stage_id' in self._context:
+            stage_id = self._context.get('default_stage_id')
+        else:
+            stage_id = self._default_stage_id()
         if stage_id:
             return self.env['crm.stage'].browse(stage_id).probability
         return 10
@@ -96,9 +99,6 @@ class Lead(models.Model):
     date_last_stage_update = fields.Datetime(string='Last Stage Update', index=True, default=fields.Datetime.now)
     date_conversion = fields.Datetime('Conversion Date', readonly=True)
 
-    # Messaging and marketing
-    message_bounce = fields.Integer('Bounce', help="Counter of the number of bounced emails for this contact", default=0)
-
     # Only used for type opportunity
     probability = fields.Float('Probability', group_operator="avg", default=lambda self: self._default_probability())
     planned_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True)
@@ -124,7 +124,7 @@ class Lead(models.Model):
     mobile = fields.Char('Mobile')
     function = fields.Char('Job Position')
     title = fields.Many2one('res.partner.title')
-    company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.user.company_id.id)
+    company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.company.id)
     meeting_count = fields.Integer('# Meetings', compute='_compute_meeting_count')
     lost_reason = fields.Many2one('crm.lost.reason', string='Lost Reason', index=True, tracking=True)
 
@@ -308,9 +308,10 @@ class Lead(models.Model):
         if vals.get('user_id') and 'date_open' not in vals:
             vals['date_open'] = fields.Datetime.now()
 
-        if context.get('default_partner_id') and not vals.get('email_from'):
-            partner = self.env['res.partner'].browse(context['default_partner_id'])
-            vals['email_from'] = partner.email
+        partner_id = vals.get('partner_id') or context.get('default_partner_id')
+        onchange_values = self._onchange_partner_id_values(partner_id)
+        onchange_values.update(vals)  # we don't want to overwrite any existing key
+        vals = onchange_values
 
         return super(Lead, self.with_context(context)).create(vals)
 
@@ -319,7 +320,8 @@ class Lead(models.Model):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.Datetime.now()
-        if vals.get('user_id') and 'date_open' not in vals:
+        # Only write the 'date_open' if no salesperson was assigned.
+        if vals.get('user_id') and 'date_open' not in vals and not self.mapped('user_id'):
             vals['date_open'] = fields.Datetime.now()
         # stage change with new stage: update probability and date_closed
         if vals.get('stage_id') and 'probability' not in vals:
@@ -1082,7 +1084,7 @@ class Lead(models.Model):
 
         result['done']['target'] = self.env.user.target_sales_done
         result['won']['target'] = self.env.user.target_sales_won
-        result['currency_id'] = self.env.user.company_id.currency_id.id
+        result['currency_id'] = self.env.company.currency_id.id
 
         return result
 
@@ -1117,10 +1119,10 @@ class Lead(models.Model):
         return super(Lead, self)._track_subtype(init_values)
 
     @api.multi
-    def _notify_get_groups(self, message, groups):
+    def _notify_get_groups(self):
         """ Handle salesman recipients that can convert leads into opportunities
         and set opportunities as won / lost. """
-        groups = super(Lead, self)._notify_get_groups(message, groups)
+        groups = super(Lead, self)._notify_get_groups()
 
         self.ensure_one()
         if self.type == 'lead':
@@ -1163,17 +1165,16 @@ class Lead(models.Model):
         return view_id
 
     @api.multi
-    def message_get_default_recipients(self):
-        return {
-            r.id : {'partner_ids': [],
-                    'email_to': r.email_normalized,
-                    'email_cc': False}
-            for r in self.sudo()
-        }
+    def _message_get_default_recipients(self):
+        return {r.id: {
+            'partner_ids': [],
+            'email_to': r.email_normalized,
+            'email_cc': False}
+            for r in self}
 
     @api.multi
-    def message_get_suggested_recipients(self):
-        recipients = super(Lead, self).message_get_suggested_recipients()
+    def _message_get_suggested_recipients(self):
+        recipients = super(Lead, self)._message_get_suggested_recipients()
         try:
             for lead in self:
                 if lead.partner_id:
@@ -1215,7 +1216,7 @@ class Lead(models.Model):
             defaults['company_id'] = self.env['crm.team'].browse(defaults['team_id']).company_id.id
         return super(Lead, self).message_new(msg_dict, custom_values=defaults)
 
-    def _message_post_after_hook(self, message, *args, **kwargs):
+    def _message_post_after_hook(self, message, msg_vals):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -1226,11 +1227,11 @@ class Lead(models.Model):
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
                     ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Lead, self)._message_post_after_hook(message, *args, **kwargs)
+        return super(Lead, self)._message_post_after_hook(message, msg_vals)
 
     @api.multi
-    def message_partner_info_from_emails(self, emails, link_mail=False):
-        result = super(Lead, self).message_partner_info_from_emails(emails, link_mail=link_mail)
+    def _message_partner_info_from_emails(self, emails, link_mail=False):
+        result = super(Lead, self)._message_partner_info_from_emails(emails, link_mail=link_mail)
         for partner_info in result:
             if not partner_info.get('partner_id') and (self.partner_name or self.contact_name):
                 emails = email_re.findall(partner_info['full_name'] or '')

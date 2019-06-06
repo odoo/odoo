@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
+from pprint import pformat
 import json
 import logging
 
@@ -183,14 +184,17 @@ class GoogleService(models.TransientModel):
             except:
                 pass
         except requests.HTTPError as error:
+            # https://developers.google.com/calendar/v3/errors
             if error.response.status_code in (204, 404):
                 status = error.response.status_code
                 response = ""
             else:
-                _logger.exception("Bad google request : %s !", error.response.content)
+                req = json.loads(error.request.body or 'null')
+                res = error.response.json()
+                _logger.exception("Error while requesting Google Services\nRequest:\n%s\nResponse:\n%s", pformat(req), pformat(res))
                 if error.response.status_code in (400, 401, 410):
-                    raise error
-                raise self.env['res.config.settings'].get_config_warning(_("Something went wrong with your request to google"))
+                    raise UserError(_("Error while requesting Google Services: %s") % res['error']['message'])
+                raise self.env['res.config.settings'].get_config_warning(_("Something went wrong with your request to google: %s") % res['error']['message'])
         return (status, response, ask_time)
 
     # TODO : remove me, it is only used in google calendar. Make google_calendar use the constants

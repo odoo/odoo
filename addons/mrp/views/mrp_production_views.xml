@@ -165,8 +165,8 @@
                             <group>
                                 <group groups="stock.group_stock_multi_locations">
                                     <field name="picking_type_id" domain="[('code', '=', 'mrp_operation')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                    <field name="location_src_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                    <field name="location_dest_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="location_src_id" options="{'no_create': True}" domain="[('usage','=','internal')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="location_dest_id" options="{'no_create': True}" domain="[('usage','=','internal')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </group>
                             </group>
                             <group>

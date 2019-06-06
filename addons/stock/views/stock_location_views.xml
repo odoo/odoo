@@ -6,7 +6,8 @@
         id="act_product_location_open"
         name="Products"
         res_model="product.product"
-        src_model="stock.location"/>
+        binding_model="stock.location"
+        binding_views="form"/>
 
     <record id="view_location_form" model="ir.ui.view">
         <field name="name">stock.location.form</field>
@@ -202,8 +203,8 @@
                             <tree>
                                 <field name="sequence" widget="handle"/>
                                 <field name="action"/>
-                                <field name="location_src_id"/>
-                                <field name="location_id"/>
+                                <field name="location_src_id" options="{'no_create': True}"/>
+                                <field name="location_id" options="{'no_create': True}"/>
                             </tree>
                         </field>
                     </group>

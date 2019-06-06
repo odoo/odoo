@@ -15,7 +15,7 @@ class User(models.Model):
     job_title = fields.Char(related='employee_id.job_title', readonly=False)
     work_phone = fields.Char(related='employee_id.work_phone', readonly=False)
     mobile_phone = fields.Char(related='employee_id.mobile_phone', readonly=False)
-    phone = fields.Char(related='employee_id.phone', readonly=False, related_sudo=False)
+    employee_phone = fields.Char(related='employee_id.phone', readonly=False, related_sudo=False)
     work_email = fields.Char(related='employee_id.work_email', readonly=False, related_sudo=False)
     category_ids = fields.Many2many(related='employee_id.category_ids', string="Employee Tags", readonly=False, related_sudo=False)
     department_id = fields.Many2one(related='employee_id.department_id', readonly=False, related_sudo=False)
@@ -48,16 +48,15 @@ class User(models.Model):
     additional_note = fields.Text(related='employee_id.additional_note', readonly=False, related_sudo=False)
     barcode = fields.Char(related='employee_id.barcode', readonly=False, related_sudo=False)
     pin = fields.Char(related='employee_id.pin', readonly=False, related_sudo=False)
-    employee_warning = fields.Char("Missing employee warning", compute='_compute_employee_warning')
+    certificate = fields.Selection(related='employee_id.certificate', readonly=False, related_sudo=False)
+    study_field = fields.Char(related='employee_id.study_field', readonly=False, related_sudo=False)
+    study_school = fields.Char(related='employee_id.study_school', readonly=False, related_sudo=False)
+    employee_count = fields.Integer(compute='_compute_employee_count')
 
-    @api.depends('groups_id', 'employee_ids', 'active')
-    def _compute_employee_warning(self):
-        """ Fill warning only for active internal user (employee) not linked to hr.employee """
+    @api.depends('employee_ids')
+    def _compute_employee_count(self):
         for user in self:
-            if not user.employee_ids and not user.share and user.active:
-                user.employee_warning = _("Don't forget to create the linked employee.")
-            else:
-                user.employee_warning = False
+            user.employee_count = len(user.employee_ids)
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights.
@@ -100,7 +99,7 @@ class User(models.Model):
             'parent_id',
             'passport_id',
             'permit_no',
-            'phone',
+            'employee_phone',
             'pin',
             'place_of_birth',
             'spouse_birthdate',
@@ -109,7 +108,10 @@ class User(models.Model):
             'visa_no',
             'work_email',
             'work_location',
-            'work_phone'
+            'work_phone',
+            'certificate',
+            'study_field',
+            'study_school',
         ]
 
         init_res = super(User, self).__init__(pool, cr)
@@ -177,12 +179,7 @@ class User(models.Model):
     @api.multi
     def action_create_employee(self):
         self.ensure_one()
-        form_view = self.env.ref('hr.view_employee_form')
-        return {
-            'name': _('Create Employee'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'hr.employee',
-            'views': [(form_view.id, 'form')],
-            'target': 'new',
-            'context': {'default_user_id': self.id}
-        }
+        self.env['hr.employee'].create(dict(
+            user_id=self.id,
+            **self.env['hr.employee']._sync_user(self)
+        ))

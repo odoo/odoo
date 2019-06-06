@@ -20,7 +20,7 @@ class MailTestGateway(models.Model):
     mailing features and base performances. """
     _description = 'Simple Chatter Model for Mail Gateway'
     _name = 'mail.test.gateway'
-    _inherit = ['mail.blacklist.mixin', 'mail.thread']
+    _inherit = ['mail.thread.blacklist']
     _primary_email = 'email_from'
 
     name = fields.Char()
@@ -148,3 +148,13 @@ class MailCC(models.Model):
     _inherit = ['mail.thread.cc']
 
     name = fields.Char()
+
+
+class MailMultiCompany(models.Model):
+    """ This model can be used in multi company tests"""
+    _name = 'mail.test.multi.company'
+    _description = "Test Multi Company Mail"
+    _inherit = 'mail.thread'
+
+    name = fields.Char()
+    company_id = fields.Many2one('res.company')

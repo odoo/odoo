@@ -623,13 +623,13 @@ var StatementModel = BasicModel.extend({
             prop = this._formatQuickCreate(line);
             line.reconciliation_proposition.push(prop);
         }
-        if (!line.reconciliation_proposition.slice(0,-1).every(function(prop) {return prop.to_check == values.to_check;})) {
+        if ('to_check' in values && !line.reconciliation_proposition.slice(0,-1).every(function(prop) {return prop.to_check == values.to_check;})) {
             new CrashManager().show_warning({data: {
                 exception_type: _t("Incorrect Operation"),
                 message: _t("You cannot mix items with and without the 'To Check' checkbox ticked.")
             }});
             // FIXME: model should not be tied to the DOM !
-            $('.create_to_check input').click();
+            $('.create_to_check input:visible').prop('checked', !values.to_check).change();
             return Promise.resolve();
         }
         _.each(values, function (value, fieldName) {
@@ -837,11 +837,17 @@ var StatementModel = BasicModel.extend({
         return this._rpc({
                 model: 'res.partner',
                 method: 'read',
-                args: [partner_id, ["property_account_receivable_id", "property_account_payable_id"]],
+                args: [partner_id, ["property_account_receivable_id", "property_account_payable_id", "customer", "supplier"]],
             }).then(function (result) {
                 if (result.length > 0) {
                     var line = self.getLine(handle);
-                    self.lines[handle].st_line.open_balance_account_id = line.balance.amount < 0 ? result[0]['property_account_payable_id'][0] : result[0]['property_account_receivable_id'][0];
+                    if (result[0]['supplier'] && !result[0]['customer']) {
+                        self.lines[handle].st_line.open_balance_account_id = result[0]['property_account_payable_id'][0];
+                    } else if (!result[0]['supplier'] && result[0]['customer']) {
+                        self.lines[handle].st_line.open_balance_account_id = result[0]['property_account_receivable_id'][0];
+                    } else {
+                        self.lines[handle].st_line.open_balance_account_id = line.balance.amount < 0 ? result[0]['property_account_payable_id'][0] : result[0]['property_account_receivable_id'][0];
+                    }
                 }
             });
     },

@@ -277,6 +277,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         'field_changed': '_onFieldChanged',
     }),
     _avoidFieldUpdate: {},
+    MV_LINE_DEBOUNCE: 200,
 
     /**
      * create partner_id field in editable mode
@@ -289,6 +290,11 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
 
         this.model = model;
         this._initialState = state;
+        if (this.MV_LINE_DEBOUNCE) {
+            this._onSelectMoveLine = _.debounce(this._onSelectMoveLine, this.MV_LINE_DEBOUNCE, true);
+        } else {
+            this._onSelectMoveLine = this._onSelectMoveLine;
+        }
     },
     /**
      * @override
@@ -932,10 +938,12 @@ var ManualLineRenderer = LineRenderer.extend({
      * @override
      */
     _renderCreate: function (state) {
-        var parentPromise = this._super(state);
-        this.$('.create .create_journal_id').show();
-        this.$('.create .create_date').removeClass('d-none');
-        this.$('.create .create_journal_id .o_input').addClass('o_required_modifier');
+        var self = this;
+        var parentPromise = this._super(state).then(function() {
+            self.$('.create .create_journal_id').show();
+            self.$('.create .create_date').removeClass('d-none');
+            self.$('.create .create_journal_id .o_input').addClass('o_required_modifier');
+        });
         return parentPromise;
     },
 

@@ -51,7 +51,7 @@ class TestUom(TransactionCase):
 
     def test_30_reference_uniqueness(self):
         """ Check the uniqueness of the reference UoM in a category """
-        time_category = self.env['uom.category'].search([('measure_type', '=', 'time')], limit=1)
+        time_category = self.env['uom.category'].search([('measure_type', '=', 'working_time')], limit=1)
 
         with self.assertRaises(ValidationError):
             self.env['uom.uom'].create({

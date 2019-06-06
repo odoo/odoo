@@ -8,9 +8,8 @@ class ResConfigSettings(models.TransientModel):
 
     _inherit = 'res.config.settings'
 
-    group_multi_company = fields.Boolean("Manage multiple companies", implied_group='base.group_multi_company')
     company_id = fields.Many2one('res.company', string='Company', required=True,
-        default=lambda self: self.env.user.company_id)
+        default=lambda self: self.env.company)
     user_default_rights = fields.Boolean(
         "Default Access Rights",
         config_parameter='base_setup.default_user_rights',
@@ -67,7 +66,7 @@ class ResConfigSettings(models.TransientModel):
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'res.company',
-            'res_id': self.env.user.company_id.id,
+            'res_id': self.env.company.id,
             'target': 'current',
         }
     @api.multi
@@ -103,7 +102,7 @@ class ResConfigSettings(models.TransientModel):
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
-            'res_id': self.env.user.company_id.id,
+            'res_id': self.env.company.id,
             'res_model': 'res.company',
             'views': [(template.id, 'form')],
             'view_id': template.id,

@@ -110,7 +110,7 @@ QUnit.test('Magic wand', async function (assert) {
 });
 
 QUnit.test('Font style', function (assert) {
-    assert.expect(56);
+    assert.expect(58);
 
     return weTestUtils.createWysiwyg({
         debug: false,
@@ -281,6 +281,19 @@ QUnit.test('Font style', function (assert) {
                     content: '<p><b>a</b>aa<span class="fa fa-heart"></span>bb<b>b</b></p>',
                     start: 'p:contents()[1]->0',
                     end: 'p:contents()[3]->2',
+                },
+            },
+            {
+                name: "Click BOLD: bold -> normal (at start of dom)",
+                content: '<p><b>abc</b></p>',
+                start: 'b:contents()[0]->0',
+                do: function () {
+                    $btnBold.mousedown().click();
+                },
+                test: {
+                    content: '<p>\u200B<b>abc</b></p>',
+                    start: 'p:contents()[0]->1',
+                    end: 'p:contents()[0]->1',
                 },
             },
             /* ITALIC */
@@ -1141,7 +1154,7 @@ QUnit.test('Text bgcolor', function (assert) {
 });
 
 QUnit.test('Unordered list', function (assert) {
-    assert.expect(10);
+    assert.expect(34);
 
     return weTestUtils.createWysiwyg({
         debug: false,
@@ -1223,6 +1236,176 @@ QUnit.test('Unordered list', function (assert) {
                     end: 'p:eq(2):contents()[0]->5',
                 },
             },
+            // Conversion from OL
+            {
+                name: "Click UL: ol -> ul",
+                content: '<p>dom not to edit</p><ol><li><p>dom to edit</p></li></ol>',
+                start: 'p:eq(1):contents()[0]->1',
+                end: 'p:eq(1):contents()[0]->5',
+                do: function () {
+                    $btnUL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ul><li><p>dom to edit</p></li></ul>',
+                    start: 'p:eq(1):contents()[0]->1',
+                    end: 'p:eq(1):contents()[0]->5',
+                },
+            },
+            {
+                name: "Click UL: ol -> ul (across li's)",
+                content: '<p>dom not to edit</p><ol><li><p>dom to edit</p></li><li><p>dom to edit</p></li></ol>',
+                start: 'p:eq(1):contents()[0]->1',
+                end: 'p:eq(2):contents()[0]->5',
+                do: function () {
+                    $btnUL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ul><li><p>dom to edit</p></li><li><p>dom to edit</p></li></ul>',
+                    start: 'p:eq(1):contents()[0]->1',
+                    end: 'p:eq(2):contents()[0]->5',
+                },
+            },
+            {
+                name: "Click UL: ol -> ul (from second li)",
+                content: '<p>dom not to edit</p><ol><li><p>xxx</p></li><li><p>dom to edit</p></li></ol>',
+                start: 'li:eq(1) p:contents()[0]->1',
+                end: 'li:eq(1) p:contents()[0]->5',
+                do: function () {
+                    $btnUL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ol><li><p>xxx</p></li></ol><ul><li><p>dom to edit</p></li></ul>',
+                    start: 'p:eq(2):contents()[0]->1',
+                    end: 'p:eq(2):contents()[0]->5',
+                },
+            },
+            {
+                name: "Click UL: ul ol -> ul ul (from indented li)",
+                content: '<p>dom not to edit</p><ul><li><p>xxx</p></li><ol><li><p>dom to edit</p></li></ol></ul>',
+                start: 'li:eq(1) p:contents()[0]->1',
+                end: 'li:eq(1) p:contents()[0]->5',
+                do: function () {
+                    $btnUL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ul><li><p>xxx</p></li><ul><li><p>dom to edit</p></li></ul></ul>',
+                    start: 'p:eq(2):contents()[0]->1',
+                    end: 'p:eq(2):contents()[0]->5',
+                },
+            },
+            {
+                name: "Click UL: ul ol -> ul ul (across several indented li)",
+                content: '<p>dom not to edit</p><ul><li><p>xxx</p></li><ol><li><p>dom to edit 1</p></li><li><p>dom to edit 2</p></li></ol></ul>',
+                start: 'li:eq(1) p:contents()[0]->1',
+                end: 'li:eq(2) p:contents()[0]->5',
+                do: function () {
+                    $btnUL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ul><li><p>xxx</p></li><ul><li><p>dom to edit 1</p></li><li><p>dom to edit 2</p></li></ul></ul>',
+                    start: 'p:eq(2):contents()[0]->1',
+                    end: 'p:eq(3):contents()[0]->5',
+                },
+            },
+            {
+                name: "Click UL: ul ol -> ul ul (from second indented li)",
+                content: '<p>dom not to edit</p><ul><li><p>xxx</p></li><ol><li><p>dom not to edit</p></li><li><p>dom to edit</p></li><li><p>dom not to edit</p></li></ol></ul>',
+                start: 'li:eq(2) p:contents()[0]->1',
+                end: 'li:eq(2) p:contents()[0]->5',
+                do: function () {
+                    $btnUL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ul><li><p>xxx</p></li><ol><li><p>dom not to edit</p></li></ol><ul><li><p>dom to edit</p></li></ul><ol><li><p>dom not to edit</p></li></ol></ul>',
+                    start: 'p:eq(3):contents()[0]->1',
+                    end: 'p:eq(3):contents()[0]->5',
+                },
+            },
+            // Conversion from Checklist
+            {
+                name: "Click UL: ul.o_checklist -> ul",
+                content: '<p>dom not to edit</p><ul class="o_checklist"><li><p>dom to edit</p></li></ul>',
+                start: 'p:eq(1):contents()[0]->1',
+                end: 'p:eq(1):contents()[0]->5',
+                do: function () {
+                    $btnUL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ul><li><p>dom to edit</p></li></ul>',
+                    start: 'p:eq(1):contents()[0]->1',
+                    end: 'p:eq(1):contents()[0]->5',
+                },
+            },
+            {
+                name: "Click UL: ul.o_checklist -> ul (across li's)",
+                content: '<p>dom not to edit</p><ul class="o_checklist"><li><p>dom to edit</p></li><li><p>dom to edit</p></li></ul>',
+                start: 'p:eq(1):contents()[0]->1',
+                end: 'p:eq(2):contents()[0]->5',
+                do: function () {
+                    $btnUL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ul><li><p>dom to edit</p></li><li><p>dom to edit</p></li></ul>',
+                    start: 'p:eq(1):contents()[0]->1',
+                    end: 'p:eq(2):contents()[0]->5',
+                },
+            },
+            {
+                name: "Click UL: ul.o_checklist -> ul (from second li)",
+                content: '<p>dom not to edit</p><ul class="o_checklist"><li><p>xxx</p></li><li><p>dom to edit</p></li></ul>',
+                start: 'li:eq(1) p:contents()[0]->1',
+                end: 'li:eq(1) p:contents()[0]->5',
+                do: function () {
+                    $btnUL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ul class="o_checklist"><li><p>xxx</p></li></ul><ul><li><p>dom to edit</p></li></ul>',
+                    start: 'p:eq(2):contents()[0]->1',
+                    end: 'p:eq(2):contents()[0]->5',
+                },
+            },
+            {
+                name: "Click UL: ul ul.o_checklist -> ul ul (from indented li)",
+                content: '<p>dom not to edit</p><ul><li><p>xxx</p></li><ul class="o_checklist"><li><p>dom to edit</p></li></ul></ul>',
+                start: 'li:eq(1) p:contents()[0]->1',
+                end: 'li:eq(1) p:contents()[0]->5',
+                do: function () {
+                    $btnUL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ul><li><p>xxx</p></li><ul><li><p>dom to edit</p></li></ul></ul>',
+                    start: 'p:eq(2):contents()[0]->1',
+                    end: 'p:eq(2):contents()[0]->5',
+                },
+            },
+            {
+                name: "Click UL: ul ul.o_checklist -> ul ul (across several indented li)",
+                content: '<p>dom not to edit</p><ul><li><p>xxx</p></li><ul class="o_checklist"><li><p>dom to edit 1</p></li><li><p>dom to edit 2</p></li></ul></ul>',
+                start: 'li:eq(1) p:contents()[0]->1',
+                end: 'li:eq(2) p:contents()[0]->5',
+                do: function () {
+                    $btnUL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ul><li><p>xxx</p></li><ul><li><p>dom to edit 1</p></li><li><p>dom to edit 2</p></li></ul></ul>',
+                    start: 'p:eq(2):contents()[0]->1',
+                    end: 'p:eq(3):contents()[0]->5',
+                },
+            },
+            {
+                name: "Click UL: ul ul.o_checklist -> ul ul (from second indented li)",
+                content: '<p>dom not to edit</p><ul><li><p>xxx</p></li><ul class="o_checklist"><li><p>dom not to edit</p></li><li><p>dom to edit</p></li><li><p>dom not to edit</p></li></ul></ul>',
+                start: 'li:eq(2) p:contents()[0]->1',
+                end: 'li:eq(2) p:contents()[0]->5',
+                do: function () {
+                    $btnUL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ul><li><p>xxx</p></li><ul class="o_checklist"><li><p>dom not to edit</p></li></ul><ul><li><p>dom to edit</p></li></ul><ul class="o_checklist"><li><p>dom not to edit</p></li></ul></ul>',
+                    start: 'p:eq(3):contents()[0]->1',
+                    end: 'p:eq(3):contents()[0]->5',
+                },
+            },
         ];
 
         var def = Promise.resolve();
@@ -1244,7 +1427,7 @@ QUnit.test('Unordered list', function (assert) {
 });
 
 QUnit.test('Ordered list', function (assert) {
-    assert.expect(32);
+    assert.expect(56);
 
     return weTestUtils.createWysiwyg({
         debug: false,
@@ -1675,6 +1858,176 @@ QUnit.test('Ordered list', function (assert) {
                     start: 'font:contents(0)->11',
                 },
             },
+            // Conversion from UL
+            {
+                name: "Click OL: ul -> ol",
+                content: '<p>dom not to edit</p><ul><li><p>dom to edit</p></li></ul>',
+                start: 'p:eq(1):contents()[0]->1',
+                end: 'p:eq(1):contents()[0]->5',
+                do: function () {
+                    $btnOL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ol><li><p>dom to edit</p></li></ol>',
+                    start: 'p:eq(1):contents()[0]->1',
+                    end: 'p:eq(1):contents()[0]->5',
+                },
+            },
+            {
+                name: "Click OL: ul -> ol (across li's)",
+                content: '<p>dom not to edit</p><ul><li><p>dom to edit</p></li><li><p>dom to edit</p></li></ul>',
+                start: 'p:eq(1):contents()[0]->1',
+                end: 'p:eq(2):contents()[0]->5',
+                do: function () {
+                    $btnOL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ol><li><p>dom to edit</p></li><li><p>dom to edit</p></li></ol>',
+                    start: 'p:eq(1):contents()[0]->1',
+                    end: 'p:eq(2):contents()[0]->5',
+                },
+            },
+            {
+                name: "Click OL: ul -> ol (from second li)",
+                content: '<p>dom not to edit</p><ul><li><p>xxx</p></li><li><p>dom to edit</p></li></ul>',
+                start: 'li:eq(1) p:contents()[0]->1',
+                end: 'li:eq(1) p:contents()[0]->5',
+                do: function () {
+                    $btnOL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ul><li><p>xxx</p></li></ul><ol><li><p>dom to edit</p></li></ol>',
+                    start: 'p:eq(2):contents()[0]->1',
+                    end: 'p:eq(2):contents()[0]->5',
+                },
+            },
+            {
+                name: "Click OL: ol ul -> ol ol (from indented li)",
+                content: '<p>dom not to edit</p><ol><li><p>xxx</p></li><ul><li><p>dom to edit</p></li></ul></ol>',
+                start: 'li:eq(1) p:contents()[0]->1',
+                end: 'li:eq(1) p:contents()[0]->5',
+                do: function () {
+                    $btnOL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ol><li><p>xxx</p></li><ol><li><p>dom to edit</p></li></ol></ol>',
+                    start: 'p:eq(2):contents()[0]->1',
+                    end: 'p:eq(2):contents()[0]->5',
+                },
+            },
+            {
+                name: "Click OL: ol ul -> ol ol (across several indented li)",
+                content: '<p>dom not to edit</p><ol><li><p>xxx</p></li><ul><li><p>dom to edit 1</p></li><li><p>dom to edit 2</p></li></ul></ol>',
+                start: 'li:eq(1) p:contents()[0]->1',
+                end: 'li:eq(2) p:contents()[0]->5',
+                do: function () {
+                    $btnOL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ol><li><p>xxx</p></li><ol><li><p>dom to edit 1</p></li><li><p>dom to edit 2</p></li></ol></ol>',
+                    start: 'p:eq(2):contents()[0]->1',
+                    end: 'p:eq(3):contents()[0]->5',
+                },
+            },
+            {
+                name: "Click OL: ol ul -> ol ol (from second indented li)",
+                content: '<p>dom not to edit</p><ol><li><p>xxx</p></li><ul><li><p>dom not to edit</p></li><li><p>dom to edit</p></li><li><p>dom not to edit</p></li></ul></ol>',
+                start: 'li:eq(2) p:contents()[0]->1',
+                end: 'li:eq(2) p:contents()[0]->5',
+                do: function () {
+                    $btnOL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ol><li><p>xxx</p></li><ul><li><p>dom not to edit</p></li></ul><ol><li><p>dom to edit</p></li></ol><ul><li><p>dom not to edit</p></li></ul></ol>',
+                    start: 'p:eq(3):contents()[0]->1',
+                    end: 'p:eq(3):contents()[0]->5',
+                },
+            },
+            // Conversion from Checklist
+            {
+                name: "Click OL: ul.o_checklist -> ol",
+                content: '<p>dom not to edit</p><ul class="o_checklist"><li><p>dom to edit</p></li></ul>',
+                start: 'p:eq(1):contents()[0]->1',
+                end: 'p:eq(1):contents()[0]->5',
+                do: function () {
+                    $btnOL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ol><li><p>dom to edit</p></li></ol>',
+                    start: 'p:eq(1):contents()[0]->1',
+                    end: 'p:eq(1):contents()[0]->5',
+                },
+            },
+            {
+                name: "Click OL: ul.o_checklist -> ol (across li's)",
+                content: '<p>dom not to edit</p><ul class="o_checklist"><li><p>dom to edit</p></li><li><p>dom to edit</p></li></ul>',
+                start: 'p:eq(1):contents()[0]->1',
+                end: 'p:eq(2):contents()[0]->5',
+                do: function () {
+                    $btnOL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ol><li><p>dom to edit</p></li><li><p>dom to edit</p></li></ol>',
+                    start: 'p:eq(1):contents()[0]->1',
+                    end: 'p:eq(2):contents()[0]->5',
+                },
+            },
+            {
+                name: "Click OL: ul.o_checklist -> ol (from second li)",
+                content: '<p>dom not to edit</p><ul class="o_checklist"><li><p>xxx</p></li><li><p>dom to edit</p></li></ul>',
+                start: 'li:eq(1) p:contents()[0]->1',
+                end: 'li:eq(1) p:contents()[0]->5',
+                do: function () {
+                    $btnOL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ul class="o_checklist"><li><p>xxx</p></li></ul><ol><li><p>dom to edit</p></li></ol>',
+                    start: 'p:eq(2):contents()[0]->1',
+                    end: 'p:eq(2):contents()[0]->5',
+                },
+            },
+            {
+                name: "Click OL: ol ul.o_checklist -> ol ol (from indented li)",
+                content: '<p>dom not to edit</p><ol><li><p>xxx</p></li><ul class="o_checklist"><li><p>dom to edit</p></li></ul></ol>',
+                start: 'li:eq(1) p:contents()[0]->1',
+                end: 'li:eq(1) p:contents()[0]->5',
+                do: function () {
+                    $btnOL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ol><li><p>xxx</p></li><ol><li><p>dom to edit</p></li></ol></ol>',
+                    start: 'p:eq(2):contents()[0]->1',
+                    end: 'p:eq(2):contents()[0]->5',
+                },
+            },
+            {
+                name: "Click OL: ul ul.o_checklist -> ul ol (across several indented li)",
+                content: '<p>dom not to edit</p><ul><li><p>xxx</p></li><ul class="o_checklist"><li><p>dom to edit 1</p></li><li><p>dom to edit 2</p></li></ul></ul>',
+                start: 'li:eq(1) p:contents()[0]->1',
+                end: 'li:eq(2) p:contents()[0]->5',
+                do: function () {
+                    $btnOL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ul><li><p>xxx</p></li><ol><li><p>dom to edit 1</p></li><li><p>dom to edit 2</p></li></ol></ul>',
+                    start: 'p:eq(2):contents()[0]->1',
+                    end: 'p:eq(3):contents()[0]->5',
+                },
+            },
+            {
+                name: "Click OL: ul ul.o_checklist -> ul ol (from second indented li)",
+                content: '<p>dom not to edit</p><ul><li><p>xxx</p></li><ul class="o_checklist"><li><p>dom not to edit</p></li><li><p>dom to edit</p></li><li><p>dom not to edit</p></li></ul></ul>',
+                start: 'li:eq(2) p:contents()[0]->1',
+                end: 'li:eq(2) p:contents()[0]->5',
+                do: function () {
+                    $btnOL.mousedown().click();
+                },
+                test: {
+                    content: '<p>dom not to edit</p><ul><li><p>xxx</p></li><ul class="o_checklist"><li><p>dom not to edit</p></li></ul><ol><li><p>dom to edit</p></li></ol><ul class="o_checklist"><li><p>dom not to edit</p></li></ul></ul>',
+                    start: 'p:eq(3):contents()[0]->1',
+                    end: 'p:eq(3):contents()[0]->5',
+                },
+            },
         ];
 
 
@@ -1887,7 +2240,7 @@ QUnit.test('Align', function (assert) {
 });
 
 QUnit.test('Indent/outdent', function (assert) {
-    assert.expect(18);
+    assert.expect(20);
 
     return weTestUtils.createWysiwyg({
         debug: false,
@@ -1927,6 +2280,21 @@ QUnit.test('Indent/outdent', function (assert) {
                 test: {
                     content: '<ul><li><p>dom</p></li><li class="o_indent"><ul><li><p>to edit</p></li></ul></li></ul>',
                     start: 'p:eq(1):contents()[0]->1',
+                },
+            },
+            {
+                name: "Click INDENT: li -> indented li",
+                content: '<p>aaa</p><p>bbb</p><p>ccc</p><p>ddd</p>',
+                start: 'p:eq(1):contents()[0]->0',
+                end: 'p:eq(3):contents()[0]->3',
+                do: function () {
+                    $dropdownPara.mousedown().click();
+                    $btnIndent.mousedown().click();
+                },
+                test: {
+                    content: '<p>aaa</p><p style="margin-left: 1.5em;">bbb</p><p style="margin-left: 1.5em;">ccc</p><p style="margin-left: 1.5em;">ddd</p>',
+                    start: 'p:eq(1):contents()[0]->0',
+                    end: 'p:eq(3):contents()[0]->3',
                 },
             },
             /* OUTDENT */
@@ -2116,15 +2484,19 @@ QUnit.test('Indent/outdent', function (assert) {
 });
 
 QUnit.test('checklist', function (assert) {
-    assert.expect(10);
+    assert.expect(11);
 
     return weTestUtils.createWysiwyg({
         debug: false,
         wysiwygOptions: {
-
+            generateOptions: function (options) {
+                options.toolbar[4][1] = ['ul', 'ol', 'checklist', 'paragraph'];
+            },
         },
     }).then(function (wysiwyg) {
         var $editable = wysiwyg.$('.note-editable');
+
+        var $btnChecklist = wysiwyg.$('.note-para .fa-check-square');
 
         var checklistTests = [
             {
@@ -2477,6 +2849,60 @@ QUnit.test('checklist', function (assert) {
                         '<p>y</p>',
                 },
             },
+            {
+                name: "convert 2 ul li ul li into two ul li ul.o_checklist li",
+                content: '<ul>' +
+                            '<li>' +
+                                '<p>1</p>' +
+                            '</li>' +
+                            '<li class="o_indent">' +
+                                '<ul>' +
+                                    '<li>' +
+                                        '<p>2</p>' +
+                                    '</li>' +
+                                    '<li>' +
+                                        '<p>3</p>' +
+                                    '</li>' +
+                                    '<li>' +
+                                        '<p>4</p>' +
+                                    '</li>' +
+                                '</ul>' +
+                            '</li>' +
+                            '<li>' +
+                                '<p>5</p>' +
+                            '</li>' +
+                        '</ul>',
+                start: 'p:eq(2):contents()[0]->0',
+                end: 'p:eq(3):contents()[0]->1',
+                do: function () {
+                    $btnChecklist.mousedown().click();
+                },
+                test: {
+                    content: '<ul>' +
+                                '<li>' +
+                                    '<p>1</p>' +
+                                '</li>' +
+                                '<li class="o_indent">' +
+                                    '<ul>' +
+                                        '<li>' +
+                                            '<p>2</p>' +
+                                        '</li>' +
+                                    '</ul>' +
+                                    '<ul class="o_checklist">' +
+                                        '<li>' +
+                                            '<p>3</p>' +
+                                        '</li>' +
+                                        '<li>' +
+                                            '<p>4</p>' +
+                                        '</li>' +
+                                    '</ul>' +
+                                '</li>' +
+                                '<li>' +
+                                    '<p>5</p>' +
+                                '</li>' +
+                            '</ul>',
+                },
+            },
         ];
 
         var def = Promise.resolve();
@@ -2485,6 +2911,11 @@ QUnit.test('checklist', function (assert) {
             def = def.then(async function(){
                 testName = test.name;
                 wysiwyg.setValue(test.content);
+                if (test.start) {
+                    var range = weTestUtils.select(test.start, test.end || test.start, $editable);
+                    $(range.sc).mousedown();
+                    Wysiwyg.setRange(range.sc, range.so, range.ec, range.eo);
+                }
                 await test.do();
                 assert.deepEqual(wysiwyg.getValue(), test.test.content, testName);
             });
@@ -2975,43 +3406,35 @@ var altDialogSaved;
 var cropDialogOpened;
 QUnit.module('Media', {
     beforeEach: function () {
-        $('body').on('submit.WysiwygTests', function (ev) {
-            ev.preventDefault();
-            var $from = $(ev.target);
-            var iframe = $from.find('iframe[name="' + $from.attr('target') + '"]')[0];
-            if (iframe) {
-                iframe.contentWindow.attachments = [{
-                    id: 1,
-                    public: true,
-                    name: 'image',
-                    datas_fname: 'image.png',
-                    mimetype: 'image/png',
-                    checksum: false,
-                    url: '/web_editor/static/src/img/transparent.png',
-                    type: 'url',
-                    res_id: 0,
-                    res_model: false,
-                    access_token: false
-                }];
-                $(iframe).trigger('load');
-            }
-        });
-
         this.data = {
             debug: false,
             wysiwygOptions: {
 
             },
             mockRPC: function (route, args) {
-                if (args.model === 'ir.attachment' || !args.length) {
-                    if (!args.length && route.indexOf('data:image/png;base64') === 0 ||
-                        args.method === "search_read" &&
-                        args.kwargs.domain[7][2].join(',') === "image/gif,image/jpe,image/jpeg,image/jpg,image/gif,image/png") {
-                        return Promise.resolve(this.data.records);
-                    }
+                if (route.indexOf('data:image/png;base64') === 0) {
+                    return Promise.resolve();
                 }
                 if (route.indexOf('youtube') !== -1) {
                     return Promise.resolve();
+                }
+                if (route.indexOf('/web_editor/static/src/img/') === 0) {
+                    return Promise.resolve();
+                }
+                if (route === '/web_editor/attachment/add_url') {
+                    return Promise.resolve({
+                        id: 1,
+                        public: true,
+                        name: 'image',
+                        mimetype: 'image/png',
+                        checksum: false,
+                        url: '/web_editor/static/src/img/transparent.png',
+                        image_src: '/web_editor/static/src/img/transparent.png',
+                        type: 'url',
+                        res_id: 0,
+                        res_model: false,
+                        access_token: false,
+                    });
                 }
                 return this._super(route, args);
             },
@@ -3075,7 +3498,7 @@ var _clickMedia = async function (wysiwyg, assert, callbackInit, test) {
 };
 
 var _uploadAndInsertImg = async function (url) {
-    $('.modal-dialog input[name="url"]:first').val(url).trigger('input');
+    $('.modal-dialog .o_we_url_input:first').val(url).trigger('input');
     await testUtils.nextTick();
     await testUtils.dom.triggerEvents($('.modal-dialog .o_upload_media_url_button:first'), ['mousedown', 'click']);
 };

@@ -15,9 +15,9 @@ class AccountAnalyticLine(models.Model):
         return expression.OR([domain, [('qty_delivered_method', '=', 'timesheet')]])
 
     timesheet_invoice_type = fields.Selection([
-        ('billable_time', 'Billable Time'),
-        ('billable_fixed', 'Billable Fixed'),
-        ('non_billable', 'Non Billable'),
+        ('billable_time', 'Billed on Timesheets'),
+        ('billable_fixed', 'Billed at a Fixed price'),
+        ('non_billable', 'Non Billable Tasks'),
         ('non_billable_project', 'No task found')], string="Billable Type", compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
     timesheet_invoice_id = fields.Many2one('account.invoice', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
 
@@ -57,11 +57,15 @@ class AccountAnalyticLine(models.Model):
     @api.multi
     def write(self, values):
         # prevent to update invoiced timesheets if one line is of type delivery
+        self._check_can_write(values)
+        result = super(AccountAnalyticLine, self).write(values)
+        return result
+
+    @api.multi
+    def _check_can_write(self, values):
         if self.sudo().filtered(lambda aal: aal.so_line.product_id.invoice_policy == "delivery") and self.filtered(lambda timesheet: timesheet.timesheet_invoice_id):
             if any([field_name in values for field_name in ['unit_amount', 'employee_id', 'project_id', 'task_id', 'so_line', 'amount', 'date']]):
                 raise UserError(_('You can not modify already invoiced timesheets (linked to a Sales order items invoiced on Time and material).'))
-        result = super(AccountAnalyticLine, self).write(values)
-        return result
 
     @api.model
     def _timesheet_preprocess(self, values):

@@ -310,7 +310,7 @@ var FormRenderer = BasicRenderer.extend({
         $button.tooltip({
             title: function () {
                 return qweb.render('WidgetButton.tooltip', {
-                    debug: config.debug,
+                    debug: config.isDebug(),
                     state: self.state,
                     node: node,
                 });
@@ -491,7 +491,7 @@ var FormRenderer = BasicRenderer.extend({
         this._registerModifiers(node, this.state, $button);
 
         // Display tooltip
-        if (config.debug || node.attrs.help) {
+        if (config.isDebug() || node.attrs.help) {
             this._addButtonTooltip(node, $button);
         }
         return $button;
@@ -727,7 +727,7 @@ var FormRenderer = BasicRenderer.extend({
         this._registerModifiers(node, this.state, $button);
 
         // Display tooltip
-        if (config.debug || node.attrs.help) {
+        if (config.isDebug() || node.attrs.help) {
             this._addButtonTooltip(node, $button);
         }
 
@@ -998,7 +998,7 @@ var FormRenderer = BasicRenderer.extend({
             var $widgets = self.$('.o_field_widget[name=' + widget.name + ']');
             var $label = idForLabel ? self.$('.o_form_label[for=' + idForLabel + ']') : $();
             $label = $label.eq($widgets.index(widget.$el));
-            if (config.debug || widget.attrs.help || widget.field.help) {
+            if (config.isDebug() || widget.attrs.help || widget.field.help) {
                 self._addFieldTooltip(widget, $label);
             }
             if (widget.attrs.widget === 'upgrade_boolean') {

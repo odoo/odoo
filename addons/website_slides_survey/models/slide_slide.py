@@ -60,13 +60,12 @@ class Slide(models.Model):
         for slide in self.filtered(lambda slide: slide.slide_type == 'certification' and slide.survey_id):
             if slide.channel_id.is_member:
                 user_membership_id_sudo = slide.user_membership_id.sudo()
-                quizz_passed = user_membership_id_sudo.survey_quizz_passed
-                if not quizz_passed and user_membership_id_sudo.user_input_ids:
+                if user_membership_id_sudo.user_input_ids:
                     last_user_input = next(user_input for user_input in user_membership_id_sudo.user_input_ids.sorted(
                         lambda user_input: user_input.create_date, reverse=True
                     ))
                     certification_urls[slide.id] = last_user_input._get_survey_url()
-                elif not user_membership_id_sudo.user_input_ids:
+                else:
                     user_input = slide.survey_id.sudo()._create_answer(
                         partner=self.env.user.partner_id,
                         check_attempts=False,

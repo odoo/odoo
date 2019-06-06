@@ -1,13 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.tests import common
+from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueSetup
 
 
-class TestSaleCouponCommon(common.TransactionCase):
+class TestSaleCouponCommon(TestSaleProductAttributeValueSetup):
 
     def setUp(self):
         super(TestSaleCouponCommon, self).setUp()
+
+        # set currency to not rely on demo data and avoid possible race condition
+        self.currency_ratio = 1.0
+        pricelist = self.env.ref('product.list0')
+        pricelist.currency_id = self._setup_currency(self.currency_ratio)
 
         # Set all the existing programs to active=False to avoid interference
         self.env['sale.coupon.program'].search([]).write({'active': False})

@@ -11,7 +11,7 @@ from collections import defaultdict
 import uuid
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import AccessError, ValidationError, MissingError
 from odoo.tools import config, human_size, ustr, html_escape
 from odoo.tools.mimetypes import guess_mimetype
 
@@ -201,7 +201,7 @@ class IrAttachment(models.Model):
             vals = {
                 'file_size': len(bin_data),
                 'checksum': self._compute_checksum(bin_data),
-                'index_content': self._index(bin_data, attach.datas_fname, attach.mimetype),
+                'index_content': self._index(bin_data, attach.mimetype),
                 'store_fname': False,
                 'db_datas': value,
             }
@@ -232,8 +232,8 @@ class IrAttachment(models.Model):
         mimetype = None
         if values.get('mimetype'):
             mimetype = values['mimetype']
-        if not mimetype and values.get('datas_fname'):
-            mimetype = mimetypes.guess_type(values['datas_fname'])[0]
+        if not mimetype and values.get('name'):
+            mimetype = mimetypes.guess_type(values['name'])[0]
         if not mimetype and values.get('url'):
             mimetype = mimetypes.guess_type(values['url'])[0]
         if values.get('datas') and (not mimetype or mimetype == 'application/octet-stream'):
@@ -251,8 +251,8 @@ class IrAttachment(models.Model):
         return values
 
     @api.model
-    def _index(self, bin_data, datas_fname, file_type):
-        """ compute the index content of the given filename, or binary data.
+    def _index(self, bin_data, file_type):
+        """ compute the index content of the given binary data.
             This is a python implementation of the unix command 'strings'.
             :param bin_data : datas in binary form
             :return index_content : string containing all the printable character of the binary data
@@ -275,14 +275,13 @@ class IrAttachment(models.Model):
         return ['base.group_system']
 
     name = fields.Char('Name', required=True)
-    datas_fname = fields.Char('Filename')
     description = fields.Text('Description')
     res_name = fields.Char('Resource Name', compute='_compute_res_name', store=True)
     res_model = fields.Char('Resource Model', readonly=True, help="The database object this attachment will be attached to.")
     res_field = fields.Char('Resource Field', readonly=True)
     res_id = fields.Integer('Resource ID', readonly=True, help="The record id this is attached to.")
     company_id = fields.Many2one('res.company', string='Company', change_default=True,
-                                 default=lambda self: self.env['res.company']._company_default_get('ir.attachment'))
+                                 default=lambda self: self.env.company)
     type = fields.Selection([('url', 'URL'), ('binary', 'File')],
                             string='Type', required=True, default='binary', change_default=True,
                             help="You can either upload a file from your computer or copy/paste an internet link to your file.")
@@ -313,6 +312,8 @@ class IrAttachment(models.Model):
     def _check_serving_attachments(self):
         # restrict writing on attachments that could be served by the
         # ir.http's dispatch exception handling
+        # XDO note: this should be done in check(write), constraints for access rights?
+        # XDO note: if read on sudo, read twice, one for constraints, one for _inverse_datas as user
         if self.env.user._is_admin():
             return
         if self.type == 'binary' and self.url:
@@ -326,13 +327,15 @@ class IrAttachment(models.Model):
         In the 'document' module, it is overriden to relax this hard rule, since
         more complex ones apply there.
         """
+        if self.env.user._is_superuser():
+            return True
         # collect the records to check (by model)
         model_ids = defaultdict(set)            # {model_name: set(ids)}
         require_employee = False
         if self:
             self._cr.execute('SELECT res_model, res_id, create_uid, public, res_field FROM ir_attachment WHERE id IN %s', [tuple(self.ids)])
             for res_model, res_id, create_uid, public, res_field in self._cr.fetchall():
-                if self.env.user.id != SUPERUSER_ID and not self.env.user._is_system() and res_field:
+                if not self.env.user._is_system() and res_field:
                     raise AccessError(_("Sorry, you are not allowed to access this document."))
                 if public and mode == 'read':
                     continue
@@ -370,7 +373,7 @@ class IrAttachment(models.Model):
                 raise AccessError(_("Sorry, you are not allowed to access this document."))
 
     def _read_group_allowed_fields(self):
-        return ['type', 'company_id', 'res_id', 'create_date', 'create_uid', 'res_name', 'name', 'mimetype', 'id', 'url', 'datas_fname', 'res_field', 'res_model']
+        return ['type', 'company_id', 'res_id', 'create_date', 'create_uid', 'res_name', 'name', 'mimetype', 'id', 'url', 'res_field', 'res_model']
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -488,12 +491,20 @@ class IrAttachment(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        record_tuple_set = set()
         for values in vals_list:
             # remove computed field depending of datas
             for field in ('file_size', 'checksum'):
                 values.pop(field, False)
             values = self._check_contents(values)
-            self.browse().check('write', values=values)
+            # 'check()' only uses res_model and res_id from values, and make an exists.
+            # We can group the values by model, res_id to make only one query when 
+            # creating multiple attachments on a single record.
+            record_tuple = (values.get('res_model'), values.get('res_id'))
+            record_tuple_set.add(record_tuple)
+        for record_tuple in record_tuple_set:
+            (res_model, res_id) = record_tuple
+            self.check('write', values={'res_model':res_model, 'res_id':res_id})
         return super(IrAttachment, self).create(vals_list)
 
     @api.multi
@@ -504,9 +515,12 @@ class IrAttachment(models.Model):
     def generate_access_token(self):
         if self.access_token:
             return self.access_token
-        access_token = str(uuid.uuid4())
+        access_token = self._generate_access_token()
         self.write({'access_token': access_token})
         return access_token
+
+    def _generate_access_token(self):
+        return str(uuid.uuid4())
 
     @api.model
     def action_get(self):

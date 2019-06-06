@@ -6,28 +6,28 @@
         <field name="name">Analytic multi company rule</field>
         <field name="model_id" ref="model_account_analytic_account"/>
         <field eval="True" name="global"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
      
     <record id="analytic_line_comp_rule" model="ir.rule">
         <field name="name">Analytic line multi company rule</field>
         <field name="model_id" ref="model_account_analytic_line"/>
         <field eval="True" name="global"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
 
     <record id="analytic_group_comp_rule" model="ir.rule">
         <field name="name">Analytic line multi company rule</field>
         <field name="model_id" ref="model_account_analytic_group"/>
         <field eval="True" name="global"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
 
     <record id="analytic_tag_comp_rule" model="ir.rule">
         <field name="name">Analytic line multi company rule</field>
         <field name="model_id" ref="model_account_analytic_tag"/>
         <field eval="True" name="global"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
 </data>
 <data noupdate="0">

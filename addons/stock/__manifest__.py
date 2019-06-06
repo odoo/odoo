@@ -40,7 +40,6 @@
         'report/product_templates.xml',
         'report/product_packaging.xml',
 
-        'wizard/stock_change_product_qty_views.xml',
         'wizard/stock_picking_return_views.xml',
         'wizard/stock_scheduler_compute_views.xml',
         'wizard/stock_immediate_transfer_views.xml',
@@ -77,6 +76,7 @@
         'data/stock_sequence_data.xml',
     ],
     'qweb': [
+        'static/src/xml/inventory_lines.xml',
         'static/src/xml/stock_traceability_report_backend.xml',
     ],
     'installable': True,

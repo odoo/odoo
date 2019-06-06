@@ -19,6 +19,26 @@ class StockInventory(models.Model):
         help="Date at which the accounting entries will be created"
              " in case of automated inventory valuation."
              " If empty, the inventory date will be used.")
+    has_account_moves = fields.Boolean(compute='_compute_has_account_moves')
+
+    def _compute_has_account_moves(self):
+        for inventory in self:
+            if inventory.state == 'done' and inventory.move_ids:
+                account_move = self.env['account.move'].search_count([
+                    ('stock_move_id.id', 'in', inventory.move_ids.ids)
+                ])
+                inventory.has_account_moves = account_move > 0
+            else:
+                inventory.has_account_moves = False
+
+    def action_get_account_moves(self):
+        self.ensure_one()
+        action_ref = self.env.ref('account.action_move_journal_line')
+        if not action_ref:
+            return False
+        action_data = action_ref.read()[0]
+        action_data['domain'] = [('stock_move_id.id', 'in', self.move_ids.ids)]
+        return action_data
 
     @api.multi
     def post_inventory(self):
@@ -166,8 +186,8 @@ class StockMove(models.Model):
                     ('location_id.company_id', '=', False),
                     '&',
                         ('location_id.usage', 'in', ['inventory', 'production']),
-                        ('location_id.company_id', '=', company_id or self.env.user.company_id.id),
-                ('location_dest_id.company_id', '=', company_id or self.env.user.company_id.id),
+                        ('location_id.company_id', '=', company_id or self.env.company.id),
+                ('location_dest_id.company_id', '=', company_id or self.env.company.id),
         ]
         return domain
 
@@ -190,15 +210,15 @@ class StockMove(models.Model):
                         ('location_id.company_id', '=', False),
                         '&',
                             ('location_id.usage', 'in', ['inventory', 'production']),
-                            ('location_id.company_id', '=', company_id or self.env.user.company_id.id),
-                    ('location_dest_id.company_id', '=', company_id or self.env.user.company_id.id),
+                            ('location_id.company_id', '=', company_id or self.env.company.id),
+                    ('location_dest_id.company_id', '=', company_id or self.env.company.id),
                 '&',
-                    ('location_id.company_id', '=', company_id or self.env.user.company_id.id),
+                    ('location_id.company_id', '=', company_id or self.env.company.id),
                     '|',
                         ('location_dest_id.company_id', '=', False),
                         '&',
                             ('location_dest_id.usage', '=', 'inventory'),
-                            ('location_dest_id.company_id', '=', company_id or self.env.user.company_id.id),
+                            ('location_dest_id.company_id', '=', company_id or self.env.company.id),
         ]
         return domain
 
@@ -266,7 +286,7 @@ class StockMove(models.Model):
 
         # Find back incoming stock moves (called candidates here) to value this move.
         qty_to_take_on_candidates = quantity or valued_quantity
-        candidates = move.product_id._get_fifo_candidates_in_move()
+        candidates = move.product_id._get_fifo_candidates_in_move_with_company(move.company_id.id)
         new_standard_price = 0
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in candidates:
@@ -320,6 +340,7 @@ class StockMove(models.Model):
 
     def _run_valuation(self, quantity=None):
         self.ensure_one()
+        value_to_return = 0
         if self._is_in():
             valued_move_lines = self.move_line_ids.filtered(lambda ml: not ml.location_id._should_be_valued() and ml.location_dest_id._should_be_valued() and not ml.owner_id)
             valued_quantity = 0
@@ -377,7 +398,7 @@ class StockMove(models.Model):
                 'value': value_to_return,
                 'price_unit': price_unit if self._is_dropshipped() else -price_unit,
             })
-            return value_to_return
+        return value_to_return
 
     def _action_done(self, cancel_backorder=False):
         self.product_price_update_before_done()
@@ -648,6 +669,8 @@ class StockMove(models.Model):
                 ref = 'Revaluation of %s (negative inventory)' % ref
             elif self.env.context.get('forced_quantity') is not None:
                 ref = 'Correction of %s (modification of past move)' % ref
+        if not ref and self.inventory_id:
+            ref = self.inventory_id.name
 
         move_lines = self.with_context(forced_ref=ref)._prepare_account_move_line(quantity, abs(self.value), credit_account_id, debit_account_id)
         if move_lines:
@@ -715,13 +738,6 @@ class StockMove(models.Model):
 class StockReturnPicking(models.TransientModel):
     _inherit = "stock.return.picking"
 
-    @api.model
-    def default_get(self, default_fields):
-        res = super(StockReturnPicking, self).default_get(default_fields)
-        for i, k, vals in res.get('product_return_moves', []):
-            vals.update({'to_refund': True})
-        return res
-
     @api.multi
     def _create_returns(self):
         new_picking_id, pick_type_id = super(StockReturnPicking, self)._create_returns()
@@ -731,6 +747,11 @@ class StockReturnPicking(models.TransientModel):
             if return_picking_line and return_picking_line.to_refund:
                 move.to_refund = True
         return new_picking_id, pick_type_id
+
+    def _prepare_stock_return_picking_line_vals_from_move(self, stock_move):
+        res = super(StockReturnPicking, self)._prepare_stock_return_picking_line_vals_from_move(stock_move)
+        res['to_refund'] = True
+        return res
 
 
 class StockReturnPickingLine(models.TransientModel):

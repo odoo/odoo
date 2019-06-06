@@ -194,6 +194,9 @@ root can have the following attributes:
     <reference/views/form>`'s fields and buttons are thus accepted by list
     views although they may not have any meaning if the list view is
     non-editable
+
+    .. note:: if the ``edit`` attribute is set to ``false``, the ``editable`` option will be ignored.
+
 ``default_order``
     overrides the ordering of the view, replacing the model's default order.
     The value is a comma-separated list of fields, postfixed by ``desc`` to
@@ -1315,7 +1318,7 @@ take the following attributes:
   name of the field that describes if the task has to be excluded
   from the consolidation
   if set to true it displays a striped zone in the consolidation line
-``create``, ``edit``
+``create``, ``edit``, ``plan``
     allows *dis*\ abling the corresponding action in the view by setting the
     corresponding attribute to ``false``. If ``create`` is enabled, a "+" button
     will be displayed while hovering each time slot to create a new record in
@@ -1388,6 +1391,10 @@ take the following attributes:
     the current :js:class:`GanttRow`, can be used to fetch some
     meta-information. The ``getColor`` method to convert in a color integer is
     also available directly in the template context without using ``widget``.
+
+  ``on_create``
+  If specified when clicking the add button on the view, instead of opening a generic dialog, launch a client action.
+  this should hold the xmlid of the action (eg: ``on_create="%(my_module.my_wizard)d"``
 
 .. _reference/views/diagram:
 

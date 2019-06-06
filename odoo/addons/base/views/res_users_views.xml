@@ -29,10 +29,9 @@
         </record>
         <act_window id="change_password_wizard_action"
             name="Change Password"
-            src_model="res.users"
+            binding_model="res.users"
             res_model="change.password.wizard"
-            view_type="form" view_mode="form"
-            key2="client_action_multi" target="new"
+            view_type="form" view_mode="form" target="new"
             groups="base.group_erp_manager"/>
 
         <!-- res.groups -->
@@ -209,7 +208,7 @@
                             <page name="access_rights" string="Access Rights">
                                 <group string="Multi Companies" attrs="{'invisible': [('companies_count', '&lt;=', 1)]}">
                                     <field string="Allowed Companies" name="company_ids" widget="many2many_tags" options="{'no_create': True}"/>
-                                    <field string="Current Company" name="company_id" context="{'user_preference': 0}"/>
+                                    <field string="Default Company" name="company_id" context="{'user_preference': 0}"/>
                                     <field string="Companies count" name="companies_count" invisible="1"/>
                                 </group>
                                 <field name="groups_id"/>

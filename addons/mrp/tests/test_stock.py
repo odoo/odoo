@@ -98,20 +98,18 @@ class TestWarehouse(common.TestMrpCommon):
 
         stock_inv_product_4 = self.env['stock.inventory'].create({
             'name': 'Stock Inventory for Stick',
-            'filter': 'product',
-            'product_id': self.product_4.id,
+            'product_ids': [(4, self.product_4.id)],
             'line_ids': [
                 (0, 0, {'product_id': self.product_4.id, 'product_uom_id': self.product_4.uom_id.id, 'product_qty': 8, 'prod_lot_id': lot_product_4.id, 'location_id': self.ref('stock.stock_location_14')}),
             ]})
 
         stock_inv_product_2 = self.env['stock.inventory'].create({
             'name': 'Stock Inventory for Stone Tools',
-            'filter': 'product',
-            'product_id': self.product_2.id,
+            'product_ids': [(4, self.product_2.id)],
             'line_ids': [
                 (0, 0, {'product_id': self.product_2.id, 'product_uom_id': self.product_2.uom_id.id, 'product_qty': 12, 'prod_lot_id': lot_product_2.id, 'location_id': self.ref('stock.stock_location_14')})
             ]})
-        (stock_inv_product_4 | stock_inv_product_2).action_start()
+        (stock_inv_product_4 | stock_inv_product_2)._action_start()
         stock_inv_product_2.action_validate()
         stock_inv_product_4.action_validate()
 
@@ -175,7 +173,7 @@ class TestWarehouse(common.TestMrpCommon):
 
         workorder.button_start()
         serial = self.env['stock.production.lot'].create({'product_id': self.laptop.id})
-        workorder.final_lot_id = serial
+        workorder.finished_lot_id = serial
         workorder.record_production()
         mo_laptop.button_mark_done()
 
@@ -199,7 +197,7 @@ class TestWarehouse(common.TestMrpCommon):
             'active_ids': [mo_laptop.id],
         }).create({
             "qty_producing": 1.0,
-            "final_lot_id": serial.id,
+            "finished_lot_id": serial.id,
         })
         product_produce.do_produce()
         mo_laptop.button_mark_done()

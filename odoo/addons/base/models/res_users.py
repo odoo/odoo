@@ -240,17 +240,13 @@ class Users(models.Model):
     companies_count = fields.Integer(compute='_compute_companies_count', string="Number of Companies", default=_companies_count)
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
 
-    @api.model
-    def _get_company(self):
-        return self.env.user.company_id
-
     # Special behavior for this field: res.company.search() will only return the companies
     # available to the current user (should be the user's companies?), when the user_preference
     # context is set.
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=_get_company,
-        help='The company this user is currently working for.', context={'user_preference': True})
+    company_id = fields.Many2one('res.company', string='Default Company', required=True, default=lambda self: self.env.company.id,
+        help='The default company for this user.', context={'user_preference': True})
     company_ids = fields.Many2many('res.company', 'res_company_users_rel', 'user_id', 'cid',
-        string='Companies', default=_get_company)
+        string='Companies', default=lambda self: self.env.company.ids)
 
     # overridden inherited fields to bypass access rights, in case you have
     # access to the user but not its corresponding partner
@@ -787,7 +783,7 @@ class Users(models.Model):
 
     @api.model
     def get_company_currency_id(self):
-        return self.env.user.company_id.currency_id.id
+        return self.env.company.currency_id.id
 
     def _crypt_context(self):
         """ Passlib CryptContext instance used to encrypt and verify
@@ -966,15 +962,15 @@ class UsersImplied(models.Model):
             if 'groups_id' in values:
                 # complete 'groups_id' with implied groups
                 user = self.new(values)
+                gs = user.groups_id._origin
                 group_public = self.env.ref('base.group_public', raise_if_not_found=False)
                 group_portal = self.env.ref('base.group_portal', raise_if_not_found=False)
-                if group_public and group_public in user.groups_id:
-                    gs = self.env.ref('base.group_public') | self.env.ref('base.group_public').trans_implied_ids
-                elif group_portal and group_portal in user.groups_id:
-                    gs = self.env.ref('base.group_portal') | self.env.ref('base.group_portal').trans_implied_ids
-                else:
-                    gs = user.groups_id | user.groups_id.trans_implied_ids
-                values['groups_id'] = type(self).groups_id.convert_to_write(gs, user.groups_id)
+                if group_public and group_public in gs:
+                    gs = group_public
+                elif group_portal and group_portal in gs:
+                    gs = group_portal
+                gs = gs | gs.trans_implied_ids
+                values['groups_id'] = type(self).groups_id.convert_to_write(gs, user)
         return super(UsersImplied, self).create(vals_list)
 
     @api.multi
@@ -982,7 +978,7 @@ class UsersImplied(models.Model):
         res = super(UsersImplied, self).write(values)
         if values.get('groups_id'):
             # add implied groups for all users
-            for user in self.with_context({}):
+            for user in self:
                 if not user.has_group('base.group_user'):
                     vals = {'groups_id': [(5, 0, 0)] + values['groups_id']}
                     super(UsersImplied, user).write(vals)
@@ -1048,10 +1044,9 @@ class GroupsView(models.Model):
         """ Modify the view with xmlid ``base.user_groups_view``, which inherits
             the user form view, and introduces the reified group fields.
         """
-        if self._context.get('install_mode'):
-            # use installation/admin language for translatable names in the view
-            user_context = self.env['res.users'].context_get()
-            self = self.with_context(**user_context)
+
+        # remove the language to avoid translations, it will be handled at the view level
+        self = self.with_context(lang=None)
 
         # We have to try-catch this, because at first init the view does not
         # exist but we are already creating some basic groups.
@@ -1061,7 +1056,7 @@ class GroupsView(models.Model):
             group_employee = view.env.ref('base.group_user')
             xml1, xml2, xml3 = [], [], []
             xml_by_category = {}
-            xml1.append(E.separator(string=_('User Type'), colspan="2", groups='base.group_no_one'))
+            xml1.append(E.separator(string='User Type', colspan="2", groups='base.group_no_one'))
 
             user_type_field_name = ''
             for app, kind, gs, category_name in self.get_groups_by_application():
@@ -1092,7 +1087,7 @@ class GroupsView(models.Model):
 
                 else:
                     # application separator with boolean fields
-                    app_name = app.name or _('Other')
+                    app_name = app.name or 'Other'
                     xml3.append(E.separator(string=app_name, colspan="4", **attrs))
                     for g in gs:
                         field_name = name_boolean_group(g.id)
@@ -1182,9 +1177,9 @@ class UsersView(models.Model):
         group_multi_company = self.env.ref('base.group_multi_company', False)
         if group_multi_company and 'company_ids' in values:
             if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
-                group_multi_company.write({'users': [(3, user.id)]})
+                user.write({'groups_id': [(3, group_multi_company.id)]})
             elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
-                group_multi_company.write({'users': [(4, user.id)]})
+                user.write({'groups_id': [(4, group_multi_company.id)]})
         return user
 
     @api.multi
@@ -1195,9 +1190,9 @@ class UsersView(models.Model):
         if group_multi_company and 'company_ids' in values:
             for user in self:
                 if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
-                    group_multi_company.write({'users': [(3, user.id)]})
+                    user.write({'groups_id': [(3, group_multi_company.id)]})
                 elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
-                    group_multi_company.write({'users': [(4, user.id)]})
+                    user.write({'groups_id': [(4, group_multi_company.id)]})
         return res
 
     def _remove_reified_groups(self, values):

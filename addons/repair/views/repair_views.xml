@@ -53,6 +53,7 @@
                         <group>
                             <field name="tracking" invisible="1" attrs="{'readonly': 1}"/>
                             <field name="product_id" domain="[('type', 'in', ['product', 'consu'])]"/>
+                            <field name="product_uom_category_id" invisible="1"/>
                             <label for="product_qty"/>
                             <div class="o_row">
                                 <field name="product_qty"/>
@@ -63,7 +64,7 @@
                             <field name="address_id" groups="sale.group_delivery_invoice_address"/>
                         </group>
                         <group>
-                            <field name="location_id"/>
+                            <field name="location_id" options="{'no_create': True}"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="guarantee_limit"/>
                             <field name="invoice_method"/>
@@ -79,6 +80,7 @@
                                     <group>
                                         <field name="product_id"/>
                                         <field name="name"/>
+                                        <field name="product_uom_category_id" invisible="1"/>
                                         <label for="product_uom_qty"/>
                                         <div class="o_row">
                                             <field name="product_uom_qty"/>
@@ -92,8 +94,8 @@
                                     </group>
                                     <group>
                                         <field name="lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}" groups="stock.group_production_lot"/>
-                                        <field name="location_id" groups="stock.group_stock_multi_locations"/>
-                                        <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
+                                        <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                                        <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                                     </group>
                                 </group>
                                 <group name="History" string="History" attrs="{'invisible':[('move_id','=', False)]}">
@@ -104,14 +106,15 @@
                             <tree string="Operations" editable="bottom">
                                 <field name="type"/>
                                 <field name="product_id"/>
-                                <field name='name'/>
+                                <field name='name' optional="show"/>
+                                <field name="product_uom_category_id" invisible="1"/>
                                 <field name="lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}" groups="stock.group_production_lot"/>
-                                <field name="location_id" groups="stock.group_stock_multi_locations"/>
-                                <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
+                                <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" optional="show"/>
+                                <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" optional="show"/>
                                 <field name="product_uom_qty" string="Quantity"/>
-                                <field name="product_uom" string="UoM" groups="uom.group_uom"/>
+                                <field name="product_uom" string="UoM" groups="uom.group_uom" optional="show"/>
                                 <field name="price_unit"/>
-                                <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
+                                <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale')]" optional="show"/>
                                 <field name="price_subtotal" widget="monetary"/>
                             </tree>
                         </field>
@@ -134,6 +137,7 @@
                                 <group>
                                     <field name="product_id"/>
                                     <field name="name"/>
+                                    <field name="product_uom_category_id" invisible="1"/>
                                     <label for="product_uom_qty"/>
                                     <div class="o_row">
                                         <field name="product_uom_qty" string="Quantity"/>
@@ -146,11 +150,12 @@
                             </form>
                             <tree string="Fees" editable="bottom">
                                 <field name="product_id" domain="[('type','=','service')]" required="True"/>
-                                <field name='name'/>
+                                <field name='name' optional="show"/>
                                 <field name="product_uom_qty" string="Quantity"/>
-                                <field name="product_uom" string="Unit of Measure" groups="uom.group_uom"/>
+                                <field name="product_uom_category_id" invisible="1"/>
+                                <field name="product_uom" string="Unit of Measure" groups="uom.group_uom" optional="show"/>
                                 <field name="price_unit"/>
-                                <field name="tax_id" domain="[('type_tax_use', '=', 'sale')]" widget="many2many_tags"/>
+                                <field name="tax_id" domain="[('type_tax_use', '=', 'sale')]" widget="many2many_tags" optional="show"/>
                                 <field name="price_subtotal" widget="monetary"/>
                             </tree>
                         </field>

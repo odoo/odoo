@@ -17,12 +17,13 @@ class ProductProduct(models.Model):
             return r
         date_from = fields.Datetime.to_string(fields.datetime.combine(fields.datetime.now() - timedelta(days=365),
                                                                       time.min))
-        date_to = fields.Datetime.to_string(fields.datetime.combine(fields.datetime.today(), time.min))
+
+        done_states = self.env['sale.report']._get_done_states()
+
         domain = [
-            ('state', 'in', ['sale', 'done', 'paid']),
+            ('state', 'in', done_states),
             ('product_id', 'in', self.ids),
             ('date', '>=', date_from),
-            ('date', '<', date_to)
         ]
         for group in self.env['sale.report'].read_group(domain, ['product_id', 'product_uom_qty'], ['product_id']):
             r[group['product_id'][0]] = group['product_uom_qty']

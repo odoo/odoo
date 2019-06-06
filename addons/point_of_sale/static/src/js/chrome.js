@@ -406,9 +406,11 @@ var ProxyStatusWidget = StatusWidget.extend({
 
 /* --------- The Sale Details --------- */
 
-// Generates a report to print the sales of the
-// day on a ticket
-
+/** Print an overview of todays sales.
+ *
+ * If the current cashier is a manager all sales of the day will be printed, else only the sales of the current
+ * session will be printed.
+ */
 var SaleDetailsButton = PosBaseWidget.extend({
     template: 'SaleDetailsButton',
     start: function(){

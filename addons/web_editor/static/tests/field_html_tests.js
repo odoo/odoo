@@ -193,21 +193,9 @@ QUnit.module('web_editor', {}, function () {
                         if (args.method === "generate_access_token") {
                             return Promise.resolve();
                         }
-                        if (args.kwargs.domain[7][2].join(',') === "image/gif,image/jpe,image/jpeg,image/jpg,image/gif,image/png") {
-                            return Promise.resolve([{
-                                "id": 1,
-                                "public": true,
-                                "name": "image",
-                                "datas_fname": "image.png",
-                                "mimetype": "image/png",
-                                "checksum": false,
-                                "url": "/web_editor/static/src/img/transparent.png",
-                                "type": "url",
-                                "res_id": 0,
-                                "res_model": false,
-                                "access_token": false
-                            }]);
-                        }
+                    }
+                    if (route.indexOf('/web_editor/static/src/img/') === 0) {
+                        return Promise.resolve();
                     }
                     return this._super(route, args);
                 },
@@ -231,7 +219,7 @@ QUnit.module('web_editor', {}, function () {
 
             // load static xml file (dialog, media dialog, unsplash image widget)
             await defMediaDialog;
-            await testUtils.dom.click($('.modal #editor-media-image .o_image:first'));
+            await testUtils.dom.click($('.modal #editor-media-image .o_existing_attachment_cell:first'));
             await testUtils.dom.click($('.modal .modal-footer button.btn-primary'));
 
             var $editable = form.$('.oe_form_field[name="body"] .note-editable');

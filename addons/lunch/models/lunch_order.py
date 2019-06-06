@@ -36,11 +36,15 @@ class LunchOrder(models.Model):
                               ('confirmed', 'Received'),
                               ('cancelled', 'Cancelled')],
                              'Status', readonly=True, index=True, default='new')
-    company_id = fields.Many2one('res.company', related='user_id.company_id', store=True)
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True, store=True)
     quantity = fields.Float('Quantity', required=True, default=1)
 
     display_toppings = fields.Text('Toppings', compute='_compute_display_toppings', store=True)
+
+    def init(self):
+        self._cr.execute("""CREATE INDEX IF NOT EXISTS lunch_order_user_product_date ON %s (user_id, product_id, date)"""
+            % self._table)
 
     @api.depends('topping_ids_1', 'topping_ids_2', 'topping_ids_3', 'product_id', 'quantity')
     def _compute_total_price(self):
@@ -51,7 +55,7 @@ class LunchOrder(models.Model):
     def _compute_display_toppings(self):
         for line in self:
             toppings = line.topping_ids_1 | line.topping_ids_2 | line.topping_ids_3
-            line.display_toppings = '+ '.join(toppings.mapped('name'))
+            line.display_toppings = ' + '.join(toppings.mapped('name'))
 
     def update_quantity(self, increment):
         for line in self.filtered(lambda line: line.state != 'confirmed'):
@@ -69,8 +73,8 @@ class LunchOrder(models.Model):
                         'To add some money to your wallet, please contact your lunch manager.'))
 
     def action_order(self):
-        self._check_wallet()
         self.write({'state': 'ordered'})
+        self._check_wallet()
 
     def action_confirm(self):
         self.write({'state': 'confirmed'})

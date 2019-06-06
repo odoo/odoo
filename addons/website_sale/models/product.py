@@ -21,7 +21,7 @@ class ProductPricelist(models.Model):
 
     def _default_website(self):
         """ Find the first company's website, if there is one. """
-        company_id = self.env.user.company_id.id
+        company_id = self.env.company.id
 
         if self._context.get('default_company_id'):
             company_id = self._context.get('default_company_id')
@@ -430,10 +430,23 @@ class Product(models.Model):
 
     product_variant_image_ids = fields.One2many('product.image', 'product_variant_id', string="Extra Variant Images")
 
+    website_url = fields.Char('Website URL', compute='_compute_product_website_url', help='The full URL to access the document through the website.')
+
+    @api.depends('product_tmpl_id.website_url', 'attribute_value_ids')
+    def _compute_product_website_url(self):
+        for product in self:
+            attributes = ','.join(str(x) for x in product.attribute_value_ids.ids)
+            product.website_url = "%s#attr=%s" % (product.product_tmpl_id.website_url, attributes)
+
     @api.multi
     def website_publish_button(self):
         self.ensure_one()
-        return self.product_tmpl_id.website_publish_button()
+        res = self.product_tmpl_id.website_publish_button()
+
+        # res can be the result of write() if not website_publisher
+        if type(res) == dict and res.get('type') == 'ir.actions.act_url':
+            res['url'] = self.website_url
+        return res
 
     @api.multi
     def _get_images(self):

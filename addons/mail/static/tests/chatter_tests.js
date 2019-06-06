@@ -170,15 +170,14 @@ QUnit.module('Chatter', {
                     url:{type:'char', string:'url'},
                     type:{ type:'selection', selection:[['url',"URL"],['binary',"BINARY"]]},
                     mimetype:{type:'char', string:"mimetype"},
-                    datas_fname:{type:'char', string:"filename"},
                 },
                 records:[
-                    {id:1, name:"name1", type:'url', mimetype:'image/png', datas_fname:'filename.jpg',
+                    {id:1, type:'url', mimetype:'image/png', name:'filename.jpg',
                      res_id: 7, res_model: 'partner'},
-                    {id:2, name:"name2", type:'binary', mimetype:"application/x-msdos-program",
-                     datas_fname:"file2.txt", res_id: 7, res_model: 'partner'},
-                    {id:3, name:"name2", type:'binary', mimetype:"application/x-msdos-program",
-                     datas_fname:"file2.txt", res_id: 5, res_model: 'partner'},
+                    {id:2, type:'binary', mimetype:"application/x-msdos-program",
+                     name:"file2.txt", res_id: 7, res_model: 'partner'},
+                    {id:3, type:'binary', mimetype:"application/x-msdos-program",
+                     name:"file3.txt", res_id: 5, res_model: 'partner'},
                 ],
             },
         };
@@ -321,10 +320,9 @@ QUnit.test('Activity Done by uploading a file', async function (assert) {
 
             $(window).trigger(fileuploadID, [{
                 id:3,
-                name:"name2",
                 type:'binary',
                 mimetype:"application/x-msdos-program",
-                datas_fname:"file2.txt",
+                name:"file2.txt",
                 res_id: 5,
                 res_model: 'partner'
             }]);
@@ -438,12 +436,12 @@ QUnit.test('attachmentBox basic rendering', async function (assert) {
     assert.hasAttrValue($resIdInput, 'value', '7');
     assert.hasAttrValue($resIdInput, 'type', 'hidden');
 
-    assert.strictEqual(form.$('.o_attachment_title').text(), 'name1',
+    assert.strictEqual(form.$('.o_attachment_title').text(), 'filename.jpg',
         "the image name should be correct");
     // since there are two elements "Download name2"; one "name" and the other "txt" as text content, the following test
     // asserts both at the same time.
-    assert.strictEqual(form.$('a[title = "Download name2"]').text().trim(), 'name2txt',
-        "the attachment name should be correct");
+    assert.strictEqual(form.$('a[title = "Download file2.txt"]').text().trim(), 'file2.txttxt',
+        "the attachment name and the extension display should be correct");
     assert.ok(form.$('.o_attachment_image').css('background-image').indexOf('/web/image/1/160x160/?crop=true') >= 0,
         "the attachment image URL should be correct");
     assert.hasAttrValue(form.$('.o_attachment_download').eq(0), 'href', '/web/content/1?download=true',
@@ -473,7 +471,7 @@ QUnit.test('chatter in create mode', async function (assert) {
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
-            if (route === "/web/dataset/call_kw/partner/message_get_suggested_recipients") {
+            if (route === "/mail/get_suggested_recipients") {
                 return Promise.resolve({2: []});
             }
             return this._super(route, args);
@@ -540,7 +538,7 @@ QUnit.test('chatter rendering inside the sheet', async function (assert) {
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
-            if (route === "/web/dataset/call_kw/partner/message_get_suggested_recipients") {
+            if (route === "/mail/get_suggested_recipients") {
                 return Promise.resolve({2: []});
             }
             return this._super(route, args);
@@ -773,7 +771,7 @@ QUnit.test('chatter: post, receive and star messages', async function (assert) {
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
-            if (args.method === 'message_get_suggested_recipients') {
+            if (route === '/mail/get_suggested_recipients') {
                 return Promise.resolve({2: []});
             }
             if (args.method === 'get_mention_suggestions') {
@@ -916,7 +914,7 @@ QUnit.test('chatter: post a message disable the send button', async function(ass
         res_id: 2,
         session: {},
         mockRPC: function (route, args) {
-            if (args.method === 'message_get_suggested_recipients') {
+            if (route === '/mail/get_suggested_recipients') {
                 return Promise.resolve({2: []});
             }
             if (args.method === 'message_post') {
@@ -963,7 +961,7 @@ QUnit.test('chatter: post message failure keep message', async function(assert) 
         res_id: 2,
         session: {},
         mockRPC: function (route, args) {
-            if (args.method === 'message_get_suggested_recipients') {
+            if (route === '/mail/get_suggested_recipients') {
                 return Promise.resolve({2: []});
             }
             if (args.method === 'message_post') {
@@ -1036,6 +1034,8 @@ QUnit.test('chatter: receive notif when document is open', async function (asser
     assert.strictEqual(thread.getUnreadCounter(), 1,
         "document thread should now have one unread message");
 
+    // do not destroy form too early. wait rendering to avoid race condition in service call.
+    await testUtils.nextTick();
     form.destroy();
 });
 
@@ -1109,7 +1109,7 @@ QUnit.test('chatter: post a message and switch in edit mode', async function (as
         res_id: 2,
         session: {},
         mockRPC: function (route, args) {
-            if (args.method === 'message_get_suggested_recipients') {
+            if (route === '/mail/get_suggested_recipients') {
                 return Promise.resolve({2: []});
             }
             if (args.method === 'message_post') {
@@ -1174,7 +1174,7 @@ QUnit.test('chatter: discard changes on message post with post_refresh "always"'
         res_id: 2,
         session: {},
         mockRPC: function (route, args) {
-            if (route === "/web/dataset/call_kw/partner/message_get_suggested_recipients") {
+            if (route === "/mail/get_suggested_recipients") {
                 return Promise.resolve({2: []});
             }
             return this._super(route, args);
@@ -1225,7 +1225,7 @@ QUnit.test('chatter: discard changes on message post without post_refresh', asyn
         res_id: 2,
         session: {},
         mockRPC: function (route, args) {
-            if (route === "/web/dataset/call_kw/partner/message_get_suggested_recipients") {
+            if (route === "/mail/get_suggested_recipients") {
                 return Promise.resolve({2: []});
             }
             if (args.method === 'message_format') {
@@ -1303,7 +1303,7 @@ QUnit.test('chatter: discard changes on message post with post_refresh "recipien
         res_id: 2,
         session: {},
         mockRPC: function (route, args) {
-            if (route === "/web/dataset/call_kw/partner/message_get_suggested_recipients") {
+            if (route === "/mail/get_suggested_recipients") {
                 return Promise.resolve({2: [[42, "Me"]]});
             }
             if (args.method === 'get_mention_suggestions') {
@@ -1399,7 +1399,7 @@ QUnit.test('chatter: discard changes on opening full-composer', async function (
         res_id: 2,
         session: {},
         mockRPC: function (route, args) {
-            if (route === "/web/dataset/call_kw/partner/message_get_suggested_recipients") {
+            if (route === "/mail/get_suggested_recipients") {
                 return Promise.resolve({2: []});
             }
             return this._super(route, args);
@@ -1580,7 +1580,7 @@ QUnit.test('chatter: keep context when sending a message', async function(assert
             user_context: {lang: 'en_US'},
         },
         mockRPC: function (route, args) {
-            if (args.method === 'message_get_suggested_recipients') {
+            if (route === '/mail/get_suggested_recipients') {
                 return Promise.resolve({2: []});
             }
             if (args.method === 'message_post') {
@@ -2569,7 +2569,7 @@ QUnit.test('chatter: suggested partner auto-follow on message post', async funct
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
-            if (args.method === 'message_get_suggested_recipients') {
+            if (route === '/mail/get_suggested_recipients') {
                 return Promise.resolve({2: [
                         [
                             8,
@@ -2638,7 +2638,7 @@ QUnit.test('chatter: suggested partner auto-follow on message post', async funct
         "should have a single follower (widget counter)");
     assert.containsOnce(form, '.o_followers_list > div.o_partner',
         "should have a single follower (listed partners)");
-    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a').text(), "Admin",
+    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a').text().trim(), "Admin",
         "should have 'Admin' as follower");
 
     // open composer
@@ -2665,10 +2665,10 @@ QUnit.test('chatter: suggested partner auto-follow on message post', async funct
         "should have a two followers (widget counter)");
     assert.containsN(form, '.o_followers_list > div.o_partner', 2,
         "should have two followers (listed partners)");
-    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a[data-oe-id="5"]').text(),
+    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a[data-oe-id="5"]').text().trim(),
         "Admin",
         "should have 'Admin' as follower");
-    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a[data-oe-id="8"]').text(),
+    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a[data-oe-id="8"]').text().trim(),
         "Demo User",
         "should have 'Demo User' as follower");
 
@@ -2743,7 +2743,7 @@ QUnit.test('chatter: mention prefetched partners (followers & employees)', async
                     subtypes: [],
                 });
             }
-            if (args.method === 'message_get_suggested_recipients') {
+            if (route === '/mail/get_suggested_recipients') {
                 return Promise.resolve({2: []});
             }
             if (args.method === 'get_mention_suggestions') {

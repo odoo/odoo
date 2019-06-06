@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_compare
-
+from dateutil import relativedelta
 from odoo.exceptions import UserError
 
 from odoo.addons.purchase.models.purchase import PurchaseOrder as Purchase
@@ -15,7 +15,7 @@ class PurchaseOrder(models.Model):
     @api.model
     def _default_picking_type(self):
         type_obj = self.env['stock.picking.type']
-        company_id = self.env.context.get('company_id') or self.env.user.company_id.id
+        company_id = self.env.context.get('company_id') or self.env.company.id
         types = type_obj.search([('code', '=', 'incoming'), ('warehouse_id.company_id', '=', company_id)])
         if not types:
             types = type_obj.search([('code', '=', 'incoming'), ('warehouse_id', '=', False)])
@@ -227,6 +227,8 @@ class PurchaseOrderLine(models.Model):
     move_ids = fields.One2many('stock.move', 'purchase_line_id', string='Reservation', readonly=True, ondelete='set null', copy=False)
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Orderpoint')
     move_dest_ids = fields.One2many('stock.move', 'created_purchase_line_id', 'Downstream Moves')
+    propagate_date = fields.Boolean(string="Propagate Rescheduling", help='The rescheduling is propagated to the next move.')
+    propagate_date_minimum_delta = fields.Integer(string='Reschedule if Higher Than', help='The change must be higher than this value to be propagated')
 
     @api.multi
     def _compute_qty_received_method(self):
@@ -266,12 +268,18 @@ class PurchaseOrderLine(models.Model):
 
     @api.multi
     def write(self, values):
+        for line in self:
+            if values.get('date_planned') and line.propagate_date:
+                new_date = values['date_planned']
+                delta_days = (new_date - line.date_planned).total_seconds() / 86400
+                if abs(delta_days) < line.propagate_date_minimum_delta:
+                    continue
+                moves_to_update = line.move_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
+                if not moves_to_update:
+                    moves_to_update = line.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
+                for move in moves_to_update:
+                    move.date_expected = move.date_expected + relativedelta.relativedelta(days=delta_days)
         result = super(PurchaseOrderLine, self).write(values)
-        # Update expected date of corresponding moves
-        if 'date_planned' in values:
-            self.env['stock.move'].search([
-                ('purchase_line_id', 'in', self.ids), ('state', '!=', 'done')
-            ]).write({'date_expected': values['date_planned']})
         if 'product_qty' in values:
             self.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
         return result
@@ -344,7 +352,9 @@ class PurchaseOrderLine(models.Model):
         for move in self.move_ids.filtered(lambda x: x.state != 'cancel' and not x.location_dest_id.usage == "supplier"):
             qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
         template = {
-            'name': self.name or '',
+            # truncate to 2000 to avoid triggering index limit error
+            # TODO: remove index in master?
+            'name': (self.name or '')[:2000],
             'product_id': self.product_id.id,
             'product_uom': self.product_uom.id,
             'date': self.order_id.date_order,
@@ -361,6 +371,8 @@ class PurchaseOrderLine(models.Model):
             'picking_type_id': self.order_id.picking_type_id.id,
             'group_id': self.order_id.group_id.id,
             'origin': self.order_id.name,
+            'propagate_date': self.propagate_date,
+            'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'description_picking': self.product_id._get_description(self.order_id.picking_type_id),
             'route_ids': self.order_id.picking_type_id.warehouse_id and [(6, 0, [x.id for x in self.order_id.picking_type_id.warehouse_id.route_ids])] or [],
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
@@ -388,4 +400,5 @@ class PurchaseOrderLine(models.Model):
         args can be merged. If it returns an empty record then a new line will
         be created.
         """
-        return self and self[0] or self.env['purchase.order.line']
+        lines = self.filtered(lambda l: l.propagate_date == values['propagate_date'] and l.propagate_date_minimum_delta == values['propagate_date_minimum_delta'])
+        return lines and lines[0] or self.env['purchase.order.line']

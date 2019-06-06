@@ -72,7 +72,7 @@ class account_payment(models.Model):
     partner_id = fields.Many2one('res.partner', string='Partner', tracking=True, readonly=True, states={'draft': [('readonly', False)]})
 
     amount = fields.Monetary(string='Payment Amount', required=True, readonly=True, states={'draft': [('readonly', False)]}, tracking=True)
-    currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.user.company_id.currency_id)
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, readonly=True, states={'draft': [('readonly', False)]}, copy=False, tracking=True)
     communication = fields.Char(string='Memo', readonly=True, states={'draft': [('readonly', False)]})
     journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True, readonly=True, states={'draft': [('readonly', False)]}, tracking=True, domain=[('type', 'in', ('bank', 'cash'))])
@@ -108,6 +108,16 @@ class account_payment(models.Model):
         # Check all invoices are open
         if any(invoice.state != 'open' for invoice in invoices):
             raise UserError(_("You can only register payments for open invoices"))
+        # Check if, in batch payments, there are not negative invoices and positive invoices
+        dtype = invoices[0].type
+        for inv in invoices[1:]:
+            if inv.type != dtype:
+                if ((dtype == 'in_refund' and inv.type == 'in_invoice') or
+                        (dtype == 'in_invoice' and inv.type == 'in_refund')):
+                    raise UserError(_("You cannot register payments for vendor bills and supplier refunds at the same time."))
+                if ((dtype == 'out_refund' and inv.type == 'out_invoice') or
+                        (dtype == 'out_invoice' and inv.type == 'out_refund')):
+                    raise UserError(_("You cannot register payments for customer invoices and credit notes at the same time."))
 
         amount = self._compute_payment_amount(invoices, invoices[0].currency_id)
         rec.update({
@@ -304,7 +314,7 @@ class account_payment(models.Model):
             if payment_currency == currency:
                 total += amount_total
             else:
-                total += payment_currency._convert(amount_total, currency, self.env.user.company_id, self.payment_date or fields.Date.today())
+                total += payment_currency._convert(amount_total, currency, self.env.company, self.payment_date or fields.Date.today())
         return total
 
     @api.multi
@@ -660,6 +670,20 @@ class account_payment(models.Model):
 
         return vals
 
+    def _get_invoice_payment_amount(self, inv):
+        """
+        Computes the amount covered by the current payment in the given invoice.
+
+        :param inv: an invoice object
+        :returns: the amount covered by the payment in the invoice
+        """
+        self.ensure_one()
+        return sum([
+            data['amount']
+            for data in inv._get_payments_vals()
+            if data['account_payment_id'] == self.id
+        ])
+
 
 class payment_register(models.TransientModel):
     _name = 'account.payment.register'
@@ -693,7 +717,7 @@ class payment_register(models.TransientModel):
         if 'invoice_ids' not in rec:
             rec['invoice_ids'] = [(6, 0, invoices.ids)]
         if 'journal_id' not in rec:
-            rec['journal_id'] = self.env['account.journal'].search([('company_id', '=', self.env.user.company_id.id), ('type', 'in', ('bank', 'cash'))], limit=1).id
+            rec['journal_id'] = self.env['account.journal'].search([('company_id', '=', self.env.company.id), ('type', 'in', ('bank', 'cash'))], limit=1).id
         if 'payment_method_id' not in rec:
             if invoices[0].type in ('out_invoice', 'in_refund'):
                 domain = [('payment_type', '=', 'inbound')]

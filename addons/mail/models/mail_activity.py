@@ -149,7 +149,7 @@ class MailActivity(models.Model):
         ('today', 'Today'),
         ('planned', 'Planned')], 'State',
         compute='_compute_state')
-    recommended_activity_type_id = fields.Many2one('mail.activity.type', string="Recommended Activity Type", readonly=True)
+    recommended_activity_type_id = fields.Many2one('mail.activity.type', string="Recommended Activity Type")
     previous_activity_type_id = fields.Many2one('mail.activity.type', string='Previous Activity Type', readonly=True)
     has_recommended_activities = fields.Boolean(
         'Next activities available',
@@ -302,7 +302,7 @@ class MailActivity(models.Model):
                     target_record = self.env[activity.res_model].browse(activity.res_id)
                     if hasattr(target_record, 'company_id') and (
                         target_record.company_id != target_user.company_id and (
-                            len(target_user.company_ids) > 1)):
+                            len(target_user.sudo().company_ids) > 1)):
                         return  # in that case we skip the check, assuming it would fail because of the company
                     model.browse(activity.res_id).check_access_rule('read')
                 except exceptions.AccessError:
@@ -386,14 +386,16 @@ class MailActivity(models.Model):
                 engine='ir.qweb',
                 minimal_qcontext=True
             )
-            self.env['mail.thread'].message_notify(
-                partner_ids=activity.user_id.partner_id.ids,
-                body=body,
-                subject=_('%s: %s assigned to you') % (activity.res_name, activity.summary or activity.activity_type_id.name),
-                record_name=activity.res_name,
-                model_description=model_description,
-                notif_layout='mail.mail_notification_light'
-            )
+            record = self.env[activity.res_model].browse(activity.res_id)
+            if activity.user_id:
+                record.message_notify(
+                    partner_ids=activity.user_id.partner_id.ids,
+                    body=body,
+                    subject=_('%s: %s assigned to you') % (activity.res_name, activity.summary or activity.activity_type_id.name),
+                    record_name=activity.res_name,
+                    model_description=model_description,
+                    email_layout_xmlid='mail.mail_notification_light',
+                )
 
     @api.multi
     def action_done(self):

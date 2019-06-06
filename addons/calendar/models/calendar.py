@@ -207,7 +207,6 @@ class Attendee(models.Model):
                     email_values['attachment_ids'] = [
                         (0, 0, {'name': 'invitation.ics',
                                 'mimetype': 'text/calendar',
-                                'datas_fname': 'invitation.ics',
                                 'datas': base64.b64encode(ics_file)})
                     ]
                 mail_ids.append(invitation_template.send_mail(attendee.id, email_values=email_values, notif_layout='mail.mail_notification_light'))
@@ -227,7 +226,8 @@ class Attendee(models.Model):
         """ Marks event invitation as Accepted. """
         result = self.write({'state': 'accepted'})
         for attendee in self:
-            attendee.event_id.message_post(body=_("%s has accepted invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
+            if attendee.event_id:
+                attendee.event_id.message_post(body=_("%s has accepted invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
         return result
 
     @api.multi
@@ -235,7 +235,8 @@ class Attendee(models.Model):
         """ Marks event invitation as Declined. """
         res = self.write({'state': 'declined'})
         for attendee in self:
-            attendee.event_id.message_post(body=_("%s has declined invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
+            if attendee.event_id:
+                attendee.event_id.message_post(body=_("%s has declined invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
         return res
 
 
@@ -244,7 +245,7 @@ class AlarmManager(models.AbstractModel):
     _name = 'calendar.alarm_manager'
     _description = 'Event Alarm Manager'
 
-    def get_next_potential_limit_alarm(self, alarm_type, seconds=None, partner_id=None):
+    def _get_next_potential_limit_alarm(self, alarm_type, seconds=None, partner_id=None):
         result = {}
         delta_request = """
             SELECT
@@ -324,6 +325,12 @@ class AlarmManager(models.AbstractModel):
                 'rrule': rule
             }
 
+        # determine accessible events
+        events = self.env['calendar.event'].browse(result)
+        result = {
+            key: result[key]
+            for key in set(events._filter_access_rules('read').ids)
+        }
         return result
 
     def do_check_alarm_for_one_date(self, one_date, event, event_maxdelta, in_the_next_X_seconds, alarm_type, after=False, missing=False):
@@ -375,7 +382,7 @@ class AlarmManager(models.AbstractModel):
 
         cron_interval = cron.interval_number * interval_to_second[cron.interval_type]
 
-        all_meetings = self.get_next_potential_limit_alarm('email', seconds=cron_interval)
+        all_meetings = self._get_next_potential_limit_alarm('email', seconds=cron_interval)
 
         for meeting in self.env['calendar.event'].browse(all_meetings):
             max_delta = all_meetings[meeting.id]['max_duration']
@@ -405,7 +412,7 @@ class AlarmManager(models.AbstractModel):
         if not partner:
             return []
 
-        all_meetings = self.get_next_potential_limit_alarm('notification', partner_id=partner.id)
+        all_meetings = self._get_next_potential_limit_alarm('notification', partner_id=partner.id)
         time_limit = 3600 * 24  # return alarms of the next 24 hours
         for event_id in all_meetings:
             max_delta = all_meetings[event_id]['max_duration']
@@ -1238,10 +1245,10 @@ class Meeting(models.Model):
         """ Compute rule string according to value type RECUR of iCalendar
             :return: string containing recurring rule (empty if no rule)
         """
-        if self.interval and self.interval < 0:
-            raise UserError(_('interval cannot be negative.'))
-        if self.count and self.count <= 0:
-            raise UserError(_('Event recurrence interval cannot be negative.'))
+        if self.interval <= 0:
+            raise UserError(_('The interval cannot be negative.'))
+        if self.end_type == 'count' and self.count <= 0:
+            raise UserError(_('The number of repetitions  cannot be negative.'))
 
         def get_week_string(freq):
             weekdays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']

@@ -1177,6 +1177,30 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('state.sa should load action from session', async function (assert) {
+        assert.expect(1);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/session/get_session_action') {
+                    return Promise.resolve(1);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        await actionManager.loadState({
+            sa: 1,
+        });
+
+        assert.strictEqual(actionManager.$('.o_kanban_view').length, 1,
+            "should have rendered a kanban view");
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Concurrency management');
 
     QUnit.test('drop previous actions if possible', async function (assert) {
@@ -2568,6 +2592,36 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('reverse breadcrumb works on accesskey "b"', async function (assert) {
+        assert.expect(4);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        await actionManager.doAction(3);
+
+        // open a record in form view
+        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
+        await testUtils.dom.click(actionManager.$('.o_form_view button:contains(Execute action)'));
+
+        assert.containsN(actionManager, '.o_control_panel .breadcrumb li', 3);
+
+        var $previousBreadcrumb = actionManager.$('.o_control_panel .breadcrumb li.active').prev();
+        assert.strictEqual($previousBreadcrumb.attr("accesskey"), "b",
+            "previous breadcrumb should have accessKey 'b'");
+        await testUtils.dom.click($previousBreadcrumb);
+
+        assert.containsN(actionManager, '.o_control_panel .breadcrumb li', 2);
+
+        var $previousBreadcrumb = actionManager.$('.o_control_panel .breadcrumb li.active').prev();
+        assert.strictEqual($previousBreadcrumb.attr("accesskey"), "b",
+            "previous breadcrumb should have accessKey 'b'");
+
+        actionManager.destroy();
+    });
+
     QUnit.test('reload previous controller when discarding a new record', async function (assert) {
         assert.expect(8);
 
@@ -2859,7 +2913,7 @@ QUnit.module('ActionManager', {
         });
         await actionManager.doAction(3);
 
-        assert.doesNotHaveClass(actionManager.$('.o_list_view'), 'o_list_view_grouped',
+        assert.doesNotHaveClass(actionManager.$('.o_list_table'), 'o_list_table_grouped',
             "list view is not grouped");
 
         // open group by dropdown
@@ -2868,7 +2922,7 @@ QUnit.module('ActionManager', {
         // click on first link
         await testUtils.dom.click($('.o_control_panel .o_group_by_menu a:first'));
 
-        assert.hasClass(actionManager.$('.o_list_view'),'o_list_view_grouped',
+        assert.hasClass(actionManager.$('.o_list_table'),'o_list_table_grouped',
             'list view is now grouped');
 
         actionManager.destroy();
@@ -3080,7 +3134,7 @@ QUnit.module('ActionManager', {
         });
         await actionManager.doAction(3);
 
-        assert.containsOnce(actionManager, '.o_list_view_grouped',
+        assert.containsOnce(actionManager, '.o_list_table_grouped',
             "should be grouped");
         assert.containsN(actionManager, '.o_group_header', 2,
             "should be grouped by 'bar' (two groups) at first load");
@@ -3095,7 +3149,7 @@ QUnit.module('ActionManager', {
         // remove the groupby in the searchview
         await testUtils.dom.click($('.o_control_panel .o_searchview .o_facet_remove'));
 
-        assert.containsOnce(actionManager, '.o_list_view_grouped',
+        assert.containsOnce(actionManager, '.o_list_table_grouped',
             "should still be grouped");
         assert.containsN(actionManager, '.o_group_header', 2,
             "should be grouped by 'bar' (two groups) at reload");

@@ -22,6 +22,7 @@ except ImportError:
 class EventType(models.Model):
     _name = 'event.type'
     _description = 'Event Category'
+    _order = 'sequence, id'
 
     @api.model
     def _get_default_event_type_mail_ids(self):
@@ -42,6 +43,7 @@ class EventType(models.Model):
         })]
 
     name = fields.Char('Event Category', required=True, translate=True)
+    sequence = fields.Integer()
     # registration
     has_seats_limitation = fields.Boolean(
         'Limited Seats', default=False)
@@ -101,12 +103,12 @@ class EventEvent(models.Model):
         readonly=False, states={'done': [('readonly', True)]})
     company_id = fields.Many2one(
         'res.company', string='Company', change_default=True,
-        default=lambda self: self.env['res.company']._company_default_get('event.event'),
+        default=lambda self: self.env.company,
         required=False, readonly=False, states={'done': [('readonly', True)]})
     organizer_id = fields.Many2one(
         'res.partner', string='Organizer',
         tracking=True,
-        default=lambda self: self.env.user.company_id.partner_id)
+        default=lambda self: self.env.company.partner_id)
     event_type_id = fields.Many2one(
         'event.type', string='Category',
         readonly=False, states={'done': [('readonly', True)]},
@@ -165,7 +167,7 @@ class EventEvent(models.Model):
     is_online = fields.Boolean('Online Event')
     address_id = fields.Many2one(
         'res.partner', string='Location',
-        default=lambda self: self.env.user.company_id.partner_id,
+        default=lambda self: self.env.company.partner_id,
         readonly=False, states={'done': [('readonly', True)]},
         tracking=True)
     country_id = fields.Many2one('res.country', 'Country',  related='address_id.country_id', store=True, readonly=False)
@@ -474,8 +476,8 @@ class EventRegistration(models.Model):
                 self.phone = contact.phone or self.phone
 
     @api.multi
-    def message_get_suggested_recipients(self):
-        recipients = super(EventRegistration, self).message_get_suggested_recipients()
+    def _message_get_suggested_recipients(self):
+        recipients = super(EventRegistration, self)._message_get_suggested_recipients()
         public_users = self.env['res.users'].sudo()
         public_groups = self.env.ref("base.group_public", raise_if_not_found=False)
         if public_groups:
@@ -492,17 +494,16 @@ class EventRegistration(models.Model):
         return recipients
 
     @api.multi
-    def message_get_default_recipients(self):
+    def _message_get_default_recipients(self):
         # Prioritize registration email over partner_id, which may be shared when a single
         # partner booked multiple seats
-        return {
-            r.id: {'partner_ids': [],
-                   'email_to': r.email,
-                   'email_cc': False}
-            for r in self
-        }
+        return {r.id: {
+            'partner_ids': [],
+            'email_to': r.email,
+            'email_cc': False}
+            for r in self}
 
-    def _message_post_after_hook(self, message, *args, **kwargs):
+    def _message_post_after_hook(self, message, msg_vals):
         if self.email and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -514,7 +515,7 @@ class EventRegistration(models.Model):
                     ('email', '=', new_partner.email),
                     ('state', 'not in', ['cancel']),
                 ]).write({'partner_id': new_partner.id})
-        return super(EventRegistration, self)._message_post_after_hook(message, *args, **kwargs)
+        return super(EventRegistration, self)._message_post_after_hook(message, msg_vals)
 
     @api.multi
     def action_send_badge_email(self):

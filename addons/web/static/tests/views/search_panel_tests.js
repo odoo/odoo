@@ -534,7 +534,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('category with parent_field', async function (assert) {
-        assert.expect(24);
+        assert.expect(28);
 
         this.data.company.records.push({id: 40, name: 'child company 1', parent_id: 5});
         this.data.company.records.push({id: 41, name: 'child company 2', parent_id: 5});
@@ -593,7 +593,14 @@ QUnit.module('Views', {
         assert.containsOnce(kanban, '.o_search_panel_category_value:nth(2) .active');
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 1);
 
+        // parent company should be folded
+        assert.containsOnce(kanban, '.o_search_panel_category_value .active');
+        assert.containsOnce(kanban, '.o_search_panel_category_value:nth(2) .active');
+        assert.containsN(kanban, '.o_search_panel_category_value', 3);
+        assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 1);
+
         // fold category with children
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value .o_toggle_fold'));
         await testUtils.dom.click(kanban.$('.o_search_panel_category_value .o_toggle_fold'));
 
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
@@ -1554,6 +1561,36 @@ QUnit.module('Views', {
         var secondGroupCheckbox = kanban.$('.o_search_panel_filter_group:nth(1) > div > input').get(0);
         assert.strictEqual(secondGroupCheckbox.indeterminate, true);
 
+        kanban.destroy();
+    });
+
+    QUnit.test('tests conservation of category record order', async function (assert) {
+        assert.expect(1);
+
+        this.data.company.records.push({id: 56, name: 'highID', category_id: 6});
+        this.data.company.records.push({id: 2, name: 'lowID', category_id: 6});
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            services: this.services,
+            arch: '<kanban>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="foo"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                    '<searchpanel>' +
+                        '<field name="company_id"/>' +
+                        '<field select="multi" name="category_id"/>' +
+                    '</searchpanel>' +
+                '</kanban>',
+        });
+
+        var $firstSection = kanban.$('.o_search_panel_section:first');
+        assert.strictEqual($firstSection.find('.o_search_panel_category_value').text().replace(/\s/g, ''),
+            'AllasustekagrolaithighIDlowID');
         kanban.destroy();
     });
 });
