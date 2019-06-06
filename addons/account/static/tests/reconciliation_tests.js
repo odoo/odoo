@@ -742,7 +742,7 @@ QUnit.module('account', {
                                                                   "name": "INV/2017/0003",
                                                                   "analytic_tag_ids": [[6, null, []]]
                                                                 }],
-                                    payment_aml_ids: [], new_aml_dicts: []}]],
+                                    payment_aml_ids: [], new_aml_dicts: [], to_check: false}]],
                 "Should call process_bank_statement_line with ids");
             var def = $.Deferred();
             def.abort = function () {};
@@ -780,8 +780,10 @@ QUnit.module('account', {
         // line is send back to server.
         testUtils.mock.intercept(clientAction, 'call_service', function (event) {
             assert.deepEqual(event.data.args[1].args,
-                [[5],[{partner_id: 8, counterpart_aml_dicts: [],
-                                    payment_aml_ids: [], new_aml_dicts: [{
+                [[5],[{partner_id: 8, to_check: false, counterpart_aml_dicts: [],
+                                    payment_aml_ids: [], 
+                                    to_check: false,
+                                    new_aml_dicts: [{
                                         account_id: 287,
                                         credit: 1175,
                                         debit: 0,
@@ -829,7 +831,7 @@ QUnit.module('account', {
         // We also create a line which is the open balance.
         testUtils.mock.intercept(clientAction, 'call_service', function (event) {
             assert.deepEqual(event.data.args[1].args,
-                [[5],[{partner_id: 8,
+                [[5],[{partner_id: 8, to_check: false,
                                     counterpart_aml_dicts: [{
                                         counterpart_aml_id: 109,
                                         credit: 650,
@@ -879,6 +881,7 @@ QUnit.module('account', {
                             }],
                             payment_aml_ids: [],
                             new_aml_dicts: [],
+                            to_check: false,
                         }]
                     ], "should call process_bank_statement_line with partial reconcile values");
                 }
@@ -1381,6 +1384,7 @@ QUnit.module('account', {
 
                               payment_aml_ids: [],
                               partner_id: 8,
+                              to_check: false,
                               new_aml_dicts: []}]
                         ], "should call process_bank_statement_line with partial reconcile values");
                 }
@@ -1472,6 +1476,7 @@ QUnit.module('account', {
 
                               payment_aml_ids: [],
                               partner_id: 8,
+                              to_check: false,
                               new_aml_dicts: [
                                 {account_id: 282,
                                  credit: 0,
@@ -1580,6 +1585,7 @@ QUnit.module('account', {
 
                               payment_aml_ids: [],
                               partner_id: 8,
+                              to_check: false,
                               new_aml_dicts: []
                           }]
                         ], "should call process_bank_statement_line with correct counterpart_aml_dicts");
