@@ -1733,6 +1733,16 @@ msgid "Applicability"
 msgstr ""
 
 #. module: account
+#: selection:tax.adjustments.wizard,adjustment_type:0
+msgid "Applied on credit journal item"
+msgstr ""
+
+#. module: account
+#: selection:tax.adjustments.wizard,adjustment_type:0
+msgid "Applied on debit journal item"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Apply"
 msgstr ""
@@ -1996,6 +2006,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Bank Statements"
+msgstr ""
+
+#. module: account
+#: selection:account.journal,bank_statements_source:0
+msgid "Bank Synchronization"
 msgstr ""
 
 #. module: account
@@ -3164,6 +3179,12 @@ msgstr ""
 #: code:addons/account/models/account_move.py:1339
 #, python-format
 msgid "Currency exchange rate difference"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account.py:309
+#, python-format
+msgid "Currency field should only be set if the journal's currency is different from the company's. Leave the field blank to use company currency."
 msgstr ""
 
 #. module: account
@@ -8453,6 +8474,12 @@ msgid "The last line's computation type should be \"Balance\" to ensure that the
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/company.py:80
+#, python-format
+msgid "The lock date for advisors is irreversible and can't be removed."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_move_id
 msgid "The move of this entry line."
 msgstr ""
@@ -8467,6 +8494,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_name
 msgid "The name that will be used on account move lines"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:84
+#, python-format
+msgid "The new lock date for advisors must be set after the previous lock date."
 msgstr ""
 
 #. module: account
@@ -9504,11 +9537,16 @@ msgstr ""
 
 #. module: account
 #: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
+msgid "Wrong credit or debit value in accounting entry! Credit and debit should be positive."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:845
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry! Credit or debit should be zero."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:931
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled!"
 msgstr ""
@@ -9644,6 +9682,12 @@ msgstr ""
 #: code:addons/account/models/account.py:96
 #, python-format
 msgid "You cannot have a receivable/payable account that is not reconciliable. (account code: %s)"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:95
+#, python-format
+msgid "You cannot lock a period that is not finished yet. Please make sure that the lock date for advisors is not set after the last day of the previous month."
 msgstr ""
 
 #. module: account
