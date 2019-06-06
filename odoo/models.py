@@ -5018,7 +5018,7 @@ Fields:
         if origin is not None:
             origin = origin.id
         record = self.browse([NewId(origin, ref)])
-        record._update_cache(values)
+        record._update_cache(values, validate=False)
         return record
 
     @property
@@ -5596,7 +5596,7 @@ Fields:
 
         # store changed values in cache, and update snapshot0
         for name, value in changed_x2many.items():
-            record._update_cache({name: value})
+            record._update_cache({name: value}, validate=False)
             snapshot0.fetch(name)
 
         # determine which field(s) should be triggered an onchange
