@@ -1264,11 +1264,11 @@ class expression(object):
             column = '%s.%s' % (table_alias, _quote(left))
             query = '(%s %s %s)' % (unaccent(column + cast), sql_operator, unaccent(format))
 
+            if (need_wildcard and not right) or (right and operator in NEGATIVE_TERM_OPERATORS):
+                query = '(%s OR %s."%s" IS NULL)' % (query, table_alias, left)
+
             if need_wildcard:
-                native_str = pycompat.to_text(right)
-                if not native_str:
-                    query = '(%s OR %s."%s" IS NULL)' % (query, table_alias, left)
-                params = ['%%%s%%' % native_str]
+                params = ['%%%s%%' % pycompat.to_text(right)]
             else:
                 field = model._fields[left]
                 params = [field.convert_to_column(right, model, validate=False)]
