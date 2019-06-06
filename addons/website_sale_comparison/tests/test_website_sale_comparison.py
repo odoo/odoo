@@ -61,4 +61,4 @@ class TestWebsiteSaleComparison(odoo.tests.TransactionCase):
 class TestUi(odoo.tests.HttpCase):
 
     def test_01_admin_tour_product_comparison(self):
-        self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('product_comparison')", "odoo.__DEBUG__.services['web_tour.tour'].tours.product_comparison.ready", login='admin')
+        self.start_tour("/", 'product_comparison', login='admin')
