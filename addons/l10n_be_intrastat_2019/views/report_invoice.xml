@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_invoice_document_intrastat_2019" inherit_id="account.report_invoice_document">
+    <xpath expr="//th[@class='hidden']" position="after">
+        <th class="text-right">Origin Country</th>
+    </xpath>
+    <xpath expr="//td[@class='hidden']" position="after">
+        <td class="text-right">
+            <span t-field="l.intrastat_product_origin_country_id"/>
+        </td>
+    </xpath>
+</template>
+<template id="report_intrastatinvoice_document_2019" inherit_id="report_intrastat.report_intrastatinvoice_document">
+    <xpath expr="//th[4]" position="after">
+        <th class="text-right">Origin Country</th>
+    </xpath>
+    <xpath expr="//td[4]" position="after">
+        <td class="text-right">
+            <span t-field="l.intrastat_product_origin_country_id"/>
+        </td>
+    </xpath>
+</template>
+<template id="report_invoice_layouted_intrastat_2019" inherit_id="sale.report_invoice_layouted">
+    <xpath expr="//t[@groups='sale.group_sale_layout']//th[1]" position="after">
+        <th class="text-right">Origin Country</th>
+    </xpath>
+    <xpath expr="//t[@groups='sale.group_sale_layout']//t[@t-as='l']//td[1]" position="after">
+        <td class="text-right">
+            <span t-field="l.intrastat_product_origin_country_id"/>
+        </td>
+    </xpath>
+</template>
+</odoo>
