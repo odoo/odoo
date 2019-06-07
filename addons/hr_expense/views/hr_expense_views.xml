@@ -36,6 +36,7 @@
                     <field name="sheet_id" invisible="not context.get('show_report', False)"/>
                     <field name="payment_mode"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                     <field name="total_amount" sum="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <button name="action_get_attachment_view" string="View Attached Documents" type="object" icon="fa-paperclip" attrs="{'invisible': [('attachment_number', '=', 0)]}"/>
@@ -456,6 +457,7 @@
                     <field name="currency_id" invisible="1"/>
                     <field name="state"/>
                     <field name="message_unread" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
