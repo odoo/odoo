@@ -486,13 +486,9 @@ class AccountAssetDepreciationLine(models.Model):
     def create_move(self, post_move=True):
         created_moves = self.env['account.move']
         prec = self.env['decimal.precision'].precision_get('Account')
-        # `line.move_id` was invalidated from the cache at each iteration
-        # To prevent to refetch `move_id` of all lines at each iteration just to check a UserError,
-        # we use an intermediar dict which stores the information the UserError check requires.
-        line_moves = {line: line.move_id for line in self}
+        if self.mapped('move_id'):
+            raise UserError(_('This depreciation is already linked to a journal entry! Please post or delete it.'))
         for line in self:
-            if line_moves[line]:
-                raise UserError(_('This depreciation is already linked to a journal entry! Please post or delete it.'))
             category_id = line.asset_id.category_id
             depreciation_date = self.env.context.get('depreciation_date') or line.depreciation_date or fields.Date.context_today(self)
             company_currency = line.asset_id.company_id.currency_id
@@ -529,7 +525,6 @@ class AccountAssetDepreciationLine(models.Model):
             }
             move = self.env['account.move'].create(move_vals)
             line.write({'move_id': move.id, 'move_check': True})
-            line_moves[line] = move
             created_moves |= move
 
         if post_move and created_moves:
