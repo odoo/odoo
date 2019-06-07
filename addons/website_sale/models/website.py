@@ -260,7 +260,8 @@ class Website(models.Model):
         sale_order = self.env['sale.order'].sudo().browse(sale_order_id).exists() if sale_order_id else None
 
         if not (sale_order or force_create or code):
-            request.session['sale_order_id'] = None
+            if request.session.get('sale_order_id'):
+                request.session['sale_order_id'] = None
             return self.env['sale.order']
 
         if self.env['product.pricelist'].browse(force_pricelist).exists():
