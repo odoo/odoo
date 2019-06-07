@@ -12,6 +12,7 @@ This module allows a customer to give rating.
     'data': [
         'views/rating_view.xml',
         'views/rating_template.xml',
+        'views/assets.xml',
         'security/ir.model.access.csv'
      ],
     'installable': True,
