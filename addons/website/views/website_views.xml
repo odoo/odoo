@@ -204,6 +204,7 @@
                             </group>
                             <group>
                                 <field name="parent_id"/>
+                                <field name="group_ids"/>
                             </group>
                         </group>
                         <label for="child_id" string="Child Menus"/>
@@ -231,6 +232,7 @@
                     <field name="url"/>
                     <field name="new_window"/>
                     <field name="parent_id"/>
+                    <field name="group_ids" widget="many2many_tags"/>
                 </tree>
             </field>
         </record>
