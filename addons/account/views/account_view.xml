@@ -182,6 +182,7 @@
                     <field name="sequence"  widget="handle"/>
                     <field name="name"/>
                     <field name="account_journal_ids" widget="many2many_tags"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -476,6 +477,7 @@ action = model.setting_init_bank_account_action()
                     <field name="name"/>
                     <field name="date"/>
                     <field name="journal_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="balance_start"/>
                     <field name="balance_end_real"/>
                     <field name="balance_end" invisible="1"/>
@@ -1257,6 +1259,7 @@ action = model.setting_init_bank_account_action()
                 <tree string="Payment Terms">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>

@@ -39,6 +39,7 @@
                 <button name="action_confirm" string="Confirm" type="object" icon="fa-phone text-success" attrs="{'invisible': [('state', '!=', 'ordered')]}" groups="lunch.group_lunch_manager"/>
                 <button name="action_cancel" string="Cancel" type="object" icon="fa-times-circle text-danger" attrs="{'invisible': [('state', 'in', ['cancelled', 'confirmed'])]}" groups="lunch.group_lunch_manager"/>
                 <field name='state'/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>

@@ -190,6 +190,7 @@
                 <field name="user_id"/>
                 <field name="category_id" groups="maintenance.group_equipment_manager"/>
                 <field name="stage_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>
@@ -492,6 +493,7 @@
                 <field name="technician_user_id"/>
                 <field name="category_id"/>
                 <field name="partner_id" invisible="1"/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>
@@ -629,6 +631,7 @@
             <tree string="Assign To User">
                 <field name="name" string="Name"/>
                 <field name="technician_user_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>
@@ -782,6 +785,7 @@
         <field name="arch" type="xml">
             <tree string="Maintenance Team">
                 <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>

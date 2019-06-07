@@ -136,6 +136,7 @@
                 <tree string="Journal Items" create="false" editable="bottom">
                     <field name="date"/>
                     <field name="journal_id" options='{"no_open":True}'/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     <field name="name"/>
                     <field name="ref"/>
                     <field name="statement_id" invisible="1"/>
@@ -152,7 +153,6 @@
                     <field name="currency_id" readonly="True" invisible="1" />
                     <field name="date_maturity"/>
                     <field name="company_currency_id" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
                     <field name="parent_state" invisible="1"/>
                 </tree>
             </field>
@@ -343,6 +343,7 @@
                     <field name="partner_id"/>
                     <field name="ref"/>
                     <field name="journal_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="amount" sum="Total Amount"/>
                     <field name="state"/>
                     <field name="currency_id" invisible="1"/>
