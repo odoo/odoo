@@ -477,7 +477,7 @@
                                t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'latest' else '')">Newest</a>
                             <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('slide_type', sorting='most_voted'))"
                                t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'most_voted' else '')">Most Voted</a>
-                            <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query(''slide_type', sorting='most_viewed'))"
+                            <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('slide_type', sorting='most_viewed'))"
                                t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'most_viewed' else '')">Most Viewed</a>
                         </div>
                     </li>
