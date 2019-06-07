@@ -3,6 +3,7 @@ odoo.define('hr_attendance.kiosk_confirm', function (require) {
 
 var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
+var field_utils = require('web.field_utils');
 var QWeb = core.qweb;
 
 
@@ -61,6 +62,7 @@ var KioskConfirm = AbstractAction.extend({
         this.employee_id = action.employee_id;
         this.employee_name = action.employee_name;
         this.employee_state = action.employee_state;
+        this.employee_hours_today = field_utils.format.float_time(action.employee_hours_today);
     },
 
     start: function () {

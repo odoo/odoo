@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import pytz
+from datetime import datetime
+from unittest.mock import patch
+
+from odoo import fields
 from odoo.tests import new_test_user
 from odoo.tests.common import TransactionCase
 
@@ -81,3 +86,25 @@ class TestHrAttendance(TransactionCase):
         self.assertEqual(employee.attendance_state, 'checked_in', "He should be able to check in with his pin")
         employee.attendance_manual({}, entered_pin=None)
         self.assertEqual(employee.attendance_state, 'checked_out', "He should be able to check out with his pin")
+
+    def test_hours_today(self):
+        """ Test day start is correctly computed according to the employee's timezone """
+
+        def tz_datetime(year, month, day, hour, minute):
+            tz = pytz.timezone('Europe/Brussels')
+            return tz.localize(datetime(year, month, day, hour, minute)).astimezone(pytz.utc)
+
+        employee = self.env['hr.employee'].create({'name': 'Cunégonde', 'tz': 'Europe/Brussels'})
+        self.env['hr.attendance'].create({
+            'employee_id': employee.id,
+            'check_in': tz_datetime(2019, 3, 1, 22, 0),  # should count from midnight in the employee's timezone (=the previous day in utc!)
+            'check_out': tz_datetime(2019, 3, 2, 2, 0),
+        })
+        self.env['hr.attendance'].create({
+            'employee_id': employee.id,
+            'check_in': tz_datetime(2019, 3, 2, 11, 0),
+        })
+
+        # now = 2019/3/2 14:00 in the employee's timezone
+        with patch.object(fields.Datetime, 'now', lambda: tz_datetime(2019, 3, 2, 14, 0).astimezone(pytz.utc).replace(tzinfo=None)):
+            self.assertEqual(employee.hours_today, 5, "It should have counted 5 hours")
