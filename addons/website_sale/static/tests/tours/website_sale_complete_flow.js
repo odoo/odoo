@@ -1,74 +1,13 @@
 odoo.define('website_sale_tour.tour', function (require) {
     'use strict';
 
-    var ajax = require('web.ajax');
     var tour = require("web_tour.tour");
     var rpc = require("web.rpc");
 
     tour.register('website_sale_tour', {
         test: true,
-        url: '/',
-    }, [{
-        content: "Configuration Settings for 'Free Sign Up' and 'Tax-Excluded'",
-        trigger: '#wrapwrap',
-        run: function () {
-            var taxDef = $.Deferred();
-            ajax.jsonRpc('/web/dataset/call', 'call', {
-                model: 'product.template',
-                method: 'search',
-                args: [[['name', '=', 'Storage Box']]],
-            }).then(function (productId) {
-                return ajax.jsonRpc('/web/dataset/call', 'call', {
-                    model: 'account.tax.group',
-                    method: 'create',
-                    args: [{
-                      'name': 'Tax 15%',
-                    }],
-                }).then(function (taxGroupId) {
-                    return ajax.jsonRpc('/web/dataset/call', 'call', {
-                        model: 'account.tax',
-                        method: 'create',
-                        args: [{
-                          'name': 'Tax 15%',
-                          'amount': 15,
-                          'type_tax_use': 'sale',
-                          'tax_group_id': taxGroupId,
-                        }],
-                    }).then(function (taxId) {
-                        return ajax.jsonRpc('/web/dataset/call', 'call', {
-                            model: 'product.template',
-                            method: 'write',
-                            args: [productId, {
-                              'taxes_id': [[4, taxId]],
-                            }],
-                        }).then(function () {
-                            taxDef.resolve();
-                        });
-                    });
-                });
-            });
-            var def1 = rpc.query({
-                model: 'res.config.settings',
-                method: 'create',
-                args: [{
-                    'auth_signup_uninvited': 'b2c',
-                    'show_line_subtotals_tax_selection': 'tax_excluded',
-                    'group_show_line_subtotals_tax_excluded': true,
-                    'group_show_line_subtotals_tax_included': false,
-                }],
-            });
-            var def2 = def1.then(function (resId) {
-                return rpc.query({
-                    model: 'res.config.settings',
-                    method: 'execute',
-                    args: [[resId]],
-                });
-            });
-            return Promise.all([taxDef, def2]).then(function (res) {
-                window.location.href = '/web/session/logout?redirect=/shop?search=Storage Box';
-            });
-        },
-    },
+        url: '/shop?search=Storage Box',
+    }, [
     // Testing b2c with Tax-Excluded Prices
     {
         content: "Open product page",
