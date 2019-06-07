@@ -92,6 +92,12 @@
                                 <div class="text-muted" id="module_crm_phone_validation">
                                     Format phone numbers based on national conventions
                                 </div>
+                                <div class="content-group">
+                                    <div class="mt16" attrs="{'invisible': [('module_crm_phone_validation','=',False)]}">
+                                        <label for="crm_phone_valid_method" class="o_light_label"/>
+                                        <field name="crm_phone_valid_method" widget="radio" class="o_light_label"/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
