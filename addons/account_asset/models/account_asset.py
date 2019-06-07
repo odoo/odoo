@@ -500,17 +500,12 @@ class AccountAssetDepreciationLine(models.Model):
     @api.multi
     def create_move(self, post_move=True):
         created_moves = self.env['account.move']
-        # `line.move_id` was invalidated from the cache at each iteration
-        # To prevent to refetch `move_id` of all lines at each iteration just to check a UserError,
-        # we use an intermediar dict which stores the information the UserError check requires.
-        line_moves = {line: line.move_id for line in self}
+        if self.mapped('move_id'):
+            raise UserError(_('This depreciation is already linked to a journal entry! Please post or delete it.'))
         for line in self:
-            if line_moves[line]:
-                raise UserError(_('This depreciation is already linked to a journal entry! Please post or delete it.'))
             move_vals = self._prepare_move(line)
             move = self.env['account.move'].create(move_vals)
             line.write({'move_id': move.id, 'move_check': True})
-            line_moves[line] = move
             created_moves |= move
 
         if post_move and created_moves:
