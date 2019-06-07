@@ -14,6 +14,7 @@ class ResConfigSettings(models.TransientModel):
     module_crm_iap_lead = fields.Boolean("Generate new leads based on their country, industries, size, etc.")
     module_crm_iap_lead_website = fields.Boolean("Create Leads/Opportunities from your website's traffic")
     lead_mining_in_pipeline = fields.Boolean("Create a lead mining request directly from the opportunity pipeline.", config_parameter='crm.lead_mining_in_pipeline')
+    crm_phone_valid_method = fields.Selection(related="company_id.phone_international_format", required=True, readonly=False)
 
     def _find_default_lead_alias_id(self):
         alias = self.env.ref('crm.mail_alias_lead_info', False)
