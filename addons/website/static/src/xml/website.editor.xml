@@ -48,6 +48,19 @@
             </label>
         </div>
     </t>
+    <t t-name="website.theme_customize_delete_font">
+        <t t-set="delete_font_title">Delete this font</t>
+        <button type="button"
+            class="btn btn-link d-flex align-items-center text-danger fa fa-trash-o o_theme_customize_delete_google_font"
+            t-att-aria-label="delete_font_title"
+            t-att-title="delete_font_title"
+            t-att-data-font-index="index"/>
+    </t>
+    <t t-name="website.theme_customize_add_google_font_option">
+        <a class="dropdown-item p-2 o_theme_customize_add_google_font" t-att-data-variable="variable" href="#">
+            <i class="fa fa-plus"/> Add a Google Font
+        </a>
+    </t>
     <t t-name="website.theme_customize_dropdown_option">
         <div t-attf-class="dropdown o_theme_customize_dropdown">
             <div class="dropdown-menu rounded-0 o_theme_customize_selection" role="menu"/>
@@ -105,6 +118,19 @@
                     <p class="d-none o_anchor_not_valid">The chosen name is not valid (use only a-Z A-Z 0-9 - _)</p>
                     <p class="d-none o_anchor_already_exists">The chosen name already exists</p>
                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- Add a Google Font option dialog -->
+    <div t-name="website.dialog.addGoogleFont">
+        <div class="form-group row">
+            <label class="col-form-label col-md-3" for="google_font_html">Google Font HTML</label>
+            <div class="col-md-9">
+                <textarea id="google_font_html" class="form-control o_input_google_font"
+                    placeholder="&lt;link href='https://fonts.googleapis.com/css?family=Bonbon&amp;display=swap' rel='stylesheet'&gt;" style="height: 100px;"/>
+                <span class="float-right text-muted">
+                    Select one font on <a target="_blank" href="https://fonts.google.com">fonts.google.com</a> and copy paste the embed code here.
+                </span>
             </div>
         </div>
     </div>
