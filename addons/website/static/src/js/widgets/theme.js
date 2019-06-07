@@ -114,6 +114,8 @@ var ThemeCustomizeDialog = Dialog.extend({
     events: {
         'change .o_theme_customize_option_input': '_onChange',
         'click .checked .o_theme_customize_option_input[type="radio"]': '_onChange',
+        'click .o_theme_customize_add_google_font': '_onAddGoogleFontClick',
+        'click .o_theme_customize_delete_google_font': '_onDeleteGoogleFontClick',
     },
 
     CUSTOM_BODY_IMAGE_XML_ID: 'option_custom_body_image',
@@ -129,6 +131,7 @@ var ThemeCustomizeDialog = Dialog.extend({
         }, options));
 
         this.defaultTab = options.tab || 0;
+        this.fontVariables = [];
     },
     /**
      * @override
@@ -159,6 +162,9 @@ var ThemeCustomizeDialog = Dialog.extend({
         this.$modal.addClass('o_theme_customize_modal');
 
         this.style = window.getComputedStyle(document.documentElement);
+        this.nbFonts = parseInt(this.style.getPropertyValue('--number-of-fonts'));
+        var googleFontsProperty = this.style.getPropertyValue('--google-fonts').trim();
+        this.googleFonts = googleFontsProperty ? googleFontsProperty.split(/\s*,\s*/g) : [];
 
         var $tabs;
         var loadDef = this._loadViews().then(function (data) {
@@ -380,16 +386,31 @@ var ThemeCustomizeDialog = Dialog.extend({
 
                     case 'FONTSELECTION':
                         var $options = $();
-                        _.times(parseInt(self.style.getPropertyValue('--number-of-fonts')), function (font) {
+                        var variable = $item.data('variable');
+                        self.fontVariables.push(variable);
+                        _.times(self.nbFonts, function (font) {
                             $options = $options.add($('<opt/>', {
                                 'data-widget': 'auto',
-                                'data-variable': $item.data('variable'),
+                                'data-variable': variable,
                                 'data-value': font + 1,
                                 'data-font': font + 1,
                             }));
                         });
                         $element = $(core.qweb.render('website.theme_customize_dropdown_option'));
-                        _processItems($options, $element.find('.o_theme_customize_selection'), true);
+                        var $selection = $element.find('.o_theme_customize_selection');
+                        _processItems($options, $selection, true);
+
+                        if (self.googleFonts.length) {
+                            var $googleFontItems = $selection.children().slice(-self.googleFonts.length);
+                            _.each($googleFontItems, function (el, index) {
+                                $(el).append(core.qweb.render('website.theme_customize_delete_font', {
+                                    'index': index,
+                                }));
+                            });
+                        }
+                        $selection.append($(core.qweb.render('website.theme_customize_add_google_font_option', {
+                            'variable': variable,
+                        })));
                         break;
 
                     default:
@@ -449,6 +470,24 @@ var ThemeCustomizeDialog = Dialog.extend({
             }
         });
         return xmlIDs;
+    },
+    /**
+     * @private
+     * @param {object} [values]
+     *        When a new set of google fonts are saved, other variables
+     *        potentially have to be adapted.
+     */
+    _makeGoogleFontsCusto: function (values) {
+        values = values ? _.clone(values) : {};
+        if (this.googleFonts.length) {
+            values['google-fonts'] = "('" + this.googleFonts.join("', '") + "')";
+        } else {
+            values['google-fonts'] = 'null';
+        }
+        return this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values).then(function () {
+            window.location.hash = 'theme=true';
+            window.location.reload();
+        });
     },
     /**
      * @private
@@ -737,7 +776,7 @@ var ThemeCustomizeDialog = Dialog.extend({
             var $checked = $dropdown.find('label.checked');
             $checked.closest('.dropdown-item').addClass('active');
 
-            var classes = 'btn btn-light dropdown-toggle w-100 o_theme_customize_dropdown_btn';
+            var classes = 'btn btn-light dropdown-toggle w-100 o_text_overflow o_theme_customize_dropdown_btn';
             if ($checked.data('font-id')) {
                 classes += _.str.sprintf(' o_theme_customize_option_font_%s', $checked.data('font-id'));
             }
@@ -810,6 +849,73 @@ var ThemeCustomizeDialog = Dialog.extend({
             self._updateValues();
             self.$inputs.prop('disabled', false);
         });
+    },
+    /**
+     * @private
+     */
+    _onAddGoogleFontClick: function (ev) {
+        var self = this;
+        var variable = $(ev.currentTarget).data('variable');
+        new Dialog(this, {
+            title: _t("Add a Google Font"),
+            $content: $(core.qweb.render('website.dialog.addGoogleFont')),
+            buttons: [
+                {
+                    text: _t("Save"),
+                    classes: 'btn-primary',
+                    click: function () {
+                        var $input = this.$('.o_input_google_font');
+                        var m = $input.val().match(/\bfamily=([\w+]+)/);
+                        if (!m) {
+                            $input.addClass('is-invalid');
+                            return;
+                        }
+                        var font = m[1].replace(/\+/g, ' ');
+                        self.googleFonts.push(font);
+                        var values = {};
+                        values[variable] = self.nbFonts + 1;
+                        return self._makeGoogleFontsCusto(values);
+                    },
+                },
+                {
+                    text: _t("Discard"),
+                    close: true,
+                },
+            ],
+        }).open();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onDeleteGoogleFontClick: function (ev) {
+        var self = this;
+        ev.preventDefault();
+
+        var nbBaseFonts = this.nbFonts - this.googleFonts.length;
+
+        // Remove Google font
+        var googleFontIndex = $(ev.currentTarget).data('fontIndex');
+        this.googleFonts.splice(googleFontIndex, 1);
+
+        // Adapt font variable indexes to the removal
+        var values = {};
+        _.each(this.fontVariables, function (variable) {
+            var value = parseInt(self.style.getPropertyValue('--' + variable));
+            var googleFontValue = nbBaseFonts + 1 + googleFontIndex;
+            if (value === googleFontValue) {
+                // If an element is using the google font being removed, reset
+                // it to the first base font.
+                values[variable] = 1;
+            } else if (value > googleFontValue) {
+                // If an element is using a google font whose index is higher
+                // than the one of the font being removed, that index must be
+                // lowered by 1 so that the font is unchanged.
+                values[variable] = value - 1;
+            }
+        });
+
+        return this._makeGoogleFontsCusto(values);
     },
 });
 
