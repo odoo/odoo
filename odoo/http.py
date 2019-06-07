@@ -1051,9 +1051,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.setdefault("login", None)
         self.setdefault("session_token", None)
         self.setdefault("context", {})
-        # Force tests debug mode when test mode enabled to load 'assets_tests'
-        test_mode = odoo.tools.config['test_enable'] or odoo.tools.config['test_file']
-        self.setdefault("debug", 'tests' if test_mode else '')
+        self.setdefault("debug", '')
 
     def get_context(self):
         """
