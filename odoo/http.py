@@ -507,8 +507,16 @@ def route(route=None, **kw):
             else:
                 routes = [route]
             routing['routes'] = routes
+
         @functools.wraps(f)
         def response_wrap(*args, **kw):
+            # if controller cannot be called with extra args (utm, debug, ...), call endpoint ignoring them
+            spec = inspect.getargspec(f)
+            if not spec.keywords:
+                ignored = ['<%s=%s>' % (k, kw.pop(k)) for k in list(kw) if k not in spec.args]
+                if ignored:
+                    _logger.info("<function %s.%s> called ignoring args %s" % (f.__module__, f.__name__, ', '.join(ignored)))
+
             response = f(*args, **kw)
             if isinstance(response, Response) or f.routing_type == 'json':
                 return response
