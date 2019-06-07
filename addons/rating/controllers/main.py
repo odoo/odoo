@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug
-
 from odoo import http
 from odoo.http import request
 from odoo.tools.translate import _
@@ -18,19 +16,21 @@ class Rating(http.Controller):
         if not rating:
             return request.not_found()
         rate_names = {
+            10: _("satisfied"),
             5: _("not satisfied"),
-            1: _("highly dissatisfied"),
-            10: _("satisfied")
+            1: _("highly dissatisfied")
         }
         rating.write({'rating': rate, 'consumed': True})
         lang = rating.partner_id.lang or get_lang(request.env).code
         return request.env['ir.ui.view'].with_context(lang=lang).render_template('rating.rating_external_page_submit', {
             'rating': rating, 'token': token,
-            'rate_name': rate_names[rate], 'rate': rate
+            'rate_names': rate_names, 'rate': rate
         })
 
-    @http.route(['/rating/<string:token>/<int:rate>/submit_feedback'], type="http", auth="public", methods=['post'], website=True)
-    def submit_rating(self, token, rate, **kwargs):
+    @http.route(['/rating/<string:token>/submit_feedback'], type="http", auth="public", methods=['post'], website=True)
+    def submit_rating(self, token, **kwargs):
+        rate = kwargs.get('rate')
+        assert rate in (1, 5, 10), "Incorrect rating"
         rating = request.env['rating.rating'].sudo().search([('access_token', '=', token)])
         if not rating:
             return request.not_found()
