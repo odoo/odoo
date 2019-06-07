@@ -4,7 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_round
+from odoo.tools import float_round, ormcache_context
 
 
 class MrpBom(models.Model):
@@ -92,13 +92,28 @@ class MrpBom(models.Model):
     def name_get(self):
         return [(bom.id, '%s%s' % (bom.code and '%s: ' % bom.code or '', bom.product_tmpl_id.display_name)) for bom in self]
 
+    @api.model
+    def create(self, vals):
+        # Altering a BoM invalidates results from `_bom_find()`
+        self._bom_find.clear_cache(self)
+        return super(MrpBom, self).create(vals)
+
     @api.multi
     def unlink(self):
         if self.env['mrp.production'].search([('bom_id', 'in', self.ids), ('state', 'not in', ['done', 'cancel'])], limit=1):
             raise UserError(_('You can not delete a Bill of Material with running manufacturing orders.\nPlease close or cancel it first.'))
+        # Altering a BoM invalidates results from `_bom_find()`
+        self._bom_find.clear_cache(self)
         return super(MrpBom, self).unlink()
 
+    @api.multi
+    def write(self, vals):
+        # Altering a BoM invalidates results from `_bom_find()`
+        self._bom_find.clear_cache(self)
+        return super(MrpBom, self).write(vals)
+
     @api.model
+    @ormcache_context("self._uid", "product_tmpl", "product", "picking_type", "company_id", keys=("company_id",))
     def _bom_find(self, product_tmpl=None, product=None, picking_type=None, company_id=False):
         """ Finds BoM for particular product, picking and company """
         if product:
