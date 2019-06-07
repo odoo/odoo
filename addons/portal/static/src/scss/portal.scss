@@ -37,6 +37,11 @@ $o-portal-use-default-colors: $body-bg == $white;
     > main {
         flex: 1 0 auto;
     }
+    @if ($o-theme-layout == 'boxed') {
+        > main {
+            display: flex;
+        }
+    }
 }
 
 header {
