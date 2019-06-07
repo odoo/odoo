@@ -6,6 +6,7 @@
         <field name="arch" type="xml">
             <form string="Model">
                 <sheet>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="image_128" widget='image' class="oe_avatar"/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
@@ -19,6 +20,7 @@
                     </div>
                     <group>
                         <group>
+                            <field name="active" invisible="1"/>
                             <field name="manager_id" groups="fleet.fleet_group_manager"/>
                         </group>
                     </group>
@@ -144,7 +146,7 @@
                 <field name="name" />
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_vignette oe_semantic_html_override">
+                        <div class="oe_kanban_vignette oe_semantic_html_override oe_kanban_global_click">
                             <a type="open" href="#" class="o_kanban_image oe_kanban_action">
                                 <img alt="Open" t-att-src="kanban_image('fleet.vehicle.model.brand', 'image_128', record.id.raw_value)" class="img-fluid" style="width:100px;"/>
                             </a>
@@ -154,6 +156,12 @@
                                         <field name="name"/>
                                     </a>
                                 </h4>
+                            </div>
+                            <div class="o_kanban_button">
+                                <a type="object" name="action_brand_model" class="oe_kanban_action oe_kanban_action_a">
+                                    <field name="model_count"/>
+                                MODELS
+                                </a>
                             </div>
                         </div>
                     </t>
