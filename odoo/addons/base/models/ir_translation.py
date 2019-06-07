@@ -247,7 +247,13 @@ class IrTranslation(models.Model):
                 continue
             if not callable(field.translate):
                 # Pass context without lang, need to read real stored field, not translation
-                result = model.browse(record.res_id).with_context(lang=None).read([field_name])
+                try:
+                    result = model.browse(record.res_id).with_context(lang=None).read([field_name])
+                except AccessError:
+                    # because we can read self but not the record,
+                    # that means we would get an access error when accessing the translations
+                    # so instead we defer the access right to the "check" method
+                    result = [{field_name: _("Cannot be translated; record not accessible.")}]
                 record.source = result[0][field_name] if result else False
 
     def _inverse_source(self):
@@ -539,7 +545,7 @@ class IrTranslation(models.Model):
         """ Check access rights of operation ``mode`` on ``self`` for the
         current user. Raise an AccessError in case conditions are not met.
         """
-        if self.env.user._is_admin():
+        if self.env.user._is_superuser():
             return
 
         # collect translated field records (model_ids) and other translations
