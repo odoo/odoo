@@ -27,6 +27,7 @@
                 <field name="name"/>
                 <field name="category_id"/>
                 <field name="supplier_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
                 <field name="description"/>
                 <field name="price" widget="monetary"/>
             </tree>
@@ -189,6 +190,7 @@
         <field name="arch" type="xml">
             <tree string="Products List">
                 <field name='name' string="Product Category: "/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>

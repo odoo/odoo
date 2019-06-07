@@ -292,6 +292,7 @@
                     <field name="user_id"/>
                     <field name="state"/>
                     <field name="message_needaction" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -455,6 +456,7 @@
                     <field name="email"/>
                     <field name="event_id" />
                     <field name="state"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="message_needaction" invisible="1"/>
                     <button name="confirm_registration" string="Confirm Registration" states="draft" type="object" icon="fa-check text-success"/>
                     <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="fa-level-down text-success"/>

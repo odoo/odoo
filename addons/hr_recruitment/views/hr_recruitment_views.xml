@@ -42,6 +42,7 @@
                 <field name="availability" invisible="1"/>
                 <field name="department_id" invisible="context.get('invisible_department', True)"/>
                 <field name="user_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>

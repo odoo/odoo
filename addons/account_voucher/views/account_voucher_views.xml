@@ -8,6 +8,7 @@
                     <field name="date"/>
                     <field name="number"/>
                     <field name="partner_id" string="Customer"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="voucher_type" invisible="context.get('visible', True)"/>
                     <field name="amount" sum="Total Amount"/>
                     <field name="currency_id" invisible="1"/>
