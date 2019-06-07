@@ -279,7 +279,22 @@ class TestUi(odoo.tests.HttpCase):
         all_pricelists = env['product.pricelist'].search([('id', '!=', excluded_pricelist.id)])
         all_pricelists.write(dict(currency_id=main_company.currency_id.id))
 
+        src_tax = env['account.tax'].create({'name': "SRC", 'amount': 10})
+        dst_tax = env['account.tax'].create({'name': "DST", 'amount': 5})
+
+        env.ref('point_of_sale.citron').taxes_id = [(6, 0, [src_tax.id])]
+
+
         main_pos_config.write({
+            'tax_regime_selection': True,
+            'fiscal_position_ids': [(0, 0, {
+                                            'name': "FP-POS-2M",
+                                            'tax_ids': [
+                                                (0,0,{'tax_src_id': src_tax.id,
+                                                      'tax_dest_id': src_tax.id}),
+                                                (0,0,{'tax_src_id': src_tax.id,
+                                                      'tax_dest_id': dst_tax.id})]
+                                            })],
             'journal_id': test_sale_journal.id,
             'invoice_journal_id': test_sale_journal.id,
             'journal_ids': [(0, 0, {'name': 'Cash Journal - Test',
