@@ -236,7 +236,7 @@
             <field name="name">sale.order.form</field>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
-                <form string="Sales Order" class="o_sale_order">
+              <form string="Sales Order" class="o_sale_order">
                 <header>
                     <field name="authorized_transaction_ids" invisible="1"/>
                     <button name="payment_action_capture" type="object"
@@ -330,7 +330,7 @@
                                             <field name="price_tax" invisible="1"/>
                                             <field name="price_subtotal" invisible="1"/>
                                             <label for="product_uom_qty"/>
-                                            <div class="o_row">
+                                            <div class="o_row" name="ordered_qty">
                                                 <field
                                                     context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'uom_qty_change':True, 'company_id': parent.company_id}"
                                                     name="product_uom_qty"/>
@@ -346,11 +346,11 @@
                                                 />
                                             </div>
                                             <label for="qty_delivered" string="Delivered" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
-                                            <div attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}">
+                                            <div name="delivered_qty" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}">
                                                 <field name="qty_delivered" attrs="{'readonly': [('qty_delivered_method', '!=', 'manual')]}"/>
                                             </div>
                                             <label for="qty_invoiced" string="Invoiced" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
-                                            <div attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}">
+                                            <div name="invoiced_qty" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}">
                                                 <field name="qty_invoiced" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
                                             </div>
                                             <field name="price_unit"/>
@@ -370,7 +370,7 @@
                                         </group>
                                         <group attrs="{'invisible': [('display_type', '!=', False)]}">
                                             <label for="customer_lead"/>
-                                            <div>
+                                            <div name="lead">
                                                 <field name="customer_lead" class="oe_inline"/> days
                                             </div>
                                             <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" options="{'color_field': 'color'}"/>
@@ -380,7 +380,7 @@
                                     <label for="name" string="Section Name (eg. Products, Services)" attrs="{'invisible': [('display_type', '!=', 'line_section')]}"/>
                                     <label for="name" string="Note" attrs="{'invisible': [('display_type', '!=', 'line_note')]}"/>
                                     <field name="name"/>
-                                    <div groups="base.group_no_one" attrs="{'invisible': [('display_type', '!=', False)]}">
+                                    <div name="invoice_lines" groups="base.group_no_one" attrs="{'invisible': [('display_type', '!=', False)]}">
                                         <label for="invoice_lines"/>
                                         <field name="invoice_lines"/>
                                     </div>
@@ -418,7 +418,26 @@
                                             'default_lst_price': price_unit,
                                             'default_description_sale': name
                                         }"
+                                        widget="product_configurator"
                                     />
+                                    <field name="product_template_id"
+                                      string="Product"
+                                      invisible="1"
+                                      attrs="{
+                                          'readonly': [('product_updatable', '=', False)],
+                                          'required': [('display_type', '=', False)],
+                                      }"
+                                      options="{'no_open': True}"
+                                      context="{
+                                          'partner_id': parent.partner_id,
+                                          'quantity': product_uom_qty,
+                                          'pricelist': parent.pricelist_id,
+                                          'uom':product_uom,
+                                          'company_id': parent.company_id,
+                                          'default_lst_price': price_unit,
+                                          'default_description_sale': name
+                                      }"
+                                      widget="product_configurator"/>
                                     <field name="name" widget="section_and_note_text" optional="show"/>
                                     <field
                                         name="analytic_tag_ids"
@@ -614,7 +633,7 @@
                     <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
-                </form>
+              </form>
             </field>
         </record>
 
