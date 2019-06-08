@@ -5907,12 +5907,12 @@ msgstr "Facturen"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_pivot
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Invoices Analysis"
-msgstr "Factuur analyse"
+msgstr "Factuuranalyse"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr "Factuur analyses"
+msgstr "Factuuranalyses"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:178
@@ -10502,6 +10502,16 @@ msgstr ""
 "De fiscale positie bepaald de BTW/rekeningen gebruikt voor dit contact."
 
 #. module: account
+#: code:addons/account/wizard/account_invoice_send.py:59
+#, python-format
+msgid ""
+"The following invoice(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
+"De volgende facturen worden niet verstuurt per e-mail, omdat bij de klant "
+"geen e-mail adres is ingesteld."
+
+#. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
@@ -12510,6 +12520,11 @@ msgstr "voor de leverancier. U kan deze toewijzen om te markeren als betaald."
 #, python-format
 msgid "have been reconciled automatically."
 msgstr "Werden automatisch gereconsilleerd."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
+msgid "number of invoice(s) that will not be sent"
+msgstr "aantal facturen die niet wordt verstuurt"
 
 #. module: account
 #. openerp-web

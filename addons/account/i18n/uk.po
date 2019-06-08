@@ -10498,6 +10498,16 @@ msgstr ""
 "партнера."
 
 #. module: account
+#: code:addons/account/wizard/account_invoice_send.py:59
+#, python-format
+msgid ""
+"The following invoice(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
+"Наступні рахунки-фактури не надсилатимуться електронною поштою, оскільки "
+"клієнти не мають адреси електронної пошти."
+
+#. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
@@ -12475,6 +12485,11 @@ msgstr ""
 #, python-format
 msgid "have been reconciled automatically."
 msgstr "було узгоджено автоматично."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
+msgid "number of invoice(s) that will not be sent"
+msgstr "номер рахунка-фактури, який не буде надіслано"
 
 #. module: account
 #. openerp-web

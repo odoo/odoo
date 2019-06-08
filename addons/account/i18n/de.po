@@ -32,6 +32,7 @@
 # Rudolf Schnapka <rs@techno-flex.de>, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
+# Anja Uebermuth <anja.uebermuth@arts.eu>, 2019
 # 
 msgid ""
 msgstr ""
@@ -39,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
+"Last-Translator: Anja Uebermuth <anja.uebermuth@arts.eu>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8410,7 +8411,7 @@ msgstr "Einkauf"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Purchase Representative"
-msgstr ""
+msgstr "Einkaufsbeauftragter"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10492,6 +10493,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/wizard/account_invoice_send.py:59
+#, python-format
+msgid ""
+"The following invoice(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
@@ -11936,7 +11945,7 @@ msgstr "Falscher Buchungsbetrag in Soll oder Haben"
 #: code:addons/account/models/account_move.py:921
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
-msgstr ""
+msgstr "Sie versuchen, einige bereits abgeglichene Einträge abzugleichen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__blocked
@@ -12258,7 +12267,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:1112
 #, python-format
 msgid "You cannot use a deprecated account."
-msgstr ""
+msgstr "Sie können kein veraltetes Konto verwenden."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1069
@@ -12452,6 +12461,11 @@ msgstr ""
 #, python-format
 msgid "have been reconciled automatically."
 msgstr "wurden automatisch abgeglichen."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
+msgid "number of invoice(s) that will not be sent"
+msgstr "Anzahl der Rechnungen, die nicht versendet werden"
 
 #. module: account
 #. openerp-web

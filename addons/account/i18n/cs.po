@@ -3062,7 +3062,7 @@ msgstr "Spočtený zůstatek"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Conditions on Bank Statement Line"
-msgstr ""
+msgstr "Podmínky na výpisu z účtu"
 
 #. module: account
 #: model:ir.model,name:account.model_res_config_settings
@@ -6556,7 +6556,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:932
 #, python-format
 msgid "Manually create a write-off on clicked button."
-msgstr ""
+msgstr "Ručně udělejte odpis kliknutím na tlačítko."
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -8543,7 +8543,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__account_line_id
 msgid "Revenue/Expense Account"
-msgstr ""
+msgstr "Účet příjmů a výdajů"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__reverse_date
@@ -10143,6 +10143,14 @@ msgid ""
 msgstr "Fiskální pozice určuje daně / účty použité pro tento kontakt."
 
 #. module: account
+#: code:addons/account/wizard/account_invoice_send.py:59
+#, python-format
+msgid ""
+"The following invoice(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
@@ -10286,6 +10294,8 @@ msgid ""
 "The reconciliation model will only be applied to the selected "
 "customer/vendor categories."
 msgstr ""
+"Model vyrovnání bude použit pouze pro vybrané kategorie zákazníků / "
+"dodavatelů."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_ids
@@ -10337,7 +10347,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__match_journal_ids
 msgid ""
 "The reconciliation model will only be available from the selected journals."
-msgstr ""
+msgstr "Model vyrovnání bude k dispozici pouze z vybraných deníků."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual_currency
@@ -10392,7 +10402,7 @@ msgstr ""
 msgid ""
 "The sum of total residual amount propositions matches the statement line "
 "amount."
-msgstr ""
+msgstr "Součet celkových zbývajících částek se shoduje s částkou výkazu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding_method
@@ -11066,7 +11076,7 @@ msgstr "Nezdaněná částka v měně společnosti"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
 msgid "Untaxed Total"
-msgstr ""
+msgstr "Nezdaněný součet"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11990,6 +12000,11 @@ msgstr ""
 #, python-format
 msgid "have been reconciled automatically."
 msgstr "byly spárovány automaticky."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
+msgid "number of invoice(s) that will not be sent"
+msgstr ""
 
 #. module: account
 #. openerp-web
