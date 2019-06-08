@@ -13,7 +13,7 @@ var ProductConfiguratorFormRenderer = FormRenderer.extend(VariantMixin, {
     /**
      * @override
      */
-    init: function (){
+    init: function () {
         this._super.apply(this, arguments);
         this.pricelistId = this.state.context.default_pricelist_id || 0;
     },

@@ -14,7 +14,7 @@ odoo.define('event.configurator.tests', function (require) {
         '<create string="Add a section" context="{\'default_display_type\': \'line_section\'}"/>' +
         '<create string="Add a note" context="{\'default_display_type\': \'line_note\'}"/>' +
         '</control>' +
-        '<field name="product_id" widget="event_configurator" />' +
+        '<field name="product_id" widget="product_configurator" />' +
         '</tree>' +
         '</field>' +
         '</sheet>' +
@@ -24,19 +24,22 @@ odoo.define('event.configurator.tests', function (require) {
     QUnit.module('Event Configurator', {
         beforeEach: function () {
             this.data = {
-                product: {
+                'product.product': {
                     fields: {
                         id: {type: 'integer'},
-                        event_ok: {type: 'boolean'}
+                        event_ok: {type: 'boolean'},
+                        rent_ok: {type: 'boolean'}//sale_rental purposes
                     },
                     records: [{
                         id: 1,
                         display_name: "Customizable Event",
-                        event_ok: true
+                        event_ok: true,
+                        rent_ok: false//sale_rental purposes
                     }, {
                         id: 2,
                         display_name: "Desk",
-                        event_ok: false
+                        event_ok: false,
+                        rent_ok: false//sale_rental purposes
                     }]
                 },
                 sale_order: {
@@ -54,9 +57,10 @@ odoo.define('event.configurator.tests', function (require) {
                         product_id: {
                             string: 'product',
                             type: 'many2one',
-                            relation: 'product'
+                            relation: 'product.product'
                         },
                         event_ok: {type: 'boolean'},
+                        rent_ok: {type: 'boolean'},//sale_rental purposes
                         event_id: {
                             string: 'event',
                             type: 'many2one',
@@ -81,7 +85,7 @@ odoo.define('event.configurator.tests', function (require) {
                 data: this.data,
                 arch: getArch(),
                 mockRPC: function (route, params) {
-                    if (params.method === 'read') {
+                    if (params.method === 'read' && params.args[1][0] === 'event_ok') {
                         assert.ok(true);
                         return Promise.resolve([{event_ok: false}]);
                     }
@@ -110,7 +114,7 @@ odoo.define('event.configurator.tests', function (require) {
                 data: this.data,
                 arch: getArch(),
                 mockRPC: function (route, params) {
-                    if (params.method === 'read') {
+                    if (params.method === 'read' && params.args[1][0] === 'event_ok') {
                         assert.ok(true);
                         return Promise.resolve([{event_ok: true}]);
                     }
@@ -126,7 +130,7 @@ odoo.define('event.configurator.tests', function (require) {
             });
 
             await testUtils.dom.click(form.$("a:contains('Add a product')"));
-            await testUtils.fields.many2one.searchAndClickItem("product_id", {item: 'Customizable Event'})
+            await testUtils.fields.many2one.searchAndClickItem("product_id", {item: 'Customizable Event'});
             form.destroy();
         });
     });
