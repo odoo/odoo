@@ -10138,6 +10138,14 @@ msgid ""
 msgstr "税科目调整将决定该联系人的税和科目。"
 
 #. module: account
+#: code:addons/account/wizard/account_invoice_send.py:59
+#, python-format
+msgid ""
+"The following invoice(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
@@ -11934,6 +11942,11 @@ msgstr "对于这个供应商，你可以将它们分配为标记此账单已支
 #, python-format
 msgid "have been reconciled automatically."
 msgstr "已自动核销"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
+msgid "number of invoice(s) that will not be sent"
+msgstr ""
 
 #. module: account
 #. openerp-web

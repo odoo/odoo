@@ -10008,6 +10008,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/wizard/account_invoice_send.py:59
+#, python-format
+msgid ""
+"The following invoice(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
@@ -11797,6 +11805,11 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:318
 #, python-format
 msgid "have been reconciled automatically."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
+msgid "number of invoice(s) that will not be sent"
 msgstr ""
 
 #. module: account

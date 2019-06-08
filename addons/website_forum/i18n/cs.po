@@ -147,6 +147,8 @@ msgid ""
 "<b>Answers should not comment other answers</b>. Instead\n"
 "    add a comment on the other answers."
 msgstr ""
+"<b>Odpovědi by neměly komentovat další odpovědi</b>. Místo toho\n"
+"přidejte komentář k ostatním odpovědím."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -172,6 +174,10 @@ msgid ""
 "to include links to other questions or answers providing relevant additional"
 " information."
 msgstr ""
+"<b>Odpovědi by neměly jen odkazovat na jiné otázky</b>. Místo toho přidejte "
+"poznámku s poznámkou k otázce \"Možný duplikát ...\". Je však v pořádku "
+"zahrnout odkazy na další otázky nebo odpovědi, které poskytují relevantní "
+"doplňující informace."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -834,6 +840,9 @@ msgid ""
 "            you receive badges for being especially helpful. Badges\n"
 "            appear on your profile page, and your posts."
 msgstr ""
+"Kromě získávání reputace s vašimi dotazy a odpověďmi,\n"
+"dostáváte odznaky za to, že jsou obzvláště užitečné. Odznaky\n"
+"se zobrazí na stránce profilu a ve vašich příspěvcích."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
@@ -921,7 +930,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_unlink
 msgid "Can Unlink"
-msgstr ""
+msgstr "Lze odpojit odkaz"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_upvote
@@ -975,7 +984,7 @@ msgstr "Vymazat"
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:24
 #, python-format
 msgid "Click <em>Continue</em> to create the forum."
-msgstr ""
+msgstr "Klikněte na <em>Pokračovat</em> pro vytvoření fóra."
 
 #. module: website_forum
 #. openerp-web
@@ -1260,7 +1269,7 @@ msgstr "Smazat vlastní příspěvky"
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_23
 msgid "Deleted own post with 3 or more downvotes"
-msgstr ""
+msgstr "Vymazal vlastní příspěvek s 3 nebo více hlasy pro snížení pozice"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_6
@@ -1482,7 +1491,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_flag
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_flag
 msgid "Flag a post as offensive"
-msgstr ""
+msgstr "Označit příspěvek jako urážlivý"
 
 #. module: website_forum
 #: selection:forum.post,state:0
@@ -1799,6 +1808,8 @@ msgid ""
 "            users having a high karma can see offensive posts to moderate\n"
 "            them."
 msgstr ""
+"Pokud tento příspěvek označíte jako urážlivý, bude pro většinu uživatelů skrytý. Pouze\n"
+"uživatelé, kteří mají vysokou karmu, mohou vidět urážlivá místa kvůli jejich umírnění."
 
 #. module: website_forum
 #. openerp-web
@@ -1989,7 +2000,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Moderation Tools"
-msgstr ""
+msgstr "Nástroje k moderování"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -2944,6 +2955,8 @@ msgid ""
 "This post is currently awaiting moderation and not yet published... Do you "
 "want <i>Accept</i> or <i>Reject</i> this post ?"
 msgstr ""
+"Tento příspěvek momentálně čeká na moderování a dosud nebyl publikován ... "
+"Chcete tento příspěvek <i>přijmout</i> nebo <i>odmítnout</i>?"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.private_profile
@@ -3062,7 +3075,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__write_uid
 msgid "Updated by"
-msgstr ""
+msgstr "Aktualizováno od "
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_upvote
@@ -3085,7 +3098,7 @@ msgstr ""
 #: model:gamification.challenge.line,name:website_forum.line_nice_question
 #: model:gamification.goal.definition,name:website_forum.definition_nice_question
 msgid "Upvoted question (4)"
-msgstr ""
+msgstr "Otázka s hlasy pro zvýšení pozice (4)"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_good_question
@@ -3397,7 +3410,7 @@ msgstr "zavřít všechny příspěvky"
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_7
 msgid "contains offensive or malicious remarks"
-msgstr ""
+msgstr "obsahuje urážlivé nebo škodlivé poznámky"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
@@ -3437,7 +3450,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "every answer is equally valid: “What’s your favorite ______?”"
-msgstr ""
+msgstr "každá odpověď je stejně platná: “Jaké je vaše oblíbené ______?”"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
@@ -3545,6 +3558,7 @@ msgstr "agresívní a urážlivý jazyk"
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "it is a rant disguised as a question: “______ sucks, am I right?”"
 msgstr ""
+"jsou ty řeči maskované jako otázka “________ akorát otravuje, nemám pravdu?”"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -3604,6 +3618,8 @@ msgid ""
 "on social networks get an answer within\n"
 "        5 hours. Questions shared on two social networks have"
 msgstr ""
+"na sociálních sítích dostanete odpověď během\n"
+"5 hodin. Otázky sdílené ve dvou sociálních sítích mají"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
