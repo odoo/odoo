@@ -610,7 +610,6 @@ class PurchaseOrderLine(models.Model):
             self.name += '\n' + product_lang.description_purchase
 
         self._compute_tax_id()
-
         self._suggest_quantity()
         self._onchange_quantity()
 
