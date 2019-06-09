@@ -52,7 +52,8 @@ msgid ""
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
-"'Пропозиція' or 'Замовлення'} (Референс ${object.name or 'немає' })"
+"'Комерційна пропозиція' or 'Замовлення'} (Референс ${object.name or 'немає' "
+"})"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -215,8 +216,8 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
 "                            <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
-"<span class=\"d-none d-md-inline\">Замовлення на продаж #</span>\n"
-"                            <span class=\"d-block d-md-none\">Пос.</span>"
+"<span class=\"d-none d-md-inline\">Замовлення на продаж №</span>\n"
+"                            <span class=\"d-block d-md-none\">Реф.</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -775,7 +776,7 @@ msgstr "Захист підлоги від стільця"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_payment_acquirer_wizard
 msgid "Choose how to confirm quotations"
-msgstr ""
+msgstr "Виберіть підтвердження комерційної пропозиції"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
@@ -795,7 +796,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Click to define an invoicing target"
-msgstr ""
+msgstr "Натисніть, щоби визначити ціль виставлення рахунку"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -959,7 +960,7 @@ msgstr "Створіть нову комерційну пропозицію, п�
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create and View Invoice"
-msgstr ""
+msgstr "Створити та переглянути рахунок"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__create_uid
@@ -1045,7 +1046,7 @@ msgstr "Об'єкт клієнта"
 #: model:ir.model.fields,field_description:sale.field_sale_report__industry_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Customer Industry"
-msgstr ""
+msgstr "Галузь клієнта"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
@@ -1060,7 +1061,7 @@ msgstr "Посилання на клієнта"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Customer Signature"
-msgstr ""
+msgstr "Підпис клієнта"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_taxes_id

@@ -9,7 +9,6 @@
 # Patrik Lermon <patrik.lermon@gmail.com>, 2018
 # Stephen Schmidt <stephen.schmidt@linserv.se>, 2018
 # Kristoffer Grundström <hamnisdude@gmail.com>, 2018
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2019
 # Christelle Wehbe <libanon_cristelle@hotmail.com>, 2019
 # Robert Frykelius <robert.frykelius@linserv.se>, 2019
 # Frida E, 2019
@@ -17,6 +16,7 @@
 # Martin Trigaux, 2019
 # Zou Haojun <haojunzou84@gmail.com>, 2019
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2019
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2019
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-20 13:49+0000\n"
 "PO-Revision-Date: 2016-08-05 13:05+0000\n"
-"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2019\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2019\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -342,6 +342,12 @@ msgid ""
 "                                The email will be sent for all the records selected in the list.<br/>\n"
 "                                Confirming this wizard will probably take a few minutes blocking your browser."
 msgstr ""
+"<strong>\n"
+"                                   Alla postser som uppfyller aktuellt sökfilter kommer e-postas. \n"
+"inte enbart valda poster i vyn. \n"
+"                                </strong><br/>\n"
+"                                E-postmeddelandet kommer skickas för alla valda poster i listan.<br/>\n"
+"                                Bekräftan av formuläret kommer förmodligen ta ett antal minuter i anspråk och blockera din webbläsare."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
@@ -356,6 +362,8 @@ msgid ""
 "<strong>Only records checked in list view will be used.</strong><br/>\n"
 "                                The email will be sent for all the records selected in the list."
 msgstr ""
+"<strong>Endast kryssade poster i listvyn kommer användas.</strong><br/>\n"
+"                                E-postmeddelandet kommer skickas till alla valda poster i listan."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
@@ -815,7 +823,7 @@ msgstr "Bilaga"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_res_users__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Antal bilagor"
 
 #. module: mail
 #. openerp-web
@@ -1342,7 +1350,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/systray.xml:9
 #, python-format
 msgid "Conversations"
-msgstr ""
+msgstr "Konversationer"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner__message_bounce
@@ -1781,7 +1789,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Done & Schedule Next"
-msgstr ""
+msgstr "Klar och planera nästa"
 
 #. module: mail
 #. openerp-web
@@ -3027,18 +3035,18 @@ msgstr "Logg"
 #: code:addons/mail/static/src/xml/chatter.xml:99
 #, python-format
 msgid "Log a note. Followers will not be notified."
-msgstr ""
+msgstr "Registrera en notering, följare kommer inte att notifieras."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Log a note..."
-msgstr ""
+msgstr "Registrera en notering..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Log an Activity"
-msgstr ""
+msgstr "Registrera en aktivitet"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__is_log
@@ -3050,14 +3058,14 @@ msgstr "Lägg till intern anteckning"
 #: code:addons/mail/static/src/xml/chatter.xml:99
 #, python-format
 msgid "Log note"
-msgstr ""
+msgstr "Lägg till en notering"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:102
 #, python-format
 msgid "Log or schedule an activity"
-msgstr ""
+msgstr "Logga eller planera en aktivitet"
 
 #. module: mail
 #. openerp-web
@@ -4808,20 +4816,20 @@ msgstr ""
 #: code:addons/mail/static/src/xml/chatter.xml:103
 #, python-format
 msgid "Schedule activity"
-msgstr ""
+msgstr "Planera en aktivitet"
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:424
 #, python-format
 msgid "Schedule an Activity"
-msgstr ""
+msgstr "Planera en aktivitet"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:49
 #, python-format
 msgid "Schedule an activity"
-msgstr ""
+msgstr "Planera en aktivitet"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__scheduled_date
@@ -4834,7 +4842,7 @@ msgstr "Planerat datum"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__scheduled_date
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Scheduled Send Date"
-msgstr ""
+msgstr "Planerat sändningsdatum"
 
 #. module: mail
 #: selection:ir.ui.view,type:0
@@ -5570,6 +5578,8 @@ msgstr ""
 #, python-format
 msgid "Unable to log message, please configure the sender's email address."
 msgstr ""
+"Kunde inte logga ett meddelande, vänligen konfigurera avsändarens "
+"e-postadress."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:2157
@@ -5840,7 +5850,7 @@ msgstr "Typ av vy"
 #: code:addons/mail/static/src/xml/chatter.xml:115
 #, python-format
 msgid "View all the attachments of the current record"
-msgstr ""
+msgstr "Visa alla bilagor för aktuell post"
 
 #. module: mail
 #. openerp-web

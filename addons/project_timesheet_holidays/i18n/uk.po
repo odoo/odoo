@@ -40,6 +40,9 @@ msgid ""
 "generate timesheet for the time of. If you don't want timesheet, you must "
 "let                    empty internal project and task."
 msgstr ""
+"Для створення табелю для відпусток потрібні як внутрішній проект, так і "
+"завдання. Якщо ви не бажаєте табелю, ви повинні дозволити порожній "
+"внутрішній проект і завдання."
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
@@ -56,6 +59,7 @@ msgstr "Налаштування"
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_project_id
 msgid "Default project value for timesheet generated from time off type."
 msgstr ""
+"Значення проекту за замовчуванням для табеля, створеного з типу відпустки."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
@@ -68,6 +72,8 @@ msgid ""
 "If checked, when validating a time off, timesheet will be generated in the "
 "Vacation Project of the company."
 msgstr ""
+"Якщо перевірено, під час підтвердження відпустки, табель буде створюватися у"
+" проекті відпусток компанії."
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:30
@@ -96,7 +102,7 @@ msgstr "Завдання"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_task_id
 msgid "Task for timesheet"
-msgstr ""
+msgstr "Завдання для табеля"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_project_id
@@ -104,6 +110,7 @@ msgid ""
 "The project will contain the timesheet generated when a time off is "
 "validated."
 msgstr ""
+"Проект буде вміщувати створений табель, коли відпустка буде підтверджена."
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:40
@@ -116,7 +123,7 @@ msgstr "Неробочий час"
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid "Time Off Task"
-msgstr ""
+msgstr "Завдання відпустки"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
@@ -135,5 +142,5 @@ msgid ""
 "You cannot delete timesheet lines attached to a leaves. Please cancel the "
 "leaves instead."
 msgstr ""
-"Ви не можете видалити рядки часу, додані до відпусток. Замість цього "
+"Ви не можете видалити рядки табелю, додані до відпусток. Замість цього "
 "скасуйте відпустки."

@@ -26,7 +26,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Call for Tender Reference:</strong><br/>"
-msgstr "<strong>Посилання тендера:</strong><br/>"
+msgstr "<strong>Посилання запиту на участь у тендері:</strong><br/>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -41,7 +41,7 @@ msgstr "<strong>Опис</strong>"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Product UoM</strong>"
-msgstr "<strong>Од. виміру товару</strong>"
+msgstr "<strong>Одиниця вимірювання товару</strong>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -81,7 +81,7 @@ msgstr "<strong>Постачальник </strong>"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction
 msgid "Action Needed"
-msgstr "Дія необхідна"
+msgstr "Необхідна дія"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_ids
@@ -270,7 +270,7 @@ msgstr "Назва для відображення"
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
 msgid "Do not create RfQ lines automatically"
-msgstr "Не створюйте рядки RfQ автоматично"
+msgstr "Не створюйте рядки ЗНКП автоматично"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -353,7 +353,7 @@ msgstr "Якщо позначено, то повідомленя потребу�
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
+msgstr "Якщо позначено, то нові повідомлення будуть потребувати вашої уваги."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error
@@ -369,7 +369,7 @@ msgid ""
 "            validate some and cancel others."
 msgstr ""
 "Під час проведення тендеру ви можете записати товари, які вам потрібно придбати\n"
-"і генерувати створення RfQ для постачальників. Отримавши тендери\n"
+"і генерувати створення ЗНКП для постачальників. Отримавши тендери\n"
 "ви зареєструвалися, їх можна переглянути та порівняти\n"
 "перевірити деякі та скасувати інші."
 
@@ -658,7 +658,7 @@ msgstr "Кількість"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "RFQs/Orders"
-msgstr "RFQ/Замовлення"
+msgstr "ЗНКП/Замовлення"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.product_template_form_view_inherit
@@ -713,12 +713,12 @@ msgstr "Шукати угоди про придбання"
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,exclusive:0
 msgid "Select multiple RFQ"
-msgstr "Вибрати декілька ЗКП"
+msgstr "Вибрати декілька ЗНКП"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,exclusive:0
 msgid "Select only one RFQ (exclusive)"
-msgstr "Вибрати тільки один ЗКП (виключно)"
+msgstr "Вибрати тільки одне ЗНКП (виключно)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__exclusive
@@ -727,7 +727,7 @@ msgid ""
 "\n"
 "                    Select multiple RFQ: allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
-"Виберіть лише один RFQ (ексклюзивний): після підтвердження замовлення на придбання скасуйте решту замовлення на купівлю.\n"
+"Виберіть лише одне ЗНКП (ексклюзивне): після підтвердження замовлення на придбання скасуйте решту замовлення на купівлю.\n"
 "\n"
 "Виберіть кілька запитів за замовленням: дозволяє кілька замовлень на покупку. При підтвердженні замовлення на купівлю він не скасовує залишкові замовлення"
 
@@ -803,7 +803,7 @@ msgstr "Інформація постачальника"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr "Прайслист постачальника"
+msgstr "Прайс-лист постачальника"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -864,12 +864,12 @@ msgstr "Кількість непрочитаних повідомлень"
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
 msgid "Use lines of agreement"
-msgstr "Використовуйте рядки згоди"
+msgstr "Використовуйте рядки угоди"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
 msgid "Use quantities of agreement"
-msgstr "Використовуйте кількість угоди"
+msgstr "Використовуйте кількість угод"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -895,7 +895,7 @@ msgstr "Попередження для %s"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__website_message_ids
 msgid "Website Messages"
-msgstr "Повідомлення з вебсайту"
+msgstr "Повідомлення з веб-сайту"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__website_message_ids
@@ -935,8 +935,8 @@ msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
 "requisition."
 msgstr ""
-"Ви повинні скасувати або підтвердити кожен RfQ перед тим, як закрити заявку "
-"на купівлю."
+"Ви повинні скасувати або підтвердити кожне ЗНКП перед тим, як закрити заявку"
+" на купівлю."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
