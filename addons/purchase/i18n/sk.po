@@ -825,6 +825,8 @@ msgid ""
 "If enabled, activates 3-way matching on vendor bills : the items must be "
 "received in order to pay the invoice."
 msgstr ""
+"Ak je povolené, aktivovuje 3-cestnú kontrolu dodávateľských faktúr: položky "
+"musia byť dodané aby bolo možné platiť faktúry"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -998,6 +1000,9 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Odchýlka pre dodacie lehoty predajcov. Keď systém vygeneruje nákupnú "
+"objednávku pre obstaranie výrobkov, budú naplánované o toľko dní skôr pre "
+"vysporiadanie sa s nečakaným oneskorením dodavateľov."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
@@ -1435,7 +1440,7 @@ msgstr "Štatistiky nákupných objednávok"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Purchase orders that have been invoiced."
-msgstr ""
+msgstr "Fakturované nákupné objednávky."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1483,7 +1488,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Quantities billed by vendors"
-msgstr ""
+msgstr "Množstvá účtované dodávateľom"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_qty
@@ -1575,6 +1580,8 @@ msgid ""
 "Reference of the document that generated this purchase order request (e.g. a"
 " sales order)"
 msgstr ""
+"Odkaz na dokument, ktorý vytvoril túto požiadavku nákupnej objednávky (napr."
+" objednávka predaja)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_partner_ref
@@ -1896,19 +1903,19 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "This note will show up on purchase orders."
-msgstr ""
+msgstr "Poznámka sa zobrazí na nákupných objednávkach."
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:218
 #, python-format
 msgid "This vendor bill has been created from: %s"
-msgstr ""
+msgstr "Dodacia faktúra vytvorená: %s"
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:232
 #, python-format
 msgid "This vendor bill has been modified from: %s"
-msgstr ""
+msgstr "Dodacia faktúra zmenená: %s"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -2026,6 +2033,10 @@ msgid ""
 "            and Odoo will fill the bill automatically according to ordered\n"
 "            or received quantities."
 msgstr ""
+"Použite toto menu na kontrolu faktúr ktoré obdržíte od vášho \n"
+"dodávateľa. keď registrujete novú účtenku, nastavte nákupnú objednávku \n"
+"a Odoo vyplní účtenku automaticky podľa objednaného\n"
+"alebo obdržaného množstva."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
