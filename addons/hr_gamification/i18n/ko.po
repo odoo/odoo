@@ -3,16 +3,17 @@
 # * hr_gamification
 # 
 # Translators:
-# Martin Trigaux, 2017
 # Link Up링크업 <linkup.way@gmail.com>, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
+# Martin Trigaux, 2018
+# JH CHOI <hwangtog@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: 최재호 <hwangtog@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:18+0000\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,13 +27,15 @@ msgid ""
 "A goal is defined by a user and a goal type.\n"
 "                    Goals can be created automatically by using challenges."
 msgstr ""
+"목표는 사용자와 목표 유형에 의해 정의됩니다.\n"
+"                      도전 과제를 사용하여 목표를 자동으로 생성할 수 있습니다."
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_badge_ids
 msgid ""
 "All employee badges, linked to the employee either directly or through the "
 "user"
-msgstr ""
+msgstr "직원에게 직접 또는 사용자를 통해 링크된 모든 직원 배지"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,help:hr_gamification.challenge_list_action2
@@ -41,6 +44,9 @@ msgid ""
 "                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                    The goals are created for the specified users or member of the group."
 msgstr ""
+"선택한 사용자에게 목표 목록을 할당하여 평가합니다.\n"
+"                이 도전 과제는 자동으로 목표를 생성하기 위한 기간(매주, 매월...)을 사용할 수 있습니다.\n"
+"                지정된 사용자 또는 그룹 구성원에 대해 목표가 생성됩니다."
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users_badge_ids
@@ -57,7 +63,7 @@ msgstr "뱃지는 열심히 일한 보상입니다. 당신이 그럴만한 자�
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_direct_badge_ids
 msgid "Badges directly linked to the employee"
-msgstr ""
+msgstr "직원과 직접 연결된 배지"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -94,7 +100,7 @@ msgstr "그들이 어떤 일을 했고 그것이 왜 중요한지 설명합니�
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_direct_badge_ids
 msgid "Direct Badge"
-msgstr ""
+msgstr "직접 배지"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_hr_employee
@@ -142,12 +148,12 @@ msgstr "배지 수여"
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_badge_form_view
 msgid "Granted"
-msgstr ""
+msgstr "수여함"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_granted_employees_count
 msgid "Granted Employees Count"
-msgstr ""
+msgstr "수여된 직원 수"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_has_badges
@@ -184,7 +190,7 @@ msgstr "사용자"
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "What are you thankful for?"
-msgstr ""
+msgstr "무엇이 감사한가요?"
 
 #. module: hr_gamification
 #: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:21
