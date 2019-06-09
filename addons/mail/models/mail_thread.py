@@ -1064,7 +1064,7 @@ class MailThread(models.AbstractModel):
                 if dsn_part and len(dsn_part.get_payload()) > 1:
                     dsn = dsn_part.get_payload()[1]
                     final_recipient_data = tools.decode_message_header(dsn, 'Final-Recipient')
-                    partner_address = final_recipient_data.split(';', 1)[1].strip()
+                    partner_address = final_recipient_data.split(';', 1).pop().strip()
                     if partner_address:
                         partners = partners.sudo().search([('email', 'like', partner_address)])
                         for partner in partners:
