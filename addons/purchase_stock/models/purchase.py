@@ -304,7 +304,7 @@ class PurchaseOrderLine(models.Model):
                     # If the quantity is now below the invoiced quantity, create an activity on the vendor bill
                     # inviting the user to create a refund.
                     activity = self.env['mail.activity'].sudo().create({
-                        'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
+                        'activity_type_id': self.env.ref('mail.mail_activity_data_warning').id,
                         'note': _('The quantities on your purchase order indicate less than billed. You should ask for a refund. '),
                         'res_id': line.invoice_lines[0].invoice_id.id,
                         'res_model_id': self.env.ref('account.model_account_move').id,
