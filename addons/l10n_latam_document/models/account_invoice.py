@@ -62,7 +62,7 @@ class AccountInvoice(models.Model):
             move_name = rec.move_name
             doc_code_prefix = rec.l10n_latam_document_type_id.doc_code_prefix
             if doc_code_prefix and move_name:
-                move_name = move_name.replace(doc_code_prefix + " ", "")
+                move_name = move_name.split(" ", 1)[-1]
             rec.l10n_latam_document_number = move_name
 
     @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number')
@@ -88,26 +88,24 @@ class AccountInvoice(models.Model):
         'l10n_latam_document_type_id')
     def _compute_l10n_latam_amount_and_taxes(self):
         for invoice in self:
-            taxes_included = (
-                invoice.l10n_latam_document_type_id and
-                invoice.l10n_latam_document_type_id._get_taxes_included() or
-                False)
-            if not taxes_included:
+            included_taxes = invoice.l10n_latam_document_type_id and \
+                invoice.l10n_latam_document_type_id._filter_taxes_included(invoice.tax_line_ids.mapped('tax_id'))
+            if not included_taxes:
                 l10n_latam_amount_tax = invoice.amount_tax
                 l10n_latam_amount_untaxed = invoice.amount_untaxed
-                not_included_taxes = invoice.tax_line_ids
+                not_included_invoice_taxes = invoice.tax_line_ids
             else:
-                included_taxes = invoice.tax_line_ids.filtered(
-                    lambda x: x.tax_id in taxes_included)
-                not_included_taxes = (
-                    invoice.tax_line_ids - included_taxes)
+                included_invoice_taxes = invoice.tax_line_ids.filtered(
+                    lambda x: x.tax_id in included_taxes)
+                not_included_invoice_taxes = (
+                    invoice.tax_line_ids - included_invoice_taxes)
                 l10n_latam_amount_tax = sum(
-                    not_included_taxes.mapped('amount'))
+                    not_included_invoice_taxes.mapped('amount'))
                 l10n_latam_amount_untaxed = invoice.amount_untaxed + sum(
-                    included_taxes.mapped('amount'))
+                    included_invoice_taxes.mapped('amount'))
             invoice.l10n_latam_amount_tax = l10n_latam_amount_tax
             invoice.l10n_latam_amount_untaxed = l10n_latam_amount_untaxed
-            invoice.l10n_latam_tax_line_ids = not_included_taxes
+            invoice.l10n_latam_tax_line_ids = not_included_invoice_taxes
 
     @api.constrains(
         'journal_id',

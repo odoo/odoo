@@ -25,18 +25,15 @@ class AccountInvoiceLine(models.Model):
     def compute_l10n_latam_prices_and_taxes(self):
         for line in self:
             invoice = line.invoice_id
-            taxes_included = (
-                invoice.l10n_latam_document_type_id and
-                invoice.l10n_latam_document_type_id._get_taxes_included() or False)
-            if not taxes_included:
+            included_taxes = invoice.l10n_latam_document_type_id and \
+                invoice.l10n_latam_document_type_id._filter_taxes_included(line.invoice_line_tax_ids)
+            if not included_taxes:
                 l10n_latam_price_unit = line.price_unit
                 l10n_latam_price_subtotal = line.price_subtotal
                 not_included_taxes = line.invoice_line_tax_ids
                 l10n_latam_price_net = l10n_latam_price_unit * (
                     1 - (line.discount or 0.0) / 100.0)
             else:
-                included_taxes = line.invoice_line_tax_ids.filtered(
-                    lambda x: x in taxes_included)
                 not_included_taxes = (
                     line.invoice_line_tax_ids - included_taxes)
                 l10n_latam_price_unit = included_taxes.compute_all(

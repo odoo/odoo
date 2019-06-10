@@ -71,10 +71,10 @@ class L10nLatamAccountDocmentType(models.Model):
         return result
 
     @api.multi
-    def _get_taxes_included(self):
+    def _filter_taxes_included(self, taxes):
         """ This method is to be inherited by different localizations and
-        must return the recordset of the taxes to be included on reports of
-        this document type.
+        must return filter the given taxes recordset returning the taxes to be
+        included on reports of this document type.
         All taxes are going to be discriminated except the one returned by
         this method.
         """

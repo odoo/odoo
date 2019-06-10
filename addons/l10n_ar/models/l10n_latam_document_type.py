@@ -79,16 +79,15 @@ class L10nLatamDocumentType(models.Model):
         return values
 
     @api.multi
-    def _get_taxes_included(self):
+    def _filter_taxes_included(self, taxes):
         """ In argentina we include taxes depending on document letter
         """
         self.ensure_one()
         if self.country_id == self.env.ref('base.ar') and \
            self.l10n_ar_letter in ['B', 'C', 'X', 'R']:
-            return self.env['account.tax'].search(
-                [('tax_group_id.l10n_ar_tax', '=', 'vat'),
-                 ('tax_group_id.l10n_ar_type', '=', 'tax')])
-        return super()._get_taxes_included()
+            return taxes.filtered(
+                lambda x: x.tax_group_id.l10n_ar_tax == 'vat' and x.tax_group_id.l10n_ar_type == 'tax')
+        return super()._filter_taxes_included(taxes)
 
     @api.multi
     def _format_document_number(self, document_number):
