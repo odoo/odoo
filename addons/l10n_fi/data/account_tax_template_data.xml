@@ -440,17 +440,6 @@
         <field name="amount_type">percent</field>
         <field name="tag_ids" eval="[(6,0,[ref('304-sales0')])]"/>
     </record>
-    <record id="vat0export" model="account.tax.template">
-        <field name="chart_template_id" ref="fi_chart_template"/>
-        <field name="name">VAT 0% Export</field>
-        <field name="description">VAT 0% Export</field>
-        <field name="amount">0.0</field>
-        <field name="type_tax_use">sale</field>
-        <field name="account_id" ref="chart2830"/>
-        <field name="refund_account_id" ref="chart2830"/>
-        <field name="amount_type">percent</field>
-        <field name="tag_ids" eval="[(6,0,[ref('304-sales0')])]"/>
-    </record>
     <record id="import_pay24" model="account.tax.template">
         <field name="chart_template_id" ref="fi_chart_template"/>
         <field name="name">Import Pay24</field>
