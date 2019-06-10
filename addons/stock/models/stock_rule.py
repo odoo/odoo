@@ -357,8 +357,8 @@ class ProcurementGroup(models.Model):
             procurement.values.setdefault('date_planned', fields.Datetime.now())
             rule = self._get_rule(procurement.product_id, procurement.location_id, procurement.values)
             if not rule:
-                errors.append(_('No procurement rule found in location "%s" for product "%s".\n Check routes configuration.') %
-                    (procurement.location_id.display_name, procurement.product_id.display_name))
+                errors.append(_('No rule has been found to replenish "%s" in "%s".\nVerify the routes configuration on the product.') %
+                    (procurement.product_id.display_name, procurement.location_id.display_name))
             else:
                 action = 'pull' if rule.action == 'pull_push' else rule.action
                 actions_to_run[action].append((procurement, rule))
