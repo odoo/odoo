@@ -289,9 +289,9 @@ class StockRule(models.Model):
         existing_activity = self.env['mail.activity'].search([('res_id', '=',  product_id.product_tmpl_id.id), ('res_model_id', '=', self.env.ref('product.model_product_template').id),
                                                               ('note', '=', note)])
         if not existing_activity:
-            # If the user deleted todo activity type.
+            # If the user deleted warning activity type.
             try:
-                activity_type_id = self.env.ref('mail.mail_activity_data_todo').id
+                activity_type_id = self.env.ref('mail.mail_activity_data_warning').id
             except:
                 activity_type_id = False
             self.env['mail.activity'].create({
