@@ -27,14 +27,6 @@ class AccountInvoice(models.Model):
     l10n_ar_afip_responsability_type = fields.Selection(
         related='move_id.l10n_ar_afip_responsability_type',
     )
-    l10n_ar_invoice_number = fields.Integer(
-        compute='_compute_l10n_ar_invoice_number',
-        string='AFIP Invoice Number',
-    )
-    l10n_ar_afip_pos_number = fields.Integer(
-        compute='_compute_l10n_ar_invoice_number',
-        string="AFIP Point Of Sale",
-    )
     l10n_ar_vat_tax_ids = fields.One2many(
         compute="_compute_argentina_amounts",
         comodel_name='account.invoice.tax',
@@ -205,39 +197,6 @@ class AccountInvoice(models.Model):
             l10n_ar_other_taxes_amount = sum(not_vat_taxes.mapped('amount'))
             rec.l10n_ar_not_vat_tax_ids = not_vat_taxes
             rec.l10n_ar_other_taxes_amount = l10n_ar_other_taxes_amount
-
-    @api.depends('l10n_latam_document_number', 'number')
-    def _compute_l10n_ar_invoice_number(self):
-        for rec in self.filtered('l10n_latam_document_number'):
-            str_number = rec.l10n_latam_document_number
-            if rec.l10n_latam_document_type_id.code in [
-                    '33', '99', '331', '332']:
-                point_of_sale = '0'
-                # leave only numbers and convert to integer
-                # otherwise use date as a number
-                if re.search(r'\d', str_number):
-                    invoice_number = str_number
-                else:
-                    invoice_number = rec.date_invoice
-            # despachos de importacion
-            elif rec.l10n_latam_document_type_id.code == '66':
-                point_of_sale = '0'
-                invoice_number = '0'
-            elif "-" in str_number:
-                splited_number = str_number.split('-')
-                invoice_number = splited_number.pop()
-                point_of_sale = splited_number.pop()
-            elif "-" not in str_number and len(str_number) == 12:
-                point_of_sale = str_number[:4]
-                invoice_number = str_number[-8:]
-            else:
-                raise UserError(_(
-                    'Could not get invoice number and point of sale for '
-                    'Invoice [%i] %s') % (rec.id, rec.display_name))
-            rec.l10n_ar_invoice_number = int(
-                re.sub("[^0-9]", "", invoice_number))
-            rec.l10n_ar_afip_pos_number = int(
-                re.sub("[^0-9]", "", point_of_sale))
 
     @api.multi
     def action_invoice_open(self):
