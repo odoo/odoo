@@ -8,8 +8,6 @@ _logger = logging.getLogger(__name__)
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-@odoo.tests.common.at_install(False)
-@odoo.tests.common.post_install(True)
 class TestUi(odoo.tests.HttpCase):
 
     def test_01_admin_bank_statement_reconciliation(self):

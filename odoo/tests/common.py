@@ -85,37 +85,9 @@ def get_db_name():
 # For backwards-compatibility - get_db_name() should be used instead
 DB = get_db_name()
 
-
-def at_install(flag):
-    """ Sets the at-install state of a test, the flag is a boolean specifying
-    whether the test should (``True``) or should not (``False``) run during
-    module installation.
-
-    By default, tests are run right after installing the module, before
-    starting the installation of the next module.
-
-    .. deprecated:: 12.0
-
-        ``at_install`` is now a flag, you can use :func:`tagged` to
-        add/remove it, although ``tagged`` only works on test classes
-    """
-    return tagged('at_install' if flag else '-at_install')
-
-def post_install(flag):
-    """ Sets the post-install state of a test. The flag is a boolean
-    specifying whether the test should or should not run after a set of
-    module installations.
-
-    By default, tests are *not* run after installation of all modules in the
-    current installation set.
-
-    .. deprecated:: 12.0
-
-        ``post_install`` is now a flag, you can use :func:`tagged` to
-        add/remove it, although ``tagged`` only works on test classes
-    """
-    return tagged('post_install' if flag else '-post_install')
-
+# ------------------------------------------------------------
+# Helpers
+# ------------------------------------------------------------
 
 def new_test_user(env, login='', groups='base.group_user', context=None, **kwargs):
     """ Helper function to create a new test user. It allows to quickly create
