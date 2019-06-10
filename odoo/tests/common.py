@@ -6,6 +6,7 @@ helpers and classes to write tests.
 """
 import base64
 import collections
+import glob
 import importlib
 import inspect
 import itertools
@@ -80,7 +81,6 @@ def get_db_name():
     if not db and hasattr(threading.current_thread(), 'dbname'):
         return threading.current_thread().dbname
     return db
-
 
 # For backwards-compatibility - get_db_name() should be used instead
 DB = get_db_name()
@@ -410,10 +410,26 @@ class SavepointCase(SingleTransactionCase):
         super(SavepointCase, self).tearDown()
 
 
+class ChromeBrowserException(Exception):
+    pass
+
+
+class ChromeJavascriptException(ChromeBrowserException):
+    pass
+
+
+class ChromeConsoleLogError(ChromeBrowserException):
+    pass
+
+
+class ChromeTimeoutExceeded(ChromeBrowserException):
+    pass
+
+
 class ChromeBrowser():
     """ Helper object to control a Chrome headless process. """
 
-    def __init__(self, logger, window_size):
+    def __init__(self, logger, window_size, screencast_path=None, screenshot_path=None):
         self._logger = logger
         if websocket is None:
             self._logger.warning("websocket-client module is not installed")
@@ -424,8 +440,14 @@ class ChromeBrowser():
         self.request_id = 0
         self.user_data_dir = tempfile.mkdtemp(suffix='_chrome_odoo')
         self.chrome_process = None
+        self.screencast_path = screencast_path
+        self.screencast_index = 0
+        self.screencast_start = time.time()
+        self.screenshot_path = screenshot_path
+        self.screenshot_ids = []
         self.screencast_frames = []
         self.window_size = window_size
+        self.last_result = {} # store last result of dev tools protocol evaluation
         self._chrome_start()
         self._find_websocket()
         self._logger.info('Websocket url found: %s', self.ws_url)
@@ -434,6 +456,8 @@ class ChromeBrowser():
         self._websocket_send('Runtime.enable')
         self._logger.info('Chrome headless enable page notifications')
         self._websocket_send('Page.enable')
+        if self.screencast_path:
+            self._websocket_send('Page.startScreencast', {'params': {'everyNthFrame': 5, 'maxWidth': 683, 'maxHeight': 384}})
         self.sigxcpu_handler = None
         if os.name == 'posix':
             self.sigxcpu_handler = signal.getsignal(signal.SIGXCPU)
@@ -485,6 +509,7 @@ class ChromeBrowser():
 
         raise unittest.SkipTest("Chrome executable not found")
 
+    # execute
     def _chrome_start(self):
         if self.chrome_process is not None:
             return
@@ -524,6 +549,12 @@ class ChromeBrowser():
         self.ws_url = infos['webSocketDebuggerUrl']
         self._logger.info('Chrome headless temporary user profile dir: %s', self.user_data_dir)
 
+    def _open_websocket(self):
+        self.ws = websocket.create_connection(self.ws_url)
+        if self.ws.getstatus() != 101:
+            raise unittest.SkipTest("Cannot connect to chrome dev tools")
+        self.ws.settimeout(0.01)
+
     def _json_command(self, command, timeout=3):
         """
         Inspect dev tools with get
@@ -554,12 +585,6 @@ class ChromeBrowser():
         self._logger.error('Could not connect to chrome debugger')
         raise unittest.SkipTest("Cannot connect to chrome headless")
 
-    def _open_websocket(self):
-        self.ws = websocket.create_connection(self.ws_url)
-        if self.ws.getstatus() != 101:
-            raise unittest.SkipTest("Cannot connect to chrome dev tools")
-        self.ws.settimeout(0.01)
-
     def _websocket_send(self, method, params=None):
         """
         send chrome devtools protocol commands through websocket
@@ -575,189 +600,119 @@ class ChromeBrowser():
         self.request_id += 1
         return sent_id
 
-    def _websocket_wait_id(self, awaited_id, timeout=10):
-        """
-        blocking wait for a certain id in a response
-        warning other messages are discarded
-        """
-        start_time = time.time()
-        while time.time() - start_time < timeout:
-            try:
-                res = json.loads(self.ws.recv())
-            except websocket.WebSocketTimeoutException:
-                res = None
-            if res and res.get('id') == awaited_id:
-                return res
-        self._logger.info('timeout exceeded while waiting for id : %d', awaited_id)
-        return {}
-
-    def _websocket_wait_event(self, method, params=None, timeout=10):
-        """
-        blocking wait for a particular event method and eventually a dict of params
-        """
-        start_time = time.time()
-        while time.time() - start_time < timeout:
-            try:
-                res = json.loads(self.ws.recv())
-            except websocket.WebSocketTimeoutException:
-                res = None
-            if res and res.get('method', '') == method:
-                if params:
-                    if set(params).issubset(set(res.get('params', {}))):
-                        return res
-                else:
-                    return res
-            elif res:
-                self._logger.debug('chrome devtools protocol event: %s', res)
-        self._logger.info('timeout exceeded while waiting for : %s', method)
-
-    def _get_shotname(self, prefix, ext):
-        """ return a unique filename for screenshot or screencast"""
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_%f')
-        base_file = os.path.splitext(odoo.tools.config['logfile'])[0]
-        name = '%s_%s_%s.%s' % (base_file, prefix, timestamp, ext)
-        return name
-
-    def take_screenshot(self, prefix='failed'):
-        if not odoo.tools.config['logfile']:
-            self._logger.info('Screenshot disabled !')
-            return None
-        ss_id = self._websocket_send('Page.captureScreenshot')
-        self._logger.info('Asked for screenshot (id: %s)', ss_id)
-        res = self._websocket_wait_id(ss_id)
-        base_png = res.get('result', {}).get('data')
-        decoded = base64.decodebytes(bytes(base_png.encode('utf-8')))
-        outfile = self._get_shotname(prefix, 'png')
-        with open(outfile, 'wb') as f:
-            f.write(decoded)
-        self._logger.info('Screenshot in: %s', outfile)
-
-    def _save_screencast(self, prefix='failed'):
-        # could be encododed with something like that
-        #  ffmpeg -framerate 3 -i frame_%05d.png  output.mp4
-        if not odoo.tools.config['logfile']:
-            self._logger.info('Screencast disabled !')
-            return None
-        sdir = tempfile.mkdtemp(suffix='_chrome_odoo_screencast')
-        nb = 0
-        for frame in self.screencast_frames:
-            outfile = os.path.join(sdir, 'frame_%05d.png' % nb)
-            with open(outfile, 'wb') as f:
-                f.write(base64.decodebytes(bytes(frame.get('data').encode('utf-8'))))
-                nb += 1
-        framerate = int(nb / (self.screencast_frames[nb-1].get('metadata').get('timestamp') - self.screencast_frames[0].get('metadata').get('timestamp')))
-        outfile = self._get_shotname(prefix, 'mp4')
-        r = subprocess.run(['ffmpeg', '-framerate', str(framerate), '-i', '%s/frame_%%05d.png' % sdir, outfile])
-        shutil.rmtree(sdir)
-        if r.returncode == 0:
-            self._logger.info('Screencast in: %s', outfile)
-
-    def start_screencast(self):
-        self._websocket_send('Page.startScreencast', {'params': {'everyNthFrame': 5, 'maxWidth': 683, 'maxHeight': 384}})
-
+    # methods
     def set_cookie(self, name, value, path, domain):
         params = {'name': name, 'value': value, 'path': path, 'domain': domain}
         self._websocket_send('Network.setCookie', params=params)
 
-    def _wait_ready(self, ready_code, timeout=60):
-        self._logger.info('Evaluate ready code "%s"', ready_code)
-        awaited_result = {'result': {'type': 'boolean', 'value': True}}
-        ready_id = self._websocket_send('Runtime.evaluate', params={'expression': ready_code})
-        last_bad_res = ''
-        start_time = time.time()
-        tdiff = time.time() - start_time
-        has_exceeded = False
-        while tdiff < timeout:
-            try:
-                res = json.loads(self.ws.recv())
-            except websocket.WebSocketTimeoutException:
-                res = None
-            if res and res.get('id') == ready_id:
-                if res.get('result') == awaited_result:
-                    if has_exceeded:
-                        self._logger.info('The ready code tooks too much time : %s', tdiff)
-                    return True
-                else:
-                    last_bad_res = res
-                    ready_id = self._websocket_send('Runtime.evaluate', params={'expression': ready_code})
-            tdiff = time.time() - start_time
-            if tdiff >= 2 and not has_exceeded:
-                has_exceeded = True
+    def navigate_to(self, url, wait_stop=False):
+        self._logger.info('Navigating to: "%s"', url)
+        nav_id = self._websocket_send('Page.navigate', params={'url': url})
+        self.catch_next_event(ids={nav_id}, timeout=10)
+        frame_id = self.last_result.get('result', {}).get('frameId', '')
+        if wait_stop and frame_id:
+            self._logger.info('Waiting for frame "%s" to stop loading', frame_id)
+            self.catch_next_event(methods={'Page.frameStoppedLoading'}, params={'frameId': frame_id}, timeout=10)
 
-        self.take_screenshot(prefix='failed_ready')
-        self._logger.info('Ready code last try result: %s', last_bad_res or res)
-        return False
-
-    def _wait_code_ok(self, code, timeout):
-        self._logger.info('Evaluate test code "%s"', code)
+    def evaluate(self, code):
+        self._logger.debug('Evaluate code "%s"', code)
         code_id = self._websocket_send('Runtime.evaluate', params={'expression': code})
+        return code_id
+
+    def take_screenshot(self):
+        self.screenshot_ids.append(self._websocket_send('Page.captureScreenshot'))
+
+    def _encode_screencast(self):
+        if self.screencast_path and self.screencast_index:
+            framerate = int((time.time() - self.screencast_start)/ self.screencast_index)
+            outfile = '%s_screencast_%s.png' % (self.screencast_path, datetime.now().strftime('%Y%m%d_%H%M%S_%f'))
+            r = subprocess.run(['ffmpeg', '-framerate', str(framerate), '-i', '%s_frame_%%05d.png' % self.screencast_path, outfile])
+            if r.returncode == 0:
+                self._logger.info('Screencast in: %s', outfile)
+            for f in glob.glob('%s_frame_*' % self.screencast_path):
+                os.remove(f)
+
+    def clear(self):    
+        self._websocket_send('Page.stopScreencast')
+        # wait for remaining screenshots
+        while self.screenshot_ids:
+            self.catch_next_event() 
+        self._websocket_send('Page.stopLoading')
+        self._logger.info('Deleting cookies and clearing local storage')
+        self.catch_next_event(ids={self._websocket_send('Network.clearBrowserCookies')})
+        self.catch_next_event(ids={self._websocket_send('Runtime.evaluate', params={'expression': 'localStorage.clear()'})})
+        self.navigate_to('about:blank', wait_stop=True)
+        self._encode_screencast()
+
+    # main loop
+    def catch_next_event(self, ids=[], methods={}, params={}, timeout=60):
+        errors = []
         start_time = time.time()
-        logged_error = False
         while time.time() - start_time < timeout:
             try:
                 res = json.loads(self.ws.recv())
             except websocket.WebSocketTimeoutException:
-                res = None
-            if res and res.get('id', -1) == code_id:
-                self._logger.info('Code start result: %s', res)
-                if res.get('result', {}).get('result').get('subtype', '') == 'error':
-                    self._logger.error("Running code returned an error")
-                    return False
-            elif res and res.get('method') == 'Runtime.exceptionThrown':
-                exception_details = res.get('params', {}).get('exceptionDetails', {})
-                self._logger.error(exception_details)
-                self.take_screenshot()
-                self._save_screencast()
-                return False
-            elif res and res.get('method') in 'Runtime.consoleAPICalled' and res.get('params', {}).get('type') in ('log', 'error', 'trace'):
+                continue
+
+            # Wait for event ids
+            if res.get('id', -1) in ids:
+                self.last_result = res.get('result', {})  # let the caller evaluate the result
+                return True
+
+            # Wait for Methods
+            elif res.get('method') in methods:
+                self._logger.info('waited event found method: %s', res)
+                return True
+
+            # Javascript Traceback
+            elif res.get('method') == 'Runtime.exceptionThrown':
+                exception_details = '\n'.join([ '%s: %s' % (x,y) for x,y in res.get('params', {}).get('exceptionDetails', {}).items()])
+                self._logger.info(exception_details)
+                raise ChromeJavascriptException("Javascript Traceback: %s" % exception_details)
+
+            # console.log output
+            elif res.get('method') == 'Runtime.consoleAPICalled' and res.get('params', {}).get('type') in ('log', 'error', 'trace'):
                 logs = res.get('params', {}).get('args')
                 log_type = res.get('params', {}).get('type')
                 content = " ".join([str(log.get('value', '')) for log in logs])
                 if log_type == 'error':
-                    self._logger.error(content)
-                    self.take_screenshot()
-                    self._save_screencast()
-                    return False
+                    self._logger.error("console log error: %s", content)
+                    errors.append(content)
+                    if content.startswith('test fail'):
+                        raise ChromeConsoleLogError('\n'.join(errors))
                 else:
                     self._logger.info('console log: %s', content)
                     if 'test successful' in content:
                         return True
-            elif res and res.get('method') == 'Page.screencastFrame':
-                self.screencast_frames.append(res.get('params'))
-            elif res:
-                self._logger.debug('chrome devtools protocol event: %s', res)
+
+            # Screencast frame
+            elif res.get('method') == 'Page.screencastFrame':
+                outfile = '%s_frame_%05d.png' % (self.screencast_path, self.screencast_index)
+                png = base64.decodebytes(res['params']['data'].encode('utf-8'))
+                with open(outfile, 'wb') as f:
+                    f.write(png)
+                self.screencast_index += 1
+
+            # Screenshots
+            if res.get('id', -1) in self.screenshot_ids:
+                outfile = '%s_screenshot_%s.png' % (self.screenshot_path, datetime.now().strftime('%Y%m%d_%H%M%S_%f'))
+                self._logger.log(25, 'Write screenshot in %s', outfile)
+                png = base64.decodebytes(res['result']['data'].encode('utf-8'))
+                with open(outfile, 'wb') as f:
+                    f.write(png)
+                    self.screenshot_ids.remove(res['id'])
+                return
+
+            self._logger.debug('uncatched chrome devtools protocol event: %s', res)
+
         self._logger.error('Script timeout exceeded : %s', (time.time() - start_time))
-        self.take_screenshot()
-        return False
-
-    def navigate_to(self, url, wait_stop=False):
-        self._logger.info('Navigating to: "%s"', url)
-        nav_id = self._websocket_send('Page.navigate', params={'url': url})
-        nav_result = self._websocket_wait_id(nav_id)
-        self._logger.info("Navigation result: %s", nav_result)
-        frame_id = nav_result.get('result', {}).get('frameId', '')
-        if wait_stop and frame_id:
-            self._logger.info('Waiting for frame "%s" to stop loading', frame_id)
-            self._websocket_wait_event('Page.frameStoppedLoading', params={'frameId': frame_id})
-
-    def clear(self):
-        self._websocket_send('Page.stopScreencast')
-        self.screencast_frames = []
-        self._websocket_send('Page.stopLoading')
-        self._logger.info('Deleting cookies and clearing local storage')
-        dc_id = self._websocket_send('Network.clearBrowserCookies')
-        self._websocket_wait_id(dc_id)
-        cl_id = self._websocket_send('Runtime.evaluate', params={'expression': 'localStorage.clear()'})
-        self._websocket_wait_id(cl_id)
-        self.navigate_to('about:blank', wait_stop=True)
-
+        raise ChromeTimeoutExceeded('Script timeout exceeded : %s' % (time.time() - start_time))
 
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and Chrome headless helpers.
     """
     registry_test_mode = True
     browser = None
-    browser_size = '1366x768'
 
     def __init__(self, methodName='runTest'):
         super(HttpCase, self).__init__(methodName)
@@ -770,10 +725,10 @@ class HttpCase(TransactionCase):
         self._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
 
     @classmethod
-    def start_browser(cls, logger):
+    def start_browser(cls, logger, size, screencast_path=None, screenshot_path=None):
         # start browser on demand
         if cls.browser is None:
-            cls.browser = ChromeBrowser(logger, cls.browser_size)
+            cls.browser = ChromeBrowser(logger, size, screencast_path, screenshot_path)
 
     @classmethod
     def tearDownClass(cls):
@@ -852,7 +807,7 @@ class HttpCase(TransactionCase):
             self._logger.info('Setting session cookie in browser')
             self.browser.set_cookie('session_id', self.session_id, '/', HOST)
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, size='1366x768', **kw):
         """ Test js code running in the browser
         - optionnally log as 'login'
         - load page given by url_path
@@ -870,7 +825,19 @@ class HttpCase(TransactionCase):
         # increase timeout if coverage is running
         if any(f.filename.endswith('/coverage/execfile.py') for f in inspect.stack()  if f.filename):
             timeout = timeout * 1.5
-        self.start_browser(self._logger)
+
+        screencast_path = None
+        if odoo.tools.config['logfile']:
+            self._logger.info('Enabling screen cast')
+            d = os.path.join(os.path.dirname(odoo.tools.config['logfile']), 'tests')
+            os.makedirs(d, exist_ok=True)
+            screencast_path = os.path.join(d, type(self).__name__)
+        else:
+            d = os.path.join(os.path.dirname(odoo.tools.config['data_dir']), 'tests')
+            os.makedirs(d, exist_ok=True)
+        screenshot_path = os.path.join(d, type(self).__name__)
+
+        self.start_browser(self._logger, size=size, screencast_path=screencast_path, screenshot_path=screenshot_path)
 
         try:
             self.authenticate(login, login)
@@ -880,20 +847,48 @@ class HttpCase(TransactionCase):
             url = "%s%s" % (base_url, url_path or '/')
             self._logger.info('Open "%s" in browser', url)
 
-            if odoo.tools.config['logfile']:
-                self._logger.info('Starting screen cast')
-                self.browser.start_screencast()
             self.browser.navigate_to(url, wait_stop=not bool(ready))
 
+            # Waiting for ready code to be available
             # Needed because tests like test01.js (qunit tests) are passing a ready
             # code = ""
             ready = ready or "document.readyState === 'complete'"
-            self.assertTrue(self.browser._wait_ready(ready), 'The ready "%s" code was always falsy' % ready)
+            self._logger.info('Waiting for ready code: %s', ready)
+            start_time = time.time()
+            tdiff = time.time() - start_time
+            failure = True
+            while tdiff < 10:
+                self.browser.catch_next_event(ids={self.browser.evaluate(ready)}, timeout=10)
+                if self.browser.last_result == {'result': {'type': 'boolean', 'value': True}}:
+                    failure = False
+                    break
+                tdiff = time.time() - start_time
+            if tdiff > 2:
+                self._logger.info('The ready code tooks too much time : %s', tdiff)
+
+            if failure:
+                self.browser.take_screenshot()
+                self.fail('The ready "%s" code was always falsy' % ready)
+            self._logger.info('Ready code successful')
+
+            # Testing code
+            failure = False
             if code:
                 message = 'The test code "%s" failed' % code
+                self.browser.evaluate(code)
             else:
                 message = "Some js test failed"
-            self.assertTrue(self.browser._wait_code_ok(code, timeout), message)
+
+            try:
+                self.browser.catch_next_event(timeout=timeout)
+            except ChromeBrowserException as e:
+                message = '%s (%s)\n%s' % (message, type(e).__name__, e)
+                failure = True
+
+            if failure:
+                self.browser.take_screenshot()
+                self.fail(message)
+
         finally:
             # clear browser to make it stop sending requests, in case we call
             # the method several times in a test method
@@ -934,7 +929,6 @@ def users(*logins):
             self.uid = old_uid
 
     return wrapper
-
 
 @decorator
 def warmup(func, *args, **kwargs):

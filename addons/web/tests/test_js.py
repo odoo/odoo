@@ -35,8 +35,7 @@ class WebSuite(odoo.tests.HttpCase):
 
 @odoo.tests.tagged('post_install', '-at_install')
 class MobileWebSuite(odoo.tests.HttpCase):
-    browser_size = '375x667'
 
     def test_mobile_js(self):
         # webclient mobile test suite
-        self.browser_js('/web/tests/mobile?mod=web&failfast', "", "", login='admin', timeout=1800)
+        self.browser_js('/web/tests/mobile?mod=web&failfast', "", "", login='admin', timeout=1800, size='375x667')
