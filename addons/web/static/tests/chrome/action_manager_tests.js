@@ -3258,6 +3258,65 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('list with default_order and favorite filter with no orderedBy', async function (assert) {
+        assert.expect(5);
+
+        this.archs['partner,1,list'] = '<tree default_order="foo desc"><field name="foo"/></tree>';
+
+        this.actions.push({
+            id: 12,
+            name: 'Partners',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[1, 'list'], [false, 'form']],
+        });
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                load_filters: function (ev) {
+                    ev.data.on_success([
+                        {
+                            user_id: [2, "Mitchell Admin"],
+                            name: 'favorite filter',
+                            id: 5,
+                            context: {},
+                            sort: '[]',
+                            domain: '[("bar", "=", 1)]'
+                        }
+                    ]);
+                },
+            },
+        });
+
+        await actionManager.doAction(12);
+        assert.strictEqual(actionManager.$('.o_list_view tr.o_data_row .o_data_cell').text(), 'zoupyopplopgnapblip',
+            'record should be in descending order as default_order applies');
+
+        // apply favorite filter
+        await testUtils.dom.click(actionManager.$('.o_favorites_menu_button'));
+        await testUtils.dom.click(actionManager.$('.o_menu_item a:contains("favorite filter")'));
+        assert.strictEqual(actionManager.$('.o_control_panel .o_facet_values').text().trim(),
+            'favorite filter', 'favorite filter should be applied');
+        assert.strictEqual(actionManager.$('.o_list_view tr.o_data_row .o_data_cell').text(), 'gnapblip',
+            'record should still be in descending order after default_order applied');
+
+        // go to formview and come back to listview
+        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
+        await testUtils.dom.click(actionManager.$('.o_control_panel .breadcrumb a:eq(0)'));
+        assert.strictEqual(actionManager.$('.o_list_view tr.o_data_row .o_data_cell').text(), 'gnapblip',
+            'order of records should not be changed, while coming back through breadcrumb');
+
+        // remove filter
+        await testUtils.dom.click(actionManager.$('.o_searchview .o_facet_remove'));
+        assert.strictEqual(actionManager.$('.o_list_view tr.o_data_row .o_data_cell').text(),
+            'zoupyopplopgnapblip', 'order of records should not be changed, after removing current filter');
+
+        actionManager.destroy();
+    });
+
     QUnit.test("search menus are still available when switching between actions", async function (assert) {
         assert.expect(3);
 
