@@ -21,3 +21,16 @@ class AccountMove(models.Model):
     def _get_afip_responsabilities(self):
         """ Return the list of values of the selection field """
         return self.env['res.partner']._get_afip_responsabilities()
+
+    @staticmethod
+    def _l10n_ar_get_document_number_parts(document_number, document_type_code):
+        # despachos de importacion
+        if document_type_code in ['66', '67']:
+            point_of_sale = '0'
+            invoice_number = '0'
+        else:
+            invoice_number, point_of_sale  = str_number.split('-')
+        return {
+            'invoice_number': int(invoice_number),
+            'point_of_sale': int(point_of_sale),
+        }
