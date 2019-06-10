@@ -812,7 +812,7 @@ var ControlPanelModel = mvc.Model.extend({
      * Used to get the key orderedBy of a favorite.
      *
      * @private
-     * @returns {Object[]} orderedBy
+     * @returns {Object[]|undefined} orderedBy
      */
     _getOrderedBy: function () {
         var orderedBy;
@@ -823,7 +823,9 @@ var ControlPanelModel = mvc.Model.extend({
             var group = this.groups[id];
             var activeFavoriteId = group.activeFilterIds[0];
             var favorite = this.filters[activeFavoriteId];
-            orderedBy = favorite.orderedBy;
+            if (favorite.orderedBy && favorite.orderedBy.length) {
+                orderedBy = favorite.orderedBy;
+            }
         }
         return orderedBy;
     },
