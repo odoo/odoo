@@ -131,28 +131,6 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
 # Main classes
 # ------------------------------------------------------------
 
-
-class TreeCase(unittest.TestCase):
-    def __init__(self, methodName='runTest'):
-        super(TreeCase, self).__init__(methodName)
-        self.addTypeEqualityFunc(etree._Element, self.assertTreesEqual)
-        self.addTypeEqualityFunc(html.HtmlElement, self.assertTreesEqual)
-
-    def assertTreesEqual(self, n1, n2, msg=None):
-        self.assertIsNotNone(n1, msg)
-        self.assertIsNotNone(n2, msg)
-        self.assertEqual(n1.tag, n2.tag, msg)
-        # Because lxml.attrib is an ordereddict for which order is important
-        # to equality, even though *we* don't care
-        self.assertEqual(dict(n1.attrib), dict(n2.attrib), msg)
-
-        self.assertEqual((n1.text or u'').strip(), (n2.text or u'').strip(), msg)
-        self.assertEqual((n1.tail or u'').strip(), (n2.tail or u'').strip(), msg)
-
-        for c1, c2 in izip_longest(n1, n2):
-            self.assertTreesEqual(c1, c2, msg)
-
-
 class MetaCase(type):
     """ Metaclass of test case classes to assign default 'test_tags':
         'standard', 'at_install' and the name of the module.
@@ -164,8 +142,7 @@ class MetaCase(type):
             module = cls.__module__.split('.')[2]
             cls.test_tags = {'standard', 'at_install', module}
 
-
-class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
+class BaseCase(unittest.TestCase, MetaCase('DummyCase', (object,), {})):
     """
     Subclass of TestCase for common OpenERP-specific code.
 
@@ -175,6 +152,11 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
 
     longMessage = True      # more verbose error message by default: https://www.odoo.com/r/Vmh
     warm = True             # False during warm-up phase (see :func:`warmup`)
+
+    def __init__(self, methodName='runTest'):
+        super(BaseCase, self).__init__(methodName)
+        self.addTypeEqualityFunc(etree._Element, self.assertTreesEqual)
+        self.addTypeEqualityFunc(html.HtmlElement, self.assertTreesEqual)
 
     def cursor(self):
         return self.registry.cursor()
@@ -329,7 +311,22 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
     def assertItemsEqual(self, a, b, msg=None):
         self.assertCountEqual(a, b, msg=None)
 
+    def assertTreesEqual(self, n1, n2, msg=None):
+        self.assertIsNotNone(n1, msg)
+        self.assertIsNotNone(n2, msg)
+        self.assertEqual(n1.tag, n2.tag, msg)
+        # Because lxml.attrib is an ordereddict for which order is important
+        # to equality, even though *we* don't care
+        self.assertEqual(dict(n1.attrib), dict(n2.attrib), msg)
 
+        self.assertEqual((n1.text or u'').strip(), (n2.text or u'').strip(), msg)
+        self.assertEqual((n1.tail or u'').strip(), (n2.tail or u'').strip(), msg)
+
+        for c1, c2 in izip_longest(n1, n2):
+            self.assertTreesEqual(c1, c2, msg)
+
+
+# Remove transcation case to be replaced by savepoint case
 class TransactionCase(BaseCase):
     """ TestCase in which each test method is run in its own transaction,
     and with its own cursor. The transaction is rolled back and the cursor
