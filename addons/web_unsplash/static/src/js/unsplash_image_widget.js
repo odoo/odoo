@@ -177,7 +177,7 @@ widgetsMedia.ImageWidget.include({
      */
     _toggleUnsplashContainer: function (show) {
         this._unsplash.isActive = show;
-        this.$('.existing-attachments').toggleClass('d-none', show);
+        this.$('.o_we_existing_attachments').toggleClass('d-none', show);
         this.$('.unsplash_img_container').toggleClass('d-none', !show);
         this.$('.o_we_search_icon > span').text(show ? "Unsplash" : "");
     },
