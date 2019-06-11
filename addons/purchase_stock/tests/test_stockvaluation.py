@@ -292,6 +292,16 @@ class TestStockValuationWithCOA(AccountingTestCase):
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.partner_id = self.env.ref('base.res_partner_1')
         self.product1 = self.env.ref('product.product_product_8')
+
+        cat = self.env['product.category'].create({
+            'name': 'cat',
+        })
+        self.product1 = self.env['product.product'].create({
+            'name': 'product1',
+            'type': 'product',
+            'categ_id': cat.id,
+        })
+
         Account = self.env['account.account']
         self.usd_currency = self.env.ref('base.USD')
         self.eur_currency = self.env.ref('base.EUR')
@@ -625,12 +635,12 @@ class TestStockValuationWithCOA(AccountingTestCase):
             'property_stock_valuation_account_id': self.stock_valuation_account.id,
             'property_stock_journal': self.stock_journal.id,
         })
-        product_standard = self.product1.product_tmpl_id.copy({
+        product_standard = self.product1.copy({
             'categ_id': product_categ_standard.id,
             'name': 'Standard Val',
             'standard_price': 60,
             'property_account_creditor_price_difference': self.price_diff_account.id
-        }).product_variant_id
+        })
 
         # SetUp currency and rates
         self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", (self.usd_currency.id, company.id))
@@ -785,12 +795,12 @@ class TestStockValuationWithCOA(AccountingTestCase):
         date_delivery = '2019-01-08'
         date_invoice = '2019-01-16'
 
-        product_avg = self.product1.product_tmpl_id.copy({
+        product_avg = self.product1.copy({
             'purchase_method': 'purchase',
             'name': 'AVG',
             'standard_price': 60,
             'property_account_creditor_price_difference': self.price_diff_account.id
-        }).product_variant_id
+        })
         product_avg.invoice_policy = 'order'
 
         # SetUp currency and rates
@@ -944,12 +954,12 @@ class TestStockValuationWithCOA(AccountingTestCase):
 
         self.product1.categ_id.property_valuation = 'real_time'
         self.product1.categ_id.property_cost_method = 'average'
-        product_avg = self.product1.product_tmpl_id.copy({
+        product_avg = self.product1.copy({
             'purchase_method': 'purchase',
             'name': 'AVG',
             'standard_price': 60,
             'property_account_creditor_price_difference': self.price_diff_account.id
-        }).product_variant_id
+        })
         product_avg.invoice_policy = 'order'
 
         # SetUp currency and rates
