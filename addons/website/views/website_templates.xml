@@ -911,19 +911,22 @@
     </t>
 </template>
 
+<template id="error_message">
+    <p t-if="error_message">
+        <strong>Error message:</strong>
+        <pre t-esc="error_message"/>
+    </p>
+</template>
+
 <template id="http_error_debug">
     <div class="container accordion mb32 mt32" id="debug_infos">
-        <div class="card" t-if="exception">
+        <div class="card" t-if="error_message">
             <h4 class="card-header">
                 <a data-toggle="collapse" href="#error_main">Error</a>
             </h4>
-            <div id="error_main" class="collapse in">
+            <div id="error_main" class="collapse in show">
                 <div class="card-body">
-                    <p t-if="website_controller">The following error was raised in the website controller <code t-esc="website_controller"/></p>
-                    <p>
-                        <strong>Error message:</strong>
-                        <pre t-esc="exception"/>
-                    </p>
+                    <t t-call="website.error_message"/>
                 </div>
             </div>
         </div>
@@ -931,7 +934,7 @@
             <h4 class="card-header">
                 <a data-toggle="collapse" href="#error_qweb">QWeb</a>
             </h4>
-            <div id="error_qweb" class="collapse">
+            <div id="error_qweb" class="collapse show">
                 <div class="card-body">
                     <p t-if="exception.message">
                         <strong>Error message:</strong>
@@ -948,7 +951,7 @@
             <h4 class="card-header">
                 <a data-toggle="collapse" href="#error_traceback">Traceback</a>
             </h4>
-            <div id="error_traceback" class="collapse">
+            <div id="error_traceback" t-attf-class="collapse #{not error_message and not qweb_exception and 'show'}">
                 <div class="card-body">
                     <pre id="exception_traceback" t-esc="traceback"/>
                 </div>
@@ -957,21 +960,40 @@
     </div>
 </template>
 
+<template id="400">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="container">
+                <h1 class="mt-5">Oops! Something went wrong.</h1>
+                <p>Take a look at the error message below.</p>
+            </div>
+            <t t-if="editable or request.session.debug">
+                <t t-call="website.http_error_debug"/>
+            </t>
+            <t t-else="">
+                <div class="container">
+                    <t t-call="website.error_message"/>
+                </div>
+            </t>
+    </div>
+    </t>
+</template>
+
 <template id="403">
     <t t-call="website.layout">
         <div id="wrap">
             <div class="container">
-                <h1 class="mt32">403: Forbidden</h1>
+                <h1 class="mt-5">403: Forbidden</h1>
                 <p>The page you were looking for could not be authorized.</p>
-                <p>Maybe you were looking for one of these popular pages ?</p>
-                <ul>
-                    <li><a href="/">Homepage</a></li>
-                    <li><a href="/contactus">Contact Us</a></li>
-                </ul>
             </div>
-            <t t-if="editable or debug">
-                <t t-call="website.http_error_debug"/>
-            </t>
+                <t t-if="editable or request.session.debug">
+                    <t t-call="website.http_error_debug"/>
+                </t>
+                <t t-else="">
+                    <div class="container">
+                        <t t-call="website.error_message"/>
+                    </div>
+                </t>
         </div>
     </t>
 </template>
@@ -982,7 +1004,7 @@
             <t t-raw="0"/>
             <div class="oe_structure oe_empty">
                 <div class="container">
-                    <h1 class="mt32">404: Page not found!</h1>
+                    <h1 class="mt-5">404: Page not found!</h1>
                     <p>
                         The page you were looking for could not be found; it is possible you have
                         typed the address incorrectly, but it has most probably been removed due
@@ -995,10 +1017,6 @@
                     </ul>
                 </div>
             </div>
-
-            <t t-if="debug">
-                <t t-call="website.http_error_debug"/>
-            </t>
         </div>
     </t>
 </template>
