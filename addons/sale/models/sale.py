@@ -1016,6 +1016,10 @@ class SaleOrderLine(models.Model):
             :param additional_domain: domain to restrict AAL to include in computation (required since timesheet is an AAL with a project ...)
         """
         result = {}
+
+        # The delivered quantity of Sales Lines in 'manual' mode should not be erased
+        self = self.filtered(lambda sol: sol.product_id.service_type != 'manual')
+
         # avoid recomputation if no SO lines concerned
         if not self:
             return result
@@ -1305,7 +1309,6 @@ class SaleOrderLine(models.Model):
             discount = (new_list_price - price) / new_list_price * 100
             if discount > 0:
                 self.discount = discount
-
 
     def _is_delivery(self):
         self.ensure_one()
