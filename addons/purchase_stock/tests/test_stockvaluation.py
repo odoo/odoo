@@ -87,10 +87,10 @@ class TestStockValuation(TransactionCase):
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
         wizard.process()
 
-        # the unit price of the stock move has been updated to the latest value
-        self.assertEquals(move1.price_unit, 200)
+        # the unit price of the valuationlayer used the latest value
+        self.assertEquals(move1.stock_valuation_layer_ids.unit_cost, 200)
 
-        self.assertEquals(self.product1.stock_value, 2000)
+        self.assertEquals(self.product1.value_svl, 2000)
 
     def test_standard_price_change_1(self):
         """ Confirm a purchase order and create the associated receipt, change the unit cost of the
@@ -135,10 +135,10 @@ class TestStockValuation(TransactionCase):
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
         wizard.process()
 
-        # the unit price of the stock move has been updated to the latest value
-        self.assertEquals(move1.price_unit, 12)
+        # the unit price of the valuation layer used the latest value
+        self.assertEquals(move1.stock_valuation_layer_ids.unit_cost, 12)
 
-        self.assertEquals(self.product1.stock_value, 120)
+        self.assertEquals(self.product1.value_svl, 120)
 
     def test_change_currency_rate_average_1(self):
         """ Confirm a purchase order in another currency and create the associated receipt, change
@@ -205,10 +205,10 @@ class TestStockValuation(TransactionCase):
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
         wizard.process()
 
-        # the unit price of the stock move has been updated to the latest value
-        self.assertAlmostEqual(move1.price_unit, price_unit_usd_new_rate)
+        # the unit price of the valuation layer used the latest value
+        self.assertAlmostEqual(move1.stock_valuation_layer_ids.unit_cost, price_unit_usd_new_rate)
 
-        self.assertAlmostEqual(self.product1.stock_value, price_unit_usd_new_rate * 10, delta=0.1)
+        self.assertAlmostEqual(self.product1.value_svl, price_unit_usd_new_rate * 10, delta=0.1)
 
     def test_extra_move_fifo_1(self):
         """ Check that the extra move when over processing a receipt is correctly merged back in
@@ -241,8 +241,9 @@ class TestStockValuation(TransactionCase):
         # there should be only one move
         self.assertEqual(len(picking1.move_lines), 1)
         self.assertEqual(move1.price_unit, 100)
+        self.assertEqual(move1.stock_valuation_layer_ids.unit_cost, 100)
         self.assertEqual(move1.product_qty, 15)
-        self.assertEqual(self.product1.stock_value, 1500)
+        self.assertEqual(self.product1.value_svl, 1500)
 
     def test_backorder_fifo_1(self):
         """ Check that the backordered move when under processing a receipt correctly keep the
@@ -291,6 +292,16 @@ class TestStockValuationWithCOA(AccountingTestCase):
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.partner_id = self.env.ref('base.res_partner_1')
         self.product1 = self.env.ref('product.product_product_8')
+
+        cat = self.env['product.category'].create({
+            'name': 'cat',
+        })
+        self.product1 = self.env['product.product'].create({
+            'name': 'product1',
+            'type': 'product',
+            'categ_id': cat.id,
+        })
+
         Account = self.env['account.account']
         self.usd_currency = self.env.ref('base.USD')
         self.eur_currency = self.env.ref('base.EUR')
@@ -393,7 +404,7 @@ class TestStockValuationWithCOA(AccountingTestCase):
         invoice_po2.action_invoice_open()
 
         # valuation of product1 should be 300
-        self.assertEqual(self.product1.stock_value, 300)
+        self.assertEqual(self.product1.value_svl, 300)
 
         # return the second po
         stock_return_picking_form = Form(self.env['stock.return.picking']
@@ -407,7 +418,7 @@ class TestStockValuationWithCOA(AccountingTestCase):
         return_pick.button_validate()
 
         # valuation of product1 should be 200 as the first items will be sent out
-        self.assertEqual(self.product1.stock_value, 200)
+        self.assertEqual(self.product1.value_svl, 200)
 
         # create a credit note for po2
         creditnote_po2 = self.env['account.invoice'].create({
@@ -506,7 +517,8 @@ class TestStockValuationWithCOA(AccountingTestCase):
 
         # valuation of product1 should be 15 as the tax with no account set
         # has gone to the stock account, and must be reflected in inventory valuation
-        self.assertEqual(self.product1.stock_value, 150)
+        self.assertEqual(self.product1.value_svl, 150)
+
     def test_average_realtime_anglo_saxon_valuation_multicurrency_same_date(self):
         """
         The PO and invoice are in the same foreign currency.
@@ -623,12 +635,12 @@ class TestStockValuationWithCOA(AccountingTestCase):
             'property_stock_valuation_account_id': self.stock_valuation_account.id,
             'property_stock_journal': self.stock_journal.id,
         })
-        product_standard = self.product1.product_tmpl_id.copy({
+        product_standard = self.product1.copy({
             'categ_id': product_categ_standard.id,
             'name': 'Standard Val',
             'standard_price': 60,
             'property_account_creditor_price_difference': self.price_diff_account.id
-        }).product_variant_id
+        })
 
         # SetUp currency and rates
         self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", (self.usd_currency.id, company.id))
@@ -783,12 +795,12 @@ class TestStockValuationWithCOA(AccountingTestCase):
         date_delivery = '2019-01-08'
         date_invoice = '2019-01-16'
 
-        product_avg = self.product1.product_tmpl_id.copy({
+        product_avg = self.product1.copy({
             'purchase_method': 'purchase',
             'name': 'AVG',
             'standard_price': 60,
             'property_account_creditor_price_difference': self.price_diff_account.id
-        }).product_variant_id
+        })
         product_avg.invoice_policy = 'order'
 
         # SetUp currency and rates
@@ -942,12 +954,12 @@ class TestStockValuationWithCOA(AccountingTestCase):
 
         self.product1.categ_id.property_valuation = 'real_time'
         self.product1.categ_id.property_cost_method = 'average'
-        product_avg = self.product1.product_tmpl_id.copy({
+        product_avg = self.product1.copy({
             'purchase_method': 'purchase',
             'name': 'AVG',
             'standard_price': 60,
             'property_account_creditor_price_difference': self.price_diff_account.id
-        }).product_variant_id
+        })
         product_avg.invoice_policy = 'order'
 
         # SetUp currency and rates

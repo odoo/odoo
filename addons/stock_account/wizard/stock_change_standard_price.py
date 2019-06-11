@@ -40,5 +40,5 @@ class StockChangeStandardPrice(models.TransientModel):
         else:
             products = self.env['product.product'].browse(self._context['active_id'])
 
-        products.do_change_standard_price(self.new_price, self.counterpart_account_id.id)
+        products._change_standard_price(self.new_price, counterpart_account_id=self.counterpart_account_id.id)
         return {'type': 'ir.actions.act_window_close'}
