@@ -390,7 +390,11 @@ var FileWidget = SearchableMediaWidget.extend({
             });
             optimizeDialog.on('closed', self, function () {
                 self.noSave = true;
-                resolve(attachment);
+                if (isExisting) {
+                    reject();
+                } else {
+                    resolve(attachment);
+                }
             });
         });
         var always = function () {
