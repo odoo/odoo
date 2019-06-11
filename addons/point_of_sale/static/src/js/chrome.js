@@ -8,7 +8,7 @@ var models = require('point_of_sale.models');
 var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
 var ajax = require('web.ajax');
-var CrashManager = require('web.CrashManager');
+var CrashManager = require('web.CrashManager').CrashManager;
 var BarcodeEvents = require('barcodes.BarcodeEvents').BarcodeEvents;
 
 
