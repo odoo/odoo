@@ -20,6 +20,30 @@ from odoo.tools import misc
 
 _logger = logging.getLogger(__name__)
 
+# Optional Flanker dependency for email validation.
+_flanker_warning = False
+try:
+    from flanker.addresslib import address
+    if hasattr(address, 'six'):
+        # Python 3 supported
+        def checkmail(mail):
+            return bool(address.validate_address(mail))
+    else:
+        def checkmail(mail):
+            global _flanker_warning
+            if not _flanker_warning:
+                _logger.info("Flanker version 0.9 or greater required for Python 3 compatibility")
+                _flanker_warning = True
+            return True
+
+except ImportError:
+    _logger.info('The flanker Python module is not installed, so email validation with flanker is unavailable')
+    def checkmail(mail):
+        global _flanker_warning
+        if not _flanker_warning:
+            _logger.info('The flanker Python module is not installed, so email validation with flanker is unavailable')
+            _flanker_warning = True
+        return True
 
 #----------------------------------------------------------
 # HTML Sanitizer
@@ -512,6 +536,16 @@ def email_normalize(text):
     if not emails or len(emails) != 1:
         return False
     return emails[0].lower()
+
+def email_validate(email):
+    """
+    Check is the email is valid using email normalization + optional Flanker module.
+    If Flanker is installed, it will check if email is valid (checking DNS and other stuff).
+    If Flanker is not installed, this method only normalizes the email
+    :param text: string containing the email to validate
+    :return: normalized email if mail is valid or False
+    """
+    return email_normalize(email) if checkmail(email) else False
 
 def email_escape_char(email_address):
     """ Escape problematic characters in the given email address string"""

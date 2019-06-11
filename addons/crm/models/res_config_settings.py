@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from datetime import datetime, date
 
 
 class ResConfigSettings(models.TransientModel):
@@ -14,6 +15,11 @@ class ResConfigSettings(models.TransientModel):
     module_crm_iap_lead = fields.Boolean("Generate new leads based on their country, industries, size, etc.")
     module_crm_iap_lead_website = fields.Boolean("Create Leads/Opportunities from your website's traffic")
     lead_mining_in_pipeline = fields.Boolean("Create a lead mining request directly from the opportunity pipeline.", config_parameter='crm.lead_mining_in_pipeline')
+    crm_phone_valid_method = fields.Selection(related="company_id.phone_international_format", required=True, readonly=False)
+    predictive_lead_scoring_start_date = fields.Date(string='Lead Scoring Starting Date', compute="_compute_pls_start_date", inverse="_inverse_pls_start_date_str")
+    predictive_lead_scoring_start_date_str = fields.Char(string='Lead Scoring Starting Date in String', default=date.today().strftime('%Y-%m-%d'), config_parameter='crm.pls_start_date')
+    predictive_lead_scoring_fields = fields.Many2many('crm.lead.scoring.frequency.field', string='Lead Scoring Frequency Fields', compute="_compute_pls_fields", inverse="_inverse_pls_fields_str")
+    predictive_lead_scoring_fields_str = fields.Char(string='Lead Scoring Frequency Fields in String', config_parameter='crm.pls_fields')
 
     def _find_default_lead_alias_id(self):
         alias = self.env.ref('crm.mail_alias_lead_info', False)
@@ -26,6 +32,38 @@ class ResConfigSettings(models.TransientModel):
                 ('alias_defaults', '=', '{}')
             ], limit=1)
         return alias
+
+    @api.depends('predictive_lead_scoring_fields_str')
+    def _compute_pls_fields(self):
+        """ As config_parameters does not accept m2m field,
+            we get the fields back from the Char config field, to ease the configuration in config panel """
+        for setting in self:
+            if setting.predictive_lead_scoring_fields_str:
+                names = setting.predictive_lead_scoring_fields_str.split(',')
+                setting.predictive_lead_scoring_fields = self.env['crm.lead.scoring.frequency.field'].search([('name', 'in', names)])
+            else:
+                setting.predictive_lead_scoring_fields = None
+
+    def _inverse_pls_fields_str(self):
+        """ As config_parameters does not accept m2m field,
+            we store the fields with a comma separated string into a Char config field """
+        for setting in self:
+            if setting.predictive_lead_scoring_fields:
+                setting.predictive_lead_scoring_fields_str = ','.join(setting.predictive_lead_scoring_fields.mapped('name'))
+
+    @api.depends('predictive_lead_scoring_start_date_str')
+    def _compute_pls_start_date(self):
+        """ As config_parameters does not accept Date field,
+            we get the date back from the Char config field, to ease the configuration in config panel """
+        for setting in self:
+            setting.predictive_lead_scoring_start_date = fields.Date.to_date(setting.predictive_lead_scoring_start_date_str)
+
+    def _inverse_pls_start_date_str(self):
+        """ As config_parameters does not accept Date field,
+            we store the date formated string into a Char config field """
+        for setting in self:
+            if setting.predictive_lead_scoring_start_date:
+                setting.predictive_lead_scoring_start_date_str = fields.Date.to_string(setting.predictive_lead_scoring_start_date)
 
     @api.onchange('group_use_lead')
     def _onchange_group_use_lead(self):
