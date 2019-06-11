@@ -331,7 +331,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
      * @private
      */
     _onConnectionLost: function () {
-        this.connectionNotificationID = this.call('notification', 'notify', {
+        this.connectionNotificationID = this.displayNotification({
             title: _t('Connection lost'),
             message: _t('Trying to reconnect...'),
             sticky: true
@@ -345,7 +345,8 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
     _onConnectionRestored: function () {
         if (this.connectionNotificationID) {
             this.call('notification', 'close', this.connectionNotificationID);
-            this.call('notification', 'notify', {
+            this.displayNotification({
+                type: 'info',
                 title: _t('Connection restored'),
                 message: _t('You are back online'),
                 sticky: false
