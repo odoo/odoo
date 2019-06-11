@@ -25,6 +25,46 @@ var CrashManager = core.Class.extend({
         this.active = true;
         this.isConnected = true;
 
+        // crash manager integration
+        core.bus.on('rpc_error', this, this.rpc_error);
+        window.onerror = function (message, file, line, col, error) {
+            // Scripts injected in DOM (eg: google API's js files) won't return a clean error on window.onerror.
+            // The browser will just give you a 'Script error.' as message and nothing else for security issue.
+            // To enable onerror to work properly with CORS file, you should:
+            //   1. add crossorigin="anonymous" to your <script> tag loading the file
+            //   2. enabling 'Access-Control-Allow-Origin' on the server serving the file.
+            // Since in some case it wont be possible to to this, this handle should have the possibility to be
+            // handled by the script manipulating the injected file. For this, you will use window.onOriginError
+            // If it is not handled, we should display something clearer than the common crash_manager error dialog
+            // since it won't show anything except "Script error."
+            // This link will probably explain it better: https://blog.sentry.io/2016/05/17/what-is-script-error.html
+            if (!file && !line && !col) {
+                // Chrome and Opera set "Script error." on the `message` and hide the `error`
+                // Firefox handles the "Script error." directly. It sets the error thrown by the CORS file into `error`
+                if (window.onOriginError) {
+                    window.onOriginError();
+                    delete window.onOriginError;
+                } else {
+                    self.show_error({
+                        type: _t("Odoo Client Error"),
+                        message: _t("Unknown CORS error"),
+                        data: {debug: _t("An unknown CORS error occured. The error probably originates from a JavaScript file served from a different origin. (Opening your browser console might give you a hint on the error.)")},
+                    });
+                }
+            } else {
+                // ignore Chrome video internal error: https://crbug.com/809574
+                if (!error && message === 'ResizeObserver loop limit exceeded') {
+                    return;
+                }
+                var traceback = error ? error.stack : '';
+                self.show_error({
+                    type: _t("Odoo Client Error"),
+                    message: message,
+                    data: {debug: file + ':' + line + "\n" + _t('Traceback:') + "\n" + traceback},
+                });
+            }
+        };
+
         // listen to unhandled rejected promises, and throw an error when the
         // promise has been rejected due to a crash
         window.addEventListener('unhandledrejection', function (ev) {
