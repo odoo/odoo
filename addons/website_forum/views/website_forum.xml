@@ -54,7 +54,7 @@
             <div t-field="forum.welcome_message"/>
         </div>
 
-        <div class="container mt16 mb32 ">
+        <div class="o_forum_nav_header_container mb-4">
             <t t-call="website_forum.forum_nav_header"></t>
         </div>
 
@@ -143,6 +143,7 @@
 
 <template id="forum_nav_header">
     <div class="navbar navbar-expand-md navbar-light">
+            <div class="container">
                 <a class="navbar-brand" t-attf-href="/forum/#{slug(forum)}">
                     <span t-field="forum.name"/>
                 </a>
@@ -197,6 +198,7 @@
                     </form>
                 </div>
             </div>
+        </div>
 </template>
 
 <!-- Template use to edit the welcome_message -->

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo><data>
     <template id="website_slides_forum_header" inherit_id="website_forum.header">
-        <xpath expr="//div[hasclass('container')]" position="before">
+        <xpath expr="//div[hasclass('o_forum_nav_header_container')]" position="before">
             <t t-if="forum.slide_channel_id">
                 <div class="o_wforum_elearning_navtabs_container">
                     <div class="container">
