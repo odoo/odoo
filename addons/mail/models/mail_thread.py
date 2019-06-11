@@ -2363,6 +2363,21 @@ class MailThread(models.AbstractModel):
                 model_description=model_description,
             )
 
+    def _message_auto_subscribe_check_access(self, uid):
+        """ Check if the specified user have read access rights on the records to autofollow it.
+        """
+        if uid is None:
+            return False
+
+        sudoed_records = self.sudo(uid)
+        try:
+            sudoed_records.check_access_rights('read')
+            sudoed_records.check_access_rule('read')
+            return True
+        except exceptions.AccessError:
+            pass
+        return False
+
     @api.multi
     def _message_auto_subscribe(self, updated_values):
         """ Handle auto subscription. Auto subscription is done based on two
@@ -2400,10 +2415,10 @@ class MailThread(models.AbstractModel):
         if udpated_fields:
             doc_data = [(model, [updated_values[fname] for fname in fnames]) for model, fnames in updated_relation.items()]
             res = self.env['mail.followers']._get_subscription_data(doc_data, None, None, include_pshare=True)
-            for fid, rid, pid, cid, subtype_ids, pshare in res:
+            for fid, rid, pid, uid, cid, subtype_ids, pshare in res:
                 sids = [parent[sid] for sid in subtype_ids if parent.get(sid)]
                 sids += [sid for sid in subtype_ids if sid not in parent and sid in def_ids]
-                if pid:
+                if pid and self._message_auto_subscribe_check_access(uid):
                     new_partners[pid] = (set(sids) & set(all_ids)) - set(int_ids) if pshare else set(sids) & set(all_ids)
                 if cid:
                     new_channels[cid] = (set(sids) & set(all_ids)) - set(int_ids)

@@ -122,6 +122,7 @@ class AdvancedFollowersTest(common.BaseFunctionalTest):
         super(AdvancedFollowersTest, cls).setUpClass()
 
         cls.user_portal = mail_new_test_user(cls.env, login='chell', groups='base.group_portal', name='Chell Gladys')
+        cls.user_employee_2 = mail_new_test_user(cls.env, login='alexander', groups='base.group_user', signature='--\nAlexander', name='Alexander Employee')
 
         cls.test_track = cls.env['mail.test.track'].sudo(cls.user_employee).create({
             'name': 'Test',
@@ -187,8 +188,8 @@ class AdvancedFollowersTest(common.BaseFunctionalTest):
             'name': 'Project-Like',
         })
 
-        umbrella.message_subscribe(partner_ids=[self.user_portal.partner_id.id])
-        self.assertEqual(umbrella.message_partner_ids, self.user_portal.partner_id)
+        umbrella.message_subscribe(partner_ids=[self.user_employee_2.partner_id.id, self.user_portal.partner_id.id])
+        self.assertEqual(umbrella.message_partner_ids, self.user_employee_2.partner_id | self.user_portal.partner_id)
 
         sub1 = self.env['mail.test.track'].sudo(self.user_employee).create({
             'name': 'Task-Like Test',
@@ -197,10 +198,10 @@ class AdvancedFollowersTest(common.BaseFunctionalTest):
 
         all_defaults = self.env['mail.message.subtype'].search([('default', '=', True), '|', ('res_model', '=', 'mail.test.track'), ('res_model', '=', False)])
         external_defaults = all_defaults.filtered(lambda subtype: not subtype.internal)
-
-        self.assertEqual(sub1.message_partner_ids, self.user_portal.partner_id | self.user_employee.partner_id)
+        # only the employees should be automatically subscribed since the portal user doesn't have access to "mail.test.track"
+        self.assertEqual(sub1.message_partner_ids, self.user_employee_2.partner_id | self.user_employee.partner_id)
         self.assertEqual(
-            sub1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.user_portal.partner_id).subtype_ids,
+            sub1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.user_employee_2.partner_id).subtype_ids,
             external_defaults | self.sub_umb1)
         self.assertEqual(
             sub1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.user_employee.partner_id).subtype_ids,

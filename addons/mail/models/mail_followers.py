@@ -179,6 +179,7 @@ FROM mail_channel channel WHERE channel.id IN %s """
           follower ID,
           document ID,
           partner ID (void if channel_id),
+          user ID (user linked to the partner)
           channel ID (void if partner_id),
           followed subtype IDs,
           share status of partner (void id channel_id, returned only if include_pshare is True)
@@ -203,13 +204,14 @@ FROM mail_channel channel WHERE channel.id IN %s """
             where_clause += "AND (%s)" % " OR ".join(sub_where)
 
         query = """
-SELECT fol.id, fol.res_id, fol.partner_id, fol.channel_id, array_agg(subtype.id)%s
+SELECT fol.id, fol.res_id, fol.partner_id, u.id, fol.channel_id, array_agg(subtype.id)%s
 FROM mail_followers fol
 %s
 LEFT JOIN mail_followers_mail_message_subtype_rel fol_rel ON fol_rel.mail_followers_id = fol.id
 LEFT JOIN mail_message_subtype subtype ON subtype.id = fol_rel.mail_message_subtype_id
+LEFT JOIN res_users u ON u.partner_id = fol.partner_id
 WHERE %s
-GROUP BY fol.id%s""" % (
+GROUP BY fol.id, u.id%s""" % (
             ', partner.partner_share' if include_pshare else '',
             'LEFT JOIN res_partner partner ON partner.id = fol.partner_id' if include_pshare else '',
             where_clause,
@@ -296,7 +298,7 @@ GROUP BY fol.id%s""" % (
         data_fols, doc_pids, doc_cids = dict(), dict((i, set()) for i in _res_ids), dict((i, set()) for i in _res_ids)
 
         if check_existing and res_ids:
-            for fid, rid, pid, cid, sids in self._get_subscription_data([(res_model, res_ids)], partner_ids or None, channel_ids or None):
+            for fid, rid, pid, uid, cid, sids in self._get_subscription_data([(res_model, res_ids)], partner_ids or None, channel_ids or None):
                 if existing_policy != 'force':
                     if pid:
                         doc_pids[rid].add(pid)
