@@ -1017,9 +1017,6 @@ class SaleOrderLine(models.Model):
         """
         result = {}
 
-        # The delivered quantity of Sales Lines in 'manual' mode should not be erased
-        self = self.filtered(lambda sol: sol.product_id.service_type != 'manual')
-
         # avoid recomputation if no SO lines concerned
         if not self:
             return result
