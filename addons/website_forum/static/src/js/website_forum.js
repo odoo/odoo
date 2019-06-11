@@ -30,7 +30,6 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         'click .accept_answer:not(.karma_required)': '_onAcceptAnswerClick',
         'click .favourite_question': '_onFavoriteQuestionClick',
         'click .comment_delete': '_onDeleteCommentClick',
-        'click .notification_close': '_onCloseNotificationClick',
         'click .js_close_intro': '_onCloseIntroClick',
     },
 
@@ -450,22 +449,6 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         }).then(function () {
             $link.parents('.comment').first().remove();
         });
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onCloseNotificationClick: function (ev) {
-        if (!session.is_website_user) {
-            ev.preventDefault();
-            var $link = $(ev.currentTarget);
-            this._rpc({
-                route: '/forum/notification_read',
-                params: {
-                    notification_id: $link.attr('id'),
-                },
-            });
-        }
     },
     /**
      * @private
