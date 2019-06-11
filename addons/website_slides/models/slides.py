@@ -531,11 +531,16 @@ class Slide(models.Model):
         return result
 
     def _find_document_data_from_url(self, url):
-        expr = re.compile(r'^.*((youtu.be/)|(v/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*')
-        arg = expr.match(url)
-        document_id = arg and arg.group(7) or False
-        if document_id:
-            return ('youtube', document_id)
+        url_obj = urls.url_parse(url)
+        if url_obj.ascii_host == 'youtu.be':
+            return ('youtube', url_obj.path[1:] if url_obj.path else False)
+        elif url_obj.ascii_host in ('youtube.com', 'www.youtube.com', 'm.youtube.com'):
+            v_query_value = url_obj.decode_query().get('v')
+            if v_query_value:
+                return ('youtube', v_query_value)
+            split_path = url_obj.path.split('/')
+            if len(split_path) >= 3 and split_path[1] in ('v', 'embed'):
+                return ('youtube', split_path[2])
 
         expr = re.compile(r'(^https:\/\/docs.google.com|^https:\/\/drive.google.com).*\/d\/([^\/]*)')
         arg = expr.match(url)
