@@ -842,7 +842,7 @@ class HolidaysRequest(models.Model):
 
     def _get_responsible_for_approval(self):
         self.ensure_one()
-        responsible = self.env.user
+        responsible = self.env['res.users']
 
         if self.validation_type == 'hr' or (self.validation_type == 'both' and self.state == 'validate1'):
             company = self.department_id.company_id if self.holiday_type == 'department' else self.employee_id.company_id
@@ -868,12 +868,12 @@ class HolidaysRequest(models.Model):
             elif holiday.state == 'confirm':
                 holiday.activity_schedule(
                     'hr_holidays.mail_act_leave_approval',
-                    user_id=holiday.sudo()._get_responsible_for_approval().id)
+                    user_id=holiday.sudo()._get_responsible_for_approval().id or self.env.user.id)
             elif holiday.state == 'validate1':
                 holiday.activity_feedback(['hr_holidays.mail_act_leave_approval'])
                 holiday.activity_schedule(
                     'hr_holidays.mail_act_leave_second_approval',
-                    user_id=holiday.sudo()._get_responsible_for_approval().id)
+                    user_id=holiday.sudo()._get_responsible_for_approval().id or self.env.user.id)
             elif holiday.state == 'validate':
                 to_do |= holiday
             elif holiday.state == 'refuse':

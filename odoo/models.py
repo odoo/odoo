@@ -2776,11 +2776,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
 Document type: %(document_kind)s (%(document_model)s)
 Operation: %(operation)s
+User: %(user)s
 Fields:
 %(fields_list)s""") % {
                     'document_model': self._name,
                     'document_kind': description or self._name,
                     'operation': operation,
+                    'user': self._uid,
                     'fields_list': '\n'.join(
                         '- %s (%s)' % (f, format_groups(self._fields[f]))
                         for f in sorted(invalid_fields)
@@ -3100,7 +3102,13 @@ Fields:
             # errors for non-transactional search/read sequences coming from clients.
             return
         _logger.info('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, self._uid, self._name)
-        raise MissingError(_('Missing document(s)') + ':' + _('One of the documents you are trying to access has been deleted, please try again after refreshing.'))
+        raise MissingError(
+            _('Missing document(s)') + ':' + _('One of the documents you are trying to access has been deleted, please try again after refreshing.')
+            + '\n\n({} {}, {} {}, {} {}, {} {})'.format(
+                _('Document type:'), self._name, _('Operation:'), operation,
+                _('Records:'), invalid.ids[:6], _('User:'), self._uid,
+            )
+        )
 
     def _filter_access_rules(self, operation):
         """ Return the subset of ``self`` for which ``operation`` is allowed. """
@@ -3455,7 +3463,10 @@ Fields:
             for sub_ids in cr.split_for_in_conditions(set(self.ids)):
                 cr.execute(query, params + [sub_ids])
                 if cr.rowcount != len(sub_ids):
-                    raise MissingError(_('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description)
+                    raise MissingError(
+                        _('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description
+                        + '\n\n({} {}, {} {})'.format(_('Records:'), sub_ids[:6], _('User:'), self._uid)
+                    )
 
             for name in updated:
                 field = self._fields[name]
@@ -4357,7 +4368,10 @@ Fields:
         existing = self.browse(ids + new_ids)
         if len(existing) < len(self):
             # mark missing records in cache with a failed value
-            exc = MissingError(_("Record does not exist or has been deleted."))
+            exc = MissingError(
+                _("Record does not exist or has been deleted.")
+                + '\n\n({} {}, {} {})'.format(_('Records:'), (self - existing).ids[:6], _('User:'), self._uid)
+            )
             self.env.cache.set_failed(self - existing, self._fields.values(), exc)
         return existing
 
