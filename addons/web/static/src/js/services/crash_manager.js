@@ -17,6 +17,7 @@ var map_title ={
     validation_error: _lt("Validation Error"),
     except_orm: _lt("Global Business Error"),
     access_denied: _lt("Access Denied"),
+    karma_error: _lt("Karma Error"),
 };
 
 /**

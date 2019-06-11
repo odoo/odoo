@@ -8,6 +8,7 @@ from odoo import http
 from odoo.http import request
 from odoo.addons.portal.controllers.web import Home
 from odoo.exceptions import UserError, ValidationError, AccessError, MissingError, AccessError, AccessDenied
+from odoo.addons.gamification.models.gamification_karma_rank import KarmaError
 
 
 class WebsiteTest(Home):
@@ -79,6 +80,14 @@ class WebsiteTest(Home):
     @http.route('/test_missing_error_http', type='http', auth='public', website=True)
     def test_missing_error_http(self, **kwargs):
         raise MissingError("This is a missing http test")
+
+    @http.route('/test_karma_error_json', type='json', auth='public', website=True)
+    def test_karma_error_rpc(self, **kwargs):
+        raise KarmaError("This is a karma rpc test")
+
+    @http.route('/test_karma_error_http', type='http', auth='public', website=True)
+    def test_karma_error_http(self, **kwargs):
+        raise KarmaError("This is a karma http test")
 
     @http.route('/test_internal_error_json', type='json', auth='public', website=True)
     def test_internal_error_json(self, **kwargs):
