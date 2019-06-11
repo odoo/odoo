@@ -31,6 +31,7 @@ Core mechanisms for the accounting modules. To display the menuitems, install th
         'wizard/pos_box.xml',
         'views/account_end_fy.xml',
         'views/account_invoice_view.xml',
+        'views/company_view.xml',
         'views/partner_view.xml',
         'views/product_view.xml',
         'views/account_analytic_view.xml',

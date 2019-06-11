@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="setup_overdue_msg_view_company_form" model="ir.ui.view">
+            <field name="name">overdue.company.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <group name="social_media" position="after">
+                    <group>
+                        <label for="overdue_msg" string="Overdue Payments Message"/>
+                        <field name="overdue_msg"/>
+                    </group>
+                </group>
+            </field>
+        </record>
+
+    </data>
+</odoo>
