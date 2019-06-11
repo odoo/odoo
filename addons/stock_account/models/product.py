@@ -15,6 +15,56 @@ class ProductTemplate(models.Model):
     cost_method = fields.Selection(related="categ_id.property_cost_method", readonly=True)
     valuation = fields.Selection(related="categ_id.property_valuation", readonly=True)
 
+    def write(self, vals):
+        impacted_templates = {}
+        move_vals_list = []
+        Product = self.env['product.product']
+        SVL = self.env['stock.valuation.layer']
+
+        if 'categ_id' in vals:
+            # When a change of category implies a change of cost method, we empty out and replenish
+            # the stock.
+            new_product_category = self.env['product.category'].browse(vals.get('categ_id'))
+
+            for product_template in self:
+                valuation_impacted = False
+                if product_template.cost_method != new_product_category.property_cost_method:
+                    valuation_impacted = True
+                if product_template.valuation != new_product_category.property_valuation:
+                    valuation_impacted = True
+                if valuation_impacted is False:
+                    continue
+
+                # Empty out the stock with the current cost method.
+                description = _("Due to a change of product category (from %s to %s), the costing method\
+                                has changed for product template %s: from %s to %s.") %\
+                    (product_template.categ_id.display_name, new_product_category.display_name, \
+                     product_template.display_name, product_template.cost_method, new_product_category.property_cost_method)
+                out_svl_vals_list, products_orig_quantity_svl, products = Product\
+                    ._svl_empty_stock(description, product_template=product_template)
+                out_stock_valuation_layers = SVL.create(out_svl_vals_list)
+                if product_template.valuation == 'real_time':
+                    move_vals_list += Product._svl_empty_stock_am(out_stock_valuation_layers)
+                impacted_templates[product_template] = (products, description, products_orig_quantity_svl)
+
+        res = super(ProductTemplate, self).write(vals)
+
+        for product_template, (products, description, products_orig_quantity_svl) in impacted_templates.items():
+            # Replenish the stock with the new cost method.
+            in_svl_vals_list = products._svl_replenish_stock(description, products_orig_quantity_svl)
+            in_stock_valuation_layers = SVL.create(in_svl_vals_list)
+            if product_template.valuation == 'real_time':
+                move_vals_list += Product._svl_replenish_stock_am(in_stock_valuation_layers)
+
+        # Create the account moves.
+        if move_vals_list:
+            account_moves = self.env['account.move'].create(move_vals_list)
+            account_moves.post()
+        return res
+
+    # -------------------------------------------------------------------------
+    # Misc.
+    # -------------------------------------------------------------------------
     def _is_cost_method_standard(self):
         return self.categ_id.property_cost_method == 'standard'
 
@@ -33,11 +83,6 @@ class ProductTemplate(models.Model):
         return accounts
 
     @api.multi
-    def action_open_product_moves(self):
-        # TODO: remove me in master
-        pass
-
-    @api.multi
     def get_product_accounts(self, fiscal_pos=None):
         """ Add the stock journal related to product to the result of super()
         @return: dictionary which contains all needed information regarding stock accounts and journal and super (income+expense accounts)
@@ -50,210 +95,401 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    stock_value_currency_id = fields.Many2one('res.currency', compute='_compute_stock_value_currency')
-    stock_value = fields.Float(
-        'Value', compute='_compute_stock_value')
-    qty_at_date = fields.Float(
-        'Quantity', compute='_compute_stock_value')
-    stock_fifo_real_time_aml_ids = fields.Many2many(
-        'account.move.line', compute='_compute_stock_value')
-    stock_fifo_manual_move_ids = fields.Many2many(
-        'stock.move', compute='_compute_stock_value')
+    value_svl = fields.Float(compute='_compute_value_svl')
+    quantity_svl = fields.Float(compute='_compute_value_svl')
+    stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'product_id')
 
-    @api.multi
-    def do_change_standard_price(self, new_price, account_id):
-        """ Changes the Standard Price of Product and creates an account move accordingly."""
-        AccountMove = self.env['account.move']
+    @api.depends('stock_valuation_layer_ids')
+    def _compute_value_svl(self):
+        """Compute `value_svl` and `quantity_svl`."""
+        domain = [
+            ('product_id', 'in', self.ids),
+            ('company_id', '=', self.env.user.company_id.id)
+        ]
+        if self.env.context.get('to_date'):
+            to_date = fields.Datetime.to_datetime(self.env.context['to_date'])
+            domain.append(('create_date', '<=', to_date))
+        groups = self.env['stock.valuation.layer'].read_group(domain, ['value:sum', 'quantity:sum'], ['product_id'])
+        for group in groups:
+            product = self.browse(group['product_id'][0])
+            product.value_svl = group['value']
+            product.quantity_svl = group['quantity']
 
-        quant_locs = self.env['stock.quant'].sudo().read_group([('product_id', 'in', self.ids)], ['location_id'], ['location_id'])
-        quant_loc_ids = [loc['location_id'][0] for loc in quant_locs]
-        locations = self.env['stock.location'].search([('usage', '=', 'internal'), ('company_id', '=', self.env.company.id), ('id', 'in', quant_loc_ids)])
+    # -------------------------------------------------------------------------
+    # SVL creation helpers
+    # -------------------------------------------------------------------------
+    def _prepare_in_svl_vals(self, quantity, unit_cost):
+        """Prepare the values for a stock valuation layer created by a receipt.
 
-        product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in self}
-
-        for location in locations:
-            for product in self.with_context(location=location.id, compute_child=False).filtered(lambda r: r.valuation == 'real_time'):
-                diff = product.standard_price - new_price
-                if float_is_zero(diff, precision_rounding=product.currency_id.rounding):
-                    raise UserError(_("No difference between the standard price and the new price."))
-                if not product_accounts[product.id].get('stock_valuation', False):
-                    raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
-                qty_available = product.qty_available
-                if qty_available:
-                    # Accounting Entries
-                    if diff * qty_available > 0:
-                        debit_account_id = account_id
-                        credit_account_id = product_accounts[product.id]['stock_valuation'].id
-                    else:
-                        debit_account_id = product_accounts[product.id]['stock_valuation'].id
-                        credit_account_id = account_id
-
-                    move_vals = {
-                        'journal_id': product_accounts[product.id]['stock_journal'].id,
-                        'company_id': location.company_id.id,
-                        'ref': product.default_code,
-                        'line_ids': [(0, 0, {
-                            'name': _('%s changed cost from %s to %s - %s') % (self.env.user.name, product.standard_price, new_price, product.display_name),
-                            'account_id': debit_account_id,
-                            'debit': abs(diff * qty_available),
-                            'credit': 0,
-                            'product_id': product.id,
-                        }), (0, 0, {
-                            'name': _('%s changed cost from %s to %s - %s') % (self.env.user.name, product.standard_price, new_price, product.display_name),
-                            'account_id': credit_account_id,
-                            'debit': 0,
-                            'credit': abs(diff * qty_available),
-                            'product_id': product.id,
-                        })],
-                    }
-                    move = AccountMove.create(move_vals)
-                    move.post()
-
-        self.write({'standard_price': new_price})
-        return True
-
-    def _get_fifo_candidates_in_move(self):
-        """ Find IN moves that can be used to value OUT moves.
-        """
-        return self._get_fifo_candidates_in_move_with_company()
-
-    def _get_fifo_candidates_in_move_with_company(self, move_company_id=False):
-        self.ensure_one()
-        domain = [('product_id', '=', self.id), ('remaining_qty', '>', 0.0)] + self.env['stock.move']._get_in_base_domain(move_company_id)
-        candidates = self.env['stock.move'].search(domain, order='date, id')
-        return candidates
-
-    def _sum_remaining_values(self):
-        StockMove = self.env['stock.move']
-        domain = [('product_id', '=', self.id)] + StockMove._get_all_base_domain()
-        moves = StockMove.search(domain)
-        return sum(moves.mapped('remaining_value')), moves
-
-    @api.multi
-    def _compute_stock_value_currency(self):
-        currency_id = self.env.company.currency_id
-        for product in self:
-            product.stock_value_currency_id = currency_id
-
-    @api.multi
-    @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state', 'stock_move_ids.remaining_value', 'product_tmpl_id.cost_method', 'product_tmpl_id.standard_price', 'product_tmpl_id.categ_id.property_valuation')
-    def _compute_stock_value(self):
-        StockMove = self.env['stock.move']
-        to_date = self.env.context.get('to_date')
-
-        real_time_product_ids = [product.id for product in self if product.product_tmpl_id.valuation == 'real_time']
-        if real_time_product_ids:
-            self.env['account.move.line'].check_access_rights('read')
-            fifo_automated_values = {}
-            query = """SELECT aml.product_id, aml.account_id, sum(aml.debit) - sum(aml.credit), sum(quantity), array_agg(aml.id)
-                         FROM account_move_line AS aml
-                        WHERE aml.product_id IN %%s AND aml.company_id=%%s %s
-                     GROUP BY aml.product_id, aml.account_id"""
-            params = (tuple(real_time_product_ids), self.env.company.id)
-            if to_date:
-                query = query % ('AND aml.date <= %s',)
-                params = params + (to_date,)
-            else:
-                query = query % ('',)
-            self.env.cr.execute(query, params=params)
-
-            res = self.env.cr.fetchall()
-            for row in res:
-                fifo_automated_values[(row[0], row[1])] = (row[2], row[3], list(row[4]))
-
-        product_values = {product.id: 0 for product in self}
-        product_move_ids = {product.id: [] for product in self}
-
-        if to_date:
-            domain = [('product_id', 'in', self.ids), ('date', '<=', to_date)] + StockMove._get_all_base_domain()
-            value_field_name = 'value'
-        else:
-            domain = [('product_id', 'in', self.ids)] + StockMove._get_all_base_domain()
-            value_field_name = 'remaining_value'
-
-        StockMove.check_access_rights('read')
-        query = StockMove._where_calc(domain)
-        StockMove._apply_ir_rules(query, 'read')
-        from_clause, where_clause, params = query.get_sql()
-        query_str = """
-            SELECT stock_move.product_id, SUM(COALESCE(stock_move.{}, 0.0)), ARRAY_AGG(stock_move.id)
-            FROM {}
-            WHERE {}
-            GROUP BY stock_move.product_id
-        """.format(value_field_name, from_clause, where_clause)
-        self.env.cr.execute(query_str, params)
-        for product_id, value, move_ids in self.env.cr.fetchall():
-            product_values[product_id] = value
-            product_move_ids[product_id] = move_ids
-
-        for product in self:
-            if product.cost_method in ['standard', 'average']:
-                qty_available = product.with_context(company_owned=True, owner_id=False).qty_available
-                price_used = product.standard_price
-                if to_date:
-                    price_used = product.get_history_price(
-                        self.env.company.id,
-                        date=to_date,
-                    )
-                product.stock_value = price_used * qty_available
-                product.qty_at_date = qty_available
-            elif product.cost_method == 'fifo':
-                if to_date:
-                    if product.product_tmpl_id.valuation == 'manual_periodic':
-                        product.stock_value = product_values[product.id]
-                        product.qty_at_date = product.with_context(company_owned=True, owner_id=False).qty_available
-                        product.stock_fifo_manual_move_ids = StockMove.browse(product_move_ids[product.id])
-                    elif product.product_tmpl_id.valuation == 'real_time':
-                        valuation_account_id = product.categ_id.property_stock_valuation_account_id.id
-                        value, quantity, aml_ids = fifo_automated_values.get((product.id, valuation_account_id)) or (0, 0, [])
-                        product.stock_value = value
-                        product.qty_at_date = quantity
-                        product.stock_fifo_real_time_aml_ids = self.env['account.move.line'].browse(aml_ids)
-                else:
-                    product.stock_value = product_values[product.id]
-                    product.qty_at_date = product.with_context(company_owned=True, owner_id=False).qty_available
-                    if product.product_tmpl_id.valuation == 'manual_periodic':
-                        product.stock_fifo_manual_move_ids = StockMove.browse(product_move_ids[product.id])
-                    elif product.product_tmpl_id.valuation == 'real_time':
-                        valuation_account_id = product.categ_id.property_stock_valuation_account_id.id
-                        value, quantity, aml_ids = fifo_automated_values.get((product.id, valuation_account_id)) or (0, 0, [])
-                        product.stock_fifo_real_time_aml_ids = self.env['account.move.line'].browse(aml_ids)
-
-    def action_valuation_at_date_details(self):
-        """ Returns an action with either a list view of all the valued stock moves of `self` if the
-        valuation is set as manual or a list view of all the account move lines if the valuation is
-        set as automated.
+        :param quantity: the quantity to value, expressed in `self.uom_id`
+        :param unit_cost: the unit cost to value `quantity`
+        :return: values to use in a call to create
+        :rtype: dict
         """
         self.ensure_one()
-        to_date = self.env.context.get('to_date')
-        ctx = self.env.context.copy()
-        ctx.pop('group_by', None)
-        action = {
-            'name': _('Valuation at date'),
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'context': ctx,
+        vals = {
+            'product_id': self.id,
+            'value': unit_cost * quantity,
+            'unit_cost': unit_cost,
+            'quantity': quantity,
         }
-        if self.valuation == 'real_time':
-            action['res_model'] = 'account.move.line'
-            action['domain'] = [('id', 'in', self.with_context(to_date=to_date).stock_fifo_real_time_aml_ids.ids)]
-            tree_view_ref = self.env.ref('stock_account.view_stock_account_aml')
-            form_view_ref = self.env.ref('account.view_move_line_form')
-            action['views'] = [(tree_view_ref.id, 'tree'), (form_view_ref.id, 'form')]
+        if self.cost_method in ('average', 'fifo'):
+            vals['remaining_qty'] = quantity
+        return vals
+
+    def _prepare_out_svl_vals(self, quantity, company):
+        """Prepare the values for a stock valuation layer created by a delivery.
+
+        :param quantity: the quantity to value, expressed in `self.uom_id`
+        :return: values to use in a call to create
+        :rtype: dict
+        """
+        self.ensure_one()
+        # Quantity is negative for out valuation layers.
+        quantity = -1 * quantity
+        vals = {
+            'product_id' : self.id,
+            'value': quantity * self.standard_price,
+            'unit_cost': self.standard_price,
+            'quantity': quantity,
+        }
+        if self.cost_method in ('average', 'fifo'):
+            fifo_vals = self._run_fifo(abs(quantity), company)
+            vals['remaining_qty'] = fifo_vals.get('remaining_qty')
+            if self.cost_method == 'fifo':
+                vals.update(fifo_vals)
+        return vals
+
+    def _change_standard_price(self, new_price, counterpart_account_id=False):
+        """Helper to create the stock valuation layers and the account moves
+        after an update of standard price.
+
+        :param new_price: new standard price
+        """
+        # Handle stock valuation layers.
+        svl_vals_list = []
+        company_id = self.env.user.company_id
+        for product in self:
+            if product.cost_method not in ('standard', 'average'):
+                continue
+            if float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
+                continue
+            diff = new_price - product.standard_price
+            value = company_id.currency_id.round(product.quantity_svl * diff)
+            if company_id.currency_id.is_zero(value):
+                continue
+
+            svl_vals = {
+                'company_id': company_id.id,
+                'product_id': product.id,
+                'description': _('Product value manually modified (from %s to %s)') % (product.standard_price, new_price),
+                'value': value,
+                'quantity': 0,
+            }
+            svl_vals_list.append(svl_vals)
+        stock_valuation_layers = self.env['stock.valuation.layer'].create(svl_vals_list)
+
+        # Handle account moves.
+        product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in self}
+        am_vals_list = []
+        for stock_valuation_layer in stock_valuation_layers:
+            product = stock_valuation_layer.product_id
+            value = stock_valuation_layer.value
+
+            if product.valuation != 'real_time':
+                continue
+
+            # Sanity check.
+            if counterpart_account_id is False:
+                raise UserError(_('You must set a counterpart account.'))
+            if not product_accounts[product.id].get('stock_valuation'):
+                raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
+
+            if value < 0:
+                debit_account_id = counterpart_account_id
+                credit_account_id = product_accounts[product.id]['stock_valuation'].id
+            else:
+                debit_account_id = product_accounts[product.id]['stock_valuation'].id
+                credit_account_id = counterpart_account_id
+
+            move_vals = {
+                'journal_id': product_accounts[product.id]['stock_journal'].id,
+                'company_id': company_id.id,
+                'ref': product.default_code,
+                'stock_valuation_layer_ids': [(6, None, [stock_valuation_layer.id])],
+                'line_ids': [(0, 0, {
+                    'name': _('%s changed cost from %s to %s - %s') % (self.env.user.name, product.standard_price, new_price, product.display_name),
+                    'account_id': debit_account_id,
+                    'debit': abs(value),
+                    'credit': 0,
+                    'product_id': product.id,
+                }), (0, 0, {
+                    'name': _('%s changed cost from %s to %s - %s') % (self.env.user.name, product.standard_price, new_price, product.display_name),
+                    'account_id': credit_account_id,
+                    'debit': 0,
+                    'credit': abs(value),
+                    'product_id': product.id,
+                })],
+            }
+            am_vals_list.append(move_vals)
+        account_moves = self.env['account.move'].create(am_vals_list)
+        account_moves.post()
+
+        # Actually update the standard price.
+        self.write({'standard_price': new_price})
+
+    def _run_fifo(self, quantity, company):
+        self.ensure_one()
+
+        # Find back incoming stock valuation layers (called candidates here) to value `quantity`.
+        qty_to_take_on_candidates = quantity
+        candidates = self.env['stock.valuation.layer'].search([
+            ('product_id', '=', self.id),
+            ('remaining_qty', '>', 0),
+            ('company_id', '=', company.id),
+        ])
+        new_standard_price = 0
+        tmp_value = 0  # to accumulate the value taken on the candidates
+        for candidate in candidates:
+            new_standard_price = candidate.unit_cost
+            qty_taken_on_candidate = min(qty_to_take_on_candidates, candidate.remaining_qty)
+
+            candidate_unit_cost = candidate.unit_cost
+            if candidate.stock_valuation_layer_ids:
+                candidate_unit_cost += sum(candidate.stock_valuation_layer_ids.mapped('value')) / candidate.remaining_qty
+
+            value_taken_on_candidate = qty_taken_on_candidate * candidate_unit_cost
+            candidate_vals = {
+                'remaining_qty': candidate.remaining_qty - qty_taken_on_candidate,
+            }
+            candidate.write(candidate_vals)
+
+            qty_to_take_on_candidates -= qty_taken_on_candidate
+            tmp_value += value_taken_on_candidate
+            if float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
+                break
+
+        # Update the standard price with the price of the last used candidate, if any.
+        if new_standard_price and self.cost_method == 'fifo':
+            self.sudo().with_context(force_company=company.id).standard_price = new_standard_price
+
+        # If there's still quantity to value but we're out of candidates, we fall in the
+        # negative stock use case. We chose to value the out move at the price of the
+        # last out and a correction entry will be made once `_fifo_vacuum` is called.
+        vals = {}
+        if float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
+            vals = {
+                'value': -tmp_value,
+                'unit_cost': tmp_value / quantity,
+            }
         else:
-            action['res_model'] = 'stock.move'
-            action['domain'] = [('id', 'in', self.with_context(to_date=to_date).stock_fifo_manual_move_ids.ids)]
-            tree_view_ref = self.env.ref('stock_account.view_move_tree_valuation_at_date')
-            form_view_ref = self.env.ref('stock.view_move_form')
-            action['views'] = [(tree_view_ref.id, 'tree'), (form_view_ref.id, 'form')]
-        return action
+            assert qty_to_take_on_candidates > 0
+            last_fifo_price = new_standard_price or self.standard_price
+            negative_stock_value = last_fifo_price * -qty_to_take_on_candidates
+            tmp_value += abs(negative_stock_value)
+            vals = {
+                'remaining_qty': -qty_to_take_on_candidates,
+                'value': -tmp_value,
+                'unit_cost': last_fifo_price,
+            }
+        return vals
 
-    @api.multi
-    def action_open_product_moves(self):
-        #TODO: remove me in master
-        pass
+    def _run_fifo_vacuum(self):
+        """Compensate layer valued at an estimated price with the price of future receipts
+        if any. If the estimated price is equals to the real price, no layer is created but
+        the original layer is marked as compensated.
+        """
+        self.ensure_one()
+        svls_to_vacuum = self.env['stock.valuation.layer'].search([
+            ('product_id', '=', self.id),
+            ('remaining_qty', '<', 0),
+            ('stock_move_id', '!=', False),
+        ])
+        for svl_to_vacuum in svls_to_vacuum:
+            domain = [
+                ('company_id', '=', svl_to_vacuum.company_id.id),
+                ('product_id', '=', self.id),
+                ('remaining_qty', '>', 0),
+                '|',
+                    ('create_date', '>', svl_to_vacuum.create_date),
+                    '&',
+                        ('create_date', '=', svl_to_vacuum.create_date),
+                        ('id', '>', svl_to_vacuum.id)
+            ]
+            candidates = self.env['stock.valuation.layer'].search(domain)
+            if not candidates:
+                continue
+            qty_to_take_on_candidates = abs(svl_to_vacuum.remaining_qty)
+            qty_taken_on_candidates = 0
+            tmp_value = 0
+            for candidate in candidates:
+                qty_taken_on_candidate = min(candidate.remaining_qty, qty_to_take_on_candidates)
+                qty_taken_on_candidates += qty_taken_on_candidate
 
+                value_taken_on_candidate = qty_taken_on_candidate * candidate.unit_cost
+                candidate_vals = {
+                    'remaining_qty': candidate.remaining_qty - qty_taken_on_candidate,
+                }
+                candidate.write(candidate_vals)
+
+                qty_to_take_on_candidates -= qty_taken_on_candidate
+                tmp_value += value_taken_on_candidate
+                if float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
+                    break
+
+            # Get the estimated value we will correct.
+            remaining_value_before_vacuum = svl_to_vacuum.unit_cost * qty_taken_on_candidates
+            new_remaining_qty = svl_to_vacuum.remaining_qty + qty_taken_on_candidates
+            corrected_value = remaining_value_before_vacuum - tmp_value
+            svl_to_vacuum.write({
+                'remaining_qty': new_remaining_qty,
+            })
+
+            # Don't create a layer or an accounting entry if the corrected value is zero.
+            if svl_to_vacuum.currency_id.is_zero(corrected_value):
+                continue
+
+            corrected_value = svl_to_vacuum.currency_id.round(corrected_value)
+            move = svl_to_vacuum.stock_move_id
+            vals = {
+                'product_id': self.id,
+                'value': corrected_value,
+                'unit_cost': 0,
+                'quantity': 0,
+                'remaining_qty': 0,
+                'description': 'vacuum',
+                'stock_move_id': move.id,
+                'company_id': move.company_id.id,
+                'description': 'Revaluation of %s (negative inventory)' % move.picking_id.name or move.name,
+            }
+            vacuum_svl = self.env['stock.valuation.layer'].create(vals)
+
+            # Create the account move.
+            if self.valuation != 'real_time':
+                continue
+            vacuum_svl.stock_move_id._account_entry_move(
+                vacuum_svl.quantity, vacuum_svl.description, vacuum_svl.id, vacuum_svl.value
+            )
+
+    @api.model
+    def _svl_empty_stock(self, description, product_category=None, product_template=None):
+        impacted_product_ids = []
+        impacted_products = self.env['product.product']
+        products_orig_quantity_svl = {}
+
+        # get the impacted products
+        domain = [('type', '=', 'product')]
+        if product_category is not None:
+            domain += [('categ_id', '=', product_category.id)]
+        elif product_template is not None:
+            domain += [('product_tmpl_id', '=', product_template.id)]
+        else:
+            raise ValueError()
+        products = self.env['product.product'].search_read(domain, ['quantity_svl'])
+        for product in products:
+            impacted_product_ids.append(product['id'])
+            products_orig_quantity_svl[product['id']] = product['quantity_svl']
+        impacted_products |= self.env['product.product'].browse(impacted_product_ids)
+
+        # empty out the stock for the impacted products
+        empty_stock_svl_list = []
+        for product in impacted_products:
+            # FIXME sle: why not use products_orig_quantity_svl here?
+            if float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
+                # FIXME: create an empty layer to track the change?
+                continue
+            svsl_vals = product._prepare_out_svl_vals(product.quantity_svl, self.env.company)
+            svsl_vals['description'] = description
+            svsl_vals['company_id'] = self.env.company.id
+            empty_stock_svl_list.append(svsl_vals)
+        return empty_stock_svl_list, products_orig_quantity_svl, impacted_products
+
+    def _svl_replenish_stock(self, description, products_orig_quantity_svl):
+        refill_stock_svl_list = []
+        for product in self:
+            quantity_svl = products_orig_quantity_svl[product.id]
+            if quantity_svl:
+                svl_vals = product._prepare_in_svl_vals(quantity_svl, product.standard_price)
+                svl_vals['description'] = description
+                svl_vals['company_id'] = self.env.company.id
+                refill_stock_svl_list.append(svl_vals)
+        return refill_stock_svl_list
+
+    @api.model
+    def _svl_empty_stock_am(self, stock_valuation_layers):
+        move_vals_list = []
+        product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in stock_valuation_layers.mapped('product_id')}
+        for out_stock_valuation_layer in stock_valuation_layers:
+            product = out_stock_valuation_layer.product_id
+            expense_account = product.property_account_expense_id or product.categ_id.property_account_expense_categ_id
+            if not expense_account:
+                raise UserError(_('Please define an expense account for this product: "%s" (id:%d) - or for its category: "%s".') % (product.name, product.id, self.name))
+            if not product_accounts[product.id].get('stock_valuation'):
+                raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
+
+            debit_account_id = expense_account.id
+            credit_account_id = product_accounts[product.id]['stock_valuation'].id
+            value = out_stock_valuation_layer.value
+            move_vals = {
+                'journal_id': product_accounts[product.id]['stock_journal'].id,
+                'company_id': self.env.company.id,
+                'ref': product.default_code,
+                'stock_valuation_layer_ids': [(6, None, [out_stock_valuation_layer.id])],
+                'line_ids': [(0, 0, {
+                    'name': out_stock_valuation_layer.description,
+                    'account_id': debit_account_id,
+                    'debit': abs(value),
+                    'credit': 0,
+                    'product_id': product.id,
+                }), (0, 0, {
+                    'name': out_stock_valuation_layer.description,
+                    'account_id': credit_account_id,
+                    'debit': 0,
+                    'credit': abs(value),
+                    'product_id': product.id,
+                })],
+            }
+            move_vals_list.append(move_vals)
+        return move_vals_list
+
+    def _svl_replenish_stock_am(self, stock_valuation_layers):
+        move_vals_list = []
+        product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in stock_valuation_layers.mapped('product_id')}
+        for out_stock_valuation_layer in stock_valuation_layers:
+            product = out_stock_valuation_layer.product_id
+            if not product_accounts[product.id].get('stock_input'):
+                raise UserError(_('You don\'t have any input valuation account defined on your product category. You must define one before processing this operation.'))
+            if not product_accounts[product.id].get('stock_valuation'):
+                raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
+
+            debit_account_id = product_accounts[product.id]['stock_valuation'].id
+            credit_account_id = product_accounts[product.id]['stock_input'].id
+            value = out_stock_valuation_layer.value
+            move_vals = {
+                'journal_id': product_accounts[product.id]['stock_journal'].id,
+                'company_id': self.env.company.id,
+                'ref': product.default_code,
+                'stock_valuation_layer_ids': [(6, None, [out_stock_valuation_layer.id])],
+                'line_ids': [(0, 0, {
+                    'name': out_stock_valuation_layer.description,
+                    'account_id': debit_account_id,
+                    'debit': abs(value),
+                    'credit': 0,
+                    'product_id': product.id,
+                }), (0, 0, {
+                    'name': out_stock_valuation_layer.description,
+                    'account_id': credit_account_id,
+                    'debit': 0,
+                    'credit': abs(value),
+                    'product_id': product.id,
+                })],
+            }
+            move_vals_list.append(move_vals)
+        return move_vals_list
+
+    # -------------------------------------------------------------------------
+    # Anglo saxon helpers
+    # -------------------------------------------------------------------------
     @api.model
     def _anglo_saxon_sale_move_lines(self, name, product, uom, qty, price_unit, currency=False, amount_currency=False, fiscal_position=False, account_analytic=False, analytic_tags=False):
         """Prepare dicts describing new journal COGS journal items for a product sale.
@@ -332,10 +568,15 @@ class ProductProduct(models.Model):
                 qty_to_consider = invoiced_qty - qty_done
             qty_to_consider = min(qty_to_consider, quantity - qty_delivered)
             qty_delivered += qty_to_consider
-            # `move.price_unit` is negative if the move is out and positive if the move is
-            # dropshipped. Use its absolute value to compute the average price unit.
             if qty_delivered:
-                average_price_unit = (average_price_unit * (qty_delivered - qty_to_consider) + abs(move.price_unit) * qty_to_consider) / qty_delivered
+                layers = move.stock_valuation_layer_ids
+                # Dropshipped moves are always linked to two layers cancelling each others.
+                if move._is_dropshipped() or move._is_dropshipped_returned():
+                    layers = layers.filtered(lambda svl: svl.value > 0)
+                layers_qty = sum(layers.mapped('quantity'))
+                layers_value = sum(layers.mapped('value'))
+                move_price_unit = layers_value / layers_qty
+                average_price_unit = (average_price_unit * (qty_delivered - qty_to_consider) + move_price_unit * qty_to_consider) / qty_delivered
             if qty_delivered == quantity:
                 break
         return average_price_unit
@@ -388,14 +629,6 @@ class ProductCategory(models.Model):
             input_and_output_accounts = category.property_stock_account_input_categ_id | category.property_stock_account_output_categ_id
             if valuation_account and valuation_account in input_and_output_accounts:
                 raise ValidationError(_('The Stock Input and/or Output accounts cannot be the same than the Stock Valuation account.'))
-    @api.multi
-    def write(self, vals):
-        # When going from FIFO to AVCO or to standard, we update the standard price with the
-        # average value in stock.
-        cost_method = vals.get('property_cost_method')
-        if cost_method and cost_method in ['average', 'standard']:
-            self._update_standard_price()
-        return super(ProductCategory, self).write(vals)
 
     @api.onchange('property_cost_method')
     def onchange_property_valuation(self):
@@ -409,11 +642,50 @@ class ProductCategory(models.Model):
             }
         }
 
-    def _update_standard_price(self):
-        updated_categories = self.filtered(lambda x: x.property_cost_method == 'fifo')
-        templates = self.env['product.template'].search([('categ_id', 'in', updated_categories.ids)])
-        for t in templates:
-            valuation = sum([variant._sum_remaining_values()[0] for variant in t.product_variant_ids])
-            qty_available = t.with_context(company_owned=True).qty_available
-            if qty_available:
-                t.standard_price = valuation / qty_available
+    def write(self, vals):
+        impacted_categories = {}
+        move_vals_list = []
+        Product = self.env['product.product']
+        SVL = self.env['stock.valuation.layer']
+
+        if 'property_cost_method' in vals or 'property_valuation' in vals:
+            # When the cost method or the valuation are changed on a product category, we empty
+            # out and replenish the stock for each impacted products.
+            new_cost_method = vals.get('property_cost_method')
+            new_valuation = vals.get('property_valuation')
+
+
+            for product_category in self:
+                valuation_impacted = False
+                if new_cost_method and new_cost_method != product_category.property_cost_method:
+                    valuation_impacted = True
+                if new_valuation and new_valuation != product_category.property_valuation:
+                    valuation_impacted = True
+                if valuation_impacted is False:
+                    continue
+
+                # Empty out the stock with the current cost method.
+                description = _("Costing method change for product category %s: from %s to %s.") \
+                    % (self.display_name, self.property_cost_method, new_cost_method)
+                out_svl_vals_list, products_orig_quantity_svl, products = Product\
+                    ._svl_empty_stock(description, product_category=product_category)
+                out_stock_valuation_layers = SVL.create(out_svl_vals_list)
+                if product_category.property_valuation == 'real_time':
+                    move_vals_list += Product._svl_empty_stock_am(out_stock_valuation_layers)
+                impacted_categories[product_category] = (products, description, products_orig_quantity_svl)
+
+        res = super(ProductCategory, self).write(vals)
+
+        for product_category, (products, description, products_orig_quantity_svl) in impacted_categories.items():
+            # Replenish the stock with the new cost method.
+            in_svl_vals_list = products._svl_replenish_stock(description, products_orig_quantity_svl)
+            in_stock_valuation_layers = SVL.create(in_svl_vals_list)
+            if product_category.property_valuation == 'real_time':
+                move_vals_list += Product._svl_replenish_stock_am(in_stock_valuation_layers)
+
+        # Create the account moves.
+        if move_vals_list:
+            account_moves = self.env['account.move'].create(move_vals_list)
+            account_moves.post()
+        return res
+
