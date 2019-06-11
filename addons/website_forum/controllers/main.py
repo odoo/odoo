@@ -59,12 +59,6 @@ class WebsiteForum(WebsiteProfile):
             })
         return "/forum/%s" % slug(forum_id)
 
-    @http.route('/forum/notification_read', type='json', auth="user", methods=['POST'], website=True)
-    def notification_read(self, **kwargs):
-        if kwargs.get('notification_id'):
-            request.env['mail.message'].browse([int(kwargs.get('notification_id'))]).set_message_done()
-        return True
-
     def sitemap_forum(env, rule, qs):
         Forum = env['forum.forum']
         dom = sitemap_qs2dom(qs, '/forum', Forum._rec_name)
