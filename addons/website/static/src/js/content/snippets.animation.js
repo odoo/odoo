@@ -6,9 +6,9 @@ odoo.define('website.content.snippets.animation', function (require) {
  */
 
 var Class = require('web.Class');
+var config = require('web.config');
 var core = require('web.core');
 var mixins = require('web.mixins');
-var utils = require('web.utils');
 var publicWidget = require('web.public.widget');
 var utils = require('web.utils');
 
@@ -678,6 +678,113 @@ registry.mediaVideo = publicWidget.Widget.extend({
         }));
 
         return def;
+    },
+});
+
+registry.backgroundVideo = publicWidget.Widget.extend({
+    selector: '.o_background_video',
+    xmlDependencies: ['/website/static/src/xml/website.background.video.xml'],
+    disabledInEditableMode: false,
+
+    /**
+     * @override
+     */
+    start: function () {
+        var proms = [this._super(...arguments)];
+
+        this.videoSrc = this.el.dataset.bgVideoSrc;
+        this.iframeID = _.uniqueId('o_bg_video_iframe_');
+
+        this.isYoutubeVideo = this.videoSrc.indexOf('youtube') >= 0;
+        this.isMobileEnv = config.device.size_class <= config.device.SIZES.LG && config.device.touch;
+        if (this.isYoutubeVideo && this.isMobileEnv) {
+            this.videoSrc = this.videoSrc + "&enablejsapi=1";
+
+            if (!window.YT) {
+                proms.push(new Promise(resolve => {
+                    window.onYouTubeIframeAPIReady = () => resolve();
+                }));
+                $('<script/>', {
+                    src: 'https://www.youtube.com/iframe_api',
+                }).appendTo('head');
+            }
+        }
+
+        $(window).on('resize.' + this.iframeID, _.throttle(() => this._adjustIframe(), 50));
+
+        return Promise.all(proms).then(() => this._appendBgVideo());
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super.apply(this, arguments);
+
+        $(window).off('resize.' + this.iframeID);
+
+        if (this.$bgVideoContainer) {
+            this.$bgVideoContainer.remove();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adjusts iframe sizes and position so that it fills the container and so
+     * that it is centered in it.
+     *
+     * @private
+     */
+    _adjustIframe: function () {
+        // Adjust the iframe
+        var wrapperWidth = this.$target.innerWidth();
+        var wrapperHeight = this.$target.innerHeight();
+        var relativeRatio = (wrapperWidth / wrapperHeight) / (16 / 9);
+        var style = {};
+        if (relativeRatio >= 1.0) {
+            style['width'] = '100%';
+            style['height'] = (relativeRatio * 100) + '%';
+            style['left'] = '0';
+            style['top'] = (-(relativeRatio - 1.0) / 2 * 100) + '%';
+        } else {
+            style['width'] = ((1 / relativeRatio) * 100) + '%';
+            style['height'] = '100%';
+            style['left'] = (-((1 / relativeRatio) - 1.0) / 2 * 100) + '%';
+            style['top'] = '0';
+        }
+        this.$iframe.css(style);
+    },
+    /**
+     * Append background video related elements to the target.
+     *
+     * @private
+     */
+    _appendBgVideo: function () {
+        var $oldContainer = this.$bgVideoContainer || this.$('> .o_bg_video_container');
+        this.$bgVideoContainer = $(qweb.render('website.background.video', {
+            videoSrc: this.videoSrc,
+            iframeID: this.iframeID,
+        }));
+        this.$iframe = this.$bgVideoContainer.find('.o_bg_video_iframe');
+        this.$iframe.one('load', () => {
+            this.$bgVideoContainer.find('.o_bg_video_loading').remove();
+        });
+        this.$bgVideoContainer.prependTo(this.$target);
+        $oldContainer.remove();
+
+        this._adjustIframe();
+
+        // YouTube does not allow to auto-play video in mobile devices, so we
+        // have to play the video manually.
+        if (this.isMobileEnv && this.isYoutubeVideo) {
+            new window.YT.Player(this.iframeID, {
+                events: {
+                    onReady: ev => ev.target.playVideo(),
+                }
+            });
+        }
     },
 });
 
