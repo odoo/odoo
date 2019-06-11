@@ -216,7 +216,9 @@ var ImageOptimizeDialog = Dialog.extend({
      * @private
      */
     _onKeepOriginalClick: function () {
-        this.trigger_up('attachment_updated', this.attachment);
+        if (!this.isExisting) {
+            this.trigger_up('attachment_updated', this.attachment);
+        }
         this.close();
     },
     /**
