@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime
+from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields
@@ -192,3 +192,61 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         (self.employee_emp | self.employee_hrmanager).mapped('is_absent')  # compute in batch
         self.assertTrue(self.employee_emp.is_absent, "He should be considered absent")
         self.assertFalse(self.employee_hrmanager.is_absent, "He should not be considered absent")
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_timezone_employee_leave_request(self):
+        """ Create a leave request for an employee in another timezone """
+        self.employee_emp.tz = 'NZ'  # GMT+12
+        leave = self.env['hr.leave'].new({
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'request_unit_hours': True,
+            'request_date_from': date(2019, 5, 6),
+            'request_date_to': date(2019, 5, 6),
+            'request_hour_from': '8',  # 8:00 AM in the employee's timezone
+            'request_hour_to': '17',  # 5:00 PM in the employee's timezone
+        })
+        leave._onchange_request_parameters()
+        self.assertEqual(leave.date_from, datetime(2019, 5, 5, 20, 0, 0), "It should have been localized before saving in UTC")
+        self.assertEqual(leave.date_to, datetime(2019, 5, 6, 5, 0, 0), "It should have been localized before saving in UTC")
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_timezone_company_leave_request(self):
+        """ Create a leave request for a company in another timezone """
+        company = self.env['res.company'].create({'name': "Hergé"})
+        company.resource_calendar_id.tz = 'NZ'  # GMT+12
+        leave = self.env['hr.leave'].new({
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'request_unit_hours': True,
+            'holiday_type': 'company',
+            'mode_company_id': company.id,
+            'request_date_from': date(2019, 5, 6),
+            'request_date_to': date(2019, 5, 6),
+            'request_hour_from': '8',  # 8:00 AM in the company's timezone
+            'request_hour_to': '17',  # 5:00 PM in the company's timezone
+        })
+        leave._onchange_request_parameters()
+        self.assertEqual(leave.date_from, datetime(2019, 5, 5, 20, 0, 0), "It should have been localized before saving in UTC")
+        self.assertEqual(leave.date_to, datetime(2019, 5, 6, 5, 0, 0), "It should have been localized before saving in UTC")
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_timezone_department_leave_request(self):
+        """ Create a leave request for a department in another timezone """
+        company = self.env['res.company'].create({'name': "Hergé"})
+        company.resource_calendar_id.tz = 'NZ'  # GMT+12
+        department = self.env['hr.department'].create({'name': "Museum", 'company_id': company.id})
+        leave = self.env['hr.leave'].new({
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'request_unit_hours': True,
+            'holiday_type': 'department',
+            'department_id': department.id,
+            'request_date_from': date(2019, 5, 6),
+            'request_date_to': date(2019, 5, 6),
+            'request_hour_from': '8',  # 8:00 AM in the department's timezone
+            'request_hour_to': '17',  # 5:00 PM in the department's timezone
+        })
+        leave._onchange_request_parameters()
+        self.assertEqual(leave.date_from, datetime(2019, 5, 5, 20, 0, 0), "It should have been localized before saving in UTC")
+        self.assertEqual(leave.date_to, datetime(2019, 5, 6, 5, 0, 0), "It should have been localized before saving in UTC")
