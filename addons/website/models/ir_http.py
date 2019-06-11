@@ -214,6 +214,11 @@ class Http(models.AbstractModel):
                 traceback=traceback.format_exc(),
             )
 
+            # only except_orm exceptions contain a message
+            if isinstance(exception, odoo.exceptions.except_orm):
+                values['error_message'] = exception.name
+                code = 400
+
             if isinstance(exception, werkzeug.exceptions.HTTPException):
                 if exception.code is None:
                     # Hand-crafted HTTPException likely coming from abort(),
@@ -279,6 +284,8 @@ class Http(models.AbstractModel):
                         values['editable'] = request.uid and request.website.is_publisher()
                 elif code == 403:
                     logger.warn("403 Forbidden:\n\n%s", values['traceback'])
+                elif code == 400:
+                    logger.warn("400 Bad Request:\n\n%s", values['traceback'])
                 try:
                     html = env['ir.ui.view'].render_template('website.%s' % view_id, values)
                 except Exception:
