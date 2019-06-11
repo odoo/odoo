@@ -1202,13 +1202,17 @@ class IrModelAccess(models.Model):
            :rtype: list
         """
         assert access_mode in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
-        self._cr.execute("""SELECT c.name, g.name
-                            FROM ir_model_access a
-                                JOIN ir_model m ON (a.model_id=m.id)
-                                JOIN res_groups g ON (a.group_id=g.id)
-                                LEFT JOIN ir_module_category c ON (c.id=g.category_id)
-                            WHERE m.model=%s AND a.active IS TRUE AND a.perm_""" + access_mode,
-                         (model_name,))
+        self._cr.execute("""
+            SELECT c.name, g.name
+              FROM ir_model_access a
+              JOIN ir_model m ON (a.model_id = m.id)
+              JOIN res_groups g ON (a.group_id = g.id)
+         LEFT JOIN ir_module_category c ON (c.id = g.category_id)
+             WHERE m.model = %%s
+               AND a.active = TRUE
+               AND a.perm_%s = TRUE
+          ORDER BY c.name, g.name NULLS LAST
+        """ % access_mode, [model_name])
         return [('%s/%s' % x) if x[0] else x[1] for x in self._cr.fetchall()]
 
     # The context parameter is useful when the method translates error messages.
