@@ -15,9 +15,8 @@ var ActionManager = require('web.ActionManager');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var config = require('web.config');
-var crash_manager = require('web.crash_manager');
+var WarningDialog = require('web.CrashManager').WarningDialog;
 var data_manager = require('web.data_manager');
-var Dialog = require('web.Dialog');
 var dom = require('web.dom');
 var KeyboardNavigationMixin = require('web.KeyboardNavigationMixin');
 var Loading = require('web.Loading');
@@ -29,7 +28,6 @@ var utils = require('web.utils');
 var Widget = require('web.Widget');
 
 var _t = core._t;
-var qweb = core.qweb;
 
 var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMixin, {
     dependencies: ['notification'],
@@ -393,11 +391,9 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
     _onDisplayWarning: function (e) {
         var data = e.data;
         if (data.type === 'dialog') {
-            new Dialog(this, {
-                size: 'medium',
+            new WarningDialog(this, {
                 title: data.title,
-                $content: qweb.render("CrashManager.warning", data),
-            }).open({shouldFocusButtons: true});
+            }, data).open();
         } else {
             this.call('notification', 'notify', e.data);
         }

@@ -3,7 +3,7 @@ odoo.define('iap.CrashManager', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
-var CrashManager = require('web.CrashManager');
+var CrashManager = require('web.CrashManager').CrashManager;
 var Dialog = require('web.Dialog');
 
 var _t = core._t;

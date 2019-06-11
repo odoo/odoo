@@ -630,13 +630,18 @@ class JsonRequest(WebRequest):
         try:
             return super(JsonRequest, self)._handle_exception(exception)
         except Exception:
-            if not isinstance(exception, (odoo.exceptions.Warning, SessionExpiredException,
-                                          odoo.exceptions.except_orm, werkzeug.exceptions.NotFound)):
-                _logger.exception("Exception during JSON request handling.")
+            if not isinstance(exception, SessionExpiredException):
+                if exception.args and exception.args[0] == "bus.Bus not available in test mode":
+                    _logger.info(exception)
+                elif isinstance(exception, (odoo.exceptions.Warning, odoo.exceptions.except_orm,
+                                          werkzeug.exceptions.NotFound)):
+                    _logger.warning(exception)
+                else:
+                    _logger.exception("Exception during JSON request handling.")
             error = {
-                    'code': 200,
-                    'message': "Odoo Server Error",
-                    'data': serialize_exception(exception)
+                'code': 200,
+                'message': "Odoo Server Error",
+                'data': serialize_exception(exception),
             }
             if isinstance(exception, werkzeug.exceptions.NotFound):
                 error['http_status'] = 404
@@ -1414,7 +1419,7 @@ class Root(object):
             httprequest = werkzeug.wrappers.Request(environ)
             httprequest.app = self
             httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
-            
+
             current_thread = threading.current_thread()
             current_thread.url = httprequest.url
             current_thread.query_count = 0
