@@ -4,6 +4,9 @@ odoo.define('web.CrashManager', function (require) {
 var ajax = require('web.ajax');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+var mixins = require('web.mixins');
+var ServicesMixin = require('web.ServicesMixin');
+var ServiceProviderMixin = require('web.ServiceProviderMixin');
 var Widget = require('web.Widget');
 
 var _t = core._t;
@@ -75,11 +78,13 @@ var WarningDialog = CrashManagerDialog.extend({
     },
 });
 
-var CrashManager = core.Class.extend({
+var CrashManager = core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, ServiceProviderMixin,{
     init: function () {
         var self = this;
         this.active = true;
         this.isConnected = true;
+
+        mixins.EventDispatcherMixin.init.call(this);
 
         // crash manager integration
         core.bus.on('rpc_error', this, this.rpc_error);
@@ -139,6 +144,7 @@ var CrashManager = core.Class.extend({
                 ev.preventDefault();
             }
         });
+        ServiceProviderMixin.init.call(this);
     },
     enable: function () {
         this.active = true;
@@ -192,7 +198,7 @@ var CrashManager = core.Class.extend({
                                     data: _.extend({}, error.data,
                                         {
                                             message: error.data.arguments[1],
-                                            title: error.data.arguments[0] !== 'Warning' ? (" - " + error.data.arguments[0]) : '',
+                                            title: error.data.arguments[0] !== 'Warning' ? error.data.arguments[0] : '',
                                         })
                                 });
                 }
@@ -213,14 +219,11 @@ var CrashManager = core.Class.extend({
                                 data: _.extend({}, error.data,
                                     {
                                         message: error.data.arguments[0],
-                                        title: map_title[error.data.exception_type] !== 'Warning' ? (" - " + map_title[error.data.exception_type]) : '',
+                                        title: map_title[error.data.exception_type] !== 'Warning' ? map_title[error.data.exception_type] : '',
                                     })
                             });
             }
-
             this.show_warning(error);
-        //InternalError
-
         } else {
             this.show_error(error);
         }
@@ -230,12 +233,14 @@ var CrashManager = core.Class.extend({
             return;
         }
         var message = error.data ? error.data.message : error.message;
-        return new WarningDialog(this, {
-            title: _.str.capitalize(error.type) || _t("Odoo Warning"),
-            subtitle: error.data.title,
-        }, {
+        var title = _.str.capitalize(error.type) || _t("Oops Something went wrong !");
+        var subtitle = error.data ? error.data.title : error.title;
+        this.displayNotification({
+            title: title,
             message: message,
-        }).open();
+            subtitle: subtitle,
+            sticky: true,
+        });
     },
     show_error: function (error) {
         if (!this.active) {
