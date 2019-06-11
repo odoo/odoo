@@ -228,19 +228,19 @@ var CrashManager = core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
             this.show_error(error);
         }
     },
-    show_warning: function (error) {
+    show_warning: function (error, options) {
         if (!this.active) {
             return;
         }
         var message = error.data ? error.data.message : error.message;
         var title = _.str.capitalize(error.type) || _t("Oops Something went wrong !");
         var subtitle = error.data ? error.data.title : error.title;
-        this.displayNotification({
+        this.displayNotification(_.extend({
             title: title,
             message: message,
             subtitle: subtitle,
             sticky: true,
-        });
+        }, options));
     },
     show_error: function (error) {
         if (!this.active) {
