@@ -166,7 +166,6 @@ var PivotRenderer = AbstractRenderer.extend({
                 }
                 $row.append($cell);
 
-                $cell.toggleClass('d-none d-md-table-cell', (cell.expanded !== undefined) || (cell.measure !== undefined && j < headers[i].length - this.state.measures.length));
                 if (cell.height > 1) {
                     $cell.css('padding', 0);
                 }
@@ -267,7 +266,6 @@ var PivotRenderer = AbstractRenderer.extend({
                             if (((j >= length - this.state.measures.length) && shouldDisplayTotal) || i === 0){
                                 $cell.css('font-weight', 'bold');
                             }
-                            $cell.toggleClass('d-none d-md-table-cell', j < length - nbrMeasures);
                             $row.append($cell);
                         }
                     } else {
@@ -292,8 +290,6 @@ var PivotRenderer = AbstractRenderer.extend({
                         $cell.css('font-weight', 'bold');
                     }
                     $row.append($cell);
-
-                    $cell.toggleClass('d-none d-md-table-cell', j < length - nbrMeasures);
                 }
             }
             $tbody.append($row);
