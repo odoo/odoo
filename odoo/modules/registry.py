@@ -301,6 +301,7 @@ class Registry(Mapping):
             for name in missing:
                 _logger.info("Recreate table of model %s.", name)
                 env[name].init()
+            env['base'].flush()
             # check again, and log errors if tables are still missing
             missing_tables = set(table2model).difference(existing_tables(cr, table2model))
             for table in missing_tables:
