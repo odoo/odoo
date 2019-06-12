@@ -174,6 +174,11 @@ class Location(models.Model):
         self.ensure_one()
         return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location
 
+    @api.constrains('company_id', 'location_id')
+    def _check_company(self):
+        if self.company_id and self.location_id.company_id and self.company_id != self.location_id.company_id:
+            raise UserError(_('The company cannot be different than the parent''s one'))
+
 
 class Route(models.Model):
     _name = 'stock.location.route'
