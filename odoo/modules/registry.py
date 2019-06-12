@@ -281,6 +281,8 @@ class Registry(Mapping):
             func = self._post_init_queue.popleft()
             func()
 
+        env['base'].flush()
+
         # make sure all tables are present
         self.check_tables_exist(cr)
 

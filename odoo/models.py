@@ -2382,27 +2382,24 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
             # update the database schema for fields
             columns = tools.table_columns(cr, self._table)
-
-            def recompute(field):
-                _logger.info("Storing computed values of %s", field)
-                recs = self.with_context(active_test=False).search([])
-                # DLE P15: we are in the database init, (convert models to database table/columns)
-                # at the end end of the initialization, stored computed fields must be computed right away.
-                # add_todo is nice to add the fields to recompute, but in this case it was never called after the database init,
-                # and the computed stored field todo were lost.
-                # test `test_amount_to_text_10`
-                field.compute_value(recs)
+            fields_to_compute = []
 
             for field in self._fields.values():
                 if not field.store:
                     continue
-
                 if field.manual and not update_custom_fields:
                     continue            # don't update custom fields
-
                 new = field.update_db(self, columns)
                 if new and field.compute:
-                    self.pool.post_init(recompute, field)
+                    fields_to_compute.append(field)
+
+            if fields_to_compute:
+                @self.pool.post_init
+                def mark_fields_to_compute():
+                    recs = self.with_context(active_test=False).search([])
+                    for field in fields_to_compute:
+                        _logger.info("Storing computed values of %s", field)
+                        self.env.add_todo(field, recs)
 
         if self._auto:
             self._add_sql_constraints()
