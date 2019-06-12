@@ -796,14 +796,14 @@
                     <t t-if='!simple'>
                         <line><left><t t-esc='line.product_name_wrapped[0]' /></left></line>
                         <t t-call="XmlReceiptWrappedProductNameLines"/>
-                        <t t-if="line.display_discount_policy == 'without_discount' &amp;&amp; line.price != line.price_lst">
+                        <t t-if="line.display_discount_policy == 'without_discount' &amp;&amp; line.price_display_one != line.price">
                             <line indent='1'>
                                 <left>
                                     <value t-att-value-decimals='pos.dp["Product Price"]'>
-                                        <t t-esc="line.price_lst" />
+                                        <t t-esc="line.price" />
                                     </value> ->
                                     <value t-att-value-decimals='pos.dp["Product Price"]'>
-                                        <t t-esc="line.price" />
+                                        <t t-esc="line.price_display_one" />
                                     </value>
                                 </left>
                             </line>
@@ -834,7 +834,7 @@
                                 </t>
                                 x
                                 <value t-att-value-decimals='pos.dp["Product Price"]'>
-                                    <t t-esc='line.price_display_one' />
+                                    <t t-esc='line.price' />
                                 </value>
                             </left>
                             <right>

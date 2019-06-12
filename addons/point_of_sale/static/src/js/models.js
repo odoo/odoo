@@ -1627,7 +1627,7 @@ exports.Orderline = Backbone.Model.extend({
             this.quantity = quantity;
             return price;
         } else {
-            return this.get_unit_price();
+            return this.get_unit_price() * (1.0 - (this.get_discount() / 100.0));
         }
     },
     get_base_price:    function(){
@@ -1635,9 +1635,8 @@ exports.Orderline = Backbone.Model.extend({
         return round_pr(this.get_unit_price() * this.get_quantity() * (1 - this.get_discount()/100), rounding);
     },
     get_display_price_one: function(){
-        var rounding = this.pos.currency.rounding;
-        var unit_display_price=this.get_unit_display_price();
-        return round_pr(unit_display_price * (1.0 - (this.get_discount() / 100.0)), rounding);
+        var unit_display_price = this.product.get_price(this.order.pricelist, this.get_quantity());
+        return unit_display_price
     },
     get_display_price: function(){
         if (this.pos.config.iface_tax_included === 'total') {
