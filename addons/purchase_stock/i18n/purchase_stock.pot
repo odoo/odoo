@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.1\n"
+"Project-Id-Version: Odoo Server saas~12.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-16 07:59+0000\n"
-"PO-Revision-Date: 2019-01-16 07:59+0000\n"
+"POT-Creation-Date: 2019-06-12 12:23+0000\n"
+"PO-Revision-Date: 2019-06-12 12:23+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,6 +26,12 @@ msgid "<span class=\"o_stat_text\">Purchase Orders</span>"
 msgstr ""
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
+msgid "<strong>Shipping address:</strong>"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
 msgid "According to product configuration, the recieved quantity can be automatically computed by mechanism :\n"
 "  - Manual: the quantity is set manually on the line\n"
@@ -39,7 +45,7 @@ msgid "Action"
 msgstr ""
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/stock.py:117
+#: code:addons/purchase_stock/models/stock.py:122
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_report_stock_rule
 #: model:stock.location.route,name:purchase_stock.route_warehouse0_buy
 #: selection:stock.rule,action:0
@@ -320,13 +326,13 @@ msgid "Technical field used to display the Drop Ship Address"
 msgstr ""
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:290
+#: code:addons/purchase_stock/models/purchase.py:297
 #, python-format
 msgid "The quantities on your purchase order indicate less than billed. You should ask for a refund. "
 msgstr ""
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/stock_rule.py:38
+#: code:addons/purchase_stock/models/stock_rule.py:48
 #, python-format
 msgid "There is no vendor associated to the product %s. Please define a vendor for this product."
 msgstr ""
@@ -364,13 +370,13 @@ msgid "When products are bought, they can be delivered to this warehouse"
 msgstr ""
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/stock_rule.py:20
+#: code:addons/purchase_stock/models/stock_rule.py:21
 #, python-format
 msgid "When products are needed in <b>%s</b>, <br/> a request for quotation is created to fulfill the need."
 msgstr ""
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:282
+#: code:addons/purchase_stock/models/purchase.py:289
 #, python-format
 msgid "You cannot decrease the ordered quantity below the received quantity.\n"
 "Create a return first."

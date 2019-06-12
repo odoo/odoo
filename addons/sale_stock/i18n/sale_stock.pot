@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2\n"
+"Project-Id-Version: Odoo Server saas~12.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 13:50+0000\n"
-"PO-Revision-Date: 2019-03-20 13:50+0000\n"
+"POT-Creation-Date: 2019-06-12 12:24+0000\n"
+"PO-Revision-Date: 2019-06-12 12:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:278
+#: code:addons/sale_stock/models/sale_order.py:293
 #, python-format
 msgid "\n"
 "There are %s %s available across all warehouses.\n"
@@ -32,27 +32,17 @@ msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "<span class=\"badge badge-danger label-text-align\"><i class=\"fa fa-fw fa-times\"/> Cancelled</span>"
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Preparation</b>"
 msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "<span class=\"badge badge-info label-text-align\"><i class=\"fa fa-fw fa-clock-o\"/> Preparation</span>"
+msgid "<i class=\"fa fa-fw fa-times\"/> <b>Cancelled</b>"
 msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "<span class=\"badge badge-success label-text-align\"><i class=\"fa fa-fw fa-truck\"/> Shipped</span>"
-msgstr ""
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "<span class=\"badge badge-warning label-text-align\"><i class=\"fa fa-fw fa-clock-o\"/> Partially Available</span>"
-msgstr ""
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "<span class=\"fa fa-download\" role=\"img\" aria-label=\"Download\" title=\"Download\"/>"
+msgid "<i class=\"fa fa-fw fa-truck\"/> <b>Shipped</b>"
 msgstr ""
 
 #. module: sale_stock
@@ -81,7 +71,6 @@ msgid "<strong>Delivery Orders</strong>"
 msgstr ""
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
 msgstr ""
@@ -142,6 +131,11 @@ msgid "Config Settings"
 msgstr ""
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "Date:"
+msgstr ""
+
+#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Delivery"
 msgstr ""
@@ -159,6 +153,12 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:108
+#, python-format
+msgid "Do not forget to change the partner on the following delivery orders: %s"
 msgstr ""
 
 #. module: sale_stock
@@ -198,16 +198,10 @@ msgid "Impacted Transfer(s):"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_account_invoice__incoterms_id
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Incoterms"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_account_invoice__incoterms_id
-msgid "Incoterms are series of sales terms. They are used to divide transaction costs and responsibilities between buyer and seller and reflect state-of-the-art transportation practices."
 msgstr ""
 
 #. module: sale_stock
@@ -241,7 +235,7 @@ msgid "Lot/Serial"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:427
+#: code:addons/sale_stock/models/sale_order.py:442
 #, python-format
 msgid "Make To Order"
 msgstr ""
@@ -279,7 +273,7 @@ msgid "Move forward expected delivery dates by"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:285
+#: code:addons/sale_stock/models/sale_order.py:300
 #, python-format
 msgid "Not enough inventory!"
 msgstr ""
@@ -290,7 +284,7 @@ msgid "Order-Specific Routes"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:306
+#: code:addons/sale_stock/models/sale_order.py:321
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr ""
@@ -459,7 +453,7 @@ msgid "This allows to apply a special route on sales order lines (e.g. dropshipp
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:407
+#: code:addons/sale_stock/models/sale_order.py:422
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
 msgstr ""
@@ -481,9 +475,15 @@ msgid "Warehouse"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:406
+#: code:addons/sale_stock/models/sale_order.py:421
 #, python-format
 msgid "Warning"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:107
+#, python-format
+msgid "Warning!"
 msgstr ""
 
 #. module: sale_stock
@@ -502,20 +502,20 @@ msgid "When to start shipping"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:307
+#: code:addons/sale_stock/models/sale_order.py:322
 #, python-format
 msgid "You are decreasing the ordered quantity! Do not forget to manually update the delivery order if needed."
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:447
+#: code:addons/sale_stock/models/sale_order.py:463
 #, python-format
 msgid "You cannot decrease the ordered quantity below the delivered quantity.\n"
 "Create a return first."
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:271
+#: code:addons/sale_stock/models/sale_order.py:286
 #, python-format
 msgid "You plan to sell %s %s of %s but you only have %s %s available in %s warehouse."
 msgstr ""

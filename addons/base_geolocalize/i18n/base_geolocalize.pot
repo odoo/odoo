@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2\n"
+"Project-Id-Version: Odoo Server saas~12.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 13:49+0000\n"
-"PO-Revision-Date: 2019-03-20 13:49+0000\n"
+"POT-Creation-Date: 2019-06-12 12:24+0000\n"
+"PO-Revision-Date: 2019-06-12 12:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -74,7 +74,7 @@ msgid "Display Name"
 msgstr ""
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/base_geocoder.py:146
+#: code:addons/base_geolocalize/models/base_geocoder.py:151
 #, python-format
 msgid "Error with geolocation server:"
 msgstr ""
@@ -169,6 +169,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_techname
 msgid "Tech Name"
+msgstr ""
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/base_geocoder.py:118
+#, python-format
+msgid "Unable to geolocate, received the error:\n"
+"%s\n"
+"\n"
+"Google made this a paid feature.\n"
+"You should first enable billing on your Google account.\n"
+"Then, go to Developer Console, and enable the APIs:\n"
+"Geocoding, Maps Static, Maps Javascript.\n"
+""
 msgstr ""
 
 #. module: base_geolocalize
