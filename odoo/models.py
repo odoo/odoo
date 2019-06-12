@@ -4180,6 +4180,7 @@ Fields:
             model_name = self._name
             for fname in arg[0].split('.'):
                 to_flush[model_name].add(fname)
+                field = self.env[model_name]._fields[fname]
                 model_name = field.comodel_name
 
         # DLE P56: needs to flush write the order fields
