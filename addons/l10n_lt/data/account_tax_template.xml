@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Groups -->
+<record model="account.tax.group" id="LT_MENAMAS">
+  <field name="name">Menamas PVM</field>
+  <field name="sequence" eval="10"/>
+</record>
+
+<!-- Sales -->
+<record model="account.tax.template" id="EU_SALE_0">
+  <field name="chart_template_id" ref="l10n_lt"/>
+  <field name="name">EU-PARD 0%</field>
+  <field name="description">EU PVM 0%</field>
+  <field name="amount" eval="0"/>
+  <field name="amount_type">percent</field>
+  <field name="sequence" eval="10"/>
+  <field name="type_tax_use">sale</field>
+</record>
+
+<record model="account.tax.template" id="LT_SALE_0">
+  <field name="chart_template_id" ref="l10n_lt"/>
+  <field name="name">PARD-PVM 0%</field>
+  <field name="description">PVM 0%</field>
+  <field name="amount" eval="0"/>
+  <field name="amount_type">percent</field>
+  <field name="sequence" eval="10"/>
+  <field name="type_tax_use">sale</field>
+</record>
+
+<!-- Default sale tax -->
+<record model="account.tax.template" id="LT_SALE_21">
+  <field name="chart_template_id" ref="l10n_lt"/>
+  <field name="name">PARD-PVM 21%</field>
+  <field name="description">PVM 21%</field>
+  <field name="amount" eval="21"/>
+  <field name="amount_type">percent</field>
+  <field name="sequence" eval="1"/>
+  <field name="type_tax_use">sale</field>
+  <field name="refund_account_id" ref="4492"/>
+  <field name="account_id" ref="4492"/>
+</record>
+
+<!-- Purchases -->
+<record model="account.tax.template" id="EU_PURCHASE_0">
+  <field name="chart_template_id" ref="l10n_lt"/>
+  <field name="name">EU-PIRK 0%</field>
+  <field name="description">EU PVM 0%</field>
+  <field name="amount" eval="0"/>
+  <field name="amount_type">percent</field>
+  <field name="sequence" eval="10"/>
+  <field name="type_tax_use">purchase</field>
+</record>
+
+<record model="account.tax.template" id="LT_PURCHASE_0">
+  <field name="chart_template_id" ref="l10n_lt"/>
+  <field name="name">PIRK-PVM 0%</field>
+  <field name="description">PVM 0%</field>
+  <field name="amount" eval="0"/>
+  <field name="amount_type">percent</field>
+  <field name="sequence" eval="10"/>
+  <field name="type_tax_use">purchase</field>
+</record>
+
+<!-- Default purchase tax -->
+<record model="account.tax.template" id="LT_PURCHASE_21">
+  <field name="chart_template_id" ref="l10n_lt"/>
+  <field name="name">PIRK-PVM 21%</field>
+  <field name="description">PVM 21%</field>
+  <field name="amount" eval="21"/>
+  <field name="amount_type">percent</field>
+  <field name="sequence" eval="1"/>
+  <field name="type_tax_use">purchase</field>
+  <field name="refund_account_id" ref="2441"/>
+  <field name="account_id" ref="2441"/>
+</record>
+
+<record model="account.tax.template" id="LT_PURCHASE_95STR-MEN">
+  <field name="chart_template_id" ref="l10n_lt"/>
+  <field name="name">PVM-95-STR-MEN</field>
+  <field name="description">21%</field>
+  <field name="amount" eval="21"/>
+  <field name="amount_type">percent</field>
+  <field name="sequence" eval="10"/>
+  <field name="type_tax_use">purchase</field>
+  <field name="refund_account_id" ref="24411"/>
+  <field name="account_id" ref="24411"/>
+  <field name="tax_group_id" ref="LT_MENAMAS"/>
+</record>
+
+<record model="account.tax.template" id="LT_PURCHASE_95STR">
+  <field name="chart_template_id" ref="l10n_lt"/>
+  <field name="name">PVM-95-STR</field>
+  <field name="description">-21%</field>
+  <field name="amount" eval="-21"/>
+  <field name="amount_type">percent</field>
+  <field name="sequence" eval="10"/>
+  <field name="type_tax_use">purchase</field>
+  <field name="refund_account_id" ref="44921"/>
+  <field name="account_id" ref="44921"/>
+  <field name="tax_group_id" ref="LT_MENAMAS"/>
+</record>
+
+<record model="account.tax.template" id="LT_PURCHASE_96STR-MEN">
+  <field name="chart_template_id" ref="l10n_lt"/>
+  <field name="name">PVM-96-STR-MEN</field>
+  <field name="description">21%</field>
+  <field name="amount" eval="21"/>
+  <field name="amount_type">percent</field>
+  <field name="sequence" eval="10"/>
+  <field name="type_tax_use">purchase</field>
+  <field name="refund_account_id" ref="24412"/>
+  <field name="account_id" ref="24412"/>
+  <field name="tax_group_id" ref="LT_MENAMAS"/>
+</record>
+
+<record model="account.tax.template" id="LT_PURCHASE_96STR">
+  <field name="chart_template_id" ref="l10n_lt"/>
+  <field name="name">PVM-96-STR</field>
+  <field name="description">-21%</field>
+  <field name="amount" eval="-21"/>
+  <field name="amount_type">percent</field>
+  <field name="sequence" eval="10"/>
+  <field name="type_tax_use">purchase</field>
+  <field name="refund_account_id" ref="44922"/>
+  <field name="account_id" ref="44922"/>
+  <field name="tax_group_id" ref="LT_MENAMAS"/>
+</record>
+
+</odoo>
