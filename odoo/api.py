@@ -540,25 +540,6 @@ class Environment(Mapping):
         """ return the current language code """
         return self.context.get('lang')
 
-    @contextmanager
-    def do_in_draft(self):
-        """ Context-switch to draft mode, where all field updates are done in
-            cache only.
-        """
-        if self.all.in_draft:
-            yield
-        else:
-            try:
-                self.all.in_draft = True
-                yield
-            finally:
-                self.all.in_draft = False
-
-    @property
-    def in_draft(self):
-        """ Return whether we are in draft mode. """
-        return self.all.in_draft
-
     def clear(self):
         """ Clear all record caches, and discard all fields to recompute.
             This may be useful when recovering from a failed ORM operation.
@@ -709,7 +690,6 @@ class Environments(object):
         self.envs = WeakSet()           # weak set of environments
         self.cache = Cache()            # cache for all records
         self.todo = {}                  # recomputations {field: [records]}  FP NOTE: should be renamed to "tocompute"
-        self.mode = False               # flag for draft/onchange
         self.recompute = True
         self.towrite = defaultdict(lambda : defaultdict(dict))  # {model: {id: {field: value}}}
 

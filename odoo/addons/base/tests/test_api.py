@@ -205,21 +205,6 @@ class TestAPI(common.TransactionCase):
             demo_partners[0].company_id.name
 
     @mute_logger('odoo.models')
-    def test_55_draft(self):
-        """ Test draft mode nesting. """
-        env = self.env
-        self.assertFalse(env.in_draft)
-        with env.do_in_draft():
-            self.assertTrue(env.in_draft)
-            with env.do_in_draft():
-                self.assertTrue(env.in_draft)
-                with env.do_in_draft():
-                    self.assertTrue(env.in_draft)
-                self.assertTrue(env.in_draft)
-            self.assertTrue(env.in_draft)
-        self.assertFalse(env.in_draft)
-
-    @mute_logger('odoo.models')
     def test_60_cache(self):
         """ Check the record cache behavior """
         Partners = self.env['res.partner']
