@@ -1,9 +1,9 @@
-odoo.define('mass_mailing.CampaignKanbanRecord', function (require) {
+odoo.define('utm.CampaignKanbanRecord', function (require) {
 "use strict";
 
 var KanbanRecord = require('web.KanbanRecord');
 
-var MassMailingCampaignKanbanRecord = KanbanRecord.extend({
+var UtmCampaignKanbanRecord = KanbanRecord.extend({
     /**
      * @override
      * @private
@@ -13,6 +13,6 @@ var MassMailingCampaignKanbanRecord = KanbanRecord.extend({
     }
 });
 
-return MassMailingCampaignKanbanRecord;
+return UtmCampaignKanbanRecord;
 
 });

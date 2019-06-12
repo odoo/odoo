@@ -11,28 +11,6 @@
         sequence="99"
         groups="base.group_no_one"/>
 
-	<!-- utm.campaign -->
-	<record id="utm_campaign_view_tree" model="ir.ui.view">
-        <field name="name">utm.campaign.view.tree</field>
-        <field name="model">utm.campaign</field>
-        <field name="arch" type="xml">
-            <tree string="Campaign">
-                <field name="name"/>
-            </tree>
-        </field>
-    </record>
-    <record id="utm_campaign_view_form" model="ir.ui.view">
-        <field name="name">utm.campaign.view.form</field>
-        <field name="model">utm.campaign</field>
-        <field name="arch" type="xml">
-            <form string="Campaign">
-                <group>
-                    <field name="name"/>
-                </group>
-            </form>
-        </field>
-    </record>
-
     <record id="utm_campaign_action" model="ir.actions.act_window">
         <field name="name">Campaigns</field>
         <field name="res_model">utm.campaign</field>

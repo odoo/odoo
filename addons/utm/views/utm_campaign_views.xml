@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============== UTM Campaigns   =============== -->
+    <record model="ir.ui.view" id="utm_campaign_form_view">
+        <field name="name">utm.campaign.form</field>
+        <field name="model">utm.campaign</field>
+        <field name="arch" type="xml">
+            <form string="UTM Campaign">
+                <sheet>
+                    <group id="top-group">
+                        <field name="name" string="Campaign Name"/>
+                        <field name="user_id"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                    </group>
+                    <notebook>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="utm_campaign_view_tree">
+        <field name="name">utm.campaign.tree</field>
+        <field name="model">utm.campaign</field>
+        <field name="arch" type="xml">
+            <tree string="UTM Campaigns">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="stage_id"/>
+                <field name="tag_ids"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_utm_campaign_kanban">
+        <field name="name">utm.campaign.kanban</field>
+        <field name="model">utm.campaign</field>
+        <field name="arch" type="xml">
+            <kanban js_class="utm_campaign_kanban" default_group_by='stage_id'>
+                <field name='color'/>
+                <field name='user_id'/>
+                <field name="stage_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing_campaign">
+                            <div class="o_dropdown_kanban dropdown">
+
+                                <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <span class="fa fa-ellipsis-v"/>
+                                </a>
+                                <div class="dropdown-menu" role="menu">
+                                    <t t-if="widget.editable">
+                                        <a role="menuitem" type="edit" class="dropdown-item">Settings</a>
+                                    </t>
+                                    <t t-if="widget.deletable">
+                                        <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                    </t>
+                                    <div role="separator" class="dropdown-divider"/>
+                                    <div role="separator" class="dropdown-header">Colour</div>
+                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                </div>
+                            </div>
+                                <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top mb16">
+                                    <div class="o_kanban_record_headings">
+                                        <h3 class="oe_margin_bottom_8 o_kanban_record_title"><field name="name"/></h3>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                </div>
+                                <div class="o_kanban_record_bottom mt16" style="height:90px">
+                                    <div class="oe_kanban_bottom_left" style="height:90px">
+                                    </div>
+                                    <div class="oe_kanban_bottom_right" style="height:90px">
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="30" height="30" class="oe_kanban_avatar"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!--  CAMPAIGN TAGS !-->
+    <record id="utm_tag_view_form" model="ir.ui.view">
+        <field name="name">utm.tag.form</field>
+        <field name="model">utm.tag</field>
+        <field name="arch" type="xml">
+            <form string="Campaign Tags">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--  CAMPAIGN STAGE !-->
+    <record model="ir.ui.view" id="view_utm_stage_search">
+        <field name="name">utm.stage.search</field>
+        <field name="model">utm.stage</field>
+        <field name="arch" type="xml">
+            <search string="Stages">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_utm_stage_tree">
+        <field name="name">utm.stage.tree</field>
+        <field name="model">utm.stage</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree string="Stages" editable="top">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

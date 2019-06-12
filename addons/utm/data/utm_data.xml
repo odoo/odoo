@@ -1,17 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+        <!-- UTM Stage -->
+        <record id="default_utm_stage" model="utm.stage">
+            <field name="name">Default</field>
+            <field name="sequence">10</field>
+        </record>
+
         <!-- UTM Campain -->
         <record model="utm.campaign" id="utm_campaign_fall_drive">
             <field name="name">Sale</field>
+            <field name="stage_id" ref="utm.default_utm_stage"/>
+            <field name="is_website" eval="True"/>
         </record>
         <record model="utm.campaign" id="utm_campaign_christmas_special">
             <field name="name">Christmas Special</field>
+            <field name="stage_id" ref="utm.default_utm_stage"/>
+            <field name="is_website" eval="True"/>
         </record>
         <record model="utm.campaign" id="utm_campaign_email_campaign_services">
             <field name="name">Email Campaign - Services</field>
+            <field name="stage_id" ref="utm.default_utm_stage"/>
+            <field name="is_website" eval="True"/>
         </record>
         <record model="utm.campaign" id="utm_campaign_email_campaign_products">
             <field name="name">Email Campaign - Products</field>
+            <field name="stage_id" ref="utm.default_utm_stage"/>
+            <field name="is_website" eval="True"/>
         </record>
 
         <!-- UTM Source -->
@@ -58,5 +72,11 @@
         </record>
         <record model="utm.medium" id="utm_medium_google_adwords">
             <field name="name">Google Adwords</field>
+        </record>
+
+        <!-- UTM Tag -->
+        <record id="utm_tag_1" model="utm.tag">
+            <field name="name">Marketing</field>
+            <field name="color" eval="1"/>
         </record>
 </odoo>
