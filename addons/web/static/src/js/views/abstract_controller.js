@@ -473,6 +473,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             this.dp.add(this._rpc({
                 model: data.model,
                 method: data.method,
+                context: data.context,
             })).then(function (action) {
                 if (action !== undefined) {
                     self.do_action(action, options);
