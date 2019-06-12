@@ -875,30 +875,12 @@ class TestFields(common.TransactionCase):
         self.assertEqual(record.with_user(user1).foo, 'beta')
         self.assertEqual(record.with_user(user2).foo, 'default')
 
-        # create company record and attribute
-        company_record = self.env['test_new_api.company'].create({'foo': 'ABC'})
-        attribute_record = self.env['test_new_api.company.attr'].create({
-            'company': company_record.id,
-            'quantity': 1,
-        })
-        self.assertEqual(attribute_record.bar, 'ABC')
-
-        # change quantity, 'bar' should recompute to 'ABCABC'
-        attribute_record.quantity = 2
-        self.assertEqual(attribute_record.bar, 'ABCABC')
-        self.assertFalse(self.env.has_todo())
-
-        # change company field 'foo', 'bar' should recompute to 'DEFDEF'
-        company_record.foo = 'DEF'
-        self.assertEqual(attribute_record.company.foo, 'DEF')
-        self.assertEqual(attribute_record.bar, 'DEFDEF')
-        self.assertFalse(self.env.has_todo())
-
         # add group on company-dependent field
         self.assertFalse(user0.has_group('base.group_system'))
         self.patch(type(record).foo, 'groups', 'base.group_system')
         with self.assertRaises(AccessError):
             record.with_user(user0).foo = 'forbidden'
+            record.flush()
 
         user0.write({'groups_id': [(4, self.env.ref('base.group_system').id)]})
         record.with_user(user0).foo = 'yes we can'
@@ -912,7 +894,26 @@ class TestFields(common.TransactionCase):
         })
         with self.assertRaises(AccessError):
             record.with_user(user0).foo = 'forbidden'
-            record.with_user(user0).flush()
+            record.flush()
+            
+
+        # create company record and attribute
+        company_record = self.env['test_new_api.company'].create({'foo': 'ABC'})
+        attribute_record = self.env['test_new_api.company.attr'].create({
+            'company': company_record.id,
+            'quantity': 1,
+        })
+        self.assertEqual(attribute_record.bar, 'ABC')
+
+        # change quantity, 'bar' should recompute to 'ABCABC'
+        attribute_record.quantity = 2
+        self.assertEqual(attribute_record.bar, 'ABCABC')
+
+        # change company field 'foo', 'bar' should recompute to 'DEFDEF'
+        company_record.foo = 'DEF'
+        self.assertEqual(attribute_record.company.foo, 'DEF')
+        self.assertEqual(attribute_record.bar, 'DEFDEF')
+>>>>>>> m
 
     def test_30_read(self):
         """ test computed fields as returned by read(). """
