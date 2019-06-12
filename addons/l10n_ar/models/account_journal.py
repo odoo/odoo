@@ -127,20 +127,6 @@ class AccountJournal(models.Model):
         elif self.l10n_ar_afip_pos_system in ['FEERCEL', 'FEEWS', 'FEERCELP']:
             return expo_codes
 
-    def get_document_type_sequence(self, invoice):
-        """ Return the match sequences for the given journal and invoice
-        """
-        self.ensure_one()
-        if self.l10n_latam_country_code != 'AR':
-            return False
-        if self.l10n_ar_share_sequences:
-            return self.l10n_ar_sequence_ids.filtered(
-                lambda x: x.l10n_ar_letter == invoice.l10n_ar_letter)
-
-        return self.l10n_ar_sequence_ids.filtered(
-            lambda x: x.l10n_latam_document_type_id ==
-                invoice.l10n_latam_document_type_id)
-
     def create_document_type_sequences(self):
         """ Create new sequences for document types, update if can be updated
         """

@@ -391,3 +391,15 @@ class AccountInvoice(models.Model):
                 'message': 'Please configure the AFIP Responsability for '
                 '"%s" in order to continue' % self.partner_id.name,
             }}
+
+    def get_document_type_sequence(self):
+        """ Return the match sequences for the given journal and invoice
+        """
+        self.ensure_one()
+        if self.journal_id.l10n_latam_use_documents and self.l10n_latam_country_code == 'AR':
+            if self.journal_id.l10n_ar_share_sequences:
+                return self.journal_id.l10n_ar_sequence_ids.filtered(lambda x: x.l10n_ar_letter == self.l10n_ar_letter)
+            res = self.journal_id.l10n_ar_sequence_ids.filtered(
+                lambda x: x.l10n_latam_document_type_id == self.l10n_latam_document_type_id)
+            return res
+        return super().get_document_type_sequence()

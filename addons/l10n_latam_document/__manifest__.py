@@ -14,7 +14,7 @@ government required by this countries.
 
 In order to do that we add a new model named l10n_ar_document_type and we create
 links between this new model and another Odoo's models.
-"""
+""",
     "depends": [
         "account",
     ],

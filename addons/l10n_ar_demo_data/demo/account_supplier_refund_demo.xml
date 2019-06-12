@@ -9,7 +9,7 @@
         <field name="l10n_latam_invoice_id" ref="demo_sup_invoice_3"/>
     </record>
 
-        <function model="account.invoice.refund" name="_compute_l10n_latam_available_document_types"
+        <function model="account.invoice.refund" name="_onchange_l10n_latam_invoice"
            eval="[ref('demo_sup_refund_invoice_3')], {'active_ids': [ref('demo_sup_invoice_3')], 'active_model': 'account.invoice'}"/>
 
         <function model="account.invoice.refund" name="invoice_refund"
@@ -23,7 +23,7 @@
         <field name="l10n_latam_invoice_id" ref="demo_sup_invoice_4"/>
     </record>
 
-        <function model="account.invoice.refund" name="_compute_l10n_latam_available_document_types"
+        <function model="account.invoice.refund" name="_onchange_l10n_latam_invoice"
            eval="[ref('demo_sup_refund_invoice_4')], {'active_ids': [ref('demo_sup_invoice_4')], 'active_model': 'account.invoice'}"/>
 
         <function model="account.invoice.refund" name="invoice_refund"

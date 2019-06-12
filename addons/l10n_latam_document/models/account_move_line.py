@@ -9,7 +9,6 @@ class AccountMoveLine(models.Model):
 
     l10n_latam_document_type_id = fields.Many2one(
         related='move_id.l10n_latam_document_type_id',
-        readonly=True,
         auto_join=True,
         store=True,
         index=True,

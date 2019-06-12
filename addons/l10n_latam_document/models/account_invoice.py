@@ -80,8 +80,7 @@ class AccountInvoice(models.Model):
     @api.depends('l10n_latam_document_type_id', 'journal_id')
     def _compute_l10n_latam_sequence(self):
         for rec in self.filtered('journal_id'):
-            rec.l10n_latam_sequence_id = \
-                rec.journal_id.get_document_type_sequence(rec)
+            rec.l10n_latam_sequence_id = rec.get_document_type_sequence()
 
     @api.depends(
         'amount_untaxed', 'amount_tax', 'tax_line_ids',
@@ -107,55 +106,50 @@ class AccountInvoice(models.Model):
             invoice.l10n_latam_amount_untaxed = l10n_latam_amount_untaxed
             invoice.l10n_latam_tax_line_ids = not_included_invoice_taxes
 
-    @api.constrains(
-        'journal_id',
-        'partner_id',
-        'l10n_latam_document_type_id',
-    )
-    def _get_document_type(self):
-        """ Como los campos responsible y journal document type no los
-        queremos hacer funcion porque no queremos que sus valores cambien nunca
-        y como con la funcion anterior solo se almacenan solo si se crea desde
-        interfaz, hacemos este hack de constraint para computarlos si no estan
-        computados"""
-        for rec in self.filtered(
-                lambda x: not x.l10n_latam_document_type_id and
-                x.l10n_latam_available_document_type_ids):
-            rec.l10n_latam_document_type_id = (
-                rec._get_available_document_types(
-                    rec.journal_id, rec.type, rec.partner_id
-                ).get('document_type'))
-
-    @api.multi
-    def action_move_create(self):
-        self._pre_action_move_create()
-        res = super(AccountInvoice, self).action_move_create()
-        self._post_action_move_create()
+    def _get_onchange_create(self):
+        res = super()._get_onchange_create()
+        res.update([('onchange_journal_partner_company', ['l10n_latam_document_type_id'])])
         return res
 
     @api.multi
-    def _pre_action_move_create(self):
+    def action_move_create(self):
+        for rec in self.filtered(lambda x: x.l10n_latam_use_documents and not x.l10n_latam_document_number):
+            rec.l10n_latam_document_number = rec.l10n_latam_sequence_id.next_by_id()
+        res = super(AccountInvoice, self).action_move_create()
         for rec in self.filtered('l10n_latam_use_documents'):
-            if not rec.l10n_latam_document_type_id:
-                raise UserError(_(
-                    'The journal require a document type but not '
-                    'document type has been selected on invoice id %s.' % (
-                        rec.id)))
-            if not rec.l10n_latam_document_number:
-                if not rec.l10n_latam_sequence_id:
-                    raise UserError(_(
-                        'Error!. Please define sequence on the journal '
-                        'related documents to this invoice or set the '
-                        'document number.'))
-                rec.l10n_latam_document_number = \
-                    rec.l10n_latam_sequence_id.next_by_id()
+            rec.move_id.l10n_latam_document_type_id = rec.l10n_latam_document_type_id.id
+        return res
 
-    @api.multi
-    def _post_action_move_create(self):
-        for rec in self.filtered('l10n_latam_use_documents'):
-            rec.move_id.l10n_latam_document_type_id = \
-                rec.l10n_latam_document_type_id.id,
-        return True
+    @api.constrains('state', 'l10n_latam_document_type_id')
+    def _check_l10n_latam_documents(self):
+        validated_invoices = self.filtered(lambda x: x.l10n_latam_use_documents and x.state in ['open', 'done'])
+        without_doc_type = validated_invoices.filtered(lambda x: not x.l10n_latam_document_type_id)
+        if without_doc_type:
+            raise ValidationError(_(
+                'The journal require a document type but not document type has been selected on invoices %s.' % (
+                    without_doc_type.ids)))
+        without_number = validated_invoices.filtered(
+            lambda x: not x.l10n_latam_document_number and not x.l10n_latam_sequence_id)
+        if without_number:
+            raise ValidationError(_('Please set the document number on the following invoices %s.' % (
+                without_number.ids)))
+
+    @api.constrains('type', 'l10n_latam_document_type_id')
+    def _check_invoice_type_document_type(self):
+        for rec in self.filtered('l10n_latam_document_type_id.internal_type'):
+            internal_type = rec.l10n_latam_document_type_id.internal_type
+            invoice_type = rec.type
+            if internal_type in [
+                    'debit_note', 'invoice'] and invoice_type in [
+                    'out_refund', 'in_refund']:
+                raise ValidationError(_(
+                    'You can not use a %s document type with a refund '
+                    'invoice') % internal_type)
+            elif internal_type == 'credit_note' and invoice_type in [
+                    'out_invoice', 'in_invoice']:
+                raise ValidationError(_(
+                    'You can not use a %s document type with a invoice') % (
+                    internal_type))
 
     @api.onchange('journal_id', 'partner_id', 'company_id')
     def onchange_journal_partner_company(self):
@@ -165,18 +159,8 @@ class AccountInvoice(models.Model):
 
     @api.depends('journal_id', 'partner_id', 'company_id')
     def _compute_l10n_latam_available_document_types(self):
-        """
-        This function should only be inherited if you need to add another
-        "depends", for eg, if you need to add a depend on "new_field" you
-        should add:
-
-        @api.depends('new_field')
-        def _get_available_document_types(
-                self, journal, invoice_type, partner):
-            return super(
-                AccountInvoice, self)._get_available_document_types(
-                    journal, invoice_type, partner)
-        """
+        """ This function should not be inherited, you should inherit
+        _get_available_document_types instead """
         for invoice in self:
             res = invoice._get_available_document_types(
                 invoice.journal_id, invoice.type, invoice.partner_id)
@@ -185,8 +169,8 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def write(self, vals):
-        """ If someone change the type (for eg from sale order), we update
-        the document type"""
+        """ If someone change the type (for eg from
+        sale_order.action_invoice_create), we update the document type"""
         inv_type = vals.get('type')
         # if len(vals) == 1 and vals.get('type'):
         # podrian pasarse otras cosas ademas del type
@@ -221,23 +205,6 @@ class AccountInvoice(models.Model):
             'Method not implemented by localization of %s') % (
                 journal.company_id.country_id.name))
 
-    @api.constrains('type', 'l10n_latam_document_type_id')
-    def check_invoice_type_document_type(self):
-        for rec in self.filtered('l10n_latam_document_type_id.internal_type'):
-            internal_type = rec.l10n_latam_document_type_id.internal_type
-            invoice_type = rec.type
-            if internal_type in [
-                    'debit_note', 'invoice'] and invoice_type in [
-                    'out_refund', 'in_refund']:
-                raise ValidationError(_(
-                    'You can not use a %s document type with a refund '
-                    'invoice') % internal_type)
-            elif internal_type == 'credit_note' and invoice_type in [
-                    'out_invoice', 'in_invoice']:
-                raise ValidationError(_(
-                    'You can not use a %s document type with a invoice') % (
-                    internal_type))
-
     @api.model
     def _prepare_refund(
             self, invoice, date_invoice=None,
@@ -255,15 +222,6 @@ class AccountInvoice(models.Model):
         if refund_document_number:
             values['l10n_latam_document_number'] = refund_document_number
         return values
-
-    @api.multi
-    def _check_duplicate_supplier_reference(self):
-        """We make reference only unique if you are not using documents.
-        Documents already guarantee to not encode twice same vendor bill.
-        """
-        return super(
-            AccountInvoice,
-            self.filtered(lambda x: not x.l10n_latam_use_documents))
 
     def _amount_by_group(self):
         invoice_with_doc_type = self.filtered('l10n_latam_document_type_id')
@@ -299,3 +257,9 @@ class AccountInvoice(models.Model):
             x.move_name
         ).write({'move_name': False})
         return super(AccountInvoice, self).unlink()
+
+    def get_document_type_sequence(self):
+        """ Method to be inherited by different localizations.
+        """
+        self.ensure_one()
+        return self.env['ir.sequence']

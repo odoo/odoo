@@ -37,23 +37,15 @@ class AccountInvoiceRefund(models.TransientModel):
     l10n_latam_document_number = fields.Char(
         string='Document Number',
     )
-    l10n_latam_available_document_type_ids = fields.Many2many(
-        'l10n_latam.document.type',
-        compute='_compute_l10n_latam_available_document_types',
-        string='Available Journal Document Types',
-    )
 
-    @api.depends('l10n_latam_invoice_id')
-    def _compute_l10n_latam_available_document_types(self):
-        for rec in self.filtered('l10n_latam_invoice_id'):
-            invoice = rec.l10n_latam_invoice_id
+    @api.onchange('l10n_latam_invoice_id')
+    def _onchange_l10n_latam_invoice(self):
+        if self.l10n_latam_invoice_id:
+            invoice = self.l10n_latam_invoice_id
             invoice_type = TYPE2REFUND[invoice.type]
-            res = invoice._get_available_document_types(
-                invoice.journal_id, invoice_type, invoice.partner_id)
-            rec.l10n_latam_available_document_type_ids = res[
-                'available_document_types']
-            rec.l10n_latam_document_type_id = res[
-                'document_type']
+            res = invoice._get_available_document_types(invoice.journal_id, invoice_type, invoice.partner_id)
+            self.l10n_latam_document_type_id = res['document_type']
+            return {'domain': {'l10n_latam_document_type_id': [('id', 'in', res['available_document_types'].ids)]}}
 
     @api.multi
     def compute_refund(self, mode='refund'):
@@ -65,9 +57,14 @@ class AccountInvoiceRefund(models.TransientModel):
     @api.depends('l10n_latam_document_type_id')
     def _compute_l10n_latam_sequence(self):
         for rec in self:
-            rec.l10n_latam_sequence_id = \
-                rec.l10n_latam_invoice_id.journal_id.\
-                    get_document_type_sequence(rec)
+            refund = rec.l10n_latam_invoice_id.new({
+                'type': TYPE2REFUND[rec.l10n_latam_invoice_id.type],
+                'journal_id': rec.l10n_latam_invoice_id.journal_id.id,
+                'partner_id': rec.l10n_latam_invoice_id.partner_id.id,
+                'company_id': rec.l10n_latam_invoice_id.company_id.id,
+                'l10n_latam_document_type_id': rec.l10n_latam_document_type_id.id,
+            })
+            rec.l10n_latam_sequence_id = refund.get_document_type_sequence()
 
     @api.onchange('l10n_latam_document_number', 'l10n_latam_document_type_id')
     def _onchange_l10n_latam_document_number(self):

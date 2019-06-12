@@ -3,7 +3,7 @@
 from odoo import fields, models, api
 
 
-class L10nLatamAccountDocmentType(models.Model):
+class L10nLatamDocumentType(models.Model):
 
     _name = 'l10n_latam.document.type'
     _description = 'Latam Document Type'
