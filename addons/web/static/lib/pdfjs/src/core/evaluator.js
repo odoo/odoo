@@ -956,8 +956,8 @@ var PartialEvaluator = (function PartialEvaluatorClosure() {
           var tsm = [textState.fontSize * textState.textHScale, 0,
                      0, textState.fontSize,
                      0, textState.textRise];
-          var trm = textChunk.transform = Util.transform(textState.ctm,
-                                    Util.transform(textState.textMatrix, tsm));
+          var trm = textChunk.transform = PDFJS.Util.transform(textState.ctm,
+                                    PDFJS.Util.transform(textState.textMatrix, tsm));
           if (!font.vertical) {
             textChunk.height = Math.sqrt(trm[2] * trm[2] + trm[3] * trm[3]);
           } else {
@@ -1161,8 +1161,8 @@ var PartialEvaluator = (function PartialEvaluatorClosure() {
               var name = args[0].name;
               if (xobjsCache.key === name) {
                 if (xobjsCache.texts) {
-                  Util.appendToArray(bidiTexts, xobjsCache.texts.items);
-                  Util.extendObj(textContent.styles, xobjsCache.texts.styles);
+                  PDFJS.Util.appendToArray(bidiTexts, xobjsCache.texts.items);
+                  PDFJS.Util.extendObj(textContent.styles, xobjsCache.texts.styles);
                 }
                 break;
               }
@@ -1192,8 +1192,8 @@ var PartialEvaluator = (function PartialEvaluatorClosure() {
               return self.getTextContent(xobj,
                 xobj.dict.get('Resources') || resources, stateManager).
                 then(function (formTextContent) {
-                  Util.appendToArray(bidiTexts, formTextContent.items);
-                  Util.extendObj(textContent.styles, formTextContent.styles);
+                  PDFJS.Util.appendToArray(bidiTexts, formTextContent.items);
+                  PDFJS.Util.extendObj(textContent.styles, formTextContent.styles);
                   stateManager.restore();
 
                   xobjsCache.key = name;
@@ -1949,7 +1949,7 @@ var StateManager = (function StateManagerClosure() {
       }
     },
     transform: function (args) {
-      this.state.ctm = Util.transform(this.state.ctm, args);
+      this.state.ctm = PDFJS.Util.transform(this.state.ctm, args);
     }
   };
   return StateManager;

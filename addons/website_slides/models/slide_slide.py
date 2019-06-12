@@ -8,6 +8,7 @@ import datetime
 import io
 import re
 import uuid
+import PyPDF2
 
 from werkzeug import urls
 
@@ -107,7 +108,7 @@ class Slide(models.Model):
     category_id = fields.Many2one('slide.category', string="Category", domain="[('channel_id', '=', channel_id)]")
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     is_preview = fields.Boolean('Is Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
-    completion_time = fields.Float('# Hours', default=1, digits=(10, 4))
+    completion_time = fields.Float('# Hours', digits=(10, 4), compute="_compute_duration", store=True)
     # subscribers
     partner_ids = fields.Many2many('res.partner', 'slide_slide_partner', 'slide_id', 'partner_id',
                                    string='Subscribers', groups='website.group_website_publisher')
@@ -156,6 +157,29 @@ class Slide(models.Model):
     _sql_constraints = [
         ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
     ]
+
+    @api.depends('url','datas')
+    def _compute_duration(self):
+        for record in self:
+            if record.url:
+                data = self._parse_document_url(record.url)
+                duration = data['values']['duration']
+                x = re.search(r'PT(([0-9]+)H)?(([0-9]+)M)?(([0-9]+)S)?', duration)
+                record.completion_time = int(x.group(6)) / 3600 + int(x.group(4) or 0) / 60 + int(x.group(2) or 0)
+            elif record.datas:
+                data = base64.b64decode(record.datas)
+                if data.startswith(b'%PDF-'):
+                    buf = u""
+                    f = io.BytesIO(data)
+                    pdf = PyPDF2.PdfFileReader(f, overwriteWarnings=False)
+                    for page in pdf.pages:
+                        buf += page.extractText()
+                    buf = re.sub(r'\0', '', buf)
+                    buf = re.sub(r' +', ' ', buf)
+                    nbr_words = len(buf.split())
+                    record.completion_time = (nbr_words / 130) / 60
+            else:
+                record.completion_time = 1
 
     @api.depends('slide_views', 'public_views')
     def _compute_total(self):
@@ -287,6 +311,8 @@ class Slide(models.Model):
                 values.setdefault(key, value)
 
         slide = super(Slide, self).create(values)
+        if values.get('completion_time'):
+            slide.completion_time = values['completion_time']
 
         if slide.website_published:
             slide._post_publication()
@@ -574,7 +600,7 @@ class Slide(models.Model):
 
     def _parse_youtube_document(self, document_id, only_preview_fields):
         key = self.env['website'].get_current_website().website_slide_google_app_key
-        fetch_res = self._fetch_data('https://www.googleapis.com/youtube/v3/videos', {'id': document_id, 'key': key, 'part': 'snippet', 'fields': 'items(id,snippet)'}, 'json')
+        fetch_res = self._fetch_data('https://www.googleapis.com/youtube/v3/videos', {'id': document_id, 'key': key, 'part': 'snippet,contentDetails', 'fields': 'items(id,snippet,contentDetails)'}, 'json')
         if fetch_res.get('error'):
             return fetch_res
 
@@ -583,13 +609,15 @@ class Slide(models.Model):
         if not items:
             return {'error': _('Please enter valid Youtube or Google Doc URL')}
         youtube_values = items[0]
-        if youtube_values.get('snippet'):
+        if youtube_values.get('snippet') and youtube_values.get('contentDetails'):
             snippet = youtube_values['snippet']
+            contentDetails = youtube_values['contentDetails']
             if only_preview_fields:
                 values.update({
                     'url_src': snippet['thumbnails']['high']['url'],
                     'title': snippet['title'],
-                    'description': snippet['description']
+                    'description': snippet['description'],
+                    'duration': contentDetails['duration'],
                 })
                 return values
             values.update({
@@ -597,6 +625,7 @@ class Slide(models.Model):
                 'image': self._fetch_data(snippet['thumbnails']['high']['url'], {}, 'image')['values'],
                 'description': snippet['description'],
                 'mime_type': False,
+                'duration': contentDetails['duration'],
             })
         return {'values': values}
 

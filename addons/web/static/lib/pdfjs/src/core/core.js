@@ -93,7 +93,7 @@ var Page = (function PageClosure() {
       // "The crop, bleed, trim, and art boxes should not ordinarily
       // extend beyond the boundaries of the media box. If they do, they are
       // effectively reduced to their intersection with the media box."
-      cropBox = Util.intersect(cropBox, mediaBox);
+      cropBox = PDFJS.Util.intersect(cropBox, mediaBox);
       if (!cropBox) {
         return shadow(this, 'view', mediaBox);
       }

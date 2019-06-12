@@ -805,6 +805,9 @@ class WebsiteSlides(WebsiteProfile):
             else:
                 values['category_id'] = post['category_id'][0]
 
+        if post.get('duration'):
+            values['completion_time'] = int(post['duration']) / 60
+
         # handle exception during creation of slide and sent error notification to the client
         # otherwise client slide create dialog box continue processing even server fail to create a slide
         try:

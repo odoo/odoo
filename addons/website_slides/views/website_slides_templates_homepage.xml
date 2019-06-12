@@ -304,7 +304,27 @@
         </div>
         <div class="card-footer bg-white text-600 px-3">
             <div class="d-flex justify-content-between align-items-center">
-                <small t-if="channel.total_time" class="font-weight-bold"><t t-esc="channel.total_time * 60" t-options="{&quot;widget&quot;: &quot;integer&quot;}"/> min</small>
+                <small class="font-weight-bold">
+                    <t t-set="hours" t-value="int(channel.total_time // 1)"/>
+                    <t t-set="mins" t-value="int(channel.total_time % 1 * 60 // 15 * 15)"/>
+                    <t t-set="rounding" t-value="int(channel.total_time % 1 * 60 % 15)"/>
+                    <t t-if="rounding &gt; 8">
+                        <t t-set="mins" t-value="mins + 15"/>
+                        <t t-if="mins &gt; 59">
+                            <t t-set="hours" t-value="hours + 1"/>
+                            <t t-set="mins" t-value="60 - mins"/>
+                        </t>
+                    </t>
+                    <t t-if="channel.total_time &lt; 1">
+                        <t t-esc="mins"/> min
+                    </t>
+                    <t t-else="">
+                        <t t-esc="hours"/>
+                        <t t-if="hours &gt; 1"> hours </t>
+                        <t t-else=""> hour </t>
+                        <t t-if="mins &gt; 0"><t t-esc="mins"/> min</t>
+                    </t>
+                </small>
                 <div class="d-flex flex-grow-1 justify-content-end">
                     <t t-if="channel.is_member and channel.completed">
                         <span class="badge badge-pill badge-success pull-right py-1 px-2"><i class="fa fa-check"/> Completed</span>
