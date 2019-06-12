@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2\n"
+"Project-Id-Version: Odoo Server saas~12.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 13:49+0000\n"
-"PO-Revision-Date: 2019-03-20 13:49+0000\n"
+"POT-Creation-Date: 2019-06-12 12:23+0000\n"
+"PO-Revision-Date: 2019-06-12 12:23+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -30,6 +30,11 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_ids
 msgid "Account Move"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_account_reconciliation_widget
+msgid "Account Reconciliation widget"
 msgstr ""
 
 #. module: stock_account
@@ -80,13 +85,13 @@ msgid "Cancel"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:512
+#: code:addons/stock_account/models/stock.py:538
 #, python-format
 msgid "Cannot find a stock input account for the product %s. You must define one on the product category, or on the location, before processing this operation."
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:514
+#: code:addons/stock_account/models/stock.py:540
 #, python-format
 msgid "Cannot find a stock output account for the product %s. You must define one on the product category, or on the location, before processing this operation."
 msgstr ""
@@ -109,7 +114,7 @@ msgid "Change Standard Price"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:393
+#: code:addons/stock_account/models/product.py:408
 #, python-format
 msgid "Changing your cost method is an important change that will impact your inventory valuation. Are you sure you want to make that change?"
 msgstr ""
@@ -125,7 +130,7 @@ msgid "Config Settings"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:589
+#: code:addons/stock_account/models/stock.py:615
 #, python-format
 msgid "Configuration error. Please configure the price difference account on the product or its category to process this operation."
 msgstr ""
@@ -435,31 +440,31 @@ msgid "Stock Value Currency"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:375
+#: code:addons/stock_account/models/product.py:390
 #, python-format
 msgid "The Stock Input and/or Output accounts cannot be the same than the Stock Valuation account."
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:538
+#: code:addons/stock_account/models/stock.py:564
 #, python-format
 msgid "The cost of %s is currently equal to 0. Change the cost or the configuration of your product to avoid an incorrect valuation."
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:364
+#: code:addons/stock_account/models/stock.py:390
 #, python-format
 msgid "The move lines are not in a consistent state: some are entering and other are leaving the company."
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:375
+#: code:addons/stock_account/models/stock.py:401
 #, python-format
 msgid "The move lines are not in a consistent states: they are doing an intercompany in a single step while they should go through the intercompany transit location."
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:373
+#: code:addons/stock_account/models/stock.py:399
 #, python-format
 msgid "The move lines are not in a consistent states: they do not share the same origin or destination company."
 msgstr ""
@@ -503,7 +508,7 @@ msgid "Valuation"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:217
+#: code:addons/stock_account/models/product.py:232
 #, python-format
 msgid "Valuation at date"
 msgstr ""
@@ -516,7 +521,7 @@ msgid "Value"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:392
+#: code:addons/stock_account/models/product.py:407
 #, python-format
 msgid "Warning"
 msgstr ""
@@ -542,14 +547,14 @@ msgid "When real-time inventory valuation is enabled on a product, this account 
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:510
+#: code:addons/stock_account/models/stock.py:536
 #, python-format
 msgid "You don't have any stock journal defined on your product category, check if you have installed a chart of accounts."
 msgstr ""
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:80
-#: code:addons/stock_account/models/stock.py:516
+#: code:addons/stock_account/models/stock.py:542
 #, python-format
 msgid "You don't have any stock valuation account defined on your product category. You must define one before processing this operation."
 msgstr ""

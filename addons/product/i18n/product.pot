@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2\n"
+"Project-Id-Version: Odoo Server saas~12.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 13:50+0000\n"
-"PO-Revision-Date: 2019-03-20 13:50+0000\n"
+"POT-Creation-Date: 2019-06-12 12:24+0000\n"
+"PO-Revision-Date: 2019-06-12 12:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,19 +32,19 @@ msgid "# Products"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:474
+#: code:addons/product/models/product_pricelist.py:494
 #, python-format
 msgid "%s %% discount"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:476
+#: code:addons/product/models/product_pricelist.py:496
 #, python-format
 msgid "%s %% discount and %s surcharge"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_template.py:381
+#: code:addons/product/models/product_template.py:397
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -55,8 +55,8 @@ msgid "1 year"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product__image
-#: model:ir.model.fields,help:product.field_product_template__image
+#: model:ir.model.fields,help:product.field_product_product__image_big
+#: model:ir.model.fields,help:product.field_product_template__image_big
 msgid "1024px * 1024px"
 msgstr ""
 
@@ -225,7 +225,7 @@ msgid "All"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:469
+#: code:addons/product/models/product_pricelist.py:489
 #, python-format
 msgid "All Products"
 msgstr ""
@@ -348,8 +348,8 @@ msgid "Based on"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__image
-#: model:ir.model.fields,field_description:product.field_product_template__image
+#: model:ir.model.fields,field_description:product.field_product_product__image_big
+#: model:ir.model.fields,field_description:product.field_product_template__image_big
 msgid "Big-sized Image"
 msgstr ""
 
@@ -391,13 +391,12 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_be_zoomed
-#: model:ir.model.fields,field_description:product.field_product_template__can_image_be_zoomed
 msgid "Can image be zoomed"
 msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_raw_be_zoomed
-#: model:ir.model.fields,field_description:product.field_product_template__can_image_raw_be_zoomed
+#: model:ir.model.fields,field_description:product.field_product_template__can_image_be_zoomed
 msgid "Can image raw be zoomed"
 msgstr ""
 
@@ -412,7 +411,7 @@ msgid "Category name"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:463
+#: code:addons/product/models/product_pricelist.py:483
 #, python-format
 msgid "Category: %s"
 msgstr ""
@@ -812,7 +811,7 @@ msgid "Ending valid for the pricelist item validation"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:287
+#: code:addons/product/models/product.py:376
 #, python-format
 msgid "Error! It is not allowed to choose more than one value for a given attribute."
 msgstr ""
@@ -997,25 +996,31 @@ msgid "If unchecked, it will allow you to hide the product without removing it."
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__image
+#: model:ir.model.fields,field_description:product.field_product_template__image
+msgid "Image"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product__image_original
 #: model:ir.model.fields,help:product.field_product_template__image_original
 msgid "Image in its original size, as it was uploaded."
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:357
+#: code:addons/product/models/product_pricelist.py:377
 #, python-format
 msgid "Import Template for Pricelists"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_template.py:1062
+#: code:addons/product/models/product_template.py:1108
 #, python-format
 msgid "Import Template for Products"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:743
+#: code:addons/product/models/product.py:849
 #, python-format
 msgid "Import Template for Vendor Pricelists"
 msgstr ""
@@ -1252,11 +1257,6 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__min_quantity
 msgid "Min. Quantity"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo__min_qty
-msgid "Minimal Quantity"
 msgstr ""
 
 #. module: product
@@ -1637,6 +1637,11 @@ msgid "Product Category"
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__module_sale_product_configurator
+msgid "Product Configurator"
+msgstr ""
+
+#. module: product
 #: model:ir.actions.report,name:product.report_product_label
 #: model:ir.actions.report,name:product.report_product_template_label
 msgid "Product Label (PDF)"
@@ -1764,7 +1769,7 @@ msgid "Products Price Search"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:500
+#: code:addons/product/models/product.py:603
 #, python-format
 msgid "Products: "
 msgstr ""
@@ -1799,6 +1804,11 @@ msgid "Purchase Unit of Measure"
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__min_qty
+msgid "Quantity"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
 msgid "Quantity of products contained in the packaging."
 msgstr ""
@@ -1830,31 +1840,26 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_raw_big
-#: model:ir.model.fields,field_description:product.field_product_template__image_raw_big
 msgid "Raw Big-sized Image"
 msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_raw_large
-#: model:ir.model.fields,field_description:product.field_product_template__image_raw_large
 msgid "Raw Large-sized Image"
 msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_raw_medium
-#: model:ir.model.fields,field_description:product.field_product_template__image_raw_medium
 msgid "Raw Medium-sized Image"
 msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_raw_original
-#: model:ir.model.fields,field_description:product.field_product_template__image_raw_original
 msgid "Raw Original Image"
 msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_raw_small
-#: model:ir.model.fields,field_description:product.field_product_template__image_raw_small
 msgid "Raw Small-sized Image"
 msgstr ""
 
@@ -2106,7 +2111,7 @@ msgid "The computed price is expressed in the default Unit of Measure of the pro
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_template.py:331
+#: code:addons/product/models/product_template.py:333
 #, python-format
 msgid "The default Unit of Measure and the purchase Unit of Measure must be in the same category."
 msgstr ""
@@ -2117,12 +2122,7 @@ msgid "The first in the sequence is the default one."
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
-msgid "The minimal quantity to purchase from this vendor, expressed in the vendor Product Unit of Measure if not any, in the default unit of measure of the product otherwise."
-msgstr ""
-
-#. module: product
-#: code:addons/product/models/product_pricelist.py:455
+#: code:addons/product/models/product_pricelist.py:475
 #, python-format
 msgid "The minimum margin should be lower than the maximum margin."
 msgstr ""
@@ -2133,7 +2133,7 @@ msgid "The number of products under this category (Does not consider the childre
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_template.py:517
+#: code:addons/product/models/product_template.py:534
 #, python-format
 msgid "The number of variants to generate is too high. You should either not generate variants for each combination or generate them on demand from the sales order. To do so, open the form view of attributes and change the mode of *Create Variants*."
 msgstr ""
@@ -2151,9 +2151,14 @@ msgid "The price to purchase a product"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_template.py:952
+#: code:addons/product/models/product_template.py:996
 #, python-format
 msgid "The product template is archived so no combination is possible."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
+msgid "The quantity to purchase from this vendor to benefit from the price, expressed in the vendor Product Unit of Measure if not any, in the default unit of measure of the product otherwise."
 msgstr ""
 
 #. module: product
@@ -2162,19 +2167,19 @@ msgid "The sale price is managed from the product template. Click on the 'Config
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_template.py:1019
+#: code:addons/product/models/product_template.py:1065
 #, python-format
 msgid "There are no possible combination."
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_template.py:1014
+#: code:addons/product/models/product_template.py:1060
 #, python-format
 msgid "There are no remaining closest combination."
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_template.py:972
+#: code:addons/product/models/product_template.py:1018
 #, python-format
 msgid "There are no remaining possible combination."
 msgstr ""
@@ -2434,14 +2439,10 @@ msgid "Variant Values"
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
 #: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Variants"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
-msgid "Variants and Options"
 msgstr ""
 
 #. module: product
@@ -2569,13 +2570,13 @@ msgid "You can assign pricelists to your customers or select one when creating a
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:449
+#: code:addons/product/models/product_pricelist.py:469
 #, python-format
 msgid "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:57
+#: code:addons/product/models/product.py:58
 #, python-format
 msgid "You cannot create recursive categories."
 msgstr ""
@@ -2584,6 +2585,12 @@ msgstr ""
 #: code:addons/product/models/decimal_precision.py:16
 #, python-format
 msgid "You cannot define the decimal precision of 'Account' as greater than the rounding factor of the company's main currency"
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_template.py:339
+#, python-format
+msgid "You cannot define two attribute lines for the same attribute."
 msgstr ""
 
 #. module: product
@@ -2660,8 +2667,13 @@ msgid "from"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:611
-#: code:addons/product/models/product_template.py:1055
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "per"
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product.py:717
+#: code:addons/product/models/product_template.py:1101
 #, python-format
 msgid "product"
 msgstr ""
