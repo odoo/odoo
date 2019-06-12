@@ -490,5 +490,5 @@ class QuantPackage(models.Model):
         for quant in self._get_contained_quants():
             if quant.product_id not in res:
                 res[quant.product_id] = 0
-            res[quant.product_id] += quant.qty
+            res[quant.product_id] += quant.quantity
         return res
