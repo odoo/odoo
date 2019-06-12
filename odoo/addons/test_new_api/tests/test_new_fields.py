@@ -98,6 +98,16 @@ class TestFields(common.TransactionCase):
             message.write({'body': (message.body or '') + "!!!"})
             self.assertEqual(message.size, size + 3)
 
+        # create a message, assign body, and check size in several environments
+        message1 = self.env['test_new_api.message'].create({})
+        message2 = message1.sudo(self.env.ref('base.user_demo'))
+        self.assertEqual(message1.size, 0)
+        self.assertEqual(message2.size, 0)
+
+        message1.write({'body': "XXX"})
+        self.assertEqual(message1.size, 3)
+        self.assertEqual(message2.size, 3)
+
         # special case: computed field without dependency must be computed
         record = self.env['test_new_api.mixed'].create({})
         self.assertTrue(record.now)
