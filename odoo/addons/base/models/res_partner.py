@@ -773,7 +773,7 @@ class Partner(models.Model):
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         self = self.with_user(name_get_uid or self.env.uid)
         # as the implementation is in SQL, we force the recompute of fields if necessary
-        self.recompute_fields(['display_name'])
+        self.recompute(['display_name'])
         self.flush()
         if args is None:
             args = []

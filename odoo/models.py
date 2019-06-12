@@ -2782,7 +2782,7 @@ Fields:
         """
         fields = self.check_field_access_rights('read', fields)
 
-        self.recompute_fields(fields)
+        self.recompute(fields)
 
         # fetch stored fields from the database to the cache; this should feed
         # the prefetching of secondary records
@@ -5064,7 +5064,7 @@ Fields:
                 process(self.env[model_name], id_vals)
         else:
             # flush self's model if any of the fields must be flushed
-            self.recompute_fields(fnames)
+            self.recompute(fnames)
             if any(
                 fname in vals
                 for vals in self.env.all.towrite.get(self._name, {}).values()
