@@ -686,28 +686,6 @@ class ProductCategory(models.Model):
 class UoM(models.Model):
     _inherit = 'uom.uom'
 
-    def write(self, values):
-        # Users can not update the factor if open stock moves are based on it
-        if 'factor' in values or 'factor_inv' in values or 'category_id' in values:
-            changed = self.filtered(
-                lambda u: any(u[f] != values[f] if f in values else False
-                              for f in {'factor', 'factor_inv'})) + self.filtered(
-                lambda u: any(u[f].id != int(values[f]) if f in values else False
-                              for f in {'category_id'}))
-            if changed:
-                stock_move_lines = self.env['stock.move.line'].search_count([
-                    ('product_uom_id.category_id', 'in', changed.mapped('category_id.id')),
-                    ('state', '!=', 'cancel'),
-                ])
-
-                if stock_move_lines:
-                    raise UserError(_(
-                        "You cannot change the ratio of this unit of mesure as some"
-                        " products with this UoM have already been moved or are "
-                        "currently reserved."
-                    ))
-        return super(UoM, self).write(values)
-
     def _adjust_uom_quantities(self, qty, quant_uom):
         """ This method adjust the quantities of a procurement if its UoM isn't the same
         as the one of the quant and the parameter 'propagate_uom' is not set.
