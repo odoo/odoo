@@ -1948,10 +1948,11 @@ class Reference(Selection):
                 return (value._name, value.id) if value else False
         elif isinstance(value, str):
             res_model, res_id = value.split(',')
-            if record.env[res_model].browse(int(res_id)).exists():
-                return (res_model, int(res_id))
-            else:
-                return False
+            if not validate or res_model in self.get_values(record.env):
+                if record.env[res_model].browse(int(res_id)).exists():
+                    return (res_model, int(res_id))
+                else:
+                    return False
         elif not value:
             return False
         raise ValueError("Wrong value for %s: %r" % (self, value))
