@@ -33,7 +33,41 @@ odoo.define('web.AbstractField', function (require) {
 var field_utils = require('web.field_utils');
 var Widget = require('web.Widget');
 
-var AbstractField = Widget.extend({
+var PropertyFieldMixin = {
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @returns {jQuery}
+     */
+    _renderPropertyButton: function () {
+        if (this.field.company_dependent === true) {
+            return $('<button>', {
+                    type: 'button',
+                    'class': 'o_field_property fa fa-th-list btn btn-link',
+                })
+                .on('click', this._propertyButtonClick.bind(this));
+        }
+        return $();
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * open the translation view for the current field
+     *
+     * @private
+     */
+    _propertyButtonClick: function () {
+        this.trigger_up('open_property', {fieldName: this.name, id: this.dataPointID});
+    },
+};
+
+var AbstractField = Widget.extend(PropertyFieldMixin, {
     events: {
         'keydown': '_onKeydown',
     },
@@ -409,14 +443,20 @@ var AbstractField = Widget.extend({
      * @returns {Promise|undefined}
      */
     _render: function () {
+        var self = this;
+        var prom = Promise.resolve();
+
         if (this.attrs.decorations) {
             this._applyDecorations();
         }
         if (this.mode === 'edit') {
-            return this._renderEdit();
+            prom = Promise.resolve(this._renderEdit());
         } else if (this.mode === 'readonly') {
-            return this._renderReadonly();
+            prom = Promise.resolve(this._renderReadonly());
         }
+        return prom.then(function () {
+            self.$el = self.$el.append(self._renderPropertyButton());
+        });
     },
     /**
      * Render the widget in edit mode.  The actual implementation is left to the

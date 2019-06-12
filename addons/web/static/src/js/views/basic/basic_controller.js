@@ -19,6 +19,7 @@ var _t = core._t;
 var BasicController = AbstractController.extend(FieldManagerMixin, {
     custom_events: _.extend({}, AbstractController.prototype.custom_events, FieldManagerMixin.custom_events, {
         discard_changes: '_onDiscardChanges',
+        open_property: '_onOpenProperty',
         reload: '_onReload',
         resequence_records: '_onResequenceRecords',
         set_dirty: '_onSetDirty',
@@ -560,6 +561,22 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      */
     _onDeletedRecords: function (ids) {
         this.update({});
+    },
+    _onOpenProperty: function (ev) {
+        ev.stopPropagation();
+        var self = this;
+        var record = this.model.get(ev.data.id, {raw: true});
+        this._rpc({
+            route: '/web/dataset/call_button',
+            params: {
+                model: 'ir.property',
+                method: 'get_values_action',
+                args: [record.model, record.res_id, ev.data.fieldName],
+                kwargs: {context: record.getContext()},
+            }
+        }).then(function (result) {
+            self.do_action(result);
+        });
     },
     /**
      * Saves the record whose ID is given, if necessary. Automatically leaves

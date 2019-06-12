@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+from lxml import etree
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import ormcache
@@ -244,6 +247,43 @@ class Property(models.Model):
             return None
         company_id = self.env.company.id
         return [('fields_id', '=', res[0]), ('company_id', 'in', [company_id, False])]
+
+    @api.model
+    def get_values_action(self, model, res_id, field):
+        action = self.env.ref('base.ir_property_form').read()[0]
+        action['domain'] = [
+            ('name', '=', field),
+            ('res_id', '=', '%s,%s' % (model, res_id)),
+        ]
+        field_name = ''
+
+        # This gives at most one record per company
+        types = set(self.search(action['domain']).mapped('type'))
+        if len(types) == 1:
+            if types & {'integer', 'boolean'}:
+                field_name = 'value_integer'
+            elif types & {'float'}:
+                field_name = 'value_float'
+            elif types & {'char', 'text', 'selection'}:
+                field_name = 'value_text'
+            elif types & {'many2one'}:
+                field_name = 'value_reference'
+            elif types & {'binary'}:
+                field_name = 'value_binary'
+
+        if field_name:
+            action['context'] = json.dumps(dict(json.loads(action.get('context', '{}')), field_name=field_name))
+        return action
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        res = super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        if view_type == 'tree' and self._context.get('field_name'):
+            doc = etree.XML(res['arch'])
+            element = etree.Element('field', {'name': self._context.get('field_name')})
+            doc.xpath("//field[@name='type']")[0].addnext(element)
+            res['arch'] = etree.tostring(doc, encoding='unicode')
+        return res
 
     @api.model
     def get_multi(self, name, model, ids):
