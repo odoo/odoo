@@ -608,6 +608,7 @@ class Picking(models.Model):
                                                     'location_dest_id': pick.location_dest_id.id,
                                                     'picking_id': pick.id,
                                                     'picking_type_id': pick.picking_type_id.id,
+                                                    'company_id': pick.company_id.id,
                                                    })
                     ops.move_id = new_move.id
                     new_move._action_confirm()

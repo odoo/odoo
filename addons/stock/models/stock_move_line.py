@@ -178,6 +178,7 @@ class StockMoveLine(models.Model):
                         'state': 'done',
                         'additional': True,
                         'picking_id': picking.id,
+                        'company_id': picking.company_id,
                     })
                     vals['move_id'] = new_move.id
         
