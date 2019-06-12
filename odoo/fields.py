@@ -972,16 +972,23 @@ class Field(MetaField('DummyField', (object,), {})):
         if record is None:
             return self         # the field is accessed through the owner class
 
-        env = record.env
-        if record._ids:
-            # only a single record may be accessed
-            record.ensure_one()
-            if env.check_todo(self, record) and record not in env.protected(self):
-                recs = self.recursive and record or env.field_todo(self)
-                self.compute_value(recs)
+        if not record._ids:
+            # null record -> return the null value for this field
+            value = self.convert_to_cache(False, record, validate=False)
+            return self.convert_to_record(value, record)
 
-            if not env.cache.contains(record, self):
-                if self.store and record.id:
+        env = record.env
+
+        # only a single record may be accessed
+        record.ensure_one()
+        if env.check_todo(self, record) and record not in env.protected(self):
+            recs = record if self.recursive else env.field_todo(self)
+            self.compute_value(recs)
+
+        if not env.cache.contains(record, self):
+            if record.id:
+                # real record
+                if self.store:
                     recs = record._in_cache_without(self)
                     try:
                         recs._fetch_field(self)
@@ -998,13 +1005,41 @@ class Field(MetaField('DummyField', (object,), {})):
                         self.compute_value(record)
 
                 else:
-                    env.cache.set(record, self, self.convert_to_cache(False, record, validate=False))
+                    value = self.convert_to_cache(False, record, validate=False)
+                    env.cache.set(record, self, value)
 
-            # raise access rights here instead of in the end of read()
-            value = env.cache.get(record, self)
-        else:
-            # null record -> return the null value for this field
-            value = self.convert_to_cache(False, record, validate=False)
+            else:
+                if self.compute:
+                    # RCO TODO: compute_sudo is not handled here
+                    self.compute_value(record)
+
+                elif record._origin:
+                    # retrieve value from origin record
+                    value = self.convert_to_cache(record._origin[self.name], record)
+                    env.cache.set(record, self, value)
+
+                elif self.type == 'many2one' and self.delegate:
+                    # special case: parent records are new as well
+                    parent = record.env[self.comodel_name].new()
+                    value = self.convert_to_cache(parent, record)
+                    env.cache.set(record, self, value)
+
+                else:
+                    value = self.convert_to_cache(False, record, validate=False)
+                    env.cache.set(record, self, value)
+
+                    defaults = record.default_get([self.name])
+                    if self.name in defaults:
+                        # The null value above is necessary to convert x2many field values.
+                        # For instance, converting [(4, id)] accesses the field's current
+                        # value, then adds the given id. Without an initial value, the
+                        # conversion ends up here to determine the field's value, and this
+                        # generates an infinite recursion.
+                        value = self.convert_to_cache(defaults[self.name], record)
+                        env.cache.set(record, self, value)
+
+        # raise access rights here instead of in the end of read()
+        value = env.cache.get(record, self)
 
         return self.convert_to_record(value, record)
 
