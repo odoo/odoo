@@ -391,6 +391,7 @@ class StockMove(models.Model):
         for vals in vals_list:
             if not self.env.context.get('mail_notrack') and vals.get('picking_id'):
                 picking = self.env['stock.picking'].browse(vals['picking_id'])
+                vals['company_id'] = picking.company_id.id
                 initial_values = {picking.id: {'state': picking.state}}
                 tracking.append((picking, initial_values))
         res = super(StockMove, self).create(vals_list)
