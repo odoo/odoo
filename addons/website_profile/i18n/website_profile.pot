@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2\n"
+"Project-Id-Version: Odoo Server saas~12.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 14:19+0000\n"
-"PO-Revision-Date: 2019-03-20 14:19+0000\n"
+"POT-Creation-Date: 2019-06-12 12:25+0000\n"
+"PO-Revision-Date: 2019-06-12 12:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -72,7 +72,7 @@ msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
-msgid "<small class=\"font-weight-bold mr-2\">Rank:</small>"
+msgid "<small class=\"font-weight-bold mr-2\">Current rank:</small>"
 msgstr ""
 
 #. module: website_profile
@@ -88,6 +88,11 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "<small class=\"font-weight-bold\">Joined</small>"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+msgid "<span class=\"badge badge-danger font-weight-normal px-2 py-1 m-1\">Unpublished</span>"
 msgstr ""
 
 #. module: website_profile
@@ -303,7 +308,7 @@ msgid "Gamification Badge"
 msgstr ""
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Home"
 msgstr ""
 
@@ -319,7 +324,7 @@ msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
-msgid "It appears your email has not been verified."
+msgid "It appears your email has not been verified.<br/>"
 msgstr ""
 
 #. module: website_profile
@@ -333,13 +338,28 @@ msgid "Minimal karma to see other user's profile"
 msgstr ""
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
+msgid "Mobile sub-nav"
+msgstr ""
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "More info"
 msgstr ""
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
+msgid "Nav"
+msgstr ""
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
 msgid "No badge yet"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
+msgid "No results matched"
 msgstr ""
 
 #. module: website_profile
@@ -363,18 +383,28 @@ msgid "Return to the website."
 msgstr ""
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Search"
 msgstr ""
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
-msgid "Search in Users"
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
+msgid "Search courses"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
+msgid "Search users"
 msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.private_profile
 msgid "This profile is private!"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
+msgid "Unpublished"
 msgstr ""
 
 #. module: website_profile
@@ -389,7 +419,7 @@ msgstr ""
 
 #. module: website_profile
 #: model:ir.model,name:website_profile.model_res_users
-#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Users"
 msgstr ""
 
@@ -409,7 +439,7 @@ msgid "You can score more points by answering quizzes at the end of each course 
 msgstr ""
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "breadcrumb"
 msgstr ""
 
@@ -421,5 +451,10 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
 msgid "xp"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
+msgid "└ Users"
 msgstr ""
 
