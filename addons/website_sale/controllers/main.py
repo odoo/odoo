@@ -10,6 +10,7 @@ from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.payment.controllers.portal import PaymentProcessing
 from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.exceptions import ValidationError
 from odoo.addons.website.controllers.main import Website
 from odoo.addons.website_form.controllers.main import WebsiteForm
@@ -197,12 +198,24 @@ class WebsiteSale(http.Controller):
 
         return expression.AND(domains)
 
+    def sitemap_shop(env, rule, qs):
+        if not qs or qs.lower() in '/shop':
+            yield {'loc': '/shop'}
+
+        Category = env['product.public.category']
+        dom = sitemap_qs2dom(qs, '/shop/category', Category._rec_name)
+        dom += env['website'].get_current_website().website_domain()
+        for cat in Category.search(dom):
+            loc = '/shop/category/%s' % slug(cat)
+            if not qs or qs.lower() in loc:
+                yield {'loc': loc}
+
     @http.route([
         '''/shop''',
         '''/shop/page/<int:page>''',
-        '''/shop/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>''',
-        '''/shop/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>/page/<int:page>'''
-    ], type='http', auth="public", website=True)
+        '''/shop/category/<model("product.public.category"):category>''',
+        '''/shop/category/<model("product.public.category"):category>/page/<int:page>'''
+    ], type='http', auth="public", website=True, sitemap=sitemap_shop)
     def shop(self, page=0, category=None, search='', ppg=False, **post):
         add_qty = int(post.get('add_qty', 1))
         if category:
