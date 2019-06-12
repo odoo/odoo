@@ -50,8 +50,8 @@ class TestRecordCache(TransactionCase):
         check(bar1, None, None)
         check(bar2, None, None)
 
-        self.assertCountEqual(cache.get_missing_ids(foo1 + bar1, name, (foo1+bar1)._ids), [1, 2])
-        self.assertCountEqual(cache.get_missing_ids(foo2 + bar2, name, (foo2+bar2)._ids), [1, 2])
+        self.assertCountEqual(cache.get_missing_ids(foo1 + bar1, name), [1, 2])
+        self.assertCountEqual(cache.get_missing_ids(foo2 + bar2, name), [1, 2])
 
         # set values in one environment only
         cache.set(foo1, name, 'FOO1_NAME')
@@ -63,8 +63,8 @@ class TestRecordCache(TransactionCase):
         check(foo2, None, None)
         check(bar1, 'BAR1_NAME', 'BAR1_REF')
         check(bar2, None, None)
-        self.assertCountEqual(cache.get_missing_ids(foo1 + bar1, name, (foo1+bar1)._ids), [])
-        self.assertCountEqual(cache.get_missing_ids(foo2 + bar2, name, (foo2+bar2)._ids), [1, 2])
+        self.assertCountEqual(cache.get_missing_ids(foo1 + bar1, name), [])
+        self.assertCountEqual(cache.get_missing_ids(foo2 + bar2, name), [1, 2])
 
         # set values in both environments
         cache.set(foo2, name, 'FOO2_NAME')
@@ -75,8 +75,8 @@ class TestRecordCache(TransactionCase):
         check(foo2, 'FOO2_NAME', 'FOO2_REF')
         check(bar1, 'BAR1_NAME', 'BAR1_REF')
         check(bar2, 'BAR2_NAME', 'BAR2_REF')
-        self.assertCountEqual(cache.get_missing_ids(foo1 + bar1, name, (foo1+bar1)._ids), [])
-        self.assertCountEqual(cache.get_missing_ids(foo2 + bar2, name, (foo2+bar2)._ids), [])
+        self.assertCountEqual(cache.get_missing_ids(foo1 + bar1, name), [])
+        self.assertCountEqual(cache.get_missing_ids(foo2 + bar2, name), [])
 
         # remove value in one environment
         cache.remove(foo1, name)
@@ -84,8 +84,8 @@ class TestRecordCache(TransactionCase):
         check(foo2, 'FOO2_NAME', 'FOO2_REF')
         check(bar1, 'BAR1_NAME', 'BAR1_REF')
         check(bar2, 'BAR2_NAME', 'BAR2_REF')
-        self.assertCountEqual(cache.get_missing_ids(foo1 + bar1, name, (foo1+bar1)._ids), [1])
-        self.assertCountEqual(cache.get_missing_ids(foo2 + bar2, name, (foo2+bar2)._ids), [])
+        self.assertCountEqual(cache.get_missing_ids(foo1 + bar1, name), [1])
+        self.assertCountEqual(cache.get_missing_ids(foo2 + bar2, name), [])
 
         # partial invalidation
         cache.invalidate([(name, None), (ref, foo1.ids)])

@@ -825,21 +825,13 @@ class Cache(object):
         ids = self._data[key][field]
         return records.browse([it for it in records._ids if it in ids])
 
-    def get_missing_ids(self, records, field, ids, limit=1000):
+    def get_missing_ids(self, records, field):
         """ Return the ids of ``records`` that have no value for ``field``. """
         key = records.env.cache_key(field)
         field_cache = self._data[key][field]
-        result = []
-        for record_id in ids:
-            # DLE P57: avoid to return the same id multiple times
-            # This prevented to load `stock/data/stock_demo.xml` because in `_compute_company_dependent`
-            # `Property.get_multi(self.name, self.model_name, records.ids)` is not coded to support multiple times the same id passed in the browse record,
-            # and the values ended to something like `stock.location(stock.location(stock.location(stock.location(14,),),),),`
-            if record_id and record_id not in result and (record_id not in field_cache):
-                result.append(record_id)
-                limit = limit-1
-                if limit<1: break
-        return result
+        for record_id in records._ids:
+            if record_id not in field_cache:
+                yield record_id
 
     def copy(self, records, env):
         """ Copy the cache of ``records`` to ``env``. """
