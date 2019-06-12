@@ -62,6 +62,7 @@
                     <button name="action_toggle_is_locked" attrs="{'invisible': [('is_locked', '=', True)]}" string="Lock" class="oe_highlight" groups="mrp.group_mrp_manager" type="object"/>
                 </header>
                 <sheet>
+                    <field name="reservation_state" invisible="1"/>
                     <field name="is_locked" invisible="1"/>
                     <field name="post_visible" invisible="1"/>
                     <field name="unreserve_visible" invisible="1"/>
@@ -191,16 +192,13 @@
                                 Use the Produce button or process the work orders to create some finished products.
                             </p>
                         </page>
-                        <page string="Miscellaneous">
+                        <page string="Miscellaneous" groups="stock.group_stock_multi_locations">
                             <group>
-                                <group groups="stock.group_stock_multi_locations">
+                                <group>
                                     <field name="picking_type_id" domain="[('code', '=', 'mrp_operation')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     <field name="location_src_id" options="{'no_create': True}" domain="[('usage','=','internal')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     <field name="location_dest_id" options="{'no_create': True}" domain="[('usage','=','internal')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </group>
-                            </group>
-                            <group>
-                                <field name="reservation_state"/>
                             </group>
                         </page>
                     </notebook>
