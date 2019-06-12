@@ -3299,7 +3299,7 @@ Fields:
                     # Alternatively, in the `onchange` method, the new record must be created from the origin record values,
                     # and then we assign the new values through __set__
                     # `test_onchange_one2many_with_domain_on_related_field`
-                    if not env.in_onchange and env.cache.contains(record, field) and (env.cache.get(record, field) == cache_value):
+                    if record.id and env.cache.contains(record, field) and (env.cache.get(record, field) == cache_value):
                         continue
 
                 # when updating a relational field, updates it's inverse fields, as well as those reelying on it's old value
@@ -3381,7 +3381,7 @@ Fields:
         inverse_fields = [f.name for g in determine_inverses for f in g]
 
         # DLE P36: `test_40_new`, ask RCO if there is not a better way to filter out new records.
-        to_validate = self.filtered(lambda r: not isinstance(r.id, NewId))
+        to_validate = self.filtered('id')
         # DLE P35: Validate first regular fields, then inverse fields
         # Because inverse field might be wrong because the regular fields are not valid,
         # and this can cause infinite recursion or longer processing.
@@ -3389,7 +3389,7 @@ Fields:
         # test `test_no_recursion`
         # DLE P48: do not validate fields in onchange
         # `test_onchange_related`
-        if not env.in_onchange:
+        if to_validate:
             to_validate._validate_fields(set(vals) - set(inverse_fields))
 
         # DLE P34: Batch process inverse fields
