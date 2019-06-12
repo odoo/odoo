@@ -53,10 +53,10 @@ class HrEmployeeBase(models.AbstractModel):
     @api.multi
     def attendance_manual(self, next_action, entered_pin=None):
         self.ensure_one()
-        if not (entered_pin is None) or self.env.user.has_group('hr_attendance.group_hr_attendance_use_pin') and (self.user_id and self.user_id == self.env.user):
-            if entered_pin != self.pin:
-                return {'warning': _('Wrong PIN')}
-        return self._attendance_action(next_action)
+        can_check_without_pin = not self.env.user.has_group('hr_attendance.group_hr_attendance_use_pin') or (self.user_id == self.env.user and entered_pin is None)
+        if can_check_without_pin or entered_pin is not None and entered_pin == self.sudo().pin:
+            return self._attendance_action(next_action)
+        return {'warning': _('Wrong PIN')}
 
     @api.multi
     def _attendance_action(self, next_action):
@@ -73,14 +73,14 @@ class HrEmployeeBase(models.AbstractModel):
         action_message['next_action'] = next_action
 
         if employee.user_id:
-            modified_attendance = employee.sudo(employee.user_id.id).attendance_action_change()
+            modified_attendance = employee.sudo(employee.user_id.id)._attendance_action_change()
         else:
-            modified_attendance = employee.attendance_action_change()
+            modified_attendance = employee._attendance_action_change()
         action_message['attendance'] = modified_attendance.read()[0]
         return {'action': action_message}
 
     @api.multi
-    def attendance_action_change(self):
+    def _attendance_action_change(self):
         """ Check In/Check Out action
             Check In: create a new attendance record
             Check Out: modify check_out field of appropriate attendance record
