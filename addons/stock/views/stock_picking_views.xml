@@ -284,8 +284,8 @@
                                     <field name="product_uom_id" force_save="1" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="uom.group_uom"/>
                                     <field name="location_id" options="{'no_create': True}" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'incoming')]}" groups="stock.group_stock_multi_locations" domain="[('id', 'child_of', parent.location_id)]"/>
                                     <field name="location_dest_id" options="{'no_create': True}" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'outgoing')]}" groups="stock.group_stock_multi_locations" domain="[('id', 'child_of', parent.location_dest_id)]"/>
-                                    <field name="package_id" groups="stock.group_tracking_lot" domain="[('location_id', '=', location_id)]"/>
-                                    <field name="result_package_id" groups="stock.group_tracking_lot" domain="['|', '|', ('location_id', '=', False), ('location_id', '=', location_dest_id), ('id', '=', package_id)]"/>
+                                    <field name="package_id" groups="stock.group_tracking_lot" domain="['&amp;', ('location_id', '=', location_id), ('company_id', 'in', [parent.company_id, False])]"/>
+                                    <field name="result_package_id" groups="stock.group_tracking_lot" domain="['&amp;', '|', '|', ('location_id', '=', False), ('location_id', '=', location_dest_id), ('id', '=', package_id), ('company_id', 'in', [parent.company_id, False])]"/>
                                     <field name="lots_visible" invisible="1"/>
                                     <field name="owner_id" groups="stock.group_tracking_owner"/>
                                     <field name="state" invisible="1"/>
