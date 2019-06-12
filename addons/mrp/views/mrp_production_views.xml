@@ -318,8 +318,8 @@
                     <filter string="Done" name="filter_done" domain="[('state', '=', 'done')]"/>
                     <filter string="Cancelled" name="filter_cancel" domain="[('state', '=', 'cancel')]"/>
                     <separator/>
-                    <filter string="Waiting for Material" name="waiting" domain="[('reservation_state', 'in', ('waiting', 'confirmed'))]"/>
-                    <filter string="Material Available" name="filter_ready" domain="[('reservation_state', '=', 'assigned')]"/>
+                    <filter string="Waiting for Component" name="waiting" domain="[('reservation_state', 'in', ('waiting', 'confirmed'))]"/>
+                    <filter string="Component Available" name="filter_ready" domain="[('reservation_state', '=', 'assigned')]"/>
                     <separator/>
                     <filter string="Late" name="late" help="Production started late"
                         domain="['&amp;', ('date_deadline', '&lt;', current_date), ('state', '=', 'confirmed')]"/>
