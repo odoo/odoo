@@ -11,4 +11,4 @@ class TestUi(odoo.tests.HttpCase):
             'free_over': True,
             'amount': 10,
         })
-        self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('check_free_delivery')", "odoo.__DEBUG__.services['web_tour.tour'].tours.check_free_delivery.ready", login="admin")
+        self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('check_free_delivery')", "odoo.__DEBUG__.services['web_tour.tour'].tours.check_free_delivery.ready", login="admin")
