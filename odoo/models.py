@@ -3268,11 +3268,19 @@ Fields:
         self.check_field_access_rights('write', vals.keys())
         env = self.env
 
+        bad_names = {'id', 'parent_path'}
+        if self._log_access:
+            # the superuser can set log_access fields while loading registry
+            if not(self.env.uid == SUPERUSER_ID and not self.pool.ready):
+                bad_names.update(LOG_ACCESS_COLUMNS)
+
         # DLE P34
         determine_inverses = {}
         # DLE P39: for monetary field, their related currency field must be cached before the amount so it can be rounded correctly
         # test `test_20_monetary`
         for fname, value in self._sort_values(vals):
+            if fname in bad_names:
+                continue
             field = self._fields.get(fname)
             # DLE P34
             if field.inverse:
@@ -3412,10 +3420,11 @@ Fields:
         # If there are only fields that do not trigger _write (e.g. only determine inverse),
         # the below will ensure `_write ` will be called, even with empty vals, to ensure `write_date` and `write_uid` is updated
         if self._log_access and self.ids:
-            if not any(self._fields[fname].store for fname in vals.keys() if fname in self._fields):
+            if not any(self._fields[fname].column_type for fname in vals.keys() if fname in self._fields):
                 for record in self:
                     if record.id:
-                        env.all.towrite[record._name][record.id]
+                        env.all.towrite[record._name][record.id]['write_uid'] = self.env.uid
+                        env.all.towrite[record._name][record.id]['write_date'] = False
             self.env.cache.invalidate([(self._fields['write_date'], self.ids), (self._fields['write_uid'], self.ids)])
         to_validate._validate_fields(inverse_fields)
         return True
@@ -3438,12 +3447,8 @@ Fields:
         single_lang = len(self.env['res.lang'].get_installed()) <= 1
         has_translation = self.env.lang and self.env.lang != 'en_US'
 
-        bad_names = {'id', 'parent_path'}
-        if self._log_access:
-            bad_names.update(LOG_ACCESS_COLUMNS)
-
         for name, val in vals.items():
-            if name in bad_names:
+            if self._log_access and name in LOG_ACCESS_COLUMNS and not val:
                 continue
             field = self._fields[name]
             assert field.store
@@ -3461,10 +3466,12 @@ Fields:
                 other_fields.append(field)
 
         if self._log_access:
-            columns.append(('write_uid', '%s', self._uid))
-            updated.append('write_uid')
-            columns.append(('write_date', '%s', AsIs("(now() at time zone 'UTC')")))
-            updated.append('write_date')
+            if not vals.get('write_uid'):
+                columns.append(('write_uid', '%s', self._uid))
+                updated.append('write_uid')
+            if not vals.get('write_date'):
+                columns.append(('write_date', '%s', AsIs("(now() at time zone 'UTC')")))
+                updated.append('write_date')
 
         # update columns
         if columns:
@@ -5402,6 +5409,13 @@ Fields:
                     field.compute_value(recs)
                 except MissingError:
                     field.compute_value(recs.exists())
+                    # DLE P61: test_access_deleted_records
+                    # `compute_value` ensures to call `remove_todo` for the record it treats
+                    # but for the record it doesn't treat,
+                    # e.g. records that no longer exists,
+                    # they have to be removed here
+                    # otherwise the record remains forever in the todo list, and leads to an infinite loop.
+                    self.env.remove_todo(field, recs - recs.exists())
             else:
                 self.env.cache.invalidate([(field, recs._ids)])
                 self.env.remove_todo(field, recs)
