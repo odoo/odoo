@@ -41,7 +41,7 @@ class AlipayTest(PaymentAcquirerCommon):
             'notify_url': urls.url_join(base_url, AlipayController._notify_url),
             'out_trade_no': 'SO12345-1',
             'partner': self.alipay.alipay_merchant_partner_id,
-            'return_url': urls.url_join(base_url, AlipayController._return_url) + '?' + urls.url_encode({'redirect_url': '/payment/process'}),
+            'return_url': urls.url_join(base_url, AlipayController._return_url),
             'subject': 'test_ref0',
             'total_fee': '0.01',
         }
@@ -152,7 +152,7 @@ class AlipayTest(PaymentAcquirerCommon):
         self.assertEqual(tx.acquirer_reference, '2017112321001003690200384552', 'alipay: wrong txn_id after receiving a valid pending notification')
 
         # update tx
-        tx.write({'acquirer_reference': False})
+        tx.write({'state': 'draft', 'acquirer_reference': False})
 
         # update notification from alipay should not go through since it has already been set as 'done'
         if self.alipay.alipay_payment_method == 'standard_checkout':
