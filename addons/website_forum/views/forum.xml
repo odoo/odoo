@@ -28,6 +28,7 @@
             <field name="arch" type="xml">
                 <form string="Forum">
                     <sheet>
+                        <field name="active" invisible="1"/>
                         <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="image_1920" widget="image" options="{'preview_image': 'image_128'}" class="oe_avatar"/>
                         <div class="oe_title">
@@ -37,16 +38,15 @@
                             </h1>
                         </div>
                         <group>
-                            <field name="active" invisible="1"/>
-                            <field name="description"/>
+                            <field name="mode" widget="radio" required="True"/>
                             <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                         </group>
                         <notebook>
                             <page string="Options">
-                              <group string="Orders">
+                              <group string="Order">
                                 <field name="default_order"/>
-                                <label for="relevancy_post_vote" string="Relevance Computation" groups="base.group_no_one"/>
-                                <div groups="base.group_no_one" class="o_row">
+                                <label for="relevancy_post_vote" string="Relevance Computation" groups="base.group_no_one" attrs="{'invisible':[('default_order','!=','relevancy desc')]}"/>
+                                <div groups="base.group_no_one" class="o_row" attrs="{'invisible':[('default_order','!=','relevancy desc')]}">
                                     (votes - 1) ** <field name="relevancy_post_vote"/> / (days + 2) ** <field name="relevancy_time_decay"/>
                                 </div>
                               </group>
@@ -97,6 +97,9 @@
                                 </group>
                             </page>
                         </notebook>
+                        <group>
+                            <field name="description"/>
+                        </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
