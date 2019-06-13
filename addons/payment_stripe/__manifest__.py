@@ -6,7 +6,7 @@
     'summary': 'Payment Acquirer: Stripe Implementation',
     'version': '1.0',
     'description': """Stripe Payment Acquirer""",
-    'depends': ['payment'],
+    'depends': ['payment', 'iap'],
     'data': [
         'views/payment_views.xml',
         'views/payment_stripe_templates.xml',

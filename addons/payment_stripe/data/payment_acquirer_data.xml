@@ -9,5 +9,10 @@
             <field name="view_template_id" ref="stripe_form"/>
             <field name="registration_view_template_id" ref="stripe_s2s_form"/>
         </record>
+
+        <record id="default_payment_stripe_service_endpoint" model="ir.config_parameter">
+            <field name="key">payment_stripe_service.endpoint</field>
+            <field name="value">http://localhost:8069</field>
+        </record>
     </data>
 </odoo>

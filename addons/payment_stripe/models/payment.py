@@ -9,10 +9,14 @@ from werkzeug import urls
 from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_round
 
+from odoo.exceptions import UserError
+from odoo.addons.iap import jsonrpc, InsufficientCreditError
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_stripe.controllers.main import StripeController
 
 _logger = logging.getLogger(__name__)
+
+DEFAULT_ENDPOINT = 'https://iap-services.odoo.com'
 
 # The following currencies are integer only, see https://stripe.com/docs/currencies#zero-decimal
 INT_CURRENCIES = [
@@ -32,6 +36,7 @@ class PaymentAcquirerStripe(models.Model):
         help="A relative or absolute URL pointing to a square image of your "
              "brand or product. As defined in your Stripe profile. See: "
              "https://stripe.com/docs/checkout")
+    stripe_connect_status_msg = fields.Boolean(groups='base.group_user')
 
     def stripe_form_generate_values(self, tx_values):
         self.ensure_one()
@@ -127,6 +132,42 @@ class PaymentAcquirerStripe(models.Model):
         res = super(PaymentAcquirerStripe, self)._get_feature_support()
         res['tokenize'].append('stripe')
         return res
+
+    def create_account(self):
+        user_token = self.env['iap.account'].get('payment_stripe')
+
+        params = {
+            'res_id': self.id,
+            'account_token': user_token.account_token,
+            'email': self.env.user.email,
+            'name': self.env.user.name,
+            'redirect_url': self.env['ir.config_parameter'].get_param('web.base.url')
+        }
+        endpoint = self.env['ir.config_parameter'].sudo().get_param('payment_stripe_service.endpoint', DEFAULT_ENDPOINT)
+
+        try:
+            result = jsonrpc(endpoint + '/create_stripe_account', params=params)
+            if result.get('account_exists'):
+                raise UserError(_('You already have created a stripe account. Please enter the credentials to Stipe manually'))
+            else:
+                company = self.env.user.company_id
+                result['redirect_uri'] += '&stripe_user[country]=%s&stripe_user[street_address]=%s&stripe_user[zip]=%s&stripe_user[business_name]=%s' \
+                    '&stripe_user[url]=%s' % (company.country_id.code, company.street, company.zip, company.name, company.website)
+
+                return {
+                    'type': 'ir.actions.act_url',
+                    'url': result['redirect_uri'],
+                    'target': 'self',
+                }
+
+        except InsufficientCreditError as e:
+            return {
+                'type': 'ir.actions.act_url',
+                'url': self.env['iap.account'].get_credits_url(service_name='payment_stripe'),
+            }
+
+    def action_close_status_msg(self):
+        self.stripe_connect_status_msg = False
 
 
 class PaymentTransactionStripe(models.Model):

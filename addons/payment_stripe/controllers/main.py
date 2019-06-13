@@ -52,3 +52,15 @@ class StripeController(http.Controller):
     @http.route('/payment/stripe/s2s/process_payment_intent', type='json', auth='public', csrf=False)
     def stripe_s2s_process_payment_intent(self, **post):
         return request.env['payment.transaction'].sudo().form_feedback(post, 'stripe')
+
+    @http.route('/payment/stripe/account/success', type="http", auth="user", csrf=False)
+    def stripe_account_success(self, res_id=None, secret_key=None, publishable_key=None, **post):
+        if res_id and secret_key and publishable_key:
+            acquirer = request.env['payment.acquirer'].browse(int(res_id))
+            acquirer.write({
+                'stripe_secret_key': secret_key,
+                'stripe_publishable_key': publishable_key,
+                'state': 'enabled',
+                'stripe_connect_status_msg': True,
+            })
+            return werkzeug.utils.redirect('/web#id='+res_id+'&model=payment.acquirer&view_type=form')

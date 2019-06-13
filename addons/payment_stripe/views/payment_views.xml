@@ -16,6 +16,20 @@
                     <field name="stripe_image_url"/>
                 </group>
             </xpath>
+            <xpath expr='//form/sheet' position='before'>
+                <header>
+                    <button name="create_account" type="object" class="oe_highlight" string="Create a stripe account" attrs="{'invisible': ['|', ('provider', '!=', 'stripe'), ('stripe_secret_key', '!=', 'dummy')]}"/>
+                </header>
+            </xpath>
+            <field name="inbound_payment_method_ids" position="after">
+                <field name="stripe_connect_status_msg" invisible="1"/>
+                <div class="alert alert-info text-center" attrs="{'invisible': [('stripe_connect_status_msg', '=', False)]}" role="alert">
+                    <button class="close" role="alert" name="action_close_status_msg" type="object">x</button>
+                    <div>
+                        <strong>Your Stripe account is successfully configured!</strong>
+                    </div>
+                </div>
+            </field>
         </field>
     </record>
 </odoo>
