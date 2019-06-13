@@ -820,3 +820,24 @@ class Website(models.Model):
             return ''
         res = urls.url_parse(self.domain)
         return 'http://' + self.domain if not res.scheme else self.domain
+
+
+class BaseModel(models.AbstractModel):
+    _inherit = 'base'
+
+    @api.multi
+    def get_base_url(self):
+        """
+        Returns baseurl about one given record.
+        If a website_id field exists in the current record we use the url
+        from this website as base url.
+
+        :return: the base url for this record
+        :rtype: string
+
+        """
+        self.ensure_one()
+        if 'website_id' in self and self.website_id.domain:
+            return self.website_id._get_http_domain()
+        else:
+            return super(BaseModel, self).get_base_url()
