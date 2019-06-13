@@ -446,7 +446,6 @@ class AccountMove(models.Model):
     def action_duplicate(self):
         self.ensure_one()
         action = self.env.ref('account.action_move_journal_line').read()[0]
-        action['target'] = 'inline'
         action['context'] = dict(self.env.context)
         action['context']['view_no_maturity'] = False
         action['views'] = [(self.env.ref('account.view_move_form').id, 'form')]
