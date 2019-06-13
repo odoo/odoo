@@ -143,7 +143,7 @@ class Website(models.Model):
         public_user_to_change_websites = self.env['website']
         self._get_languages.clear_cache(self)
         if 'company_id' in values and 'user_id' not in values:
-            public_user_to_change_websites = self.filtered(lambda w: w.user_id.company_id.id != values['company_id'])
+            public_user_to_change_websites = self.filtered(lambda w: w.sudo().user_id.company_id.id != values['company_id'])
             if public_user_to_change_websites:
                 company = self.env['res.company'].browse(values['company_id'])
                 super(Website, public_user_to_change_websites).write(dict(values, user_id=company._get_public_user().id))
