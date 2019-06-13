@@ -803,6 +803,7 @@
         <field name="tax_group_id" ref="tax_group_iva_10"/>
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_04_06'), ref('mod_303_14_15_sale')])]"/>
     </record>
+    <!-- TODO: Change iva0_nd to iva21_nd in next version -->
     <record id="account_tax_template_p_iva0_nd" model="account.tax.template">
         <field name="description">P_IVA0_ND</field>
         <field name="type_tax_use">purchase</field>
@@ -819,6 +820,7 @@
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="10"/>
         <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_iva_10"/>
     </record>
     <record id="account_tax_template_p_iva4_nd" model="account.tax.template">
         <field name="description">P_IVA4_ND</field>
@@ -827,6 +829,7 @@
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="4"/>
         <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_iva_4"/>
     </record>    
     <record id="account_tax_template_s_iva4s" model="account.tax.template">
         <field name="description">S_IVA4S</field>
@@ -1082,6 +1085,7 @@
         <field name="amount" eval="10.5"/>
         <field name="amount_type">percent</field>
         <field name="include_base_amount" eval="1"/>
+        <field name="tax_group_id" ref="tax_group_iva_10-5"/>
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_42')])]"/>
     </record>
     <record id="account_tax_template_s_iva0_e" model="account.tax.template">
