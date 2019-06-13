@@ -2917,7 +2917,7 @@ Fields:
                 # This does not harm in practice, as it is only used in Monetary
                 # fields for rounding the value. As the value comes straight
                 # from the database, it is expected to be rounded already.
-                values = [convert(value, target, validate=False) for record_id, value in zip(ids, values)]
+                values = [convert(value, target, validate=False) for value in values]
                 self.env.cache.update(fetched, field, values)
 
             # determine the fields that must be processed now;
