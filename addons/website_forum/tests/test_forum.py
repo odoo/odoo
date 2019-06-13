@@ -391,3 +391,49 @@ class TestForum(TestForumCommon):
     def test_unlink_post_all(self):
         self.user_portal.karma = KARMA['unlink_all']
         self.post.with_user(self.user_portal).unlink()
+
+    def test_forum_mode_questions(self):
+        Forum = self.env['forum.forum']
+        forum_questions = Forum.create({
+            'name': 'Questions Forum',
+            'mode': 'questions',
+            'active': True
+        })
+        Post = self.env['forum.post']
+        questions_post = Post.create({
+            'name': 'My First Post',
+            'forum_id': forum_questions.id,
+            'parent_id': self.post.id,
+        })
+        answer_to_questions_post = Post.create({
+            'name': 'This is an answer',
+            'forum_id': forum_questions.id,
+            'parent_id': questions_post.id,
+        })
+        self.assertEqual(
+            not questions_post.uid_has_answered or questions_post.forum_id.mode == 'discussions', False)
+        self.assertEqual(
+            questions_post.uid_has_answered and questions_post.forum_id.mode == 'questions', True)
+
+    def test_forum_mode_discussions(self):
+        Forum = self.env['forum.forum']
+        forum_discussions = Forum.create({
+            'name': 'Discussions Forum',
+            'mode': 'discussions',
+            'active': True
+        })
+        Post = self.env['forum.post']
+        discussions_post = Post.create({
+            'name': 'My First Post',
+            'forum_id': forum_discussions.id,
+            'parent_id': self.post.id,
+        })
+        answer_to_discussions_post = Post.create({
+            'name': 'This is an answer',
+            'forum_id': forum_discussions.id,
+            'parent_id': discussions_post.id,
+        })
+        self.assertEqual(
+            not discussions_post.uid_has_answered or discussions_post.forum_id.mode == 'discussions', True)
+        self.assertEqual(
+            discussions_post.uid_has_answered and discussions_post.forum_id.mode == 'questions', False)
