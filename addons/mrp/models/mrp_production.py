@@ -51,6 +51,12 @@ class MrpProduction(models.Model):
                 location = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).lot_stock_id
         return location and location.id or False
 
+    @api.model
+    def _get_default_date_planned_finished(self):
+        if self.env.context.get('default_date_planned_start'):
+            return fields.Datetime.to_datetime(self.env.context.get('default_date_planned_start')) + datetime.timedelta(hours=1)
+        return datetime.datetime.now() + datetime.timedelta(hours=1)
+
     name = fields.Char(
         'Reference', copy=False, readonly=True, default=lambda x: _('New'))
     origin = fields.Char(
@@ -89,28 +95,24 @@ class MrpProduction(models.Model):
         states={'draft': [('readonly', False)]},
         help="Location where the system will stock the finished products.")
     date_planned_start = fields.Datetime(
-        'Deadline Start', copy=False, default=fields.Datetime.now,
-        index=True, required=True,
-        states={'draft': [('readonly', False)]})
+        'Planned Date', copy=False, default=fields.Datetime.now,
+        help="Date at which you plan to start the production.",
+        index=True, required=True, store=True)
     date_planned_finished = fields.Datetime(
-        'Deadline End', copy=False, default=fields.Datetime.now,
-        index=True,
-        states={'draft': [('readonly', False)]})
-    date_planned_start_wo = fields.Datetime(
-        'Scheduled Start Date', compute='_compute_date_planned',
-        copy=False, store=True,
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
-    date_planned_finished_wo = fields.Datetime(
-        'Scheduled End Date', compute='_compute_date_planned',
-        copy=False, store=True,
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+        'Planned End Date',
+        default=_get_default_date_planned_finished,
+        help="Date at which you plan to finish the production.",
+        copy=False, store=True)
+    date_deadline = fields.Datetime(
+        'Deadline', copy=False, index=True,
+        help="Informative date allowing to define when the manufacturing order should be processed at the latest to fulfill delivery on time.")
     date_start = fields.Datetime('Start Date', copy=False, index=True, readonly=True)
     date_finished = fields.Datetime('End Date', copy=False, index=True, readonly=True)
     date_start_wo = fields.Datetime(
-        'Planned Start Date', copy=False, readonly=True,
-        states={'draft': [('readonly', False)], 'confirmed': [('readonly', False)]},
-        help="The work orders will be planned based on the availability of the work centers starting from "
-        "this date. If emtpy, the work orders are planned as soon as possible.")
+        'Plan From', copy=False, readonly=True,
+        help="Work orders will be planned based on the availability of the work centers\
+              starting from this date. If empty, the work orders will be planned as soon as possible.",
+    )
     bom_id = fields.Many2one(
         'mrp.bom', 'Bill of Material',
         readonly=True, states={'draft': [('readonly', False)]},
@@ -370,18 +372,6 @@ class MrpProduction(models.Model):
         for production in self:
             production.scrap_count = count_data.get(production.id, 0)
 
-    @api.depends('workorder_ids.date_planned_start', 'workorder_ids.date_planned_finished')
-    def _compute_date_planned(self):
-        for order in self:
-            date_planned_start_wo = date_planned_finished_wo = False
-            if order.workorder_ids:
-                start_dates = order.workorder_ids.filtered(lambda r: r.date_planned_start is not False).sorted(key=lambda r: r.date_planned_start)
-                date_planned_start_wo = start_dates[0].date_planned_start if start_dates else False
-                finished_dates = order.workorder_ids.filtered(lambda r: r.date_planned_finished is not False).sorted(key=lambda r: r.date_planned_finished)
-                date_planned_finished_wo = finished_dates[-1].date_planned_finished if finished_dates else False
-            order.date_planned_start_wo = date_planned_start_wo
-            order.date_planned_finished_wo = date_planned_finished_wo
-
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
         ('qty_positive', 'check (product_qty > 0)', 'The quantity to produce must be positive!'),
@@ -414,6 +404,8 @@ class MrpProduction(models.Model):
             'date': self.date_planned_start,
             'date_expected': self.date_planned_start,
         })
+        if not self.routing_id:
+            self.date_planned_finished = self.date_planned_start + datetime.timedelta(hours=1)
 
     @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
     def _onchange_move_raw(self):
@@ -451,6 +443,11 @@ class MrpProduction(models.Model):
                 'date_expected': vals['date_planned_start'],
             })
         for production in self:
+            if 'date_planned_start' in vals:
+                if production.state in ['done', 'cancel']:
+                    raise UserError(_('You cannot move a manufacturing order once it is cancelled or done.'))
+                if production.workorder_ids and not self.env.context.get('force_date', False):
+                    raise UserError(_('You cannot move a planned manufacturing order.'))
             if 'move_raw_ids' in vals and production.state != 'draft':
                 production.move_raw_ids.filtered(lambda m: m.state == 'draft')._action_confirm()
         return res
@@ -715,6 +712,10 @@ class MrpProduction(models.Model):
             })
             vals['leave_id'] = leave.id
             workorder.write(vals)
+        self.with_context(force_date=True).write({
+            'date_planned_start': self.workorder_ids[0].date_planned_start,
+            'date_planned_finished': self.workorder_ids[-1].date_planned_finished
+        })
 
     def button_unplan(self):
         if any(wo.state == 'done' for wo in self.workorder_ids):

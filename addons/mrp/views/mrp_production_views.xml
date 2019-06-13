@@ -9,7 +9,6 @@
                 <tree decoration-bf="message_needaction==True" default_order="date_planned_start desc" decoration-info="state=='confirmed'" decoration-danger="date_planned_start&lt;current_date and state not in ('done','cancel')" decoration-muted="state in ('done','cancel')" string="Manufacturing Orders">
                     <field name="message_needaction" invisible="1"/>
                     <field name="name"/>
-                    <field name="date_start_wo" optional="hide"/>
                     <field name="date_planned_start" optional="show"/>
                     <field name="product_id" optional="show"/>
                     <field name="product_qty" sum="Total Qty" string="Quantity" optional="show"/>
@@ -46,15 +45,15 @@
                     <button name="button_mark_done" attrs="{'invisible': [('state', '!=', 'to_close')]}" string="Mark as Done" type="object" class="oe_highlight"/>
                     <button name="action_confirm" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('is_locked', '=', False)]}" string="Mark as Todo" type="object" class="oe_highlight"/>
                     <button name="action_assign" attrs="{'invisible': ['|', '|', ('is_locked', '=', False), ('state', 'in', ('draft', 'done', 'cancel')), ('reservation_state', '=', 'assigned')]}" string="Check availability" type="object" class="oe_highlight"/>
-                    <button name="button_plan" attrs="{'invisible': ['|', ('state', 'not in', ('confirmed', 'planned')), '|', ('routing_id', '=', False), '|', ('date_planned_start_wo', '!=', False), ('date_planned_finished_wo', '!=', False)]}" type="object" string="Plan" class="oe_highlight"/>
-                    <button name="button_unplan" type="object" string="Unplan" attrs="{'invisible': ['|', '|', ('state', '!=', 'planned'), ('date_planned_start_wo', '=', False), ('date_planned_finished_wo', '=', False)]}"/>
+                    <button name="button_plan" attrs="{'invisible': ['|', ('state', '!=', 'confirmed'), ('routing_id', '=', False)]}" type="object" string="Plan" class="oe_highlight"/>
+                    <button name="button_unplan" type="object" string="Unplan" attrs="{'invisible': ['|', '|', ('state', '!=', 'planned'), ('date_planned_start', '=', False), ('date_planned_finished', '=', False)]}"/>
                     <button name="open_produce_product" attrs="{'invisible': ['|', '|', '|', ('state', '=', 'to_close'), ('is_locked', '=', False), ('reservation_state', '!=', 'assigned'), ('routing_id', '!=', False)]}" string="Produce" type="object" class="oe_highlight"/>
                     <button name="open_produce_product" attrs="{'invisible': ['|', '|', '|', ('state', '=', 'to_close'), ('is_locked', '=', False), ('reservation_state', 'not in', ('confirmed', 'waiting')), ('routing_id', '!=', False)]}" string="Produce" type="object"/>
                     <button name="post_inventory" string="Post Inventory" type="object" attrs="{'invisible': [('post_visible', '=', False)]}" groups="base.group_no_one"/>
                     <button name="action_cancel" type="object" string="Cancel"
-                            attrs="{'invisible': ['|', '|', ('is_locked', '=', False), ('state', 'in', ('done','cancel')), ('confirm_cancel', '=', True)]}"/>
+                            attrs="{'invisible': ['|', '|', '|', ('id', '=', False), ('is_locked', '=', False), ('state', 'in', ('done','cancel')), ('confirm_cancel', '=', True)]}"/>
                     <button name="action_cancel" type="object" string="Cancel"
-                            attrs="{'invisible': ['|', '|', ('is_locked', '=', False), ('state', 'in', ('done','cancel')), ('confirm_cancel', '=', False)]}"
+                            attrs="{'invisible': ['|', '|', '|', ('id', '=', False), ('is_locked', '=', False), ('state', 'in', ('done','cancel')), ('confirm_cancel', '=', False)]}"
                             confirm="Some product moves have already been confirmed, this manufacturing order can't be completely cancelled. Are you still sure you want to process ?"/>
                     <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': ['|', ('state', 'in', ('cancel', 'draft')), ('is_locked', '=', False)]}"/>
                     <button name="button_unreserve" type="object" string="Unreserve" attrs="{'invisible': [('unreserve_visible', '=', False)]}"/>
@@ -114,14 +113,56 @@
                             <field name="routing_id" groups="mrp.group_mrp_routings"/>
                         </group>
                         <group>
-                            <field name="date_planned_start"/>
-                            <field name="date_planned_finished" invisible="1"/>
-                            <field name="date_start_wo" attrs="{'invisible': ['|', ('routing_id', '=', False), ('state', 'not in', ['draft', 'confirmed'])]}"/>
-                            <label for="date_planned_start_wo" string="Scheduled Date" attrs="{'invisible': [('date_planned_start_wo', '=', False)]}"/>
-                            <div class="o_row" attrs="{'invisible': [('date_planned_start_wo', '=', False)]}">
-                                <field name="date_planned_start_wo" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
-                                <label for="date_planned_finished_wo" string="to" attrs="{'invisible': [('date_planned_finished_wo', '=', False)]}"/>
-                                <field name="date_planned_finished_wo" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
+                            <field name="date_deadline" attrs="{'readonly': [('state', 'in', ['done', 'cancel'])]}"/>
+                            <field name="date_start_wo"
+                                attrs="{'invisible': [
+                                '|',
+                                    '&amp;',
+                                        ('routing_id', '!=', False),
+                                        ('state', 'not in', ['draft', 'confirmed']),
+                                    ('routing_id', '=', False),
+                                ], 'readonly': [
+                                    ('routing_id', '!=', False),
+                                    ('state', 'not in', ['draft', 'confirmed']),
+                                ]}"/>
+                            <div class="o_row o_td_label">
+                                <label for="date_planned_start" string="Planned Date"
+                                       attrs="{'invisible': [
+                                                ('routing_id', '!=', False),
+                                                ('state', 'in', ['draft', 'confirmed'])
+                                        ]}"/>
+                            </div>
+                            <div class="o_row">
+                                <field name="date_planned_start"
+                                       attrs="{'invisible': [
+                                            ('routing_id', '!=', False),
+                                            ('state', 'in', ['draft', 'confirmed']),
+                                        ], 'readonly': [
+                                       '|',
+                                        '&amp;',
+                                            ('routing_id', '=', False),
+                                            ('state', 'in', ['done', 'cancel']),
+                                        '&amp;',
+                                            ('routing_id', '!=', False),
+                                            ('state', 'not in', ['draft', 'confirmed'])]}"/>
+                                <label for="date_planned_finished" string="to" attrs="{'invisible': [
+                                    '|',
+                                        ('id', '=', False),
+                                        '&amp;',
+                                            ('routing_id', '!=', False),
+                                            ('state', 'in', ['draft', 'confirmed'])
+                                ]}"/>
+                                <field name="date_planned_finished" required="1"
+                                attrs="{'readonly': [
+                                    '|',
+                                        '&amp;',
+                                            ('routing_id', '=', False),
+                                            ('state', 'in', ['done', 'cancel']),
+                                        ('routing_id', '!=', False)
+                                ], 'invisible': [
+                                    ('routing_id', '!=', False),
+                                    ('state', 'in', ['draft', 'confirmed'])
+                                ]}"/>
                             </div>
                             <field name="user_id"/>
                             <field name="origin"/>
@@ -204,8 +245,8 @@
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
-                     <field name="product_uom_id" options="{'no_open':True,'no_create':True}"/>
-                    <field name="date_planned_start"/>
+                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}"/>
+                    <field name="date_deadline"/>
                     <field name="state"/>
                     <field name="activity_state"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
@@ -220,7 +261,7 @@
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left text-muted">
-                                        <span><t t-esc="record.name.value"/> <t t-esc="record.date_planned_start.value and record.date_planned_start.value.split(' ')[0] or False"/></span>
+                                        <span><t t-esc="record.name.value"/> <t t-esc="record.date_deadline.value and record.date_deadline.value.split(' ')[0] or False"/></span>
                                         <field name="activity_ids" widget="kanban_activity"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
@@ -238,7 +279,8 @@
             <field name="model">mrp.production</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar date_start="date_planned_start" string="Manufacturing Orders" color="routing_id" event_limit="5">
+                <calendar date_start="date_planned_start" date_stop="date_planned_finished"
+                          string="Manufacturing Orders" color="routing_id" event_limit="5">
                     <field name="routing_id"/>
                     <field name="user_id" avatar_field="image_small"/>
                     <field name="product_id"/>
@@ -259,7 +301,7 @@
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
                 <pivot string="Manufacturing Orders">
-                    <field name="date_planned_start" type="row"/>
+                    <field name="date_deadline" type="row"/>
                 </pivot>
             </field>
         </record>
@@ -268,7 +310,7 @@
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
                 <graph string="Manufacturing Orders">
-                    <field name="date_planned_start"/>
+                    <field name="date_deadline"/>
                 </graph>
             </field>
         </record>
@@ -292,7 +334,7 @@
                     <filter string="Waiting for Material" name="waiting" domain="[('reservation_state', 'in', ('waiting', 'confirmed'))]"/>
                     <filter string="Material Available" name="filter_ready" domain="[('reservation_state', '=', 'assigned')]"/>
                     <separator/>
-                    <filter string="Late" domain="['&amp;', ('date_planned_start', '&lt;', current_date), ('state', '=', 'confirmed')]"
+                    <filter string="Late" domain="['&amp;', ('date_deadline', '&lt;', current_date), ('state', '=', 'confirmed')]"
                         name="late" help="Production started late"/>
                     <separator/>
                     <field name="product_id"/>
@@ -312,7 +354,7 @@
                     <group expand="0" string="Group By...">
                         <filter string="Product" name="product" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Routing" name="routing" domain="[]" context="{'group_by':'routing_id'}" groups="mrp.group_mrp_routings"/>
-                        <filter string="Scheduled Date" name="scheduled_date" domain="[]" context="{'group_by':'date_planned_start'}" help="Scheduled Date by Month"/>
+                        <filter string="Scheduled Date" name="scheduled_date" domain="[]" context="{'group_by':'date_deadline'}" help="Scheduled Date by Month"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
                         <filter string="Material Availability" name="groupby_reservation_state" domain="[]" context="{'group_by': 'reservation_state'}"/>
                     </group>
