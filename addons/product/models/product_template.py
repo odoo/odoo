@@ -1021,3 +1021,16 @@ class ProductTemplate(models.Model):
             'label': _('Import Template for Products'),
             'template': '/product/static/xls/product_template.xls'
         }]
+
+    @api.multi
+    def _compute_message_attachment_count(self):
+        super(ProductTemplate, self)._compute_message_attachment_count()
+        records = self.filtered(lambda x: len(x.product_variant_ids) == 1)
+        for record in records:
+            record.message_attachment_count += record.product_variant_id.message_attachment_count
+
+    def read_attachments(self):
+        res = super(ProductTemplate, self).read_attachments()
+        if len(self.product_variant_ids) == 1:
+            res += self.product_variant_ids.read_attachments()
+        return res
