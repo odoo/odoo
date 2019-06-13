@@ -37,7 +37,7 @@ tour.register('crm_tour', {
     position: "right",
     run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(2) ",
 }, {
-    trigger: ".o_kanban_record:not(.o_updating) .o_activity_color_default",
+    trigger: ".o_kanban_record:not(.o_updating) .o_activity_color_normal",
     extra_trigger: ".o_opportunity_kanban",
     content: _t("This opportunity has <b>no activity planned</b>."),
     position: "bottom"

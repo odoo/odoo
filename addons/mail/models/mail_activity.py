@@ -576,6 +576,7 @@ class MailActivityMixin(models.AbstractModel):
         groups="base.group_user",
         domain=lambda self: [('res_model', '=', self._name)])
     activity_state = fields.Selection([
+        ('normal', 'Normal'),
         ('overdue', 'Overdue'),
         ('today', 'Today'),
         ('planned', 'Planned')], string='Activity State',
@@ -614,6 +615,8 @@ class MailActivityMixin(models.AbstractModel):
                 record.activity_state = 'today'
             elif 'planned' in states:
                 record.activity_state = 'planned'
+            else:
+                record.activity_state = 'normal'
 
     @api.depends('activity_ids.date_deadline')
     def _compute_activity_date_deadline(self):

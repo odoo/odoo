@@ -357,7 +357,7 @@ QUnit.test('Activity Done by uploading a file', async function (assert) {
                 var current_ids = this.data.partner.records[0].activity_ids;
                 var done_ids = args.args[0];
                 this.data.partner.records[0].activity_ids = _.difference(current_ids, done_ids);
-                this.data.partner.records[0].activity_state = false;
+                this.data.partner.records[0].activity_state = 'normal';
                 return Promise.resolve();
             }
             return this._super.apply(this, arguments);
@@ -585,13 +585,14 @@ QUnit.test('kanban activity widget with no activity', async function (assert) {
                 '</kanban>',
         mockRPC: function (route, args) {
             rpcCount++;
+            this.data.partner.records[0].activity_state = 'normal';
             return this._super(route, args);
         },
         session: {uid: 2},
     });
 
     var $record = kanban.$('.o_kanban_record').first();
-    assert.ok($record.find('.o_mail_activity .o_activity_color_default').length,
+    assert.ok($record.find('.o_mail_activity .o_activity_color_normal').length,
         "activity widget should have been rendered correctly");
     assert.strictEqual(rpcCount, 1, '1 RPC (search_read) should have been done');
 
@@ -637,7 +638,7 @@ QUnit.test('kanban activity widget with an activity', async function (assert) {
                 var current_ids = this.data.partner.records[0].activity_ids;
                 var done_ids = args.args[0];
                 this.data.partner.records[0].activity_ids = _.difference(current_ids, done_ids);
-                this.data.partner.records[0].activity_state = false;
+                this.data.partner.records[0].activity_state = 'normal';
                 return Promise.resolve();
             }
             return this._super(route, args);
@@ -671,7 +672,7 @@ QUnit.test('kanban activity widget with an activity', async function (assert) {
     await testUtils.dom.click($record.find('.o_activity_popover_done'));
     $record = kanban.$('.o_kanban_record').first(); // the record widget has been reset
     assert.strictEqual(rpcCount, 5, 'should have done an RPC to mark activity as done, and a read');
-    assert.ok($record.find('.o_mail_activity .o_activity_color_default:not(.o_activity_color_today)').length,
+    assert.ok($record.find('.o_mail_activity .o_activity_color_normal:not(.o_activity_color_today)').length,
         "activity widget should have been updated correctly");
     assert.strictEqual($record.find('.o_mail_activity.show').length, 1,
         "dropdown should remain open when marking an activity as done");
@@ -713,7 +714,7 @@ QUnit.test('kanban activity widget popover test', async function (assert) {
                 var current_ids = this.data.partner.records[0].activity_ids;
                 var done_ids = args.args[0];
                 this.data.partner.records[0].activity_ids = _.difference(current_ids, done_ids);
-                this.data.partner.records[0].activity_state = false;
+                this.data.partner.records[0].activity_state = 'normal';
                 return Promise.resolve();
             }
             return this._super(route, args);
