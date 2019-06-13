@@ -1154,7 +1154,16 @@ class MailThread(models.AbstractModel):
             tools.decode_message_header(message, 'Cc'),
             tools.decode_message_header(message, 'Resent-To'),
             tools.decode_message_header(message, 'Resent-Cc')])
-        rcpt_tos_localparts = [e.split('@')[0].lower() for e in tools.email_split(rcpt_tos)]
+        # rcpt_tos_localparts = [e.split('@')[0].lower() for e in tools.email_split(rcpt_tos)]
+
+        # Mail on the header might have a different domain. If this is the case, we shouldn't be taking care of them.
+        # Add verification to ensure that the catchall domain is the same than the one in the email splitted.
+        catchall_domain = self.env['ir.config_parameter'].sudo().get_param('mail.catchall.domain')
+        rcpt_tos_localparts = []
+        for e in tools.email_split(rcpt_tos):
+            split = e.split('@')
+            if split[1].lower() == catchall_domain:
+                rcpt_tos_localparts.append(split[0].lower())
 
         # 0. Verify whether this is a bounced email and use it to collect bounce data and update notifications for customers
         if bounce_alias and bounce_alias in email_to_localpart:
