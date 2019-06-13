@@ -354,7 +354,7 @@ class ProductTemplate(models.Model):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
         templates = super(ProductTemplate, self).create(vals_list)
         if "create_product_product" not in self._context:
-            templates.with_context(create_from_tmpl=True).create_variant_ids()
+            templates.create_variant_ids()
 
         # This is needed to set given values to first variant after creation
         for template, vals in zip(templates, vals_list):
