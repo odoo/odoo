@@ -185,7 +185,7 @@
                 <t t-set="title" t-value="default_title"></t>
             </t>
         </t>
-        <t t-set="x_icon" t-value="'/web/image/website/%s/favicon/' % website.id"/>
+        <t t-set="x_icon" t-value="website.image_url(website, 'favicon')"/>
     </xpath>
     <xpath expr="//head/meta[last()]" position="after">
         <meta name="generator" content="Odoo"/>

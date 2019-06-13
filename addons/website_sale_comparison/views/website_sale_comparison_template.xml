@@ -143,7 +143,7 @@
         <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
         <div class="row no-gutters align-items-center mt-2 o_product_row" t-att-data-category_ids="product.public_categ_ids.ids">
             <div class="col-3">
-                <img class="img img-fluid" t-attf-src="/web/image/product.product/#{product.id}/image_64" style="max-height: 50px;" alt="Product image"/>
+                <img class="img img-fluid" t-att-src="website.image_url(product, 'image_64')" style="max-height: 50px;" alt="Product image"/>
             </div>
             <div class="col-8 pl-2">
                 <h6>
