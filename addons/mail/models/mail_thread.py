@@ -2746,3 +2746,12 @@ class MailThread(models.AbstractModel):
         if 'company_id' in self:
             return self.company_id
         return False
+
+    def read_attachments(self):
+        self.ensure_one()
+        domain = [
+            ('res_id', '=', self.id),
+            ('res_model', '=', self._name)
+        ]
+        fields = ['id', 'name', 'mimetype']
+        return self.env['ir.attachment'].search_read(domain, fields)

@@ -402,6 +402,12 @@ QUnit.test('attachmentBox basic rendering', async function (assert) {
             '</form>',
         res_id: 7,
         mockRPC: function (route, args) {
+            if (args.method === 'read_attachments') {
+                var data = _.filter(this.data['ir.attachment'].records, function (rec) {
+                    return rec.res_id == args.args[0] && rec.res_model == args.model;
+                });
+                return Promise.resolve(data);
+            }
             var result = this._super.apply(this, arguments);
             if (args.method === 'read' && args.model === 'partner') {
                 return result.then(function (records) {
@@ -1542,6 +1548,12 @@ QUnit.test('chatter: Attachment viewer', async function (assert) {
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
+            if (args.method === 'read_attachments') {
+                var data = _.filter(this.data['ir.attachment'].records, function (rec) {
+                    return rec.res_id == args.args[0] && rec.res_model == args.model;
+                });
+                return Promise.resolve(data);
+            }
             if (_.str.contains(route, '/mail/attachment/preview/') ||
                 _.str.contains(route, '/web/static/lib/pdfjs/web/viewer.html')){
                 var canvas = document.createElement('canvas');

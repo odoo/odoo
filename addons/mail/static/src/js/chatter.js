@@ -250,15 +250,10 @@ var Chatter = Widget.extend({
     */
     _fetchAttachments: function () {
         var self = this;
-        var domain = [
-            ['res_id', '=', this.record.res_id],
-            ['res_model', '=', this.record.model],
-        ];
         return this._rpc({
-            model: 'ir.attachment',
-            method: 'search_read',
-            domain: domain,
-            fields: ['id', 'name', 'mimetype'],
+            model: this.record.model,
+            method: 'read_attachments',
+            args : [this.record.res_id],
         }).then(function (result) {
             self._areAttachmentsLoaded = true;
             self.attachments = result;
