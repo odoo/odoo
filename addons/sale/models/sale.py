@@ -1260,6 +1260,7 @@ class SaleOrderLine(models.Model):
             :param additional_domain: domain to restrict AAL to include in computation (required since timesheet is an AAL with a project ...)
         """
         result = {}
+
         # avoid recomputation if no SO lines concerned
         if not self:
             return result
