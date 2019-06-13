@@ -27,12 +27,6 @@
                             <field name="contracts_count" widget="statinfo" string="Contracts"/>
                         </button>
                     </div>
-                    <xpath expr="//group[@name='active_group']" position="after">
-                        <group string="Current Contract">
-                            <field name="medic_exam" string="Medical Exam"/>
-                            <field name="vehicle"/>
-                        </group>
-                    </xpath>
                     <xpath expr="//field[@name='bank_account_id']" position="replace">
                         <field name="bank_account_id" context="{'display_partner':True}" attrs="{'invisible' : [('address_home_id', '=', False)]}"/>
                     </xpath>
@@ -89,12 +83,6 @@
         <field name="model">res.users</field>
         <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='active_group']" position="after">
-                <group string="Current Contract">
-                    <field name="medic_exam" string="Medical Exam"/>
-                    <field name="vehicle"/>
-                </group>
-            </xpath>
             <xpath expr="//field[@name='employee_bank_account_id']" position="replace">
                 <field name="employee_bank_account_id" context="{'display_partner':True}"/>
             </xpath>

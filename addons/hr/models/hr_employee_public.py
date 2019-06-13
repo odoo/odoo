@@ -28,6 +28,7 @@ class HrEmployeePublic(models.Model):
     user_id = fields.Many2one(readonly=True)
     resource_id = fields.Many2one(readonly=True)
     resource_calendar_id = fields.Many2one(readonly=True)
+    color = fields.Integer(readonly=True)
 
     # hr.employee.public specific fields
     child_ids = fields.One2many('hr.employee.public', 'parent_id', string='Direct subordinates', readonly=True)

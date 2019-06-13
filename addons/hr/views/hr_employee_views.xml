@@ -10,7 +10,7 @@
                     <field name="name" string="Employees" filter_domain="['|',('work_email','ilike',self),('name','ilike',self)]"/>
                     <field name="department_id" operator="child_of"/>
                     <field name="category_ids" groups="hr.group_hr_user"/>
-                    <field name="job_id" />
+                    <field name="job_title" />
                     <field name="company_id" groups="base.group_multi_company"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <separator/>
@@ -77,7 +77,7 @@
                                 <field name="name" placeholder="Employee's Name" required="True"/>
                             </h1>
                             <h2>
-                                <field name="job_title" placeholder="Job Title" />
+                                <field name="job_title" placeholder="Job Position" />
                             </h2>
                             <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags"  groups="hr.group_hr_manager"/>
                         </div>
@@ -90,7 +90,8 @@
                             <group>
                                 <field name="department_id"/>
                                 <field name="job_id"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="parent_id"/>
+                                <field name="company_id" invisible="1"/>
                             </group>
                         </group>
                         <notebook>
@@ -103,8 +104,7 @@
                                                 options='{"always_reload": True, "highlight_first_line": True}'/>
                                             <field name="work_location"/>
                                         </group>
-                                        <group name="managers" string="Managers">
-                                            <field name="parent_id"/>
+                                        <group name="managers" string="Responsibles">
                                             <field name="coach_id"/>
                                         </group>
                                         <group name="departure" string="Departure" attrs="{'invisible': [('active', '=', True)]}">
@@ -120,23 +120,17 @@
                             </page>
                             <page name="personal_information" string="Private Information" groups="hr.group_hr_user">
                                 <group>
-                                    <group string="Contact Information">
+                                    <group string="Private Contact">
                                         <field name="address_home_id"
                                             context="{
                                                 'show_address': 1,
                                                 'default_type': 'private',
                                                 'form_view_ref': 'base.res_partner_view_form_private'}"
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
-                                        <field name="is_address_home_a_company" invisible="1"/>
-                                        <div class="text-warning" groups="hr.group_hr_user"
-                                             attrs="{'invisible': [('is_address_home_a_company','=', False)]}">
-                                            Use here the home address of the employee.
-                                            This private address is used in the expense report reimbursement document.
-                                            It should be different from the work address.
-                                        </div>
-                                        <field name="km_home_work" groups="hr.group_hr_user"/>
-                                        <field name="phone" groups="hr.group_hr_user"/>
+                                        <field name="private_email" string="Email"/>
+                                        <field name="phone" groups="hr.group_hr_user" string="Phone"/>
                                         <field name="bank_account_id" context="{'default_partner_id': address_home_id}"/>
+                                        <field name="km_home_work" groups="hr.group_hr_user"/>
                                     </group>
                                     <group string="Citizenship">
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
@@ -175,16 +169,13 @@
                                         <field name="study_school"/>
                                     </group>
                                 </group>
-                                <group>
-                                    <field name="google_drive_link" widget="url"/>
-                                </group>
                             </page>
                             <page name="hr_settings" string="HR Settings" groups="hr.group_hr_user">
                                 <group>
                                     <group string='Status' name="active_group">
                                         <field name="user_id" string="Related User"/>
                                     </group>
-                                    <group string="Login Information" name="identification_group">
+                                    <group string="Attendance" name="identification_group">
                                         <field name="pin"/>
                                         <field name="barcode"/>
                                         <button string="Generate Badge ID" class="btn btn-primary" type="object" name="generate_random_barcode" attrs="{'invisible': [('barcode', '!=', False)]}"/>
@@ -251,13 +242,14 @@
                                             </div>
                                             <field name="name" placeholder="Employee's Name"/>
                                        </strong>
-                                       <span t-if="record.job_id.raw_value" class="o_kanban_record_subtitle"><field name="job_id"/></span>
+                                       <span t-if="record.job_title.raw_value" class="o_kanban_record_subtitle"><field name="job_title"/></span>
                                    </div>
                                </div>
                                <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                <ul>
                                    <li id="last_login"/>
-                                   <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
+                                   <li t-if="record.work_email.raw_value"><field name="work_email" /></li>
+                                   <li t-if="record.work_phone.raw_value"><field name="work_phone" /></li>
                                </ul>
                            </div>
                        </div>

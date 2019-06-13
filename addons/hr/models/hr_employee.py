@@ -41,12 +41,13 @@ class HrEmployeePrivate(models.Model):
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
     # private partner
     address_home_id = fields.Many2one(
-        'res.partner', 'Private Address', help='Enter here the private address of the employee, not the one linked to your company.',
+        'res.partner', 'Address', help='Enter here the private address of the employee, not the one linked to your company.',
         groups="hr.group_hr_user", tracking=True)
     is_address_home_a_company = fields.Boolean(
         'The employee adress has a company linked',
         compute='_compute_is_address_home_a_company',
     )
+    private_email = fields.Char(related='address_home_id.email', string="Private Email", readonly=False, groups="hr.group_hr_user")
     country_id = fields.Many2one(
         'res.country', 'Nationality (Country)', groups="hr.group_hr_user", tracking=True)
     gender = fields.Selection([
@@ -90,8 +91,7 @@ class HrEmployeePrivate(models.Model):
     study_school = fields.Char("School", groups="hr.group_hr_user", tracking=True)
     emergency_contact = fields.Char("Emergency Contact", groups="hr.group_hr_user", tracking=True)
     emergency_phone = fields.Char("Emergency Phone", groups="hr.group_hr_user", tracking=True)
-    km_home_work = fields.Integer(string="Km home-work", groups="hr.group_hr_user", tracking=True)
-    google_drive_link = fields.Char(string="Employee Documents", groups="hr.group_hr_user", tracking=True)
+    km_home_work = fields.Integer(string="Km Home-Work", groups="hr.group_hr_user", tracking=True)
 
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary(

@@ -156,10 +156,10 @@ class Applicant(models.Model):
     day_close = fields.Float(compute='_compute_day', string="Days to Close")
     delay_close = fields.Float(compute="_compute_day", string='Delay to Close', readonly=True, group_operator="avg", help="Number of days to close", store=True)
     color = fields.Integer("Color Index", default=0)
-    emp_id = fields.Many2one('hr.employee', string="Employee", tracking=True, help="Employee linked to the applicant.")
+    emp_id = fields.Many2one('hr.employee', string="Employee", help="Employee linked to the applicant.")
     user_email = fields.Char(related='user_id.email', type="char", string="User Email", readonly=True)
     attachment_number = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
-    employee_name = fields.Char(related='emp_id.name', string="Employee Name", readonly=False)
+    employee_name = fields.Char(related='emp_id.name', string="Employee Name", readonly=False, tracking=False)
     attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.applicant')], string='Attachments')
     kanban_state = fields.Selection([
         ('normal', 'Grey'),
@@ -461,6 +461,7 @@ class Applicant(models.Model):
                 employee = self.env['hr.employee'].create({
                     'name': applicant.partner_name or contact_name,
                     'job_id': applicant.job_id.id or False,
+                    'job_title': applicant.job_id.name,
                     'address_home_id': address_id,
                     'department_id': applicant.department_id.id or False,
                     'address_id': applicant.company_id and applicant.company_id.partner_id
@@ -475,6 +476,10 @@ class Applicant(models.Model):
                     applicant.job_id.message_post(
                         body=_('New Employee %s Hired') % applicant.partner_name if applicant.partner_name else applicant.name,
                         subtype="hr_recruitment.mt_job_applicant_hired")
+                applicant.message_post_with_view(
+                    'hr_recruitment.applicant_hired_template',
+                    values={'applicant': applicant},
+                    subtype_id=self.env.ref("hr_recruitment.mt_applicant_hired").id)
 
         employee_action = self.env.ref('hr.open_view_employee_list')
         dict_act_window = employee_action.read([])[0]

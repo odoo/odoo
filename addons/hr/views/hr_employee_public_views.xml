@@ -8,6 +8,14 @@
             <field name="arch" type="xml">
                 <search string="Employees">
                     <field name="name" string="Employees" filter_domain="['|',('work_email','ilike',self),('name','ilike',self)]"/>
+                    <field name="job_title" string="Job Title"/>
+                    <field name="department_id" string="Department"/>
+                    <field name="company_id" string="Company"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_manager" string="Manager" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter name="group_department" string="Department" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter name="group_company" string="Company" domain="[]" context="{'group_by':'company_id'}"/>
+                    </group>
                 </search>
              </field>
         </record>
@@ -43,6 +51,7 @@
                                 <group>
                                     <field name="department_id"/>
                                     <field name="company_id" groups="base.group_multi_company"/>
+                                    <field name="parent_id"/>
                                 </group>
                             </group>
                         <notebook>
@@ -55,8 +64,7 @@
                                                 options='{"always_reload": True, "highlight_first_line": True}'/>
                                             <field name="work_location"/>
                                         </group>
-                                        <group name="managers" string="Managers">
-                                            <field name="parent_id"/>
+                                        <group name="managers" string="Responsibles">
                                             <field name="coach_id"/>
                                         </group>
                                         <group string="Schedule" groups="base.group_no_one">
@@ -81,7 +89,7 @@
                     <field name="work_email"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="department_id"/>
-                    <field name="job_id"/>
+                    <field name="job_title"/>
                     <field name="parent_id"/>
                     <field name="coach_id" invisible="1"/>
                 </tree>
@@ -119,12 +127,13 @@
                                             </div>
                                             <field name="name"/>
                                         </strong>
-                                        <span t-if="record.job_id.raw_value" class="o_kanban_record_subtitle"><field name="job_id"/></span>
+                                        <span t-if="record.job_title.raw_value" class="o_kanban_record_subtitle"><field name="job_title"/></span>
                                     </div>
                                 </div>
                                 <ul>
                                     <li id="last_login"/>
-                                    <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
+                                    <li t-if="record.work_email.raw_value"><field name="work_email" /></li>
+                                    <li t-if="record.work_phone.raw_value"><field name="work_phone" /></li>
                                 </ul>
                             </div>
                         </div>
