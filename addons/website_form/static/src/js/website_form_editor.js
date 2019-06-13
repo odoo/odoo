@@ -12,6 +12,7 @@ odoo.define('website_form_editor', function (require) {
     var wUtils = require('website.utils');
     var Wysiwyg = require('web_editor.wysiwyg');
 
+    var _t = core._t;
     var qweb = core.qweb;
 
     options.registry['website_form_editor'] = options.Class.extend({
@@ -121,7 +122,7 @@ odoo.define('website_form_editor', function (require) {
 
                 // Form parameters modal
                 self.build_modal(
-                    "Form Parameters",
+                    _t("Form Parameters"),
                     model_selection + success_page,
                     function () {
                         var success_page = self.$modal.find("[name='success_page']").val();
@@ -164,6 +165,61 @@ odoo.define('website_form_editor', function (require) {
                     }
                 });
             });
+        },
+
+        /**
+         * Prompt the user for a default value for this field.
+         *
+         * It creates a modal with a clone of the target field.
+         */
+        ask_default_value: function () {
+            this.trigger_up("clean_for_save");
+            var $body = $("<div/>").append(this.$target.clone());
+            // Alter unique ids, for datepickers
+            $body.find("[id]").each(function () {
+                var $el = $(this),
+                    newId = _.uniqueId("modalinput"),
+                    oldId = $el.attr("id");
+                $el.attr("id", newId);
+                $body.find(_.str.sprintf("[data-target='#%s']", oldId))
+                    .attr("data-target", _.str.sprintf("#%s", newId))
+            });
+            // Display the modal to ask for the default value
+            this.build_modal(
+                _t("Default Value"),
+                $body.html(),
+                this._setDefaultValue.bind(this)
+            );
+        },
+
+        /**
+         * Set the new default value for the field.
+         */
+        _setDefaultValue: function () {
+            // Modal and target should have equivalent inputs
+            var $modal_inputs = this.$modal.find("form :input");
+            var $target_inputs = this.$target.find(":input");
+            for (var i = 0; i < $target_inputs.length; i++) {
+                // Get twin inputs
+                var $modal_input = $($modal_inputs[i]);
+                var $target_input = $($target_inputs[i]);
+                // Store value in the target input depending on its type
+                if ($target_input.is(":checkbox, :radio")) {
+                    $target_input
+                        .attr("checked", $modal_input.prop("checked"))
+                        .prop("checked", $modal_input.prop("checked"));
+                } else if ($target_input.is("select")) {
+                    $target_input.find("option").attr("selected", function () {
+                        return $(this).attr("value") === $modal_input.val();
+                    });
+                } else if ($target_input.is("textarea")) {
+                    $target_input.text($modal_input.val());
+                } else {
+                    $target_input
+                        .attr("value", $modal_input.val())
+                        .prop("value", $modal_input.val());
+                }
+            }
         },
 
         //--------------------------------------------------------------------------

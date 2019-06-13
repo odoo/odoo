@@ -29,6 +29,7 @@ var SnippetEditor = Widget.extend({
     },
     custom_events: {
         cover_update: '_onCoverUpdate',
+        clean_for_save: 'cleanForSave',
         option_update: '_onOptionUpdate',
     },
 

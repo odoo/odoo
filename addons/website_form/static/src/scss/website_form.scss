@@ -52,3 +52,8 @@
 .form-field input[type=file].form-control {
     height: 100%;
 }
+
+// Without this, datepicker dropdown hides uglily inside the modal body
+.o_website_form_modal .modal-body {
+    overflow: inherit;
+}
