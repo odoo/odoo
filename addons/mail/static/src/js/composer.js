@@ -619,6 +619,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
         });
         attachments = attachments.concat(upload_attachments);
         this.set('attachment_ids', attachments);
+        event.target.value = "";
     },
     on_attachment_loaded: function(event) {
         var self = this,
