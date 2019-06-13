@@ -85,7 +85,7 @@ class HrPayslip(models.Model):
                         'date': date,
                         'debit': amount > 0.0 and amount or 0.0,
                         'credit': amount < 0.0 and -amount or 0.0,
-                        'analytic_account_id': line.salary_rule_id.analytic_account_id.id,
+                        'analytic_account_id': line.salary_rule_id.analytic_account_id.id or slip.contract_id.analytic_account_id.id,
                         'tax_line_id': line.salary_rule_id.account_tax_id.id,
                     })
                     line_ids.append(debit_line)
@@ -100,7 +100,7 @@ class HrPayslip(models.Model):
                         'date': date,
                         'debit': amount < 0.0 and -amount or 0.0,
                         'credit': amount > 0.0 and amount or 0.0,
-                        'analytic_account_id': line.salary_rule_id.analytic_account_id.id,
+                        'analytic_account_id': line.salary_rule_id.analytic_account_id.id or slip.contract_id.analytic_account_id.id,
                         'tax_line_id': line.salary_rule_id.account_tax_id.id,
                     })
                     line_ids.append(credit_line)
