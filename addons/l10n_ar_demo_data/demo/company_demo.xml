@@ -4,7 +4,7 @@
     <record id="base.main_company" model="res.company">
         <!-- because argentina country is configurade by base, argentina chart is loaded and localization is setted -->
         <field name='gross_income_type'>no_liquida</field>
-        <field name='afip_responsability_type_id' ref='res_IVARI'/>
+        <field name='afip_responsability_type_id' ref='l10n_ar.res_IVARI'/>
         <field name="start_date" eval="time.strftime('%Y-%m')+'-1'"/>
         <!-- por errores en los test de odoo, para demo revertimos el cambio, lo ideal seria modificar el caso de test pero no lo logre  -->
         <!-- <field name="tax_calculation_rounding_method">round_per_line</field> -->

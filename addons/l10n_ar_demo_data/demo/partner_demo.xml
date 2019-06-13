@@ -3,7 +3,7 @@
 
     <!-- ADHOC - Supplier/Customer -->
     <record id="l10n_ar_base.res_partner_adhoc" model="res.partner">
-        <field name='l10n_ar_afip_responsability_type'>1</field>
+        <field name='l10n_ar_afip_responsability_type_id' ref="l10n_ar.res_IVARI"/>
     </record>
 
     <!-- Gritti Agrimensura -->
@@ -24,7 +24,7 @@
         <field name='l10n_ar_identification_type_id' ref="l10n_ar_base.dt_CUIT"/>
         <field name='vat'>27320732811</field>
         <field name="image" type="base64" file="l10n_ar_partner/demo/gritti_logo.png"/>
-        <field name='l10n_ar_afip_responsability_type'>6</field>
+        <field name='l10n_ar_afip_responsability_type_id' ref="l10n_ar.res_RM"/>
     </record>
 
     <!-- Consejo Municipal Rosario -->
@@ -43,7 +43,7 @@
         <field name='l10n_ar_identification_type_id' ref="l10n_ar_base.dt_CUIT"/>
         <field name='vat'>30684679372</field>
         <field name="image" type="base64" file="l10n_ar_partner/demo/cmr_logo.jpg"/>
-        <field name='l10n_ar_afip_responsability_type'>4</field>
+        <field name='l10n_ar_afip_responsability_type_id' ref="l10n_ar.res_IVAE"/>
     </record>
 
     <!-- Odoo -->
@@ -61,7 +61,7 @@
         <field name='l10n_ar_identification_type_id' ref="l10n_ar_base.dt_CIe"/>
         <field name='vat'>111222333444</field>
         <field name="image" type="base64" file="l10n_ar_partner/demo/odoo_logo.jpg"/>
-        <field name='l10n_ar_afip_responsability_type'>8</field>
+        <field name='l10n_ar_afip_responsability_type_id' ref="l10n_ar.res_EXT"/>
     </record>
 
     <!-- Telecom -->
@@ -74,7 +74,7 @@
         <field name='vat'>30639453738</field>
         <!-- TODO agregar -->
         <!-- <field name="image" type="base64" file="l10n_ar_partner/demo/odoo_logo.jpg"/> -->
-        <field name='l10n_ar_afip_responsability_type'>1</field>
+        <field name='l10n_ar_afip_responsability_type_id' ref="l10n_ar.res_IVARI"/>
     </record>
 
     <!-- Odoo -->
@@ -92,7 +92,7 @@
         <field name='l10n_ar_identification_type_id' ref="l10n_ar_base.dt_CIe"/>
         <field name='vat'>2222333344445555</field>
         <field name="image" type="base64" file="l10n_ar_partner/demo/expresso_logo.png"/>
-        <field name='l10n_ar_afip_responsability_type'>9</field>
+        <field name='l10n_ar_afip_responsability_type_id' ref="l10n_ar.res_CLI_EXT"/>
     </record>
 
     <!-- Paseo del Fuego -->
@@ -110,7 +110,7 @@
         <field name='l10n_ar_identification_type_id' ref="l10n_ar_base.dt_CUIT"/>
         <field name='vat'>27333333339</field>
         <field name="image" type="base64" file="l10n_ar_partner/demo/cerrocastor_logo.png"/>
-        <field name='l10n_ar_afip_responsability_type'>10</field>
+        <field name='l10n_ar_afip_responsability_type_id' ref="l10n_ar.res_IVA_LIB"/>
     </record>
 
 <!-- Default Partners -->
@@ -125,28 +125,28 @@
     <record id="base.res_partner_1" model="res.partner">
         <field name='l10n_ar_identification_type_id' ref="l10n_ar_base.dt_CUIT"/>
         <field name='vat'>30222222229</field>
-        <field name='l10n_ar_afip_responsability_type'>1</field>
+        <field name='l10n_ar_afip_responsability_type_id' ref="l10n_ar.res_IVARI"/>
     </record>
 
         <!-- Agrolait - Customer -->
     <record id="base.res_partner_2" model="res.partner">
         <field name='l10n_ar_identification_type_id' ref="l10n_ar_base.dt_CUIT"/>
         <field name='vat'>30111111126</field>
-        <field name='l10n_ar_afip_responsability_type'>1</field>
+        <field name='l10n_ar_afip_responsability_type_id' ref="l10n_ar.res_IVARI"/>
     </record>
 
         <!-- Camptocamp - Supplier/Customer -->
     <record id="base.res_partner_12" model="res.partner">
         <field name='l10n_ar_identification_type_id' ref="l10n_ar_base.dt_CUIT"/>
         <field name='vat'>30888888884</field>
-        <field name='l10n_ar_afip_responsability_type'>1</field>
+        <field name='l10n_ar_afip_responsability_type_id' ref="l10n_ar.res_IVARI"/>
     </record>
 
         <!-- Global Solutions  - cliente exterior -->
     <record id="base.res_partner_4" model="res.partner">
         <field name='l10n_ar_identification_type_id' ref="l10n_ar_base.dt_CIe"/>
         <field name='vat'>12345678</field>
-        <field name='l10n_ar_afip_responsability_type'>9</field>
+        <field name='l10n_ar_afip_responsability_type_id' ref="l10n_ar.res_CLI_EXT"/>
     </record>
 
 </odoo>

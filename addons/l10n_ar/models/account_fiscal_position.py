@@ -6,9 +6,11 @@ class AccountFiscalPosition(models.Model):
 
     _inherit = 'account.fiscal.position'
 
-    l10n_ar_afip_responsability_type_codes = fields.Char(
-        'AFIP Responsability Type Codes',
-        help='List of AFIP responsability codes where this fiscal position '
+    l10n_ar_afip_responsability_type_ids = fields.Many2many(
+        'l10n_ar.afip.responsability.type',
+        'l10n_ar_afip_reponsability_type_fiscal_pos_rel',
+        string='AFIP Responsability Types',
+        help='List of AFIP responsabilities where this fiscal position '
         'should be auto-detected',
     )
 
@@ -19,8 +21,7 @@ class AccountFiscalPosition(models.Model):
             'force_company', self.env.user.company_id.id))
         if company.country_id == self.env.ref('base.ar'):
             partner = self.env['res.partner'].browse(partner_id)
-            afip_responsability = \
-                partner.commercial_partner_id.l10n_ar_afip_responsability_type
+            afip_responsability = partner.commercial_partner_id.l10n_ar_afip_responsability_type_id.id
             self = self.with_context(
                 partner_afip_responsability=afip_responsability)
         return super().get_fiscal_position(partner_id, delivery_id=delivery_id)
@@ -34,8 +35,7 @@ class AccountFiscalPosition(models.Model):
         if 'partner_afip_responsability' in self._context:
             domain = [
                 ('auto_apply', '=', True),
-                ('l10n_ar_afip_responsability_type_codes', 'like',
-                    "'%s'" % self._context.get('partner_afip_responsability')),
+                ('l10n_ar_afip_responsability_type_ids', '=', self._context.get('partner_afip_responsability')),
             ]
             if self.env.context.get('force_company'):
                 domain.append(

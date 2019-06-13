@@ -11,8 +11,8 @@ class AccountChartTemplate(models.Model):
     def _get_fp_vals(self, company, position):
         res = super()._get_fp_vals(company, position)
         if company.country_id == self.env.ref('base.ar'):
-            res['l10n_ar_afip_responsability_type_codes'] = \
-                position.l10n_ar_afip_responsability_type_codes
+            res['l10n_ar_afip_responsability_type_ids'] = [
+                (6, False, position.l10n_ar_afip_responsability_type_ids.ids)]
         return res
 
     @api.multi

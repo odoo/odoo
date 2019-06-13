@@ -20,8 +20,8 @@ class ResCompany(models.Model):
         string='Gross Income',
         readonly=False,
     )
-    l10n_ar_afip_responsability_type = fields.Selection(
-        related='partner_id.l10n_ar_afip_responsability_type',
+    l10n_ar_afip_responsability_type_id = fields.Many2one(
+        related='partner_id.l10n_ar_afip_responsability_type_id',
         readonly=False,
     )
     l10n_ar_company_requires_vat = fields.Boolean(
@@ -41,10 +41,10 @@ class ResCompany(models.Model):
                 lambda x: x.country_id == self.env.ref('base.ar')):
             rec.tax_calculation_rounding_method = 'round_globally'
 
-    @api.depends('l10n_ar_afip_responsability_type')
+    @api.depends('l10n_ar_afip_responsability_type_id')
     def _compute_l10n_ar_company_requires_vat(self):
         for rec in self.filtered(
-                lambda x: x.l10n_ar_afip_responsability_type == '1'):
+                lambda x: x.l10n_ar_afip_responsability_type_id.code == '1'):
             rec.l10n_ar_company_requires_vat = True
 
     def _localization_use_documents(self):

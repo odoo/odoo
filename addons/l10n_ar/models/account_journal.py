@@ -89,21 +89,21 @@ class AccountJournal(models.Model):
         to filter document types on specific invoices to/from customer/supplier
         """
         letters_data = self._get_letters_data()
-        if not company.l10n_ar_afip_responsability_type:
+        if not company.l10n_ar_afip_responsability_type_id:
             raise UserError(_(
                 'Need to configure your company AFIP responsability first!'))
         letters = letters_data[
             'issued' if journal_type == 'sale' else 'received'][
-            company.l10n_ar_afip_responsability_type]
+            company.l10n_ar_afip_responsability_type_id.code]
         if not counterpart_partner:
             return letters
 
-        if not counterpart_partner.l10n_ar_afip_responsability_type:
+        if not counterpart_partner.l10n_ar_afip_responsability_type_id:
             letters = []
         else:
             counterpart_letters = letters_data[
                 'issued' if journal_type == 'purchase' else 'received'][
-                    counterpart_partner.l10n_ar_afip_responsability_type]
+                    counterpart_partner.l10n_ar_afip_responsability_type_id.code]
             letters = list(set(letters) & set(counterpart_letters))
         return letters
 

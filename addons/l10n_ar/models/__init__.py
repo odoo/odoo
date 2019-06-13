@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from . import l10n_ar_afip_responsability_type
 from . import account_journal
 from . import account_tax_group
 from . import account_fiscal_position

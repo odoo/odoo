@@ -24,8 +24,8 @@ class AccountInvoice(models.Model):
     l10n_ar_letter = fields.Selection(
         related='l10n_latam_document_type_id.l10n_ar_letter',
     )
-    l10n_ar_afip_responsability_type = fields.Selection(
-        related='move_id.l10n_ar_afip_responsability_type',
+    l10n_ar_afip_responsability_type_id = fields.Many2one(
+        related='move_id.l10n_ar_afip_responsability_type_id',
     )
     l10n_ar_vat_tax_ids = fields.One2many(
         compute="_compute_argentina_amounts",
@@ -294,8 +294,7 @@ class AccountInvoice(models.Model):
         # check partner has responsability so it will be assigned on invoice
         # validate
         without_responsability = argentinian_invoices.filtered(
-            lambda x:
-                not x.commercial_partner_id.l10n_ar_afip_responsability_type)
+            lambda x: not x.commercial_partner_id.l10n_ar_afip_responsability_type_id)
         if without_responsability:
             raise UserError(_(
                 'The following invoices has a partner without AFIP '
@@ -385,7 +384,7 @@ class AccountInvoice(models.Model):
     def check_afip_responsability_set(self):
         if self.company_id.country_id == self.env.ref('base.ar') and \
            self.l10n_latam_use_documents and self.partner_id and \
-           not self.partner_id.l10n_ar_afip_responsability_type:
+           not self.partner_id.l10n_ar_afip_responsability_type_id:
             return {'warning': {
                 'title': 'Missing Partner Configuration',
                 'message': 'Please configure the AFIP Responsability for '

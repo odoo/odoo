@@ -5,7 +5,7 @@
         <record model='account.fiscal.position.template' id='fiscal_position_template_operaciones_exentas'>
             <field name='name'>Operaciones exentas</field>
             <field name="auto_apply" eval="True"/>
-            <field name='l10n_ar_afip_responsability_type_codes'>'9', '10'</field>
+            <field name="l10n_ar_afip_responsability_type_ids" eval="[(6, False, [ref('l10n_ar.res_CLI_EXT'), ref('l10n_ar.res_IVA_LIB')])]"/>
             <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         </record>
         <record id="fiscal_position_template_operaciones_exentas_tax_0" model="account.fiscal.position.tax.template">
@@ -33,7 +33,7 @@
         <record model='account.fiscal.position.template' id='fiscal_position_template_iva_no_corresponde'>
             <field name='name'>IVA Compras no corresponde</field>
             <field name="auto_apply" eval="True"/>
-            <field name='l10n_ar_afip_responsability_type_codes'>'4', '6', '8'</field>
+            <field name="l10n_ar_afip_responsability_type_ids" eval="[(6, False, [ref('l10n_ar.res_IVAE'), ref('l10n_ar.res_RM'), ref('l10n_ar.res_EXT')])]"/>
             <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         </record>
         <record id="fiscal_position_template_iva_no_corresponde_tax_0" model="account.fiscal.position.tax.template">

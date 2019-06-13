@@ -3,7 +3,7 @@
     <template id="report_invoice_document" inherit_id="l10n_latam_document.report_invoice_document">
 
         <div t-if="o.partner_id.vat" position="before">
-            <span t-field="o.l10n_ar_afip_responsability_type"/>
+            <span t-field="o.l10n_ar_afip_responsability_type_id"/>
         </div>
 
         <span t-field="o.l10n_latam_document_type_id.report_name" position="after">

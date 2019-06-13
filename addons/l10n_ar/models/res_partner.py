@@ -16,20 +16,13 @@ class ResPartner(models.Model):
         'Gross Income Type',
         help='Type of gross income: exempt, local, multilateral',
     )
-    l10n_ar_afip_responsability_type = fields.Selection(
-        selection='_get_afip_responsabilities',
+    l10n_ar_afip_responsability_type_id = fields.Many2one(
+        'l10n_ar.afip.responsability.type',
         string='AFIP Responsability Type',
         index=True,
         help='Defined by AFIP to identify the type of responsabilities that a'
         ' person or a legal entity could have and that impacts in the type of'
-        ' operations and requirements they need. Possible values:\n'
-        '1 - IVA Responsable Inscripto\n'
-        '4 - IVA Sujeto Exento\n'
-        '5 - Consumidor Final\n'
-        '6 - Responsable Monotributo\n'
-        '8 - Proveedor del Exterior\n'
-        '9 - Cliente del Exterior\n'
-        '10 - IVA Liberado – Ley Nº 19.640\n',
+        ' operations and requirements they need.',
     )
     l10n_ar_special_purchase_document_type_ids = fields.Many2many(
         'l10n_latam.document.type',

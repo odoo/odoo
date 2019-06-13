@@ -35,6 +35,8 @@ Follow the next configuration steps
         'l10n_ar_base',
     ],
     'data':[
+        'security/ir.model.access.csv',
+        'data/l10n_ar_afip_responsability_type_data.xml',
         'data/account_account_tag_data.xml',
         'data/account_chart_base.xml',
         'data/account_chart_exento.xml',
@@ -54,6 +56,7 @@ Follow the next configuration steps
         'views/res_partner_view.xml',
         'views/res_company_view.xml',
         'views/afip_menuitem.xml',
+        'views/l10n_ar_afip_responsability_type_view.xml',
         'views/res_currency_view.xml',
         'views/account_fiscal_position_view.xml',
         'views/uom_uom_view.xml',

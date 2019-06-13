@@ -6,10 +6,10 @@
         <field name="inherit_id" ref="account.view_account_move_filter"/>
         <field name="arch" type="xml">
             <field name="partner_id" position="after">
-                <field name="l10n_ar_afip_responsability_type"/>
+                <field name="l10n_ar_afip_responsability_type_id"/>
             </field>
             <group>
-                <filter string="AFIP Responsability Type" domain="[]" name="l10n_ar_afip_responsability_type_filter" context="{'group_by':'l10n_ar_afip_responsability_type'}"/>
+                <filter string="AFIP Responsability Type" domain="[]" name="l10n_ar_afip_responsability_type_id_filter" context="{'group_by':'l10n_ar_afip_responsability_type_id'}"/>
             </group>
         </field>
     </record>
