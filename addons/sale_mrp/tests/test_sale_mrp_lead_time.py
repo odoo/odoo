@@ -71,9 +71,9 @@ class TestSaleMrpLeadTime(TestStockCommon):
 
         # Check schedule date of manufacturing order
         mo_date = out_date - timedelta(days=self.product_1.produce_delay) - timedelta(days=company.manufacturing_lead)
-        date_planned_start = fields.Datetime.from_string(manufacturing_order.date_planned_start)
+        date_deadline = fields.Datetime.from_string(manufacturing_order.date_deadline)
         self.assertAlmostEqual(
-            date_planned_start, mo_date,
+            date_deadline, mo_date,
             delta=timedelta(seconds=1),
             msg="Schedule date of manufacturing order should be equal to: Schedule date of picking - product's Manufacturing Lead Time - company's Manufacturing Lead Time."
         )
@@ -141,9 +141,9 @@ class TestSaleMrpLeadTime(TestStockCommon):
 
         # Check schedule date of manufacturing order
         mo_date = pack_date - timedelta(days=self.product_1.produce_delay)
-        date_planned_start = fields.Datetime.from_string(manufacturing_order.date_planned_start)
+        date_deadline = fields.Datetime.from_string(manufacturing_order.date_deadline)
         self.assertAlmostEqual(
-            date_planned_start, mo_date,
+            date_deadline, mo_date,
             delta=timedelta(seconds=10),
             msg="Schedule date of manufacturing order should be equal to: Schedule date of pack type picking - product's Manufacturing Lead Time."
         )

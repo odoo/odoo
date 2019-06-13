@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 
@@ -146,6 +146,14 @@ class MrpWorkorder(models.Model):
             'date_to': date_to,
         })
 
+    @api.onchange('date_planned_start')
+    def _onchange_date_planned_start(self):
+        if self.duration_expected:
+            time_delta = timedelta(minutes=self.duration_expected)
+        else:
+            time_delta = timedelta(hours=1)
+        self.update({'date_planned_finished': self.date_planned_start + time_delta})
+
     @api.onchange('finished_lot_id')
     def _onchange_finished_lot_id(self):
         """When the user changes the lot being currently produced, suggest
@@ -256,6 +264,16 @@ class MrpWorkorder(models.Model):
                 end_date = fields.Datetime.to_datetime(values.get('date_planned_finished')) or workorder.date_planned_finished
                 if start_date and end_date and start_date > end_date:
                     raise UserError(_('The planned end date of the work order cannot be prior to the planned start date, please correct this to save the work order.'))
+                # Update MO dates if the start date of the first WO or the
+                # finished date of the last WO is update.
+                if workorder == workorder.production_id.workorder_ids[0] and 'date_planned_start' in values:
+                    workorder.production_id.with_context(force_date=True).write({
+                        'date_planned_start': values['date_planned_start']
+                    })
+                if workorder == workorder.production_id.workorder_ids[-1] and 'date_planned_finished' in values:
+                    workorder.production_id.with_context(force_date=True).write({
+                        'date_planned_finished': values['date_planned_finished']
+                    })
         return super(MrpWorkorder, self).write(values)
 
     def _generate_wo_lines(self):
