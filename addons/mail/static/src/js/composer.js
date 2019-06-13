@@ -607,6 +607,7 @@ var BasicComposer = Widget.extend({
         });
         attachments = attachments.concat(upload_attachments);
         this.set('attachment_ids', attachments);
+        event.target.value = "";
     },
     on_attachment_loaded: function(event) {
         var self = this,
