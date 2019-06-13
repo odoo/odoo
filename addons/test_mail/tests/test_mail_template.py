@@ -89,15 +89,14 @@ class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
         attachments_onchange = [composer.attachment_ids]
         # template_1 has two static attachments and one dynamically generated report,
         # template_2 only has the report, so we should get 3, 1, 3 attachments
-        attachment_numbers = [0, 3, 1, 3, 3]
+        attachment_numbers = [0, 3, 1, 3, 0]
 
         for template in onchange_templates:
             onchange = composer.onchange_template_id(
                 template.id if template else False, 'comment', self.test_record._name, self.test_record.id
             )
-            values = composer._convert_to_record(composer._convert_to_cache(onchange['value']))
-            attachments_onchange.append(values['attachment_ids'])
             composer.update(onchange['value'])
+            attachments_onchange.append(composer.attachment_ids)
 
         self.assertEqual(
             [len(attachments) for attachments in attachments_onchange],
