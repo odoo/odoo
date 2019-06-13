@@ -209,8 +209,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
 
         if needs_update:
             env = api.Environment(cr, SUPERUSER_ID, {})
-            env.clear()
-
             # Can't put this line out of the loop: ir.module.module will be
             # registered by init_models() above.
             module = env['ir.module.module'].browse(module_id)
