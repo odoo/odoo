@@ -26,14 +26,13 @@ class AccountMoveLine(models.Model):
         """
         values_list = super(AccountMoveLine, self)._prepare_analytic_line()
 
-        uom_precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-
         # filter the move lines that can be reinvoiced: a cost (negative amount) analytic line without SO line but with a product can be reinvoiced
         move_to_reinvoice = self.env['account.move.line']
         for index, move_line in enumerate(self):
             values = values_list[index]
-            if 'so_line' not in values and float_compare(move_line.credit or 0.0, move_line.debit or 0.0, precision_digits=uom_precision_digits) != 1 and move_line.product_id.expense_policy not in [False, 'no']:
-                move_to_reinvoice |= move_line
+            if 'so_line' not in values:
+                if move_line._sale_can_be_reinvoice():
+                    move_to_reinvoice |= move_line
 
         # insert the sale line in the create values of the analytic entries
         if move_to_reinvoice:
@@ -45,6 +44,14 @@ class AccountMoveLine(models.Model):
                     values['so_line'] = sale_line.id
 
         return values_list
+
+    def _sale_can_be_reinvoice(self):
+        """ determine if the generated analytic line should be reinvoiced or not.
+            For Vendor Bill flow, if the product has a 'erinvoice policy' and is a cost, then we will find the SO on which reinvoice the AAL
+        """
+        self.ensure_one()
+        uom_precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        return float_compare(self.credit or 0.0, self.debit or 0.0, precision_digits=uom_precision_digits) != 1 and self.product_id.expense_policy not in [False, 'no']
 
     def _sale_create_reinvoice_sale_line(self):
 
