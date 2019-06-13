@@ -15,7 +15,7 @@ class HrEmployeeBase(models.AbstractModel):
         return [('groups_id', 'in', group.ids)] if group else []
 
     leave_manager_id = fields.Many2one(
-        'res.users', string='Time Off Responsible',
+        'res.users', string='Time Off',
         domain=_group_hr_user_domain,
         help="User responsible of leaves approval. Should be Team Leader or Department Manager.")
     remaining_leaves = fields.Float(
@@ -39,6 +39,8 @@ class HrEmployeeBase(models.AbstractModel):
     allocation_used_count = fields.Float('Total number of days off used', compute='_compute_total_allocation_used')
     show_leaves = fields.Boolean('Able to see Remaining Time Off', compute='_compute_show_leaves')
     is_absent = fields.Boolean('Absent Today', compute='_compute_leave_status', search='_search_absent_employee')
+    allocation_display = fields.Char(compute='_compute_allocation_count')
+    allocation_used_display = fields.Char(compute='_compute_total_allocation_used')
 
     def _get_date_start_work(self):
         return self.create_date
@@ -86,10 +88,12 @@ class HrEmployeeBase(models.AbstractModel):
                     ('date_to', '>=', datetime.date.today()),
             ])
             employee.allocation_count = sum(allocations.mapped('number_of_days'))
+            employee.allocation_display = "%g" % employee.allocation_count
 
     def _compute_total_allocation_used(self):
         for employee in self:
             employee.allocation_used_count = employee.allocation_count - employee.remaining_leaves
+            employee.allocation_used_display = "%g" % employee.allocation_used_count
 
     def _compute_presence_state(self):
         super()._compute_presence_state()
