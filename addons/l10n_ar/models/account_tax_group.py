@@ -10,6 +10,7 @@ class AccountTaxGroup(models.Model):
         'AFIP Code',
         help='This code will be used on electronic invoice and citi '
         'reports',
+        readonly=True,
     )
     l10n_ar_type = fields.Selection([
         ('tax', 'TAX'),
@@ -19,6 +20,7 @@ class AccountTaxGroup(models.Model):
     ],
         string='Type',
         index=True,
+        readonly=True,
     )
     l10n_ar_tax = fields.Selection([
         ('vat', 'VAT'),
@@ -27,6 +29,7 @@ class AccountTaxGroup(models.Model):
         ('other', 'Other')],
         index=True,
         string='Tax',
+        readonly=True,
     )
     l10n_ar_application = fields.Selection([
         ('national_taxes', 'National Taxes'),
@@ -37,6 +40,7 @@ class AccountTaxGroup(models.Model):
         string="Application",
         help='Other Taxes According AFIP',
         index=True,
+        readonly=True,
     )
     l10n_ar_application_code = fields.Char(
         'Application Code',
