@@ -171,8 +171,8 @@
                         help="Remaining leaves">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
-                            <field name="allocation_used_count" digits="[42,1]"/>/
-                            <field name="allocation_count" digits="[42,1]"/>
+                            <field name="allocation_used_display"/>/
+                            <field name="allocation_display"/>
                         </span>
                         <span class="o_stat_text">
                             Time Off
@@ -198,7 +198,7 @@
                 <button disabled="1"
                         class="oe_stat_button"
                         attrs="{'invisible': [('is_absent', '=', False)]}">
-                    <div role="img" class="fa fa-fw fa-plane o_button_icon text-danger" aria-label="Absent Until" title="Absent Until"/>
+                    <div role="img" class="fa fa-fw fa-plane o_button_icon text-warning" aria-label="Absent Until" title="Absent Until"/>
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
                             <field name="leave_date_to"/>
@@ -258,8 +258,8 @@
                         help="Remaining leaves">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
-                            <field name="allocation_used_count" digits="[42,1]"/>/
-                            <field name="allocation_count" digits="[42,1]"/>
+                            <field name="allocation_used_display"/>/
+                            <field name="allocation_display"/>
                         </span>
                         <span class="o_stat_text">
                             Time Off

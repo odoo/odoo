@@ -106,7 +106,7 @@ function formatChar(value, field, options) {
  * @returns {string}
  */
 function formatDate(value, field, options) {
-    if (value === false) {
+    if (value === false || isNaN(value)) {
         return "";
     }
     if (field && field.type === 'datetime') {

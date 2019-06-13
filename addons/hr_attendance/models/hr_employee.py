@@ -13,9 +13,12 @@ class HrEmployeeBase(models.AbstractModel):
 
     attendance_ids = fields.One2many('hr.attendance', 'employee_id', help='list of attendances for the employee')
     last_attendance_id = fields.Many2one('hr.attendance', compute='_compute_last_attendance_id', store=True)
+    last_check_in = fields.Datetime(related='last_attendance_id.check_in', store=True)
+    last_check_out = fields.Datetime(related='last_attendance_id.check_out', store=True)
     attendance_state = fields.Selection(string="Attendance Status", compute='_compute_attendance_state', selection=[('checked_out', "Checked out"), ('checked_in', "Checked in")])
     hours_last_month = fields.Float(compute='_compute_hours_last_month')
     hours_today = fields.Float(compute='_compute_hours_today')
+    hours_last_month_display = fields.Char(compute='_compute_hours_last_month')
 
     def _compute_presence_state(self):
         """
@@ -42,6 +45,7 @@ class HrEmployeeBase(models.AbstractModel):
                 ('check_out', '<=', end),
             ])
             employee.hours_last_month = sum(attendances.mapped('worked_hours'))
+            employee.hours_last_month_display = "%g" % employee.hours_last_month
 
     def _compute_hours_today(self):
         now = fields.Datetime.now()

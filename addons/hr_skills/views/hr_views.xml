@@ -16,7 +16,19 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_filter"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='job_id']" position="after">
+            <xpath expr="//field[@name='job_title']" position="after">
+                <field name="employee_skill_ids"/>
+                <field name="resume_line_ids" string="Resumé" filter_domain="['|', ('resume_line_ids.name', 'ilike', self), ('resume_line_ids.description', 'ilike', self)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_employee_public_view_search" model="ir.ui.view">
+        <field name="name">hr.employee.public.skill.search</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
                 <field name="employee_skill_ids"/>
                 <field name="resume_line_ids" string="Resumé" filter_domain="['|', ('resume_line_ids.name', 'ilike', self), ('resume_line_ids.description', 'ilike', self)]"/>
             </xpath>

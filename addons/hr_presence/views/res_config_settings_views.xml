@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.hr</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="70"/>
+        <field name="inherit_id" ref="hr.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='hr']//div[hasclass('o_settings_container')]" position="inside">
+                <div class="col-12 col-lg-6 o_setting_box" title="Employees Presence Check Based on">
+                    <div class="o_setting_left_pane">
+                        <field name="module_hr_presence"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="module_hr_presence"/>
+                        <div class="content-group" name="hr_presence_options">
+                            <div class="row">
+                                <field name="hr_presence_control_login" class="col-lg-1 ml16"/>
+                                <label for="hr_presence_control_login" class="col-lg-10 o_light_label"/>
+                            </div>
+                            <div class="row">
+                                <field name="hr_presence_control_email" class="col-lg-1 ml16"/>
+                                <label for="hr_presence_control_email" class="col-lg-10 o_light_label"/>
+                            </div>
+                            <div attrs="{'invisible': [('hr_presence_control_email', '=', False)]}"> 
+                                <span>At least </span>
+                                <field name="hr_presence_control_email_amount"/>
+                                <span> sent emails</span>
+                            </div>
+                            <div class="row">
+                                <field name="hr_presence_control_ip" class="col-lg-1 ml16"/>
+                                <label for="hr_presence_control_ip" class="col-lg-10 o_light_label"/>
+                            </div>
+                            <div attrs="{'invisible': [('hr_presence_control_ip', '=', False)]}"> 
+                                <span>IP List (comma separated):</span>
+                                <field name="hr_presence_control_ip_list"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
