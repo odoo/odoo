@@ -14,3 +14,9 @@ class PosOrder(models.Model):
         for order in self:
             date_order = order.date_order or fields.Datetime.now()
             order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.pricelist_id.currency_id, order.company_id, date_order)
+
+    @api.multi
+    def _prepare_invoice(self):
+        invoice_vals = super(PosOrder, self)._prepare_invoice()
+        invoice_vals['team_id'] = self.config_id.crm_team_id
+        return invoice_vals
