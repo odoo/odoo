@@ -3124,10 +3124,15 @@ Fields:
         if not self:
             return True
 
-        # for recomputing fields
         self.check_access_rights('unlink')
-        self.modified(self._fields)
         self._check_concurrency()
+
+        # mark fields that depend on 'self' to recompute them after 'self' has
+        # been deleted (like updating a sum of lines after deleting one line)
+        self.modified(self._fields)
+
+        # RCO: this is nonsense: it recomputes right now all fields that depend
+        # on 'self', but with 'self' still existing!
         self.flush()
 
         # Check if the records are used as default properties.
