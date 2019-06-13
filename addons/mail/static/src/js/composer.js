@@ -608,6 +608,7 @@ var BasicComposer = Widget.extend({
                 'mimetype': '',
             });
             this.set('attachment_ids', attachments);
+            event.target.value = "";
         }
     },
     on_attachment_loaded: function(event, result) {
