@@ -3048,6 +3048,21 @@ Fields:
         return res
 
     @api.multi
+    def get_base_url(self):
+        """
+        Returns rooturl for a specific given record.
+
+        By default, it return the ir.config.parameter of base_url
+        but it can be overidden by model.
+
+        :return: the base url for this record
+        :rtype: string
+
+        """
+        self.ensure_one()
+        return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+
+    @api.multi
     def _check_concurrency(self):
         if not (self._log_access and self._context.get(self.CONCURRENCY_CHECK_FIELD)):
             return
