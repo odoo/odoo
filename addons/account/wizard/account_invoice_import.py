@@ -19,15 +19,16 @@ class ImportInvoiceImportWizard(models.TransientModel):
     def _create_invoice(self, attachment):
         return self._create_invoice_from_file(attachment)
 
-    def create_invoices(self):
+    def create_invoices(self, attachment_ids=[]):
         ''' Create the invoices from files.
          :return: A action redirecting to account.invoice tree/form view.
         '''
-        if not self.attachment_ids:
+        attachments = self.attachment_ids or self.env['ir.attachment'].browse(attachment_ids)
+        if not attachments:
             raise UserError(_("No attachment was provided"))
 
         invoices = self.env['account.move']
-        for attachment in self.attachment_ids:
+        for attachment in attachments:
             invoices += self._create_invoice(attachment)
 
         action_vals = {
