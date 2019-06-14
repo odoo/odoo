@@ -185,6 +185,13 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             if pre_init:
                 getattr(py_module, pre_init)(cr)
 
+        new_upgrade = package.state == 'to update'
+        if new_upgrade:
+            py_module = sys.modules['odoo.addons.%s' % (module_name,)]
+            pre_init = package.info.get('pre_update_hook')
+            if pre_init:
+                getattr(py_module, pre_init)(cr)
+
         model_names = registry.load(cr, package)
 
         loaded_modules.append(package.name)
@@ -235,6 +242,11 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
 
             if new_install:
                 post_init = package.info.get('post_init_hook')
+                if post_init:
+                    getattr(py_module, post_init)(cr, registry)
+
+            if new_upgrade:
+                post_init = package.info.get('post_update_hook')
                 if post_init:
                     getattr(py_module, post_init)(cr, registry)
 
