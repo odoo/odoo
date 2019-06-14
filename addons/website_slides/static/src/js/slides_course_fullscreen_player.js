@@ -5,6 +5,7 @@ odoo.define('website_slides.fullscreen', function (require) {
     var sAnimations = require('website.content.snippets.animation');
     var Widget = require('web.Widget');
     var core = require('web.core');
+    var config = require('web.config');
     var QWeb = core.qweb;
 
     var session = require('web.session');
@@ -321,6 +322,9 @@ odoo.define('website_slides.fullscreen', function (require) {
         start: function (){
             var self = this;
             this.on('change:slide', this, this._onChangeSlide);
+            if  (config.device.size_class > config.device.SIZES.MD) {
+                this._toggleSidebar();
+            }
             return this._super.apply(this, arguments).then(function () {
                 self._onChangeSlide(); // trigger manually once DOM ready, since slide content is not rendered server side
             });
@@ -540,12 +544,20 @@ odoo.define('website_slides.fullscreen', function (require) {
             this.sidebar.goNext();
         },
         /**
-         * Show or Hide the sidebar
+         * Called when the sidebar toggle is clicked -> toggles the sidebar visibility.
          *
          * @private
          */
         _onClickToggleSidebar: function (ev){
             ev.preventDefault();
+            this._toggleSidebar();
+        },
+        /**
+         * Toggles sidebar visibility.
+         *
+         * @private
+         */
+        _toggleSidebar: function () {
             this.$('.o_wslides_fs_sidebar').toggleClass('o_wslides_fs_sidebar_hidden');
             this.$('.o_wslides_fs_toggle_sidebar').toggleClass('active');
         },
