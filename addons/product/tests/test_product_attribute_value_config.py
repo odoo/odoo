@@ -206,12 +206,7 @@ class TestProductAttributeValueConfig(TestProductAttributeValueSetup):
         self.assertEqual(len(variant), 0)
 
         # also test _has_valid_attributes (case ok):
-        valid_value_ids = self.computer.valid_product_attribute_value_wnva_ids
-        valid_attribute_ids = self.computer.valid_product_attribute_wnva_ids
-        self.assertTrue(ok_variant._has_valid_attributes(valid_attribute_ids, valid_value_ids))
-
-        # also test _has_valid_attributes (case not ok):
-        self.assertFalse(ok_variant._has_valid_attributes(valid_attribute_ids, valid_value_ids - self.hdd_1))
+        self.assertTrue(ok_variant._has_valid_attributes())
 
     def test_product_filtered_exclude_for(self):
         """

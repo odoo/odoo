@@ -541,10 +541,8 @@ class ProductTemplate(models.Model):
             #   should be activated
             # - if the product does not have valid attributes or attribute values, it should be
             #   deleted
-            valid_value_ids = tmpl_id.valid_product_attribute_value_wnva_ids
-            valid_attribute_ids = tmpl_id.valid_product_attribute_wnva_ids
             for product_id in tmpl_id.product_variant_ids:
-                if product_id._has_valid_attributes(valid_attribute_ids, valid_value_ids):
+                if product_id._has_valid_attributes():
                     if not product_id.active:
                         variants_to_activate += product_id
                 else:
@@ -606,7 +604,7 @@ class ProductTemplate(models.Model):
         A product attribute is considered valid for a template if it
         has at least one possible value set on the template.
 
-        For what is considered an archived variant, see `_has_valid_attributes`.
+        For what is considered a valid variant, see `_has_valid_attributes`.
         """
         # prefetch
         self.mapped('attribute_line_ids.value_ids.id')

@@ -685,28 +685,24 @@ class ProductProduct(models.Model):
 
         return name
 
-    def _has_valid_attributes(self, valid_attributes, valid_values):
+    def _has_valid_attributes(self):
         """ Check if a product has valid attributes. It is considered valid if:
             - it uses ALL valid attributes
             - it ONLY uses valid values
-            We must make sure that all attributes are used to take into account the case where
-            attributes would be added to the template.
+            We must make sure that all attributes are used to take into account
+            the case where attributes would be added to the template.
 
             This method does not check if the combination is possible, it just
             checks if it has valid attributes and values. A possible combination
             is always valid, but a valid combination is not always possible.
 
-            :param valid_attributes: a recordset of product.attribute
-            :param valid_values: a recordset of product.attribute.value
-            :return: True if the attibutes and values are correct, False instead
+            :return: True if the attributes & values are valid, False otherwise
         """
         self.ensure_one()
-        values = self.attribute_value_ids
-        attributes = values.mapped('attribute_id')
-        if attributes != valid_attributes:
+        if self.attribute_value_ids.attribute_id != self.valid_product_attribute_wnva_ids:
             return False
-        for value in values:
-            if value not in valid_values:
+        for value in self.attribute_value_ids:
+            if value not in self.valid_product_attribute_value_wnva_ids:
                 return False
         return True
 
