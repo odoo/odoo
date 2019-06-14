@@ -129,11 +129,20 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
      * @param {integer} quantity
      */
     _onOptionsUpdateQuantity: function (quantity) {
-        this.$form
+        var $qtyInput = this.$form
             .find('.js_main_product input[name="add_qty"]')
-            .first()
-            .val(quantity)
-            .trigger('change');
+            .first();
+
+        if ($qtyInput.length) {
+            $qtyInput.val(quantity).trigger('change');
+        } else {
+            // This handles the case when the "Select Quantity" customize show
+            // is disabled, and therefore the above selector does not find an
+            // element.
+            // To avoid duplicating all RPC, only trigger the variant change if
+            // it is not already done from the above trigger.
+            this.optionalProductsModal.triggerVariantChange(this.optionalProductsModal.$el);
+        }
     },
 
     /**
