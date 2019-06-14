@@ -118,11 +118,6 @@ class Website(models.Model):
         # This method is cached, must not return records! See also #8795
         return pricelists.ids
 
-    # DEPRECATED (Not used anymore) -> Remove me in master (saas12.3)
-    def _get_pl(self, country_code, show_visible, website_pl, current_pl, all_pl):
-        pl_ids = self._get_pl_partner_order(country_code, show_visible, website_pl, current_pl, all_pl)
-        return self.env['product.pricelist'].browse(pl_ids)
-
     def _get_pricelist_available(self, req, show_visible=False):
         """ Return the list of pricelists that can be used on website for the current user.
         Country restrictions will be detected with GeoIP (if installed).
