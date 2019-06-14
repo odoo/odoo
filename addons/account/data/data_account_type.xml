@@ -101,5 +101,17 @@
             <field name="type">other</field>
             <field name="internal_group">off_balance</field>
         </record>
+        <record model="account.account.type" id="data_account_type_accrued_revenue">
+          <field name="name">Accrued Revenue</field>
+          <field name="type">other</field>
+          <field name="internal_group">asset</field>
+          <field name="include_initial_balance" eval="True"/>
+        </record>
+        <record model="account.account.type" id="data_account_type_accrued_expense">
+          <field name="name">Accrued Expense</field>
+          <field name="type">other</field>
+          <field name="internal_group">liability</field>
+          <field name="include_initial_balance" eval="True"/>
+        </record>
     </data>
 </odoo>

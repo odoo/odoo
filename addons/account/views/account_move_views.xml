@@ -488,6 +488,12 @@
                         <!-- Cancel -->
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                     </header>
+                    <!-- Accrued account -->
+                    <div groups="account.group_account_invoice"
+                         class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                         attrs="{'invisible': ['|', '|', ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), ('invoice_accrued_entry', '=', []), ('invoice_payment_state', '!=', 'not_paid')]}">
+                        There are unreconciled accrued entries for this partner. <button type="object" name="action_check_accrual_entry" string="Check them" class="btn-link p-0 align-bottom"/>
+                    </div>
                     <!-- Invoice outstanding credits -->
                     <div groups="account.group_account_invoice"
                          class="alert alert-info" role="alert" style="margin-bottom:0px;"
@@ -531,6 +537,7 @@
                         <field name="bank_partner_id" invisible="1"/>
 
                         <field name="invoice_has_outstanding" invisible="1"/>
+                        <field name="invoice_accrued_entry" invisible="1"/>
                         <field name="invoice_sent" invisible="1"/>
                         <field name="invoice_sequence_number_next_prefix" invisible="1"/>
                         <field name="invoice_sequence_number_next" invisible="1"/>
@@ -979,6 +986,14 @@
             <field name="name">Journal Items to Reconcile</field>
             <field name="res_model">account.move.line</field>
             <field name="tag">manual_reconciliation_view</field>
+        </record>
+
+        <record id="action_accrual_entry" model="ir.actions.server">
+            <field name="name">Change Period</field>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="binding_model_id" ref="account.model_account_move_line"/>
+            <field name="state">code</field>
+            <field name="code">action = records.action_accrual_entry()</field>
         </record>
 
         <act_window

@@ -188,11 +188,14 @@ class AccountAccount(models.Model):
     _description = "Account"
     _order = "code"
 
-    @api.constrains('internal_type', 'reconcile')
+    @api.constrains('user_type_id', 'reconcile')
     def _check_reconcile(self):
+        accrued_types = self.env.ref('account.data_account_type_accrued_revenue') + self.env.ref('account.data_account_type_accrued_expense')
         for account in self:
-            if account.internal_type in ('receivable', 'payable') and account.reconcile == False:
+            if account.internal_type in ('receivable', 'payable') and not account.reconcile:
                 raise ValidationError(_('You cannot have a receivable/payable account that is not reconcilable. (account code: %s)') % account.code)
+            if account.user_type_id in accrued_types and not account.reconcile:
+                raise ValidationError(_('You cannot have an accrual account that is not reconcilable. (account code: %s)') % account.code)
 
     @api.constrains('user_type_id')
     def _check_user_type_id(self):
@@ -342,10 +345,9 @@ class AccountAccount(models.Model):
 
     @api.onchange('user_type_id')
     def _onchange_user_type_id(self):
-        self.reconcile = self.internal_type in ('receivable', 'payable')
-        if self.internal_type == 'liquidity':
-            self.reconcile = False
-        elif self.internal_group == 'off_balance':
+        accrued_types = self.env.ref('account.data_account_type_accrued_revenue') + self.env.ref('account.data_account_type_accrued_expense')
+        self.reconcile = (self.internal_type in ('receivable', 'payable')) or (self.user_type_id in accrued_types)
+        if self.internal_group == 'off_balance':
             self.reconcile = False
             self.tax_ids = False
         elif self.internal_group == 'income' and not self.tax_ids:

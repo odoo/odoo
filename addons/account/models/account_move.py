@@ -219,6 +219,10 @@ class AccountMove(models.Model):
     invoice_has_outstanding = fields.Boolean(groups="account.group_account_invoice",
         compute='_compute_payments_widget_to_reconcile_info')
 
+    # ==== Accrual widget fields ====
+    invoice_accrued_entry = fields.One2many('account.move.line', groups="account.group_account_invoice",
+        compute='_compute_accrual_info')
+
     # ==== Vendor bill fields ====
     invoice_vendor_bill_id = fields.Many2one('account.move', store=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
@@ -1126,6 +1130,11 @@ class AccountMove(models.Model):
                 move.invoice_outstanding_credits_debits_widget = json.dumps(info)
                 move.invoice_has_outstanding = True
 
+    def _compute_accrual_info(self):
+        for move in self:
+            accrued_types = [self.env.ref('account.data_account_type_accrued_expense').id, self.env.ref('account.data_account_type_accrued_revenue').id]
+            move.invoice_accrued_entry = self.env['account.move.line'].search([('account_id.user_type_id', 'in', accrued_types), ('partner_id', '=', move.partner_id.id), ('reconciled', '=', False)]).move_id.line_ids
+
     def _get_reconciled_info_JSON_values(self):
         self.ensure_one()
         foreign_currency = self.currency_id if self.currency_id != self.company_id.currency_id else False
@@ -1908,6 +1917,11 @@ class AccountMove(models.Model):
 
         return action
 
+    def action_check_accrual_entry(self):
+        action = self.env.ref('account.action_account_moves_journal_misc').read()[0]
+        action['domain'] = [('id', 'in', self.ids)]
+        return action
+
     def action_post(self):
         if self.mapped('line_ids.payment_id') and any(self.mapped('journal_id.post_at_bank_rec')):
             raise UserError(_("A payment journal entry generated in a journal configured to post entries only when payments are reconciled with a bank statement cannot be manually posted. Those will be posted automatically after performing the bank reconciliation."))
@@ -2635,7 +2649,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             line.balance = line.debit - line.credit
 
-    @api.depends('debit', 'credit', 'amount_currency', 'currency_id', 'matched_debit_ids', 'matched_credit_ids', 'matched_debit_ids.amount', 'matched_credit_ids.amount', 'move_id.state', 'company_id')
+    @api.depends('debit', 'credit', 'amount_currency', 'currency_id', 'matched_debit_ids', 'matched_credit_ids', 'matched_debit_ids.amount', 'matched_credit_ids.amount', 'move_id.state', 'account_id', 'company_id')
     def _amount_residual(self):
         """ Computes the residual amount of a move line from a reconcilable account in the company currency and the line's currency.
             This amount will be 0 for fully reconciled lines or lines from a non-reconcilable account, the original line amount
@@ -2776,16 +2790,15 @@ class AccountMoveLine(models.Model):
 
     def _update_check(self):
         """ Raise Warning to cause rollback if the move is posted, some entries are reconciled or the move is older than the lock date"""
-        move_ids = set()
+        if self.env.context.get('no_update_check'):
+            return True
         for line in self:
             err_msg = _('Move name (id): %s (%s)') % (line.move_id.name, str(line.move_id.id))
             if line.move_id.state != 'draft':
                 raise UserError(_('You cannot do this modification on a posted journal entry, you can just change some non legal fields. You must revert the journal entry to cancel it.\n%s.') % err_msg)
             if line.reconciled and not (line.debit == 0 and line.credit == 0):
                 raise UserError(_('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)
-            if line.move_id.id not in move_ids:
-                move_ids.add(line.move_id.id)
-        self.env['account.move'].browse(list(move_ids))._check_fiscalyear_lock_date()
+        self.mapped('move_id')._check_fiscalyear_lock_date()
         return True
 
     # -------------------------------------------------------------------------
@@ -3545,6 +3558,11 @@ class AccountMoveLine(models.Model):
         [action] = self.env.ref('account.action_account_moves_all_a').read()
         ids = self._reconciled_lines()
         action['domain'] = [('id', 'in', ids)]
+        return action
+
+    def action_accrual_entry(self):
+        [action] = self.env.ref('account.account_accrual_accounting_wizard_action').read()
+        action['context'] = self.env.context
         return action
 
     @api.model
