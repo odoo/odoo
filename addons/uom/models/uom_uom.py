@@ -83,9 +83,8 @@ class UoM(models.Model):
         self._cr.execute("""
             SELECT C.id AS category_id, count(U.id) AS uom_count
             FROM uom_category C
-            LEFT JOIN uom_uom U ON C.id = U.category_id AND uom_type = 'reference'
+            LEFT JOIN uom_uom U ON C.id = U.category_id AND uom_type = 'reference' AND U.active = 't'
             WHERE C.id IN %s
-                AND U.active = 't'
             GROUP BY C.id
         """, (tuple(category_ids),))
         for uom_data in self._cr.dictfetchall():

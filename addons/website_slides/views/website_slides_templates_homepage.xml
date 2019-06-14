@@ -1,11 +1,34 @@
 <?xml version="1.0" ?>
 <odoo><data>
 
+<template id='courses_footer'>
+    <!-- 'users':  3 top users with picture (skip users without picture) -->
+    <section class="s_banner bg-900" style="background-image: url(/website_slides/static/src/img/banner_heroes_default.svg); background-size: cover; background-position: right bottom">
+        <div class="container py-5">
+            <div class="row align-items-center">
+                <div t-attf-class="col-12 #{'col-md' if top3_users else 'text-center'}">
+                    <h2 class="my-4 text-white">Meet The Heros Who Transformed Their Company!</h2>
+                    <a href="/profile/users" class="btn btn-primary btn-lg">Go meet them</a>
+                </div>
+                <div class="col-12 col-md-5" t-if="top3_users">
+                    <div class="ml-4">
+                        <t t-foreach="top3_users" t-as="user">
+                            <img class="rounded-circle img-fluid shadow ml-n4"
+                                style="border: 6px solid white"
+                                t-attf-src="/web/image/res.users/#{user['id']}/image_medium"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
 <!-- Channels home template -->
 <template id='courses_home' name="Odoo Courses Homepage">
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
     <t t-call="website.layout">
-        <div class="wrap o_wslides_wrap">
+        <div id="wrap" class="wrap o_wslides_wrap">
             <section class="s_banner overflow-hidden bg-900" style="background-image: url(&quot;/website_slides/static/src/img/banner_default.svg&quot;); background-size: cover; background-position: 55% 65%">
                 <div class="container align-items-center d-flex mb-5 mt-lg-5 pt-lg-4 pb-lg-1">
                     <div>
@@ -146,18 +169,7 @@
                     </div>
                 </div>
             </div>
-            <section class="s_banner" style="background-image: url(/website_slides/static/src/img/banner_heroes_default.svg); background-size: cover; background-position: right bottom">
-                <div class="container py-5">
-                    <div class="row align-items-center">
-                        <div class="col-12 col-md">
-                            <h2 class="my-4 text-white">Meet the people who transformed their company</h2>
-                        </div>
-                        <div class="col-12 col-md-4">
-                            <a href="/profile/users" class="btn btn-primary btn-lg">Go meet them</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <t t-call="website_slides.courses_footer"></t>
         </div>
     </t>
 </template>
@@ -264,18 +276,7 @@
                 </div>
             </div>
 
-            <section class="s_banner bg-900" style="background-image: url(/website_slides/static/src/img/banner_heroes_default.svg); background-size: cover; background-position: right bottom">
-                <div class="container py-5">
-                    <div class="row align-items-center">
-                        <div class="col-12 col-md">
-                            <h2 class="my-4">Meet the people who transformed their company</h2>
-                        </div>
-                        <div class="col-12 col-md-4">
-                            <a href="/profile/users" class="btn btn-primary btn-lg">Go meet them</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <t t-call="website_slides.courses_footer"></t>
         </div>
     </t>
 </template>
@@ -395,13 +396,13 @@
             <img t-attf-src="/web/image/gamification.karma.rank/#{user.rank_id.id}/image_small" height="16" alt="" class="mr-1"/>
             <a href="/profile/ranks_badges" t-field="user.rank_id"/>
         </div>
-        <t t-if="user.next_rank_id">
-            <div class="font-weight-bold text-muted mt-1">Next rank:</div>
+        <t t-if="user.rank_id">
+            <div t-if="user.next_rank_id" class="font-weight-bold text-muted mt-1">Next rank:</div>
             <t t-call="website_profile.profile_next_rank_card">
                 <t t-set="bg_class">bg-200</t>
                 <t t-set="img_max_width">50%</t>
             </t>
-            <div t-field="user.next_rank_id.description_motivational"/>
+            <div t-field="user.rank_id.description_motivational"/>
         </t>
     </div>
 </template>

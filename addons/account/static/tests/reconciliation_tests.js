@@ -477,7 +477,7 @@ var auto_reconciliation = {
 };
 
 var data_for_manual_reconciliation_widget = {
-    '[[],null]': {
+    '[null,[282,283,284,285,286,287,288,308,499,500,501,502,503,504]]': {
         'customers': [
             {'account_id': 287, 'partner_name': "Agrolait", 'reconciliation_proposition': [], 'currency_id': 3, 'max_date': "2017-02-14 12:30:31", 'last_time_entries_checked': null, 'account_code': "101200", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'mode': "customers"},
             {'account_id': 7, 'partner_name': "Camptocamp", 'reconciliation_proposition': [], 'currency_id': 3, 'max_date': "2017-02-13 14:24:55", 'last_time_entries_checked': null, 'account_code': "101200", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'mode': "customers"}
@@ -744,7 +744,7 @@ QUnit.module('account', {
                                                                   "name": "INV/2017/0003",
                                                                   "analytic_tag_ids": [[6, null, []]]
                                                                 }],
-                                    payment_aml_ids: [], new_aml_dicts: []}]],
+                                    payment_aml_ids: [], new_aml_dicts: [], to_check: false}]],
                 "Should call process_bank_statement_line with ids");
             var def = testUtils.makeTestPromise();
             def.abort = function () {};
@@ -782,8 +782,10 @@ QUnit.module('account', {
         // line is send back to server.
         testUtils.mock.intercept(clientAction, 'call_service', function (event) {
             assert.deepEqual(event.data.args[1].args,
-                [[5],[{partner_id: 8, counterpart_aml_dicts: [],
-                                    payment_aml_ids: [], new_aml_dicts: [{
+                [[5],[{partner_id: 8, to_check: false, counterpart_aml_dicts: [],
+                                    payment_aml_ids: [],
+                                    to_check: false,
+                                    new_aml_dicts: [{
                                         account_id: 287,
                                         credit: 1175,
                                         debit: 0,
@@ -834,7 +836,7 @@ QUnit.module('account', {
         // We also create a line which is the open balance.
         testUtils.mock.intercept(clientAction, 'call_service', function (event) {
             assert.deepEqual(event.data.args[1].args,
-                [[5],[{partner_id: 8,
+                [[5],[{partner_id: 8, to_check: false,
                                     counterpart_aml_dicts: [{
                                         counterpart_aml_id: 109,
                                         credit: 650,
@@ -884,6 +886,7 @@ QUnit.module('account', {
                             }],
                             payment_aml_ids: [],
                             new_aml_dicts: [],
+                            to_check: false,
                         }]
                     ], "should call process_bank_statement_line with partial reconcile values");
                 }
@@ -1408,6 +1411,7 @@ QUnit.module('account', {
 
                               payment_aml_ids: [],
                               partner_id: 8,
+                              to_check: false,
                               new_aml_dicts: []}]
                         ], "should call process_bank_statement_line with partial reconcile values");
                 }
@@ -1500,6 +1504,7 @@ QUnit.module('account', {
 
                               payment_aml_ids: [],
                               partner_id: 8,
+                              to_check: false,
                               new_aml_dicts: [
                                 {account_id: 282,
                                  credit: 0,
@@ -1609,6 +1614,7 @@ QUnit.module('account', {
 
                               payment_aml_ids: [],
                               partner_id: 8,
+                              to_check: false,
                               new_aml_dicts: []
                           }]
                         ], "should call process_bank_statement_line with correct counterpart_aml_dicts");
@@ -1662,7 +1668,7 @@ QUnit.module('account', {
         assert.expect(5);
 
         // tweak the data to fit our needs
-        this.params.data_for_manual_reconciliation_widget['[283, null, "", 0, 6]'] = _.extend({}, this.params.data_for_manual_reconciliation_widget['[[],null]']);
+        this.params.data_for_manual_reconciliation_widget['[283, null, "", 0, 6]'] = _.extend({}, this.params.data_for_manual_reconciliation_widget['[null,[282,283,284,285,286,287,288,308,499,500,501,502,503,504]]']);
         this.params.data_for_manual_reconciliation_widget['[283, null, "", 0, 6]'].accounts[0].reconciliation_proposition = [
             {account_id: 283, account_type: "other", amount_currency_str: "", currency_id: false, date_maturity: "2017-03-18", date: "2017-02-16",
              total_amount_str: "$ 500.00", partner_id: 8, account_name: "101000 Current Assets", name: "INV/2017/0987", partner_name: "Agrolait",
@@ -1772,7 +1778,7 @@ QUnit.module('account', {
     QUnit.test('Tax on account receivable', async function(assert){
         assert.expect(21);
 
-        this.params.data_for_manual_reconciliation_widget['[[],null]'].accounts = [];
+        this.params.data_for_manual_reconciliation_widget['[null,[282,283,284,285,286,287,288,308,499,500,501,502,503,504]]'].accounts = [];
         var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
         testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,

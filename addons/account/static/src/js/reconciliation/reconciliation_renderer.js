@@ -346,7 +346,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     update: function (state) {
         var self = this;
         // isValid
-        var to_check_checked = !!(state.reconciliation_proposition[0] && state.reconciliation_proposition[0].to_check);
+        var to_check_checked = !!(state.to_check);
         this.$('caption .o_buttons button.o_validate').toggleClass('d-none', !!state.balance.type && !to_check_checked);
         this.$('caption .o_buttons button.o_reconcile').toggleClass('d-none', state.balance.type <= 0 || to_check_checked);
         this.$('caption .o_buttons .o_no_valid').toggleClass('d-none', state.balance.type >= 0);
@@ -476,9 +476,13 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                                 }
                             }
                         });
+                        if (state.to_check) {
+                            // Set the to_check field to true if global to_check is set
+                            this.$('.create_to_check input').prop('checked', state.to_check).change();
+                        }
                         return true; 
                     });
-                });
+            });
         }
         this.$('.create .add_line').toggle(!!state.balance.amount_currency);
     },

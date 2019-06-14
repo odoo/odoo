@@ -93,11 +93,12 @@ class AccountInvoice(models.Model):
             ('type', 'in', [TYPE2JOURNAL[ty] for ty in inv_types if ty in TYPE2JOURNAL]),
             ('company_id', '=', company_id),
         ]
-        journal_with_currency = False
-        if self._context.get('default_currency_id'):
-            currency_clause = [('currency_id', '=', self._context.get('default_currency_id'))]
-            journal_with_currency = self.env['account.journal'].search(domain + currency_clause, limit=1)
-        return journal_with_currency or self.env['account.journal'].search(domain, limit=1)
+        company_currency_id = self.env['res.company'].browse(company_id).currency_id.id
+        currency_id = self._context.get('default_currency_id') or company_currency_id
+        currency_clause = [('currency_id', '=', currency_id)]
+        if currency_id == company_currency_id:
+            currency_clause = ['|', ('currency_id', '=', False)] + currency_clause
+        return self.env['account.journal'].search(domain + currency_clause, limit=1)
 
     @api.model
     def _default_currency(self):

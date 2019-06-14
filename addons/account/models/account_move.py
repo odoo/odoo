@@ -87,12 +87,14 @@ class AccountMove(models.Model):
                 if line.account_id.user_type_id.type in ('receivable', 'payable'):
                     amount = abs(line.debit - line.credit)
                     total_amount += amount
-                    for partial_line in (line.matched_debit_ids + line.matched_credit_ids):
-                        total_reconciled += partial_line.amount
             precision_currency = move.currency_id or move.company_id.currency_id
             if float_is_zero(total_amount, precision_rounding=precision_currency.rounding):
                 move.matched_percentage = 1.0
             else:
+                for line in move.line_ids:
+                    if line.account_id.user_type_id.type in ('receivable', 'payable'):
+                        for partial_line in (line.matched_debit_ids + line.matched_credit_ids):
+                            total_reconciled += partial_line.amount
                 move.matched_percentage = total_reconciled / total_amount
 
     @api.multi
@@ -432,6 +434,7 @@ class AccountMove(models.Model):
     @api.multi
     def _reverse_move(self, date=None, journal_id=None):
         self.ensure_one()
+        date = date or fields.Date.today()
         with self.env.norecompute():
             reversed_move = self.copy(default={
                 'date': date,
@@ -692,8 +695,8 @@ class AccountMoveLine(models.Model):
     tax_audit = fields.Char(string="Tax Audit String", compute="_compute_tax_audit", store=True, help="Computed field, listing the tax grids impacted by this line, and the amount it applies to each of them.")
 
     _sql_constraints = [
-        ('credit_debit1', 'CHECK (credit*debit=0)', 'Wrong credit or debit value in accounting entry !'),
-        ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in accounting entry !'),
+        ('credit_debit1', 'CHECK (credit*debit=0)', 'Wrong credit or debit value in accounting entry! Credit or debit should be zero.'),
+        ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in accounting entry! Credit and debit should be positive.'),
     ]
 
     @api.model
@@ -827,22 +830,21 @@ class AccountMoveLine(models.Model):
         In case of full reconciliation, all moves belonging to the reconciliation will belong to the same account_full_reconcile object.
         """
         # Get first all aml involved
-        part_recs = self.env['account.partial.reconcile'].search(['|', ('debit_move_id', 'in', self.ids), ('credit_move_id', 'in', self.ids)])
-        amls = self
-        todo = set(part_recs)
+        todo = self.env['account.partial.reconcile'].search_read(['|', ('debit_move_id', 'in', self.ids), ('credit_move_id', 'in', self.ids)], ['debit_move_id', 'credit_move_id'])
+        amls = set(self.ids)
         seen = set()
         while todo:
-            partial_rec = todo.pop()
-            seen.add(partial_rec)
-            for aml in [partial_rec.debit_move_id, partial_rec.credit_move_id]:
-                if aml not in amls:
-                    amls += aml
-                    for x in aml.matched_debit_ids | aml.matched_credit_ids:
-                        if x not in seen:
-                            todo.add(x)
-        partial_rec_ids = [x.id for x in seen]
+            aml_ids = [rec['debit_move_id'][0] for rec in todo if rec['debit_move_id']] + [rec['credit_move_id'][0] for rec in todo if rec['credit_move_id']]
+            amls |= set(aml_ids)
+            seen |= set([rec['id'] for rec in todo])
+            todo = self.env['account.partial.reconcile'].search_read(['&', '|', ('credit_move_id', 'in', aml_ids), ('debit_move_id', 'in', aml_ids), '!', ('id', 'in', list(seen))], ['debit_move_id', 'credit_move_id'])
+
+        partial_rec_ids = list(seen)
         if not amls:
             return
+        else:
+            amls = self.browse(list(amls))
+
         # If we have multiple currency, we can only base ourselve on debit-credit to see if it is fully reconciled
         currency = set([a.currency_id for a in amls if a.currency_id.id != False])
         multiple_currency = False
