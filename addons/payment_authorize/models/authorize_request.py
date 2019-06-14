@@ -83,7 +83,7 @@ class AuthorizeAPI():
         else:
             self.url = 'https://api.authorize.net/xml/v1/request.api'
         self.name = acquirer.authorize_login
-        self.transaction_key = acquirer.authorize_transaction_key
+        self.transaction_key = acquirer.authorize_signature_key
 
     def _authorize_request(self, data):
         """Encode, send and process the request to the Authorize.net API.
