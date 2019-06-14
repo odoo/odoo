@@ -21,6 +21,12 @@ var _t = core._t;
 
 var Loading = Widget.extend({
     template: "Loading",
+    custom_events: {
+        "loading.inform": "_onInform",
+        "loading.blocked": "_onBlocked",
+        "loading.finished": "_onUnblocked",
+    },
+    _wait_ms: 3000,
 
     init: function(parent) {
         this._super(parent);
@@ -43,17 +49,17 @@ var Loading = Widget.extend({
         this.on_rpc_event(-1);
     },
     on_rpc_event : function(increment) {
-        var self = this;
         if (!this.count && increment === 1) {
             // Block UI after 3s
-            this.long_running_timer = setTimeout(function () {
-                self.blocked_ui = true;
-                framework.blockUI();
-            }, 3000);
+            this.long_running_timer = setTimeout(
+                () => this.trigger_up("loading.blocked"),
+                this.waitTimeout(),
+            );
         }
 
         this.count += increment;
         if (this.count > 0) {
+            this.trigger_up("loading.inform");
             if (config.isDebug()) {
                 this.$el.text(_.str.sprintf( _t("Loading (%d)"), this.count));
             } else {
@@ -64,15 +70,43 @@ var Loading = Widget.extend({
         } else {
             this.count = 0;
             clearTimeout(this.long_running_timer);
-            // Don't unblock if blocked by somebody else
-            if (self.blocked_ui) {
-                this.blocked_ui = false;
-                framework.unblockUI();
-            }
-            this.$el.fadeOut();
-            this.getParent().$el.removeClass('oe_wait');
+            this.trigger_up("loading.finished");
         }
-    }
+    },
+
+    /**
+     * Milliseconds to wait for blocking the UI
+     *
+     * @returns {Number}
+     */
+    waitTimeout: function () {
+        return this._wait_ms;
+    },
+
+    _onInform: function () {
+        if (session.debug) {
+            this.$el.text(_.str.sprintf( _t("Loading (%d)"), this.count));
+        } else {
+            this.$el.text(_t("Loading"));
+        }
+        this.$el.show();
+        this.getParent().$el.addClass('oe_wait');
+    },
+
+    _onBlocked: function () {
+        this.blocked_ui = true;
+        framework.blockUI();
+    },
+
+    _onUnblocked: function () {
+        // Don't unblock if blocked by somebody else
+        if (this.blocked_ui) {
+            this.blocked_ui = false;
+            framework.unblockUI();
+        }
+        this.$el.fadeOut();
+        this.getParent().$el.removeClass('oe_wait');
+    },
 });
 
 return Loading;
