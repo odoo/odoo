@@ -89,7 +89,7 @@
     <xpath expr="//a" position="attributes">
         <attribute name="t-attf-href"/>
         <attribute name="t-att-href">
-            line.event_id and ('/event/%s/register' % slug(line.event_id)) or ('/shop/product/%s' % slug(line.product_id.product_tmpl_id))
+            line.event_id and ('/event/%s/register' % slug(line.event_id)) or line.product_id.website_url
         </attribute>
     </xpath>
 </template>

@@ -62,12 +62,12 @@
                                 <t t-foreach="wishes" t-as="wish">
                                     <tr t-att-data-wish-id='wish.id' t-att-data-product-id='wish.product_id.id'>
                                         <td class='td-img'>
-                                            <a t-att-href="'/shop/product/%s' % slug(wish.product_id.product_tmpl_id)">
+                                            <a t-att-href="wish.product_id.website_url">
                                                 <img t-attf-src="/web/image/product.product/#{wish.product_id.id}/image_128" class="img img-fluid" style="margin:auto;" alt="Product image"/>
                                             </a>
                                         </td>
                                         <td class='text-left'>
-                                            <strong><a t-att-href="'/shop/product/%s' % slug(wish.product_id.product_tmpl_id)"><t t-esc="wish.product_id.display_name" /></a></strong>
+                                            <strong><a t-att-href="wish.product_id.website_url"><t t-esc="wish.product_id.display_name" /></a></strong>
                                             <small class='d-none d-md-block'><p t-field="wish.product_id.description_sale" class="text-muted"/></small>
                                             <button type="button" class="btn btn-link o_wish_rm no-decoration"><small><i class='fa fa-trash-o'></i> Remove</small></button>
                                         </td>

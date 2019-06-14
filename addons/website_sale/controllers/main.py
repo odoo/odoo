@@ -1069,7 +1069,7 @@ class WebsiteSale(http.Controller):
             'public_categ_ids': category,
             'website_id': request.website.id,
         })
-        return "/shop/product/%s?enable_editor=1" % slug(product.product_tmpl_id)
+        return "%s?enable_editor=1" % product.product_tmpl_id.website_url
 
     @http.route(['/shop/change_styles'], type='json', auth='user')
     def change_styles(self, id, style_id):

@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.models import ir_http
 from odoo.tools.translate import html_translate
 from odoo.osv import expression
@@ -367,7 +368,7 @@ class ProductTemplate(models.Model):
     def _compute_website_url(self):
         super(ProductTemplate, self)._compute_website_url()
         for product in self:
-            product.website_url = "/shop/product/%s" % (product.id,)
+            product.website_url = "/shop/product/%s" % slug(product)
 
     # ---------------------------------------------------------
     # Rating Mixin API
