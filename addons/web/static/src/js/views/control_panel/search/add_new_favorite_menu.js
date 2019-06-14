@@ -12,6 +12,7 @@ var AddNewFavoriteMenu = Widget.extend({
     events: _.extend({}, Widget.prototype.events, {
         'click .o_save_favorite': '_onSaveFavoriteClick',
         'click .o_add_favorite.o_menu_header': '_onMenuHeaderClick',
+        'click input[type="checkbox"]': '_onCheckboxClick',
         'keyup .o_save_name input': '_onKeyUp',
     }),
     /**
@@ -107,6 +108,33 @@ var AddNewFavoriteMenu = Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Additional behavior when a checkbox is clicked upon
+     * Namely, some checkbox are mutually exclusive
+     * this function allows this
+     *
+     * @private
+     * @param {jQueryEvent} ev
+     */
+    _onCheckboxClick: function (ev) {
+        function mutuallyExclusive (elem) {
+            if (!elem.id) return false;
+            return ['use_by_default', 'share_all_users'].some(function (str) {
+                return elem.id.indexOf(str);
+            });
+        }
+        var $checkboxes = this.$('input[type="checkbox"]');
+        var currentCheckBox = ev.target;
+
+        if (mutuallyExclusive(currentCheckBox)) {
+            for (var i=0; i < $checkboxes.length; i++) {
+                var checkbox = $checkboxes[i];
+                if (checkbox !== currentCheckBox && mutuallyExclusive(checkbox)) {
+                    checkbox.checked = false;
+                }
+            }
+        }
+    },
     /**
      * @private
      * @param {jQueryEvent} ev
