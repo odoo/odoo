@@ -64,7 +64,7 @@ msgid ""
 msgstr ""
 "* O estado 'Rascunho' é usado quando um usuário está preparando uma fatura nova e ainda não confirmada.\n"
 "* O estado 'Aberta' é usado quando o usuário cria a fatura e um número é gerado para ela. A fatura é mantida neste estado até ela ser paga. \n"
-"* O estado 'Paga' é definido automaticamente quando a fatura é paga. Os registros no livro Diário relacionados à fatura podem ser reconciliadas ou não.\n"
+"* O estado 'Paga' é definido automaticamente quando a fatura é paga. Os registros no livro Diário relacionados à fatura podem ser conciliadas ou não.\n"
 "* O estado 'Cancelado' é usado quando o usuário cancela a fatura."
 
 #. module: account
@@ -114,7 +114,7 @@ msgstr "${object.subject}"
 #: code:addons/account/models/account_bank_statement.py:462
 #, python-format
 msgid "%d transactions were automatically reconciled."
-msgstr "%d transações foram automaticamente reconciliadas."
+msgstr "%d transações foram automaticamente conciliadas."
 
 #. module: account
 #: code:addons/account/models/account.py:809
@@ -148,18 +148,18 @@ msgstr "- Primeiro Número:"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "-> Reconcile"
-msgstr "-> Reconciliar"
+msgstr "-> Conciliar"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr "-> Ver entradas parcialmente reconciliadas."
+msgstr "-> Ver entradas parcialmente conciliadas."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:463
 #, python-format
 msgid "1 transaction was automatically reconciled."
-msgstr "1 transação foi automaticamente reconciliada."
+msgstr "1 transação foi automaticamente conciliada."
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -573,7 +573,7 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
-"                                        <strong>Reconciliar Extratos Bancários</strong>\n"
+"                                        <strong>Conciliar Extratos Bancários</strong>\n"
 "                                    </span>"
 
 #. module: account
@@ -640,7 +640,7 @@ msgstr "<span>Operações</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reconciliation</span>"
-msgstr "<span>Reconciliação</span>"
+msgstr "<span>Conciliação</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -945,7 +945,7 @@ msgstr "<strong>Compras</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Reconcile Bank Statement</strong>"
-msgstr "<strong>Reconciliar Extrato Bancário</strong>"
+msgstr "<strong>Conciliar Extrato Bancário</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -953,13 +953,13 @@ msgid ""
 "<strong>Reconcile with existing transaction</strong><br/>\n"
 "                                        In this case, Odoo should automatically match the bank statement with the previously recorded check transaction."
 msgstr ""
-"<strong>Reconciliar com transação existente</strong><br/>\n"
+"<strong>Conciliar com transação existente</strong><br/>\n"
 "Neste caso, Odoo deve corresponder automaticamente o extrato bancário com a transação de cheque previamente gravada."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Reconcile your Bank Statements</strong>"
-msgstr "<strong>Reconciliar seus Extratos Bancários</strong>"
+msgstr "<strong>Conciliar seus Extratos Bancários</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1200,7 +1200,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:891
 #, python-format
 msgid "A reconciliation must involve at least 2 move lines."
-msgstr "Uma reconciliação deve envolver pelo menos 2 linhas de movimentação."
+msgstr "Uma conciliação deve envolver pelo menos 2 linhas de movimentação."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1216,14 +1216,14 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:884
 #, python-format
 msgid "A selected move line was already reconciled."
-msgstr "Uma linha de movimento selecionada já foi reconciliada."
+msgstr "Uma linha de movimento selecionada já foi conciliada."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:892
 #, python-format
 msgid "A selected statement line was already reconciled with an account move."
 msgstr ""
-"Uma linha de declaração selecionada já foi reconciliada com um movimento de "
+"Uma linha de declaração selecionada já foi conciliada com um movimento de "
 "conta."
 
 #. module: account
@@ -1866,7 +1866,7 @@ msgstr "Todas as faturas"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_all_lines_reconciled
 msgid "All Lines Reconciled"
-msgstr "Todas as Linhas Reconciliadas"
+msgstr "Todas as Linhas Conciliadas"
 
 #. module: account
 #: selection:account.aged.trial.balance,target_move:0
@@ -2492,12 +2492,12 @@ msgstr "Operações de Banco"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_tree
 msgid "Bank Reconciliation Move Presets"
-msgstr "Predefinições de Movimentos de Reconciliação Bancária"
+msgstr "Predefinições de Movimentos de Conciliação Bancária"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Bank Reconciliation Move preset"
-msgstr "Predefinição de Movimento de Reconciliação Bancária"
+msgstr "Predefinição de Movimento de Conciliação Bancária"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_bank_data_done
@@ -2559,7 +2559,7 @@ msgstr "Configuração de banco marcada como feita"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_statement_line_id
 msgid "Bank statement line reconciled with this entry"
-msgstr "Linha de extrato bancário reconciliada com esta entrada"
+msgstr "Linha de extrato bancário conciliada com esta entrada"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_bank_statement
@@ -2778,7 +2778,7 @@ msgstr "Cancelar"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create credit note and reconcile"
-msgstr "Cancelar: criar nota de crédito e reconciliar"
+msgstr "Cancelar: criar nota de crédito e conciliar"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -2801,7 +2801,7 @@ msgid ""
 "this invoice."
 msgstr ""
 "Não é possível criar uma nota de crédito para a fatura que já está "
-"reconciliada, a fatura deve ser desreconciliada primeiro, somente então você"
+"conciliada, a fatura deve ser desconciliada primeiro, somente então você"
 " pode adicionar uma nota de crédito para essa fatura."
 
 #. module: account
@@ -3170,7 +3170,7 @@ msgstr "Clique para criar um novo registro de caixa."
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_reconcile_model
 msgid "Click to create a reconciliation model."
-msgstr "Clique para criar um modelo de reconciliação."
+msgstr "Clique para criar um modelo de conciliação."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
@@ -5254,7 +5254,7 @@ msgstr "Tem pendência"
 #: model:ir.model.fields,field_description:account.field_res_partner_has_unreconciled_entries
 #: model:ir.model.fields,field_description:account.field_res_users_has_unreconciled_entries
 msgid "Has Unreconciled Entries"
-msgstr "Tem entradas não reconciliadas"
+msgstr "Tem entradas não conciliadas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_hide_payment_method
@@ -5515,7 +5515,7 @@ msgstr ""
 "Se você quer ser capaz de enviar a seus clientes os seus extratos\n"
 "do Odoo, você primeiro precisa registrar todas as transações pendentes\n"
 "nas contas a pagar e a receber. Estas seriam faturas\n"
-"que não teriam sido pagas ou pagamentos que não foram reconciliados."
+"que não teriam sido pagas ou pagamentos que não foram conciliados."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6048,7 +6048,7 @@ msgid ""
 "It indicates that the invoice has been paid and the journal entry of the "
 "invoice has been reconciled with one or several journal entries of payment."
 msgstr ""
-"Indica que a fatura foi paga e a entrada do diário foi reconciliada com um "
+"Indica que a fatura foi paga e a entrada do diário foi conciliada com um "
 "ou mais diários de pagamentos"
 
 #. module: account
@@ -6238,7 +6238,7 @@ msgstr "Itens do Diário"
 #: model:ir.actions.client,name:account.action_manual_reconcile
 #, python-format
 msgid "Journal Items to Reconcile"
-msgstr "Itens de Diário a Reconciliar"
+msgstr "Itens de Diário a Conciliar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_name
@@ -6450,7 +6450,7 @@ msgstr "Último Mês"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:119
 #, python-format
 msgid "Last Reconciliation:"
-msgstr "Última Reconciliação:"
+msgstr "Última Conciliação:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_write_uid
@@ -6604,7 +6604,7 @@ msgid ""
 msgstr ""
 "A última vez em que a correspondência de faturas e pagamentos foi realizada "
 "para este parceiro. Ele é definido se não houver pelo menos um débito não "
-"reconciliado e um crédito não reconciliado ou se você clicar no botão "
+"conciliado e um crédito não conciliado ou se você clicar no botão "
 "\"Concluído\"."
 
 #. module: account
@@ -6616,7 +6616,7 @@ msgid ""
 msgstr ""
 "A última vez em que a correspondência de faturas & pagamentos foi executada "
 "nesta conta. Ela é definido tanto se não houver pelo menos um débito não "
-"reconciliada e um crédito não reconciliada Ou se você clicar no botão "
+"conciliada e um crédito não conciliada Ou se você clicar no botão "
 "\"Concluído\"."
 
 #. module: account
@@ -6662,7 +6662,7 @@ msgstr "Menor Pagamento"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:24
 #, python-format
 msgid "Let odoo try to reconcile entries for the user"
-msgstr "Deixa o odoo reconciliar as entradas para o usuário"
+msgstr "Deixa o odoo conciliar as entradas para o usuário"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6837,7 +6837,7 @@ msgid ""
 msgstr ""
 "Manual: Seja pago em dinheiro, cheque ou lqualquer outro método fora do Odoo.\n"
 "Eletrônico: Seja pago automaticamente através de um adquiridor de pagamentos requerendo uma transação em um cartão salvo pelo cliente quando comprando ou subscrição online(token de pagamento).\n"
-"Depósito em Lote: Engloba vários cheques de clientes de uma vez gerando um depósito em lote para submeter ao seu banco. quando encodificando o extrato bancário no Odoo, você é sugerido a reconciliar a transação com o depósito em lote. Habilite essa opção nas configurações."
+"Depósito em Lote: Engloba vários cheques de clientes de uma vez gerando um depósito em lote para submeter ao seu banco. quando encodificando o extrato bancário no Odoo, você é sugerido a conciliar a transação com o depósito em lote. Habilite essa opção nas configurações."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment_payment_method_id
@@ -6853,7 +6853,7 @@ msgstr ""
 "Manual: Seja pago em dinheiro, cheque ou lqualquer outro método fora do Odoo.\n"
 "Eletrônico: Seja pago automaticamente através de um adquiridor de pagamentos requerendo uma transação em um cartão salvo pelo cliente quando comprando ou subscrição online(token de pagamento).\n"
 "Cheque: Pague a conta com cheque e imprima isso do Odoo\n"
-"Depósito em Lote: Engloba vários cheques de clientes de uma vez gerando um depósito em lote para submeter ao seu banco. quando encodificando o extrato bancário no Odoo, você é sugerido a reconciliar a transação com o depósito em lote. Para habilitar depósitos em lote, módulo account_batch_deposit deve estar instalado.\n"
+"Depósito em Lote: Engloba vários cheques de clientes de uma vez gerando um depósito em lote para submeter ao seu banco. quando encodificando o extrato bancário no Odoo, você é sugerido a conciliar a transação com o depósito em lote. Para habilitar depósitos em lote, módulo account_batch_deposit deve estar instalado.\n"
 "Transferência de Crédito SEPA: Pague conta por um arquivo de Transferência de Crédito SEPA que você envia ao seu banco. Para habilitar transferência de crédito SEPA, o módulo account_sepa deve estar instalado"
 
 #. module: account
@@ -7017,7 +7017,7 @@ msgstr "Modificar o valor dos impostos"
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create credit note, reconcile and create a new draft invoice"
 msgstr ""
-"Modificar: criar nota de crédito, reconciliar e criar um novo rascunho de "
+"Modificar: criar nota de crédito, conciliar e criar um novo rascunho de "
 "fatura"
 
 #. module: account
@@ -7062,7 +7062,7 @@ msgstr "Conta Linha de Movimento"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_move_reconciled
 msgid "Move Reconciled"
-msgstr "Mover Reconciliados"
+msgstr "Mover Conciliados"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1362
@@ -7277,7 +7277,7 @@ msgstr "Observações"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Nothing to Reconcile"
-msgstr "Nada para Reconciliar"
+msgstr "Nada para Conciliar"
 
 #. module: account
 #. openerp-web
@@ -7396,9 +7396,9 @@ msgid ""
 " need to review a few of them when a <strong>'Reconcile Items'</strong> "
 "button appears on your Vendor Bills dash."
 msgstr ""
-"Odoo deve fazer a maioria do trabalho de reconciliação automaticamente, "
+"Odoo deve fazer a maioria do trabalho de conciliação automaticamente, "
 "assim você só vai precisar rever algumas delas quando um botão "
-"<strong>'Reconciliar Itens'</strong> aparecer no painel de Contas de "
+"<strong>'Conciliar Itens'</strong> aparecer no painel de Contas de "
 "Fornecedor."
 
 #. module: account
@@ -7593,7 +7593,7 @@ msgid ""
 "regular revert of it in case you want to cancel it."
 msgstr ""
 "Operação não permitida. Desde que sua linha de instrução já recebeu um "
-"número, você não pode reconciliá-lo inteiramente com entradas de diário "
+"número, você não pode conciliá-lo inteiramente com entradas de diário "
 "existentes caso contrário, faria uma lacuna na numeração. Você deve "
 "registrar uma entrada e fazer um retorno regular dela caso você queira "
 "cancelá-la."
@@ -7728,7 +7728,7 @@ msgstr "Pago em"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reconciled
 msgid "Paid/Reconciled"
-msgstr "Pago/Reconciliado"
+msgstr "Pago/Conciliado"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_parent_id
@@ -8532,17 +8532,17 @@ msgstr "Conciliar o extrato bancário de demonstração"
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconciled
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Reconciled"
-msgstr "Reconciliado"
+msgstr "Conciliado"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_reconciled
 msgid "Reconciled Entries"
-msgstr "Entradas Reconciliadas"
+msgstr "Entradas Conciliadas"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
 msgid "Reconciled entries"
-msgstr "Lançamentos reconciliados"
+msgstr "Lançamentos conciliados"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
@@ -8553,13 +8553,13 @@ msgstr "Conciliação"
 #: model:ir.actions.act_window,name:account.action_account_reconcile_model
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Reconciliation Models"
-msgstr "Modelos de Reconciliação"
+msgstr "Modelos de Conciliação"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_partial_reconcile_ids
 msgid "Reconciliation Parts"
 msgstr ""
-"Trechos de Reconciliação\n"
+"Trechos de Conciliação\n"
 " "
 
 #. module: account
@@ -8571,12 +8571,12 @@ msgstr "Conciliação de transações"
 #: model:ir.actions.client,name:account.action_bank_reconcile
 #: model:ir.actions.client,name:account.action_bank_reconcile_bank_statements
 msgid "Reconciliation on Bank Statements"
-msgstr "Reconciliaçã em Demonstrativos Bancários"
+msgstr "Conciliação em Demonstrativos Bancários"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Reconciling journal entries"
-msgstr "Reconciliando entradas de diário"
+msgstr "Conciliando entradas de diário"
 
 #. module: account
 #: selection:account.journal,bank_statements_source:0
@@ -8665,7 +8665,7 @@ msgid ""
 "already reconciled"
 msgstr ""
 "Reembolso baseados neste tipo. Você não pode modificar e cancelar se a "
-"fatura já está reconciliada"
+"fatura já está conciliada"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_invoice_payment
@@ -9772,7 +9772,7 @@ msgid ""
 "number again if the line is cancelled, set to draft and re-processed again."
 msgstr ""
 "Campo técnico que contém o número atribuído ao lançamento contábil, definido"
-" automaticamente quando a linha de declaração é reconciliada e armazenada "
+" automaticamente quando a linha de declaração é conciliada e armazenada "
 "para definir novamente o mesmo número se a linha for cancelada, ajustada "
 "para rascunho e novamente processada."
 
@@ -9858,7 +9858,7 @@ msgid ""
 "Technical field used to determine at which date this reconciliation needs to"
 " be shown on the aged receivable/payable reports."
 msgstr ""
-"Campo Técnico usado para determinar em que data essa reconciliação precisa "
+"Campo Técnico usado para determinar em que data essa conciliação precisa "
 "ser mostrada nos relatórios envelhecidos de recebíveis/pagáveis"
 
 #. module: account
@@ -9879,7 +9879,7 @@ msgid ""
 "This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
-"Campo técnico usado para manter o controle da reconciliação de regime de "
+"Campo técnico usado para manter o controle da conciliação de regime de "
 "caixa fiscal. Isto é necessário quando do cancelamento da fonte: isto vai "
 "postar uma entrada de diário inversa para cancelar essa parte também."
 
@@ -10007,7 +10007,7 @@ msgstr "A conta %s (%s) está depreciada !"
 #: code:addons/account/models/account_move.py:1021
 #, python-format
 msgid "The account %s (%s) is not marked as reconciliable !"
-msgstr "A conta %s (%s) não está marcada como reconciliável !"
+msgstr "A conta %s (%s) não está marcada como conciliável !"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_bank_journal_id
@@ -10074,7 +10074,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_statement_id
 msgid "The bank statement used for bank reconciliation"
-msgstr "O extrato bancário utilizado para a reconciliação bancária"
+msgstr "O extrato bancário utilizado para a conciliação bancária"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1165
@@ -10307,7 +10307,7 @@ msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
 msgstr ""
-"O parceiro tem pelo menos um débito e crédito não reconciliado desde última "
+"O parceiro tem pelo menos um débito e crédito não conciliado desde última "
 "vez que a correspondência de faturas e pagamentos foi realizada."
 
 #. module: account
@@ -10439,7 +10439,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:46
 #, python-format
 msgid "There is nothing to reconcile."
-msgstr "Não há nada para reconciliar."
+msgstr "Não há nada para conciliar."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_error
@@ -10609,7 +10609,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model_journal_id
 #: model:ir.model.fields,help:account.field_account_reconcile_model_second_journal_id
 msgid "This field is ignored in a bank statement reconciliation."
-msgstr "Este campo é ignorado em uma reconciliação de extrato bancário."
+msgstr "Este campo é ignorado em uma conciliação de extrato bancário."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_date_maturity
@@ -10739,7 +10739,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:240
 #, python-format
 msgid "This payment is registered but not reconciled."
-msgstr "Este pagamento é registrado mas não reconciliado."
+msgstr "Este pagamento é registrado mas não conciliado."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_supplier_payment_term_id
@@ -10776,7 +10776,7 @@ msgid ""
 "line will simply create a counterpart on this account"
 msgstr ""
 "Este campo técnico pode ser usado na linha do demonstrativo na hora de "
-"criação / importação, a fim de evitar o processo de reconciliação sobre ele "
+"criação / importação, a fim de evitar o processo de conciliação sobre ele "
 "mais tarde. A linha do demonstrativo irá simplesmente criar uma "
 "contrapartida desta conta"
 
@@ -10795,7 +10795,7 @@ msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
 "                a bank statement or an account."
 msgstr ""
-"Aquele que pode ser usado para criar rapidamente itens de diário quando reconciliar\n"
+"Aquele que pode ser usado para criar rapidamente itens de diário quando conciliar\n"
 "um extrato bancário ou uma conta."
 
 #. module: account
@@ -10852,7 +10852,7 @@ msgstr "A pagar"
 #: code:addons/account/models/account_move.py:1017
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries!"
-msgstr "Para reconciliar, a empresa deve ser a mesma para todas as entradas."
+msgstr "Para conciliar, a empresa deve ser a mesma para todas as entradas."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -11080,7 +11080,7 @@ msgstr "Lucros/Perdas não distribuídos(as)"
 #: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:392
 #, python-format
 msgid "Undo the partial reconciliation."
-msgstr "Desfazer reconciliação parcial."
+msgstr "Desfazer conciliação parcial."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_unit
@@ -11151,7 +11151,7 @@ msgstr "Desconciliar"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_unreconcile
 msgid "Unreconcile Entries"
-msgstr "Desfazer reconciliação de Lançamentos"
+msgstr "Desfazer conciliação de Lançamentos"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_unreconcile_view
@@ -11251,7 +11251,7 @@ msgid ""
 "                                so that you can edit it."
 msgstr ""
 "Use esta opção se você deseja cancelar uma fatura e criar uma nova.\n"
-"                                     A nota de crédito será criada, validada e reconciliada\n"
+"                                     A nota de crédito será criada, validada e conciliada\n"
 "                                     com a fatura atual. A nova fatura, provisória, será criada\n"
 "                                     para que você possa editá-la."
 
@@ -11625,7 +11625,7 @@ msgstr "Valor de Crédito ou Débito incorreto no lançamento contábil!"
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled!"
 msgstr ""
-"Você está tentando reconciliar algumas entradas que já estão reconciliadas!"
+"Você está tentando reconciliar algumas entradas que já estão conciliadas!"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_blocked
@@ -11738,7 +11738,7 @@ msgid ""
 "You cannot change the value of the reconciliation on this account as it "
 "already has some moves"
 msgstr ""
-"Você não pode alterar o valor da reconciliação nesta conta, uma vez que já "
+"Você não pode alterar o valor da conciliação nesta conta, uma vez que já "
 "tem alguns movimentos"
 
 #. module: account
@@ -11818,7 +11818,7 @@ msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
 msgstr ""
-"Você não pode fazer esta modificação em uma entrada reconciliada. Você pode apenas alterar alguns campos não legais ou você deve desconciliar primeiro. \n"
+"Você não pode fazer esta modificação em uma entrada conciliada. Você pode apenas alterar alguns campos não legais ou você deve desconciliar primeiro. \n"
 "%s."
 
 #. module: account
@@ -11834,7 +11834,7 @@ msgid ""
 "You cannot have a receivable/payable account that is not reconcilable. "
 "(account code: %s)"
 msgstr ""
-"Você não pode ter uma conta recebível/pagáve que não seja reconciliável. "
+"Você não pode ter uma conta recebível/pagáve que não seja conciliável. "
 "(código de conta: %s)"
 
 #. module: account
@@ -11872,7 +11872,7 @@ msgid ""
 "You cannot pay an invoice which is partially paid. You need to reconcile "
 "payment entries first."
 msgstr ""
-"Não é possível pagar uma fatura parcialmente paga. Você precisa reconciliar "
+"Não é possível pagar uma fatura parcialmente paga. Você precisa conciliar "
 "as entradas de pagamento primeiro."
 
 #. module: account
@@ -11934,7 +11934,7 @@ msgstr ""
 #, python-format
 msgid "You did not configure any reconcile model yet, you can do it"
 msgstr ""
-"Você não configurou nenhum modelo de reconciliação ainda, você pode fazer "
+"Você não configurou nenhum modelo de conciliação ainda, você pode fazer "
 "isso"
 
 #. module: account
@@ -11978,7 +11978,7 @@ msgstr "Você precisa definir uma data inicial."
 #: code:addons/account/static/src/xml/account_reconciliation.xml:53
 #, python-format
 msgid "You reconciled"
-msgstr "Você reconciliou"
+msgstr "Você conciliou"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1884
