@@ -314,7 +314,7 @@ class MrpBomLine(models.Model):
         if not self.parent_product_tmpl_id:
             return {}
         return {'domain': {'attribute_value_ids': [
-            ('id', 'in', self.parent_product_tmpl_id._get_valid_product_attribute_values().ids),
+            ('id', 'in', self.parent_product_tmpl_id.valid_product_attribute_value_ids.ids),
             ('attribute_id.create_variant', '!=', 'no_variant')
         ]}}
 

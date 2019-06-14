@@ -373,8 +373,6 @@ class ProductProduct(models.Model):
         self.clear_caches()
         self.env['product.template'].invalidate_cache(
             fnames=[
-                'valid_archived_variant_ids',
-                'valid_existing_variant_ids',
                 'product_variant_ids',
                 'product_variant_id',
                 'product_variant_count'
@@ -661,11 +659,6 @@ class ProductProduct(models.Model):
                     prices[product.id], currency, product.company_id, fields.Date.today())
 
         return prices
-
-    # compatibility to remove after v10 - DEPRECATED
-    @api.multi
-    def price_get(self, ptype='list_price'):
-        return self.price_compute(ptype)
 
     @api.model
     def get_empty_list_help(self, help):

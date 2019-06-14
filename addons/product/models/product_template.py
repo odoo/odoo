@@ -135,12 +135,6 @@ class ProductTemplate(models.Model):
         compute="_compute_valid_attributes", string='Valid Product Attribute Values Without No Variant Attributes', help="Technical compute")
     valid_product_attribute_wnva_ids = fields.Many2many('product.attribute',
         compute="_compute_valid_attributes", string='Valid Product Attributes Without No Variant Attributes', help="Technical compute")
-    # valid_archived_variant_ids deprecated
-    valid_archived_variant_ids = fields.Many2many('product.product',
-        compute="_compute_valid_archived_variant_ids", string='Valid Archived Variants', help="Technical compute")
-    # valid_existing_variant_ids deprecated
-    valid_existing_variant_ids = fields.Many2many('product.product',
-        compute="_compute_valid_existing_variant_ids", string='Valid Existing Variants', help="Technical compute")
 
     product_variant_ids = fields.One2many('product.product', 'product_tmpl_id', 'Products', required=True)
     # performance: product_variant_id provides prefetching on the first product variant only
@@ -482,11 +476,6 @@ class ProductTemplate(models.Model):
 
         return prices
 
-    # compatibility to remove after v10 - DEPRECATED
-    @api.model
-    def _price_get(self, products, ptype='list_price'):
-        return products.price_compute(ptype)
-
     @api.multi
     def create_variant_ids(self):
         Product = self.env["product.product"]
@@ -500,7 +489,7 @@ class ProductTemplate(models.Model):
             variants_to_unlink = self.env['product.product']
             # adding an attribute with only one value should not recreate product
             # write this attribute on every product to make sure we don't lose them
-            variant_alone = tmpl_id._get_valid_product_template_attribute_lines().filtered(lambda line: line.attribute_id.create_variant == 'always' and len(line.value_ids) == 1).mapped('value_ids')
+            variant_alone = tmpl_id.valid_product_template_attribute_line_ids.filtered(lambda line: line.attribute_id.create_variant == 'always' and len(line.value_ids) == 1).mapped('value_ids')
             for value_id in variant_alone:
                 updated_products = tmpl_id.product_variant_ids.filtered(lambda product: value_id.attribute_id not in product.mapped('attribute_value_ids.attribute_id'))
                 updated_products.write({'attribute_value_ids': [(4, value_id.id)]})
@@ -588,7 +577,7 @@ class ProductTemplate(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        return any(a.create_variant == 'dynamic' for a in self._get_valid_product_attributes())
+        return any(a.create_variant == 'dynamic' for a in self.valid_product_attribute_ids)
 
     @api.multi
     def _compute_valid_attributes(self):
@@ -621,51 +610,6 @@ class ProductTemplate(models.Model):
 
             record.valid_product_attribute_ids = record.valid_product_template_attribute_line_ids.mapped('attribute_id')
             record.valid_product_attribute_wnva_ids = record.valid_product_template_attribute_line_wnva_ids.mapped('attribute_id')
-
-    @api.multi
-    def _compute_valid_archived_variant_ids(self):
-        """This compute is done outside of `_compute_valid_attributes` because
-        it is often not needed, and it can be very bad on performance."""
-        archived_variants = self.env['product.product'].search([('product_tmpl_id', 'in', self.ids), ('active', '=', False)])
-        for record in self:
-            valid_value_ids = record.valid_product_attribute_value_wnva_ids
-            valid_attribute_ids = record.valid_product_attribute_wnva_ids
-
-            record.valid_archived_variant_ids = archived_variants.filtered(
-                lambda v: v.product_tmpl_id == record and v._has_valid_attributes(valid_attribute_ids, valid_value_ids)
-            )
-
-    @api.multi
-    def _compute_valid_existing_variant_ids(self):
-        """This compute is done outside of `_compute_valid_attributes` because
-        it is often not needed, and it can be very bad on performance."""
-        existing_variants = self.env['product.product'].search([('product_tmpl_id', 'in', self.ids), ('active', '=', True)])
-        for record in self:
-
-            valid_value_ids = record.valid_product_attribute_value_wnva_ids
-            valid_attribute_ids = record.valid_product_attribute_wnva_ids
-
-            record.valid_existing_variant_ids = existing_variants.filtered(
-                lambda v: v.product_tmpl_id == record and v._has_valid_attributes(valid_attribute_ids, valid_value_ids)
-            )
-
-    @api.multi
-    def _get_valid_product_template_attribute_lines(self):
-        """deprecated, use `valid_product_template_attribute_line_ids`"""
-        self.ensure_one()
-        return self.valid_product_template_attribute_line_ids
-
-    @api.multi
-    def _get_valid_product_attributes(self):
-        """deprecated, use `valid_product_attribute_ids`"""
-        self.ensure_one()
-        return self.valid_product_attribute_ids
-
-    @api.multi
-    def _get_valid_product_attribute_values(self):
-        """deprecated, use `valid_product_attribute_value_ids`"""
-        self.ensure_one()
-        return self.valid_product_attribute_value_ids
 
     @api.multi
     def _get_possible_variants(self, parent_combination=None):
@@ -707,10 +651,6 @@ class ProductTemplate(models.Model):
             - exclusions: from this product itself
             - parent_combination: ids of the given parent_combination
             - parent_exclusions: from the parent_combination
-            - archived_combinations: deprecated
-            - existing_combinations: deprecated
-            - has_dynamic_attributes: deprecated
-            - no_variant_product_template_attribute_value_ids: deprecated
            - parent_product_name: the name of the parent product if any, used in the interface
                to explain why some combinations are not available.
                (e.g: Not available with Customizable Desk (Legs: Steel))
@@ -724,10 +664,6 @@ class ProductTemplate(models.Model):
             'exclusions': self._complete_inverse_exclusions(self._get_own_attribute_exclusions()),
             'parent_exclusions': self._get_parent_attribute_exclusions(parent_combination),
             'parent_combination': parent_combination.ids,
-            'archived_combinations': [],
-            'has_dynamic_attributes': self.has_dynamic_attributes(),
-            'existing_combinations': [],
-            'no_variant_product_template_attribute_value_ids': [],
             'parent_product_name': parent_name,
             'mapped_attribute_names': self._get_mapped_attribute_names(parent_combination),
         }
@@ -756,7 +692,7 @@ class ProductTemplate(models.Model):
         the value is an array with the other ptav that they exclude (empty if no exclusion).
         """
         self.ensure_one()
-        product_template_attribute_values = self._get_valid_product_template_attribute_lines().mapped('product_template_value_ids')
+        product_template_attribute_values = self.valid_product_template_attribute_line_ids.product_template_value_ids
         return {
             ptav.id: [
                 value_id
@@ -794,29 +730,6 @@ class ProductTemplate(models.Model):
         return result
 
     @api.multi
-    def _get_archived_combinations(self):
-        """Deprecated"""
-        self.ensure_one()
-        return [archived_variant.product_template_attribute_value_ids.ids
-            for archived_variant in self.valid_archived_variant_ids]
-
-    @api.multi
-    def _get_existing_combinations(self):
-        """Deprecated"""
-        self.ensure_one()
-        return [variant.product_template_attribute_value_ids.ids
-            for variant in self.valid_existing_variant_ids]
-
-    @api.multi
-    def _get_no_variant_product_template_attribute_values(self):
-        """Deprecated"""
-        self.ensure_one()
-        product_template_attribute_values = self._get_valid_product_template_attribute_lines().mapped('product_template_value_ids')
-        return product_template_attribute_values.filtered(
-            lambda v: v.attribute_id.create_variant == 'no_variant'
-        ).ids
-
-    @api.multi
     def _get_mapped_attribute_names(self, parent_combination=None):
         """ The name of every attribute values based on their id,
         used to explain in the interface why that combination is not available
@@ -826,7 +739,7 @@ class ProductTemplate(models.Model):
         the parent combination if provided.
         """
         self.ensure_one()
-        all_product_attribute_values = self._get_valid_product_template_attribute_lines().mapped('product_template_value_ids')
+        all_product_attribute_values = self.valid_product_template_attribute_line_ids.product_template_value_ids
         if parent_combination:
             all_product_attribute_values |= parent_combination
 

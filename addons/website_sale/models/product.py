@@ -224,7 +224,7 @@ class ProductTemplate(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        return any(a.create_variant == 'no_variant' for a in self._get_valid_product_attributes())
+        return any(a.create_variant == 'no_variant' for a in self.valid_product_attribute_ids)
 
     @api.multi
     def _has_is_custom_values(self):
@@ -235,7 +235,7 @@ class ProductTemplate(models.Model):
         :return: True if at least one is_custom attribute value, False otherwise
         :rtype: bool
         """
-        return any(v.is_custom for v in self._get_valid_product_attribute_values())
+        return any(v.is_custom for v in self.valid_product_attribute_value_ids)
 
     @api.multi
     def _get_possible_variants_sorted(self, parent_combination=None):

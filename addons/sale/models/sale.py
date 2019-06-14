@@ -1373,21 +1373,6 @@ class SaleOrderLine(models.Model):
         }
         return res
 
-    @api.multi
-    def invoice_line_create(self, invoice_id, qty):
-        """ Create an invoice line. The quantity to invoice can be positive (invoice) or negative (refund).
-
-            .. deprecated:: 12.0
-                Replaced by :func:`invoice_line_create_vals` which can be used for creating
-                `account.invoice.line` records in batch
-
-            :param invoice_id: integer
-            :param qty: float quantity to invoice
-            :returns recordset of account.invoice.line created
-        """
-        return self.env['account.invoice.line'].create(
-            self.invoice_line_create_vals(invoice_id, qty))
-
     def invoice_line_create_vals(self, invoice_id, qty):
         """ Create an invoice line. The quantity to invoice can be positive (invoice) or negative
             (refund).
@@ -1454,12 +1439,12 @@ class SaleOrderLine(models.Model):
 
         # remove the is_custom values that don't belong to this template
         for pacv in self.product_custom_attribute_value_ids:
-            if pacv.attribute_value_id not in self.product_id.product_tmpl_id._get_valid_product_attribute_values():
+            if pacv.attribute_value_id not in self.product_id.product_tmpl_id.valid_product_attribute_value_ids:
                 self.product_custom_attribute_value_ids -= pacv
 
         # remove the no_variant attributes that don't belong to this template
         for ptav in self.product_no_variant_attribute_value_ids:
-            if ptav.product_attribute_value_id not in self.product_id.product_tmpl_id._get_valid_product_attribute_values():
+            if ptav.product_attribute_value_id not in self.product_id.product_tmpl_id.valid_product_attribute_value_ids:
                 self.product_no_variant_attribute_value_ids -= ptav
 
         vals = {}
