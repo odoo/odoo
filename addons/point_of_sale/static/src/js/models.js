@@ -59,6 +59,7 @@ exports.PosModel = Backbone.Model.extend({
         this.employees = [];
         this.partners = [];
         this.taxes = [];
+        this.tax_repartition_lines = [];
         this.pos_session = null;
         this.config = null;
         this.units = [];
@@ -234,7 +235,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'account.tax',
-        fields: ['name','amount', 'price_include', 'include_base_amount', 'amount_type', 'children_tax_ids'],
+        fields: ['name','amount', 'price_include', 'include_base_amount', 'amount_type', 'children_tax_ids', 'invoice_repartition_line_ids'],
         domain: function(self) {return [['company_id', '=', self.company && self.company.id || false]]},
         loaded: function(self, taxes){
             self.taxes = taxes;
@@ -246,6 +247,17 @@ exports.PosModel = Backbone.Model.extend({
                 tax.children_tax_ids = _.map(tax.children_tax_ids, function (child_tax_id) {
                     return self.taxes_by_id[child_tax_id];
                 });
+            });
+        },
+    },{
+        model:  'account.tax.repartition.line',
+        fields: ['sequence', 'factor', 'invoice_tax_id'],
+        domain: function(self) {return [['company_id', '=', self.company && self.company.id || false],['repartition_type','=', 'tax']]},
+        loaded: function(self, tax_repartition_lines){
+            self.tax_repartition_lines = tax_repartition_lines;
+            self.tax_repartition_lines_by_id = {};
+            _.each(tax_repartition_lines, function(tax_repartition_line){
+                return self.tax_repartition_lines_by_id[tax_repartition_line.id] = tax_repartition_line;
             });
         },
     },{
@@ -1861,12 +1873,19 @@ exports.Orderline = Backbone.Model.extend({
             if(tax.price_include && total_included_checkpoints[i] === undefined)
                 cumulated_tax_included_amount += tax_amount;
 
-            taxes_vals.push({
-                'id': tax.id,
-                'name': tax.name,
-                'amount': sign * tax_amount,
-                'base': sign * round_pr(base, currency_rounding),
-            });
+            var invoice_repartition_line_ids = tax.invoice_repartition_line_ids;
+            for (var i = 0; i < invoice_repartition_line_ids.length; i++) {
+                if (invoice_repartition_line_ids[i] in self.pos.tax_repartition_lines_by_id){
+                    var tax_repartition_line = self.pos.tax_repartition_lines_by_id[invoice_repartition_line_ids[i]];
+                    taxes_vals.push({
+                        'id': tax.id,
+                        'tax_repartition_line_id': invoice_repartition_line_ids[i],
+                        'name': tax.name,
+                        'amount': sign * tax_amount * tax_repartition_line.factor,
+                        'base': sign * round_pr(base, currency_rounding),
+                    });
+                }
+            }
 
             if(tax.include_base_amount)
                 base += tax_amount;
@@ -1904,7 +1923,7 @@ exports.Orderline = Backbone.Model.extend({
         var all_taxes_before_discount = this.compute_all(product_taxes, this.get_unit_price(), this.get_quantity(), this.pos.currency.rounding);
         _(all_taxes.taxes).each(function(tax) {
             taxtotal += tax.amount;
-            taxdetail[tax.id] = tax.amount;
+            taxdetail[tax.tax_repartition_line_id] = tax.amount;
         });
 
         return {
@@ -2659,7 +2678,14 @@ exports.Order = Backbone.Model.extend({
 
         for(var id in details){
             if(details.hasOwnProperty(id)){
-                fulldetails.push({amount: details[id], tax: this.pos.taxes_by_id[id], name: this.pos.taxes_by_id[id].name});
+                var tax_repartition_line = this.pos.tax_repartition_lines_by_id[id]
+                debugger;
+                fulldetails.push({
+                    amount: details[id],
+                    tax: this.pos.taxes_by_id[tax_repartition_line.invoice_tax_id[0]],
+                    tax_repartition_line: tax_repartition_line,
+                    name: this.pos.taxes_by_id[tax_repartition_line.invoice_tax_id[0]].name
+                });
             }
         }
 
