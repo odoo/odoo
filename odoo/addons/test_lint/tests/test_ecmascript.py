@@ -34,7 +34,7 @@ class TestECMAScriptVersion(TransactionCase):
         files_to_check = []
         for p in mod_paths:
             for dp, _, file_names in os.walk(p):
-                if 'static/test' in dp:
+                if 'static/test' in dp or "static/src/tests" in dp:
                     continue
                 for fn in file_names:
                     fullpath_name = os.path.join(dp, fn)
