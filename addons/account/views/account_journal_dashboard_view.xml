@@ -3,7 +3,7 @@
         <field name="name">account.journal.dashboard.kanban</field>
         <field name="model">account.journal</field>
         <field name="arch" type="xml">
-            <kanban create="false" class="oe_background_grey o_kanban_dashboard o_account_kanban" banner_route="/account/account_dashboard_onboarding">
+            <kanban create="false" class="oe_background_grey o_kanban_dashboard o_account_kanban" banner_route="/account/account_dashboard_onboarding" js_class="account_dashboard_kanban">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="type"/>
@@ -296,7 +296,7 @@
                                 </button>
                             </t>
                             <t t-if="journal_type == 'purchase'">
-                                <button type="action" name="%(account_invoice_import_wizard_action)d" class="btn btn-primary">
+                                <button class="btn btn-primary o_button_upload_bill" journal_type="purchase">
                                     <span>Upload Bills</span>
                                 </button>
                             </t>
