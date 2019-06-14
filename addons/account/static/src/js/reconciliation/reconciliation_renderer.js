@@ -478,9 +478,9 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                         });
                         if (state.to_check) {
                             // Set the to_check field to true if global to_check is set
-                            this.$('.create_to_check input').prop('checked', state.to_check).change();
+                            self.$('.create_to_check input').prop('checked', state.to_check).change();
                         }
-                        return true; 
+                        return true;
                     });
             });
         }
