@@ -6,7 +6,6 @@
 # artol <arto.leskinen@tek.fi>, 2017
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2017
 # Sanna Edelman <direct@generare.com>, 2017
-# Mikko Salmela <salmemik@gmail.com>, 2017
 # Jussi Lehto <jussi@gulfeo.com>, 2017
 # Miku Laitinen <miku.laitinen@gmail.com>, 2017
 # Timo Koukkari <ti.ko@netikka.fi>, 2017
@@ -15,12 +14,15 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2017
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2017
+# Mikko Salmela <salmemik@gmail.com>, 2017
 # Martin Trigaux, 2017
 # Jukka Paulin <jukka.paulin@gmail.com>, 2018
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
 # Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2018
 # Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2018
+# Jussi Heikkilä <jussi.heikkila@panimo.com>, 2019
+# Simo Suurla <simo@suurla.fi>, 2019
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
 # 
 msgid ""
@@ -869,7 +871,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.quantity.history,compute_at_date:0
 msgid "At a Specific Date"
-msgstr ""
+msgstr "Tiettynä ajankohtana"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_variants_action
@@ -1151,7 +1153,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Check Availability"
-msgstr ""
+msgstr "Tarkista saatavuus"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_has_packages
@@ -1626,7 +1628,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.quantity.history,compute_at_date:0
 msgid "Current Inventory"
-msgstr ""
+msgstr "Nykyhetken varasto"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_picking_id
@@ -1913,7 +1915,7 @@ msgstr "Toimitustilaukset"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_tracking_lot
 msgid "Delivery Packages"
-msgstr ""
+msgstr "Toimituspakkaukset"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_delivery_route_id
@@ -2031,7 +2033,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Detailed Operations"
-msgstr ""
+msgstr "Määrittele keräilyt"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_form
@@ -2816,7 +2818,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_exhausted
 msgid "Include Exhausted Products"
-msgstr ""
+msgstr "Sisällytä nollasaldot"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_incoming_qty
@@ -3087,7 +3089,7 @@ msgstr "Inventoinnin viite"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_quantity_history
 msgid "Inventory Report"
-msgstr ""
+msgstr "Inventaarioraportti"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
@@ -3359,12 +3361,12 @@ msgstr "Myöhästyneet toimenpiteet"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
 msgid "Late Transfers"
-msgstr ""
+msgstr "Myöh. siirrot"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_lead_days
 msgid "Lead Time"
-msgstr ""
+msgstr "Toimitusviive"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_lead_type
@@ -3417,7 +3419,7 @@ msgstr "Lokalisointi"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Locate"
-msgstr ""
+msgstr "Sijainnit"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_location_id
@@ -4354,7 +4356,7 @@ msgstr "Pakkausviite:"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Package Transfers"
-msgstr ""
+msgstr "Pakkauksen siirrot"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
@@ -4628,6 +4630,8 @@ msgid ""
 "Priority for this picking. Setting manually a value here would set it as "
 "priority for all the moves"
 msgstr ""
+"Keräilyn prioriteetti. Asettamalla arvo manuaalisesti määrätään kaikkien "
+"siirtojen prioriteetti."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -4929,7 +4933,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Put in Pack"
-msgstr ""
+msgstr "Pakkaa"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5127,7 +5131,7 @@ msgstr "Todellinen määrä"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_product_qty
 msgid "Real Reserved Quantity"
-msgstr ""
+msgstr "Todellinen varattu määrä"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_reception_route_id
@@ -5210,7 +5214,7 @@ msgstr "Dokumentin viite"
 #: model:ir.ui.view,arch_db:stock.view_move_kandan
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Register lots, packs, location"
-msgstr ""
+msgstr "Määrittele erät, pakkaukset, sijainnit"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -5302,12 +5306,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_tree
 msgid "Reserved"
-msgstr ""
+msgstr "Varattu"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_reserved_quantity
 msgid "Reserved Quantity"
-msgstr ""
+msgstr "Varattu määrä"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings_module_procurement_jit
@@ -5341,7 +5345,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_quantity_history
 msgid "Retrieve the Inventory Quantities"
-msgstr ""
+msgstr "Näytä varastonarvostus"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -5473,6 +5477,8 @@ msgid ""
 "Scheduled time for the first part of the shipment to be processed. Setting "
 "manually a value here would set it as expected date for all the stock moves."
 msgstr ""
+"Suunniteltu päivämäärä ensimmäisen erän toimitukseen. Asettamalla arvo "
+"manuaalisesti määritellään kaikkien erien toimituspäivämäärä."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:881
@@ -5773,7 +5779,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_show_reserved
 msgid "Show Reserved"
-msgstr ""
+msgstr "Näytä varatut"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_show_validate
@@ -5783,7 +5789,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "Näytä kaikki tietueet joissa on toimenpide myöhässä."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_string_availability_info
@@ -6155,6 +6161,8 @@ msgid ""
 "The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has"
 " been created."
 msgstr ""
+"Jälkitoimitus <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> on "
+"luotu."
 
 #. module: stock
 #: sql_constraint:stock.location:0
@@ -6594,7 +6602,7 @@ msgstr "Seuranta"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_body_print
 msgid "Traceability Report"
-msgstr ""
+msgstr "Seuranta"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings_module_product_expiry
@@ -7377,7 +7385,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
-msgstr ""
+msgstr "Olet käsittelemässä vähemmän tuotteita kuin alkuperäinen tarve on."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_overprocessed_transfer
@@ -7385,6 +7393,8 @@ msgid ""
 "You have processed more than what was initially\n"
 "                    planned for the product"
 msgstr ""
+"Olet käsittelemässä enemmän tuotteita\n"
+"                    kuin alkuperäinen tarve on."
 
 #. module: stock
 #: code:addons/stock/models/product.py:306

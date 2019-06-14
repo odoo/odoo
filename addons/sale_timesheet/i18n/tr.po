@@ -3,19 +3,20 @@
 # * sale_timesheet
 # 
 # Translators:
-# Martin Trigaux, 2017
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
 # Murat Kaplan <muratk@projetgrup.com>, 2017
-# Ediz Duman <neps1192@gmail.com>, 2017
+# Martin Trigaux, 2017
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
-# Umur Akın <umura@projetgrup.com>, 2018
+# Ediz Duman <neps1192@gmail.com>, 2018
+# Umur Akın <umura@projetgrup.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-17 09:57+0000\n"
-"PO-Revision-Date: 2018-09-17 09:57+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:23+0000\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +39,15 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"oe_view_nocontent_create\">\n"
+"                    Timesheet kaydetmek için tıklayın.\n"
+"                </p><p>\n"
+"                    Proje için çalışmalarınızı her gün kaydedebilir ve takip edebilirsiniz.\n"
+"                    Bir projeye harcanan her zaman bir maliyet haline gelir ve \n"
+"gerekirse müşterilere yeniden faturalandırılabilir.\n"
+"                </p>\n"
+"            "
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -57,43 +67,43 @@ msgstr "Analitik Satırı"
 #. module: sale_timesheet
 #: selection:account.analytic.line,timesheet_invoice_type:0
 msgid "Billable Fixed"
-msgstr ""
+msgstr "Sabit Faturalanabilir"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billable Hours"
-msgstr ""
+msgstr "Faturalanabilir Saatler"
 
 #. module: sale_timesheet
 #: selection:account.analytic.line,timesheet_invoice_type:0
 msgid "Billable Time"
-msgstr ""
+msgstr "Faturalanabilir Zaman"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line_timesheet_invoice_type
 msgid "Billable Type"
-msgstr ""
+msgstr "Faturalanabilir Tür"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Billable fixed"
-msgstr ""
+msgstr "Sabit faturalanabilir"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Billable time"
-msgstr ""
+msgstr "Faturalanabilir zaman"
 
 #. module: sale_timesheet
 #: model:ir.filters,name:sale_timesheet.timesheet_filter_billing
 msgid "Billing Rate"
-msgstr ""
+msgstr "Faturalama Oranı"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
 #: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_billing_analysis
 msgid "By Billing Rate"
-msgstr ""
+msgstr "Faturalama Oranı"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -149,7 +159,7 @@ msgstr "Sabit Fiyatlı Projeler"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.product_template_search_view_sale_timesheet
 msgid "Fixed price services"
-msgstr ""
+msgstr "Sabit fiyatlı hizmetler"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -166,7 +176,7 @@ msgstr "Fatura"
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_service_policy
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template_service_policy
 msgid "Invoice based on"
-msgstr ""
+msgstr "bağlı fatura"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line_timesheet_invoice_id
@@ -186,12 +196,12 @@ msgstr "Bir Hizmet "
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.product_template_search_view_sale_timesheet
 msgid "Milestone services"
-msgstr ""
+msgstr "Kilometre taşı hizmetler"
 
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
 msgid "Milestones (manually set quantities on order)"
-msgstr ""
+msgstr "Kilometre taşları (sipariş sırasına göre elle ayarlanan miktarlar)"
 
 #. module: sale_timesheet
 #: selection:account.analytic.line,timesheet_invoice_type:0
@@ -208,17 +218,17 @@ msgstr "Faturalanamayan"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Non Billable Hours"
-msgstr ""
+msgstr "Faturalanamayan Saatler"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Non billable"
-msgstr ""
+msgstr "Faturalanamayan"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_invoice_timesheet_count
 msgid "Number of timesheets"
-msgstr ""
+msgstr "Timesheet sayısı"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_service_tracking
@@ -268,7 +278,7 @@ msgstr "Proje"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_project_id
 msgid "Project associated to this sale"
-msgstr ""
+msgstr "Bu satışla ilişkilendirilmiş proje"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
@@ -285,7 +295,7 @@ msgstr "Projeler"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_project_ids
 msgid "Projects used in this sales order."
-msgstr ""
+msgstr "Bu satış siparişinde kullanılmış projeler"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
@@ -308,6 +318,7 @@ msgid ""
 "Sale order line from which the project has been created. Used for "
 "tracability."
 msgstr ""
+"Projeden oluşturulan satış sipariş satırı. İzlenebilirlik için kullanılır."
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
@@ -332,6 +343,8 @@ msgid ""
 "Sales Order item should generate a task and/or a project, depending on the "
 "product settings."
 msgstr ""
+"Satış siparişi öğesi, ürün ayarlarına bağlı olarak, bir görev ve/veya proje "
+"oluşturabilir. "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_project_id
@@ -340,6 +353,8 @@ msgid ""
 "Select a non billable project on which tasks can be created. This setting "
 "must be set for each company."
 msgstr ""
+"Görevlerin oluşturulabileceği faturalandırılamayan bir proje seçin. Bu ayar "
+"her şirket için ayarlanmalıdır."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_service_tracking
@@ -350,17 +365,17 @@ msgstr "Hizmet Takibi"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Setup your fixed price services"
-msgstr ""
+msgstr "Sabit fiyatlı hizmetleri ayarlayın"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Setup your milestone services"
-msgstr ""
+msgstr "Kilometre taşı hizmetlerinizi ayarlayın"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Setup your time-based services"
-msgstr ""
+msgstr "Zaman bazlı hizmetlerinizi ayarlayın"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task
@@ -380,7 +395,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line_task_id
 msgid "Task generated by the sales order item"
-msgstr ""
+msgstr "Görev satış siparişi öğesinden oluştu"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:109
@@ -414,12 +429,12 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Time by people"
-msgstr ""
+msgstr "Kişi zamanı"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.product_template_search_view_sale_timesheet
 msgid "Time-based services"
-msgstr ""
+msgstr "Zaman bazlı hizmetler"
 
 #. module: sale_timesheet
 #. openerp-web
@@ -463,7 +478,7 @@ msgstr "Zaman Çizelgeleri"
 #: code:addons/sale_timesheet/models/project.py:20
 #, python-format
 msgid "Timesheets of %s"
-msgstr ""
+msgstr " %s zaman çizelgesi"
 
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
@@ -482,6 +497,8 @@ msgid ""
 "You can not modify already invoiced timesheets (linked to a Sales order "
 "items invoiced on Time and material)."
 msgstr ""
+"Zaten faturalanmış timesheet üzerinde değişiklik yapamazsınız (Zaman ve mal "
+"üzerinden faturalandırılan bir satış siparişi kalemine bağlandı)"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:74
@@ -490,8 +507,10 @@ msgid ""
 "You cannot delete a task related to a Sales Order. You can only archive this"
 " task."
 msgstr ""
+"Bir Satış Siparişi ile ilişkili bir görevi silemezsiniz. Bu görevi ancak "
+"arşivleyebilirsiniz."
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_employee_extd_form
 msgid "per hour"
-msgstr ""
+msgstr "saat başına"

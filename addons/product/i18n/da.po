@@ -14,14 +14,15 @@
 # Ejner Sønniksen <ejner@vkdata.dk>, 2018
 # Martin Trigaux, 2018
 # Sanne Kristensen <sanne@vkdata.dk>, 2018
+# Joe Hansen <joedalton2@yahoo.dk>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"POT-Creation-Date: 2019-03-29 09:08+0000\n"
 "PO-Revision-Date: 2017-09-20 10:22+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2018\n"
+"Last-Translator: Joe Hansen <joedalton2@yahoo.dk>, 2019\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -434,7 +435,7 @@ msgstr "Stregkode"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_barcode
 msgid "Barcode used for packaging identification."
-msgstr ""
+msgstr "Stegkode brugt til identifikation af pakning."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_base
@@ -777,6 +778,12 @@ msgstr ""
 #: selection:product.pricelist.item,base:0
 msgid "Cost"
 msgstr "Kostpris"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_cost_currency_id
+#: model:ir.model.fields,field_description:product.field_product_template_cost_currency_id
+msgid "Cost Currency"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
@@ -2047,7 +2054,7 @@ msgstr "Produktnavn"
 #: model:ir.model.fields,field_description:product.field_res_config_settings_group_stock_packaging
 #: model:ir.ui.view,arch_db:product.product_packaging_tree_view
 msgid "Product Packages"
-msgstr ""
+msgstr "Produktindpakninger"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_packaging_form_view
@@ -2820,7 +2827,7 @@ msgstr "Dette er summen af ekstra pris på alle egenskaber"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is only for internal purposes."
-msgstr ""
+msgstr "Denne note er kun til interne formål."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -3201,6 +3208,7 @@ msgid ""
 "You must define at least one product category in order to be able to create "
 "products."
 msgstr ""
+"Du skal definere mindst en produktkategori for at kunne oprette produkter."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11

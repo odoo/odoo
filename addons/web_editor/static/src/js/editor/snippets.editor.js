@@ -84,6 +84,16 @@ var SnippetEditor = Widget.extend({
             });
         }
 
+        this.$target.on('transitionstart.snippet_editor, animationstart.snippet_editor', function () {
+            self._targetIsAnimated = true;
+        });
+        this.$target.on('transitionend.snippet_editor, animationend.snippet_editor', function () {
+            self._targetIsAnimated = false;
+            if (self.$el.is('.oe_active')) {
+                self.cover();
+            }
+        });
+
         return $.when.apply($, defs);
     },
     /**
@@ -92,6 +102,7 @@ var SnippetEditor = Widget.extend({
     destroy: function () {
         this._super.apply(this, arguments);
         this.$target.removeData('snippet-editor');
+        this.$target.off('.snippet_editor');
     },
 
     //--------------------------------------------------------------------------
@@ -123,6 +134,11 @@ var SnippetEditor = Widget.extend({
      * Makes the editor overlay cover the associated snippet.
      */
     cover: function () {
+        if (this._targetIsAnimated) {
+            // Do not cover a target being animated, it will be covered once the
+            // animation is completed.
+            return;
+        }
         var mt = parseInt(this.$target.css('margin-top') || 0);
         var offset = this.$target.offset();
         var manipulatorOffset = this.$el.parent().offset();
@@ -354,6 +370,7 @@ var SnippetEditor = Widget.extend({
      */
     _onDragAndDropStart: function () {
         var self = this;
+        this.dropped = false;
         self.size = {
             width: self.$target.width(),
             height: self.$target.height()
@@ -399,9 +416,20 @@ var SnippetEditor = Widget.extend({
      * 'move' button.
      *
      * @private
+     * @param {Event} ev
+     * @param {Object} ui
      */
-    _onDragAndDropStop: function () {
+    _onDragAndDropStop: function (ev, ui) {
         var self = this;
+
+        // TODO lot of this is duplicated code of the d&d feature of snippets
+        if (!this.dropped) {
+            var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone').first();
+            if ($el.length) {
+                $el.after(this.$target);
+                this.dropped = true;
+            }
+        }
 
         $('.oe_drop_zone').droppable('destroy').remove();
 
@@ -652,6 +680,10 @@ var SnippetsMenu = Widget.extend({
             class: 'oe_drop_zone oe_insert',
         });
 
+        function isFullWidth($elem) {
+            return $elem.parent().width() === $elem.outerWidth(true);
+        }
+
         if ($selectorChildren) {
             $selectorChildren.each(function () {
                 var $zone = $(this);
@@ -669,7 +701,10 @@ var SnippetsMenu = Widget.extend({
                         display: 'inline-block',
                     });
                 } else if (float === 'left' || float === 'right') {
-                    $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().last().outerHeight()), 30));
+                    $drop.css('float', float);
+                    if (!isFullWidth($zone)) {
+                        $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().last().outerHeight()), 30));
+                    }
                 }
 
                 $drop = $drop.clone();
@@ -684,7 +719,10 @@ var SnippetsMenu = Widget.extend({
                         display: 'inline-block'
                     });
                 } else if (float === 'left' || float === 'right') {
-                    $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().first().outerHeight()), 30));
+                    $drop.css('float', float);
+                    if (!isFullWidth($zone)) {
+                        $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().first().outerHeight()), 30));
+                    }
                 }
                 if (test) {
                     $drop.css({'float': 'none', 'display': 'inline-block'});
@@ -705,14 +743,20 @@ var SnippetsMenu = Widget.extend({
                 if ($zone.prev('.oe_drop_zone:visible').length === 0) {
                     $drop = zone_template.clone();
                     if (float === 'left' || float === 'right') {
-                        $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.prev().outerHeight() || Infinity), 30));
+                        $drop.css('float', float);
+                        if (!isFullWidth($zone)) {
+                            $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.prev().outerHeight() || Infinity), 30));
+                        }
                     }
                     $zone.before($drop);
                 }
                 if ($zone.next('.oe_drop_zone:visible').length === 0) {
                     $drop = zone_template.clone();
                     if (float === 'left' || float === 'right') {
-                        $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.next().outerHeight() || Infinity), 30));
+                        $drop.css('float', float);
+                        if (!isFullWidth($zone)) {
+                            $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.next().outerHeight() || Infinity), 30));
+                        }
                     }
                     $zone.after($drop);
                 }

@@ -26,7 +26,6 @@
 # Collex100, 2017
 # Evgeny <transingularity@gmail.com>, 2017
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
-# Martin Trigaux, 2017
 # Артур Чеботарь <artcha.chebotar@gmail.com>, 2017
 # Артём Инжиянц <artem.inzhyyants@gmail.com>, 2017
 # Aidos Kakimzhanov <aidos.kakimzhan@gmail.com>, 2017
@@ -40,14 +39,16 @@
 # Yaroslav Panychev <walkmanyd@yandex.ru>, 2018
 # Дмитрий Ефременко <shiza867@gmail.com>, 2019
 # Sergo S, 2019
+# Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Sergo S, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -343,6 +344,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Значения относятся к "
+"конкретной компании.\" groups=\"base.group_multi_company\"/>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1406,7 +1409,7 @@ msgstr "Шаблон налогового счета"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_taxcloud
 msgid "Account TaxCloud"
-msgstr ""
+msgstr "Учет TaxCloud"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
@@ -1711,7 +1714,7 @@ msgstr "Корректировка налога"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
 msgid "Adjustment Type"
-msgstr ""
+msgstr "Тип регулировки"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -2432,7 +2435,7 @@ msgstr "Банковская выписка"
 #: code:addons/account/models/account_bank_statement.py:937
 #, python-format
 msgid "Bank Statement %s"
-msgstr ""
+msgstr "Банковская выписка %s"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -3820,6 +3823,9 @@ msgid ""
 "Currency field should only be set if the journal's currency is different "
 "from the company's. Leave the field blank to use company currency."
 msgstr ""
+"Поле валюты должно быть установлено только в том случае, если валюта журнала"
+" отличается от валюты компании. Оставьте поле пустым, чтобы использовать "
+"валюту компании."
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
@@ -4468,7 +4474,12 @@ msgid "Due date"
 msgstr "Дата исполнения"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1176
+#: model:ir.ui.view,arch_db:account.view_move_form
+msgid "Duplicate"
+msgstr "Дублировать"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1194
 #, python-format
 msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
@@ -11507,6 +11518,8 @@ msgid ""
 "You cannot change the currency of the company since some journal items "
 "already exist"
 msgstr ""
+"Вы не можете изменить валюту компании, так как некоторые записи журнала уже "
+"существуют"
 
 #. module: account
 #: code:addons/account/models/account.py:235
@@ -11716,7 +11729,7 @@ msgstr "Вы имеете"
 #: code:addons/account/models/account_payment.py:505
 #, python-format
 msgid "You have to define a sequence for %s in your company."
-msgstr ""
+msgstr "Вы должны определить последовательность для %s в вашей компании."
 
 #. module: account
 #: code:addons/account/wizard/account_report_general_ledger.py:21

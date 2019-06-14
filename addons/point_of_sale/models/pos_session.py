@@ -274,6 +274,7 @@ class PosSession(models.Model):
         for session in self:
             company_id = session.config_id.company_id.id
             ctx = dict(self.env.context, force_company=company_id, company_id=company_id)
+            ctx_notrack = dict(ctx, mail_notrack=True)
             for st in session.statement_ids:
                 if abs(st.difference) > st.journal_id.amount_authorized_diff:
                     # The pos manager can close statements with maximums.
@@ -281,7 +282,7 @@ class PosSession(models.Model):
                         raise UserError(_("Your ending balance is too different from the theoretical cash closing (%.2f), the maximum allowed is: %.2f. You can contact your manager to force it.") % (st.difference, st.journal_id.amount_authorized_diff))
                 if (st.journal_id.type not in ['bank', 'cash']):
                     raise UserError(_("The type of the journal for your payment method should be bank or cash "))
-                st.with_context(ctx).sudo().button_confirm_bank()
+                st.with_context(ctx_notrack).sudo().button_confirm_bank()
         self.with_context(ctx)._confirm_orders()
         self.write({'state': 'closed'})
         return {

@@ -3,18 +3,19 @@
 # * project
 # 
 # Translators:
-# Martin Trigaux, 2017
 # matjaz k <matjaz@mentis.si>, 2018
 # laznikd <laznik@mentis.si>, 2018
-# Matjaž Mozetič <m.mozetic@matmoz.si>, 2018
+# Martin Trigaux, 2018
 # Vida Potočnik <vida.potocnik@mentis.si>, 2018
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Vida Potočnik <vida.potocnik@mentis.si>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:22+0000\n"
+"Last-Translator: Matjaz Mozetic <m.mozetic@matmoz.si>, 2019\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -157,12 +158,12 @@ msgstr "# opravil"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_working_days_open
 msgid "# Working Days to Assign"
-msgstr ""
+msgstr "# delovnih dni do dodelitve"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_working_days_close
 msgid "# Working Days to Close"
-msgstr ""
+msgstr "# delovnih dni do zaključka"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
@@ -193,7 +194,7 @@ msgstr "- Ekipa Odoo"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "1. Learn about Tasks and Timesheets."
-msgstr ""
+msgstr "1. Spoznajte opravila in časovnice."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -227,6 +228,8 @@ msgstr "<b>Za uveljavitev sprememb</b> na opravilu, pritisnite gumb shrani."
 #, python-format
 msgid "<b>Drag &amp; drop tasks</b> between columns as you work on them."
 msgstr ""
+"<b>Povlecite &amp; in spustite opravila</b> med stolpci, medtem ko na njih "
+"delate."
 
 #. module: project
 #. openerp-web
@@ -235,13 +238,15 @@ msgstr ""
 msgid ""
 "<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
 msgstr ""
+"<b>Povabite sodelavce</b> preko e-pošte.<br/><i>Vnesite po en e-poštni "
+"naslov na vrstico.</i>"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:54
 #, python-format
 msgid "<b>Star tasks</b> to mark team priorities."
-msgstr ""
+msgstr "<b>Označite opravila z zvezdicami</b>, da jim določite prioritete."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -268,7 +273,7 @@ msgstr ""
 #: code:addons/project/models/project.py:144
 #, python-format
 msgid "<p class=\"oe_view_nocontent_create\">Click to create a new project.</p>"
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">Ustvari nov projekt.</p>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -411,6 +416,11 @@ msgid ""
 "                                            <span class=\"small\">Delay to close an Task</span>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-thumb-tack\"/>\n"
+"                                            <strong> Vaja 2</strong><br/>\n"
+"                                            <span class=\"small\">Čas do zaključka opravila</span>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -539,7 +549,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>About Employees:</strong>"
-msgstr ""
+msgstr "<strong>O kadrih:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -547,6 +557,8 @@ msgid ""
 "<strong>Add a Deadline</strong><br/>\n"
 "                                    The deadline will help you determine if a task is progressing as expected  and to anticipate its next update."
 msgstr ""
+"<strong>Dodaj rok izvedbe</strong><br/>\n"
+"                                    Rok izvedbe pomaga ugotoviti, če opravilo poteka po pričakovanjih."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -554,6 +566,8 @@ msgid ""
 "<strong>An internal activity</strong> that should be done within a defined "
 "period of time."
 msgstr ""
+"<strong>Interna aktivnost</strong>, ki mora biti opravljena v sklopu "
+"določenega časovnega obdobja."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -570,7 +584,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Assigned to</strong>"
-msgstr ""
+msgstr "<strong>Zadolžen</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -582,7 +596,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Billing</strong>"
-msgstr ""
+msgstr "<strong>Obračun</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -613,7 +627,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_project
 msgid "<strong>Customer</strong>"
-msgstr ""
+msgstr "<strong>Kupec</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
@@ -623,7 +637,7 @@ msgstr "<strong>Datum:</strong>"
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Deadline:</strong>"
-msgstr ""
+msgstr "<strong>Rok:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -640,7 +654,7 @@ msgstr "<strong>Opis</strong>"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Enter your activities</strong> (every day)"
-msgstr ""
+msgstr "<strong>Vnesi svoje aktivnosti</strong> (vsak dan)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -678,7 +692,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>For tasks:</strong>"
-msgstr ""
+msgstr "<strong>Za opravila:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -722,7 +736,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Invoice your customers</strong> (every month)"
-msgstr ""
+msgstr "<strong>Obračun kupcem</strong> (vsak mesec)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -734,7 +748,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.portal_my_project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Message and communication history</strong>"
-msgstr ""
+msgstr "<strong>Komunikacije in kronologija</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -768,12 +782,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_project
 msgid "<strong>Project Manager</strong>"
-msgstr ""
+msgstr "<strong>Vodja projekta</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Project:</strong>"
-msgstr ""
+msgstr "<strong>Projekt:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -790,7 +804,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Reported by</strong>"
-msgstr ""
+msgstr "<strong>Prijavitelj</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -941,7 +955,7 @@ msgstr "Aktivnosti"
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
 #: model:ir.ui.menu,name:project.project_menu_config_activity_type
 msgid "Activity Types"
-msgstr ""
+msgstr "Tipi aktivnosti"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -1060,7 +1074,7 @@ msgstr "Arhivirano"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign to Me"
-msgstr ""
+msgstr "Dodeli meni"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
@@ -1075,7 +1089,7 @@ msgstr "Mesec dodelitve"
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
 msgid "Assigned Tasks"
-msgstr "Dodeljene naloge"
+msgstr "Dodeljena opravila"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_user_id
@@ -1267,6 +1281,9 @@ msgid ""
 "Choosing a sub-tasks project will both enable sub-tasks and set their "
 "default project (possibly the project itself)"
 msgstr ""
+"Izbira projekta za podopravila omogoči tako nastavitev privzetega projekta "
+"za podopravila (lahko je kar projekt izvornega opravila) kakor podopravila "
+"sama."
 
 #. module: project
 #. openerp-web
@@ -1295,22 +1312,22 @@ msgstr ""
 #: code:addons/project/static/src/js/tour.js:64
 #, python-format
 msgid "Click on this button to modify the task."
-msgstr ""
+msgstr "Uredi opravilo"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.project_tags_action
 msgid "Click to add a new tag."
-msgstr ""
+msgstr "Dodaj novo oznako"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
 msgid "Click to add a stage in the task pipeline."
-msgstr ""
+msgstr "Dodaj novo stopnjo v opravilni tok."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "Click to create a new project.<br>"
-msgstr ""
+msgstr "Ustvari nov projekt.<br>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_color
@@ -1403,7 +1420,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
 msgid "Cover Image"
-msgstr ""
+msgstr "Naslovna slika"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -1413,7 +1430,7 @@ msgstr "Ustvari"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create & Edit"
-msgstr ""
+msgstr "Ustvari in urejaj"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_create_date
@@ -1438,7 +1455,7 @@ msgstr "Ustvari nov projekt"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_create_new_task
 msgid "Create a new task"
-msgstr ""
+msgstr "Ustvari novo opravilo"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1519,12 +1536,12 @@ msgstr "Trenutna stopnja opravila"
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "Current stage of this task"
-msgstr ""
+msgstr "Trenutna stopnja tega opravila"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.project_task_action_activity
 msgid "Currently there are not any activity scheduled."
-msgstr ""
+msgstr "Trenutno ni razporejene nobene aktivnosti."
 
 #. module: project
 #: code:addons/project/models/project.py:836
@@ -1552,7 +1569,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:74
 #, python-format
 msgid "Customer feedback has been requested"
-msgstr ""
+msgstr "Od kupca so bile zahtevane povratne informacije"
 
 #. module: project
 #. openerp-web
@@ -1604,7 +1621,7 @@ msgstr "Rok"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_debit
 msgid "Debit"
-msgstr "Debit"
+msgstr "Breme"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_defaults
@@ -1798,7 +1815,7 @@ msgstr "Končni datum"
 #: code:addons/project/models/project.py:556
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of task(s)."
-msgstr ""
+msgstr "Napaka! Rekurzivna hierarhija opravil ni dovoljena."
 
 #. module: project
 #: sql_constraint:project.project:0
@@ -1810,7 +1827,9 @@ msgstr "Datum pričetka mora biti pred datumom zaključka."
 msgid ""
 "Estimated time to do the task, usually set by the project manager when the "
 "task is in draft state."
-msgstr "Predvideni čas"
+msgstr ""
+"Predvideni čas za dokončanje opravila, običajno ga nastavi upravitelj "
+"projekta ko je opravilo še osnutek."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1870,7 +1889,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:89
 #, python-format
 msgid "Feedback from customer requested"
-msgstr ""
+msgstr "Od kupca so bile zahtevane povratne informacije"
 
 #. module: project
 #. openerp-web
@@ -1894,7 +1913,7 @@ msgstr "Sledite projektu"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Followed by Me"
-msgstr ""
+msgstr "Sem sledilec"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1930,7 +1949,7 @@ msgstr "Napovedi"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
-msgstr ""
+msgstr "Bodoče aktivnosti"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
@@ -1960,7 +1979,7 @@ msgstr "Pridobi več aplikacij"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_label_tasks
 msgid "Gives label to tasks on project's kanban view."
-msgstr ""
+msgstr "Oznaka opravila na kanban prikazu"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_sequence
@@ -1970,7 +1989,7 @@ msgstr "Zaporedje prikaza projektov"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_sequence
 msgid "Gives the sequence order when displaying a list of tasks."
-msgstr "Zaporedje prikaza nalog"
+msgstr "Zaporedje prikaza opravil"
 
 #. module: project
 #. openerp-web
@@ -1995,7 +2014,7 @@ msgstr "Zelena"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_done
 msgid "Green Kanban Label"
-msgstr ""
+msgstr "Zelena kanban oznaka"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2395,7 +2414,7 @@ msgstr "Zadnjič posodobljeno"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
-msgstr ""
+msgstr "Aktivnosti z zamudo"
 
 #. module: project
 #: model:web.planner,tooltip_planner:project.planner_project
@@ -2429,7 +2448,7 @@ msgstr "Povežite ta projekt z analitičnim kontom."
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "List, plan and track things to do"
-msgstr ""
+msgstr "Naštej, načrtuj in spremljaj seznam opravkov"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -2440,7 +2459,7 @@ msgstr "Nizko"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_attachment_ids
 msgid "Main Attachments"
-msgstr ""
+msgstr "Glavne priponke"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2489,17 +2508,17 @@ msgstr "Člani"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_actions_act_window_merge_tasks
 msgid "Merge Selected Tasks"
-msgstr ""
+msgstr "Spoji izbrana opravila"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_task_merge_wizard_form
 msgid "Merge Tasks"
-msgstr ""
+msgstr "Spoji opravila"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_task_id
 msgid "Merge into an existing task"
-msgstr ""
+msgstr "Spoji v obstoječe opravilo"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2509,7 +2528,7 @@ msgstr "Učinkovitejše komunikacije med zaposlenimi"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Activities"
-msgstr ""
+msgstr "Moje aktivnosti"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2519,17 +2538,17 @@ msgstr "Moje priljubljene"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Followed Tasks"
-msgstr ""
+msgstr "Opravila, ki jim sledim"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_activity
 msgid "My Next Activities"
-msgstr ""
+msgstr "Moje naslednje aktivnosti"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Tasks"
-msgstr "Moje naloge"
+msgstr "Moja opravila"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:35
@@ -2543,7 +2562,7 @@ msgstr "Naziv"
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks :"
-msgstr ""
+msgstr "Imenovanje opravil :"
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_10
@@ -2582,7 +2601,7 @@ msgstr "Dodano novo popravilo"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_task_name
 msgid "New task name"
-msgstr ""
+msgstr "Nov naziv opravila"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:34
@@ -2595,7 +2614,7 @@ msgstr "Najnovejše"
 #: model:ir.ui.menu,name:project.project_task_menu_activity
 #: model:ir.ui.view,arch_db:project.project_task_view_tree_activity
 msgid "Next Activities"
-msgstr "Naslednja dejanja"
+msgstr "Naslednje aktivnosti"
 
 #. module: project
 #: code:addons/project/models/project.py:792
@@ -2646,12 +2665,12 @@ msgstr "Zdaj, ko je projekt nastavljen, <b>ustvarite nekaj opravil</b>."
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_working_days_open
 msgid "Number of Working Days to Open the task"
-msgstr ""
+msgstr "Število delovnih dni do odprtja opravila"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_working_days_close
 msgid "Number of Working Days to close the task"
-msgstr ""
+msgstr "Število delovnih dni do zaključka opravila"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_doc_count
@@ -2723,7 +2742,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
 msgid "Overpassed Tasks"
-msgstr "Naloge s prekoračenim rokom"
+msgstr "Opravila s prekoračenim rokom"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_legend_blocked
@@ -2776,7 +2795,7 @@ msgstr "ID nadrejene niti zapisov"
 #: model:ir.ui.view,arch_db:project.view_task_form2
 #, python-format
 msgid "Parent Task"
-msgstr ""
+msgstr "Nadrejeno opravilo"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_parent_model_id
@@ -2856,7 +2875,7 @@ msgstr "Projekt"
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_project
 msgid "Project -"
-msgstr ""
+msgstr "Projekt -"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_project_count
@@ -2909,17 +2928,17 @@ msgstr "Projektna enota časa"
 #. module: project
 #: model:res.request.link,name:project.req_link_task
 msgid "Project task"
-msgstr "Projektna naloga"
+msgstr "Projektno opravilo"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
-msgstr "Naloge na projektu"
+msgstr "Projektna opravila"
 
 #. module: project
 #: model:ir.actions.server,name:project.ir_actions_server_project_sample
 msgid "Project: Activate Sample Project"
-msgstr ""
+msgstr "Projekt: aktiviraj vzorčni projekt"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -2945,7 +2964,7 @@ msgstr "Projekti in opravila"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings_module_rating_project
 msgid "Rating on Tasks"
-msgstr ""
+msgstr "Ocenjevanje opravil"
 
 #. module: project
 #: code:addons/project/models/project.py:32
@@ -2980,7 +2999,7 @@ msgstr ""
 #: model:project.task.type,legend_done:project.project_stage_data_2
 #, python-format
 msgid "Ready for Next Stage"
-msgstr ""
+msgstr "Pripravljeno za naslednjo stopnjo"
 
 #. module: project
 #. openerp-web
@@ -3043,7 +3062,7 @@ msgstr "ID niti zapisov"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Record's Colour"
-msgstr ""
+msgstr "Barva zapisa"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -3053,7 +3072,7 @@ msgstr "Rdeča"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_blocked
 msgid "Red Kanban Label"
-msgstr ""
+msgstr "Rdeča kanban oznaka"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3150,36 +3169,36 @@ msgstr "Iskanje"
 #: code:addons/project/controllers/portal.py:95
 #, python-format
 msgid "Search <span class=\"nolabel\"> (in Content)</span>"
-msgstr ""
+msgstr "Iskanje <span class=\"nolabel\"> (po vsebini)</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Search Project"
-msgstr "Iskanje"
+msgstr "Iskanje projekta"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:99
 #, python-format
 msgid "Search in All"
-msgstr ""
+msgstr "Iskanje po vseh"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:97
 #, python-format
 msgid "Search in Customer"
-msgstr ""
+msgstr "Iskanje po kupcu"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:96
 #, python-format
 msgid "Search in Messages"
-msgstr ""
+msgstr "Iskanje po sporočilih"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:98
 #, python-format
 msgid "Search in Stages"
-msgstr ""
+msgstr "Iskanje po stopnjah"
 
 #. module: project
 #. openerp-web
@@ -3210,19 +3229,19 @@ msgstr "Zaporedje"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Service Level Agreement (SLA)"
-msgstr ""
+msgstr "Dogovor o ravni storitve (SLA)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
-msgstr ""
+msgstr "Nastavi naslovno sliko"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project.js:61
 #, python-format
 msgid "Set a Cover Image"
-msgstr ""
+msgstr "Nastavi naslovno sliko"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -3245,12 +3264,13 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_is_favorite
 msgid "Show Project on dashboard"
-msgstr ""
+msgstr "Prikaz projekta na preglednici"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
 msgstr ""
+"Prikaži vse zapise z datumom naslednje aktivnosti pred današnjim datumom."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3288,7 +3308,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Split your tasks to organize your work into sub-milestones"
-msgstr ""
+msgstr "Razdelite svoja opravila na podrejene mejnike."
 
 #. module: project
 #. openerp-web
@@ -3337,7 +3357,7 @@ msgstr "Stopnje"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Starred"
-msgstr "Začeto"
+msgstr "Označeno"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
@@ -3352,7 +3372,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_date_start
 msgid "Start Date"
-msgstr "Začetni daum"
+msgstr "Začetni datum"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_start
@@ -3363,12 +3383,12 @@ msgstr "Začetni datum"
 #: model:ir.model.fields,field_description:project.field_project_project_subtask_project_id
 #: model:ir.model.fields,field_description:project.field_project_task_subtask_project_id
 msgid "Sub-task Project"
-msgstr ""
+msgstr "Projekt za podrejena opravila"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_subtask_count
 msgid "Sub-task count"
-msgstr ""
+msgstr "Števec podopravil"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_sub_task
@@ -3376,7 +3396,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_res_config_settings_group_subtask_project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Sub-tasks"
-msgstr ""
+msgstr "Podopravila"
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3395,12 +3415,12 @@ msgstr "Ključne besede"
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Tags of project's tasks"
-msgstr ""
+msgstr "Oznake projektnih opravil"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_project_id
 msgid "Target Project"
-msgstr ""
+msgstr "Ciljni projekt"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
@@ -3408,34 +3428,34 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Task"
-msgstr "Naloga"
+msgstr "Opravilo"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "Task -"
-msgstr "Opravilo -"
+msgstr "Opravilo"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_tasks
 msgid "Task Activities"
-msgstr "Aktivnosti na nalogi"
+msgstr "Aktivnosti na opravilu"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
 #: model:mail.message.subtype,name:project.mt_task_blocked
 msgid "Task Blocked"
-msgstr "Naloga blokirana"
+msgstr "Opravilo blokirano"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Task Management"
-msgstr ""
+msgstr "Upravljanje opravil"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Opened"
-msgstr ""
+msgstr "Opravilo odprto"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
@@ -3446,7 +3466,7 @@ msgstr "Tok opravil"
 #: model:mail.message.subtype,name:project.mt_project_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready"
-msgstr ""
+msgstr "Opravilo pripravljeno"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -3464,48 +3484,48 @@ msgstr "Stopnja opravila spremenjena"
 #: model:ir.model.fields,field_description:project.field_project_task_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_name
 msgid "Task Title"
-msgstr ""
+msgstr "Naziv opravila"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task Title..."
-msgstr ""
+msgstr "Naziv opravila..."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked
 msgid "Task blocked"
-msgstr "Naloga blokirana"
+msgstr "Opravilo blokirano"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:25
 #, python-format
 msgid "Task is Developed"
-msgstr ""
+msgstr "Opravilo v razvoju"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Task is completed"
-msgstr ""
+msgstr "Opravilo dokončano"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:26
 #, python-format
 msgid "Task is tested"
-msgstr ""
+msgstr "Opravilo v testiranju"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
 msgid "Task opened"
-msgstr ""
+msgstr "Opravilo odprto"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
 msgid "Task ready for Next Stage"
-msgstr ""
+msgstr "Opravilo pripravljeno za naslednjo stopnjo"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
@@ -3529,7 +3549,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 #: model:ir.ui.view,arch_db:project.view_task_tree2
 msgid "Tasks"
-msgstr "Naloga"
+msgstr "Opravila"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
@@ -3539,18 +3559,18 @@ msgstr "Naloga"
 #: model:ir.ui.view,arch_db:project.view_task_project_user_pivot
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Tasks Analysis"
-msgstr "Analiza nalog"
+msgstr "Analiza opravil"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_type_ids
 #: model:ir.ui.view,arch_db:project.task_type_search
 msgid "Tasks Stages"
-msgstr "Stopnje nalog"
+msgstr "Stopnje opravil"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Tasks analysis"
-msgstr ""
+msgstr "Analiza opravil"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3560,12 +3580,12 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_report_project_task_user
 msgid "Tasks by user and project"
-msgstr "Naloge po uporabnikih in projektih"
+msgstr "Opravila po uporabnikih in projektih"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_task_ids
 msgid "Tasks to Merge"
-msgstr ""
+msgstr "Opravila za združitev"
 
 #. module: project
 #. openerp-web
@@ -3650,7 +3670,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_projects
 msgid "There are no projects."
-msgstr ""
+msgstr "Ni projektov."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_tasks
@@ -3665,6 +3685,8 @@ msgid ""
 "There is no available image to be set as cover. Send a message on the task "
 "with an attached image."
 msgstr ""
+"Slike za naslovnico ni na voljo. Na opravilo pošljite sporočilo s sliko v "
+"priponki."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_email_cc
@@ -3744,17 +3766,17 @@ msgstr ""
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
 msgid "Time Estimation on Tasks"
-msgstr "Planiranje časa na nalogah"
+msgstr "Planiranje časa na opravilih"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Time Management"
-msgstr ""
+msgstr "Upravljanje časa"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Time Scheduling"
-msgstr ""
+msgstr "Razporejanje časa"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings_module_hr_timesheet
@@ -3791,7 +3813,7 @@ msgstr "Naziv"
 #: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
-msgstr "Za narediti"
+msgstr "Opravki"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3808,7 +3830,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"
-msgstr ""
+msgstr "Današnje aktivnosti"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_remaining_hours
@@ -3820,12 +3842,12 @@ msgstr "Skupni preostali čas."
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track customer satisfaction on tasks"
-msgstr ""
+msgstr "Sledite zadovoljstvu kupcev na opravilih"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track time spent on projects and tasks"
-msgstr ""
+msgstr "Sledite porabi časa na opravilih in projektih"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3842,12 +3864,12 @@ msgstr "Neprebrana sporočila"
 #. module: project
 #: model:res.groups,name:project.group_subtask_project
 msgid "Use Subtask Project"
-msgstr ""
+msgstr "Uporabi projekt za podopravila"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_label_tasks
 msgid "Use Tasks as"
-msgstr ""
+msgstr "Uporabi opravila kot"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3857,7 +3879,7 @@ msgstr "Uporaba časovnic"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Use collaborative rich text pads on tasks"
-msgstr ""
+msgstr "Uporaba Etherpad beležk na opravilih"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3916,12 +3938,12 @@ msgstr "Potrjevanje"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "View statistics (time spent, efficiency, etc.)"
-msgstr ""
+msgstr "Prikaz statistike (porabljeni čas, učinkovitost, ipd.)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "View statistics for the week"
-msgstr ""
+msgstr "Prikaz tedenske statistike"
 
 #. module: project
 #: code:addons/project/models/project.py:201
@@ -3935,7 +3957,7 @@ msgstr "Vidno za vse zaposlene"
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by following customers"
-msgstr ""
+msgstr "Vidno za naslednje kupce"
 
 #. module: project
 #. openerp-web
@@ -4063,32 +4085,32 @@ msgstr "Delovni čas"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr ""
+msgstr "Delovni čas za dodelitev"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Close"
-msgstr ""
+msgstr "Delovni čas do zaključka"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_days_open
 msgid "Working days to assign"
-msgstr ""
+msgstr "Delovnih dni do dodelitve"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_days_close
 msgid "Working days to close"
-msgstr ""
+msgstr "Delovnih dni do zaključka"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_hours_open
 msgid "Working hours to assign"
-msgstr ""
+msgstr "Delovnih ur do dodelitve"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_hours_close
 msgid "Working hours to close"
-msgstr ""
+msgstr "Delovnih ur do zaključka"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
@@ -4098,7 +4120,7 @@ msgstr "Obremenitev"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_write_date
 msgid "Write Date"
-msgstr ""
+msgstr "Datum zapisa"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -4163,17 +4185,18 @@ msgid ""
 "project's tasks and then delete the project or simply deactivate the "
 "project."
 msgstr ""
-"Ni možno brisati projekta , ki ima naloge.Lahko pa ga de - aktivirate."
+"Ni možno brisati projekta, ki vsebuje opravila. Lahko izbrišete projektna "
+"opravila in zatem izbrišete projekt, ali pa ga enostavno deaktivirate."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Activities"
-msgstr ""
+msgstr "Vaše aktivnosti"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Objectives"
-msgstr ""
+msgstr "Vaši cilji"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_module_install_project
@@ -4198,7 +4221,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "and activate 'Log work activities on tasks'"
-msgstr ""
+msgstr "in aktivirajte 'Beleženje delovnih aktivnosti na opravilih'"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -4228,7 +4251,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
 msgid "res.config.settings"
-msgstr ""
+msgstr "res.config.settings"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner

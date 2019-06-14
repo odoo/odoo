@@ -5,7 +5,6 @@
 # Translators:
 # jonas <jonas.hillebrecht@bklynsoap.com>, 2017
 # Alexander Klockhaus <a.klockhaus@gmail.com>, 2017
-# Christian Körner <fipes.de@gmail.com>, 2017
 # Kontor Consulting <p.becker@kontor.consulting>, 2017
 # Maik Steinfeld <info@streward.de>, 2017
 # Falk Scholze, 2017
@@ -14,17 +13,16 @@
 # Patrick Belser <patrick.belser@camptocamp.com>, 2017
 # Sören Prilop <mail@soeren-prilop.de>, 2017
 # Henry Mineehen <info@mineehen.de>, 2017
-# Markus Mattes <mmattes87@gmail.com>, 2017
 # Niki Waibel, 2017
+# Markus Mattes <mmattes87@gmail.com>, 2017
 # aNj <anj2j@yahoo.de>, 2017
-# Christopher Westburry <cricsus99@gmail.com>, 2017
+# christopher westburry <cricsus99@gmail.com>, 2017
 # Winfried Grieb <inactive+wigrieb@transifex.com>, 2017
 # key six <mobile.umts@gmail.com>, 2017
 # brokemeister <work@maltejansen.de>, 2017
 # Anja Funk <anja.funk@afimage.de>, 2017
 # Renzo Meister, 2017
 # Bülent Tiknas <btiknas@googlemail.com>, 2017
-# Felix Schubert <felix.schubert@go-erp.com>, 2017
 # Philipp Hug <philipp@hug.cx>, 2017
 # Mathias Neef <mn@copado.de>, 2017
 # David Lehov <KHottend@gmx.de>, 2017
@@ -32,31 +30,32 @@
 # Gab_Odoo <gab@odoo.com>, 2017
 # Ralf Hilgenstock <rh@dialoge.info>, 2017
 # Tina Rittmüller <tr@ife.de>, 2017
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
 # JackTheHunter <Maximilian.N98@gmail.com>, 2017
-# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2017
+# Constantin Ehrenstein <transifex@skiller.eu>, 2017
 # Andi, 2017
-# Stefan Hartenfels <stefan.hartenfels@camptocamp.com>, 2017
+# ba566f9f7abd166f8f1f032649ec3e69, 2017
 # Mark Lorenz <bandworm@gmail.com>, 2017
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2017
 # Pascal Künzli <p.kuenzli@pk-its.com>, 2017
 # Christoph Giesel <mail@cgiesel.de>, 2018
-# Ermin Trevisan <trevi@twanda.com>, 2018
-# Katharina Moritz <kmo@e2f.com>, 2018
 # e2f <projects@e2f.com>, 2018
-# Constantin Ehrenstein <transifex@skiller.eu>, 2018
-# Wolfgang Taferner, 2018
-# Martin Trigaux, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
 # Rudolf Schnapka <rs@techno-flex.de>, 2018
 # Jan Meyer, 2018
+# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2018
+# Ermin Trevisan <trevi@twanda.com>, 2018
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2019
+# Felix Schubert <felix.schubert@go-erp.com>, 2019
+# Martin Trigaux, 2019
+# Wolfgang Taferner, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Jan Meyer, 2018\n"
+"Last-Translator: Wolfgang Taferner, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -471,6 +470,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1364,12 +1365,12 @@ msgstr "Konto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
 msgid "Account Accountant"
-msgstr "Konto-Sachbearbeiter"
+msgstr "Finanzbuchhalter"
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
-msgstr "Auswertung Alter der Forderungen"
+msgstr "Auswertung der Forderungen nach Fälligkeit"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1683,8 +1684,8 @@ msgid ""
 "Account that will be set on invoice tax lines for refunds. Leave empty to "
 "use the expense account."
 msgstr ""
-"Dieses Konto wird für die Mehrwertsteuer bei Rückerstattungen gebucht. "
-"Lassen Sie das Feld leer, um das Aufwandskonto zu nutzen."
+"Dieses Konto wird für die Mehrwertsteuer bei Gutschriften gebucht. Lassen "
+"Sie dies Feld einfach leer, wird anstatt dessen das Aufwandskonto gebucht."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_dest_id
@@ -2003,10 +2004,10 @@ msgid ""
 "and will be created in 'Posted' status."
 msgstr ""
 "Alle manuell erstellten Buchungssätze sind üblicherweise zunächst im Status "
-"'Noch nicht gebucht'. Diesen Zwischenschritt können Sie durch eine  "
-"Einstellung im Journal auch überspringen. In diesem Fall wird eine Buchung "
-"ebenso direkt erstellt, wie bei einer Buchung, die automatisch durch "
-"Rechnungen, Gutschriften, Bankauszüge durch OpenERP direkt erstellt wurde."
+"'Nicht gebucht'. Diesen Zwischenschritt können Sie durch eine Einstellung im"
+" zugehörigen Journal auch überspringen. In diesem Fall wird eine Buchung "
+"automatisch durch die Bestätigung von Rechnungen, Gutschriften, Bankauszügen"
+" direkt erstellt und verbucht."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.validate_account_move_view
@@ -2252,7 +2253,7 @@ msgstr "Kostenstellenbuchungen"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analytischer Buchungssatz"
+msgstr "Kostenstellen-Buchungen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -2314,7 +2315,7 @@ msgstr "Steuerzuordnung generell anwenden"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_country_group_id
 msgid "Apply only if delivery or invocing country match the group."
-msgstr "Nur anwenden, wenn Gruppe in Rechnung oder Lieferung zutrifft."
+msgstr "Nur anwenden, wenn Rechnungs- oder Lieferland zutrifft."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template_country_group_id
@@ -2327,7 +2328,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_fiscal_position_country_id
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template_country_id
 msgid "Apply only if delivery or invoicing country match."
-msgstr "Nur anwenden, wenn Land in Rechnung oder Lieferung zutrifft."
+msgstr "Nur anwenden, wenn Rechnungs- oder Lieferland zutrifft."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template_vat_required
@@ -2360,7 +2361,7 @@ msgstr "Nach Gutschrift fragen"
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
 msgid "Assets"
-msgstr "Vermögenswerte"
+msgstr "Aktiva"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_asset
@@ -2530,9 +2531,9 @@ msgid ""
 "account if this is a Customer Invoice or Vendor Credit Note, otherwise a "
 "Partner bank account number."
 msgstr ""
-"Bankkontonummer, auf die die Rechnung bezahlt wird. Ein Firmenbankkonto, "
-"wenn es sich um eine Kundenrechnung oder eine Lieferantengutschrift handelt,"
-" ansonsten eine Partnerbankkontonummer."
+"Bankkontonummer, auf die die Rechnung überwiesen wird. Es ist ein "
+"Firmenkonto, wenn es sich um eine Kundenrechnung oder eine "
+"Lieferantengutschrift handelt, ansonsten die Kontonummer eines Kontakts."
 
 #. module: account
 #. openerp-web
@@ -4003,6 +4004,9 @@ msgid ""
 "Currency field should only be set if the journal's currency is different "
 "from the company's. Leave the field blank to use company currency."
 msgstr ""
+"Das Währungsfeld sollte nur belegt werden, wenn sich die Währung des "
+"Journals von der des Unternehmens unterscheidet. Lassen sie das Feld frei, "
+"um die Unternehmenswährung zu verwenden."
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
@@ -4657,7 +4661,12 @@ msgid "Due date"
 msgstr "Fälligkeitsdatum"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1176
+#: model:ir.ui.view,arch_db:account.view_move_form
+msgid "Duplicate"
+msgstr "Duplizieren"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1194
 #, python-format
 msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
@@ -9477,7 +9486,7 @@ msgstr "Kasse starten"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "State"
-msgstr "Bundesland"
+msgstr "Status"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_parent_state
@@ -11579,7 +11588,7 @@ msgstr "Zahlungsbedingungen des Lieferanten"
 #: model:ir.model.fields,field_description:account.field_res_partner_property_supplier_payment_term_id
 #: model:ir.model.fields,field_description:account.field_res_users_property_supplier_payment_term_id
 msgid "Vendor Payment Terms"
-msgstr "Zahlungsbedingungen des Verkäufers"
+msgstr "Zahlungsbedingungen des Lieferanten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference
@@ -12030,6 +12039,8 @@ msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
 msgstr ""
+"Sie können die Währung dieses Kontos nicht ändern, da es bereits Buchungen "
+"in einer anderen Währung enthält."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1368

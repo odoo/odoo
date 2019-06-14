@@ -3,21 +3,22 @@
 # * auth_signup
 # 
 # Translators:
-# Martin Trigaux, 2017
 # Ediz Duman <neps1192@gmail.com>, 2017
-# Murat Kaplan <muratk@projetgrup.com>, 2017
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2017
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
-# Umur Akın <umura@projetgrup.com>, 2018
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
+# Murat Kaplan <muratk@projetgrup.com>, 2017
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
+# Martin Trigaux, 2018
+# Umur Akın <umura@projetgrup.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:56+0000\n"
-"PO-Revision-Date: 2018-07-27 11:56+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:15+0000\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -186,6 +187,38 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <p>Sayın ${object.name},</p>\n"
+"    <p>\n"
+"        Hesabınız başarıyla oluşturuldu!\n"
+"    </p>\n"
+"    <p>\n"
+"        Giriş: ${object.email}\n"
+"        <br/>\n"
+"    </p>\n"
+"    <p>\n"
+"        Hesabınıza erişim için aşağıdaki bağlantıyı kullanabilirsiniz:\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin-top: 16px;\">\n"
+"        <a href=\"/web/login?${ctx['auth_login']}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Hesabıma Git</a>\n"
+"    </div>\n"
+"    <p>Saygılarımızla,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
+"    ${user.signature | safe}\n"
+"    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"        <strong>Tarafından gönderilmiştir ${user.company_id.name} using <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
+"    </p>\n"
+"</div>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -427,13 +460,13 @@ msgstr "Davet edilmeyen kullanıcılar için giriş izni verilmedi."
 #: code:addons/auth_signup/models/res_partner.py:147
 #, python-format
 msgid "Signup token '%s' is no longer valid"
-msgstr ""
+msgstr "Kayıt simgesi '%s' artık geçerli değil."
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:143
 #, python-format
 msgid "Signup token '%s' is not valid"
-msgstr ""
+msgstr "Kayıt simgesi '%s' geçersiz"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
@@ -460,7 +493,7 @@ msgstr "Kullanıcılar"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to ${object.company_id.name}!"
-msgstr ""
+msgstr "Hoşgeldiniz ${object.company_id.name}!"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields

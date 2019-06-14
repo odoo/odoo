@@ -274,11 +274,11 @@ var PivotModel = AbstractModel.extend({
                 // if we don't have the key 'groupBy' in params.  In that case,
                 // we want to have the full open state for the groupbys.
                 self._updateTree(old_row.root, self.data.main_row.root);
-                self._updateMainGroupBys(old_row, self.data.main_row);
             }
 
-            self._updateTree(old_col.root, self.data.main_col.root);
-            self._updateMainGroupBys(old_col, self.data.main_col);
+            if (!('pivot_column_groupby' in (params.context || {}))) {
+                self._updateTree(old_col.root, self.data.main_col.root);
+            }
         });
     },
     /**
@@ -597,13 +597,13 @@ var PivotModel = AbstractModel.extend({
         });
 
         var index = 0;
-        var rowGroupBys = !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys;
+        var rowGroupBys = !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys.slice();
+        this.data.groupedBy = rowGroupBys;
         var colGroupBys = this.data.colGroupBys;
         var datapt, row, col, attrs, cell_value;
         var main_row_header, main_col_header;
         var groupBys;
         var m;
-
 
         for (var i = 0; i < rowGroupBys.length + 1; i++) {
             for (var j = 0; j < colGroupBys.length + 1; j++) {
@@ -708,19 +708,6 @@ var PivotModel = AbstractModel.extend({
         for (var i = 0; i < root.children.length; i++) {
             this._traverseTree(root.children[i], f, arg1, arg2, arg3);
         }
-    },
-    /**
-     * Updates the groupBys that the main[row | col] holds
-     *
-     * @private
-     * @param {Object} old: The main abstract header before reload
-     * @param {Object} main: The main abstract header after reload
-     *
-     */
-    _updateMainGroupBys: function (old, main) {
-        var new_groupby_length = this._getHeaderDepth(main.root) - 1;
-        var new_groupby_list = old.root.groupbys.slice(0, new_groupby_length);
-        main.root.groupbys = new_groupby_list;
     },
     /**
      * @param {Object} old_tree

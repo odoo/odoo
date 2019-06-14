@@ -58,10 +58,11 @@ return AbstractModel.extend({
             end.add(-1, 'days');
         }
 
+        var isDateEvent = this.fields[this.mapping.date_start].type === 'date';
         // An "allDay" event without the "all_day" option is not considered
         // as a 24h day. It's just a part of the day (by default: 7h-19h).
         if (event.allDay) {
-            if (!this.mapping.all_day) {
+            if (!this.mapping.all_day && !isDateEvent) {
                 if (event.r_start) {
                     start.hours(event.r_start.hours())
                          .minutes(event.r_start.minutes())
@@ -73,9 +74,11 @@ return AbstractModel.extend({
                        .utc();
                 } else {
                     // default hours in the user's timezone
-                    start.hours(7).add(-this.getSession().getTZOffset(start), 'minutes');
-                    end.hours(19).add(-this.getSession().getTZOffset(end), 'minutes');
+                    start.hours(7);
+                    end.hours(19);
                 }
+                start.add(-this.getSession().getTZOffset(start), 'minutes');
+                end.add(-this.getSession().getTZOffset(end), 'minutes');
             }
         } else {
             start.add(-this.getSession().getTZOffset(start), 'minutes');

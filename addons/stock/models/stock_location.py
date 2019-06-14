@@ -170,6 +170,11 @@ class Route(models.Model):
     categ_ids = fields.Many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories')
     warehouse_ids = fields.Many2many('stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id', 'Warehouses')
 
+    @api.onchange('warehouse_selectable')
+    def _onchange_warehouse_selectable(self):
+        if not self.warehouse_selectable:
+            self.warehouse_ids = [(5, 0, 0)]
+
     def write(self, values):
         '''when a route is deactivated, deactivate also its pull and push rules'''
         res = super(Route, self).write(values)

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"POT-Creation-Date: 2019-03-29 09:08+0000\n"
 "PO-Revision-Date: 2017-09-20 10:22+0000\n"
 "Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
@@ -165,12 +165,12 @@ msgstr "<strong>Popis</strong>"
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Price List Name</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Název ceníku</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Print date</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Datum tisku</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -277,7 +277,7 @@ msgstr "Všechny produkty"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "All general settings about this product are managed on"
-msgstr ""
+msgstr "Všechna obecná nastavení tohoto produktu jsou spravována"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_config_settings_group_sale_pricelist
@@ -339,7 +339,7 @@ msgstr "Archivováno"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_sequence
 msgid "Assigns the priority to the list of product vendor."
-msgstr ""
+msgstr "Přiřadí prioritu seznamu dodavatelů produktu."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_attribute_id
@@ -351,12 +351,12 @@ msgstr "Vlastnost"
 #: model:ir.ui.view,arch_db:product.product_attribute_line_form
 #: model:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Name"
-msgstr ""
+msgstr "Název atributu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_extra
 msgid "Attribute Price Extra"
-msgstr ""
+msgstr "Atribut Speciální Ceny"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_ids
@@ -461,7 +461,7 @@ msgstr "Krásný širokoúhlý displej."
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image
 msgid "Big-sized image"
-msgstr ""
+msgstr "Velký obrázek"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_factor_inv
@@ -558,13 +558,13 @@ msgstr "Kategorie"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "Category name"
-msgstr ""
+msgstr "Název Kategorie"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:435
 #, python-format
 msgid "Category: %s"
-msgstr ""
+msgstr "Kategorie: %s"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -590,6 +590,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_attribute_create_variant
 msgid "Check this if you want to create multiple variants for this attribute."
 msgstr ""
+"Zaškrtněte toto, pokud chcete pro tento atribut vytvořit více variant."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_child_id
@@ -659,7 +660,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Common Product Catalog"
-msgstr ""
+msgstr "Společný katalog produktů"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -685,7 +686,7 @@ msgstr "Kompletní jméno"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Compute Price"
-msgstr ""
+msgstr "Výpočet ceny"
 
 #. module: product
 #: model:product.product,name:product.product_product_16
@@ -737,12 +738,21 @@ msgid "Cost"
 msgstr "Cena"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_cost_currency_id
+#: model:ir.model.fields,field_description:product.field_product_template_cost_currency_id
+msgid "Cost Currency"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
 msgid ""
 "Cost used for stock valuation in standard price and as a first price to set "
 "in average/fifo. Also used as a base price for pricelists. Expressed in the "
 "default unit of measure of the product."
 msgstr ""
+"Náklady použité pro ocenění zásob ve standardní ceně a jako první cena v "
+"průměru / fifo. Používá se také jako základní cena pro ceníky. Vyjádřeno ve "
+"výchozí měrné jednotce produktu."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_standard_price
@@ -1199,7 +1209,7 @@ msgstr "Globální"
 #: code:addons/product/models/product_template.py:30
 #, python-format
 msgid "Go to Internal Categories"
-msgstr ""
+msgstr "Jít do interních kategorií"
 
 #. module: product
 #: model:product.product,name:product.membership_0
@@ -1536,7 +1546,7 @@ msgstr "Délka / Vzdálenost"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_attribute_line_ids
 msgid "Lines"
-msgstr "Linky"
+msgstr "Řádky"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_litre
@@ -1840,7 +1850,7 @@ msgstr "Ceník"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_pricelist_item_ids
 msgid "Pricelist Item"
-msgstr ""
+msgstr "Položka ceníku"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_applied_on
@@ -1925,7 +1935,7 @@ msgstr "Výrobek"
 #: model:ir.model,name:product.model_product_attribute
 #: model:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Product Attribute"
-msgstr ""
+msgstr "Atribut produktu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_price_value_id
@@ -1935,7 +1945,7 @@ msgstr "Hodnota atributu produktu"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_attribute_line_form
 msgid "Product Attribute and Values"
-msgstr ""
+msgstr "Atributy a hodnoty produktu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_attribute_line_ids
@@ -1974,7 +1984,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Product Packaging"
-msgstr ""
+msgstr "Balení produktu"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -2140,7 +2150,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_6c
 #: model:product.template,name:product.product_product_6c_product_template
 msgid "Repair"
-msgstr ""
+msgstr "Oprava"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_right
@@ -2225,7 +2235,7 @@ msgstr "Prodej"
 #: model:ir.model.fields,field_description:product.field_product_product_list_price
 #: model:ir.model.fields,field_description:product.field_product_template_list_price
 msgid "Sales Price"
-msgstr ""
+msgstr "Zlevněné ceny"
 
 #. module: product
 #: model:res.groups,name:product.group_sale_pricelist
@@ -2318,7 +2328,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings_group_pricelist_item
 msgid "Show pricelists to customers"
-msgstr ""
+msgstr "Zobrazit ceník zákazníkům"
 
 #. module: product
 #: model:product.product,name:product.membership_1
@@ -2714,6 +2724,8 @@ msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
 msgstr ""
+"Toto pole obsahuje obrázek použitý jako obrázek pro variantu produktu, "
+"omezenou na 1024x1024px."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image
@@ -2727,7 +2739,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_price_extra
 msgid "This is the sum of the extra price of all attributes"
-msgstr ""
+msgstr "Toto je součet extra ceny všech atributů"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view

@@ -155,9 +155,9 @@ class MassMailingCampaign(models.Model):
     campaign_id = fields.Many2one('utm.campaign', 'campaign_id',
         required=True, ondelete='cascade',  help="This name helps you tracking your different campaign efforts, e.g. Fall_Drive, Christmas_Special")
     source_id = fields.Many2one('utm.source', string='Source',
-            help="This is the link source, e.g. Search Engine, another domain,or name of email list", default=lambda self: self.env.ref('utm.utm_source_newsletter'))
+            help="This is the link source, e.g. Search Engine, another domain,or name of email list", default=lambda self: self.env.ref('utm.utm_source_newsletter', False))
     medium_id = fields.Many2one('utm.medium', string='Medium',
-            help="This is the delivery method, e.g. Postcard, Email, or Banner Ad", default=lambda self: self.env.ref('utm.utm_medium_email'))
+            help="This is the delivery method, e.g. Postcard, Email, or Banner Ad", default=lambda self: self.env.ref('utm.utm_medium_email', False))
     tag_ids = fields.Many2many(
         'mail.mass_mailing.tag', 'mail_mass_mailing_tag_rel',
         'tag_id', 'campaign_id', string='Tags')
@@ -558,6 +558,12 @@ class MassMailing(models.Model):
         failed_mails = self.env['mail.mail'].search([('mailing_id', 'in', self.ids), ('state', '=', 'exception')])
         failed_mails.mapped('statistics_ids').unlink()
         failed_mails.sudo().unlink()
+        res_ids = self.get_recipients()
+        except_mailed = self.env['mail.mail.statistics'].search([
+            ('model', '=', self.mailing_model_real),
+            ('res_id', 'in', res_ids),
+            ('exception', '!=', False),
+            ('mass_mailing_id', '=', self.id)]).unlink()
         self.write({'state': 'in_queue'})
 
     #------------------------------------------------------
@@ -610,15 +616,28 @@ class MassMailing(models.Model):
         """Returns a set of emails already targeted by current mailing/campaign (no duplicates)"""
         self.ensure_one()
         target = self.env[self.mailing_model_real]
-        mail_field = 'email' if 'email' in target._fields else 'email_from'
-        # avoid loading a large number of records in memory
-        # + use a basic heuristic for extracting emails
-        query = """
-            SELECT lower(substring(%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
-              FROM mail_mail_statistics s
-              JOIN %(target)s t ON (s.res_id = t.id)
-             WHERE substring(%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
-        """
+        if set(['email', 'email_from']) & set(target._fields):
+            mail_field = 'email' if 'email' in target._fields else 'email_from'
+            # avoid loading a large number of records in memory
+            # + use a basic heuristic for extracting emails
+            query = """
+                SELECT lower(substring(%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
+                  FROM mail_mail_statistics s
+                  JOIN %(target)s t ON (s.res_id = t.id)
+                 WHERE substring(%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
+            """
+        elif 'partner_id' in target._fields:
+            mail_field = 'email'
+            query = """
+                SELECT lower(substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
+                  FROM mail_mail_statistics s
+                  JOIN %(target)s t ON (s.res_id = t.id)
+                  JOIN res_partner p ON (t.partner_id = p.id)
+                 WHERE substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
+            """
+        else:
+            raise UserError(_("Unsupported mass mailing model %s") % self.mailing_model_id.name)
+
         if self.mass_mailing_campaign_id.unique_ab_testing:
             query +="""
                AND s.mass_mailing_campaign_id = %%(mailing_campaign_id)s;

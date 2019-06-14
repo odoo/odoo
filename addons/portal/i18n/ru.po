@@ -3,24 +3,26 @@
 # * portal
 # 
 # Translators:
-# Collex100, 2017
-# Martin Trigaux, 2017
-# Максим Дронь <dronmax@gmail.com>, 2017
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
-# Masha Koc <mariya.kos.ua@gmail.com>, 2017
-# Sergey Vilizhanin, 2017
-# Viktor Pogrebniak <vp@aifil.ru>, 2017
-# Denis Trepalin <zekarious@gmail.com>, 2017
 # Andrey Skabelin, 2017
+# Denis Trepalin <zekarious@gmail.com>, 2017
+# Masha Koc <mariya.kos.ua@gmail.com>, 2017
 # Артур Чеботарь <artcha.chebotar@gmail.com>, 2017
+# Collex100, 2017
 # Gennady Marchenko <gennadym@gmail.com>, 2017
+# Viktor Pogrebniak <vp@aifil.ru>, 2017
+# Sergey Vilizhanin, 2017
+# Максим Дронь <dronmax@gmail.com>, 2017
+# Martin Trigaux, 2018
+# Oleg Kuryan <oleg@ventor.tech>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:56+0000\n"
-"PO-Revision-Date: 2018-07-27 11:56+0000\n"
-"Last-Translator: Gennady Marchenko <gennadym@gmail.com>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:21+0000\n"
+"Last-Translator: Oleg Kuryan <oleg@ventor.tech>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,6 +57,29 @@ msgid ""
 "<p>\n"
 "${object.wizard_id.welcome_message or ''}"
 msgstr ""
+"\n"
+"<p>\n"
+"    Дорогой ${object.user_id.name or ''},\n"
+"</p>\n"
+"<p>\n"
+"    Вам дали доступ к ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
+"</p>\n"
+"<p>\n"
+"    Ваши данные учетной записи:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Имя пользователя: ${object.user_id.login or ''}</li>\n"
+"    <li>Портал: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"    <li>База данных: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"</ul>\n"
+"<p>\n"
+"    Вы можете установить или сменить пароль по ссылке:\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"${object.wizard_id.welcome_message or ''}"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_show_sign_in
@@ -69,11 +94,15 @@ msgid ""
 "                                    <span class=\"icon-bar\"/>\n"
 "                                    <span class=\"icon-bar\"/>"
 msgstr ""
+"<span class=\"sr-only\">Переключить навигацию</span>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span id=\"search_label\">Search</span> <span class=\"caret\"/>"
-msgstr ""
+msgstr "<span id=\"search_label\">Искать</span> <span class=\"caret\"/>"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -112,7 +141,7 @@ msgstr "Очистить"
 #: code:addons/portal/static/src/xml/portal_signature.xml:27
 #, python-format
 msgid "Click here to see your document."
-msgstr ""
+msgstr "Нажмите для просмотра своих документов"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -125,6 +154,8 @@ msgid ""
 "Confirm\n"
 "                                <span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
+"Подтвердить\n"
+"                                <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_partner_id
@@ -165,7 +196,7 @@ msgstr "Создан"
 #: model:ir.model.fields,help:portal.field_project_task_portal_url
 #: model:ir.model.fields,help:portal.field_sale_order_portal_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "Ссылка на портал клиента"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin_display_name
@@ -179,7 +210,7 @@ msgstr "Отображаемое Имя"
 #: code:addons/portal/static/src/xml/portal_signature.xml:14
 #, python-format
 msgid "Draw your signature"
-msgstr ""
+msgstr "Нарисуйте вашу подпись"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
@@ -284,6 +315,8 @@ msgstr "Далее"
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr ""
+"Опаньки! Что-то пошло не так. Попробуйте перегрузить страницу и "
+"авторизоваться."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -309,7 +342,7 @@ msgstr "Доступ к порталу"
 #: model:ir.model.fields,field_description:portal.field_project_task_portal_url
 #: model:ir.model.fields,field_description:portal.field_sale_order_portal_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "Ссылка для доступа в портал"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -326,7 +359,7 @@ msgstr "Пред"
 #: code:addons/portal/static/src/js/portal_chatter.js:102
 #, python-format
 msgid "Published on %s"
-msgstr ""
+msgstr "Опубликовано %s"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -399,7 +432,7 @@ msgstr "Портал, в котором можно добавить или уд�
 #: code:addons/portal/static/src/xml/portal_chatter.xml:11
 #, python-format
 msgid "There are no comments for now."
-msgstr ""
+msgstr "Пока нет ни одного комментария"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -587,18 +620,18 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Your Contact Details"
-msgstr ""
+msgstr "Ваши контактные данные"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_layout
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Your Details"
-msgstr "Ваше подробности"
+msgstr "Ваши данные"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Your Documents"
-msgstr ""
+msgstr "Ваши документы"
 
 #. module: portal
 #. openerp-web

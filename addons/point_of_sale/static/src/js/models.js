@@ -134,11 +134,16 @@ exports.PosModel = Backbone.Model.extend({
                         done.resolve();
                 },
                 function(statusText, url){
-                        if (statusText == 'error' && window.location.protocol == 'https:') {
-                            var error = {message: 'TLSError', url: url};
-                            self.chrome.loading_error(error);
-                        } else {
-                            done.resolve();
+                        var show_loading_error = (self.gui.current_screen === null);
+                        done.resolve();
+                        if (show_loading_error && statusText == 'error' && window.location.protocol == 'https:') {
+                            self.gui.show_popup('alert', {
+                                title: _t('HTTPS connection to IoT Box failed'),
+                                body: _.str.sprintf(
+                                  _t('Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept the certificate of your IoT Box.'),
+                                  url
+                                ),
+                            });
                         }
                 });
         return done;
@@ -898,6 +903,9 @@ exports.PosModel = Backbone.Model.extend({
                     }}).done(function () {
                         invoiced.resolve();
                         done.resolve();
+                    }).fail(function (error) {
+                        invoiced.reject({code:401, message:'Backend Invoice', data:{order: order}});
+                        done.reject();
                     });
                 } else {
                     // The order has been pushed separately in batch when
@@ -1464,7 +1472,7 @@ exports.Orderline = Backbone.Model.extend({
         var lots_required = 1;
 
         if (this.product.tracking == 'serial') {
-            lots_required = this.quantity;
+            lots_required = Math.abs(this.quantity);
         }
 
         return lots_required;
@@ -1867,8 +1875,11 @@ var PacklotlineCollection = Backbone.Collection.extend({
 
     set_quantity_by_lot: function() {
         if (this.order_line.product.tracking == 'serial') {
-            var valid_lots = this.get_valid_lots();
-            this.order_line.set_quantity(valid_lots.length);
+            var valid_lots_quantity = this.get_valid_lots().length;
+            if (this.order_line.quantity < 0){
+                valid_lots_quantity = -valid_lots_quantity;
+            }
+            this.order_line.set_quantity(valid_lots_quantity);
         }
     }
 });
@@ -2653,7 +2664,7 @@ exports.NumpadState = Backbone.Model.extend({
             this.set({
                 buffer: "-" + newChar
             });
-        } else {
+        } else if (!(newChar === '.') || oldBuffer.indexOf('.') === -1) {
             this.set({
                 buffer: (this.get('buffer')) + newChar
             });

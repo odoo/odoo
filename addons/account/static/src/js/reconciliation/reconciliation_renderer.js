@@ -526,7 +526,10 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             type: 'float',
             name: 'amount',
         }], {
-            account_id: {string: _t("Account")},
+            account_id: {
+                string: _t("Account"),
+                domain: [['deprecated', '=', false]],
+            },
             label: {string: _t("Label")},
             amount: {string: _t("Account")}
         }).then(function (recordID) {

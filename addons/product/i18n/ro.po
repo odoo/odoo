@@ -5,16 +5,16 @@
 # Translators:
 # Iulian Cutui <iulian.cutui@gmail.com>, 2017
 # Cozmin Candea <office@terrabit.ro>, 2018
-# Dorin Hongu <dhongu@gmail.com>, 2018
 # Martin Trigaux, 2018
+# Dorin Hongu <dhongu@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"POT-Creation-Date: 2019-03-29 09:08+0000\n"
 "PO-Revision-Date: 2017-09-20 10:22+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2019\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -153,7 +153,7 @@ msgstr "<span>kg</span>"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>m³</span>"
-msgstr ""
+msgstr "<span>m³</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
@@ -199,6 +199,8 @@ msgid ""
 " This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
+"O descriere a produsului, accesibilă clienţilor. Această descriere va fi "
+"copiată în fiecare comandă de vânzare sau factură emisă"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description_purchase
@@ -602,7 +604,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_create_variant
 msgid "Check this if you want to create multiple variants for this attribute."
-msgstr ""
+msgstr "Bifați dacă doriți să creați mai multe variante pentru acest atribut."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_child_id
@@ -758,12 +760,21 @@ msgid "Cost"
 msgstr "Cost"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_cost_currency_id
+#: model:ir.model.fields,field_description:product.field_product_template_cost_currency_id
+msgid "Cost Currency"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
 msgid ""
 "Cost used for stock valuation in standard price and as a first price to set "
 "in average/fifo. Also used as a base price for pricelists. Expressed in the "
 "default unit of measure of the product."
 msgstr ""
+"Costul utilizat pentru evaluarea stocului în prețul standard și ca primul "
+"preț stabilit în medie / FIFO. De asemenea, folosit ca preț de bază pentru "
+"lista de prețuri. Exprimat în unitatea de măsură implicită a produsului."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_standard_price
@@ -1302,6 +1313,8 @@ msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
+"Cu cât este mai mare aceasta Unitate de Măsura decât Unitatea de Măsura de referință din aceasta categorie:\n"
+"1 * (aceasta unitate) = raport * (unitatea de referință)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_factor
@@ -1309,6 +1322,8 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"Cu cât este mai mare sau mică această unitate în comparație cu unitatea de măsură de referință pentru această categorie: \n"
+"1 * (unitatea de referință) = raport * (această unitate)"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1596,7 +1611,7 @@ msgstr "Gestionați Ambalarea Produsului"
 #. module: product
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
-msgstr ""
+msgstr "Gestionați variante de produse"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2348,7 +2363,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings_group_product_pricelist
 msgid "Show pricelists On Products"
-msgstr ""
+msgstr "Afișați listele de prețuri în produse"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings_group_pricelist_item
@@ -2516,6 +2531,8 @@ msgstr ""
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
 msgstr ""
+"Domeniul tehnic. Folosit pentru căutarea în lista de prețuri, care nu este "
+"stocată în baza de date."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -2613,6 +2630,9 @@ msgid ""
 "Product Unit of Measure if not any, in the default unit of measure of the "
 "product otherwise."
 msgstr ""
+"Cantitatea minimă de cumpărare de la acest vânzător, exprimată în unitatea "
+"de produs a furnizorului de măsurare dacă nu există sau în unitatea de "
+"măsură implicită a produsului. "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category_product_count
@@ -2702,7 +2722,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
 msgid "The total number of products you can have per pallet or box."
-msgstr ""
+msgstr "Numarul total de produse care pot fi puse in palet sau in cutie."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -2782,7 +2802,7 @@ msgstr "Suma prețurilor extra pentru toate atributele"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is only for internal purposes."
-msgstr ""
+msgstr "Această notă este numai pentru scopuri interne."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2854,6 +2874,8 @@ msgstr ""
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
+"Debifați câmpul activ pentru a dezactiva o unitate de măsură fără a o "
+"șterge."
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
@@ -2898,6 +2920,9 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
+"Unitățile de măsură care aparțin aceleiași categorii pot fi convertite între"
+" ele. De exemplu, în categoria \"Timp\", veți avea următoarele unități de "
+"măsură: Ore, Zile."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2952,7 +2977,7 @@ msgstr "Imagine variantă"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Variant Information"
-msgstr ""
+msgstr "Informații variantă"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_price_extra
@@ -3122,13 +3147,13 @@ msgstr ""
 #: code:addons/product/wizard/product_price_list.py:26
 #, python-format
 msgid "You have to set a logo or a layout for your company."
-msgstr ""
+msgstr "Trebuie să setați o siglă sau un aspect pentru compania dvs."
 
 #. module: product
 #: code:addons/product/wizard/product_price_list.py:28
 #, python-format
 msgid "You have to set your reports's header and footer layout."
-msgstr ""
+msgstr "Trebuie să setați aspectul antetului și subsolului din rapoarte."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
@@ -3340,7 +3365,7 @@ msgstr "product.price.history"
 #. module: product
 #: model:product.uom,name:product.product_uom_qt
 msgid "qt"
-msgstr ""
+msgstr "qt"
 
 #. module: product
 #: model:product.product,description_sale:product.consu_delivery_02

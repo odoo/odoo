@@ -1246,6 +1246,9 @@ class SaleOrderLine(models.Model):
         """ Compute and write the delivered quantity of current SO lines, based on their related
             analytic lines.
         """
+        # The delivered quantity of Sales Lines in 'manual' mode should not be erased
+        self = self.filtered(lambda sol: sol.product_id.service_type != 'manual')
+
         # avoid recomputation if no SO lines concerned
         if not self:
             return False
@@ -1269,7 +1272,7 @@ class SaleOrderLine(models.Model):
             value_to_write.setdefault(so_line, 0.0)
             uom = self.env['product.uom'].browse(item['product_uom_id'][0])
             if so_line.product_uom.category_id == uom.category_id:
-                qty = uom._compute_quantity(item['unit_amount'], so_line.product_uom)
+                qty = uom._compute_quantity(item['unit_amount'], so_line.product_uom, rounding_method='HALF-UP')
             else:
                 qty = item['unit_amount']
             value_to_write[so_line] += qty

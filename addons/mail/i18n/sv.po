@@ -15,8 +15,8 @@
 # Patrik Lermon <patrik.lermon@gmail.com>, 2017
 # Kristoffer Grundström <hamnisdude@gmail.com>, 2017
 # Martin Trigaux, 2017
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2017
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2018
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2019
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2019
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:19+0000\n"
-"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2018\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2019\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -381,6 +381,12 @@ msgid ""
 "                                The email will be sent for all the records selected in the list.<br/>\n"
 "                                Confirming this wizard will probably take a few minutes blocking your browser."
 msgstr ""
+"<strong>\n"
+"                                   Alla postser som uppfyller aktuellt sökfilter kommer e-postas. \n"
+"inte enbart valda poster i vyn. \n"
+"                                </strong><br/>\n"
+"                                E-postmeddelandet kommer skickas för alla valda poster i listan.<br/>\n"
+"                                Bekräftan av formuläret kommer förmodligen ta ett antal minuter i anspråk och blockera din webbläsare."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_activity_done
@@ -393,6 +399,8 @@ msgid ""
 "<strong>Only records checked in list view will be used.</strong><br/>\n"
 "                                The email will be sent for all the records selected in the list."
 msgstr ""
+"<strong>Endast kryssade poster i listvyn kommer användas.</strong><br/>\n"
+"                                E-postmeddelandet kommer skickas till alla valda poster i listan."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -562,7 +570,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mail.menu_mail_activity_type
 #: model:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Activity Types"
-msgstr ""
+msgstr "Aktivitetstyp"
 
 #. module: mail
 #. openerp-web
@@ -966,7 +974,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_type
 msgid "Channel Type"
-msgstr ""
+msgstr "Kanaltyp"
 
 #. module: mail
 #. openerp-web
@@ -1149,7 +1157,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
 msgid "Conversations"
-msgstr ""
+msgstr "Konversationer"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner_message_bounce
@@ -1497,7 +1505,7 @@ msgstr "Klar"
 #: code:addons/mail/static/src/xml/activity.xml:77
 #, python-format
 msgid "Done & Schedule Next"
-msgstr ""
+msgstr "Klar och planera nästa"
 
 #. module: mail
 #. openerp-web
@@ -2789,17 +2797,17 @@ msgstr "Logg"
 #: code:addons/mail/static/src/xml/chatter.xml:56
 #, python-format
 msgid "Log a note. Followers will not be notified."
-msgstr ""
+msgstr "Registrera en notering, följare kommer inte att notifieras."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Log a note..."
-msgstr ""
+msgstr "Registrera en notering..."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Log an Activity"
-msgstr ""
+msgstr "Registrera en aktivitet"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_is_log
@@ -2812,14 +2820,14 @@ msgstr "Lägg till intern anteckning"
 #: code:addons/mail/static/src/xml/chatter.xml:56
 #, python-format
 msgid "Log note"
-msgstr ""
+msgstr "Lägg till en notering"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:59
 #, python-format
 msgid "Log or schedule an activity"
-msgstr ""
+msgstr "Logga eller planera en aktivitet"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_mail_activity_type_id
@@ -4402,14 +4410,14 @@ msgstr "Schema"
 #: code:addons/mail/static/src/xml/chatter.xml:60
 #, python-format
 msgid "Schedule activity"
-msgstr ""
+msgstr "Planera en aktivitet"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:56
 #, python-format
 msgid "Schedule an activity"
-msgstr ""
+msgstr "Planera en aktivitet"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_scheduled_date
@@ -4421,7 +4429,7 @@ msgstr "Planerat datum"
 #: model:ir.model.fields,field_description:mail.field_mail_mail_scheduled_date
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Scheduled Send Date"
-msgstr ""
+msgstr "Planerat sändningsdatum"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search

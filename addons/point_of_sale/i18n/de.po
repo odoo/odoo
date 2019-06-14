@@ -8,7 +8,6 @@
 # Torsten Wichmann <t.wichmann@intero-technologies.de>, 2017
 # Andreas Stauder <andreas.stauder@brain-tec.ch>, 2017
 # Martin K <martinkuenz@gmail.com>, 2017
-# Philipp Hug <philipp@hug.cx>, 2017
 # key six <mobile.umts@gmail.com>, 2017
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
 # JackTheHunter <Maximilian.N98@gmail.com>, 2017
@@ -36,14 +35,16 @@
 # Juan José Trujillo <juanjosetrujillo@gmx.de>, 2018
 # e2f <projects@e2f.com>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
+# Philipp Hug <philipp@hug.cx>, 2019
+# Chris Egal <sodaswed@web.de>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:21+0000\n"
-"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -501,6 +502,8 @@ msgid ""
 "An error occurred when loading product prices. Make sure all pricelists are "
 "available in the POS."
 msgstr ""
+"Beim Laden der Produktpreise ist ein Fehler aufgetreten. Stellen Sie sicher,"
+" dass alle Preislisten im POS verfügbar sind."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_name
@@ -1646,6 +1649,13 @@ msgid "Group Journal Items"
 msgstr "Gruppiere Buchungszeilen"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:135
+#, python-format
+msgid "HTTPS connection to IoT Box failed"
+msgstr "HTTPS-Verbindung zur IoT Box fehlgeschlagen"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_uom_categ_is_pos_groupable
 #: model:ir.model.fields,field_description:point_of_sale.field_product_uom_is_pos_groupable
 msgid "Group Products in POS"
@@ -2024,6 +2034,17 @@ msgid "Make Payment"
 msgstr "Erfasse Zahlung"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:137
+#, python-format
+msgid ""
+"Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept "
+"the certificate of your IoT Box."
+msgstr ""
+"Stellen Sie sicher, dass Sie IoT Box v18.12 oder höher verwenden. Navigiere "
+"zu%sum das Zertifikat Ihrer IoT Box zu akzeptieren."
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_available_pricelist_ids
 msgid ""
 "Make several pricelists available in the Point of Sale. You can also apply a"
@@ -2132,7 +2153,7 @@ msgstr "Nächster Auftrag"
 #: code:addons/point_of_sale/models/pos_order.py:1089
 #, python-format
 msgid "No Taxes"
-msgstr ""
+msgstr "Keine Steuern"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:142
@@ -2650,19 +2671,26 @@ msgstr "Kommissionierfehler"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2003
+#: code:addons/point_of_sale/static/src/js/screens.js:2034
 #, python-format
 msgid "Please Confirm Large Amount"
 msgstr "Bitte bestätigen Sie den hohen Betrag"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:344
+#: code:addons/point_of_sale/models/pos_order.py:369
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Weisen Sie ein Ertragskonto für dieses Produkt zu: \"%s\" (id:%d)."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:587
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2083
+#, python-format
+msgid "Please print the invoice from the backend"
+msgstr "Bitte drucken Sie die Rechnung aus dem backend"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:653
 #, python-format
 msgid "Please provide a partner for the sale."
 msgstr "Bitte Partner für diesen Verkauf definieren"
@@ -2900,7 +2928,14 @@ msgstr "Drucken"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:716
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1372
+#, python-format
+msgid "Print Invoice"
+msgstr "Rechnung drucken"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:719
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1375
 #, python-format
 msgid "Print Receipt"
 msgstr "Bon drucken"
@@ -2939,7 +2974,7 @@ msgstr "Fehler beim Druck: "
 #: code:addons/point_of_sale/static/src/js/screens.js:1569
 #, python-format
 msgid "Printing is not supported on some android browsers"
-msgstr ""
+msgstr "Das Drucken wird in einigen Android-Browsern nicht unterstützt"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2950,6 +2985,9 @@ msgid ""
 "printing protocol is available. It is possible to print your tickets by "
 "making use of an IoT Box."
 msgstr ""
+"Das Drucken wird in einigen Android-Browsern nicht unterstützt, da kein "
+"Standarddruckprotokoll verfügbar ist. Es ist möglich, Ihre Tickets mithilfe "
+"einer IoT-Box auszudrucken."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_product
@@ -3764,19 +3802,30 @@ msgstr "Die Anzahl der Point-of-Sales-Aufträge für diesen Kunden"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2052
+#: code:addons/point_of_sale/static/src/js/screens.js:2094
 #, python-format
 msgid "The order could not be sent"
 msgstr "Der Verkaufsauftrag konnte nicht gesendet werden"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2063
+#: code:addons/point_of_sale/static/src/js/screens.js:2105
 #, python-format
 msgid "The order could not be sent to the server due to an unknown error"
 msgstr ""
 "Der Verkauf konnte aufgrund eines unbekannten Fehlers nicht abgeschlossen "
 "werden."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2084
+#, python-format
+msgid ""
+"The order has been synchronized earlier. Please make the invoice from the "
+"backend for the order: "
+msgstr ""
+"Die Bestellung wurde früher synchronisiert. Bitte machen Sie die Rechnung "
+"aus dem Backend für die Bestellung:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_precompute_cash
@@ -3845,6 +3894,8 @@ msgid ""
 "The selected pricelists must belong to no company or the company of the "
 "point of sale."
 msgstr ""
+"Die ausgewählten Preislisten dürfen keinem Unternehmen oder der Firma der "
+"Verkaufsstelle gehören."
 
 #. module: point_of_sale
 #. openerp-web

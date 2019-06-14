@@ -50,13 +50,18 @@ class Team(models.Model):
             team.unassigned_leads_count = counts.get(team.id, 0)
 
     def _compute_opportunities(self):
-        opportunity_data = self.env['crm.lead'].read_group([
+        opportunity_data = self.env['crm.lead'].search([
             ('team_id', 'in', self.ids),
             ('probability', '<', 100),
             ('type', '=', 'opportunity'),
-        ], ['planned_revenue', 'probability', 'team_id'], ['team_id'])
-        counts = {datum['team_id'][0]: datum['team_id_count'] for datum in opportunity_data}
-        amounts = {datum['team_id'][0]: (datum['planned_revenue'] * datum['probability'] / 100) for datum in opportunity_data}
+        ]).read(['planned_revenue', 'probability', 'team_id'])
+        counts = {}
+        amounts = {}
+        for datum in opportunity_data:
+            counts.setdefault(datum['team_id'][0], 0)
+            amounts.setdefault(datum['team_id'][0], 0)
+            counts[datum['team_id'][0]] += 1
+            amounts[datum['team_id'][0]] += (datum.get('planned_revenue', 0) * datum.get('probability', 0) / 100.0)
         for team in self:
             team.opportunities_count = counts.get(team.id, 0)
             team.opportunities_amount = amounts.get(team.id, 0)

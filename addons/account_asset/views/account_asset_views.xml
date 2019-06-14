@@ -160,7 +160,7 @@
                             <field name="salvage_value" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'invisible': [('type','=','sale')]}"/>
                             <field name="value_residual" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="partner_id" string="Vendor" domain="[('supplier', '=', True)]"/>
-                            <field name="invoice_id" string="Invoice" options="{'no_create': True}"/>
+                            <field name="invoice_id" string="Invoice" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True}"/>
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -244,7 +244,7 @@
                                 </div>
                                 <div class="col-xs-6">
                                     <span class="pull-right text-right">
-                                        <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'primary', 'open': 'success', 'close': 'default'}}"/>
+                                        <field name="state" widget="label_selection" options="{'classes': {'draft': 'primary', 'open': 'success', 'close': 'default'}}"/>
                                     </span>
                                 </div>
                             </div>

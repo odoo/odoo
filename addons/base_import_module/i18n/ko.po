@@ -3,17 +3,18 @@
 # * base_import_module
 # 
 # Translators:
-# Martin Trigaux, 2017
 # Seongseok Shin <shinss61@hotmail.com>, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
+# Martin Trigaux, 2018
 # Linkup <link-up@naver.com>, 2018
+# JH CHOI <hwangtog@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:15+0000\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +36,7 @@ msgstr "닫기"
 #: code:addons/base_import_module/controllers/main.py:31
 #, python-format
 msgid "Could not select database '%s'"
-msgstr ""
+msgstr "데이터베이스를 선택할 수 없습니다 '%s'"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_uid
@@ -83,12 +84,12 @@ msgstr "ID"
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import App"
-msgstr ""
+msgstr "앱 가져 오기"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
 msgid "Import Message"
-msgstr ""
+msgstr "메시지 가져오기"
 
 #. module: base_import_module
 #: model:ir.actions.act_window,name:base_import_module.action_view_base_module_import
@@ -106,7 +107,7 @@ msgstr "모듈 가져오기"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module_imported
 msgid "Imported Module"
-msgstr ""
+msgstr "가져온 모듈"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module___last_update
@@ -137,13 +138,18 @@ msgstr "모듈 .ZIP 파일"
 #: code:addons/base_import_module/models/ir_module.py:102
 #, python-format
 msgid "No file sent."
-msgstr ""
+msgstr "파일을 보내지 않았습니다."
+
+#. module: base_import_module
+#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Note: you can only import data modules (.xml files and static assets)"
+msgstr "참고 : 데이터 모듈(.xml 파일 및 정적 자산)만 가져올 수 있습니다."
 
 #. module: base_import_module
 #: code:addons/base_import_module/controllers/main.py:25
 #, python-format
 msgid "Only administrators can upload a module"
-msgstr ""
+msgstr "관리자만 모듈을 업로드할 수 있습니다."
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -165,7 +171,7 @@ msgstr "상태"
 #: code:addons/base_import_module/models/ir_module.py:47
 #, python-format
 msgid "Studio customizations require Studio"
-msgstr ""
+msgstr "Studio 사용자 정의를 위해서는 Studio 설치가 필요합니다."
 
 #. module: base_import_module
 #: code:addons/base_import_module/models/ir_module.py:42

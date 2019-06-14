@@ -44,7 +44,7 @@ class PortalWizard(models.TransientModel):
         contact_ids = set()
         user_changes = []
         for partner in self.env['res.partner'].sudo().browse(partner_ids):
-            contact_partners = partner.child_ids or [partner]
+            contact_partners = partner.child_ids | partner
             for contact in contact_partners:
                 # make sure that each contact appears at most once in the list
                 if contact.id not in contact_ids:
@@ -93,7 +93,7 @@ class PortalWizardUser(models.TransientModel):
                 partners_error_empty |= wizard_user.partner_id
             elif email in emails:
                 partners_error_emails |= wizard_user.partner_id
-            user = self.env['res.users'].sudo().with_context(active_test=False).search([('login', '=', email)])
+            user = self.env['res.users'].sudo().with_context(active_test=False).search([('login', '=ilike', email)])
             if user:
                 partners_error_user |= wizard_user.partner_id
             emails.append(email)

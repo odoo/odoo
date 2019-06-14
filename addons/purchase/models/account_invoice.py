@@ -79,6 +79,11 @@ class AccountInvoice(models.Model):
         if not self.partner_id:
             self.partner_id = self.purchase_id.partner_id.id
 
+        vendor_ref = self.purchase_id.partner_ref
+        if vendor_ref and (not self.reference or (
+                vendor_ref + ", " not in self.reference and not self.reference.endswith(vendor_ref))):
+            self.reference = ", ".join([self.reference, vendor_ref]) if self.reference else vendor_ref
+
         new_lines = self.env['account.invoice.line']
         for line in self.purchase_id.order_line - self.invoice_line_ids.mapped('purchase_line_id'):
             data = self._prepare_invoice_line_from_po_line(line)
@@ -103,7 +108,6 @@ class AccountInvoice(models.Model):
         purchase_ids = self.invoice_line_ids.mapped('purchase_id')
         if purchase_ids:
             self.origin = ', '.join(purchase_ids.mapped('name'))
-            self.reference = ', '.join(purchase_ids.filtered('partner_ref').mapped('partner_ref')) or self.reference
 
     @api.onchange('partner_id', 'company_id')
     def _onchange_partner_id(self):
@@ -143,6 +147,7 @@ class AccountInvoice(models.Model):
         """
         inv = i_line.invoice_id
         company_currency = inv.company_id.currency_id
+        invoice_currency = inv.currency_id
         if i_line.product_id and i_line.product_id.valuation == 'real_time' and i_line.product_id.type == 'product':
             # get the fiscal position
             fpos = i_line.invoice_id.fiscal_position_id
@@ -158,10 +163,12 @@ class AccountInvoice(models.Model):
             # calculate and write down the possible price difference between invoice price and product price
             for line in res:
                 if line.get('invl_id', 0) == i_line.id and reference_account_id == line['account_id']:
+                    # Do not forward port in >= saas-11.3. PR #32616 takes care of it
+                    # Standard price is in company currency
                     valuation_price_unit = i_line.product_id.uom_id._compute_price(i_line.product_id.standard_price, i_line.uom_id)
+                    currency_valuation_price_unit = company_currency
                     if i_line.product_id.cost_method != 'standard' and i_line.purchase_line_id:
                         #for average/fifo/lifo costing method, fetch real cost price from incomming moves
-                        valuation_price_unit = i_line.purchase_line_id.product_uom._compute_price(i_line.purchase_line_id.price_unit, i_line.uom_id)
                         stock_move_obj = self.env['stock.move']
                         valuation_stock_move = stock_move_obj.search([
                             ('purchase_line_id', '=', i_line.purchase_line_id.id),
@@ -178,31 +185,53 @@ class AccountInvoice(models.Model):
                             for val_stock_move in valuation_stock_move:
                                 valuation_price_unit_total += abs(val_stock_move.price_unit) * val_stock_move.product_qty
                                 valuation_total_qty += val_stock_move.product_qty
+
+                            # in Stock Move, price unit is in company_currency
                             valuation_price_unit = valuation_price_unit_total / valuation_total_qty
                             valuation_price_unit = i_line.product_id.uom_id._compute_price(valuation_price_unit, i_line.uom_id)
-                    if inv.currency_id.id != company_currency.id:
-                            valuation_price_unit = company_currency.with_context(date=inv.date_invoice).compute(valuation_price_unit, inv.currency_id, round=False)
-                    if valuation_price_unit != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
+                        else:
+                            # PO unit price might be in another currency
+                            valuation_price_unit = i_line.purchase_line_id.product_uom._compute_price(i_line.purchase_line_id.price_unit, i_line.uom_id)
+                            currency_valuation_price_unit = i_line.purchase_line_id.order_id.currency_id
+
+                    # Put the valuation price unit in the invoice currency
+                    if invoice_currency != currency_valuation_price_unit:
+                        valuation_price_unit_invoice_currency = (
+                            currency_valuation_price_unit
+                            .with_context(date=inv.date_invoice)
+                            .compute(valuation_price_unit, invoice_currency, round=False)
+                        )
+                    else:
+                        valuation_price_unit_invoice_currency = valuation_price_unit
+
+                    # Valuation price unit and i_line.price_unit in invoice currency
+                    # A safe assumption is that line['price_unit'] and i_line.price_unit both in the currency of the invoice, foreign or not
+                    if (
+                        acc and
+                        float_compare(line['price_unit'], i_line.price_unit, precision_rounding=invoice_currency.rounding) == 0 and
+                        float_compare(valuation_price_unit_invoice_currency, i_line.price_unit, precision_rounding=invoice_currency.rounding) != 0
+                    ):
                         # price with discount and without tax included
                         price_unit = i_line.price_unit * (1 - (i_line.discount or 0.0) / 100.0)
                         tax_ids = []
                         if line['tax_ids']:
                             #line['tax_ids'] is like [(4, tax_id, None), (4, tax_id2, None)...]
                             taxes = self.env['account.tax'].browse([x[1] for x in line['tax_ids']])
-                            price_unit = taxes.compute_all(price_unit, currency=inv.currency_id, quantity=1.0)['total_excluded']
+                            price_unit = taxes.compute_all(price_unit, currency=invoice_currency, quantity=1.0)['total_excluded']
                             for tax in taxes:
                                 tax_ids.append((4, tax.id, None))
                                 for child in tax.children_tax_ids:
                                     if child.type_tax_use != 'none':
                                         tax_ids.append((4, child.id, None))
+
                         price_before = line.get('price', 0.0)
-                        line.update({'price': inv.currency_id.round(valuation_price_unit * line['quantity'])})
+                        line.update({'price': invoice_currency.round(valuation_price_unit_invoice_currency * line['quantity'])})
                         diff_res.append({
                             'type': 'src',
                             'name': i_line.name[:64],
-                            'price_unit': inv.currency_id.round(price_unit - valuation_price_unit),
+                            'price_unit': invoice_currency.round(price_unit - valuation_price_unit_invoice_currency),
                             'quantity': line['quantity'],
-                            'price': inv.currency_id.round(price_before - line.get('price', 0.0)),
+                            'price': invoice_currency.round(price_before - line.get('price', 0.0)),
                             'account_id': acc,
                             'product_id': line['product_id'],
                             'uom_id': line['uom_id'],

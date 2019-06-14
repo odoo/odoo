@@ -5,24 +5,23 @@
 # Translators:
 # Kateryna Onyshchenko <Katrona17@gmail.com>, 2017
 # Евгений Жердев <e.v.zherdev@gmail.com>, 2017
-# Martin Trigaux, 2017
 # Анатолій Пономаренко <Ponomarenkoa@minfin.gov.ua>, 2017
 # Анатолій Пономаренко <aponomarenko020@gmail.com>, 2017
 # ТАрас <tratatuta@i.ua>, 2017
 # Olha Koshelieva <olha.koshelieva@gmail.com>, 2017
 # Dmytro Kriesovich <dimscoffer@bigmir.net>, 2017
 # Артём Инжиянц <artem.inzhyyants@gmail.com>, 2018
-# iraqez <vladimir.gumenyuk@gmail.com>, 2018
 # Zoriana Zaiats, 2018
-# Bohdan Lisnenko, 2018
 # Olga Lugova <trolka.olug@gmail.com>, 2018
+# Bohdan Lisnenko, 2018
+# Martin Trigaux, 2019
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -1179,7 +1178,7 @@ msgstr "Останній рядок терміну оплати повинен �
 #: code:addons/account/models/account_invoice.py:1702
 #, python-format
 msgid "A Payment Terms should have only one line of type Balance."
-msgstr "Тільки один рядок терміну оплати повинен бути з типом оплати Баланс"
+msgstr "Термін оплати повинен мати тільки один рядок типу Балансу."
 
 #. module: account
 #: code:addons/account/models/account.py:722
@@ -1476,7 +1475,7 @@ msgstr "Звіти рахунку"
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
 msgid "Account Rounding"
-msgstr "Оформлення рахунку"
+msgstr "Округлення в бухобліку"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template_account_src_id
@@ -1505,7 +1504,7 @@ msgstr "Теги рахунків"
 #: model:ir.ui.view,arch_db:account.view_tax_form
 #: model:ir.ui.view,arch_db:account.view_tax_tree
 msgid "Account Tax"
-msgstr "Рахунок податку"
+msgstr "Податок рахунку"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -2749,7 +2748,7 @@ msgstr "По країнах"
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_refund
 msgid "By Credit Note"
-msgstr "За стерно"
+msgstr "За сторно"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product
@@ -3002,7 +3001,7 @@ msgstr "Категорія рахунку доходів"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Change"
-msgstr "Здача"
+msgstr "Решта"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_writeoff_label
@@ -3144,7 +3143,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Checks"
-msgstr "Перевірки"
+msgstr "Чеки"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_children_tax_ids
@@ -3431,7 +3430,7 @@ msgstr "Створити електронний лист"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Compute tax rates based on U.S. ZIP codes"
-msgstr "Розрахувати податки на підставі почтовогу індексу США"
+msgstr "Розрахувати податки на підставі поштового індексу США"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_counterpart
@@ -3869,7 +3868,7 @@ msgstr "Дата сторно"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence_id
 msgid "Credit Note Entry Sequence"
-msgstr "Послідовність запису кредитної примітки"
+msgstr "Послідовність запису сторно"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3879,7 +3878,7 @@ msgstr "Сторно"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence_number_next
 msgid "Credit Notes: Next Number"
-msgstr "Кредитна примітка: наступний номер"
+msgstr "Сторно: наступний номер"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_credit_account_id
@@ -3999,7 +3998,7 @@ msgstr "Сторно клієнта"
 #: model:ir.actions.act_window,name:account.action_invoice_out_refund
 #: model:ir.ui.menu,name:account.menu_action_invoice_out_refund
 msgid "Customer Credit Notes"
-msgstr "Кредитні примітки клієнта"
+msgstr "Сторно клієнта"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4611,7 +4610,12 @@ msgid "Due date"
 msgstr "Установлений термін"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1176
+#: model:ir.ui.view,arch_db:account.view_move_form
+msgid "Duplicate"
+msgstr "Дублювати"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1194
 #, python-format
 msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
@@ -5005,7 +5009,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_receivables_follow_up
 msgid "Follow-up"
-msgstr "Післядія"
+msgstr "Нагадування"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_reports_followup
@@ -6644,7 +6648,7 @@ msgid ""
 msgstr ""
 "Останнім часом для цього партнера виконано звірку рахунків-фактур та "
 "платежів. Вона виконується, якщо у вас немає принаймні неузгодженого дебету "
-"та невмотивованих кредитів, або якщо ви натискаєте кнопку \"Готово\"."
+"та кредиту, або якщо ви натискаєте кнопку \"Готово\"."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_last_time_entries_checked
@@ -6783,7 +6787,7 @@ msgstr "Рахунок витрат від курсових різниць"
 #: code:addons/account/models/chart_template.py:195
 #, python-format
 msgid "MISC"
-msgstr "ІНШ"
+msgstr "ІНШІ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6963,7 +6967,7 @@ msgstr "Співставлення"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_full_reconcile_id
 msgid "Matching Number"
-msgstr "Номер співставленя"
+msgstr "Номер співставлення"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_max_date
@@ -7237,7 +7241,7 @@ msgstr "Немає деталей"
 #: code:addons/account/models/account.py:116
 #, python-format
 msgid "No opening move defined !"
-msgstr "Відкритий рух не визначено!"
+msgstr "Початковий рух не визначено!"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company_fiscalyear_lock_date
@@ -7582,7 +7586,7 @@ msgstr "Відкриття журнальних статей"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op_opening_move_posted
 msgid "Opening Move Posted"
-msgstr "Відкриття переміщення опубліковано"
+msgstr "Початковий рух опубліковано"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cashbox_line_number

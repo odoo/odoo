@@ -3,18 +3,19 @@
 # * fleet
 # 
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Cozmin Candea <office@terrabit.ro>, 2017
 # Laurentiu Archip, 2017
 # Iulian Cutui <iulian.cutui@gmail.com>, 2017
+# Martin Trigaux, 2018
+# Cozmin Candea <office@terrabit.ro>, 2018
+# Dorin Hongu <dhongu@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:56+0000\n"
-"PO-Revision-Date: 2018-07-27 11:56+0000\n"
-"Last-Translator: Iulian Cutui <iulian.cutui@gmail.com>, 2017\n"
+"POT-Creation-Date: 2019-03-29 09:08+0000\n"
+"PO-Revision-Date: 2017-09-20 10:17+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2019\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +34,7 @@ msgstr "%s %s a fost adăugat la flotă!"
 #, python-format
 msgid "%s contract(s) will expire soon and should be renewed and/or closed!"
 msgstr ""
+"%s contractul (e) va expira în curând și ar trebui reînnoit și / sau închis!"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -171,7 +173,7 @@ msgstr "Inlocuirea Placutelor de Frana"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_model_brand
 msgid "Brand of the vehicle"
-msgstr ""
+msgstr "Marcă de vehicul"
 
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_break
@@ -201,7 +203,7 @@ msgstr "Spalatorie Auto"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_car_value
 msgid "Catalog Value (VAT Incl.)"
-msgstr ""
+msgstr "Valoare (TVA inc.)"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_15
@@ -234,13 +236,15 @@ msgstr "Numărul de șasiu"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_state
 msgid "Choose whether the contract is still valid or not"
-msgstr ""
+msgstr "Alegeți dacă contractul este încă valabil sau nu"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_service_type_category
 msgid ""
 "Choose whether the service refer to contracts, vehicle services or both"
 msgstr ""
+"Alegeți dacă serviciul se referă la contracte, servicii pentru vehicule sau "
+"ambele"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_tag_action
@@ -305,7 +309,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Close Contract"
-msgstr ""
+msgstr "Închideți contractul"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,state:0
@@ -643,6 +647,8 @@ msgid ""
 "Each contract (e.g.: leasing) may include several services\n"
 "            (reparation, insurances, periodic maintenance)."
 msgstr ""
+"Fiecare contract (de exemplu: leasing) poate include mai multe servicii "
+"(reparații, asigurări, întreținere periodică)."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
@@ -667,7 +673,7 @@ msgstr "Emisii"
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_leasing
 msgid "Employee Car"
-msgstr ""
+msgstr "Mașina angajatului"
 
 #. module: fleet
 #: code:addons/fleet/models/fleet_vehicle_cost.py:44
@@ -864,6 +870,9 @@ msgid ""
 "            also filter logs of a particular vehicle using the search\n"
 "            field."
 msgstr ""
+"Aici puteți adăuga intrări de realimentare pentru toate vehiculele. De "
+"asemenea, puteți filtra jurnalele unui anumit vehicul utilizând câmpul de "
+"căutare."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
@@ -872,6 +881,9 @@ msgid ""
 "            You can also show odometer value for a particular vehicle using\n"
 "            the search field."
 msgstr ""
+"Aici puteți adăuga diferite intrări de kilometraj pentru toate vehiculele. "
+"De asemenea, puteți afișa valoarea kilometrajului pentru un anumit vehicul "
+"utilizând câmpul de căutare."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_horsepower
@@ -911,7 +923,7 @@ msgstr "Inlocuirea Bobinei de Inductie"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_acquisition_date
 msgid "Immatriculation Date"
-msgstr ""
+msgstr "Data înscrierii"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,state:0
@@ -991,6 +1003,11 @@ msgstr "Kilometri"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_kanban
 msgid "Km"
+msgstr "Km"
+
+#. module: fleet
+#: selection:fleet.vehicle,fuel_type:0
+msgid "LPG"
 msgstr ""
 
 #. module: fleet
@@ -1118,6 +1135,9 @@ msgid ""
 "            their related services, costs. Odoo will automatically warn\n"
 "            you when some contracts have to be renewed."
 msgstr ""
+"Gestionați toate contractele (leasing, asigurări etc.) cu serviciile, "
+"costurile aferente. Odoo vă va avertiza în mod automat când unele contracte "
+"trebuie reînnoite."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
@@ -1173,7 +1193,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_year
 msgid "Model Year"
-msgstr ""
+msgstr "Modelul anului"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_brand_action
@@ -1244,7 +1264,7 @@ msgstr "Nu"
 #: code:addons/fleet/models/fleet_vehicle.py:81
 #, python-format
 msgid "No Plate"
-msgstr ""
+msgstr "Fără număr"
 
 #. module: fleet
 #: code:addons/fleet/models/fleet_vehicle.py:212
@@ -1330,7 +1350,7 @@ msgstr "Registrul Controrului de kilometraj pentru un vehicul"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_odometer
 msgid "Odometer measure of the vehicle at the moment of the contract creation"
-msgstr ""
+msgstr "Măsurarea kilometrajului vehiculului la momentul creării contractului"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_odometer
@@ -1353,6 +1373,9 @@ msgid ""
 "            on your vehicle. Services can be of many type: occasional\n"
 "            repair, fixed maintenance, etc."
 msgstr ""
+"Odoo vă ajută să țineți evidența tuturor serviciilor efectuate pe vehiculul "
+"dvs. Serviciile pot fi de mai multe tipuri: reparații ocazionale, "
+"întreținere fixă etc."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_costs_action
@@ -1361,6 +1384,9 @@ msgid ""
 "                vehicles. Costs are created automatically from services,\n"
 "                contracts (fixed or recurring) and fuel logs."
 msgstr ""
+"Odoo vă ajută să gestionați costurile pentru diferitele dvs. vehicule. "
+"Costurile sunt create automat din servicii, contracte (fixe sau recurente) "
+"și jurnale de combustibil."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
@@ -1369,13 +1395,15 @@ msgid ""
 "Odoo helps you managing the costs for your different vehicles\n"
 "          Costs are generally created from services and contract and appears here."
 msgstr ""
+"Odoo vă ajută să gestionați costurile pentru diferitele dvs. vehicule\n"
+" Costurile sunt, în general, create din servicii și contract și apar aici."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_action
 msgid ""
 "Odoo will warn you when services or contract have to be\n"
 "            renewed."
-msgstr ""
+msgstr "Odoo vă va avertiza când serviciile sau contractul trebuie reînnoite."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_31
@@ -1475,7 +1503,7 @@ msgstr "Prețul pe litru"
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_purchased
 msgid "Purchased"
-msgstr ""
+msgstr "Achiziționat"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_purchaser_id
@@ -2053,7 +2081,7 @@ msgstr "An"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_year
 msgid "Year of the model"
-msgstr ""
+msgstr "Anul modelului"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
@@ -2066,6 +2094,8 @@ msgid ""
 "You can customize available status to track the evolution of\n"
 "            each vehicle. Example: Active, Being Repaired, Sold."
 msgstr ""
+"Puteți personaliza starea disponibilă pentru a urmări evoluția fiecărui "
+"vehicul. Exemplu: activ, fiind reparate, vândute."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
@@ -2079,6 +2109,9 @@ msgid ""
 "            contracts, services, fixed and recurring costs, odometers and\n"
 "            fuel logs associated to each vehicle."
 msgstr ""
+"Veți putea gestiona flota prin urmărirea contractelor, a serviciilor, a "
+"costurilor fixe și recurente, a kilometrajelor și a consumurilor de "
+"combustibil asociate fiecărui vehicul."
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form

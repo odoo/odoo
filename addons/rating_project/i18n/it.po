@@ -3,17 +3,19 @@
 # * rating_project
 # 
 # Translators:
-# Paolo Valier, 2017
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Giovanni Perteghella <giovanni@perteghella.org>, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2018
+# Paolo Valier, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:12+0000\n"
-"PO-Revision-Date: 2017-11-30 13:12+0000\n"
-"Last-Translator: Simone Bernini <simone@aperturelabs.it>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:22+0000\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -112,12 +114,12 @@ msgstr "% per attività"
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "<i class=\"fa fa-smile-o\"/> No rating yet"
-msgstr ""
+msgstr "<i class=\"fa fa-smile-o\"/> Nessuna valutazione al momento"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid "Automatic kanban status"
-msgstr ""
+msgstr "Stato kanban automatico"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
@@ -145,6 +147,8 @@ msgid ""
 "Customer ratings on tasks. If you have no rating, change your project "
 "Settings to activate it."
 msgstr ""
+"Valutazioni delle attività da parte del cliente. Se non sono disponibili, "
+"modificare la configurazione del progetto per attivarle."
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_project_report
@@ -173,12 +177,12 @@ msgstr ""
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_project
 msgid "Happy % on Project"
-msgstr ""
+msgstr "% soddisfatto del progetto"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_task
 msgid "Happy % on Task"
-msgstr ""
+msgstr "% soddisfatto dell'attività"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_project_rating_status
@@ -189,6 +193,11 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"Come conoscere l'opinione di un cliente?\n"
+"- Valutazione quando si verifica un cambiamento di fase: una email viene inviata quando un'attività o un problema cambia di fase\n"
+"- Valutazione periodica: una email viene inviata regolarmente\n"
+"\n"
+"Non dimenticare di configurare i modelli di email per le fasi in cui si desidera avere un commento del cliente."
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
@@ -197,6 +206,9 @@ msgid ""
 "stage', then an email will be sent to the customer when the task reaches "
 "this step."
 msgstr ""
+"Se questa opzione è attivata e se il progetto è configurato per una "
+"\"Valutazione quando si verifica un cambiamento di fase\", una email verrà "
+"inviata al cliente quando l'attività raggiungerà questa fase. "
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
@@ -234,6 +246,8 @@ msgid ""
 "Percentage of happy ratings over the past 30 days. Get rating details from "
 "the More menu."
 msgstr ""
+"Percentuale di valutazioni positive negli ultimi 30 giorni. I dettagli delle"
+" valutazioni possono essere visualizzati nel menu Altro."
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
@@ -251,7 +265,7 @@ msgstr "Progetto"
 #: model:ir.cron,cron_name:rating_project.ir_cron_rating_project
 #: model:ir.cron,name:rating_project.ir_cron_rating_project
 msgid "Project: Send rating"
-msgstr ""
+msgstr "Progetto: inviare la valutazione"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -261,7 +275,7 @@ msgstr "Quadrimstrale"
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_search
 msgid "Rated tasks"
-msgstr ""
+msgstr "Attività valutate"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating
@@ -282,7 +296,7 @@ msgstr "Frequenza valutazione"
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_request_deadline
 msgid "Rating Request Deadline"
-msgstr ""
+msgstr "Scadenza richiesta di valutazione"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
@@ -303,7 +317,7 @@ msgstr "Valutazioni"
 #: code:addons/rating_project/models/project.py:107
 #, python-format
 msgid "Ratings of %s"
-msgstr ""
+msgstr "Valutazioni di %s"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating_task
@@ -313,7 +327,7 @@ msgstr ""
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.res_config_settings_view_form
 msgid "Set Email Template to Stages"
-msgstr ""
+msgstr "Definire un modello di email per fase"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task

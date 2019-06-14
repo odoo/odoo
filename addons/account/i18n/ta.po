@@ -2,12 +2,16 @@
 # This file contains the translation of the following modules:
 # * account
 # 
+# Translators:
+# Alagappan Karthikeyan <me@karthik.sg>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
+"Last-Translator: Alagappan Karthikeyan <me@karthik.sg>, 2019\n"
 "Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +52,7 @@ msgstr ""
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
 msgid "${(object.name or '').replace('/','-')}"
-msgstr ""
+msgstr "$ {(பொருள். பெயர் அல்லது '') .அமைப்பு ('/', '-')}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
@@ -104,12 +108,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "-> Reconcile"
-msgstr ""
+msgstr "-> மறுபயன்பாடு"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr ""
+msgstr "-> பகுதியளவு சமரசம் உள்ளீடுகளை காண்க"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:463
@@ -927,6 +931,13 @@ msgid ""
 "                your cash box, and then post entries when money comes in or\n"
 "                goes out of the cash box."
 msgstr ""
+"ரொக்கப் பதிவு உங்கள் பணத்தில் பண உள்ளீடுகளை நிர்வகிக்க உங்களை அனுமதிக்கிறது\n"
+"                 பத்திரிகைகள். இந்த அம்சம் பணத்தை பின்பற்ற எளிய வழி வழங்குகிறது\n"
+"                 தினசரி அடிப்படையில் பணம் செலுத்துதல். நீங்கள் நாணயங்களை உள்ளிடலாம்\n"
+"                 இல்\n"
+"                 உங்கள் பண பெட்டியில், பின்னர் பணம் உள்ளிடும் போது பதிவுகளை இடுகையிடவும்\n"
+"                 அல்லது\n"
+"                 பண பெட்டியிலிருந்து வெளியே செல்கிறது."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:383
@@ -959,6 +970,9 @@ msgid ""
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodicaly from your bank."
 msgstr ""
+"ஒரு வங்கி அறிக்கை அனைத்து நிதி பரிவர்த்தனைகளின் சுருக்கம் ஆகும்\n"
+"                 ஒரு வங்கிக் கணக்கில் குறிப்பிட்ட காலப்பகுதியில் ஏற்படும். நீங்கள்\n"
+"                 உங்கள் வங்கியிலிருந்து இந்த காலவரிசையை பெற வேண்டும்."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
@@ -971,6 +985,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
+"ஒரு பத்திரிகை நுழைவு பல பத்திரிகை பொருட்களை கொண்டுள்ளது, ஒவ்வொரு\n"
+"                 இது ஒரு பற்று அல்லது கடன் பரிவர்த்தனை ஆகும்."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
@@ -978,6 +994,8 @@ msgid ""
 "A journal is used to record transactions of all accounting data\n"
 "                related to the day-to-day business."
 msgstr ""
+"அனைத்து கணக்கியல் தரவின் பரிவர்த்தனைகளையும் பதிவு செய்ய ஒரு பத்திரிகை பயன்படுத்தப்படுகிறது\n"
+"                 தினசரி வணிகம் தொடர்பானது."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1001,7 +1019,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:891
 #, python-format
 msgid "A reconciliation must involve at least 2 move lines."
-msgstr ""
+msgstr "ஒரு சமரசம் குறைந்தபட்சம் 2 நகர்வுகளை உள்ளடக்கியது."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1009,6 +1027,9 @@ msgid ""
 "A rounding per line is advised if your prices are tax-included. That way, "
 "the sum of line subtotals equals the total with taxes."
 msgstr ""
+"உங்கள் விலை வரிக்கு உட்பட்டால் வரிக்கு ஒரு சுற்றுக்கு ஆலோசனை "
+"வழங்கப்படுகிறது. அந்த வழியில் வரி வரிகளின் மொத்த தொகையை வரிகளுடன் மொத்தமாக "
+"சமன் செய்கிறது."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:881
@@ -1039,7 +1060,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
-msgstr ""
+msgstr "கூட்டாளர் (கணக்கு) மீது ஒரு எச்சரிக்கை அமைக்கப்படலாம்"
 
 #. module: account
 #. openerp-web
@@ -1066,12 +1087,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_search
 #, python-format
 msgid "Account"
-msgstr ""
+msgstr "கணக்கு"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
 msgid "Account Accountant"
-msgstr ""
+msgstr "கணக்கு கணக்காளர்"
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
@@ -1111,14 +1132,14 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
 msgid "Account Common Report"
-msgstr ""
+msgstr "கணக்கு பொதுவான அறிக்கை"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_currency_id
 #: model:ir.model.fields,field_description:account.field_account_account_template_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_currency_id
 msgid "Account Currency"
-msgstr ""
+msgstr "கணக்கு நாணயம்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template_account_dest_id
@@ -1140,7 +1161,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_group_tree
 msgid "Account Groups"
-msgstr ""
+msgstr "கணக்கு குழுக்கள்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_bank_journal_id
@@ -1175,7 +1196,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_bank_acc_number
 msgid "Account Number"
-msgstr ""
+msgstr "கணக்கு எண்"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_partner_ledger
@@ -1211,7 +1232,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_financial_report_search
 #: model:ir.ui.view,arch_db:account.view_account_financial_report_tree
 msgid "Account Report"
-msgstr ""
+msgstr "கணக்கு அறிக்கை"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_account_report_id
@@ -1245,7 +1266,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.account_tag_action
 msgid "Account Tags"
-msgstr ""
+msgstr "கணக்கு குறிச்சொற்கள்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_tax_form
@@ -1276,7 +1297,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_valuation_account_id
 #: model:ir.model.fields,field_description:account.field_res_company_property_stock_valuation_account_id
 msgid "Account Template for Stock Valuation"
-msgstr ""
+msgstr "பங்கு மதிப்பீட்டுக்கான கணக்கு டெம்ப்ளேட்"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_template_form
@@ -1309,6 +1330,9 @@ msgid ""
 "legal reports, and set the rules to close a fiscal year and generate opening"
 " entries."
 msgstr ""
+"கணக்கு வகை தகவல் நோக்கத்திற்காக பயன்படுத்தப்படுகிறது, நாட்டின் குறிப்பிட்ட "
+"சட்ட அறிக்கைகள் உருவாக்க, மற்றும் ஒரு நிதியாண்டில் மூடுவதற்கு மற்றும் தொடக்க"
+" நுழைவுகளை உருவாக்க விதிகள் அமைக்க."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_type_form
@@ -1319,7 +1343,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_type_control_ids
 msgid "Account Types Allowed"
-msgstr ""
+msgstr "கணக்கு வகைகள் அனுமதிக்கப்பட்டன"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
@@ -1354,7 +1378,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_src_id
 msgid "Account on Product"
-msgstr ""
+msgstr "தயாரிப்பு பற்றிய கணக்கு"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_tag_ids
@@ -1426,7 +1450,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_date
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_date
 msgid "Accounting Date"
-msgstr ""
+msgstr "கணக்கியல் தேதி"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -1461,12 +1485,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
 #: model:ir.ui.view,arch_db:account.view_account_search
 msgid "Accounts"
-msgstr ""
+msgstr "கணக்குகள்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_account_control_ids
 msgid "Accounts Allowed"
-msgstr ""
+msgstr "கணக்குகள் அனுமதிக்கப்பட்டன"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
@@ -1502,7 +1526,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax_template_active
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Active"
-msgstr ""
+msgstr "செயலில்"
 
 #. module: account
 #. openerp-web
@@ -1548,7 +1572,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Address"
-msgstr ""
+msgstr "முகவரி"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_tax_id
@@ -1609,7 +1633,7 @@ msgstr ""
 #: selection:account.common.account.report,display_account:0
 #: selection:account.report.general.ledger,display_account:0
 msgid "All"
-msgstr ""
+msgstr "அனைத்து"
 
 #. module: account
 #: selection:account.aged.trial.balance,target_move:0
@@ -1681,6 +1705,8 @@ msgid ""
 "All invoices and payments have been matched, your accounts' balances are "
 "clean."
 msgstr ""
+"அனைத்து பொருள் மற்றும் பணம் பொருந்தும், உங்கள் கணக்குகள் 'நிலுவைகளை சுத்தமாக"
+" உள்ளன."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_state
@@ -1691,6 +1717,11 @@ msgid ""
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' status."
 msgstr ""
+"அனைத்து கைமுறையாக உருவாக்கப்பட்ட புதிய ஜர்னல் உள்ளீடுகளை வழக்கமாக நிலை "
+"'Unposted' நிலையில் இருக்கும், ஆனால் தொடர்புடைய இதழில் அந்த நிலையை தவிர்க்க "
+"நீங்கள் விருப்பத்தை அமைக்கலாம். அந்த வழக்கில், ஆவணத்தின் சரிபார்ப்பு "
+"(பொருள், வங்கி அறிக்கைகள் ...) மீது தானாகவே உருவாக்கப்பட்ட ஜர்னல் பதிவுகள், "
+"'அனுப்புக' நிலையில் உருவாக்கப்படும்."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.validate_account_move_view
@@ -1705,12 +1736,12 @@ msgstr ""
 msgid ""
 "All the account entries lines must be processed in order to close the "
 "statement."
-msgstr ""
+msgstr "அறிக்கையை மூட அனைத்து கணக்கு உள்ளீடுகளும் செயலாக்கப்பட வேண்டும்."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_update_posted
 msgid "Allow Cancelling Entries"
-msgstr ""
+msgstr "Allow Cancelling Entries"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_reconcile
@@ -1725,22 +1756,22 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_reconcile
 msgid "Allow Reconciliation"
-msgstr ""
+msgstr "நல்லிணக்கத்தை அனுமதி"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_l10n_us_check_printing
 msgid "Allow check printing and deposits"
-msgstr ""
+msgstr "காசோலை அச்சிடுதல் மற்றும் வைப்புகளை அனுமதிக்கவும்"
 
 #. module: account
 #: model:res.groups,name:account.group_cash_rounding
 msgid "Allow the cash rounding management"
-msgstr ""
+msgstr "ரொக்க ரவுண்டிங் மேலாண்மை அனுமதி"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allow to configure taxes using cash basis"
-msgstr ""
+msgstr "ரொக்க அடிப்படையில் வரிகளை கட்டமைக்க அனுமதி"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1782,7 +1813,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount_currency
 #: model:ir.model.fields,field_description:account.field_account_move_line_amount_currency
 msgid "Amount Currency"
-msgstr ""
+msgstr "தொகை நாணயம்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual
@@ -1814,7 +1845,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal_signed
 msgid "Amount Signed"
-msgstr ""
+msgstr "தொகை கையொப்பமிட்டது"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_amount_type
@@ -1892,13 +1923,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Analytic Account"
-msgstr ""
+msgstr "பகுப்பாய்வு கணக்கு"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_group_analytic_accounting
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
 msgid "Analytic Accounting"
-msgstr ""
+msgstr "பகுப்பாய்வு கணக்கியல்"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_partner_analytic_accounts
@@ -1906,7 +1937,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.partner_view_button_contracts_count
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Analytic Accounts"
-msgstr ""
+msgstr "பகுப்பாய்வுக் கணக்குகள்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template_analytic
@@ -1918,23 +1949,23 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_reporting
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
 msgid "Analytic Entries"
-msgstr ""
+msgstr "பகுப்பாய்வு உள்ளீடுகள்"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "பகுப்பாய்வு வரி"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Analytic Lines"
-msgstr ""
+msgstr "பகுப்பாய்வு கோடுகள்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_analytic_tag_ids
 #: model:ir.ui.menu,name:account.account_analytic_tag_menu
 msgid "Analytic Tags"
-msgstr ""
+msgstr "பகுப்பாய்வு குறிச்சொற்கள்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_account_analytic_id
@@ -2017,7 +2048,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_search
 msgid "Archived"
-msgstr ""
+msgstr "காப்பகப்படுத்தியவை"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -2027,7 +2058,7 @@ msgstr ""
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
 msgid "Assets"
-msgstr ""
+msgstr "சொத்துக்கள்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_asset
@@ -2042,12 +2073,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_at_least_one_inbound
 msgid "At Least One Inbound"
-msgstr ""
+msgstr "குறைந்த ஒரு உள்வட்டத்தில்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_at_least_one_outbound
 msgid "At Least One Outbound"
-msgstr ""
+msgstr "குறைந்த ஒரு வெளிச்சத்தில்"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -2135,7 +2166,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "Balance"
-msgstr ""
+msgstr "இருப்பு"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_balance_cash_basis
@@ -2148,12 +2179,13 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_account_report_bs
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Balance Sheet"
-msgstr ""
+msgstr "இருப்பு தாள்"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_balance_end
 msgid "Balance as calculated based on Opening Balance and transaction lines"
 msgstr ""
+"திறனை சமநிலை மற்றும் பரிவர்த்தனை கோடுகளின் அடிப்படையில் கணக்கிடப்படுகிறது"
 
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
@@ -2164,7 +2196,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_users_bank_account_count
 #, python-format
 msgid "Bank"
-msgstr ""
+msgstr "வங்கி"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2182,7 +2214,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
 #, python-format
 msgid "Bank Account"
-msgstr ""
+msgstr "வங்கி கணக்கு"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_bank_journal_form
@@ -2196,6 +2228,9 @@ msgid ""
 "account if this is a Customer Invoice or Vendor Credit Note, otherwise a "
 "Partner bank account number."
 msgstr ""
+"வங்கிக் கணக்கு எண், இதில் விலைப்பட்டியல் செலுத்தப்படும். ஒரு வாடிக்கையாளர் "
+"விலைப்பட்டியல் அல்லது விற்பனையாளர் குறிப்பு குறிப்பு இல்லையெனில் ஒரு "
+"கூட்டாளர் வங்கிக் கணக்கு எண்."
 
 #. module: account
 #. openerp-web
@@ -2205,7 +2240,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_action_account_bank_journal_form
 #, python-format
 msgid "Bank Accounts"
-msgstr ""
+msgstr "வங்கி கணக்குகள்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_bank_account_code_prefix
@@ -2215,7 +2250,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_bank_statements_source
 msgid "Bank Feeds"
-msgstr ""
+msgstr "வங்கி ஊட்டங்கள்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_yodlee
@@ -2252,7 +2287,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
-msgstr ""
+msgstr "வங்கி அறிக்கை"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:937
@@ -2263,7 +2298,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "வங்கி அறிக்கை வரி"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_line
@@ -2319,13 +2354,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_base
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
 msgid "Base"
-msgstr ""
+msgstr "அடித்தளம்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_tax_base_amount
 #: model:ir.ui.view,arch_db:account.report_journal
 msgid "Base Amount"
-msgstr ""
+msgstr "அடிப்படை தொகை"
 
 #. module: account
 #: selection:account.tax,tax_exigibility:0
@@ -2362,7 +2397,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_belongs_to_company
 msgid "Belong to the user's current company"
-msgstr ""
+msgstr "பயனரின் தற்போதைய நிறுவனத்திற்கு சொந்தமானது"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2374,7 +2409,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_tree
 msgid "Bill Date"
-msgstr ""
+msgstr "பில் தேதி"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -2469,6 +2504,8 @@ msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
 msgstr ""
+"செயல்திறன் புலத்தைத் தேர்வு செய்வதன் மூலம், அதை நீக்காமல் ஒரு நிதி நிலையை "
+"மறைக்கலாம்."
 
 #. module: account
 #: code:addons/account/models/chart_template.py:173
@@ -2521,7 +2558,7 @@ msgstr ""
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: selection:account.payment,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "ரத்து"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_page
@@ -2554,7 +2591,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:229
 #, python-format
 msgid "Cannot create unbalanced journal entry."
-msgstr ""
+msgstr "சமநிலையற்ற பத்திரிகை நுழைவு உருவாக்க முடியாது."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:641
@@ -2563,6 +2600,8 @@ msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
 "Please go to Account Configuration."
 msgstr ""
+"இந்த நிறுவனத்திற்கான கணக்குகளின் பட்டியலைக் கண்டுபிடிக்க முடியவில்லை, நீங்கள் அதை கட்டமைக்க வேண்டும்.\n"
+"கணக்கு கட்டமைப்பிற்கு செல்க."
 
 #. module: account
 #: code:addons/account/models/account.py:594
@@ -2576,6 +2615,8 @@ msgstr ""
 msgid ""
 "Cannot generate an unused journal code. Please fill the 'Shortcode' field."
 msgstr ""
+"பயன்படுத்தப்படாத பத்திரிகை குறியீட்டை உருவாக்க முடியாது. "
+"'சுருக்குக்குறியீடு' புலத்தை நிரப்பவும்."
 
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
@@ -2583,7 +2624,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:758
 #, python-format
 msgid "Cash"
-msgstr ""
+msgstr "பணம்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_cash_account_code_prefix
@@ -2593,7 +2634,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_tax_exigibility
 msgid "Cash Basis"
-msgstr ""
+msgstr "பண அடிப்படைகள்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_tax_cash_basis_journal_id
@@ -2712,6 +2753,8 @@ msgid ""
 "Changing your name is not allowed once invoices have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
+"உங்கள் கணக்கிற்கான பொருள் வழங்கப்பட்டதும் உங்கள் பெயரை மாற்றுதல் "
+"அனுமதிக்கப்படாது. இந்த நடவடிக்கைக்கு நேரடியாக எங்களை தொடர்பு கொள்ளவும்."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_chart_template_id
@@ -2783,6 +2826,8 @@ msgid ""
 "Check this box if this account allows invoices & payments matching of "
 "journal items."
 msgstr ""
+"பத்திரிகை உருப்படிகளின் பொருள்கள் மற்றும் பணம் செலுத்தும் பொருளை இந்த கணக்கு"
+" அனுமதித்தால், இந்த பெட்டியை சரிபார்க்கவும்."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence
@@ -2790,6 +2835,9 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
 msgstr ""
+"இந்த பத்திரிகையிலிருந்து உருவாக்கப்பட்ட பொருள் மற்றும் கடன் குறிப்புகளுக்கான"
+" அதே காட்சியை நீங்கள் பகிர்ந்து கொள்ள விரும்பவில்லை என்றால் இந்த பெட்டியை "
+"சரிபார்க்கவும்"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_update_posted
@@ -2797,6 +2845,9 @@ msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
 msgstr ""
+"இந்த பத்திரிகை தொடர்பான இந்த உள்ளீடுகளை அல்லது இந்த பத்திரிகை தொடர்பான "
+"விவரப்பட்டியல் ரத்துசெய்ய அனுமதிக்க விரும்பினால் இந்த பெட்டியை "
+"சரிபார்க்கவும்"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_price_include
@@ -2805,17 +2856,21 @@ msgid ""
 "Check this if the price you use on the product and invoices includes this "
 "tax."
 msgstr ""
+"தயாரிப்பு மற்றும் பொருள் மீது நீங்கள் பயன்படுத்தும் விலை இந்த வரி அடங்கும் "
+"என்றால் இதை சரிபார்க்கவும்."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template_reconcile
 msgid ""
 "Check this option if you want the user to reconcile entries in this account."
 msgstr ""
+"இந்த கணக்கில் பயனர் உள்ளீடுகளை மறுசீரமைக்க விரும்பினால் இந்த விருப்பத்தைச் "
+"சரிபார்க்கவும்."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Checks"
-msgstr ""
+msgstr "காசோலைகள்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_children_tax_ids
@@ -2915,7 +2970,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:260
 #, python-format
 msgid "Close"
-msgstr ""
+msgstr "நெருக்கமான"
 
 #. module: account
 #. openerp-web
@@ -2939,7 +2994,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_register_payments_payment_method_code
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "Code"
-msgstr ""
+msgstr "குறியீடு"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group_code_prefix
@@ -2960,7 +3015,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_tag_color
 #: model:ir.model.fields,field_description:account.field_account_journal_color
 msgid "Color Index"
-msgstr ""
+msgstr "வண்ண குறியீட்டு"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_label_filter
@@ -2970,7 +3025,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_comment
 msgid "Comment"
-msgstr ""
+msgstr "கருத்து"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_commercial_partner_id
@@ -2986,7 +3041,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "Communication"
-msgstr ""
+msgstr "தொடர்பாடல்"
 
 #. module: account
 #: model:ir.model,name:account.model_res_company
@@ -3046,7 +3101,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_line_company_currency_id
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_company_currency_id
 msgid "Company Currency"
-msgstr ""
+msgstr "நிறுவனத்தின் நாணயம்"
 
 #. module: account
 #. openerp-web
@@ -3075,7 +3130,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment_company_id
 #: model:ir.model.fields,help:account.field_account_register_payments_company_id
 msgid "Company related to this journal"
-msgstr ""
+msgstr "இந்த பத்திரிகை தொடர்பான நிறுவனம்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3167,14 +3222,14 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Configure"
-msgstr ""
+msgstr "கட்டமைக்கவும்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_cashbox
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
 #: model:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Confirm"
-msgstr ""
+msgstr "உறுதிப்படுத்தவும்"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_invoice_confirm
@@ -3200,7 +3255,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Confirmed"
-msgstr ""
+msgstr "உறுதி"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
@@ -3208,6 +3263,8 @@ msgid ""
 "Confirming this will create automatically a journal entry with the "
 "difference in the profit/loss account set on the cash journal."
 msgstr ""
+"இதை உறுதிப்படுத்துவது, தானாக ஒரு பத்திரிகை இடுகையை உருவாக்கி, பணத்தாளில் "
+"உள்ள இலாப / இழப்பு கணக்கில் வித்தியாசத்தை உருவாக்குகிறது."
 
 #. module: account
 #. openerp-web
@@ -3230,7 +3287,7 @@ msgstr ""
 #: model:ir.model,name:account.model_account_abstract_payment
 msgid ""
 "Contains the logic shared between models which allows to register payments"
-msgstr ""
+msgstr "பணம் பதிவு செய்ய அனுமதிக்கும் மாதிரிகள் இடையே தர்க்கம் பகிர்ந்து"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_contract_ids
@@ -3248,7 +3305,7 @@ msgstr ""
 #. module: account
 #: model:account.account.type,name:account.data_account_type_direct_costs
 msgid "Cost of Revenue"
-msgstr ""
+msgstr "வருவாய் செலவு"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:873
@@ -3278,7 +3335,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_country_group_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_country_group_id
 msgid "Country Group"
-msgstr ""
+msgstr "நாடு குழு"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_country_id
@@ -3474,12 +3531,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "Credit"
-msgstr ""
+msgstr "கடன்"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_credit_card
 msgid "Credit Card"
-msgstr ""
+msgstr "கடன் அட்டை"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_credit_cash_basis
@@ -3527,7 +3584,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence_id
 msgid "Credit Note Entry Sequence"
-msgstr ""
+msgstr "கடன் குறிப்பு நுழைவு வரிசை"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3537,7 +3594,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence_number_next
 msgid "Credit Notes: Next Number"
-msgstr ""
+msgstr "கடன் குறிப்புகள்: அடுத்த எண்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_credit_account_id
@@ -3552,7 +3609,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_matched_credit_ids
 msgid "Credit journal items that are matched with this journal item."
-msgstr ""
+msgstr "இந்த பத்திரிகை உருப்படிடன் பொருந்தப்பட்ட கடன் பத்திரிகை உருப்படிகள்."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -3621,17 +3678,17 @@ msgstr ""
 #: model:account.account.type,name:account.data_account_type_current_assets
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Current Assets"
-msgstr ""
+msgstr "நடப்பு சொத்து"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_liabilities
 msgid "Current Liabilities"
-msgstr ""
+msgstr "தற்போதைய கடன் பொறுப்புகள்"
 
 #. module: account
 #: model:account.account.type,name:account.data_unaffected_earnings
 msgid "Current Year Earnings"
-msgstr ""
+msgstr "தற்போதைய வருடாந்திர வருவாய்"
 
 #. module: account
 #: selection:account.abstract.payment,partner_type:0
@@ -3642,7 +3699,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model:ir.ui.view,arch_db:account.view_account_payment_tree
 msgid "Customer"
-msgstr ""
+msgstr "வாடிக்கையாளர்"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
@@ -3702,12 +3759,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "Customer ref:"
-msgstr ""
+msgstr "வாடிக்கையாளர் மறுப்பு:"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_customer
 msgid "Customers"
-msgstr ""
+msgstr "வாடிக்கையாளர்கள்"
 
 #. module: account
 #: selection:account.cash.rounding,rounding_method:0
@@ -3753,14 +3810,14 @@ msgstr ""
 msgid ""
 "Date at which the opening entry of this company's accounting has been "
 "posted."
-msgstr ""
+msgstr "இந்த நிறுவனத்தின் கணக்கியல் திறந்த இடுகை வெளியிடப்பட்ட தேதி."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op_opening_date
 msgid ""
 "Date from which the accounting is managed in Odoo. It is the date of the "
 "opening entry."
-msgstr ""
+msgstr "கணக்கியல் ஒடூவில் நிர்வகிக்கப்படும் தேதி. தொடக்க நுழைவு தேதி இது."
 
 #. module: account
 #. openerp-web
@@ -3812,7 +3869,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "Debit"
-msgstr ""
+msgstr "டெபிட்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_debit_cash_basis
@@ -3852,17 +3909,17 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr ""
+msgstr "அர்ப்பணித்து கடன் குறிப்பு வரிசை"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_default_credit_account_id
 msgid "Default Credit Account"
-msgstr ""
+msgstr "இயல்புநிலை கடன் கணக்கு"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_default_debit_account_id
 msgid "Default Debit Account"
-msgstr ""
+msgstr "இயல்புநிலை பற்று கணக்கு"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_default_purchase_tax_id
@@ -3932,7 +3989,7 @@ msgstr ""
 #: model:account.account.type,name:account.data_account_type_depreciation
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Depreciation"
-msgstr ""
+msgstr "தேய்மானம்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.cash_box_out_form
@@ -3979,7 +4036,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_difference
 msgid "Difference"
-msgstr ""
+msgstr "வேறுபாடு"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_writeoff_account_id
@@ -4007,7 +4064,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.setup_opening_move_wizard_form
 msgid "Discard"
-msgstr ""
+msgstr "நிராகரி"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_discount
@@ -4149,7 +4206,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Download"
-msgstr ""
+msgstr "பதிவிறக்க"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4163,7 +4220,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Draft"
-msgstr ""
+msgstr "வரைவு"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -4221,7 +4278,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #, python-format
 msgid "Due Date"
-msgstr ""
+msgstr "தேதி தேதி"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -4249,12 +4306,19 @@ msgid "Due date"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1176
+#: model:ir.ui.view,arch_db:account.view_move_form
+msgid "Duplicate"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1194
 #, python-format
 msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
 "vendor bill/credit note."
 msgstr ""
+"நகல் விற்பனையாளர் குறிப்பு கண்டறியப்பட்டது. நீங்கள் இருமடங்கு அதே "
+"விற்பனையாளர் மசோதா / கிரெடிட் குறிப்பில் குறியிடப்பட்டிருக்கலாம்."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_reports
@@ -4366,7 +4430,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_sequence_id
 msgid "Entry Sequence"
-msgstr ""
+msgstr "நுழைவு வரிசை"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_move_line_ids
@@ -4442,7 +4506,7 @@ msgstr ""
 #: model:account.account.type,name:account.data_account_type_expenses
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Expenses"
-msgstr ""
+msgstr "செலவுகள்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_reference
@@ -4508,7 +4572,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_report
 #: model:ir.ui.menu,name:account.menu_account_reports
 msgid "Financial Reports"
-msgstr ""
+msgstr "நிதி அறிக்கைகள்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_fy_data_done
@@ -4566,7 +4630,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_position_template_tree
 #: model:ir.ui.view,arch_db:account.view_account_position_tree
 msgid "Fiscal Position"
-msgstr ""
+msgstr "நிதி நிலை"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_name
@@ -4593,13 +4657,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op_fiscalyear_last_day
 #: model:ir.model.fields,field_description:account.field_res_company_fiscalyear_last_day
 msgid "Fiscalyear Last Day"
-msgstr ""
+msgstr "கடைசி நாள்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op_fiscalyear_last_month
 #: model:ir.model.fields,field_description:account.field_res_company_fiscalyear_last_month
 msgid "Fiscalyear Last Month"
-msgstr ""
+msgstr "நிதி ஆண்டு கடந்த மாதம்"
 
 #. module: account
 #: selection:account.reconcile.model,amount_type:0
@@ -4609,7 +4673,7 @@ msgstr ""
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Fixed"
-msgstr ""
+msgstr "நிலையான"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -4634,12 +4698,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_receivables_follow_up
 msgid "Follow-up"
-msgstr ""
+msgstr "பின்தொடர்தல்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_reports_followup
 msgid "Follow-up Levels"
-msgstr ""
+msgstr "பின்தொடர் நிலைகள்"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_report_sign
@@ -4733,7 +4797,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Future Activities"
-msgstr ""
+msgstr "எதிர்கால செயல்பாடுகள்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -4751,17 +4815,17 @@ msgstr ""
 #: model:ir.actions.report,name:account.action_report_general_ledger
 #: model:ir.ui.menu,name:account.menu_general_ledger
 msgid "General Ledger"
-msgstr ""
+msgstr "பொது பேரேடு"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
 msgid "General Ledger Report"
-msgstr ""
+msgstr "பொது லெட்ஜர் அறிக்கை"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_generate_entries
 msgid "Generate Entries"
-msgstr ""
+msgstr "பதிவுகள் உருவாக்குக"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
@@ -4786,11 +4850,16 @@ msgid ""
 "“Bank Synchronization” in bank account settings. Then, click “Configure” on "
 "the online account to enter your bank credentials."
 msgstr ""
+"உங்கள் வங்கி அறிக்கைகள் ஒவ்வொரு 4 மணி நேரமும் தானாகவே இறக்குமதி செய்யப்படும்"
+" அல்லது ஒரே கிளிக்கில், Yodlee மற்றும் Plaid சேவைகளைப் பயன்படுத்தி பெறவும். "
+"நிறுவப்பட்டவுடன், வங்கி கணக்கு அமைப்புகளில் \"வங்கி ஒருங்கிணைப்புகள்\" என்ற "
+"\"வங்கி ஊட்டங்கள்\" அமைக்கவும். பின்னர், உங்கள் வங்கிக் கணக்கில் நுழைய, "
+"ஆன்லைன் கணக்கில் \"உள்ளமை\" என்பதைக் கிளிக் செய்யவும்."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_sequence
 msgid "Gives the sequence of this line when displaying the invoice."
-msgstr ""
+msgstr "விலைப்பட்டியல் காண்பிக்கும் போது இந்த வரியின் வரிசையை அளிக்கிறது."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_sequence
@@ -4838,7 +4907,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_group_id
 #: model:ir.model.fields,field_description:account.field_account_account_template_group_id
 msgid "Group"
-msgstr ""
+msgstr "குழு"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
@@ -4852,18 +4921,18 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_template_search
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Group By"
-msgstr ""
+msgstr "மூலம் குழு"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group_invoice_lines
 msgid "Group Invoice Lines"
-msgstr ""
+msgstr "குழு விலைப்பட்டியல் கோடுகள்"
 
 #. module: account
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Group of Taxes"
-msgstr ""
+msgstr "வரி குழு"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4923,6 +4992,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "How total tax amount is computed in orders and invoices"
 msgstr ""
+"ஆர்டர்கள் மற்றும் பொருள் விவரங்களில் மொத்த வரி அளவு எப்படி கணக்கிடப்படுகிறது"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_id
@@ -5030,6 +5100,8 @@ msgid ""
 "If set, taxes which are computed after this one will be computed based on "
 "the price tax included."
 msgstr ""
+"அமைக்கப்பட்டிருந்தால், இந்த வரிக்குப் பின் கணக்கிடப்படும் வரிகள் வரி விலக்கு"
+" அடிப்படையில் கணக்கிடப்படும்."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_analytic
@@ -5052,6 +5124,8 @@ msgid ""
 "If this box is checked, the system will try to group the accounting lines "
 "when generating them from invoices."
 msgstr ""
+"இந்த பெட்டி சோதிக்கப்பட்டிருந்தால், அவை பொருள்வழங்களின்போது உருவாக்கும்போது "
+"கணக்கியல் வரிகளை குழுப்படுத்த முயற்சிக்கும்."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5059,12 +5133,16 @@ msgid ""
 "If you check this box, you will be able to collect payments using SEPA "
 "Direct Debit mandates."
 msgstr ""
+"இந்த பெட்டியை நீங்கள் சரிபார்க்கினால், நீங்கள் SEPA நேரடி டெபிட் கட்டளைகளை "
+"பயன்படுத்தி பணம் சேகரிக்க முடியும்."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "If you check this box, you will be able to register your payment using SEPA."
 msgstr ""
+"இந்த பெட்டியை நீங்கள் சரிபார்க்கினால் SEPA ஐ பயன்படுத்தி உங்கள் கட்டணத்தை "
+"பதிவு செய்ய முடியும்."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5086,6 +5164,9 @@ msgid ""
 "If you unreconcile transactions, you must also verify all the actions that "
 "are linked to those transactions because they will not be disabled"
 msgstr ""
+"நீங்கள் பரிவர்த்தனைகளை பரிகாரம் செய்யாவிட்டால், அந்த பரிவர்த்தனைகளுக்கு "
+"இணைக்கப்பட்டுள்ள எல்லா செயல்களையும் சரிபார்க்க வேண்டும், ஏனெனில் அவர்கள் "
+"முடக்கப்படுவதில்லை"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_payment_term_id
@@ -5095,6 +5176,11 @@ msgid ""
 " date empty, it means direct payment. The payment terms may compute several "
 "due dates, for example 50% now, 50% in one month."
 msgstr ""
+"நீங்கள் கட்டண விதிமுறைகளைப் பயன்படுத்தினால், கணக்கு தேதிகளின் தலைமுறையிலுள்ள"
+" தற்காலிக தேதி தானாக கணக்கிடப்படும். நீங்கள் கட்டண விதிமுறைகளையும் "
+"காலையையும் காலியாக வைத்திருந்தால், நேரடி பணம் செலுத்துவது என்பது பொருள். "
+"பணம் செலுத்தும் விதிமுறைகள் பல காரணமாகக் கணக்கிடலாம், எடுத்துக்காட்டாக 50% "
+"இப்போது, ஒரு மாதத்தில் 50%."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_date_due
@@ -5105,6 +5191,13 @@ msgid ""
 " due date, make sure that the payment term is not set on the invoice. If you"
 " keep the Payment terms and the due date empty, it means direct payment."
 msgstr ""
+"நீங்கள் கட்டண விதிமுறைகளைப் பயன்படுத்தினால், கணக்கு தேதிகளின் தலைமுறையிலுள்ள"
+" தற்காலிக தேதி தானாக கணக்கிடப்படும். பணம் செலுத்தும் விதிமுறைகள், பல "
+"விதிமுறைகளை கணக்கிடலாம், உதாரணமாக 50% இப்போது மற்றும் ஒரு மாதத்தில் 50%, "
+"ஆனால் நீங்கள் செலுத்த வேண்டிய தேதியை கட்டாயப்படுத்த விரும்பினால், பணம் "
+"செலுத்தும் காலவரை விலைப்பட்டியல் மீது அமைக்கப்படவில்லை என்பதை "
+"உறுதிப்படுத்தவும். நீங்கள் செலுத்தும் விதிமுறைகள் மற்றும் காலக்கெடுவை "
+"காலியாக வைத்திருந்தால், நேரடி பணம் செலுத்துவது என்பது பொருள்."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5143,6 +5236,9 @@ msgid ""
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
 msgstr ""
+"தயாரிப்பு மாறுபாட்டின் படம் (தவறானால் தயாரிப்பு வகைகளின் பெரிய அளவிலான "
+"படம்). இது 1024x1024px படமாக தானாக மறுஅளவாக்குகிறது, அதே போல காப்பீட்டு "
+"விகிதம் பாதுகாக்கப்படுகிறது."
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -5218,6 +5314,8 @@ msgid ""
 "In order to delete a bank statement line, you must first cancel it to delete"
 " related journal items."
 msgstr ""
+"ஒரு வங்கி அறிக்கையை நீக்குவதற்கு, முதலில் தொடர்புடைய பத்திரிகை உருப்படிகளை "
+"நீக்க நீங்கள் அதை முதலில் ரத்து செய்ய வேண்டும்."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:199
@@ -5226,6 +5324,8 @@ msgid ""
 "In order to delete a bank statement, you must first cancel it to delete "
 "related journal items."
 msgstr ""
+"வங்கி அறிக்கையை நீக்க வேண்டுமானால், தொடர்புடைய பத்திரிகை உருப்படிகளை நீக்க "
+"நீங்கள் அதை முதலில் ரத்து செய்ய வேண்டும்."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:144
@@ -5233,6 +5333,8 @@ msgstr ""
 msgid ""
 "In order to pay multiple invoices at once, they must use the same currency."
 msgstr ""
+"ஒரே நேரத்தில் பல பொருள் வாங்குவதற்கு, அதே நாணயத்தை அவர்கள் பயன்படுத்த "
+"வேண்டும்."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5247,7 +5349,7 @@ msgstr ""
 #. module: account
 #: selection:account.payment.method,payment_type:0
 msgid "Inbound"
-msgstr ""
+msgstr "பிணைப்பிலுள்ள"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_general_ledger_initial_balance
@@ -5290,7 +5392,7 @@ msgstr ""
 #: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:700
 #, python-format
 msgid "Incorrect Operation"
-msgstr ""
+msgstr "உள்ளிணைப்பு பேட் கொடுப்பனவு வரிசை"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -5340,16 +5442,18 @@ msgid ""
 "Intermediary account used when moving money from a liquidity account to "
 "another"
 msgstr ""
+"பணப்புழக்கக் கணக்கிலிருந்து பணத்தை மற்றொரு இடத்திற்கு மாற்றும் போது "
+"இடைத்தரகர் கணக்கு பயன்படுத்தப்படுகிறது"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_narration
 msgid "Internal Note"
-msgstr ""
+msgstr "உள் குறிப்பு"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_note
 msgid "Internal Notes"
-msgstr ""
+msgstr "உள் குறிப்புகள்"
 
 #. module: account
 #: selection:account.payment,payment_type:0
@@ -5371,7 +5475,7 @@ msgstr ""
 #: code:addons/account/models/partner.py:45
 #, python-format
 msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr ""
+msgstr "தவறான \"ஜிப் ரேஞ்ச்\", தயவுசெய்து அதை ஒழுங்காக உள்ளமைக்கவும்."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5430,7 +5534,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_invoice_line_form
 #: model:ir.ui.view,arch_db:account.view_invoice_line_tree
 msgid "Invoice Line"
-msgstr ""
+msgstr "விலைப்பட்டியல் வரி"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_invoice_line_ids
@@ -5456,7 +5560,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_invoice_id
 msgid "Invoice Reference"
-msgstr ""
+msgstr "விலைப்பட்டியல் குறிப்பு"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_state
@@ -5545,7 +5649,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_invoice_line_calendar
 #: model:ir.ui.view,arch_db:account.view_invoice_pivot
 msgid "Invoices"
-msgstr ""
+msgstr "பற்றுச்சீட்டுகள்"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_invoice_report_all
@@ -5594,7 +5698,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_is_rounding_line
 msgid "Is a rounding line in case of cash rounding."
-msgstr ""
+msgstr "ரொக்க சுழற்சியின் ஒரு சுற்றுவட்டம்."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_is_difference_zero
@@ -5605,13 +5709,13 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_journal_default_credit_account_id
 #: model:ir.model.fields,help:account.field_res_company_income_currency_exchange_account_id
 msgid "It acts as a default account for credit amount"
-msgstr ""
+msgstr "இது கடன் தொகைக்கான முன்னிருப்பு கணக்காக செயல்படுகிறது"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_default_debit_account_id
 #: model:ir.model.fields,help:account.field_res_company_expense_currency_exchange_account_id
 msgid "It acts as a default account for debit amount"
-msgstr ""
+msgstr "இது டெபிட் தொகைக்கான இயல்புநிலை கணக்காக செயல்படுகிறது"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_partner_ledger_amount_currency
@@ -5673,7 +5777,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Items"
-msgstr ""
+msgstr "பொருட்களை"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -5710,7 +5814,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 #, python-format
 msgid "Journal"
-msgstr ""
+msgstr "ஜர்னல்"
 
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
@@ -5728,7 +5832,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_move_tree
 #, python-format
 msgid "Journal Entries"
-msgstr ""
+msgstr "ஜர்னல் பதிவுகள்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
@@ -5740,7 +5844,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_line_move_id
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Journal Entry"
-msgstr ""
+msgstr "ஜர்னல் நுழைவு"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_move_name
@@ -5759,7 +5863,7 @@ msgstr ""
 #: model:ir.model,name:account.model_account_move_line
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Journal Item"
-msgstr ""
+msgstr "Journal Item"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_writeoff_label
@@ -5796,7 +5900,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_move_line_tree
 #, python-format
 msgid "Journal Items"
-msgstr ""
+msgstr "பத்திரிகை பொருட்கள்"
 
 #. module: account
 #. openerp-web
@@ -5809,7 +5913,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_name
 msgid "Journal Name"
-msgstr ""
+msgstr "பத்திரிகை பெயர்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -5831,7 +5935,7 @@ msgstr ""
 msgid ""
 "Journal where the opening entry of this company's accounting has been "
 "posted."
-msgstr ""
+msgstr "இந்த நிறுவனத்தின் கணக்கியல் திறந்த இடுகை வெளியிடப்பட்டுள்ளது."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_form
@@ -5855,7 +5959,7 @@ msgstr ""
 #: model:ir.actions.report,name:account.action_report_journal
 #: model:ir.ui.menu,name:account.menu_print_journal
 msgid "Journals Audit"
-msgstr ""
+msgstr "ஜர்னல்ஸ் ஆடிட்"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -5875,12 +5979,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard
 msgid "Kanban Dashboard"
-msgstr ""
+msgstr "கான்பன் டாஷ்போர்டு"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard_graph
 msgid "Kanban Dashboard Graph"
-msgstr ""
+msgstr "கான்பன் டாஷ்போர்டு வரைபடம்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
@@ -5908,6 +6012,8 @@ msgstr ""
 msgid ""
 "Keep this field empty to use the default value from the product category."
 msgstr ""
+"தயாரிப்பு பிரிவில் இருந்து இயல்புநிலை மதிப்பைப் பயன்படுத்த இந்த புலம் "
+"காலியாக வைக்கவும்."
 
 #. module: account
 #. openerp-web
@@ -6165,6 +6271,10 @@ msgid ""
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
 msgstr ""
+"கடைசியாக இந்த பங்குதாரர்களுக்காக பொருள்களும் பணம் செலுத்தும் பொருத்தங்களும் "
+"செய்யப்பட்டன. குறைந்தபட்சம் ஒரு ஒப்பந்தம் செய்யப்படாத டெபிட் மற்றும் ஒரு "
+"அச்சமற்ற கடன் அல்லது நீங்கள் \"முடிந்தது\" பொத்தானைக் கிளிக் செய்தால் அது "
+"அமைக்கப்பட்டிருக்கும்."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_last_time_entries_checked
@@ -6173,11 +6283,14 @@ msgid ""
 " is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit Or if you click the \"Done\" button."
 msgstr ""
+"கடைசி நேரத்தில் இந்த கணக்குகளில் பணம் மற்றும் பணம் பொருந்தும். குறைந்தபட்சம்"
+" ஒரு ஒப்பந்தம் செய்யப்படாத டெபிட் மற்றும் ஒரு அச்சமற்ற கடன் அல்லது நீங்கள் "
+"\"முடிந்தது\" பொத்தானைக் கிளிக் செய்தால் அது அமைக்கப்பட்டிருக்கும்."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "தாமதமான செயல்பாடுகள்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_last_time_entries_checked
@@ -6204,7 +6317,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_note
 msgid "Legal mentions that have to be printed on the invoices."
-msgstr ""
+msgstr "பொருள் சம்பந்தமாக அச்சிடப்பட வேண்டிய சட்ட குறிப்புகள்."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:216
@@ -6223,6 +6336,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Let your customers pay their invoices online"
 msgstr ""
+"உங்கள் வாடிக்கையாளர்கள் ஆன்லைனில் தங்கள் விவரங்களை ஆன்லைனில் செலுத்தட்டும்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_level
@@ -6238,7 +6352,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_move_id
 msgid "Link to the automatically generated Journal Items."
-msgstr ""
+msgstr "தானாக உருவாக்கப்பட்ட ஜர்னல் பொருட்கள் இணைப்பு."
 
 #. module: account
 #: selection:account.account.type,type:0
@@ -6249,7 +6363,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_tax_template_ids
 msgid "List of all the taxes that have to be installed by the wizard"
-msgstr ""
+msgstr "வழிகாட்டி மூலம் நிறுவப்பட வேண்டிய அனைத்து வரிகளின் பட்டியல்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -6271,12 +6385,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_period_lock_date
 msgid "Lock Date for Non-Advisers"
-msgstr ""
+msgstr "அல்லாத ஆலோசகர்கள் தேதி பூட்டு"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Logo"
-msgstr ""
+msgstr "சின்னம்"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:173
@@ -6287,7 +6401,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_loss_account_id
 msgid "Loss Account"
-msgstr ""
+msgstr "இழப்பு கணக்கு"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_expense_currency_exchange_account_id
@@ -6320,7 +6434,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings_currency_id
 msgid "Main currency of the company."
-msgstr ""
+msgstr "நிறுவனத்தின் முக்கிய நாணயம்."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6363,7 +6477,7 @@ msgstr ""
 #: model:account.payment.method,name:account.account_payment_method_manual_out
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_manual
 msgid "Manual"
-msgstr ""
+msgstr "கையேடு"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_invoice_tax_form
@@ -6384,6 +6498,9 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
+"கையேடு: ரொக்கம், காசோலை அல்லது ஒடூக்கு வெளியே வேறு எந்த முறையிலும் பணம் செலுத்துங்கள்.\n"
+"மின்னணு: ஆன்லைனில் வாங்குதல் அல்லது சந்தா செலுத்தும் போது வாடிக்கையாளர் சேமித்த ஒரு அட்டையில் ஒரு பரிவர்த்தனை கோரியதன் மூலம் பணம் செலுத்துபவர் மூலம் தானாக பணம் சம்பாதிக்கலாம்.\n"
+"பேட்ச் டெபாசிட்: உங்கள் வங்கிக்கு சமர்ப்பிக்க ஒரு தொகுப்பு வைப்பு உருவாக்குவதன் மூலம் ஒரே நேரத்தில் பல வாடிக்கையாளர் காசோலைகளை வெளிப்படுத்தவும். Odoo இல் வங்கி அறிக்கையை குறியாக்கும் போது, நீங்கள் பங்கு வைப்புடன் பரிமாற்றத்தை சரிசெய்ய பரிந்துரைக்கப்படுவீர்கள். அமைப்புகளில் இருந்து இந்த விருப்பத்தை இயக்கவும்."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment_payment_method_id
@@ -6404,6 +6521,9 @@ msgid ""
 "Check:Pay bill by check and print it from Odoo.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings."
 msgstr ""
+"கையேடு: பணம் செலுத்துதல் அல்லது ஒடுவின் வெளியே வேறு எந்த முறையிலும் பணம் செலுத்துங்கள்.\n"
+"சரிபாருங்கள்: காசோலையைச் சரிபார்த்து அதை ஓடுவிலிருந்து அச்சிடவும்.\n"
+"SEPA கிரெடிட் டிரான்ஸ்ஃபர்: உங்கள் வங்கியில் சமர்ப்பிக்கும் SEPA கிரெடிட் டிரான்ஸ்ஃபர் கோப்புகளிலிருந்து பணம் செலுத்துங்கள். அமைப்புகளில் இருந்து இந்த விருப்பத்தை இயக்கவும்."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6463,7 +6583,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_full_reconcile_id
 msgid "Matching Number"
-msgstr ""
+msgstr "பொருந்தும் எண்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_max_date
@@ -6480,7 +6600,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment_communication
 #: model:ir.model.fields,field_description:account.field_account_register_payments_communication
 msgid "Memo"
-msgstr ""
+msgstr "மெமோ"
 
 #. module: account
 #. openerp-web
@@ -6617,12 +6737,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Multi-Currencies"
-msgstr ""
+msgstr "பல நாணயங்கள்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "My Activities"
-msgstr ""
+msgstr "எனது செயல்பாடுகள்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -6680,7 +6800,7 @@ msgstr ""
 #. module: account
 #: selection:account.bank.statement,state:0
 msgid "New"
-msgstr ""
+msgstr "புதிய"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6703,7 +6823,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_sequence_number_next_prefix
 #: model:ir.model.fields,field_description:account.field_account_journal_sequence_number_next
 msgid "Next Number"
-msgstr ""
+msgstr "அடுத்த எண்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6742,6 +6862,9 @@ msgid ""
 "No users, including Advisers, can edit accounts prior to and inclusive of "
 "this date. Use it for fiscal year locking for example."
 msgstr ""
+"ஆலோசகர்கள் உள்ளிட்ட எந்த பயனர்களும், இந்த தேதிக்கு முந்தைய மற்றும் அதனுடன் "
+"தொடர்புடைய கணக்குகளை திருத்தலாம். உதாரணமாக நிதி ஆண்டு பூட்டுதல் அதை "
+"பயன்படுத்த."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_code_digits
@@ -6768,7 +6891,7 @@ msgstr ""
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
 msgid "None"
-msgstr ""
+msgstr "யாரும்"
 
 #. module: account
 #: selection:res.partner,trust:0
@@ -6786,7 +6909,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_template_note
 #, python-format
 msgid "Note"
-msgstr ""
+msgstr "குறிப்பு"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_out_refund
@@ -6801,7 +6924,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_note
 #: model:ir.ui.view,arch_db:account.view_account_template_form
 msgid "Notes"
-msgstr ""
+msgstr "குறிப்புக்கள்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6857,7 +6980,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:17
 #, python-format
 msgid "OK"
-msgstr ""
+msgstr "சரி"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -6875,6 +6998,8 @@ msgid ""
 "Odoo allows you to reconcile a statement line directly with\n"
 "                the related sale or puchase invoice(s)."
 msgstr ""
+"Odoo நீங்கள் நேரடியாக தொடர்புடைய விற்பனை அல்லது கொள்முதல் பொருள் ஒரு அறிக்கை"
+" வரி சரிசெய்ய அனுமதிக்கிறது)."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -6882,6 +7007,8 @@ msgid ""
 "Odoo allows you to reconcile a statement line directly with\n"
 "                the related sale or puchase invoices."
 msgstr ""
+"Odoo நீங்கள் நேரடியாக தொடர்புடைய விற்பனை அல்லது கொள்முதல் பொருள் ஒரு அறிக்கை"
+" வரி சரிசெய்ய அனுமதிக்கிறது."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
@@ -6931,6 +7058,10 @@ msgid ""
 "                        number and journal items will be created in your chart\n"
 "                        of accounts."
 msgstr ""
+"வரைவு விவரங்களை உறுதிப்படுத்தியவுடன், நீங்கள் முடியாது\n"
+"                         அவர்களை மாற்ற. பொருள் ஒரு தனிப்பட்ட பெறும்\n"
+"                         எண் மற்றும் பத்திரிகை உருப்படிகளை உங்கள் அட்டவணையில் உருவாக்கப்படும்\n"
+"                         கணக்குகள்."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6994,6 +7125,9 @@ msgid ""
 "of this date. Use it for period locking inside an open fiscal year, for "
 "example."
 msgstr ""
+"'ஆலோசகர்' பாத்திரத்துடன் மட்டுமே பயனர்கள் மட்டுமே இந்த தேதிக்கு முந்தைய "
+"மற்றும் அதனுடன் தொடர்புடைய கணக்குகளை திருத்த முடியும். ஒரு திறந்த "
+"நிதியாண்டில் கால பூட்டுதலுக்காக அதைப் பயன்படுத்தவும், உதாரணமாக."
 
 #. module: account
 #. openerp-web
@@ -7105,7 +7239,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_option
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
 msgid "Options"
-msgstr ""
+msgstr "விருப்பங்கள்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
@@ -7125,7 +7259,7 @@ msgstr ""
 #. module: account
 #: model:account.account.type,name:account.data_account_type_other_income
 msgid "Other Income"
-msgstr ""
+msgstr "வேறு வருமானம்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -7136,7 +7270,7 @@ msgstr ""
 #. module: account
 #: selection:account.payment.method,payment_type:0
 msgid "Outbound"
-msgstr ""
+msgstr "வெளிச்செல்லும்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_account_output_categ_id
@@ -7169,7 +7303,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Overdue"
-msgstr ""
+msgstr "தாமதம்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_overdue_msg
@@ -7189,7 +7323,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Package"
-msgstr ""
+msgstr "தொகுப்பு"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -7197,13 +7331,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:mail.message.subtype,name:account.mt_invoice_paid
 msgid "Paid"
-msgstr ""
+msgstr "பணம்"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:430
 #, python-format
 msgid "Paid Invoices"
-msgstr ""
+msgstr "பணம் பற்றுச்சீட்டுகள்"
 
 #. module: account
 #. openerp-web
@@ -7222,7 +7356,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_financial_report_parent_id
 #: model:ir.model.fields,field_description:account.field_account_group_parent_id
 msgid "Parent"
-msgstr ""
+msgstr "பெற்றோர்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_parent_id
@@ -7281,7 +7415,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_partner_ledger
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 msgid "Partner Ledger"
-msgstr ""
+msgstr "கூட்டாளர் லெட்ஜர்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_partner_name
@@ -7324,7 +7458,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Payable"
-msgstr ""
+msgstr "செலுத்த வேண்டிய"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_payable_id
@@ -7388,7 +7522,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Payment Method"
-msgstr ""
+msgstr "கொடுப்பனவு முறை"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_payment_method_id
@@ -7508,7 +7642,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 #, python-format
 msgid "Payments"
-msgstr ""
+msgstr "கொடுப்பனவு"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7552,13 +7686,13 @@ msgstr ""
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Percentage of Price"
-msgstr ""
+msgstr "விலை சதவீதம்"
 
 #. module: account
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Percentage of Price Tax Included"
-msgstr ""
+msgstr "விலை வரி சதவீதம் சேர்க்கப்பட்டுள்ளது"
 
 #. module: account
 #: selection:account.reconcile.model,second_amount_type:0
@@ -7581,7 +7715,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Period"
-msgstr ""
+msgstr "காலம்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_period_length
@@ -7626,7 +7760,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:162
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr ""
+msgstr "பத்திரிகையில் ஒரு காட்சியை வரையறுக்கவும்"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1068
@@ -7650,7 +7784,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Fixed Assets"
-msgstr ""
+msgstr "பிளஸ் நிலையான சொத்துகள்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -7695,7 +7829,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Posted"
-msgstr ""
+msgstr "வெளியிட்டது"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
@@ -7727,7 +7861,7 @@ msgstr ""
 #: model:account.account.type,name:account.data_account_type_prepayments
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Prepayments"
-msgstr ""
+msgstr "முன்செலுத்துதல்களுக்காக"
 
 #. module: account
 #: selection:account.financial.report,sign:0
@@ -7744,7 +7878,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
 #: model:ir.ui.view,arch_db:account.account_common_report_view
 msgid "Print"
-msgstr ""
+msgstr "அச்சு"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -7779,12 +7913,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_categ_id
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Product Category"
-msgstr ""
+msgstr "தயாரிப்பு வகை"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_product_image
 msgid "Product Image"
-msgstr ""
+msgstr "தயாரிப்பு படம்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_product_qty
@@ -7821,14 +7955,14 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_profit_account_id
 msgid "Profit Account"
-msgstr ""
+msgstr "இலாப கணக்கு"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_profitandloss0
 #: model:ir.actions.act_window,name:account.action_account_report_pl
 #: model:ir.ui.menu,name:account.menu_account_report_pl
 msgid "Profit and Loss"
-msgstr ""
+msgstr "லாபம் மற்றும் இழப்பு"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:135
@@ -7854,7 +7988,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_search
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Purchase"
-msgstr ""
+msgstr "கொள்முதல்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7892,7 +8026,7 @@ msgstr ""
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Python Code"
-msgstr ""
+msgstr "பைதான் குறியீடு"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7912,7 +8046,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_cash_box_in_name
 #: model:ir.model.fields,field_description:account.field_cash_box_out_name
 msgid "Reason"
-msgstr ""
+msgstr "காரணம்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -7925,7 +8059,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Receivable"
-msgstr ""
+msgstr "பெறத்தக்க"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_receivable_id
@@ -7955,7 +8089,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.product_template_form_view
 #: model:ir.ui.view,arch_db:account.view_account_bank_journal_form
 msgid "Receivables"
-msgstr ""
+msgstr "வரவுகள்"
 
 #. module: account
 #: selection:account.abstract.payment,payment_type:0
@@ -8006,7 +8140,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconciled
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Reconciled"
-msgstr ""
+msgstr "ஒருமைப்படுத்திய"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_reconciled
@@ -8043,7 +8177,7 @@ msgstr ""
 #: model:ir.actions.client,name:account.action_bank_reconcile
 #: model:ir.actions.client,name:account.action_bank_reconcile_bank_statements
 msgid "Reconciliation on Bank Statements"
-msgstr ""
+msgstr "வங்கி அறிக்கைகளில் நல்லிணக்கம்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8072,7 +8206,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #, python-format
 msgid "Ref"
-msgstr ""
+msgstr "குறிப்பு"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_ref
@@ -8088,7 +8222,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_cash_box_in_ref
 #, python-format
 msgid "Reference"
-msgstr ""
+msgstr "குறிப்பு"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_uom_name
@@ -8104,7 +8238,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_invoice_line_origin
 #: model:ir.model.fields,help:account.field_account_invoice_origin
 msgid "Reference of the document that produced this invoice."
-msgstr ""
+msgstr "இந்த விலைப்பட்டியல் தயாரித்த ஆவணத்தின் குறிப்பு."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_payment_reference
@@ -8144,12 +8278,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_payment_from_invoices
 #: model:ir.ui.view,arch_db:account.view_account_payment_invoice_form
 msgid "Register Payment"
-msgstr ""
+msgstr "கட்டணம் செலுத்துக"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Register Payments"
-msgstr ""
+msgstr "கட்டணம் செலுத்துங்கள்"
 
 #. module: account
 #: model:ir.model,name:account.model_account_register_payments
@@ -8203,7 +8337,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_name
 msgid "Report Name"
-msgstr ""
+msgstr "அறிக்கை பெயர்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
@@ -8226,7 +8360,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.account_report_folder
 #: model:ir.ui.menu,name:account.menu_finance_reports
 msgid "Reporting"
-msgstr ""
+msgstr "அறிக்கையிடல்"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding_rounding
@@ -8236,14 +8370,14 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Reset to Draft"
-msgstr ""
+msgstr "வரைவை மீட்டமை"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:236
 #, python-format
 msgid "Residual"
-msgstr ""
+msgstr "எச்ச"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_amount_residual
@@ -8259,12 +8393,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_user_id
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Responsible"
-msgstr ""
+msgstr "பொறுப்பான"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_deferred_revenue
 msgid "Revenue Recognition"
-msgstr ""
+msgstr "வருவாய் அங்கீகாரம்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_date
@@ -8337,7 +8471,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_is_rounding_line
 msgid "Rounding Line"
-msgstr ""
+msgstr "வட்டமான வரி"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cash_rounding_rounding_method
@@ -8391,7 +8525,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_journal_search
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Sales"
-msgstr ""
+msgstr "விற்பனை"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8415,7 +8549,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Salesperson"
-msgstr ""
+msgstr "விற்பனையாளர்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.setup_bank_journal_form
@@ -8424,7 +8558,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.setup_posted_move_form
 #: model:ir.ui.view,arch_db:account.setup_view_company_form
 msgid "Save"
-msgstr ""
+msgstr "சேமி"
 
 #. module: account
 #. openerp-web
@@ -8546,6 +8680,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"வாடிக்கையாளர் பொருள் பத்திரிகைகளுக்கான 'விற்பனை' என்பதைத் தேர்ந்தெடுக்கவும்.\n"
+"விற்பனையாளர் கட்டணம் பத்திரிகைகளுக்கான 'கொள்முதல்' என்பதைத் தேர்ந்தெடுக்கவும்.\n"
+"வாடிக்கையாளர் அல்லது விற்பனையாளர் கொடுப்பனவுகளில் பயன்படுத்தப்படும் பத்திரிகைகள் 'பண' அல்லது 'வங்கி' என்பதைத் தேர்ந்தெடுக்கவும்.\n"
+"பல்வேறு செயல்பாட்டு பத்திரிகைகள் 'பொது' என்பதைத் தேர்ந்தெடுக்கவும்."
 
 #. module: account
 #. openerp-web
@@ -8581,6 +8719,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"\"எச்சரிக்கை\" விருப்பத்தைத் தேர்ந்தெடுப்பது, செய்தியுடன் பயனரை அறிவிக்கும்,"
+" \"தடுப்பு செய்தி\" என்பதைத் தேர்ந்தெடுப்பதன் மூலம் ஒரு விதிவிலக்கு எறிந்து,"
+" ஓட்டம் தடுக்கும். செய்தி அடுத்த துறையில் எழுதப்பட வேண்டும்."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.product_product_action_sellable
@@ -8618,7 +8759,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_sent
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Sent"
-msgstr ""
+msgstr "அனுப்பப்பட்டது"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -8656,7 +8797,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_active
 msgid "Set active to false to hide the Journal without removing it."
-msgstr ""
+msgstr "இதனை அகற்றாமல் பத்திரிகை மறைக்க பொய்யாக செயலில் வைக்கவும்."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_active
@@ -8684,18 +8825,22 @@ msgid ""
 "you want to generate accounts of this template only when loading its child "
 "template."
 msgstr ""
+"இந்த டெம்ப்ளேட்டை வார்ப்புருக்களில் இருந்து கணக்குகளை உருவாக்கும் "
+"வழிகாட்டிக்கு தீவிரமாக பயன்படுத்த விரும்பவில்லை என்றால் இதை தவறு என "
+"அமைக்கவும், அதன் டெம்ப்ளேட்டை ஏற்றும் போது மட்டுமே இந்த டெம்ப்ளேட்டின் "
+"கணக்குகளை உருவாக்கும் போது இது பயனுள்ளதாக இருக்கும்."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Set to Draft"
-msgstr ""
+msgstr "வரைவை அமைக்கவும்"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_config
 #: model:ir.ui.menu,name:account.menu_account_config
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Settings"
-msgstr ""
+msgstr "அமைப்புகள்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8710,7 +8855,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_code
 msgid "Short Code"
-msgstr ""
+msgstr "குறுகிய குறியீடு"
 
 #. module: account
 #: model:res.groups,name:account.group_account_user
@@ -8726,6 +8871,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
+"அடுத்த நடவடிக்கை தேதி இன்றைய தினம் கொண்டிருக்கும் எல்லா பதிவுகளையும் காட்டுக"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
@@ -8735,7 +8881,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_show_on_dashboard
 msgid "Show journal on dashboard"
-msgstr ""
+msgstr "டாஷ்போர்டில் இதழ் காட்டு"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_sign
@@ -8772,7 +8918,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Source Document"
-msgstr ""
+msgstr "மூல ஆவணம்"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding_strategy
@@ -8810,7 +8956,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "State"
-msgstr ""
+msgstr "நிலை"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_parent_state
@@ -8869,7 +9015,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 #, python-format
 msgid "Status"
-msgstr ""
+msgstr "நிலைமை"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_subtotal
@@ -8979,7 +9125,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
 msgid "Tax Amount"
-msgstr ""
+msgstr "வரி தொகை"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
@@ -9005,12 +9151,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax_amount_type
 #: model:ir.model.fields,field_description:account.field_account_tax_template_amount_type
 msgid "Tax Computation"
-msgstr ""
+msgstr "வரி கணிப்பு"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
 msgid "Tax Declaration"
-msgstr ""
+msgstr "வரி பிரகடனம்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_name
@@ -9064,7 +9210,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_account_report
 #: model:ir.ui.view,arch_db:account.report_tax
 msgid "Tax Report"
-msgstr ""
+msgstr "வரி அறிக்கை"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_report
@@ -9120,7 +9266,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "TaxCloud"
-msgstr ""
+msgstr "TaxCloud"
 
 #. module: account
 #: selection:account.account.tag,applicability:0
@@ -9172,6 +9318,8 @@ msgid ""
 "Technical field holding the debit - credit in order to open meaningful graph"
 " views from reports"
 msgstr ""
+"டெபிட் வைத்திருக்கும் தொழில்நுட்ப துறை - அறிக்கைகள் இருந்து அர்த்தமுள்ள "
+"வரைபட காட்சிகள் திறக்க கடன்"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_balance_cash_basis
@@ -9179,6 +9327,8 @@ msgid ""
 "Technical field holding the debit_cash_basis - credit_cash_basis in order to"
 " open meaningful graph views from reports"
 msgstr ""
+"அறிக்கைகள் இருந்து அர்த்தமுள்ள வரைபட காட்சிகள் திறக்க பொருட்டு "
+"debit_cash_basis - credit_cash_basis வைத்திருக்கும் தொழில்நுட்ப துறையில்"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_move_name
@@ -9187,6 +9337,9 @@ msgid ""
 "when the invoice is validated then stored to set the same number again if "
 "the invoice is cancelled, set to draft and re-validated."
 msgstr ""
+"விலைப்பட்டியல் சரிபார்க்கப்படும்போது தானாக அமைக்கப்படும், விலைப்பட்டியல் "
+"ரத்து செய்யப்பட்டு, வரைவு மற்றும் மீண்டும் செல்லுபடியற்றதாக அமைக்கப்பட்டால் "
+"மீண்டும் அதே எண்ணை அமைக்க, சேமித்து வைத்திருக்கும் தொழில்நுட்ப துறையில்."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_move_name
@@ -9196,6 +9349,10 @@ msgid ""
 " set when the statement line is reconciled then stored to set the same "
 "number again if the line is cancelled, set to draft and re-processed again."
 msgstr ""
+"பத்திரிகை நுழைவுக்கு கொடுக்கப்பட்ட எண்ணை வைத்திருக்கும் தொழில்நுட்ப துறை, "
+"அறிக்கை கோடு சரிசெய்யப்படும் போது தானாக அமைக்கப்பட்டிருக்கும், பின்னர் கோடு "
+"ரத்து செய்யப்பட்டால் மீண்டும் அதே எண்ணை மீண்டும் அமைக்கவும், மீண்டும் வரைவு "
+"மற்றும் மறு-செயல்முறைக்கு அமைக்கவும்."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company_account_setup_bank_data_done
@@ -9223,6 +9380,8 @@ msgid ""
 "Technical field indicating if the user selected invoices from multiple "
 "partners or from different types."
 msgstr ""
+"பல துறைகளிடமிருந்து அல்லது பல்வேறு வகைகளிலிருந்து பயனர் தேர்ந்தெடுக்கப்பட்ட "
+"பொருள் விவரங்களைக் குறிப்பிடுகின்ற தொழில்நுட்ப துறை."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company_account_setup_bar_closed
@@ -9235,6 +9394,8 @@ msgstr ""
 msgid ""
 "Technical field to hide filter_refund in case invoice is partially paid"
 msgstr ""
+"வழக்கமாக விலைப்பட்டியல் செலுத்துவதற்கு வடிகட்டி_அமைப்புகளை மறைக்க "
+"தொழில்நுட்ப துறை பகுதி"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_journal_type
@@ -9259,6 +9420,8 @@ msgstr ""
 msgid ""
 "Technical field used to adapt the interface to the payment type selected."
 msgstr ""
+"தேர்ந்தெடுக்கப்பட்ட கட்டணம் வகைக்கு இடைமுகத்தை ஏற்படுத்துவதற்கு "
+"தொழில்நுட்பத் துறை பயன்படுத்தப்பட்டது."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile_max_date
@@ -9266,6 +9429,8 @@ msgid ""
 "Technical field used to determine at which date this reconciliation needs to"
 " be shown on the aged receivable/payable reports."
 msgstr ""
+"வயது வரம்பு / செலுத்தத்தக்க அறிக்கைகளில் இந்த நல்லிணக்கத்தைக் காட்ட வேண்டிய "
+"தேதியில் தீர்மானிக்க தொழில்நுட்ப தொழில்நுட்பம் பயன்படுத்தப்படுகிறது."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment_hide_payment_method
@@ -9274,7 +9439,7 @@ msgstr ""
 msgid ""
 "Technical field used to hide the payment method if the selected journal has "
 "only one available which is 'manual'"
-msgstr ""
+msgstr "தேர்ந்தெடுக்கப்பட்ட பத்திரிகை ஒரே ஒரு 'கையேஜ்' மட்டுமே இருந்தால்,"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_tax_cash_basis_rec_id
@@ -9283,6 +9448,9 @@ msgid ""
 "This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
+"வரி செலுத்துதலின் அடிப்படையில் நல்லிணக்கத்தைக் கண்காணிப்பதற்கு தொழில்நுட்ப "
+"துறை பயன்படுத்தப்படுகிறது. மூலத்தை ரத்து செய்யும் போது இது தேவைப்படுகிறது: "
+"அந்த பகுதியை ரத்து செய்வதற்கு தலைகீழ் பத்திரிகை இடுகையை இடுகையிடும்."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_tax_exigible
@@ -9292,6 +9460,11 @@ msgid ""
 "items are directly exigible, but with the feature cash_basis on taxes, some "
 "will become exigible only when the payment is recorded."
 msgstr ""
+"வாட் அறிக்கையில் தகுதியுடைய வரி வரிகளை குறிக்க பயன்படுத்திக்கொள்ளும் "
+"தொழில்நுட்பத் தொழில்நுட்பம் (மட்டுமே தகுந்த பத்திரிகை உருப்படிகளைக் "
+"காட்டப்படும்). முன்னிருப்பாக அனைத்து புதிய பத்திரிகை பொருட்களும் நேரடியாக "
+"தகுதியுடையவையாக இருக்கின்றன, ஆனால் வரி செலுத்துபவரின் மீது பணப்புழக்கம் "
+"இருப்பதால், பணம் பதிவு செய்யப்படும் போது சிலர் சிறப்பாக மாறும்."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_is_unaffected_earnings_line
@@ -9302,7 +9475,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_chart_template_id
 msgid "Template"
-msgstr ""
+msgstr "டெம்ப்ளேட்"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
@@ -9317,7 +9490,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr ""
+msgstr "நிதி நிலைக்கான டெம்ப்ளேட்"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
@@ -9332,7 +9505,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr ""
+msgstr "வரிகளுக்கான டெம்ப்ளேட்கள்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -9370,6 +9543,9 @@ msgid ""
 "accounts: liquidity type is for cash or bank accounts, payable/receivable is"
 " for vendor/customer accounts."
 msgstr ""
+"பல்வேறு வகையான கணக்குகளில் கிடைக்கக்கூடிய அம்சங்களுக்கான 'உள்ளக வகை' "
+"பயன்படுத்தப்படுகிறது: பணம் அல்லது வங்கிக் கணக்குகளுக்கு பணப்புழக்கம் வகை, "
+"விற்பனையாளர் / வாடிக்கையாளர் கணக்குகளுக்கு செலுத்தத்தக்க / பெறத்தக்கது."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9446,7 +9622,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The bank account of a bank journal must belong to the same company (%s)."
-msgstr ""
+msgstr "ஒரு வங்கி பத்திரிகையின் வங்கிக் கணக்கு அதே நிறுவனம் ()."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_statement_id
@@ -9460,6 +9636,8 @@ msgid ""
 "The cash rounding cannot be computed because the difference must be added on the biggest tax found and no tax are specified.\n"
 "Please set up a tax or change the cash rounding method."
 msgstr ""
+"ரொக்க வட்டத்தை கணிக்க முடியாது, ஏனென்றால் மிகப்பெரிய வரிகளில் வேறுபாடு சேர்க்கப்பட வேண்டும், வரி எதுவும் குறிப்பிடப்படவில்லை.\n"
+"ஒரு வரி அமைக்க அல்லது பண வட்ட சுற்று முறை மாற்றவும்."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company_chart_template_id
@@ -9475,22 +9653,26 @@ msgstr ""
 #: sql_constraint:account.journal:0
 msgid "The code and name of the journal must be unique per company !"
 msgstr ""
+"பத்திரிகையின் குறியீடு மற்றும் பெயர் நிறுவனம் ஒன்றுக்கு தனிப்பட்டதாக இருக்க "
+"வேண்டும்!"
 
 #. module: account
 #: sql_constraint:account.account:0
 msgid "The code of the account must be unique per company !"
 msgstr ""
+"கணக்கின் குறியீடு ஒவ்வொரு நிறுவனத்திற்கும் தனிப்பட்டதாக இருக்க வேண்டும்!"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_commercial_partner_id
 msgid ""
 "The commercial entity that will be used on Journal Entries for this invoice"
 msgstr ""
+"இந்த விலைப்பட்டியல்க்கு ஜர்னல் நுழைவுகளில் பயன்படுத்தப்படும் வணிக நிறுவனம்"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_currency_id
 msgid "The currency used to enter statement"
-msgstr ""
+msgstr "அறிக்கை உள்ளிட பயன்படுத்தப்படும் நாணயம்"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree1
@@ -9506,6 +9688,8 @@ msgid ""
 "The ending balance is incorrect !\n"
 "The expected balance (%s) is different from the computed one. (%s)"
 msgstr ""
+"இறுதி சமநிலை தவறானது!\n"
+"கணக்கிடப்பட்ட இருப்பு () கணக்கிடப்பட்ட ஒரு வித்தியாசத்தில் உள்ளது. ()"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category_property_account_expense_categ_id
@@ -9515,6 +9699,10 @@ msgid ""
 "expense (Cost of Goods Sold account) is recognized at the customer invoice "
 "validation."
 msgstr ""
+"ஒரு விற்பனையாளர் மசோதா செல்லுபடியாகும் போது செலவினம் கணக்கிடப்படுகிறது, "
+"இடைக்கால-சாக்ஸன் கணக்கில் இடைவிடா சரக்கு மதிப்பீட்டை தவிர, செலவில் "
+"(விற்கப்பட்ட பொருட்களின் விலை) வாடிக்கையாளர் விலைப்பட்டியல் சரிபார்ப்பில் "
+"அங்கீகரிக்கப்படுகிறது."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product_property_account_expense_id
@@ -9550,7 +9738,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_account_id
 msgid "The income or expense account related to the selected product."
-msgstr ""
+msgstr "தேர்ந்தெடுக்கப்பட்ட தயாரிப்பு தொடர்பான வருமானம் அல்லது செலவு கணக்கு."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:643
@@ -9562,6 +9750,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_journal_code
 msgid "The journal entries of this journal will be named using this prefix."
 msgstr ""
+"இந்த பத்திரிகையின் ஜர்னல் பதிவுகள் இந்த முன்னுரிமையைப் பயன்படுத்தி "
+"பெயரிடப்படும்."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_opening_opening_move_id
@@ -9569,7 +9759,7 @@ msgstr ""
 msgid ""
 "The journal entry containing the initial balance of all this company's "
 "accounts."
-msgstr ""
+msgstr "இந்த நிறுவனத்தின் கணக்குகளின் தொடக்க சமநிலையை உள்ளடக்கிய இதழ் நுழைவு."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op_fiscalyear_last_day
@@ -9584,17 +9774,19 @@ msgid ""
 "The last line's computation type should be \"Balance\" to ensure that the "
 "whole amount will be allocated."
 msgstr ""
+"முழு வரி ஒதுக்கீடு செய்யப்படுவதற்கு கடைசி வரி கணக்கீட்டு வகை \"இருப்பு\" ஆக "
+"இருக்க வேண்டும்."
 
 #. module: account
 #: code:addons/account/models/company.py:94
 #, python-format
 msgid "The lock date for advisors is irreversible and can't be removed."
-msgstr ""
+msgstr "ஆலோசகர்களுக்கான பூட்டு தேதி மறுக்க முடியாதது மற்றும் நீக்க முடியாது."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_move_id
 msgid "The move of this entry line."
-msgstr ""
+msgstr "இந்த நுழைவு வரியின் நகர்வு."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9607,7 +9799,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_name
 msgid "The name that will be used on account move lines"
-msgstr ""
+msgstr "கணக்கு நகர்வு வரிகளில் பயன்படுத்தப்படும் அந்த பெயர்"
 
 #. module: account
 #: code:addons/account/models/company.py:98
@@ -9615,16 +9807,18 @@ msgstr ""
 msgid ""
 "The new lock date for advisors must be set after the previous lock date."
 msgstr ""
+"ஆலோசனையாளர்களுக்கான புதிய பூட்டு தேதி முந்தைய பூட்டு தேதிக்குப் பின்னர் "
+"அமைக்கப்பட வேண்டும்."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence_number_next
 msgid "The next sequence number will be used for the next credit note."
-msgstr ""
+msgstr "அடுத்த கடன் குறிப்பு அடுத்த கடன் குறிப்புக்கு பயன்படுத்தப்படும்."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence_number_next
 msgid "The next sequence number will be used for the next invoice."
-msgstr ""
+msgstr "அடுத்த விலைப்பட்டியல் எண் அடுத்த வரிசை எண்."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_currency_id
@@ -9696,6 +9890,8 @@ msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
 msgstr ""
+"உங்கள் பத்திரிகை நுழைவு தேர்வு செய்யப்பட்ட கணக்கு, இரண்டாம் நிலை நாணயத்தை "
+"வழங்குவதற்கு உதவுகிறது. நீங்கள் கணக்கில் இரண்டாம் நாணயத்தை நீக்க வேண்டும்."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1612
@@ -9711,7 +9907,7 @@ msgstr ""
 msgid ""
 "The sequence field is used to define order in which the tax lines are "
 "applied."
-msgstr ""
+msgstr "வரிசை வரி பயன்படுத்தப்படும் பொருட்டு வரையறுக்க பயன்படுத்தப்படுகிறது."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:645
@@ -9722,12 +9918,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding_rounding_method
 msgid "The tie-breaking rule used for float rounding operations"
-msgstr ""
+msgstr "மிதவை சுற்று செயல்பாடுகளை பயன்படுத்த டை-பிரேக்கிங் விதி"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
 msgid "There are currently no invoices and payments for your account."
-msgstr ""
+msgstr "தற்போது உங்களுடைய கணக்கிற்கான பணம் மற்றும் பணம் எதுவும் இல்லை."
 
 #. module: account
 #: code:addons/account/models/company.py:178
@@ -9736,6 +9932,8 @@ msgid ""
 "There are still unposted entries in the period you want to lock. You should "
 "either post or delete them."
 msgstr ""
+"நீங்கள் பூட்ட விரும்பும் காலப்பகுதியில் இன்னும் பதிவு செய்யப்படாத உள்ளீடுகள்"
+" உள்ளன. நீங்கள் அவற்றை இடுகையிட அல்லது நீக்க வேண்டும்."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:179
@@ -9758,6 +9956,8 @@ msgid ""
 "There is no tax cash basis journal defined for this company: \"%s\" \n"
 "Configure it in Accounting/Configuration/Settings"
 msgstr ""
+"இந்த நிறுவனத்திற்கு வரையறுக்கப்பட்ட வரியாத பண அடிப்படையிலான ஜர்னல் இல்லை: \"\"\n"
+"பைனான்ஸ் / அமைப்பு / அமைப்புகளில் அதை கட்டமைக்கவும்"
 
 #. module: account
 #. openerp-web
@@ -9774,7 +9974,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "These taxes are set in any new product created."
-msgstr ""
+msgstr "இந்த வரிகள் உருவாக்கப்பட்ட புதிய தயாரிப்புகளில் அமைக்கப்பட்டுள்ளன."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template_user_type_id
@@ -9782,6 +9982,8 @@ msgid ""
 "These types are defined according to your country. The type contains more "
 "information about the account and its specificities."
 msgstr ""
+"இந்த வகைகள் உங்கள் நாட்டிற்கு ஏற்ப வரையறுக்கப்படுகின்றன. கணக்கு மற்றும் அதன்"
+" குறிப்பிட்ட தன்மை குறித்த மேலும் தகவல்களில் வகை உள்ளது."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9819,6 +10021,8 @@ msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
 msgstr ""
+"நடப்பு பங்குதாரருக்கான செலுத்தத்தக்க கணக்கு என இயல்புநிலைக்கு பதிலாக இந்த "
+"கணக்கு பயன்படுத்தப்படும்"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_account_receivable_id
@@ -9827,11 +10031,16 @@ msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
 msgstr ""
+"நடப்பு பங்காளிக்கான பெறத்தக்க கணக்கு என்பதால் இந்த கணக்கு இயல்புநிலைக்கு "
+"பதிலாகப் பயன்படுத்தப்படும். நடப்பு பங்குதாரருக்கு பெறக்கூடிய கணக்கு என "
+"இயல்புநிலைக்கு பதிலாக இந்த கணக்கு பயன்படுத்தப்படும்."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category_property_account_income_categ_id
 msgid "This account will be used when validating a customer invoice."
 msgstr ""
+"வாடிக்கையாளர் விலைப்பட்டியல் சரிபார்க்கும் போது இந்த கணக்கு "
+"பயன்படுத்தப்படும்."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9840,6 +10049,10 @@ msgid ""
 " master budgets and the budgets are defined, the project managers can set "
 "the planned amount on each analytic account."
 msgstr ""
+"இது கணக்காளர்கள் பகுப்பாய்வு மற்றும் குறுக்கு வரவு செலவு திட்டங்களை "
+"நிர்வகிக்க அனுமதிக்கிறது. மாஸ்டர் வரவுசெலவுத்திட்டங்கள் மற்றும் வரவு செலவு "
+"திட்டங்களை வரையறுத்தவுடன், திட்ட நிர்வாகிகள் ஒவ்வொரு பகுப்பாய்வு கணக்கில் "
+"திட்டமிடப்பட்ட தொகையை அமைக்கலாம்."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings_module_account_batch_deposit
@@ -9855,6 +10068,9 @@ msgid ""
 "keeps track of the depreciation occurred on those assets, and creates "
 "account move for those depreciation lines."
 msgstr ""
+"இது ஒரு நிறுவனம் அல்லது ஒரு நபர் சொந்தமான சொத்துக்களை நிர்வகிக்க "
+"அனுமதிக்கிறது. அந்த சொத்துக்கள் மீது ஏற்படும் தேய்மானத்தை கண்காணிக்கும், "
+"மற்றும் தேய்மான வரிகளுக்கு கணக்கை உருவாக்குகிறது."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9863,6 +10079,9 @@ msgid ""
 "keeps track of the installments occurred on those revenue recognitions, and "
 "creates account moves for those installment lines."
 msgstr ""
+"இது விற்பனையை விற்பதில் வருவாய் அங்கீகாரத்தை நிர்வகிக்க உங்களை "
+"அனுமதிக்கிறது. அந்த வருவாய் அங்கீகரிப்பில் தவணைகளை வைத்திருப்பதை இது "
+"கண்காணிக்கும், மேலும் அந்த தவணை வரிகளுக்கான கணக்கு நகர்வை உருவாக்குகிறது."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_complete_tax_set
@@ -9871,6 +10090,10 @@ msgid ""
 "encode the sale and purchase rates or choose from list of taxes. This last "
 "choice assumes that the set of tax defined on this template is complete"
 msgstr ""
+"விற்பனை மற்றும் கொள்முதல் வீதங்களை குறியீடாக்க அல்லது வரிகளின் "
+"பட்டியலிலிருந்து தேர்வு செய்ய நீங்கள் முன்மொழிய விரும்பினால், இந்த பூலியன் "
+"உங்களுக்கு உதவுகிறது. இந்த கடைசி தேர்வு இந்த டெம்ப்ளேட்டில் வரையறுக்கப்பட்ட "
+"வரி தொகுப்பு முடிவடைகிறது என்று கருதுகிறது"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_wizard_multi_charts_accounts_complete_tax_set
@@ -9885,6 +10108,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This feature is useful if you issue a high amounts of invoices."
 msgstr ""
+"நீங்கள் அதிக அளவு பொருள்களை வழங்கினால், இந்த அம்சம் பயனுள்ளதாக இருக்கும்."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence_id
@@ -9892,6 +10116,8 @@ msgid ""
 "This field contains the information related to the numbering of the credit "
 "note entries of this journal."
 msgstr ""
+"இந்த பத்திரிகையின் கடன் குறிப்பு உள்ளீடுகளின் எண்ணிக்கை தொடர்பான தகவலை "
+"இந்தத் துறையில் கொண்டுள்ளது."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence_id
@@ -9899,12 +10125,14 @@ msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
 msgstr ""
+"இந்த பத்திரிகையின் ஜர்னல் உள்ளீடுகளின் எண்ணிடத்துடன் தொடர்புடைய தகவல் இந்த "
+"துறையில் உள்ளது."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_journal_id
 #: model:ir.model.fields,help:account.field_account_reconcile_model_second_journal_id
 msgid "This field is ignored in a bank statement reconciliation."
-msgstr ""
+msgstr "வங்கிக் கூற்று மறுசீரமைப்பில் இந்த புலம் புறக்கணிக்கப்படுகிறது."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_date_maturity
@@ -9912,6 +10140,9 @@ msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
 msgstr ""
+"இந்த புலம் செலுத்தத்தக்க மற்றும் பெறத்தக்க இதழ் உள்ளீடுகளுக்கு "
+"பயன்படுத்தப்படுகிறது. இந்த வரி செலுத்துவதற்கான வரம்பு தேதியை நீங்கள் "
+"வைக்கலாம்."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_partner_name
@@ -9920,6 +10151,9 @@ msgid ""
 "statement in electronic format, when the partner doesn't exist yet in the "
 "database (or cannot be found)."
 msgstr ""
+"பங்குதாரர் தரவுத்தளத்தில் இன்னமும் இல்லாத போது (அல்லது காணப்படவில்லை) "
+"மின்னணு வடிவமைப்பில் வங்கி அறிக்கையை இறக்குமதி செய்யும் போது மூன்றாம் நபரின்"
+" பெயரை பதிவு செய்ய இந்த புலம் பயன்படுத்தப்படுகிறது."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9942,6 +10176,8 @@ msgid ""
 "This journal already contains items, therefore you cannot modify its "
 "company."
 msgstr ""
+"இந்த பத்திரிகை ஏற்கனவே பொருட்களை வைத்திருக்கிறது, எனவே நீங்கள் அதன் "
+"நிறுவனத்தை மாற்ற முடியாது."
 
 #. module: account
 #: code:addons/account/models/account.py:503
@@ -9950,6 +10186,8 @@ msgid ""
 "This journal already contains items, therefore you cannot modify its short "
 "name."
 msgstr ""
+"இந்த பத்திரிகை ஏற்கனவே பொருட்களைக் கொண்டிருக்கிறது, எனவே நீங்கள் அதன் "
+"குறுகிய பெயரை மாற்ற முடியாது."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_accounting_report_label_filter
@@ -9964,6 +10202,7 @@ msgstr ""
 msgid ""
 "This method should only be called to process a single invoice's payment."
 msgstr ""
+"இந்த முறை ஒரு விலைப்பட்டியல் செலுத்துவதற்கு மட்டுமே அழைக்கப்பட வேண்டும்."
 
 #. module: account
 #. openerp-web
@@ -9991,6 +10230,12 @@ msgid ""
 "with few new accounts (You don't need to define the whole structure that is "
 "common to both several times)."
 msgstr ""
+"இந்த விருப்பமான புலங்கள் ஒரு கணக்கு வார்ப்புருவை இணைக்க அனுமதிக்கின்றன, அது "
+"ஒரு குறிப்பிட்ட விளக்கப்படம் வார்ப்புருவுடன் இணைக்க உதவுகிறது, அதன் வேர் "
+"பெற்றோரிடமிருந்து வேறுபடலாம். இது மற்றொரு நீட்டிக்கப்பட்ட விளக்கப்படம் "
+"வார்ப்புருவை வரையறுக்க மற்றும் சில புதிய கணக்குகளுடன் (அதைப் பல முறை "
+"பொதுவாகக் கொண்டிருக்கும் ஒட்டுமொத்த அமைப்பை நீங்கள் வரையறுக்க வேண்டிய "
+"அவசியம் இல்லை) வரையறுக்க இது அனுமதிக்கிறது."
 
 #. module: account
 #. openerp-web
@@ -10111,7 +10356,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Today Activities"
-msgstr ""
+msgstr "இன்று செயல்பாடுகள்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_total
@@ -10120,12 +10365,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_cashbox
 msgid "Total"
-msgstr ""
+msgstr "மொத்த"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_tree
 msgid "Total Amount"
-msgstr ""
+msgstr "மொத்த தொகை"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.setup_opening_move_lines_tree
@@ -10173,7 +10418,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_price_subtotal_signed
 msgid "Total amount in the currency of the company, negative for credit note."
-msgstr ""
+msgstr "நிறுவனத்தின் நாணயத்தின் மொத்த தொகை, கடன் குறிப்புக்கு எதிர்மறையானது."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_amount_total_company_signed
@@ -10196,12 +10441,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_price_total
 msgid "Total amount with taxes"
-msgstr ""
+msgstr "வரிகளுடன் மொத்த தொகை"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_price_subtotal
 msgid "Total amount without taxes"
-msgstr ""
+msgstr "வரி இல்லாமல் மொத்த தொகை"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_debit
@@ -10235,12 +10480,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #, python-format
 msgid "Transaction"
-msgstr ""
+msgstr "பரிவர்த்தனை"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "Transactions"
-msgstr ""
+msgstr "பரிவர்த்தனைகள்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_total_entry_encoding
@@ -10251,7 +10496,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_chart_template_transfer_account_id
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_transfer_account_id
 msgid "Transfer Account"
-msgstr ""
+msgstr "கணக்கை மாற்றவும்"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_destination_journal_id
@@ -10286,7 +10531,7 @@ msgstr ""
 #: model:ir.actions.report,name:account.action_report_trial_balance
 #: model:ir.ui.menu,name:account.menu_general_Balance_report
 msgid "Trial Balance"
-msgstr ""
+msgstr "சோதனை சமநிலை"
 
 #. module: account
 #: model:ir.model,name:account.model_account_balance_report
@@ -10343,7 +10588,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_uom_id
 #: model:ir.model.fields,field_description:account.field_account_move_line_product_uom_id
 msgid "Unit of Measure"
-msgstr ""
+msgstr "அளவீட்டு அலகு"
 
 #. module: account
 #: code:addons/account/report/account_aged_partner_balance.py:194
@@ -10375,7 +10620,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
-msgstr ""
+msgstr "இடுகையிடப்படாத"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
@@ -10408,7 +10653,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unreconciled"
-msgstr ""
+msgstr "ஒப்புரவாகவேயில்லை"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
@@ -10523,7 +10768,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr ""
+msgstr "டாஷ்போர்டு பார்வையில் ஜர்னல்களை ஆர்டர் செய்ய பயன்படுத்தப்பட்டது"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_loss_account_id
@@ -10531,6 +10776,8 @@ msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
 msgstr ""
+"ஒரு பணப்பதிவு முடிவடையும் சமநிலை கணினியை கணக்கிடுவதால் வேறுபடும் போது இழப்பை"
+" பதிவு செய்ய பயன்படுத்தப்படுகிறது"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_profit_account_id
@@ -10538,6 +10785,8 @@ msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
 msgstr ""
+"பணப்பதிவு முடிவடையும் சமநிலை கணினியால் கணக்கிடப்படுவதிலிருந்து மாறுபடும் "
+"போது இலாபத்தை பதிவு செய்ய பயன்படுகிறது"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_line_company_currency_id
@@ -10570,7 +10819,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 #, python-format
 msgid "Validate"
-msgstr ""
+msgstr "சரிபார்க்கவும்"
 
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
@@ -10586,7 +10835,7 @@ msgstr ""
 #: selection:account.bank.statement,state:0
 #: model:mail.message.subtype,name:account.mt_invoice_validated
 msgid "Validated"
-msgstr ""
+msgstr "சரிபார்க்கப்பட்டது"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_value_amount
@@ -10602,7 +10851,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model:ir.ui.view,arch_db:account.view_account_supplier_payment_tree
 msgid "Vendor"
-msgstr ""
+msgstr "விற்பனையாளர்"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
@@ -10695,12 +10944,12 @@ msgstr ""
 #. module: account
 #: selection:account.financial.report,type:0
 msgid "View"
-msgstr ""
+msgstr "காண்க"
 
 #. module: account
 #: selection:res.partner,invoice_warn:0
 msgid "Warning"
-msgstr ""
+msgstr "எச்சரிக்கை"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:662
@@ -10763,7 +11012,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr ""
+msgstr "இந்த பத்திரிகை டாஷ்போர்டில் காட்டப்பட வேண்டுமா அல்லது இல்லையா"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report_amount_currency
@@ -10848,6 +11097,8 @@ msgid ""
 "You can check this box to mark this journal item as a litigation with the "
 "associated partner"
 msgstr ""
+"இந்த பத்திரிகை உருப்படியை தொடர்புடைய கூட்டாளருடன் ஒரு வழக்கு என்று நீங்கள் "
+"அடையாளப்படுத்திக்கொள்ளலாம்"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
@@ -10872,6 +11123,8 @@ msgstr ""
 #, python-format
 msgid "You can only delete an invoice line if the invoice is in draft state."
 msgstr ""
+"விலைப்பட்டியல் வரைவு நிலையில் இருந்தால் மட்டுமே விலைப்பட்டியல் வரி நீக்க "
+"முடியும்."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:141
@@ -10893,6 +11146,7 @@ msgstr ""
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s"
 msgstr ""
+"பூட்டுத் தேதிக்கு முன் மற்றும் உள்ளீடுகளை நீங்கள் சேர்க்க / திருத்த முடியாது"
 
 #. module: account
 #: code:addons/account/models/account_move.py:211
@@ -10901,6 +11155,9 @@ msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
 "Check the company settings or ask someone with the 'Adviser' role"
 msgstr ""
+"பூட்டுத் தேதிக்கு முன் மற்றும் உள்ளீடுகளை நீங்கள் சேர்க்க / திருத்த "
+"முடியாது. நிறுவனத்தின் அமைப்புகளை சரிபார்க்கவும் அல்லது 'ஆலோசகர்' "
+"பாத்திரத்துடன் ஒருவர் கேட்கவும்"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1196
@@ -10917,6 +11174,8 @@ msgid ""
 "You cannot change the currency of the company since some journal items "
 "already exist"
 msgstr ""
+"சில பத்திரிகை உருப்படிகளை ஏற்கனவே உள்ளதால், நிறுவனத்தின் நாணயத்தை மாற்ற "
+"முடியாது"
 
 #. module: account
 #: code:addons/account/models/account.py:235
@@ -10925,6 +11184,8 @@ msgid ""
 "You cannot change the owner company of an account that already contains "
 "journal items."
 msgstr ""
+"ஏற்கனவே பத்திரிகை உருப்படிகளை வைத்திருக்கும் ஒரு கணக்கு உரிமையாளர் "
+"நிறுவனத்தை நீங்கள் மாற்ற முடியாது."
 
 #. module: account
 #: code:addons/account/models/account.py:242
@@ -10949,6 +11210,9 @@ msgid ""
 "You cannot define stricter conditions on advisors than on users. Please make"
 " sure that the lock date on advisor is set before the lock date for users."
 msgstr ""
+"பயனர்களிடம் விட ஆலோசகர்கள் மீது கடுமையான நிபந்தனைகளை வரையறுக்க முடியாது. "
+"பயனர்களுக்கான பூட்டு தேதிக்கு முன் ஆலோசனையின் பூட்டு தேதி அமைக்கப்பட்டுள்ளதா"
+" என்பதை உறுதிசெய்யவும்."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:613
@@ -10958,6 +11222,9 @@ msgid ""
 "number). You can set it back to \"Draft\" state and modify its content, then"
 " re-confirm it."
 msgstr ""
+"You cannot delete an invoice after it has been validated (and received a "
+"number). You can set it back to \"Draft\" state and modify its content, then"
+" re-confirm it."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:611
@@ -10966,6 +11233,8 @@ msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
 "create a credit note instead."
 msgstr ""
+"வரைவு இல்லாத அல்லது ரத்துசெய்யப்பட்ட ஒரு விலைப்பட்டியல் நீக்க முடியாது. "
+"அதற்கு பதிலாக கடன் குறிப்பு உருவாக்க வேண்டும்."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:133
@@ -10974,6 +11243,8 @@ msgid ""
 "You cannot disable this setting because some of your taxes are cash basis. "
 "Modify your taxes first before disabling this setting."
 msgstr ""
+"உங்கள் வரிகளில் சில ரொக்க அடிப்படையில் இருப்பதால் இந்த அமைப்பை நீங்கள் "
+"முடக்க முடியாது. இந்த அமைப்பை முடக்க முன்பு உங்கள் வரிகளை மாற்றவும்."
 
 #. module: account
 #: code:addons/account/models/account.py:248
@@ -10988,6 +11259,8 @@ msgid ""
 "You cannot do this modification on a posted journal entry, you can just change some non legal fields. You must revert the journal entry to cancel it.\n"
 "%s."
 msgstr ""
+"இடுகையிடப்பட்ட பத்திரிகை நுழைவில் இந்த மாற்றத்தை நீங்கள் செய்ய முடியாது, நீங்கள் சில சட்டப்பூர்வ துறைகள் மாற்றலாம். அதை ரத்து செய்ய பத்திரிகை நுழைவு திரும்ப வேண்டும்.\n"
+"."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1366
@@ -10996,6 +11269,9 @@ msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
 msgstr ""
+"ஒரு திருத்தப்பட்ட நுழைவில் நீங்கள் இந்த மாற்றத்தை செய்ய முடியாது. நீங்கள் "
+"சில சட்டப்பூர்வ துறைகள் மாற்றிக்கொள்ளலாம் அல்லது நீங்கள் முதலில் "
+"கண்டிப்பற்றதாக இருக்க வேண்டும்."
 
 #. module: account
 #: code:addons/account/models/account.py:518
@@ -11010,6 +11286,8 @@ msgid ""
 "You cannot have a receivable/payable account that is not reconcilable. "
 "(account code: %s)"
 msgstr ""
+"சமரசம் இல்லை என்று ஒரு பெறத்தக்க / செலுத்தத்தக்க கணக்கு இல்லை. (கணக்குக் "
+"குறியீடு:)"
 
 #. module: account
 #: code:addons/account/models/company.py:109
@@ -11033,6 +11311,8 @@ msgid ""
 "You cannot modify a posted entry of this journal.\n"
 "First you should set the journal to allow cancelling entries."
 msgstr ""
+"இந்த இதழின் இடுகையை நீங்கள் மாற்ற முடியாது.\n"
+"முதலில் நீங்கள் பதிவுகளை ரத்து செய்ய அனுமதிக்க இதழ் அமைக்க வேண்டும்."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:789
@@ -11041,12 +11321,15 @@ msgid ""
 "You cannot pay an invoice which is partially paid. You need to reconcile "
 "payment entries first."
 msgstr ""
+"ஓரளவு பணம் செலுத்திய ஒரு விலைப்பட்டியல் நீங்கள் செலுத்த முடியாது. முதலில் "
+"பணம் உள்ளீடுகளை சரிசெய்ய வேண்டும்."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:36
 #, python-format
 msgid "You cannot put/take money in/out for a bank statement which is closed."
 msgstr ""
+"மூடப்பட்ட வங்கி அறிக்கைக்கு நீங்கள் பணம் எடுக்க / எடுத்துக்கொள்ள முடியாது."
 
 #. module: account
 #: code:addons/account/models/account.py:261
@@ -11055,6 +11338,8 @@ msgid ""
 "You cannot remove/deactivate an account which is set on a customer or "
 "vendor."
 msgstr ""
+"நீங்கள் ஒரு வாடிக்கையாளர் அல்லது விற்பனையாளர் மீது அமைக்கப்பட்டுள்ள கணக்கை "
+"நீக்கவோ / முடக்கவோ முடியாது."
 
 #. module: account
 #: code:addons/account/models/account.py:249
@@ -11063,6 +11348,8 @@ msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
 msgstr ""
+"இந்த கணக்கில் ஒரு நாணயத்தை அமைக்க முடியாது, ஏற்கனவே ஏற்கனவே வேறு வெளிநாட்டு "
+"நாணயத்தை வைத்திருக்கும் சில பத்திரிகை உள்ளீடுகள் உள்ளன."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1368
@@ -11077,6 +11364,8 @@ msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
 "Controls' on the related journal."
 msgstr ""
+"இந்த இதழில் இந்த பொது கணக்கை நீங்கள் பயன்படுத்த முடியாது, தாவலை 'நுழை "
+"கட்டுப்பாடுகள்' தொடர்பான இதழில் சரிபார்க்கவும்."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:74
@@ -11086,6 +11375,8 @@ msgid ""
 "You cannot validate an invoice with a negative total amount. You should "
 "create a credit note instead."
 msgstr ""
+"எதிர்மறை மொத்த அளவுடன் நீங்கள் ஒரு விலைப்பட்டியல் மதிப்பீடு செய்ய முடியாது. "
+"அதற்கு பதிலாக கடன் குறிப்பு உருவாக்க வேண்டும்."
 
 #. module: account
 #. openerp-web
@@ -11098,13 +11389,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "You have"
-msgstr ""
+msgstr "உனக்கு இருக்கிறது"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:505
 #, python-format
 msgid "You have to define a sequence for %s in your company."
-msgstr ""
+msgstr "உங்கள் நிறுவனத்தில் நீங்கள் ஒரு காட்சியை வரையறுக்க வேண்டும்."
 
 #. module: account
 #: code:addons/account/wizard/account_report_general_ledger.py:21
@@ -11135,7 +11426,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:53
 #, python-format
 msgid "You reconciled"
-msgstr ""
+msgstr "நீங்கள் சமரசம் செய்தீர்கள்"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1884
@@ -11145,6 +11436,9 @@ msgid ""
 " to manage automatically the booking of accounting entries related to "
 "differences between exchange rates."
 msgstr ""
+"நீங்கள் கணக்கியல் அமைப்புகளில் 'Exchange Rate Journal' ஐ கட்டமைக்க வேண்டும்,"
+" பரிமாற்ற விகிதங்களுக்கிடையில் வேறுபாடுகள் தொடர்பான கணக்கியல் உள்ளீடுகளை "
+"தானாக நிர்வகிக்கும்."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1886
@@ -11154,6 +11448,9 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
+"நீங்கள் கணக்கியல் அமைப்புகளில் 'பரிவர்த்தனை விகிதம் கணக்கை' கட்டமைக்க "
+"வேண்டும், பரிமாற்ற விகிதங்களுக்கிடையில் வேறுபாடுகள் தொடர்பான கணக்கியல் "
+"உள்ளீடுகளை தானாகவே நிர்வகிக்கவும்."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1888
@@ -11163,6 +11460,9 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
+"நீங்கள் கணக்கியல் அமைப்புகளில் 'லாஸ் எக்ஸ்சேஞ்ச் ரேட் கணக்கு' கட்டமைக்க "
+"வேண்டும், பரிமாற்ற விகிதங்களுக்கிடையில் வேறுபாடுகள் தொடர்பான கணக்கியல் "
+"பதிவுகளின் பதிவுகளை தானாக நிர்வகிக்க"
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:49
@@ -11181,6 +11481,10 @@ msgid ""
 "                                waiting for the document to be issued by\n"
 "                                your supplier/customer."
 msgstr ""
+"இதை திருத்தவும் சரிபார்க்கவும் முடியும்\n"
+"                                 கடன் குறிப்பு நேரடியாகவோ,\n"
+"                                 ஆவணம் வழங்கப்பட காத்திருக்கிறது\n"
+"                                 உங்கள் சப்ளையர் / வாடிக்கையாளர்."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -11274,7 +11578,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_payment.xml:17
 #, python-format
 msgid "assign to invoice"
-msgstr ""
+msgstr "விலைப்பட்டியல் ஒதுக்க"
 
 #. module: account
 #: model:ir.model,name:account.model_cash_box_in
@@ -11326,11 +11630,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "for this customer. You can allocate them to mark this invoice as paid."
 msgstr ""
+"இந்த வாடிக்கையாளருக்கு. பணம் செலுத்துவது போல் இந்த விலைப்பட்டியல் குறிக்க "
+"நீங்கள் அவற்றை ஒதுக்கலாம்."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "for this supplier. You can allocate them to mark this bill as paid."
 msgstr ""
+"இந்த சப்ளையருக்கு. இந்த மசோதாவை ஊதியமாகக் குறிக்க நீங்கள் அவற்றை ஒதுக்கலாம்."
 
 #. module: account
 #. openerp-web
@@ -11347,7 +11654,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "outstanding payments"
-msgstr ""
+msgstr "நிலுவையிலுள்ள பணம்"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_agedpartnerbalance
@@ -11430,7 +11737,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
-msgstr ""
+msgstr "பெற்றோர் நிறுவனம்"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -11459,7 +11766,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:53
 #, python-format
 msgid "transactions in"
-msgstr ""
+msgstr "பரிமாற்றங்கள்"
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts

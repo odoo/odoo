@@ -310,6 +310,19 @@ var FormController = BasicController.extend({
         this._super(state);
     },
     /**
+     * Overrides to reload the form when saving failed in readonly (e.g. after
+     * a change on a widget like priority or statusbar).
+     *
+     * @override
+     * @private
+     */
+    _rejectSave: function () {
+        if (this.mode === 'readonly') {
+            return this.reload();
+        }
+        return this._super.apply(this, arguments);
+    },
+    /**
      * Calls unfreezeOrder when changing the mode.
      *
      * @override

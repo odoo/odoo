@@ -8,6 +8,7 @@
 # amrnegm <amrnegm.01@gmail.com>, 2017
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2017
 # Shaima Safar <shaima.safar@open-inside.com>, 2017
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:15+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2017\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,17 +27,17 @@ msgstr ""
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span class=\"oe_inline\"> ( On  </span>"
-msgstr ""
+msgstr "<span class=\"oe_inline\"> ( على  </span>"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span> : Lat : </span>"
-msgstr ""
+msgstr "<span> : خط العرض : </span>"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span> ;  Long:  </span>"
-msgstr ""
+msgstr "<span> : خط الطول : </span>"
 
 #. module: base_geolocalize
 #: code:addons/base_geolocalize/models/res_partner.py:19
@@ -48,6 +49,11 @@ msgid ""
 "                          Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information.\n"
 "                          "
 msgstr ""
+"مطلوب مفتاح API للـGeoCoding (الأماكن).\n"
+"\n"
+"                          احتفظ بهذا المفتاح في باراميترات النظام مع المفتاح: google.api_key_geocode, القيمة: <your api key>\n"
+"                          قم بزيارةhttps://developers.google.com/maps/documentation/geocoding/get-api-key للمزيد من المعلومات.\n"
+"                          "
 
 #. module: base_geolocalize
 #: code:addons/base_geolocalize/models/res_partner.py:28
@@ -56,6 +62,8 @@ msgid ""
 "Cannot contact geolocation servers. Please make sure that your Internet "
 "connection is up and running (%s)."
 msgstr ""
+"لم نستطع الاتصال بسيرفرات التموضع الجغرافي. برجاء التأكد أن اتصالك بشبكة "
+"الإنترنت يعمل (%s)."
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_partner
@@ -77,7 +85,7 @@ msgstr "خط الطول الجغرافي "
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Geolocate"
-msgstr ""
+msgstr "تحديد الموقع الجغرافي"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form

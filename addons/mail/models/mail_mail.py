@@ -5,6 +5,7 @@ import base64
 import datetime
 import logging
 import psycopg2
+import smtplib
 import threading
 
 from collections import defaultdict
@@ -152,6 +153,7 @@ class MailMail(models.Model):
         if notif_emails:
             notifications = self.env['mail.notification'].search([
                 ('mail_message_id', 'in', notif_emails.mapped('mail_message_id').ids),
+                ('res_partner_id', 'in', notif_emails.mapped('recipient_ids').ids),
                 ('is_email', '=', True)])
             if mail_sent:
                 notifications.write({
@@ -319,6 +321,20 @@ class MailMail(models.Model):
                 })
                 mail_sent = False
 
+                # Update notification in a transient exception state to avoid concurrent
+                # update in case an email bounces while sending all emails related to current
+                # mail record.
+                notifs = self.env['mail.notification'].search([
+                    ('is_email', '=', True),
+                    ('mail_message_id', 'in', mail.mapped('mail_message_id').ids),
+                    ('res_partner_id', 'in', mail.mapped('recipient_ids').ids),
+                    ('email_status', 'not in', ('sent', 'canceled'))
+                ])
+                if notifs:
+                    notifs.sudo().write({
+                        'email_status': 'exception',
+                    })
+
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None
                 for email in email_list:
@@ -366,11 +382,12 @@ class MailMail(models.Model):
                     'MemoryError while processing mail with ID %r and Msg-Id %r. Consider raising the --limit-memory-hard startup option',
                     mail.id, mail.message_id)
                 raise
-            except psycopg2.Error:
-                # If an error with the database occurs, chances are that the cursor is unusable.
-                # This will lead to an `psycopg2.InternalError` being raised when trying to write
-                # `state`, shadowing the original exception and forbid a retry on concurrent
-                # update. Let's bubble it.
+            except (psycopg2.Error, smtplib.SMTPServerDisconnected):
+                # If an error with the database or SMTP session occurs, chances are that the cursor
+                # or SMTP session are unusable, causing further errors when trying to save the state.
+                _logger.exception(
+                    'Exception while processing mail with ID %r and Msg-Id %r.',
+                    mail.id, mail.message_id)
                 raise
             except Exception as e:
                 failure_reason = tools.ustr(e)

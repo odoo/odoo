@@ -3,7 +3,7 @@
     <data>
         <template id="report_invoice_document">
             <t t-call="web.external_layout">
-                <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
+                <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)" />
                 <div class="page">
                     <div class="row">
                         <div name="invoice_address" class="col-xs-5 col-xs-offset-7">

@@ -14,7 +14,7 @@ class FleetVehicle(models.Model):
 
     def _get_default_state(self):
         state = self.env.ref('fleet.vehicle_state_active', raise_if_not_found=False)
-        return state and state.id or False
+        return state if state and state.id else False
 
     name = fields.Char(compute="_compute_vehicle_name", store=True)
     active = fields.Boolean('Active', default=True, track_visibility="onchange")
@@ -225,7 +225,7 @@ class FleetVehicle(models.Model):
                 changes.append(_("License Plate: from '%s' to '%s'") % (old_license_plate, vals['license_plate']))
 
             if len(changes) > 0:
-                self.message_post(body=", ".join(changes))
+                vehicle.message_post(body=", ".join(changes))
 
             return super(FleetVehicle, self).write(vals)
 

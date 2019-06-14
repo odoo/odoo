@@ -240,7 +240,7 @@ class MrpWorkorder(models.Model):
 
     @api.multi
     def write(self, values):
-        if ('date_planned_start' in values or 'date_planned_finished' in values) and any(workorder.state == 'done' for workorder in self):
+        if list(values.keys()) != ['time_ids'] and any(workorder.state == 'done' for workorder in self):
             raise UserError(_('You can not change the finished work order.'))
         return super(MrpWorkorder, self).write(values)
 
@@ -362,6 +362,7 @@ class MrpWorkorder(models.Model):
                     move_line.product_uom_qty += self.qty_producing
                     move_line.qty_done += self.qty_producing
                 else:
+                    location_dest_id = production_move.location_dest_id.get_putaway_strategy(self.product_id).id or production_move.location_dest_id.id
                     move_line.create({'move_id': production_move.id,
                              'product_id': production_move.product_id.id,
                              'lot_id': self.final_lot_id.id,
@@ -370,7 +371,7 @@ class MrpWorkorder(models.Model):
                              'qty_done': self.qty_producing,
                              'workorder_id': self.id,
                              'location_id': production_move.location_id.id,
-                             'location_dest_id': production_move.location_dest_id.id,
+                             'location_dest_id': location_dest_id,
                     })
             else:
                 production_move.quantity_done += self.qty_producing

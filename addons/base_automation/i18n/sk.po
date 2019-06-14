@@ -3,18 +3,20 @@
 # * base_automation
 # 
 # Translators:
-# Martin Trigaux, 2017
-# gebri <gebri@inmail.sk>, 2018
+# Martin Trigaux, 2018
 # Matus Krnac <matus.krnac@gmail.com>, 2018
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
+# gebri <gebri@inmail.sk>, 2018
+# Jan Prokop, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:15+0000\n"
+"Last-Translator: Jan Prokop, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -377,7 +379,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_model_id
 msgid "Model on which the server action runs."
-msgstr ""
+msgstr "Model, na ktorom beží akcia servera."
 
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
@@ -518,6 +520,13 @@ msgid ""
 "- 'Add Followers': add followers to a record (available in Discuss)\n"
 "- 'Send Email': automatically send an email (available in email_template)"
 msgstr ""
+"Typ akcie servera. Násedovné hodnoty sú dostupné:\n"
+"- 'Vykonať Python kód': blok Python kódu ktorý bude vykonaný\n"
+"- 'Vytvoriť alebo kopírovať nový záznam': vytvoriť nový záznam s novými hodnotami alebo skopírovať existujúci záznam v databáze\n"
+"- 'Zapísať do záznamu': upraviť hodnoty záznamu\n"
+"- 'Vykonať viaceré akcie': definujte akciu ktorá spustí viacero iných akcií servera\n"
+"- 'Pridať sledovateľov': pridať sledovateľov záznamu (dostupné v diskusii)\n"
+"- 'Poslať email': automaticky poslať email (dostupný v šablóne emailu)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_usage

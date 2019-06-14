@@ -12,17 +12,18 @@
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2018
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
 # Martin Trigaux, 2018
-# Maria Boyadjieva <marabo2000@gmail.com>, 2018
 # Георги Пехливанов <sonaris@gmail.com>, 2018
 # Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2019
+# Maria Boyadjieva <marabo2000@gmail.com>, 2019
+# Igor Sheludko <igor.sheludko@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2019\n"
+"Last-Translator: Igor Sheludko <igor.sheludko@gmail.com>, 2019\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -437,6 +438,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -448,7 +451,9 @@ msgstr "<span class=\"fa\"/> Поканете Вашите Потребител�
 msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-check\"/><span "
 "class=\"hidden-xs\"> Paid</span></span>"
-msgstr "Платено"
+msgstr ""
+"<span class=\"label label-default\"><i class=\"fa fa-fw fa-check\"/><span "
+"class=\"hidden-xs\">Платено</span></span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -482,8 +487,11 @@ msgid ""
 "                                        <span class=\"small\">Recommended if &gt;100 products</span>\n"
 "                                    </span>"
 msgstr ""
-"Импортиране на файл\n"
-"Препоръчва се ако & gt; 100 продукта"
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong>Импорт на файл</strong><br/>\n"
+"                                        <span class=\"small\">Препоръчва се ако &gt;100 продукта</span>\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -632,7 +640,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
-msgstr "Баланс в ГК"
+msgstr "<span title=\"Balance in Odoo\">Баланс в ГК</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3253,7 +3261,7 @@ msgstr "Затваряне"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:60
 #, python-format
 msgid "Close statement"
-msgstr "Затваряне на прозореца"
+msgstr "Затвори извлеченията"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_date_done
@@ -4620,7 +4628,12 @@ msgid "Due date"
 msgstr "Падежна дата"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1176
+#: model:ir.ui.view,arch_db:account.view_move_form
+msgid "Duplicate"
+msgstr "Дублирайте"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1194
 #, python-format
 msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
@@ -6041,7 +6054,7 @@ msgstr "Фактури за валидиране"
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
 msgid "Invoices without Payment"
-msgstr ""
+msgstr "Фактури без Плащане"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance
@@ -8041,12 +8054,12 @@ msgstr "Условия за плащане: 30 дни"
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_advance
 msgid "Payment terms: 30% Advance End of Following Month"
-msgstr ""
+msgstr "Срок на плащане: 30% аванс в края на следващия месец"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term
 msgid "Payment terms: End of Following Month"
-msgstr ""
+msgstr "Срок на плащане: края на следващия месец"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_immediate
@@ -12354,7 +12367,7 @@ msgstr "продуктовия списък"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:158
 #, python-format
 msgid "there"
-msgstr "there"
+msgstr "тук"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

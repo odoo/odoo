@@ -10,17 +10,17 @@
 # Roy Edvard Ellingsen <roy@royedvard.com>, 2018
 # Jorunn D. Newth, 2018
 # Aleksander, 2018
-# Martin Trigaux, 2018
 # Nils Fredrik Gjerull, 2018
-# Marius Stedjan <marius@stedjan.com>, 2018
+# Martin Trigaux, 2019
+# Marius Stedjan <marius@stedjan.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2018\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1086,6 +1086,9 @@ msgid ""
 "                        whether or not it is goods, consumables, or services.\n"
 "                        Choose how you want to create your products:"
 msgstr ""
+"Et produkt i Odoo er noe du selger eller kjøper,\n"
+"uavhengig av om det er varer, forbruksvarer eller tjenester.\n"
+"Velg hvordan du ønsker å opprette dine produkter:"
 
 #. module: account
 #: code:addons/account/models/account_move.py:891
@@ -1521,7 +1524,7 @@ msgstr "Regnskapsdashbord"
 #: model:ir.model.fields,field_description:account.field_account_invoice_date
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_date
 msgid "Accounting Date"
-msgstr ""
+msgstr "Konteringsdato"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -1669,7 +1672,7 @@ msgstr "Avanserte innstillinger"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries
 msgid "Adviser"
-msgstr ""
+msgstr "Regnskapsfører"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_include_base_amount
@@ -1810,7 +1813,7 @@ msgstr "Tillat kansellering av registreringer"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_reconcile
 msgid "Allow Invoices & payments Matching"
-msgstr ""
+msgstr "Tillat avstemming av fakturaer mot betalinger"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_product_margin
@@ -1894,7 +1897,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_signed
 msgid "Amount Due in Invoice Currency"
-msgstr ""
+msgstr "Beløp til forfall i fakturavaluta"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
@@ -2661,6 +2664,8 @@ msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
 "Please go to Account Configuration."
 msgstr ""
+"Kan ikke finne en kontoplan for dette firmaet.\n"
+"Gå til regnskapskonfigurasjon for å velge en kontoplan."
 
 #. module: account
 #: code:addons/account/models/account.py:594
@@ -2859,6 +2864,8 @@ msgid ""
 "Chart of Accounts has been\n"
 "                            installed. You should review it and create any additional accounts."
 msgstr ""
+"Kontoplan ble installert. Du bør se igjennom planen, og opprette andre "
+"nødvendige kontoer."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_list
@@ -3415,7 +3422,7 @@ msgstr ""
 #: code:addons/account/models/account_journal_dashboard.py:274
 #, python-format
 msgid "Create invoice/bill"
-msgstr ""
+msgstr "Opprett faktura/regning"
 
 #. module: account
 #. openerp-web
@@ -4359,7 +4366,12 @@ msgid "Due date"
 msgstr "Forfallsdato"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1176
+#: model:ir.ui.view,arch_db:account.view_move_form
+msgid "Duplicate"
+msgstr "Dupliser"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1194
 #, python-format
 msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
@@ -4528,7 +4540,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_expects_chart_of_accounts
 msgid "Expects a Chart of Accounts"
-msgstr ""
+msgstr "Forventer en kontoplan"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_expense0
@@ -4821,6 +4833,8 @@ msgid ""
 "vendors. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"Denne rapporten viser oversikt over fakturert beløp fra dine leverandører. "
+"Søkeverktøyet kan brukes til å tilpasse fakturarapporten."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -4829,6 +4843,8 @@ msgid ""
 "customers. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"Denne rapporten viser oversikt over fakturert beløp til dine kunder. "
+"Søkeverktøyet kan brukes til å tilpasse fakturarapporten."
 
 #. module: account
 #: model:ir.model,name:account.model_account_full_reconcile
@@ -5629,7 +5645,7 @@ msgstr "Faktura betalt"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
 msgid "Invoice validated"
-msgstr ""
+msgstr "Faktura validert"
 
 #. module: account
 #: model:mail.template,report_name:account.email_template_edi_invoice
@@ -5793,7 +5809,7 @@ msgstr "Tekst i kursiv (mindre)"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Items"
-msgstr ""
+msgstr "Oppføringer"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -6045,7 +6061,7 @@ msgstr "Merkelapp"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_description
 msgid "Label on Invoices"
-msgstr ""
+msgstr "Tekst på fakturaer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment___last_update
@@ -6391,7 +6407,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_period_lock_date
 msgid "Lock Date for Non-Advisers"
-msgstr ""
+msgstr "Låsedato for ikke-regnskapsførere"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7011,6 +7027,8 @@ msgid ""
 "                etc. So, you should record journal entries manually only/mainly\n"
 "                for miscellaneous operations."
 msgstr ""
+"Odoo vil automatisk opprette én journalpostering pr regnskapsdokument: faktura, kreditnota, leverandørbetaling, bankavstemminger osv.\n"
+"Du bør kun opprette manuelle journalposteringer for diverse operasjoner."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7051,6 +7069,9 @@ msgid ""
 "                        number and journal items will be created in your chart\n"
 "                        of accounts."
 msgstr ""
+"Når fakturaer blir validert, kan du ikke lenger modifisere dem.\n"
+"Fakturaene vil bli tildelt et unikt fakturanummer,\n"
+"og journalposteringer vil bli opprettet i hovedboken."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7065,6 +7086,7 @@ msgid ""
 "Once you have created your chart of accounts, you will need to update your "
 "account balances."
 msgstr ""
+"Så snart du har opprettet din kontoplan, må du legge inn kontobalanse."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8008,7 +8030,7 @@ msgstr "Innkjøp"
 #: model:ir.actions.act_window,name:account.action_cash_box_in
 #: model:ir.ui.view,arch_db:account.cash_box_in_form
 msgid "Put Money In"
-msgstr ""
+msgstr "Kasseinnskudd"
 
 #. module: account
 #: selection:account.tax,amount_type:0
@@ -8305,7 +8327,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual_signed
 msgid "Remaining amount due in the currency of the invoice."
-msgstr ""
+msgstr "Beløp til forfall i fakturaens valuta"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual
@@ -8429,7 +8451,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Review the Chart of Accounts"
-msgstr ""
+msgstr "Gjennomgå kontoplanen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8668,6 +8690,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"Velg 'Salg' for kundefaktura-journaler.\n"
+"Velg 'Innkjøp' for leverandørfaktura-journaler.\n"
+"Velg 'Kontant' eller 'Bank' for journaler som brukes i kunde eller leverandørbetalinger.\n"
+"Velg 'Generelt' for journaler av type 'diverse operasjoner'."
 
 #. module: account
 #. openerp-web
@@ -10081,6 +10107,8 @@ msgid ""
 "This is the accounting dashboard. If you have not yet\n"
 "                installed a chart of account, please install one first."
 msgstr ""
+"Dette er regnskaps-dashbordet. Om du enda ikke har installert en kontoplan,"
+"  gjør det først."
 
 #. module: account
 #: code:addons/account/models/account.py:494
@@ -10326,13 +10354,14 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_invoice_amount_total_company_signed
 msgid ""
 "Total amount in the currency of the company, negative for credit notes."
-msgstr ""
+msgstr "Totalt beløp i firmaets valuta. Beløpet er negativt for kreditnotaer."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_amount_total_signed
 msgid ""
 "Total amount in the currency of the invoice, negative for credit notes."
 msgstr ""
+"Totalt beløp i fakturaens valuta. Beløpet er negativt for kreditnotaer."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_credit
@@ -10364,7 +10393,7 @@ msgstr "Totalt i Selskapets Valuta."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_total_signed
 msgid "Total in Invoice Currency"
-msgstr ""
+msgstr "Total i fakturaens valuta"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_total_entry_encoding
@@ -10652,6 +10681,9 @@ msgid ""
 "                                have issued. The credit note will be created, validated and reconciled\n"
 "                                with the invoice. You will not be able to modify the credit note."
 msgstr ""
+"Velg denne om du vil kansellere en faktura, og opprette en ny.\n"
+"Kreditnotaen vil bli opprettet, validert, og avstemt med nåværende faktura.\n"
+"En ny fakturakladd vil bli opprettet, slik at du kan redigere den."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_type_include_initial_balance
@@ -10672,7 +10704,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr ""
+msgstr "Brukes til å sortere journaler i dashbordvisningen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_loss_account_id
@@ -11070,6 +11102,8 @@ msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
 msgstr ""
+"Du kan ikke annullere en faktura som er delvis betalt. Du må reversere "
+"avstemminger til relaterte betalinger først."
 
 #. module: account
 #: code:addons/account/models/company.py:200
@@ -11121,6 +11155,9 @@ msgid ""
 "number). You can set it back to \"Draft\" state and modify its content, then"
 " re-confirm it."
 msgstr ""
+"Du kan ikke slette en faktura etter at den er bekreftet (og har fått tildelt"
+" fakturanummer). Du kan sette den tilbake som kladd og modifisere innholdet,"
+" for så å bekrefte den på nytt."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:611
@@ -11204,6 +11241,8 @@ msgid ""
 "You cannot pay an invoice which is partially paid. You need to reconcile "
 "payment entries first."
 msgstr ""
+"Du kan ikke betale en faktura som er delvis betalt. Du må først avstemme "
+"betalingsposteringene."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:36
@@ -11344,6 +11383,8 @@ msgid ""
 "                                waiting for the document to be issued by\n"
 "                                your supplier/customer."
 msgstr ""
+"Du vil kunne direkte redigere og validere kreditnotaen, eller lagre den som "
+"en kladd i påvente av dokumenter fra din leverandør/kunde."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

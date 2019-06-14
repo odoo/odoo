@@ -3,16 +3,18 @@
 # * rating_project
 # 
 # Translators:
-# krnkris, 2017
 # Martin Trigaux, 2017
 # gezza <geza.nagy@oregional.hu>, 2017
+# krnkris, 2017
+# Ákos Nagy <akos.nagy@oregional.hu>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:12+0000\n"
-"PO-Revision-Date: 2017-11-30 13:12+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:22+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -111,7 +113,7 @@ msgstr "% Feladatokon"
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "<i class=\"fa fa-smile-o\"/> No rating yet"
-msgstr ""
+msgstr "<i class=\"fa fa-smile-o\"/> Még nincs értékelés"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
@@ -207,6 +209,9 @@ msgid ""
 "stage', then an email will be sent to the customer when the task reaches "
 "this step."
 msgstr ""
+"Ha beállításra kerül, és ha a projekt értékelési konfigurációja 'Értékelés "
+"szakaszváltoztatáskor'-ra van állítva, akkor egy e-mail kerül elküldésre az "
+"ügyfélnek, amikor a feladat eléri ezt a szakaszt."
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
@@ -263,7 +268,7 @@ msgstr "Projekt"
 #: model:ir.cron,cron_name:rating_project.ir_cron_rating_project
 #: model:ir.cron,name:rating_project.ir_cron_rating_project
 msgid "Project: Send rating"
-msgstr ""
+msgstr "Projekt: értékelés küldése"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -273,7 +278,7 @@ msgstr "Negyedéves"
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_search
 msgid "Rated tasks"
-msgstr ""
+msgstr "Értékelt feladatok"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating
@@ -294,7 +299,7 @@ msgstr "Értékelés gyakorisága"
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_request_deadline
 msgid "Rating Request Deadline"
-msgstr ""
+msgstr "Értékelés kérésének határideje"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
@@ -315,7 +320,7 @@ msgstr "Értékelések"
 #: code:addons/rating_project/models/project.py:107
 #, python-format
 msgid "Ratings of %s"
-msgstr ""
+msgstr "A(z) %s értékelései"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating_task
@@ -325,7 +330,7 @@ msgstr ""
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.res_config_settings_view_form
 msgid "Set Email Template to Stages"
-msgstr ""
+msgstr "E-mail sablon beállítása a szakaszoknak"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task

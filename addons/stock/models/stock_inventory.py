@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_utils
 
 
@@ -148,13 +148,13 @@ class Inventory(models.Model):
         if self.filter == 'none' and self.product_id and self.location_id and self.lot_id:
             return
         if self.filter not in ('product', 'product_owner') and self.product_id:
-            raise UserError(_('The selected inventory options are not coherent.'))
+            raise ValidationError(_('The selected inventory options are not coherent.'))
         if self.filter != 'lot' and self.lot_id:
-            raise UserError(_('The selected inventory options are not coherent.'))
+            raise ValidationError(_('The selected inventory options are not coherent.'))
         if self.filter not in ('owner', 'product_owner') and self.partner_id:
-            raise UserError(_('The selected inventory options are not coherent.'))
+            raise ValidationError(_('The selected inventory options are not coherent.'))
         if self.filter != 'pack' and self.package_id:
-            raise UserError(_('The selected inventory options are not coherent.'))
+            raise ValidationError(_('The selected inventory options are not coherent.'))
 
     def action_reset_product_qty(self):
         self.mapped('line_ids').write({'product_qty': 0})
@@ -310,9 +310,9 @@ class InventoryLine(models.Model):
         domain=[('type', '=', 'product')],
         index=True, required=True)
     product_name = fields.Char(
-        'Product Name', related='product_id.name', store=True, readonly=True)
+        'Product Name', related='product_id.name', store=True, readonly=True, compute_sudo=True)
     product_code = fields.Char(
-        'Product Code', related='product_id.default_code', store=True)
+        'Product Code', related='product_id.default_code', store=True, readonly=True, compute_sudo=True)
     product_uom_id = fields.Many2one(
         'product.uom', 'Product Unit of Measure',
         required=True,
@@ -406,7 +406,7 @@ class InventoryLine(models.Model):
         """
         for line in self:
             if line.product_id.type != 'product':
-                raise UserError(_("You can only adjust stockable products.") + '\n\n%s -> %s' % (line.product_id.display_name, line.product_id.type))
+                raise ValidationError(_("You can only adjust stockable products.") + '\n\n%s -> %s' % (line.product_id.display_name, line.product_id.type))
 
     def _get_quants(self):
         return self.env['stock.quant'].search([

@@ -5,10 +5,10 @@
 # Translators:
 # son dang <son.dang@doda100.com>, 2017
 # Phạm Lân <phamquanglan@gmail.com>, 2017
-# file aio <fileaio@gmail.com>, 2017
 # fanha99 <fanha99@hotmail.com>, 2017
+# file aio <fileaio@gmail.com>, 2017
 # Martin Trigaux, 2017
-# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2018
 # Duy BQ <duybq86@gmail.com>, 2019
 # 
 msgid ""
@@ -29,7 +29,7 @@ msgstr ""
 #: code:addons/hr_payroll/models/hr_salary_rule.py:41
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (bản sao)"
+msgstr "%s (sao chép)"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_state
@@ -57,7 +57,7 @@ msgstr "<strong>Địa chỉ</strong>"
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Authorized signature</strong>"
-msgstr "<strong>Chữ ký Người có Thẩm quyền</strong>"
+msgstr "<strong>Chữ ký xác nhận</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -91,7 +91,7 @@ msgstr "<strong>Đến ngày</strong>"
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Designation</strong>"
-msgstr "<strong>Bổ nhiệm</strong>"
+msgstr "<strong>Chức vụ</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -163,7 +163,7 @@ msgstr "Thêm ghi chú nội bộ..."
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_contract_advantage_template_view_form
 msgid "Advantage Name"
-msgstr "Tên Chế độ Đãi ngộ"
+msgstr "Tên phụ cấp/phúc lợi"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
@@ -206,7 +206,7 @@ msgstr "Hàng năm"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_appears_on_payslip
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_appears_on_payslip
 msgid "Appears on Payslip"
-msgstr "Xuất hiện trong Phiếu lương"
+msgstr "Hiển thị ở phiếu lương"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_python
@@ -236,12 +236,12 @@ msgstr "Bảng Lương Vương Quốc Bỉ"
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Bi-monthly"
-msgstr "Hai tháng một"
+msgstr "Hai tháng một lần"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Bi-weekly"
-msgstr "Hai tuần một"
+msgstr "Hai tuần một lần"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_form
@@ -358,13 +358,13 @@ msgstr "Tính toán"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Compute Sheet"
-msgstr "Tính toán Phiếu lương"
+msgstr "Tính lương"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_select
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_select
 msgid "Condition Based on"
-msgstr "Điều kiện Dựa trên"
+msgstr "Điều kiện dựa trên"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
@@ -393,7 +393,7 @@ msgstr "Hợp đồng"
 #: model:ir.actions.act_window,name:hr_payroll.hr_contract_advantage_template_action
 #: model:ir.ui.menu,name:hr_payroll.hr_contract_advantage_template_menu_action
 msgid "Contract Advantage Templates"
-msgstr "Mẫu Chế độ Đãi ngộ cho Hợp đồng"
+msgstr "Chế độ đãi ngộ/phúc lợi mẫu cho hợp đồng"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
@@ -603,13 +603,13 @@ msgstr "Nhân viên"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_contract
 msgid "Employee Contract"
-msgstr "Hợp đồng Nhân viên"
+msgstr "Hợp đồng nhân viên"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_list_view
 msgid "Employee Function"
-msgstr "Chức năng Nhân viên"
+msgstr "Chức vụ nhân viên"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
@@ -620,7 +620,7 @@ msgstr "Phiếu lương nhân viên"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_contract_advantage_template
 msgid "Employee's Advantage on Contract"
-msgstr "Chế độ Đãi ngộ Nhân viên trên Hợp đồng"
+msgstr "Chế độ đãi ngộ nhân viên trên hợp đồng"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_employee_ids
@@ -635,7 +635,7 @@ msgstr "Nhân viên"
 #, python-format
 msgid "Error ! You cannot create a recursive Salary Structure."
 msgstr ""
-"Lỗi! Bạn không thể tạo các cấu trúc lưowng đệ quy (gà có trước hay trứng có "
+"Lỗi! Bạn không thể tạo các cấu trúc lương đệ quy (gà có trước hay trứng có "
 "trước)"
 
 #. module: hr_payroll
@@ -662,7 +662,7 @@ msgstr "Bên thứ ba mà có liên quan đến việc thanh toán lương của
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_fix
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_fix
 msgid "Fixed Amount"
-msgstr "Giá trị Cố định"
+msgstr "Giá trị cố định"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_percentage
@@ -695,7 +695,7 @@ msgstr "Tạo"
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_by_employees
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
 msgid "Generate Payslips"
-msgstr "Tạo Phiếu lương"
+msgstr "Tạo phiếu lương"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_employees
@@ -729,7 +729,7 @@ msgstr "Nhóm theo"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_houserentallowance1
 msgid "House Rent Allowance"
-msgstr "Phụ cấp Thuê nhà"
+msgstr "Phụ cấp thuê nhà"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_id
@@ -885,12 +885,12 @@ msgid ""
 "purpose."
 msgstr ""
 "Liên kết một nhóm lương đến cấp cha của nó chỉ được sử dụng cho mục đích báo"
-" cáo"
+" cáo."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_lower_bound
 msgid "Lower Bound"
-msgstr "Giới hạn Thấp"
+msgstr "Mức tối thiểu"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_contract_advantage_template_lower_bound
@@ -900,7 +900,7 @@ msgstr "Mức ràng buộc thấp hơn được nhà tuyển dụng ủy quyền
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_paid
 msgid "Made Payment Order ? "
-msgstr "Đã tạo Lệnh thanh toán/UNC?"
+msgstr "Đã tạo lệnh thanh toán/UNC? "
 
 #. module: hr_payroll
 #: model:res.groups,name:hr_payroll.group_hr_payroll_manager
@@ -1289,7 +1289,7 @@ msgstr "Hoàn trả: "
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_register_line_ids
 msgid "Register Line"
-msgstr "Đăng ký Line"
+msgstr "Chi tiết ghi nhận"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
@@ -1317,14 +1317,14 @@ msgstr "Tính toán Lương"
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_salary_rule_category_filter
 msgid "Salary Rule Categories"
-msgstr "Nhóm Quy tắc Lương"
+msgstr "Nhóm quy tắc Lương"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule_category
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Salary Rule Category"
-msgstr "Nhóm Quy tắc Lương"
+msgstr "Nhóm quy tắc Lương"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_rule_input
@@ -1374,7 +1374,7 @@ msgstr "Thanh toán"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Search Payslip Batches"
-msgstr "Tìm kiếm Bảng lương"
+msgstr "Tìm kiếm bảng lương"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
@@ -1402,7 +1402,7 @@ msgstr "Nửa năm một"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_sequence
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_sequence
 msgid "Sequence"
-msgstr "Trình tự"
+msgstr "Thứ tự"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
@@ -1510,12 +1510,12 @@ msgstr "Tổng số ngày làm việc"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_upper_bound
 msgid "Upper Bound"
-msgstr "Giới hạn Trên"
+msgstr "Mức tối đa"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_contract_advantage_template_upper_bound
 msgid "Upper bound authorized by the employer for this advantage"
-msgstr "Giới hạn trên được ủy quyền bởi nhà tuyển dụng vì lợi thế này"
+msgstr "Mức tối đa mà nhà tuyển dụng có thể trả dành cho khoản phúc lợi này"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_sequence

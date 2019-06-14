@@ -3233,6 +3233,15 @@ class StockMove(TransactionCase):
         })
         picking.action_confirm()
         picking.action_assign()
+
+        scrap = self.env['stock.scrap'].create({
+            'picking_id': picking.id,
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'scrap_qty': 5.0,
+        })
+        scrap.do_scrap()
+
         # No products are reserved on the move of 10, click on `button_validate`.
         with self.assertRaises(UserError):
             picking.button_validate()

@@ -460,6 +460,16 @@ class PurchaseOrder(models.Model):
                     'currency_id': currency.id,
                     'delay': 0,
                 }
+                # In case the order partner is a contact address, a new supplierinfo is created on
+                # the parent company. In this case, we keep the product name and code.
+                seller = line.product_id._select_seller(
+                    partner_id=line.partner_id,
+                    quantity=line.product_qty,
+                    date=line.order_id.date_order and line.order_id.date_order[:10],
+                    uom_id=line.product_uom)
+                if seller:
+                    supplierinfo['product_name'] = seller.product_name
+                    supplierinfo['product_code'] = seller.product_code
                 vals = {
                     'seller_ids': [(0, 0, supplierinfo)],
                 }
@@ -522,6 +532,8 @@ class PurchaseOrder(models.Model):
             res = self.env.ref('account.invoice_supplier_form', False)
             result['views'] = [(res and res.id or False, 'form')]
             result['res_id'] = self.invoice_ids.id
+        result['context']['default_origin'] = self.name
+        result['context']['default_reference'] = self.partner_ref
         return result
 
     @api.multi
@@ -693,7 +705,7 @@ class PurchaseOrderLine(models.Model):
         if line.product_uom.id != line.product_id.uom_id.id:
             price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
         if order.currency_id != order.company_id.currency_id:
-            price_unit = order.currency_id.compute(price_unit, order.company_id.currency_id, round=False)
+            price_unit = order.currency_id.with_context(date=order.date_approve).compute(price_unit, order.company_id.currency_id, round=False)
         return price_unit
 
     @api.multi
@@ -710,10 +722,12 @@ class PurchaseOrderLine(models.Model):
         for move in self.move_ids.filtered(lambda x: x.state != 'cancel' and not x.location_dest_id.usage == "supplier"):
             qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
         template = {
-            'name': self.name or '',
+            # truncate to 2000 to avoid triggering index limit error
+            # TODO: remove index in master?
+            'name': (self.name or '')[:2000],
             'product_id': self.product_id.id,
             'product_uom': self.product_uom.id,
-            'date': self.order_id.date_order,
+            'date': self.order_id.date_approve,
             'date_expected': self.date_planned,
             'location_id': self.order_id.partner_id.property_stock_supplier.id,
             'location_dest_id': self.order_id._get_destination_location(),
@@ -747,9 +761,11 @@ class PurchaseOrderLine(models.Model):
     def _create_stock_moves(self, picking):
         moves = self.env['stock.move']
         done = self.env['stock.move'].browse()
-        for line in self:
-            for val in line._prepare_stock_moves(picking):
-                done += moves.create(val)
+        with self.env.norecompute():
+            for line in self:
+                for val in line._prepare_stock_moves(picking):
+                    done += moves.create(val)
+        self.recompute()
         return done
 
     @api.multi
@@ -947,7 +963,7 @@ class ProcurementRule(models.Model):
     def _get_purchase_order_date(self, product_id, product_qty, product_uom, values, partner, schedule_date):
         """Return the datetime value to use as Order Date (``date_order``) for the
            Purchase Order created to satisfy the given procurement. """
-        seller = product_id._select_seller(
+        seller = product_id.with_context(force_company=values['company_id'].id)._select_seller(
             partner_id=partner,
             quantity=product_qty,
             date=fields.Date.to_string(schedule_date),
@@ -957,7 +973,7 @@ class ProcurementRule(models.Model):
 
     def _update_purchase_order_line(self, product_id, product_qty, product_uom, values, line, partner):
         procurement_uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id)
-        seller = product_id._select_seller(
+        seller = product_id.with_context(force_company=values['company_id'].id)._select_seller(
             partner_id=partner,
             quantity=line.product_qty + procurement_uom_po_qty,
             date=line.order_id.date_order and line.order_id.date_order[:10],
@@ -967,11 +983,15 @@ class ProcurementRule(models.Model):
         if price_unit and seller and line.order_id.currency_id and seller.currency_id != line.order_id.currency_id:
             price_unit = seller.currency_id.compute(price_unit, line.order_id.currency_id)
 
-        return {
+        res = {
             'product_qty': line.product_qty + procurement_uom_po_qty,
             'price_unit': price_unit,
             'move_dest_ids': [(4, x.id) for x in values.get('move_dest_ids', [])]
         }
+        orderpoint_id = values.get('orderpoint_id')
+        if orderpoint_id:
+            res['orderpoint_id'] = orderpoint_id.id
+        return res
 
     @api.multi
     def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, values, po, supplier):
@@ -1131,6 +1151,7 @@ class MailComposeMessage(models.TransientModel):
     @api.multi
     def send_mail(self, auto_commit=False):
         if self._context.get('default_model') == 'purchase.order' and self._context.get('default_res_id'):
-            self = self.with_context(mail_post_autofollow=True)
+            order = self.env['purchase.order'].browse(self._context['default_res_id'])
+            self = self.with_context(mail_post_autofollow=True, lang=order.partner_id.lang)
             self.mail_purchase_order_on_send()
         return super(MailComposeMessage, self).send_mail(auto_commit=auto_commit)

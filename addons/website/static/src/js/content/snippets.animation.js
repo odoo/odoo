@@ -804,6 +804,10 @@ registry.gallerySlider = Animation.extend({
     destroy: function () {
         this._super.apply(this, arguments);
 
+        if (!this.$indicator) {
+            return;
+        }
+
         this.$prev.prependTo(this.$indicator);
         this.$next.appendTo(this.$indicator);
         this.$carousel.off('.gallery_slider');

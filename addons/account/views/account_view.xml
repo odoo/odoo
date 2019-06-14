@@ -1159,6 +1159,7 @@
                                         <field name="invoice_id" attrs="{'invisible': [('invoice_id','=',False)]}"/>
                                     </group>
                                     <group string="Dates">
+                                        <field name="date"/>
                                         <field name="date_maturity"/>
                                     </group>
 
@@ -1166,7 +1167,7 @@
                                         <field name="tax_line_id" readonly="1" attrs="{'invisible': [('tax_line_id','=',False)]}"/>
                                         <field name="tax_ids" widget="many2many_tags" readonly="1" attrs="{'invisible': [('tax_ids','=',[])]}"/>
                                     </group>
-                                    <group string="Matching" attrs="{'invisible':[('full_reconcile_id','=',False)]}">
+                                    <group string="Matching" attrs="{'invisible':[('full_reconcile_id','=',False), ('matched_debit_ids', '=', []),('matched_credit_ids', '=', [])]}">
                                         <label for="full_reconcile_id"/>
                                         <div>
                                             <field name="full_reconcile_id"/>
@@ -1412,7 +1413,7 @@
                                     </div>
                                     <div class="col-xs-6">
                                         <span class="pull-right">
-                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'posted': 'success'}}"/>
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'posted': 'success'}}"/>
                                         </span>
                                     </div>
                                 </div>

@@ -5,9 +5,9 @@
 # Translators:
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
 # Otgonbayar.A <gobi.mn@gmail.com>, 2018
-# Jacara <baskhuujacara@gmail.com>, 2018
 # Onii Onii <onii0223@yahoo.com>, 2018
 # Martin Trigaux, 2019
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:23+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -244,6 +244,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Энд байх утгууд нь "
+"компанитайгаа уялдаж хадгалагдана.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_orders
@@ -326,7 +328,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<span>Pro-Forma Invoice # </span>"
-msgstr ""
+msgstr "<span>Pro-Forma Нэхэмжлэл # </span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -445,6 +447,9 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
+"Энэ бол борлуулалтын захиалга дээр савлагааны төрөл сонгох боломж бөгөөд "
+"захиалгын тоо хэмжээ нь савлагаанд багтах тоонд бүхлээр хуваагдаж байхыг "
+"шаардах болно."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -509,7 +514,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings_group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr ""
+msgstr "Pro-forma нэхэмжлэл илгээхийг зөвшөөрөх"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -532,7 +537,7 @@ msgstr "Нэхэмжлэх Дүн"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_quotations_amount
 msgid "Amount of quotations to invoice"
-msgstr ""
+msgstr "Нэхэмжилвэл зохих үнийн дүн"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_analytic_account_id
@@ -585,6 +590,10 @@ msgid ""
 "codes. Specific conditions can be set (products, customers, minimum purchase"
 " amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
+"Хоёр төрлийн хөнгөлөлтийн програмаар борлуулалтаа дэмжээрэй: урамшуулал ба "
+"купон код. Тодорхой нөхцөл болзол тохируулах боломжтой (бараа, харилцагч, "
+"худалдан авах доод үнийн дүн, цаг хугацаа). Шагнал нь хөнгөлөлт (% эсвэл "
+"мөнгөн дүн) эсвэл үнэгүй бараа байж болно."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
@@ -639,6 +648,9 @@ msgid ""
 "confirming orders straight away. This will add specific action buttons to "
 "your dashboard."
 msgstr ""
+"Хэрэв та захиалгыг батлахаасаа өмнө үнийн саналаа харилцагч руу илгээхийг "
+"хүсвэл үүнийг сонго. Ингэснээр таны хянах самбарт тодорхой үйлдэл бүхий "
+"товчууд нэмэгдэнэ."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_invoices
@@ -723,7 +735,7 @@ msgstr "Холбох хаяг"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_sale_coupon
 msgid "Coupons & Promotions"
-msgstr ""
+msgstr "Купон & Урамшуулал"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -985,6 +997,9 @@ msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
+"Борлуулалтын захиалгаас нэхэмжлэл үүсгэх үед урьдчилгаа төлбөр ашиглагдана. "
+"Борлуулалтын захиалгыг хуулбарлах үед урьдчилгааны мэдээлэл дагаж "
+"хуулбарлагдахгүй."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -1119,7 +1134,7 @@ msgstr "Энд өөрийн худалдааны нөхцөл & тавигдах
 #: code:addons/sale/controllers/portal.py:216
 #, python-format
 msgid "Invalid order"
-msgstr ""
+msgstr "Буруу захиалга"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice
@@ -1197,7 +1212,7 @@ msgstr "Хүргэсэн тоо хэмжээг нэхэмжлэх"
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
 msgid "Invoice what is ordered"
-msgstr ""
+msgstr "Захиалганд суурилсан нэхэмжлэл"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1307,12 +1322,14 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"Түгжигдсэн захиалгын хувьд дараах талбаруудыг засварлах хориотой:\n"
+"%s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:551
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
-msgstr ""
+msgstr "Дараах төлвүүдэд байх захиалгыг батлах боломжгүй: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales___last_update
@@ -1356,6 +1373,7 @@ msgstr "Төлөвлөлтийн Дараалал"
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
 msgstr ""
+"Таны харилцагчидад системд нэвтэрч өөрсдийн баримтаа харах боломжыг олгох"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1385,7 +1403,7 @@ msgstr "Түгжигдсэн"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage promotion &amp; coupon programs"
-msgstr ""
+msgstr "Урамшуулал &amp; купон програмыг удирдах"
 
 #. module: sale
 #: selection:product.template,service_type:0
@@ -1495,7 +1513,7 @@ msgstr "Мессеж байхгүй"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "No longer edit orders once confirmed"
-msgstr ""
+msgstr "Захиалгыг батласны дараа засварлах боломжгүй болно"
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
@@ -1778,7 +1796,7 @@ msgstr "Дэд дүн"
 #. module: sale
 #: selection:res.config.settings,sale_pricelist_setting:0
 msgid "Price computed from formulas (discounts, margins, roundings)"
-msgstr ""
+msgstr "Үнийг томьёоллоор тогтоох (хөнгөлөлт, бүхэлчлэл, тоймчлол)"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_pricelist
@@ -1804,7 +1822,7 @@ msgstr "Үнийн хүснэгт"
 #. module: sale
 #: selection:res.config.settings,multi_sales_price_method:0
 msgid "Prices computed from formulas (discounts, margins, roundings)"
-msgstr ""
+msgstr "Үнийг томьёоллоор тогтоох (хөнгөлөлт, бүхэлчлэл, тоймчлол)"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1879,7 +1897,7 @@ msgstr "Барааны Хувилбар"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product used for down payments"
-msgstr ""
+msgstr "Урьдчилгаа төлбөрийг төлөөлөх бараа"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_template_action
@@ -2251,12 +2269,14 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
-msgstr ""
+msgstr "Худалдан авах болон борлуулахдаа ялгаатай хэмжих нэгж ашиглах"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
 msgstr ""
+"Барааг борлуулахдаа хайрцагны савлагааны тоонд бүхлээр хуваагдах тоо хэмжээг"
+" ашиглана"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2266,7 +2286,7 @@ msgstr "Урьдчилсан Нэхэмжлэл Илгээх"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Send a product-specific email once the invoice is paid"
-msgstr ""
+msgstr "Нэхэмжлэл төлөгдөх үед тухайн бараатай холбоотой онцгой имэйл илгээх"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2280,6 +2300,10 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Sales tab)."
 msgstr ""
+"Хэрэв та бараатай холбоотой онцгой мэдээлэл, агуулгыг (заавар, дүрэм, "
+"холбоос, медиа г.м) бусдад хуваалцахыг хүсвэл имэйл илгээлт нь танд туслах "
+"болно. Барааны дэлгэрэнгүй мэдээллийн Борлуулалт хэсэгт имэйл загвар үүсгэж "
+"тохируулах боломжтой."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
@@ -2295,7 +2319,7 @@ msgstr "Үйлчилгээ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_use_invoices
 msgid "Set Invoicing Target"
-msgstr ""
+msgstr "Нэхэмжлэлийн зорилтот дүнг тохируулах"
 
 #. module: sale
 #. openerp-web
@@ -2307,7 +2331,7 @@ msgstr "Нэхэмжлэлийн зорилго тохируулах:"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
-msgstr ""
+msgstr "Нэг бараанд олон үнэ тохируулах, автомат хөнгөлөлт г.м"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2507,6 +2531,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s is cancelled. You "
 "cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"%s борлуулалтын захиалга цуцлагдсан байна. Борлуулалтын захиалга цуцлагдсан "
+"тул та холбогдох %s шинжилгээний дансанд зардал бүртгэх боломжгүй."
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:133
@@ -2516,6 +2542,9 @@ msgid ""
 "You cannot register an expense on a locked Sales Order. Please create a new "
 "SO linked to this Analytic Account."
 msgstr ""
+"%s борлуулалтын захиалга түгжигдсэн байна. Борлуулалтын захиалга түгжигдсэн "
+"үед холбогдох %s шинжилгээний дансанд зардал бүртгэх боломжгүй. Та шинээр "
+"борлуулалтын захиалга бүртгээд уг шинжилгээний данстай холбож ашиглана уу."
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:129
@@ -2524,6 +2553,9 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s must be validated "
 "before registering expenses."
 msgstr ""
+"Борлуулалтын захиалга %s батлагдаагүй байна. Тиймээс уг захиалгатай "
+"холбоотой %s шинжилгээний дансанд зардал бүртгэхийн тул эхлээд борлуулалтын "
+"захиалгаа батлах шаардлагатай."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
@@ -2541,6 +2573,8 @@ msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set"
 " in their detail form."
 msgstr ""
+"Бохир ашиг бол борлуулалтын нийт үнийн дүнгээс борлуулсан барааны өртөгийн "
+"дүнг хассан ялгавар юм."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:151
@@ -2587,6 +2621,9 @@ msgid ""
 "must be set in the Sales tab of the product detail form. 2) Price computed "
 "from formulas: must be set in the pricelist form."
 msgstr ""
+"Үнийн хүснэгтийн зохион байгуулах хоёр арга зам бий: 1) Нэг бараанд олон үнэ"
+" зохиох: барааны дэлгэрэнгүй мэдээллийн Борлуулалт ТАБ дээр тохируулагдана. "
+"2) Томьёоллоор үнэ бодох: Үнийн хүснэгтийн мэдээлэл дээр тохируулна."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:74
@@ -2607,7 +2644,7 @@ msgstr "Нэхэмжлэх боломжтой мөр алга."
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_error
 msgid "There was an error processing this page."
-msgstr ""
+msgstr "Энэ хуудсыг харуулахад алдаа үүслээ."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2620,6 +2657,8 @@ msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
+"Энэ утга нь шинээр бараа бүртгэх бүрт ашиглагдана. Энэ утгыг барааны "
+"дэлгэрэнгүй форм дээр өөрчлөх боломжтой."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -2672,6 +2711,8 @@ msgstr ""
 #: selection:product.template,service_type:0
 msgid "Timesheets on project (one fare per SO/Project)"
 msgstr ""
+"Төсөл дээрх цагийн хуудас (Төсөл/Борлуулалт бүрийн цагийн үнэ өөр байх "
+"боломжтой)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice

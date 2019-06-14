@@ -16,33 +16,34 @@
 # Si Ling Lau <happy8645@hotmail.com>, 2017
 # mrshelly <mrshelly@hotmail.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
-# e2f_cn r14 <e2f_cn_r14@outlook.com>, 2017
 # xiaobin wu <bd5dml@gmail.com>, 2017
 # liulixia <liu.lixia@elico-corp.com>, 2017
 # fausthuang, 2017
 # Martin Trigaux, 2017
 # Joray <13637815@qq.com>, 2017
 # v2exerer <9010446@qq.com>, 2017
-# Gary Wei <Gary.wei@elico-corp.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # e2f <projects@e2f.com>, 2018
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
+# bf2549c5415a9287249cba2b8a5823c7, 2018
+# 0023d6d916c2d56e4d76ed7a6e80ad5b, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
 # snow wang <147156565@qq.com>, 2018
 # xu xiaohu <xu.xiaohu@gmail.com>, 2018
+# John An <johnxan@163.com>, 2019
+# Gary Wei <Gary.wei@elico-corp.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:21+0000\n"
-"Last-Translator: xu xiaohu <xu.xiaohu@gmail.com>, 2018\n"
+"Last-Translator: Gary Wei <Gary.wei@elico-corp.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1591,6 +1592,13 @@ msgid "Group Journal Items"
 msgstr "分组日记账项目"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:135
+#, python-format
+msgid "HTTPS connection to IoT Box failed"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_uom_categ_is_pos_groupable
 #: model:ir.model.fields,field_description:point_of_sale.field_product_uom_is_pos_groupable
 msgid "Group Products in POS"
@@ -1960,6 +1968,15 @@ msgstr "用于此销售点的忠诚度方案。"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 msgid "Make Payment"
 msgstr "付款"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:137
+#, python-format
+msgid ""
+"Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept "
+"the certificate of your IoT Box."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_available_pricelist_ids
@@ -2570,19 +2587,26 @@ msgstr "拣货错误"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2003
+#: code:addons/point_of_sale/static/src/js/screens.js:2034
 #, python-format
 msgid "Please Confirm Large Amount"
 msgstr "请确认大金额"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:344
+#: code:addons/point_of_sale/models/pos_order.py:369
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "请为这个产品定义收益科目: \"%s\" (id:%d)。"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:587
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2083
+#, python-format
+msgid "Please print the invoice from the backend"
+msgstr "请从后台打印发票"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:653
 #, python-format
 msgid "Please provide a partner for the sale."
 msgstr "请提供销售的业务伙伴。"
@@ -2820,7 +2844,14 @@ msgstr "打印"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:716
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1372
+#, python-format
+msgid "Print Invoice"
+msgstr "打印发票"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:719
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1375
 #, python-format
 msgid "Print Receipt"
 msgstr "打印收据"
@@ -2859,7 +2890,7 @@ msgstr "打印错误："
 #: code:addons/point_of_sale/static/src/js/screens.js:1569
 #, python-format
 msgid "Printing is not supported on some android browsers"
-msgstr ""
+msgstr "不支持从一些安卓浏览器打印"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3665,17 +3696,26 @@ msgstr "与此客户相关的销售点订单的数量"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2052
+#: code:addons/point_of_sale/static/src/js/screens.js:2094
 #, python-format
 msgid "The order could not be sent"
 msgstr "订单不能被发送"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2063
+#: code:addons/point_of_sale/static/src/js/screens.js:2105
 #, python-format
 msgid "The order could not be sent to the server due to an unknown error"
 msgstr "因为未知错误，订单不能发送到服务器"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2084
+#, python-format
+msgid ""
+"The order has been synchronized earlier. Please make the invoice from the "
+"backend for the order: "
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_precompute_cash

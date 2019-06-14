@@ -161,12 +161,12 @@ msgstr "# Feladatok"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_working_days_open
 msgid "# Working Days to Assign"
-msgstr ""
+msgstr "# Munkanapok a hozzárendelésig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_working_days_close
 msgid "# Working Days to Close"
-msgstr ""
+msgstr "# Munkanapok a lezárásig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
@@ -646,7 +646,7 @@ msgstr "<strong>Dátum:</strong>"
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Deadline:</strong>"
-msgstr ""
+msgstr "<strong>Határidő:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -823,7 +823,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Project:</strong>"
-msgstr ""
+msgstr "<strong>Projekt:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1127,7 +1127,7 @@ msgstr "Archivált"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign to Me"
-msgstr ""
+msgstr "Hozzám rendelés"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
@@ -1181,7 +1181,7 @@ msgstr "Melléklet"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_attachment_ids
 msgid "Attachment that don't come from message."
-msgstr ""
+msgstr "Melléklet, ami nem üzenetből jön."
 
 #. module: project
 #: code:addons/project/models/project.py:109
@@ -1346,6 +1346,8 @@ msgid ""
 "Choosing a sub-tasks project will both enable sub-tasks and set their "
 "default project (possibly the project itself)"
 msgstr ""
+"Az alfeladat projekt kiválasztása mind bekapcsolja az alfeladatokat, mind "
+"beállítja az alapértelmezett projektjeiket (esetleg magát a projektet)"
 
 #. module: project
 #. openerp-web
@@ -1486,7 +1488,7 @@ msgstr "Szlogen / Kivitelezés"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
 msgid "Cover Image"
-msgstr ""
+msgstr "Borítókép"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -1521,7 +1523,7 @@ msgstr "Hozzon létre egy új projekt témát."
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_create_new_task
 msgid "Create a new task"
-msgstr ""
+msgstr "Új feladat létrehozása"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1599,12 +1601,12 @@ msgstr "Jelenlegi munkaidő-kiosztás"
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "Current stage of the task"
-msgstr ""
+msgstr "A feladat jelenlegi szakasza"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "Current stage of this task"
-msgstr ""
+msgstr "Ezen feladat jelenlegi szakasza"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.project_task_action_activity
@@ -1895,7 +1897,7 @@ msgstr "Befejezési dátum"
 #: code:addons/project/models/project.py:556
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of task(s)."
-msgstr ""
+msgstr "Hiba! Nem hozható létre a feladat(ok) rekurzív hierarchiája."
 
 #. module: project
 #: sql_constraint:project.project:0
@@ -1954,6 +1956,8 @@ msgid ""
 "Explanation text to help users using the star on tasks or issues in this "
 "stage."
 msgstr ""
+"Magyarázó szöveg, amely segíti a felhasználókat a csillag használatában az "
+"ezen szakaszban lévő feladatokon vagy ügyeken."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -2110,7 +2114,7 @@ msgstr "Zöld"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_done
 msgid "Green Kanban Label"
-msgstr ""
+msgstr "Zöld kanban címke"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2123,12 +2127,12 @@ msgstr ""
 #. module: project
 #: selection:project.task,kanban_state:0
 msgid "Grey"
-msgstr ""
+msgstr "Szürke"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_normal
 msgid "Grey Kanban Label"
-msgstr ""
+msgstr "Szürke kanban címke"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2540,7 +2544,7 @@ msgstr "Utoljára frissítve "
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
-msgstr ""
+msgstr "Késő tevékenységek"
 
 #. module: project
 #: model:web.planner,tooltip_planner:project.planner_project
@@ -2562,6 +2566,9 @@ msgid ""
 "Lets the company customize which Pad installation should be used to link to "
 "new pads (for example: http://etherpad.com/)."
 msgstr ""
+"Lehetővé teszi a vállalat számára annak testreszabását, hogy melyik "
+"szerkesztőtelepítést használja az új szerkesztőkkel való összekapcsoláshoz "
+"(például: http://etherpad.com/)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_analytic_account_id
@@ -2588,7 +2595,7 @@ msgstr "Alacsony"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_attachment_ids
 msgid "Main Attachments"
-msgstr ""
+msgstr "Fő mellékletek"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2677,7 +2684,7 @@ msgstr "Kedvenceim"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Followed Tasks"
-msgstr ""
+msgstr "Követett feladataim"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_activity
@@ -2701,7 +2708,7 @@ msgstr "Név"
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks :"
-msgstr ""
+msgstr "Feladatok neve:"
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_10
@@ -2806,12 +2813,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_working_days_open
 msgid "Number of Working Days to Open the task"
-msgstr ""
+msgstr "Munkanapok száma a feladat megnyitásáig"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_working_days_close
 msgid "Number of Working Days to close the task"
-msgstr ""
+msgstr "Munkanapok száma a feladat lezárásáig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_doc_count
@@ -2948,7 +2955,7 @@ msgstr "Szülő rekord folyamat azonosító"
 #: model:ir.ui.view,arch_db:project.view_task_form2
 #, python-format
 msgid "Parent Task"
-msgstr ""
+msgstr "Szülőfeladat"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_parent_model_id
@@ -3098,7 +3105,7 @@ msgstr "Projekt feladatai"
 #. module: project
 #: model:ir.actions.server,name:project.ir_actions_server_project_sample
 msgid "Project: Activate Sample Project"
-msgstr ""
+msgstr "Projekt: mintaprojekt aktiválása"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -3159,7 +3166,7 @@ msgstr ""
 #: model:project.task.type,legend_done:project.project_stage_data_2
 #, python-format
 msgid "Ready for Next Stage"
-msgstr ""
+msgstr "Készen áll a következő szakaszra"
 
 #. module: project
 #. openerp-web
@@ -3232,7 +3239,7 @@ msgstr "Piros"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_blocked
 msgid "Red Kanban Label"
-msgstr ""
+msgstr "Piros kanbancímke"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3329,7 +3336,7 @@ msgstr "Keresés"
 #: code:addons/project/controllers/portal.py:95
 #, python-format
 msgid "Search <span class=\"nolabel\"> (in Content)</span>"
-msgstr ""
+msgstr "Keresés <span class=\"nolabel\"> (a tartalomban)</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -3340,25 +3347,25 @@ msgstr "Projekt keresése"
 #: code:addons/project/controllers/portal.py:99
 #, python-format
 msgid "Search in All"
-msgstr ""
+msgstr "Keresés mindenben"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:97
 #, python-format
 msgid "Search in Customer"
-msgstr ""
+msgstr "Keresés az ügyfelek között"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:96
 #, python-format
 msgid "Search in Messages"
-msgstr ""
+msgstr "Keresés az üzenetek között"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:98
 #, python-format
 msgid "Search in Stages"
-msgstr ""
+msgstr "Keresés a szakaszok között"
 
 #. module: project
 #. openerp-web
@@ -3469,6 +3476,8 @@ msgstr "Feladat specifikációja leírva"
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Split your tasks to organize your work into sub-milestones"
 msgstr ""
+"Ossza fel a feladatait annak érdekében, hogy al-mérföldkövekbe szervezze a "
+"munkáját"
 
 #. module: project
 #. openerp-web
@@ -3522,7 +3531,7 @@ msgstr "Kedvenc"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
 msgid "Starred Explanation"
-msgstr ""
+msgstr "Csillagozás magyarázata"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3543,12 +3552,12 @@ msgstr "Kezdési dátum"
 #: model:ir.model.fields,field_description:project.field_project_project_subtask_project_id
 #: model:ir.model.fields,field_description:project.field_project_task_subtask_project_id
 msgid "Sub-task Project"
-msgstr ""
+msgstr "Alfeladat projekt"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_subtask_count
 msgid "Sub-task count"
-msgstr ""
+msgstr "Alfeladatok száma"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_sub_task
@@ -3556,7 +3565,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_res_config_settings_group_subtask_project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Sub-tasks"
-msgstr ""
+msgstr "Alfeladatok"
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3839,12 +3848,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_projects
 msgid "There are no projects."
-msgstr ""
+msgstr "Nincsenek projektek."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "There are no tasks."
-msgstr ""
+msgstr "Nincsenek feladatok."
 
 #. module: project
 #. openerp-web
@@ -3952,7 +3961,7 @@ msgstr "Idő becslés a feladatra"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Time Management"
-msgstr ""
+msgstr "Idő menedzsment"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -4067,7 +4076,7 @@ msgstr "Munkaidő-kiosztás használata"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Use collaborative rich text pads on tasks"
-msgstr ""
+msgstr "Kollaboratív, formázott szövegszerkesztők használata a feladatokon"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4100,6 +4109,8 @@ msgstr ""
 #: model:project.task.type,legend_priority:project.project_stage_0
 msgid "Use the star for tasks related to gold customers"
 msgstr ""
+"Használja a csillagot az arany fokozatú ügyfelekkel kapcsolatos feladatok "
+"esetében"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -4290,32 +4301,32 @@ msgstr "Munkaidő"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr ""
+msgstr "Munkaidő a hozzárendelésig"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Close"
-msgstr ""
+msgstr "Munkaidő a lezárásig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_days_open
 msgid "Working days to assign"
-msgstr ""
+msgstr "Munkanapok a hozzárendelésig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_days_close
 msgid "Working days to close"
-msgstr ""
+msgstr "Munkanapok a lezárásig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_hours_open
 msgid "Working hours to assign"
-msgstr ""
+msgstr "Munkaórák a hozzárendelésig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_hours_close
 msgid "Working hours to close"
-msgstr ""
+msgstr "Munkaórák a lezárásig"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
@@ -4452,7 +4463,7 @@ msgstr "stb.."
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "for project:"
-msgstr ""
+msgstr "ehhez a projekthez:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban

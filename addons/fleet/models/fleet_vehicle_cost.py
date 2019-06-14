@@ -274,7 +274,7 @@ class FleetVehicleLogContract(models.Model):
             Vehicle.browse(vehicle).message_post(body=_('%s contract(s) will expire soon and should be renewed and/or closed!') % value)
         nearly_expired_contracts.write({'state': 'diesoon'})
 
-        expired_contracts = self.search([('state', '!=', 'expired'), ('expiration_date', '<',fields.Date.today() )])
+        expired_contracts = self.search([('state', 'not in', ['expired', 'closed']), ('expiration_date', '<',fields.Date.today() )])
         expired_contracts.write({'state': 'expired'})
 
         futur_contracts = self.search([('state', 'not in', ['futur', 'closed']), ('start_date', '>', fields.Date.today())])

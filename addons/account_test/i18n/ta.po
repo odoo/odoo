@@ -2,12 +2,16 @@
 # This file contains the translation of the following modules:
 # * account_test
 # 
+# Translators:
+# Alagappan Karthikeyan <me@karthik.sg>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 10:14+0000\n"
+"Last-Translator: Alagappan Karthikeyan <me@karthik.sg>, 2019\n"
 "Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,22 +36,24 @@ msgstr ""
 #: model:ir.actions.report,name:account_test.account_assert_test_report
 #: model:ir.ui.menu,name:account_test.menu_action_license
 msgid "Accounting Tests"
-msgstr ""
+msgstr "பைனான்ஸ் டெஸ்ட்"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "Accouting tests on"
-msgstr ""
+msgstr "பைனான்ஸ் சோதனைகள்"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_active
 msgid "Active"
-msgstr ""
+msgstr "செயலில்"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
 msgstr ""
+"இயக்கம் கோடுகள் சமச்சீரற்றதாக இருந்தால், அதே தேதி மற்றும் காலம் ஆகியவற்றைச் "
+"சரிபார்க்கவும்"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
@@ -55,11 +61,15 @@ msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of"
 " statement lines"
 msgstr ""
+"வங்கி அறிக்கையை சரிபார்க்கவும் மூடு சமநிலை = தொடங்கி இருப்பு + தொகை வரிகளின்"
+" தொகை"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
 msgstr ""
+"பணம் / ஒத்திவைக்கப்பட்ட பொருள் 'திறந்த' நிலையில் இல்லை என்பதைச் "
+"சரிபார்க்கவும்"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
@@ -67,6 +77,8 @@ msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
 msgstr ""
+"பணம் செலுத்தும் மற்றும் பெறக்கூடிய கணக்குகளை வரையறுக்கின்ற, கணக்கு "
+"சமன்பாடுகள், சமரசம் செய்யப்பட்ட கணக்குகளைச் சேர்ந்தவை"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
@@ -74,11 +86,13 @@ msgid ""
 "Check that reconciled invoice for Sales/Purchases has reconciled entries for"
 " Payable and Receivable Accounts"
 msgstr ""
+"விற்பனை / வாங்குதலுக்கான சமரசம் செய்யப்பட்ட விலைப்பட்டியல், பணம் செலுத்தும் "
+"மற்றும் பெறத்தக்க கணக்குகளுக்கான பதிவுகளை பதிவுசெய்தது"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
-msgstr ""
+msgstr "இருப்பு சரிபார்க்கவும்: பற்று தொகை = கடன் தொகை"
 
 #. module: account_test
 #: model:ir.actions.act_window,help:account_test.action_accounting_assert
@@ -88,7 +102,7 @@ msgstr ""
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Code Help"
-msgstr ""
+msgstr "குறியீடு உதவி"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -114,6 +128,26 @@ msgid ""
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
+"குறியீடானது, உங்கள் சோதனைகளின் விளைவாக `முடிவு` என்ற மாறி அமைக்கப்பட வேண்டும், அது ஒரு பட்டியல் அல்லது இருக்கலாம்\n"
+"ஒரு அகராதி. `முடிவு` என்பது ஒரு வெற்றுப் பட்டியலாக இருந்தால், அது சோதனை வெற்றிகரமானது என்று பொருள். இல்லையெனில் அது\n"
+"`முடிவு` உள்ளே உள்ளதை மொழிபெயர்க்கவும், அச்சிடவும் முயற்சிக்கவும்.\n"
+"\n"
+"உங்கள் சோதனை முடிவு என்பது ஒரு அகராதியைக் கொண்டால், நீங்கள் தேர்வு செய்யக்கூடிய `column_order` என்று பெயரிடப்பட்ட மாறி அமைக்கலாம்\n"
+"`பொருளின்` உள்ளடக்கத்தை நீங்கள் அச்சிட விரும்புகிறீர்கள்.\n"
+"\n"
+"உங்களுக்கு அவசியம் தேவைப்பட்டால், உங்கள் குறியீட்டில் பின்வரும் மாறிகள் பயன்படுத்தலாம்:\n"
+"     * cr: தரவுத்தளத்தில் கர்சர்\n"
+"     * uid: தற்போதைய பயனரின் ID\n"
+"\n"
+"எந்தவொரு வழியிலும், குறியீடானது சரியான உள்தள்ளலுடன் (தேவைப்பட்டால்) சட்டபூர்வ பைதான் அறிக்கைகளாக இருக்க வேண்டும்.\n"
+"\n"
+"உதாரணமாக:\n"
+"     sql = '' 'SELECT ஐடி, பெயர், ref, தேதி\n"
+"              கணக்கு_மாதம்_வரிலிருந்து\n"
+"              WHERE account_id IN (account_account WHERE வகை = 'பார்வை')\n"
+"           '' '\n"
+"     cr.execute (SQL)\n"
+"     விளைவாக = cr.dictfetchall ()"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_uid
@@ -139,7 +173,7 @@ msgstr ""
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Expression"
-msgstr ""
+msgstr "எக்ஸ்பிரஷன்"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_id
@@ -166,12 +200,12 @@ msgstr ""
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Python Code"
-msgstr ""
+msgstr "பைதான் குறியீடு"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_code_exec
 msgid "Python code"
-msgstr ""
+msgstr "பைதான் குறியீடு"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_sequence
@@ -181,33 +215,37 @@ msgstr ""
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_01
 msgid "Test 1: General balance"
-msgstr ""
+msgstr "டெஸ்ட் 1: பொது சமநிலை"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_03
 msgid "Test 3: Movement lines"
-msgstr ""
+msgstr "டெஸ்ட் 3: இயக்கம் கோடுகள்"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
 msgid ""
 "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
 msgstr ""
+"டெஸ்ட் 5.1: சமரசம் செய்யப்பட்ட பொருள்களின் செலுத்தத்தக்க மற்றும் பெறத்தக்க "
+"கணக்காளர் கோடுகள்"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
 msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
 msgstr ""
+"டெஸ்ட் 5.2: மீள்திருத்தப்பட்ட பொருள் மற்றும் செலுத்தத்தக்க / பெறத்தக்க "
+"கணக்குகள்"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06
 msgid "Test 6 : Invoices status"
-msgstr ""
+msgstr "டெஸ்ட் 6: பற்றுச்சீட்டு நிலை"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
 msgid "Test 7 : Closing balance on bank statements"
-msgstr ""
+msgstr "டெஸ்ட் 7: வங்கி அறிக்கைகளில் சமநிலை மூடுவது"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_desc
@@ -229,7 +267,7 @@ msgstr ""
 #: code:addons/account_test/report/report_account_test.py:52
 #, python-format
 msgid "The test was passed successfully"
-msgstr ""
+msgstr "சோதனை வெற்றிகரமாக நிறைவேறியது"
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_accounting_assert_test

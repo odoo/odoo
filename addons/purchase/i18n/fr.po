@@ -17,7 +17,6 @@
 # Fabien Bourgeois <fabien@yaltik.com>, 2017
 # Sébastien LANGE (SYLEAM) <sebastien.lange@syleam.fr>, 2017
 # matthieu gaillet <matthieu.gaillet@lebrass.be>, 2017
-# Benoît Fontaine <benoitfontaine.ba@gmail.com>, 2017
 # Denis Leemann <denis.leemann@camptocamp.com>, 2017
 # Laura Piraux <lap@odoo.com>, 2017
 # Loic <loic.richard2@gmail.com>, 2017
@@ -35,12 +34,14 @@
 # Clo <clo@odoo.com>, 2017
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
 # f5f0a0dac17dde787a1d812a6989680e, 2017
-# fr rev <e2ffr04@hotmail.com>, 2017
+# 31c77b784710e4a287a92d851a40e039, 2017
 # Florian Hatat, 2017
-# fr trans <e2ftrans1@yahoo.com>, 2017
-# fr rev <e2ffr02@hotmail.com>, 2018
+# 6534c450c77b2549e41c52e2051f5839, 2017
 # e2f <projects@e2f.com>, 2018
+# bb76cd9ac0cb7e20167a14728edb858b, 2018
 # Martin Trigaux, 2018
+# Benoît Fontaine <benoitfontaine.ba@gmail.com>, 2019
+# Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -48,7 +49,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:22+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"Last-Translator: Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,40 +79,14 @@ msgid ""
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
-"<p>Do not hesitate to contact us, further you have any question.</p>\n"
+"<p>Do not hesitate to contact us if you have any further question.</p>\n"
 "<p>Best regards,</p>\n"
 "<p style=\"color:#888888;\">\n"
-"% if object.user_id and object.user_id.signature:\n"
-"    ${object.user_id.signature | safe}\n"
+"% if object.sudo().create_uid and object.sudo().create_uid.signature:\n"
+"    ${object.sudo().create_uid.signature | safe}\n"
 "% endif\n"
 "</p>\n"
 msgstr ""
-"\n"
-"<p>Cher\n"
-"% if object.partner_id.is_company and object.partner_id.child_ids:\n"
-"    ${object.partner_id.child_ids[0].name}\n"
-"% else :\n"
-"    ${object.partner_id.name}\n"
-"% endif\n"
-",</p><p>\n"
-"Veuillez trouvez ci-joint une ${object.state in ('draft', 'sent') and 'demande de devis' or 'confirmation de commande d\\'achat'} <strong>${object.name}</strong>\n"
-"% if object.partner_ref:\n"
-"    référence : ${object.partner_ref}\n"
-"% endif\n"
-"% if object.origin:\n"
-"    (RFQ origin: ${object.origin})\n"
-"% endif\n"
-"d'un montant de <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
-"émanant de ${object.company_id.name}.\n"
-"</p>\n"
-"\n"
-"<p>N'hésitez pas à nous contacter si vous avez d'autres questions.</p>\n"
-"<p>Cordialement,</p>\n"
-"<p style=\"color:#888888;\">\n"
-"% if object.user_id and object.user_id.signature:\n"
-"    ${object.user_id.signature | safe}\n"
-"% endif\n"
-"</p>\n"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -136,27 +111,12 @@ msgid ""
 "\n"
 "<p>You can reply to this email if you have any questions.</p>\n"
 "<p>Thank you,</p>\n"
-msgstr ""
-"\n"
-"<p>Cher ${object.partner_id.name} \n"
-"% if object.partner_id.parent_id:\n"
-"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"<p style=\"color:#888888;\">\n"
+"% if object.sudo().create_uid and object.sudo().create_uid.signature:\n"
+"    ${object.sudo().create_uid.signature | safe}\n"
 "% endif\n"
-",</p>\n"
-"<p>\n"
-"Veuillez trouver ci-joint une <strong>${object.state in ('draft', 'sent') and 'demande de devis' or 'confirmation de commande d\\'achat'} ${object.name}</strong>\n"
-"% if object.partner_ref:\n"
-"    réfrence : ${object.partner_ref}\n"
-"% endif\n"
-"% if object.origin:\n"
-"    (correspondant à la demande de devis : ${object.origin})\n"
-"% endif\n"
-"émanant de ${object.company_id.name}.\n"
-"Son montant s'élève à <strong>${format_amount(object.amount_total, object.currency_id)}</strong>.\n"
 "</p>\n"
-"\n"
-"<p>N'hésitez pas à répondre à ce mail pour toute demande.</p>\n"
-"<p>Cordialement,</p>\n"
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/models/stock.py:98
@@ -367,6 +327,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Les valeurs définies ici sont"
+" propres à l'entreprise.\" groups=\"base.group_multi_company\"/>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_orders

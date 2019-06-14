@@ -4,13 +4,13 @@
 # 
 # Translators:
 # Potsawat Manuthamathorn <firmpotsawat@hotmail.com>, 2018
-# Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2018
 # Somchart Jabsung <jabsung.s@gmail.com>, 2018
 # monchai7 <montchye@gmail.com>, 2018
 # Martin Trigaux, 2018
 # Seksan Poltree <seksan.poltree@gmail.com>, 2018
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
 # Prawit Boonthue <prawit.boonthue@gmail.com>, 2018
+# Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2018
 # gsong <gsong2014@foxmail.com>, 2018
 # 
 msgid ""
@@ -49,11 +49,11 @@ msgid ""
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
-"<p>Do not hesitate to contact us, further you have any question.</p>\n"
+"<p>Do not hesitate to contact us if you have any further question.</p>\n"
 "<p>Best regards,</p>\n"
 "<p style=\"color:#888888;\">\n"
-"% if object.user_id and object.user_id.signature:\n"
-"    ${object.user_id.signature | safe}\n"
+"% if object.sudo().create_uid and object.sudo().create_uid.signature:\n"
+"    ${object.sudo().create_uid.signature | safe}\n"
 "% endif\n"
 "</p>\n"
 msgstr ""
@@ -81,6 +81,11 @@ msgid ""
 "\n"
 "<p>You can reply to this email if you have any questions.</p>\n"
 "<p>Thank you,</p>\n"
+"<p style=\"color:#888888;\">\n"
+"% if object.sudo().create_uid and object.sudo().create_uid.signature:\n"
+"    ${object.sudo().create_uid.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 msgstr ""
 
 #. module: purchase
@@ -679,7 +684,7 @@ msgstr "รายละเอียด"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Description for Vendors"
-msgstr "คำอธิบายสำหรับผู้ขาย"
+msgstr "รายละเอียดสำหรับผู้ขาย"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_default_location_dest_id_usage

@@ -31,6 +31,8 @@ try:
 except ImportError:
     astor = None
 
+from odoo.tools.parse_version import parse_version
+
 unsafe_eval = eval
 
 _logger = logging.getLogger(__name__)
@@ -176,7 +178,7 @@ class QWebException(Exception):
         return str(self)
 
 # Avoid DeprecationWarning while still remaining compatible with werkzeug pre-0.9
-escape = (lambda text: _escape(text, quote=True)) if getattr(werkzeug, '__version__', '0.0') < '0.9.0' else _escape
+escape = (lambda text: _escape(text, quote=True)) if parse_version(getattr(werkzeug, '__version__', '0.0')) < parse_version('0.9.0') else _escape
 
 def foreach_iterator(base_ctx, enum, name):
     ctx = base_ctx.copy()
@@ -1458,7 +1460,7 @@ class QWeb(object):
             )
 
             if call_options:
-            # update this dict with the content of `t-call-options`
+                # update this dict with the content of `t-call-options`
                 content.extend([
                     # options_.update(template options)
                     ast.Expr(ast.Call(
@@ -1469,7 +1471,56 @@ class QWeb(object):
                         ),
                         args=[self._compile_expr(call_options)],
                         keywords=[], starargs=None, kwargs=None
-                    ))
+                    )),
+
+                    # if options.get('lang') != options_.get('lang'):
+                    #   self = self.with_context(lang=options.get('lang'))
+                    ast.If(
+                        test=ast.Compare(
+                            left=ast.Call(
+                                func=ast.Attribute(
+                                    value=ast.Name(id='options', ctx=ast.Load()),
+                                    attr='get',
+                                    ctx=ast.Load()
+                                ),
+                                args=[ast.Str("lang")], keywords=[],
+                                starargs=None, kwargs=None
+                            ),
+                            ops=[ast.NotEq()],
+                            comparators=[ast.Call(
+                                func=ast.Attribute(
+                                    value=ast.Name(id=name_options, ctx=ast.Load()),
+                                    attr='get',
+                                    ctx=ast.Load()
+                                ),
+                                args=[ast.Str("lang")], keywords=[],
+                                starargs=None, kwargs=None
+                            )]
+                        ),
+                        body=[
+                            ast.Assign(
+                                targets=[ast.Name(id='self', ctx=ast.Store())],
+                                value=ast.Call(
+                                    func=ast.Attribute(
+                                        value=ast.Name(id='self', ctx=ast.Load()),
+                                        attr='with_context',
+                                        ctx=ast.Load()
+                                    ),
+                                    args=[],
+                                    keywords=[ast.keyword('lang', ast.Call(
+                                        func=ast.Attribute(
+                                            value=ast.Name(id=name_options, ctx=ast.Load()),
+                                            attr='get',
+                                            ctx=ast.Load()
+                                        ),
+                                        args=[ast.Str("lang")], keywords=[],
+                                        starargs=None, kwargs=None
+                                    ))],
+                                    starargs=None, kwargs=None
+                                )
+                            )],
+                        orelse=[],
+                    )
                 ])
 
             if nsmap:

@@ -8,14 +8,15 @@ var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
 var _t = core._t;
+var _lt = core._lt;
 
 var ORDER = {
     ASC: 1,
     DESC: -1,
 };
 
-var read_more = _t('read more');
-var read_less = _t('read less');
+var read_more = _lt('read more');
+var read_less = _lt('read less');
 
 function time_from_now(date) {
     if (moment().diff(date, 'seconds') < 45) {

@@ -7,17 +7,17 @@
 # Zoriana Zaiats, 2017
 # ТАрас <tratatuta@i.ua>, 2017
 # Yaroslav Molochko <onorua@gmail.com>, 2017
-# Martin Trigaux, 2017
 # Bohdan Lisnenko, 2018
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# Martin Trigaux, 2019
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"POT-Creation-Date: 2019-03-29 09:08+0000\n"
 "PO-Revision-Date: 2017-09-20 10:19+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -672,6 +672,11 @@ msgid "Email Statistics"
 msgstr "Статистика електронної пошти"
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_mail_template
+msgid "Email Templates"
+msgstr "Шаблони електронних листів"
+
+#. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_thread
 msgid "Email Thread"
 msgstr "Ланцюжки повідомлень"
@@ -711,7 +716,7 @@ msgstr "Виняток"
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Exclude Bounced"
-msgstr "Виключити зіткнення"
+msgstr "Виключити відмову"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
@@ -1026,7 +1031,7 @@ msgstr "Керування кампаніями масової розсилки"
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Manage campaigns of mass emails with process stages"
-msgstr "Керування кампаніями масових електронних листів із етапами процесу"
+msgstr "Керування кампаніями масових електронних листів з етапами процесу"
 
 #. module: mass_mailing
 #: model:mail.mass_mailing.tag,name:mass_mailing.mass_mail_tag_1
@@ -1258,7 +1263,7 @@ msgstr "Подарунки Odoo"
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_image_text
 msgid "Omnichannel sales"
-msgstr "Omnichannel продажі"
+msgstr "Багатоканальні продажі"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
@@ -1461,7 +1466,7 @@ msgstr "Майстер Sample Mail"
 #. module: mass_mailing
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_1
 msgid "Schedule"
-msgstr "План"
+msgstr "Запланувати"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_schedule_date
@@ -1578,7 +1583,7 @@ msgstr "Дата відправлення"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_sent
 msgid "Sent Emails"
-msgstr "Надісланні електронні листи"
+msgstr "Надіслані електронні листи"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
@@ -1732,7 +1737,7 @@ msgid ""
 "This is the link source, e.g. Search Engine, another domain, or name of "
 "email list"
 msgstr ""
-"Це  посилання джрела, наприклад, пошукова система, інший домен або ім'я "
+"Це посилання джерела, наприклад, пошукова система, інший домен або назва "
 "списку листів"
 
 #. module: mass_mailing
@@ -1741,7 +1746,7 @@ msgid ""
 "This is the link source, e.g. Search Engine, another domain,or name of email"
 " list"
 msgstr ""
-"Це  посилання джрела, наприклад, пошукова система, інший домен або ім'я "
+"Це посилання джерела, наприклад, пошукова система, інший домен або назва "
 "списку листів"
 
 #. module: mass_mailing
@@ -1825,6 +1830,12 @@ msgid "Unsubscription Date"
 msgstr "Дата відмови на підписку"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:639
+#, python-format
+msgid "Unsupported mass mailing model %s"
+msgstr "Непідтримувана модель масової розсилки %s"
+
+#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_paragraph
 msgid ""
 "Usability improvements made on Odoo will automatically apply to all\n"
@@ -1856,10 +1867,10 @@ msgid ""
 " back please accept this 20% discount on you next purchase by clicking the "
 "button."
 msgstr ""
-"Ми продовжуємо рости, і ми не хочемо, щоб ви були частиною цього! Ми "
-"збільшили час магазину та отримали багато нових брендів. Щоб привітати вас "
-"назад, будь ласка, прийміть цю знижку на 20% на наступну покупку, натиснувши"
-" кнопку."
+"Ми продовжуємо рости і хочемо, щоби ви були частиною цього! Ми збільшили час"
+" магазину та отримали багато нових брендів. Щоби привітати вас із "
+"поверненням, будь ласка, прийміть цю знижку на 20% на наступну покупку, "
+"натиснувши кнопку."
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_text

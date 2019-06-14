@@ -3,16 +3,18 @@
 # * base_import_module
 # 
 # Translators:
-# Yihya Hugirat <hugirat@gmail.com>, 2017
+# Yihya Hugirat <hugirat@gmail.com>, 2018
 # Martin Trigaux, 2018
 # ExcaliberX <excaliberx@gmail.com>, 2018
+# דודי מלכה <Dudimalka6@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: ExcaliberX <excaliberx@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:15+0000\n"
+"Last-Translator: דודי מלכה <Dudimalka6@gmail.com>, 2019\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +36,7 @@ msgstr "סגור"
 #: code:addons/base_import_module/controllers/main.py:31
 #, python-format
 msgid "Could not select database '%s'"
-msgstr ""
+msgstr "לא ניתן לבחור מסד נתונים '%s'"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_uid
@@ -55,7 +57,7 @@ msgstr "השם המוצג"
 #: code:addons/base_import_module/models/ir_module.py:112
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
-msgstr ""
+msgstr "שדה '%s' גודל הקובץ המרבי המותר"
 
 #. module: base_import_module
 #: code:addons/base_import_module/models/ir_module.py:104
@@ -66,13 +68,13 @@ msgstr ""
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_force
 msgid "Force init"
-msgstr ""
+msgstr "לכפות אתחול"
 
 #. module: base_import_module
 #: model:ir.model.fields,help:base_import_module.field_base_import_module_force
 msgid ""
 "Force init mode even if installed. (will update `noupdate='1'` records)"
-msgstr ""
+msgstr "פה את מצב ההתחלה גם אם מותקן. (עדכון 'noupdate =' 1 'רשומות)"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_id
@@ -82,12 +84,12 @@ msgstr "מזהה"
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import App"
-msgstr ""
+msgstr "ייבוא יישומון"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
 msgid "Import Message"
-msgstr ""
+msgstr "ייבוא הודעות"
 
 #. module: base_import_module
 #: model:ir.actions.act_window,name:base_import_module.action_view_base_module_import
@@ -95,7 +97,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base_import_module.menu_view_base_module_import
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import Module"
-msgstr ""
+msgstr "מודול ייבוא"
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -105,7 +107,7 @@ msgstr "ייבוא מודול"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module_imported
 msgid "Imported Module"
-msgstr ""
+msgstr "מודול מיובא"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module___last_update
@@ -136,23 +138,28 @@ msgstr "מודול בקובץ .ZIP"
 #: code:addons/base_import_module/models/ir_module.py:102
 #, python-format
 msgid "No file sent."
-msgstr ""
+msgstr "לא נשלח קובץ."
+
+#. module: base_import_module
+#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Note: you can only import data modules (.xml files and static assets)"
+msgstr "הערה: ניתן לייבא רק מודולי נתונים (קובצי .xml ונכסים סטטיים)"
 
 #. module: base_import_module
 #: code:addons/base_import_module/controllers/main.py:25
 #, python-format
 msgid "Only administrators can upload a module"
-msgstr ""
+msgstr "רק מנהלים יכולים לטעון מודול"
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Open Modules"
-msgstr ""
+msgstr "פתח מודולים"
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Select module package to import (.zip file):"
-msgstr ""
+msgstr "בחר חבילת מודול לייבוא (קובץ zip):"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_state
@@ -164,7 +171,7 @@ msgstr "סטטוס"
 #: code:addons/base_import_module/models/ir_module.py:47
 #, python-format
 msgid "Studio customizations require Studio"
-msgstr ""
+msgstr "ההתאמות של סטודיו דורשות סטודיו"
 
 #. module: base_import_module
 #: code:addons/base_import_module/models/ir_module.py:42

@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Murat Kaplan <muratk@projetgrup.com>, 2018
-# Martin Trigaux, 2018
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
-# Umur Akın <umura@projetgrup.com>, 2018
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2019
+# Martin Trigaux, 2019
+# Umur Akın <umura@projetgrup.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -180,6 +180,15 @@ msgid ""
 "</p>\n"
 "</data>"
 msgstr ""
+"<?xml version=\"1.0\"?>Sayın ${object.partner_id.name},</p>\n"
+"<p>Ödemeniz için teşekkür ederiz.<br/>tutarındaki ödeme<strong>${(object.name or '').replace('/','-')}</strong> makbuzunuz<strong>${format_amount(object.amount, object.currency_id)}</strong> from ${object.company_id.name}.</p>\n"
+"<p>Herhangi bir sorunuz varsa, lütfen bizimle iletişime geçmekten çekinmeyin.</p>\n"
+"<p>Saygılarımızla,\n"
+"% if user and user.signature:\n"
+"${user.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</data>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_notification_email_account_invoice
@@ -250,6 +259,71 @@ msgid ""
 "</table>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"% set record = ctx.get('record')\n"
+"% set company = record and record.company_id or ctx.get('company')\n"
+"<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                        <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
+"                            Invoice ${object.record_name}\n"
+"                        </span>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\">\n"
+"                        <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"          </table>\n"
+"    </td>\n"
+"  </tr>\n"
+"  <!-- CONTENT -->\n"
+"  <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;\">\n"
+"                <tbody>\n"
+"                    <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+"                        ${object.body | safe}\n"
+"                    </td>\n"
+"                </tbody>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                        ${company.name}<br/>\n"
+"                        ${company.phone or ''}\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                        % if company.email:\n"
+"                        <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
+"                        % endif\n"
+"                        % if company.website:\n"
+"                        <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                        ${company.website}\n"
+"                        </a>\n"
+"                        % endif\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\">\n"
+"            Powered by <a target=\"_blank\" href=\"https://www.odoo.com\">Odoo</a>.\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</div>"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -299,6 +373,50 @@ msgid ""
 "</p>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"<p>Sayın ${object.partner_id.name}\n"
+"% set access_action = object.with_context(force_website=True).get_access_action()\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set access_url = object.get_mail_url()\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>Ekte,\n"
+"% if object.number:\n"
+"Faturanız <strong>${object.number}</strong>\n"
+"% else:\n"
+"Fatura\n"
+"% endif\n"
+"% if object.origin:\n"
+"(with reference: ${object.origin})\n"
+"% endif\n"
+"tutarında <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"from ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"% if is_online:\n"
+"    <br/><br/>\n"
+"    <center>\n"
+"      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">Faturayı Görüntüle\n"
+"    </center>\n"
+"% endif\n"
+"    <br/><br/>\n"
+"\n"
+"% if object.state=='paid':\n"
+"    <p>Bu fatura daha önce ödendi.</p>\n"
+"% else:\n"
+"    <p>Lütfen gecikmiş borcunuzu en kısa sürede ödeyiniz.</p>\n"
+"% endif\n"
+"\n"
+"<p>Teşekkür ederiz,</p>\n"
+"<p style=\"color:#888888\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</div>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -311,6 +429,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -390,7 +510,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon=\"\"/>\n"
-"                                        <strong> Elle Oluşturun</strong><br/>\n"
+"                                        <strong> Manuel Oluşturun</strong><br/>\n"
 "                                        <span class=\"small\">&lt; 200 kontak için önerilir</span>\n"
 "                                    </span>"
 
@@ -2134,12 +2254,12 @@ msgstr "Uygulanabilirlik"
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on credit journal item"
-msgstr ""
+msgstr "Alacak yevmiye kalemine uygulandı"
 
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on debit journal item"
-msgstr ""
+msgstr "Borç yevmiye kalemine uygulandı"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_auto_apply
@@ -2251,7 +2371,7 @@ msgstr "Otomatik Döviz Kurları"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Automatic Import"
-msgstr "Otomatik İçer Aktarım"
+msgstr "İçe Aktarım"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -2907,12 +3027,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_company_chart_template_id
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_chart_template_id
 msgid "Chart Template"
-msgstr "Çizelge Şablonu"
+msgstr "Hesap Planı Şablonu"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_charts_modules
 msgid "Chart Templates"
-msgstr "Çizelge Şablonu"
+msgstr "Hesap Planı Şablonu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_coa_done
@@ -3034,7 +3154,7 @@ msgstr "Hesap Şablonu Seç"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:131
 #, python-format
 msgid "Choose counterpart or Create Write-off"
-msgstr ""
+msgstr "Karşı hesap seçin yada borcu silin"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_bank_journal_form
@@ -3277,7 +3397,7 @@ msgstr "Bu yevmiyeyle ilişkili şirket"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Compare actual revenues &amp; costs with budgets"
-msgstr "Gerçek gelirleri karşılaştırın & amp; Bütçeli maliyetler"
+msgstr "Gerçekleşen gelir ve maliyetleri bütçeler ile karşılaştırın"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.accounting_report_view
@@ -3826,6 +3946,8 @@ msgid ""
 "Currency field should only be set if the journal's currency is different "
 "from the company's. Leave the field blank to use company currency."
 msgstr ""
+"Para birimi alanı yalnızca yevmiyenin para birimi şirketten farklıysa "
+"ayarlanmalıdır. Şirketin para birimini kullanmak için alanı boş bırakın."
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
@@ -4473,7 +4595,12 @@ msgid "Due date"
 msgstr "Vade Tarihi"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1176
+#: model:ir.ui.view,arch_db:account.view_move_form
+msgid "Duplicate"
+msgstr "Kopyala"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1194
 #, python-format
 msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
@@ -5123,7 +5250,7 @@ msgstr "Vergi Grupları"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Group received checks before depositing them to the bank"
-msgstr "Grup, bankaya yatırmadan önce çek aldı"
+msgstr "Bankaya vermeden önce, alınan çekleri grupla "
 
 #. module: account
 #: selection:account.cash.rounding,rounding_method:0
@@ -5259,7 +5386,7 @@ msgstr "ID"
 #: code:addons/account/models/chart_template.py:193
 #, python-format
 msgid "INV"
-msgstr "FAT"
+msgstr "SAT"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:389
@@ -6031,7 +6158,7 @@ msgstr "Ocak"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 #, python-format
 msgid "Journal"
-msgstr "Journal"
+msgstr "Yevmiye"
 
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
@@ -6599,7 +6726,7 @@ msgstr "Tarihi Kilitle"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_period_lock_date
 msgid "Lock Date for Non-Advisers"
-msgstr "Müşavir olmayanlar için Kilit Tarihi"
+msgstr "Müşavir Hariç Kilit Tarihi"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6753,7 +6880,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Manually enter your transactions using our"
-msgstr "İşlemlerimizi el ile girelim."
+msgstr "İşlemlerimizi manuel girelim."
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -7220,7 +7347,7 @@ msgstr "Ekim"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Odoo Accounting has many extra-features:"
-msgstr ""
+msgstr "Odoo Muhasebe birçok ekstra özelliğe sahiptir:"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
@@ -8361,7 +8488,7 @@ msgstr "Alacaklar"
 #: selection:account.register.payments,payment_type:0
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Receive Money"
-msgstr "Para Alma"
+msgstr "Para Al"
 
 #. module: account
 #. openerp-web
@@ -8451,7 +8578,7 @@ msgstr "Yevmiye girişlerinin uzlaştırılması"
 #. module: account
 #: selection:account.journal,bank_statements_source:0
 msgid "Record Manually"
-msgstr "Elle Kaydet"
+msgstr "Manuel Kaydet"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9856,7 +9983,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:1209
 #, python-format
 msgid "The account %s (%s) is deprecated !"
-msgstr ""
+msgstr "Hesap %s (%s) kullanımdan kaldırıldı!"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1021
@@ -9941,7 +10068,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company_chart_template_id
 msgid "The chart template for the company (if any)"
-msgstr "Şirket için grafik şablonu (varsa)"
+msgstr "Şirket için hesap planı şablonu (varsa)"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
@@ -10087,7 +10214,7 @@ msgstr ""
 #: code:addons/account/models/company.py:94
 #, python-format
 msgid "The lock date for advisors is irreversible and can't be removed."
-msgstr ""
+msgstr "Müşavirler için kilit tarihleri geri alınamaz ve değiştirilemez."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_move_id
@@ -10116,6 +10243,8 @@ msgstr "Hesap hareket satırlarında kullanılacak ad"
 msgid ""
 "The new lock date for advisors must be set after the previous lock date."
 msgstr ""
+"Müşavirler için yeni kilit tarihi, önceki kilit tarihinden sonraya "
+"ayarlanmalıdır."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence_number_next
@@ -10817,7 +10946,7 @@ msgstr "İşlem satırlarının toplamı."
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Track costs &amp; revenues by project, department, etc."
-msgstr "Maliyeti ve ampulü takip et Proje, bölüm vb. Gelirler"
+msgstr "Proje ve departmanlara göre maliyet ve gelir takibi."
 
 #. module: account
 #. openerp-web
@@ -11171,7 +11300,7 @@ msgstr "Vergi No Zorunlu"
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
 msgid "VAT:"
-msgstr "Vergi :"
+msgstr "Vergi No :"
 
 #. module: account
 #. openerp-web
@@ -11591,6 +11720,9 @@ msgid ""
 "You cannot define stricter conditions on advisors than on users. Please make"
 " sure that the lock date on advisor is set before the lock date for users."
 msgstr ""
+"Müşavirler için, kullanıcılardan daha katı kurallar tanımlayamazsınız. "
+"Lütfen, müşavirler için tanımladığınız kilit tarihinin, kullanıcılar için "
+"tanımlanan kilit tarihinden önce olmadığından emin olun."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:613
@@ -11664,6 +11796,8 @@ msgid ""
 "You cannot have a receivable/payable account that is not reconcilable. "
 "(account code: %s)"
 msgstr ""
+"Uzlaştırılamayan bir alacak / borç hesabına sahip olamazsınız. (hesap kodu: "
+"%s)"
 
 #. module: account
 #: code:addons/account/models/company.py:109
@@ -11672,6 +11806,8 @@ msgid ""
 "You cannot lock a period that is not finished yet. Please make sure that the"
 " lock date for advisors is not set after the last day of the previous month."
 msgstr ""
+"Henüz bitmemiş bir dönemi kilitleyemezsiniz. Lütfen müşavirler için kilit "
+"tarihini, önceki ayın son gününden sonraya ayarlamadığınızdan emin olun."
 
 #. module: account
 #. openerp-web
@@ -11724,6 +11860,8 @@ msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
 msgstr ""
+"Farklı para biriminde yevmiye kayıtları olduğu için bu hesap üzerinde bir "
+"para birimi tanımlayamazsınız."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1368
@@ -11770,7 +11908,7 @@ msgstr "Var"
 #: code:addons/account/models/account_payment.py:505
 #, python-format
 msgid "You have to define a sequence for %s in your company."
-msgstr ""
+msgstr "Şirketiniz için %s bir dizi tanımlamanız gerekmekte."
 
 #. module: account
 #: code:addons/account/wizard/account_report_general_ledger.py:21
@@ -12019,7 +12157,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:41
 #, python-format
 msgid "o_manual_statement"
-msgstr ""
+msgstr "o_manual_statement"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -12064,7 +12202,7 @@ msgstr "report.account.report_partnerledger"
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_tax
 msgid "report.account.report_tax"
-msgstr ""
+msgstr "report.account.report_tax"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_trialbalance
@@ -12141,7 +12279,7 @@ msgstr "Tüm hesaplarınızın dengesini ayarlamak için."
 #: code:addons/account/static/src/xml/account_reconciliation.xml:53
 #, python-format
 msgid "transactions in"
-msgstr ""
+msgstr "İşlemler"
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts

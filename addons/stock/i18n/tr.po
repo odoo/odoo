@@ -14,10 +14,10 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2018
 # Ediz Duman <neps1192@gmail.com>, 2018
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
-# Umur Akın <umura@projetgrup.com>, 2018
 # Buket Şeker <buket_skr@hotmail.com>, 2018
 # Levent Karakaş <levent@mektup.at>, 2019
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2019
+# Umur Akın <umura@projetgrup.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:24+0000\n"
-"Last-Translator: Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2019\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,6 +41,9 @@ msgid ""
 "\n"
 "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
 msgstr ""
+"\n"
+"\n"
+"%s --> Ürün ölçü birimi %s (%s) - ölçü birimini taşı%s (%s)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:341
@@ -153,6 +156,8 @@ msgid ""
 "<br/>\n"
 "                    <strong>Here is your current inventory: </strong>"
 msgstr ""
+"<br/>\n"
+"                    <strong>Güncel envanteriniz burada: </strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -237,7 +242,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "<span class=\"o_stat_text\">Details</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Detaylar</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -370,7 +375,7 @@ msgstr "<span><strong>Teslim Adresi:</strong></span>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Partner Address:</strong></span>"
-msgstr ""
+msgstr "<span><strong>İş Ortağı Adresi:</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -385,7 +390,7 @@ msgstr "<span>Yeni</span>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span>No reservation or quantity done yet.</span>"
-msgstr ""
+msgstr "<span>Henüz rezervasyon veya tamamlanmış miktar yok.</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -431,6 +436,9 @@ msgid ""
 "                The done move line has been corrected.\n"
 "            </strong>"
 msgstr ""
+"<strong>\n"
+"                Yapılan hareket satırı düzeltildi.\n"
+"            </strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -551,12 +559,12 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
 msgid "<strong>Max qty :</strong>"
-msgstr ""
+msgstr "<strong>Maks miktar :</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
 msgid "<strong>Min qty :</strong>"
-msgstr ""
+msgstr "<strong>Min miktar :</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -631,7 +639,7 @@ msgstr "<strong>Üretim Lotu</strong>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_move_kanban
 msgid "<strong>Qty: </strong>"
-msgstr ""
+msgstr "<strong>Miktar: </strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
@@ -670,7 +678,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_head
 msgid "<strong>The initial demand has been updated.</strong>"
-msgstr ""
+msgstr "<strong>Başlangıç talebi güncellendi.</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
@@ -955,7 +963,7 @@ msgstr "Sahip Ata"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Assign Partner"
-msgstr ""
+msgstr "İş Ortağı Ata"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -963,6 +971,8 @@ msgid ""
 "Assign the partner to the Operations. Use only if the partner is manually "
 "changed!"
 msgstr ""
+"Operasyonlara İş Ortağı atayın. Yalnızca iş ortağınız manuel olarak "
+"değiştirilmişse kullanın!"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -2627,7 +2637,7 @@ msgstr "HDD SH-1"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_has_move_lines
 msgid "Has Move Lines"
-msgstr ""
+msgstr "Hareket Satırları Var"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_line_exist
@@ -2647,7 +2657,7 @@ msgstr "Hurda Hareketi Var"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_has_tracking
 msgid "Has Tracking"
-msgstr ""
+msgstr "Takip Ediliyor"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_posz
@@ -3398,14 +3408,14 @@ msgstr ""
 #, python-format
 msgid ""
 "It is not possible to reserve more products of %s than you have in stock."
-msgstr ""
+msgstr "Stokta olandan daha fazla ürün %s rezerve etmek mümkün değildir."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:270
 #, python-format
 msgid ""
 "It is not possible to unreserve more products of %s than you have in stock."
-msgstr ""
+msgstr "Stokta olandan daha fazla ürünü %s geri almak mümkün değildir."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4002,7 +4012,7 @@ msgstr "Hareket Kalemi"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_move_line_nosuggest_ids
 msgid "Move Line Nosuggest"
-msgstr ""
+msgstr "Hareket Satırları "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_line_form
@@ -4158,7 +4168,7 @@ msgstr ""
 #: code:addons/stock/models/procurement.py:67
 #, python-format
 msgid "No source location defined on procurement rule: %s!"
-msgstr ""
+msgstr "Tedarik kuralında tanımlanmış bir kaynak konumu yok: %s!"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_8
@@ -4327,7 +4337,7 @@ msgstr "Sadece bir ürün"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Ongoing Package Creation: Content"
-msgstr ""
+msgstr "Devam Eden Paket Oluşturma: İçerik"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_name
@@ -5645,7 +5655,7 @@ msgstr "Ters Transfer"
 #: code:addons/stock/wizard/stock_picking_return.py:101
 #, python-format
 msgid "Return of %s"
-msgstr ""
+msgstr "İade edilen %s"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:151
@@ -5934,6 +5944,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set expiration dates on lots &amp; serial numbers"
 msgstr ""
+"Lotlarda & amp; seri numaralarında son kullanım tarihlerini ayarlayın "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6613,6 +6624,10 @@ msgid ""
 "                                   rounding precision of your unit of "
 "measure."
 msgstr ""
+"Ürün için gerçekleşen miktar, \"%s\" ölçü biriminde tanımlanan yuvarlama "
+"hassasiyetine uymaz.                                   defined on the unit "
+"of measure \"%s\".  Lütfen yapılan miktarı veya ölçü biriminin yuvarlama "
+"hassasiyetini değiştirin."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7597,6 +7612,9 @@ msgid ""
 "if some stock moves have already been created with that number. This would "
 "lead to inconsistencies in your stock."
 msgstr ""
+"Bir seri veya lot numarasına bağlı ürünü, bu stokla daha önce bir hareket "
+"yaratılmışsa değiştiremezsiniz. Bu, stoklarınızda tutarsızlıklara yol "
+"açacaktır."
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:37
@@ -7737,6 +7755,8 @@ msgstr "Sadece taslak hareketleri silebilirsiniz."
 #, python-format
 msgid "You can only process 1.0 %s for products with unique serial number."
 msgstr ""
+"Yalnızca benzersiz seri numarasına sahip ürünler %s için 1.0'ı "
+"işleyebilirsiniz."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7756,6 +7776,9 @@ msgid ""
 "You cannot change the location type or its use as a scrap location as there "
 "are products reserved in this location. Please unreserve the products first."
 msgstr ""
+"Konum türünü veya bir hurda konum olarak kullanımını, bu yerde ayrılan "
+"ürünler olduğu için değiştiremezsiniz. Lütfen önce ürünleri rezerveden "
+"çıkarın."
 
 #. module: stock
 #: code:addons/stock/models/product.py:606
@@ -7764,6 +7787,8 @@ msgid ""
 "You cannot change the ratio of this unit of mesure as some products with "
 "this UoM have already been moved or are currently reserved."
 msgstr ""
+"Bu ölçü birimine sahip bazı ürünler zaten taşındığından veya şu anda rezerve"
+" edildiğinden, bu birim ölçü oranını değiştiremezsiniz."
 
 #. module: stock
 #: code:addons/stock/models/stock_scrap.py:75
@@ -7775,7 +7800,7 @@ msgstr "\"Yapıldı\" durumundaki bir hurda işlemini silemezsiniz."
 #: code:addons/stock/models/stock_inventory.py:104
 #, python-format
 msgid "You cannot delete a validated inventory adjustement."
-msgstr ""
+msgstr "Doğrulanmış bir envanter ayarını silemezsiniz."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:394
@@ -7786,6 +7811,9 @@ msgid ""
 "lot. Please first validate the first inventory adjustement with this product"
 " before creating another one."
 msgstr ""
+"Aynı ürün, aynı konum, aynı paket,   (%s), aynı sahip ve aynı lotla (%s), "
+"'Devam Ediyor' durumunda iki envanter ayarlaması yapamazsınız. Lütfen başka "
+"bir ürün oluşturmadan önce ilk ürün ayarını bu ürünle doğrulayın."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:166
@@ -7837,6 +7865,8 @@ msgid ""
 "You cannot validate a transfer if you have not processed any quantity. You "
 "should rather cancel the transfer."
 msgstr ""
+"Herhangi bir miktarda işlem yapmadıysanız transferi doğrulayamazsınız. "
+"Aktarımı iptal etmeniz daha iyi olacaktır."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -7918,7 +7948,7 @@ msgstr "Şirket için öncelikle bir depo tanımlamalısınız: %s."
 #: code:addons/stock/models/stock_picking.py:721
 #, python-format
 msgid "You need to supply a lot/serial number for %s."
-msgstr ""
+msgstr "Bir lot / seri numarası tedarik etmeniz gerekiyor. %s."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:1126

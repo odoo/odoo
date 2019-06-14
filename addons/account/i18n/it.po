@@ -8,30 +8,31 @@
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
 # Manuela Feliciani <mfeliciani@alice.it>, 2018
 # Luigi Di Naro <gigidn@gmail.com>, 2018
-# Alessandro Camilli <alessandrocamilli@openforce.it>, 2018
 # maiolif <maiolif@mgftools.com>, 2018
 # David Minneci <david@numeko.it>, 2018
-# Davide Corio <enlightx@gmail.com>, 2018
 # Giuliano Lotta <giuliano.lotta@gmail.com>, 2018
-# Paolo Valier, 2018
 # Daniele Faraglia <daniele.faraglia@gmail.com>, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
+# Alessandro Camilli <alessandrocamilli@openforce.it>, 2018
 # Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
+# Davide Corio <enlightx@gmail.com>, 2018
 # efraimbiffi <eab@odoo.com>, 2018
 # Martin Trigaux, 2018
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
 # mymage <stefano.consolaro@mymage.it>, 2019
+# Léonie Bouchat <lbo@odoo.com>, 2019
+# Marco Calcagni <mcalcagni@dinamicheaziendali.it>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Paolo Valier, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: mymage <stefano.consolaro@mymage.it>, 2019\n"
+"Last-Translator: Paolo Valier, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1384,7 +1385,7 @@ msgstr "Rendiconto contabile ordinario"
 #: model:ir.model.fields,field_description:account.field_account_account_template_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_currency_id
 msgid "Account Currency"
-msgstr "Valuta contabile"
+msgstr "Valuta del conto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template_account_dest_id
@@ -2273,7 +2274,7 @@ msgstr "Applicabilità"
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on credit journal item"
-msgstr ""
+msgstr "Applicare al movimento contabile di credito"
 
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
@@ -4627,7 +4628,12 @@ msgid "Due date"
 msgstr "Data di scadenza"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1176
+#: model:ir.ui.view,arch_db:account.view_move_form
+msgid "Duplicate"
+msgstr "Duplica"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1194
 #, python-format
 msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
@@ -6079,13 +6085,13 @@ msgstr "È zero"
 #: model:ir.model.fields,help:account.field_account_journal_default_credit_account_id
 #: model:ir.model.fields,help:account.field_res_company_income_currency_exchange_account_id
 msgid "It acts as a default account for credit amount"
-msgstr "Opera come conto predefinito per l'importo avere"
+msgstr "Opera come conto predefinito per l'importo in avere"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_default_debit_account_id
 #: model:ir.model.fields,help:account.field_res_company_expense_currency_exchange_account_id
 msgid "It acts as a default account for debit amount"
-msgstr "Opera come conto predefinito per l'importo dare"
+msgstr "Opera come conto predefinito per l'importo in dare"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_partner_ledger_amount_currency
@@ -8118,7 +8124,7 @@ msgstr "Aliquota abbinata"
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Percentage of Price"
-msgstr "Percentuale del perzzo"
+msgstr "Percentuale sul prezzo"
 
 #. module: account
 #: selection:account.tax,amount_type:0
@@ -9934,11 +9940,11 @@ msgid ""
 "items are directly exigible, but with the feature cash_basis on taxes, some "
 "will become exigible only when the payment is recorded."
 msgstr ""
-"Campo tecnico usato per contrassegnare una riga come esigibile o meno nella "
-"liquidazione IVA  (solo i movimenti esigibili sono mostrati). Tutti i nuovi "
-"movimenti sono predeterminati direttamente esigibili ma con la funzionalita'"
-" di imposte per cassa alcuni diventano esigibili solo alla registrazione del"
-" pagamento."
+"Campo tecnico usato per indicare una riga imposta come esigibile nella "
+"dichiarazione IVA (vengono visualizzati solo i movimenti esigibili). I nuovi"
+" movimenti sono tutti direttamente esigibili in modo predefinito. Con la "
+"funzionalità cash_basis sulle imposte alcuni diventano esigibili solo alla "
+"registrazione del pagamento."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_is_unaffected_earnings_line
@@ -11351,8 +11357,8 @@ msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
 msgstr ""
-"Usato per registrare una perdita quando il saldo finale di un registro di "
-"cassa è diverso da quanto calcolato dal sistema"
+"Usato per registrare una perdita quando il saldo finale di un registratore "
+"di cassa è diverso da quanto calcolato dal sistema"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_profit_account_id
@@ -11360,7 +11366,7 @@ msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
 msgstr ""
-"Usato per registrare un ricavo quando il saldo finale di un registro di "
+"Usato per registrare un utile quando il saldo finale di un registratore di "
 "cassa è diverso da quanto calcolato dal sistema"
 
 #. module: account
@@ -11600,7 +11606,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr "Determina se questo registro deve essere visualizzato nella bacheca"
+msgstr "Indica se questo registro deve essere visualizzato nella bacheca"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report_amount_currency
@@ -11953,6 +11959,8 @@ msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
 msgstr ""
+"Impossibile impostare una valuta su questo conto in quanto ha già "
+"registrazioni contabili con una valuta estera diversa."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1368

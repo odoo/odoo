@@ -3,22 +3,23 @@
 # * mass_mailing
 # 
 # Translators:
-# Bole <bole@dajmi5.com>, 2017
-# Tina Milas, 2017
-# Martin Trigaux, 2017
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
-# Marko Carević <marko.carevic@live.com>, 2017
 # Davor Bojkić <davor.bojkic@storm.hr>, 2017
+# Marko Carević <marko.carevic@live.com>, 2017
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
+# Martin Trigaux, 2017
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2018
+# Tina Milas, 2019
+# Bole <bole@dajmi5.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Davor Bojkić <davor.bojkic@storm.hr>, 2017\n"
+"POT-Creation-Date: 2019-03-29 09:08+0000\n"
+"PO-Revision-Date: 2017-09-20 10:19+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -665,6 +666,11 @@ msgid "Email Statistics"
 msgstr "E-mail statistike"
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_mail_template
+msgid "Email Templates"
+msgstr "Predlošci e-mail poruka"
+
+#. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_thread
 msgid "Email Thread"
 msgstr "Nit e-pošte"
@@ -1224,7 +1230,7 @@ msgstr "ISKLJUČENO"
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
 msgid "OFF YOUR NEXT ORDER!"
-msgstr ""
+msgstr "OD VAŠE SLJEDEĆE NARUDŽBE!"
 
 #. module: mass_mailing
 #: model:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_1
@@ -1788,6 +1794,12 @@ msgstr "Odjava"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_unsubscription_date
 msgid "Unsubscription Date"
 msgstr "Datum odjave pretplate"
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:639
+#, python-format
+msgid "Unsupported mass mailing model %s"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_paragraph

@@ -8,7 +8,6 @@
 # Christelle Wehbe <libanon_cristelle@hotmail.com>, 2017
 # lynnliuying <lynn.liu1971@gmail.com>, 2017
 # Robert Frykelius <robert.frykelius@linserv.se>, 2017
-# Kim Asplund <kim.asplund@gmail.com>, 2017
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2017
 # Patrik Lermon <patrik.lermon@gmail.com>, 2017
 # Egils Verkstad <egils@riseup.net>, 2017
@@ -17,6 +16,7 @@
 # Haojun Zou <apollo_zhj@msn.com>, 2017
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2018
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
+# Kim Asplund <kim.asplund@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:22+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2018\n"
+"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2019\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,11 +54,11 @@ msgid ""
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
-"<p>Do not hesitate to contact us, further you have any question.</p>\n"
+"<p>Do not hesitate to contact us if you have any further question.</p>\n"
 "<p>Best regards,</p>\n"
 "<p style=\"color:#888888;\">\n"
-"% if object.user_id and object.user_id.signature:\n"
-"    ${object.user_id.signature | safe}\n"
+"% if object.sudo().create_uid and object.sudo().create_uid.signature:\n"
+"    ${object.sudo().create_uid.signature | safe}\n"
 "% endif\n"
 "</p>\n"
 msgstr ""
@@ -86,6 +86,11 @@ msgid ""
 "\n"
 "<p>You can reply to this email if you have any questions.</p>\n"
 "<p>Thank you,</p>\n"
+"<p style=\"color:#888888;\">\n"
+"% if object.sudo().create_uid and object.sudo().create_uid.signature:\n"
+"    ${object.sudo().create_uid.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 msgstr ""
 
 #. module: purchase
@@ -311,7 +316,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong>Total:</strong>"
-msgstr ""
+msgstr "<strong>Totalt:</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -1236,7 +1241,7 @@ msgstr "Produktkategori"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_image
 msgid "Product Image"
-msgstr ""
+msgstr "Produkt Bild"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_unit_quantity

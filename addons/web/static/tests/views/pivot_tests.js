@@ -899,6 +899,172 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('Unload Filter, reset display, load another filter', function (assert) {
+        assert.expect(18);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="foo" type="measure"/>' +
+                '</pivot>',
+            viewOptions: {
+                context: {
+                    pivot_measures: ['foo'],
+                    pivot_column_groupby: ['customer'],
+                    pivot_row_groupby: ['product_id'],
+                },
+            },
+        });
+
+        // Check Columns
+        assert.strictEqual(pivot.$('thead .o_pivot_header_cell_opened').length, 1,
+            'The column should be grouped');
+        assert.strictEqual(pivot.$('thead tr:contains("First")').length, 1,
+            'There should be a column "First"');
+        assert.strictEqual(pivot.$('thead tr:contains("Second")').length, 1,
+            'There should be a column "Second"');
+
+        // Check Rows
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_opened').length, 1,
+            'The row should be grouped');
+        assert.strictEqual(pivot.$('tbody tr:contains("xphone")').length, 1,
+            'There should be a row "xphone"');
+        assert.strictEqual(pivot.$('tbody tr:contains("xpad")').length, 1,
+            'There should be a row "xpad"');
+
+        // Equivalent to unload the filter
+        var reloadParams = {
+            context: {},
+        };
+        pivot.reload(reloadParams);
+        // collapse all headers
+        pivot.$('.o_pivot_header_cell_opened').click();
+        pivot.$('.o_pivot_header_cell_opened').click();
+
+        // Check Columns
+        assert.strictEqual(pivot.$('thead .o_pivot_header_cell_closed').length, 1,
+            'The column should not be grouped');
+        assert.strictEqual(pivot.$('thead tr:contains("First")').length, 0,
+            'There should not be a column "First"');
+        assert.strictEqual(pivot.$('thead tr:contains("Second")').length, 0,
+            'There should not be a column "Second"');
+
+        // Check Rows
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_closed').length, 1,
+            'The row should not be grouped');
+        assert.strictEqual(pivot.$('tbody tr:contains("xphone")').length, 0,
+            'There should not be a row "xphone"');
+        assert.strictEqual(pivot.$('tbody tr:contains("xpad")').length, 0,
+            'There should not be a row "xpad"');
+
+        // Equivalent to load another filter
+        reloadParams = {
+            context: {
+                pivot_measures: ['foo'],
+                pivot_column_groupby: ['customer'],
+                pivot_row_groupby: ['product_id'],
+            },
+        };
+        pivot.reload(reloadParams);
+
+        // Check Columns
+        assert.strictEqual(pivot.$('thead .o_pivot_header_cell_opened').length, 1,
+            'The column should be grouped');
+        assert.strictEqual(pivot.$('thead tr:contains("First")').length, 1,
+            'There should be a column "First"');
+        assert.strictEqual(pivot.$('thead tr:contains("Second")').length, 1,
+            'There should be a column "Second"');
+
+        // Check Rows
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_opened').length, 1,
+            'The row should be grouped');
+        assert.strictEqual(pivot.$('tbody tr:contains("xphone")').length, 1,
+            'There should be a row "xphone"');
+        assert.strictEqual(pivot.$('tbody tr:contains("xpad")').length, 1,
+            'There should be a row "xpad"');
+
+        pivot.destroy();
+    });
+
+    QUnit.test('Reload, group by columns, reload', function (assert) {
+        assert.expect(2);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot/>',
+        });
+
+        // Set a column groupby
+        pivot.$('thead .o_pivot_header_cell_closed').click();
+        pivot.$('.o_field_selection li[data-field=customer] a').click();
+
+        // Set a domain
+        pivot.update({domain: [['product_id', '=', 41]]});
+
+        var expectedContext = {pivot_column_groupby: ['customer'],
+                               pivot_measures: ['__count'],
+                               pivot_row_groupby: []};
+
+        // Check that column groupbys were not lost
+        assert.deepEqual(pivot.getContext(), expectedContext,
+            'Column groupby not lost after first reload');
+
+        // Set a column groupby
+        pivot.$('thead .o_pivot_header_cell_closed').click();
+        pivot.$('.o_field_selection li[data-field=product_id] a').click();
+
+        // Set a domain
+        pivot.update({domain: [['product_id', '=', 37]]});
+
+        var expectedContext = {pivot_column_groupby: ['customer', 'product_id'],
+                               pivot_measures: ['__count'],
+                               pivot_row_groupby: []};
+
+        assert.deepEqual(pivot.getContext(), expectedContext,
+            'Column groupby not lost after second reload');
+
+        pivot.destroy();
+    });
+
+    QUnit.test('Empty results keep groupbys', function (assert) {
+        assert.expect(2);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot/>',
+        });
+
+        // Set a column groupby
+        pivot.$('thead .o_pivot_header_cell_closed').click();
+        pivot.$('.o_field_selection li[data-field=customer] a').click();
+
+        // Set a domain for empty results
+        pivot.update({domain: [['id', '=', false]]});
+
+        var expectedContext = {pivot_column_groupby: undefined,
+                               pivot_measures: undefined,
+                               pivot_row_groupby: undefined};
+        assert.deepEqual(pivot.getContext(), expectedContext,
+            'Column groupby not lost after empty results');
+
+        // Set a domain for not empty results
+        pivot.update({domain: [['product_id', '=', 37]]});
+
+        var expectedContext = {pivot_column_groupby: ['customer'],
+                               pivot_measures: ['__count'],
+                               pivot_row_groupby: []};
+        assert.deepEqual(pivot.getContext(), expectedContext,
+            'Column groupby not lost after reload after empty results');
+
+        pivot.destroy();
+    });
+
     QUnit.test('correctly uses pivot_ keys from the context', function (assert) {
         assert.expect(7);
 
