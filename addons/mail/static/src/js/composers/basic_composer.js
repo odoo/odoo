@@ -536,6 +536,7 @@ var BasicComposer = Widget.extend({
             files: ev.currentTarget.files,
             submitForm: true
         });
+        ev.target.value = "";
     },
     /**
      * @private
