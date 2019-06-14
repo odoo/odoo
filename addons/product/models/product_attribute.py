@@ -117,10 +117,10 @@ class ProductTemplateAttributeLine(models.Model):
     Used as a configuration model to generate the appropriate product.template.attribute.value"""
 
     _name = "product.template.attribute.line"
-    _rec_name = 'attribute_id'
     _description = 'Product Template Attribute Line'
     _order = 'attribute_id, id'
 
+    name = fields.Char("Attribute", related='attribute_id.name')
     product_tmpl_id = fields.Many2one('product.template', string='Product Template', ondelete='cascade', required=True, index=True)
     attribute_id = fields.Many2one('product.attribute', string='Attribute', ondelete='restrict', required=True, index=True)
     value_ids = fields.Many2many('product.attribute.value', string='Attribute Values')
@@ -203,7 +203,7 @@ class ProductTemplateAttributeLine(models.Model):
         # difficult to compute - check if performance optimization is required
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
             args = args or []
-            domain = ['|', ('attribute_id', operator, name), ('value_ids', operator, name)]
+            domain = ['|', ('name', operator, name), ('value_ids', operator, name)]
             attribute_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
             return self.browse(attribute_ids).name_get()
         return super(ProductTemplateAttributeLine, self)._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
