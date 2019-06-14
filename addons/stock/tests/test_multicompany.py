@@ -89,6 +89,7 @@ class StockMove(SavepointCase):
         self.new_user.company_ids = [(4, self.comp2.id)]
         inventory.action_validate()
         self.assertEquals(inventory.move_ids.company_id, self.comp2, 'The moves was created in the wrong company')
+<<<<<<< HEAD
 
     def test_multicompany_3(self):
         """ Validate a receipt with a lot name. This should create the lot in the
@@ -138,3 +139,5 @@ class StockMove(SavepointCase):
             'product_ids': [(4, self.product.id)],
         })
         self.assertEqual(inventory.company_id, self.new_user.company_id, 'Inventory created in the wrong company')
+=======
+>>>>>>> 2be2c2e415c... inventory
