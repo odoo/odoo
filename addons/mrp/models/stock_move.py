@@ -216,8 +216,8 @@ class StockMove(models.Model):
         return self.env['stock.move']
 
     def _get_upstream_documents_and_responsibles(self, visited):
-            if self.created_production_id and self.created_production_id.state not in ('done', 'cancel'):
-                return [(self.created_production_id, self.created_production_id.user_id, visited)]
+            if self.production_id and self.production_id.state not in ('done', 'cancel'):
+                return [(self.production_id, self.production_id.user_id, visited)]
             else:
                 return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
 
