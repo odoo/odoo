@@ -632,7 +632,7 @@
                 <div class="o_wslides_desc_truncate_3 font-weight-light oe_no_empty" t-field="slide.description"/>
                 <div t-if="slide.tag_ids" class="mt-2 pt-1 o_wslides_desc_truncate_2">
                     <t t-foreach="slide.tag_ids" t-as="tag">
-                        <a t-att-href="'/slides/all?channel_tag_id=%s' % tag.id" class="badge badge-light" t-esc="tag.name"/>
+                        <a t-att-href="'/slides/%s/tag/%s' % (slug(slide.channel_id), slug(tag))" class="badge badge-light" t-esc="tag.name"/>
                     </t>
                 </div>
             </div>
