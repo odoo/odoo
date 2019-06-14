@@ -550,7 +550,7 @@ class HolidaysAllocation(models.Model):
 
     def _get_responsible_for_approval(self):
         self.ensure_one()
-        responsible = self.env.user
+        responsible = self.env['res.users']
 
         if self.validation_type == 'hr' or (self.validation_type == 'both' and self.state == 'validate1'):
             if self.holiday_status_id.responsible_id:
@@ -570,12 +570,12 @@ class HolidaysAllocation(models.Model):
             elif allocation.state == 'confirm':
                 allocation.activity_schedule(
                     'hr_holidays.mail_act_leave_allocation_approval',
-                    user_id=allocation.sudo()._get_responsible_for_approval().id)
+                    user_id=allocation.sudo()._get_responsible_for_approval().id or self.env.user.id)
             elif allocation.state == 'validate1':
                 allocation.activity_feedback(['hr_holidays.mail_act_leave_allocation_approval'])
                 allocation.activity_schedule(
                     'hr_holidays.mail_act_leave_allocation_second_approval',
-                    user_id=allocation.sudo()._get_responsible_for_approval().id)
+                    user_id=allocation.sudo()._get_responsible_for_approval().id or self.env.user.id)
             elif allocation.state == 'validate':
                 to_do |= allocation
             elif allocation.state == 'refuse':

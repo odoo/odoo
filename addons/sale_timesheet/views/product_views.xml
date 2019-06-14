@@ -18,12 +18,28 @@
         </field>
     </record>
 
+    <record id="product_template_view_search_sale_timesheet" model="ir.ui.view">
+        <field name="name">product.template.search.timesheet</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='consumable']" position="after">
+                <separator/>
+                <filter string="Time-based services" name="product_time_based" domain="[('type', '=', 'service'), ('invoice_policy', '=', 'delivery'), ('service_type', '=', 'timesheet')]"/>
+                <filter string="Fixed price services" name="product_service_fixed" domain="[('type', '=', 'service'), ('invoice_policy', '=', 'order'), ('service_type', '=', 'timesheet')]"/>
+                <filter string="Milestone services" name="product_service_milestone" domain="[('type', '=', 'service'), ('invoice_policy', '=', 'delivery'), ('service_type', '=', 'manual')]"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="product_template_action_time_based" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="res_model">product.template</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{'search_default_product_time_based':1, 'default_type': 'service', 'default_invoice_policy': 'delivery', 'default_service_type': 'timesheet'}</field>
+        <field name="search_view_id" ref="sale_timesheet.product_template_view_search_sale_timesheet"/>
+        <field name="context">{'search_default_product_time_based':1, 'default_type': 'service', 'default_invoice_policy': 'delivery', 'default_service_type': 'timesheet', 'default_service_policy': 'delivered_timesheet'}</field>
     </record>
 
     <record id="product_template_action_fixed" model="ir.actions.act_window">
@@ -31,7 +47,8 @@
         <field name="res_model">product.template</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{'search_default_product_service_fixed':1, 'default_type': 'service', 'default_invoice_policy': 'order', 'default_service_type': 'timesheet'}</field>
+        <field name="search_view_id" ref="sale_timesheet.product_template_view_search_sale_timesheet"/>
+        <field name="context">{'search_default_product_service_fixed':1, 'default_type': 'service', 'default_invoice_policy': 'order', 'default_service_type': 'timesheet', 'default_service_policy': 'ordered_timesheet'}</field>
     </record>
 
     <record id="product_template_action_milestone" model="ir.actions.act_window">
@@ -39,7 +56,8 @@
         <field name="res_model">product.template</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{'search_default_product_service_milestone':1, 'default_type': 'service', 'default_invoice_policy': 'delivery', 'default_service_type': 'manual'}</field>
+        <field name="search_view_id" ref="sale_timesheet.product_template_view_search_sale_timesheet"/>
+        <field name="context">{'search_default_product_service_milestone':1, 'default_type': 'service', 'default_invoice_policy': 'delivery', 'default_service_type': 'manual', 'default_service_policy': 'delivered_manual'}</field>
     </record>
 
 </odoo>

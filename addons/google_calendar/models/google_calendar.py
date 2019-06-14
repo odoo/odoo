@@ -81,7 +81,7 @@ class SyncEvent(object):
                 self.OP = Delete((self.OE.status and "OE") or (self.GG.status and "GG"),
                                  'The event has been deleted from one side, we delete on other side !')
             #If event is not deleted !
-            elif self.OE.status and (self.GG.status or not is_owner):
+            elif self.OE.status and (self.GG.status or (not is_owner and self.GG.update)):
                 if abs(self.OE.update - self.GG.update) > timedelta(seconds=1):
                     if self.OE.update < self.GG.update:
                         tmpSrc = 'GG'

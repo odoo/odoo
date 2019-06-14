@@ -268,6 +268,7 @@ class WebsiteSlides(WebsiteProfile):
             'channels_newest': channels_newest,
             'achievements': achievements,
             'users': users,
+            'top3_users': self._get_top3_users(),
             'challenges': challenges,
             'challenges_done': challenges_done,
         })
@@ -311,12 +312,18 @@ class WebsiteSlides(WebsiteProfile):
             'search_my': my,
             'search_tags': search_tags,
             'search_channel_tag_id': post.get('channel_tag_id'),
+            'top3_users': self._get_top3_users(),
         })
 
         return request.render('website_slides.courses_all', values)
 
     def _prepare_additional_channel_values(self, values, **kwargs):
         return values
+
+    def _get_top3_users(self):
+        return request.env['res.users'].sudo().search_read([
+            ('karma', '>', 0),
+            ('image', '!=', False)], ['id'], limit=3, order='karma desc')
 
     @http.route([
         '/slides/<model("slide.channel"):channel>',
@@ -374,6 +381,7 @@ class WebsiteSlides(WebsiteProfile):
 
         values = {
             'channel': channel,
+            'active_tab': kw.get('active_tab', 'home'),
             # search
             'search_category': category,
             'search_tag': tag,

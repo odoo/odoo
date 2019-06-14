@@ -82,12 +82,16 @@ class Project(models.Model):
         #
         # Time Repartition (per employee per billable types)
         #
-        user_ids = self.env['project.task'].sudo().search_read([('project_id', 'in', self.ids), ('user_id', '!=', False)], ['user_id'])
+        user_ids = self.env['project.task'].sudo().read_group([('project_id', 'in', self.ids), ('user_id', '!=', False)], ['user_id'], ['user_id'])
         user_ids = [user_id['user_id'][0] for user_id in user_ids]
         employee_ids = self.env['res.users'].sudo().search_read([('id', 'in', user_ids)], ['employee_ids'])
         # flatten the list of list
         employee_ids = list(itertools.chain.from_iterable([employee_id['employee_ids'] for employee_id in employee_ids]))
-        employees = self.env['hr.employee'].sudo().browse(employee_ids) | self.env['account.analytic.line'].search([('project_id', 'in', self.ids)]).mapped('employee_id')
+
+        aal_employee_ids = self.env['account.analytic.line'].read_group([('project_id', 'in', self.ids), ('employee_id', '!=', False)], ['employee_id'], ['employee_id'])
+        employee_ids.extend(list(map(lambda x: x['employee_id'][0], aal_employee_ids)))
+
+        employees = self.env['hr.employee'].sudo().browse(employee_ids)
         repartition_domain = [('project_id', 'in', self.ids), ('employee_id', '!=', False), ('timesheet_invoice_type', '!=', False)]  # force billable type
         repartition_data = self.env['account.analytic.line'].read_group(repartition_domain, ['employee_id', 'timesheet_invoice_type', 'unit_amount'], ['employee_id', 'timesheet_invoice_type'], lazy=False)
 
@@ -332,8 +336,14 @@ class Project(models.Model):
     def _plan_prepare_actions(self, values):
         actions = []
         if len(self) == 1:
+            task_order_line_ids = []
+            # retrieve all the sale order line that we will need later below
+            if self.env.user.has_group('sales_team.group_sale_salesman') or self.env.user.has_group('sales_team.group_sale_salesman_all_leads'):
+                task_order_line_ids = self.env['project.task'].read_group([('project_id', '=', self.id), ('sale_line_id', '!=', False)], ['sale_line_id'], ['sale_line_id'])
+                task_order_line_ids = [ol['sale_line_id'][0] for ol in task_order_line_ids]
+
             if self.env.user.has_group('sales_team.group_sale_salesman'):
-                if not self.sale_line_id and not self.tasks.mapped('sale_line_id'):
+                if not self.sale_line_id and not task_order_line_ids:
                     actions.append({
                         'label': _("Create a Sales Order"),
                         'type': 'action',
@@ -342,14 +352,19 @@ class Project(models.Model):
                     })
             if self.env.user.has_group('sales_team.group_sale_salesman_all_leads'):
                 to_invoice_amount = values['dashboard']['profit'].get('to_invoice', False)  # plan project only takes services SO line with timesheet into account
-                sale_orders = self.tasks.mapped('sale_line_id.order_id').filtered(lambda so: so.invoice_status == 'to invoice')
-                if to_invoice_amount and sale_orders:
-                    if len(sale_orders) == 1:
+
+                sale_order_ids = self.env['sale.order.line'].read_group([('id', 'in', task_order_line_ids)], ['order_id'], ['order_id'])
+                sale_order_ids = [s['order_id'][0] for s in sale_order_ids]
+                sale_order_ids = self.env['sale.order'].search_read([('id', 'in', sale_order_ids), ('invoice_status', '=', 'to invoice')], ['id'])
+                sale_order_ids = list(map(lambda x: x['id'], sale_order_ids))
+
+                if to_invoice_amount and sale_order_ids:
+                    if len(sale_order_ids) == 1:
                         actions.append({
                             'label': _("Create Invoice"),
                             'type': 'action',
                             'action_id': 'sale.action_view_sale_advance_payment_inv',
-                            'context': json.dumps({'active_ids': sale_orders.ids, 'active_model': 'project.project'}),
+                            'context': json.dumps({'active_ids': sale_order_ids, 'active_model': 'project.project'}),
                         })
                     else:
                         actions.append({
@@ -385,9 +400,13 @@ class Project(models.Model):
         # if only one project, add it in the context as default value
         tasks_domain = [('project_id', 'in', self.ids)]
         tasks_context = self.env.context
-        tasks_projects = self.env['project.task'].sudo().search(tasks_domain).mapped('project_id')
-        if len(tasks_projects) == 1:
-            tasks_context = {**tasks_context, 'default_project_id': tasks_projects.id}
+
+        # filter out all the projects that have no tasks
+        task_projects_ids = self.env['project.task'].read_group([('project_id', 'in', self.ids)], ['project_id'], ['project_id'])
+        task_projects_ids = [p['project_id'][0] for p in task_projects_ids]
+
+        if len(task_projects_ids) == 1:
+            tasks_context = {**tasks_context, 'default_project_id': task_projects_ids[0]}
         stat_buttons.append({
             'name': _('Tasks'),
             'count': sum(self.mapped('task_count')),
@@ -400,8 +419,13 @@ class Project(models.Model):
         })
 
         if self.env.user.has_group('sales_team.group_sale_salesman_all_leads'):
-            sale_orders = self.mapped('sale_line_id.order_id') | self.mapped(
-                'tasks.sale_order_id')
+            # read all the sale orders linked to the projects' tasks
+            task_so_ids = self.env['project.task'].search_read([
+                ('project_id', 'in', self.ids), ('sale_order_id', '!=', False)
+            ], ['sale_order_id'])
+            task_so_ids = [o['sale_order_id'][0] for o in task_so_ids]
+
+            sale_orders = self.mapped('sale_line_id.order_id') | self.env['sale.order'].browse(task_so_ids)
             if sale_orders:
                 stat_buttons.append({
                     'name': _('Sales Orders'),
@@ -413,15 +437,20 @@ class Project(models.Model):
                         context={'create': False, 'edit': False, 'delete': False}
                     )
                 })
-                invoices = sale_orders.mapped('invoice_ids').filtered(lambda inv: inv.type == 'out_invoice')
-                if invoices:
+
+                invoice_ids = self.env['sale.order'].search_read([('id', 'in', sale_orders.ids)], ['invoice_ids'])
+                invoice_ids = list(itertools.chain(*[i['invoice_ids'] for i in invoice_ids]))
+                invoice_ids = self.env['account.invoice'].search_read([('id', 'in', invoice_ids), ('type', '=', 'out_invoice')], ['id'])
+                invoice_ids = list(map(lambda x: x['id'], invoice_ids))
+
+                if invoice_ids:
                     stat_buttons.append({
                         'name': _('Invoices'),
-                        'count': len(invoices),
+                        'count': len(invoice_ids),
                         'icon': 'fa fa-pencil-square-o',
                         'action': _to_action_data(
                             action=self.env.ref('account.action_invoice_tree1'),
-                            domain=[('id', 'in', invoices.ids), ('type', '=', 'out_invoice')],
+                            domain=[('id', 'in', invoice_ids), ('type', '=', 'out_invoice')],
                             context={'create': False, 'delete': False}
                         )
                     })

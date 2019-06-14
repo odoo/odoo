@@ -163,20 +163,20 @@
                         <div class="col-12 col-md-8 col-lg-9">
                             <ul class="nav nav-tabs o_wslides_nav_tabs flex-nowrap" role="tablist" id="profile_extra_info_tablist">
                                 <li class="nav-item o_wslides_course_header_nav_home">
-                                    <a t-att-class="'nav-link %s' % ('' if search_slide_type else 'active')" id="home-tab" data-toggle="pill" href="#home" role="tab" aria-controls="home" aria-selected="true">
+                                    <a t-att-class="'nav-link %s' % ('active' if active_tab == 'home' else '')" id="home-tab" data-toggle="pill" href="#home" role="tab" aria-controls="home" t-att-aria-selected="'true' if active_tab == 'home' else 'false'">
                                         <i class="fa fa-home"/> Course
                                     </a>
                                 </li>
                                 <li t-if="channel.allow_comment" class="nav-item">
-                                    <a class="nav-link" id="review-tab" data-toggle="pill" href="#review" role="tab" aria-controls="review" aria-selected="false">Review</a>
+                                    <a t-att-class="'nav-link %s' % ('active' if active_tab == 'review' else '')" id="review-tab" data-toggle="pill" href="#review" role="tab" aria-controls="review" t-att-aria-selected="'true' if active_tab == 'review' else 'false'">Review</a>
                                 </li>
                             </ul>
 
                             <div class="tab-content py-4 o_wslides_tabs_content mb-4" id="courseMainTabContent">
-                                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <div t-att-class="'tab-pane fade %s' % ('show active' if active_tab == 'home' else '')" id="home" role="tabpanel" aria-labelledby="home-tab">
                                     <t t-if="channel.channel_type == 'training'" t-call="website_slides.course_slides_list"/>
                                 </div>
-                                <div t-if="channel.allow_comment" class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
+                                <div t-if="channel.allow_comment" t-att-class="'tab-pane fade %s' % ('show active' if active_tab == 'review' else '')" id="review" role="tabpanel" aria-labelledby="review-tab">
                                     <t t-call="portal.message_thread">
                                         <t t-set="object" t-value="channel"/>
                                         <t t-set="hash" t-value="message_post_hash"/>

@@ -57,15 +57,12 @@ class TestACLFeedback(Feedback):
             })
         self.assertEqual(
             ctx.exception.args[0],
-            """Sorry, you are not allowed to create documents of type 'Object For Test Access Right' (test_access_right.some_obj). This operation is allowed for the groups:
-	- Group 0"""
+            """Sorry, you are not allowed to create documents of type 'Object For Test Access Right' (test_access_right.some_obj). This operation is allowed for the groups:\n\t- Group 0"""
         )
 
     def test_two_groups(self):
         r = self.record.sudo(self.user)
-        expected = """Sorry, you are not allowed to access documents of type 'Object For Test Access Right' (test_access_right.some_obj). This operation is allowed for the groups:
-	- Group 0
-	- Group 1"""
+        expected = """Sorry, you are not allowed to access documents of type 'Object For Test Access Right' (test_access_right.some_obj). This operation is allowed for the groups:\n\t- Group 0\n\t- Group 1"""
         with self.assertRaises(AccessError) as ctx:
             # noinspection PyStatementEffect
             r.val
@@ -266,8 +263,10 @@ class TestFieldGroupFeedback(Feedback):
 
 Document type: Object For Test Access Right (test_access_right.some_obj)
 Operation: read
+User: %s
 Fields:
 - forbidden (allowed for groups 'User types / Internal User', 'Test Group'; forbidden for groups 'Extra Rights / Technical Features', 'User types / Public')"""
+    % self.user.id
         )
 
     def test_write(self):
@@ -283,7 +282,9 @@ Fields:
 
 Document type: Object For Test Access Right (test_access_right.some_obj)
 Operation: write
+User: %s
 Fields:
 - forbidden (allowed for groups 'User types / Internal User', 'Test Group'; forbidden for groups 'Extra Rights / Technical Features', 'User types / Public')
 - forbidden2 (allowed for groups 'Test Group')"""
+    % self.user.id
         )

@@ -87,6 +87,9 @@
                                 <input type="checkbox" name="o_payment_form_save_token" data-remove-me=""/>
                                 Save my payment data
                             </label>
+                            <t t-if="acq.save_token == 'always'">
+                                <input type="checkbox" name="o_payment_form_save_token" checked="'checked'" class="o_hidden" data-remove-me=""/>
+                            </t>
                         </div>
                     </t>
                     <t t-else="acq.payment_flow == 's2s'">

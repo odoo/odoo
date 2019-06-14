@@ -9,6 +9,7 @@ import time
 
 from odoo import api
 from odoo.addons.base.models.assetsbundle import AssetsBundle
+from odoo.addons.base.models.ir_attachment import IrAttachment
 from odoo.modules.module import get_resource_path
 from odoo.tests import HttpCase
 from odoo.tests.common import TransactionCase
@@ -544,21 +545,21 @@ class TestAssetsBundleWithIRAMock(TransactionCase):
         self.counter = counter = Counter()
 
         # patch methods 'create' and 'unlink' of model 'ir.attachment'
+        origin_create = IrAttachment.create
+        origin_unlink = IrAttachment.unlink
+
         @api.model
         def create(self, vals):
             counter.update(['create'])
-            return create.origin(self, vals)
+            return origin_create(self, vals)
 
         @api.multi
         def unlink(self):
             counter.update(['unlink'])
-            return unlink.origin(self)
+            return origin_unlink(self)
 
-        self.env['ir.attachment']._patch_method('create', create)
-        self.addCleanup(self.env['ir.attachment']._revert_method, 'create')
-
-        self.env['ir.attachment']._patch_method('unlink', unlink)
-        self.addCleanup(self.env['ir.attachment']._revert_method, 'unlink')
+        self.patch(IrAttachment, 'create', create)
+        self.patch(IrAttachment, 'unlink', unlink)
 
     def _get_asset(self):
         files, remains = self.env['ir.qweb']._get_asset_content(self.stylebundle_xmlid, {})
