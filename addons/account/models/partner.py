@@ -438,8 +438,9 @@ class ResPartner(models.Model):
     def action_view_partner_invoices(self):
         self.ensure_one()
         action = self.env.ref('account.action_invoice_refund_out_tree').read()[0]
-        action['domain'] = literal_eval(action['domain'])
+        action['domain'] = [('type','in', ['out_invoice', 'out_refund']), ('state', '!=', 'cancel')]
         action['domain'].append(('partner_id', 'child_of', self.id))
+        action['context'] = {'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale', 'search_default_unpaid': 1}
         return action
 
     @api.onchange('company_id')
