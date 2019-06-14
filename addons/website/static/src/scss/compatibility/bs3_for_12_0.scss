@@ -9,10 +9,12 @@ $-compat-gray-map: (
     'gray': '700',
     'gray-light': '600',
     'gray-lighter': '200',
-);
+) !default;
 @each $old, $new in $-compat-gray-map {
-    @include bg-variant(".bg-#{$old}", gray($new));
-    @include text-emphasis-variant(".text-#{$old}", gray($new));
+    @if not map-has-key($grays, $old) {
+        @include bg-variant(".bg-#{$old}", gray($new));
+        @include text-emphasis-variant(".text-#{$old}", gray($new));
+    }
 }
 
 // Restore media ?
