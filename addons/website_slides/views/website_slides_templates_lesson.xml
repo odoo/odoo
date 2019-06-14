@@ -185,12 +185,12 @@
     <div class="row align-items-center my-3">
         <div class="col-12 col-md order-2 order-md-1 d-flex">
             <div class="d-flex align-items-center">
-                <h4 class="my-0">
+                <h1 class="h5 my-0">
                     <t t-call="website_slides.slide_icon">
                         <t t-set="icon_class">mr-1</t>
                     </t>
                     <span t-field="slide.name"/>
-                </h4>
+                </h1>
                 <span t-if="slide.question_ids"
                     t-att-class="'ml-2 badge %s' % ('badge-success' if channel_progress[slide.id].get('completed') else 'badge-info')">
                     <span t-if="channel_progress[slide.id].get('completed')">
