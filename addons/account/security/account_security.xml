@@ -131,13 +131,6 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
 
-    <record id="tax_report_comp_rule" model="ir.rule">
-        <field name="name">Tax report multi-company</field>
-        <field name="model_id" ref="model_account_tax_report_line"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">[('country_id','=',user.company_id.country_id.id)]</field>
-    </record>
-
     <record id="invoice_comp_rule" model="ir.rule">
         <field name="name">Invoice multi-company</field>
         <field name="model_id" ref="model_account_invoice"/>
