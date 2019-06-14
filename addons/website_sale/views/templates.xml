@@ -132,7 +132,7 @@
     </template>
 
     <template id="products_item" name="Products item">
-        <t t-set="product_href" t-value="request.httprequest.url_root + keep('shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" />
+        <t t-set="product_href" t-value="keep(product.website_url, page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" />
 
         <t t-set="combination_info" t-value="product._get_combination_info(only_template=True, add_qty=add_qty or 1, pricelist=pricelist)"/>
 
@@ -499,7 +499,7 @@
                         </div>
                         <div class="col-md-6 col-xl-4" id="product_details">
                             <h1 itemprop="name" t-field="product.name">Product Name</h1>
-                            <span itemprop="url" style="display:none;" t-esc="'%sshop/product/%s' % (request.httprequest.url_root, slug(product))"/>
+                            <span itemprop="url" style="display:none;" t-esc="product.website_url"/>
                             <form t-if="product._is_add_to_cart_possible()" action="/shop/cart/update" method="POST">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                 <div class="js_product js_main_product">
@@ -576,7 +576,7 @@
                                 <div t-if="product_variant" t-field="product_variant.image_64" t-options="{'widget': 'image', 'class': 'rounded shadow o_alternative_product' }" />
                                 <div t-else="" t-field="alt_product.image_64" t-options="{'widget': 'image', 'class': 'rounded shadow o_alternative_product' }" />
                                 <h6>
-                                    <a t-attf-href="/shop/product/#{ slug(alt_product) }" style="display: block">
+                                    <a t-att-href="alt_product.website_url" style="display: block">
                                         <span t-att-title="alt_product.name" t-field="alt_product.name" class="o_text_overflow" style="display: block;" />
                                     </a>
                                 </h6>
@@ -802,7 +802,7 @@
 
     <!-- We use this template where we want to give the user a link to the product of a sale order line. -->
     <template id="cart_line_product_link" name="Shopping Cart Line Product Link">
-        <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
+        <a t-att-href="line.product_id.website_url">
             <t t-raw="0"/>
         </a>
     </template>
@@ -994,13 +994,13 @@
                     <tr t-foreach="suggested_products" t-as="product">
                         <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
                         <td class='td-img'>
-                            <a t-attf-href="/shop/product/#{ slug(product.product_tmpl_id) }">
+                            <a t-att-href="product.website_url">
                                 <span t-field="product.image_64" t-options="{'widget': 'image', 'class': 'rounded'}" />
                             </a>
                         </td>
                         <td class='td-product_name'>
                             <div>
-                                <a t-attf-href="/shop/product/#{ slug(product.product_tmpl_id) }">
+                                <a t-att-href="product.website_url">
                                     <strong t-esc="combination_info['display_name']" />
                                 </a>
                             </div>
