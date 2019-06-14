@@ -97,20 +97,20 @@
     <template id="user_profile_edit_content" name="Edit Profile">
         <h1 class="o_page_header">Edit Profile</h1>
         <div>
-            <form t-attf-action="/profile/user/save" method="post" role="form" class="js_website_submit_form row" enctype="multipart/form-data">
+            <form t-attf-action="/profile/user/save" method="post" role="form" class="o_wprofile_editor_form js_website_submit_form row" enctype="multipart/form-data">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input type="file" class="d-none o_forum_file_upload" name="ufile" accept="image/*"/>
                 <input type="hidden" name="url_param" t-att-value="request.params.get('url_param')"/>
                 <div class="col-3">
                     <div class="card o_card_people">
                         <div class="card-body">
-                            <img class="w-100 mb-3" t-attf-src="/web/image/res.users/#{user.id}/image_medium"/>
+                            <img class="o_forum_avatar_img w-100 mb-3" t-attf-src="/web/image/res.users/#{user.id}/image_medium"/>
                             <div class="text-center">
                                 <a href="#" class="o_forum_profile_pic_edit btn btn-primary" aria-label="Edit">
                                     <i class="fa fa-pencil fa-1g float-sm-none float-md-left" title="Edit"></i>
                                 </a>
-                                <a href="#" title="Clear" aria-label="Clear" class="btn border-primary">
-                                    <i class="fa fa-trash-o float-sm-none float-md-right o_forum_profile_pic_clear"></i>
+                                <a href="#" title="Clear" aria-label="Clear" class="btn border-primary o_forum_profile_pic_clear">
+                                    <i class="fa fa-trash-o float-sm-none float-md-right"></i>
                                 </a>
                             </div>
                             <div class="form-group mt-3 mb-0 pt-2 border-top">
@@ -125,7 +125,7 @@
                 </div>
                 <div class="col-9 mb-3">
                     <div class="card">
-                        <div class="card-body o_wprofile_editor_form">
+                        <div class="card-body">
                             <div class="row">
                                 <input name="user_id" t-att-value="user.id" type="hidden"/>
                                 <div class="form-group col-12">
