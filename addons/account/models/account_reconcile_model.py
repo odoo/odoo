@@ -442,6 +442,8 @@ class AccountReconcileModel(models.Model):
                     (
                         line_partner.partner_id = 0
                         AND
+                        TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')) != ''
+                        AND
                         (
                             regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')
                             && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
