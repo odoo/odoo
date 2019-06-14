@@ -290,12 +290,6 @@ class Pricelist(models.Model):
         self.ensure_one()
         return self._compute_price_rule([(product, quantity, partner)], date=date, uom_id=uom_id)[product.id]
 
-    # Compatibility to remove after v10 - DEPRECATED
-    @api.model
-    def _price_rule_get_multi(self, pricelist, products_by_qty_by_partner):
-        """ Low level method computing the result tuple for a given pricelist and multi products - return tuple """
-        return pricelist._compute_price_rule(products_by_qty_by_partner)
-
     @api.multi
     def price_get(self, prod_id, qty, partner=None):
         """ Multi pricelist, mono product - returns price per pricelist """
@@ -317,16 +311,6 @@ class Pricelist(models.Model):
         """ Mono pricelist, multi product - return price per product """
         return pricelist.get_products_price(
             list(zip(**products_by_qty_by_partner)))
-
-    # DEPRECATED (Not used anymore, see d39d583b2) -> Remove me in master (saas12.3)
-    def _get_partner_pricelist(self, partner_id, company_id=None):
-        """ Retrieve the applicable pricelist for a given partner in a given company.
-
-            :param company_id: if passed, used for looking up properties,
-             instead of current user's company
-        """
-        res = self._get_partner_pricelist_multi([partner_id], company_id)
-        return res[partner_id].id
 
     def _get_partner_pricelist_multi_search_domain_hook(self):
         return []
