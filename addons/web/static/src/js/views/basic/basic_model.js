@@ -218,10 +218,12 @@ var BasicModel = AbstractModel.extend({
         // complete the given fieldsInfo with the fields of the main view, so
         // that those field will be reloaded if a reload is triggered by the
         // secondary view
-        var fieldsInfo = _.mapObject(viewInfo.fieldsInfo, function (fieldsInfo) {
-            return _.defaults({}, fieldsInfo, record.fieldsInfo[record.viewType]);
-        });
-        record.fieldsInfo = _.extend({}, record.fieldsInfo, fieldsInfo);
+        if (!_.contains(Object.keys(record.fieldsInfo), Object.keys(viewInfo.fieldsInfo)[0])){
+            var fieldsInfo = _.mapObject(viewInfo.fieldsInfo, function (fieldsInfo) {
+                return _.defaults({}, fieldsInfo, record.fieldsInfo[record.viewType]);
+            });
+            record.fieldsInfo = _.extend({}, record.fieldsInfo, fieldsInfo);
+        }
     },
     /**
      * Add and process default values for a given record. Those values are
