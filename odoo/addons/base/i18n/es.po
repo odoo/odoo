@@ -59,6 +59,7 @@
 # Vivian Montana <vmo@odoo.com>, 2019
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # pepito alialabs <pepitoalialabs@gmail.com>, 2019
+# Rick Hunter <rick.hunter.ec@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -66,7 +67,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-22 11:56+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: pepito alialabs <pepitoalialabs@gmail.com>, 2019\n"
+"Last-Translator: Rick Hunter <rick.hunter.ec@gmail.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10088,6 +10089,12 @@ msgid "Cannot aggregate field %r."
 msgstr "No se puede agregar el campo %r."
 
 #. module: base
+#: code:addons/base/models/ir_translation.py:256
+#, python-format
+msgid "Cannot be translated; record not accessible."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_lang.py:228
 #, python-format
 msgid "Cannot deactivate a language that is currently used by users."
@@ -19906,7 +19913,7 @@ msgstr "Menú padre"
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_path
 #: model:ir.model.fields,field_description:base.field_res_partner_category__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "Directorio base"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__parent_name

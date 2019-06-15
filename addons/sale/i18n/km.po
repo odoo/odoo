@@ -240,7 +240,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "<span class=\"o_stat_text\">Sold</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">លក់</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -303,12 +303,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"mr16\">Subtotal</strong>"
-msgstr ""
+msgstr "<strong class=\"mr16\">សរុបរង</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong class=\"text-muted\">Your Contact</strong>"
-msgstr ""
+msgstr "<strong class=\"text-muted\">ទំនាក់ទំនងរ​បស់អ្នក</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -362,7 +362,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content_totals_table
 msgid "<strong>Subtotal</strong>"
-msgstr ""
+msgstr "<strong>ការបូកសរុបរង</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -394,7 +394,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content_totals_table
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>សរុប</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -476,11 +476,16 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"យោងតាមការកំណត់រចនាសម្ព័ន្ធផលិតផលបរិមាណដែលបានបញ្ជូនអាចត្រូវបានគណនាដោយស្វ័យប្រវត្តិដោយយន្តការ:\n"
+"- សៀវភៅណែនាំ: បរិមាណត្រូវបានកំណត់ដោយដៃនៅលើគំនូសបង្ហាញ\n"
+"- វិភាគពីចំណាយ: បរិមាណគឺជាបរិមាណសុរបពីការចំណាយដែលបានចុះបញ្ជី\n"
+"- ពេលវេលា: បរិមាណគឺជាផលបូកនៃម៉ោងដែលបានកត់ត្រាលើភារកិច្ចដែលភ្ជាប់ទៅនឹងគំនូសបង្ហាញនៃការលក់នេះ\n"
+"- ការផ្លាស់ប្តូរភាគហ៊ុន: បរិមាណនេះបានមកពីការជ្រើសរើសដែលបានបញ្ជាក់\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__acc_number
 msgid "Account Number"
-msgstr ""
+msgstr "លេខគណនី"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__deposit_account_id
@@ -779,7 +784,7 @@ msgstr "បិទ"
 #. module: sale
 #: selection:res.company,sale_quotation_onboarding_state:0
 msgid "Closed"
-msgstr ""
+msgstr "ការបិទ"
 
 #. module: sale
 #: selection:product.attribute,type:0
@@ -973,7 +978,7 @@ msgstr "រូបិយវត្ថុ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__currency_rate
 msgid "Currency Rate"
-msgstr ""
+msgstr "អត្រារូបិយប័ណ្ណ"
 
 #. module: sale
 #: model:product.attribute.value,name:sale.product_attribute_value_7
@@ -1881,7 +1886,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Manual"
-msgstr ""
+msgstr "ហត្ថកម្ម"
 
 #. module: sale
 #: selection:product.template,service_type:0
@@ -2460,7 +2465,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Posted"
-msgstr ""
+msgstr "បានប្រកាស"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2606,7 +2611,7 @@ msgstr ""
 #: model:ir.model,name:sale.model_product_template
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__product_tmpl_id
 msgid "Product Template"
-msgstr ""
+msgstr "គំរូផលិតផល"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_id
@@ -2796,7 +2801,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:104
 #, python-format
 msgid "Reference"
-msgstr ""
+msgstr "អ្នកធានា"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
@@ -2909,7 +2914,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Sales"
-msgstr ""
+msgstr "ការលក់"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
