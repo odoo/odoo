@@ -39,8 +39,8 @@
 # Wolfgang Taferner, 2019
 # Jan Meyer, 2019
 # Joerg Hueneburg <melikeymedia@gmail.com>, 2019
-# Chris Egal <sodaswed@web.de>, 2019
 # Leon Grill <leg@odoo.com>, 2019
+# Chris Egal <sodaswed@web.de>, 2019
 # 
 msgid ""
 msgstr ""
@@ -48,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-22 11:56+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,12 +71,13 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-" 科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n"
+"    Kontotyp \\ Accounting-Diagrammvorlage \\ VAT \\ Zusatzbuchhaltungstyp \\ Management-Buchhaltungsbeleg \\ Finanzbuchhaltungsbelegbuch\n"
 "\n"
-" 添加中文省份数据\n"
+"    Daten der chinesischen Provinz hinzufügen\n"
 "\n"
-" 增加小企业会计科目表\n"
+"    Erhöhen Sie das Small Business Accounting-Diagramm\n"
 "\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_invoice_bba
@@ -9304,7 +9305,7 @@ msgstr "Nach Betrag"
 #. module: base
 #: model:ir.module.category,name:base.module_category_helpdesk
 msgid "After-Sales"
-msgstr ""
+msgstr "nach dem Verkauf"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_helpdesk
@@ -10580,6 +10581,12 @@ msgstr "Upgrade abbrechen"
 #, python-format
 msgid "Cannot aggregate field %r."
 msgstr "Das Feld %r kann nicht aggregiert werden."
+
+#. module: base
+#: code:addons/base/models/ir_translation.py:256
+#, python-format
+msgid "Cannot be translated; record not accessible."
+msgstr "Kann nicht übersetzt werden; Datensatz nicht zugänglich."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:228
@@ -18486,6 +18493,9 @@ msgid ""
 "'%%(field)s' and the following error was encountered when we attempted to "
 "create one: %(error_message)s"
 msgstr ""
+"Kein passender Datensatz gefunden für %(field_type)s '%(value)s' im Feld "
+"'%%(feld)er' und der folgende Fehler ist aufgetreten, als wir versucht "
+"haben, einen zu erstellen: %(error_message)s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_ids
@@ -18523,6 +18533,11 @@ msgid ""
 "supposed to do\n"
 "    "
 msgstr ""
+"Nicht-triviale Testprogramme können Modelle und alle erfordern\n"
+"    \n"
+"Dieses Modul hier ist nützlich, um zu überprüfen, ob sie das tun, was sie tun \n"
+"tun sollen\n"
+"    "
 
 #. module: base
 #: selection:ir.mail_server,smtp_encryption:0

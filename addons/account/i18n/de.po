@@ -13,7 +13,6 @@
 # DE T2 <e2f48d4s5vd1s2@outlook.com>, 2018
 # Tina Rittmüller <tr@ife.de>, 2018
 # Jan Brodersen <4rmitxes@gmail.com>, 2018
-# Julian S <jus@odoo.com>, 2018
 # Luc Muller <lmuller@ityou.de>, 2018
 # e2f <projects@e2f.com>, 2018
 # JackTheHunter <Maximilian.N98@gmail.com>, 2018
@@ -23,7 +22,6 @@
 # Michael Schütt <michael.schuett.lwl@gmail.com>, 2018
 # Jan Dillmann <derjan@devzero.de>, 2018
 # Albert Hild <mail@albert-hild.de>, 2019
-# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
 # Felix Schubert <felix.schubert@go-erp.com>, 2019
 # Martin Trigaux, 2019
@@ -33,6 +31,7 @@
 # Leon Grill <leg@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
 # Anja Uebermuth <anja.uebermuth@arts.eu>, 2019
+# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2019
 # 
 msgid ""
 msgstr ""
@@ -40,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Anja Uebermuth <anja.uebermuth@arts.eu>, 2019\n"
+"Last-Translator: Andreas Stauder <andreas.stauder@brain-tec.ch>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,8 +56,9 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
-"BenutzerStatus * Der Status 'Entwurf' wird verwendet, wenn der Anwender eine neue, aber noch nicht freigegeben Rechnung erfasst.\n"
+"* Der Status 'Entwurf' wird verwendet, wenn der Anwender eine neue, aber noch nicht freigegeben Rechnung erfasst.\n"
 " * Der Status 'Offen' wird verwendet wenn eine Rechnung freigegeben und eine Rechnungsnummer vergeben wurde. Dieser Status bleibt erhalten bis die Rechnung beglichen wird.\n"
+" * Der Status \"In Zahlung\" wird gesetzt, wenn eine Zahlung für den Gesamtbetrag der Rechnung erfasst wurde. Der Status wird nur gesetzt wenn die Zahlung auf einem Journal erfasst wurde welches für die Bankabstimmung konfiguriert wurde, aber die Abstimmung noch nicht erfolgt ist.\n"
 " * Der Status 'Bezahlt' wird automatisch gesetzt, wenn die Rechnung beglichen wird. Die zugehörigen Journal-Posten können dann ausgeglichen sein oder auch nicht. \n"
 " * Der Status 'Abgebrochen' tritt ein, wenn der Anwender die Rechnung storniert."
 
@@ -1250,7 +1250,7 @@ msgstr "Buchungsdatum"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Accounting Documents"
-msgstr "Finanzen Belege"
+msgstr "Buchhaltungsdokumente"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_accounting_entries
