@@ -6,15 +6,14 @@
 # Zoriana Zaiats, 2018
 # Bohdan Lisnenko, 2018
 # ТАрас <tratatuta@i.ua>, 2018
-# Kateryna Onyshchenko <Katrona17@gmail.com>, 2018
 # Martin Trigaux, 2019
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2+e\n"
+"Project-Id-Version: Odoo Server saas~12.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 14:08+0000\n"
+"POT-Creation-Date: 2019-06-12 12:24+0000\n"
 "PO-Revision-Date: 2017-02-15 11:46+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -47,6 +46,11 @@ msgstr "%s%% знижка на найдешевший товар"
 #, python-format
 msgid "%s%% discount on total amount"
 msgstr "%s%% знижка на загальну суму"
+
+#. module: sale_coupon
+#: model:sale.coupon.program,name:sale_coupon.10_percent_coupon
+msgid "10% Discount"
+msgstr ""
 
 #. module: sale_coupon
 #: model:product.product,name:sale_coupon.product_product_10_percent_discount
@@ -223,7 +227,7 @@ msgstr ""
 "            % endif\n"
 "        % elif object.program_id.reward_type == 'product':\n"
 "            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\">\n"
-"                ${'get %s free %s' % (object.program_id.reward_product_quantity, object.program_id.reward_product_id.name)}\n"
+"                ${'get %s безкоштовно %s' % (object.program_id.reward_product_quantity, object.program_id.reward_product_id.name)}\n"
 "            </span><br/>\n"
 "            <strong style=\"font-size: 24px;\">на вашому наступному замовленні</strong><br/>\n"
 "        % elif object.program_id.reward_type == 'free_shipping':\n"
@@ -271,7 +275,7 @@ msgstr "Купон вже застосовується за таку ж вина
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon.py:62
-#: code:addons/sale_coupon/models/sale_coupon_program.py:155
+#: code:addons/sale_coupon/models/sale_coupon_program.py:168
 #, python-format
 msgid "A minimum of %s %s should be purchased to get the reward"
 msgstr "Мінімум %s %sпотрібно придбати, щоб отримати нагороду"
@@ -290,7 +294,7 @@ msgid ""
 msgstr ""
 "Промокод - це код, пов'язаний з маркетинговою знижкою. Наприклад, роздрібний"
 " продавець може сказати, що часті покупці вводять промокод \"THX001\", щоб "
-"отримати 10%% знижки на все їх замовлення."
+"отримати 10%% знижки на все їхнє замовлення."
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__program_type
@@ -319,7 +323,7 @@ msgstr "Активно"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__promo_applicability
 msgid "Applicability"
-msgstr "застосовність"
+msgstr "Застосовуваність"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__applied_coupon_ids
@@ -334,7 +338,7 @@ msgstr "Застосовані невідкладні промо-програм�
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__code_promo_program_id
 msgid "Applied Promo Program"
-msgstr "Застосовані програми промо"
+msgstr "Застосовані промо-програми"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon__sales_order_id
@@ -379,7 +383,7 @@ msgstr "Застосувати на першому"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon.py:80
-#: code:addons/sale_coupon/models/sale_coupon_program.py:176
+#: code:addons/sale_coupon/models/sale_coupon_program.py:189
 #, python-format
 msgid "At least one of the required conditions is not met to get the reward!"
 msgstr ""
@@ -397,7 +401,7 @@ msgid ""
 "Use a code - If the program rules are met, a valid code is mandatory for the reward to be applied\n"
 msgstr ""
 "Автоматично застосовується - коду не потрібно, якщо правила програми задовольняються, нагорода застосовується (окрім загальної знижки або безкоштовних нагород, які не є сукупними)\n"
-"Використовувати код - якщо правила програми задовольняються, дійсний код є обов'язковим для нагороди, яка буде застосована\n"
+"Використовуйте код - якщо правила програми задовольняються, дійсний код є обов'язковим для нагороди, яка буде застосована\n"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
@@ -775,7 +779,7 @@ msgid "Global discounts are not cumulable."
 msgstr "Загальні знижки не накопичуються."
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:167
+#: code:addons/sale_coupon/models/sale_coupon_program.py:180
 #, python-format
 msgid "Global discounts are not cumulative."
 msgstr "Загальні знижки не є сукупними."
@@ -1001,7 +1005,7 @@ msgstr "Посилання на замовлення"
 #. module: sale_coupon
 #: selection:sale.coupon.reward,discount_type:0
 msgid "Percentage"
-msgstr "Процент"
+msgstr "Відсоток"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__discount_type
@@ -1025,7 +1029,8 @@ msgstr "Товар"
 msgid ""
 "Product that will be discounted if the discount is applied on a specific "
 "product"
-msgstr "Товар, який буде знижено, якщо знижка застосовується до певного товар"
+msgstr ""
+"Товар, який буде знижено, якщо знижка застосовується до певного товару"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon__discount_line_product_id
@@ -1064,19 +1069,19 @@ msgid "Promo Code Usage"
 msgstr "Використання промо-коду"
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:153
+#: code:addons/sale_coupon/models/sale_coupon_program.py:166
 #, python-format
 msgid "Promo code %s has been expired."
 msgstr "Термін дії промо-коду %s закінчився."
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:163
+#: code:addons/sale_coupon/models/sale_coupon_program.py:176
 #, python-format
 msgid "Promo code is expired"
 msgstr "Термін дії промо-коду закінчився."
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:161
+#: code:addons/sale_coupon/models/sale_coupon_program.py:174
 #, python-format
 msgid "Promo code is invalid"
 msgstr "Промо-код недійсний"
@@ -1090,7 +1095,7 @@ msgstr "Промо-код"
 #. module: sale_coupon
 #: model:ir.actions.act_window,name:sale_coupon.sale_coupon_program_action_promo_program
 msgid "Promotion Program"
-msgstr "Програма сприяння"
+msgstr "Програма просування"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_promo_program_form
@@ -1101,7 +1106,7 @@ msgstr "Назва програми просування..."
 #: model:ir.ui.menu,name:sale_coupon.menu_promotion_type_config
 #: model_terms:ir.ui.view,arch_db:sale_coupon.res_config_settings_view_form
 msgid "Promotion Programs"
-msgstr "Програми промоції"
+msgstr "Програми просування"
 
 #. module: sale_coupon
 #: selection:sale.coupon.program,program_type:0
@@ -1109,7 +1114,7 @@ msgid "Promotional Program"
 msgstr "Програма просування"
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:165
+#: code:addons/sale_coupon/models/sale_coupon_program.py:178
 #, python-format
 msgid "Promotionals codes are not cumulative."
 msgstr "Промо-коди не є сукупними."
@@ -1312,7 +1317,7 @@ msgstr "Купонна програма %sу стані чернетки або 
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon.py:74
-#: code:addons/sale_coupon/models/sale_coupon_program.py:171
+#: code:addons/sale_coupon/models/sale_coupon_program.py:184
 #, python-format
 msgid "The customer doesn't have access to this reward."
 msgstr "Клієнт не має доступу до цієї винагороди."
@@ -1336,20 +1341,20 @@ msgid "The program code must be unique!"
 msgstr "Код програми повинен бути унікальним!"
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:157
+#: code:addons/sale_coupon/models/sale_coupon_program.py:170
 #, python-format
 msgid "The promo code is already applied on this order"
 msgstr "Промо-код уже застосовується до цього замовлення"
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:159
+#: code:addons/sale_coupon/models/sale_coupon_program.py:172
 #, python-format
 msgid "The promotional offer is already applied on this order"
-msgstr "Пропозиційна промо вже застосовується до цього замовлення"
+msgstr "Пропозиція промо вже застосовується до цього замовлення"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon.py:72
-#: code:addons/sale_coupon/models/sale_coupon_program.py:169
+#: code:addons/sale_coupon/models/sale_coupon_program.py:182
 #, python-format
 msgid ""
 "The reward products should be in the sales order lines to apply the "
@@ -1413,7 +1418,7 @@ msgstr "Використовуйте код"
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
 msgid "Use this promo code before"
-msgstr "Використовувати цей промокод перед"
+msgstr "Використовувати цей промо-код перед"
 
 #. module: sale_coupon
 #: selection:sale.coupon,state:0
@@ -1455,13 +1460,13 @@ msgid ""
 "products should be recorded on the sales order. (Example: You need to have 3"
 " T-shirts on your sales order if the promotion is 'Buy 2, Get 1 Free')."
 msgstr ""
-"Ви не маєте потрібної кількості товарів у замовленні а продаж. Усі товари "
+"Ви не маєте потрібної кількості товарів у замовленні на продаж. Усі товари "
 "повинні бути записані в замовленні на продаж. (Приклад: у вашому замовленні "
 "має бути 3 футболки, якщо рекламна акція - \"Купуй 2, отримай 1 "
 "безкоштовно\")."
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:173
+#: code:addons/sale_coupon/models/sale_coupon_program.py:186
 #, python-format
 msgid ""
 "You don't have the required product quantities on your sales order. If the "

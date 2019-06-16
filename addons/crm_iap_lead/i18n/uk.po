@@ -1,0 +1,3663 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * crm_iap_lead
+# 
+# Translators:
+# Bohdan Lisnenko, 2019
+# Martin Trigaux, 2019
+# ТАрас <tratatuta@i.ua>, 2019
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~12.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-03-20 14:18+0000\n"
+"PO-Revision-Date: 2019-03-20 14:55+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: crm_iap_lead
+#: model:mail.template,body_html:crm_iap_lead.lead_generation_no_credits
+msgid ""
+"\n"
+"                \n"
+"                    <p>Dear,</p>\n"
+"                    <p>There is no more credits on your IAP Lead Generation account.<br/>\n"
+"                    You can charge your IAP Lead Generation account in the settings of the CRM app.<br/>\n"
+"\n"
+"                    <p>Best regards,</p>\n"
+"                    <p>Odoo S.A.</p>\n"
+"                \n"
+"            "
+msgstr ""
+"\n"
+"                \n"
+"                    <p>Шановний,</p>\n"
+"                    <p>Тут є більше кредитів на вашому обліку генерації лідів IAP.<br/>\n"
+"                    Ви можете стягувати плату з вашого обліку генерації лідів IAP у налаштуваннях додатку CRM.<br/>\n"
+"\n"
+"                    <p>З найкращими побажаннями,</p>\n"
+"                    <p>Odoo S.A.</p>\n"
+"                \n"
+"            "
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+msgid "(Time Now)"
+msgstr "(Тепер)"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_1
+msgid "1&1 Hosting"
+msgstr "1&1 Хостинг"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_1
+msgid "3D Printing"
+msgstr "3D-друк"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_2
+msgid "3d Cart"
+msgstr "3d-кошик"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+msgid "<b>Contacts</b>"
+msgstr "<b>Контакти</b>"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+msgid "<b>Phone :</b>"
+msgstr "<b>Телефон :</b>"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+msgid "<b>Timezone : </b>"
+msgstr "<b>Часовий пояс : </b>"
+
+#. module: crm_iap_lead
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:216
+#, python-format
+msgid ""
+"<p class=\"o_view_nocontent_empty_folder\">\n"
+"            No leads found\n"
+"        </p><p>\n"
+"            No leads could be generated according to your search criteria\n"
+"        </p>"
+msgstr ""
+"<p class=\"o_view_nocontent_empty_folder\">\n"
+"            Не знайдено жодних лідів\n"
+"        </p><p>\n"
+"            Жодних лідів не буде створено відповідно до ваших пошукових критеріїв\n"
+"        </p>"
+
+#. module: crm_iap_lead
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:228
+#, python-format
+msgid ""
+"<p class=\"o_view_nocontent_empty_folder\">\n"
+"            No opportunities found\n"
+"        </p><p>\n"
+"            No opportunities could be generated according to your search criteria\n"
+"        </p>"
+msgstr ""
+"<p class=\"o_view_nocontent_empty_folder\">\n"
+"            Не знайдено жодних нагод\n"
+"        </p><p>\n"
+"           Жодних нагод не буде створено відповідно до ваших пошукових критеріїв\n"
+"        </p>"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "<span class=\"o_stat_text\">Leads</span>"
+msgstr "<span class=\"o_stat_text\">Ліди</span>"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "<span class=\"o_stat_text\">Opportunities</span>"
+msgstr "<span class=\"o_stat_text\">Нагоди</span>"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_35
+msgid "ASP.Net"
+msgstr "ASP.Net"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_2
+msgid "Accounting"
+msgstr "Бухоблік"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_3
+msgid "Acquia"
+msgstr "Acquia"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_4
+msgid "Acquisio"
+msgstr "Acquisio"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_5
+msgid "Act On"
+msgstr "Дія на"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_6
+msgid "Action Network"
+msgstr "Мережа дій"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_7
+msgid "Active Demand"
+msgstr "Попит дій"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_8
+msgid "Activecampaign"
+msgstr "Активна кампанія"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_15
+msgid "AdRoll"
+msgstr "AdRoll"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_9
+msgid "Add To Any"
+msgstr "Додати до будь-якого"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_10
+msgid "Adform Advertiser"
+msgstr "Форма реклами рекламодавця"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_11
+msgid "Adobe Business Catalyst"
+msgstr "Adobe Business Catalyst"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_12
+msgid "Adobe Connect"
+msgstr "З'єднання з Adobe"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_13
+msgid "Adobe Dynamic Tag Management"
+msgstr "Управління тегом Adobe Dynamic"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_14
+msgid "Adobe Experience Manager"
+msgstr "Управління Adobe Experience"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_205
+msgid "Advertising"
+msgstr "Реклама"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_3
+msgid "Aerospace & Defense"
+msgstr "Аерокосмічна & оборона"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_210
+msgid "Agricultural Products"
+msgstr "Товари сільського господарства"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_4
+msgid "Agriculture"
+msgstr "Сільське господарство"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_187
+msgid "Air Freight & Logistics"
+msgstr "Авіаперевезення та логістика"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_16
+msgid "Airbrake"
+msgstr "Повітряні гальма"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_5
+msgid "Airlines"
+msgstr "Авіакомпанії"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_17
+msgid "Akamai"
+msgstr "Akamai"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_18
+msgid "Akamai DNS"
+msgstr "Akamai DNS"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_19
+msgid "Alexa"
+msgstr "Alexa"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_6
+msgid "Alternative Medicine"
+msgstr "Альтернативна медицина"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_20
+msgid "Altocloud"
+msgstr "Altocloud"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_21
+msgid "Amazon Associates"
+msgstr "Асоціації Amazon"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_22
+msgid "Amazon Payments"
+msgstr "Платежі Amazon "
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_23
+msgid "Amazon S3"
+msgstr "Amazon S3"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_24
+msgid "Amazon Simple Email Service"
+msgstr "Простий поштовий сервіс Amazon"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_25
+msgid "Amazon Web Services"
+msgstr "Веб-послуги Amazon "
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_27
+msgid "Amplitude"
+msgstr "Амплітуда"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_28
+msgid "Android"
+msgstr "Android"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_7
+msgid "Animation"
+msgstr "Анімація"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_29
+msgid "Apache"
+msgstr "Apache"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_30
+msgid "App Nexus"
+msgstr "Додаток Nexus"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_33
+msgid "AppDynamics"
+msgstr "AppDynamics"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_8
+msgid "Apparel & Footwear"
+msgstr "Одяг та взуття"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_31
+msgid "Appboy"
+msgstr "Appboy"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_32
+msgid "Appcues"
+msgstr "Appcues"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_34
+msgid "Apteligent"
+msgstr "Apteligent"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_9
+msgid "Architecture"
+msgstr "Архітектура"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_10
+msgid "Arts"
+msgstr "Мистецтво"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_11
+msgid "Arts & Crafts"
+msgstr "Мистецтво та ремесла"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_12
+msgid "Asset Management"
+msgstr "Управління активами"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_212
+msgid "Asset Management & Custody Banks"
+msgstr "Управління активами та депозитарні банки"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_36
+msgid "Attribution"
+msgstr "Атрибуція"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_13
+msgid "Audio"
+msgstr "Аудіо"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_37
+msgid "Authorizenet"
+msgstr "Authorizenet"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_14
+msgid "Automation"
+msgstr "Автоматизація"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_15
+msgid "Automotive"
+msgstr "Automotive"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_38
+msgid "Autopilot"
+msgstr "Автопілот"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_39
+msgid "Aweber"
+msgstr "Aweber"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_230
+msgid "B2B"
+msgstr "B2B"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_231
+msgid "B2C"
+msgstr "B2C"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_16
+msgid "Banking & Mortgages"
+msgstr "Banking & Mortgages"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_157
+msgid "Banks"
+msgstr "Банки"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_40
+msgid "Bazaarvoice"
+msgstr "Bazaarvoice"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_41
+msgid "Benchmarkemail"
+msgstr "Benchmarkemail"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_17
+msgid "Beverages"
+msgstr "Холодні напої"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_42
+msgid "Big Cartel"
+msgstr "Big Cartel"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_43
+msgid "Bigcommerce"
+msgstr "Bigcommerce"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_44
+msgid "Bing Ads"
+msgstr "Bing Ads"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_45
+msgid "Bing Advertiser"
+msgstr "Bing Advertiser"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_46
+msgid "Bing Maps"
+msgstr "Bing Maps"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_18
+msgid "Biotechnology"
+msgstr "Biotechnology"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_47
+msgid "Bloomreach"
+msgstr "Bloomreach"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_48
+msgid "Bluehost Hosting"
+msgstr "Bluehost Hosting"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_49
+msgid "Braintree"
+msgstr "Braintree"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_50
+msgid "Branch"
+msgstr "Branch"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_51
+msgid "Brightcove"
+msgstr "Brightcove"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_19
+msgid "Broadcasting"
+msgstr "Broadcasting"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_52
+msgid "Bronto"
+msgstr "Bronto"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_53
+msgid "Bug Herd"
+msgstr "Bug Herd"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_54
+msgid "Bugsnag"
+msgstr "Bugsnag"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_20
+msgid "Building Materials"
+msgstr "Конструкторські матеріали"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_21
+msgid "Business Supplies"
+msgstr "Товари для бізнесу"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_55
+msgid "C3 Metrics"
+msgstr "C3 Metrics"
+
+#. module: crm_iap_lead
+#: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_mining_request
+msgid "CRM Lead Mining Request"
+msgstr "Запит на отримання лідів CRM"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_56
+msgid "Calq"
+msgstr "Calq"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_57
+msgid "Campaignmonitor"
+msgstr "Campaignmonitor"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "Cancel"
+msgstr "Скасувати"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_162
+msgid "Capital Goods"
+msgstr "Capital Goods"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_177
+msgid "Capital Markets"
+msgstr "Capital Markets"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_203
+msgid "Casinos & Gaming"
+msgstr "Casinos & Gaming"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_58
+msgid "Castle"
+msgstr "Castle"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_59
+msgid "CentOS"
+msgstr "CentOS"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_60
+msgid "Chargify"
+msgstr "Chargify"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_61
+msgid "Chart Beat"
+msgstr "Chart Beat"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_62
+msgid "Chartio"
+msgstr "Chartio"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_63
+msgid "Chatlio"
+msgstr "Chatlio"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_22
+msgid "Chemicals"
+msgstr "Хімікалії"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_64
+msgid "Chownow"
+msgstr "Chownow"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_23
+msgid "Civil Engineering"
+msgstr "Цивільна інженерія"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_65
+msgid "ClickFunnels"
+msgstr "ClickFunnels"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_66
+msgid "Clicktale"
+msgstr "Clicktale"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_67
+msgid "Clicky"
+msgstr "Clicky"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_68
+msgid "Cloud Flare"
+msgstr "Cloud Flare"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_24
+msgid "Cloud Services"
+msgstr "Хмарні послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_69
+msgid "Cloudinary"
+msgstr "Cloudinary"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__color
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__color
+msgid "Color Index"
+msgstr "Індекс кольору"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_70
+msgid "Commerce Sciences"
+msgstr "Commerce Sciences"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_163
+msgid "Commercial & Professional Services"
+msgstr "Комерційні та професійні послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_216
+msgid "Commercial Printing"
+msgstr "Комерційний друк"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_181
+msgid "Commercial Services & Supplies"
+msgstr "Комерційні послуги та матеріали"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_225
+msgid "Commodity Chemicals"
+msgstr "Товарні хімікати"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_25
+msgid "Communications"
+msgstr "Комунікації"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_193
+msgid "Communications Equipment"
+msgstr "Устаткування зв'язку"
+
+#. module: crm_iap_lead
+#: selection:crm.iap.lead.mining.request,search_type:0
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "Companies"
+msgstr "Компанії"
+
+#. module: crm_iap_lead
+#: selection:crm.iap.lead.mining.request,search_type:0
+msgid "Companies and their Contacts"
+msgstr "Компанії та їхні контакти"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__company_size_max
+msgid "Company Size Max"
+msgstr "Максимальний розмір компанії"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_26
+msgid "Computer Hardware"
+msgstr "Комп'ютерне обладнання"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_224
+msgid "Computer Networking"
+msgstr "Комп'ютерні мережі"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_71
+msgid "Constant Contact"
+msgstr "Constant Contact"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_27
+msgid "Construction"
+msgstr "Створення"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_182
+msgid "Construction & Engineering"
+msgstr "Будівництво та інженерія"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_28
+msgid "Construction Contractors & Services"
+msgstr "Будівельні підрядники та послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_167
+msgid "Construction Materials"
+msgstr "Будівельні матеріали"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_218
+msgid "Consulting"
+msgstr "Консалтинг"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_29
+msgid "Consulting & Professional Services"
+msgstr "Консультаційні та професійні послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_30
+msgid "Consumer Discretionary"
+msgstr "Дискреційний споживач"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_31
+msgid "Consumer Electronics"
+msgstr "Побутова електроніка"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_32
+msgid "Consumer Goods"
+msgstr "Споживчі товари"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_150
+msgid "Consumer Services"
+msgstr "Споживчі послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_33
+msgid "Consumer Staples"
+msgstr "Споживчі скоби"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__contact_credit_per_company
+msgid "Contact Credit Per Company"
+msgstr "Контактний кредит на компанію"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__contact_total_credit
+msgid "Contact Total Credit"
+msgstr "Загальна сума контактів"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "Contacts"
+msgstr "Контакти"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_196
+msgid "Containers & Packaging"
+msgstr "Контейнери та упаковка"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_72
+msgid "Contently"
+msgstr "Contently"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_73
+msgid "Convert Kit"
+msgstr "Convert Kit"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_74
+msgid "Convertro"
+msgstr "Convertro"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_34
+msgid "Corporate & Business"
+msgstr "Корпоративний та бізнес"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_35
+msgid "Cosmetics"
+msgstr "Косметика"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__country_ids
+msgid "Countries"
+msgstr "Країни"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_75
+msgid "Crazy Egg"
+msgstr "Crazy Egg"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers__create_uid
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__create_uid
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__create_uid
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__create_uid
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__create_uid
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_technology__create_uid
+msgid "Created by"
+msgstr "Створив"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers__create_date
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__create_date
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__create_date
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__create_date
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__create_date
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_technology__create_date
+msgid "Created on"
+msgstr "Створено"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_76
+msgid "Criteo"
+msgstr "Criteo"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_77
+msgid "Crowdskout"
+msgstr "Crowdskout"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_78
+msgid "Customer.io"
+msgstr "Customer.io"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_86
+msgid "DNS Made Easy"
+msgstr "DNS Made Easy"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_79
+msgid "Dailymotion"
+msgstr "Dailymotion"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_222
+msgid "Data Processing & Outsourced Services"
+msgstr "Обробка даних та аутсорсинг послуг"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_80
+msgid "Debian"
+msgstr "Debian"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_81
+msgid "Demandbase"
+msgstr "Demandbase"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_82
+msgid "Demandware"
+msgstr "Demandware"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_36
+msgid "Design"
+msgstr "Дизайн"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_83
+msgid "Digital Ocean"
+msgstr "Digital Ocean"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers__display_name
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__display_name
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__display_name
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__display_name
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__display_name
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_technology__display_name
+msgid "Display Name"
+msgstr "Назва для відображення"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_84
+msgid "Disqus"
+msgstr "Disqus"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_172
+msgid "Distributors"
+msgstr "Дистриб'ютори"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_213
+msgid "Diversified Capital Markets"
+msgstr "Диверсифіковані ринки капіталу"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_151
+msgid "Diversified Consumer Services"
+msgstr "Диверсифіковані споживчі послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_158
+msgid "Diversified Financial Services"
+msgstr "Диверсифіковані фінансові послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_159
+msgid "Diversified Financials"
+msgstr "Диверсифіковані фінанси"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_199
+msgid "Diversified Telecommunication Services"
+msgstr "Різноманітні телекомунікаційні послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_85
+msgid "Django"
+msgstr "Django"
+
+#. module: crm_iap_lead
+#: selection:crm.iap.lead.mining.request,state:0
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
+msgid "Done"
+msgstr "Готово"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_87
+msgid "DoubleClick Ads"
+msgstr "DoubleClick Ads"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_88
+msgid "DoubleClick Advertiser"
+msgstr "DoubleClick Advertiser"
+
+#. module: crm_iap_lead
+#: selection:crm.iap.lead.mining.request,state:0
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
+msgid "Draft"
+msgstr "Чернетка"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_89
+msgid "DreamHost Hosting"
+msgstr "DreamHost Hosting"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_90
+msgid "Drift"
+msgstr "Drift"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_91
+msgid "Drip"
+msgstr "Drip"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_92
+msgid "Drupal"
+msgstr "Drupal"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_93
+msgid "Dwolla"
+msgstr "Dwolla"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_94
+msgid "Dyn DNS"
+msgstr "Dyn DNS"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_95
+msgid "Dynamic Yield"
+msgstr "Dynamic Yield"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_232
+msgid "E-Commerce"
+msgstr "Електронна комерція"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_37
+msgid "E-Commerce & Marketplaces"
+msgstr "Електронна комерція та ринки"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_38
+msgid "E-Learning"
+msgstr "Електронне навчання"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_96
+msgid "Ecwid"
+msgstr "Ecwid"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_39
+msgid "Education"
+msgstr "Освіта"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_170
+msgid "Education Services"
+msgstr "Послуги навчання"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_97
+msgid "ElasticEmail"
+msgstr "ElasticEmail"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_202
+msgid "Electric Utilities"
+msgstr "Електроінструменти"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_40
+msgid "Electrical"
+msgstr "Електричні"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_183
+msgid "Electrical Equipment"
+msgstr "Електричне обладнання"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_194
+msgid "Electronic Equipment, Instruments & Components"
+msgstr "Електронне обладнання, інструменти та компоненти"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_98
+msgid "Elevio"
+msgstr "Elevio"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_99
+msgid "Eloqua"
+msgstr "Eloqua"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+msgid "Email"
+msgstr "Ел. пошта"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_100
+msgid "Emma"
+msgstr "Emma"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_41
+msgid "Energy"
+msgstr "Energy"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_42
+msgid "Energy & Utilities"
+msgstr "Енергетика та комунальні послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_156
+msgid "Energy Equipment & Services"
+msgstr "Енергетичне обладнання та послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_101
+msgid "Engagio"
+msgstr "Engagio"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_233
+msgid "Enterprise"
+msgstr "Підприємство"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_43
+msgid "Entertainment & Recreation"
+msgstr "Розваги та відпочинок"
+
+#. module: crm_iap_lead
+#: selection:crm.iap.lead.mining.request,state:0
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__error
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
+msgid "Error"
+msgstr "Помилка"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_102
+msgid "Errorception"
+msgstr "Errorception"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_44
+msgid "Events"
+msgstr "Події"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_103
+msgid "Express"
+msgstr "Express"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_45
+msgid "Eyewear"
+msgstr "Окуляри"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_104
+msgid "Facebook Advertiser"
+msgstr "Facebook Advertiser"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_105
+msgid "Facebook Beacon"
+msgstr "Facebook Beacon"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_106
+msgid "Facebook Comments"
+msgstr "Facebook Comments"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_107
+msgid "Facebook Connect"
+msgstr "Facebook Connect"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_108
+msgid "Facebook Like Button"
+msgstr "Facebook Like Button"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_109
+msgid "Facebook Social Plugins"
+msgstr "Facebook Social Plugins"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_46
+msgid "Facilities"
+msgstr "Послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_47
+msgid "Family Services"
+msgstr "Сімейні послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_110
+msgid "Fedora"
+msgstr "Fedora"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__contact_filter_type
+msgid "Filter on"
+msgstr "Фільтрувати на"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__filter_on_size
+msgid "Filter on Size"
+msgstr "Фільтр на розмір"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_48
+msgid "Finance"
+msgstr "Фінанси"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_49
+msgid "Financial Services"
+msgstr "Фінансові послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_145
+msgid "Financials"
+msgstr "Фінанси"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_50
+msgid "Fine Art"
+msgstr "Образотворче мистецтво"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_51
+msgid "Firearms"
+msgstr "Вогнепальна зброя"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_52
+msgid "Fishery"
+msgstr "Рибальство"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_111
+msgid "Flowplayer"
+msgstr "Flowplayer"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_53
+msgid "Food"
+msgstr "Їжа"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_153
+msgid "Food & Staples Retailing"
+msgstr "Роздрібна торгівля продуктами харчування та скоб"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_54
+msgid "Food Production"
+msgstr "Виробництво продуктів харчування"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_174
+msgid "Food Products"
+msgstr "Продукти харчування"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_209
+msgid "Food Retail"
+msgstr "Роздрібна торгівля продуктами харчування"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_154
+msgid "Food, Beverage & Tobacco"
+msgstr "Продукти харчування, напої та тютюнові вироби"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_112
+msgid "Formstack"
+msgstr "Formstack"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_55
+msgid "Forums"
+msgstr "Форуми"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_113
+msgid "FreeBSD"
+msgstr "FreeBSD"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_114
+msgid "Freshdesk"
+msgstr "Freshdesk"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "From"
+msgstr "Від"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_115
+msgid "Fullcontact"
+msgstr "Fullcontact"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_116
+msgid "Fullstory"
+msgstr "Fullstory"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_56
+msgid "Fundraising"
+msgstr "Фандрайзинг"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_117
+msgid "FusionCharts"
+msgstr "FusionCharts"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_57
+msgid "Gambling & Casinos"
+msgstr "Азартні ігри та казино"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_176
+msgid "Gas Utilities"
+msgstr "Газові комунальні послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_118
+msgid "Gauges"
+msgstr "Gauges"
+
+#. module: crm_iap_lead
+#. openerp-web
+#: code:addons/crm_iap_lead/static/src/xml/leads_tree_generate_leads_views.xml:5
+#, python-format
+msgid "Generate Leads"
+msgstr "Генерація лідів"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_ids
+msgid "Generated Lead / Opportunity"
+msgstr "Створені ліди/нагоди"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_119
+msgid "Get Response"
+msgstr "Get Response"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_120
+msgid "Get Satisfaction"
+msgstr "Get Satisfaction"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_121
+msgid "Go Squared"
+msgstr "Go Squared"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_123
+msgid "GoDaddy Hosting"
+msgstr "GoDaddy Hosting"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_122
+msgid "Gocardless"
+msgstr "Gocardless"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_124
+msgid "Godaddy Nameserver"
+msgstr "Godaddy Nameserver"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_226
+msgid "Gold"
+msgstr "Золотий"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_125
+msgid "Google Adsense"
+msgstr "Google Adsense"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_126
+msgid "Google Adwords"
+msgstr "Google Adwords"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_127
+msgid "Google Affiliate Network"
+msgstr "Google Affiliate Network"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_128
+msgid "Google Analytics"
+msgstr "Google Analytics"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_129
+msgid "Google Apps"
+msgstr "Google Apps"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_130
+msgid "Google Charts"
+msgstr "Google Charts"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_131
+msgid "Google Cloud"
+msgstr "Google Cloud"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_132
+msgid "Google Forms"
+msgstr "Google Forms"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_133
+msgid "Google Maps"
+msgstr "Google Maps"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_134
+msgid "Google Tag Manager"
+msgstr "Google Tag Manager"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_135
+msgid "Google Website Optimizer"
+msgstr "Google Website Optimizer"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_136
+msgid "Google Widgets"
+msgstr "Google Widgets"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_58
+msgid "Government"
+msgstr "Уряд"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_137
+msgid "GraphIQ"
+msgstr "GraphIQ"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_223
+msgid "Graphic Design"
+msgstr "Graphic Design"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_138
+msgid "Gravity Forms"
+msgstr "Gravity Forms"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_139
+msgid "Greenhouse"
+msgstr "Greenhouse"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_59
+msgid "Ground Transportation"
+msgstr "Наземний транспорт"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
+msgid "Group By"
+msgstr "Групувати за"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_60
+msgid "Health & Wellness"
+msgstr "Здоров'я"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_61
+msgid "Health Care"
+msgstr "Охорона здоров'я"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_160
+msgid "Health Care Equipment & Services"
+msgstr "Обладнання та послуги охорони здоров'я"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_178
+msgid "Health Care Equipment & Supplies"
+msgstr "Обладнання та матеріали для охорони здоров'я"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_179
+msgid "Health Care Providers & Services"
+msgstr "Постачальники та послуги охорони здоров'я"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_215
+msgid "Health Care Services"
+msgstr "Послуги охорони здоров'я"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_140
+msgid "Heap"
+msgstr "Heap"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_141
+msgid "Hello Bar"
+msgstr "Hello Bar"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_142
+msgid "Help Scout"
+msgstr "Help Scout"
+
+#. module: crm_iap_lead
+#: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_helpers
+msgid "Helper methods for crm_iap_lead modules"
+msgstr "Допоміжні методи для модулей crm_iap_lead"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_143
+msgid "Heroku"
+msgstr "Heroku"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_144
+msgid "Highcharts"
+msgstr "Highcharts"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_62
+msgid "Higher Education"
+msgstr "Вища освіта"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_63
+msgid "Home & Furniture"
+msgstr "Будинок та меблі"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_64
+msgid "Home Improvement"
+msgstr "Домогосподарство"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_207
+msgid "Home Improvement Retail"
+msgstr "Роздрібна торгівля"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_208
+msgid "Homefurnishing Retail"
+msgstr "Роздрібна торгівля меблів для дому"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_169
+msgid "Hotels, Restaurants & Leisure"
+msgstr "Готелі, ресторани та відпочинок"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_145
+msgid "Hotjar"
+msgstr "Hotjar"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_155
+msgid "Household & Personal Products"
+msgstr "Побутові та особисті товари"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_146
+msgid "Hoverowl"
+msgstr "Hoverowl"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_147
+msgid "HubSpot"
+msgstr "HubSpot"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_219
+msgid "Human Resource & Employment Services"
+msgstr "Послуги відділу кадрів та співробітників"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_65
+msgid "Human Resources"
+msgstr "Кадри"
+
+#. module: crm_iap_lead
+#: model:mail.template,subject:crm_iap_lead.lead_generation_no_credits
+msgid "IAP Lead Generation Notification"
+msgstr "Сповіщення генерації лідів IAP"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers__id
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__id
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__id
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__id
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__id
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_technology__id
+msgid "ID"
+msgstr "ID"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_234
+msgid "ISP"
+msgstr "ISP"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_191
+msgid "IT Services"
+msgstr "Послуги ІТ"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_148
+msgid "Icims"
+msgstr "Icims"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_66
+msgid "Import & Export"
+msgstr "Імпорт та експорт"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_168
+msgid "Independent Power and Renewable Electricity Producers"
+msgstr "Незалежні виробники електроенергії та відновлюваної електроенергії"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_149
+msgid "Indicative"
+msgstr "Indicative"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_184
+msgid "Industrial Conglomerates"
+msgstr "Промислові конгломерати"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_217
+msgid "Industrial Machinery"
+msgstr "Промислове обладнання"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_146
+msgid "Industrials"
+msgstr "Промислові підприємства"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_67
+msgid "Industrials & Manufacturing"
+msgstr "Промисловість та виробництво"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__industry_ids
+msgid "Industries"
+msgstr "Галузі"
+
+#. module: crm_iap_lead
+#: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_industry
+msgid "Industry Tag"
+msgstr "Мітка промисловості"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_147
+msgid "Information Technology"
+msgstr "Інформаційна технологія"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_68
+msgid "Information Technology & Services"
+msgstr "Інформаційна технологія та послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_150
+msgid "Infusionsoft"
+msgstr "Infusionsoft"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_151
+msgid "Inside Sales"
+msgstr "Внутрішній продаж"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_152
+msgid "Inspectlet"
+msgstr "Inspectlet"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_153
+msgid "Instagram"
+msgstr "Instagram"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_154
+msgid "Instagram Links"
+msgstr "Instagram Links"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_155
+msgid "Instart Logic"
+msgstr "Instart Logic"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_69
+msgid "Insurance"
+msgstr "Страхування"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_228
+msgid "Integrated Telecommunication Services"
+msgstr "Інтегровані телекомунікаційні послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_156
+msgid "Intense Debate"
+msgstr "Intense Debate"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_157
+msgid "Intercom"
+msgstr "Intercom"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_70
+msgid "International Relations"
+msgstr "Міжнародні зв'язки"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_71
+msgid "International Trade"
+msgstr "Міжнародна торгівля"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_72
+msgid "Internet"
+msgstr "Інтернет"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_190
+msgid "Internet Software & Services"
+msgstr "Інтернет та програмне забезпечення"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_73
+msgid "Investment"
+msgstr "Інвестиції"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_74
+msgid "Investment Banking"
+msgstr "Інвестиційний банкінг"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_214
+msgid "Investment Banking & Brokerage"
+msgstr "Інвестиційний банкінг та брокерські послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_75
+msgid "Investment Management"
+msgstr "Управління інвестиціями"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_159
+msgid "Iterable"
+msgstr "Iterable"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_160
+msgid "Java"
+msgstr "Java"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_76
+msgid "Jewelry, Watches & Luxury Goods"
+msgstr "Ювелірні вироби, годинники та предмети розкоші"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_161
+msgid "Jobvite"
+msgstr "Jobvite"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_162
+msgid "Joomla"
+msgstr "Joomla"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_77
+msgid "Judiciary"
+msgstr "Судова влада"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_163
+msgid "Jw Player"
+msgstr "Jw Player"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_164
+msgid "Kaltura"
+msgstr "Kaltura"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_165
+msgid "Kapost"
+msgstr "Kapost"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_166
+msgid "Keen IO"
+msgstr "Keen IO"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_167
+msgid "Kissmetrics"
+msgstr "Kissmetrics"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_168
+msgid "Klaviyo"
+msgstr "Klaviyo"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_169
+msgid "Knowtify"
+msgstr "Knowtify"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_179
+msgid "LKQD"
+msgstr "LKQD"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers____last_update
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry____last_update
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request____last_update
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role____last_update
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority____last_update
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_technology____last_update
+msgid "Last Modified on"
+msgstr "Останні зміни на"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers__write_uid
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__write_uid
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__write_uid
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__write_uid
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__write_uid
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_technology__write_uid
+msgid "Last Updated by"
+msgstr "Востаннє оновив"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers__write_date
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__write_date
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__write_date
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__write_date
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__write_date
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_technology__write_date
+msgid "Last Updated on"
+msgstr "Останнє оновлення"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_78
+msgid "Law Enforcement"
+msgstr "Правозастосування"
+
+#. module: crm_iap_lead
+#: selection:crm.iap.lead.mining.request,lead_type:0
+msgid "Lead"
+msgstr "Лід"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_170
+msgid "Lead Dyno"
+msgstr "Lead Dyno"
+
+#. module: crm_iap_lead
+#: model:ir.ui.menu,name:crm_iap_lead.crm_menu_lead_generation
+msgid "Lead Generation"
+msgstr "Генерація лідів"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "Lead Information"
+msgstr "Інформація ліда"
+
+#. module: crm_iap_lead
+#: model:ir.ui.menu,name:crm_iap_lead.crm_iap_lead_mining_request_menu_action
+msgid "Lead Mining"
+msgstr "Отримання лідів"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead__lead_mining_request_id
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
+msgid "Lead Mining Request"
+msgstr "Запит на отримання ліда"
+
+#. module: crm_iap_lead
+#: model:ir.actions.act_window,name:crm_iap_lead.crm_iap_lead_mining_request_action
+msgid "Lead Mining Requests"
+msgstr "Запити на отримання ліда"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_total_credit
+msgid "Lead Total Credit"
+msgstr "Загальна сума кредиту лідів"
+
+#. module: crm_iap_lead
+#: model:ir.model,name:crm_iap_lead.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Лід/Нагода"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
+msgid "Leads"
+msgstr "Ліди"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_79
+msgid "Legal Services"
+msgstr "Юридичні послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_204
+msgid "Leisure Facilities"
+msgstr "Послуги для відпочинку"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_171
+msgid "Lever"
+msgstr "Lever"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_80
+msgid "Libraries"
+msgstr "Бібліотеки"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_180
+msgid "Life Sciences Tools & Services"
+msgstr "Інструменти та послуги з наук про життя"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_172
+msgid "Lightspeed"
+msgstr "Lightspeed"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_173
+msgid "LinkedIn Advertiser"
+msgstr "LinkedIn Advertiser"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_174
+msgid "Linkwithin"
+msgstr "Linkwithin"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_175
+msgid "Linode Hosting"
+msgstr "Linode Hosting"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_176
+msgid "Live Chat"
+msgstr "Живий чат"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_177
+msgid "Livefyre"
+msgstr "Livefyre"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_178
+msgid "Liveramp"
+msgstr "Liveramp"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_180
+msgid "Localytics"
+msgstr "Localytics"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_181
+msgid "Looker"
+msgstr "Looker"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_182
+msgid "Lucky Orange"
+msgstr "Lucky Orange"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_81
+msgid "Machinery"
+msgstr "Машини"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_183
+msgid "Mad Kudu"
+msgstr "Mad Kudu"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_184
+msgid "Magento"
+msgstr "Magento"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_185
+msgid "Magento Enterprise"
+msgstr "Magento Enterprise"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_186
+msgid "Magento V1"
+msgstr "Magento V1"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_187
+msgid "Magento V2"
+msgstr "Magento V2"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_188
+msgid "Mailchimp"
+msgstr "Mailchimp"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_189
+msgid "Mailgun"
+msgstr "Mailgun"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_190
+msgid "Mailjet"
+msgstr "Mailjet"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid ""
+"Make sure you know if you have to be GDPR compliant for storing personal "
+"data."
+msgstr ""
+"Переконайтеся, що ви знаєте, чи маєте ви дотримуватись вимог GDPR для "
+"зберігання особистих даних."
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_191
+msgid "Mandrill"
+msgstr "Mandrill"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_192
+msgid "Marin"
+msgstr "Marin"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_188
+msgid "Marine"
+msgstr "Морський"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_82
+msgid "Maritime"
+msgstr "Морський"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_83
+msgid "Market Research"
+msgstr "Дослідження ринку"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_84
+msgid "Marketing & Advertising"
+msgstr "Маркетинг і реклама"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_193
+msgid "Marketo"
+msgstr "Marketo"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_235
+msgid "Marketplace"
+msgstr "Ринок"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_148
+msgid "Materials"
+msgstr "Матеріали"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_194
+msgid "Maxmind"
+msgstr "Maxmind"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_85
+msgid "Mechanical Engineering"
+msgstr "Машинобудування"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_86
+msgid "Media"
+msgstr "Медіа"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_87
+msgid "Medicine"
+msgstr "Медицина"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_197
+msgid "Metals & Mining"
+msgstr "Метали та видобуток"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_195
+msgid "Microsoft Azure"
+msgstr "Microsoft Azure"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_196
+msgid "Microsoft Exchange Online"
+msgstr "Microsoft Exchange Online"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_197
+msgid "Microsoft Office 365"
+msgstr "Microsoft Office 365"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_88
+msgid "Military"
+msgstr "Військові"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_198
+msgid "Mindbody"
+msgstr "Mindbody"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_89
+msgid "Mining & Metals"
+msgstr "Видобуток і метали"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_199
+msgid "Mixpanel"
+msgstr "Mixpanel"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_236
+msgid "Mobile"
+msgstr "Мобільний додаток"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_200
+msgid "Mode"
+msgstr "Режим"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_201
+msgid "Mouseflow"
+msgstr "Mouseflow"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_202
+msgid "Mousestats"
+msgstr "Mousestats"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_206
+msgid "Movies & Entertainment"
+msgstr "Фільми та розваги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_90
+msgid "Movies & TV"
+msgstr "Фільми та телебачення"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_91
+msgid "Museums"
+msgstr "Музеї"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_92
+msgid "Music"
+msgstr "Музика"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_203
+msgid "My Site Auditor"
+msgstr "My Site Auditor"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__name
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_technology__name
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+msgid "Name"
+msgstr "Назва"
+
+#. module: crm_iap_lead
+#: sql_constraint:crm.iap.lead.seniority:0
+msgid "Name already exists!"
+msgstr "Ім'я вже існує!"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_204
+msgid "Namecheap Dns"
+msgstr "Namecheap Dns"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_93
+msgid "Nanotechnology"
+msgstr "Нанотехнології"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_205
+msgid "NationBuilder"
+msgstr "NationBuilder"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_94
+msgid "Networking"
+msgstr "Мережа"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_206
+msgid "Neustar Ad Advisor"
+msgstr "Neustar Ad Advisor"
+
+#. module: crm_iap_lead
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:31
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:194
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:200
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:201
+#, python-format
+msgid "New"
+msgstr "Новий"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_207
+msgid "New Relic"
+msgstr "New Relic"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_208
+msgid "Nextable"
+msgstr "Nextable"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_209
+msgid "Nginx"
+msgstr "Nginx"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_95
+msgid "Non-Profit & Philanthropy"
+msgstr "Неприбуткові та філантропії"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_210
+msgid "Nosto"
+msgstr "Nosto"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_211
+msgid "Ns1"
+msgstr "Ns1"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__contact_number
+msgid "Number of Contacts"
+msgstr "Кількість контактів"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__leads_count
+msgid "Number of Generated Leads"
+msgstr "Кількість створених лідів"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_number
+msgid "Number of Leads"
+msgstr "Кількість лідів"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_number_info
+msgid "Number of Leads "
+msgstr "Кількість лідів"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_96
+msgid "Oil & Gas"
+msgstr "Нафта та газ"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_212
+msgid "Olark"
+msgstr "Olark"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_213
+msgid "Omniconvert"
+msgstr "Omniconvert"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_214
+msgid "Omniture (Adobe Analytics)"
+msgstr "Omniture (Adobe Analytics)"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_215
+msgid "Ooyala"
+msgstr "Ooyala"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_216
+msgid "Open Table"
+msgstr "Open Table"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
+msgid "Opportunities"
+msgstr "Нагоди"
+
+#. module: crm_iap_lead
+#: selection:crm.iap.lead.mining.request,lead_type:0
+msgid "Opportunity"
+msgstr "Нагода"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+msgid "Opportunity created by Odoo Lead Generation"
+msgstr "Нагода, створена генерацією лідів Odoo"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_217
+msgid "Optimizely"
+msgstr "Optimizely"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_218
+msgid "Optimonk"
+msgstr "Optimonk"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_219
+msgid "Oscommerce"
+msgstr "Oscommerce"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__role_ids
+msgid "Other Roles"
+msgstr "Інші ролі"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_220
+msgid "Outbound"
+msgstr "Вихідні"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_221
+msgid "Outbrain Ads"
+msgstr "Outbrain Ads"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_222
+msgid "Outlook"
+msgstr "Outlook"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_97
+msgid "Outsourcing"
+msgstr "Outsourcing"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_211
+msgid "Packaged Foods & Meats"
+msgstr "Упаковані продукти та м'ясо"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_98
+msgid "Packaging & Containers"
+msgstr "Упаковка та контейнери"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_198
+msgid "Paper & Forest Products"
+msgstr "Папір та лісові товари"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_99
+msgid "Paper Goods"
+msgstr "Паперові товари"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_227
+msgid "Paper Products"
+msgstr "Паперові товари"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_224
+msgid "Pardot"
+msgstr "Pardot"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_225
+msgid "PayPal"
+msgstr "PayPal"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_100
+msgid "Payments"
+msgstr "Платежі"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_226
+msgid "Payza"
+msgstr "Payza"
+
+#. module: crm_iap_lead
+#: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_role
+msgid "People Role"
+msgstr "Роль людей"
+
+#. module: crm_iap_lead
+#: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_seniority
+msgid "People Seniority"
+msgstr "Стаж людей"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_227
+msgid "Percolate"
+msgstr "Percolate"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_228
+msgid "Perfect Audience"
+msgstr "Perfect Audience"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_101
+msgid "Performing Arts"
+msgstr "Виконавські види мистецтва"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_229
+msgid "Periscope Data"
+msgstr "Periscope Data"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_175
+msgid "Personal Products"
+msgstr "Персональні товари"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_102
+msgid "Pharmaceuticals"
+msgstr "Фармацевтика"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_161
+msgid "Pharmaceuticals, Biotechnology & Life Sciences"
+msgstr "Фармацевтика, біотехнологія та науки про життя"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_103
+msgid "Pharmacy"
+msgstr "Аптека"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+msgid "Phone"
+msgstr "Телефон"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_104
+msgid "Photography"
+msgstr "Фотографія"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_230
+msgid "Picreel"
+msgstr "Picreel"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_231
+msgid "Pingdom"
+msgstr "Pingdom"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_232
+msgid "Pinterest"
+msgstr "Pinterest"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_233
+msgid "Pipedrive"
+msgstr "Pipedrive"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_234
+msgid "Piwik"
+msgstr "Piwik"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_105
+msgid "Plastics"
+msgstr "Пластик"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_235
+msgid "Playwire"
+msgstr "Playwire"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_106
+msgid "Plumbing"
+msgstr "Сантехніка"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_107
+msgid "Political Organization"
+msgstr "Політична організація"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_108
+msgid "Pornography"
+msgstr "Порнографія"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_236
+msgid "Postmark"
+msgstr "Postmark"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_237
+msgid "PowerReviews"
+msgstr "PowerReviews"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__preferred_role_id
+msgid "Preferred Role"
+msgstr "Бажана роль"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_238
+msgid "Presta Shop"
+msgstr "Presta Shop"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_109
+msgid "Primary & Secondary Education"
+msgstr "Первинна та середня освіта"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_110
+msgid "Printing"
+msgstr "Друк"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_239
+msgid "Privy"
+msgstr "Privy"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_186
+msgid "Professional Services"
+msgstr "Професійні послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_111
+msgid "Public Relations"
+msgstr "Зв'язки з громадськістю"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_112
+msgid "Publishing"
+msgstr "Публікування"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_240
+msgid "Qbrick"
+msgstr "Qbrick"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_241
+msgid "Qualaroo"
+msgstr "Qualaroo"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_242
+msgid "Qualtrics"
+msgstr "Qualtrics"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_243
+msgid "Quantcast"
+msgstr "Quantcast"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_244
+msgid "Qubit"
+msgstr "Qubit"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_245
+msgid "Rackspace"
+msgstr "Rackspace"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_246
+msgid "Rackspace Email"
+msgstr "Rackspace Email"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_113
+msgid "Ranching"
+msgstr "Фермерство"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_251
+msgid "ReSRCit"
+msgstr "ReSRCit"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_114
+msgid "Real Estate"
+msgstr "Нерухомість"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_247
+msgid "Recaptcha"
+msgstr "Recaptcha"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_248
+msgid "Recruiterbox"
+msgstr "Recruiterbox"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_249
+msgid "Recurly"
+msgstr "Recurly"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_250
+msgid "Red Hat"
+msgstr "Red Hat"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_115
+msgid "Religion"
+msgstr "Релігія"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_201
+msgid "Renewable Electricity"
+msgstr "Відновлювана електроенергія"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_229
+msgid "Renewable Energy"
+msgstr "Відновлювана енергія"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_116
+msgid "Renewables & Environment"
+msgstr "Відновлювані джерела енергії та довкілля"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "Request"
+msgstr "Запит"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__name
+msgid "Request Number"
+msgstr "Кількість запитів"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_220
+msgid "Research & Consulting Services"
+msgstr "Послуги пошуку та консалтингу"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_117
+msgid "Restaurants"
+msgstr "Ресторани"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_252
+msgid "Resumator"
+msgstr "Resumator"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_118
+msgid "Retail"
+msgstr "Роздрібний продаж"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_253
+msgid "RetailRocket"
+msgstr "RetailRocket"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_152
+msgid "Retailing"
+msgstr "Роздрібний продаж"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "Retry"
+msgstr "Повторити"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__reveal_id
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__reveal_id
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__reveal_id
+msgid "Reveal"
+msgstr "Reveal"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead__reveal_id
+msgid "Reveal ID"
+msgstr "Reveal ID"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_254
+msgid "Rezdy"
+msgstr "Rezdy"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_255
+msgid "Rezgo"
+msgstr "Rezgo"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_189
+msgid "Road & Rail"
+msgstr "Дорога та залізниця"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_256
+msgid "Robly"
+msgstr "Robly"
+
+#. module: crm_iap_lead
+#: selection:crm.iap.lead.mining.request,contact_filter_type:0
+msgid "Role"
+msgstr "Роль"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__name
+msgid "Role Name"
+msgstr "Назва ролі"
+
+#. module: crm_iap_lead
+#: sql_constraint:crm.iap.lead.role:0
+msgid "Role name already exists!"
+msgstr "Рольове ім'я вже існує!"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_257
+msgid "Rollbar"
+msgstr "Rollbar"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_258
+msgid "Route 53"
+msgstr "Route 53"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_259
+msgid "Ruby On Rails"
+msgstr "Ruby On Rails"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_237
+msgid "SAAS"
+msgstr "SAAS"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__team_id
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
+msgid "Sales Team"
+msgstr "Команда продажу"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_260
+msgid "Salesforce"
+msgstr "Salesforce"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_261
+msgid "Salesmachine"
+msgstr "Salesmachine"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__user_id
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
+msgid "Salesperson"
+msgstr "Продавець"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_262
+msgid "Salsa"
+msgstr "Salsa"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_119
+msgid "Sanitization Services"
+msgstr "Санітарні послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_263
+msgid "Satismeter"
+msgstr "Satismeter"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_120
+msgid "Scientific & Academic Research"
+msgstr "Наукові та академічні дослідження"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_121
+msgid "Security"
+msgstr "Безпека"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_264
+msgid "Segment"
+msgstr "Сегмент"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_221
+msgid "Semiconductors"
+msgstr "Напівпровідники"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_164
+msgid "Semiconductors & Semiconductor Equipment"
+msgstr "Напівпровідники та напівпровідникове обладнання"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_265
+msgid "Sendgrid"
+msgstr "Sendgrid"
+
+#. module: crm_iap_lead
+#: selection:crm.iap.lead.mining.request,contact_filter_type:0
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__seniority_id
+msgid "Seniority"
+msgstr "Стаж"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_266
+msgid "Sentry"
+msgstr "Sentry"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_122
+msgid "Services"
+msgstr "Послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_267
+msgid "Sessioncam"
+msgstr "Sessioncam"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_268
+msgid "Sharepoint"
+msgstr "Sharepoint"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_269
+msgid "Sharp Spring"
+msgstr "Sharp Spring"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_123
+msgid "Shipbuilding"
+msgstr "Суднобудування"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_124
+msgid "Shipping & Logistics"
+msgstr "Доставка та логістика"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_270
+msgid "Shopify"
+msgstr "Shopify"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_271
+msgid "Shopify Plus"
+msgstr "Shopify Plus"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_272
+msgid "Shopware"
+msgstr "Shopware"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_273
+msgid "Sidecar"
+msgstr "Sidecar"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_274
+msgid "Silkroad"
+msgstr "Silkroad"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_275
+msgid "Simplicant"
+msgstr "Simplicant"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__company_size_min
+msgid "Size"
+msgstr "Розмір"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_276
+msgid "Slack"
+msgstr "Slack"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_277
+msgid "Smartlook"
+msgstr "Smartlook"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_278
+msgid "Snowplow Analytics"
+msgstr "Snowplow Analytics"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_125
+msgid "Society"
+msgstr "Суспільство"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_279
+msgid "Sociomantic"
+msgstr "Sociomantic"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_280
+msgid "Socket.io"
+msgstr "Socket.io"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_281
+msgid "Softlayer Hosting"
+msgstr "Softlayer Hosting"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_192
+msgid "Software"
+msgstr "Програмне забезпечення"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_165
+msgid "Software & Services"
+msgstr "Програмне забезпечення та послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_171
+msgid "Specialized Consumer Services"
+msgstr "Спеціалізовані споживчі послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_173
+msgid "Specialty Retail"
+msgstr "Спеціалізована роздрібна торгівля"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_126
+msgid "Sporting Goods"
+msgstr "Спортивні товари"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_127
+msgid "Sports & Fitness"
+msgstr "Спорт та фітнес"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_282
+msgid "Squarespace"
+msgstr "Squarespace"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__state_ids
+msgid "States"
+msgstr "Області"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__state
+msgid "Status"
+msgstr "Статус"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_283
+msgid "SteelHouse"
+msgstr "SteelHouse"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_128
+msgid "Stores"
+msgstr "Магазини"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_284
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "Submit"
+msgstr "Розглянути"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_285
+msgid "Success Factors"
+msgstr "Success Factors"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_286
+msgid "Sumo"
+msgstr "Sumo"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_287
+msgid "Survey Monkey"
+msgstr "Survey Monkey"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_288
+msgid "Tableau"
+msgstr "Tableau"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_289
+msgid "Taboola Ads"
+msgstr "Taboola Ads"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__name
+msgid "Tag Name"
+msgstr "Назва тегу"
+
+#. module: crm_iap_lead
+#: sql_constraint:crm.iap.lead.industry:0
+msgid "Tag name already exists!"
+msgstr "Така мітка вже існує!"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__tag_ids
+msgid "Tags"
+msgstr "Теги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_129
+msgid "Talent Agencies"
+msgstr "Агенції талантів"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_290
+msgid "Taleo"
+msgstr "Taleo"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_291
+msgid "Talkable"
+msgstr "Talkable"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__search_type
+msgid "Target"
+msgstr "Ціль"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_292
+msgid "Tawk"
+msgstr "Tawk"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_293
+msgid "Tealium"
+msgstr "Tealium"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_technology__tech_tag
+msgid "Tech Tag"
+msgstr "Технічні мітки"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__technology_ids
+msgid "Technologies"
+msgstr "Технології"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_130
+msgid "Technology"
+msgstr "Технологія"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_166
+msgid "Technology Hardware & Equipment"
+msgstr "Технологія обладнання та обладнання"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_195
+msgid "Technology Hardware, Storage & Peripherals"
+msgstr "Технологічне обладнання, зберігання та периферія"
+
+#. module: crm_iap_lead
+#: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_technology
+msgid "Technology Tag"
+msgstr "Технологічний тег"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+msgid "Technology Used :"
+msgstr "Технологія використовується :"
+
+#. module: crm_iap_lead
+#: sql_constraint:crm.iap.lead.technology:0
+msgid "Technology tag name already exists!"
+msgstr "Назва технологічного тегу вже існує!"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_149
+msgid "Telecommunication Services"
+msgstr "Послуги телекомунікації"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_131
+msgid "Telecommunications"
+msgstr "Телекомунікації"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_294
+msgid "Terminus"
+msgstr "Terminus"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_132
+msgid "Textiles"
+msgstr "Текстиль"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+msgid "Title"
+msgstr "Заголовок"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_133
+msgid "Tobacco"
+msgstr "Тютюн"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_134
+msgid "Tools"
+msgstr "Інструменти"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_295
+msgid "Top Producer"
+msgstr "Top Producer"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_296
+msgid "Totango"
+msgstr "Totango"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_297
+msgid "Tout"
+msgstr "Tout"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_298
+msgid "Toutapp"
+msgstr "Toutapp"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_299
+msgid "TowerData"
+msgstr "TowerData"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_300
+msgid "Track JS"
+msgstr "Track JS"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_185
+msgid "Trading Companies & Distributors"
+msgstr "Торгові компанії та дистриб'ютори"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_135
+msgid "Translation"
+msgstr "Переклад"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_136
+msgid "Transportation"
+msgstr "Перевезення"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_137
+msgid "Travel & Leisure"
+msgstr "Подорожі та відпочинок"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_301
+msgid "Trustpilot"
+msgstr "Trustpilot"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_302
+msgid "Twitter Advertiser"
+msgstr "Twitter Advertiser"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_303
+msgid "Twitter Badge"
+msgstr "Twitter Badge"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_304
+msgid "Twitter Button"
+msgstr "Twitter Button"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_type
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
+msgid "Type"
+msgstr "Тип"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_305
+msgid "Typeform"
+msgstr "Typeform"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_306
+msgid "Typekit By Adobe"
+msgstr "Typekit By Adobe"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_307
+msgid "Uber Cart"
+msgstr "Uber Cart"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_308
+msgid "Ubuntu"
+msgstr "Ubuntu"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_309
+msgid "Ultipro"
+msgstr "Ultipro"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_310
+msgid "Unix"
+msgstr "Unix"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "Up to"
+msgstr "Підняти до"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_311
+msgid "UserVoice"
+msgstr "UserVoice"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_138
+msgid "Utilities"
+msgstr "Комунальні послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_139
+msgid "Venture Capital"
+msgstr "Венчурний капітал"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_312
+msgid "Vero"
+msgstr "Vero"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_313
+msgid "Verticalresponse"
+msgstr "Verticalresponse"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_140
+msgid "Veterinary"
+msgstr "Ветеринарія"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_141
+msgid "Video Games"
+msgstr "Відеоігри"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_314
+msgid "Video.js"
+msgstr "Video.js"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_315
+msgid "Vidyard"
+msgstr "Vidyard"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_316
+msgid "Vimeo"
+msgstr "Vimeo"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_317
+msgid "Virtue Mart"
+msgstr "Virtue Mart"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_318
+msgid "Visual IQ"
+msgstr "Visual IQ"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_319
+msgid "Visual Website Optimizer"
+msgstr "Visual Website Optimizer"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_320
+msgid "Volusion"
+msgstr "Volusion"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_321
+msgid "Vzaar"
+msgstr "Vzaar"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_142
+msgid "Warehousing"
+msgstr "Складування"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_143
+msgid "Web Services & Apps"
+msgstr "Веб-послуги та додатки"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_322
+msgid "WebEngage"
+msgstr "WebEngage"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_323
+msgid "Weebly"
+msgstr "Weebly"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_144
+msgid "Wholesale"
+msgstr "Оптова торгівля"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_200
+msgid "Wireless Telecommunication Services"
+msgstr "Бездротові телекомунікаційні послуги"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_324
+msgid "Wistia"
+msgstr "Wistia"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_325
+msgid "Wix Stores"
+msgstr "Wix Stores"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_326
+msgid "Woo Commerce"
+msgstr "Woo Commerce"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_327
+msgid "Woopra"
+msgstr "Woopra"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_328
+msgid "Wootric"
+msgstr "Wootric"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_329
+msgid "Wordpress"
+msgstr "Wordpress"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_330
+msgid "Workable"
+msgstr "Workable"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_331
+msgid "Wp Engine"
+msgstr "Wp Engine"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_332
+msgid "Wufoo"
+msgstr "Wufoo"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_334
+msgid "Yahoo Stores"
+msgstr "Yahoo Stores"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_335
+msgid "Yandex Metrica"
+msgstr "Yandex Metrica"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_336
+msgid "Yelp Seatme"
+msgstr "Yelp Seatme"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_337
+msgid "Yesware"
+msgstr "Yesware"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_338
+msgid "Yieldify"
+msgstr "Yieldify"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_339
+msgid "Yotpo"
+msgstr "Yotpo"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_340
+msgid "Youtube"
+msgstr "Youtube"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_341
+msgid "Zeit Now"
+msgstr "Zeit Now"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_342
+msgid "Zen Cart"
+msgstr "Zen Cart"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_343
+msgid "Zendesk"
+msgstr "Zendesk"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_344
+msgid "Zenreach"
+msgstr "Zenreach"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_345
+msgid "Zopim"
+msgstr "Zopim"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_346
+msgid "Zuora"
+msgstr "Zuora"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_347
+msgid "Zype"
+msgstr "Zype"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid ""
+"additional credits will be consumed per company to identify contacts.\n"
+"                                    ("
+msgstr ""
+"додаткові кредити будуть витрачені на компанію для визначення контактів.\n"
+"                                    ("
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_26
+msgid "amCharts"
+msgstr "amCharts"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_1
+msgid "ceo"
+msgstr "ceo"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_2
+msgid "communications"
+msgstr "комунікації"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid ""
+"companies.\n"
+"                                <br/>"
+msgstr ""
+"компанії.\n"
+"                                <br/>"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_3
+msgid "consulting"
+msgstr "консалтинг"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "credits will be consumed to find"
+msgstr "кредити будуть витрачені на пошук"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_4
+msgid "customer_service"
+msgstr "customer_service"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.seniority,name:crm_iap_lead.crm_iap_lead_seniority_1
+msgid "director"
+msgstr "директор"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_5
+msgid "education"
+msgstr "освіта"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "employees"
+msgstr "співробітники"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_6
+msgid "engineering"
+msgstr "машинобудування"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.seniority,name:crm_iap_lead.crm_iap_lead_seniority_2
+msgid "executive"
+msgstr "адміістративний"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_7
+msgid "finance"
+msgstr "фінанси"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_8
+msgid "founder"
+msgstr "засновник"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_9
+msgid "health_professional"
+msgstr "health_professional"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_10
+msgid "human_resources"
+msgstr "human_resources"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_11
+msgid "information_technology"
+msgstr "information_technology"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_158
+msgid "ios"
+msgstr "ios"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_12
+msgid "legal"
+msgstr "юридичний"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.seniority,name:crm_iap_lead.crm_iap_lead_seniority_3
+msgid "manager"
+msgstr "керівник"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_13
+msgid "marketing"
+msgstr "маркетинг"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_14
+msgid "operations"
+msgstr "операції"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_15
+msgid "owner"
+msgstr "власник"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_223
+msgid "ownerIQ"
+msgstr "ownerIQ"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_16
+msgid "president"
+msgstr "голова відомства"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_17
+msgid "product"
+msgstr "товар"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_18
+msgid "public_relations"
+msgstr "public_relations"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_19
+msgid "real_estate"
+msgstr "real_estate"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_20
+msgid "recruiting"
+msgstr "рекрутинг"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_21
+msgid "research"
+msgstr "пошук"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_22
+msgid "sale"
+msgstr "продаж"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "to"
+msgstr "до"
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_333
+msgid "xt:Commerce"
+msgstr "xt:Commerce"
