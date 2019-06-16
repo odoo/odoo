@@ -191,6 +191,9 @@ msgid ""
 "    % set channel_id = object.env.ref('mail.channel_all_employees').id\n"
 "    <strong style=\"font-size: 16px;\">Did you know...?</strong>"
 msgstr ""
+"% set users = object.env['res.users'].search([], limit=10, order='id desc')\n"
+"    % set channel_id = object.env.ref('mail.channel_all_employees').id\n"
+"    <strong style=\"font-size: 16px;\">Wussten Sie schon...?</strong>"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_1
