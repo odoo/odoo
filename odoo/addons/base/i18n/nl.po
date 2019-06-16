@@ -10,16 +10,16 @@
 # Thomas Pot <thomas@open2bizz.nl>, 2018
 # Cas Vissers <c.vissers@brahoo.nl>, 2018
 # Eric Geens <ericgeens@yahoo.com>, 2018
-# Cas Vissers <casvissers@brahoo.nl>, 2018
 # Martin Trigaux, 2018
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Cas Vissers <casvissers@brahoo.nl>, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:38+0000\n"
+"POT-Creation-Date: 2019-05-22 11:56+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -3977,13 +3977,13 @@ msgstr ""
 "Beheer vakantieaanvragen en toewijzingen\n"
 "=====================================\n"
 "\n"
-"Deze applicatie beheerd de vakantieschema's van uw bedrijf. Het staat werknemers toe om verlofaanvragen te doen. Vervolgens kunnen managers vakantieaanvragen controleren en ze vervolgens goedkeuren of afwijzen. Op deze manier kan u de algemene vakanties plannen voor uw bedrijf of afdeling.\n"
+"Deze applicatie beheerd de verlofschema's van uw bedrijf. Het staat werknemers toe om verlofaanvragen te doen. Vervolgens kunnen managers vakantieaanvragen controleren en ze vervolgens goedkeuren of afwijzen. Op deze manier kan u de algemene verlof plannen voor uw bedrijf of afdeling.\n"
 "\n"
 "U kan verschillende soorten aanvragen configureren (ziekte, betaalde dagen, ...) en u kan vakantie snel toewijzen aan een werknemer of afdeling door vakantie toewijzingen. Een werknemer kan ook een aanvraag doen voor meer vakantie toewijzingen. Het verhoogt het aantal beschikbare dagen voor dat type vakantie (als het verzoek is goedgekeurd).\n"
 "\n"
-"U kan vakanties opvolgen op verschillende manieren volgen:\n"
+"U kan verlof opvolgen op verschillende manieren volgen:\n"
 "\n"
-"* Vakantiesamenvattingen\n"
+"* Verlofsamenvattingen\n"
 "* Vakantie op afdeling\n"
 "* Vakantie analyse\n"
 "\n"
@@ -9595,9 +9595,7 @@ msgid "Application"
 msgstr "Applicatie"
 
 #. module: base
-#: code:addons/base/models/res_users.py:968
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "Application Accesses"
 msgstr "Applicatie toegangen"
 
@@ -10653,6 +10651,12 @@ msgstr "Bijwerken onderbreken"
 #, python-format
 msgid "Cannot aggregate field %r."
 msgstr "Kan veld %r niet agregeren."
+
+#. module: base
+#: code:addons/base/models/ir_translation.py:256
+#, python-format
+msgid "Cannot be translated; record not accessible."
+msgstr "Kan niet worden vertaald; record is niet benaderbaar."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:228
@@ -21462,8 +21466,7 @@ msgid "Original currency"
 msgstr "Originele valuta"
 
 #. module: base
-#: code:addons/base/models/res_users.py:995
-#: code:addons/base/models/res_users.py:1178
+#: code:addons/base/models/res_users.py:1222
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
@@ -25749,6 +25752,7 @@ msgstr "Technische naam"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "Technische instellingen"
 
@@ -27489,9 +27493,7 @@ msgid "User Login"
 msgstr "Gebruikersnaam"
 
 #. module: base
-#: code:addons/base/models/res_users.py:967
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "User Type"
 msgstr "Gebruikerssoort"
 

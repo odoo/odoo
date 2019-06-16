@@ -7,7 +7,6 @@
 # Wanradt Koell <wanradt@gmail.com>, 2018
 # Ants Peetsalu <ants@avalah.ee>, 2018
 # Egon Raamat <egon@avalah.ee>, 2018
-# Eneli Õigus <enelioigus@gmail.com>, 2018
 # Marek Pontus, 2018
 # Martin Aavastik <martin@avalah.ee>, 2018
 # Helen Sulaoja <helen@avalah.ee>, 2018
@@ -15,14 +14,15 @@
 # Arma Gedonsky <armagedonsky@hot.ee>, 2018
 # Martin Trigaux, 2018
 # Maidu Targama <m.targama@gmail.com>, 2019
+# Eneli Õigus <enelioigus@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:38+0000\n"
+"POT-Creation-Date: 2019-05-22 11:56+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Maidu Targama <m.targama@gmail.com>, 2019\n"
+"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2019\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7350,9 +7350,7 @@ msgid "Application"
 msgstr "Kandideerimine"
 
 #. module: base
-#: code:addons/base/models/res_users.py:968
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "Application Accesses"
 msgstr "Ligipääsud rakendustele"
 
@@ -8394,6 +8392,12 @@ msgstr "Tühista uuendus"
 #: code:addons/models.py:2118
 #, python-format
 msgid "Cannot aggregate field %r."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_translation.py:256
+#, python-format
+msgid "Cannot be translated; record not accessible."
 msgstr ""
 
 #. module: base
@@ -13488,12 +13492,12 @@ msgstr "Sisemine allikas"
 #. module: base
 #: model:res.groups,name:base.group_user
 msgid "Internal User"
-msgstr "Sisemine Kasutaja"
+msgstr "Ettevõttesisene kasutaja"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
 msgid "Internal Users"
-msgstr "Sisemised Kasutajad"
+msgstr "Ettevõttesisene kasutaja"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -14511,7 +14515,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_localization
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Localization"
-msgstr "Asukoht laos"
+msgstr "Lokalisatsioon"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
@@ -15081,7 +15085,7 @@ msgstr "Sõnum"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Messaging and Social"
-msgstr ""
+msgstr "Infovahetus"
 
 #. module: base
 #: code:addons/base/models/res_config.py:548
@@ -17456,8 +17460,7 @@ msgid "Original currency"
 msgstr "Originaal valuuta"
 
 #. module: base
-#: code:addons/base/models/res_users.py:995
-#: code:addons/base/models/res_users.py:1178
+#: code:addons/base/models/res_users.py:1222
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
@@ -21069,6 +21072,7 @@ msgstr "Tehniline nimi"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "Tehnilised seaded"
 
@@ -22644,11 +22648,9 @@ msgid "User Login"
 msgstr "Kasutaja sisselogimine"
 
 #. module: base
-#: code:addons/base/models/res_users.py:967
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "User Type"
-msgstr ""
+msgstr "Kasutaja tüüp"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__log_ids

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:38+0000\n"
+"POT-Creation-Date: 2019-05-22 11:56+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
 "Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
@@ -7041,9 +7041,7 @@ msgid "Application"
 msgstr "aplikace"
 
 #. module: base
-#: code:addons/base/models/res_users.py:968
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "Application Accesses"
 msgstr "Přístup k aplikaci"
 
@@ -7629,7 +7627,7 @@ msgstr "Základní pohled"
 #: model:ir.cron,cron_name:base.autovacuum_job
 #: model:ir.cron,name:base.autovacuum_job
 msgid "Base: Auto-vacuum internal data"
-msgstr "Základní: Automatické čištění interních dat"
+msgstr "Základní modul: Automatické čištění interních dat"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_grid
@@ -8093,6 +8091,12 @@ msgstr "Zrušit upgrade"
 #, python-format
 msgid "Cannot aggregate field %r."
 msgstr "Nelze agregovat pole %r."
+
+#. module: base
+#: code:addons/base/models/ir_translation.py:256
+#, python-format
+msgid "Cannot be translated; record not accessible."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/res_lang.py:228
@@ -8624,7 +8628,7 @@ msgstr "Logo společnosti"
 #: model:ir.model.fields,field_description:base.field_res_partner__company_name
 #: model:ir.model.fields,field_description:base.field_res_users__company_name
 msgid "Company Name"
-msgstr "Jméno společnosti"
+msgstr " Název společnosti "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__commercial_company_name
@@ -10392,7 +10396,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_payment
 msgid "EDI Payment"
-msgstr ""
+msgstr "Platba EDI"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_payment
@@ -10975,7 +10979,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_external_trade
 msgid "External Trade Complement for the Mexican localization"
-msgstr ""
+msgstr "Doplněk zahraničního obchodu pro mexickou lokalizaci"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_external_trade
@@ -14770,7 +14774,7 @@ msgstr "Marketingová automatizace"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_marketing_automation
 msgid "Marketing Automation Tests"
-msgstr ""
+msgstr "Testy marketingové automatizace"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ma
@@ -17357,8 +17361,7 @@ msgid "Original currency"
 msgstr "Původní měna"
 
 #. module: base
-#: code:addons/base/models/res_users.py:995
-#: code:addons/base/models/res_users.py:1178
+#: code:addons/base/models/res_users.py:1222
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
@@ -18262,7 +18265,7 @@ msgstr "Publikujte blogové příspěvky, oznámení, zprávy"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event
 msgid "Publish events, sell tickets"
-msgstr "Publikovat akce, prodávat vstupenky"
+msgstr "Publikujte akce, prodávejte vstupenky"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides
@@ -20387,7 +20390,7 @@ msgstr "Cílové okno"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet
 msgid "Task Logs"
-msgstr ""
+msgstr "Protokoly úloh"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_tax_cash_basis
@@ -20997,6 +21000,7 @@ msgstr "Technický název"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "Technická nastavení"
 
@@ -22628,6 +22632,8 @@ msgid ""
 "Used by Sales and Purchase Apps to select the relevant address depending on "
 "the context."
 msgstr ""
+"Aplikace Prodej a Nákup používají k výběru příslušné adresy v závislosti na "
+"kontextu."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__relation_table
@@ -22675,9 +22681,7 @@ msgid "User Login"
 msgstr "Uživatelské přihlášení"
 
 #. module: base
-#: code:addons/base/models/res_users.py:967
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "User Type"
 msgstr "Typ uživatele"
 
@@ -23018,7 +23022,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__inherit_children_ids
 msgid "Views which inherit from this one"
-msgstr "Pohledy, které z tohoto důvodu dědí"
+msgstr "Zobrazení, které se z tohoto dědí"
 
 #. module: base
 #: model:res.country,name:base.vg
@@ -23105,7 +23109,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_gantt
 msgid "Web Gantt"
-msgstr ""
+msgstr "Webová strana Ganttova diagramu"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__web_icon
@@ -23157,7 +23161,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_livechat
 msgid "Website IM Livechat Helpdesk"
-msgstr ""
+msgstr "Webová stránka IM Livechat Helpdesk"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_livechat
@@ -23733,7 +23737,7 @@ msgstr "např. www.odoo.com"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay
 msgid "eBay Connector"
-msgstr "eBay Connector"
+msgstr "eBay konektor"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale

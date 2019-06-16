@@ -30,8 +30,6 @@
 # liAnGjiA <liangjia@qq.com>, 2018
 # inspur qiuguodong <qiuguodong@inspur.com>, 2018
 # xu xiaohu <xu.xiaohu@gmail.com>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # Liping Wang <lynn.config@gmail.com>, 2019
 # 开阖软件 Jeff Wang <jeff@osbzr.com>, 2019
 # Martin Trigaux, 2019
@@ -39,8 +37,9 @@
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2019
 # John An <johnxan@163.com>, 2019
 # 张宏奎 <zhanghongkui@inspur.com>, 2019
-# Jerry Pan <panjianyu@inspur.com>, 2019
 # 红瑜 陶 <823103015@qq.com>, 2019
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# Jerry Pan <panjianyu@inspur.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -48,7 +47,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: 红瑜 陶 <823103015@qq.com>, 2019\n"
+"Last-Translator: Jerry Pan <panjianyu@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -408,7 +407,7 @@ msgid ""
 "Note</span>"
 msgstr ""
 "<span class=\"o_form_label\" attrs=\"{'invisible': "
-"['|',('state','=','draft'), ('type','!=','out_refund')]}\">红字发票</span>"
+"['|',('state','=','draft'), ('type','!=','out_refund')]}\">退款发票</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1321,7 +1320,7 @@ msgstr "添加"
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid "Add Credit Note"
-msgstr "添加红字发票"
+msgstr "添加信用票"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__add_sign
@@ -1938,7 +1937,7 @@ msgstr "已归档"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Ask for a Credit Note"
-msgstr "红字发票"
+msgstr "信用票"
 
 #. module: account
 #: selection:account.account.type,internal_group:0
@@ -2160,7 +2159,7 @@ msgid ""
 "Bank Account Number to which the invoice will be paid. A Company bank "
 "account if this is a Customer Invoice or Vendor Credit Note, otherwise a "
 "Partner bank account number."
-msgstr "已支付的发票将记录银行账号。如果这是客户发票或供应商红字发票，则是公司银行账户，否则是合作伙伴银行帐号。"
+msgstr "已支付的发票将记录银行账号。如果这是客户发票或供应商信用票，则是公司银行账户，否则是合作伙伴银行帐号。"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_bank_journal_form
@@ -2443,7 +2442,7 @@ msgstr "按 国家"
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_refund
 msgid "By Credit Note"
-msgstr "按 红字发票"
+msgstr "按 信用票"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product
@@ -2541,7 +2540,7 @@ msgstr "取消"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create credit note and reconcile"
-msgstr "取消：创建红字发票，并核销"
+msgstr "取消：创建信用票，并核销"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -2561,13 +2560,13 @@ msgid ""
 "Cannot create a credit note for the invoice which is already reconciled, "
 "invoice should be unreconciled first, then only you can add credit note for "
 "this invoice."
-msgstr "无法为已核销的发票创建红字发票，应该先要取消核销发票，然后再为这张发票创建红字发票。"
+msgstr "无法为已核销的发票创建信用票，应该先要取消核销发票，然后再为这张发票创建信用票。"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:54
 #, python-format
 msgid "Cannot create credit note for the draft/cancelled invoice."
-msgstr "无法为草稿/已取消的发票创建红字发票"
+msgstr "无法为草稿/已取消的发票创建信用票"
 
 #. module: account
 #: code:addons/account/models/account_move.py:358
@@ -2811,7 +2810,7 @@ msgstr "如果这个科目能够让发票和付款与日记账的匹配就勾选
 msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
-msgstr "勾选此框，则此日记账下的会计发票或红字发票不使用同一个序列。"
+msgstr "勾选此框，则此日记账下的会计发票或信用票不使用同一个序列。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__update_posted
@@ -2989,7 +2988,7 @@ msgstr "商业实体"
 #: code:addons/account/models/account_invoice.py:519
 #, python-format
 msgid "Commercial partner and vendor account owners must be identical."
-msgstr "商业伙伴和伙伴帐户货主必须是相同的。"
+msgstr "商业伙伴和伙伴帐户所有者必须是相同的。"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
@@ -3294,7 +3293,7 @@ msgstr "创建银行账户"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_invoice_out_refund
 msgid "Create a credit note"
-msgstr "创建红字发票"
+msgstr "创建信用票"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_invoice_tree1
@@ -3304,7 +3303,7 @@ msgstr "创建一个客户发票"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Create a draft credit note"
-msgstr "创建草稿红字发票"
+msgstr "创建草稿信用票"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -3355,7 +3354,7 @@ msgstr "创建一个新的税项"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_invoice_in_refund
 msgid "Create a vendor credit note"
-msgstr "创建供应商红字发票"
+msgstr "创建供应商信用票"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -3548,28 +3547,28 @@ msgstr "贷方凭证"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_refund
 #, python-format
 msgid "Credit Note"
-msgstr "红字发票"
+msgstr "信用票"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:487
 #, python-format
 msgid "Credit Note - %s"
-msgstr "红字发票-%s"
+msgstr "信用票-%s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Credit Note Bill"
-msgstr "红字发票账单"
+msgstr "信用票账单"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund__date_invoice
 msgid "Credit Note Date"
-msgstr "红字发票日期"
+msgstr "信用票日期"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence_id
 msgid "Credit Note Entry Sequence"
-msgstr "红字发票分录序列"
+msgstr "信用票分录序列"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_out_refund
@@ -3577,12 +3576,12 @@ msgstr "红字发票分录序列"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Credit Notes"
-msgstr "红字发票"
+msgstr "信用票"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence_number_next
 msgid "Credit Notes: Next Number"
-msgstr "红字发票：下一号码"
+msgstr "信用票：下一号码"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__credit_account_id
@@ -3672,7 +3671,7 @@ msgstr "客户"
 #: code:addons/account/models/account_payment.py:769
 #, python-format
 msgid "Customer Credit Note"
-msgstr "客户红字发票"
+msgstr "客户信用票"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
@@ -3896,7 +3895,7 @@ msgstr "十二月"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr "专用的红字发票序列"
+msgstr "专用的信用票序列"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_reference_type
@@ -4250,7 +4249,7 @@ msgstr "草稿"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
 msgid "Draft Credit Note"
-msgstr "草稿红字发票"
+msgstr "草稿信用票"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:484
@@ -5626,7 +5625,7 @@ msgstr "发票税率"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__refund_invoice_id
 msgid "Invoice for which this invoice is the credit note"
-msgstr "此发票为红字发票的发票"
+msgstr "此发票为信用票的发票"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:869
@@ -6766,7 +6765,7 @@ msgstr "修改税率金额"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create credit note, reconcile and create a new draft invoice"
-msgstr "修改：创建红字发票，核销，并创建草稿发票"
+msgstr "修改：创建信用票，核销，并创建草稿发票"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7826,7 +7825,7 @@ msgstr "价格百分比"
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Percentage of Price Tax Included"
-msgstr "价格百分比"
+msgstr "含税价格百分比"
 
 #. module: account
 #: selection:account.reconcile.model,second_amount_type:0
@@ -7883,7 +7882,7 @@ msgstr "请检查公司中设置的 '转账账户' 字段"
 #: code:addons/account/models/account_move.py:301
 #, python-format
 msgid "Please define a sequence for the credit notes"
-msgstr "请为红字发票定义序列"
+msgstr "请为信用票定义序列"
 
 #. module: account
 #: code:addons/account/models/account_move.py:306
@@ -8375,12 +8374,12 @@ msgstr "参考/说明"
 #: model:ir.actions.act_window,name:account.action_invoice_in_refund
 #: model:ir.ui.menu,name:account.menu_action_invoice_in_refund
 msgid "Refund"
-msgstr "红字账单"
+msgstr "退款"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__refund_invoice_ids
 msgid "Refund Invoices"
-msgstr "红字发票"
+msgstr "退款发票"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_invoice_payment
@@ -9452,7 +9451,7 @@ msgstr "退款单的税率科目"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__refund_account_id
 msgid "Tax Account on Refunds"
-msgstr "退税科目"
+msgstr "退款的税金科目"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.tax_adjustments_form
@@ -10139,6 +10138,14 @@ msgid ""
 msgstr "税科目调整将决定该联系人的税和科目。"
 
 #. module: account
+#: code:addons/account/wizard/account_invoice_send.py:59
+#, python-format
+msgid ""
+"The following invoice(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
@@ -10542,7 +10549,7 @@ msgid ""
 "This customer invoice credit note has been created from: <a href=# data-oe-"
 "model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s"
 msgstr ""
-"客户红字发票已生成，原发票： <a href=# data-oe-model=account.invoice data-oe-"
+"客户信用票已生成，原发票： <a href=# data-oe-model=account.invoice data-oe-"
 "id=%d>%s</a><br>原因： %s"
 
 #. module: account
@@ -10678,7 +10685,7 @@ msgid ""
 "This vendor bill credit note has been created from: <a href=# data-oe-"
 "model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s"
 msgstr ""
-"供应商红字发票已生成。原发票：<a href=# data-oe-model=account.invoice data-oe-"
+"供应商信用票已生成。原发票：<a href=# data-oe-model=account.invoice data-oe-"
 "id=%d>%s</a><br>原因： %s"
 
 #. module: account
@@ -11139,7 +11146,7 @@ msgid ""
 msgstr ""
 "如果您想取消发票并创建\n"
 "                                一个新的，请使用该选项。\n"
-"                                创建、验证红字发票，并与当前的发票相一致\n"
+"                                创建、验证信用票，并与当前的发票相一致\n"
 "                               创建新增发票草案，以便您进行编辑."
 
 #. module: account
@@ -11282,19 +11289,19 @@ msgstr "供应商帐单"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Vendor Credit Note"
-msgstr "供应商红字发票"
+msgstr "供应商信用票"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:491
 #, python-format
 msgid "Vendor Credit Note - %s"
-msgstr "供应商红字发票-%s"
+msgstr "供应商信用票-%s"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1317
 #, python-format
 msgid "Vendor Credit note"
-msgstr "供应商红字发票"
+msgstr "供应商信用票"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__vendor_display_name
@@ -11935,6 +11942,11 @@ msgstr "对于这个供应商，你可以将它们分配为标记此账单已支
 #, python-format
 msgid "have been reconciled automatically."
 msgstr "已自动核销"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
+msgid "number of invoice(s) that will not be sent"
+msgstr ""
 
 #. module: account
 #. openerp-web

@@ -208,7 +208,7 @@ msgstr "Zrušeno"
 #: code:addons/repair/models/repair.py:244
 #, python-format
 msgid "Cannot cancel completed repairs."
-msgstr ""
+msgstr "Nelze zrušit dokončené opravy."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__partner_id
@@ -295,7 +295,7 @@ msgstr "Zákazník"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__default_address_id
 msgid "Default Address"
-msgstr ""
+msgstr "Výchozí adresa"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__address_id
@@ -479,7 +479,7 @@ msgstr "Fakturační a dodací adresa:"
 #: code:addons/repair/models/repair.py:385
 #, python-format
 msgid "Invoice created"
-msgstr ""
+msgstr "Faktura vytvořena"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__invoiced
@@ -614,7 +614,7 @@ msgstr "Výrobek \"%s\" nemá definovaný účet"
 #: code:addons/repair/models/repair.py:658
 #, python-format
 msgid "No pricelist found."
-msgstr ""
+msgstr "Nenalezen žádný ceník."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:355
@@ -740,7 +740,7 @@ msgstr "Výrobek k opravě"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__lot_id
 msgid "Products repaired are all belonging to this lot"
-msgstr ""
+msgstr "Opravené výrobky patří k tomuto produktovému číslu"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__quant_ids
@@ -854,19 +854,19 @@ msgstr ""
 #: code:addons/repair/models/repair.py:404
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
-msgstr ""
+msgstr "Oprava musí být potvrzena před zahájením opravy."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:432
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
-msgstr ""
+msgstr "Oprava musí být vpořádku, aby se produkt posunul dál."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:415
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
-msgstr ""
+msgstr "Oprava musí být vpořádku, aby mohlo být opravování ukončeno."
 
 #. module: repair
 #: code:addons/repair/wizard/repair_cancel.py:20
@@ -899,7 +899,7 @@ msgstr "Zodpovědný uživatel"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr ""
+msgstr "Vyhledávání objednávek opravy"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__invoice_method
@@ -959,6 +959,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Stav na základě aktivit\n"
+"Vypršeno: Datum již uplynulo\n"
+"Dnes: Datum aktivity je dnes\n"
+"Plánováno: Budoucí aktivity."
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_move
@@ -1017,11 +1021,13 @@ msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
 msgstr ""
+"Stav řádku pro opravy se automaticky nastaví na stav, v jakém je propojená "
+"objednávka."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
 msgid "This is the location where the product to repair is located."
-msgstr ""
+msgstr "Toto je místo, kde se nachází výrobek k opravě."
 
 #. module: repair
 #: selection:repair.order,state:0
@@ -1145,4 +1151,4 @@ msgstr ""
 #: code:addons/repair/models/repair.py:296
 #, python-format
 msgid "You have to select an invoice address in the repair form."
-msgstr ""
+msgstr "Ve formuláři opravy musíte vybrat fakturační adresu."

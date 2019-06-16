@@ -64,17 +64,17 @@ msgstr "이전 계정에서 일정을 단절하는 동안 오류가 발생했습
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
 msgid "Calendar"
-msgstr "달력"
+msgstr "캘린더"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
 msgid "Calendar Attendee Information"
-msgstr "일정 참석자 정보"
+msgstr "캘린더 참석자 정보"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_cal_id
 msgid "Calendar ID"
-msgstr "달력 ID"
+msgstr "캘린더 ID"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
@@ -107,12 +107,12 @@ msgstr "설정 구성"
 #: code:addons/google_calendar/static/src/js/google_calendar.js:58
 #, python-format
 msgid "Configuration"
-msgstr "구성"
+msgstr "환경 설정"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar__display_name
 msgid "Display Name"
-msgstr "이름 표시"
+msgstr "제목"
 
 #. module: google_calendar
 #. openerp-web
@@ -131,14 +131,14 @@ msgstr "일정"
 #: code:addons/google_calendar/static/src/js/google_calendar.js:84
 #, python-format
 msgid "Event disconnection error"
-msgstr ""
+msgstr "일정 연결 끊기 오류"
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:80
 #, python-format
 msgid "Event disconnection success"
-msgstr ""
+msgstr "일정 연결 끊기 성공"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar
@@ -148,14 +148,14 @@ msgstr "구글 캘린더"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee__google_internal_event_id
 msgid "Google Calendar Event Id"
-msgstr "구글 달력 일정 ID"
+msgstr "구글 캘린더 일정 ID"
 
 #. module: google_calendar
 #: model:ir.actions.server,name:google_calendar.ir_cron_sync_all_cals_ir_actions_server
 #: model:ir.cron,cron_name:google_calendar.ir_cron_sync_all_cals
 #: model:ir.cron,name:google_calendar.ir_cron_sync_all_cals
 msgid "Google Calendar: synchronization"
-msgstr ""
+msgstr "구글 캘린더 : 동기화"
 
 #. module: google_calendar
 #: sql_constraint:calendar.attendee:0
@@ -170,6 +170,9 @@ msgid ""
 "\n"
 " %s"
 msgstr ""
+"구글과 연결이 끊어졌습니다... 다음 동기화 때 전체 동기화가 될 것입니다. \n"
+"\n"
+" %s"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar__id
@@ -190,7 +193,7 @@ msgstr "이 작업을 수행하려면, 먼저 이전 계정에서 기존의 모�
 msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
-msgstr "동기화 된 마지막 달력 ID. 변경되는 경우, 구글 ID와 Odoo 구글 내부 ID 사이의 모든 연결을 제거합니다."
+msgstr "동기화 된 마지막 캘린더 ID. 변경되는 경우, 구글 ID와 Odoo 구글 내부 ID 사이의 모든 연결을 제거합니다."
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar____last_update
@@ -217,7 +220,7 @@ msgstr "Odoo 갱신 날짜"
 #: code:addons/google_calendar/static/src/js/google_calendar.js:46
 #, python-format
 msgid "Redirection"
-msgstr ""
+msgstr "반송"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_rtoken
@@ -229,7 +232,7 @@ msgstr "새로 고침 토큰"
 #: code:addons/google_calendar/static/src/js/google_calendar.js:117
 #, python-format
 msgid "Sync with <b>Google</b>"
-msgstr ""
+msgstr "<b>Google</b>과 동기화"
 
 #. module: google_calendar
 #. openerp-web
@@ -274,10 +277,10 @@ msgstr "사용자"
 #: code:addons/google_calendar/static/src/js/google_calendar.js:42
 #, python-format
 msgid "You will be redirected to Google to authorize access to your calendar!"
-msgstr "달력 접근 권한을 부여하는 구글로 리디렉션됩니다!"
+msgstr "캘린더 접근 권한을 부여하기 위해 구글로 리디렉션됩니다!"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_calendar.py:296
 #, python-format
 msgid "Your token is invalid or has been revoked !"
-msgstr ""
+msgstr "토큰이 잘못되었거나 취소되었습니다!"

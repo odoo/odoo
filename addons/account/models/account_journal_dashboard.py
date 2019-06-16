@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from babel.dates import format_datetime, format_date
 
 from odoo import models, api, _, fields
+from odoo.osv import expression
 from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, safe_eval
 from odoo.tools.misc import formatLang
@@ -343,10 +344,16 @@ class account_journal(models.Model):
                 action_name = 'action_view_bank_statement_tree'
             elif self.type == 'sale':
                 action_name = 'action_invoice_tree1'
-                self = self.with_context(use_domain=[('journal_id', '=', self.id)])
+                use_domain = expression.AND(
+                    [self.env.context.get('use_domain', []), [('journal_id', '=', self.id)]]
+                )
+                self = self.with_context(use_domain=use_domain)
             elif self.type == 'purchase':
                 action_name = 'action_vendor_bill_template'
-                self = self.with_context(use_domain=[('journal_id', '=', self.id)])
+                use_domain = expression.AND(
+                    [self.env.context.get('use_domain', []), [('journal_id', '=', self.id)]]
+                )
+                self = self.with_context(use_domain=use_domain)
             else:
                 action_name = 'action_move_journal_line'
 

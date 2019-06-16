@@ -20,6 +20,7 @@
 # Vladimir Lukianov <lvm.mobile@gmail.com>, 2019
 # Андрей Гусев <gaussgss@gmail.com>, 2019
 # Konstantin Korovin <korovin74@gmail.com>, 2019
+# sorin Rusu <to.rusu.sorin@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -27,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Konstantin Korovin <korovin74@gmail.com>, 2019\n"
+"Last-Translator: sorin Rusu <to.rusu.sorin@gmail.com>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,16 +45,16 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
-" * Статус «Проект» используется, когда пользователь составляет новый и неподтвержденный Cчёт-фактуру.\n"
-" * Статус «Открыт» используется, когда пользователь создает Cчёт-фактуру, генерируется номер Cчёт-фактуры. Он остается в открытом состоянии до тех пор, пока пользователь не оплатит счёт.\n"
-" * Статус «В оплате» используется, когда платежи были зарегистрированы для всего Счёта-фактуры в журнале, настроенном на внесение записей только при сверке банковских счетов, и некоторые из них еще не были согласованы с банковской выпиской.\n"
-" * Статус «Оплачено» устанавливается автоматически при оплате счёта. Связанные с ним записи в журнале могут или не могут быть согласованы.\n"
+" * Статус «Черновик» используется, когда пользователь составляет новую и неподтвержденную Cчёт-фактуру.\n"
+" * Статус «Открыт» используется, когда пользователь создает Cчёт-фактуру, генерируется номер Cчёт-фактуры. Он остается со статусом открыт до тех пор, пока пользователь не оплатит счёт.\n"
+" * Статус «В процессе оплаты» используется, когда платежи были зарегистрированы для всей Счёт-фактуры в журнале, настроенном на внесение записей только при сверке банковских счетов, и некоторые из них еще не были согласованы с банковской выпиской.\n"
+" * Статус «Оплачено» устанавливается автоматически при оплате счёта. Связанные с ним записи в журнале могут могут быть или могут не быть согласованы.\n"
 " * Статус «Отменён» используется, когда пользователь отменяет Счёт-фактуру."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
 msgid "# of Digits"
-msgstr "кол-во знаков"
+msgstr "кол-во цифр"
 
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
@@ -302,7 +303,7 @@ msgid ""
 msgstr ""
 "<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
 "check\" aria-label=\"Paid\" title=\"Paid\" role=\"img\"/><span "
-"class=\"d-none d-md-inline\">Оплаченный</span></span>"
+"class=\"d-none d-md-inline\">Оплачено</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -311,6 +312,9 @@ msgid ""
 "remove\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/><span "
 "class=\"d-none d-md-inline\"> Cancelled</span></span>"
 msgstr ""
+"<span class=\"badge badge-pill badge-warning\"><i class=\"fa fa-fw fa-"
+"remove\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/><span "
+"class=\"d-none d-md-inline\"> Отменено</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -351,6 +355,8 @@ msgid ""
 "<span class=\"o_form_label\" attrs=\"{'invisible': [('match_amount', '!=', "
 "'between')]}\">and</span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible': [('match_amount', '!=', "
+"'between')]}\">и</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -358,6 +364,8 @@ msgid ""
 "<span class=\"o_form_label\">All selected journal entries will be validated "
 "and posted. You won't be able to modify them afterwards.</span>"
 msgstr ""
+"<span class=\"o_form_label\">Все выбранные записи будут проверены и "
+"опубликованы. После этого вы не сможете их изменить.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -365,6 +373,8 @@ msgid ""
 "<span class=\"o_form_label\">Default Taxes</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Налоги по умолчанию</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -379,16 +389,18 @@ msgid ""
 "<span class=\"o_form_label\">Main Currency</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Основная Валюта</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Rounding Method</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Метод Округления</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "<span class=\"o_form_label\">of the month</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">месяца</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -510,7 +522,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Quantity</span>"
-msgstr ""
+msgstr "<span>Количество</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -520,17 +532,17 @@ msgstr "<span>Отчетность</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Source Document</span>"
-msgstr ""
+msgstr "<span>Исходный Документ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Taxes</span>"
-msgstr ""
+msgstr "<span>Налоги</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Unit Price</span>"
-msgstr ""
+msgstr "<span>Цена за ед.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -680,10 +692,11 @@ msgid ""
 "                your cash box, and then post entries when money comes in or\n"
 "                goes out of the cash box."
 msgstr ""
-"Учёт наличных позволяет фиксировать движения наличных в ваших журналах. С "
-"этой опцией вам проще отслеживать ежедневные наличные платежи. Вы можете "
-"указать текущий остаток наличности, а затем добавлять записи при каждом "
-"внесении или выплате денег через кассу."
+"Кассовый аппарат позволяет вам управлять записями о наличных\n"
+"платежах в журналах налички. Эта опция поможет проще отслеживать\n"
+"наличные платежи ежедневно. Вы можете внести остаток денег в\n"
+"кассе, а затем добавлять записи при каждом внесении или выплате\n"
+"денег через кассу."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1895
@@ -695,7 +708,7 @@ msgstr "Условия оплаты могут содержать только �
 #: code:addons/account/models/account.py:854
 #, python-format
 msgid "A bank account can belong to only one journal."
-msgstr ""
+msgstr "Банковский аккаунт может соответствовать только одному журналу."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -10209,6 +10222,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/wizard/account_invoice_send.py:59
+#, python-format
+msgid ""
+"The following invoice(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
@@ -12089,6 +12110,11 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:318
 #, python-format
 msgid "have been reconciled automatically."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
+msgid "number of invoice(s) that will not be sent"
 msgstr ""
 
 #. module: account

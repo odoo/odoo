@@ -93,11 +93,12 @@ class AccountInvoice(models.Model):
             ('type', 'in', [TYPE2JOURNAL[ty] for ty in inv_types if ty in TYPE2JOURNAL]),
             ('company_id', '=', company_id),
         ]
-        journal_with_currency = False
-        if self._context.get('default_currency_id'):
-            currency_clause = [('currency_id', '=', self._context.get('default_currency_id'))]
-            journal_with_currency = self.env['account.journal'].search(domain + currency_clause, limit=1)
-        return journal_with_currency or self.env['account.journal'].search(domain, limit=1)
+        company_currency_id = self.env['res.company'].browse(company_id).currency_id.id
+        currency_id = self._context.get('default_currency_id') or company_currency_id
+        currency_clause = [('currency_id', '=', currency_id)]
+        if currency_id == company_currency_id:
+            currency_clause = ['|', ('currency_id', '=', False)] + currency_clause
+        return self.env['account.journal'].search(domain + currency_clause, limit=1)
 
     @api.model
     def _default_currency(self):
@@ -792,7 +793,7 @@ class AccountInvoice(models.Model):
         domain = {}
         company_id = self.company_id.id
         p = self.partner_id if not company_id else self.partner_id.with_context(force_company=company_id)
-        type = self.type
+        type = self.type or self.env.context.get('type', 'out_invoice')
         if p:
             rec_account = p.property_account_receivable_id
             pay_account = p.property_account_payable_id
@@ -1785,7 +1786,7 @@ class AccountInvoiceLine(models.Model):
             self_lang = self
             if part.lang:
                 self_lang = self.with_context(lang=part.lang)
-   
+
             product = self_lang.product_id
             account = self.get_invoice_line_account(type, product, fpos, company)
             if account:

@@ -56,20 +56,20 @@
 # 卫安琪 <weianqi1991@gmail.com>, 2018
 # jian liu <lj1989419@gmail.com>, 2018
 # Martin Trigaux, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # keecome <7017511@qq.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # 张宏奎 <zhanghongkui@inspur.com>, 2019
 # John An <johnxan@163.com>, 2019
 # Maie <m@maie.name>, 2019
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:38+0000\n"
+"POT-Creation-Date: 2019-05-22 11:56+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Maie <m@maie.name>, 2019\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -929,7 +929,7 @@ msgstr ""
 "\n"
 "        在“注册付款”向导中选择银行账户时，\n"
 "        针对未付清发票，还可以使用专用的“SEPA 直接付款”付款方式。\n"
-"        如果您在验证后为其货主添加了授权，则可以使用其为发票\n"
+"        如果您在验证后为其所有者添加了授权，则可以使用其为发票\n"
 "       生成 SDD 付款。如果您尝试在没有被赋予授权的发票上使用此方法，\n"
 "       您将看到一条错误消息，其付款方式可能无法使用。\n"
 "    "
@@ -7396,7 +7396,7 @@ msgstr "%A - 星期几全称。"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%B - Full month name.\""
-msgstr "%B - 完整月份名称.\""
+msgstr "%B - 月份全称.\""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -7426,12 +7426,12 @@ msgstr "%Y - 四位数的年份.\""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%a - Abbreviated weekday name."
-msgstr "%a - 星期几缩写。"
+msgstr "%a - 星期天缩写。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%b - Abbreviated month name."
-msgstr "%b - 月份名称缩写。"
+msgstr "%b - 月份缩写。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -9556,9 +9556,7 @@ msgid "Application"
 msgstr "应用"
 
 #. module: base
-#: code:addons/base/models/res_users.py:968
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "Application Accesses"
 msgstr "应用程序访问"
 
@@ -10602,6 +10600,12 @@ msgid "Cannot aggregate field %r."
 msgstr "无法聚合字段 %r."
 
 #. module: base
+#: code:addons/base/models/ir_translation.py:256
+#, python-format
+msgid "Cannot be translated; record not accessible."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_lang.py:228
 #, python-format
 msgid "Cannot deactivate a language that is currently used by users."
@@ -10695,7 +10699,7 @@ msgid ""
 "a new contact should be created under that new company. You can use the "
 "\"Discard\" button to abandon this change."
 msgstr ""
-"只有在没有被正确设置的情况下，才能改变联系人的公司。如果一个已经存在的联系人加入了新公司，则必须在这个新公司里创建一个新联系人，你可以使用“取消”按钮来放弃这个改变。"
+"只有在没有被正确设置的情况下，才能改变联系人的公司。如果一个已经存在的联系人加入了新公司，则必须在这个新公司里创建一个新联系人，你可以使用“丢弃”按钮来丢弃这个改变。"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:705
@@ -20998,8 +21002,7 @@ msgid "Original currency"
 msgstr "原始货币"
 
 #. module: base
-#: code:addons/base/models/res_users.py:995
-#: code:addons/base/models/res_users.py:1178
+#: code:addons/base/models/res_users.py:1222
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
@@ -21087,7 +21090,7 @@ msgstr "覆盖现有术语"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Owner"
-msgstr "货主"
+msgstr "所有者"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_P
@@ -24679,6 +24682,7 @@ msgstr "技术名称"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "技术设置"
 
@@ -26314,9 +26318,7 @@ msgid "User Login"
 msgstr "用户 登录"
 
 #. module: base
-#: code:addons/base/models/res_users.py:967
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "User Type"
 msgstr "用户类型"
 
