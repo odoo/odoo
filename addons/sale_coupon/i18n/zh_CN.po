@@ -23,9 +23,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2+e\n"
+"Project-Id-Version: Odoo Server saas~12.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 14:08+0000\n"
+"POT-Creation-Date: 2019-06-12 12:24+0000\n"
 "PO-Revision-Date: 2017-02-15 11:46+0000\n"
 "Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -58,6 +58,11 @@ msgstr "%s %% 最便宜的产品折扣"
 #, python-format
 msgid "%s%% discount on total amount"
 msgstr "%s%%总价上打折"
+
+#. module: sale_coupon
+#: model:sale.coupon.program,name:sale_coupon.10_percent_coupon
+msgid "10% Discount"
+msgstr ""
 
 #. module: sale_coupon
 #: model:product.product,name:sale_coupon.product_product_10_percent_discount
@@ -276,7 +281,7 @@ msgstr "优惠券已经申请相同的回报"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon.py:62
-#: code:addons/sale_coupon/models/sale_coupon_program.py:155
+#: code:addons/sale_coupon/models/sale_coupon_program.py:168
 #, python-format
 msgid "A minimum of %s %s should be purchased to get the reward"
 msgstr "至少%s%s应该购买得到的奖励"
@@ -384,7 +389,7 @@ msgstr "适用于第一"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon.py:80
-#: code:addons/sale_coupon/models/sale_coupon_program.py:176
+#: code:addons/sale_coupon/models/sale_coupon_program.py:189
 #, python-format
 msgid "At least one of the required conditions is not met to get the reward!"
 msgstr "在规定的条件下至少有一个是不符合获得奖励！"
@@ -776,7 +781,7 @@ msgid "Global discounts are not cumulable."
 msgstr "全球折扣不累计的。"
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:167
+#: code:addons/sale_coupon/models/sale_coupon_program.py:180
 #, python-format
 msgid "Global discounts are not cumulative."
 msgstr "全球折扣不是累积的。"
@@ -1063,19 +1068,19 @@ msgid "Promo Code Usage"
 msgstr "促销代码的使用"
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:153
+#: code:addons/sale_coupon/models/sale_coupon_program.py:166
 #, python-format
 msgid "Promo code %s has been expired."
 msgstr "促销代码%s已经过期。"
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:163
+#: code:addons/sale_coupon/models/sale_coupon_program.py:176
 #, python-format
 msgid "Promo code is expired"
 msgstr "促销代码过期"
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:161
+#: code:addons/sale_coupon/models/sale_coupon_program.py:174
 #, python-format
 msgid "Promo code is invalid"
 msgstr "促销代码无效"
@@ -1108,7 +1113,7 @@ msgid "Promotional Program"
 msgstr "推广计划"
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:165
+#: code:addons/sale_coupon/models/sale_coupon_program.py:178
 #, python-format
 msgid "Promotionals codes are not cumulative."
 msgstr "促销代码不累积。"
@@ -1313,7 +1318,7 @@ msgstr "优惠券计划草案或是关闭状态"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon.py:74
-#: code:addons/sale_coupon/models/sale_coupon_program.py:171
+#: code:addons/sale_coupon/models/sale_coupon_program.py:184
 #, python-format
 msgid "The customer doesn't have access to this reward."
 msgstr "客户并没有获得这些奖励。"
@@ -1337,20 +1342,20 @@ msgid "The program code must be unique!"
 msgstr "程序代码必须是唯一的！"
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:157
+#: code:addons/sale_coupon/models/sale_coupon_program.py:170
 #, python-format
 msgid "The promo code is already applied on this order"
 msgstr "促销代码已经应用在这个订单上"
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:159
+#: code:addons/sale_coupon/models/sale_coupon_program.py:172
 #, python-format
 msgid "The promotional offer is already applied on this order"
 msgstr "促销提供已经应用此订单上"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon.py:72
-#: code:addons/sale_coupon/models/sale_coupon_program.py:169
+#: code:addons/sale_coupon/models/sale_coupon_program.py:182
 #, python-format
 msgid ""
 "The reward products should be in the sales order lines to apply the "
@@ -1456,7 +1461,7 @@ msgid ""
 msgstr "你不在你的销售订单所需的产品数量。所有的产品应记录在销售订单。例如：如果促销是“买2，免费1”，你需要在你的销售订单上有3件T恤。"
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:173
+#: code:addons/sale_coupon/models/sale_coupon_program.py:186
 #, python-format
 msgid ""
 "You don't have the required product quantities on your sales order. If the "

@@ -3,20 +3,23 @@
 # * auth_signup
 # 
 # Translators:
-# Martin Trigaux, 2018
-# ChinaMaker <liuct@chinamaker.net>, 2018
-# inspur qiuguodong <qiuguodong@inspur.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# 广州救火 <7017511@qq.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
+# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
+# e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# keecome <7017511@qq.com>, 2019
+# ChinaMaker <liuct@chinamaker.net>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: 广州救火 <7017511@qq.com>, 2018\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +32,7 @@ msgstr ""
 msgid ""
 "${object.create_uid.name} from ${object.company_id.name} invites you to "
 "connect to Odoo"
-msgstr "${object.create_uid.name} 来自 ${object.company_id.name} 邀请你连接到Odoo"
+msgstr "${object.create_uid.name} 从 ${object.company_id.name} 邀请你连接到Odoo."
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:126
@@ -42,7 +45,7 @@ msgstr "%s 已连接"
 msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
-msgstr "<strong>此用户请求密码重置，已发送包含以下链接的电子邮件：</strong>"
+msgstr "<strong>要求该用户更改密码，包含以下信息的邮件发出：</strong>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -555,7 +558,7 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Already have an account?"
-msgstr "已经拥有账户？"
+msgstr "已经具有账户？"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:80
@@ -567,7 +570,7 @@ msgstr "一封包含验证证书以重置您的密码的电子邮件已经发送
 #: code:addons/auth_signup/controllers/main.py:52
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr "该邮件地址已经被其他用户注册了"
+msgstr "该邮件地址已经被其他注册了"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:137
@@ -594,7 +597,7 @@ msgstr "关闭"
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings
 msgid "Config Settings"
-msgstr "配置设定"
+msgstr "配置设置"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
@@ -757,7 +760,7 @@ msgstr "注册网址"
 #: code:addons/auth_signup/models/res_users.py:117
 #, python-format
 msgid "Signup is not allowed for uninvited users"
-msgstr "不允许未经邀请的用户注册"
+msgstr "不允许未邀请的用户进行注册"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:149
@@ -781,13 +784,13 @@ msgstr "登入: 无效用户模板"
 #: code:addons/auth_signup/models/res_users.py:141
 #, python-format
 msgid "Signup: no login given for new user"
-msgstr "注册：没有为新用户提供登录"
+msgstr "登入: 未为新用户指定名称"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:143
 #, python-format
 msgid "Signup: no name or partner given for new user"
-msgstr "注册：没有为新用户指定名称或合作伙伴"
+msgstr "登入: 未为新用户或合作伙伴指定名称"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
@@ -843,4 +846,4 @@ msgstr "你的姓名"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr "例如:张三"
+msgstr "例如:约翰"

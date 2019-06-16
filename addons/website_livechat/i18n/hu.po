@@ -3,17 +3,18 @@
 # * website_livechat
 # 
 # Translators:
-# Martin Trigaux, 2018
-# krnkris, 2018
-# Tibor Kőnig <konig.tibor@evitalit.hu>, 2018
+# Martin Trigaux, 2019
+# krnkris, 2019
+# Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
+# Ákos Nagy <akos.nagy@oregional.hu>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:06+0000\n"
-"PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: Tibor Kőnig <konig.tibor@evitalit.hu>, 2018\n"
+"POT-Creation-Date: 2018-12-24 10:58+0000\n"
+"PO-Revision-Date: 2016-08-05 13:13+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,11 +28,18 @@ msgid ""
 "<span class=\"o_form_label\">Live Chat</span>\n"
 "                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Élő csevegés</span>\n"
+"                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "<span>Livechat Channel</span>"
 msgstr "<span>Élő társalgási csatorna</span>"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Bad"
+msgstr "Rossz"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
@@ -50,8 +58,13 @@ msgstr "A weboldalon megjelenített csatorna leírása"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "Happy face"
+msgid "Great"
 msgstr ""
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Happy face"
+msgstr "Boldog arc"
 
 #. module: website_livechat
 #: model:website.menu,name:website_livechat.menu_livechat
@@ -61,7 +74,7 @@ msgstr "Élő támogatás"
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
 msgid "Live chat channel of your website"
-msgstr ""
+msgstr "A weboldal élő csevegési csatornája"
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_im_livechat_channel
@@ -83,19 +96,29 @@ msgstr "Név"
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Neutral face"
-msgstr ""
+msgstr "Semleges arc"
 
 #. module: website_livechat
 #. openerp-web
 #: code:addons/website_livechat/static/src/js/website_livechat.editor.js:29
 #, python-format
 msgid "New Channel"
+msgstr "Új csatorna"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Not rated yet"
 msgstr ""
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Okay"
+msgstr "Rendben van"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Sad face"
-msgstr ""
+msgstr "Szomorú arc"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -120,7 +143,7 @@ msgstr "Nincsenek elérhető élő társalgási csatornák."
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "There is no rating for this channel for now."
-msgstr ""
+msgstr "Ezen csatornának egyelőre nincsenek értékelései."
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_website
@@ -130,7 +153,7 @@ msgstr "Weboldal"
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__channel_id
 msgid "Website Live Channel"
-msgstr ""
+msgstr "Weboldali élő csatorna"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website__channel_id

@@ -3,19 +3,19 @@
 # * account_bank_statement_import
 # 
 # Translators:
-# Martin Trigaux, 2018
 # ТАрас <tratatuta@i.ua>, 2018
 # Анатолій Пономаренко <aponomarenko020@gmail.com>, 2018
 # Роман Яхненко <bsap132@gmail.com>, 2018
 # Bohdan Lisnenko, 2018
-# Sergey Doroshenko <sdoroshenko@artwebny.com>, 2018
+# Martin Trigaux, 2019
+# Sergey Doroshenko <sdoroshenko@artwebny.com>, 2019
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -33,13 +33,13 @@ msgid " Import Template for Bank Statements"
 msgstr "Імпорт шаблону для банківської виписки"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:234
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
 msgstr "%d транзакцій вже було імпортовано раніше тому вони пропущені"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:234
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
 msgstr "1 транзакцію вже було імпортовано раніше тому вона пропущена"
@@ -71,9 +71,24 @@ msgid "Accounts Allowed"
 msgstr "Дозволені рахунки"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction
+msgid "Action Needed"
+msgstr "Необхідна дія"
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__active
 msgid "Active"
 msgstr "Активно"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_ids
+msgid "Activities"
+msgstr "Дії"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_state
+msgid "Activity State"
+msgstr "Стан дії"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_id
@@ -96,7 +111,7 @@ msgid "Allow Cancelling Entries"
 msgstr "Дозволити скасування записів"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:238
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
 #, python-format
 msgid "Already imported items"
 msgstr "Вже імпортовані рядки"
@@ -112,7 +127,12 @@ msgid "At Least One Outbound"
 msgstr "Принаймні один вихідний"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:82
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_attachment_count
+msgid "Attachment Count"
+msgstr "Підрахунок прикріплення"
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:80
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_id
 #, python-format
 msgid "Bank"
@@ -160,7 +180,7 @@ msgid "Cancel"
 msgstr "Скасувати"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:171
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:169
 #, python-format
 msgid ""
 "Cannot find in which journal import this statement. Please manually select a"
@@ -208,7 +228,7 @@ msgid "Company related to this journal"
 msgstr "Компанія-власник цього журналу"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:112
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:110
 #, python-format
 msgid ""
 "Could not make sense of the given file.\n"
@@ -232,12 +252,12 @@ msgstr "Створено"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_id
 msgid "Credit Note Entry Sequence"
-msgstr "Послідовність запису кредитної примітки"
+msgstr "Послідовність запису сторно"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
 msgid "Credit Notes: Next Number"
-msgstr "Кредитна примітка: наступний номер"
+msgstr "Сторно: наступний номер"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
@@ -247,7 +267,7 @@ msgstr "Валюта"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr "Виділена послідовність кредитних приміток"
+msgstr "Виділена послідовність сторно"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_credit_account_id
@@ -290,6 +310,21 @@ msgid "Filename"
 msgstr "Назва файлу"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_follower_ids
+msgid "Followers"
+msgstr "Підписники"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Підписники (Канали)"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Підписники (Партнери)"
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__inbound_payment_method_ids
 msgid "For Incoming Payments"
 msgstr "Для вхідних платежів"
@@ -317,6 +352,21 @@ msgstr "Згрупувати рядки рахунків"
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__id
 msgid "ID"
 msgstr "ID"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Якщо позначено, то повідомлення потребує вашої уваги."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Якщо позначено, деякі повідомлення мають помилку доставки."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__group_invoice_lines
@@ -361,6 +411,11 @@ msgid "Install Import Format"
 msgstr "Встановити формат імпорту"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_is_follower
+msgid "Is Follower"
+msgstr "Стежить"
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_credit_account_id
 msgid "It acts as a default account for credit amount"
 msgstr "Використовується, як типовий кредитовий рахунок"
@@ -374,8 +429,7 @@ msgstr "Використовується, як типовий дебетовий
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_name
 msgid "It creates draft vendor bill by sending an email."
 msgstr ""
-"Він створює чернетку рахунка постачальника, відправивши електронне "
-"повідомлення."
+"Він створює чернетку рахунка постачальника, відправивши електронний лист."
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_journal
@@ -384,7 +438,7 @@ msgid "Journal"
 msgstr "Журнал"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:73
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:71
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #, python-format
 msgid "Journal Creation"
@@ -443,6 +497,11 @@ msgid "Loss Account"
 msgstr "Рахунок для браку і втрат"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Основне прикріплення"
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__inbound_payment_method_ids
 msgid ""
 "Manual: Get paid by cash, check or any other method outside of Odoo.\n"
@@ -465,15 +524,65 @@ msgstr ""
 "SEPA Credit Transfer: сплачуйте рахунок з файлу SEPA Credit Transfer, який ви передаєте в свій банк. Увімкніть цю опцію в налаштуваннях."
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error
+msgid "Message Delivery error"
+msgstr "Помилка доставлення повідомлення"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_ids
+msgid "Messages"
+msgstr "Повідомлення"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Дедлайн наступної дії"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_summary
+msgid "Next Activity Summary"
+msgstr "Підсумок наступної дії"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_type_id
+msgid "Next Activity Type"
+msgstr "Тип наступної дії"
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_number_next
 msgid "Next Number"
 msgstr "Наступний номер"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:142
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:140
 #, python-format
 msgid "No currency found matching '%s'."
 msgstr "Не знайдено валюти для '%s'."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Кількість дій"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error_counter
+msgid "Number of error"
+msgstr "Кількість помилок"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Кількість повідомлень, які потебують дії"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Кількість повідомлень з помилковою доставкою"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Кількість непрочитаних повідомлень"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -489,6 +598,11 @@ msgstr "Публікувати на узгодженні з банком"
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
 msgid "Profit Account"
 msgstr "Рахунок доходів"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_user_id
+msgid "Responsible User"
+msgstr "Відповідальний користувач"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type
@@ -517,7 +631,7 @@ msgstr "Послідовність"
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__active
 msgid "Set active to false to hide the Journal without removing it."
 msgstr ""
-"Встановити активне значення \"помилково\", щоби приховати журнал, не "
+"Встановіть активне значення \"помилково\", щоби приховати журнал, не "
 "видаливши його."
 
 #. module: account_bank_statement_import
@@ -531,6 +645,19 @@ msgid "Show journal on dashboard"
 msgstr "Показати журнал на панелі приладів"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Етап заснований на діях\n"
+"Протермінований: термін виконання вже минув\n"
+"Сьогодні: дата дії сьогодні\n"
+"Заплановано: майбутні дії."
+
+#. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid ""
 "The account of the statement you are importing is not yet recorded in Odoo. "
@@ -538,18 +665,18 @@ msgid ""
 "this account."
 msgstr ""
 "Банківський рахунок для цієї виписки поки що не створено в системі. Для того"
-" щоб продовжити імпорт виписки вам необхідно створити банківський журнал з "
+" щоб продовжити імпорт виписки вам необхідно створити банківський журнал із "
 "вказаним рахунком."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:157
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:155
 #, python-format
 msgid ""
 "The account of this statement (%s) is not the same as the journal (%s)."
 msgstr "Рахунок виписки (%s) не співпадає з рахунком журналу (%s) !"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:167
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:165
 #, python-format
 msgid ""
 "The currency of the bank statement (%s) is not the same as the currency of "
@@ -569,8 +696,7 @@ msgstr "Записи в журналі будуть нумеруватися в�
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
 msgid "The next sequence number will be used for the next credit note."
-msgstr ""
-"Наступний порядковий номер буде використано для наступної кредитної замітки."
+msgstr "Наступний порядковий номер буде використано для наступного сторно."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_number_next
@@ -584,8 +710,8 @@ msgid ""
 "This field contains the information related to the numbering of the credit "
 "note entries of this journal."
 msgstr ""
-"Це поле містить інформацію, що стосується нумерації записів кредитної "
-"замітки цього журналу."
+"Це поле містить інформацію, що стосується нумерації записів сторно цього "
+"журналу."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_id
@@ -595,13 +721,13 @@ msgid ""
 msgstr "Це поле містить інформацію про нумерацію записів у журналі проведень."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:117
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:115
 #, python-format
 msgid "This file doesn't contain any statement."
 msgstr "Файл не містить виписки."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:125
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:123
 #, python-format
 msgid "This file doesn't contain any transaction."
 msgstr "Файл не містить транзакцій."
@@ -610,6 +736,16 @@ msgstr "Файл не містить транзакцій."
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type
 msgid "Type"
 msgstr "Тип"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_unread
+msgid "Unread Messages"
+msgstr "Непрочитані повідомлення"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Кількість непрочитаних повідомлень"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence
@@ -635,6 +771,16 @@ msgstr ""
 "касі не співпадає з тим, що обчислено системою."
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__website_message_ids
+msgid "Website Messages"
+msgstr "Повідомлення з веб-сайту"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__website_message_ids
+msgid "Website communication history"
+msgstr "Історія бесіди на сайті"
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
 msgid ""
 "Whether or not the payments made in this journal should be generated in "
@@ -652,7 +798,7 @@ msgstr ""
 "Визначає чи потрібно показувати цей журнал, як елемент на панелі приладів."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:226
 #, python-format
 msgid "You already have imported that file."
 msgstr "Ви вже імпортували цей файл."
@@ -669,13 +815,13 @@ msgid ""
 "You have to set a Default Debit Account and a Default Credit Account for the"
 " journal: %s"
 msgstr ""
-"Ви повинні встановити дебетовий рахунок за замовчуванням і кредитну рахунок "
-"за замовчуванням для журналу: %s"
+"Ви повинні встановити дебетовий рахунок і кредитний рахунок за замовчуванням"
+" для журналу: %s"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "_Import"
-msgstr "_Імпорт"
+msgstr "_Import"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view

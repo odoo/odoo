@@ -3,20 +3,19 @@
 # * event_sale
 # 
 # Translators:
-# Martin Trigaux, 2018
-# krnkris, 2018
-# picibucor <picibucor@gmail.com>, 2018
-# gezza <geza.nagy@oregional.hu>, 2018
-# Kovács Tibor <kovika@gmail.com>, 2018
-# Ákos Nagy <akos.nagy@oregional.hu>, 2018
+# Kovács Tibor <kovika@gmail.com>, 2017
+# gezza <geza.nagy@oregional.hu>, 2017
+# picibucor <picibucor@gmail.com>, 2017
+# Martin Trigaux, 2019
+# krnkris, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: krnkris, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +26,7 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Apply"
-msgstr "Alkalmazás"
+msgstr "Alkalmaz"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_availability
@@ -66,14 +65,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_uid
 msgid "Created by"
-msgstr "Létrehozta"
+msgstr "Készítette"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__create_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_date
 msgid "Created on"
-msgstr "Létrehozva"
+msgstr "Létrehozás dátuma"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket__seats_max
@@ -180,9 +179,10 @@ msgstr "Szabad"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__id
 msgid "ID"
-msgstr "Azonosító"
+msgstr "Azonosító ID"
 
 #. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_product_product__event_ok
 #: model:ir.model.fields,help:event_sale.field_product_template__event_ok
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ok
 msgid ""
@@ -201,6 +201,7 @@ msgid "Is Expired"
 msgstr "Lejárt"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product__event_ok
 #: model:ir.model.fields,field_description:event_sale.field_product_template__event_ok
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ok
 msgid "Is an Event Ticket"
@@ -211,21 +212,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor____last_update
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line____last_update
 msgid "Last Modified on"
-msgstr "Legutóbb frissítve"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__write_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_uid
 msgid "Last Updated by"
-msgstr "Legutóbb frissítette"
+msgstr "Utoljára frissítette"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__write_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_date
 msgid "Last Updated on"
-msgstr "Legutóbb frissítve "
+msgstr "Utoljára frissítve "
 
 #. module: event_sale
 #: selection:event.event.ticket,seats_availability:0
@@ -347,16 +348,12 @@ msgid "Reserved Seats"
 msgstr "Lefoglalt székek"
 
 #. module: event_sale
-#: model:ir.model,name:event_sale.model_sale_order
-msgid "Sale Order"
-msgstr "Vásárlói megrendelés"
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__deadline
 msgid "Sales End"
 msgstr "Vevői megrendelések lezárva"
 
 #. module: event_sale
+#: model:ir.model,name:event_sale.model_sale_order
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__sale_order_id
 msgid "Sales Order"
 msgstr "Vásárlói megrendelés"
@@ -457,12 +454,6 @@ msgstr "Korlátlan"
 #: model:event.event.ticket,name:event_sale.event_2_ticket_2
 msgid "VIP"
 msgstr "VIP"
-
-#. module: event_sale
-#: model:product.product,weight_uom_name:event_sale.product_product_event
-#: model:product.template,weight_uom_name:event_sale.product_product_event_product_template
-msgid "kg"
-msgstr "kg"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form

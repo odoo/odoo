@@ -3,14 +3,20 @@
 # * purchase_stock
 # 
 # Translators:
-# Martin Trigaux, 2018
+# nasaaskii <nasaaskii@gmail.com>, 2018
+# Batzul B <batzul.active@gmail.com>, 2018
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
+# Onii Onii <onii0223@yahoo.com>, 2018
+# Martin Trigaux, 2019
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2019-01-16 07:59+0000\n"
+"PO-Revision-Date: 2018-08-02 11:17+0000\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,8 +25,25 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Энд байх утгууд нь "
+"компанитайгаа уялдаж хадгалагдана.\" groups=\"base.group_multi_company\"/>"
+
+#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Purchase Orders</span>"
+msgstr "<span class=\"o_stat_text\">Худалдан авалт</span>"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
+msgid ""
+"According to product configuration, the recieved quantity can be automatically computed by mechanism :\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 
 #. module: purchase_stock
@@ -29,9 +52,11 @@ msgid "Action"
 msgstr "Үйлдэл"
 
 #. module: purchase_stock
+#: code:addons/purchase_stock/models/stock.py:117
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_report_stock_rule
 #: model:stock.location.route,name:purchase_stock.route_warehouse0_buy
 #: selection:stock.rule,action:0
+#, python-format
 msgid "Buy"
 msgstr "Худалдан авах"
 
@@ -43,12 +68,12 @@ msgstr "Худалдан авалтын дүрэм"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_to_resupply
 msgid "Buy to Resupply"
-msgstr ""
+msgstr "Худалдан авч нөхөн дүүргэх"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Тохируулга"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_id
@@ -61,10 +86,12 @@ msgid "Deliver To"
 msgstr "Хүргэх"
 
 #. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_product_product__route_ids
 #: model:ir.model.fields,help:purchase_stock.field_product_template__route_ids
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
-"of the product: whether it will be bought, manufactured, MTO, etc."
+"of the product: whether it will be bought, manufactured, replenished on "
+"order, etc."
 msgstr ""
 
 #. module: purchase_stock
@@ -75,7 +102,7 @@ msgstr "Хүргэх Байрлалын Төрөл"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_dest_ids
 msgid "Downstream Moves"
-msgstr ""
+msgstr "Орлогодсны дараах хөдөлгөөн"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__module_stock_dropshipping
@@ -85,12 +112,12 @@ msgstr "Шууд хүргэлт"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr ""
+msgstr "Худалдан авалтанд тохиосон саатал:"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s):"
-msgstr ""
+msgstr "Саатал:"
 
 #. module: purchase_stock
 #: model:ir.ui.menu,name:purchase_stock.menu_action_picking_tree_in_move
@@ -142,9 +169,14 @@ msgid "Lot/Serial"
 msgstr "Цуврал"
 
 #. module: purchase_stock
+#: selection:purchase.order.line,qty_received_method:0
+msgid "Manual"
+msgstr "Гараар"
+
+#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Manual actions may be needed."
-msgstr ""
+msgstr "Гар ажиллагаа шаардагдаж магадгүй."
 
 #. module: purchase_stock
 #: selection:stock.rule,action:0
@@ -170,17 +202,17 @@ msgstr "Зохистой Нөөцийн Дүрэм"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr ""
+msgstr "Худалдан авалтын орлогыг огноог төлөвлөхдөө нөөц хоногийг"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Next transfer(s) impacted:"
-msgstr ""
+msgstr "Нөлөөлөх дараагийн хөдөлгөөн:"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__orderpoint_id
 msgid "Orderpoint"
-msgstr ""
+msgstr "Дахин захиалах дүрэм"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_count
@@ -200,12 +232,12 @@ msgstr "Барааны үлгэр"
 #. module: purchase_stock
 #: selection:stock.rule,action:0
 msgid "Pull & Push"
-msgstr ""
+msgstr "Татах & Түлхэх"
 
 #. module: purchase_stock
 #: selection:stock.rule,action:0
 msgid "Pull From"
-msgstr ""
+msgstr "Хаанаас татах"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order
@@ -228,17 +260,17 @@ msgstr "Худалдан авалтын Захиалгууд"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_report
 msgid "Purchase Report"
-msgstr ""
+msgstr "Худалдан авалтын тайлан"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_count
 msgid "Purchase order count"
-msgstr ""
+msgstr "Худалдан авалтын баримтын тоо"
 
 #. module: purchase_stock
 #: selection:stock.rule,action:0
 msgid "Push To"
-msgstr ""
+msgstr "Хаашаа түлхэх"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -249,6 +281,11 @@ msgstr "Хүлээн авах баримт"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receive Products"
 msgstr "Бараанууд Хүлээж авах"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__qty_received_method
+msgid "Received Qty Method"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.actions.act_window,name:purchase_stock.purchase_open_picking
@@ -272,6 +309,7 @@ msgid "Return Picking"
 msgstr "Бэлтгэлийн Буцаалт"
 
 #. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_product__route_ids
 #: model:ir.model.fields,field_description:purchase_stock.field_product_template__route_ids
 msgid "Routes"
 msgstr "Маршрутууд"
@@ -279,7 +317,7 @@ msgstr "Маршрутууд"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Schedule receivings earlier to avoid delays"
-msgstr ""
+msgstr "Хүлээн авах хугацааг хоцрохоос сэргийлж илүү эрт төлөвлөх"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_move
@@ -288,18 +326,19 @@ msgstr "Барааны Хөдөлгөөн"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
+#: selection:purchase.order.line,qty_received_method:0
 msgid "Stock Moves"
 msgstr "Барааны Хөдөлгөөнүүд"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "Агуулахын дүрэм"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "Агуулахын дүрмийн тайлан"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -307,12 +346,14 @@ msgid "Technical field used to display the Drop Ship Address"
 msgstr "Шууд Хүргэлтийн Хаяг харуулахад хэрэглэгддэг техникийн талбар"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:265
+#: code:addons/purchase_stock/models/purchase.py:290
 #, python-format
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund. "
 msgstr ""
+"Захиалсан тоо хэмжээ нь нэхэмжилсэн тоо хэмжээнээс бага байгаа нь "
+"ажиглагдлаа. Магадгүй та нэхэмжлэлийн буцаалт хийх хэрэгтэй."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:38
@@ -333,6 +374,12 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
+"Энэхүү нэмэгдэл нь бараан дээр нийлүүлэгчээс үйлчлүүлэгч рүү шууд хүргэлт "
+"хийх чиглэл тохируулах боломжыг олгоно. Шууд хүргэлт хийхээр тохируулагдсан "
+"барааг борлуулалтын захиалганд бичиж батлахад худалдан авалтын ноорог "
+"захиалга шууд үүснэ. Энэ бол on-demand урсгал. Худалдан авалтын захиалга "
+"дээрх хүлээх авах хаяг нь танай агуулах бус шууд харилцагчийн хүлээн авах "
+"хаяг байх болно."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
@@ -372,14 +419,18 @@ msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
 "created to fulfill the need."
 msgstr ""
+"Барааны нөөц <b>%s</b>д хэрэгтэй болсон үед , <br/>тэрхүү хэрэгцээг хангах "
+"үүднээс худалдан авалтын үнийн санал үүсэх болно."
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:257
+#: code:addons/purchase_stock/models/purchase.py:282
 #, python-format
 msgid ""
 "You cannot decrease the ordered quantity below the received quantity.\n"
 "Create a return first."
 msgstr ""
+"Та захиалсан тоог хүлээн авсан тооноос бууруулж өөрчлөх боломжгүй.\n"
+"Эхлээд буцаалтын барааны баримт үүсгэнэ үү."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:186
@@ -400,4 +451,4 @@ msgstr "ын"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "ordered instead of"
-msgstr ""
+msgstr "оронд нь захиалагдсан"

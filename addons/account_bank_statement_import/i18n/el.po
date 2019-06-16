@@ -3,19 +3,20 @@
 # * account_bank_statement_import
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Kostas Goutoudis <goutoudis@gmail.com>, 2018
-# Stefanos Nikou <stefanos.nikou@gmail.com>, 2018
-# Timos Zacharatos <kokkinopioupiou@hotmail.com>, 2018
-# Costas Pittalis <cpittalis@gmail.com>, 2018
-# George Tarasidis <george_tarasidis@yahoo.com>, 2018
+# Stefanos Nikou <stefanos.nikou@gmail.com>, 2019
+# Timos Zacharatos <kokkinopioupiou@hotmail.com>, 2019
+# Costas Pittalis <cpittalis@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Kostas Goutoudis <goutoudis@gmail.com>, 2019
+# George Tarasidis <george_tarasidis@yahoo.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
+"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2019\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,13 +32,13 @@ msgid " Import Template for Bank Statements"
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:234
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:234
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
 msgstr ""
@@ -69,9 +70,24 @@ msgid "Accounts Allowed"
 msgstr "Επιτρεπόμενοι Λογαριασμοί"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction
+msgid "Action Needed"
+msgstr "Απαιτείται ενέργεια"
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__active
 msgid "Active"
 msgstr "Σε Ισχύ"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_ids
+msgid "Activities"
+msgstr "Δραστηριότητες"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_state
+msgid "Activity State"
+msgstr "Κατάσταση Δραστηριότητας"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_id
@@ -94,7 +110,7 @@ msgid "Allow Cancelling Entries"
 msgstr "Επιτρέπεται η Ακύρωση Εγγραφών"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:238
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
 #, python-format
 msgid "Already imported items"
 msgstr ""
@@ -110,7 +126,12 @@ msgid "At Least One Outbound"
 msgstr "Τουλάχιστον Ένα Εξερχόμενο"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:82
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:80
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_id
 #, python-format
 msgid "Bank"
@@ -158,7 +179,7 @@ msgid "Cancel"
 msgstr "Ακύρωση"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:171
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:169
 #, python-format
 msgid ""
 "Cannot find in which journal import this statement. Please manually select a"
@@ -205,7 +226,7 @@ msgid "Company related to this journal"
 msgstr "Η εταιρία που σχετίζεται με το ημερολόγιο"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:112
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:110
 #, python-format
 msgid ""
 "Could not make sense of the given file.\n"
@@ -283,6 +304,21 @@ msgid "Filename"
 msgstr "Όνομα αρχείου"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_follower_ids
+msgid "Followers"
+msgstr "Ακόλουθοι"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Ακόλουθοι (Κανάλια)"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Ακόλουθοι (Συνεργάτες)"
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__inbound_payment_method_ids
 msgid "For Incoming Payments"
 msgstr ""
@@ -309,6 +345,21 @@ msgstr "Ομαδοποίηση Γραμμών Τιμολογίου"
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__id
 msgid "ID"
 msgstr "Κωδικός"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__group_invoice_lines
@@ -353,6 +404,11 @@ msgid "Install Import Format"
 msgstr ""
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_is_follower
+msgid "Is Follower"
+msgstr "Είναι Ακόλουθος"
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_credit_account_id
 msgid "It acts as a default account for credit amount"
 msgstr "Λειτουργεί ως προεπιλεγμένος λογαριασμός για πίστωση ποσού"
@@ -374,7 +430,7 @@ msgid "Journal"
 msgstr "Ημερολόγιο"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:73
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:71
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #, python-format
 msgid "Journal Creation"
@@ -431,6 +487,11 @@ msgid "Loss Account"
 msgstr "Λογαριασμός Ζημιών"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__inbound_payment_method_ids
 msgid ""
 "Manual: Get paid by cash, check or any other method outside of Odoo.\n"
@@ -447,15 +508,65 @@ msgid ""
 msgstr ""
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_ids
+msgid "Messages"
+msgstr "Μηνύματα"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Επόμενη Προθεσμία Δραστηριότητας"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_summary
+msgid "Next Activity Summary"
+msgstr "Σύνοψη Επόμενης Δραστηριότητας"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_type_id
+msgid "Next Activity Type"
+msgstr "Επόμενος Τύπος Δραστηριότητας"
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_number_next
 msgid "Next Number"
 msgstr "Επόμενος Αριθμός"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:142
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:140
 #, python-format
 msgid "No currency found matching '%s'."
 msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Πλήθος ενεργειών"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Πλήθος μηνυμάτων που απαιτούν ενέργεια"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -471,6 +582,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
 msgid "Profit Account"
 msgstr "Λογαριασμός Κερδών"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_user_id
+msgid "Responsible User"
+msgstr "Υπεύθυνος Χρήστης"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type
@@ -507,6 +623,19 @@ msgid "Show journal on dashboard"
 msgstr "Εμφάνιση ημερολογίου στο Ταμπλό"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Κατάσταση βασισμένη σε δραστηριότητες\n"
+"Καθυστερημένη: Η ημερομηνία λήξης έχει ήδη περάσει\n"
+"Σήμερα: Η ημερομηνία δραστηριότητας είναι σήμερα\n"
+"Προγραμματισμένες: Μελλοντικές δραστηριότητες."
+
+#. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid ""
 "The account of the statement you are importing is not yet recorded in Odoo. "
@@ -515,14 +644,14 @@ msgid ""
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:157
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:155
 #, python-format
 msgid ""
 "The account of this statement (%s) is not the same as the journal (%s)."
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:167
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:165
 #, python-format
 msgid ""
 "The currency of the bank statement (%s) is not the same as the currency of "
@@ -566,13 +695,13 @@ msgstr ""
 "ημερολογιακών καταχωρήσεων αυτού του ημερολογίου."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:117
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:115
 #, python-format
 msgid "This file doesn't contain any statement."
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:125
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:123
 #, python-format
 msgid "This file doesn't contain any transaction."
 msgstr ""
@@ -581,6 +710,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type
 msgid "Type"
 msgstr "Τύπος"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_unread
+msgid "Unread Messages"
+msgstr "Μη αναγνωσμένα μηνύματα"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence
@@ -602,6 +741,16 @@ msgid ""
 msgstr ""
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__website_message_ids
+msgid "Website Messages"
+msgstr "Μηνύματα Ιστότοπου"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__website_message_ids
+msgid "Website communication history"
+msgstr "Ιστορικό επικοινωνίας ιστότοπου"
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
 msgid ""
 "Whether or not the payments made in this journal should be generated in "
@@ -615,7 +764,7 @@ msgid "Whether this journal should be displayed on the dashboard or not"
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:226
 #, python-format
 msgid "You already have imported that file."
 msgstr ""

@@ -3,19 +3,20 @@
 # * mass_mailing
 # 
 # Translators:
-# Martin Trigaux, 2018
-# krnkris, 2018
 # gezza <geza.nagy@oregional.hu>, 2018
-# Ákos Nagy <akos.nagy@oregional.hu>, 2018
-# Tibor Kőnig <konig.tibor@evitalit.hu>, 2018
+# krnkris, 2019
+# Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
+# Ákos Nagy <akos.nagy@oregional.hu>, 2019
+# Martin Trigaux, 2019
+# Kisrobert <kisrobi@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Tibor Kőnig <konig.tibor@evitalit.hu>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Kisrobert <kisrobi@gmail.com>, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +49,7 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:606
+#: code:addons/mass_mailing/models/mass_mailing.py:659
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (másolat)"
@@ -96,7 +97,6 @@ msgid "21 Jul"
 msgstr ""
 
 #. module: mass_mailing
-#: model_terms:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_1
 #: model_terms:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_2
 msgid ""
 "<font>7</font>\n"
@@ -115,8 +115,29 @@ msgid "<i class=\"fa fa-angle-double-up\"/> Headers"
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_rel_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_form
+msgid ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
+msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "<i class=\"fa fa-clone\"/> Body"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_kanban
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-label=\"Warning\" "
+"title=\"Warning\"/>"
 msgstr ""
 
 #. module: mass_mailing
@@ -127,6 +148,11 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "<i class=\"fa fa-plus\"/> Marketing Content"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_kanban
+msgid "<i class=\"fa fa-user\" role=\"img\" aria-label=\"Contacts\" title=\"Contacts\"/>"
 msgstr ""
 
 #. module: mass_mailing
@@ -305,6 +331,12 @@ msgid "Apps That Help You Grow Your Business!"
 msgstr "Alkalmazások melyek segítik az üzleti növekedésben!"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_kanban
+msgid "Archive"
+msgstr "Archiválás"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge__archive_src_lists
 msgid "Archive source mailing lists"
 msgstr ""
@@ -318,7 +350,7 @@ msgstr "Archivált"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Attach a file"
-msgstr "Fájl csatolása"
+msgstr "Csatolj egy fájlt"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_attachment_count
@@ -328,7 +360,7 @@ msgstr "Mellékletek száma"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__attachment_ids
 msgid "Attachments"
-msgstr "Csatolmányok"
+msgstr "Mellékletek"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
@@ -354,9 +386,14 @@ msgid "Blacklist Me"
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__body_html
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__body_arch
 msgid "Body"
 msgstr "Törzs"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__body_html
+msgid "Body converted to be send by mail"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__bounced
@@ -379,7 +416,6 @@ msgstr "Visszadobási arány"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__campaign_id
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Campaign"
 msgstr "Kampány"
 
@@ -413,7 +449,7 @@ msgstr "Kampányok"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Cancel"
-msgstr "Mégsem"
+msgstr "Mégse"
 
 #. module: mass_mailing
 #. openerp-web
@@ -457,7 +493,7 @@ msgstr "Kattintások"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__color
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag__color
 msgid "Color Index"
-msgstr "Színjegyzék"
+msgstr "Szín jegyzék"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_kanban
@@ -502,9 +538,8 @@ msgstr "Konfigurációs beállítások"
 
 #. module: mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.mass_mailing_configuration
-#: model:ir.ui.menu,name:mass_mailing.menu_mass_mailing_configuration
 msgid "Configuration"
-msgstr "Konfiguráció"
+msgstr "Beállítások"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_contact_rel__contact_id
@@ -557,6 +592,12 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
 msgid "Create a contact in your address book"
+msgstr "Kapcsolat létrehozása a címtárban"
+
+#. module: mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.link_tracker_action_mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.link_tracker_action_mass_mailing_campaign
+msgid "Create a new link tracker"
 msgstr ""
 
 #. module: mass_mailing
@@ -600,7 +641,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge__create_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_schedule_date__create_uid
 msgid "Created by"
-msgstr "Létrehozta"
+msgstr "Készítette"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__create_date
@@ -615,13 +656,13 @@ msgstr "Létrehozta"
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge__create_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_schedule_date__create_date
 msgid "Created on"
-msgstr "Létrehozva"
+msgstr "Létrehozás dátuma"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Creation Date"
-msgstr "Létrehozva"
+msgstr "Létrehozás dátuma"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_search
@@ -771,7 +812,7 @@ msgstr "Legördülő menü"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
 msgid "Duplicate"
-msgstr "Duplikálás"
+msgstr "Többszörözés"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_kanban
@@ -784,7 +825,6 @@ msgid "Email"
 msgstr "E-mail"
 
 #. module: mass_mailing
-#: model:ir.ui.menu,name:mass_mailing.mass_mailing_menu_root
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Email Marketing"
 msgstr ""
@@ -793,6 +833,11 @@ msgstr ""
 #: model:ir.model,name:mass_mailing.model_mail_mail_statistics
 msgid "Email Statistics"
 msgstr "Email statisztikák"
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_mail_template
+msgid "Email Templates"
+msgstr "E-mail sablonok"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_thread
@@ -851,6 +896,7 @@ msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Exclude Opt Out"
 msgstr "Kizárni a kiemelt termékek közül"
 
@@ -877,15 +923,9 @@ msgid "Failed"
 msgstr "Sikertelen"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/controllers/main.py:153
+#: code:addons/mass_mailing/controllers/main.py:162
 #, python-format
 msgid "Feedback from %s: %s"
-msgstr ""
-
-#. module: mass_mailing
-#: model:mail.mass_mailing,name:mass_mailing.mass_mail_1
-#: model:utm.source,name:mass_mailing.mass_mail_1_utm_source
-msgid "First Newsletter"
 msgstr ""
 
 #. module: mass_mailing
@@ -924,7 +964,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Group By"
-msgstr "Csoportosítás ezzel"
+msgstr "Csoportosítás"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_search
@@ -945,7 +985,7 @@ msgstr "Csoportosítás..."
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge__id
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_schedule_date__id
 msgid "ID"
-msgstr "Azonosító"
+msgstr "Azonosító ID"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics__mail_mail_id_int
@@ -980,6 +1020,7 @@ msgstr ""
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
+"Ha be van jelölve, akkor néhány üzenetnél kézbesítési hiba lépett fel."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__is_blacklisted
@@ -988,6 +1029,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
+"Ha az e-mail cím a tiltólistán van, a kapcsolat nem fog tömegesen küldött "
+"leveleket kapni egyik listáról sem."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__ignored
@@ -1019,7 +1062,6 @@ msgid "Is Public"
 msgstr ""
 
 #. module: mass_mailing
-#: model_terms:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_1
 #: model_terms:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_2
 msgid ""
 "Join our Marketing newsletter and get <strong>this white paper "
@@ -1050,7 +1092,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge____last_update
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_schedule_date____last_update
 msgid "Last Modified on"
-msgstr "Legutóbb frissítve"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
@@ -1070,7 +1112,7 @@ msgstr "Utolsó állapot frissítése"
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge__write_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_schedule_date__write_uid
 msgid "Last Updated by"
-msgstr "Legutóbb frissítette"
+msgstr "Utoljára frissítette"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__write_date
@@ -1085,7 +1127,7 @@ msgstr "Legutóbb frissítette"
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge__write_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_schedule_date__write_date
 msgid "Last Updated on"
-msgstr "Legutóbb frissítve "
+msgstr "Utoljára frissítve "
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics__state_update
@@ -1094,6 +1136,7 @@ msgstr "A levél utolsó állapot frissítése"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_link_tracker
+#: model:ir.ui.menu,name:mass_mailing.link_tracker_menu_mass_mailing
 msgid "Link Tracker"
 msgstr "Kapcsolat követő"
 
@@ -1149,6 +1192,7 @@ msgstr "Levelezés"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Mailing Campaign"
 msgstr ""
 
@@ -1164,7 +1208,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mailing_list_ids
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list__name
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_contact_rel__list_id
-#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message__mailing_list_ids
 msgid "Mailing List"
 msgstr "Levelezőlista"
 
@@ -1201,19 +1244,14 @@ msgid "Mailing Lists"
 msgstr "Levelezőlisták"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__user_id
-msgid "Mailing Manager"
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "Mailing Name"
 msgstr ""
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_stages
 msgid "Mailing Stages"
 msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_links_tree
-msgid "Mailing Statistics of Clicks"
-msgstr "Levelező statisztikák a kattintásokról"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
@@ -1250,7 +1288,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Fő melléklet"
 
 #. module: mass_mailing
 #: model:res.groups,name:mass_mailing.group_mass_mailing_campaign
@@ -1263,6 +1301,7 @@ msgid "Manage campaigns of mass emails with process stages"
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #: model:mail.mass_mailing.tag,name:mass_mailing.mass_mail_tag_1
 msgid "Marketing"
 msgstr "Marketing"
@@ -1285,7 +1324,7 @@ msgstr "Tömeges levelezési kampány"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail__mailing_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__mass_mailing_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_schedule_date__mass_mailing_id
-#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message__mass_mailing_id
+#: model:ir.ui.menu,name:mass_mailing.mass_mailing_menu_root
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
 msgid "Mass Mailing"
 msgstr "Tömeges email küldés"
@@ -1302,7 +1341,6 @@ msgstr "Tömeges email küldés elemzése"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mass_mailing_campaign_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__mass_mailing_campaign_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__mass_mailing_campaign_id
-#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message__mass_mailing_campaign_id
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_search
 msgid "Mass Mailing Campaign"
 msgstr "Tömeges email küldési kampány"
@@ -1324,7 +1362,6 @@ msgstr "Tömeges email küldés címzett"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mass_mailing_name
-#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message__mass_mailing_name
 msgid "Mass Mailing Name"
 msgstr ""
 
@@ -1417,7 +1454,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Üzenetkézbesítési hiba"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__message_id
@@ -1478,6 +1515,12 @@ msgid "Newsletter"
 msgstr "Hírlevél"
 
 #. module: mass_mailing
+#: model:mail.mass_mailing,name:mass_mailing.mass_mail_1
+#: model:utm.source,name:mass_mailing.mass_mail_1_utm_source
+msgid "Newsletter 1"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
 msgid "No customization"
 msgstr ""
@@ -1490,13 +1533,18 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings_from_campaign
 msgid ""
 "No need of importing your mailing lists, you can easily\n"
-"                send emails to any contact saved in other Odoo apps."
+"                send emails<br> to any contact saved in other Odoo apps."
 msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
 msgid "No support"
 msgstr "Nincs támogatás"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__email_normalized
+msgid "Normalized email address"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_needaction_counter
@@ -1532,7 +1580,7 @@ msgstr "Kattintások száma"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Hiba száma"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__message_needaction_counter
@@ -1542,7 +1590,7 @@ msgstr "Üzenetek száma, melyek akciót igényelnek"
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Kézbesítési hibával rendelkező üzenetek száma"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__message_unread_counter
@@ -1565,7 +1613,6 @@ msgid "Odoo"
 msgstr "Odoo"
 
 #. module: mass_mailing
-#: model_terms:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_1
 #: model_terms:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_2
 msgid "Odoo Presents"
 msgstr ""
@@ -1574,6 +1621,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
 msgid "Odoo helps you to easily track all activities related to a customer."
 msgstr ""
+"Az Odoo segít egy ügyfélhez kapcsolódó összes tevékenység könnyed nyomon "
+"követésében."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_image_text
@@ -1610,14 +1659,22 @@ msgid "Opened Ratio"
 msgstr "Megnyitási arány"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__opt_out
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_contact_rel__opt_out
 msgid "Opt Out"
 msgstr "Kiemel"
 
 #. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__opt_out
+msgid ""
+"Opt out flag for a specific mailing list.This field should not be used in a "
+"view without a unique and active mailing list context."
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Options"
-msgstr "Opciók"
+msgstr "Lehetőségek"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
@@ -1769,31 +1826,38 @@ msgstr "Válaszoló mód"
 #. module: mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.menu_mass_mailing_report
 msgid "Reporting"
-msgstr "Riportkészítés"
+msgstr "Riport készítés"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/controllers/main.py:68
+#: code:addons/mass_mailing/controllers/main.py:72
 #, python-format
 msgid "Requested blacklisting via unsubscribe link."
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/controllers/main.py:127
+#: code:addons/mass_mailing/controllers/main.py:137
 #, python-format
 msgid "Requested blacklisting via unsubscription page."
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/controllers/main.py:139
+#: code:addons/mass_mailing/controllers/main.py:149
 #, python-format
 msgid "Requested de-blacklisting via unsubscription page."
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__user_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__user_id
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_search
 msgid "Responsible"
 msgstr "Felelős"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_kanban
+msgid "Restore"
+msgstr "Visszaállít"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1878,12 +1942,8 @@ msgstr "Egy minta email küldése"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
-msgid ""
-"Send a sample of this mailing to the above of email addresses for test "
-"purpose."
+msgid "Send a sample email for testing purpose to the address below."
 msgstr ""
-"Küldjön ebből a levelezésből egy minta email-t, a fenti email címekre, "
-"tesztelés céljából."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
@@ -1950,6 +2010,7 @@ msgid "Show blacklist buttons on unsubscribe page"
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__source_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__source_id
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Source"
@@ -1974,14 +2035,14 @@ msgstr "Megatározott email címek"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__stage_id
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_search
 msgid "Stage"
-msgstr "Szakasz"
+msgstr "Értékesítési szint"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__state
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_search
 msgid "State"
-msgstr "Állam / megye"
+msgstr "Állapot"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__state_update
@@ -1994,8 +2055,8 @@ msgid "Statistics"
 msgstr "Statisztika"
 
 #. module: mass_mailing
-#: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_links_statistics
-#: model:ir.actions.act_window,name:mass_mailing.dropdb snipp
+#: model:ir.actions.act_window,name:mass_mailing.link_tracker_action_mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.link_tracker_action_mass_mailing_campaign
 msgid "Statistics of Clicks"
 msgstr "Kattintási statisztikák"
 
@@ -2007,10 +2068,15 @@ msgid "Status"
 msgstr "Állapot"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__source_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__subject
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Subject"
 msgstr "Tárgy"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing__subject
+msgid "Subject of emails to send"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__subscription_list_ids
@@ -2021,7 +2087,7 @@ msgstr ""
 #. module: mass_mailing
 #: sql_constraint:mail.mass_mailing.tag:0
 msgid "Tag name already exists !"
-msgstr "A címkenév már létezik!"
+msgstr "Címke név már létezik!"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__tag_ids
@@ -2040,7 +2106,7 @@ msgid "Test"
 msgstr "Tesztelés"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:657
+#: code:addons/mass_mailing/models/mass_mailing.py:757
 #, python-format
 msgid "Test Mailing"
 msgstr "Teszt levelezés"
@@ -2097,21 +2163,28 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:624
+#: code:addons/mass_mailing/models/mass_mailing.py:677
 #, python-format
 msgid "The recipient <strong>subscribed to %s</strong> mailing list(s)"
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:623
+#: code:addons/mass_mailing/models/mass_mailing.py:676
 #, python-format
 msgid "The recipient <strong>unsubscribed from %s</strong> mailing list(s)"
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:823
+#: code:addons/mass_mailing/models/mass_mailing.py:957
 #, python-format
 msgid "There is no recipients selected."
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__email_normalized
+msgid ""
+"This field is used to search on email address,\n"
+"                                  as the primary email field can contain more than strictly an email address."
 msgstr ""
 
 #. module: mass_mailing
@@ -2196,6 +2269,11 @@ msgid "Tracking"
 msgstr "Nyomonkövetés"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "UTM Campaign"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_unread
 msgid "Unread Messages"
 msgstr "Olvasatlan üzenetek"
@@ -2213,9 +2291,25 @@ msgid "Unsubscribe"
 msgstr "Leiratkozás"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
+msgid "Unsubscribed"
+msgstr "Leiratkozva"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_contact_rel__unsubscription_date
 msgid "Unsubscription Date"
 msgstr "Leiratkozás dátuma"
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:893
+#, python-format
+msgid "Unsupported mass mailing model %s"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
+msgid "Update my subscriptions"
+msgstr ""
 
 #. module: mass_mailing
 #. openerp-web
@@ -2263,6 +2357,7 @@ msgstr "Felhasználó"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Valid Recipients"
 msgstr ""
 
@@ -2376,6 +2471,13 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribed
 msgid "You have been successfully <strong>unsubscribed</strong>!"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribed
+msgid ""
+"You were still subscribed to those newsletters. You will not receive any "
+"news from them anymore:"
 msgstr ""
 
 #. module: mass_mailing

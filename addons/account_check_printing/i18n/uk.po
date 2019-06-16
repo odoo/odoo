@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:58
+#: code:addons/account_check_printing/models/account_journal.py:61
 #, python-format
 msgid " : Check Number Sequence"
 msgstr ": Порядковий Номер Чеку"
@@ -38,6 +38,11 @@ msgstr "Запис на чеку не може перевищувати 60 си�
 #: model:ir.model,name:account_check_printing.model_account_chart_template
 msgid "Account Chart Template"
 msgstr "Шаблон плану рахунків"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_reconciliation_widget
+msgid "Account Reconciliation widget"
+msgstr "Віджет узгодження рахунку"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -85,7 +90,7 @@ msgstr "Номер чеку"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
 msgid "Check Printing"
-msgstr "Друк Чеку"
+msgstr "Друк чеку"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_printing_payment_method_selected
@@ -113,7 +118,8 @@ msgstr "Верхнє поле чеку"
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_register_payments__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr "Виберіть цю опцію, якщо ваші пере-друковані чеки не пронумеровані"
+msgstr ""
+"Виберіть цю опцію, якщо ваші попередньо надруковані чеки не пронумеровані"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -136,7 +142,7 @@ msgid "Checks numbering sequence."
 msgstr "Порядковий номер чеків"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:97
+#: code:addons/account_check_printing/models/account_journal.py:100
 #, python-format
 msgid "Checks to Print"
 msgstr "Роздрукувати чеки"
@@ -231,6 +237,13 @@ msgid "Next Check Number"
 msgstr "Наступний номер чеку"
 
 #. module: account_check_printing
+#: code:addons/account_check_printing/models/account_journal.py:27
+#: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:19
+#, python-format
+msgid "Next Check Number should only contains numbers."
+msgstr "Наступний номер чеку повинен містити лише цифри."
+
+#. module: account_check_printing
 #: selection:res.company,account_check_printing_layout:0
 msgid "None"
 msgstr "Немає"
@@ -242,8 +255,9 @@ msgid ""
 " are not already numbered, you can manage the numbering in the journal "
 "configuration page."
 msgstr ""
-"Номер чеку для цієї оплати. Якщо передрукований чек не пронумерований, ви "
-"можете впливати на нумерацію на сторінці налаштування журналів. "
+"Номер чеку для цієї оплати. Якщо попередньо надрукований чек не "
+"пронумерований, ви можете впливати на нумерацію на сторінці налаштування "
+"журналів. "
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
@@ -258,7 +272,7 @@ msgid ""
 "and not have already been reconciled"
 msgstr ""
 "Платежі, які потрібно роздрукувати у вигляді чеку, повинні мати спосіб "
-"оплати 'Чек' і повинні бути не узгодженими"
+"оплати 'Чек' і не повинні бути узгодженими"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -291,7 +305,7 @@ msgid "Print Date Label"
 msgstr "Мітка дати друку"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:94
+#: code:addons/account_check_printing/models/account_payment.py:95
 #: model:ir.model,name:account_check_printing.model_print_prenumbered_checks
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
@@ -316,7 +330,7 @@ msgid ""
 "In order to disable the printing feature, select 'None'."
 msgstr ""
 "Виберіть формат, відповідний паперу чеку, який ви будете друкувати на чеках.\n"
-"Щоб вимкнути функцію друку, виберіть \"Ні\"."
+"Щоб вимкнути функцію друку, виберіть \"Нічого\"."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
@@ -329,7 +343,7 @@ msgid ""
 "Technical feature used to know whether check printing was enabled as payment"
 " method."
 msgstr ""
-"Технічна функція використовується для того, щоб дізнатись, чи ввімкнено друк"
+"Технічна функція використовується для того, щоб дізнатись, чи увімкнено друк"
 " чеку як спосіб оплати."
 
 #. module: account_check_printing
@@ -342,7 +356,7 @@ msgstr ""
 "Ви можете використовувати це поле для швидкого пошуку."
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:26
+#: code:addons/account_check_printing/models/account_journal.py:29
 #, python-format
 msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
@@ -370,7 +384,7 @@ msgid ""
 "they don't fit on a single page."
 msgstr ""
 "Ця опція дозволяє друкувати деталі чеку (корінці) на кількох сторінках, якщо"
-" вони не вкладаються на одну сторінку."
+" вони не вкладаються в одну сторінку."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -394,7 +408,7 @@ msgid "Unmark Sent"
 msgstr "Скасувати позначку надіслано"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:116
+#: code:addons/account_check_printing/models/account_payment.py:117
 #, python-format
 msgid ""
 "You have to choose a check layout. For this, go in Apps, search for 'Checks "
