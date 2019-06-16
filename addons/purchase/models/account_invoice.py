@@ -147,6 +147,13 @@ class AccountInvoice(models.Model):
                 ('currency_id', '=', self.partner_id.property_purchase_currency_id.id),
             ]
             default_journal_id = self.env['account.journal'].search(journal_domain, limit=1)
+            if not default_journal_id:
+                journal_domain = [
+                    ('type', '=', 'purchase'),
+                    ('company_id', '=', self.company_id.id),
+                    ('currency_id', '=', self.company_id.currency_id.id),
+                ]
+                default_journal_id = self.env['account.journal'].search(journal_domain, limit=1)
             if default_journal_id:
                 self.journal_id = default_journal_id
             if self.env.context.get('default_currency_id'):
