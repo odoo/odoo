@@ -958,7 +958,7 @@ class Message(models.Model):
             return
         raise AccessError(
             _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation)
-            + ' - ({} {}, {} {})'.format(_('Records:'), list(other_ids)[:6], _('User:'), self._uid)
+            + ' - ({} {}, {} {})'.format(_('Records:'), list(messages_to_check)[:6], _('User:'), self._uid)
         )
 
     @api.model
