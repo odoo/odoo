@@ -1032,7 +1032,7 @@ class AccountMove(models.Model):
         let the user manually change it.
         """
         # Check user group.
-        system_user = self.env.user._is_system()
+        system_user = self.env.is_system()
         if not system_user:
             return
 
@@ -1065,7 +1065,7 @@ class AccountMove(models.Model):
     def _inverse_invoice_sequence_number_next(self):
         ''' Set the number_next on the sequence related to the invoice/bill/refund'''
         # Check user group.
-        if not self.env.user._is_admin():
+        if not self.env.is_admin():
             return
 
         # Set the next number in the sequence.

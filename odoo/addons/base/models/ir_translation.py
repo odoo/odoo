@@ -514,7 +514,7 @@ class IrTranslation(models.Model):
         """ Check access rights of operation ``mode`` on ``self`` for the
         current user. Raise an AccessError in case conditions are not met.
         """
-        if self.env.user._is_superuser():
+        if self.env.is_superuser():
             return
 
         # collect translated field records (model_ids) and other translations

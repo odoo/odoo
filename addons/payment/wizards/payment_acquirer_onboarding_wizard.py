@@ -44,7 +44,7 @@ class PaymentWizard(models.TransientModel):
             ('company_id', '=', env.company.id)], limit=1)
 
     def _get_default_payment_acquirer_onboarding_value(self, key):
-        if not self.env.user._is_admin():
+        if not self.env.is_admin():
             raise UserError(_("Only administrators can access this data."))
 
         if self._data_fetched:

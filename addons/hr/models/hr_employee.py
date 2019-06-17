@@ -6,7 +6,7 @@ from random import choice
 from string import digits
 from werkzeug import url_encode
 
-from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, AccessError
 from odoo.modules.module import get_module_resource
 
@@ -322,7 +322,7 @@ class HrEmployeePrivate(models.Model):
         to post messages as the correct user.
         """
         real_user = self.env.context.get('binary_field_real_user')
-        if self.env.user.id == SUPERUSER_ID and real_user:
+        if self.env.is_superuser() and real_user:
             self = self.with_user(real_user)
         return self
 

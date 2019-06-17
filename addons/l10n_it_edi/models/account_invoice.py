@@ -337,7 +337,7 @@ class AccountMove(models.Model):
                 else:
                     _logger.info(_('Company not found. The company\'s user is set by default.'))
 
-            if not self.env.user._is_superuser():
+            if not self.env.is_superuser():
                 if self.env.company != company:
                     raise UserError(_("You can only import invoice concern your current company: %s") % self.env.company.display_name)
 
