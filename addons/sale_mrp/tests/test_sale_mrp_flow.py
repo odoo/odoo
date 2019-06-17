@@ -1043,7 +1043,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         self.assertEquals(kit_parent_wh1.virtual_available, 1)
 
         # A warning message should be returned as there arn't enough quantities available for the sale order
-        warning = order_line._onchange_product_id_check_availability()
+        warning = order_line.stock_kit_quantity_info()
         self.assertTrue(warning)
 
         # We receive enoug of each component in Warehouse 2 to make 3 kit_parent
@@ -1066,7 +1066,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         self.assertEquals(kit_parent_wh1.virtual_available, 1)
 
         # A warning message should be returned as there arn't enough quantities available for the sale order
-        warning = order_line._onchange_product_id_check_availability()
+        warning = order_line.stock_kit_quantity_info()
         self.assertTrue(warning)
 
         # We receive enough of each component in Warehouse 2 to make 7 kit_parent
@@ -1285,7 +1285,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         self.assertEquals(virtual_available_wh_order, 1)
 
         # A warning message should be returned as there arn't enough quantities available for the sale order
-        warning = order_line._onchange_product_id_check_availability()
+        warning = order_line.stock_kit_quantity_info()
         self.assertTrue(warning)
 
         # We receive enough of each component in Warehouse 1 to make 3 kit_uom_in_kit.
@@ -1299,7 +1299,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         self._create_move_quantities(qty_to_process, components, warehouse_1)
 
         # Enough quantities should be available to make 3 kit_uom_in_kit and a warning message should be displayed
-        warning = order_line._onchange_product_id_check_availability()
+        warning = order_line.stock_kit_quantity_info()
         self.assertTrue(warning)
         kit_uom_in_kit.with_context(warehouse=warehouse_1.id)._compute_quantities()
         virtual_available_wh_order = kit_uom_in_kit.virtual_available
