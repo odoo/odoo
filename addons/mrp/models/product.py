@@ -93,6 +93,7 @@ class ProductProduct(models.Model):
          """
         for product in self:
             bom_kit = self.env['mrp.bom']._bom_find(product=product, bom_type='phantom')
+            context = self._context
             if bom_kit:
                 boms, bom_sub_lines = bom_kit.explode(product, 1)
                 ratios_virtual_available = []
@@ -100,7 +101,7 @@ class ProductProduct(models.Model):
                 ratios_incoming_qty = []
                 ratios_outgoing_qty = []
                 for bom_line, bom_line_data in bom_sub_lines:
-                    component = bom_line.product_id
+                    component = bom_line.product_id.with_context(context)
                     uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
                     qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id)
                     ratios_virtual_available.append(component.virtual_available / qty_per_kit)
