@@ -228,7 +228,7 @@ class TestCalendar(TransactionCase):
         test_name, test_description, test_description2 = 'Test-Meeting', '<p>Test-Description</p>', '<p>NotTest</p>'
 
         # create using default_* keys
-        test_event = self.env['calendar.event'].sudo(test_user).with_context(
+        test_event = self.env['calendar.event'].with_user(test_user).with_context(
             default_res_model=test_record._name,
             default_res_id=test_record.id,
         ).create({
@@ -263,7 +263,7 @@ class TestCalendar(TransactionCase):
         self.assertEqual(self.env['calendar.event'], self.env['calendar.event'].search([('name', '=', test_name)]))
 
         # create using active_model keys
-        test_event = self.env['calendar.event'].sudo(self.env.ref('base.user_demo')).with_context(
+        test_event = self.env['calendar.event'].with_user(self.env.ref('base.user_demo')).with_context(
             active_model=test_record._name,
             active_id=test_record.id,
         ).create({

@@ -37,7 +37,7 @@ Integrator at Agrolait"""
 class TestProjectFlow(TestProjectBase):
 
     def test_project_process_project_manager_duplicate(self):
-        pigs = self.project_pigs.sudo(self.user_projectmanager)
+        pigs = self.project_pigs.with_user(self.user_projectmanager)
         dogs = pigs.copy()
         self.assertEqual(len(dogs.tasks), 2, 'project: duplicating a project must duplicate its tasks')
 

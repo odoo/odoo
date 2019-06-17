@@ -25,13 +25,13 @@ class TestBLAccessRights(common.MassMailingCase):
             self.env['mail.blacklist'].create([{'email': 'Arya.Stark@example.com'}])
 
         with self.assertRaises(AccessError):
-            self.bl_rec.sudo(self.env.user).read([])
+            self.bl_rec.with_user(self.env.user).read([])
 
         with self.assertRaises(AccessError):
-            self.bl_rec.sudo(self.env.user).write({'email': 'jaimie.lannister@example.com'})
+            self.bl_rec.with_user(self.env.user).write({'email': 'jaimie.lannister@example.com'})
 
         with self.assertRaises(AccessError):
-            self.bl_rec.sudo(self.env.user).unlink()
+            self.bl_rec.with_user(self.env.user).unlink()
 
     @users('port')
     def test_bl_crud_portal(self):
@@ -39,25 +39,25 @@ class TestBLAccessRights(common.MassMailingCase):
             self.env['mail.blacklist'].create([{'email': 'Arya.Stark@example.com'}])
 
         with self.assertRaises(AccessError):
-            self.bl_rec.sudo(self.env.user).read([])
+            self.bl_rec.with_user(self.env.user).read([])
 
         with self.assertRaises(AccessError):
-            self.bl_rec.sudo(self.env.user).write({'email': 'jaimie.lannister@example.com'})
+            self.bl_rec.with_user(self.env.user).write({'email': 'jaimie.lannister@example.com'})
 
         with self.assertRaises(AccessError):
-            self.bl_rec.sudo(self.env.user).unlink()
+            self.bl_rec.with_user(self.env.user).unlink()
 
     @users('marketing')
     def test_bl_crud_marketing(self):
         self.env['mail.blacklist'].create([{'email': 'Arya.Stark@example.com'}])
 
-        read_res = self.bl_rec.sudo(self.env.user).read([])
+        read_res = self.bl_rec.with_user(self.env.user).read([])
         self.assertEqual(read_res[0]['id'], self.bl_rec.id)
 
-        self.bl_rec.sudo(self.env.user).write({'email': 'jaimie.lannister@example.com'})
+        self.bl_rec.with_user(self.env.user).write({'email': 'jaimie.lannister@example.com'})
         self.assertEqual(self.bl_rec.email, 'jaimie.lannister@example.com')
 
-        self.bl_rec.sudo(self.env.user).unlink()
+        self.bl_rec.with_user(self.env.user).unlink()
 
 
 class TestBLConsistency(common.MassMailingCase):

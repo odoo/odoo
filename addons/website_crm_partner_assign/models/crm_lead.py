@@ -289,7 +289,7 @@ class CrmLead(models.Model):
             except AccessError:
                 return super(CrmLead, self).get_access_action(access_uid)
             user = self.env['res.users'].sudo().browse(access_uid)
-            record = self.sudo(user)
+            record = self.with_user(user)
         if user.share or self.env.context.get('force_website'):
             try:
                 record.check_access_rights('read')

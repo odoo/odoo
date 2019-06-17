@@ -37,7 +37,7 @@ class TestHrLeaveType(TestHrHolidaysBase):
     def test_type_creation_right(self):
         # HrUser creates some holiday statuses -> crash because only HrManagers should do this
         with self.assertRaises(AccessError):
-            self.env['hr.leave.type'].sudo(self.user_hruser_id).create({
+            self.env['hr.leave.type'].with_user(self.user_hruser_id).create({
                 'name': 'UserCheats',
                 'allocation_type': 'no',
             })

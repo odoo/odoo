@@ -30,7 +30,7 @@ class TestHasGroup(TransactionCase):
         self.grp_portal = self.env.ref(self.grp_portal_xml_id)
 
     def test_env_uid(self):
-        Users = self.env['res.users'].sudo(self.test_user)
+        Users = self.env['res.users'].with_user(self.test_user)
         self.assertTrue(
             Users.has_group(self.group0),
             "the test user should belong to group0"

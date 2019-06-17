@@ -133,8 +133,8 @@ class TestSaleOrder(TestCommonSaleNoChart):
         # SO in state 'draft' can be deleted
         so_copy = self.sale_order.copy()
         with self.assertRaises(AccessError):
-            so_copy.sudo(self.user_employee).unlink()
-        self.assertTrue(so_copy.sudo(self.user_manager).unlink(), 'Sale: deleting a quotation should be possible')
+            so_copy.with_user(self.user_employee).unlink()
+        self.assertTrue(so_copy.with_user(self.user_manager).unlink(), 'Sale: deleting a quotation should be possible')
 
         # SO in state 'cancel' can be deleted
         so_copy = self.sale_order.copy()
@@ -143,19 +143,19 @@ class TestSaleOrder(TestCommonSaleNoChart):
         so_copy.action_cancel()
         self.assertTrue(so_copy.state == 'cancel', 'Sale: SO should be in state "cancel"')
         with self.assertRaises(AccessError):
-            so_copy.sudo(self.user_employee).unlink()
-        self.assertTrue(so_copy.sudo(self.user_manager).unlink(), 'Sale: deleting a cancelled SO should be possible')
+            so_copy.with_user(self.user_employee).unlink()
+        self.assertTrue(so_copy.with_user(self.user_manager).unlink(), 'Sale: deleting a cancelled SO should be possible')
 
         # SO in state 'sale' or 'done' cannot be deleted
         self.sale_order.action_confirm()
         self.assertTrue(self.sale_order.state == 'sale', 'Sale: SO should be in state "sale"')
         with self.assertRaises(UserError):
-            self.sale_order.sudo(self.user_manager).unlink()
+            self.sale_order.with_user(self.user_manager).unlink()
 
         self.sale_order.action_done()
         self.assertTrue(self.sale_order.state == 'done', 'Sale: SO should be in state "done"')
         with self.assertRaises(UserError):
-            self.sale_order.sudo(self.user_manager).unlink()
+            self.sale_order.with_user(self.user_manager).unlink()
 
     def test_cost_invoicing(self):
         """ Test confirming a vendor invoice to reinvoice cost on the so """

@@ -228,7 +228,7 @@ class PosSession(models.Model):
                 'balance_start': self.env["account.bank.statement"]._get_opening_balance(journal.id)
             }
 
-            statements.append(ABS.with_context(ctx).sudo(uid).create(st_values).id)
+            statements.append(ABS.with_context(ctx).with_user(uid).create(st_values).id)
 
         values.update({
             'name': pos_name,
@@ -236,7 +236,7 @@ class PosSession(models.Model):
             'config_id': config_id
         })
 
-        res = super(PosSession, self.with_context(ctx).sudo(uid)).create(values)
+        res = super(PosSession, self.with_context(ctx).with_user(uid)).create(values)
         if not pos_config.cash_control:
             res.action_pos_session_open()
 

@@ -6,7 +6,7 @@ from odoo.addons.product.tests import common
 class TestStockCommon(common.TestProductCommon):
 
     def _create_pack_operation(self, product, product_qty, picking_id, **values):
-        PackOperation = self.env['stock.move.line'].sudo(self.user_stock_manager)
+        PackOperation = self.env['stock.move.line'].with_user(self.user_stock_manager)
         vals = {
             'picking_id': picking_id.id,
             'product_id': product.id,
@@ -28,7 +28,7 @@ class TestStockCommon(common.TestProductCommon):
 
     def _create_move(self, product, src_location, dst_location, **values):
         # TDE FIXME: user as parameter
-        Move = self.env['stock.move'].sudo(self.user_stock_manager)
+        Move = self.env['stock.move'].with_user(self.user_stock_manager)
         # simulate create + onchange
         move = Move.new({'product_id': product.id, 'location_id': src_location.id, 'location_dest_id': dst_location.id})
         move.onchange_product_id()

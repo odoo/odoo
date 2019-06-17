@@ -36,15 +36,15 @@ class TestHrAttendance(TransactionCase):
 
     def test_checkin_self_without_pin(self):
         """ Employee can check in/out without pin with his own account """
-        employee = self.test_employee.sudo(self.user)
-        employee.sudo(self.user).attendance_manual({}, entered_pin=None)
+        employee = self.test_employee.with_user(self.user)
+        employee.with_user(self.user).attendance_manual({}, entered_pin=None)
         self.assertEqual(employee.attendance_state, 'checked_in', "He should be able to check in without pin")
         employee.attendance_manual({}, entered_pin=None)
         self.assertEqual(employee.attendance_state, 'checked_out', "He should be able to check out without pin")
 
     def test_checkin_self_with_pin(self):
         """ Employee can check in/out with pin with his own account """
-        employee = self.test_employee.sudo(self.user)
+        employee = self.test_employee.with_user(self.user)
         employee.attendance_manual({}, entered_pin='1234')
         self.assertEqual(employee.attendance_state, 'checked_in', "He should be able to check in with his pin")
         employee.attendance_manual({}, entered_pin='1234')
@@ -52,14 +52,14 @@ class TestHrAttendance(TransactionCase):
 
     def test_checkin_self_wrong_pin(self):
         """ Employee cannot check in/out with wrong pin with his own account """
-        employee = self.test_employee.sudo(self.user)
+        employee = self.test_employee.with_user(self.user)
         action = employee.attendance_manual({}, entered_pin='9999')
         self.assertNotEqual(employee.attendance_state, 'checked_in', "He should not be able to check in with a wrong pin")
         self.assertTrue(action.get('warning'))
 
     def test_checkin_kiosk_with_pin(self):
         """ Employee can check in/out with his pin in kiosk """
-        employee = self.employee_kiosk.sudo(self.user)
+        employee = self.employee_kiosk.with_user(self.user)
         employee.attendance_manual({}, entered_pin='5678')
         self.assertEqual(employee.attendance_state, 'checked_in', "He should be able to check in with his pin")
         employee.attendance_manual({}, entered_pin='5678')
@@ -67,21 +67,21 @@ class TestHrAttendance(TransactionCase):
 
     def test_checkin_kiosk_with_wrong_pin(self):
         """ Employee cannot check in/out with wrong pin in kiosk """
-        employee = self.employee_kiosk.sudo(self.user)
+        employee = self.employee_kiosk.with_user(self.user)
         action = employee.attendance_manual({}, entered_pin='8888')
         self.assertNotEqual(employee.attendance_state, 'checked_in', "He should not be able to check in with a wrong pin")
         self.assertTrue(action.get('warning'))
 
     def test_checkin_kiosk_without_pin(self):
         """ Employee cannot check in/out without his pin in kiosk """
-        employee = self.employee_kiosk.sudo(self.user)
+        employee = self.employee_kiosk.with_user(self.user)
         action = employee.attendance_manual({}, entered_pin=None)
         self.assertNotEqual(employee.attendance_state, 'checked_in', "He should not be able to check in with no pin")
         self.assertTrue(action.get('warning'))
 
     def test_checkin_kiosk_no_pin_mode(self):
         """ Employee can check in/out without pin in kiosk when user has not group `use_pin` """
-        employee = self.employee_kiosk.sudo(self.user_no_pin)
+        employee = self.employee_kiosk.with_user(self.user_no_pin)
         employee.attendance_manual({}, entered_pin=None)
         self.assertEqual(employee.attendance_state, 'checked_in', "He should be able to check in with his pin")
         employee.attendance_manual({}, entered_pin=None)

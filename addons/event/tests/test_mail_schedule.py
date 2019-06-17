@@ -17,7 +17,7 @@ class TestMailSchedule(TestEventCommon):
         event_date_begin = now + relativedelta(days=1)
         event_date_end = now + relativedelta(days=3)
 
-        test_event = self.Event.sudo(self.user_eventmanager).create({
+        test_event = self.Event.with_user(self.user_eventmanager).create({
             'name': 'TestEventMail',
             'auto_confirm': True,
             'date_begin': event_date_begin,
@@ -37,12 +37,12 @@ class TestMailSchedule(TestEventCommon):
         })
 
         # create some registrations
-        self.Registration.sudo(self.user_eventuser).create({
+        self.Registration.with_user(self.user_eventuser).create({
             'event_id': test_event.id,
             'name': 'Reg0',
             'email': 'reg0@example.com',
         })
-        self.Registration.sudo(self.user_eventuser).create({
+        self.Registration.with_user(self.user_eventuser).create({
             'event_id': test_event.id,
             'name': 'Reg1',
             'email': 'reg1@example.com',

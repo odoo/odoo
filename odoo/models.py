@@ -1679,7 +1679,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         access_rights_uid = name_get_uid or self._uid
         ids = self._search(args, limit=limit, access_rights_uid=access_rights_uid)
         recs = self.browse(ids)
-        return lazy_name_get(recs.sudo(access_rights_uid))
+        return lazy_name_get(recs.with_user(access_rights_uid))
 
     @api.model
     def _add_missing_default_values(self, values):
@@ -4176,7 +4176,8 @@ Fields:
                                   (not for ir.rules, this is only for ir.model.access)
         :return: a list of record ids or an integer (if count is True)
         """
-        self.sudo(access_rights_uid or self._uid).check_access_rights('read')
+        model = self.with_user(access_rights_uid) if access_rights_uid else self
+        model.check_access_rights('read')
 
         if expression.is_false(self, args):
             # optimization: no need to query, as no record satisfies the domain

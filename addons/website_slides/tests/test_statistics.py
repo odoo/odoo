@@ -17,14 +17,14 @@ class TestStatistics(common.SlidesCase):
     def setUp(self):
         super(TestStatistics, self).setUp()
 
-        self.slide_2 = self.env['slide.slide'].sudo(self.user_publisher).create({
+        self.slide_2 = self.env['slide.slide'].with_user(self.user_publisher).create({
             'name': 'How To Cook For Humans',
             'channel_id': self.channel.id,
             'slide_type': 'presentation',
             'website_published': True,
             'completion_time': 3.0,
         })
-        self.slide_3 = self.env['slide.slide'].sudo(self.user_publisher).create({
+        self.slide_3 = self.env['slide.slide'].with_user(self.user_publisher).create({
             'name': 'How To Cook Humans For Humans',
             'channel_id': self.channel.id,
             'slide_type': 'document',
@@ -34,7 +34,7 @@ class TestStatistics(common.SlidesCase):
 
     @mute_logger('odoo.models')
     def test_channel_statistics(self):
-        channel_publisher = self.channel.sudo(self.user_publisher)
+        channel_publisher = self.channel.with_user(self.user_publisher)
         # slide type computation
         self.assertEqual(channel_publisher.total_slides, len(channel_publisher.slide_ids))
         self.assertEqual(channel_publisher.nbr_infographic, len(channel_publisher.slide_ids.filtered(lambda s: s.slide_type == 'infographic')))
@@ -53,14 +53,14 @@ class TestStatistics(common.SlidesCase):
 
     @mute_logger('odoo.models')
     def test_channel_user_statistics(self):
-        channel_publisher = self.channel.sudo(self.user_publisher)
+        channel_publisher = self.channel.with_user(self.user_publisher)
         channel_publisher.write({
             'enroll': 'invite',
         })
         channel_publisher._action_add_members(self.user_emp.partner_id)
-        channel_emp = self.channel.sudo(self.user_emp)
+        channel_emp = self.channel.with_user(self.user_emp)
 
-        slides_emp = (self.slide | self.slide_2).sudo(self.user_emp)
+        slides_emp = (self.slide | self.slide_2).with_user(self.user_emp)
         slides_emp.action_set_viewed()
         self.assertEqual(channel_emp.completion, 0)
 
@@ -71,14 +71,14 @@ class TestStatistics(common.SlidesCase):
             math.ceil(100.0 * len(slides_emp) / len(channel_publisher.slide_ids)))
         self.assertFalse(channel_emp.completed)
 
-        self.slide_3.sudo(self.user_emp).action_set_completed()
+        self.slide_3.with_user(self.user_emp).action_set_completed()
         self.assertEqual(channel_emp.completion, 100)
         self.assertTrue(channel_emp.completed)
 
     @mute_logger('odoo.models')
     def test_channel_user_statistics_complete_check_member(self):
         (self.slide | self.slide_2).write({'is_preview': True})
-        slides_emp = (self.slide | self.slide_2).sudo(self.user_emp)
+        slides_emp = (self.slide | self.slide_2).with_user(self.user_emp)
         slides_emp.read(['name'])
         with self.assertRaises(UserError):
             slides_emp.action_set_completed()
@@ -86,16 +86,16 @@ class TestStatistics(common.SlidesCase):
     @mute_logger('odoo.models')
     def test_channel_user_statistics_view_check_member(self):
         (self.slide | self.slide_2).write({'is_preview': True})
-        slides_emp = (self.slide | self.slide_2).sudo(self.user_emp)
+        slides_emp = (self.slide | self.slide_2).with_user(self.user_emp)
         slides_emp.read(['name'])
         with self.assertRaises(UserError):
             slides_emp.action_set_viewed()
 
     def test_slide_user_statistics(self):
-        channel_publisher = self.channel.sudo(self.user_publisher)
+        channel_publisher = self.channel.with_user(self.user_publisher)
         channel_publisher._action_add_members(self.user_emp.partner_id)
 
-        slide_emp = self.slide.sudo(self.user_emp)
+        slide_emp = self.slide.with_user(self.user_emp)
         self.assertEqual(slide_emp.likes, 0)
         self.assertEqual(slide_emp.dislikes, 0)
         self.assertEqual(slide_emp.user_vote, 0)
@@ -113,7 +113,7 @@ class TestStatistics(common.SlidesCase):
         self.assertEqual(slide_emp.user_vote, -1)
 
     def test_slide_statistics(self):
-        channel_publisher = self.channel.sudo(self.user_publisher)
+        channel_publisher = self.channel.with_user(self.user_publisher)
         channel_publisher._action_add_members(self.user_emp.partner_id)
 
         self.assertEqual(self.slide.slide_views, 0)
@@ -125,7 +125,7 @@ class TestStatistics(common.SlidesCase):
         self.assertEqual(self.slide.public_views, 4)
         self.assertEqual(self.slide.total_views, 4)
 
-        slide_emp = self.slide.sudo(self.user_emp)
+        slide_emp = self.slide.with_user(self.user_emp)
         slide_emp.action_set_viewed()
 
         self.assertEqual(slide_emp.slide_views, 1)

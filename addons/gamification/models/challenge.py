@@ -581,7 +581,7 @@ class Challenge(models.Model):
                 if not lines:
                     continue
 
-                body_html = MailTemplates.sudo(user).with_context(challenge_lines=lines)._render_template(
+                body_html = MailTemplates.with_user(user).with_context(challenge_lines=lines)._render_template(
                     challenge.report_template_id.body_html,
                     'gamification.challenge',
                     challenge.id)

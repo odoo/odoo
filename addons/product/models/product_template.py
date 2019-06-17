@@ -847,7 +847,7 @@ class ProductTemplate(models.Model):
         return self.env['product.product'].browse(self._get_variant_id_for_combination(attribute_values))
 
     @api.multi
-    @tools.ormcache('self', 'attribute_values')
+    @tools.ormcache('self.id', 'attribute_values')
     def _get_variant_id_for_combination(self, attribute_values):
         """See `_get_variant_for_combination`. This method returns an ID
         so it can be cached."""
@@ -869,7 +869,7 @@ class ProductTemplate(models.Model):
         )[:1].id
 
     @api.multi
-    @tools.ormcache('self')
+    @tools.ormcache('self.id')
     def _get_first_possible_variant_id(self):
         """See `_create_first_product_variant`. This method returns an ID
         so it can be cached."""

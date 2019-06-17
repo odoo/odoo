@@ -158,7 +158,7 @@ class Website(Home):
             sitemaps.unlink()
 
             pages = 0
-            locs = request.website.sudo(user=request.website.user_id.id).enumerate_pages()
+            locs = request.website.with_user(request.website.user_id).enumerate_pages()
             while True:
                 values = {
                     'locs': islice(locs, 0, LOC_PER_SITEMAP),

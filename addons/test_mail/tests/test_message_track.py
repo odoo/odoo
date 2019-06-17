@@ -26,7 +26,7 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
     def setUp(self):
         super(TestTracking, self).setUp()
 
-        record = self.env['mail.test.full'].sudo(self.user_employee).with_context(common.BaseFunctionalTest._test_context).create({
+        record = self.env['mail.test.full'].with_user(self.user_employee).with_context(common.BaseFunctionalTest._test_context).create({
             'name': 'Test',
         })
         self.record = record.with_context(mail_notrack=False)
@@ -120,7 +120,7 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
     def test_message_track_template_at_create(self):
         """ Create a record with tracking template on create, template should be sent."""
 
-        Model = self.env['mail.test.full'].sudo(self.user_employee).with_context(common.BaseFunctionalTest._test_context)
+        Model = self.env['mail.test.full'].with_user(self.user_employee).with_context(common.BaseFunctionalTest._test_context)
         Model = Model.with_context(mail_notrack=False)
         record = Model.create({
             'name': 'Test',
@@ -155,7 +155,7 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
         self.record.sudo().write({'email_from': 'X'})
 
         msg_emp = self.record.message_ids.message_format()
-        msg_admin = self.record.message_ids.sudo(self.user_admin).message_format()
+        msg_admin = self.record.message_ids.with_user(self.user_admin).message_format()
         self.assertFalse(msg_emp[0].get('tracking_value_ids'), "should not have protected tracking values")
         self.assertTrue(msg_admin[0].get('tracking_value_ids'), "should have protected tracking values")
 
@@ -163,8 +163,8 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
         self.record._fields['email_from'].groups = 'base.group_erp_manager' # patch the group attribute
         self.record.sudo().write({'email_from': 'X'})
 
-        msg_emp = self.record.sudo(self.user_employee)._notify_prepare_template_context(self.record.message_ids, {})
-        msg_admin = self.record.sudo(self.user_admin)._notify_prepare_template_context(self.record.message_ids, {})
+        msg_emp = self.record.with_user(self.user_employee)._notify_prepare_template_context(self.record.message_ids, {})
+        msg_admin = self.record.with_user(self.user_admin)._notify_prepare_template_context(self.record.message_ids, {})
         self.assertFalse(msg_emp.get('tracking_values'), "should not have protected tracking values")
         self.assertTrue(msg_admin.get('tracking_values'), "should have protected tracking values")
 

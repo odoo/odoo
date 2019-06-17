@@ -106,7 +106,7 @@ class IrRule(models.Model):
                 expression.normalize_domain(dom)
             ])) < len(ids)
 
-        return all_rules.filtered(lambda r: r in group_rules or (not r.groups and is_failing(r))).sudo(self.env.user)
+        return all_rules.filtered(lambda r: r in group_rules or (not r.groups and is_failing(r))).with_user(self.env.user)
 
     def _get_rules(self, model_name, mode='read'):
         """ Returns all the rules matching the model for the mode for the

@@ -13,7 +13,7 @@ class TestWarehouse(TestStockCommon):
             'inventory_quantity': 50.0,
             'location_id': self.warehouse_1.lot_stock_id.id,
         })
-        inventory = self.env['stock.inventory'].sudo(self.user_stock_manager).create({
+        inventory = self.env['stock.inventory'].with_user(self.user_stock_manager).create({
             'name': 'Starting for product_1',
             'location_ids': [(4, self.warehouse_1.lot_stock_id.id)],
             'product_ids': [(4, self.product_1.id)],
@@ -50,7 +50,7 @@ class TestWarehouse(TestStockCommon):
         """ Using the "Update Quantity" wizard as stock manager.
         """
         self.product_1.type = 'product'
-        InventoryWizard = self.env['stock.change.product.qty'].sudo(self.user_stock_manager.id)
+        InventoryWizard = self.env['stock.change.product.qty'].with_user(self.user_stock_manager)
         inventory_wizard = InventoryWizard.create({
             'product_id': self.product_1.id,
             'product_tmpl_id': self.product_1.product_tmpl_id.id,
@@ -69,7 +69,7 @@ class TestWarehouse(TestStockCommon):
         """ Using the "Update Quantity" wizard as stock user.
         """
         self.product_1.type = 'product'
-        InventoryWizard = self.env['stock.change.product.qty'].sudo(self.user_stock_user.id)
+        InventoryWizard = self.env['stock.change.product.qty'].with_user(self.user_stock_user)
         inventory_wizard = InventoryWizard.create({
             'product_id': self.product_1.id,
             'product_tmpl_id': self.product_1.product_tmpl_id.id,
@@ -87,7 +87,7 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(len(quant), 0)
 
     def test_basic_move(self):
-        product = self.product_3.sudo(self.user_stock_manager)
+        product = self.product_3.with_user(self.user_stock_manager)
         product.type = 'product'
         picking_out = self.env['stock.picking'].create({
             'partner_id': self.env.ref('base.res_partner_2').id,

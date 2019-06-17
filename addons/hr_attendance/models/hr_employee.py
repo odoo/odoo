@@ -97,7 +97,7 @@ class HrEmployeeBase(models.AbstractModel):
         action_message['next_action'] = next_action
 
         if employee.user_id:
-            modified_attendance = employee.sudo(employee.user_id.id)._attendance_action_change()
+            modified_attendance = employee.with_user(employee.user_id)._attendance_action_change()
         else:
             modified_attendance = employee._attendance_action_change()
         action_message['attendance'] = modified_attendance.read()[0]

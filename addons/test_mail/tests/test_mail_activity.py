@@ -32,14 +32,14 @@ class TestActivityCommon(BaseFunctionalTest):
 class TestActivityRights(TestActivityCommon):
 
     def test_activity_security_user_access_other(self):
-        activity = self.test_record.sudo(self.user_employee).activity_schedule(
+        activity = self.test_record.with_user(self.user_employee).activity_schedule(
             'test_mail.mail_act_test_todo',
             user_id=self.user_admin.id)
         self.assertTrue(activity.can_write)
         activity.write({'user_id': self.user_employee.id})
 
     def test_activity_security_user_access_own(self):
-        activity = self.test_record.sudo(self.user_employee).activity_schedule(
+        activity = self.test_record.with_user(self.user_employee).activity_schedule(
             'test_mail.mail_act_test_todo')
         self.assertTrue(activity.can_write)
         activity.write({'user_id': self.user_admin.id})
@@ -81,7 +81,7 @@ class TestActivityRights(TestActivityCommon):
         # cannot create activities if no access to the document
         with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
             with self.assertRaises(exceptions.AccessError):
-                activity = self.test_record.sudo(self.user_employee).activity_schedule(
+                activity = self.test_record.with_user(self.user_employee).activity_schedule(
                     'test_mail.mail_act_test_todo',
                     user_id=self.user_admin.id)
 
@@ -133,7 +133,7 @@ class TestActivityFlow(TestActivityCommon):
 
     def test_activity_notify_other_user(self):
         self.user_admin.notification_type = 'email'
-        rec = self.test_record.sudo(self.user_employee)
+        rec = self.test_record.with_user(self.user_employee)
         with self.assertNotifications(partner_admin=(1, 'email', 'read')):
             activity = rec.activity_schedule(
                 'test_mail.mail_act_test_todo',
@@ -143,7 +143,7 @@ class TestActivityFlow(TestActivityCommon):
 
     def test_activity_notify_same_user(self):
         self.user_employee.notification_type = 'email'
-        rec = self.test_record.sudo(self.user_employee)
+        rec = self.test_record.with_user(self.user_employee)
         with self.assertNotifications(partner_employee=(0, 'email', 'read')):
             activity = rec.activity_schedule(
                 'test_mail.mail_act_test_todo',
@@ -155,7 +155,7 @@ class TestActivityFlow(TestActivityCommon):
         self.user_employee.notification_type = 'email'
         activity = self.test_record.activity_schedule('test_mail.mail_act_test_todo', user_id=self.user_employee.id)
         with self.assertNotifications(partner_employee=(0, 'email', 'read')):
-            activity.sudo(self.user_admin).write({'user_id': self.user_employee.id})
+            activity.with_user(self.user_admin).write({'user_id': self.user_employee.id})
         self.assertEqual(activity.user_id, self.user_employee)
 
 
@@ -233,7 +233,7 @@ class TestActivityMixin(TestActivityCommon):
             self.assertEqual(len(self.test_record.message_ids), 2)
 
     def test_activity_mixin_archive(self):
-        rec = self.test_record.sudo(self.user_employee)
+        rec = self.test_record.with_user(self.user_employee)
         new_act = rec.activity_schedule(
             'test_mail.mail_act_test_todo',
             user_id=self.user_admin.id)
@@ -246,7 +246,7 @@ class TestActivityMixin(TestActivityCommon):
         self.assertEqual(rec.activity_ids, self.env['mail.activity'])
 
     def test_activity_mixin_reschedule_user(self):
-        rec = self.test_record.sudo(self.user_employee)
+        rec = self.test_record.with_user(self.user_employee)
         rec.activity_schedule(
             'test_mail.mail_act_test_todo',
             user_id=self.user_admin.id)

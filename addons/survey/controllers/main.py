@@ -96,7 +96,7 @@ class Survey(http.Controller):
         if validity_code != 'survey_wrong':
             survey_sudo, answer_sudo = self._fetch_from_access_token(survey_token, answer_token)
             try:
-                survey_user = survey_sudo.sudo(request.env.user)
+                survey_user = survey_sudo.with_user(request.env.user)
                 survey_user.check_access_rights(self, 'read', raise_exception=True)
                 survey_user.check_access_rule(self, 'read')
             except:
@@ -201,8 +201,8 @@ class Survey(http.Controller):
 
         if not answer_sudo:
             try:
-                survey_sudo.sudo(request.env.user).check_access_rights('read')
-                survey_sudo.sudo(request.env.user).check_access_rule('read')
+                survey_sudo.with_user(request.env.user).check_access_rights('read')
+                survey_sudo.with_user(request.env.user).check_access_rule('read')
             except:
                 return werkzeug.utils.redirect("/")
             else:

@@ -15,14 +15,14 @@ class TestComposer(common.SavepointCase):
         )
 
         test_record = self.env['res.partner'].create({'name': 'Mass Mail Partner'})
-        mass_mail_record = self.env['mail.mass_mailing'].sudo(test_user).create({
+        mass_mail_record = self.env['mail.mass_mailing'].with_user(test_user).create({
             'name': 'Test',
             'subject': 'Test',
             'state': 'draft',
             'mailing_model_id': self.env.ref('base.model_res_partner').id,
         })
 
-        composer = self.env['mail.compose.message'].sudo(test_user).with_context({
+        composer = self.env['mail.compose.message'].with_user(test_user).with_context({
             'default_composition_mode': 'mass_mail',
             'default_model': 'res.partner',
             'default_res_id': test_record.id,

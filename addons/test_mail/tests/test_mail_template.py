@@ -50,7 +50,7 @@ class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_composer_w_template(self):
-        composer = self.env['mail.compose.message'].sudo(self.user_employee).with_context({
+        composer = self.env['mail.compose.message'].with_user(self.user_employee).with_context({
             'default_composition_mode': 'comment',
             'default_model': 'mail.test.simple',
             'default_res_id': self.test_record.id,
@@ -110,7 +110,7 @@ class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_post_w_template(self):
-        self.test_record.sudo(self.user_employee).message_post_with_template(self.email_template.id, composition_mode='comment')
+        self.test_record.with_user(self.user_employee).message_post_with_template(self.email_template.id, composition_mode='comment')
 
         new_partners = self.env['res.partner'].search([('email', 'in', [self.email_1, self.email_2])])
         self.assertEmails(
@@ -124,7 +124,7 @@ class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
     def test_composer_w_template_mass_mailing(self):
         test_record_2 = self.env['mail.test.simple'].with_context(BaseFunctionalTest._test_context).create({'name': 'Test2', 'email_from': 'laurie.poiret@example.com'})
 
-        composer = self.env['mail.compose.message'].sudo(self.user_employee).with_context({
+        composer = self.env['mail.compose.message'].with_user(self.user_employee).with_context({
             'default_composition_mode': 'mass_mail',
             # 'default_notify': True,
             'default_notify': False,

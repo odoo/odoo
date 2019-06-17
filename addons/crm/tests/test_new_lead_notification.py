@@ -39,7 +39,7 @@ class NewLeadNotification(TestCrmCases):
         self.assertIn(channel_listen, msg.channel_ids)
 
         # The user should have a new unread message
-        lead_user = lead.sudo(self.crm_salesman)
+        lead_user = lead.with_user(self.crm_salesman)
         self.assertTrue(lead_user.message_needaction)
 
     def test_new_lead_from_email_multicompany(self):
