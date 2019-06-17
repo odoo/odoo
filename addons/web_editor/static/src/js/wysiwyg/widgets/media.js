@@ -539,7 +539,7 @@ var FileWidget = SearchableMediaWidget.extend({
      * @param {boolean} isURL
      * @param {boolean} isImage
      */
-    _updateAddUrlUi(emptyValue, isURL, isImage) {
+    _updateAddUrlUi: function (emptyValue, isURL, isImage) {
         this.$addUrlButton.toggleClass('btn-secondary', emptyValue)
             .toggleClass('btn-primary', !emptyValue)
             .prop('disabled', !isURL);
