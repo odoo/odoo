@@ -4939,6 +4939,12 @@ msgid "If tags are defined for a tax report line, only two are allowed on it: a 
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account.py:156
+#, python-format
+msgid "Tag name %(tag)s is used by more than one tax report line in %(country)s. Each tag name should only be used once per country."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__active
 msgid "If the active field is set to False, it will allow you to hide the payment terms without removing it."
 msgstr ""
