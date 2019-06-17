@@ -107,3 +107,11 @@ class AccountAnalyticLine(models.Model):
             elif task.billable_type == 'task_rate':
                 return task.sale_line_id
         return self.env['sale.order.line']
+
+    def _timesheet_get_portal_domain(self):
+        """ Only the timesheets with a product invoiced on delivered quantity are concerned.
+            since in ordered quantity, the timesheet quantity is not invoiced,
+            thus there is no meaning of showing invoice with ordered quantity.
+        """
+        domain = super(AccountAnalyticLine, self)._timesheet_get_portal_domain()
+        return expression.AND([domain, [('timesheet_invoice_type', 'in', ['billable_time', 'non_billable'])]])
