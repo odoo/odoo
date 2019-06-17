@@ -4,7 +4,6 @@
 from odoo import exceptions
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
-from odoo.tests import Form
 from odoo.tools import float_compare, float_round
 
 
@@ -23,8 +22,8 @@ class TestBoM(TestMrpCommon):
 
     def test_variants(self):
         test_bom = self.env['mrp.bom'].create({
-            'product_id': self.product_7.id,
-            'product_tmpl_id': self.product_7.product_tmpl_id.id,
+            'product_id': self.product_7_3.id,
+            'product_tmpl_id': self.product_7_template.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 4.0,
             'routing_id': self.routing_2.id,
@@ -47,7 +46,7 @@ class TestBoM(TestMrpCommon):
             'product_qty': 2,
             'attribute_value_ids': [(4, self.prod_attr1_v2.id)],
         })
-        boms, lines = test_bom.explode(self.product_7, 4)
+        boms, lines = test_bom.explode(self.product_7_3, 4)
         self.assertIn(test_bom, [b[0]for b in boms])
         self.assertIn(test_bom_l1, [l[0] for l in lines])
         self.assertNotIn(test_bom_l2, [l[0] for l in lines])
@@ -88,8 +87,8 @@ class TestBoM(TestMrpCommon):
         })
 
         test_bom_2 = self.env['mrp.bom'].create({
-            'product_id': self.product_7.id,
-            'product_tmpl_id': self.product_7.product_tmpl_id.id,
+            'product_id': self.product_7_3.id,
+            'product_tmpl_id': self.product_7_template.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 4.0,
             'routing_id': self.routing_2.id,
