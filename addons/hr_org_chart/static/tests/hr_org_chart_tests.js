@@ -51,6 +51,30 @@ QUnit.module('hr_org_chart', {
             "the chart should have 1 child");
         form.destroy();
     });
+    QUnit.test("hr org chart: render without data", async function (assert) {
+        assert.expect(2);
+
+        var form = await createView({
+            View: FormView,
+            model: 'hr_employee',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<field name="child_ids" widget="hr_org_chart"/>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === '/hr/get_org_chart') {
+                    assert.ok('employee_id' in args, "it should have 'employee_id' as argument");
+                    return Promise.resolve({}); // return no data
+                }
+                return this._super(route, args);
+            }
+        });
+        assert.strictEqual(form.$('[name="child_ids"]').children().length, 1,
+            "the chart should have 1 child");
+        form.destroy();
+    });
     QUnit.test("hr org chart: basic render", async function (assert) {
         assert.expect(3);
 
