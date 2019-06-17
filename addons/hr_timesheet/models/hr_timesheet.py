@@ -102,6 +102,14 @@ class AccountAnalyticLine(models.Model):
     # Business Methods
     # ----------------------------------------------------
 
+    def _timesheet_get_portal_domain(self):
+        return ['|', '&',
+                ('task_id.project_id.privacy_visibility', '=', 'portal'),
+                ('task_id.project_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
+                '&',
+                ('task_id.project_id.privacy_visibility', '=', 'portal'),
+                ('task_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id])]
+
     def _timesheet_preprocess(self, vals):
         """ Deduce other field values from the one given.
             Overrride this to compute on the fly some field that can not be computed fields.
