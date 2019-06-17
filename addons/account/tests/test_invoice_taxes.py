@@ -189,7 +189,13 @@ class TestInvoiceTaxes(AccountingTestCase):
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
+                    'factor_percent': 10,
+                    'repartition_type': 'tax',
+                    'tag_ids': [(4, ref_tax_tag.id, 0)],
+                }),
+
+                (0,0, {
+                    'factor_percent': 90,
                     'repartition_type': 'tax',
                     'account_id': account_1.id,
                     'tag_ids': [(4, ref_tax_tag.id, 0)],
@@ -219,13 +225,13 @@ class TestInvoiceTaxes(AccountingTestCase):
         refund.action_invoice_open()
         refund_move = refund.move_id
 
-        self.assertEqual(len(refund_move.line_ids), 3, "There should be 4 account move lines created for the refund: payable, base and tax line")
+        self.assertEqual(len(refund_move.line_ids), 4, "There should be 4 account move lines created for the refund: payable, base and 2 tax lines")
         ref_base_line = refund_move.line_ids.filtered(lambda x: not x.tax_repartition_line_id and x.account_id.user_type_id.type != 'receivable')
         self.assertEqual(len(ref_base_line), 1, "There should be only one base line generated")
         self.assertEqual(abs(ref_base_line.balance), 100, "Base amount should be 100")
         self.assertEqual(ref_base_line.tag_ids, ref_base_tag, "Base line should have received base tag")
-        ref_tax_line = refund_move.line_ids.filtered(lambda x: x.tax_repartition_line_id.repartition_type == 'tax')
-        self.assertEqual(len(ref_tax_line), 1, "There should be only one tax line")
-        self.assertEqual(ref_tax_line.account_id, account_1, "Tax line should have been made on account 1")
-        self.assertEqual(abs(ref_tax_line.balance), 42, "Tax line should have been made on account 1")
-        self.assertEqual(ref_tax_line.tag_ids, ref_tax_tag, "Tax line should have the right tag")
+        ref_tax_lines = refund_move.line_ids.filtered(lambda x: x.tax_repartition_line_id.repartition_type == 'tax')
+        self.assertEqual(len(ref_tax_lines), 2, "There should be two refund tax lines")
+        self.assertEqual(abs(ref_tax_lines.filtered(lambda x: x.account_id == ref_base_line.account_id).balance), 4.2, "Refund tax line on base account should amount to 4.2 (10% of 42)")
+        self.assertEqual(abs(ref_tax_lines.filtered(lambda x: x.account_id == account_1).balance), 37.8, "Refund tax line on account 1 should amount to 37.8 (90% of 42)")
+        self.assertEqual(ref_tax_lines.mapped('tag_ids'), ref_tax_tag, "Refund tax lines should have the right tag")

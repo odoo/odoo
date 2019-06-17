@@ -668,6 +668,6 @@ class Slide(models.Model):
         res = super(Slide, self)._default_website_meta()
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.description
-        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/slide.slide/%s/image_small" % (self.id)
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/slide.slide/%s/image" % (self.id)
         res['default_meta_description'] = self.description
         return res

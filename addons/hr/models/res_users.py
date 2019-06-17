@@ -21,7 +21,7 @@ class User(models.Model):
     department_id = fields.Many2one(related='employee_id.department_id', readonly=False, related_sudo=False)
     address_id = fields.Many2one(related='employee_id.address_id', readonly=False, related_sudo=False)
     work_location = fields.Char(related='employee_id.work_location', readonly=False, related_sudo=False)
-    parent_id = fields.Many2one(related='employee_id.parent_id', related_sudo=False)
+    employee_parent_id = fields.Many2one(related='employee_id.parent_id', related_sudo=False)
     coach_id = fields.Many2one(related='employee_id.coach_id', readonly=False, related_sudo=False)
     address_home_id = fields.Many2one(related='employee_id.address_home_id', readonly=False, related_sudo=False)
     is_address_home_a_company = fields.Boolean(related='employee_id.is_address_home_a_company', readonly=False, related_sudo=False)
@@ -68,7 +68,7 @@ class User(models.Model):
             'child_ids',
             'employee_id',
             'employee_ids',
-            'parent_id',
+            'employee_parent_id',
         ]
 
         hr_writable_fields = [
@@ -96,7 +96,7 @@ class User(models.Model):
             'marital',
             'mobile_phone',
             'notes',
-            'parent_id',
+            'employee_parent_id',
             'passport_id',
             'permit_no',
             'employee_phone',

@@ -1998,6 +1998,36 @@ QUnit.module('basic_fields', {
         list.destroy();
     });
 
+    QUnit.test("binary fields input value is empty whean clearing after uploading", async function (assert) {
+        assert.expect(2);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<field name="document" filename="foo"/>' +
+                '<field name="foo"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+
+        // // We need to convert the input type since we can't programmatically set the value of a file input
+        form.$('.o_input_file').attr('type', 'text').val('coucou.txt');
+
+        assert.strictEqual(form.$('.o_input_file').val(), 'coucou.txt',
+            "input value should be changed to \"coucou.txt\"");
+
+        await testUtils.dom.click(form.$('.o_field_binary_file > .o_clear_file_button'));
+
+        assert.strictEqual(form.$('.o_input_file').val(), '',
+            "input value should be empty");
+
+        form.destroy();
+    });
+
     QUnit.test('field text in editable list view', async function (assert) {
         assert.expect(1);
 

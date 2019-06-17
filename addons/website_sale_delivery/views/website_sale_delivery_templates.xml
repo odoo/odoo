@@ -19,6 +19,7 @@
       <xpath expr="." position="inside">
         <script type="text/javascript" src="/website_sale_delivery/static/src/js/website_sale_delivery.js"></script>
         <link rel="stylesheet" type="text/scss" href="/website_sale_delivery/static/src/scss/website_sale_delivery.scss"/>
+        <script type="text/javascript" src="/website_sale_delivery/static/src/js/website_free_delivery_tour.js"></script>
       </xpath>
     </template>
 
@@ -28,11 +29,9 @@
         <t t-set='badge_class' t-value="(delivery_nb != 1 and 'float-right ' or '') + 'badge badge-secondary'" />
         <t t-if="delivery.delivery_type == 'fixed'">
           <span t-if="delivery.fixed_price > 0.0" t-att-class="badge_class">
-            <t t-set="monetary_options" t-value='{"widget": "monetary",
-                                                   "from_currency": delivery.product_id.company_id.currency_id,
-                                                   "display_currency": website_sale_order.currency_id}'/>
-            <t t-if="delivery.free_over" t-esc="delivery.rate_shipment(website_sale_order)['price']" t-options='monetary_options'/>
-            <t t-else="" t-esc="delivery.fixed_price" t-options='monetary_options'/>
+            <t t-esc="delivery.rate_shipment(website_sale_order)['price'] if delivery.free_over else delivery.fixed_price"
+               t-options='{"widget": "monetary", "from_currency": delivery.product_id.company_id.currency_id,
+                           "display_currency": website_sale_order.currency_id}'/>
           </span>
           <span t-else="" t-att-class="badge_class">Free</span>
         </t>

@@ -265,6 +265,11 @@ class HolidaysRequest(models.Model):
         self.request_unit_hours = False
         self.request_unit_custom = False
 
+    @api.onchange('user_id')
+    def _onchange_user_id(self):
+        if not self.out_of_office_message:
+            self.out_of_office_message = self.user_id.out_of_office_message
+
     @api.onchange('request_date_from_period', 'request_hour_from', 'request_hour_to',
                   'request_date_from', 'request_date_to',
                   'employee_id')
@@ -575,6 +580,10 @@ class HolidaysRequest(models.Model):
 
     @api.multi
     def write(self, values):
+        # Allow an employee to always write his own out of office message
+        if len(self) == 1 and values.keys() == {'out_of_office_message'} and self.employee_id.user_id == self.env.user:
+            return super(HolidaysRequest, self.sudo()).write(values)
+
         employee_id = values.get('employee_id', False)
         if not self.env.context.get('leave_fast_create') and values.get('state'):
             self._check_approval_update(values['state'])
@@ -788,8 +797,7 @@ class HolidaysRequest(models.Model):
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         is_manager = self.env.user.has_group('hr_holidays.group_hr_holidays_manager')
-        if not all(self._ids):
-            return
+
         for holiday in self:
             val_type = holiday.holiday_status_id.validation_type
 
@@ -829,7 +837,7 @@ class HolidaysRequest(models.Model):
 
     def _get_responsible_for_approval(self):
         self.ensure_one()
-        responsible = self.env.user
+        responsible = self.env['res.users']
 
         if self.validation_type == 'hr' or (self.validation_type == 'both' and self.state == 'validate1'):
             if self.holiday_status_id.responsible_id:
@@ -854,13 +862,13 @@ class HolidaysRequest(models.Model):
                 holiday.activity_schedule(
                     'hr_holidays.mail_act_leave_approval',
                     note=note,
-                    user_id=holiday.sudo()._get_responsible_for_approval().id)
+                    user_id=holiday.sudo()._get_responsible_for_approval().id or self.env.user.id)
             elif holiday.state == 'validate1':
                 holiday.activity_feedback(['hr_holidays.mail_act_leave_approval'])
                 holiday.activity_schedule(
                     'hr_holidays.mail_act_leave_second_approval',
                     note=note,
-                    user_id=holiday.sudo()._get_responsible_for_approval().id)
+                    user_id=holiday.sudo()._get_responsible_for_approval().id or self.env.user.id)
             elif holiday.state == 'validate':
                 to_do |= holiday
             elif holiday.state == 'refuse':
