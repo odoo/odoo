@@ -2,10 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 import logging
+from datetime import datetime
 from werkzeug.exceptions import Forbidden, NotFound
 
 from odoo import fields, http, tools, _
 from odoo.http import request
+from odoo.addons.auth_signup.controllers.main import AuthSignupHome as Home
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.payment.controllers.portal import PaymentProcessing
@@ -1225,3 +1227,83 @@ class WebsiteSale(http.Controller):
                 res_product['price'] = FieldMonetary.value_to_html(res_product['price'], monetary_options)
 
         return res
+
+
+    # --------------------------------------------------------------------------
+    # Products Recently Viewed
+    # --------------------------------------------------------------------------
+    @http.route('/shop/products/recently_viewed', type='json', auth='public', website=True)
+    def products_recently_viewed(self, excluded_ids=[], **kwargs):
+        """
+        Returns list of recently viewed products according to current user and product options
+        """
+
+        current_sale_order = request.session.get('sale_order_id')
+        if current_sale_order:
+            order_lines = request.env['sale.order.line'].sudo().search([('order_id', '=', current_sale_order)])
+            excluded_ids += order_lines.mapped('product_id.id')
+
+        if not request.env.user._is_public():
+            products = request.env.user.partner_id.get_statistics_last_viewed('product.product', excluded_ids)
+        else:
+            recently_viewed = json.loads(request.httprequest.cookies.get('recently_viewed_product_ids', "[]"))[:15]
+            product_ids = [product_id for product_id in recently_viewed if product_id not in excluded_ids]
+            products = request.env['product.product'].browse(product_ids[:12])
+
+        if not products:
+            # TODO Replace with most viewed products
+            products = request.env['product.product'].search([], limit=12)
+
+        fields = ['id', 'name', 'website_url']
+        res = {
+            'products': products.read(fields),
+        }
+
+        FieldMonetary = request.env['ir.qweb.field.monetary']
+        monetary_options = {
+            'display_currency': request.website.get_current_pricelist().currency_id,
+        }
+        for res_product, product in zip(res['products'], products):
+            combination_info = product._get_combination_info_variant()
+            res_product.update(combination_info)
+            res_product['list_price'] = FieldMonetary.value_to_html(res_product['list_price'], monetary_options)
+            res_product['price'] = FieldMonetary.value_to_html(res_product['price'], monetary_options)
+            res_product['rating'] = request.env["ir.ui.view"].render_template('website_rating.rating_widget_stars_static', values={
+                'rating_avg': product.rating_avg,
+                'rating_count': product.rating_count,
+            })
+
+        return res
+
+    @http.route('/shop/products/recently_viewed_update', type='json', auth='public', website=True)
+    def products_recently_viewed_update(self, product_id, **kwargs):
+
+        if not product_id or not request.env['product.product'].browse(product_id)._is_variant_possible():
+            return
+        if not request.env.user._is_public():
+            request.env.user.partner_id.add_statistics_view('product.product', product_id)
+        else:
+            recently_viewed = json.loads(request.httprequest.cookies.get('recently_viewed_product_ids', "[]"))[:15]
+            try:
+                recently_viewed.remove(product_id)
+            except ValueError:
+                pass
+            recently_viewed.insert(0, product_id)
+
+            return {'recently_viewed_product_ids': json.dumps(recently_viewed[:15])}
+
+class SaleAuthLogin(Home):
+    @http.route()
+    def web_auth_signup(self, *args, **kwargs):
+        response = super(SaleAuthLogin, self).web_auth_signup(*args, **kwargs)
+        user = request.env['res.users'].sudo().search([('login', '=', kwargs.get('login'))])
+        if 'error' not in response.qcontext and request.httprequest.method == 'POST':
+            recently_viewed = json.loads(request.httprequest.cookies.get('recently_viewed_product_ids', "[]"))[:15]
+            if recently_viewed:
+                product_views = []
+                res_model_id = request.env['ir.model'].sudo().search([('model', '=', 'product.product')], limit=1).id
+                for product_id in recently_viewed[::-1]:
+                    product_views.append({'partner_id': user.partner_id.id, 'res_model_id': res_model_id, 'res_id': product_id})
+                request.env['statistics.statistics'].create(product_views)
+                response.delete_cookie('recently_viewed_product_ids')
+        return response

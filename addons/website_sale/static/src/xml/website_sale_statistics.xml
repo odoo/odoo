@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<!-- Recently Viewed Products Carousel -->
+<t t-name="website_sale.productsRecentlyViewed">
+    <div id="o_carousel_recently_viewed_products" class="carousel slide">
+        <div class="carousel-inner">
+        <t t-foreach="products.length" t-as="_index">
+            <t t-if="_index % productFrame === 0">
+                <t t-set="_toIndex" t-value="_index + productFrame > products.length ? _index : _index + productFrame"/>
+                <div t-if="_index != _toIndex" t-attf-class="carousel-item #{ _index === 0 ? 'active' : ''}">
+                <t t-foreach="products.slice(_index, _toIndex)" t-as="product">
+                    <div t-attf-class="o-product-card-wrap col-md-#{12 / productFrame}">
+                        <div class="o-product-card card">
+                            <input type="hidden" name="product-id" t-att-data-product-id="product.id"/>
+                            <a t-att-href="product.website_url">
+                                <img class="o-product-card-img-top card-img-top" t-att-src="'/web/image/product.product/' + product.id + '/image_256'" alt="Product Image"/>
+                            </a>
+                            <div class="o-product-card-body card-body border-top">
+                                <a t-att-href="product.website_url" class="text-decoration-none">
+                                    <h6 class="card-title mb-0 text-truncate" t-raw="product.display_name"/>
+                                </a>
+                                <t t-raw="product.rating"/>
+                            </div>
+                            <div class="o-product-card-footer card-footer d-flex align-items-center">
+                                <span class="d-block font-weight-bold" t-raw="product.price"/>
+                                <button type="button" role="button" class="btn btn-sm btn-link js_add_cart ml-auto" title="Add to Cart">
+                                    <i class="fa fa-fw fa-shopping-cart"/>
+                                </button>
+                                <button type="button" role="button" class="btn btn-sm btn-link" title="Add to Wishlist">
+                                    <i class="fa fa-fw fa-heart"/>
+                                </button>
+                                <button type="button" role="button" class="btn btn-sm btn-link o_add_compare" title="Compare">
+                                    <i class="fa fa-fw fa-exchange"/>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                </div>
+            </t>
+        </t>
+        </div>
+        <a class="o_carousel_control carousel-control-prev" href="#o_carousel_recently_viewed_products" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="o_carousel_control carousel-control-next" href="#o_carousel_recently_viewed_products" role="button" data-slide="next">
+            <span class="carousel-control-next-icon"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+</t>
+</templates>

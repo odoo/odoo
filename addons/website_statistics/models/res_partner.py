@@ -14,7 +14,7 @@ class ResPartner(models.Model):
 
     statistics_ids = fields.One2many('statistics.statistics', 'partner_id', string="Tracked activities")
 
-    def get_statistics_last_viewed(self, res_model, excluded_ids=[], quantity=10):
+    def get_statistics_last_viewed(self, res_model, excluded_ids=[], quantity=12):
         domain = expression.AND([[('partner_id', '=', self.id)], [('res_model', '=', res_model)]])
         if excluded_ids:
             domain = expression.AND([domain, [('res_id', 'not in', excluded_ids)]])

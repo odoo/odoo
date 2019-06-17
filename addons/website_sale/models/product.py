@@ -394,7 +394,8 @@ class ProductTemplate(models.Model):
 
 
 class Product(models.Model):
-    _inherit = "product.product"
+    _inherit = ["product.product", "statistics.mixin"]
+    _name = 'product.product'
 
     website_id = fields.Many2one(related='product_tmpl_id.website_id', readonly=False)
 

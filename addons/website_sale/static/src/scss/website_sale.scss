@@ -530,3 +530,26 @@ a.no-decoration {
 .o_shadow_animation {
     box-shadow: 0 0 5px 10px rgba(240,8,0,0.4)!important;
 }
+
+/* product recently viewed snippet */
+
+.o-product-card {
+    .o-product-card-img-top {
+        object-fit: scale-down;
+        height: 12rem;
+    }
+}
+
+ .o-product-card-wrap {
+    @media (min-width: 768px){
+        float: left;
+    }
+}
+
+ .o_carousel_control {
+    top: 33.333333%;
+    bottom:33.333333%;
+    width: 2rem;
+    border-radius: 5px;
+    background-color: $o-enterprise-primary-color;
+}

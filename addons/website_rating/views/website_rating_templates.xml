@@ -32,9 +32,7 @@
             <t t-foreach="range(0, empty_star)" t-as="num">
                 <i class="fa fa-star text-black-25" role="img"></i>
             </t>
-            <t t-if="rating_count">
-                (<t t-esc="rating_count"/>)
-            </t>
+            (<t t-esc="rating_count"/>)
         </div>
     </template>
 

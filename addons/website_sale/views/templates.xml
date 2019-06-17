@@ -31,6 +31,7 @@
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_utils.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_payment.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_validate.js"></script>
+            <script type="text/javascript" src="/website_sale/static/src/js/website_sale_statistics.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
         </xpath>
     </template>
@@ -368,6 +369,12 @@
         </xpath>
     </template>
 
+    <template id="recently_viewed_products_products" inherit_id="website_sale.products" active="False" customize_show="True" name="Recently Viewed Products">
+        <xpath expr="//div[@id='oe_structure_website_sale_products_2']" position="before">
+            <t t-call="website_sale.s_products_recently_viewed"/>
+        </xpath>
+    </template>
+
     <template id="option_collapse_categories_recursive" name="Collapse Category Recursive">
         <li class="nav-item">
             <t t-set="children" t-value="not search and c.child_id or c.child_id.filtered(lambda c: c.id in search_categories_ids)"/>
@@ -545,6 +552,7 @@
                     </div>
                 </section>
                 <div itemprop="description" t-field="product.website_description" class="oe_structure mt16" id="product_full_description" />
+                <div id="open_chatter"/>
             </div>
         </t>
     </template>
@@ -588,9 +596,15 @@
         </xpath>
     </template>
 
+    <template id="recently_viewed_products_product" inherit_id="website_sale.product" active="False" customize_show="True" name="Recently Viewed Products">
+        <xpath expr="//div[@t-field='product.website_description']" position="after">
+            <t t-call="website_sale.s_products_recently_viewed"/>
+        </xpath>
+    </template>
+
     <!-- Product options: OpenChatter -->
     <template id="product_comment" inherit_id="website_sale.product" active="False" customize_show="True" name="Discussion and Rating">
-        <xpath expr="//div[@t-field='product.website_description']" position="after">
+        <xpath expr="//div[@id='open_chatter']" position="replace">
             <div class="o_shop_discussion_rating">
                 <section class="container mt16 mb16">
                     <hr/>
@@ -932,7 +946,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-xl-4">
+                        <div class="col-12 col-xl-4" id="o_cart_summary">
                             <t t-call="website_sale.short_cart_summary"/>
                             <div class="d-xl-none mt8">
                                 <a role="button" href="/shop" class="btn btn-secondary mb32">
@@ -1021,6 +1035,14 @@
                     </tr>
                 </tbody>
             </table>
+        </xpath>
+    </template>
+
+    <template id="recently_viewed_products_cart" inherit_id="website_sale.cart" active="False" customize_show="True" name="Recently Viewed Products">
+        <xpath expr="//div[@id='o_cart_summary']" position="after">
+            <div class="col-12">
+                <t t-call="website_sale.s_products_recently_viewed"/>
+            </div>
         </xpath>
     </template>
 
