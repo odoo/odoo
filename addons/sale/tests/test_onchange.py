@@ -42,7 +42,7 @@ class TestOnchangeProductId(TransactionCase):
                                                               list_price=121,
                                                               taxes_id=[(6, 0, [tax_include_id.id])]))
 
-        product_id = self.product_model.create(dict(product_tmpl_id=product_tmpl_id.id))
+        product_id = product_tmpl_id.product_variant_id
 
         fp_id = self.fiscal_position_model.create(dict(name="fiscal position", sequence=1))
 

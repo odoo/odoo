@@ -632,10 +632,8 @@
         <!-- action_confirm for confirmation date -->
         <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_14')]]"/>
 
-        <!-- Moved from deleted module "website_sale_option" -->
-        <record id="product_product_1" model="product.product">
+        <record id="product_product_1_product_template" model="product.template">
             <field name="name">Warranty</field>
-            <field name="default_code">SERV_125889</field>
             <field name="list_price">20.0</field>
             <field name="website_sequence">9980</field>
             <field name="website_published" eval="True"/>
@@ -643,18 +641,26 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">Warranty, issued to the purchaser of an article by its manufacturer, promising to repair or replace it if necessary within a specified period of time.</field>
-            <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_5')])]"/>
             <field name="categ_id" ref="product.product_category_3"/>
             <field name="invoice_policy">delivery</field>
+            <field name="public_categ_ids" eval="[(6, 0, [ref('website_sale.services')])]"/>
         </record>
+
         <record id="product_template_attribute_line_1" model="product.template.attribute.line">
-            <field name="product_tmpl_id" ref="product_product_1_product_template"/>
+            <field name="product_tmpl_id" ref="website_sale.product_product_1_product_template"/>
             <field name="attribute_id" ref="product.product_attribute_3"/>
             <field name="value_ids" eval="[(6,0,[ref('product.product_attribute_value_5'), ref('product.product_attribute_value_6')])]"/>
         </record>
-        <record id="product_product_1_product_template" model="product.template">
-            <field name="attribute_line_ids" eval="[(6,0,[ref('product_template_attribute_line_1')])]"/>
-            <field name="public_categ_ids" eval="[(6,0,[ref('website_sale.services')])]"/>
+
+        <record id="product_product_1" model="product.product">
+            <field name="default_code">SERV_125889</field>
+            <field name="product_tmpl_id" ref="website_sale.product_product_1_product_template"/>
+            <field name="attribute_value_ids" eval="[(6, 0, [ref('product.product_attribute_value_5')])]"/>
+        </record>
+        <record id="product_product_1b" model="product.product">
+            <field name="default_code">SERV_125890</field>
+            <field name="product_tmpl_id" ref="website_sale.product_product_1_product_template"/>
+            <field name="attribute_value_ids" eval="[(6, 0, [ref('product.product_attribute_value_6')])]"/>
         </record>
 
         <!-- Handle automatically created product.template.attribute.value -->

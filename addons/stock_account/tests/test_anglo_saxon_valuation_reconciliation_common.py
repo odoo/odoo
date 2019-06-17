@@ -102,15 +102,15 @@ class ValuationReconciliationTestCase(AccountingTestCase):
             'uom_po_id': uom.id,
         })
 
-        self.test_product_order = self.env['product.product'].create({
+        self.test_product_order = test_product_order_inv_template.product_variant_id
+        self.test_product_order.write({
             'name': 'The chocolate moose - order',
-            'product_tmpl_id': test_product_order_inv_template.id,
             'standard_price': 42.0,
         })
 
-        self.test_product_delivery = self.env['product.product'].create({
+        self.test_product_delivery = test_product_delivery_inv_template.product_variant_id
+        self.test_product_delivery.write({
             'name': 'The chocolate moose - delivery',
-            'product_tmpl_id': test_product_delivery_inv_template.id,
             'standard_price': 42.0,
         })
 

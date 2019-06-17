@@ -61,17 +61,17 @@ class TestUi(odoo.tests.HttpCase):
             'attribute_id': product_attribute.id
         } for i in range(1, 11) for product_attribute in product_attributes])
 
-        product_template_attribute_lines = self.env['product.template.attribute.line'].create([{
+        product_template = self.env.ref("product.product_product_4_product_template")
+
+        self.env['product.template.attribute.line'].create([{
             'attribute_id': product_attribute.id,
-            'product_tmpl_id': self.env.ref("product.product_product_4").id,
+            'product_tmpl_id': product_template.id,
             'value_ids': [(6, 0, product_attribute_values.filtered(
                 lambda product_attribute_value: product_attribute_value.attribute_id == product_attribute
             ).ids)]
         } for product_attribute in product_attributes])
 
-        self.env.ref("product.product_product_4").update({
-            'attribute_line_ids': [(4, product_template_attribute_line.id) for product_template_attribute_line in product_template_attribute_lines]
-        })
+        product_template.create_variant_ids()
 
         self.start_tour("/web", 'sale_product_configurator_advanced_tour', login="admin")
 
@@ -106,15 +106,15 @@ class TestUi(odoo.tests.HttpCase):
             'attribute_id': product_attributes[0].id
         }])
 
-        product_template_attribute_lines = self.env['product.template.attribute.line'].create([{
+        product_template = self.env.ref("product.product_product_4_product_template")
+
+        self.env['product.template.attribute.line'].create([{
             'attribute_id': product_attributes[0].id,
-            'product_tmpl_id': self.env.ref("product.product_product_4").id,
+            'product_tmpl_id': product_template.id,
             'value_ids': [(6, 0, [product_attribute_values[0].id])]
         }])
 
-        self.env.ref("product.product_product_4").update({
-            'attribute_line_ids': [(4, product_template_attribute_lines[0].id)]
-        })
+        product_template.create_variant_ids()
 
         self.start_tour("/web", 'sale_product_configurator_single_custom_attribute_tour', login="admin")
 

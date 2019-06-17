@@ -43,8 +43,8 @@ class TestProductIdChange(AccountingTestCase):
                                                            list_price='121',
                                                            taxes_id=[(6, 0, [tax_include_sale.id])],
                                                            supplier_taxes_id=[(6, 0, [tax_include_purchase.id])]))
-        product = self.product_model.create(dict(product_tmpl_id=product_tmpl.id,
-                                                 standard_price='242'))
+        product = product_tmpl.product_variant_id
+        product.standard_price = '242'
         fp = self.fiscal_position_model.create(dict(name="fiscal position", sequence=1))
         fp_tax_sale = self.fiscal_position_tax_model.create(dict(position_id=fp.id,
                                                             tax_src_id=tax_include_sale.id,
