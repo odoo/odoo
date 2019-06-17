@@ -1364,7 +1364,6 @@ class APIKeysUser(models.Model):
     api_key_ids = fields.One2many('res.users.apikeys', 'user_id', string="API Keys")
 
     def __init__(self, pool, cr):
-        """ Override of __init__ to allow user to set its github_login. """
         init_res = super().__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
         type(self).SELF_WRITEABLE_FIELDS = self.SELF_WRITEABLE_FIELDS + ['api_keys_only_explicit', 'api_key_ids']
