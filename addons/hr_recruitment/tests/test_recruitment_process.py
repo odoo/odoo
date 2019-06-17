@@ -23,7 +23,7 @@ class TestRecruitmentProcess(common.TransactionCase):
         # In Order to test process of Recruitment so giving HR officer's rights
         with open(get_module_resource('hr_recruitment', 'tests', 'resume.eml'), 'rb') as request_file:
             request_message = request_file.read()
-        self.env['mail.thread'].sudo(self.res_users_hr_recruitment_officer.id).message_process(
+        self.env['mail.thread'].with_user(self.res_users_hr_recruitment_officer).message_process(
             'hr.applicant', request_message, custom_values={"job_id": self.env.ref('hr.job_developer').id})
 
         # After getting the mail, I check the details of the new applicant.

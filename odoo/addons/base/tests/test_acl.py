@@ -26,7 +26,7 @@ class TestACL(TransactionCase):
     def test_field_visibility_restriction(self):
         """Check that model-level ``groups`` parameter effectively restricts access to that
            field for users who do not belong to one of the explicitly allowed groups"""
-        currency = self.env['res.currency'].sudo(self.demo_user)
+        currency = self.env['res.currency'].with_user(self.demo_user)
 
         # Verify the test environment first
         original_fields = currency.fields_get([])
@@ -62,7 +62,7 @@ class TestACL(TransactionCase):
     @mute_logger('odoo.models')
     def test_field_crud_restriction(self):
         "Read/Write RPC access to restricted field should be forbidden"
-        partner = self.env['res.partner'].browse(1).sudo(self.demo_user)
+        partner = self.env['res.partner'].browse(1).with_user(self.demo_user)
 
         # Verify the test environment first
         has_group_system = self.demo_user.has_group(GROUP_SYSTEM)
@@ -88,7 +88,7 @@ class TestACL(TransactionCase):
     @mute_logger('odoo.models')
     def test_fields_browse_restriction(self):
         """Test access to records having restricted fields"""
-        partner = self.env['res.partner'].sudo(self.demo_user)
+        partner = self.env['res.partner'].with_user(self.demo_user)
         self._set_field_groups(partner, 'email', GROUP_SYSTEM)
 
         # accessing fields must no raise exceptions...
@@ -102,7 +102,7 @@ class TestACL(TransactionCase):
     def test_view_create_edit_button_invisibility(self):
         """ Test form view Create, Edit, Delete button visibility based on access right of model"""
         methods = ['create', 'edit', 'delete']
-        company = self.env['res.company'].sudo(self.demo_user)
+        company = self.env['res.company'].with_user(self.demo_user)
         company_view = company.fields_view_get(False, 'form')
         view_arch = etree.fromstring(company_view['arch'])
         for method in methods:
@@ -112,7 +112,7 @@ class TestACL(TransactionCase):
         """ Test form view Create, Edit, Delete button visibility based on access right of model"""
         self.erp_system_group.users += self.demo_user
         methods = ['create', 'edit', 'delete']
-        company = self.env['res.company'].sudo(self.demo_user)
+        company = self.env['res.company'].with_user(self.demo_user)
         company_view = company.fields_view_get(False, 'form')
         view_arch = etree.fromstring(company_view['arch'])
         for method in methods:
@@ -121,7 +121,7 @@ class TestACL(TransactionCase):
     def test_m2o_field_create_edit_invisibility(self):
         """ Test many2one field Create and Edit option visibility based on access rights of relation field""" 
         methods = ['create', 'write']
-        company = self.env['res.company'].sudo(self.demo_user)
+        company = self.env['res.company'].with_user(self.demo_user)
         company_view = company.fields_view_get(False, 'form')
         view_arch = etree.fromstring(company_view['arch'])
         field_node = view_arch.xpath("//field[@name='currency_id']")
@@ -133,7 +133,7 @@ class TestACL(TransactionCase):
         """ Test many2one field Create and Edit option visibility based on access rights of relation field""" 
         self.erp_system_group.users += self.demo_user
         methods = ['create', 'write']
-        company = self.env['res.company'].sudo(self.demo_user)
+        company = self.env['res.company'].with_user(self.demo_user)
         company_view = company.fields_view_get(False, 'form')
         view_arch = etree.fromstring(company_view['arch'])
         field_node = view_arch.xpath("//field[@name='currency_id']")
@@ -158,7 +158,7 @@ class TestIrRule(TransactionCase):
         })
 
         # read as demo user the partners (one blank domain)
-        partners_demo = self.env['res.partner'].sudo(user_demo)
+        partners_demo = self.env['res.partner'].with_user(user_demo)
         partners = partners_demo.search([])
         self.assertTrue(partners, "Demo user should see some partner.")
 

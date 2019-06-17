@@ -207,9 +207,9 @@ class TestEditableQuant(SavepointCase):
         self.assertEqual(quant.quantity, 12)
         # Try to write on quant without permission
         with self.assertRaises(AccessError):
-            quant.sudo(user_demo).write({'inventory_quantity': 8})
+            quant.with_user(user_demo).write({'inventory_quantity': 8})
         self.assertEqual(quant.quantity, 12)
 
         # Try to write on quant with permission
-        quant.sudo(user_admin).write({'inventory_quantity': 8})
+        quant.with_user(user_admin).write({'inventory_quantity': 8})
         self.assertEqual(quant.quantity, 8)

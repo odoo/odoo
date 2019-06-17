@@ -9,9 +9,9 @@ class TestCRMLead(TestCrmCases):
 
     def test_crm_lead_cancel(self):
         # I set a new sales team giving access rights of salesman.
-        team = self.env['crm.team'].sudo(self.crm_salemanager.id).create({'name': "Phone Marketing"})
+        team = self.env['crm.team'].with_user(self.crm_salemanager).create({'name': "Phone Marketing"})
         lead = self.env.ref('crm.crm_case_1')
-        lead.sudo(self.crm_salemanager.id).write({'team_id': team.id})
+        lead.with_user(self.crm_salemanager).write({'team_id': team.id})
         # Salesmananger check unqualified lead
         self.assertEqual(lead.stage_id.sequence, 1, 'Lead is in new stage')
 
@@ -21,7 +21,7 @@ class TestCRMLead(TestCrmCases):
 
     def test_crm_lead_unlink(self):
         # Only Sales manager Unlink the Lead so test with Manager's access rights
-        self.env.ref('crm.crm_case_4').sudo(self.crm_salemanager.id).unlink()
+        self.env.ref('crm.crm_case_4').with_user(self.crm_salemanager).unlink()
 
     def test_find_stage(self):
         # I create a new lead
@@ -49,10 +49,10 @@ class TestCRMLead(TestCrmCases):
         # Mail script will fetch his request from mail server. Then I process that mail after read EML file.
         request_file = open(get_module_resource('crm', 'tests', 'customer_request.eml'), 'rb')
         request_message = request_file.read()
-        self.env['mail.thread'].sudo(self.crm_salesman).message_process('crm.lead', request_message)
+        self.env['mail.thread'].with_user(self.crm_salesman).message_process('crm.lead', request_message)
 
         # After getting the mail, I check details of new lead of that customer
-        lead = self.env['crm.lead'].sudo(self.crm_salesman).search([('email_from', '=', 'Mr. John Right <info@customer.com>')], limit=1)
+        lead = self.env['crm.lead'].with_user(self.crm_salesman).search([('email_from', '=', 'Mr. John Right <info@customer.com>')], limit=1)
         self.assertTrue(lead.ids, 'Fail to create merge opportunity wizard')
         self.assertFalse(lead.partner_id, 'Customer should be a new one')
         self.assertEqual(lead.name, 'Fournir votre devis avec le meilleur prix.', 'Subject does not match')
@@ -76,7 +76,7 @@ class TestCRMLead(TestCrmCases):
     def test_crm_lead_merge(self):
         # During a mixed merge (involving leads and opps), data should be handled a certain way following their type (m2o, m2m, text, ...)  Start by creating two leads and an opp and giving the rights of Sales manager.
         default_stage_id = self.ref("crm.stage_lead1")
-        LeadSalesmanager = self.env['crm.lead'].sudo(self.crm_salemanager.id)
+        LeadSalesmanager = self.env['crm.lead'].with_user(self.crm_salemanager)
 
         # TEST CASE 1
         test_crm_opp_01 = LeadSalesmanager.create({
@@ -107,7 +107,7 @@ class TestCRMLead(TestCrmCases):
         additionnal_context = {'active_model': 'crm.lead', 'active_ids': lead_ids, 'active_id': lead_ids[0]}
 
         # I create a merge wizard and merge the leads and opp together in the first item of the list.
-        merge_opp_wizard_01 = self.env['crm.merge.opportunity'].sudo(self.crm_salemanager.id).with_context(**additionnal_context).create({})
+        merge_opp_wizard_01 = self.env['crm.merge.opportunity'].with_user(self.crm_salemanager).with_context(**additionnal_context).create({})
         merge_opp_wizard_01.action_merge()
 
         # I check for the resulting merged opp (based on name and partner)
@@ -140,7 +140,7 @@ class TestCRMLead(TestCrmCases):
         additionnal_context = {'active_model': 'crm.lead', 'active_ids': lead_ids, 'active_id': lead_ids[0]}
 
         # I create a merge wizard and merge the leads together.
-        merge_opp_wizard_02 = self.env['crm.merge.opportunity'].sudo(self.crm_salemanager.id).with_context(**additionnal_context).create({})
+        merge_opp_wizard_02 = self.env['crm.merge.opportunity'].with_user(self.crm_salemanager).with_context(**additionnal_context).create({})
         merge_opp_wizard_02.action_merge()
 
         # I check for the resulting merged lead (based on name and partner)
@@ -170,7 +170,7 @@ class TestCRMLead(TestCrmCases):
         additionnal_context = {'active_model': 'crm.lead', 'active_ids': opportunity_ids, 'active_id': opportunity_ids[0]}
 
         # I create a merge wizard and merge the opps together.
-        merge_opp_wizard_03 = self.env['crm.merge.opportunity'].sudo(self.crm_salemanager.id).with_context(**additionnal_context).create({})
+        merge_opp_wizard_03 = self.env['crm.merge.opportunity'].with_user(self.crm_salemanager).with_context(**additionnal_context).create({})
         merge_opp_wizard_03.action_merge()
 
         merged_opportunity = self.env['crm.lead'].search([('name', '=', 'Test opportunity 2'), ('partner_id', '=', self.env.ref("base.res_partner_3").id)], limit=1)

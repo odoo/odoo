@@ -201,7 +201,7 @@ class TestFields(common.TransactionCase):
             'domain_force': "[('id', '!=', %d)]" % user2.id,
         })
         # group users as a recordset, and read them as user demo
-        users = (user1 + user2 + user3).sudo(self.env.ref('base.user_demo'))
+        users = (user1 + user2 + user3).with_user(self.env.ref('base.user_demo'))
         user1, user2, user3 = users
         # regression test: a bug invalidated the field's value from cache
         user1.company_type
@@ -382,7 +382,7 @@ class TestFields(common.TransactionCase):
         # add group on non-stored inverse field
         self.patch(type(foo).display_name, 'groups', 'base.group_system')
         with self.assertRaises(AccessError):
-            foo.sudo(user).display_name = 'Forbidden'
+            foo.with_user(user).display_name = 'Forbidden'
 
     def test_13_inverse_access(self):
         """ test access rights on inverse fields """
@@ -392,7 +392,7 @@ class TestFields(common.TransactionCase):
         # add group on non-stored inverse field
         self.patch(type(foo).display_name, 'groups', 'base.group_system')
         with self.assertRaises(AccessError):
-            foo.sudo(user).display_name = 'Forbidden'
+            foo.with_user(user).display_name = 'Forbidden'
 
     def test_14_search(self):
         """ test search on computed fields """
@@ -659,7 +659,7 @@ class TestFields(common.TransactionCase):
         self.assertEqual(message.discussion.env, self.env)
 
         # "migrate" message into demo_env, and check again
-        demo_message = message.sudo(demo)
+        demo_message = message.with_user(demo)
         self.assertEqual(demo_message.env, demo_env)
         self.assertEqual(demo_message.discussion.env, demo_env)
 
@@ -814,57 +814,57 @@ class TestFields(common.TransactionCase):
             'tag_id': tag1.id,
         })
         record.invalidate_cache()
-        self.assertEqual(record.sudo(user0).foo, 'main')
-        self.assertEqual(record.sudo(user1).foo, 'default')
-        self.assertEqual(record.sudo(user2).foo, 'default')
-        self.assertEqual(str(record.sudo(user0).date), '1932-11-09')
-        self.assertEqual(record.sudo(user1).date, False)
-        self.assertEqual(record.sudo(user2).date, False)
-        self.assertEqual(str(record.sudo(user0).moment), '1932-11-09 00:00:00')
-        self.assertEqual(record.sudo(user1).moment, False)
-        self.assertEqual(record.sudo(user2).moment, False)
-        self.assertEqual(record.sudo(user0).tag_id, tag1)
-        self.assertEqual(record.sudo(user1).tag_id, tag0)
-        self.assertEqual(record.sudo(user2).tag_id, tag0)
+        self.assertEqual(record.with_user(user0).foo, 'main')
+        self.assertEqual(record.with_user(user1).foo, 'default')
+        self.assertEqual(record.with_user(user2).foo, 'default')
+        self.assertEqual(str(record.with_user(user0).date), '1932-11-09')
+        self.assertEqual(record.with_user(user1).date, False)
+        self.assertEqual(record.with_user(user2).date, False)
+        self.assertEqual(str(record.with_user(user0).moment), '1932-11-09 00:00:00')
+        self.assertEqual(record.with_user(user1).moment, False)
+        self.assertEqual(record.with_user(user2).moment, False)
+        self.assertEqual(record.with_user(user0).tag_id, tag1)
+        self.assertEqual(record.with_user(user1).tag_id, tag0)
+        self.assertEqual(record.with_user(user2).tag_id, tag0)
 
-        record.sudo(user1).write({
+        record.with_user(user1).write({
             'foo': 'alpha',
             'date': '1932-12-10',
             'moment': '1932-12-10 23:59:59',
             'tag_id': tag2.id,
         })
         record.invalidate_cache()
-        self.assertEqual(record.sudo(user0).foo, 'main')
-        self.assertEqual(record.sudo(user1).foo, 'alpha')
-        self.assertEqual(record.sudo(user2).foo, 'default')
-        self.assertEqual(str(record.sudo(user0).date), '1932-11-09')
-        self.assertEqual(str(record.sudo(user1).date), '1932-12-10')
-        self.assertEqual(record.sudo(user2).date, False)
-        self.assertEqual(str(record.sudo(user0).moment), '1932-11-09 00:00:00')
-        self.assertEqual(str(record.sudo(user1).moment), '1932-12-10 23:59:59')
-        self.assertEqual(record.sudo(user2).moment, False)
-        self.assertEqual(record.sudo(user0).tag_id, tag1)
-        self.assertEqual(record.sudo(user1).tag_id, tag2)
-        self.assertEqual(record.sudo(user2).tag_id, tag0)
+        self.assertEqual(record.with_user(user0).foo, 'main')
+        self.assertEqual(record.with_user(user1).foo, 'alpha')
+        self.assertEqual(record.with_user(user2).foo, 'default')
+        self.assertEqual(str(record.with_user(user0).date), '1932-11-09')
+        self.assertEqual(str(record.with_user(user1).date), '1932-12-10')
+        self.assertEqual(record.with_user(user2).date, False)
+        self.assertEqual(str(record.with_user(user0).moment), '1932-11-09 00:00:00')
+        self.assertEqual(str(record.with_user(user1).moment), '1932-12-10 23:59:59')
+        self.assertEqual(record.with_user(user2).moment, False)
+        self.assertEqual(record.with_user(user0).tag_id, tag1)
+        self.assertEqual(record.with_user(user1).tag_id, tag2)
+        self.assertEqual(record.with_user(user2).tag_id, tag0)
 
         # unlink value of a many2one (tag2), and check again
         tag2.unlink()
-        self.assertEqual(record.sudo(user0).tag_id, tag1)
-        self.assertEqual(record.sudo(user1).tag_id, tag0.browse())
-        self.assertEqual(record.sudo(user2).tag_id, tag0)
+        self.assertEqual(record.with_user(user0).tag_id, tag1)
+        self.assertEqual(record.with_user(user1).tag_id, tag0.browse())
+        self.assertEqual(record.with_user(user2).tag_id, tag0)
 
-        record.sudo(user1).foo = False
+        record.with_user(user1).foo = False
         record.invalidate_cache()
-        self.assertEqual(record.sudo(user0).foo, 'main')
-        self.assertEqual(record.sudo(user1).foo, False)
-        self.assertEqual(record.sudo(user2).foo, 'default')
+        self.assertEqual(record.with_user(user0).foo, 'main')
+        self.assertEqual(record.with_user(user1).foo, False)
+        self.assertEqual(record.with_user(user2).foo, 'default')
 
         # set field with 'force_company' in context
-        record.sudo(user0).with_context(force_company=company1.id).foo = 'beta'
+        record.with_user(user0).with_context(force_company=company1.id).foo = 'beta'
         record.invalidate_cache()
-        self.assertEqual(record.sudo(user0).foo, 'main')
-        self.assertEqual(record.sudo(user1).foo, 'beta')
-        self.assertEqual(record.sudo(user2).foo, 'default')
+        self.assertEqual(record.with_user(user0).foo, 'main')
+        self.assertEqual(record.with_user(user1).foo, 'beta')
+        self.assertEqual(record.with_user(user2).foo, 'default')
 
         # create company record and attribute
         company_record = self.env['test_new_api.company'].create({'foo': 'ABC'})
@@ -889,10 +889,10 @@ class TestFields(common.TransactionCase):
         self.assertFalse(user0.has_group('base.group_system'))
         self.patch(type(record).foo, 'groups', 'base.group_system')
         with self.assertRaises(AccessError):
-            record.sudo(user0).foo = 'forbidden'
+            record.with_user(user0).foo = 'forbidden'
 
         user0.write({'groups_id': [(4, self.env.ref('base.group_system').id)]})
-        record.sudo(user0).foo = 'yes we can'
+        record.with_user(user0).foo = 'yes we can'
 
         # add ir.rule to prevent access on record
         self.assertTrue(user0.has_group('base.group_user'))
@@ -902,7 +902,7 @@ class TestFields(common.TransactionCase):
             'domain_force': str([('id', '!=', record.id)]),
         })
         with self.assertRaises(AccessError):
-            record.sudo(user0).foo = 'forbidden'
+            record.with_user(user0).foo = 'forbidden'
 
     def test_30_read(self):
         """ test computed fields as returned by read(). """
@@ -1264,7 +1264,7 @@ class TestFields(common.TransactionCase):
         })
         # And this gives error
         with self.assertRaises(UserError):
-            self.env['test_new_api.binary_svg'].sudo(
+            self.env['test_new_api.binary_svg'].with_user(
                 self.env.ref('base.user_demo'),
             ).create({
                 'name': 'Test without attachment',
@@ -1285,7 +1285,7 @@ class TestFields(common.TransactionCase):
         ])
         self.assertEqual(attachment.mimetype, 'image/svg+xml')
         # ...but this should be neutered with demo user
-        record = self.env['test_new_api.binary_svg'].sudo(
+        record = self.env['test_new_api.binary_svg'].with_user(
             self.env.ref('base.user_demo'),
         ).create({
             'name': 'Test without attachment',
@@ -1302,7 +1302,7 @@ class TestFields(common.TransactionCase):
         from odoo.addons.base.tests.test_mimetypes import SVG
         demo_user = self.env.ref('base.user_demo')
         # User demo changes his own avatar
-        demo_user.sudo(demo_user).image = SVG
+        demo_user.with_user(demo_user).image = SVG
         # The SVG file should have been neutered
         attachment = self.env['ir.attachment'].search([
             ('res_model', '=', demo_user.partner_id._name),

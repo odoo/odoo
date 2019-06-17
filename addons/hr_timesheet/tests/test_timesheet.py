@@ -84,7 +84,7 @@ class TestTimesheet(TestCommonTimesheet):
         Timesheet = self.env['account.analytic.line']
         timesheet_uom = self.project_customer.analytic_account_id.company_id.project_time_mode_id
         # employee 1 log some timesheet on task 1
-        timesheet1 = Timesheet.sudo(self.user_employee.id).create({
+        timesheet1 = Timesheet.with_user(self.user_employee).create({
             'project_id': self.project_customer.id,
             'task_id': self.task1.id,
             'name': 'my first timesheet',
@@ -97,7 +97,7 @@ class TestTimesheet(TestCommonTimesheet):
 
         # employee 1 cannot log timesheet for employee 2
         with self.assertRaises(AccessError):
-            timesheet2 = Timesheet.sudo(self.user_employee.id).create({
+            timesheet2 = Timesheet.with_user(self.user_employee).create({
                 'project_id': self.project_customer.id,
                 'task_id': self.task1.id,
                 'name': 'a second timesheet but for employee 2',
@@ -106,7 +106,7 @@ class TestTimesheet(TestCommonTimesheet):
             })
 
         # manager log timesheet for employee 2
-        timesheet3 = Timesheet.sudo(self.user_manager.id).create({
+        timesheet3 = Timesheet.with_user(self.user_manager).create({
             'project_id': self.project_customer.id,
             'task_id': self.task1.id,
             'name': 'a second timesheet but for employee 2',
@@ -118,7 +118,7 @@ class TestTimesheet(TestCommonTimesheet):
         self.assertEquals(timesheet3.product_uom_id, timesheet_uom, "The UoM of the timesheet 3 should be the one set on the company of the analytic account.")
 
         # employee 1 log some timesheet on project (no task)
-        timesheet4 = Timesheet.sudo(self.user_employee.id).create({
+        timesheet4 = Timesheet.with_user(self.user_employee).create({
             'project_id': self.project_customer.id,
             'name': 'my first timesheet',
             'unit_amount': 4,
@@ -129,7 +129,7 @@ class TestTimesheet(TestCommonTimesheet):
         """ Test access rights : user can update its own timesheets only, and manager can change all """
         # employee 1 log some timesheet on task 1
         Timesheet = self.env['account.analytic.line']
-        timesheet1 = Timesheet.sudo(self.user_employee.id).create({
+        timesheet1 = Timesheet.with_user(self.user_employee).create({
             'project_id': self.project_customer.id,
             'task_id': self.task1.id,
             'name': 'my first timesheet',
@@ -137,12 +137,12 @@ class TestTimesheet(TestCommonTimesheet):
         })
         # then employee 2 try to modify it
         with self.assertRaises(AccessError):
-            timesheet1.sudo(self.user_employee2.id).write({
+            timesheet1.with_user(self.user_employee2).write({
                 'name': 'i try to update this timesheet',
                 'unit_amount': 2,
             })
         # manager can modify all timesheet
-        timesheet1.sudo(self.user_manager.id).write({
+        timesheet1.with_user(self.user_manager).write({
             'unit_amount': 8,
             'employee_id': self.empl_employee2.id,
         })
@@ -239,13 +239,13 @@ class TestTimesheet(TestCommonTimesheet):
         self.empl_employee.timesheet_cost = 5.0
         self.empl_employee2.timesheet_cost = 6.0
         # create a timesheet for each employee
-        timesheet_1 = Timesheet.sudo(self.user_employee).create({
+        timesheet_1 = Timesheet.with_user(self.user_employee).create({
             'project_id': self.project_customer.id,
             'task_id': self.task1.id,
             'name': '/',
             'unit_amount': 1,
         })
-        timesheet_2 = Timesheet.sudo(self.user_employee2).create({
+        timesheet_2 = Timesheet.with_user(self.user_employee2).create({
             'project_id': self.project_customer.id,
             'task_id': self.task1.id,
             'name': '/',

@@ -78,7 +78,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
     def test_validate_with_timesheet(self):
         # employee creates a leave request
         number_of_days = (self.leave_end_datetime - self.leave_start_datetime).days
-        holiday = self.Requests.sudo(self.user_employee.id).create({
+        holiday = self.Requests.with_user(self.user_employee).create({
             'name': 'Leave 1',
             'employee_id': self.empl_employee.id,
             'holiday_status_id': self.hr_leave_type_with_ts.id,
@@ -96,7 +96,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
     def test_validate_without_timesheet(self):
         # employee creates a leave request
         number_of_days = (self.leave_end_datetime - self.leave_start_datetime).days
-        holiday = self.Requests.sudo(self.user_employee.id).create({
+        holiday = self.Requests.with_user(self.user_employee).create({
             'name': 'Leave 1',
             'employee_id': self.empl_employee.id,
             'holiday_status_id': self.hr_leave_type_no_ts.id,

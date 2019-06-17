@@ -7,7 +7,7 @@ class TestPurchaseOrderProcess(TestPurchase):
         """ Test cancel purchase order with group user."""
 
         # In order to test the cancel flow,start it from canceling confirmed purchase order.
-        po_edit_with_user = self.env.ref('purchase.purchase_order_5').sudo(self.res_users_purchase_user.id)
+        po_edit_with_user = self.env.ref('purchase.purchase_order_5').with_user(self.res_users_purchase_user)
 
         # Confirm the purchase order.
         po_edit_with_user.button_confirm()

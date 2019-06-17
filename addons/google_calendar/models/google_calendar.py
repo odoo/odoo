@@ -547,7 +547,7 @@ class GoogleCalendar(models.AbstractModel):
         for user_to_sync in users.ids:
             _logger.info("Calendar Synchro - Starting synchronization for a new user [%s]", user_to_sync)
             try:
-                resp = self.sudo(user_to_sync).synchronize_events(lastSync=True)
+                resp = self.with_user(user_to_sync).synchronize_events(lastSync=True)
                 if resp.get("status") == "need_reset":
                     _logger.info("[%s] Calendar Synchro - Failed - NEED RESET  !", user_to_sync)
                 else:
@@ -561,7 +561,7 @@ class GoogleCalendar(models.AbstractModel):
         user_to_sync = self.ids and self.ids[0] or self.env.uid
         current_user = self.env['res.users'].sudo().browse(user_to_sync)
 
-        recs = self.sudo(user_to_sync)
+        recs = self.with_user(user_to_sync)
         status, current_google, ask_time = recs.get_calendar_primary_id()
         if current_user.google_calendar_cal_id:
             if current_google != current_user.google_calendar_cal_id:

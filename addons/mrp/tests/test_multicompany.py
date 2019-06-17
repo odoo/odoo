@@ -22,7 +22,7 @@ class TestMrpMulticompany(common.TransactionCase):
 
     def test_00_multicompany_user(self):
         """check no error on getting default mrp.production values in multicompany setting"""
-        StockLocation = self.env['stock.location'].sudo(self.multicompany_user_id)
+        StockLocation = self.env['stock.location'].with_user(self.multicompany_user_id)
         fields = ['location_src_id', 'location_dest_id']
         defaults = StockLocation.default_get(['location_id', 'location_dest_id', 'type'])
         for field in fields:

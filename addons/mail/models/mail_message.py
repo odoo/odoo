@@ -658,7 +658,7 @@ class Message(models.Model):
         model_ids = {}
 
         # check read access rights before checking the actual rules on the given ids
-        super(Message, self.sudo(access_rights_uid or self._uid)).check_access_rights('read')
+        super(Message, self.with_user(access_rights_uid or self._uid)).check_access_rights('read')
 
         self._cr.execute("""
             SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.message_type,

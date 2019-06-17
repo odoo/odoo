@@ -13,7 +13,7 @@ class TestMrpOrder(TestMrpCommon):
 
     def test_access_rights_manager(self):
         """ Checks an MRP manager can create, confirm and cancel a manufacturing order. """
-        man_order_form = Form(self.env['mrp.production'].sudo(self.user_mrp_manager))
+        man_order_form = Form(self.env['mrp.production'].with_user(self.user_mrp_manager))
         man_order_form.product_id = self.product_4
         man_order_form.product_qty = 5.0
         man_order_form.bom_id = self.bom_1
@@ -27,7 +27,7 @@ class TestMrpOrder(TestMrpCommon):
 
     def test_access_rights_user(self):
         """ Checks an MRP user can create, confirm and cancel a manufacturing order. """
-        man_order_form = Form(self.env['mrp.production'].sudo(self.user_mrp_user))
+        man_order_form = Form(self.env['mrp.production'].with_user(self.user_mrp_user))
         man_order_form.product_id = self.product_4
         man_order_form.product_qty = 5.0
         man_order_form.bom_id = self.bom_1
@@ -64,7 +64,7 @@ class TestMrpOrder(TestMrpCommon):
         test_date_planned = Dt.now() - timedelta(days=1)
         test_quantity = 2.0
         self.bom_1.routing_id = False
-        man_order_form = Form(self.env['mrp.production'].sudo(self.user_mrp_user))
+        man_order_form = Form(self.env['mrp.production'].with_user(self.user_mrp_user))
         man_order_form.product_id = self.product_4
         man_order_form.bom_id = self.bom_1
         man_order_form.product_uom_id = self.product_4.uom_id

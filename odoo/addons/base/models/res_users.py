@@ -579,7 +579,7 @@ class Users(models.Model):
                     user = self.search(self._get_login_domain(login))
                     if not user:
                         raise AccessDenied()
-                    user = user.sudo(user.id)
+                    user = user.with_user(user)
                     user._check_credentials(password)
                     user._update_last_login()
         except AccessDenied:
@@ -700,7 +700,7 @@ class Users(models.Model):
         # use singleton's id if called on a non-empty recordset, otherwise
         # context uid
         uid = self.id or self._uid
-        return self.sudo(user=uid)._has_group(group_ext_id)
+        return self.with_user(uid)._has_group(group_ext_id)
 
     @api.model
     @tools.ormcache('self._uid', 'group_ext_id')

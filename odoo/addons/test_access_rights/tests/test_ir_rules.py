@@ -64,7 +64,7 @@ class TestRules(TransactionCase):
         self.assertItemsEqual(container_admin.some_ids.ids, ids)
 
         # check the container as the public user
-        container_user = container_admin.sudo(self.browse_ref('base.public_user'))
+        container_user = container_admin.with_user(self.browse_ref('base.public_user'))
         self.assertItemsEqual(container_user.some_ids.ids, [self.id1])
 
         # this should not fail

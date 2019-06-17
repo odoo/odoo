@@ -103,7 +103,7 @@ class TestACLFeedback(Feedback):
         """ Operation is never allowed
         """
         with self.assertRaises(AccessError) as ctx:
-            self.record.sudo(self.user).write({'val': 10})
+            self.record.with_user(self.user).write({'val': 10})
         self.assertEqual(
             ctx.exception.args[0],
             """Sorry, you are not allowed to modify documents of type 'Object For Test Access Right' (test_access_right.some_obj). No group currently allows this operation. - (Operation: write, User: %d)""" % self.user.id
@@ -120,7 +120,7 @@ class TestACLFeedback(Feedback):
         )
 
     def test_two_groups(self):
-        r = self.record.sudo(self.user)
+        r = self.record.with_user(self.user)
         expected = """Sorry, you are not allowed to access documents of type 'Object For Test Access Right' (test_access_right.some_obj). This operation is allowed for the groups:\n\t- Group 0\n\t- Group 1 - (Operation: read, User: %d)""" % self.user.id
         with self.assertRaises(AccessError) as ctx:
             # noinspection PyStatementEffect
@@ -138,7 +138,7 @@ class TestIRRuleFeedback(Feedback):
         self.model = self.env['ir.model'].search([('model', '=', 'test_access_right.some_obj')])
         self.record = self.env['test_access_right.some_obj'].create({
             'val': 0,
-        }).sudo(self.user)
+        }).with_user(self.user)
 
     def _make_rule(self, name, domain, global_=False, attr='write'):
         return self.env['ir.rule'].create({
@@ -180,7 +180,7 @@ class TestIRRuleFeedback(Feedback):
         self.assertRaisesRegex(
             AccessError,
             r"Implicitly accessed through \\'Object for testing related access rights\\' \(test_access_right.parent\)\.",
-            p.sudo(self.user).write, {'val': 1}
+            p.with_user(self.user).write, {'val': 1}
         )
 
     def test_locals(self):
@@ -294,11 +294,11 @@ Note: this might be a multi-company issue.
         )
 
         p = self.env['test_access_right.parent'].create({'obj_id': self.record.id})
-        # p.sudo(self.user).val
+        # p.with_user(self.user).val
         self.assertRaisesRegex(
             AccessError,
             r"Implicitly accessed through \\'Object for testing related access rights\\' \(test_access_right.parent\)\.",
-            lambda: p.sudo(self.user).val
+            lambda: p.with_user(self.user).val
         )
 
 class TestFieldGroupFeedback(Feedback):
@@ -307,7 +307,7 @@ class TestFieldGroupFeedback(Feedback):
         super().setUp()
         self.record = self.env['test_access_right.some_obj'].create({
             'val': 0,
-        }).sudo(self.user)
+        }).with_user(self.user)
 
 
     def test_read(self):

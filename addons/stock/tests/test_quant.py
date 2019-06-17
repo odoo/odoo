@@ -485,9 +485,9 @@ class StockQuant(SavepointCase):
                 'quantity': 1.0,
             })
         with self.assertRaises(AccessError):
-            quant.sudo(self.demo_user).write({'quantity': 2.0})
+            quant.with_user(self.demo_user).write({'quantity': 2.0})
         with self.assertRaises(AccessError):
-            quant.sudo(self.demo_user).unlink()
+            quant.with_user(self.demo_user).unlink()
 
         self.env = self.env(user=self.stock_user)
         with self.assertRaises(AccessError):
@@ -497,9 +497,9 @@ class StockQuant(SavepointCase):
                 'quantity': 1.0,
             })
         with self.assertRaises(AccessError):
-            quant.sudo(self.demo_user).write({'quantity': 2.0})
+            quant.with_user(self.demo_user).write({'quantity': 2.0})
         with self.assertRaises(AccessError):
-            quant.sudo(self.demo_user).unlink()
+            quant.with_user(self.demo_user).unlink()
 
     def test_in_date_1(self):
         """ Check that no incoming date is set when updating the quantity of an untracked quant.
