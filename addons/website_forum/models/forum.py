@@ -20,6 +20,7 @@ class Forum(models.Model):
     _name = 'forum.forum'
     _description = 'Forum'
     _inherit = ['mail.thread', 'image.mixin', 'website.seo.metadata', 'website.multi.mixin']
+    _order = "sequence"
 
     @api.model
     def _get_default_faq(self):
@@ -28,6 +29,7 @@ class Forum(models.Model):
 
     # description and use
     name = fields.Char('Forum Name', required=True, translate=True)
+    sequence = fields.Integer('Sequence', default=1)
     active = fields.Boolean(default=True)
     faq = fields.Html('Guidelines', default=_get_default_faq, translate=html_translate, sanitize=False)
     description = fields.Text(
