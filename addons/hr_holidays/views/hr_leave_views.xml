@@ -277,6 +277,7 @@
                         </div>
 
                         <field name="name" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}"/>
+                        <field name="user_id" invisible="1"/>
                         <field name="out_of_office_message"/>
                     </group>
                     <group name="col_right">
