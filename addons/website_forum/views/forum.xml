@@ -14,6 +14,7 @@
             <field name="model">forum.forum</field>
             <field name="arch" type="xml">
                 <tree string="Forums">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                     <field name="active" invisible="1"/>
