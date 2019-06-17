@@ -135,7 +135,7 @@ class Slide(models.Model):
         ('video', 'Video'),
         ('quiz', "Quiz")],
         string='Type', required=True,
-        default='document', readonly=True,
+        default='document',
         help="The document type will be set automatically based on the document URL and properties (e.g. height and width for presentation and document).")
     index_content = fields.Text('Transcript')
     datas = fields.Binary('Content', attachment=True)
