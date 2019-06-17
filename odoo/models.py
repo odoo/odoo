@@ -4448,6 +4448,8 @@ Fields:
 
         # must ignore 'active' flag, ir.rules, etc. => direct SQL query
         cr = self._cr
+        # DLE P64: `test_no_recursion`
+        self.flush([parent])
         query = 'SELECT "%s" FROM "%s" WHERE id = %%s' % (parent, self._table)
         for id in self.ids:
             current_id = id
