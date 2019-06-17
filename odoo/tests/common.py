@@ -488,7 +488,7 @@ class ChromeBrowser():
                 self.chrome_process.wait()
         if self.user_data_dir and os.path.isdir(self.user_data_dir) and self.user_data_dir != '/':
             self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
-            shutil.rmtree(self.user_data_dir)
+            shutil.rmtree(self.user_data_dir, ignore_errors=True)
         # Restore previous signal handler
         if self.sigxcpu_handler and os.name == 'posix':
             signal.signal(signal.SIGXCPU, self.sigxcpu_handler)
