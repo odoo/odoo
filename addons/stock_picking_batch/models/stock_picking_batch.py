@@ -27,6 +27,10 @@ class StockPickingBatch(models.Model):
         ('done', 'Done'),
         ('cancel', 'Cancelled')], default='draft',
         copy=False, tracking=True, required=True)
+    company_id = fields.Many2one(
+        'res.company', 'Company', readonly=True,
+        default=lambda self: self.env.company
+    )
 
     @api.model
     def create(self, vals):

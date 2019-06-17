@@ -20,10 +20,11 @@
                     <group>
                         <group>
                             <field name="user_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
                     <separator string="Pickings"/>
-                    <field name="picking_ids" widget="many2many" domain="[('state', 'not in', ('done', 'cancel'))]" options="{'not_delete': True}">
+                    <field name="picking_ids" widget="many2many" domain="['&amp;', ('state', 'not in', ('done', 'cancel')), ('company_id', '=', company_id)]" options="{'not_delete': True}">
                         <tree>
                             <field name="name"/>
                             <field name="backorder_id"/>
