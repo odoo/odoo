@@ -259,7 +259,7 @@ class Channel(models.Model):
         for record in self:
             if not record.can_upload:
                 record.can_publish = False
-            elif record.user_id == self.env.user or self.env.user._is_superuser():
+            elif record.user_id == self.env.user or self.env.is_superuser():
                 record.can_publish = True
             else:
                 record.can_publish = self.env.user.has_group('website.group_website_publisher')
@@ -314,7 +314,7 @@ class Channel(models.Model):
     @api.model
     def create(self, vals):
         # Ensure creator is member of its channel it is easier for him to manage it (unless it is odoobot)
-        if not vals.get('channel_partner_ids') and not self.env.user._is_superuser():
+        if not vals.get('channel_partner_ids') and not self.env.is_superuser():
             vals['channel_partner_ids'] = [(0, 0, {
                 'partner_id': self.env.user.partner_id.id
             })]

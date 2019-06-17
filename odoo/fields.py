@@ -1124,7 +1124,7 @@ class Field(MetaField('DummyField', (object,), {})):
     def determine_draft_value(self, record):
         """ Determine the value of ``self`` for the given draft ``record``. """
         if self.compute:
-            if self.compute_sudo and record.env.uid != SUPERUSER_ID:
+            if self.compute_sudo and not record.env.su:
                 record_sudo = record.sudo()
                 copy_cache(record, record_sudo.env)
                 self.compute_value(record_sudo)
@@ -1824,7 +1824,7 @@ class Binary(Field):
             decoded_value = base64.b64decode(value)
             # Full mimetype detection
             if (guess_mimetype(decoded_value).startswith('image/svg') and
-                    not record.env.user._is_system()):
+                    not record.env.is_system()):
                 raise UserError(_("Only admins can upload SVG files."))
         if isinstance(value, bytes):
             return psycopg2.Binary(value)

@@ -242,7 +242,7 @@ class MailActivity(models.Model):
           * unlink: access rule OR
                     (``mail_post_access`` or write) rights on related documents);
         """
-        if self.env.user._is_superuser():
+        if self.env.is_superuser():
             return self
         if not self.check_access_rights(operation, raise_exception=False):
             return self.env[self._name]

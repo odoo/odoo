@@ -255,7 +255,7 @@ class Post(models.Model):
 
         user = self.env.user
         # Won't impact sitemap, search() in converter is forced as public user
-        if user._is_admin():
+        if self.env.is_admin():
             return [(1, '=', 1)]
 
         req = """
@@ -344,7 +344,7 @@ class Post(models.Model):
     @api.multi
     def _get_post_karma_rights(self):
         user = self.env.user
-        is_admin = user._is_admin()
+        is_admin = self.env.is_admin()
         # sudoed recordset instead of individual posts so values can be
         # prefetched in bulk
         for post, post_sudo in zip(self, self.sudo()):
@@ -867,7 +867,7 @@ class Vote(models.Model):
     @api.model
     def create(self, vals):
         # can't modify owner of a vote
-        if not self.env.user._is_admin():
+        if not self.env.is_admin():
             vals.pop('user_id', None)
 
         vote = super(Vote, self).create(vals)
@@ -882,7 +882,7 @@ class Vote(models.Model):
     @api.multi
     def write(self, values):
         # can't modify owner of a vote
-        if not self.env.user._is_admin():
+        if not self.env.is_admin():
             values.pop('user_id', None)
 
         for vote in self:
@@ -904,7 +904,7 @@ class Vote(models.Model):
         post = self.post_id
         if vals.get('post_id'):
             post = self.env['forum.post'].browse(vals.get('post_id'))
-        if not self.env.user._is_admin():
+        if not self.env.is_admin():
             # own post check
             if self._uid == post.create_uid.id:
                 raise UserError(_('It is not allowed to vote for its own post.'))

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, SUPERUSER_ID
+from odoo import api, fields, models
 from odoo.http import request
 
 
@@ -22,7 +22,7 @@ class UtmMixin(models.AbstractModel):
         values = super(UtmMixin, self).default_get(fields)
 
         # We ignore UTM for salemen, except some requests that could be done as superuser_id to bypass access rights.
-        if self.env.uid != SUPERUSER_ID and self.env.user.has_group('sales_team.group_sale_salesman'):
+        if not self.env.is_superuser() and self.env.user.has_group('sales_team.group_sale_salesman'):
             return values
 
         for url_param, field_name, cookie_name in self.env['utm.mixin'].tracking_fields():

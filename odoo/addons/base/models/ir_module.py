@@ -64,7 +64,7 @@ def assert_log_admin_access(method):
         user = self.env.user
         origin = request.httprequest.remote_addr if request else 'n/a'
         log_data = (method.__name__, self.sudo().mapped('name'), user.login, user.id, origin)
-        if not self.env.user._is_admin():
+        if not self.env.is_admin():
             _logger.warning('DENY access to module.%s on %s to user %s ID #%s via %s', *log_data)
             raise AccessDenied()
         _logger.info('ALLOW access to module.%s on %s to user %s #%s via %s', *log_data)

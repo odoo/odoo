@@ -192,7 +192,7 @@ class AccountChartTemplate(models.Model):
             company = self.env.company
         # Ensure everything is translated to the company's language, not the user's one.
         self = self.with_context(lang=company.partner_id.lang)
-        if not self.env.user._is_admin():
+        if not self.env.is_admin():
             raise AccessError(_("Only administrators can load a charf of accounts"))
 
         existing_accounts = self.env['account.account'].search([('company_id', '=', company.id)])
