@@ -1,0 +1,99 @@
+.o_stock_forecast_droppable_active {
+    border: 0px dashed transparent;
+
+    &.o_stock_forecast_droppable_hover {
+        display: block;
+        cursor: pointer;
+        background-color: rgba($o-brand-primary, 0.02);
+        border: 1px dashed rgba($o-brand-primary, 0.5);
+    }
+}
+
+$o-colors: #F06050, #F4A460, #F7CD1F, #6CC1ED;
+$col2: #814968, #EB7E7F, #2C8397, #475577;
+$col3: #D6145F, #30C381, #9365B8;
+
+$red: #F06050;
+$green: #30C381;
+.o_move_reschedule::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-top: 1em solid $red;
+    border-right: 1em solid transparent;
+}
+
+.o_cumulative_positive {
+    color: white;
+    background-color: $green;
+}
+
+.o_cumulative_negative {
+    color: white;
+    background-color: $red;
+}
+
+.o_move {
+    color: #383d41;
+    background-color: #e2e3e5;
+    border-color: #d6d8db;
+    margin: 0.5em;
+}
+
+.col-droppable {
+    border-bottom: 1px solid #e0e5e9;
+    box-shadow: inset 1px 0 #e0e5e9;
+}
+
+.col-product {
+    border-bottom: 1px solid #e0e5e9;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.col-header {
+    box-shadow: inset 1px 0 #e0e5e9;
+    padding: 1em;
+}
+
+.col-main-header {
+    padding: 1em;
+}
+
+.o_negative_qty {
+    color: $red;
+    float: right;
+}
+.o_positive_qty {
+    color: $green;
+    float: right;
+}
+.o_cell_header {
+    margin: 0.5em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    .o_main_cell {
+        position: relative;
+        padding: 0.75rem 1.25rem;
+    }
+}
+
+.o_cell_header_underline {
+    background-color: #e0e5e9;
+    height: 1px;
+}
+
+.o_header_row {
+    position: sticky;
+    outline: #e0e5e9 solid 2px;
+    top: 1px;
+    z-index: 2;
+    margin-bottom: 2px;
+    background-color: #f2f4f6;
+}
