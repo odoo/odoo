@@ -45,4 +45,4 @@ class TestECMAScriptVersion(TransactionCase):
         cmd = [es_check, MAX_ES_VERSION] + files_to_check
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = process.communicate()
-        self.assertEqual(process.returncode, 0, msg=out)
+        self.assertEqual(process.returncode, 0, msg=out.decode())
