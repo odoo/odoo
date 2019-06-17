@@ -206,7 +206,7 @@ def origin_ids(ids):
     """ Return an iterator over the origin ids corresponding to ``ids``.
         Actual ids are returned as is, and ids without origin are not returned.
     """
-    return ((id_ or id_.origin) for id_ in ids if (id_ or id_.origin))
+    return ((id_ or id_.origin) for id_ in ids if (id_ or getattr(id_, "origin", None)))
 
 
 IdType = (int, str, NewId)
