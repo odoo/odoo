@@ -47,7 +47,7 @@ var BulletPlugin = AbstractPlugin.extend({
             res = this._convertList(false, [], start, end, type);
         } else {
             var ul = this._createList(type);
-            res = [].slice.call(ul.children);
+            res = ul ? [].slice.call(ul.children) : [];
         }
 
         var startLeaf = this.context.invoke('HelperPlugin.firstLeaf', start.node);
