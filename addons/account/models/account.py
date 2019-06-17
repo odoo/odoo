@@ -149,6 +149,13 @@ class AccountTaxReportLine(models.Model):
         if self.tag_ids and (len(neg_tags) !=1 or len(pos_tags) != 1):
             raise ValidationError(_("If tags are defined for a tax report line, only two are allowed on it: a positive and a negative one."))
 
+    @api.constrains('tag_name', 'country_id')
+    def _validate_tag_name_unicity(self):
+        if self.tag_name:
+            other_lines_with_same_tag = self.env['account.tax.report.line'].search_count([('tag_name', '=', self.tag_name), ('id', '!=', self.id), ('country_id', '=', self.country_id.id)])
+            if other_lines_with_same_tag:
+                raise ValidationError(_("Tag name %(tag)s is used by more than one tax report line in %(country)s. Each tag name should only be used once per country.") % {'tag': self.tag_name, 'country': self.country_id.name})
+
     @api.onchange('parent_id')
     def _onchange_parent_id(self):
         """ If the parent of a report line is changed, the sequence of this line
