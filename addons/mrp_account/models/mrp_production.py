@@ -46,6 +46,7 @@ class MrpProduction(models.Model):
             'account_id': account,
             'ref': wc.code,
             'unit_amount': hours,
+            'company_id': self.company_id,
         }
 
     def _costs_generate(self):
@@ -73,4 +74,3 @@ class MrpProduction(models.Model):
         domain = [('id', 'in', (self.move_raw_ids + self.move_finished_ids).stock_valuation_layer_ids.ids)]
         action = self.env.ref('stock_account.stock_valuation_layer_action').read()[0]
         return dict(action, domain=domain)
-

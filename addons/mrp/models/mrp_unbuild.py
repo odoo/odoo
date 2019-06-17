@@ -209,6 +209,7 @@ class MrpUnbuild(models.Model):
             'location_id': location_id.id,
             'warehouse_id': location_dest_id.get_warehouse().id,
             'unbuild_id': self.id,
+            'company_id': self.mo_id.company_id.id,
         })
 
     def _generate_move_from_bom_line(self, product, product_uom, quantity, bom_line_id=False, byproduct_id=False):
@@ -228,6 +229,7 @@ class MrpUnbuild(models.Model):
             'location_id': location_id.id,
             'warehouse_id': warehouse.id,
             'unbuild_id': self.id,
+            'company_id': self.bom_id.company_id.id,
         })
 
     def action_validate(self):

@@ -109,7 +109,8 @@ class StockPicking(models.Model):
             'location_src_id': subcontract_move.picking_id.partner_id.property_stock_supplier.id,
             'location_dest_id': subcontract_move.location_id.id,
             'product_qty': subcontract_move.product_uom_qty,
-            'picking_type_id': warehouse.subcontracting_type_id.id
+            'picking_type_id': warehouse.subcontracting_type_id.id,
+            'company_id': self.company_id.id,
         }
         return vals
 
