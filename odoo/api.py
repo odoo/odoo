@@ -855,6 +855,20 @@ class Environment(Mapping):
         """ return the record corresponding to the given ``xml_id`` """
         return self['ir.model.data'].xmlid_to_object(xml_id, raise_if_not_found=raise_if_not_found)
 
+    def is_superuser(self):
+        """ Return whether the environment is in superuser mode. """
+        return self.su
+
+    def is_admin(self):
+        """ Return whether the current user has group "Access Rights", or is in
+            superuser mode. """
+        return self.su or self.user._is_admin()
+
+    def is_system(self):
+        """ Return whether the current user has group "Settings", or is in
+            superuser mode. """
+        return self.su or self.user._is_system()
+
     @property
     def user(self):
         """ return the current user (as an instance) """
