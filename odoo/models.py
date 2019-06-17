@@ -21,7 +21,7 @@
 
 """
 
-import datetime
+import datetime, fnmatch
 
 import collections
 import dateutil
@@ -3035,7 +3035,10 @@ Fields:
         if self.env.su:
             return
 
-        invalid = self - self._filter_access_rules(operation)
+        # SQL Alternative if computing in-memory is too slow for large dataset
+        # invalid = self - self._filter_access_rules(operation)
+        dom = self.env['ir.rule']._compute_domain(self._name, operation)
+        invalid = self - self.filtered_domain(dom or [])
         if not invalid:
             return
 
@@ -3085,6 +3088,7 @@ Fields:
             return self
 
         # detemine ids in database that satisfy ir.rules
+        # FP TODO: we should add a flush here, based on domain's arguments
         valid_ids = set()
         query = "SELECT {}.id FROM {} WHERE {}.id IN %s AND {}".format(
             self._table, ",".join(tables), self._table, " AND ".join(where_clause),
@@ -3271,6 +3275,7 @@ Fields:
 
         self.check_access_rights('write')
         self.check_field_access_rights('write', vals.keys())
+        self.check_access_rule('write')
         env = self.env
 
         bad_names = {'id', 'parent_path'}
@@ -3484,7 +3489,6 @@ Fields:
 
         # update columns
         if columns:
-            self.check_access_rule('write')
             query = 'UPDATE "%s" SET %s WHERE id IN %%s' % (
                 self._table, ','.join('"%s"=%s' % (column[0], column[1]) for column in columns),
             )
@@ -5034,6 +5038,82 @@ Fields:
             name = func
             func = lambda rec: any(rec.mapped(name))
         return self.browse([rec.id for rec in self if func(rec)])
+
+    def filtered_domain(self, domain):
+        if not domain: return self
+        result = []
+        for d in reversed(domain):
+            if d=='|': 
+                result.append(result.pop() | result.pop())
+            elif d=='!':
+                result.append(self - result.pop())
+            elif d=='&':
+                result.append(result.pop() & result.pop())
+            else:
+                (key, comparator, value) = d
+                if key.endswith('.id'):
+                    key = key[:-3]
+                if key == 'id': key=''
+                if comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
+                    value_esc = value.replace('_', '?').replace('%', '*').replace('[', '?')
+                records = self.browse()
+                for rec in self:
+                    data = rec.mapped(key)
+                    if comparator in ('child_of', 'parent_of'):
+                        value = data.search([(data._parent_name, comparator, value)]).ids
+                        comparator = 'in'
+                    if isinstance(data, BaseModel):
+                        v = value
+                        if (isinstance(value, list) or isinstance(value, tuple)) and len(value):
+                            v = value[0]
+                        if isinstance(v, str):
+                            data = data.mapped('display_name')
+                        else:
+                            data = data and data.ids or [False]
+                    else:
+                        data = [
+                            (isinstance(x, datetime.date) and x.strftime('%Y-%m-%d %H:%M:%S')) or
+                            x for x in data]
+                    if comparator in ('in', 'not in'):
+                        if not (isinstance(value, list) or isinstance(value, tuple)):
+                            value = [value]
+
+                    if comparator == '=':
+                        ok = value in data
+                    elif comparator == 'in':
+                        ok = any(map(lambda x: x in data, value))
+                    elif comparator == '<':
+                        ok = any(map(lambda x: x < value, data))
+                    elif comparator == '>':
+                        ok = any(map(lambda x: x > value, data))
+                    elif comparator in ('!=', '<>'):
+                        ok = value not in data
+                    elif comparator == 'not in':
+                        ok = all(map(lambda x: x not in data, value))
+                    elif comparator == 'not ilike':
+                        ok = all(map(lambda x: value.lower() not in x.lower(), data))
+                    elif comparator == 'ilike':
+                        data = [x.lower() for x in data]
+                        ok = bool(fnmatch.filter(data, '*'+(value_esc or '').lower()+'*'))
+                    elif comparator == 'not like':
+                        ok = all(map(lambda x: value not in x, data))
+                    elif comparator == 'like':
+                        ok = bool(fnmatch.filter(data, value and '*'+value_esc+'*'))
+                    elif comparator == '=?':
+                        ok = (value in data) or not value
+                    elif comparator in ('=like'):
+                        ok = bool(fnmatch.filter(data, value_esc))
+                    elif comparator in ('=ilike'):
+                        data = [x.lower() for x in data]
+                        ok = bool(fnmatch.filter(data, value and value_esc.lower()))
+                    else:
+                        raise ValueError
+                    if ok: records |= rec
+                result.append(records)
+        while len(result)>1:
+            result.append(result.pop() & result.pop())
+        return result[0]
+
 
     def sorted(self, key=None, reverse=False):
         """ Return the recordset ``self`` ordered by ``key``.
