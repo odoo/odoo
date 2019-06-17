@@ -272,7 +272,7 @@ class View(models.Model):
         return [(view.arch, view.id) for view in inheriting_views]
 
     @api.model
-    @tools.ormcache_context('self._uid', 'xml_id', keys=('website_id',))
+    @tools.ormcache_context('self.env.uid', 'self.env.su', 'xml_id', keys=('website_id',))
     def get_view_id(self, xml_id):
         """If a website_id is in the context and the given xml_id is not an int
         then try to get the id of the specific view for that website, but

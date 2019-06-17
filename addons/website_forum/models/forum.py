@@ -749,7 +749,7 @@ class Post(models.Model):
             'parent_id': question.id,
         }
         # done with the author user to have create_uid correctly set
-        new_post = self.sudo(post_create_uid.id).create(post_values)
+        new_post = self.with_user(post_create_uid).create(post_values)
 
         # delete comment
         comment.unlink()

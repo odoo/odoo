@@ -6,7 +6,7 @@ from odoo.addons.survey.tests import common
 
 class TestSurveyComputePagesQuestions(common.SurveyCase):
     def test_compute_pages_questions(self):
-        with self.sudo(self.survey_manager):
+        with self.with_user(self.survey_manager):
             survey = self.env['survey.survey'].create({
                 'title': 'Test compute survey',
                 'state': 'open',

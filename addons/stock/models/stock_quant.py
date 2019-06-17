@@ -224,7 +224,7 @@ class StockQuant(models.Model):
             domain = expression.AND([[('location_id', '=', location_id.id)], domain])
 
         # Copy code of _search for special NULLS FIRST/LAST order
-        self.sudo(self._uid).check_access_rights('read')
+        self.with_user(self._uid).check_access_rights('read')
         query = self._where_calc(domain)
         self._apply_ir_rules(query, 'read')
         from_clause, where_clause, where_clause_params = query.get_sql()

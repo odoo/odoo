@@ -88,7 +88,7 @@ class test_ir_http_mimetype(common.TransactionCase):
         }
 
         def test_access(**kwargs):
-            status, _, _ = self.env['ir.http'].sudo(public_user.id).binary_content(
+            status, _, _ = self.env['ir.http'].with_user(public_user).binary_content(
                 **dict(defaults, **kwargs)
             )
             return status

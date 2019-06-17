@@ -63,26 +63,26 @@ class SurveyCase(common.SavepointCase):
             'customer': True,
         })
 
-        self.survey = self.env['survey.survey'].sudo(self.survey_manager).create({
+        self.survey = self.env['survey.survey'].with_user(self.survey_manager).create({
             'title': 'Test Survey',
             'access_mode': 'public',
             'users_login_required': True,
             'users_can_go_back': False,
             'state': 'open',
         })
-        self.page_0 = self.env['survey.question'].sudo(self.survey_manager).create({
+        self.page_0 = self.env['survey.question'].with_user(self.survey_manager).create({
             'title': 'First page',
             'survey_id': self.survey.id,
             'sequence': 1,
             'is_page': True,
         })
-        self.question_ft = self.env['survey.question'].sudo(self.survey_manager).create({
+        self.question_ft = self.env['survey.question'].with_user(self.survey_manager).create({
             'title': 'Test Free Text',
             'survey_id': self.survey.id,
             'sequence': 2,
             'question_type': 'free_text',
         })
-        self.question_num = self.env['survey.question'].sudo(self.survey_manager).create({
+        self.question_num = self.env['survey.question'].with_user(self.survey_manager).create({
             'title': 'Test NUmerical Box',
             'survey_id': self.survey.id,
             'sequence': 3,
@@ -90,8 +90,8 @@ class SurveyCase(common.SavepointCase):
         })
 
     @contextmanager
-    def sudo(self, user):
-        """ Quick sudo environment """
+    def with_user(self, user):
+        """ Quick with_user environment """
         old_uid = self.uid
         try:
             self.uid = user.id

@@ -82,7 +82,7 @@ class RatingProject(http.Controller):
         project = request.env['project.project'].sudo().browse(project_id)
         # to avoid giving any access rights on projects to the public user, let's use sudo
         # and check if the user should be able to view the project (project managers only if it's unpublished or has no rating)
-        if not ((project.rating_status != 'no') and project.portal_show_rating) and not user.sudo(user).has_group('project.group_project_manager'):
+        if not ((project.rating_status != 'no') and project.portal_show_rating) and not user.with_user(user).has_group('project.group_project_manager'):
             raise NotFound()
 
         return request.render('project.rating_project_rating_page', {

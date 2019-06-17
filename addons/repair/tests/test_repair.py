@@ -77,7 +77,7 @@ class TestRepair(AccountingTestCase):
         repair = self._create_simple_repair_order('after_repair')
         self._create_simple_operation(repair_id=repair.id, qty=1.0, price_unit=50.0)
         # I confirm Repair order taking Invoice Method 'After Repair'.
-        repair.sudo(self.res_repair_user.id).action_repair_confirm()
+        repair.with_user(self.res_repair_user).action_repair_confirm()
 
         # I check the state is in "Confirmed".
         self.assertEqual(repair.state, "confirmed", 'Repair order should be in "Confirmed" state.')
@@ -107,7 +107,7 @@ class TestRepair(AccountingTestCase):
     def test_01_repair_b4inv(self):
         repair = self._create_simple_repair_order('b4repair')
         # I confirm Repair order for Invoice Method 'Before Repair'.
-        repair.sudo(self.res_repair_user.id).action_repair_confirm()
+        repair.with_user(self.res_repair_user).action_repair_confirm()
 
         # I click on "Create Invoice" button of this wizard to make invoice.
         repair.action_repair_invoice_create()
@@ -128,7 +128,7 @@ class TestRepair(AccountingTestCase):
         self.assertEqual(repair.amount_total, 26, "Amount_total should be 26")
 
         # I confirm Repair order for Invoice Method 'No Invoice'.
-        repair.sudo(self.res_repair_user.id).action_repair_confirm()
+        repair.with_user(self.res_repair_user).action_repair_confirm()
 
         # I start the repairing process by clicking on "Start Repair" button for Invoice Method 'No Invoice'.
         repair.action_repair_start()

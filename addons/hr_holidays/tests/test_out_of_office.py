@@ -51,7 +51,7 @@ class TestOutOfOffice(TestHrHolidaysBase):
             'email_send': False,
             'name': 'test'
         })
-        infos = channel.sudo(self.user_employee).channel_info()
+        infos = channel.with_user(self.user_employee).channel_info()
         self.assertEqual(infos[0]['direct_partner'][0]['out_of_office_date_end'], leave_date_end)
         self.assertEqual(infos[0]['direct_partner'][0]['out_of_office_message'], 'contact tde in case of problems')
 
@@ -59,7 +59,7 @@ class TestOutOfOffice(TestHrHolidaysBase):
         """ Out of office message from Preferences should be used as default value """
         self.user_hruser.out_of_office_message = 'contact xdo in case of problems'
 
-        leave_form = Form(self.env['hr.leave'].sudo(self.user_hruser), view='hr_holidays.hr_leave_view_form')
+        leave_form = Form(self.env['hr.leave'].with_user(self.user_hruser), view='hr_holidays.hr_leave_view_form')
         leave_form.date_from = datetime.today() - relativedelta(days=1)
         leave_form.date_to = datetime.today()
         leave_form.holiday_status_id = self.leave_type
@@ -70,7 +70,7 @@ class TestOutOfOffice(TestHrHolidaysBase):
         """ Out of office message default value should be overwrittable """
         self.user_hruser.out_of_office_message = 'contact xdo in case of problems'
 
-        leave_form = Form(self.env['hr.leave'].sudo(self.user_hruser), view='hr_holidays.hr_leave_view_form')
+        leave_form = Form(self.env['hr.leave'].with_user(self.user_hruser), view='hr_holidays.hr_leave_view_form')
         leave_form.date_from = datetime.today() - relativedelta(days=1)
         leave_form.date_to = datetime.today()
         leave_form.holiday_status_id = self.leave_type
