@@ -239,8 +239,8 @@ var WysiwygMultizone = Wysiwyg.extend({
         }
         var _super = this._super.bind(this);
         return this.savingMutex.lock.then(function () {
-            return _super().then(function (_isDirty, html) {
-                this._summernote.layoutInfo.editable.html(html);
+            return _super().then(function (res) {
+                this._summernote.layoutInfo.editable.html(res.html);
 
                 var $editable = this._getEditableArea();
                 var $areaDirty = $editable.filter('.o_dirty');
@@ -493,7 +493,7 @@ var WysiwygMultizone = Wysiwyg.extend({
         if (!$.contains(ev.data[0], this._focusedNode)) {
             this._focusedNode = ev.data[0];
         }
-        ev.data.closest('.oe_structure > *:not(.o_fake_editable)').addClass('o_fake_editable').attr('contenteditable', true);
+        ev.data.closest('.oe_structure > *:o_editable').addClass('o_fake_editable').attr('contenteditable', true);
     },
     /**
      * @override
