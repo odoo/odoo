@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_round, float_is_zero
+from odoo.osv import expression
 
 
 class AccountInvoice(models.Model):
@@ -51,13 +52,12 @@ class AccountInvoice(models.Model):
         self._compute_timesheet_revenue()
         return result
 
+    @api.multi
     def _get_compute_timesheet_revenue_domain(self, so_line_ids):
-        return [
-            ('so_line', 'in', so_line_ids),
-            ('project_id', '!=', False),
-            ('timesheet_invoice_id', '=', False),
-            ('timesheet_invoice_type', 'in', ['billable_time', 'billable_fixed'])
-        ]
+        so_line_ids = self.env['sale.order.line'].browse(so_line_ids)
+        domain = so_line_ids._analytic_compute_delivered_quantity_domain()
+        not_invoiced_domain = ['&', ('timesheet_invoice_id', '=', False), ('timesheet_invoice_type', 'in', ['billable_time', 'billable_fixed'])]
+        return expression.AND([domain, not_invoiced_domain])
 
     def _compute_timesheet_revenue(self):
         for invoice in self:
