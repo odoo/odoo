@@ -77,7 +77,7 @@ class Product(models.Model):
     reordering_max_qty = fields.Float(compute='_compute_nbr_reordering_rules')
     putaway_rule_ids = fields.One2many('stock.putaway.rule', 'product_id', 'Putaway Rules')
 
-    @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
+    @api.depends('stock_move_ids', 'stock_move_ids.product_qty', 'stock_move_ids.state', 'stock_move_ids.date_expected')
     def _compute_quantities(self):
         res = self._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
         for product in self:
@@ -113,11 +113,11 @@ class Product(models.Model):
             domain_move_in_done = list(domain_move_in)
             domain_move_out_done = list(domain_move_out)
         if from_date:
-            domain_move_in += [('date', '>=', from_date)]
-            domain_move_out += [('date', '>=', from_date)]
+            domain_move_in += [('date_expected', '>=', from_date)]
+            domain_move_out += [('date_expected', '>=', from_date)]
         if to_date:
-            domain_move_in += [('date', '<=', to_date)]
-            domain_move_out += [('date', '<=', to_date)]
+            domain_move_in += [('date_expected', '<=', to_date)]
+            domain_move_out += [('date_expected', '<=', to_date)]
 
         Move = self.env['stock.move']
         Quant = self.env['stock.quant']

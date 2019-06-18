@@ -1,18 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil import relativedelta
 from itertools import groupby
 from operator import itemgetter
+import json
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare, float_round, float_is_zero
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
+DAYS = 7
 
 
 class StockMove(models.Model):
@@ -1301,3 +1304,263 @@ class StockMove(models.Model):
                 move.procure_method = 'make_to_order'
             else:
                 move.procure_method = 'make_to_stock'
+
+    def _qweb_prepare_qcontext(self, view_id, domain):
+        values = super()._qweb_prepare_qcontext(view_id, domain)
+
+        # Filter the moves according to the selected week.
+        date_from = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
+        if self.env.context.get('date_from'):
+            date_from = datetime.strptime(self.env.context['date_from'], DEFAULT_SERVER_DATETIME_FORMAT).replace(hour=0, minute=0, second=0, microsecond=0)
+        date_to = date_from + relativedelta.relativedelta(days=DAYS, seconds=-1)
+
+        date_domain = [('date_expected', '>=', date_from), ('date_expected', '<', date_to)]
+
+        # Only incoming and outgoing moves are of interest.
+        parent_locations = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)]).view_location_id
+        domain_move_in_loc, domain_move_out_loc = self.env['product.product']._get_domain_locations_new(parent_locations.id)[1:]
+        in_or_out_domain = expression.OR([domain_move_in_loc, domain_move_out_loc])
+
+        # Not all states are of interest.
+        states_domain = [('state', 'in', ('confirmed', 'partially_available', 'assigned'))]
+
+        # Call read_group product/date:date and prepare the data do be used in the qweb view.
+        # dict indexed by products, the items are a list of n dict, the first element of
+        # the list being today, the second tomorrow, and so on.
+        res = {}
+        products = self.env['product.product']
+
+        domain = expression.AND([domain, date_domain, in_or_out_domain, states_domain])
+        moves = self.env['stock.move'].search(domain)
+        moves_sorted = sorted(moves, key=lambda m: (m.product_id, m.date_expected))
+        groups = groupby(moves_sorted, key=lambda m: (m.product_id, m.date_expected.date()))
+
+        moves_to_reschedule = self.env['stock.move']
+        for (product, date_expected), move_group in groups:
+            if not res.get(product):
+                res[product] = [{}] * DAYS
+                products |= product
+
+            moves = self.env['stock.move'].concat(*list(move_group))
+
+            # Read the virtual available at the start of the day
+            virtual_available_date = date_expected
+            virtual_available = product.with_context(to_date=virtual_available_date).virtual_available
+
+            # Infer if the move is in or out and its relative quantity, prepare a dict that will be
+            # used in the view.
+            moves_info = []
+            cumulative_virtual_available = virtual_available
+            moves_in = moves.filtered(lambda m: m.location_id.usage != 'internal' and m.location_dest_id.usage == 'internal')
+            if moves_in:
+                cumulative_virtual_available += sum(moves_in.mapped('product_qty'))
+            for move in moves:
+                is_in = move in moves_in
+                if not is_in:
+                    cumulative_virtual_available -= move.product_qty
+                is_to_reschedule = cumulative_virtual_available < 0
+                if is_to_reschedule:
+                    moves_to_reschedule |= move
+                moves_info.append({
+                    'id': move.id,
+                    'is_in': is_in,
+                    'is_out': not is_in,
+                    'is_to_reschedule': is_to_reschedule,
+                    'product_qty': move.product_qty,
+                    'picking_id': move.picking_id.id,
+                    'picking_name': move.picking_id.name,
+                    'cumulative_virtual_available': cumulative_virtual_available,
+                })
+
+            # Add the group info at the right shift in the res
+            group_res = {
+                'virtual_available': virtual_available,
+                'cumulative_virtual_available': moves_info[-1]['cumulative_virtual_available'],
+                'moves_info': moves_info,
+                'product_id': product.id,
+            }
+            date_group = moves[0].date_expected.date()
+            date_shift = abs((date_from.date() - date_group).days)
+            res[product][date_shift] = group_res
+
+        # Prepare the header
+        headers = []
+        # As the move will be counted in the `_compute_quantities_dict` method if the date_expected is set to 00h00,
+        # We set 08h00 (AM) as default date_expected to write on the move when it's dropped in a new column.
+        default_expected_datetime = date_from.replace(hour=8, minute=0, second=0, microsecond=0)
+        for i in range(DAYS):
+            headers.append({'text': self.env['ir.qweb.field.date'].value_to_html(default_expected_datetime.date(), {'format': 'eeee dd'}),
+                            'date': default_expected_datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+            default_expected_datetime += timedelta(days=1)
+
+        lines = []
+        for product in products:
+            tmp = [{'product_name': product.display_name, 'product_id': product.id}] + res[product]
+            lines.append(tmp)
+
+        values['headers'] = headers
+        values['lines'] = lines
+        values['unfold_product_ids'] = self._get_unfold_product_ids()
+        actions = self._prepare_actions(values['unfold_product_ids'])
+        values['act_previous'] = actions['previous']
+        values['act_next'] = actions['next']
+        values['act_sel_period'] = actions['select_period']
+        values['reschedule_ctx'] = json.dumps({
+            'moves_to_reschedule': moves_to_reschedule.ids,
+            'date_from': date_from.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        })
+
+        return values
+
+    def _get_unfold_product_ids(self):
+        unfold_product_ids = []
+        if self.env.context.get('unfold_product_ids'):
+            unfold_product_ids.extend(self.env.context['unfold_product_ids'])
+        if self.env.context.get('default_product_tmpl_id'):
+            product_template = self.env['product.template'].browse(self.env.context['default_product_tmpl_id'])
+            unfold_product_ids.extend(product_template.product_variant_ids.ids)
+        if self.env.context.get('default_product_id'):
+            unfold_product_ids.append(self.env.context['default_product_id'])
+        return unfold_product_ids
+
+    def _prepare_actions(self, unfold_product_ids):
+        current_date_from_srlz = self.env.context.get('date_from') if self.env.context.get('date_from') else datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        current_date_from = datetime.strptime(current_date_from_srlz, DEFAULT_SERVER_DATETIME_FORMAT)
+        previous_date_from_srlz = (current_date_from - timedelta(days=DAYS)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        next_date_from_srlz = (current_date_from + timedelta(days=DAYS)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        actions = {
+            'previous': {
+                'label': _("Previous period"),
+                'type': 'action',
+                'action_id': 'stock.action_stock_forecast_qweb_redirect',
+                'context': json.dumps({'date_from': previous_date_from_srlz, 'unfold_product_ids': unfold_product_ids}),
+            },
+            'select_period': {
+                'label': _("Week"),
+                'type': 'action',
+                'action_id': 'stock.action_stock_forecast_period',
+            },
+            'next': {
+                'label': _("Next period"),
+                'type': 'action',
+                'action_id': 'stock.action_stock_forecast_qweb_redirect',
+                'context': json.dumps({'date_from': next_date_from_srlz, 'unfold_product_ids': unfold_product_ids}),
+            }
+        }
+
+        return actions
+
+    def reschedule(self, values):
+        self.ensure_one()
+        self.write({'date_expected': values['date_expected']})
+
+        ctx = {}
+        unfold_product_ids = self._get_unfold_product_ids()
+        unfold_product_ids.extend(values['unfold_product_ids'])
+
+        # Removing the duplicates
+        unfold_product_ids = list(dict.fromkeys(unfold_product_ids))
+
+        ctx.update(self.env.context)
+        ctx.update({'unfold_product_ids': unfold_product_ids})
+        view = self.env.ref('stock.view_move_forecast_qweb')
+        return {
+            'name': 'Stock Forecast',
+            'type': 'ir.actions.act_window',
+            'view_type': 'qweb',
+            'view_mode': 'qweb',
+            'res_model': 'stock.move',
+            'views': [(view.id, 'qweb')],
+            'view_id': view.id,
+            'target': 'main',
+            'context': ctx,
+        }
+
+    @api.model
+    def action_batch_reschedule(self):
+        ctx = {}
+        ctx.update(self.env.context)
+        move_ids = self.env.context.get('moves_to_reschedule')
+        if move_ids:
+            moves_to_reschedule = self.env['stock.move'].browse(move_ids).sorted(key=lambda m: m.date_expected)
+            products = moves_to_reschedule.mapped('product_id')
+
+            # Reschedulable will be a dict of moves with the date to write on them
+            # as key in order to batch write those dates once fully computed
+            rescheduleable = {}
+            for product in products:
+                moves_by_product = moves_to_reschedule.filtered(lambda m: m.product_id == product)
+
+                # We need to get every moves posterior to the oldest one to reschedule
+                # for that specific product
+                limit_date = min(moves_by_product.mapped('date_expected'))
+                future_moves = self.env['stock.move'].search([
+                    ('date_expected', '>', limit_date),
+                    ('product_id', '=', product.id),
+                ], order='date_expected')
+                future_moves_in = future_moves.filtered(lambda m: m.location_id.usage != 'internal' and m.location_dest_id.usage == 'internal')
+                future_moves_out = future_moves.filtered(lambda m: m.location_id.usage == 'internal' and m.location_dest_id.usage != 'internal') - moves_to_reschedule
+
+                # We compute the total qty incomming to know if we have to stop the process
+                total_incomming_qty = sum(future_moves_in.mapped('product_qty'))
+                processed_moves_in = self.env['stock.move']
+                cumulative_resch_qty = 0
+                for move_resch in moves_by_product:
+                    if move_resch.product_qty > total_incomming_qty:
+                        break
+
+                    cumulative_incoming_qty = 0
+                    move_in_idx = 0
+                    for move_in in future_moves_in:
+
+                        # We need to know what will be the next incomming move to know
+                        # wich outgoing move (that were not flagged as 'to_reschedule') have to be deducted
+                        move_in_next = False
+                        if move_in_idx < (len(future_moves_in) - 1):
+                            move_in_next = future_moves_in[move_in_idx + 1]
+                        if move_in_next:
+                            moves_to_deduct = future_moves_out.filtered(lambda m: move_in.date_expected <= m.date_expected < move_in_next.date_expected)
+                        else:
+                            moves_to_deduct = future_moves_out.filtered(lambda m: move_in.date_expected <= m.date_expected)
+
+                        if moves_to_deduct:
+                            cumulative_incoming_qty -= sum(moves_to_deduct.mapped('product_qty'))
+                        cumulative_incoming_qty += (move_in.product_qty - cumulative_resch_qty)
+                        if cumulative_incoming_qty >= move_resch.product_qty:
+                            # Once we gathered enough quantities for the current move to reschedule,
+                            # we decrease the total incoming quantity, and build the 'rescheduleable' dict
+                            total_incomming_qty -= move_resch.product_qty
+                            if move_in.date_expected in rescheduleable:
+                                rescheduleable[move_in.date_expected] += move_resch
+                            else:
+                                rescheduleable[move_in.date_expected] = move_resch
+
+                            # To know if there will be enough quantities in the current move in, we keep
+                            # a trace of the quantity that we should deduct in the current move incoming
+                            cumulative_resch_qty += move_resch.product_qty
+                            break
+                        else:
+                            # If the current move incoming wasn't sufficient, we reset the quantity that had to be
+                            # deducted wand flagged the incoming move as processed.
+                            cumulative_resch_qty = 0
+                            processed_moves_in |= move_in
+                    # We then remove every processed incoming move before processing the next move to reschedule
+                    future_moves_in -= processed_moves_in
+                    processed_moves_in = self.env['stock.move']
+                    move_in_idx += 1
+
+            for date_resch, moves in rescheduleable.items():
+                moves.write({'date_expected': date_resch + timedelta(minutes=1)})
+
+        view = self.env.ref('stock.view_move_forecast_qweb')
+        return {
+            'name': 'Stock Forecast',
+            'type': 'ir.actions.act_window',
+            'view_type': 'qweb',
+            'view_mode': 'qweb',
+            'res_model': 'stock.move',
+            'views': [(view.id, 'qweb')],
+            'view_id': view.id,
+            'target': 'main',
+            'context': ctx,
+        }

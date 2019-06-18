@@ -371,6 +371,89 @@
         </record>
 
 
+        <record id="view_move_forecast_qweb" model="ir.ui.view">
+            <field name="name">stock.move.qweb</field>
+            <field name="model">stock.move</field>
+            <field name="arch" type="xml">
+                <qweb js_class="stock_move_forecast_qweb">
+                    <nav class="o_qweb_cp_buttons">
+                        <a type="action" class="btn btn-primary mr-1 text-white" t-att-name="act_previous['action_id']" t-att-data-context="act_previous['context']"><span class="fa fa-arrow-left"/></a>
+                        <a type="action" class="btn btn-primary mr-1 text-white" t-att-name="act_sel_period['action_id']"><t t-esc="act_sel_period['label']"/></a>
+                        <a type="action" class="btn btn-primary mr-1 text-white" t-att-name="act_next['action_id']" t-att-data-context="act_next['context']"><span class="fa fa-arrow-right"/></a>
+                        <a type="action" class="btn btn-secondary" data-model="stock.move" data-method="action_batch_reschedule" t-att-data-context="reschedule_ctx">Reschedule</a>
+                    </nav>
+                    <div class="container-fluid o_stock_forecast_qweb p-0">
+                        <div class="row no-gutters bg-light font-weight-bold">
+                            <div class="col px-2">Product</div>
+                            <t t-foreach="headers" t-as="header">
+                                <div class="col col-header text-center" t-att-data-date="header['date']"><span t-esc="header['text']"/></div>
+                            </t>
+                        </div>
+                        <t t-foreach="lines" t-as="line">
+
+                            <div class="row no-gutters bg-white" t-att-data-product-id="line[0]['product_id']">
+                                <t t-foreach="line" t-as="day">
+                                    <div t-att-class="'col col-droppable' if not day_first else 'col'" t-att-data-date-idx="day_index">
+                                        <!-- product name col -->
+                                        <t t-if="day.get('product_name')">
+                                            <a role="button" data-toggle="collapse" aria-expanded="false" t-att-href="'#collapse_product_%s' % day['product_id']" t-att-aria-controls="'collapse_product_%s' % day['product_id']">
+                                                <i t-if="day['product_id'] in unfold_product_ids" class="fa fa-minus-square px-2 collapse-button"/>
+                                                <i t-else="" class="fa fa-plus-square px-2 collapse-button"/>
+                                            </a>
+                                            <a t-att-data-res-id="day['product_id']" data-model="product.product" type="action"><t t-esc="day['product_name']"/></a>
+                                        </t>
+                                        <!-- moves groups col -->
+                                        <t t-if="day.get('moves_info')">
+                                            <!-- summary cell -->
+                                            <span t-att-class="'d-block alert alert-success font-weight-bold' if day['cumulative_virtual_available'] >= 0 else 'd-block alert alert-danger font-weight-bold'">
+                                                Start: <t t-esc="day['virtual_available']"/>
+                                                End: <t t-esc="day['cumulative_virtual_available']"/>
+                                            </span>
+                                            <!-- moves group -->
+                                            <t t-set="collapse_state" t-value="'collapse multi-collapse'"/>
+                                            <t t-if="day['product_id'] in unfold_product_ids">
+                                                <t t-set="collapse_state" t-value="'collapse show multi-collapse'"/>
+                                            </t>
+                                            <div t-att-class="collapse_state" t-att-id="'collapse_product_%s' % day['product_id']">
+                                                <t t-foreach="day['moves_info']" t-as="move">
+                                                    <t t-if="move['is_in'] is True">
+                                                        <div t-att-class="'d-block alert alert-secondary o_move o_product_%s' % day['product_id']" t-att-data-move-id="move['id']">
+                                                            <a t-att-data-res-id="move['picking_id']" data-model="stock.picking" type="action">
+                                                                <span class="btn-link"><t t-esc="move['picking_name']"/></span>
+                                                            </a>
+                                                            +<t t-esc="move['product_qty']"/>
+                                                        </div>
+                                                    </t>
+                                                    <t t-if="move['is_out'] is True and move['is_to_reschedule'] is False">
+                                                        <div t-att-class="'d-block alert alert-secondary o_move o_product_%s' % day['product_id']" t-att-data-move-id="move['id']">
+                                                            <a t-att-data-res-id="move['picking_id']" data-model="stock.picking" type="action">
+                                                                <span class="btn-link"><t t-esc="move['picking_name']"/></span>
+                                                            </a>
+                                                            -<t t-esc="move['product_qty']"/>
+                                                        </div>
+                                                    </t>
+                                                    <t t-if="move['is_to_reschedule'] is True">
+                                                        <span t-att-class="'d-block alert alert-secondary o_move o_product_%s' % day['product_id']" t-att-data-move-id="move['id']">
+                                                            <a t-att-data-res-id="move['picking_id']" data-model="stock.picking" type="action"><t t-esc="move['picking_name']"/> -<t t-esc="move['product_qty']"/><i class="fa fa-exclamation-triangle"></i></a>
+                                                        </span>
+                                                    </t>
+                                                </t>
+                                            </div>
+                                        </t>
+                                        <!-- empty col -->
+                                        <t t-if="not day.get('moves_info')">
+                                            <span>&amp;nbsp;</span>
+                                        </t>
+                                    </div>
+                                </t>
+                            </div>
+                        </t>
+                    </div>
+                </qweb>
+            </field>
+        </record>
+
+
         <record id="act_product_stock_move_open" model="ir.actions.act_window">
             <field name="context">{'search_default_product_id': active_id, 'default_product_id': active_id}</field>
             <field name="name">Moves</field>
@@ -394,6 +477,21 @@
                 to see all the past or future movements for the product.
               </p>
             </field>
+        </record>
+
+        <record id="action_stock_forecast_qweb" model="ir.actions.act_window">
+            <field name="name">Stock Forecast</field>
+            <field name="res_model">stock.move</field>
+            <field name="view_mode">qweb</field>
+            <field name="context">{}</field>
+        </record>
+
+        <record id="action_stock_forecast_qweb_redirect" model="ir.actions.act_window">
+            <field name="name">Stock Forecast</field>
+            <field name="res_model">stock.move</field>
+            <field name="view_mode">qweb</field>
+            <field name="context">{}</field>
+            <field name="target">main</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_stock_move_tree_all">
@@ -575,4 +673,10 @@
 
 <menuitem action="stock_move_action" id="stock_move_menu" parent="stock.menu_warehouse_report" sequence="140" groups="base.group_no_one"/>
 
+    <menuitem
+        action="action_stock_forecast_qweb"
+        id="stock_forecast_menu"
+        parent="stock.menu_warehouse_report"
+        sequence="110"
+        name="Stock Forecast" />
 </odoo>

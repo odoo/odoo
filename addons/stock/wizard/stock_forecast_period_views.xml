@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stock_forecast_period" model="ir.ui.view">
+        <field name="name">Set date from</field>
+        <field name="model">stock.forecast.period</field>
+        <field name="arch" type="xml">
+            <form string="Replenish wizard">
+                <p>
+                    Select date from:
+                </p>
+                <group>
+                    <field name="date_from"/>
+                </group>
+                <footer>
+                    <button name="set_date_from" string="Set date from" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_stock_forecast_period" model="ir.actions.act_window">
+        <field name="name">Set date from</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.forecast.period</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_stock_forecast_period"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

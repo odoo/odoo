@@ -66,7 +66,7 @@ var Model = AbstractModel.extend({
      * reload
      */
     reload: function (_id, params) {
-        _.extend(this._state, _.pick(params, ['domain', 'context']));
+        _.extend(this._state, _.pick(params, ['viewId', 'modelName', 'domain', 'context']));
 
         return this._fetch();
     }

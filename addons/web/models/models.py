@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import babel.dates
 import pytz
+from lxml import etree
 
 from odoo import _, api, fields, models
 from odoo.osv.expression import AND
@@ -203,7 +204,17 @@ class Base(models.AbstractModel):
         # avoid leaking the raw (un-rendered) template, also avoids bloating
         # the response payload for no reason
         if r['type'] == 'qweb':
-            r['arch'] = '<qweb/>'
+            arch = '<qweb/>'
+
+            # We keep the attributes if a root qweb tag is defined.
+            root = etree.fromstring(r['arch'])
+            if root.tag == 'qweb' and root.attrib:
+                attrs = dict(root.attrib)
+                root.clear()
+                for k, v in attrs.items():
+                    root.set(k, v)
+                arch = etree.tostring(root, encoding="unicode")
+            r['arch'] = arch
         return r
 
     @api.model
