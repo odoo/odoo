@@ -19,7 +19,7 @@ from lxml import etree
 from datetime import datetime
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 _logger = logging.getLogger(__name__)
@@ -137,7 +137,12 @@ class FetchmailServer(models.Model):
                 'type': 'binary',
                 })
 
-        invoice = self.env['account.move']._import_xml_invoice(att_content, invoice_attachment)
+        try:
+            tree = etree.fromstring(att_content)
+        except Exception:
+            raise UserError(_('The xml file is badly formatted : {}').format(att_name))
+
+        invoice = self.env['account.move']._import_xml_invoice(tree)
         invoice.l10n_it_send_state = "new"
         invoice.source_email = from_address
         self._cr.commit()
