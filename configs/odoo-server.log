@@ -1,1 +1,967 @@
 
+2019-06-18 15:35:17,474 2458 INFO ? odoo: Odoo version 12.0 
+2019-06-18 15:35:17,475 2458 INFO ? odoo: Using configuration file at /home/kiwsa/workspace/odoo-bootcamp/configs/odoo.conf 
+2019-06-18 15:35:17,475 2458 INFO ? odoo: addons paths: ['/home/kiwsa/.local/share/Odoo/addons/12.0', '/home/kiwsa/workspace/odoo-bootcamp/addons', '/home/kiwsa/workspace/odoo-bootcamp/odoo/addons'] 
+2019-06-18 15:35:17,475 2458 INFO ? odoo: database: odoo12@localhost:5432 
+2019-06-18 15:35:17,563 2458 INFO ? odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltopdf binary at /usr/local/bin/wkhtmltopdf 
+2019-06-18 15:35:17,691 2458 INFO ? odoo.service.server: HTTP service (werkzeug) running on turtle:8069 
+2019-06-18 15:35:22,705 2458 INFO ? odoo.http: HTTP Configuring static files 
+2019-06-18 15:35:22,716 2458 INFO odoo11-bootcamp odoo.modules.loading: loading 1 modules... 
+2019-06-18 15:35:22,730 2458 INFO odoo11-bootcamp odoo.modules.loading: 1 modules loaded in 0.01s, 0 queries 
+2019-06-18 15:35:22,732 2458 WARNING odoo11-bootcamp odoo.modules.graph: module web_planner: not installable, skipped 
+2019-06-18 15:35:22,734 2458 WARNING odoo11-bootcamp odoo.modules.graph: module auth_crypt: not installable, skipped 
+2019-06-18 15:35:22,735 2458 INFO odoo11-bootcamp odoo.modules.loading: loading 9 modules... 
+2019-06-18 15:35:22,796 2458 INFO odoo11-bootcamp odoo.modules.loading: 9 modules loaded in 0.06s, 0 queries 
+2019-06-18 15:35:22,926 2458 INFO odoo11-bootcamp odoo.modules.loading: Modules loaded. 
+2019-06-18 15:35:22,928 2458 INFO odoo11-bootcamp odoo.addons.base.models.ir_http: Generating routing map 
+2019-06-18 15:35:22,972 2458 INFO odoo11-bootcamp odoo.modules.registry: At least one model cache has been invalidated, signaling through the database. 
+2019-06-18 15:35:22,976 2458 INFO odoo11-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:35:22] "GET / HTTP/1.1" 200 - 13 0.010 0.260
+2019-06-18 15:35:23,170 2458 INFO odoo11-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:35:23] "GET /web HTTP/1.1" 303 - 1 0.001 0.002
+2019-06-18 15:35:23,302 2458 WARNING odoo11-bootcamp odoo.modules.module: module web_planner: module not found 
+2019-06-18 15:35:23,303 2458 WARNING odoo11-bootcamp odoo.modules.module: module web_planner: module not found 
+2019-06-18 15:35:23,306 2458 ERROR odoo11-bootcamp odoo.sql_db: bad query: b'SELECT "res_lang"."id" as "id","res_lang"."write_date" as "write_date","res_lang"."grouping" as "grouping","res_lang"."direction" as "direction","res_lang"."code" as "code","res_lang"."create_uid" as "create_uid","res_lang"."translatable" as "translatable","res_lang"."create_date" as "create_date","res_lang"."time_format" as "time_format","res_lang"."thousands_sep" as "thousands_sep","res_lang"."date_format" as "date_format","res_lang"."name" as "name","res_lang"."decimal_point" as "decimal_point","res_lang"."week_start" as "week_start","res_lang"."iso_code" as "iso_code","res_lang"."write_uid" as "write_uid","res_lang"."active" as "active" FROM "res_lang" WHERE "res_lang".id IN (1)'
+ERROR: column res_lang.week_start does not exist
+LINE 1: ...me","res_lang"."decimal_point" as "decimal_point","res_lang"...
+                                                             ^
+ 
+2019-06-18 15:35:23,306 2458 ERROR odoo11-bootcamp odoo.sql_db: bad query: b'SELECT "ir_ui_view".id FROM "ir_ui_view" WHERE (("ir_ui_view"."active" = true)  AND  ("ir_ui_view"."key" = \'web.login_layout\')) ORDER BY "ir_ui_view"."priority" ,"ir_ui_view"."name" ,"ir_ui_view"."id"   limit 1'
+ERROR: current transaction is aborted, commands ignored until end of transaction block
+ 
+2019-06-18 15:35:23,381 2458 INFO odoo11-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:35:23] "GET /web/login HTTP/1.1" 500 - 63 0.028 0.179
+2019-06-18 15:35:23,395 2458 ERROR odoo11-bootcamp werkzeug: Error on request:
+Traceback (most recent call last):
+  File "/home/kiwsa/.local/lib/python3.6/site-packages/werkzeug/serving.py", line 205, in run_wsgi
+    execute(self.server.app)
+  File "/home/kiwsa/.local/lib/python3.6/site-packages/werkzeug/serving.py", line 193, in execute
+    application_iter = app(environ, start_response)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/service/server.py", line 409, in app
+    return self.app(e, s)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/service/wsgi_server.py", line 128, in application
+    return application_unproxied(environ, start_response)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/service/wsgi_server.py", line 117, in application_unproxied
+    result = odoo.http.root(environ, start_response)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/http.py", line 1320, in __call__
+    return self.dispatch(environ, start_response)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/http.py", line 1293, in __call__
+    return self.app(environ, start_wrapped)
+  File "/home/kiwsa/.local/lib/python3.6/site-packages/werkzeug/wsgi.py", line 599, in __call__
+    return self.app(environ, start_response)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/http.py", line 1488, in dispatch
+    result = ir_http._dispatch()
+  File "/home/kiwsa/workspace/odoo-bootcamp/addons/web_editor/models/ir_http.py", line 22, in _dispatch
+    return super(IrHttp, cls)._dispatch()
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_http.py", line 207, in _dispatch
+    return cls._handle_exception(e)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_http.py", line 177, in _handle_exception
+    return request._handle_exception(exception)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/http.py", line 776, in _handle_exception
+    return super(HttpRequest, self)._handle_exception(exception)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/http.py", line 314, in _handle_exception
+    raise pycompat.reraise(type(exception), exception, sys.exc_info()[2])
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/tools/pycompat.py", line 87, in reraise
+    raise value
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_http.py", line 203, in _dispatch
+    result = request.dispatch()
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/http.py", line 835, in dispatch
+    r = self._call_function(**self.params)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/http.py", line 346, in _call_function
+    return checked_call(self.db, *args, **kwargs)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/service/model.py", line 97, in wrapper
+    return f(dbname, *args, **kwargs)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/http.py", line 342, in checked_call
+    result.flatten()
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/http.py", line 1270, in flatten
+    self.response.append(self.render())
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/http.py", line 1263, in render
+    return env["ir.ui.view"].render_template(self.template, self.qcontext)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_ui_view.py", line 1284, in render_template
+    return self.browse(self.get_view_id(template)).render(values, engine)
+  File "/home/kiwsa/workspace/odoo-bootcamp/addons/web_editor/models/ir_ui_view.py", line 27, in render
+    return super(IrUiView, self).render(values=values, engine=engine, minimal_qcontext=minimal_qcontext)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_ui_view.py", line 1293, in render
+    return self.env[engine].render(self.id, qcontext)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_qweb.py", line 59, in render
+    result = super(IrQWeb, self).render(id_or_xml_id, values=values, **context)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/qweb.py", line 274, in render
+    self.compile(template, options)(self, body.append, values or {})
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/qweb.py", line 348, in _compiled_fn
+    raise e
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/qweb.py", line 346, in _compiled_fn
+    return compiled(self, append, new, options, log)
+  File "<template>", line 1, in template_162_5
+    
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/qweb.py", line 351, in _compiled_fn
+    element, document = self.get_template(template, options)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/qweb.py", line 376, in get_template
+    raise QWebException("load could not load template", name=template)
+odoo.addons.base.models.qweb.QWebException: None
+Traceback (most recent call last):
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/tools/cache.py", line 88, in lookup
+    r = d[key]
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/tools/func.py", line 69, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/tools/lru.py", line 44, in __getitem__
+    a = self.d[obj].me
+KeyError: ('ir.qweb', <function IrQWeb._get_asset_nodes at 0x7f7fb849be18>, 'web.assets_common', 'en_US', True, False, False, False, (None,))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/api.py", line 1039, in get
+    value = self._data[key][field][record._ids[0]]
+KeyError: 1
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/fields.py", line 981, in __get__
+    value = record.env.cache.get(record, self)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/api.py", line 1041, in get
+    raise CacheMiss(record, field)
+odoo.exceptions.CacheMiss: ('res.lang(1,).direction', None)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/qweb.py", line 346, in _compiled_fn
+    return compiled(self, append, new, options, log)
+  File "<template>", line 1, in template_web_login_layout_11
+  File "<template>", line 2, in body_call_content_10
+  File "<template>", line 4, in set_8
+  File "<decorator-gen-56>", line 2, in _get_asset_nodes
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/tools/cache.py", line 93, in lookup
+    value = d[key] = self.method(*args, **kwargs)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_qweb.py", line 306, in _get_asset_nodes
+    asset = self.get_asset_bundle(xmlid, files, env=self.env)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_qweb.py", line 286, in get_asset_bundle
+    return AssetsBundle(xmlid, files, remains=remains, env=env)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/assetsbundle.py", line 102, in __init__
+    [('code', '=', (self.env.context.get('lang') or self.env.user.lang))]
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/fields.py", line 985, in __get__
+    self.determine_value(record)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/fields.py", line 1088, in determine_value
+    record._prefetch_field(self)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/models.py", line 2836, in _prefetch_field
+    result = records.read([f.name for f in fs], load='_classic_write')
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/models.py", line 2774, in read
+    self._read_from_database(stored, inherited)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/models.py", line 2901, in _read_from_database
+    cr.execute(query_str, params)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/sql_db.py", line 148, in wrapper
+    return f(self, *args, **kwargs)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/sql_db.py", line 225, in execute
+    res = self._obj.execute(query, params)
+psycopg2.ProgrammingError: column res_lang.week_start does not exist
+LINE 1: ...me","res_lang"."decimal_point" as "decimal_point","res_lang"...
+                                                             ^
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/qweb.py", line 372, in get_template
+    document = options.get('load', self.load)(template, options)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_qweb.py", line 122, in load
+    template = env['ir.ui.view'].read_template(name)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_ui_view.py", line 1174, in read_template
+    return self._read_template(self.get_view_id(xml_id))
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_ui_view.py", line 1189, in get_view_id
+    view = self.search([('key', '=', template)], limit=1)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/models.py", line 1561, in search
+    res = self._search(args, offset=offset, limit=limit, order=order, count=count)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/models.py", line 4122, in _search
+    self._cr.execute(query_str, where_clause_params)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/sql_db.py", line 148, in wrapper
+    return f(self, *args, **kwargs)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/sql_db.py", line 225, in execute
+    res = self._obj.execute(query, params)
+psycopg2.InternalError: current transaction is aborted, commands ignored until end of transaction block
+
+
+load could not load template
+Template: web.login_layout - - -
+2019-06-18 15:35:25,477 2458 ERROR odoo11-bootcamp odoo.sql_db: bad query: b'SELECT "res_lang"."id" as "id","res_lang"."write_date" as "write_date","res_lang"."grouping" as "grouping","res_lang"."direction" as "direction","res_lang"."code" as "code","res_lang"."create_uid" as "create_uid","res_lang"."translatable" as "translatable","res_lang"."create_date" as "create_date","res_lang"."time_format" as "time_format","res_lang"."thousands_sep" as "thousands_sep","res_lang"."date_format" as "date_format","res_lang"."name" as "name","res_lang"."decimal_point" as "decimal_point","res_lang"."week_start" as "week_start","res_lang"."iso_code" as "iso_code","res_lang"."write_uid" as "write_uid","res_lang"."active" as "active" FROM "res_lang" WHERE "res_lang".id IN (1)'
+ERROR: column res_lang.week_start does not exist
+LINE 1: ...me","res_lang"."decimal_point" as "decimal_point","res_lang"...
+                                                             ^
+ 
+2019-06-18 15:35:25,478 2458 ERROR odoo11-bootcamp odoo.sql_db: bad query: b'SELECT "ir_ui_view".id FROM "ir_ui_view" WHERE (("ir_ui_view"."active" = true)  AND  ("ir_ui_view"."key" = \'web.login_layout\')) ORDER BY "ir_ui_view"."priority" ,"ir_ui_view"."name" ,"ir_ui_view"."id"   limit 1'
+ERROR: current transaction is aborted, commands ignored until end of transaction block
+ 
+2019-06-18 15:35:25,484 2458 INFO odoo11-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:35:25] "GET /web/login HTTP/1.1" 500 - 7 0.005 0.018
+2019-06-18 15:35:25,495 2458 ERROR odoo11-bootcamp werkzeug: Error on request:
+Traceback (most recent call last):
+  File "/home/kiwsa/.local/lib/python3.6/site-packages/werkzeug/serving.py", line 205, in run_wsgi
+    execute(self.server.app)
+  File "/home/kiwsa/.local/lib/python3.6/site-packages/werkzeug/serving.py", line 193, in execute
+    application_iter = app(environ, start_response)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/service/server.py", line 409, in app
+    return self.app(e, s)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/service/wsgi_server.py", line 128, in application
+    return application_unproxied(environ, start_response)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/service/wsgi_server.py", line 117, in application_unproxied
+    result = odoo.http.root(environ, start_response)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/http.py", line 1320, in __call__
+    return self.dispatch(environ, start_response)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/http.py", line 1293, in __call__
+    return self.app(environ, start_wrapped)
+  File "/home/kiwsa/.local/lib/python3.6/site-packages/werkzeug/wsgi.py", line 599, in __call__
+    return self.app(environ, start_response)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/http.py", line 1488, in dispatch
+    result = ir_http._dispatch()
+  File "/home/kiwsa/workspace/odoo-bootcamp/addons/web_editor/models/ir_http.py", line 22, in _dispatch
+    return super(IrHttp, cls)._dispatch()
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_http.py", line 207, in _dispatch
+    return cls._handle_exception(e)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_http.py", line 177, in _handle_exception
+    return request._handle_exception(exception)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/http.py", line 776, in _handle_exception
+    return super(HttpRequest, self)._handle_exception(exception)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/http.py", line 314, in _handle_exception
+    raise pycompat.reraise(type(exception), exception, sys.exc_info()[2])
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/tools/pycompat.py", line 87, in reraise
+    raise value
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_http.py", line 203, in _dispatch
+    result = request.dispatch()
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/http.py", line 835, in dispatch
+    r = self._call_function(**self.params)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/http.py", line 346, in _call_function
+    return checked_call(self.db, *args, **kwargs)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/service/model.py", line 97, in wrapper
+    return f(dbname, *args, **kwargs)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/http.py", line 342, in checked_call
+    result.flatten()
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/http.py", line 1270, in flatten
+    self.response.append(self.render())
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/http.py", line 1263, in render
+    return env["ir.ui.view"].render_template(self.template, self.qcontext)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_ui_view.py", line 1284, in render_template
+    return self.browse(self.get_view_id(template)).render(values, engine)
+  File "/home/kiwsa/workspace/odoo-bootcamp/addons/web_editor/models/ir_ui_view.py", line 27, in render
+    return super(IrUiView, self).render(values=values, engine=engine, minimal_qcontext=minimal_qcontext)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_ui_view.py", line 1293, in render
+    return self.env[engine].render(self.id, qcontext)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_qweb.py", line 59, in render
+    result = super(IrQWeb, self).render(id_or_xml_id, values=values, **context)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/qweb.py", line 274, in render
+    self.compile(template, options)(self, body.append, values or {})
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/qweb.py", line 348, in _compiled_fn
+    raise e
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/qweb.py", line 346, in _compiled_fn
+    return compiled(self, append, new, options, log)
+  File "<template>", line 1, in template_162_5
+    
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/qweb.py", line 351, in _compiled_fn
+    element, document = self.get_template(template, options)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/qweb.py", line 376, in get_template
+    raise QWebException("load could not load template", name=template)
+odoo.addons.base.models.qweb.QWebException: None
+Traceback (most recent call last):
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/tools/cache.py", line 88, in lookup
+    r = d[key]
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/tools/func.py", line 69, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/tools/lru.py", line 44, in __getitem__
+    a = self.d[obj].me
+KeyError: ('ir.qweb', <function IrQWeb._get_asset_nodes at 0x7f7fb849be18>, 'web.assets_common', 'en_US', True, False, False, False, (None,))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/api.py", line 1039, in get
+    value = self._data[key][field][record._ids[0]]
+KeyError: 1
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/fields.py", line 981, in __get__
+    value = record.env.cache.get(record, self)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/api.py", line 1041, in get
+    raise CacheMiss(record, field)
+odoo.exceptions.CacheMiss: ('res.lang(1,).direction', None)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/qweb.py", line 346, in _compiled_fn
+    return compiled(self, append, new, options, log)
+  File "<template>", line 1, in template_web_login_layout_11
+  File "<template>", line 2, in body_call_content_10
+  File "<template>", line 4, in set_8
+  File "<decorator-gen-56>", line 2, in _get_asset_nodes
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/tools/cache.py", line 93, in lookup
+    value = d[key] = self.method(*args, **kwargs)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_qweb.py", line 306, in _get_asset_nodes
+    asset = self.get_asset_bundle(xmlid, files, env=self.env)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_qweb.py", line 286, in get_asset_bundle
+    return AssetsBundle(xmlid, files, remains=remains, env=env)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/assetsbundle.py", line 102, in __init__
+    [('code', '=', (self.env.context.get('lang') or self.env.user.lang))]
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/fields.py", line 985, in __get__
+    self.determine_value(record)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/fields.py", line 1088, in determine_value
+    record._prefetch_field(self)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/models.py", line 2836, in _prefetch_field
+    result = records.read([f.name for f in fs], load='_classic_write')
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/models.py", line 2774, in read
+    self._read_from_database(stored, inherited)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/models.py", line 2901, in _read_from_database
+    cr.execute(query_str, params)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/sql_db.py", line 148, in wrapper
+    return f(self, *args, **kwargs)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/sql_db.py", line 225, in execute
+    res = self._obj.execute(query, params)
+psycopg2.ProgrammingError: column res_lang.week_start does not exist
+LINE 1: ...me","res_lang"."decimal_point" as "decimal_point","res_lang"...
+                                                             ^
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/qweb.py", line 372, in get_template
+    document = options.get('load', self.load)(template, options)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_qweb.py", line 122, in load
+    template = env['ir.ui.view'].read_template(name)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_ui_view.py", line 1174, in read_template
+    return self._read_template(self.get_view_id(xml_id))
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/addons/base/models/ir_ui_view.py", line 1189, in get_view_id
+    view = self.search([('key', '=', template)], limit=1)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/models.py", line 1561, in search
+    res = self._search(args, offset=offset, limit=limit, order=order, count=count)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/models.py", line 4122, in _search
+    self._cr.execute(query_str, where_clause_params)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/sql_db.py", line 148, in wrapper
+    return f(self, *args, **kwargs)
+  File "/home/kiwsa/workspace/odoo-bootcamp/odoo/sql_db.py", line 225, in execute
+    res = self._obj.execute(query, params)
+psycopg2.InternalError: current transaction is aborted, commands ignored until end of transaction block
+
+
+load could not load template
+Template: web.login_layout - - -
+2019-06-18 15:35:40,467 2458 INFO ? odoo.service.server: Initiating shutdown 
+2019-06-18 15:35:40,468 2458 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2019-06-18 15:36:11,014 2636 INFO ? odoo: Odoo version 12.0 
+2019-06-18 15:36:11,014 2636 INFO ? odoo: Using configuration file at /home/kiwsa/workspace/odoo-bootcamp/configs/odoo.conf 
+2019-06-18 15:36:11,014 2636 INFO ? odoo: addons paths: ['/home/kiwsa/.local/share/Odoo/addons/12.0', '/home/kiwsa/workspace/odoo-bootcamp/addons', '/home/kiwsa/workspace/odoo-bootcamp/odoo/addons'] 
+2019-06-18 15:36:11,014 2636 INFO ? odoo: database: odoo12@localhost:5432 
+2019-06-18 15:36:11,417 2636 INFO ? odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltopdf binary at /usr/local/bin/wkhtmltopdf 
+2019-06-18 15:36:11,520 2636 INFO ? odoo.service.server: HTTP service (werkzeug) running on turtle:8069 
+2019-06-18 15:36:11,539 2636 INFO ? odoo.modules.loading: init db 
+2019-06-18 15:36:12,245 2636 INFO odoo12-bootcamp odoo.modules.loading: loading 1 modules... 
+2019-06-18 15:36:12,356 2636 INFO odoo12-bootcamp odoo.modules.registry: module base: creating or updating database tables 
+2019-06-18 15:36:12,766 2636 INFO odoo12-bootcamp odoo.models: Computing parent_path for table ir_ui_menu... 
+2019-06-18 15:36:14,071 2636 INFO odoo12-bootcamp odoo.models: Computing parent_path for table res_partner_category... 
+2019-06-18 15:36:14,721 2636 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.model.fields.relation_field_id 
+2019-06-18 15:36:14,726 2636 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.model.fields.related_field_id 
+2019-06-18 15:36:14,927 2636 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.actions.server.model_name 
+2019-06-18 15:36:15,015 2636 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.attachment.res_name 
+2019-06-18 15:36:15,016 2636 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.attachment.res_model_name 
+2019-06-18 15:36:15,032 2636 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.cron.cron_name 
+2019-06-18 15:36:15,113 2636 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.rule.global 
+2019-06-18 15:36:15,244 2636 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.module.module.menus_by_module 
+2019-06-18 15:36:15,245 2636 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.module.module.reports_by_module 
+2019-06-18 15:36:15,246 2636 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.module.module.views_by_module 
+2019-06-18 15:36:15,387 2636 INFO odoo12-bootcamp odoo.models: Storing computed values of res.partner.display_name 
+2019-06-18 15:36:15,406 2636 INFO odoo12-bootcamp odoo.models: Storing computed values of res.partner.partner_share 
+2019-06-18 15:36:15,408 2636 INFO odoo12-bootcamp odoo.models: Storing computed values of res.partner.commercial_partner_id 
+2019-06-18 15:36:15,408 2636 INFO odoo12-bootcamp odoo.models: Storing computed values of res.partner.commercial_company_name 
+2019-06-18 15:36:15,432 2636 INFO odoo12-bootcamp odoo.models: Storing computed values of res.partner.bank.sanitized_acc_number 
+2019-06-18 15:36:15,462 2636 INFO odoo12-bootcamp odoo.models: Storing computed values of res.currency.decimal_places 
+2019-06-18 15:36:15,494 2636 INFO odoo12-bootcamp odoo.models: Storing computed values of res.company.logo_web 
+2019-06-18 15:36:15,505 2636 INFO odoo12-bootcamp odoo.models: Storing computed values of res.company.email 
+2019-06-18 15:36:15,505 2636 INFO odoo12-bootcamp odoo.models: Storing computed values of res.company.phone 
+2019-06-18 15:36:15,563 2636 INFO odoo12-bootcamp odoo.models: Storing computed values of res.users.share 
+2019-06-18 15:36:16,045 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res.lang.csv 
+2019-06-18 15:36:16,162 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_lang_data.xml 
+2019-06-18 15:36:16,163 2636 INFO ? odoo.http: HTTP Configuring static files 
+2019-06-18 15:36:16,167 2636 WARNING ? odoo.http: Logged into database 'odoo11-bootcamp', but dbfilter rejects it; logging session out. 
+2019-06-18 15:36:16,177 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_partner_data.xml 
+2019-06-18 15:36:16,353 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_company_data.xml 
+2019-06-18 15:36:16,380 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_users_data.xml 
+2019-06-18 15:36:16,715 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/report_paperformat_data.xml 
+2019-06-18 15:36:16,728 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_currency_data.xml 
+2019-06-18 15:36:17,243 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_country_data.xml 
+2019-06-18 15:36:19,295 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/ir_demo_data.xml 
+2019-06-18 15:36:19,323 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/security/base_groups.xml 
+2019-06-18 15:36:19,537 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/security/base_security.xml 
+2019-06-18 15:36:19,684 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/base_menus.xml 
+2019-06-18 15:36:19,815 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_config_views.xml 
+2019-06-18 15:36:19,845 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res.country.state.csv 
+2019-06-18 15:36:20,318 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_actions_views.xml 
+2019-06-18 15:36:20,639 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_config_parameter_views.xml 
+2019-06-18 15:36:20,692 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_cron_views.xml 
+2019-06-18 15:36:20,787 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_filters_views.xml 
+2019-06-18 15:36:20,848 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_mail_server_views.xml 
+2019-06-18 15:36:20,910 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_model_views.xml 
+2019-06-18 15:36:21,307 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_attachment_views.xml 
+2019-06-18 15:36:21,381 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_rule_views.xml 
+2019-06-18 15:36:21,447 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_sequence_views.xml 
+2019-06-18 15:36:21,521 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_translation_views.xml 
+2019-06-18 15:36:21,604 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_ui_menu_views.xml 
+2019-06-18 15:36:21,682 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_ui_view_views.xml 
+2019-06-18 15:36:21,805 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_default_views.xml 
+2019-06-18 15:36:21,867 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/ir_cron_data.xml 
+2019-06-18 15:36:21,881 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/report/ir_model_report.xml 
+2019-06-18 15:36:21,888 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/report/ir_model_templates.xml 
+2019-06-18 15:36:21,911 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_logging_views.xml 
+2019-06-18 15:36:21,974 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_qweb_widget_templates.xml 
+2019-06-18 15:36:22,007 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_module_views.xml 
+2019-06-18 15:36:22,160 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/ir_module_category_data.xml 
+2019-06-18 15:36:22,255 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/ir_module_module.xml 
+2019-06-18 15:36:22,359 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/report/ir_module_reports.xml 
+2019-06-18 15:36:22,365 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/report/ir_module_report_templates.xml 
+2019-06-18 15:36:22,386 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_module_update_views.xml 
+2019-06-18 15:36:22,414 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_language_install_views.xml 
+2019-06-18 15:36:22,449 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_import_language_views.xml 
+2019-06-18 15:36:22,479 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_module_upgrade_views.xml 
+2019-06-18 15:36:22,523 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_module_uninstall_views.xml 
+2019-06-18 15:36:22,548 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_export_language_views.xml 
+2019-06-18 15:36:22,583 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_update_translations_views.xml 
+2019-06-18 15:36:22,616 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_partner_merge_views.xml 
+2019-06-18 15:36:22,652 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/ir_actions_data.xml 
+2019-06-18 15:36:22,661 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/ir_demo_failure_data.xml 
+2019-06-18 15:36:22,690 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_company_views.xml 
+2019-06-18 15:36:22,822 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_lang_views.xml 
+2019-06-18 15:36:22,883 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_partner_views.xml 
+2019-06-18 15:36:23,236 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_bank_views.xml 
+2019-06-18 15:36:23,329 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_country_views.xml 
+2019-06-18 15:36:23,435 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_currency_views.xml 
+2019-06-18 15:36:23,559 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_users_views.xml 
+2019-06-18 15:36:23,903 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_property_views.xml 
+2019-06-18 15:36:23,973 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_config_settings_views.xml 
+2019-06-18 15:36:23,996 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/report_paperformat_views.xml 
+2019-06-18 15:36:24,056 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/onboarding_views.xml 
+2019-06-18 15:36:24,149 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/security/ir.model.access.csv 
+2019-06-18 15:36:24,452 2636 INFO odoo12-bootcamp odoo.modules.loading: Module base: loading demo 
+2019-06-18 15:36:24,453 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_company_demo.xml 
+2019-06-18 15:36:24,469 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_users_demo.xml 
+2019-06-18 15:36:25,132 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_partner_bank_demo.xml 
+2019-06-18 15:36:25,145 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_currency_rate_demo.xml 
+2019-06-18 15:36:25,496 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_bank_demo.xml 
+2019-06-18 15:36:25,502 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_partner_demo.xml 
+2019-06-18 15:36:26,447 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_partner_image_demo.xml 
+2019-06-18 15:36:27,726 2636 INFO odoo12-bootcamp odoo.modules.loading: 1 modules loaded in 15.48s, 0 queries 
+2019-06-18 15:36:27,766 2636 INFO odoo12-bootcamp odoo.modules.loading: updating modules list 
+2019-06-18 15:36:27,767 2636 INFO odoo12-bootcamp odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2019-06-18 15:36:28,504 2636 INFO odoo12-bootcamp odoo.addons.base.models.ir_module: ALLOW access to module.button_upgrade on ['base'] to user __system__ #1 via n/a 
+2019-06-18 15:36:28,504 2636 INFO odoo12-bootcamp odoo.addons.base.models.ir_module: ALLOW access to module.update_list on ['base'] to user __system__ #1 via n/a 
+2019-06-18 15:36:29,136 2636 INFO odoo12-bootcamp odoo.addons.base.models.ir_module: ALLOW access to module.button_install on [] to user __system__ #1 via n/a 
+2019-06-18 15:36:29,157 2636 INFO odoo12-bootcamp odoo.modules.loading: loading 9 modules... 
+2019-06-18 15:36:29,420 2636 INFO odoo12-bootcamp odoo.modules.registry: module web: creating or updating database tables 
+2019-06-18 15:36:31,445 2636 INFO odoo12-bootcamp odoo.modules.loading: loading web/security/ir.model.access.csv 
+2019-06-18 15:36:31,463 2636 INFO odoo12-bootcamp odoo.modules.loading: loading web/views/webclient_templates.xml 
+2019-06-18 15:36:31,955 2636 INFO odoo12-bootcamp odoo.modules.loading: loading web/views/report_templates.xml 
+2019-06-18 15:36:32,407 2636 INFO odoo12-bootcamp odoo.modules.loading: loading web/data/res_company.xml 
+2019-06-18 15:36:32,418 2636 INFO odoo12-bootcamp odoo.modules.loading: loading web/data/report_layout.xml 
+2019-06-18 15:36:32,439 2636 INFO odoo12-bootcamp odoo.modules.loading: Module web: loading demo 
+2019-06-18 15:36:32,732 2636 INFO odoo12-bootcamp odoo.modules.registry: module base_import: creating or updating database tables 
+2019-06-18 15:36:34,764 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base_import/security/ir.model.access.csv 
+2019-06-18 15:36:34,865 2636 INFO odoo12-bootcamp odoo.modules.loading: loading base_import/views/base_import_templates.xml 
+2019-06-18 15:36:34,964 2636 INFO odoo12-bootcamp odoo.modules.loading: Module base_import: loading demo 
+2019-06-18 15:36:35,088 2636 INFO odoo12-bootcamp odoo.modules.registry: module web_diagram: creating or updating database tables 
+2019-06-18 15:36:35,101 2636 INFO odoo12-bootcamp odoo.modules.loading: loading web_diagram/views/web_diagram_templates.xml 
+2019-06-18 15:36:35,182 2636 INFO odoo12-bootcamp odoo.modules.loading: Module web_diagram: loading demo 
+2019-06-18 15:36:35,342 2636 INFO odoo12-bootcamp odoo.modules.registry: module web_editor: creating or updating database tables 
+2019-06-18 15:36:35,579 2636 INFO odoo12-bootcamp odoo.modules.loading: loading web_editor/security/ir.model.access.csv 
+2019-06-18 15:36:35,598 2636 INFO odoo12-bootcamp odoo.modules.loading: loading web_editor/views/editor.xml 
+2019-06-18 15:36:35,954 2636 INFO odoo12-bootcamp odoo.modules.loading: loading web_editor/views/iframe.xml 
+2019-06-18 15:36:35,996 2636 INFO odoo12-bootcamp odoo.modules.loading: loading web_editor/views/snippets.xml 
+2019-06-18 15:36:36,036 2636 INFO odoo12-bootcamp odoo.modules.loading: Module web_editor: loading demo 
+2019-06-18 15:36:36,166 2636 INFO odoo12-bootcamp odoo.modules.registry: module web_kanban_gauge: creating or updating database tables 
+2019-06-18 15:36:36,178 2636 INFO odoo12-bootcamp odoo.modules.loading: loading web_kanban_gauge/views/web_kanban_gauge_templates.xml 
+2019-06-18 15:36:36,272 2636 INFO odoo12-bootcamp odoo.modules.loading: Module web_kanban_gauge: loading demo 
+2019-06-18 15:36:36,402 2636 INFO odoo12-bootcamp odoo.modules.registry: module web_settings_dashboard: creating or updating database tables 
+2019-06-18 15:36:36,443 2636 INFO odoo12-bootcamp odoo.modules.loading: loading web_settings_dashboard/views/dashboard_views.xml 
+2019-06-18 15:36:36,459 2636 INFO odoo12-bootcamp odoo.modules.loading: loading web_settings_dashboard/views/dashboard_templates.xml 
+2019-06-18 15:36:36,547 2636 INFO odoo12-bootcamp odoo.modules.loading: Module web_settings_dashboard: loading demo 
+2019-06-18 15:36:36,661 2636 INFO odoo12-bootcamp odoo.modules.registry: module web_tour: creating or updating database tables 
+2019-06-18 15:36:36,714 2636 INFO odoo12-bootcamp odoo.modules.loading: loading web_tour/security/ir.model.access.csv 
+2019-06-18 15:36:36,731 2636 INFO odoo12-bootcamp odoo.modules.loading: loading web_tour/security/ir.rule.csv 
+2019-06-18 15:36:36,750 2636 INFO odoo12-bootcamp odoo.modules.loading: loading web_tour/views/tour_templates.xml 
+2019-06-18 15:36:36,828 2636 INFO odoo12-bootcamp odoo.modules.loading: loading web_tour/views/tour_views.xml 
+2019-06-18 15:36:36,884 2636 INFO odoo12-bootcamp odoo.modules.loading: Module web_tour: loading demo 
+2019-06-18 15:36:36,885 2636 INFO odoo12-bootcamp odoo.modules.loading: loading web_tour/data/web_tour_demo.xml 
+2019-06-18 15:36:37,034 2636 INFO odoo12-bootcamp odoo.modules.registry: module iap: creating or updating database tables 
+2019-06-18 15:36:37,090 2636 INFO odoo12-bootcamp odoo.modules.loading: loading iap/security/ir.model.access.csv 
+2019-06-18 15:36:37,109 2636 INFO odoo12-bootcamp odoo.modules.loading: loading iap/security/ir_rule.xml 
+2019-06-18 15:36:37,125 2636 INFO odoo12-bootcamp odoo.modules.loading: loading iap/views/assets.xml 
+2019-06-18 15:36:37,171 2636 INFO odoo12-bootcamp odoo.modules.loading: loading iap/views/iap_views.xml 
+2019-06-18 15:36:37,230 2636 INFO odoo12-bootcamp odoo.modules.loading: Module iap: loading demo 
+2019-06-18 15:36:37,252 2636 INFO odoo12-bootcamp odoo.modules.loading: 9 modules loaded in 8.10s, 0 queries 
+2019-06-18 15:36:37,484 2636 INFO odoo12-bootcamp odoo.modules.loading: Modules loaded. 
+2019-06-18 15:36:37,490 2636 INFO odoo12-bootcamp odoo.addons.base.models.ir_http: Generating routing map 
+2019-06-18 15:36:37,546 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:37] "GET / HTTP/1.1" 200 - 1 0.003 21.378
+2019-06-18 15:36:37,831 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:37] "GET /web HTTP/1.1" 303 - 1 0.000 0.003
+2019-06-18 15:36:39,306 2636 INFO odoo12-bootcamp odoo.modules.registry: Registry changed, signaling through the database 
+2019-06-18 15:36:39,311 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:39] "GET /web/login HTTP/1.1" 200 - 283 0.135 1.339
+2019-06-18 15:36:39,364 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:39] "GET /web/content/348-5ec5b7d/web.assets_common.0.css HTTP/1.1" 200 - 11 0.007 0.021
+2019-06-18 15:36:39,368 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:39] "GET /web/content/349-e0f78cd/web.assets_frontend.0.css HTTP/1.1" 200 - 5 0.010 0.016
+2019-06-18 15:36:39,393 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:39] "GET /web/content/350-5ec5b7d/web.assets_common.js HTTP/1.1" 200 - 5 0.007 0.030
+2019-06-18 15:36:39,408 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:39] "GET /web/content/351-e0f78cd/web.assets_frontend.js HTTP/1.1" 200 - 5 0.019 0.020
+2019-06-18 15:36:39,702 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:39] "GET /web/webclient/qweb?mods= HTTP/1.1" 200 - 1 0.001 0.002
+2019-06-18 15:36:39,708 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:39] "POST /web/webclient/bootstrap_translations HTTP/1.1" 200 - 1 0.000 0.008
+2019-06-18 15:36:49,003 2636 INFO odoo12-bootcamp odoo.addons.base.models.res_users: Login failed for db:odoo12-bootcamp login:admin@gmail.com from 127.0.0.1 
+2019-06-18 15:36:49,165 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:49] "POST /web/login HTTP/1.1" 200 - 140 0.051 0.118
+2019-06-18 15:36:49,534 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:49] "GET /web/webclient/qweb?mods= HTTP/1.1" 200 - 1 0.000 0.002
+2019-06-18 15:36:49,540 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:49] "POST /web/webclient/bootstrap_translations HTTP/1.1" 200 - 1 0.000 0.002
+2019-06-18 15:36:53,642 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:53] "GET /web/database/manager HTTP/1.1" 200 - 3 0.003 0.162
+2019-06-18 15:36:53,685 2636 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:53] "GET /web/static/lib/bootstrap/css/bootstrap.css HTTP/1.1" 200 - - - -
+2019-06-18 15:36:53,700 2636 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:53] "GET /web/static/lib/jquery/jquery.js HTTP/1.1" 200 - - - -
+2019-06-18 15:36:53,710 2636 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:53] "GET /web/static/lib/popper/popper.js HTTP/1.1" 200 - - - -
+2019-06-18 15:36:53,717 2636 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:53] "GET /web/static/lib/bootstrap/js/index.js HTTP/1.1" 200 - - - -
+2019-06-18 15:36:53,724 2636 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:53] "GET /web/static/lib/bootstrap/js/util.js HTTP/1.1" 200 - - - -
+2019-06-18 15:36:53,734 2636 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:53] "GET /web/static/lib/bootstrap/js/alert.js HTTP/1.1" 200 - - - -
+2019-06-18 15:36:53,739 2636 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:53] "GET /web/static/lib/bootstrap/js/button.js HTTP/1.1" 200 - - - -
+2019-06-18 15:36:53,748 2636 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:53] "GET /web/static/lib/bootstrap/js/carousel.js HTTP/1.1" 200 - - - -
+2019-06-18 15:36:53,752 2636 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:53] "GET /web/static/lib/bootstrap/js/collapse.js HTTP/1.1" 200 - - - -
+2019-06-18 15:36:53,760 2636 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:53] "GET /web/static/lib/bootstrap/js/popover.js HTTP/1.1" 200 - - - -
+2019-06-18 15:36:53,768 2636 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:53] "GET /web/static/lib/bootstrap/js/scrollspy.js HTTP/1.1" 200 - - - -
+2019-06-18 15:36:53,775 2636 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:36:53] "GET /web/static/lib/bootstrap/js/tab.js HTTP/1.1" 200 - - - -
+2019-06-18 15:37:33,820 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:37:33] "GET /web/database/manager HTTP/1.1" 200 - 3 0.002 0.138
+2019-06-18 15:37:34,235 2636 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:37:34] "GET /web/static/src/img/favicon.ico HTTP/1.1" 200 - - - -
+2019-06-18 15:37:37,554 2636 INFO odoo12-bootcamp odoo.addons.base.models.ir_cron: Starting job `Base: Auto-vacuum internal data`. 
+2019-06-18 15:37:37,591 2636 INFO odoo12-bootcamp odoo.addons.base.models.ir_attachment: filestore gc 353 checked, 3 removed 
+2019-06-18 15:37:37,606 2636 INFO odoo12-bootcamp odoo.addons.base.models.ir_autovacuum: GC'd 0 user log entries 
+2019-06-18 15:37:38,038 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:37:38] "GET /web?db=odoo12-bootcamp HTTP/1.1" 303 - 1 0.000 0.002
+2019-06-18 15:37:38,050 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:37:38] "GET /web/login HTTP/1.1" 200 - 5 0.002 0.007
+2019-06-18 15:37:38,301 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:37:38] "GET /web/webclient/qweb?mods= HTTP/1.1" 200 - 1 0.001 0.002
+2019-06-18 15:37:38,303 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:37:38] "POST /web/webclient/bootstrap_translations HTTP/1.1" 200 - 1 0.000 0.003
+2019-06-18 15:37:41,487 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:37:41] "GET /web/database/manager HTTP/1.1" 200 - 3 0.002 0.137
+2019-06-18 15:37:52,677 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:37:52] "GET /web/database/manager HTTP/1.1" 200 - 3 0.001 0.138
+2019-06-18 15:37:53,160 2636 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:37:53] "GET /web/static/src/img/favicon.ico HTTP/1.1" 200 - - - -
+2019-06-18 15:38:36,630 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:38:36] "GET /web/database/manager HTTP/1.1" 200 - 3 0.001 0.136
+2019-06-18 15:38:37,059 2636 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:38:37] "GET /web/static/src/img/favicon.ico HTTP/1.1" 200 - - - -
+2019-06-18 15:38:42,682 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:38:42] "GET / HTTP/1.1" 200 - 1 0.000 0.002
+2019-06-18 15:38:42,836 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:38:42] "GET /web HTTP/1.1" 303 - 1 0.000 0.002
+2019-06-18 15:38:42,849 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:38:42] "GET /web/login HTTP/1.1" 200 - 5 0.002 0.006
+2019-06-18 15:38:43,084 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:38:43] "GET /web/webclient/qweb?mods= HTTP/1.1" 200 - 1 0.001 0.003
+2019-06-18 15:38:43,094 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:38:43] "POST /web/webclient/bootstrap_translations HTTP/1.1" 200 - 1 0.000 0.001
+2019-06-18 15:38:51,370 2636 INFO odoo12-bootcamp odoo.addons.base.models.res_users: Login failed for db:odoo12-bootcamp login:admin@gmail.com from 127.0.0.1 
+2019-06-18 15:38:51,379 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:38:51] "POST /web/login HTTP/1.1" 200 - 6 0.004 0.010
+2019-06-18 15:38:51,689 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:38:51] "GET /web/webclient/qweb?mods= HTTP/1.1" 200 - 1 0.000 0.002
+2019-06-18 15:38:51,702 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:38:51] "POST /web/webclient/bootstrap_translations HTTP/1.1" 200 - 1 0.001 0.003
+2019-06-18 15:38:54,903 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:38:54] "GET /web/database/manager HTTP/1.1" 200 - 3 0.001 0.137
+2019-06-18 15:39:29,996 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:39:29] "GET /web/database/manager HTTP/1.1" 200 - 3 0.002 0.138
+2019-06-18 15:39:30,393 2636 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:39:30] "GET /web/static/src/img/favicon.ico HTTP/1.1" 200 - - - -
+2019-06-18 15:40:11,967 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:40:11] "GET /web?db=odoo12-bootcamp HTTP/1.1" 303 - 1 0.000 0.002
+2019-06-18 15:40:11,982 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:40:11] "GET /web/login HTTP/1.1" 200 - 5 0.002 0.007
+2019-06-18 15:40:12,381 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:40:12] "GET /web/webclient/qweb?mods= HTTP/1.1" 200 - 1 0.001 0.002
+2019-06-18 15:40:12,385 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:40:12] "POST /web/webclient/bootstrap_translations HTTP/1.1" 200 - 1 0.002 0.004
+2019-06-18 15:40:14,649 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:40:14] "GET /web/database/manager HTTP/1.1" 200 - 3 0.001 0.139
+2019-06-18 15:40:20,531 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:40:20] "GET /web?db=odoo12-bootcamp HTTP/1.1" 303 - 1 0.000 0.002
+2019-06-18 15:40:20,544 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:40:20] "GET /web/login HTTP/1.1" 200 - 5 0.002 0.007
+2019-06-18 15:40:20,775 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:40:20] "GET /web/webclient/qweb?mods= HTTP/1.1" 200 - 1 0.000 0.002
+2019-06-18 15:40:20,785 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:40:20] "POST /web/webclient/bootstrap_translations HTTP/1.1" 200 - 1 0.001 0.004
+2019-06-18 15:40:28,229 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:40:28] "GET /web/database/manager HTTP/1.1" 200 - 3 0.001 0.138
+2019-06-18 15:41:15,779 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:41:15] "GET /web/database/manager HTTP/1.1" 200 - 3 0.001 0.138
+2019-06-18 15:41:16,198 2636 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:41:16] "GET /web/static/src/img/favicon.ico HTTP/1.1" 200 - - - -
+2019-06-18 15:41:23,760 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:41:23] "GET /web/database/manager HTTP/1.1" 200 - 3 0.001 0.137
+2019-06-18 15:41:24,003 2636 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:41:24] "GET /web/static/src/img/favicon.ico HTTP/1.1" 200 - - - -
+2019-06-18 15:41:43,830 2636 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:41:43] "GET /web/database/manager HTTP/1.1" 200 - 3 0.002 0.137
+2019-06-18 15:41:44,226 2636 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:41:44] "GET /web/static/src/img/favicon.ico HTTP/1.1" 200 - - - -
+2019-06-18 15:41:52,865 2636 INFO odoo12-bootcamp odoo.service.server: Initiating shutdown 
+2019-06-18 15:41:52,866 2636 INFO odoo12-bootcamp odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2019-06-18 15:43:11,117 4762 INFO ? odoo: Odoo version 12.0 
+2019-06-18 15:43:11,117 4762 INFO ? odoo: Using configuration file at /home/kiwsa/workspace/odoo-bootcamp/configs/odoo.conf 
+2019-06-18 15:43:11,117 4762 INFO ? odoo: addons paths: ['/home/kiwsa/.local/share/Odoo/addons/12.0', '/home/kiwsa/workspace/odoo-bootcamp/addons', '/home/kiwsa/workspace/odoo-bootcamp/odoo/addons'] 
+2019-06-18 15:43:11,117 4762 INFO ? odoo: database: odoo12@localhost:5432 
+2019-06-18 15:43:11,450 4762 INFO ? odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltopdf binary at /usr/local/bin/wkhtmltopdf 
+2019-06-18 15:43:11,554 4762 INFO ? odoo.service.server: HTTP service (werkzeug) running on turtle:8069 
+2019-06-18 15:43:11,567 4762 INFO ? odoo.modules.loading: init db 
+2019-06-18 15:43:12,305 4762 INFO odoo12-bootcamp odoo.modules.loading: loading 1 modules... 
+2019-06-18 15:43:12,418 4762 INFO odoo12-bootcamp odoo.modules.registry: module base: creating or updating database tables 
+2019-06-18 15:43:12,851 4762 INFO odoo12-bootcamp odoo.models: Computing parent_path for table ir_ui_menu... 
+2019-06-18 15:43:14,168 4762 INFO odoo12-bootcamp odoo.models: Computing parent_path for table res_partner_category... 
+2019-06-18 15:43:14,864 4762 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.model.fields.relation_field_id 
+2019-06-18 15:43:14,868 4762 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.model.fields.related_field_id 
+2019-06-18 15:43:15,072 4762 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.actions.server.model_name 
+2019-06-18 15:43:15,159 4762 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.attachment.res_name 
+2019-06-18 15:43:15,160 4762 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.attachment.res_model_name 
+2019-06-18 15:43:15,176 4762 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.cron.cron_name 
+2019-06-18 15:43:15,236 4762 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.rule.global 
+2019-06-18 15:43:15,361 4762 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.module.module.menus_by_module 
+2019-06-18 15:43:15,362 4762 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.module.module.reports_by_module 
+2019-06-18 15:43:15,363 4762 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.module.module.views_by_module 
+2019-06-18 15:43:15,503 4762 INFO odoo12-bootcamp odoo.models: Storing computed values of res.partner.display_name 
+2019-06-18 15:43:15,520 4762 INFO odoo12-bootcamp odoo.models: Storing computed values of res.partner.partner_share 
+2019-06-18 15:43:15,522 4762 INFO odoo12-bootcamp odoo.models: Storing computed values of res.partner.commercial_partner_id 
+2019-06-18 15:43:15,523 4762 INFO odoo12-bootcamp odoo.models: Storing computed values of res.partner.commercial_company_name 
+2019-06-18 15:43:15,551 4762 INFO odoo12-bootcamp odoo.models: Storing computed values of res.partner.bank.sanitized_acc_number 
+2019-06-18 15:43:15,592 4762 INFO odoo12-bootcamp odoo.models: Storing computed values of res.currency.decimal_places 
+2019-06-18 15:43:15,623 4762 INFO odoo12-bootcamp odoo.models: Storing computed values of res.company.logo_web 
+2019-06-18 15:43:15,634 4762 INFO odoo12-bootcamp odoo.models: Storing computed values of res.company.email 
+2019-06-18 15:43:15,635 4762 INFO odoo12-bootcamp odoo.models: Storing computed values of res.company.phone 
+2019-06-18 15:43:15,694 4762 INFO odoo12-bootcamp odoo.models: Storing computed values of res.users.share 
+2019-06-18 15:43:16,205 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res.lang.csv 
+2019-06-18 15:43:16,315 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_lang_data.xml 
+2019-06-18 15:43:16,330 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_partner_data.xml 
+2019-06-18 15:43:16,511 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_company_data.xml 
+2019-06-18 15:43:16,536 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_users_data.xml 
+2019-06-18 15:43:16,879 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/report_paperformat_data.xml 
+2019-06-18 15:43:16,890 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_currency_data.xml 
+2019-06-18 15:43:17,408 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_country_data.xml 
+2019-06-18 15:43:19,414 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/ir_demo_data.xml 
+2019-06-18 15:43:19,437 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/security/base_groups.xml 
+2019-06-18 15:43:19,661 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/security/base_security.xml 
+2019-06-18 15:43:19,808 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/base_menus.xml 
+2019-06-18 15:43:19,943 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_config_views.xml 
+2019-06-18 15:43:19,972 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res.country.state.csv 
+2019-06-18 15:43:20,464 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_actions_views.xml 
+2019-06-18 15:43:20,802 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_config_parameter_views.xml 
+2019-06-18 15:43:20,856 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_cron_views.xml 
+2019-06-18 15:43:20,964 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_filters_views.xml 
+2019-06-18 15:43:21,029 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_mail_server_views.xml 
+2019-06-18 15:43:21,089 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_model_views.xml 
+2019-06-18 15:43:21,464 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_attachment_views.xml 
+2019-06-18 15:43:21,540 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_rule_views.xml 
+2019-06-18 15:43:21,610 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_sequence_views.xml 
+2019-06-18 15:43:21,681 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_translation_views.xml 
+2019-06-18 15:43:21,756 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_ui_menu_views.xml 
+2019-06-18 15:43:21,832 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_ui_view_views.xml 
+2019-06-18 15:43:21,955 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_default_views.xml 
+2019-06-18 15:43:22,018 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/ir_cron_data.xml 
+2019-06-18 15:43:22,031 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/report/ir_model_report.xml 
+2019-06-18 15:43:22,038 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/report/ir_model_templates.xml 
+2019-06-18 15:43:22,061 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_logging_views.xml 
+2019-06-18 15:43:22,117 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_qweb_widget_templates.xml 
+2019-06-18 15:43:22,152 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_module_views.xml 
+2019-06-18 15:43:22,303 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/ir_module_category_data.xml 
+2019-06-18 15:43:22,396 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/ir_module_module.xml 
+2019-06-18 15:43:22,503 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/report/ir_module_reports.xml 
+2019-06-18 15:43:22,509 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/report/ir_module_report_templates.xml 
+2019-06-18 15:43:22,531 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_module_update_views.xml 
+2019-06-18 15:43:22,563 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_language_install_views.xml 
+2019-06-18 15:43:22,601 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_import_language_views.xml 
+2019-06-18 15:43:22,629 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_module_upgrade_views.xml 
+2019-06-18 15:43:22,675 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_module_uninstall_views.xml 
+2019-06-18 15:43:22,697 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_export_language_views.xml 
+2019-06-18 15:43:22,727 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_update_translations_views.xml 
+2019-06-18 15:43:22,754 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_partner_merge_views.xml 
+2019-06-18 15:43:22,788 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/ir_actions_data.xml 
+2019-06-18 15:43:22,797 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/ir_demo_failure_data.xml 
+2019-06-18 15:43:22,825 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_company_views.xml 
+2019-06-18 15:43:22,963 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_lang_views.xml 
+2019-06-18 15:43:23,033 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_partner_views.xml 
+2019-06-18 15:43:23,365 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_bank_views.xml 
+2019-06-18 15:43:23,478 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_country_views.xml 
+2019-06-18 15:43:23,630 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_currency_views.xml 
+2019-06-18 15:43:23,810 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_users_views.xml 
+2019-06-18 15:43:24,276 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_property_views.xml 
+2019-06-18 15:43:24,362 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_config_settings_views.xml 
+2019-06-18 15:43:24,393 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/report_paperformat_views.xml 
+2019-06-18 15:43:24,470 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/onboarding_views.xml 
+2019-06-18 15:43:24,591 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/security/ir.model.access.csv 
+2019-06-18 15:43:25,038 4762 INFO odoo12-bootcamp odoo.modules.loading: Module base: loading demo 
+2019-06-18 15:43:25,039 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_company_demo.xml 
+2019-06-18 15:43:25,055 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_users_demo.xml 
+2019-06-18 15:43:25,741 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_partner_bank_demo.xml 
+2019-06-18 15:43:25,752 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_currency_rate_demo.xml 
+2019-06-18 15:43:26,131 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_bank_demo.xml 
+2019-06-18 15:43:26,138 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_partner_demo.xml 
+2019-06-18 15:43:26,316 4762 INFO ? odoo.http: HTTP Configuring static files 
+2019-06-18 15:43:27,099 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_partner_image_demo.xml 
+2019-06-18 15:43:28,236 4762 INFO odoo12-bootcamp odoo.modules.loading: 1 modules loaded in 15.93s, 0 queries 
+2019-06-18 15:43:28,271 4762 INFO odoo12-bootcamp odoo.modules.loading: updating modules list 
+2019-06-18 15:43:28,271 4762 INFO odoo12-bootcamp odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2019-06-18 15:43:28,881 4762 INFO odoo12-bootcamp odoo.addons.base.models.ir_module: ALLOW access to module.button_upgrade on ['base'] to user __system__ #1 via n/a 
+2019-06-18 15:43:28,881 4762 INFO odoo12-bootcamp odoo.addons.base.models.ir_module: ALLOW access to module.update_list on ['base'] to user __system__ #1 via n/a 
+2019-06-18 15:43:29,243 4762 INFO odoo12-bootcamp odoo.addons.base.models.ir_module: ALLOW access to module.button_install on [] to user __system__ #1 via n/a 
+2019-06-18 15:43:29,255 4762 INFO odoo12-bootcamp odoo.modules.loading: loading 9 modules... 
+2019-06-18 15:43:29,417 4762 INFO odoo12-bootcamp odoo.modules.registry: module web: creating or updating database tables 
+2019-06-18 15:43:30,614 4762 INFO odoo12-bootcamp odoo.modules.loading: loading web/security/ir.model.access.csv 
+2019-06-18 15:43:30,626 4762 INFO odoo12-bootcamp odoo.modules.loading: loading web/views/webclient_templates.xml 
+2019-06-18 15:43:30,927 4762 INFO odoo12-bootcamp odoo.modules.loading: loading web/views/report_templates.xml 
+2019-06-18 15:43:31,206 4762 INFO odoo12-bootcamp odoo.modules.loading: loading web/data/res_company.xml 
+2019-06-18 15:43:31,215 4762 INFO odoo12-bootcamp odoo.modules.loading: loading web/data/report_layout.xml 
+2019-06-18 15:43:31,229 4762 INFO odoo12-bootcamp odoo.modules.loading: Module web: loading demo 
+2019-06-18 15:43:31,454 4762 INFO odoo12-bootcamp odoo.modules.registry: module base_import: creating or updating database tables 
+2019-06-18 15:43:33,236 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base_import/security/ir.model.access.csv 
+2019-06-18 15:43:33,312 4762 INFO odoo12-bootcamp odoo.modules.loading: loading base_import/views/base_import_templates.xml 
+2019-06-18 15:43:33,395 4762 INFO odoo12-bootcamp odoo.modules.loading: Module base_import: loading demo 
+2019-06-18 15:43:33,507 4762 INFO odoo12-bootcamp odoo.modules.registry: module web_diagram: creating or updating database tables 
+2019-06-18 15:43:33,517 4762 INFO odoo12-bootcamp odoo.modules.loading: loading web_diagram/views/web_diagram_templates.xml 
+2019-06-18 15:43:33,597 4762 INFO odoo12-bootcamp odoo.modules.loading: Module web_diagram: loading demo 
+2019-06-18 15:43:33,764 4762 INFO odoo12-bootcamp odoo.modules.registry: module web_editor: creating or updating database tables 
+2019-06-18 15:43:34,038 4762 INFO odoo12-bootcamp odoo.modules.loading: loading web_editor/security/ir.model.access.csv 
+2019-06-18 15:43:34,072 4762 INFO odoo12-bootcamp odoo.modules.loading: loading web_editor/views/editor.xml 
+2019-06-18 15:43:34,535 4762 INFO odoo12-bootcamp odoo.modules.loading: loading web_editor/views/iframe.xml 
+2019-06-18 15:43:34,580 4762 INFO odoo12-bootcamp odoo.modules.loading: loading web_editor/views/snippets.xml 
+2019-06-18 15:43:34,632 4762 INFO odoo12-bootcamp odoo.modules.loading: Module web_editor: loading demo 
+2019-06-18 15:43:34,795 4762 INFO odoo12-bootcamp odoo.modules.registry: module web_kanban_gauge: creating or updating database tables 
+2019-06-18 15:43:34,807 4762 INFO odoo12-bootcamp odoo.modules.loading: loading web_kanban_gauge/views/web_kanban_gauge_templates.xml 
+2019-06-18 15:43:34,901 4762 INFO odoo12-bootcamp odoo.modules.loading: Module web_kanban_gauge: loading demo 
+2019-06-18 15:43:35,013 4762 INFO odoo12-bootcamp odoo.modules.registry: module web_settings_dashboard: creating or updating database tables 
+2019-06-18 15:43:35,072 4762 INFO odoo12-bootcamp odoo.modules.loading: loading web_settings_dashboard/views/dashboard_views.xml 
+2019-06-18 15:43:35,091 4762 INFO odoo12-bootcamp odoo.modules.loading: loading web_settings_dashboard/views/dashboard_templates.xml 
+2019-06-18 15:43:35,191 4762 INFO odoo12-bootcamp odoo.modules.loading: Module web_settings_dashboard: loading demo 
+2019-06-18 15:43:35,318 4762 INFO odoo12-bootcamp odoo.modules.registry: module web_tour: creating or updating database tables 
+2019-06-18 15:43:35,393 4762 INFO odoo12-bootcamp odoo.modules.loading: loading web_tour/security/ir.model.access.csv 
+2019-06-18 15:43:35,412 4762 INFO odoo12-bootcamp odoo.modules.loading: loading web_tour/security/ir.rule.csv 
+2019-06-18 15:43:35,435 4762 INFO odoo12-bootcamp odoo.modules.loading: loading web_tour/views/tour_templates.xml 
+2019-06-18 15:43:35,568 4762 INFO odoo12-bootcamp odoo.modules.loading: loading web_tour/views/tour_views.xml 
+2019-06-18 15:43:35,687 4762 INFO odoo12-bootcamp odoo.modules.loading: Module web_tour: loading demo 
+2019-06-18 15:43:35,688 4762 INFO odoo12-bootcamp odoo.modules.loading: loading web_tour/data/web_tour_demo.xml 
+2019-06-18 15:43:35,950 4762 INFO odoo12-bootcamp odoo.modules.registry: module iap: creating or updating database tables 
+2019-06-18 15:43:36,043 4762 INFO odoo12-bootcamp odoo.modules.loading: loading iap/security/ir.model.access.csv 
+2019-06-18 15:43:36,071 4762 INFO odoo12-bootcamp odoo.modules.loading: loading iap/security/ir_rule.xml 
+2019-06-18 15:43:36,099 4762 INFO odoo12-bootcamp odoo.modules.loading: loading iap/views/assets.xml 
+2019-06-18 15:43:36,204 4762 INFO odoo12-bootcamp odoo.modules.loading: loading iap/views/iap_views.xml 
+2019-06-18 15:43:36,299 4762 INFO odoo12-bootcamp odoo.modules.loading: Module iap: loading demo 
+2019-06-18 15:43:36,339 4762 INFO odoo12-bootcamp odoo.modules.loading: 9 modules loaded in 7.08s, 0 queries 
+2019-06-18 15:43:36,731 4762 INFO odoo12-bootcamp odoo.modules.loading: Modules loaded. 
+2019-06-18 15:43:36,746 4762 INFO odoo12-bootcamp odoo.addons.base.models.ir_http: Generating routing map 
+2019-06-18 15:43:36,767 4762 INFO odoo12-bootcamp odoo.addons.base.models.ir_http: Generating routing map 
+2019-06-18 15:43:36,882 4762 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:43:36] "GET / HTTP/1.1" 200 - 1 0.014 6.654
+2019-06-18 15:43:36,884 4762 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:43:36] "GET / HTTP/1.1" 200 - 1 0.001 10.564
+2019-06-18 15:43:37,369 4762 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:43:37] "GET /web HTTP/1.1" 303 - 1 0.001 0.009
+2019-06-18 15:43:39,552 4762 INFO odoo12-bootcamp odoo.modules.registry: Registry changed, signaling through the database 
+2019-06-18 15:43:39,554 4762 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:43:39] "GET /web/login HTTP/1.1" 200 - 283 0.214 1.961
+2019-06-18 15:43:40,143 4762 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:43:40] "GET /web/webclient/qweb?mods= HTTP/1.1" 200 - 1 0.001 0.003
+2019-06-18 15:43:40,146 4762 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:43:40] "POST /web/webclient/bootstrap_translations HTTP/1.1" 200 - 1 0.001 0.004
+2019-06-18 15:44:07,519 4762 INFO odoo12-bootcamp odoo.service.server: Initiating shutdown 
+2019-06-18 15:44:07,520 4762 INFO odoo12-bootcamp odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2019-06-18 15:47:36,642 6252 INFO ? odoo: Odoo version 12.0 
+2019-06-18 15:47:36,642 6252 INFO ? odoo: Using configuration file at /home/kiwsa/workspace/odoo-bootcamp/configs/odoo.conf 
+2019-06-18 15:47:36,642 6252 INFO ? odoo: addons paths: ['/home/kiwsa/.local/share/Odoo/addons/12.0', '/home/kiwsa/workspace/odoo-bootcamp/addons', '/home/kiwsa/workspace/odoo-bootcamp/odoo/addons'] 
+2019-06-18 15:47:36,642 6252 INFO ? odoo: database: odoo12@localhost:5432 
+2019-06-18 15:47:36,743 6252 INFO ? odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltopdf binary at /usr/local/bin/wkhtmltopdf 
+2019-06-18 15:47:36,857 6252 INFO ? odoo.service.server: HTTP service (werkzeug) running on turtle:8069 
+2019-06-18 15:47:49,018 6252 INFO ? odoo.http: HTTP Configuring static files 
+2019-06-18 15:47:49,023 6252 INFO odoo12-bootcamp odoo.sql_db: Connection to the database failed 
+2019-06-18 15:47:49,023 6252 INFO odoo12-bootcamp odoo.http: Generating nondb routing 
+2019-06-18 15:47:49,038 6252 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:47:49] "GET / HTTP/1.1" 200 - 0 0.000 0.019
+2019-06-18 15:47:49,254 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:47:49] "GET /web HTTP/1.1" 303 - 2 0.003 0.008
+2019-06-18 15:47:49,426 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:47:49] "GET /web/database/selector HTTP/1.1" 200 - 2 0.003 0.164
+2019-06-18 15:47:52,559 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:47:52] "GET /web/database/selector HTTP/1.1" 200 - 2 0.004 0.141
+2019-06-18 15:47:52,798 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:47:52] "GET /web/static/src/img/favicon.ico HTTP/1.1" 200 - - - -
+2019-06-18 15:48:31,744 6252 INFO None odoo.service.db: Create database `odoo12-bootcamp`. 
+2019-06-18 15:48:32,728 6252 INFO odoo12-bootcamp odoo.modules.loading: loading 1 modules... 
+2019-06-18 15:48:32,869 6252 INFO odoo12-bootcamp odoo.modules.registry: module base: creating or updating database tables 
+2019-06-18 15:48:33,287 6252 INFO odoo12-bootcamp odoo.models: Computing parent_path for table ir_ui_menu... 
+2019-06-18 15:48:34,563 6252 INFO odoo12-bootcamp odoo.models: Computing parent_path for table res_partner_category... 
+2019-06-18 15:48:35,270 6252 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.model.fields.relation_field_id 
+2019-06-18 15:48:35,276 6252 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.model.fields.related_field_id 
+2019-06-18 15:48:35,476 6252 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.actions.server.model_name 
+2019-06-18 15:48:35,563 6252 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.attachment.res_name 
+2019-06-18 15:48:35,564 6252 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.attachment.res_model_name 
+2019-06-18 15:48:35,579 6252 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.cron.cron_name 
+2019-06-18 15:48:35,652 6252 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.rule.global 
+2019-06-18 15:48:35,774 6252 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.module.module.menus_by_module 
+2019-06-18 15:48:35,775 6252 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.module.module.reports_by_module 
+2019-06-18 15:48:35,777 6252 INFO odoo12-bootcamp odoo.models: Storing computed values of ir.module.module.views_by_module 
+2019-06-18 15:48:35,913 6252 INFO odoo12-bootcamp odoo.models: Storing computed values of res.partner.display_name 
+2019-06-18 15:48:35,927 6252 INFO odoo12-bootcamp odoo.models: Storing computed values of res.partner.partner_share 
+2019-06-18 15:48:35,930 6252 INFO odoo12-bootcamp odoo.models: Storing computed values of res.partner.commercial_partner_id 
+2019-06-18 15:48:35,930 6252 INFO odoo12-bootcamp odoo.models: Storing computed values of res.partner.commercial_company_name 
+2019-06-18 15:48:35,956 6252 INFO odoo12-bootcamp odoo.models: Storing computed values of res.partner.bank.sanitized_acc_number 
+2019-06-18 15:48:35,989 6252 INFO odoo12-bootcamp odoo.models: Storing computed values of res.currency.decimal_places 
+2019-06-18 15:48:36,017 6252 INFO odoo12-bootcamp odoo.models: Storing computed values of res.company.logo_web 
+2019-06-18 15:48:36,027 6252 INFO odoo12-bootcamp odoo.models: Storing computed values of res.company.email 
+2019-06-18 15:48:36,027 6252 INFO odoo12-bootcamp odoo.models: Storing computed values of res.company.phone 
+2019-06-18 15:48:36,081 6252 INFO odoo12-bootcamp odoo.models: Storing computed values of res.users.share 
+2019-06-18 15:48:36,540 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res.lang.csv 
+2019-06-18 15:48:36,642 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_lang_data.xml 
+2019-06-18 15:48:36,659 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_partner_data.xml 
+2019-06-18 15:48:36,842 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_company_data.xml 
+2019-06-18 15:48:36,869 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_users_data.xml 
+2019-06-18 15:48:37,190 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/report_paperformat_data.xml 
+2019-06-18 15:48:37,202 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_currency_data.xml 
+2019-06-18 15:48:37,702 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res_country_data.xml 
+2019-06-18 15:48:39,809 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/ir_demo_data.xml 
+2019-06-18 15:48:39,837 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/security/base_groups.xml 
+2019-06-18 15:48:40,050 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/security/base_security.xml 
+2019-06-18 15:48:40,202 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/base_menus.xml 
+2019-06-18 15:48:40,338 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_config_views.xml 
+2019-06-18 15:48:40,365 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/res.country.state.csv 
+2019-06-18 15:48:40,851 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_actions_views.xml 
+2019-06-18 15:48:41,157 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_config_parameter_views.xml 
+2019-06-18 15:48:41,209 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_cron_views.xml 
+2019-06-18 15:48:41,310 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_filters_views.xml 
+2019-06-18 15:48:41,378 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_mail_server_views.xml 
+2019-06-18 15:48:41,440 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_model_views.xml 
+2019-06-18 15:48:41,820 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_attachment_views.xml 
+2019-06-18 15:48:41,894 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_rule_views.xml 
+2019-06-18 15:48:41,959 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_sequence_views.xml 
+2019-06-18 15:48:42,025 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_translation_views.xml 
+2019-06-18 15:48:42,102 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_ui_menu_views.xml 
+2019-06-18 15:48:42,179 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_ui_view_views.xml 
+2019-06-18 15:48:42,300 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_default_views.xml 
+2019-06-18 15:48:42,361 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/ir_cron_data.xml 
+2019-06-18 15:48:42,374 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/report/ir_model_report.xml 
+2019-06-18 15:48:42,382 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/report/ir_model_templates.xml 
+2019-06-18 15:48:42,405 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_logging_views.xml 
+2019-06-18 15:48:42,463 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_qweb_widget_templates.xml 
+2019-06-18 15:48:42,494 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_module_views.xml 
+2019-06-18 15:48:42,642 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/ir_module_category_data.xml 
+2019-06-18 15:48:42,732 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/ir_module_module.xml 
+2019-06-18 15:48:42,834 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/report/ir_module_reports.xml 
+2019-06-18 15:48:42,841 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/report/ir_module_report_templates.xml 
+2019-06-18 15:48:42,859 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_module_update_views.xml 
+2019-06-18 15:48:42,888 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_language_install_views.xml 
+2019-06-18 15:48:42,921 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_import_language_views.xml 
+2019-06-18 15:48:42,948 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_module_upgrade_views.xml 
+2019-06-18 15:48:42,992 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_module_uninstall_views.xml 
+2019-06-18 15:48:43,019 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_export_language_views.xml 
+2019-06-18 15:48:43,049 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_update_translations_views.xml 
+2019-06-18 15:48:43,075 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/wizard/base_partner_merge_views.xml 
+2019-06-18 15:48:43,109 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/ir_actions_data.xml 
+2019-06-18 15:48:43,118 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/data/ir_demo_failure_data.xml 
+2019-06-18 15:48:43,150 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_company_views.xml 
+2019-06-18 15:48:43,283 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_lang_views.xml 
+2019-06-18 15:48:43,346 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_partner_views.xml 
+2019-06-18 15:48:43,685 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_bank_views.xml 
+2019-06-18 15:48:43,776 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_country_views.xml 
+2019-06-18 15:48:43,882 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_currency_views.xml 
+2019-06-18 15:48:44,004 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_users_views.xml 
+2019-06-18 15:48:44,339 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/ir_property_views.xml 
+2019-06-18 15:48:44,402 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/res_config_settings_views.xml 
+2019-06-18 15:48:44,425 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/report_paperformat_views.xml 
+2019-06-18 15:48:44,487 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/views/onboarding_views.xml 
+2019-06-18 15:48:44,581 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base/security/ir.model.access.csv 
+2019-06-18 15:48:44,987 6252 INFO odoo12-bootcamp odoo.modules.loading: 1 modules loaded in 12.26s, 0 queries 
+2019-06-18 15:48:45,039 6252 INFO odoo12-bootcamp odoo.modules.loading: updating modules list 
+2019-06-18 15:48:45,040 6252 INFO odoo12-bootcamp odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via 127.0.0.1 
+2019-06-18 15:48:45,618 6252 INFO odoo12-bootcamp odoo.modules.loading: loading 9 modules... 
+2019-06-18 15:48:45,791 6252 INFO odoo12-bootcamp odoo.modules.registry: module web: creating or updating database tables 
+2019-06-18 15:48:46,801 6252 INFO odoo12-bootcamp odoo.modules.loading: loading web/security/ir.model.access.csv 
+2019-06-18 15:48:46,811 6252 INFO odoo12-bootcamp odoo.modules.loading: loading web/views/webclient_templates.xml 
+2019-06-18 15:48:47,099 6252 INFO odoo12-bootcamp odoo.modules.loading: loading web/views/report_templates.xml 
+2019-06-18 15:48:47,354 6252 INFO odoo12-bootcamp odoo.modules.loading: loading web/data/res_company.xml 
+2019-06-18 15:48:47,362 6252 INFO odoo12-bootcamp odoo.modules.loading: loading web/data/report_layout.xml 
+2019-06-18 15:48:47,575 6252 INFO odoo12-bootcamp odoo.modules.registry: module base_import: creating or updating database tables 
+2019-06-18 15:48:49,282 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base_import/security/ir.model.access.csv 
+2019-06-18 15:48:49,361 6252 INFO odoo12-bootcamp odoo.modules.loading: loading base_import/views/base_import_templates.xml 
+2019-06-18 15:48:49,556 6252 INFO odoo12-bootcamp odoo.modules.registry: module web_diagram: creating or updating database tables 
+2019-06-18 15:48:49,568 6252 INFO odoo12-bootcamp odoo.modules.loading: loading web_diagram/views/web_diagram_templates.xml 
+2019-06-18 15:48:49,779 6252 INFO odoo12-bootcamp odoo.modules.registry: module web_editor: creating or updating database tables 
+2019-06-18 15:48:49,979 6252 INFO odoo12-bootcamp odoo.modules.loading: loading web_editor/security/ir.model.access.csv 
+2019-06-18 15:48:49,996 6252 INFO odoo12-bootcamp odoo.modules.loading: loading web_editor/views/editor.xml 
+2019-06-18 15:48:50,312 6252 INFO odoo12-bootcamp odoo.modules.loading: loading web_editor/views/iframe.xml 
+2019-06-18 15:48:50,350 6252 INFO odoo12-bootcamp odoo.modules.loading: loading web_editor/views/snippets.xml 
+2019-06-18 15:48:50,500 6252 INFO odoo12-bootcamp odoo.modules.registry: module web_kanban_gauge: creating or updating database tables 
+2019-06-18 15:48:50,511 6252 INFO odoo12-bootcamp odoo.modules.loading: loading web_kanban_gauge/views/web_kanban_gauge_templates.xml 
+2019-06-18 15:48:50,705 6252 INFO odoo12-bootcamp odoo.modules.registry: module web_settings_dashboard: creating or updating database tables 
+2019-06-18 15:48:50,744 6252 INFO odoo12-bootcamp odoo.modules.loading: loading web_settings_dashboard/views/dashboard_views.xml 
+2019-06-18 15:48:50,762 6252 INFO odoo12-bootcamp odoo.modules.loading: loading web_settings_dashboard/views/dashboard_templates.xml 
+2019-06-18 15:48:50,962 6252 INFO odoo12-bootcamp odoo.modules.registry: module web_tour: creating or updating database tables 
+2019-06-18 15:48:51,009 6252 INFO odoo12-bootcamp odoo.modules.loading: loading web_tour/security/ir.model.access.csv 
+2019-06-18 15:48:51,026 6252 INFO odoo12-bootcamp odoo.modules.loading: loading web_tour/security/ir.rule.csv 
+2019-06-18 15:48:51,045 6252 INFO odoo12-bootcamp odoo.modules.loading: loading web_tour/views/tour_templates.xml 
+2019-06-18 15:48:51,122 6252 INFO odoo12-bootcamp odoo.modules.loading: loading web_tour/views/tour_views.xml 
+2019-06-18 15:48:51,293 6252 INFO odoo12-bootcamp odoo.modules.registry: module iap: creating or updating database tables 
+2019-06-18 15:48:51,350 6252 INFO odoo12-bootcamp odoo.modules.loading: loading iap/security/ir.model.access.csv 
+2019-06-18 15:48:51,374 6252 INFO odoo12-bootcamp odoo.modules.loading: loading iap/security/ir_rule.xml 
+2019-06-18 15:48:51,391 6252 INFO odoo12-bootcamp odoo.modules.loading: loading iap/views/assets.xml 
+2019-06-18 15:48:51,436 6252 INFO odoo12-bootcamp odoo.modules.loading: loading iap/views/iap_views.xml 
+2019-06-18 15:48:51,519 6252 INFO odoo12-bootcamp odoo.modules.loading: 9 modules loaded in 5.90s, 0 queries 
+2019-06-18 15:48:51,747 6252 INFO odoo12-bootcamp odoo.modules.loading: Modules loaded. 
+2019-06-18 15:48:52,301 6252 INFO odoo12-bootcamp odoo.addons.base.models.res_users: Login successful for db:odoo12-bootcamp login:admin@gmail.com from 127.0.0.1 
+2019-06-18 15:48:52,313 6252 INFO odoo12-bootcamp odoo.modules.registry: Registry changed, signaling through the database 
+2019-06-18 15:48:52,323 6252 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:52] "POST /web/database/create HTTP/1.1" 303 - 25357 11.249 9.458
+2019-06-18 15:48:52,334 6252 INFO odoo12-bootcamp odoo.addons.base.models.ir_http: Generating routing map 
+2019-06-18 15:48:56,196 6252 INFO odoo12-bootcamp odoo.modules.registry: At least one model cache has been invalidated, signaling through the database. 
+2019-06-18 15:48:56,198 6252 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:56] "GET /web/ HTTP/1.1" 200 - 605 0.416 3.451
+2019-06-18 15:48:56,318 6252 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:56] "GET /web/content/249-271017f/web_editor.summernote.0.css HTTP/1.1" 200 - 8 0.026 0.036
+2019-06-18 15:48:56,323 6252 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:56] "GET /web/content/250-1ba02f1/web_editor.assets_editor.0.css HTTP/1.1" 200 - 4 0.009 0.051
+2019-06-18 15:48:56,332 6252 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:56] "GET /web/content/246-6c6832a/web.assets_common.0.css HTTP/1.1" 200 - 5 0.035 0.066
+2019-06-18 15:48:56,352 6252 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:56] "GET /web/content/247-2f7ac66/web.assets_backend.0.css HTTP/1.1" 200 - 4 0.019 0.101
+2019-06-18 15:48:56,358 6252 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:56] "GET /web/content/248-2f7ac66/web.assets_backend.1.css HTTP/1.1" 200 - 5 0.025 0.101
+2019-06-18 15:48:56,390 6252 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:56] "GET /web/content/251-6c6832a/web.assets_common.js HTTP/1.1" 200 - 4 0.013 0.110
+2019-06-18 15:48:56,406 6252 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:56] "GET /web/content/253-271017f/web_editor.summernote.js HTTP/1.1" 200 - 4 0.014 0.032
+2019-06-18 15:48:56,422 6252 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:56] "GET /web/content/254-1ba02f1/web_editor.assets_editor.js HTTP/1.1" 200 - 4 0.018 0.023
+2019-06-18 15:48:56,438 6252 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:56] "GET /web/content/252-2f7ac66/web.assets_backend.js HTTP/1.1" 200 - 4 0.016 0.081
+2019-06-18 15:48:56,961 6252 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:56] "GET /web/webclient/qweb?mods=base,web,base_import,web_settings_dashboard,iap,web_diagram,web_editor,web_kanban_gauge,web_tour HTTP/1.1" 200 - 1 0.001 0.052
+2019-06-18 15:48:57,054 6252 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:57] "POST /web/webclient/translations HTTP/1.1" 200 - 6 0.004 0.007
+2019-06-18 15:48:57,109 6252 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:57] "POST /web/dataset/call HTTP/1.1" 200 - 12 0.010 0.012
+2019-06-18 15:48:57,427 6252 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:57] "POST /web/dataset/call_kw/ir.ui.menu/load_menus HTTP/1.1" 200 - 93 0.057 0.091
+2019-06-18 15:48:57,478 6252 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:57] "POST /web/dataset/call_kw/res.users/read HTTP/1.1" 200 - 2 0.003 0.005
+2019-06-18 15:48:57,523 6252 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:57] "GET /web/image?model=res.users&field=image_small&id=2 HTTP/1.1" 200 - 27 0.031 0.021
+2019-06-18 15:48:57,563 6252 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:57] "POST /web/action/load HTTP/1.1" 200 - 49 0.036 0.036
+2019-06-18 15:48:57,729 6252 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:57] "POST /web/dataset/call_kw/ir.module.module/load_views HTTP/1.1" 200 - 95 0.065 0.082
+2019-06-18 15:48:57,852 6252 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:57] "POST /web/dataset/search_read HTTP/1.1" 200 - 5 0.010 0.008
+2019-06-18 15:48:58,148 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:58] "GET /base/static/img/icons/timesheet_grid.png HTTP/1.1" 200 - - - -
+2019-06-18 15:48:58,171 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:58] "GET /base/static/img/icons/stock_barcode.png HTTP/1.1" 200 - - - -
+2019-06-18 15:48:58,179 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:58] "GET /account/static/description/icon.png HTTP/1.1" 200 - - - -
+2019-06-18 15:48:58,189 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:58] "GET /base/static/img/icons/account_accountant.png HTTP/1.1" 200 - - - -
+2019-06-18 15:48:58,191 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:58] "GET /base/static/img/icons/mrp_workorder.png HTTP/1.1" 200 - - - -
+2019-06-18 15:48:58,193 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:58] "GET /base/static/img/icons/mrp_plm.png HTTP/1.1" 200 - - - -
+2019-06-18 15:48:58,194 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:58] "GET /base/static/img/icons/quality_control.png HTTP/1.1" 200 - - - -
+2019-06-18 15:48:58,198 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:58] "GET /base/static/img/icons/web_studio.png HTTP/1.1" 200 - - - -
+2019-06-18 15:48:58,225 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:58] "GET /base/static/img/icons/hr_appraisal.png HTTP/1.1" 200 - - - -
+2019-06-18 15:48:58,231 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:58] "GET /base/static/img/icons/project_forecast.png HTTP/1.1" 200 - - - -
+2019-06-18 15:48:58,249 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:58] "GET /base/static/img/icons/helpdesk.png HTTP/1.1" 200 - - - -
+2019-06-18 15:48:58,275 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:58] "GET /base/static/img/icons/sale_ebay.png HTTP/1.1" 200 - - - -
+2019-06-18 15:48:58,277 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:58] "GET /base/static/img/icons/sale_subscription.png HTTP/1.1" 200 - - - -
+2019-06-18 15:48:58,284 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:58] "GET /base/static/img/icons/sign.png HTTP/1.1" 200 - - - -
+2019-06-18 15:48:58,309 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:58] "GET /base/static/img/icons/voip.png HTTP/1.1" 200 - - - -
+2019-06-18 15:48:58,310 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:58] "GET /base/static/img/icons/website_calendar.png HTTP/1.1" 200 - - - -
+2019-06-18 15:48:58,312 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:58] "GET /website_livechat/static/description/icon.png HTTP/1.1" 200 - - - -
+2019-06-18 15:48:58,313 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:58] "GET /base/static/img/icons/marketing_automation.png HTTP/1.1" 200 - - - -
+2019-06-18 15:48:58,316 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:58] "GET /website_hr_recruitment/static/description/icon.png HTTP/1.1" 200 - - - -
+2019-06-18 15:48:58,335 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:58] "GET /base/static/img/icons/web_mobile.png HTTP/1.1" 200 - - - -
+2019-06-18 15:48:58,336 6252 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:48:58] "GET /repair/static/description/icon.png HTTP/1.1" 200 - - - -
+2019-06-18 15:49:36,986 6252 INFO odoo12-bootcamp odoo.addons.base.models.ir_cron: Starting job `Base: Auto-vacuum internal data`. 
+2019-06-18 15:49:37,010 6252 INFO odoo12-bootcamp odoo.addons.base.models.ir_attachment: filestore gc 11 checked, 0 removed 
+2019-06-18 15:49:37,027 6252 INFO odoo12-bootcamp odoo.addons.base.models.ir_autovacuum: GC'd 0 user log entries 
+2019-06-18 15:50:02,158 6252 INFO ? odoo.service.server: Initiating shutdown 
+2019-06-18 15:50:02,159 6252 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2019-06-18 15:50:07,093 6775 INFO ? odoo: Odoo version 12.0 
+2019-06-18 15:50:07,094 6775 INFO ? odoo: Using configuration file at /home/kiwsa/workspace/odoo-bootcamp/configs/odoo.conf 
+2019-06-18 15:50:07,094 6775 INFO ? odoo: addons paths: ['/home/kiwsa/.local/share/Odoo/addons/12.0', '/home/kiwsa/workspace/odoo-bootcamp/addons', '/home/kiwsa/workspace/odoo-bootcamp/odoo/addons'] 
+2019-06-18 15:50:07,094 6775 INFO ? odoo: database: odoo12@localhost:5432 
+2019-06-18 15:50:07,187 6775 INFO ? odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltopdf binary at /usr/local/bin/wkhtmltopdf 
+2019-06-18 15:50:07,300 6775 INFO ? odoo.service.server: HTTP service (werkzeug) running on turtle:8069 
+2019-06-18 15:50:09,805 6775 INFO ? odoo.http: HTTP Configuring static files 
+2019-06-18 15:50:09,820 6775 INFO odoo12-bootcamp odoo.modules.loading: loading 1 modules... 
+2019-06-18 15:50:09,834 6775 INFO odoo12-bootcamp odoo.modules.loading: 1 modules loaded in 0.01s, 0 queries 
+2019-06-18 15:50:09,839 6775 INFO odoo12-bootcamp odoo.modules.loading: loading 9 modules... 
+2019-06-18 15:50:09,884 6775 INFO odoo12-bootcamp odoo.modules.loading: 9 modules loaded in 0.05s, 0 queries 
+2019-06-18 15:50:10,017 6775 INFO odoo12-bootcamp odoo.modules.loading: Modules loaded. 
+2019-06-18 15:50:10,021 6775 INFO odoo12-bootcamp odoo.addons.base.models.ir_http: Generating routing map 
+2019-06-18 15:50:10,497 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:10] "GET /web/ HTTP/1.1" 200 - 321 0.178 0.513
+2019-06-18 15:50:10,992 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:10] "GET /web/webclient/qweb?mods=base,web,base_import,web_settings_dashboard,iap,web_diagram,web_editor,web_kanban_gauge,web_tour HTTP/1.1" 200 - 1 0.001 0.032
+2019-06-18 15:50:11,075 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:11] "POST /web/dataset/call HTTP/1.1" 200 - 12 0.005 0.008
+2019-06-18 15:50:11,198 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:11] "POST /web/webclient/translations HTTP/1.1" 200 - 6 0.002 0.005
+2019-06-18 15:50:11,243 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:11] "POST /web/dataset/call_kw/ir.ui.menu/load_menus HTTP/1.1" 200 - 1 0.000 0.003
+2019-06-18 15:50:11,260 6775 INFO ? werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:11] "GET /web/static/src/img/favicon.ico HTTP/1.1" 200 - - - -
+2019-06-18 15:50:11,306 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:11] "GET /web/image?model=res.users&field=image_small&id=2 HTTP/1.1" 304 - 27 0.017 0.014
+2019-06-18 15:50:11,343 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:11] "POST /web/action/load HTTP/1.1" 200 - 49 0.027 0.024
+2019-06-18 15:50:11,454 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:11] "POST /web/dataset/call_kw/ir.module.module/load_views HTTP/1.1" 200 - 94 0.040 0.057
+2019-06-18 15:50:11,525 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:11] "POST /web/dataset/search_read HTTP/1.1" 200 - 5 0.003 0.007
+2019-06-18 15:50:13,370 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:13] "GET / HTTP/1.1" 200 - 1 0.000 0.003
+2019-06-18 15:50:13,500 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:13] "GET /web HTTP/1.1" 200 - 9 0.004 0.009
+2019-06-18 15:50:13,772 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:13] "GET /web/webclient/qweb?mods=base,web,base_import,web_settings_dashboard,iap,web_diagram,web_editor,web_kanban_gauge,web_tour HTTP/1.1" 200 - 1 0.000 0.038
+2019-06-18 15:50:13,814 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:13] "POST /web/dataset/call HTTP/1.1" 200 - 4 0.002 0.010
+2019-06-18 15:50:13,938 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:13] "POST /web/webclient/translations HTTP/1.1" 200 - 4 0.002 0.004
+2019-06-18 15:50:13,961 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:13] "POST /web/dataset/call_kw/ir.ui.menu/load_menus HTTP/1.1" 200 - 1 0.000 0.003
+2019-06-18 15:50:14,019 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:14] "POST /web/dataset/call_kw/res.users/read HTTP/1.1" 200 - 2 0.001 0.006
+2019-06-18 15:50:14,024 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:14] "GET /web/image?model=res.users&field=image_small&id=2 HTTP/1.1" 304 - 13 0.011 0.010
+2019-06-18 15:50:14,048 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:14] "POST /web/action/load HTTP/1.1" 200 - 20 0.007 0.012
+2019-06-18 15:50:14,109 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:14] "POST /web/dataset/call_kw/ir.module.module/load_views HTTP/1.1" 200 - 34 0.013 0.036
+2019-06-18 15:50:14,160 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:14] "POST /web/dataset/search_read HTTP/1.1" 200 - 3 0.003 0.006
+2019-06-18 15:50:16,018 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:16] "POST /web/dataset/search_read HTTP/1.1" 200 - 3 0.002 0.005
+2019-06-18 15:50:17,179 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:17] "POST /web/dataset/search_read HTTP/1.1" 200 - 3 0.002 0.005
+2019-06-18 15:50:19,128 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:19] "POST /web/action/load HTTP/1.1" 200 - 12 0.005 0.007
+2019-06-18 15:50:19,160 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:19] "POST /web_settings_dashboard/data HTTP/1.1" 200 - 19 0.007 0.006
+2019-06-18 15:50:19,173 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:19] "POST /web/dataset/call_kw/iap.account/get_account_url HTTP/1.1" 200 - 4 0.001 0.003
+2019-06-18 15:50:21,397 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:21] "POST /web_settings_dashboard/data HTTP/1.1" 200 - 13 0.006 0.006
+2019-06-18 15:50:21,408 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:21] "POST /web/dataset/call_kw/iap.account/get_account_url HTTP/1.1" 200 - 1 0.000 0.002
+2019-06-18 15:50:24,425 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:24] "POST /web_settings_dashboard/data HTTP/1.1" 200 - 13 0.004 0.006
+2019-06-18 15:50:24,435 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:24] "POST /web/dataset/call_kw/iap.account/get_account_url HTTP/1.1" 200 - 1 0.000 0.003
+2019-06-18 15:50:26,454 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:26] "POST /web/action/load HTTP/1.1" 200 - 48 0.029 0.054
+2019-06-18 15:50:26,577 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:26] "POST /web/dataset/call_kw/res.users/load_views HTTP/1.1" 200 - 72 0.039 0.074
+2019-06-18 15:50:26,615 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:26] "POST /web/dataset/search_read HTTP/1.1" 200 - 11 0.004 0.006
+2019-06-18 15:50:27,857 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:27] "POST /web/action/load HTTP/1.1" 200 - 17 0.010 0.017
+2019-06-18 15:50:27,918 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:27] "POST /web/dataset/call_kw/res.company/load_views HTTP/1.1" 200 - 53 0.020 0.033
+2019-06-18 15:50:27,956 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:27] "POST /web/dataset/search_read HTTP/1.1" 200 - 12 0.006 0.007
+2019-06-18 15:50:28,550 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:28] "POST /web_settings_dashboard/data HTTP/1.1" 200 - 13 0.006 0.007
+2019-06-18 15:50:28,560 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:28] "POST /web/dataset/call_kw/iap.account/get_account_url HTTP/1.1" 200 - 1 0.000 0.003
+2019-06-18 15:50:29,933 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:29] "POST /web/dataset/search_read HTTP/1.1" 200 - 3 0.003 0.006
+2019-06-18 15:50:37,514 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:37] "POST /web/dataset/search_read HTTP/1.1" 200 - 3 0.002 0.005
+2019-06-18 15:50:39,989 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:39] "POST /web_settings_dashboard/data HTTP/1.1" 200 - 13 0.004 0.006
+2019-06-18 15:50:40,011 6775 INFO odoo12-bootcamp werkzeug: 127.0.0.1 - - [18/Jun/2019 15:50:40] "POST /web/dataset/call_kw/iap.account/get_account_url HTTP/1.1" 200 - 1 0.000 0.003
+2019-06-18 15:50:56,560 6775 INFO ? odoo.service.server: Initiating shutdown 
+2019-06-18 15:50:56,560 6775 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 

@@ -31,3 +31,40 @@ For a standard installation please follow the <a href="https://www.odoo.com/docu
 from the documentation.
 
 Then follow <a href="https://www.odoo.com/documentation/master/tutorials.html">the developer tutorials</a>
+
+##  Quick start
+
+1.  **Create a new superuser in postgresSql on Docker container.**
+
+    ```sh
+    $ docker exec -it <container-name> psql -U <username> -W <database-name> psql
+    ```    
+    - -U project -W project The command to execute to the running container
+    - U user
+    - W password
+    - project the database you want to connect to.
+
+    ```sh
+    $ CREATE USER <username> WITH SUPERUSER PASSWORD '<password>';
+    ```
+
+    These are specified by you here
+    
+    ```sh
+    environment:
+        POSTGRES_DB: <database-name>
+        POSTGRES_USER: <username>
+        POSTGRES_PASSWORD: <password>
+    ```
+    
+1.  **Configure Pycharm for Odoo**
+
+    ![Pycharm](pycharm-setting.png)
+    
+1.  **Configure Eclipse for Odoo**
+
+    ![Pycharm](eclipse-setting1.png)
+    
+    ![Pycharm](eclipse-setting2.png)
+    
+    ![Pycharm](eclipse-setting3.png)
