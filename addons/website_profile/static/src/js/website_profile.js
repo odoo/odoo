@@ -2,6 +2,7 @@ odoo.define('website_profile.website_profile', function (require) {
 'use strict';
 
 var sAnimations = require('website.content.snippets.animation');
+var Wysiwyg = require('web_editor.wysiwyg.root');
 
 //TODO DBE : to change into publicWidget = require('web.public.widget'); after forward port in master
 sAnimations.registry.websiteProfile = sAnimations.Class.extend({
@@ -39,6 +40,47 @@ sAnimations.registry.websiteProfile = sAnimations.Class.extend({
         this._rpc({
             route: '/profile/validate_email/close',
         });
+    },
+});
+
+sAnimations.registry.websiteProfileEditor = sAnimations.Class.extend({
+    selector: '.o_wprofile_editor_form',
+    read_events: {
+        'click .o_wprofile_submit_btn': '_onSubmitClick',
+    },
+
+    /**
+     * @override
+     */
+    start: function () {
+        var def = this._super.apply(this, arguments);
+        if (this.editableMode) {
+            return def;
+        }
+        var $textarea = this.$('textarea.load_editor');
+        var wysiwyg = new Wysiwyg(this, {
+            recordInfo: {
+                context: this._getContext(),
+                res_model: 'res.users',
+                res_id: parseInt(this.$('input[name=user_id]').val()),
+            },
+        });
+
+        if (!$textarea.val().match(/\S/)) {
+            $textarea.val('<p><br/></p>');
+        }
+        return $.when(def, wysiwyg.attachTo($textarea));
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onSubmitClick: function () {
+        this.$('textarea.load_editor').data('wysiwyg').save();
     },
 });
 
