@@ -58,7 +58,7 @@ ProductConfiguratorWidget.include({
                 productTemplateId
             ]
         }).then(function (result) {
-            if (result) {
+            if (result.product_id) {
                 self.trigger_up('field_changed', {
                     dataPointID: dataPointId,
                     changes: {
