@@ -28,7 +28,9 @@ var AbstractRenderer = require('web.AbstractRenderer');
 var AbstractController = require('web.AbstractController');
 var ControlPanelView = require('web.ControlPanelView');
 var mvc = require('web.mvc');
+var SearchPanel = require('web.SearchPanel');
 var viewUtils = require('web.viewUtils');
+
 
 var Factory = mvc.Factory;
 
@@ -55,6 +57,7 @@ var AbstractView = Factory.extend({
         Model: AbstractModel,
         Renderer: AbstractRenderer,
         Controller: AbstractController,
+        SearchPanel: SearchPanel,
     }),
 
     /**
@@ -204,7 +207,11 @@ var AbstractView = Factory.extend({
             prom.then(function (controller) {
                 if (controlPanel) {
                     controlPanel.setParent(controller);
+                    if (self.hasSearchPanel) {
+                        self.controllerParams.searchPanel.setParent(controller);
+                    }
                 }
+
                 if (modelParent) {
                     // if we already add a model, restore its parent
                     self.model.setParent(modelParent);
@@ -252,8 +259,44 @@ var AbstractView = Factory.extend({
             self.controllerParams.controlPanel = controlPanel;
             return controlPanel.appendTo(document.createDocumentFragment()).then(function () {
                 self._updateMVCParams(controlPanel.getSearchQuery());
+                var searchPanelParams = self.config.SearchPanel.prototype.computeSearchPanelParams(self.controlPanelParams);
+                if (searchPanelParams) {
+                    self.hasSearchPanel = true;
+                    return self._createSearchPanel(parent, searchPanelParams).then(function () {
+                        return controlPanel;
+                    });
+                }
                 return controlPanel;
             });
+        });
+    },
+    /**
+     * @private
+     * @param {Widget} parent
+     * @returns {Promise} resolved when the searchPanel is ready
+     */
+    _createSearchPanel: function (parent, params) {
+        var self = this;
+        var defaultValues = {};
+        Object.keys(this.loadParams.context).forEach(function (key) {
+            var match = /^searchpanel_default_(.*)$/.exec(key);
+            if (match) {
+                defaultValues[match[1]] = self.loadParams.context[key];
+            }
+        });
+        var controlPanelDomain = this.loadParams.domain;
+        var searchPanel = new this.config.SearchPanel(parent, {
+            defaultValues: defaultValues,
+            fields: this.fields,
+            model: this.loadParams.modelName,
+            searchDomain: controlPanelDomain,
+            sections: params.searchPanelSections,
+        });
+        this.controllerParams.searchPanel = searchPanel;
+        this.controllerParams.controlPanelDomain = controlPanelDomain;
+        return searchPanel.appendTo(document.createDocumentFragment()).then(function () {
+            var searchPanelDomain = searchPanel.getDomain();
+            self.loadParams.domain = controlPanelDomain.concat(searchPanelDomain);
         });
     },
     /**
