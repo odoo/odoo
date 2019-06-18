@@ -3285,7 +3285,7 @@ Fields:
                 bad_names.update(LOG_ACCESS_COLUMNS)
 
         # protect fields being written against recomputation
-        protected = [self._fields[fname] for fname in value if fname in self._fields]
+        protected = [self._fields[fname] for fname in vals if fname in self._fields]
         with env.protecting(protected, self):
             # DLE P34
             determine_inverses = {}
