@@ -1095,7 +1095,6 @@ class Field(MetaField('DummyField', (object,), {})):
         # DLE P38: `test_13_inverse`
         fields = records._field_computed[self]
         # if we are in the inverse of a field, don't call its compute
-        records = records - records.env.protected(self)
         with records.env.protecting(fields, records):
             if isinstance(self.inverse, str):
                 getattr(records, self.inverse)()
