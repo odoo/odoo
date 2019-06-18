@@ -109,7 +109,7 @@ class SaleOrder(models.Model):
         product_context.update({
             'partner': order.partner_id,
             'quantity': qty,
-            'date': order.date_order,
+            'date': fields.Date.context_today(order, order.date_order),
             'pricelist': order.pricelist_id.id,
         })
         product = self.env['product.product'].with_context(product_context).browse(product_id)
@@ -123,7 +123,7 @@ class SaleOrder(models.Model):
             if pu != 0:
                 if order.pricelist_id.currency_id != currency:
                     # we need new_list_price in the same currency as price, which is in the SO's pricelist's currency
-                    date = order.date_order or fields.Date.today()
+                    date = fields.Date.context_today(order, order.date_order)
                     pu = currency._convert(pu, order.pricelist_id.currency_id, order.company_id, date)
                 discount = (pu - price) / pu * 100
                 if discount < 0:
