@@ -52,6 +52,9 @@ class test(models.Model):
     def testme(self):
         t = time.time()
         for partner in self.env['res.partner'].search([]):
+            partner.name
+            partner.website
+            partner.ref
             partner.country_id.name
         return time.time()-t
 
@@ -64,7 +67,8 @@ class test(models.Model):
                 (0,0, {'name': 'def'}),
             ]
         })
-        self.flush()
+        if hasattr(self, 'flush'):
+            self.flush()
         return time.time()-t
 
     def testme3(self):
@@ -88,7 +92,8 @@ class test(models.Model):
         print('* search intx2 line')
         self.env['test.line'].search([('intx2', '=', 3)])
         print('* end')
-        self.flush()
+        if hasattr(self, 'flush'):
+            self.flush()
         return time.time()-t
 
     def testme4(self):
@@ -96,7 +101,8 @@ class test(models.Model):
         main_id = self.env['test.main'].create({
             'name': 'bla',
         })
-        self.flush()
+        if hasattr(self, 'flush'):
+            self.flush()
         return time.time()-t
 
 
