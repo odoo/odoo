@@ -986,61 +986,49 @@ class Field(MetaField('DummyField', (object,), {})):
             self.compute_value(recs)
 
         if not env.cache.contains(record, self):
-            if record.id:
-                # real record
-                if self.store:
-                    recs = record._in_cache_without(self)
-                    try:
-                        recs._fetch_field(self)
-                    except AccessError:
-                        record._fetch_field(self)
-
-                elif self.compute:
-                    recs = self.recursive and record or record._in_cache_without(self)
-                    try:
-                        # DLE P35: `test_11_computed_access`
-                        # Prefetch compute fields for which we don't have the access. Same case than just above here
-                        self.compute_value(recs)
-                    except AccessError:
-                        self.compute_value(record)
-
-                else:
-                    value = self.convert_to_cache(False, record, validate=False)
-                    env.cache.set(record, self, value)
-
-            else:
-                if self.compute:
-                    # RCO TODO: compute_sudo is not handled here
+            # real record
+            if record.id and self.store:
+                recs = record._in_cache_without(self)
+                try:
+                    recs._fetch_field(self)
+                except AccessError:
+                    record._fetch_field(self)
+            elif self.compute:
+                recs = (self.recursive or not record.id) and record or record._in_cache_without(self)
+                try:
+                    # DLE P35: `test_11_computed_access`
+                    # Prefetch compute fields for which we don't have the access. Same case than just above here
+                    self.compute_value(recs)
+                except AccessError:
                     self.compute_value(record)
 
-                elif record._origin:
-                    # retrieve value from origin record
-                    value = self.convert_to_cache(record._origin[self.name], record)
-                    env.cache.set(record, self, value)
+            elif (not record.id) and record._origin:
+                # FP Note: the _origin concept should be removed otherwise, onchange behave differently
+                # when creating or updating existing records --> better to be consistent and remove this hack
+                value = self.convert_to_cache(record._origin[self.name], record)
+                env.cache.set(record, self, value)
 
-                elif self.type == 'many2one' and self.delegate:
-                    # special case: parent records are new as well
-                    parent = record.env[self.comodel_name].new()
-                    value = self.convert_to_cache(parent, record)
-                    env.cache.set(record, self, value)
+            elif (not record.id) and self.type == 'many2one' and self.delegate:
+                # special case: parent records are new as well
+                parent = record.env[self.comodel_name].new()
+                value = self.convert_to_cache(parent, record)
+                env.cache.set(record, self, value)
 
-                else:
-                    value = self.convert_to_cache(False, record, validate=False)
+            else:
+                value = self.convert_to_cache(False, record, validate=False)
+                env.cache.set(record, self, value)
+                defaults = record.default_get([self.name])
+                if self.name in defaults:
+                    # The null value above is necessary to convert x2many field values.
+                    # For instance, converting [(4, id)] accesses the field's current
+                    # value, then adds the given id. Without an initial value, the
+                    # conversion ends up here to determine the field's value, and this
+                    # generates an infinite recursion.
+                    value = self.convert_to_cache(defaults[self.name], record)
                     env.cache.set(record, self, value)
-
-                    defaults = record.default_get([self.name])
-                    if self.name in defaults:
-                        # The null value above is necessary to convert x2many field values.
-                        # For instance, converting [(4, id)] accesses the field's current
-                        # value, then adds the given id. Without an initial value, the
-                        # conversion ends up here to determine the field's value, and this
-                        # generates an infinite recursion.
-                        value = self.convert_to_cache(defaults[self.name], record)
-                        env.cache.set(record, self, value)
 
         # raise access rights here instead of in the end of read()
         value = env.cache.get(record, self)
-
         return self.convert_to_record(value, record)
 
     def __set__(self, records, value):
