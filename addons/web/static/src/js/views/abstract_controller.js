@@ -28,6 +28,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         open_record: '_onOpenRecord',
         search: '_onSearch',
         switch_view: '_onSwitchView',
+        search_panel_domain_updated: '_onSearchPanelDomainUpdated',
     },
     events: {
         'click a[type="action"]': '_onActionClicked',
@@ -58,6 +59,11 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         this.viewType = params.viewType;
         // use a DropPrevious to correctly handle concurrent updates
         this.dp = new concurrency.DropPrevious();
+
+        // the following attributes are used when there is a searchPanel
+        this._searchPanel = params.searchPanel;
+        this.controlPanelDomain = params.controlPanelDomain || [];
+        this.searchPanelDomain = this._searchPanel ? this._searchPanel.getDomain() : [];
     },
     /**
      * Simply renders and updates the url.
@@ -66,6 +72,11 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      */
     start: function () {
         var self = this;
+        if (this._searchPanel) {
+            this.$('.o_content')
+                .addClass('o_controller_with_searchpanel')
+                .prepend(this._searchPanel.$el);
+        }
 
         this.$el.addClass('o_view_controller');
 
@@ -434,6 +445,13 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         this._pushState();
         return this._renderBanner();
     },
+    /**
+     * @private
+     * @returns {Promise}
+     */
+    _updateSearchPanel: function () {
+        return this._searchPanel.update({searchDomain: this.controlPanelDomain});
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -564,6 +582,15 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
     _onSearch: function (ev) {
         ev.stopPropagation();
         this.reload(_.extend({offset: 0}, ev.data));
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     * @param {Array[]} ev.data.domain the current domain of the searchPanel
+     */
+    _onSearchPanelDomainUpdated: function (ev) {
+        this.searchPanelDomain = ev.data.domain;
+        this.reload({offset: 0});
     },
     /**
      * Intercepts the 'switch_view' event to add the controllerID into the data,

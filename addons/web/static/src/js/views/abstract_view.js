@@ -259,7 +259,7 @@ var AbstractView = Factory.extend({
             self.controllerParams.controlPanel = controlPanel;
             return controlPanel.appendTo(document.createDocumentFragment()).then(function () {
                 self._updateMVCParams(controlPanel.getSearchQuery());
-                var searchPanelParams = self.config.SearchPanel.prototype.computeSearchPanelParams(self.controlPanelParams);
+                var searchPanelParams = self.config.SearchPanel.prototype.computeSearchPanelParams(self.loadParams, self.controlPanelParams.viewInfo);
                 if (searchPanelParams) {
                     self.hasSearchPanel = true;
                     return self._createSearchPanel(parent, searchPanelParams).then(function () {

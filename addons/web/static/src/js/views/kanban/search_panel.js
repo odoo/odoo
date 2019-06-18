@@ -15,6 +15,7 @@ var pyUtils = require('web.py_utils');
 var qweb = core.qweb;
 
 var SearchPanel = Widget.extend({
+    view_types: ['kanban', 'tree'], // acts as default too
     className: 'o_search_panel',
     events: {
         'click .o_search_panel_category_value header': '_onCategoryValueClicked',
@@ -614,26 +615,36 @@ var SearchPanel = Widget.extend({
     /**
      * Given an arch, parses it, and returns the searchPanel's
      * full viewInfo
+     * Determines if a view controller needs a SearchPanel
      *
      * @classmethod
+     * @params {Object} loadParams: the controller's loadParams
+     * @params {Object} viewInfo: the viewInfo of the searchView
      *
      */
-    computeSearchPanelParams: function (params) {
-        var viewInfo = params.viewInfo;
+    computeSearchPanelParams: function (loadParams, viewInfo) {
+        var cls = this || SearchPanel;
+        var spParams;
         if (viewInfo) {
             viewInfo = _.extend({}, viewInfo);
             if (typeof viewInfo.arch === 'string') {
                 viewInfo.arch = viewUtils.parseArch(viewInfo.arch);
                 viewInfo.viewFields = _.defaults({}, viewInfo.viewFields, viewInfo.fields);
             }
-
+            var viewTypeLoad = loadParams.viewType === 'list' ? 'tree' : loadParams.viewType;
             viewInfo.arch.children.forEach(function (node) {
                 if (node.tag === 'searchpanel') {
-                    viewInfo.searchPanelSections = SearchPanel.prototype._processSearchPanelNode(node, viewInfo);
+                    var AllowedViewTypes = node.attrs.view_types ? node.attrs.view_types.split(',') : cls.view_types;
+                    if (AllowedViewTypes.indexOf(viewTypeLoad) === -1) {
+                        spParams = false;
+                        return;
+                    }
+                    spParams = viewInfo;
+                    viewInfo.searchPanelSections = cls._processSearchPanelNode(node, viewInfo);
                     return;
                 }
             });
-            return viewInfo.searchPanelSections ? viewInfo : false;
+            return spParams.searchPanelSections ? spParams : false;
         }
         return false;
     }
