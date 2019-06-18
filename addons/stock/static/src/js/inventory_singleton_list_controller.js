@@ -2,7 +2,7 @@ odoo.define('stock.SingletonListController', function (require) {
 "use strict";
 
 var core = require('web.core');
-var ListController = require('web.ListController');
+var InventoryReportListController = require('stock.InventoryReportListController');
 
 var _t = core._t;
 
@@ -16,7 +16,7 @@ var _t = core._t;
  * in the list view, so we refresh it.
  */
 
-var SingletonListController = ListController.extend({
+var SingletonListController = InventoryReportListController.extend({
     /**
      * @override
      * @return {Promise} rejected when update the list because we don't want

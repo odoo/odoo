@@ -114,20 +114,20 @@
         <field name="model">stock.quant</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <tree create="0" delete="0" decoration-danger="quantity &lt; 0">
+            <tree string="Inventory Valuation" js_class="inventory_report_list"
+                  create="0" delete="0" decoration-danger="quantity &lt; 0">
                 <field name="product_id" invisible="context.get('single_product', False)"/>
                 <field name="location_id" invisible="context.get('hide_location', False)"/>
                 <field name="lot_id" groups="stock.group_production_lot"/>
                 <field name="package_id" groups="stock.group_tracking_lot"/>
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
-                <field name="reserved_quantity"/>
+                <field name="reserved_quantity" string="Reserved"/>
                 <field name="quantity"/>
                 <field name="product_uom_id" groups="uom.group_uom"/>
                 <field name='company_id' groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>
-
 
     <record model="ir.ui.view" id="view_stock_quant_pivot">
         <field name="name">stock.quant.pivot</field>
@@ -152,23 +152,19 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="quantsact"> <!-- Menu + python -->
+    <record model="ir.actions.server" id="action_view_quants"> <!-- Menu + python -->
         <field name="name">Inventory</field>
-        <field name="res_model">stock.quant</field>
-        <field name="view_mode">tree,form,pivot,graph</field>
-        <field name="context">{
-            'search_default_internal_loc': 1,
-            'search_default_productgroup': 1,
-            'search_default_locationgroup': 1
-        }</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
-                No inventory found
-            </p><p>
-                This analysis gives you a fast overview on the current stock level of your products and their current inventory value.    
-            </p>
+        <field name="model_id" ref="model_stock_quant"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.with_context(
+                search_default_internal_loc=1,
+                search_default_productgroup=1,
+                search_default_locationgroup=1,
+            ).action_view_quants()
         </field>
     </record>
+
     <record model="ir.actions.act_window" id="product_template_open_quants"> <!-- Not used -->
         <field name="name">Stock On Hand</field>
         <field name="context">{'search_default_internal_loc': 1, 'search_default_productgroup':1, 'search_default_locationgroup':1}</field>
@@ -287,5 +283,7 @@
     </record>
 
     <menuitem id="menu_package" name="Packages" parent="menu_stock_inventory_control" action="action_package_view" groups="stock.group_tracking_lot" sequence="102"/>
-
+    <menuitem id="menu_valuation" name="Inventory Report"
+              parent="stock.menu_warehouse_report" sequence="100"
+              action="action_view_quants"/>
 </odoo>

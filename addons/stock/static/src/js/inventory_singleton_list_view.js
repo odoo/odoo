@@ -1,12 +1,12 @@
 odoo.define('stock.SingletonListView', function (require) {
 'use strict';
 
-var ListView = require('web.ListView');
+var InventoryReportListView = require('stock.InventoryReportListView');
 var SingletonListController = require('stock.SingletonListController');
 var viewRegistry = require('web.view_registry');
 
-var SingletonListView = ListView.extend({
-    config: _.extend({}, ListView.prototype.config, {
+var SingletonListView = InventoryReportListView.extend({
+    config: _.extend({}, InventoryReportListView.prototype.config, {
         Controller: SingletonListController,
     }),
 });

@@ -41,7 +41,8 @@
         <field name="name">stock.valuation.layer.tree</field>
         <field name="model">stock.valuation.layer</field>
         <field name="arch" type="xml">
-            <tree default_order="create_date desc, id desc" create="0" import="0">
+            <tree default_order="create_date desc, id desc" create="0"
+                  import="0" js_class="inventory_report_list">
                 <field name="create_date" string="Date" />
                 <field name="product_id" />
                 <field name="quantity" />
@@ -54,7 +55,7 @@
     </record>
 
     <record id="stock_valuation_layer_search" model="ir.ui.view">
-        <field name="name">stock.valuation.layer.tree</field>
+        <field name="name">stock.valuation.layer.search</field>
         <field name="model">stock.valuation.layer</field>
         <field name="arch" type="xml">
             <search string="Valuation Layer?">
