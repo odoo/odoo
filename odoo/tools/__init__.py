@@ -18,3 +18,4 @@ from .debugger import *
 from .xml_utils import *
 from .date_utils import *
 from .convert import *
+from .template_inheritance import *
