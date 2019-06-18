@@ -274,7 +274,7 @@ class TestSaleStockLeadTime(TestStockCommon):
         self.warehouse_1.write({'delivery_steps': 'pick_pack_ship'})
 
         # Set cancellation of previous move on pull rule.
-        self.warehouse_1.delivery_route_id.rule_ids.write({'previous_move_propagate': True})
+        self.warehouse_1.delivery_route_id.rule_ids.write({'propagate_cancel_backwards': True})
 
         # Create sale order of warehouse.
         order = self.env['sale.order'].create({

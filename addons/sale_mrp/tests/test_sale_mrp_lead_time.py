@@ -155,8 +155,8 @@ class TestSaleMrpLeadTime(TestStockCommon):
         self.warehouse_1.write({'delivery_steps': 'pick_pack_ship'})
 
         # Set delay on pull rule
-        self.warehouse_1.delivery_route_id.rule_ids.write({'previous_move_propagate': True})
-        self.warehouse_1.mto_pull_id.write({'previous_move_propagate': True})
+        self.warehouse_1.delivery_route_id.rule_ids.write({'propagate_cancel_backwards': True})
+        self.warehouse_1.mto_pull_id.write({'propagate_cancel_backwards': True})
 
         # Create sale order of product_1
         order_form = Form(self.env['sale.order'])

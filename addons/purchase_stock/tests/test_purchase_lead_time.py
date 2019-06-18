@@ -284,7 +284,7 @@ class TestPurchaseLeadTime(TestPurchase):
             'location_id': stock_location.id,
             'location_dest_id': cust_location.id,
             'procure_method': 'make_to_order',
-            'previous_move_propagate': True
+            'propagate_cancel_backwards': True
         })
         picking_out.action_confirm()  # by confirming move1 one purchase order will be created
         # Find the purchase order generated.

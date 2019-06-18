@@ -131,7 +131,7 @@ class StockMove(models.Model):
         help='The rescheduling is propagated to the next move.')
     propagate_date_minimum_delta = fields.Integer(string='Reschedule if Higher Than',
         help='The change must be higher than this value to be propagated')
-    previous_move_propagate = fields.Boolean(
+    propagate_cancel_backwards = fields.Boolean(
         'Cancel previous move', default=False,
         help='If checked, when this move is cancelled, cancel the linked move too')
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type')
@@ -1016,7 +1016,7 @@ class StockMove(models.Model):
         """ This method will cancel all the origin moves """
         for move in self:
             siblings_states = (move.move_orig_ids.mapped('move_dest_ids') - move).mapped('state')
-            if all(state == 'cancel' for state in siblings_states) and move.previous_move_propagate:
+            if all(state == 'cancel' for state in siblings_states) and move.propagate_cancel_backwards:
                 # only cancel if all origin of destination has been cancelled ..
                 move.write({'state': 'cancel'})
                 move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel'))._action_cancel()
@@ -1043,7 +1043,7 @@ class StockMove(models.Model):
                 if all(state in ('done', 'cancel') for state in siblings_states):
                     move.move_dest_ids.write({'procure_method': 'make_to_stock'})
                     move.move_dest_ids.write({'move_orig_ids': [(3, move.id, 0)]})
-            if move.previous_move_propagate and move.move_orig_ids:
+            if move.propagate_cancel_backwards and move.move_orig_ids:
                 move._action_cancel_origin()
         self.write({'state': 'cancel', 'move_orig_ids': [(5, 0, 0)]})
         return True
@@ -1254,7 +1254,7 @@ class StockMove(models.Model):
             visited |= self
             for move in self.move_orig_ids:
                 if move.state not in ('done', 'cancel'):
-                    if not move.previous_move_propagate:
+                    if not move.propagate_cancel_backwards:
                         log_activity = False
                     for (document, responsible, visited, activity) in move._get_upstream_documents_and_responsibles(visited, log_activity):
                         result.add((document, responsible, visited, activity))

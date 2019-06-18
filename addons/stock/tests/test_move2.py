@@ -591,7 +591,7 @@ class TestPickShip(TestStockCommon):
         pick, pack, ship = self.create_pick_pack_ship()
         pickings = pack + pick + ship
         # Set forword canceling option on the moves.
-        pickings.mapped('move_lines').write({'previous_move_propagate': True})
+        pickings.mapped('move_lines').write({'propagate_cancel_backwards': True})
         # Cancel the outgoing moves.
         ship.action_cancel()
         # Check the status of Ship.

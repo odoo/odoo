@@ -31,7 +31,7 @@ class StockMove(models.Model):
         for move in moves_purchase_line:
             order = move.created_purchase_line_id.order_id
             purchase_line = move.created_purchase_line_id
-            if move.previous_move_propagate:
+            if move.propagate_cancel_backwards:
                 if order.state not in ['done', 'purchase']:
                     siblings_states = (move.created_purchase_line_id.move_dest_ids - move).mapped('state')
                     if all(state == 'cancel' for state in siblings_states):
