@@ -6,7 +6,7 @@
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
     <t t-call="website.layout">
         <t t-set="main_object" t-value="slide"/>
-        <div class="wrap o_wslides_wrap">
+        <div id="wrap" class="wrap o_wslides_wrap">
             <div class="o_wslides_lesson_header o_wslides_gradient position-relative text-white pb-0 pt-2 pt-md-5">
                 <t t-call="website_slides.course_nav">
                     <t t-set="channel" t-value="slide.channel_id"/>
@@ -185,12 +185,12 @@
     <div class="row align-items-center my-3">
         <div class="col-12 col-md order-2 order-md-1 d-flex">
             <div class="d-flex align-items-center">
-                <h4 class="my-0">
+                <h1 class="h5 my-0">
                     <t t-call="website_slides.slide_icon">
                         <t t-set="icon_class">mr-1</t>
                     </t>
                     <span t-field="slide.name"/>
-                </h4>
+                </h1>
                 <span t-if="slide.question_ids"
                     t-att-class="'ml-2 badge %s' % ('badge-success' if channel_progress[slide.id].get('completed') else 'badge-info')">
                     <span t-if="channel_progress[slide.id].get('completed')">
@@ -427,7 +427,7 @@
         t-att-data-has-next="1 if next_slide else 0"
         t-att-data-next-slide-url="'/slides/slide/%s' % (slug(next_slide)) if next_slide else None">
         <div t-foreach="slide_questions" t-as="question"
-            t-att-class="'o_wslides_js_lesson_quiz_question mt-3 %s' % ('completed-disabled' if slide_completed else ('disabled' if not slide.channel_id.is_member else ''))" t-att-data-question-id="question['id']" t-att-data-title="question['question']">
+            t-att-class="'o_wslides_js_lesson_quiz_question mt-3 mb-4 %s' % ('completed-disabled' if slide_completed else ('disabled' if not slide.channel_id.is_member else ''))" t-att-data-question-id="question['id']" t-att-data-title="question['question']">
             <div class="h4">
                 <small class="text-muted"><span t-esc="question_index+1"/>. </small> <span t-esc="question['question']"/>
             </div>

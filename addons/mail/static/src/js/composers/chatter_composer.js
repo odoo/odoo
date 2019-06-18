@@ -88,7 +88,7 @@ var ChatterComposer = BasicComposer.extend({
             //      partner_id
             var def;
             if (namesToFind.length > 0) {
-                def = this._rpc({
+                def = self._rpc({
                     route: '/mail/get_partner_info',
                     params: {
                         model: self._model,

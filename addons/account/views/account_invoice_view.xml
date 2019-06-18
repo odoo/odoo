@@ -354,13 +354,13 @@
                                         domain="[('company_id', '=', parent.company_id)]"
                                         context="{'default_partner_id': parent.partner_id}"
                                         optional="show"/>
-                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                                     <field name="quantity"/>
                                     <field name="uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
                                     <field name="price_unit"/>
-                                    <field name="discount" string="Disc.%" groups="base.group_no_one" optional="show"/>
+                                    <field name="discount" string="Disc.%" optional="hide"/>
                                     <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'type':parent.type, 'tree_view_ref': 'account.account_tax_view_tree', 'search_view_ref': 'account.account_tax_view_search'}"
-                                        domain="[('type_tax_use','=','purchase'),('company_id', '=', parent.company_id)]" optional="show"/>
+                                        domain="[('type_tax_use','=','purchase'),('company_id', '=', parent.company_id)]"/>
                                     <field name="price_subtotal" string="Amount"/>
                                     <field name="currency_id" invisible="1"/>
                                 </tree>
@@ -539,10 +539,9 @@
                                     <field name="quantity"/>
                                     <field name="uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
                                     <field name="price_unit" string="Price"/>
-                                    <field name="discount" groups="base.group_no_one" string="Disc.%" optional="show"/>
+                                    <field name="discount" string="Disc.%" optional="hide"/>
                                     <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'type':parent.type, 'tree_view_ref': 'account.account_tax_view_tree', 'search_view_ref': 'account.account_tax_view_search'}"
-                                        domain="[('type_tax_use','=','sale'),('company_id', '=', parent.company_id)]"
-                                        optional="hide"/>
+                                        domain="[('type_tax_use','=','sale'),('company_id', '=', parent.company_id)]"/>
                                     <field name="price_subtotal" string="Subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
                                     <field name="price_total" string="Total" groups="account.group_show_line_subtotals_tax_included"/>
                                     <field name="currency_id" invisible="1"/>

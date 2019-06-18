@@ -14,6 +14,7 @@ var core = require('web.core');
 var ListModel = require('web.ListModel');
 var ListRenderer = require('web.ListRenderer');
 var ListController = require('web.ListController');
+var pyUtils = require('web.py_utils');
 
 var _lt = core._lt;
 
@@ -41,7 +42,8 @@ var ListView = BasicView.extend({
         var selectedRecords = []; // there is no selected records by default
 
         var mode = this.arch.attrs.editable && !params.readonly ? "edit" : "readonly";
-        var expandGroups = !!JSON.parse(this.arch.attrs.expand || "0");
+        var pyevalContext = py.dict.fromJSON(_.pick(params.context, function(value, key, object) {return !_.isUndefined(value)}) || {});
+        var expandGroups = !!JSON.parse(pyUtils.py_eval(this.arch.attrs.expand || "0", {'context': pyevalContext}));
 
         this.groupbys = {};
         this.arch.children.forEach(function (child) {

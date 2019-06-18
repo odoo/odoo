@@ -1097,10 +1097,17 @@ class AccountTax(models.Model):
         for record in self:
             record._check_repartition_lines(record.invoice_repartition_line_ids)
             record._check_repartition_lines(record.refund_repartition_line_ids)
-            sum_inv_tax = sum(record.mapped('invoice_repartition_line_ids.factor_percent'))
-            sum_refund_tax = sum(record.mapped('refund_repartition_line_ids.factor_percent'))
-            if float_compare(sum_inv_tax, sum_refund_tax, precision_digits=4) != 0:
-                raise ValidationError(_("You should impact the same total percentage of the tax amount for invoices and refunds."))
+
+            if len(record.invoice_repartition_line_ids) != len(record.refund_repartition_line_ids):
+                raise ValidationError(_("Invoice and credit note repartition should have the same number of lines."))
+
+            index = 0
+            while index < len(record.invoice_repartition_line_ids):
+                inv_rep_ln = record.invoice_repartition_line_ids[index]
+                ref_rep_ln = record.refund_repartition_line_ids[index]
+                if inv_rep_ln.repartition_type != ref_rep_ln.repartition_type or inv_rep_ln.factor_percent != ref_rep_ln.factor_percent:
+                    raise ValidationError(_("Invoice and credit note repartitions should match (same percentages, in the same order)."))
+                index += 1
 
     @api.one
     @api.constrains('children_tax_ids', 'type_tax_use')

@@ -221,7 +221,7 @@ class IrRule(models.Model):
             'document_model': model,
             'rules_list': '\n'.join('- %s' % rule.name for rule in rules),
             'multi_company_warning': ('\n' + _('Note: this might be a multi-company issue.') + '\n') if any(
-                'company_id' in r.domain_force for r in rules) else '',
+                'company_id' in (r.domain_force or []) for r in rules) else '',
             'example_records': ' - '.join(['%s (id=%s)' % (rec.display_name, rec.id) for rec in records[:6].sudo()]),
             'user_id': '%s (id=%s)' % (self.env.user.name, self.env.user.id),
         })

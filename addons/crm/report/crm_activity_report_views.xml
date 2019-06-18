@@ -52,7 +52,7 @@
                     <filter name="opportunity" string="Opportunities" domain="[('lead_type','=','opportunity')]" help="Show only opportunity" groups="crm.group_use_lead"/>
                     <separator/>
                     <filter string="Won" name="won"
-                            domain="['&amp;', ('stage_id.is_won', '=', True)]"/>
+                            domain="[('stage_id.is_won', '=', True)]"/>
                     <separator/>
                     <filter string="Completion Date" name="completion_date" date="date" default_period="last_365_days"/>
                     <group expand="1" string="Group By">

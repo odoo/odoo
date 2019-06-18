@@ -281,7 +281,6 @@ var StatementModel = BasicModel.extend({
         if (last && !this._isValid(last)) {
             return Promise.resolve(false);
         }
-
         prop = this._formatQuickCreate(line);
         line.reconciliation_proposition.push(prop);
         line.createForm = _.pick(prop, this.quickCreateFields);
@@ -493,13 +492,6 @@ var StatementModel = BasicModel.extend({
         this._blurProposition(handle);
         var focus = this._formatQuickCreate(line, _.pick(reconcileModel, fields));
         focus.reconcileModelId = reconcileModelId;
-        if (!line.reconciliation_proposition.every(function(prop) {return prop.to_check == focus.to_check;})) {
-            new CrashManager().show_warning({data: {
-                exception_type: _t("Incorrect Operation"),
-                message: _t("You cannot mix items with and without the 'To Check' checkbox ticked.")
-            }});
-            return Promise.resolve();
-        }
         line.reconciliation_proposition.push(focus);
         if (reconcileModel.has_second_line) {
             var second = {};
@@ -619,18 +611,15 @@ var StatementModel = BasicModel.extend({
         var self = this;
         var line = this.getLine(handle);
         var prop = _.last(_.filter(line.reconciliation_proposition, '__focus'));
+        if ('to_check' in values && values.to_check === false) {
+            // check if we have another line with to_check and if yes don't change value of this proposition
+            prop.to_check = line.reconciliation_proposition.some(function(rec_prop, index) {
+                return rec_prop.id !== prop.id && rec_prop.to_check;
+            });
+        }
         if (!prop) {
             prop = this._formatQuickCreate(line);
             line.reconciliation_proposition.push(prop);
-        }
-        if ('to_check' in values && !line.reconciliation_proposition.slice(0,-1).every(function(prop) {return prop.to_check == values.to_check;})) {
-            new CrashManager().show_warning({data: {
-                exception_type: _t("Incorrect Operation"),
-                message: _t("You cannot mix items with and without the 'To Check' checkbox ticked.")
-            }});
-            // FIXME: model should not be tied to the DOM !
-            $('.create_to_check input:visible').prop('checked', !values.to_check).change();
-            return Promise.resolve();
         }
         _.each(values, function (value, fieldName) {
             if (fieldName === 'analytic_tag_ids') {
@@ -683,7 +672,6 @@ var StatementModel = BasicModel.extend({
             prop.__tax_to_recompute = true;
         }
         line.createForm = _.pick(prop, this.quickCreateFields);
-
         // If you check/uncheck the force_tax_included box, reset the createForm amount.
         if(prop.base_amount)
             line.createForm.amount = prop.base_amount;
@@ -744,16 +732,8 @@ var StatementModel = BasicModel.extend({
                     "new_aml_dicts": _.map(_.filter(props, function (prop) {
                         return isNaN(prop.id) && prop.display;
                     }), self._formatToProcessReconciliation.bind(self, line)),
+                    "to_check": line.to_check,
                 };
-                line.reconciliation_proposition.some(function(prop) {
-                    if (prop.to_check) {
-                        values_dict['to_check'] = true;
-                        return true;
-                    }
-                });
-                if (line.reconciliation_proposition[0].to_check) {
-                    values_dict['to_check'] = true;
-                }
 
                 // If the lines are not fully balanced, create an unreconciled amount.
                 // line.st_line.currency_id is never false here because its equivalent to
@@ -870,7 +850,12 @@ var StatementModel = BasicModel.extend({
         var formatOptions = {
             currency_id: line.st_line.currency_id,
         };
+        line.to_check = false;
         _.each(line.reconciliation_proposition, function (prop) {
+            if (prop.to_check) {
+                // If one of the proposition is to_check, set the global to_check flag to true
+                line.to_check = true;
+            }
             if (prop.is_tax) {
                 if (!_.find(line.reconciliation_proposition, {'id': prop.link}).__tax_to_recompute) {
                     reconciliation_proposition.push(prop);
@@ -1025,6 +1010,7 @@ var StatementModel = BasicModel.extend({
                 prop.label = prop.name;
                 prop.account_id = self._formatNameGet(prop.account_id || line.account_id);
                 prop.is_partially_reconciled = prop.amount_str !== prop.total_amount_str;
+                prop.to_check = !!prop.to_check;
             });
         }
     },
@@ -1160,7 +1146,7 @@ var StatementModel = BasicModel.extend({
             'link': values.link,
             'display': true,
             'invalid': true,
-            'to_check': values.to_check,
+            'to_check': !!values.to_check,
             '__tax_to_recompute': true,
             'is_tax': values.is_tax,
             '__focus': '__focus' in values ? values.__focus : true,
@@ -1406,11 +1392,8 @@ var ManualModel = StatementModel.extend({
                             return self.loadData(lines);
                         });
                 default:
-                    var partner_ids = context.partner_ids;
-                    var account_ids = context.account_ids || self.account_ids;
-                    if (partner_ids && !account_ids) account_ids = [];
-                    if (!partner_ids && account_ids) partner_ids = [];
-                    account_ids = null; // TOFIX: REMOVE ME
+                    var partner_ids = context.partner_ids || null;
+                    var account_ids = context.account_ids || self.account_ids || null;
                     return self._rpc({
                             model: 'account.reconciliation.widget',
                             method: 'get_all_data_for_manual_reconciliation',
@@ -1627,6 +1610,7 @@ var ManualModel = StatementModel.extend({
                 prop.debit = prop.debit !== 0 ? 0 : tmp_value;
                 prop.amount = -prop.amount;
                 prop.journal_id = self._formatNameGet(prop.journal_id || line.journal_id);
+                prop.to_check = !!prop.to_check;
             });
         }
     },
