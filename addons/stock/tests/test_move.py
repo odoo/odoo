@@ -3564,7 +3564,9 @@ class StockMove(SavepointCase):
             'product_uom_id':self.product_consu.uom_id.id,
             'scrap_qty': 1,
         })
+        self.assertEqual(scrap.name, 'New', 'Name should be New in draft state')
         scrap.do_scrap()
+        self.assertTrue(scrap.name.startswith('SP/'), 'Sequence should be Changed after do_scrap')
         self.assertEqual(scrap.state, 'done')
         move = scrap.move_id
         self.assertEqual(move.state, 'done')

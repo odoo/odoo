@@ -37,7 +37,7 @@ class StockScrap(models.Model):
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     tracking = fields.Selection('Product Tracking', readonly=True, related="product_id.tracking")
     lot_id = fields.Many2one(
-        'stock.production.lot', 'Lot',
+        'stock.production.lot', 'Lot/Serial',
         states={'done': [('readonly', True)]}, domain="[('product_id', '=', product_id)]")
     package_id = fields.Many2one(
         'stock.quant.package', 'Package',
@@ -75,13 +75,6 @@ class StockScrap(models.Model):
                     if move_line.product_id == self.product_id:
                         self.location_id = move_line.location_id
                         break
-
-    @api.model
-    def create(self, vals):
-        if 'name' not in vals or vals['name'] == _('New'):
-            vals['name'] = self.env['ir.sequence'].next_by_code('stock.scrap') or _('New')
-        scrap = super(StockScrap, self).create(vals)
-        return scrap
 
     def unlink(self):
         if 'done' in self.mapped('state'):
@@ -121,6 +114,7 @@ class StockScrap(models.Model):
 
     def do_scrap(self):
         for scrap in self:
+            scrap.name = self.env['ir.sequence'].next_by_code('stock.scrap') or _('New')
             move = self.env['stock.move'].create(scrap._prepare_move_values())
             # master: replace context by cancel_backorder
             move.with_context(is_scrap=True)._action_done()
