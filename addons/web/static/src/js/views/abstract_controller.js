@@ -246,6 +246,19 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
     update: function (params, options) {
         var self = this;
         var shouldReload = (options && 'reload' in options) ? options.reload : true;
+        var defs = [];
+        if (this._searchPanel) {
+            if (params.domain) {
+               this.controlPanelDomain = params.domain;
+            }
+            params.domain = this.controlPanelDomain.concat(this.searchPanelDomain);
+            // do not re-render the view as soon as records have been fetched,  but
+            // wait for the searchPanel to be ready as well, such that the view
+            // isn't re-rendered before the searchPanel
+            params.noRender = true;
+            defs.push(this._updateSearchPanel());
+        }
+
         var def = shouldReload ? this.model.reload(this.handle, params) : Promise.resolve();
         // we check here that the updateIndex of the control panel hasn't changed
         // between the start of the update request and the moment the controller
@@ -256,20 +269,22 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         // note that this won't be necessary as soon as each controller will have
         // its own control panel
         var cpUpdateIndex = this._controlPanel && this._controlPanel.updateIndex;
-        return this.dp.add(def).then(function (handle) {
-            if (self._controlPanel && cpUpdateIndex !== self._controlPanel.updateIndex) {
-                return;
-            }
-            self.handle = handle || self.handle; // update handle if we reloaded
-            var state = self.model.get(self.handle);
-            var localState = self.renderer.getLocalState();
-            return self.dp.add(self.renderer.updateState(state, params)).then(function () {
+        return Promise.all(defs).then(function () {
+            return this.dp.add(def).then(function (handle) {
                 if (self._controlPanel && cpUpdateIndex !== self._controlPanel.updateIndex) {
                     return;
                 }
-                self.renderer.setLocalState(localState);
-                return self._update(state, params);
-            });
+                self.handle = handle || self.handle; // update handle if we reloaded
+                var state = self.model.get(self.handle);
+                var localState = self.renderer.getLocalState();
+                return self.dp.add(self.renderer.updateState(state, params)).then(function () {
+                    if (self._controlPanel && cpUpdateIndex !== self._controlPanel.updateIndex) {
+                        return;
+                    }
+                    self.renderer.setLocalState(localState);
+                    return self._update(state, params);
+                });
+            }
         });
     },
 
