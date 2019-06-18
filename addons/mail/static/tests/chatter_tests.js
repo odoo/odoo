@@ -2149,7 +2149,7 @@ QUnit.test('form activity widget: mark as done and remove', async function (asse
 });
 
 QUnit.test('followers widget: follow/unfollow, edit subtypes', async function (assert) {
-    assert.expect(15);
+    assert.expect(14);
 
     var resID = 2;
     var partnerID = 2;
@@ -2243,11 +2243,78 @@ QUnit.test('followers widget: follow/unfollow, edit subtypes', async function (a
 
     // click to unfollow
     await testUtils.dom.click(form.$('.o_followers_follow_button'));
-    assert.ok($('.modal').length, 'a confirm modal should be opened');
-    await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
     assert.strictEqual(form.$('.o_followers_count').text(), "0", 'should have no followers');
     assert.ok(form.$('.o_followers_follow_button.o_followers_notfollow').length,
         'should display the "Follow" button');
+
+    form.destroy();
+});
+
+QUnit.test('followers widget: follow/unfollow confirmation dialog', async function (assert) {
+    assert.expect(5);
+
+    this.data.partner.records[0].message_follower_ids = [1, 2];
+    var resID = 2;
+    var partnerID = 2;
+    var followers = [{
+        id: 1,
+        is_uid: true,
+        name: "Admin",
+        email: "admin@example.com",
+        res_id: resID,
+        res_model: 'res.partner',
+    }, {
+        id: 2,
+        is_uid: true,
+        name: "Demo",
+        email: "demo@example.com",
+        res_id: 3,
+        res_model: 'res.partner',
+    }];
+
+    var form = await createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_follower_ids" widget="mail_followers"/>' +
+                '</div>' +
+            '</form>',
+        res_id: resID,
+
+        mockRPC: function (route, args) {
+            if (route === '/web/dataset/call_kw/partner/message_unsubscribe') {
+                this.data.partner.records[0].message_follower_ids.shift();
+                followers.shift();
+                return Promise.resolve(true);
+            }
+            if (route === '/mail/read_followers') {
+                return Promise.resolve({
+                    followers: followers,
+                });
+            }
+            return this._super.apply(this, arguments);
+        },
+        session: {partner_id: partnerID},
+    });
+
+    assert.strictEqual(form.$('.o_followers_count').text(), "2", 'should have 2 followers');
+    // click to unfollow current user
+    await testUtils.dom.click(form.$('.o_followers_follow_button'));
+    assert.containsNone($, '.modal', 'a confirm modal should not be opened');
+    assert.strictEqual(form.$('.o_followers_count').text(), "1", 'should have 1 follower');
+
+    await testUtils.dom.click(form.$('.o_followers_title_box [data-toggle="dropdown"]'));
+    // remove demo user from followers
+    await testUtils.dom.click(form.$('.o_remove_follower'));
+    assert.containsOnce($, '.modal', 'a confirm modal should be opened');
+    await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+    assert.strictEqual(form.$('.o_followers_count').text(), "0", 'should have no followers');
 
     form.destroy();
 });
