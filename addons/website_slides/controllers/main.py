@@ -517,7 +517,7 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route('''/slides/slide/<model("slide.slide", "[('website_id', 'in', (False, current_website_id))]"):slide>''', type='http', auth="public", website=True)
     def slide_view(self, slide, **kwargs):
-        if not slide.channel_id.can_access_from_current_website():
+        if not slide.channel_id.can_access_from_current_website() or not slide.active:
             raise werkzeug.exceptions.NotFound()
         self._set_viewed_slide(slide)
 
