@@ -61,7 +61,8 @@ class MrpBom(models.Model):
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env.company,
-        required=True)
+        required=True,
+    )
     consumption = fields.Selection([
         ('strict', 'Strict'),
         ('flexible', 'Flexible')],
@@ -132,7 +133,7 @@ class MrpBom(models.Model):
         if picking_type:
             domain += ['|', ('picking_type_id', '=', picking_type.id), ('picking_type_id', '=', False)]
         if company_id or self.env.context.get('company_id'):
-            domain = domain + [('company_id', '=', company_id or self.env.context.get('company_id'))]
+            domain = domain + [('company_id', 'in', [company_id or self.env.context.get('company_id'), False])]
         if bom_type:
             domain += [('type', '=', bom_type)]
         # order to prioritize bom with product_id over the one without

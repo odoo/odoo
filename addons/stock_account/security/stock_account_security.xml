@@ -17,7 +17,7 @@
         <field name="name">Stock Valuation Layer Multicompany</field>
         <field name="model_id" search="[('model','=','stock.valuation.layer')]" model="ir.model"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">[('company_id','=',user.company_id.id)]</field>
+        <field name="domain_force">[('company_id','in',company_ids)]</field>
     </record>
 </data>
 </odoo>

@@ -102,12 +102,13 @@
                                     string="Update" class="oe_link" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done','cancel')), ('id', '=', False)]}"/>
                             </div>
                             <field name="bom_id"
-                                domain="['&amp;', '|',
+                                domain="['&amp;', '&amp;', '|',
                                             ('product_id','=',product_id),
                                             '&amp;',
                                                 ('product_tmpl_id.product_variant_ids','=',product_id),
                                                 ('product_id','=',False),
-                                                ('type', '=', 'normal')]"
+                                                ('type', '=', 'normal'),
+                                            ('company_id', 'in', [company_id, False])]"
                                 context="{'default_product_tmpl_id': product_tmpl_id}" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="routing_id" groups="mrp.group_mrp_routings"/>
                         </group>
