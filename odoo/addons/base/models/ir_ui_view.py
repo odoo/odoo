@@ -1357,6 +1357,7 @@ actual arch.
             keep_query=keep_query,
             request=request,  # might be unbound if we're not in an httprequest context
             debug=request.session.debug if request else '',
+            test_mode_enabled=bool(config['test_enable'] or config['test_file']),
             json=json,
             quote_plus=werkzeug.url_quote_plus,
             time=time,

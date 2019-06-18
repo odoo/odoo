@@ -1374,12 +1374,12 @@ QUnit.test('chatter: discard changes on message post with post_refresh "recipien
     form.destroy();
 });
 
-QUnit.test('chatter: discard changes on opening full-composer', async function (assert) {
+QUnit.test('chatter: discard changes on opening full-composer and open missing partner info popup', async function (assert) {
     // When we open the full-composer, any following operations by the user
     // will reload the record (even closing the full-composer). Therefore,
     // we should warn the user when we open the full-composer if the record
     // is dirty (= has some unsaved changes).
-    assert.expect(2);
+    assert.expect(3);
 
     var form = await createView({
         View: FormView,
@@ -1396,11 +1396,24 @@ QUnit.test('chatter: discard changes on opening full-composer', async function (
                         ' \'post_refresh\': \'always\'}"/>' +
                 '</div>' +
             '</form>',
+        archs: {
+            'res.partner,false,form':
+                '<form string="partners">' +
+                '<field name="name"/>' +
+                '</form>',
+        },
         res_id: 2,
         session: {},
         mockRPC: function (route, args) {
             if (route === "/mail/get_suggested_recipients") {
-                return Promise.resolve({2: []});
+                return Promise.resolve({2: [[
+                        false,
+                        'pikapika@pikachu.com',
+                        ''
+                    ]]});
+            }
+            if (route === "/mail/get_partner_info") {
+                return Promise.resolve([{full_name: "pikapika@pikachu.com", partner_id: false}]);
             }
             return this._super(route, args);
         },
@@ -1421,6 +1434,8 @@ QUnit.test('chatter: discard changes on opening full-composer', async function (
     assert.strictEqual($modal.find('.modal-body').text(),
         "The record has been modified, your changes will be discarded. Do you want to proceed?",
         "should warn the user that any unsaved changes will be lost");
+    await testUtils.dom.click($modal.find('.modal-footer .btn.btn-primary'));
+    assert.strictEqual($modal.length, 1, "should have a modal opened");
 
     form.destroy();
 });

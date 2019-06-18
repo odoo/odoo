@@ -394,7 +394,7 @@
     </template>
 
     <template id="conditional_assets_tests" name="Tests Assets Bundle">
-        <t t-call-assets="web.assets_tests" t-if="'tests' in debug" defer_load="True" />
+        <t t-call-assets="web.assets_tests" t-if="'tests' in debug or test_mode_enabled" defer_load="True" />
     </template>
 
     <template id="web.layout" name="Web layout">&lt;!DOCTYPE html&gt;
