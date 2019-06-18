@@ -273,7 +273,8 @@ class ProductProduct(models.Model):
             value -= product.price_extra
             product.write({'list_price': value})
 
-    @api.depends('product_template_attribute_value_ids.price_extra')
+    # DLE NOTE: This depends just cannot work
+    # @api.depends('product_template_attribute_value_ids.price_extra')
     def _compute_product_price_extra(self):
         for product in self:
             product.price_extra = sum(product.mapped('product_template_attribute_value_ids.price_extra'))

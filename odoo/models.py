@@ -5497,6 +5497,9 @@ Fields:
             recs = self.env.field_todo(field)
             if not recs:
                 return
+            # DLE P66: `_compute_complete_name` in product/models/product.py
+            # Do no recompute value of fields which are already being computed
+            recs = recs - self.env.protected(field)
             if field.compute and field.store:
                 try:
                     field.compute_value(recs)
