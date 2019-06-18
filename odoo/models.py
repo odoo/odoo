@@ -5438,9 +5438,9 @@ Fields:
                 if node:
                     trigger_tree_merge(tree, node)
         if tree:
-            self._modified(tree)
+            self._modified_triggers(tree)
 
-    def _modified(self, tree):
+    def _modified_triggers(self, tree):
         """ Process a tree of field triggers on ``self``. """
         if not self:
             return
@@ -5479,7 +5479,7 @@ Fields:
                         break
                 else:
                     records = model.search([(key.name, 'in', self.ids)])
-                records._modified(val)
+                records._modified_triggers(val)
 
     def _recompute_check(self, field):
         """ If ``field`` must be recomputed on some record in ``self``, return the
