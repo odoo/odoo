@@ -4,6 +4,13 @@
 from odoo import api, fields, models
 
 
+class PosOrderLine(models.Model):
+    _inherit = 'pos.order.line'
+
+    note = fields.Char('Note added by the waiter.')
+    mp_skip = fields.Boolean('Skip line when sending ticket to kitchen printers.')
+
+
 class PosOrder(models.Model):
     _inherit = 'pos.order'
 
