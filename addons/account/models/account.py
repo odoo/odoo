@@ -9,6 +9,7 @@ from odoo.tools.float_utils import float_round as round, float_compare
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import UserError, ValidationError
 from odoo import api, fields, models, _
+from odoo.tests.common import Form
 
 
 class AccountAccountType(models.Model):
@@ -952,6 +953,34 @@ class AccountJournal(models.Model):
         """
         # We simply call the setup bar function.
         return self.env['res.company'].setting_init_bank_account_action()
+
+    def create_invoice_from_attachment(self, attachment_ids=[]):
+        ''' Create the invoices from files.
+         :return: A action redirecting to account.move tree/form view.
+        '''
+        attachments = self.env['ir.attachment'].browse(attachment_ids)
+        if not attachments:
+            raise UserError(_("No attachment was provided"))
+
+        invoices = self.env['account.move']
+        for attachment in attachments:
+            invoice = self.env['account.move'].create({})
+            attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
+            invoice.message_post(attachment_ids=[attachment.id])
+            invoices += invoice
+
+        action_vals = {
+            'name': _('Generated Documents'),
+            'domain': [('id', 'in', invoices.ids)],
+            'res_model': 'account.move',
+            'views': [[False, "tree"], [False, "form"]],
+            'type': 'ir.actions.act_window',
+        }
+        if len(invoices) == 1:
+            action_vals.update({'res_id': invoices[0].id, 'view_mode': 'form'})
+        else:
+            action_vals['view_mode'] = 'tree,form'
+        return action_vals
 
 
 class ResPartnerBank(models.Model):

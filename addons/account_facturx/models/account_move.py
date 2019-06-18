@@ -291,7 +291,7 @@ class AccountMove(models.Model):
 
         :return: a list of triplet (xml_type, check_func, decode_func)
             * xml_type: The format name, e.g 'UBL 2.1'
-            * check_func: A function taking an etree as parameter and returning a dict:
+            * check_func: A function taking an etree and a file name as parameter and returning a dict:
                 * flag: The etree is part of this format.
                 * error: Error message.
             * decode_func: A function taking an etree as parameter and returning an invoice record.
@@ -310,20 +310,20 @@ class AccountMove(models.Model):
             raise UserError(_('The xml file is badly formatted : {}').format(attachment.name))
 
         for xml_type, check_func, decode_func in decoders:
-            check_res = check_func(tree)
+            check_res = check_func(tree, attachment.name)
 
             if check_res.get('flag') and not check_res.get('error'):
-                invoice = decode_func(tree)
-                if invoice:
+                invoice_ids = decode_func(tree)
+                if invoice_ids:
                     try:
                         # don't propose to send to ocr
-                        invoice.extract_state = 'done'
+                        invoice_ids.write({'extract_state': 'done'})
                     except AttributeError:
                         # account_invoice_exctract not installed
                         pass
                     break
 
         try:
-            return invoice
+            return invoice_ids
         except UnboundLocalError:
             raise UserError(_('No decoder was found for the xml file: {}. The file is badly formatted, not supported or the decoder is not installed').format(attachment.name))
