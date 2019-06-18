@@ -3285,7 +3285,7 @@ Fields:
                 bad_names.update(LOG_ACCESS_COLUMNS)
 
         # protect fields being written against recomputation
-        protected = [self._fields[fname] for fname in vals if fname in self._fields]
+        protected = [self._fields[fname] for fname in value if fname in self._fields]
         with env.protecting(protected, self):
             # DLE P34
             determine_inverses = {}
@@ -3394,52 +3394,52 @@ Fields:
                 if toflush:
                     self.flush([fname])
 
-        # DLE P34
-        determine_inverses = determine_inverses.values()
-        inverse_fields = [f.name for g in determine_inverses for f in g]
+            # DLE P34
+            determine_inverses = determine_inverses.values()
+            inverse_fields = [f.name for g in determine_inverses for f in g]
 
-        # DLE P36: `test_40_new`, ask RCO if there is not a better way to filter out new records.
-        to_validate = self.filtered('id')
-        # DLE P35: Validate first regular fields, then inverse fields
-        # Because inverse field might be wrong because the regular fields are not valid,
-        # and this can cause infinite recursion or longer processing.
-        # This was the case before: regular fields validation were done in `_write`, which was called before the validation of the inverse fields in `write`
-        # test `test_no_recursion`
-        # DLE P48: do not validate fields in onchange
-        # `test_onchange_related`
-        if to_validate:
-            to_validate._validate_fields(set(vals) - set(inverse_fields))
+            # DLE P36: `test_40_new`, ask RCO if there is not a better way to filter out new records.
+            to_validate = self.filtered('id')
+            # DLE P35: Validate first regular fields, then inverse fields
+            # Because inverse field might be wrong because the regular fields are not valid,
+            # and this can cause infinite recursion or longer processing.
+            # This was the case before: regular fields validation were done in `_write`, which was called before the validation of the inverse fields in `write`
+            # test `test_no_recursion`
+            # DLE P48: do not validate fields in onchange
+            # `test_onchange_related`
+            if to_validate:
+                to_validate._validate_fields(set(vals) - set(inverse_fields))
 
-        # DLE P34: Batch process inverse fields
-        # test `test_13_inverse`
-        for fields in determine_inverses:
-            for record in self:
-                try:
-                    fields[0].determine_inverse(self)
-                except AccessError as e:
-                    # DLE P32: test `test_feedback.py`, `test_local`: When attempting to write on an inherited field,
-                    # the exception raised must be the one below, for a clearer explanation for the user.
-                    if fields[0].inherited:
-                        description = self.env['ir.model']._get(self._name).name
-                        raise AccessError(
-                            _("%(previous_message)s\n\nImplicitly accessed through '%(document_kind)s' (%(document_model)s).") % {
-                                'previous_message': e.args[0],
-                                'document_kind': description,
-                                'document_model': self._name,
-                            }
-                        )
-                    raise
-        # DLE P58: `test_orm.py``test_write_date`
-        # If there are only fields that do not trigger _write (e.g. only determine inverse),
-        # the below will ensure `_write ` will be called, even with empty vals, to ensure `write_date` and `write_uid` is updated
-        if self._log_access and self.ids:
-            if not any(self._fields[fname].column_type for fname in vals.keys() if fname in self._fields):
+            # DLE P34: Batch process inverse fields
+            # test `test_13_inverse`
+            for fields in determine_inverses:
                 for record in self:
-                    if record.id:
-                        env.all.towrite[record._name][record.id]['write_uid'] = self.env.uid
-                        env.all.towrite[record._name][record.id]['write_date'] = False
-            self.env.cache.invalidate([(self._fields['write_date'], self.ids), (self._fields['write_uid'], self.ids)])
-        to_validate._validate_fields(inverse_fields)
+                    try:
+                        fields[0].determine_inverse(self)
+                    except AccessError as e:
+                        # DLE P32: test `test_feedback.py`, `test_local`: When attempting to write on an inherited field,
+                        # the exception raised must be the one below, for a clearer explanation for the user.
+                        if fields[0].inherited:
+                            description = self.env['ir.model']._get(self._name).name
+                            raise AccessError(
+                                _("%(previous_message)s\n\nImplicitly accessed through '%(document_kind)s' (%(document_model)s).") % {
+                                    'previous_message': e.args[0],
+                                    'document_kind': description,
+                                    'document_model': self._name,
+                                }
+                            )
+                        raise
+            # DLE P58: `test_orm.py``test_write_date`
+            # If there are only fields that do not trigger _write (e.g. only determine inverse),
+            # the below will ensure `_write ` will be called, even with empty vals, to ensure `write_date` and `write_uid` is updated
+            if self._log_access and self.ids:
+                if not any(self._fields[fname].column_type for fname in vals.keys() if fname in self._fields):
+                    for record in self:
+                        if record.id:
+                            env.all.towrite[record._name][record.id]['write_uid'] = self.env.uid
+                            env.all.towrite[record._name][record.id]['write_date'] = False
+                self.env.cache.invalidate([(self._fields['write_date'], self.ids), (self._fields['write_uid'], self.ids)])
+            to_validate._validate_fields(inverse_fields)
 
         return True
 
@@ -3634,13 +3634,13 @@ Fields:
 
         # protect fields being written against recomputation
         protected = [(data['protected'], data['record']) for data in data_list]
-        # group fields by inverse method (to call it once), and order groups
-        # by dependence (in case they depend on each other)
-        field_groups = (fields for _inv, fields in groupby(inversed_fields, attrgetter('inverse')))
-        for fields in field_groups:
-            # determine which records to inverse for those fields
-            inv_names = {field.name for field in fields}
-            with self.env.protecting(protected):
+        with self.env.protecting(protected):
+            # group fields by inverse method (to call it once), and order groups
+            # by dependence (in case they depend on each other)
+            field_groups = (fields for _inv, fields in groupby(inversed_fields, attrgetter('inverse')))
+            for fields in field_groups:
+                # determine which records to inverse for those fields
+                inv_names = {field.name for field in fields}
                 rec_vals = [
                     (data['record'], {
                         name: data['inversed'][name]
@@ -3651,19 +3651,19 @@ Fields:
                     if not inv_names.isdisjoint(data['inversed'])
                 ]
 
-            # If a field is not stored, its inverse method will probably
-            # write on its dependencies, which will invalidate the field on
-            # all records. We therefore inverse the field record by record.
-            if all(field.store or field.company_dependent for field in fields):
-                batches = [rec_vals]
-            else:
-                batches = [[rec_data] for rec_data in rec_vals]
+                # If a field is not stored, its inverse method will probably
+                # write on its dependencies, which will invalidate the field on
+                # all records. We therefore inverse the field record by record.
+                if all(field.store or field.company_dependent for field in fields):
+                    batches = [rec_vals]
+                else:
+                    batches = [[rec_data] for rec_data in rec_vals]
 
-            for batch in batches:
-                for record, vals in batch:
-                    record._cache.update(record._convert_to_cache(vals))
-                batch_recs = self.concat(*(record for record, vals in batch))
-                fields[0].determine_inverse(batch_recs)
+                for batch in batches:
+                    for record, vals in batch:
+                        record._cache.update(record._convert_to_cache(vals))
+                    batch_recs = self.concat(*(record for record, vals in batch))
+                    fields[0].determine_inverse(batch_recs)
 
         # check Python constraints for non-stored inversed fields
         for data in data_list:
@@ -5438,9 +5438,9 @@ Fields:
                 if node:
                     trigger_tree_merge(tree, node)
         if tree:
-            self._modified_rec(tree)
+            self._modified(tree)
 
-    def _modified_rec(self, tree):
+    def _modified(self, tree):
         """ Process a tree of field triggers on ``self``. """
         if not self:
             return
@@ -5479,7 +5479,7 @@ Fields:
                         break
                 else:
                     records = model.search([(key.name, 'in', self.ids)])
-                records._modified_rec(val)
+                records._modified(val)
 
     def _recompute_check(self, field):
         """ If ``field`` must be recomputed on some record in ``self``, return the
