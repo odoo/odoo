@@ -510,7 +510,7 @@
             <div class="card-body">
                 <div class="d-inline-block position-relative">
                     <img class="rounded-circle img-fluid" t-att-src="'/profile/avatar/%s?field=image_medium%s' % (user['id'], '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"/>
-                    <img class="position-absolute" t-attf-src="/website_profile/static/src/img/rank_#{user['position']}.svg" alt="User rank" style="bottom: 0; right: -10px"/>
+                    <img class="position-absolute" t-attf-src="/website_profile/static/src/img/rank_#{user_index + 1}.svg" alt="User rank" style="bottom: 0; right: -10px"/>
                 </div>
                 <h3 class="mt-2 mb-0" t-esc="user['name']"></h3>
                 <span class="badge badge-danger font-weight-normal px-2" t-if="not user['website_published']">Unpublished</span>
