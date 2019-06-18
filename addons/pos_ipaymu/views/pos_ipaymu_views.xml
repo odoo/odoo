@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_pos_ipaymu_configuration_form" model="ir.ui.view" >
+            <field name="name">IPaymu Configurations</field>
+            <field name="model">pos_ipaymu.configuration</field>
+            <field name="arch" type="xml">
+                <form string="Card Reader">
+                    <sheet>
+                        <div class="oe_title">
+                           <label for="name" class="oe_edit_only"/>
+                           <h1><field name="name"/></h1>
+                        </div>
+                        <div>
+                            <p>
+                                <i>IPaymu Configurations</i> define what IPaymu account will be used when
+                                processing cashless transactions in the Point Of Sale. Setting up a IPaymu
+                                configuration will enable you to allow payments with QR Code. After setting up this
+                                configuration you should associate it with a Point Of Sale payment method.
+                            </p><p>
+                                Using the IPaymu integration in the Point Of Sale is easy: just press the
+                                associated payment method. For quickly handling orders: just scan QR code 
+                                on the payment screen (without having pressed anything else) will charge 
+                                the full amount of the order.
+                            </p><p>
+                                If you don't already have a IPaymu account, visit <a class="oe_link" href="https://www.ipaymu.com" target="_blank">www.ipaymu.com</a> to create one.
+                            </p>
+                        </div>
+                        <group col="2">
+                            <field name="merchant_api_key"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_pos_ipaymu_configuration_tree" model="ir.ui.view">
+            <field name="name">IPaymu Configurations</field>
+            <field name="model">pos_ipaymu.configuration</field>
+            <field name="arch" type="xml">
+                <tree string="Card Reader">
+                    <field name="name"/>
+                    <field name="merchant_api_key"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_configuration_form" model="ir.actions.act_window">
+            <field name="name">IPaymu Configurations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos_ipaymu.configuration</field>
+            <field name="view_mode">tree,kanban,form</field>
+        </record>
+
+        <record id="view_account_journal_pos_user_form" model="ir.ui.view">
+            <field name="name">POS Journal</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="point_of_sale.view_account_journal_pos_user_form"></field>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='bank_account']" position="inside">
+                    <group attrs="{'invisible': [('journal_user', '!=', True)]}">
+                        <group string="Mobile Payment Methods">
+                            <field name="pos_ipaymu_config_id"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_pos_order" model="ir.ui.view">
+          <field name="name">POS orders</field>
+          <field name="model">pos.order</field>
+          <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+          <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount']" position="before">
+            </xpath>
+          </field>
+        </record>
+
+        <menuitem id="pos_ipaymu_menu_configuration" 
+            parent="point_of_sale.menu_point_config_product" 
+            action="pos_ipaymu.action_configuration_form" 
+            sequence="35"/>
+    </data>
+</odoo>

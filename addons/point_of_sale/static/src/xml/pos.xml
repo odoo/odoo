@@ -1753,14 +1753,16 @@
     </t>
 
     <t t-name="CustomerFacingDisplayPaymentLines">
-        <t t-foreach="order.get_paymentlines()" t-as="paymentline">
-            <div>
-                <span><t t-esc="paymentline.name"/></span>
-            </div>
-            <div>
-                <span><t t-esc="widget.format_currency(paymentline.get_amount())"/></span>
-            </div>
-        </t>
+        <span class="customer_payment_lines">
+            <t t-foreach="order.get_paymentlines()" t-as="paymentline">
+                <div>
+                    <span><t t-esc="paymentline.name"/></span>
+                </div>
+                <div>
+                    <span><t t-esc="widget.format_currency(paymentline.get_amount())"/></span>
+                </div>
+            </t>
+        </span>
         <t t-if="order.get_paymentlines().length > 0">
             <div>
                 <span class="pos-change_title">Change:</span>

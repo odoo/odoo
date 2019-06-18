@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="assets" inherit_id="point_of_sale.assets">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/pos_ipaymu/static/src/js/pos_ipaymu.js"></script>
+                <link rel="stylesheet" href="/pos_ipaymu/static/src/css/pos_ipaymu.css" />
+            </xpath>
+        </template>
+
+        <template id="assets_backend" name="ipaymu assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/pos_ipaymu/static/src/js/tours/pos_ipaymu.js"></script>
+            </xpath>
+        </template>
+    </data>
+</odoo>

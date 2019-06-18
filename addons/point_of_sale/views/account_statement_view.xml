@@ -43,7 +43,7 @@
           <xpath expr="//field[@name='type']" position="after">
               <field name="journal_user" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
           </xpath>
-          <xpath expr="//notebook[last()]" position="inside">
+          <xpath expr="//notebook" position="inside">
               <page string="Point of Sale" name="point_of_sale" invisible="1"/>
           </xpath>
       </field>

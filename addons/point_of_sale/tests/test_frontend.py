@@ -3,19 +3,19 @@
 
 from odoo.api import Environment
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo.tests import HttpCase
+
 from datetime import date, timedelta
 
-import odoo.tests
-
-@odoo.tests.tagged('post_install', '-at_install')
-class TestUi(odoo.tests.HttpCase):
-    def test_01_pos_basic_order(self):
+class TestUiBase(HttpCase):
+    def setUp(self):
+        super().setUp()
         env = self.env(user=self.env.ref('base.user_admin'))
 
         journal_obj = env['account.journal']
         account_obj = env['account.account']
         main_company = env.ref('base.main_company')
-        main_pos_config = env.ref('point_of_sale.pos_config_main')
+        self.pos_config = env.ref('point_of_sale.pos_config_main')
 
         account_receivable = account_obj.create({'code': 'X1012',
                                                  'name': 'Account Receivable - Test',
@@ -26,6 +26,34 @@ class TestUi(odoo.tests.HttpCase):
                                    'company_id': main_company.id,
                                    'fields_id': field.id,
                                    'value': 'account.account,' + str(account_receivable.id)})
+
+        test_sale_journal = journal_obj.create({'name': 'Sales Journal - Test',
+                                                'code': 'TSJ',
+                                                'type': 'sale',
+                                                'company_id': main_company.id})
+
+        self.pos_config.write({
+            'journal_id': test_sale_journal.id,
+            'invoice_journal_id': test_sale_journal.id,
+            'journal_ids': [(0, 0, {'name': 'Cash Journal - Test',
+                                                       'code': 'TSC',
+                                                       'type': 'cash',
+                                                       'company_id': main_company.id,
+                                                       'journal_user': True})],
+        })
+
+        # needed because tests are run before the module is marked as
+        # installed. In js web will only load qweb coming from modules
+        # that are returned by the backend in module_boot. Without
+        # this you end up with js, css but no qweb.
+        env['ir.module.module'].search([('name', '=', 'point_of_sale')], limit=1).state = 'installed'
+
+
+class TestUi(TestUiBase):
+    def setUp(self):
+        super().setUp()
+        env = self.env(user=self.env.ref('base.user_admin'))
+        main_company = env.ref('base.main_company')
 
         # test an extra price on an attribute
         pear = env.ref('point_of_sale.whiteboard')
@@ -261,11 +289,6 @@ class TestUi(odoo.tests.HttpCase):
         # price
         main_company.currency_id = env.ref('base.USD')
 
-        test_sale_journal = journal_obj.create({'name': 'Sales Journal - Test',
-                                                'code': 'TSJ',
-                                                'type': 'sale',
-                                                'company_id': main_company.id})
-
         all_pricelists = env['product.pricelist'].search([('id', '!=', excluded_pricelist.id)])
         all_pricelists.write(dict(currency_id=main_company.currency_id.id))
 
@@ -274,8 +297,7 @@ class TestUi(odoo.tests.HttpCase):
 
         env.ref('point_of_sale.letter_tray').taxes_id = [(6, 0, [src_tax.id])]
 
-
-        main_pos_config.write({
+        self.pos_config.write({
             'tax_regime_selection': True,
             'fiscal_position_ids': [(0, 0, {
                                             'name': "FP-POS-2M",
@@ -285,13 +307,6 @@ class TestUi(odoo.tests.HttpCase):
                                                 (0,0,{'tax_src_id': src_tax.id,
                                                       'tax_dest_id': dst_tax.id})]
                                             })],
-            'journal_id': test_sale_journal.id,
-            'invoice_journal_id': test_sale_journal.id,
-            'journal_ids': [(0, 0, {'name': 'Cash Journal - Test',
-                                                       'code': 'TSC',
-                                                       'type': 'cash',
-                                                       'company_id': main_company.id,
-                                                       'journal_user': True})],
             'use_pricelist': True,
             'pricelist_id': public_pricelist.id,
             'available_pricelist_ids': [(4, pricelist.id) for pricelist in all_pricelists],
@@ -306,14 +321,11 @@ class TestUi(odoo.tests.HttpCase):
             ('res_id', '=', False)
         ]).write({'value_reference': 'product.pricelist,%s' % public_pricelist.id})
 
-        # open a session, the /pos/web controller will redirect to it
-        main_pos_config.open_session_cb()
+    def test_01_pos_basic_order(self):
+        env = self.env(user=self.env.ref('base.user_admin'))
 
-        # needed because tests are run before the module is marked as
-        # installed. In js web will only load qweb coming from modules
-        # that are returned by the backend in module_boot. Without
-        # this you end up with js, css but no qweb.
-        env['ir.module.module'].search([('name', '=', 'point_of_sale')], limit=1).state = 'installed'
+        # open a session, the /pos/web controller will redirect to it
+        self.pos_config.open_session_cb()
 
         self.start_tour("/pos/web", 'pos_pricelist', login="admin")
 

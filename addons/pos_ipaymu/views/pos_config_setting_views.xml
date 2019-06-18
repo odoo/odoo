@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_config_view_form_inherit_pos_ipaymu" model="ir.ui.view">
+        <field name="name">pos.config.form.inherit.ipaymu</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="btn_use_pos_ipaymu" position="replace">
+                <div class="mt16">
+                    <button name="%(pos_ipaymu.action_configuration_form)d" icon="fa-arrow-right" type="action" string="IPaymu Accounts" class="btn-link"/>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>
