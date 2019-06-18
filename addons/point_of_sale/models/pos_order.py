@@ -1229,12 +1229,13 @@ class ReportSaleDetails(models.AbstractModel):
                 # stop by default today 23:59:59
                 date_stop = date_start + timedelta(days=1, seconds=-1)
 
-            AND(domain, [
-                ('date_order', '>=', fields.Datetime.to_string(date_start)),
-                ('date_order', '<=', fields.Datetime.to_string(date_stop)),])
+            AND([domain,
+                [('date_order', '>=', fields.Datetime.to_string(date_start)),
+                ('date_order', '<=', fields.Datetime.to_string(date_stop))]
+            ])
 
             if config_ids:
-                AND(domain, [('config_id', 'in', config_ids)])
+                AND([domain, [('config_id', 'in', config_ids)]])
 
         orders = self.env['pos.order'].search(domain)
 
