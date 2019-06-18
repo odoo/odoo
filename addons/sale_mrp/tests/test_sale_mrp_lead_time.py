@@ -148,8 +148,8 @@ class TestSaleMrpLeadTime(TestStockCommon):
             msg="Schedule date of manufacturing order should be equal to: Schedule date of pack type picking - product's Manufacturing Lead Time."
         )
 
-    def test_02_forward_cancel_confirm_manufacturing_order(self):
-        """ Test confirm manufacturing order based on rule with option forward cancelation."""
+    def test_02_backward_cancel_confirm_manufacturing_order(self):
+        """ Test confirm manufacturing order based on rule with option backward cancelation."""
 
         # Update warehouse_1 with Outgoing Shippings pick + pack + ship
         self.warehouse_1.write({'delivery_steps': 'pick_pack_ship'})

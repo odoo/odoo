@@ -240,9 +240,8 @@ class TestPurchaseLeadTime(TestPurchase):
         self.assertEqual(po_line[0].product_qty, 10, 'the purchase order line has a wrong quantity')
         self.assertEqual(po_line[1].product_qty, 5, 'the purchase order line has a wrong quantity')
 
-    def test_04_forward_cancel_po(self):
-
-        """ Test canceling purchase order based on forward canceling option on the rule.
+    def test_04_backward_cancel_po(self):
+        """ Test canceling purchase order based on backward canceling option on the rule.
             - Create a outgoing picking.
             - Confirm it, a purchase order is generated from it.
             - Confirm the purchase order.

@@ -586,7 +586,7 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(set(return_pick_picking.move_lines.move_orig_ids.ids), set((picking_pick.move_lines | return_pack_picking.move_lines).ids))
         self.assertEqual(len(return_pick_picking.move_lines.move_dest_ids), 0)
 
-    def test_forward_canceling_moves(self):
+    def test_backward_canceling_moves(self):
         """ Test that when we cancel ship it should be cancel pick , pack ."""
         pick, pack, ship = self.create_pick_pack_ship()
         pickings = pack + pick + ship
