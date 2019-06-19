@@ -6670,6 +6670,19 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('float field render with digits attribute on listview', async function (assert) {
+        assert.expect(1);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/><field name="qux" digits="[12,6]"/></tree>',
+        });
+
+        assert.strictEqual(list.$('td.o_list_number:eq(0)').text(), "0.400000", "should contain 6 digits decimal precision");
+        list.destroy();
+    });
     // TODO: write test on:
     // - default_get with a field not in view
 });
