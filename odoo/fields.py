@@ -22,7 +22,6 @@ except ImportError:
 
 import psycopg2
 
-from .sql_db import LazyCursor
 from .tools import float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar, \
     ustr, OrderedSet, pycompat, sql, date_utils, unique, IterableGenerator
 from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
