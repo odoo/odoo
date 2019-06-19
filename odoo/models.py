@@ -2907,11 +2907,7 @@ Fields:
             missing.difference_update(ids)
 
             for field in fields_pre:
-                try:
-                    values = next(cols)
-                except:
-                    import pudb
-                    pudb.set_trace()
+                values = next(cols)
                 if context.get('lang') and not field.inherited and callable(field.translate):
                     translate = field.get_trans_func(fetched)
                     values = list(values)
@@ -2919,7 +2915,6 @@ Fields:
                         values[index] = translate(ids[index], values[index])
 
                 if field._convert_to_cache_read:
-                    # print('convert', field.name)
                     convert = field.convert_to_cache
                     values = [convert(value, empty, validate=False) for value in values]
                 else:
