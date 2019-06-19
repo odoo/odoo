@@ -107,10 +107,15 @@ class ProductProduct(models.Model):
             to_date = fields.Datetime.to_datetime(self.env.context['to_date'])
             domain.append(('create_date', '<=', to_date))
         groups = self.env['stock.valuation.layer'].read_group(domain, ['value:sum', 'quantity:sum'], ['product_id'])
+        products = self.browse()
         for group in groups:
             product = self.browse(group['product_id'][0])
             product.value_svl = group['value']
             product.quantity_svl = group['quantity']
+            products |= product
+        for product in self - products:
+            product.value_svl = 0
+            product.quantity_svl = 0
 
     # -------------------------------------------------------------------------
     # SVL creation helpers
