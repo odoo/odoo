@@ -7,10 +7,15 @@ class TestStockLocationSearch(common.TransactionCase):
     def setUp(self):
         super(TestStockLocationSearch, self).setUp()
         self.location = self.env['stock.location']
-        self.location_barcode = self.env.ref('stock.stock_location_14')
-        self.location_barcode_id = self.location_barcode.id
-        self.barcode = self.location_barcode.barcode
-        self.name = self.location_barcode.name
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.sublocation = self.env['stock.location'].create({
+            'name': 'Shelf 2',
+            'barcode': 1201985,
+            'location_id': self.stock_location.id
+        })
+        self.location_barcode_id = self.sublocation.id
+        self.barcode = self.sublocation.barcode
+        self.name = self.sublocation.name
 
     def test_10_location_search_by_barcode(self):
         """Search stock location by barcode"""
