@@ -254,7 +254,7 @@
             </li>
             <li t-if="slide.channel_id.allow_comment" class="nav-item">
                 <a href="#discuss" aria-controls="discuss" class="nav-link" role="tab" data-toggle="tab">
-                    <i class="fa fa-comments-o"></i> Comments
+                    <i class="fa fa-comments-o"></i> Comments (<span t-esc="slide.comments_count"/>)
                 </a>
             </li>
             <li class="nav-item" t-if="slide.index_content">
@@ -474,9 +474,9 @@
         <div class="form-group">
             <textarea class="form-control slide_embed_code" readonly="readonly" onClick="this.select();"><t t-esc="slide.embed_code"/></textarea>
         </div>
-        <div class="form-group" t-if="slide.slide_type in ('presentation', 'document')">
-            <div class="form-text col-xl-3 col-lg-3 col-md-6 col-6">Select page to start with</div>
-            <div class="input-group col-xl-3 col-lg-3 col-md-6 col-6">
+        <div class="form-group d-flex" t-if="slide.slide_type in ('presentation', 'document')">
+            <div class="form-text p-0 col-xs-5 col-sm-5 col-md-5 col-lg-5">Select page to start with</div>
+            <div class="input-group col-xs-3 col-sm-2 col-md-2 col-lg-3">
                 <input type="number" value="1" class="form-control"/>
             </div>
         </div>
