@@ -52,7 +52,8 @@ class test(models.Model):
     def testme(self):
         recs = self.env['res.partner'].search([])
         t = time.time()
-        recs._read(['name', 'website','ref','country_id'])
+        for partner in recs:
+            partner.name
         return time.time()-t
 
     def testme2(self):

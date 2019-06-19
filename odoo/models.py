@@ -2839,6 +2839,7 @@ Fields:
 
         # DLE P27: `test` test_update_with_id:
         # On the same model, if a read follows a write, we must flush the towrite as `read` fetch from database and overwrites the cache
+        # FP NOTE: we should remove that and, instead do not overwrite existing values in the cache
         self.flush(fields)
 
         field_names = []
@@ -2887,37 +2888,45 @@ Fields:
         query_str = "SELECT %s FROM %s WHERE %s" % (",".join(qual_names), from_clause, where_clause)
 
         # fetch one list of record values per field
-        field_values_list = [[] for name in qual_names]
+        # field_values_list = [[] for name in qual_names]
         param_pos = params.index(param_ids)
+
+        missing = set(self.ids)
+        result = []
         for sub_ids in cr.split_for_in_conditions(self.ids):
             params[param_pos] = tuple(sub_ids)
             cr.execute(query_str, params)
-            for row in cr.fetchall():
-                for values, val in zip(field_values_list, row):
-                    values.append(val)
+            result += cr.fetchall()
 
-        ids = field_values_list.pop(0)
-        fetched = self.browse(ids)
+        fetched = self.browse()
+        if result:
+            cols = zip(*result)
+            ids = next(cols)
+            empty = fetched
+            fetched = self.browse(ids)
+            missing.difference_update(ids)
 
-        if ids:
-            # translate the fields if necessary
-            if context.get('lang'):
-                for field, values in zip(fields_pre, field_values_list):
-                    if not field.inherited and callable(field.translate):
-                        name = field.name
-                        translate = field.get_trans_func(fetched)
-                        for index in range(len(ids)):
-                            values[index] = translate(ids[index], values[index])
+            for field in fields_pre:
+                try:
+                    values = next(cols)
+                except:
+                    import pudb
+                    pudb.set_trace()
+                if context.get('lang') and not field.inherited and callable(field.translate):
+                    translate = field.get_trans_func(fetched)
+                    values = list(values)
+                    for index in range(len(ids)):
+                        values[index] = translate(ids[index], values[index])
 
-            # store result in cache
-            target = self.browse()
-            for field, values in zip(fields_pre, field_values_list):
-                convert = field.convert_to_cache
-                # Note that the target record passed to convert below is empty.
-                # This does not harm in practice, as it is only used in Monetary
-                # fields for rounding the value. As the value comes straight
-                # from the database, it is expected to be rounded already.
-                values = [convert(value, target, validate=False) for value in values]
+                if field._convert_to_cache_read:
+                    # print('convert', field.name)
+                    convert = field.convert_to_cache
+                    values = [convert(value, empty, validate=False) for value in values]
+                else:
+                    # FP Note: optimisation for large dataset: replace this by using a psycopg None extension for those fields
+                    values = [value or False for value in values]
+                # else:
+                #     print('no convert')
                 self.env.cache.update(fetched, field, values)
 
             # determine the fields that must be processed now;
@@ -2926,25 +2935,20 @@ Fields:
                 field = self._fields[name]
                 if not field.column_type:
                     field.read(fetched)
-
-        # Warn about deprecated fields now that fields_pre and fields_post are computed
-        for name in field_names:
-            field = self._fields[name]
-            if field.deprecated:
-                _logger.warning('Field %s is deprecated: %s', field, field.deprecated)
+                if field.deprecated:
+                    _logger.warning('Field %s is deprecated: %s', field, field.deprecated)
 
         # FP NOTE: move this to fields.py__get__, no need to slow down _read; also easier to debug when exceptions are triggered when they happen
         # store failed values in cache for the records that could not be read
-        missing = self - fetched
         if missing:
             extras = fetched - self
             if extras:
                 raise AccessError(
                     _("Database fetch misses ids ({}) and has extra ids ({}), may be caused by a type incoherence in a previous request").format(
-                        missing._ids, extras._ids,
+                        missing, extras._ids,
                     ))
             # mark non-existing records in missing
-            forbidden = missing.exists()
+            forbidden = self.browse(missing).exists()
             if forbidden:
                 exc = self.env['ir.rule']._make_access_error('read', forbidden)
                 self.env.cache.set_failed(forbidden, self._fields.values(), exc)
