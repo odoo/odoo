@@ -601,6 +601,16 @@ class IrTranslation(models.Model):
         return super(IrTranslation, self.sudo()).unlink()
 
     @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+        # DLE P67, `test_new_fields.py`, `test_80_copy`
+        # When assigning a translation to a field
+        # e.g. email.with_context(lang='fr_FR').label = "bonjour"
+        # and then search on translations for this translation, must flush as the translation has not yet been written in database
+        if any(self.env[model]._fields[field].translate for model, ids in self.env.all.towrite.items() for record_id, fields in ids.items() for field in fields):
+            self.flush()
+        return super(IrTranslation, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+
+    @api.model
     def insert_missing(self, field, records):
         """ Insert missing translations for `field` on `records`. """
         records = records.with_context(lang=None)

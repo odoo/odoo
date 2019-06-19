@@ -3359,7 +3359,11 @@ Fields:
                         # DLE P20: By writring field.convert_to_write(field.convert_to_record(field.convert_to_cache(value, record), record), record)
                         # You missed the 2many commands such as [(4, 1), (4, 2)] which were converted to (1, 2), therefore completely replacing
                         # the existing 2many value instead of just adding new ids to it.
-                        env.all.towrite[record._name][record.id][field.name] = value
+                        # DLE P65: Support translations in flush
+                        if field.translate:
+                            env.all.towrite[record._name][record.id].setdefault(field.name, {})[env.context.get('lang')] = value
+                        else:
+                            env.all.towrite[record._name][record.id][field.name] = value
                         # DLE P11: When writing on `child_ids`, must write on `parent_id` of the one2many related records,
                         # Otherwise, as we set in the case the correct value for the inverse field values thanks to the above `if field.relational`,
                         # the above `if env.cache.contains(record, field) and (env.cache.get(record, field) == value):` matches
@@ -5143,16 +5147,32 @@ Fields:
         """
         def process(model, id_vals):
             # group record ids by vals, to update in batch when possible
-            updates = defaultdict(list)
+            updates = defaultdict(lambda: defaultdict(list))
             for rid, vals in id_vals.items():
-                updates[frozendict(vals)].append(rid)
+                # DLE P65: Support translations in flush
+                # e.g assigning with a lang in the context
+                # `email.with_context(lang='fr_FR').label = "bonjour"`
+                # and then flushing without the lang in context
+                # `test_new_fields.py`, `test_80_copy`
+                vals_trans = {}
+                for key, val in dict(vals).items():
+                    if model._fields[key].translate:
+                        for lang, value in val.items():
+                            if lang:
+                                vals_trans.setdefault(lang, {})[key] = vals.pop(key)[lang]
+                            else:
+                                vals[key] = value
+                updates[None][frozendict(vals)].append(rid)
+                for lang, vals in vals_trans.items():
+                    updates[lang][frozendict(vals)].append(rid)
 
-            for vals, ids in updates.items():
-                recs = model.browse(ids)
-                try:
-                    recs._write(vals)
-                except MissingError:
-                    recs.exists()._write(vals)
+            for lang, records in updates.items():
+                for vals, ids in records.items():
+                    recs = model.with_context(lang=lang).browse(ids)
+                    try:
+                        recs._write(vals)
+                    except MissingError:
+                        recs.exists()._write(vals)
 
         if fnames is None:
             # flush everything

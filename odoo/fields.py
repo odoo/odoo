@@ -1055,7 +1055,11 @@ class Field(MetaField('DummyField', (object,), {})):
                 for record in protecteds:
                     record.env.cache.set(record, self, self.convert_to_cache(value, record))
                     if record.id and self.store:
-                        record.env.all.towrite[record._name][record.id][self.name] = write_value
+                        # DLE P65: Support translations in flush
+                        if self.translate:
+                            record.env.all.towrite[record._name][record.id].setdefault(self.name, {})[record.env.context.get('lang')] = write_value
+                        else:
+                            record.env.all.towrite[record._name][record.id][self.name] = write_value
         else:
             records.write({self.name: write_value})
 
