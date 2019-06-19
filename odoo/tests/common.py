@@ -637,12 +637,12 @@ class ChromeBrowser():
         # wait for remaining screenshots
         while self.screenshot_ids:
             self.catch_next_event() 
-        self._websocket_send('Page.stopLoading')
+        self.catch_next_event(ids={self._websocket_send('Page.stopLoading')}, ignore_errors=True)
         self._logger.info('Deleting cookies and clearing local storage')
         self.catch_next_event(ids={self._websocket_send('Network.clearBrowserCookies')}, ignore_errors=True)
         self.catch_next_event(ids={self._websocket_send('Runtime.evaluate', params={'expression': 'localStorage.clear()'})}, ignore_errors=True)
         self.navigate_to('about:blank', wait_stop=True, ignore_errors=True)
-        self._websocket_send('Runtime.DiscardConsoleEntries')
+        self.catch_next_event(ids={self._websocket_send('Runtime.discardConsoleEntries')}, ignore_errors=True)
         self._encode_screencast()
 
     # main loop
