@@ -3302,7 +3302,11 @@ Fields:
                 for record in self:
                     # DLE P46: need to remove the new records from the one2many field cache as they have been created now.
                     # test `test_70_x2many_write`, discussion.very_important_messages |= Message.new({..})
-                    if field.type not in ('one2many', 'many2many') or not record.id:
+                    # DLE P68: `test_10_sellers`, `test_20_sellers_company`, be careful with inherited one2many fields,
+                    # e.g.`product.template` & `product.product` `seller_ids` field
+                    # if the field is not store, the command write will not happen, and in this case we must set the value to cache
+                    # so the modified is triggered for the inherited field
+                    if field.type not in ('one2many', 'many2many') or not field.store or not record.id:
                         cache_value = field.convert_to_cache(value, record)
 
                         # nothing to do, the record already has the newest value
@@ -3347,8 +3351,8 @@ Fields:
                         # DLE P52: needs to filter out after all, because of onchanges, in the below test
                         # test `test_onchange_specific`
                         env.cache.invalidate([(field, record.ids)])
-                    # DLE: What about one2many, many2many commands that are just adding ids to the existing values?
-                    if field.type not in ('one2many', 'many2many') or not record.id:
+                    # DLE P68
+                    if field.type not in ('one2many', 'many2many') or not field.store or not record.id:
                         env.cache.set(record, field, cache_value)
                     # DLE P2: We set the value to write in the cache, but then it can be overwritten by a prefetch when
                     # reading another field of the same model. Writing the towrite sooner, before the computation of modified,
