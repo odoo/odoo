@@ -379,7 +379,10 @@ class Slide(models.Model):
         mail_ids = []
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for record in self:
-            mail_ids.append(self.channel_id.share_template_id.with_context(email=email, base_url=base_url).send_mail(record.id, notif_layout='mail.mail_notification_light'))
+            if self.env.user.has_group('base.group_portal'):
+                mail_ids.append(self.channel_id.share_template_id.with_context(user=self.env.user, email=email, base_url=base_url).sudo().send_mail(record.id, notif_layout='mail.mail_notification_light', email_values={'email_from': self.env['res.company'].catchall or self.env['res.company'].email}))
+            else:
+                mail_ids.append(self.channel_id.share_template_id.with_context(user=self.env.user, email=email, base_url=base_url).send_mail(record.id, notif_layout='mail.mail_notification_light'))
         return mail_ids
 
     def action_like(self):
