@@ -173,7 +173,7 @@ class HolidaysType(models.Model):
                                                 if request.leave_type_request_unit == 'hour'
                                                 else request.number_of_days)
 
-        for allocation in allocations:
+        for allocation in allocations.sudo():
             status_dict = result[allocation.holiday_status_id.id]
             if allocation.state == 'validate':
                 # note: add only validated allocation even for the virtual
