@@ -71,15 +71,6 @@ class DecimalPrecisionFloat(models.AbstractModel):
 
         return super().precision(field, options=options)
 
-class DecimalPrecisionTestModel(models.Model):
-    _name = 'decimal.precision.test'
-    _description = 'Decimal Precision Test'
-
-    float = fields.Float()
-    float_2 = fields.Float(digits=(16, 2))
-    float_4 = fields.Float(digits=(16, 4))
-
-
 # compatibility for decimal_precision.get_precision(): expose the module in addons namespace
 dp = sys.modules['odoo.addons.base.models.decimal_precision']
 odoo.addons.decimal_precision = dp
