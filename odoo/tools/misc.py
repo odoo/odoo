@@ -9,6 +9,7 @@ from functools import wraps
 import babel
 from contextlib import contextmanager
 import datetime
+import math
 import subprocess
 import io
 import os
@@ -43,7 +44,7 @@ except ImportError:
 
 from .config import config
 from .cache import *
-from .parse_version import parse_version 
+from .parse_version import parse_version
 from . import pycompat
 
 import odoo
@@ -144,7 +145,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     """Open a file from the OpenERP root, using a subdir folder.
 
     Example::
-    
+
     >>> file_open('hr/report/timesheer.xsl')
     >>> file_open('addons/hr/report/timesheet.xsl')
 
@@ -290,7 +291,7 @@ def flatten(list):
 
 def reverse_enumerate(l):
     """Like enumerate but in the other direction
-    
+
     Usage::
     >>> a = ['a', 'b', 'c']
     >>> it = reverse_enumerate(a)
@@ -676,10 +677,10 @@ def posix_to_ldml(fmt, locale):
 def split_every(n, iterable, piece_maker=tuple):
     """Splits an iterable into length-n pieces. The last piece will be shorter
        if ``n`` does not evenly divide the iterable length.
-       
+
        :param int n: maximum size of each generated chunk
        :param Iterable iterable: iterable to chunk into pieces
-       :param piece_maker: callable taking an iterable and collecting each 
+       :param piece_maker: callable taking an iterable and collecting each
                            chunk from its slice, *must consume the entire slice*.
     """
     iterator = iter(iterable)
@@ -754,7 +755,7 @@ class unquote(str):
         return self
 
 class UnquoteEvalContext(defaultdict):
-    """Defaultdict-based evaluation context that returns 
+    """Defaultdict-based evaluation context that returns
        an ``unquote`` string for any missing name used during
        the evaluation.
        Mostly useful for evaluating OpenERP domains/contexts that
@@ -1251,6 +1252,19 @@ def format_amount(env, amount, currency, lang_code=False):
         post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=currency.symbol or '')
 
     return u'{pre}{0}{post}'.format(formatted_amount, pre=pre, post=post)
+
+
+def format_duration(value):
+    """ Format a float: used to display integral or fractional values as
+        human-readable time spans (e.g. 1.5 as "01:30").
+    """
+    sign = math.copysign(1.0, value)
+    hours, minutes = divmod(abs(value) * 60, 60)
+    minutes = round(minutes)
+    if minutes == 60:
+        minutes = 0
+        hours += 1
+    return '%02d:%02d' % (sign * hours, minutes)
 
 
 def _consteq(str1, str2):

@@ -281,6 +281,7 @@ class MailTemplate(models.Model):
             'format_date': lambda date, date_format=False, lang_code=False: format_date(self.env, date, date_format, lang_code),
             'format_datetime': lambda dt, tz=False, dt_format=False, lang_code=False: format_datetime(self.env, dt, tz, dt_format, lang_code),
             'format_amount': lambda amount, currency, lang_code=False: tools.format_amount(self.env, amount, currency, lang_code),
+            'format_duration': lambda value: tools.format_duration(value),
             'user': self.env.user,
             'ctx': self._context,  # context kw would clash with mako internals
         }
