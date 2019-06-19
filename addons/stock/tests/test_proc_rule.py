@@ -9,6 +9,16 @@ from odoo.tools import mute_logger
 
 class TestProcRule(TransactionCase):
 
+    def setUp(self):
+        super(TestProcRule, self).setUp()
+
+        self.uom_unit = self.env.ref('uom.product_uom_unit')
+        self.product = self.env['product.product'].create({
+            'name': 'Desk Combination',
+            'type': 'consu',
+        })
+        self.partner = self.env['res.partner'].create({'name': 'Partner'})
+
     def test_proc_rule(self):
         # Create a product route containing a stock rule that will
         # generate a move from Stock for every procurement created in Output
@@ -25,14 +35,14 @@ class TestProcRule(TransactionCase):
         })
 
         # Set this route on `product.product_product_3`
-        self.env.ref('product.product_product_3').write({
+        self.product.write({
             'route_ids': [(4, product_route.id)]})
 
         # Create Delivery Order of 10 `product.product_product_3` from Output -> Customer
-        product = self.env.ref('product.product_product_3')
+        product = self.product
         vals = {
             'name': 'Delivery order for procurement',
-            'partner_id': self.ref('base.res_partner_2'),
+            'partner_id': self.partner.id,
             'picking_type_id': self.ref('stock.picking_type_out'),
             'location_id': self.ref('stock.stock_location_output'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
@@ -60,7 +70,7 @@ class TestProcRule(TransactionCase):
 
         # Check that a picking was created from stock to output.
         moves = self.env['stock.move'].search([
-            ('product_id', '=', self.ref('product.product_product_3')),
+            ('product_id', '=', self.product.id),
             ('location_id', '=', self.ref('stock.stock_location_stock')),
             ('location_dest_id', '=', self.ref('stock.stock_location_output')),
             ('move_dest_ids', 'in', [pick_output.move_lines[0].id])
@@ -70,16 +80,16 @@ class TestProcRule(TransactionCase):
     def test_rule_propagate_1(self):
         move_dest = self.env['stock.move'].create({
             'name': 'move_dest',
-            'product_id': self.ref('product.product_product_3'),
-            'product_uom': self.ref('uom.product_uom_unit'),
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
             'location_id': self.ref('stock.stock_location_output'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
         })
 
         move_orig = self.env['stock.move'].create({
             'name': 'move_orig',
-            'product_id': self.ref('product.product_product_3'),
-            'product_uom': self.ref('uom.product_uom_unit'),
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
             'move_dest_ids': [(4, move_dest.id)],
             'propagate_date': True,
             'propagate_date_minimum_delta': 5,
@@ -102,16 +112,16 @@ class TestProcRule(TransactionCase):
     def test_rule_propagate_2(self):
         move_dest = self.env['stock.move'].create({
             'name': 'move_dest',
-            'product_id': self.ref('product.product_product_3'),
-            'product_uom': self.ref('uom.product_uom_unit'),
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
             'location_id': self.ref('stock.stock_location_output'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
         })
 
         move_orig = self.env['stock.move'].create({
             'name': 'move_orig',
-            'product_id': self.ref('product.product_product_3'),
-            'product_uom': self.ref('uom.product_uom_unit'),
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
             'move_dest_ids': [(4, move_dest.id)],
             'propagate_date': False,
             'propagate_date_minimum_delta': 5,
@@ -132,16 +142,16 @@ class TestProcRule(TransactionCase):
     def test_rule_propagate_3(self):
         move_dest = self.env['stock.move'].create({
             'name': 'move_dest',
-            'product_id': self.ref('product.product_product_3'),
-            'product_uom': self.ref('uom.product_uom_unit'),
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
             'location_id': self.ref('stock.stock_location_output'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
         })
 
         move_orig = self.env['stock.move'].create({
             'name': 'move_orig',
-            'product_id': self.ref('product.product_product_3'),
-            'product_uom': self.ref('uom.product_uom_unit'),
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
             'move_dest_ids': [(4, move_dest.id)],
             'propagate_date': True,
             'propagate_date_minimum_delta': 5,
