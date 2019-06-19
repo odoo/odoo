@@ -46,7 +46,7 @@
 
     <record id="tax_report_bemess_vorst_rechnungen_10" model="account.tax.report.line">
         <field name="name">zum Steuersatz von 10 %</field>
-        <field name="tag_name">zum Steuersatz von 10 %</field>
+        <field name="tag_name">zum Steuersatz von 10 % (Rechnungen von anderen Unternehmern und innergemeinschaftliche Dreiecksgeschäfte)</field>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="tax_report_bemess_vorst_rechnungen"/>
         <field name="country_id" ref="base.at"/>
@@ -54,7 +54,7 @@
 
     <record id="tax_report_bemess_vorst_rechnungen_20" model="account.tax.report.line">
         <field name="name">zum Steuersatz von 20 %</field>
-        <field name="tag_name">zum Steuersatz von 20 %</field>
+        <field name="tag_name">zum Steuersatz von 20 % (Rechnungen von anderen Unternehmern und innergemeinschaftliche Dreiecksgeschäfte)</field>
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="tax_report_bemess_vorst_rechnungen"/>
         <field name="country_id" ref="base.at"/>
@@ -134,7 +134,7 @@
 
     <record id="tax_report_ust_steuern_lief_steu_20" model="account.tax.report.line">
         <field name="name">zum Steuersatz von 20 %</field>
-        <field name="tag_name">zum Steuersatz von 20 %</field>
+        <field name="tag_name">zum Steuersatz von 20 % (Lieferungen, sonstige Leistungen und Eigenverbrauch - Steuerpflichtige Umsätze)</field>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="tax_report_ust_steuern_lief_steu"/>
         <field name="country_id" ref="base.at"/>
@@ -142,7 +142,7 @@
 
     <record id="tax_report_ust_steuern_lief_steu_10" model="account.tax.report.line">
         <field name="name">zum Steuersatz von 10%</field>
-        <field name="tag_name">zum Steuersatz von 10%</field>
+        <field name="tag_name">zum Steuersatz von 10% (Lieferungen, sonstige Leistungen und Eigenverbrauch - Steuerpflichtige Umsätze)</field>
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="tax_report_ust_steuern_lief_steu"/>
         <field name="country_id" ref="base.at"/>
@@ -164,7 +164,7 @@
 
     <record id="tax_report_ust_steuern_innergemeinschaft_steu_20" model="account.tax.report.line">
         <field name="name">zum Steuersatz von 20 %</field>
-        <field name="tag_name">zum Steuersatz von 20 %</field>
+        <field name="tag_name">zum Steuersatz von 20 % (Innergemeinschaftliche Erwerbe - Steuerpflichtige Umsätze)</field>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="tax_report_ust_steuern_innergemeinschaft_steu"/>
         <field name="country_id" ref="base.at"/>
@@ -180,7 +180,7 @@
 
     <record id="tax_report_ust_steuern_innergemeinschaft_steu_10" model="account.tax.report.line">
         <field name="name">zum Steuersatz von 10 %</field>
-        <field name="tag_name">zum Steuersatz von 10 %</field>
+        <field name="tag_name">zum Steuersatz von 10 % (Innergemeinschaftliche Erwerbe - Steuerpflichtige Umsätze)</field>
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="tax_report_ust_steuern_innergemeinschaft_steu"/>
         <field name="country_id" ref="base.at"/>
