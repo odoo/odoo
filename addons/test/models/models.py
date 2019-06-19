@@ -50,8 +50,9 @@ class test(models.Model):
             record.int1 = record.intx2 // 2
 
     def testme(self):
+        recs = self.env['res.partner'].search([])
         t = time.time()
-        self.env['res.partner'].search([])._read(['name', 'website','ref','country_id'])
+        recs._read(['name', 'website','ref','country_id'])
         return time.time()-t
 
     def testme2(self):
