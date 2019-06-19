@@ -113,6 +113,7 @@ var AbstractView = Factory.extend({
         this.fields = this.fieldsView.viewFields;
         this.userContext = params.userContext || {};
         this.withControlPanel = this.withControlPanel && params.withControlPanel;
+        this.withSearchPanel = !params.disableSearchPanel;
 
         // the boolean parameter 'isEmbedded' determines if the view should be
         // considered as a subview. For now this is only used by the graph
@@ -124,6 +125,7 @@ var AbstractView = Factory.extend({
             arch: this.arch,
             isEmbedded: isEmbedded,
             noContentHelp: params.noContentHelp,
+            withSearchPanel: this.withSearchPanel,
         };
 
         this.controllerParams = {
@@ -259,9 +261,10 @@ var AbstractView = Factory.extend({
             self.controllerParams.controlPanel = controlPanel;
             return controlPanel.appendTo(document.createDocumentFragment()).then(function () {
                 self._updateMVCParams(controlPanel.getSearchQuery());
-                var searchPanelParams = self.config.SearchPanel.prototype.computeSearchPanelParams(self.loadParams, self.controlPanelParams.viewInfo);
+                var searchPanelParams = self.withSearchPanel ? self.config.SearchPanel.prototype.computeSearchPanelParams(self.loadParams, self.controlPanelParams.viewInfo) : false;
                 if (searchPanelParams) {
                     self.hasSearchPanel = true;
+                    self.rendererParams.withSearchPanel = self.hasSearchPanel;
                     return self._createSearchPanel(parent, searchPanelParams).then(function () {
                         return controlPanel;
                     });
@@ -275,7 +278,7 @@ var AbstractView = Factory.extend({
      * @param {Widget} parent
      * @returns {Promise} resolved when the searchPanel is ready
      */
-    _createSearchPanel: function (parent, params) {
+    _createSearchPanel: function (parent, searchPanelSections) {
         var self = this;
         var defaultValues = {};
         Object.keys(this.loadParams.context).forEach(function (key) {
@@ -290,7 +293,7 @@ var AbstractView = Factory.extend({
             fields: this.fields,
             model: this.loadParams.modelName,
             searchDomain: controlPanelDomain,
-            sections: params.searchPanelSections,
+            sections: searchPanelSections,
         });
         this.controllerParams.searchPanel = searchPanel;
         this.controllerParams.controlPanelDomain = controlPanelDomain;

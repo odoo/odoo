@@ -620,11 +620,11 @@ var SearchPanel = Widget.extend({
      * @classmethod
      * @params {Object} loadParams: the controller's loadParams
      * @params {Object} viewInfo: the viewInfo of the searchView
-     *
+     * @returns {Object || false}
      */
     computeSearchPanelParams: function (loadParams, viewInfo) {
         var cls = this || SearchPanel;
-        var spParams;
+        var searchPanelSections;
         if (viewInfo) {
             viewInfo = _.extend({}, viewInfo);
             if (typeof viewInfo.arch === 'string') {
@@ -636,17 +636,15 @@ var SearchPanel = Widget.extend({
                 if (node.tag === 'searchpanel') {
                     var AllowedViewTypes = node.attrs.view_types ? node.attrs.view_types.split(',') : cls.view_types;
                     if (AllowedViewTypes.indexOf(viewTypeLoad) === -1) {
-                        spParams = false;
+                        searchPanelSections = false;
                         return;
                     }
-                    spParams = viewInfo;
-                    viewInfo.searchPanelSections = cls._processSearchPanelNode(node, viewInfo);
+                    searchPanelSections = cls._processSearchPanelNode(node, viewInfo);
                     return;
                 }
             });
-            return spParams.searchPanelSections ? spParams : false;
         }
-        return false;
+        return searchPanelSections;
     }
 });
 
