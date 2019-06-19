@@ -665,7 +665,7 @@ class ChromeBrowser():
                 return True
 
             # Javascript Traceback
-        elif res.get('method') == 'Runtime.exceptionThrown' and not ignore_errors:
+            elif res.get('method') == 'Runtime.exceptionThrown' and not ignore_errors:
                 exception_details = '\n'.join([ '%s: %s' % (x,y) for x,y in res.get('params', {}).get('exceptionDetails', {}).items()])
                 self._logger.info(exception_details)
                 raise ChromeJavascriptException("Javascript Traceback: %s" % exception_details)
