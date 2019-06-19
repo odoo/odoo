@@ -61,10 +61,7 @@
                     <sheet>
                         <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" name="website_publish_button"
-                                type="object" icon="fa-globe">
-                                <field name="is_published" widget="website_button"/>
-                            </button>
+                            <field name="is_published" widget="website_redirect_button"/>
                         </div>
                         <group name="blog_details">
                             <field name="blog_id"/>
@@ -260,7 +257,7 @@
         <menuitem name="Blogs"
             id="menu_website_blog_root_global"
             sequence="100"
-            parent="website.menu_website_global_configuration" 
+            parent="website.menu_website_global_configuration"
             groups="website.group_website_designer"/>
 
         <menuitem id="menu_website_blog_tag_category_global" parent="menu_website_blog_root_global"

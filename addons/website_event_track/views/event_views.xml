@@ -23,7 +23,7 @@
             <field name="inherit_id" ref="website_event.event_event_view_form_inherit_website"/>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
-                <button name="website_publish_button" position="before">
+                <field name="is_published" position="before">
                     <button name="%(action_event_track_from_event)d"
                             type="action"
                             class="oe_stat_button"
@@ -36,7 +36,7 @@
                             icon="fa-users">
                         <field name="sponsor_count" string="Sponsors" widget="statinfo"/>
                     </button>
-                </button>
+                </field>
                 <label for="website_menu" position="after">
                     <field name="website_track" attrs="{'invisible': [('website_menu', '=', False)]}"/>
                     <label for="website_track" string="Tracks on Website" attrs="{'invisible': [('website_menu', '=', False)]}"/>
