@@ -86,6 +86,12 @@ class test_ir_http_mimetype(common.TransactionCase):
             'id': attachment.id,
             'default_mimetype': 'image/gif',
         }
+        # DLE P69: `test_ir_http_attachment_access`
+        # `binary_content` relies on the `__last_update` to determine if a user has the read access to an attachment.
+        # as the attachment has just been created above as sudo, the data is in cache and if we don't remove it the below
+        # `test_access` wont have to fetch it and therefore wont raise the accesserror as its already in the cache
+        # `__last_update` must be removed from the cache when `test_access` is called, which happens and recompute the todos
+        attachment.recompute()
 
         def test_access(**kwargs):
             status, _, _ = self.env['ir.http'].with_user(public_user).binary_content(

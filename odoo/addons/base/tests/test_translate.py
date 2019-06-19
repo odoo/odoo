@@ -340,6 +340,12 @@ class TestXMLTranslation(TransactionCase):
             'model': 'res.partner',
             'arch': archf % terms,
         })
+        # DLE P70: `_sync_terms_translations`, which delete translations for which there is no value, is called sooner than before
+        # because it's called in `_write`, which is called by `flush`, which is called by the `search`.
+        # `arch_db` is in `_write` instead of `create` because `arch_db` is the inverse of `arch`.
+        # We need to flush `arch_db` before creating the translations otherwise the translation for which there is no value will be deleted,
+        # while the `test_sync_update` specifically needs empty translations
+        view.flush()
         for lang, trans_terms in kwargs.items():
             for src, val in zip(terms, trans_terms):
                 self.env['ir.translation'].create({
