@@ -2898,11 +2898,10 @@ Fields:
             cr.execute(query_str, params)
             result += cr.fetchall()
 
-        fetched = self.browse()
+        empty = self.browse()
         if result:
             cols = zip(*result)
             ids = next(cols)
-            empty = fetched
             fetched = self.browse(ids)
             missing.difference_update(ids)
 
@@ -2918,7 +2917,7 @@ Fields:
                     convert = field.convert_to_cache
                     values = [convert(value, empty, validate=False) for value in values]
                 else:
-                    # FP Note: optimisation for large dataset: replace this by using a psycopg None extension for those fields
+                    # FP Note: optimisation to test for large dataset: replace this by using a psycopg None extension for those fields
                     values = [value or False for value in values]
                 # else:
                 #     print('no convert')
