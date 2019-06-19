@@ -17,23 +17,11 @@
     </div>
 
     <t t-extend="DashboardMain">
-        <t t-jquery=".o_web_settings_dashboard_apps" t-operation="after">
-            <div class="o_web_settings_dashboard_iap"></div>
+        <t t-jquery=".o_web_settings_apps" t-operation="after">
+            <div class="o_web_settings_iap"></div>
         </t>
     </t>
-
-    <t t-name="iap.web_settings_dashboard_iap">
-        <div class="text-center o_web_settings_dashboard_iap mt8">
-            <img class="col-5" src="/iap/static/src/img/iap_logo.svg"/>
-            <div class="o_web_settings_dashboard_header mt8">
-                In-App Purchases
-            </div>
-            <div class="mt16">
-                <a t-att-href="widget.data.url" role="button" class="btn btn-primary btn-block o_go_to_portal"><strong>Go to My Portal</strong></a>
-            </div>
-        </div>
-    </t>
-
+    
     <div t-name="iap.buy_more_credits" class="mt-2 row">
         <div class="col-sm">
             <button class="btn btn-link buy_credits"><i class="fa fa-arrow-right"/> Buy credits</button>

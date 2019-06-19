@@ -214,7 +214,27 @@
               </p>
             </field>
         </record>
-        <menuitem id="menu_module_tree" parent="menu_management" name="Apps" sequence="5" action="open_module_tree" />
+
+        <!--top menu -->
+        <menuitem id="menu_apps" name="Apps" parent="menu_management" sequence="5"/>
+
+        <!--submenu -->
+        <menuitem id="menu_module_tree" parent="menu_apps" name="Main Apps" sequence="5" action="open_module_tree" />
+
+        <menuitem id="theme_store" parent="menu_apps" name="Theme Store" sequence="15"/>
+
+        <!--link to stores-->
+        <record model='ir.actions.act_url' id='action_third_party'>
+            <field name='name'>Third-Party Apps</field>
+            <field name='url'>https://www.odoo.com/apps/modules</field>
+        </record>
+        <menuitem id="menu_third_party" parent="menu_apps" name="Third-Party Apps" sequence="20" action="action_third_party"/>
+
+        <record model='ir.actions.act_url' id='action_theme_store'>
+            <field name='name'>Theme Store</field>
+            <field name='url'>https://www.odoo.com/apps/themes</field>
+        </record>
+        <menuitem id="menu_theme_store" parent="menu_apps" name="Theme Store" sequence="10" action="action_theme_store"/>
 
 
         <!-- Apps modules -->
