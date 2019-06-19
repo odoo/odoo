@@ -472,14 +472,14 @@ class ChromeBrowser():
     def stop(self):
         if self.chrome_process is not None:
             self._logger.info("Closing chrome headless with pid %s", self.chrome_process.pid)
-            self._websocket_send('Browser.close')
+            self.catch_next_event(ids={self._websocket_send('Browser.close')}, ignore_errors=True)
             if self.chrome_process.poll() is None:
                 self._logger.info("Terminating chrome headless with pid %s", self.chrome_process.pid)
                 self.chrome_process.terminate()
                 self.chrome_process.wait()
         if self.user_data_dir and os.path.isdir(self.user_data_dir) and self.user_data_dir != '/':
             self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
-            shutil.rmtree(self.user_data_dir)
+            shutil.rmtree(self.user_data_dir, ignore_errors=True)
         # Restore previous signal handler
         if self.sigxcpu_handler and os.name == 'posix':
             signal.signal(signal.SIGXCPU, self.sigxcpu_handler)
@@ -632,17 +632,19 @@ class ChromeBrowser():
             for f in glob.glob('%s_frame_*' % self.screencast_path):
                 os.remove(f)
 
-    def clear(self):
-        self._websocket_send('Page.stopScreencast')
-        # wait for remaining screenshots
-        while self.screenshot_ids:
-            self.catch_next_event() 
-        self.catch_next_event(ids={self._websocket_send('Page.stopLoading')}, ignore_errors=True)
+    def init_page(self):
+        self.catch_next_event(ids={self._websocket_send('Runtime.discardConsoleEntries')}, ignore_errors=True)
         self._logger.info('Deleting cookies and clearing local storage')
         self.catch_next_event(ids={self._websocket_send('Network.clearBrowserCookies')}, ignore_errors=True)
         self.catch_next_event(ids={self._websocket_send('Runtime.evaluate', params={'expression': 'localStorage.clear()'})}, ignore_errors=True)
         self.navigate_to('about:blank', wait_stop=True, ignore_errors=True)
-        self.catch_next_event(ids={self._websocket_send('Runtime.discardConsoleEntries')}, ignore_errors=True)
+        
+    def clear(self):
+        self._websocket_send('Page.stopScreencast')
+        # wait for remaining screenshots
+        while self.screenshot_ids:
+            self.catch_next_event()
+        self.catch_next_event(ids={self._websocket_send('Page.stopLoading')}, ignore_errors=True)
         self._encode_screencast()
 
     # main loop
@@ -730,6 +732,7 @@ class HttpCase(TransactionCase):
         # start browser on demand
         if cls.browser is None:
             cls.browser = ChromeBrowser(logger, size, screencast_path, screenshot_path)
+        cls.browser.init_page()
 
     @classmethod
     def tearDownClass(cls):
