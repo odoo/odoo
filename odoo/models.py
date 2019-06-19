@@ -2703,7 +2703,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for fname, field in self._fields.items():
             if allfields and fname not in allfields:
                 continue
-            if field.groups and not self.user_has_groups(field.groups):
+            if field.groups and not self.env.su and not self.user_has_groups(field.groups):
                 continue
 
             description = field.get_description(self.env)

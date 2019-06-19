@@ -524,6 +524,8 @@ class HolidaysAllocation(models.Model):
 
     def _check_approval_update(self, state):
         """ Check if target state is achievable. """
+        if self.env.is_superuser():
+            return
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         if not current_employee:
             return

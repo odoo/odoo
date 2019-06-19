@@ -2189,7 +2189,7 @@ class MailThread(models.AbstractModel):
         if msg_vals.get('tracking_value_ids', True) if msg_vals else bool(self): # could be tracking
             for tracking_value in self.env['mail.tracking.value'].sudo().search([('mail_message_id', '=', message.id)]):
                 groups = tracking_value.field_groups
-                if not groups or self.user_has_groups(groups):
+                if not groups or self.env.is_superuser() or self.user_has_groups(groups):
                     tracking.append((tracking_value.field_desc,
                                     tracking_value.get_old_display_value()[0],
                                     tracking_value.get_new_display_value()[0]))
