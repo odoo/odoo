@@ -6,6 +6,11 @@ from odoo.exceptions import AccessError
 
 
 class TestWarehouse(TestStockCommon):
+
+    def setUp(self):
+        super(TestWarehouse, self).setUp()
+        self.partner = self.env['res.partner'].create({'name': 'Deco Addict'})
+
     def test_inventory_product(self):
         self.product_1.type = 'product'
         product_1_quant = self.env['stock.quant'].with_context(inventory_mode=True).create({
@@ -90,7 +95,7 @@ class TestWarehouse(TestStockCommon):
         product = self.product_3.with_user(self.user_stock_manager)
         product.type = 'product'
         picking_out = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': self.warehouse_1.lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
@@ -151,7 +156,7 @@ class TestWarehouse(TestStockCommon):
 
         # Create a picking out and force availability
         picking_out = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
@@ -194,7 +199,7 @@ class TestWarehouse(TestStockCommon):
 
         # Create a picking out and force availability
         picking_out = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
@@ -279,7 +284,7 @@ class TestWarehouse(TestStockCommon):
         })
 
         picking_out = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': warehouse_shop.lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
@@ -359,7 +364,7 @@ class TestWarehouse(TestStockCommon):
         # Create the move for the shop Namur. Should create a resupply from
         # distribution warehouse Namur.
         picking_out_namur = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': warehouse_shop_namur.lot_stock_id.id,
             'location_dest_id': customer_location.id,
@@ -403,7 +408,7 @@ class TestWarehouse(TestStockCommon):
         # Create the move for the shop Wavre. Should create a resupply from
         # distribution warehouse Wavre.
         picking_out_wavre = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': warehouse_shop_wavre.lot_stock_id.id,
             'location_dest_id': customer_location.id,
