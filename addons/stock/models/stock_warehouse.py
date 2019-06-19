@@ -679,7 +679,7 @@ class Warehouse(models.Model):
             route_rule_values.update(values or {})
             rules_list.append(route_rule_values)
             first_rule = False
-        if values.get('propagate_cancel') and rules_list:
+        if values and values.get('propagate_cancel') and rules_list:
             # In case of rules chain with cancel propagation set, we need to stop
             # the cancellation for the last step in order to avoid cancelling
             # any other move after the chain.
