@@ -45,13 +45,23 @@
     </t>
 
     <t t-name="slide.slide.quiz.validation">
-        <div t-if="widget.readonly" class="alert alert-info">
-            <b>Join course to take quiz</b>
-            <span class="my-0 h4" style="line-height: 1">
-                <span title="Succeed and gain karma" aria-label="Succeed and gain karma" class="badge badge-pill badge-warning text-white font-weight-bold ml-3 px-2 py-1">
-                    + <t t-esc="widget.quiz.quizKarmaGain"/> XP
+        <div t-if="widget.readonly" class="alert alert-info d-flex align-items-center">
+            <div class="col-md-9">
+                <b>Join course to take quiz</b>
+                <span class="my-0 h4" style="line-height: 1">
+                    <span title="Succeed and gain karma" aria-label="Succeed and gain karma" class="badge badge-pill badge-warning text-white font-weight-bold ml-3 px-2 py-1">
+                        + <t t-esc="widget.quiz.quizKarmaGain"/> XP
+                    </span>
                 </span>
-            </span>
+            </div>
+            <div class="col-md-3">
+                <a role="button"
+                    class="btn btn-primary btn-block o_wslides_js_course_join_link text-white align-items-center"
+                    title="Start Course" aria-label="Start Course Channel"
+                    t-att-href="widget.slide.channelUrl">
+                    <span class="cta-title text_small_caps">Join Course</span>
+                </a>
+            </div>
         </div>
         <div t-else="" class="d-flex align-items-center justify-content-between">
             <div t-att-class="'d-flex align-items-center' + (widget.slide.completed ? ' alert alert-success my-0 py-1 px-3' : '')">
