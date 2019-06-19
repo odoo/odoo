@@ -1814,17 +1814,8 @@ class TestSinglePicking(TestStockCommon):
 class TestStockUOM(TestStockCommon):
     def setUp(self):
         super(TestStockUOM, self).setUp()
-        self.setUpCache()
-
-    def setUpCache(self):
         dp = self.env.ref('product.decimal_product_uom')
         dp.digits = 7
-
-        # Trick: invoke the method 'precision_get' with the current environment.
-        # This fills in the cache of the method with the right value. If we
-        # don't do that, the registry will access the corresponding precision
-        # with a new cursor (LazyCursor), and get a different value!
-        self.assertEqual(dp.precision_get(dp.name), 7)
 
     def test_pickings_transfer_with_different_uom_and_back_orders(self):
         """ Picking transfer with diffrent unit of meassure. """
@@ -1851,9 +1842,6 @@ class TestStockUOM(TestStockCommon):
             'uom_po_id': T_LBS.id,
             'tracking': 'lot',
         })
-
-        # creating a variant invalidates the cache
-        self.setUpCache()
 
         picking_in = self.env['stock.picking'].create({
             'partner_id': self.partner_delta_id,
