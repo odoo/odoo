@@ -222,10 +222,10 @@ class ResUsers(models.Model):
             template.send_mail(user, notif_layout='mail.mail_notification_light', force_send=False)
 
     @api.model
-    def web_dashboard_create_users(self, emails):
+    def web_create_users(self, emails):
         inactive_users = self.search([('state', '=', 'new'), '|', ('login', 'in', emails), ('email', 'in', emails)])
         new_emails = set(emails) - set(inactive_users.mapped('email'))
-        res = super(ResUsers, self).web_dashboard_create_users(list(new_emails))
+        res = super(ResUsers, self).web_create_users(list(new_emails))
         if inactive_users:
             inactive_users.with_context(create_user=True).action_reset_password()
         return res

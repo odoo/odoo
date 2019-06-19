@@ -82,7 +82,7 @@ tour.register('crm_tour', {
     position: "bottom",
     edition: 'enterprise'
 }, {
-    trigger: ".o_web_settings_dashboard .o_user_emails",
+    trigger: "div#invite_users .o_user_emails",
     content: _t("<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"),
     position: "right"
 }, tour.STEPS.TOGGLE_HOME_MENU, tour.STEPS.SHOW_APPS_MENU_ITEM, {

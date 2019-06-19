@@ -9,12 +9,13 @@
     'description': """
 This module provides standard tools (account model, context manager and helpers) to support In-App purchases inside Odoo.
 """,
-    'depends': ['web', 'web_settings_dashboard'],
+    'depends': ['web', 'base_setup'],
     'data': [
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'views/assets.xml',
         'views/iap_views.xml',
+        'views/res_config_settings.xml',
     ],
     'images': [
         'static/src/img/iap_logo.svg',
