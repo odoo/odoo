@@ -403,7 +403,7 @@
                                 <t t-foreach="ranks" t-as="rank">
                                     <li t-attf-class="list-group-item">
                                         <div class="media align-items-center">
-                                            <img height="40" t-attf-src="/web/image/gamification.karma.rank/#{rank.id}/image" class="mr-2" alt="Rank badge"/>
+                                            <img width="40" t-attf-src="/web/image/gamification.karma.rank/#{rank.id}/image" class="mr-2" alt="Rank badge"/>
                                             <div class="media-body">
                                                 <h5 class="mt-0 mb-0" t-field="rank.name"/>
                                                 <span class="badge badge-success"><span t-field="rank.karma_min"/></span> point<span t-if="rank.karma_min">s</span>
