@@ -1076,8 +1076,8 @@ Possible children of the view element are:
     the progressbar
 
   ``colors`` (required)
-    JSON mapping the above field values to either "danger", "warning" or
-    "success" colors
+    JSON mapping the above field values to either "danger", "warning", "success"
+    or "muted" colors
 
   ``sum_field`` (optional)
     the name of the field whose column's records' values will be summed and
