@@ -3282,20 +3282,25 @@ Fields:
             if not(self.env.uid == SUPERUSER_ID and not self.pool.ready):
                 bad_names.update(LOG_ACCESS_COLUMNS)
 
+        # DLE P34
+        determine_inverses = {}
+        records_to_inverse = {}
+        protected = set()
+        for fname in vals:
+            field = self._fields[fname]
+            if field.inverse:
+                determine_inverses.setdefault(field.inverse, []).append(field)
+                records_to_inverse[field] = self - env.protected(field)
+            protected.update(self._field_computed.get(field, [field]))
+
         # protect fields being written against recomputation
-        protected = [self._fields[fname] for fname in vals if fname in self._fields]
         with env.protecting(protected, self):
-            # DLE P34
-            determine_inverses = {}
             # DLE P39: for monetary field, their related currency field must be cached before the amount so it can be rounded correctly
             # test `test_20_monetary`
             for fname, value in self._sort_values(vals):
                 if fname in bad_names:
                     continue
                 field = self._fields.get(fname)
-                # DLE P34
-                if field.inverse:
-                    determine_inverses.setdefault(field.inverse, []).append(field)
                 # DLE P59: `test_write_base_one2many` `test_performance.py`
                 # Write x2many inverses at the same time
                 toflush = False
@@ -3401,8 +3406,7 @@ Fields:
                     self.flush([fname])
 
             # DLE P34
-            determine_inverses = determine_inverses.values()
-            inverse_fields = [f.name for g in determine_inverses for f in g]
+            inverse_fields = [f.name for fs in determine_inverses.values() for f in fs]
 
             # DLE P36: `test_40_new`, ask RCO if there is not a better way to filter out new records.
             to_validate = self.filtered('id')
@@ -3418,10 +3422,11 @@ Fields:
 
             # DLE P34: Batch process inverse fields
             # test `test_13_inverse`
-            for fields in determine_inverses:
-                for record in self:
+            for fields in determine_inverses.values():
+                # inverse records that are not being computed
+                for record in records_to_inverse[fields[0]]:
                     try:
-                        fields[0].determine_inverse(self)
+                        fields[0].determine_inverse(record)
                     except AccessError as e:
                         # DLE P32: test `test_feedback.py`, `test_local`: When attempting to write on an inherited field,
                         # the exception raised must be the one below, for a clearer explanation for the user.

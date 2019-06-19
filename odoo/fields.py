@@ -1086,13 +1086,11 @@ class Field(MetaField('DummyField', (object,), {})):
     def determine_inverse(self, records):
         """ Given the value of ``self`` on ``records``, inverse the computation. """
         # DLE P38: `test_13_inverse`
-        fields = records._field_computed[self]
-        # if we are in the inverse of a field, don't call its compute
-        with records.env.protecting(fields, records):
-            if isinstance(self.inverse, str):
-                getattr(records, self.inverse)()
-            else:
-                self.inverse(records)
+        # RCO: the fields are already protected by 'create' and 'write'
+        if isinstance(self.inverse, str):
+            getattr(records, self.inverse)()
+        else:
+            self.inverse(records)
 
     def determine_domain(self, records, operator, value):
         """ Return a domain representing a condition on ``self``. """
