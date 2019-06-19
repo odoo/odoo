@@ -180,6 +180,10 @@ class Groups(models.Model):
         self.env['res.users'].has_group.clear_cache(self.env['res.users'])
         return super(Groups, self).write(vals)
 
+    def unlink(self):
+        if self.mapped('rule_groups'):
+            raise UserError(_('Please deactivate or delete linked record rules before deleting their group.'))
+        return super().unlink()
 
 class ResUsersLog(models.Model):
     _name = 'res.users.log'
