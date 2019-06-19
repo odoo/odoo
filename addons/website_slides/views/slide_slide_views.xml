@@ -42,10 +42,8 @@
                     <sheet>
                         <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" name="website_publish_button"
-                                    type="object" icon="fa-globe" attrs="{'invisible': [('is_category', '=', True)]}">
-                                <field name="is_published" widget="website_button"/>
-                            </button>
+                            <field name="is_published" widget="website_redirect_button"
+                                   attrs="{'invisible': [('is_category', '=', True)]}"/>
                         </div>
                         <field name="image_1920" widget="image" class="oe_avatar" options='{"preview_image": "image_256"}'
                             attrs="{'readonly': [('slide_type', 'in', ('document', 'presentation', 'video'))], 'invisible': [('is_category', '=', True)]}"

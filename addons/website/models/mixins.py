@@ -132,11 +132,6 @@ class WebsitePublishedMixin(models.AbstractModel):
 
     def website_publish_button(self):
         self.ensure_one()
-        if self.env.user.has_group('website.group_website_publisher') and self.website_url != '#':
-            # Force website to land on record's website to publish/unpublish it
-            if 'website_id' in self and self.env.user.has_group('website.group_multi_website'):
-                self.website_id._force()
-            return self.open_website_url()
         return self.write({'website_published': not self.website_published})
 
     def open_website_url(self):
