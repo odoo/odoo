@@ -293,6 +293,10 @@ class WebRequest(object):
         if self._cr:
             try:
                 if exc_type is None and not self._failed:
+                    # DLE NOTE: Something was planned to flush the remaining at the end of the transaction?
+                    # Because it did not look like to be the case so I did this in the mean time.
+                    # Without this, it was possible to validate the invoice, but then the state 'open' was not finally written
+                    self.env.user.flush()
                     self._cr.commit()
                     if self.registry:
                         self.registry.signal_changes()
