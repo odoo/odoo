@@ -779,7 +779,7 @@ class Meeting(models.Model):
     stop_datetime = fields.Datetime('End Datetime', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, tracking=True)  # old date_deadline
     event_tz = fields.Selection('_event_tz_get', string='Timezone', default=lambda self: self.env.context.get('tz') or self.user_id.tz)
     # DLE P30: Despite the fact duration is not marked as a compute field, it is written within the method `_compute_dates`
-    duration = fields.Float('Duration', states={'done': [('readonly', True)]}, compute='_compute_dates', inverse='_inverse_dates', store=True)
+    duration = fields.Float('Duration', states={'done': [('readonly', True)]}, compute='_compute_dates', store=True)
     description = fields.Text('Description', states={'done': [('readonly', True)]})
     privacy = fields.Selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', default='public', states={'done': [('readonly', True)]}, oldname="class")
     location = fields.Char('Location', states={'done': [('readonly', True)]}, tracking=True, help="Location of Event")

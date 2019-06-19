@@ -5060,6 +5060,8 @@ Fields:
                 result.append(self - result.pop())
             elif d=='&':
                 result.append(result.pop() & result.pop())
+            elif d == (1, '=', 1):
+                result.append(self)
             else:
                 (key, comparator, value) = d
                 if key.endswith('.id'):
