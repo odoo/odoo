@@ -473,6 +473,7 @@ class ChromeBrowser():
         if self.chrome_process is not None:
             self._logger.info("Closing chrome headless with pid %s", self.chrome_process.pid)
             self.catch_next_event(ids={self._websocket_send('Browser.close')}, ignore_errors=True)
+                self.chrome_process.wait()
             if self.chrome_process.poll() is None:
                 self._logger.info("Terminating chrome headless with pid %s", self.chrome_process.pid)
                 self.chrome_process.terminate()
@@ -638,7 +639,7 @@ class ChromeBrowser():
         self.catch_next_event(ids={self._websocket_send('Network.clearBrowserCookies')}, ignore_errors=True)
         self.catch_next_event(ids={self._websocket_send('Runtime.evaluate', params={'expression': 'localStorage.clear()'})}, ignore_errors=True)
         self.navigate_to('about:blank', wait_stop=True, ignore_errors=True)
-        
+
     def clear(self):
         self._websocket_send('Page.stopScreencast')
         # wait for remaining screenshots
