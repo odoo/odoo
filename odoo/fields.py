@@ -293,6 +293,7 @@ class Field(MetaField('DummyField', (object,), {})):
         'manual': False,                # whether the field is a custom field
         'copy': True,                   # whether the field is copied over by BaseModel.copy()
         'depends': None,                # collection of field dependencies
+        'depends_context': None,       # collection of context key dependencies
         'recursive': False,             # whether self depends on itself
         'compute': None,                # compute(recs) computes field on recs
         'compute_sudo': False,          # whether field should be recomputed as admin
@@ -316,7 +317,6 @@ class Field(MetaField('DummyField', (object,), {})):
         'group_operator': None,         # operator for aggregating values
         'group_expand': None,           # name of method to expand groups in read_group()
         'prefetch': True,               # whether the field is prefetched
-        'context_dependent': False,     # whether the field's value depends on context
     }
 
     def __init__(self, string=Default, **kwargs):
@@ -418,7 +418,6 @@ class Field(MetaField('DummyField', (object,), {})):
             attrs['store'] = attrs.get('store', False)
             attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
-            attrs['context_dependent'] = attrs.get('context_dependent', True)
         if attrs.get('related'):
             # by default, related fields are not stored and not copied
             attrs['store'] = attrs.get('store', False)
@@ -433,10 +432,10 @@ class Field(MetaField('DummyField', (object,), {})):
             if not attrs.get('readonly'):
                 attrs['inverse'] = self._inverse_company_dependent
             attrs['search'] = self._search_company_dependent
-            attrs['context_dependent'] = attrs.get('context_dependent', True)
+            attrs['depends_context'] = attrs.get('depends_context', tuple()) + ('force_company',)
         if attrs.get('translate'):
             # by default, translatable fields are context-dependent
-            attrs['context_dependent'] = attrs.get('context_dependent', True)
+            attrs['depends_context'] = attrs.get('depends_context', tuple()) + ('lang',)
         if 'depends' in attrs:
             attrs['depends'] = tuple(attrs['depends'])
 
@@ -496,6 +495,10 @@ class Field(MetaField('DummyField', (object,), {})):
             deps = getattr(func, '_depends', ())
             return deps(model) if callable(deps) else deps
 
+        def get_depends_context(func):
+            deps = getattr(func, '_depends_context', ())
+            return deps
+
         if isinstance(self.compute, str):
             # if the compute method has been overridden, concatenate all their _depends
             self.depends = tuple(
@@ -503,8 +506,15 @@ class Field(MetaField('DummyField', (object,), {})):
                 for method in resolve_mro(model, self.compute, callable)
                 for dep in get_depends(method)
             )
+            depends_context = tuple(
+                dep
+                for method in resolve_mro(model, self.compute, callable)
+                for dep in get_depends_context(method)
+            )
         else:
             self.depends = tuple(get_depends(self.compute))
+            depends_context = tuple(get_depends_context(self.compute))
+        self.depends_context = (self.depends_context or tuple()) + depends_context
 
     def _setup_regular_full(self, model):
         """ Setup the inverse field(s) of ``self``. """
@@ -639,7 +649,6 @@ class Field(MetaField('DummyField', (object,), {})):
     _related_help = property(attrgetter('help'))
     _related_groups = property(attrgetter('groups'))
     _related_group_operator = property(attrgetter('group_operator'))
-    _related_context_dependent = property(attrgetter('context_dependent'))
 
     @property
     def base_field(self):
@@ -1703,7 +1712,7 @@ class Binary(Field):
     type = 'binary'
     _slots = {
         'prefetch': False,              # not prefetched by default
-        'context_dependent': True,      # depends on context (content or size)
+        'depends_context': ('bin_size',),      # depends on context (content or size)
         'attachment': True,             # whether value is stored in attachment
     }
     _convert_to_cache_read = True
@@ -2172,7 +2181,7 @@ class _RelationalMulti(_Relational):
     _slots = {
         # DLE P9: If there is a change in the context, the one2many fields cache values of the initial context is not recomputed
         # See test test_70_archive_internal_partners
-        'context_dependent': False,      # depends on context (active_test)
+        'depends_context': ('active_test',),      # depends on context (active_test)
     }
     _convert_to_cache_read = True
     def _update(self, records, value):

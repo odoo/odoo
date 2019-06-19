@@ -3338,13 +3338,6 @@ Fields:
                             for rec in self.env[field.comodel_name].browse(env.cache.get_value(record, field, [])):
                                 env.cache.remove(rec, invf)
 
-                    # DLE P21: invalidate the field value for other caches if the field is context dependent.
-                    # test `TestXMLID`.`test_create`, `self.assertEqual(category.name, 'Bar')`
-                    # `category.name` is context dependent (translatable), category context is `{}`
-                    # but when calling `load_records`, `install_mode` is added in the context thanks to
-                    # self.with_context(install_mode=True)
-                    if field.context_dependent:
-                        env.cache.invalidate([(field, record.ids)])
                     if field.type == 'many2many':
                         # DLE P33: `odoo/addons/test_access_rights/tests/test_ir_rules.py`
                         # test `test_many2many`
