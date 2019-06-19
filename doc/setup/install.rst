@@ -113,13 +113,16 @@ Prepare
 ^^^^^^^
 
 Odoo needs a `PostgreSQL`_ server to run properly. The default configuration for
-the Odoo 'deb' package is to use the PostgreSQL server on the same host as your
+the Odoo 'deb' package is to use the PostgreSQL 9.4 server on the same host as your
 Odoo instance. Execute the following command as root in order to install
 PostgreSQL server :
 
 .. code-block:: console
 
-  # apt-get install postgresql -y
+  sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+  wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+  sudo apt-get update
+  sudo apt-get install postgresql-9.4
 
 In order to print PDF reports, you must install wkhtmltopdf_ yourself:
 the version of wkhtmltopdf_ available in debian repositories does not support
