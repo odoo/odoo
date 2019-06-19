@@ -73,12 +73,12 @@ class Invite(models.TransientModel):
                     'add_sign': True,
                 })
                 partners_data = [{
-                    'id': pid, 
-                    'share': True, 
-                    'notif': 'email', 
-                    'type': 'customer', 
+                    'id': partner.id,
+                    'share': True,
+                    'notif': 'email',
+                    'type': 'user' if (not partner.partner_share or partner.user_ids.has_group('base.group_portal')) else 'customer',
                     'groups': []
-                } for pid in new_partners.ids]
+                } for partner in new_partners]
                 document._notify_record_by_email(message, partners_data, send_after_commit=False)
                 message.unlink()
         return {'type': 'ir.actions.act_window_close'}
