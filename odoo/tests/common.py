@@ -605,14 +605,14 @@ class ChromeBrowser():
         params = {'name': name, 'value': value, 'path': path, 'domain': domain}
         self._websocket_send('Network.setCookie', params=params)
 
-    def navigate_to(self, url, wait_stop=False):
+    def navigate_to(self, url, wait_stop=False, ignore_errors=False):
         self._logger.info('Navigating to: "%s"', url)
         nav_id = self._websocket_send('Page.navigate', params={'url': url})
         self.catch_next_event(ids={nav_id}, timeout=10)
         frame_id = self.last_result.get('result', {}).get('frameId', '')
         if wait_stop and frame_id:
             self._logger.info('Waiting for frame "%s" to stop loading', frame_id)
-            self.catch_next_event(methods={'Page.frameStoppedLoading'}, params={'frameId': frame_id}, timeout=10)
+            self.catch_next_event(methods={'Page.frameStoppedLoading'}, params={'frameId': frame_id}, timeout=10, ignore_errors=ignore_errors)
 
     def evaluate(self, code):
         self._logger.debug('Evaluate code "%s"', code)
@@ -641,11 +641,11 @@ class ChromeBrowser():
         self._logger.info('Deleting cookies and clearing local storage')
         self.catch_next_event(ids={self._websocket_send('Network.clearBrowserCookies')})
         self.catch_next_event(ids={self._websocket_send('Runtime.evaluate', params={'expression': 'localStorage.clear()'})})
-        self.navigate_to('about:blank', wait_stop=True)
+        self.navigate_to('about:blank', wait_stop=True, ignore_errors=True)
         self._encode_screencast()
 
     # main loop
-    def catch_next_event(self, ids=[], methods={}, params={}, timeout=60):
+    def catch_next_event(self, ids=[], methods={}, params={}, timeout=60, ignore_errors=False):
         errors = []
         start_time = time.time()
         while time.time() - start_time < timeout:
@@ -665,7 +665,7 @@ class ChromeBrowser():
                 return True
 
             # Javascript Traceback
-            elif res.get('method') == 'Runtime.exceptionThrown':
+        elif res.get('method') == 'Runtime.exceptionThrown' and not ignore_errors:
                 exception_details = '\n'.join([ '%s: %s' % (x,y) for x,y in res.get('params', {}).get('exceptionDetails', {}).items()])
                 self._logger.info(exception_details)
                 raise ChromeJavascriptException("Javascript Traceback: %s" % exception_details)
@@ -675,7 +675,7 @@ class ChromeBrowser():
                 logs = res.get('params', {}).get('args')
                 log_type = res.get('params', {}).get('type')
                 content = " ".join([str(log.get('value', '')) for log in logs])
-                if log_type == 'error':
+                if log_type == 'error' and not ignore_errors:
                     self._logger.error("console log error: %s", content)
                     errors.append(content)
                     if content.startswith('test fail'):
