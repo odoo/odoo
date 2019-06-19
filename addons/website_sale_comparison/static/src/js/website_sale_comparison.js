@@ -1,6 +1,7 @@
 odoo.define('website_sale_comparison.comparison', function (require) {
 'use strict';
 
+var concurrency = require('web.concurrency');
 var core = require('web.core');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
@@ -31,6 +32,7 @@ var ProductComparison = Widget.extend(ProductConfiguratorMixin, {
         this.product_data = {};
         this.comparelist_product_ids = JSON.parse(utils.get_cookie('comparelist_product_ids') || '[]');
         this.product_compare_limit = 4;
+        this.guard = new concurrency.Mutex();
     },
     /**
      * @override
@@ -157,6 +159,9 @@ var ProductComparison = Widget.extend(ProductConfiguratorMixin, {
      * @private
      */
     _addNewProducts: function (product_id) {
+        this.guard.exec(this._addNewProductsImpl.bind(this, product_id));
+    },
+    _addNewProductsImpl: function (product_id) {
         var self = this;
         $('.o_product_feature_panel').addClass('d-md-block');
         if (!_.contains(self.comparelist_product_ids, product_id)) {
@@ -164,8 +169,9 @@ var ProductComparison = Widget.extend(ProductConfiguratorMixin, {
             if (_.has(self.product_data, product_id)){
                 self._updateContent();
             } else {
-                self._loadProducts([product_id]).then(function () {
+                return self._loadProducts([product_id]).then(function () {
                     self._updateContent();
+                    self._updateCookie();
                 });
             }
         }
@@ -192,6 +198,9 @@ var ProductComparison = Widget.extend(ProductConfiguratorMixin, {
      * @private
      */
     _removeFromComparelist: function (e) {
+        this.guard.exec(this._removeFromComparelistImpl.bind(this, e));
+    },
+    _removeFromComparelistImpl: function (e) {
         this.comparelist_product_ids = _.without(this.comparelist_product_ids, $(e.currentTarget).data('product_product_id'));
         $(e.currentTarget).parents('.o_product_row').remove();
         this._updateCookie();
