@@ -644,9 +644,12 @@ class ChromeBrowser():
         self._websocket_send('Page.stopScreencast')
         # wait for remaining screenshots
         while self.screenshot_ids:
-            self.catch_next_event()
+            self.catch_next_event(ignore_errors=True)
         self.catch_next_event(ids={self._websocket_send('Page.stopLoading')}, ignore_errors=True)
         self._encode_screencast()
+        for i in range(10):
+            print( 'Zzzz... ' * 10)
+            time.sleep(1)
 
     # main loop
     def catch_next_event(self, ids=[], methods={}, params={}, timeout=60, ignore_errors=False):
