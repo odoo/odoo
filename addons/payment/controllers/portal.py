@@ -129,7 +129,7 @@ class WebsitePayment(http.Controller):
         return request.render("payment.pay_methods", values)
 
     @http.route(['/website_payment/pay'], type='http', auth='public', website=True, sitemap=False)
-    def pay(self, reference='', order_id=None, amount=False, currency_id=None, acquirer_id=None, **kw):
+    def pay(self, reference='', order_id=None, amount=False, currency_id=None, acquirer_id=None, partner_id=False, **kw):
         env = request.env
         user = env.user.sudo()
         reference = normalize('NFKD', reference).encode('ascii','ignore').decode('utf-8')
@@ -181,7 +181,10 @@ class WebsitePayment(http.Controller):
             acquirers = env['payment.acquirer'].search([('state', 'in', ['enabled', 'test']), ('company_id', '=', user.company_id.id)])
 
         # Check partner
-        partner_id = user.partner_id.id if not user._is_public() else False
+        if not user._is_public():
+            partner_id = user.partner_id.id
+        elif partner_id:
+            partner_id = int(partner_id)
 
         values.update({
             'partner_id': partner_id,
@@ -195,9 +198,9 @@ class WebsitePayment(http.Controller):
         return request.render('payment.pay', values)
 
     @http.route(['/website_payment/transaction/<string:reference>/<string:amount>/<string:currency_id>',
-                '/website_payment/transaction/v2/<string:amount>/<string:currency_id>/<path:reference>',], type='json', auth='public')
-    def transaction(self, acquirer_id, reference, amount, currency_id, **kwargs):
-        partner_id = request.env.user.partner_id.id if not request.env.user._is_public() else False
+                '/website_payment/transaction/v2/<string:amount>/<string:currency_id>/<path:reference>',
+                '/website_payment/transaction/v2/<string:amount>/<string:currency_id>/<path:reference>/<int:partner_id>'], type='json', auth='public')
+    def transaction(self, acquirer_id, reference, amount, currency_id, partner_id=False, **kwargs):
         acquirer = request.env['payment.acquirer'].browse(acquirer_id)
         order_id = kwargs.get('order_id')
 
@@ -231,15 +234,14 @@ class WebsitePayment(http.Controller):
         return acquirer.sudo().render(tx.reference, float(amount), int(currency_id), values=render_values)
 
     @http.route(['/website_payment/token/<string:reference>/<string:amount>/<string:currency_id>',
-                '/website_payment/token/v2/<string:amount>/<string:currency_id>/<path:reference>'], type='http', auth='public', website=True)
-    def payment_token(self, pm_id, reference, amount, currency_id, return_url=None, **kwargs):
+                '/website_payment/token/v2/<string:amount>/<string:currency_id>/<path:reference>',
+                '/website_payment/token/v2/<string:amount>/<string:currency_id>/<path:reference>/<int:partner_id>'], type='http', auth='public', website=True)
+    def payment_token(self, pm_id, reference, amount, currency_id, partner_id=False, return_url=None, **kwargs):
         token = request.env['payment.token'].browse(int(pm_id))
         order_id = kwargs.get('order_id')
 
         if not token:
             return request.redirect('/website_payment/pay?error_msg=%s' % _('Cannot setup the payment.'))
-
-        partner_id = request.env.user.partner_id.id if not request.env.user._is_public() else False
 
         values = {
             'acquirer_id': token.acquirer_id.id,
