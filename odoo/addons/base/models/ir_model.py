@@ -855,7 +855,7 @@ class IrModelFields(models.Model):
                 keys = [key for key in new_vals if old_vals[key] != new_vals[key]]
                 self.pool.post_init(record.modified, keys)
                 old_vals.update(new_vals)
-            if module and (module == model._original_module or module in field._modules):
+            if module and not field.manual and (module == model._original_module or module in field._modules):
                 to_xmlids.append(name)
 
         if to_insert:
