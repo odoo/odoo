@@ -443,6 +443,12 @@ class TestFields(common.TransactionCase):
         record.number = 2.4999999999999996
         self.assertEqual(record.number, 2.50)
 
+    def test_21_float_digits(self):
+        """ test field description """
+        precision = self.env.ref('test_new_api.decimal_new_api_number')
+        description = self.env['test_new_api.mixed'].fields_get()['number2']
+        self.assertEqual(description['digits'], (16, precision.digits))
+
     def check_monetary(self, record, amount, currency, msg=None):
         # determine the possible roundings of amount
         if currency:

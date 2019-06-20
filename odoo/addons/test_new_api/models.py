@@ -284,6 +284,7 @@ class MixedModel(models.Model):
     _description = 'Test New API Mixed'
 
     number = fields.Float(digits=(10, 2), default=3.14)
+    number2 = fields.Float(digits='New API Precision')
     date = fields.Date()
     now = fields.Datetime(compute='_compute_now')
     lang = fields.Selection(string='Language', selection='_get_lang')
