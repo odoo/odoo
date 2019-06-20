@@ -10,7 +10,7 @@ import sys
 
 import odoo
 from odoo.tools import config
-from . import Command
+from . import Command, server
 
 _logger = logging.getLogger(__name__)
 
@@ -60,6 +60,7 @@ class Shell(Command):
         odoo.cli.server.report_configuration()
         odoo.service.server.start(preload=[], stop=True)
         signal.signal(signal.SIGINT, raise_keyboard_interrupt)
+        server.setup_pid_file()
 
     def console(self, local_vars):
         if not os.isatty(sys.stdin.fileno()):
