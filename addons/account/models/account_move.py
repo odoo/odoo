@@ -1180,6 +1180,7 @@ class AccountMoveLine(models.Model):
                 if vals.get('amount_currency'):
                     vals['amount_currency'] = self.env['res.currency'].browse(vals['currency_id']).round(vals['amount_currency'] * (res['total_excluded']/amount))
             # Create tax lines
+            company_currency = self.env.user.company_id.currency_id
             for tax_vals in res['taxes']:
                 if tax_vals['amount']:
                     tax = self.env['account.tax'].browse([tax_vals['id']])
@@ -1197,14 +1198,17 @@ class AccountMoveLine(models.Model):
                         'analytic_account_id': vals.get('analytic_account_id') if tax.analytic else False,
                     }
                     bank = self.env["account.bank.statement"].browse(vals.get('statement_id'))
+                    ctx = {}
+                    if 'date' in vals:
+                        ctx['date'] = vals['date']
+                    elif 'date_maturity' in vals:
+                        ctx['date'] = vals['date_maturity']
                     if bank.currency_id != bank.company_id.currency_id:
-                        ctx = {}
-                        if 'date' in vals:
-                            ctx['date'] = vals['date']
-                        elif 'date_maturity' in vals:
-                            ctx['date'] = vals['date_maturity']
                         temp['currency_id'] = bank.currency_id.id
                         temp['amount_currency'] = bank.company_id.currency_id.with_context(ctx).compute(tax_vals['amount'], bank.currency_id, round=True)
+                    elif currency and currency != company_currency:
+                        temp['currency_id'] = currency.id
+                        temp['amount_currency'] = company_currency.with_context(ctx).compute(tax_vals['amount'], currency, round=True)
                     tax_lines_vals.append(temp)
 
         new_line = super(AccountMoveLine, self).create(vals)
