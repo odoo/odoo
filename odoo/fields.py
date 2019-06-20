@@ -1290,7 +1290,9 @@ class Float(Field):
             return self._digits
 
     _related__digits = property(attrgetter('_digits'))
-    _description_digits = property(attrgetter('_digits'))
+
+    def _description_digits(self, env):
+        return self.get_digits(env)
 
     def convert_to_column(self, value, record, values=None, validate=True):
         result = float(value or 0.0)
