@@ -15,6 +15,24 @@ class MailMessage(models.Model):
     _inherit = 'mail.message'
 
     message_type = fields.Selection(selection_add=[('sms', 'SMS')])
+    has_sms_error = fields.Boolean(
+        'Has SMS error', compute='_compute_has_sms_error', search='_search_has_sms_error',
+        help='Has error')
+
+    @api.multi
+    def _compute_has_sms_error(self):
+        sms_error_from_notification = self.env['mail.notification'].sudo().search([
+            ('notification_type', '=', 'sms'),
+            ('mail_message_id', 'in', self.ids),
+            ('notification_status', '=', 'exception')]).mapped('mail_message_id')
+        for message in self:
+            message.has_error = message in sms_error_from_notification
+
+    @api.multi
+    def _search_has_sms_error(self, operator, operand):
+        if operator == '=' and operand:
+            return ['&', ('notification_ids.notification_status', '=', 'exception'), ('notification_ids.notification_type', '=', True)]
+        raise NotImplementedError()
 
     @api.multi
     def _format_mail_failures(self):
