@@ -246,12 +246,17 @@ class IrHttp(models.AbstractModel):
         modules = IrHttpModel.get_translation_frontend_modules()
         user_context = request.session.get_context() if request.session.uid else {}
         lang = user_context.get('lang')
-        translations, _ = request.env['ir.translation'].get_translations_for_webclient(modules, lang)
+        translations, lang_params = request.env['ir.translation'].get_translations_for_webclient(modules, lang)
+        translation_cache = {
+            'lang_parameters': lang_params,
+            'modules': translations,
+            'multi_lang': len(request.env['res.lang'].sudo().get_installed()) > 1,
+        }
 
         session_info.update({
             'translationURL': '/website/translations/',
             'cache_hashes': {
-                'translations': hashlib.sha1(json.dumps(translations, sort_keys=True).encode()).hexdigest(),
+                'translations': hashlib.sha1(json.dumps(translation_cache, sort_keys=True).encode()).hexdigest(),
             },
         })
         return session_info
