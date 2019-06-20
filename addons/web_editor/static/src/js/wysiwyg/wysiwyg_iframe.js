@@ -68,6 +68,8 @@ Wysiwyg.include({
         }
         $(document.body).off('.' + this.id);
 
+        this.$iframe.parents().removeClass('o_wysiwyg_no_transform');
+
         this.$target.insertBefore(this.$iframe);
 
         delete window.top[this._onUpdateIframeId];
@@ -100,6 +102,10 @@ Wysiwyg.include({
                 }
                 self.$iframe.toggleClass('o_fullscreen');
                 self.$iframe.contents().find('body').toggleClass('o_fullscreen');
+
+                // Hack to avoid a parent of the fullscreen iframe to have a
+                // transform (otherwise the position: fixed won't work)
+                self.$iframe.parents().toggleClass('o_wysiwyg_no_transform');
             },
             isFullscreen: function () {
                 if (!self.$iframe) {
