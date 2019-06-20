@@ -32,10 +32,15 @@ class Http(models.AbstractModel):
         _, qweb_checksum = concat_xml(files)
 
         lang = user_context.get("lang")
-        translations_per_module, _ = request.env['ir.translation'].get_translations_for_webclient(mods, lang)
+        translations_per_module, lang_params = request.env['ir.translation'].get_translations_for_webclient(mods, lang)
+        translation_cache = {
+            'lang_parameters': lang_params,
+            'modules': translations_per_module,
+            'multi_lang': len(request.env['res.lang'].sudo().get_installed()) > 1,
+        }
 
         menu_json_utf8 = json.dumps(request.env['ir.ui.menu'].load_menus(request.session.debug), default=ustr, sort_keys=True).encode()
-        translations_json_utf8 = json.dumps(translations_per_module,  sort_keys=True).encode()
+        translations_json_utf8 = json.dumps(translation_cache,  sort_keys=True).encode()
 
         return {
             "uid": request.session.uid,
