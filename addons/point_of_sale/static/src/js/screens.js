@@ -2095,6 +2095,10 @@ var set_fiscal_position_button = ActionButtonWidget.extend({
             confirm: function (fiscal_position) {
                 var order = self.pos.get_order();
                 order.fiscal_position = fiscal_position;
+                // Fix the taxes on existing lines
+                _.each(order.get_orderlines(), function (line) {
+                    order.fix_tax_included_price(line);
+                });
                 order.trigger('change');
             }
         });
