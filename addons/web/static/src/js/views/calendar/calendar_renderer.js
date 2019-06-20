@@ -57,6 +57,7 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
         this.filters = options.filters;
         this.label = options.label;
         this.getColor = options.getColor;
+        this.isSwipeEnabled = true;
     },
     /**
      * @override
@@ -325,6 +326,9 @@ return AbstractRenderer.extend({
         });
         this.$calendar.on('touchend', function (event) {
             touchEndX = event.originalEvent.changedTouches[0].pageX;
+            if (!self.isSwipeEnabled) {
+                return;
+            }
             if (touchStartX - touchEndX > 100) {
                 self.trigger_up('next');
             } else if (touchStartX - touchEndX < -100) {
@@ -393,6 +397,7 @@ return AbstractRenderer.extend({
                 self._renderEventPopover(eventData, $(ev.currentTarget));
             },
             select: function (startDate, endDate) {
+                self.isSwipeEnabled = false;
                 // Clicking on the view, dispose any visible popover. Otherwise create a new event.
                 if (self.$('.o_cw_popover').length) {
                     self._unselectEvent();
@@ -406,6 +411,7 @@ return AbstractRenderer.extend({
                 self.$calendar.fullCalendar('unselect');
             },
             eventRender: function (event, element, view) {
+                self.isSwipeEnabled = false;
                 var $render = $(self._eventRender(event));
                 element.find('.fc-content').html($render.html());
                 element.addClass($render.attr('class'));
@@ -432,6 +438,9 @@ return AbstractRenderer.extend({
                 element.on('dblclick', function () {
                     self.trigger_up('edit_event', {id: event.id});
                 });
+            },
+            eventAfterAllRender: function () {
+                self.isSwipeEnabled = true;
             },
             viewRender: function (view) {
                 // compute mode from view.name which is either 'month', 'agendaWeek' or 'agendaDay'
