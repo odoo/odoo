@@ -8,6 +8,10 @@ from odoo.addons.test_mail_full.tests import common as test_mail_full_common
 
 
 class TestSMSPost(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS, test_mail_common.MockEmails, test_mail_common.TestRecipients):
+    """ TODO
+
+      * add tests for new mail.message and mail.thread fields;
+    """
 
     @classmethod
     def setUpClass(cls):
