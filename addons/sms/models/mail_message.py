@@ -15,6 +15,24 @@ class MailMessage(models.Model):
     _inherit = 'mail.message'
 
     message_type = fields.Selection(selection_add=[('sms', 'SMS')])
+    has_sms_error = fields.Boolean(
+        'Has SMS error', compute='_compute_has_sms_error', search='_search_has_sms_error',
+        help='Has error')
+
+    @api.multi
+    def _compute_has_sms_error(self):
+        sms_error_from_notification = self.env['mail.notification'].sudo().search([
+            ('notification_type', '=', 'sms'),
+            ('mail_message_id', 'in', self.ids),
+            ('notification_status', '=', 'exception')]).mapped('mail_message_id')
+        for message in self:
+            message.has_error = message in sms_error_from_notification
+
+    @api.multi
+    def _search_has_sms_error(self, operator, operand):
+        if operator == '=' and operand:
+            return ['&', ('notification_ids.notification_status', '=', 'exception'), ('notification_ids.notification_type', '=', True)]
+        raise NotImplementedError()
 
     @api.multi
     def _format_mail_failures(self):
@@ -46,11 +64,13 @@ class MailMessage(models.Model):
 
     @api.multi
     def _notify_sms_update(self):
+        """ Send bus notifications to update status of notifications in chatter.
+        Purpose is to send the updated status per author.
+
+        TDE FIXME: author_id strategy seems curious, check with JS """
         messages = self.env['mail.message']
         for message in self:
-            # Check if user has access to the record before displaying a notification about it.
-            # In case the user switches from one company to another, it might happen that he doesn't
-            # have access to the record related to the notification. In this case, we skip it.
+            # YTI FIXME: check allowed_company_ids if necessary
             if message.model and message.res_id:
                 record = self.env[message.model].browse(message.res_id)
                 try:
@@ -85,6 +105,6 @@ class MailMessage(models.Model):
             msgid_to_notif[notif.mail_message_id.id] += notif
 
         for message in message_values:
-            customer_sms_data = [(notif.id, notif.res_partner_id.display_name, notif.notification_status) for notif in msgid_to_notif.get(message['id'], [])]
+            customer_sms_data = [(notif.id, notif.res_partner_id.display_name or notif.sms_number, notif.notification_status) for notif in msgid_to_notif.get(message['id'], [])]
             message['sms_ids'] = customer_sms_data
         return message_values
