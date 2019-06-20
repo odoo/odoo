@@ -717,7 +717,12 @@ class Cache(object):
         self._data = defaultdict(dict)
 
     def _get_context_key(self, env, field):
-        return tuple(env.context.get(key) for key in (field.depends_context or []))
+        context = env.context
+        # DLE P73: `test_27_company_dependent`
+        # Needs to ensure `force_company` is set in the context when getting or setting values
+        if field.company_dependent and 'force_company' not in context:
+            context = dict(context, force_company=env.company.id)
+        return tuple(context.get(key) for key in (field.depends_context or []))
 
     def contains(self, record, field):
         """ Return whether ``record`` has a value for ``field``. """

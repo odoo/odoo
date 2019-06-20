@@ -210,6 +210,12 @@ class TestFields(common.TransactionCase):
             'model_id': self.env['ir.model'].search([('model', '=', 'res.users')]).id,
             'domain_force': "[('id', '!=', %d)]" % user2.id,
         })
+        # DLE P72: Since we decided that we do not raise security access errors for data to which we had the occassion
+        # to put the value in the cache, we need to invalidate the cache for user1, user2 and user3 in order
+        # to test the below access error. Otherwise the above create calls set in the cache the information needed
+        # to compute `company_type` ('is_company'), and doesn't need to trigger a read.
+        # We need to force the read in order to test the security access
+        User.invalidate_cache()
         # group users as a recordset, and read them as user demo
         users = (user1 + user2 + user3).with_user(self.env.ref('base.user_demo'))
         user1, user2, user3 = users
