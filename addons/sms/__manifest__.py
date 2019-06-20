@@ -25,6 +25,7 @@ The service is provided by the In App Purchase Odoo platform.
     ],
     'qweb': [
         'static/src/xml/sms_widget.xml',
+        'static/src/xml/thread.xml',
     ],
     'installable': True,
     'auto_install': True,
