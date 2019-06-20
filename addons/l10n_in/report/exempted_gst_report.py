@@ -18,6 +18,7 @@ class L10nInExemptedReport(models.Model):
     non_gst_supplies = fields.Float("Non GST Supplies")
     date = fields.Date("Date")
     company_id = fields.Many2one('res.company', string="Company")
+    l10n_in_unit_id = fields.Many2one('res.partner', string="Operating Unit")
     journal_id = fields.Many2one('account.journal', string="Journal")
 
     def _select(self):
@@ -27,6 +28,7 @@ class L10nInExemptedReport(models.Model):
             aml.balance * (CASE WHEN aj.type = 'sale' THEN -1 ELSE 1 END) AS price_total,
             am.journal_id,
             aj.company_id,
+            am.l10n_in_unit_id,
             aml.move_id as account_move_id,
 
             (CASE WHEN p.state_id = cp.state_id

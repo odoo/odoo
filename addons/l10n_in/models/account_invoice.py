@@ -28,6 +28,14 @@ class AccountMove(models.Model):
     l10n_in_shipping_port_code_id = fields.Many2one('l10n_in.port.code', 'Shipping port code', states={'draft': [('readonly', False)]})
     l10n_in_reseller_partner_id = fields.Many2one('res.partner', 'Reseller', domain=[('vat', '!=', False)], help="Only Registered Reseller", readonly=True, states={'draft': [('readonly', False)]})
     l10n_in_partner_vat = fields.Char(related="partner_id.vat", readonly=True)
+    l10n_in_unit_id = fields.Many2one('res.partner', string="Operating Unit",
+        ondelete="restrict", readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.user._get_default_unit())
+
+    @api.onchange('journal_id')
+    def _onchange_journal(self):
+        res = super(AccountMove, self)._onchange_journal()
+        self.l10n_in_unit_id = self.journal_id.l10n_in_unit_id or self.env.user._get_default_unit()
+        return res
 
     @api.model
     def _get_tax_grouping_key_from_tax_line(self, tax_line):
@@ -46,3 +54,29 @@ class AccountMove(models.Model):
             'quantity': base_line.quantity,
         })
         return res
+
+    @api.model
+    def create(self, vals):
+        if not vals.get('l10n_in_unit_id'):
+            if vals.get('journal_id'):
+                journal_id = self.env['account.journal'].browse(vals['journal_id'])
+                vals['l10n_in_unit_id'] = journal_id.l10n_in_unit_id and journal_id.l10n_in_unit_id.id or journal_id.company_id.partner_id.id
+            else:
+                vals['l10n_in_unit_id'] = self.env.user.company_id.partner_id.id
+        return super(AccountMove, self).create(vals)
+
+class AccountMoveLine(models.Model):
+    _inherit = "account.move.line"
+
+    l10n_in_unit_id = fields.Many2one(related='move_id.l10n_in_unit_id', store=True, readonly=True)
+
+    @api.model
+    def _query_get(self, domain=None):
+        context = dict(self._context or {})
+        domain = domain or []
+        if context.get('l10n_in_unit_id'):
+            domain += [('move_id.l10n_in_unit_id', '=', context['l10n_in_unit_id'])]
+
+        if context.get('l10n_in_unit_ids'):
+            domain += [('move_id.l10n_in_unit_id', 'in', context['l10n_in_unit_ids'])]
+        return super(AccountMoveLine, self)._query_get(domain=domain)

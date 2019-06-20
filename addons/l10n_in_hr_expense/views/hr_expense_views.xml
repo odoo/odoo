@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_expense_view_form_inherit_l10n_in_hr_expense" model="ir.ui.view">
+        <field name="name">hr.expense.view.form.inherit.l10n_in_hr_expense</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="l10n_in_unit_id" domain="[('company_l10n_in_unit_id', '=', company_id)]" options="{'no_create': True, 'no_open': True}" groups="l10n_in.group_multi_operating_unit"/>
+            </field>
+        </field>
+    </record>
+</odoo>

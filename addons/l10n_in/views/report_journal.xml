@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_journal_l10n_in" name="Journals Audit" inherit_id="account.report_journal">
+        <xpath expr="//div[@id='company']" position="after">
+            <t t-if="data['form']['used_context']['l10n_in_unit_name']">
+                <div class="col-3">
+                    <strong>Unit:</strong>
+                    <p t-esc="data['form']['used_context']['l10n_in_unit_name']"/>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

@@ -8,6 +8,9 @@
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="l10n_in_reseller_partner_id" groups="l10n_in.group_l10n_in_reseller"/>
             </xpath>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="l10n_in_unit_id" domain="[('company_l10n_in_unit_id', '=', company_id)]" options="{'no_create': True}" groups="l10n_in.group_multi_operating_unit"/>
+            </xpath>
         </field>
     </record>
 </odoo>

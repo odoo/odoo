@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stock_landed_cost_form_inherit_l10n_in_stock_landed_cost" model="ir.ui.view">
+        <field name="name">stock.landed.cost.form.inherit.l10n_in_stock_landed_cost</field>
+        <field name="model">stock.landed.cost</field>
+        <field name="inherit_id" ref="stock_landed_costs.view_stock_landed_cost_form"/>
+        <field name="arch" type="xml">
+            <field name="account_journal_id" position="before">
+                <field name="company_id" readonly="1"/>
+                <field name="l10n_in_unit_id" domain="[('company_l10n_in_unit_id','=',company_id)]" options="{'no_create': True, 'no_open': True}" groups="l10n_in.group_multi_operating_unit"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -19,6 +19,27 @@
                     </div>
                 </div>
             </div>
+            <div id="invoicing" position='inside'>
+                <h2>Operating Units</h2>
+                <div class="row mt16 o_settings_container" id="setup">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="group_multi_operating_unit"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label string="Multiple Operating Units" for="group_multi_operating_unit"/>
+                            <div class="text-muted">
+                                Manage multiple operating units
+                            </div>
+                            <div class="content-group" attrs="{'invisible': [('group_multi_operating_unit','=',False)]}">
+                                <div class="mt16">
+                                    <button type="object" name="action_open_company" icon="fa-arrow-right"  string="Configure Operating Units" class="btn-link"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </field>
     </record>
 </odoo>

@@ -10,6 +10,7 @@ class ResPartner(models.Model):
 
     # Use in view attrs. Need to required state_id if Country is India.
     l10n_in_country_code = fields.Char(related="country_id.code", string="Country code")
+    company_l10n_in_unit_id = fields.Many2one('res.company', string="Company of Current Unit", ondelete='cascade')
 
     @api.constrains('vat', 'country_id')
     def l10n_in_check_vat(self):

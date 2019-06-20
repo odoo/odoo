@@ -15,6 +15,7 @@
     ],
     'demo': [
         'data/product_demo.xml',
+        'data/stock_account_demo.xml',
     ],
     'installable': True,
     'application': False,

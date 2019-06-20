@@ -10,6 +10,17 @@ class AccountJournal(models.Model):
 
     # Use for filter import and export type.
     l10n_in_import_export = fields.Boolean("Import/Export", help="Tick this if this journal is use for Import/Export Under Indian GST.")
+    l10n_in_unit_id = fields.Many2one('res.partner', string="Operating Unit", ondelete="restrict", help="Unit related to this journal. If need the same journal for company all unit then keep this empty.")
+
+    _sql_constraints = [
+        ('code_company_uniq', 'unique (code, name, company_id, l10n_in_unit_id)', 'The code and name of the journal must be unique per company unit!'),
+    ]
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        default_unit = self.l10n_in_unit_id or self.env.user._get_default_unit()
+        if default_unit not in self.company_id.l10n_in_unit_ids:
+            self.l10n_in_unit_id = self.company_id.partner_id
 
 
 class AccountMoveLine(models.Model):

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_simple_modif_inherit_l10n_in" model="ir.ui.view">
+        <field name="name">res.users.preferences.view.form.inherit.l10n_in</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif" />
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="l10n_in_unit_id" domain="[('company_l10n_in_unit_id', '=', company_id)]" options="{'no_create': True}" groups="l10n_in.group_multi_operating_unit"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_users_form_inherit_l10n_in" model="ir.ui.view">
+        <field name="name">res.users.view.form.inherit.l10n_in</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form" />
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="l10n_in_unit_id" domain="[('company_l10n_in_unit_id', '=', company_id)]" options="{'no_create': True}" groups="l10n_in.group_multi_operating_unit"/>
+            </field>
+        </field>
+    </record>
+</odoo>

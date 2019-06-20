@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_form_inherit_l10n_in" model="ir.ui.view">
+        <field name="name">account.payment.form.inherit.l10n_in</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <field name="destination_journal_id" position="after">
+                <field name="show_l10n_in_unit_id_field" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="l10n_in_unit_id" domain="[('company_l10n_in_unit_id','=',company_id)]" options="{'no_create': True, 'no_open': True}" groups="l10n_in.group_multi_operating_unit" attrs="{'invisible': [('show_l10n_in_unit_id_field', '=', False)], 'required': [('show_l10n_in_unit_id_field', '=', True)]}" help="Payment will be created against selected Operating Unit."/>
+            </field>
+        </field>
+    </record>
+</odoo>

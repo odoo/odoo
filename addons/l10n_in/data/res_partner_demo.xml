@@ -6,6 +6,10 @@
         <field name="vat">24BBBFF5679L8ZR</field>
     </record>
 
+    <record id="base.main_partner" model="res.partner">
+        <field name="company_l10n_in_unit_id" ref="base.main_company"/>
+    </record>
+
     <record id="res_partner_category_registered" model="res.partner.category">
         <field name="name">Registered</field>
         <field name="color" eval="2"/>

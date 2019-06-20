@@ -10,6 +10,11 @@
             <xpath expr="//field[@name='vat']" position="attributes">
                 <attribute name="string">GSTIN</attribute>
             </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Operating Units" groups="l10n_in.group_multi_operating_unit">
+                    <field name="l10n_in_unit_ids" mode="kanban" domain="[('company_l10n_in_unit_id', '=', active_id)]" context="{'default_country_id': country_id,'default_is_company': 1}"/>
+                </page>
+            </xpath>
         </field>
     </record>
 

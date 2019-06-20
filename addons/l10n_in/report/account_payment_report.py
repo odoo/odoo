@@ -17,6 +17,7 @@ class L10nInPaymentReport(models.AbstractModel):
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')], string='Payment Type')
     journal_id = fields.Many2one('account.journal', string="Journal")
     company_id = fields.Many2one(related="journal_id.company_id", string="Company")
+    l10n_in_unit_id = fields.Many2one('res.partner', string="Operating Unit")
     place_of_supply = fields.Char(string="Place of Supply")
     supply_type = fields.Char(string="Supply Type")
 
@@ -59,6 +60,7 @@ class L10nInPaymentReport(models.AbstractModel):
     def _select(self):
         return """SELECT aml.id AS id,
             aml.move_id as account_move_id,
+            am.l10n_in_unit_id,
             ap.id AS payment_id,
             ap.payment_type,
             tax.id as l10n_in_tax_id,

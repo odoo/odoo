@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="purchase_order_form_inherit_l10n_in_purchase" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.l10n_in_purchase</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="l10n_in_unit_id" domain="[('company_l10n_in_unit_id', '=', company_id)]" options="{'no_create': True}" groups="l10n_in.group_multi_operating_unit"/>
+            </field>
+        </field>
+    </record>
 
     <template id="gst_report_purchaseorder_document_inherit" inherit_id="purchase.report_purchaseorder_document">
         <xpath expr="//t[@t-foreach='o.order_line']//td[@id='product']" position="replace">

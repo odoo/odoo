@@ -4,6 +4,22 @@
 from odoo import api, fields, models, tools
 
 
+class AccountInvoiceReport(models.Model):
+    _inherit = "account.invoice.report"
+
+    l10n_in_unit_id = fields.Many2one('res.partner', string="Unit", readonly=True)
+
+    def _select(self):
+        return super(AccountInvoiceReport, self)._select() + """,
+            move.l10n_in_unit_id
+            """
+
+    def _group_by(self):
+        return super(AccountInvoiceReport, self)._group_by() + """,
+            move.l10n_in_unit_id
+            """
+
+
 class L10nInAccountInvoiceReport(models.Model):
     _name = "l10n_in.account.invoice.report"
     _description = "Account Invoice Statistics"
@@ -12,6 +28,7 @@ class L10nInAccountInvoiceReport(models.Model):
 
     account_move_id = fields.Many2one('account.move', string="Account Move")
     company_id = fields.Many2one('res.company', string="Company")
+    l10n_in_unit_id = fields.Many2one('res.partner', string="Operating Unit")
     date = fields.Date(string="Accounting Date")
     name = fields.Char(string="Invoice Number")
     partner_id = fields.Many2one('res.partner', string="Customer")
@@ -78,6 +95,7 @@ class L10nInAccountInvoiceReport(models.Model):
             sub.total,
             sub.journal_id,
             sub.company_id,
+            sub.l10n_in_unit_id,
             sub.move_type,
             sub.reversed_entry_id,
             sub.partner_vat,
@@ -126,6 +144,7 @@ class L10nInAccountInvoiceReport(models.Model):
                 am.amount_total AS total,
                 am.journal_id,
                 aj.company_id,
+                am.l10n_in_unit_id,
                 am.type AS move_type,
                 am.reversed_entry_id AS reversed_entry_id,
                 p.vat AS partner_vat,
@@ -279,6 +298,7 @@ class L10nInAccountInvoiceReport(models.Model):
             sub.total,
             sub.journal_id,
             sub.company_id,
+            sub.l10n_in_unit_id,
             sub.move_type,
             sub.reversed_entry_id,
             sub.partner_vat,

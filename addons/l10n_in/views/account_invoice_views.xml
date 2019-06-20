@@ -24,6 +24,9 @@
                        attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}"
                        />
             </xpath>
+            <xpath expr="//page[@name='other_info']//field[@name='company_id']" position="after">
+                <field name="l10n_in_unit_id" domain="[('company_l10n_in_unit_id', '=', company_id)]" options="{'no_create': True}" groups="l10n_in.group_multi_operating_unit"/>
+            </xpath>
         </field>
     </record>
 </odoo>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_config_view_form_inherit_l10n_in_pos" model="ir.ui.view">
+        <field name="name">pos.config.form.view.inherit.l10n_in_pos</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form" />
+        <field name="arch" type="xml">
+            <div id="company" position="after">
+                <div id="unit" class="col-12 col-lg-6 o_setting_box" groups="l10n_in.group_multi_operating_unit">
+                    <div class="o_setting_right_pane">
+                        <label for="l10n_in_unit_id"/>
+                        <div><field name="l10n_in_unit_id" domain="[('company_l10n_in_unit_id', '=', company_id)]" options="{'no_create': True}" groups="l10n_in.group_multi_operating_unit"/></div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

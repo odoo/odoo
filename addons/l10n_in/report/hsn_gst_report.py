@@ -23,6 +23,7 @@ class L10nInProductHsnReport(models.Model):
     sgst_amount = fields.Float(string="State/UT Tax Amount")
     cess_amount = fields.Float(string="Cess Amount")
     company_id = fields.Many2one('res.company', string="Company")
+    l10n_in_unit_id = fields.Many2one('res.partner', string="Operating Unit")
     journal_id = fields.Many2one('account.journal', string="Journal")
 
     hsn_code = fields.Char(string="HSN")
@@ -39,6 +40,7 @@ class L10nInProductHsnReport(models.Model):
             am.date,
             am.journal_id,
             aj.company_id,
+            am.l10n_in_unit_id,
             CASE WHEN pt.l10n_in_hsn_code IS NULL THEN '' ELSE pt.l10n_in_hsn_code END AS hsn_code,
             CASE WHEN pt.l10n_in_hsn_description IS NULL THEN '' ELSE pt.l10n_in_hsn_description END AS hsn_description,
             CASE WHEN uom.l10n_in_code IS NULL THEN '' ELSE uom.l10n_in_code END AS l10n_in_uom_code,

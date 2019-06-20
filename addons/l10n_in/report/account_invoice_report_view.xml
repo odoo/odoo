@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_invoice_report_search_inherit_l10n_in" model="ir.ui.view">
+        <field name="name">account.invoice.report.search.inherit.l10n_in</field>
+        <field name="model">account.invoice.report</field>
+        <field name="inherit_id" ref="account.view_account_invoice_report_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/filter[@name='company']" position="after">
+                <filter string="Unit" name="unit" context="{'group_by': 'l10n_in_unit_id'}" groups="l10n_in.group_multi_operating_unit"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
