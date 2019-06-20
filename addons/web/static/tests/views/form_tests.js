@@ -8159,7 +8159,7 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.skip('resequence list lines when discardable lines are present', async function (assert) {
+    QUnit.test('resequence list lines when discardable lines are present', async function (assert) {
         assert.expect(8);
 
         var onchangeNum = 0;
