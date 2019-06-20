@@ -3355,7 +3355,17 @@ Fields:
                     # DLE P2: We set the value to write in the cache, but then it can be overwritten by a prefetch when
                     # reading another field of the same model. Writing the towrite sooner, before the computation of modified,
                     # allows the possibility to not prefetch or ignore the reads of values to write
-                    if record.id and field.store:
+                    # DLE P74: `test_92_binary_self_avatar_svg`
+                    # Avoid to postpone the write of other fields in towrite/_write,
+                    # so we keep the information on who (uid) is writting
+                    # `mimetype` of `ir.attachment` is a stored field which depends on the uid during the `write`
+                    # When writing on a binary field, e.g. `user.image = SVG`, it's considered an other_field,
+                    # and the `write` in `ir.attachment` was done through the `towrite` and the `flush`, which do not guarantee
+                    # the user.
+                    # Maybe there is something to do for performance, for instance by batching the field.write to all records
+                    if record.id and not field.column_type:
+                        field.write(record, value)
+                    elif record.id and field.store:
                         # FP NOTE: we could simplify and keep the one in cache instead
                         # FP TO CHECK: for one2many / many2many, we might concatenate the values instead of overwrite. (imagine 2 write of [(0,0,{})]
                         # DLE P20: By writring field.convert_to_write(field.convert_to_record(field.convert_to_cache(value, record), record), record)
@@ -3461,7 +3471,6 @@ Fields:
         # determine SQL values
         columns = []                    # list of (column_name, format, value)
         updated = []                    # list of updated or translated columns
-        other_fields = []               # list of non-column fields
         single_lang = len(self.env['res.lang'].get_installed()) <= 1
         has_translation = self.env.lang and self.env.lang != 'en_US'
 
@@ -3480,8 +3489,6 @@ Fields:
                     val = field.convert_to_column(val, self, vals)
                     columns.append((name, field.column_format, val))
                 updated.append(name)
-            else:
-                other_fields.append(field)
 
         if self._log_access:
             if not vals.get('write_uid'):
@@ -3525,14 +3532,6 @@ Fields:
                 val = field.convert_to_column(vals[name], self, vals)
                 self.env['ir.translation']._set_ids(
                     tname, 'model', self.env.lang, self.ids, val, src_trans)
-
-        # set the value of non-column fields
-        if other_fields:
-            # discard default values from context
-            other = self.with_context(clean_context(self._context))
-
-            for field in sorted(other_fields, key=attrgetter('_sequence')):
-                field.write(other, vals[field.name])
 
         # check Python constraints
         # self._validate_fields(vals)
