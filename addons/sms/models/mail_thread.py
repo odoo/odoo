@@ -3,7 +3,7 @@
 
 import logging
 
-from odoo import api, models
+from odoo import api, models, fields
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.tools import html2plaintext
 
@@ -12,6 +12,29 @@ _logger = logging.getLogger(__name__)
 
 class MailThread(models.AbstractModel):
     _inherit = 'mail.thread'
+
+    message_has_sms_error = fields.Boolean(
+        'SMS Delivery error', compute='_compute_message_has_sms_error', search='_search_message_has_sms_error',
+        help="If checked, some messages have a delivery error.")
+
+    @api.multi
+    def _compute_message_has_sms_error(self):
+        res = {}
+        if self.ids:
+            self._cr.execute(""" SELECT msg.res_id, COUNT(msg.res_id) FROM mail_message msg
+                                 RIGHT JOIN mail_message_res_partner_needaction_rel rel
+                                 ON rel.mail_message_id = msg.id AND rel.notification_type = 'sms' AND rel.notification_status in ('exception')
+                                 WHERE msg.author_id = %s AND msg.model = %s AND msg.res_id in %s AND msg.message_type != 'user_notification'
+                                 GROUP BY msg.res_id""",
+                             (self.env.user.partner_id.id, self._name, tuple(self.ids),))
+            res.update(self._cr.fetchall())
+
+        for record in self:
+            record.message_has_sms_error = bool(res.get(record._origin.id, 0))
+
+    @api.model
+    def _search_message_has_sms_error(self, operator, operand):
+        return ['&', ('message_ids.has_sms_error', operator, operand), ('message_ids.author_id', '=', self.env.user.partner_id.id)]
 
     def _sms_get_default_partners(self):
         """ This method will likely need to be overriden by inherited models.
