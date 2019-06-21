@@ -35,7 +35,6 @@
         <record id="mail_channel_partner_action" model="ir.actions.act_window">
             <field name="name">Channels/Partner</field>
             <field name="res_model">mail.channel.partner</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 
@@ -148,7 +147,7 @@
                                     <field name="moderation_guidelines_msg" attrs="{'invisible':[('moderation_guidelines', '=', False)]}"/>
                                 </group>
                             </page>
-                            <page string="Integrations" invisible="0" name="mail_channel_integrations"></page>
+                            <page string="Integrations" invisible="1" name="mail_channel_integrations"></page>
                         </notebook>
                         <div class="oe_chatter" groups="base.group_no_one">
                             <field name="message_follower_ids" widget="mail_followers"/>
@@ -183,7 +182,6 @@
         <record id="mail_channel_action_view" model="ir.actions.act_window">
             <field name="name">Join a group</field>
             <field name="res_model">mail.channel</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref="mail_channel_view_search"/>
         </record>

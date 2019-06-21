@@ -110,7 +110,7 @@ QUnit.test('Magic wand', async function (assert) {
 });
 
 QUnit.test('Font style', function (assert) {
-    assert.expect(56);
+    assert.expect(58);
 
     return weTestUtils.createWysiwyg({
         debug: false,
@@ -281,6 +281,19 @@ QUnit.test('Font style', function (assert) {
                     content: '<p><b>a</b>aa<span class="fa fa-heart"></span>bb<b>b</b></p>',
                     start: 'p:contents()[1]->0',
                     end: 'p:contents()[3]->2',
+                },
+            },
+            {
+                name: "Click BOLD: bold -> normal (at start of dom)",
+                content: '<p><b>abc</b></p>',
+                start: 'b:contents()[0]->0',
+                do: function () {
+                    $btnBold.mousedown().click();
+                },
+                test: {
+                    content: '<p>\u200B<b>abc</b></p>',
+                    start: 'p:contents()[0]->1',
+                    end: 'p:contents()[0]->1',
                 },
             },
             /* ITALIC */
@@ -2227,7 +2240,7 @@ QUnit.test('Align', function (assert) {
 });
 
 QUnit.test('Indent/outdent', function (assert) {
-    assert.expect(18);
+    assert.expect(20);
 
     return weTestUtils.createWysiwyg({
         debug: false,
@@ -2267,6 +2280,21 @@ QUnit.test('Indent/outdent', function (assert) {
                 test: {
                     content: '<ul><li><p>dom</p></li><li class="o_indent"><ul><li><p>to edit</p></li></ul></li></ul>',
                     start: 'p:eq(1):contents()[0]->1',
+                },
+            },
+            {
+                name: "Click INDENT: li -> indented li",
+                content: '<p>aaa</p><p>bbb</p><p>ccc</p><p>ddd</p>',
+                start: 'p:eq(1):contents()[0]->0',
+                end: 'p:eq(3):contents()[0]->3',
+                do: function () {
+                    $dropdownPara.mousedown().click();
+                    $btnIndent.mousedown().click();
+                },
+                test: {
+                    content: '<p>aaa</p><p style="margin-left: 1.5em;">bbb</p><p style="margin-left: 1.5em;">ccc</p><p style="margin-left: 1.5em;">ddd</p>',
+                    start: 'p:eq(1):contents()[0]->0',
+                    end: 'p:eq(3):contents()[0]->3',
                 },
             },
             /* OUTDENT */
@@ -3378,43 +3406,35 @@ var altDialogSaved;
 var cropDialogOpened;
 QUnit.module('Media', {
     beforeEach: function () {
-        $('body').on('submit.WysiwygTests', function (ev) {
-            ev.preventDefault();
-            var $from = $(ev.target);
-            var iframe = $from.find('iframe[name="' + $from.attr('target') + '"]')[0];
-            if (iframe) {
-                iframe.contentWindow.attachments = [{
-                    id: 1,
-                    public: true,
-                    name: 'image',
-                    datas_fname: 'image.png',
-                    mimetype: 'image/png',
-                    checksum: false,
-                    url: '/web_editor/static/src/img/transparent.png',
-                    type: 'url',
-                    res_id: 0,
-                    res_model: false,
-                    access_token: false
-                }];
-                $(iframe).trigger('load');
-            }
-        });
-
         this.data = {
             debug: false,
             wysiwygOptions: {
 
             },
             mockRPC: function (route, args) {
-                if (args.model === 'ir.attachment' || !args.length) {
-                    if (!args.length && route.indexOf('data:image/png;base64') === 0 ||
-                        args.method === "search_read" &&
-                        args.kwargs.domain[7][2].join(',') === "image/gif,image/jpe,image/jpeg,image/jpg,image/gif,image/png") {
-                        return Promise.resolve(this.data.records);
-                    }
+                if (route.indexOf('data:image/png;base64') === 0) {
+                    return Promise.resolve();
                 }
                 if (route.indexOf('youtube') !== -1) {
                     return Promise.resolve();
+                }
+                if (route.indexOf('/web_editor/static/src/img/') === 0) {
+                    return Promise.resolve();
+                }
+                if (route === '/web_editor/attachment/add_url') {
+                    return Promise.resolve({
+                        id: 1,
+                        public: true,
+                        name: 'image',
+                        mimetype: 'image/png',
+                        checksum: false,
+                        url: '/web_editor/static/src/img/transparent.png',
+                        image_src: '/web_editor/static/src/img/transparent.png',
+                        type: 'url',
+                        res_id: 0,
+                        res_model: false,
+                        access_token: false,
+                    });
                 }
                 return this._super(route, args);
             },
@@ -3478,7 +3498,7 @@ var _clickMedia = async function (wysiwyg, assert, callbackInit, test) {
 };
 
 var _uploadAndInsertImg = async function (url) {
-    $('.modal-dialog input[name="url"]:first').val(url).trigger('input');
+    $('.modal-dialog .o_we_url_input:first').val(url).trigger('input');
     await testUtils.nextTick();
     await testUtils.dom.triggerEvents($('.modal-dialog .o_upload_media_url_button:first'), ['mousedown', 'click']);
 };

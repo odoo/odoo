@@ -293,8 +293,7 @@ var Gui = core.Class.extend({
         this.chrome.loading_message(_t('Closing ...'));
 
         this.pos.push_order().then(function(){
-            var url = "/web#action=point_of_sale.action_client_pos_menu";
-            window.location = session.debug ? $.param.querystring(url, {debug: session.debug}) : url;
+            window.location = "/web#action=point_of_sale.action_client_pos_menu";
         });
     },
 
@@ -405,7 +404,7 @@ var Gui = core.Class.extend({
             }
         } else if (input === '-') {
             if (options.firstinput) {
-                newbuf = '-';
+                newbuf = '-0';
             } else if ( newbuf[0] === '-' ) {
                 newbuf = newbuf.substring(1,newbuf.length);
             } else {
@@ -419,6 +418,9 @@ var Gui = core.Class.extend({
             } else {
                 newbuf += input;
             }
+        }
+        if (newbuf === "-") {
+            newbuf = "";
         }
 
         // End of input buffer at 12 characters.

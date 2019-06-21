@@ -559,7 +559,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         # Make sure the company is in USD
         self.env.cr.execute(
             "UPDATE res_company SET currency_id = %s WHERE id = %s",
-            [self.env.ref('base.USD').id, self.env.company_id.id])
+            [self.env.ref('base.USD').id, self.env.company.id])
 
         # Demo data are crappy, clean-up the rates
         self.env['res.currency.rate'].search([]).unlink()

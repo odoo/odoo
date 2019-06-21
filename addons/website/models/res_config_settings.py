@@ -10,7 +10,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     def _default_website(self):
-        return self.env['website'].search([('company_id', '=', self.env.company_id.id)], limit=1)
+        return self.env['website'].search([('company_id', '=', self.env.company.id)], limit=1)
 
     website_id = fields.Many2one('website', string="website",
                                  default=_default_website, ondelete='cascade')
@@ -107,10 +107,11 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_language_ids(self):
         # If current default language is removed from language_ids
         # update the website_default_lang_id
-        if not self.language_ids:
+        language_ids = self.language_ids._origin
+        if not language_ids:
             self.website_default_lang_id = False
-        elif self.website_default_lang_id not in self.language_ids:
-            self.website_default_lang_id = self.language_ids[0]
+        elif self.website_default_lang_id not in language_ids:
+            self.website_default_lang_id = language_ids[0]
 
     @api.depends('language_ids')
     def _compute_language_count(self):
@@ -137,7 +138,6 @@ class ResConfigSettings(models.TransientModel):
 
     def action_website_create_new(self):
         return {
-            'view_type': 'form',
             'view_mode': 'form',
             'view_id': self.env.ref('website.view_website_form').id,
             'res_model': 'website',

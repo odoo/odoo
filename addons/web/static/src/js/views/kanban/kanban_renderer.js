@@ -3,6 +3,7 @@ odoo.define('web.KanbanRenderer', function (require) {
 
 var BasicRenderer = require('web.BasicRenderer');
 var ColumnQuickCreate = require('web.kanban_column_quick_create');
+var config = require('web.config');
 var core = require('web.core');
 var KanbanColumn = require('web.KanbanColumn');
 var KanbanRecord = require('web.KanbanRecord');
@@ -12,6 +13,7 @@ var utils = require('web.utils');
 var viewUtils = require('web.viewUtils');
 
 var qweb = core.qweb;
+var _t = core._t;
 
 function findInNode(node, predicate) {
     if (predicate(node)) {
@@ -107,7 +109,7 @@ var KanbanRenderer = BasicRenderer.extend({
         this._super.apply(this, arguments);
 
         this.widgets = [];
-        this.qweb = new QWeb(session.debug, {_s: session.origin}, false);
+        this.qweb = new QWeb(config.isDebug(), {_s: session.origin}, false);
         var templates = findInNode(this.arch, function (n) { return n.tag === 'templates';});
         transformQwebTemplate(templates, state.fields);
         this.qweb.add_template(utils.json_node_to_xml(templates));
@@ -281,13 +283,27 @@ var KanbanRenderer = BasicRenderer.extend({
         }
     },
     /**
+     * Returns the default columns for the kanban view example background.
+     * You can override this method to easily customize the column names.
+     *
+     * @private
+     */
+    _getGhostColumns: function () {
+        if (this.examples && this.examples.ghostColumns) {
+            return this.examples.ghostColumns;
+        }
+        return _.map(_.range(1, 5), function (num) {
+            return _.str.sprintf(_t("Column %s"), num);
+        });
+    },
+    /**
      * Render the Example Ghost Kanban card on the background
      *
      * @private
      * @param {DocumentFragment} fragment
      */
     _renderExampleBackground: function (fragment) {
-        var $background = $(qweb.render('KanbanView.ExamplesBackground'));
+        var $background = $(qweb.render('KanbanView.ExamplesBackground', {ghostColumns: this._getGhostColumns()}));
         $background.appendTo(fragment);
     },
     /**
@@ -357,10 +373,9 @@ var KanbanRenderer = BasicRenderer.extend({
                 },
             });
 
-            // Enable column quickcreate
             if (this.createColumnEnabled) {
                 this.quickCreate = new ColumnQuickCreate(this, {
-                    examples: this.examples,
+                    examples: this.examples && this.examples.examples,
                 });
                 this.defs.push(this.quickCreate.appendTo(fragment).then(function () {
                     // Open it directly if there is no column yet

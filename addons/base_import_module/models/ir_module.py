@@ -95,7 +95,6 @@ class IrModule(models.Model):
                     filename = os.path.split(url_path)[1]
                     values = dict(
                         name=filename,
-                        datas_fname=filename,
                         url=url_path,
                         res_model='ir.ui.view',
                         type='binary',

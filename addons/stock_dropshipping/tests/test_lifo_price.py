@@ -32,7 +32,6 @@ class TestLifoPrice(common.TransactionCase):
         product_form.type = 'product'
         product_form.categ_id = product_category_001
         product_form.lst_price = 100.0
-        product_form.standard_price = 70.0
         product_form.uom_id = self.env.ref('uom.product_uom_kgm')
         product_form.uom_po_id = self.env.ref('uom.product_uom_kgm')
         # these are not available (visible) in either product or variant
@@ -43,6 +42,10 @@ class TestLifoPrice(common.TransactionCase):
         product_form.categ_id.property_stock_account_input_categ_id = self.env.ref('stock_dropshipping.o_expense')
         product_form.categ_id.property_stock_account_output_categ_id = self.env.ref('stock_dropshipping.o_income')
         product_lifo_icecream = product_form.save()
+
+        std_price_wiz = Form(self.env['stock.change.standard.price'].with_context(active_id=product_lifo_icecream.id, active_model='product.product'))
+        std_price_wiz.new_price = 70.0
+        std_price_wiz.save()
 
         # I create a draft Purchase Order for first in move for 10 pieces at 60 euro
         order_form = Form(self.env['purchase.order'])
@@ -96,4 +99,4 @@ class TestLifoPrice(common.TransactionCase):
         outgoing_lifo_shipment.button_validate()
 
         # Check if the move value correctly reflects the fifo costing method
-        self.assertEqual(outgoing_lifo_shipment.move_lines.value, -1400.0, 'Stock move value should have been 1400 euro')
+        self.assertEqual(outgoing_lifo_shipment.move_lines.stock_valuation_layer_ids.value, -1400.0, 'Stock move value should have been 1400 euro')

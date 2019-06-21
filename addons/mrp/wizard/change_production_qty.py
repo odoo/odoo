@@ -88,7 +88,7 @@ class ChangeProductionQty(models.TransientModel):
                 else:
                     quantity = quantity if (quantity > 0) else 0
                 if float_is_zero(quantity, precision_digits=precision):
-                    wo.final_lot_id = False
+                    wo.finished_lot_id = False
                     wo._workorder_line_ids().unlink()
                 wo.qty_producing = quantity
                 if wo.qty_produced < wo.qty_production and wo.state == 'done':
@@ -106,7 +106,7 @@ class ChangeProductionQty(models.TransientModel):
                 (moves_finished + moves_raw).write({'workorder_id': wo.id})
                 if wo.state not in ('done', 'cancel'):
                     line_values = wo._update_workorder_lines()
-                    self._workorder_line_ids().create(line_values['to_create'])
+                    wo._workorder_line_ids().create(line_values['to_create'])
                     if line_values['to_delete']:
                         line_values['to_delete'].unlink()
                     for line, vals in line_values['to_update'].items():

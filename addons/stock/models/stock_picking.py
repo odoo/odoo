@@ -41,7 +41,7 @@ class PickingType(models.Model):
     show_entire_packs = fields.Boolean('Move Entire Packages', help="If ticked, you will be able to select entire packages to move")
     warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse', ondelete='cascade',
-        default=lambda self: self.env['stock.warehouse'].search([('company_id', '=', self.env.company_id.id)], limit=1))
+        default=lambda self: self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1))
     active = fields.Boolean('Active', default=True)
     use_create_lots = fields.Boolean(
         'Create New Lots/Serial Numbers', default=True,
@@ -64,6 +64,7 @@ class PickingType(models.Model):
     rate_picking_late = fields.Integer(compute='_compute_picking_count')
     rate_picking_backorders = fields.Integer(compute='_compute_picking_count')
     barcode = fields.Char('Barcode', copy=False)
+    company_id = fields.Many2one('res.company', 'Company', related='warehouse_id.company_id', store=True)
 
     @api.one
     def _compute_last_done_picking(self):
@@ -256,11 +257,11 @@ class Picking(models.Model):
         readonly=True)
 
     partner_id = fields.Many2one(
-        'res.partner', 'Partner',
+        'res.partner', 'Contact',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env.company_id,
+        default=lambda self: self.env.company,
         index=True, required=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     user_id = fields.Many2one(
@@ -751,7 +752,6 @@ class Picking(models.Model):
             return {
                 'name': _('Immediate Transfer?'),
                 'type': 'ir.actions.act_window',
-                'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'stock.immediate.transfer',
                 'views': [(view.id, 'form')],
@@ -766,7 +766,6 @@ class Picking(models.Model):
             wiz = self.env['stock.overprocessed.transfer'].create({'picking_id': self.id})
             return {
                 'type': 'ir.actions.act_window',
-                'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'stock.overprocessed.transfer',
                 'views': [(view.id, 'form')],
@@ -788,7 +787,6 @@ class Picking(models.Model):
         return {
             'name': _('Create Backorder?'),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'stock.backorder.confirmation',
             'views': [(view.id, 'form')],
@@ -1038,7 +1036,6 @@ class Picking(models.Model):
             })
             return {
                 'name': _('Choose destination location'),
-                'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'stock.package.destination',
                 'view_id': view_id,
@@ -1106,7 +1103,6 @@ class Picking(models.Model):
                 products |= move.product_id
         return {
             'name': _('Scrap'),
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'stock.scrap',
             'view_id': view.id,

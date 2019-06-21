@@ -53,7 +53,7 @@ class ValuationReconciliationTestCase(AccountingTestCase):
     def setUp(self):
         super(ValuationReconciliationTestCase, self).setUp()
 
-        self.company = self.env.company_id
+        self.company = self.env.company
         self.company.anglo_saxon_accounting = True
         self.currency_one = self.company.currency_id
         currency_two_name = 'USD' if self.currency_one.name != 'USD' else 'EUR'
@@ -102,15 +102,15 @@ class ValuationReconciliationTestCase(AccountingTestCase):
             'uom_po_id': uom.id,
         })
 
-        self.test_product_order = self.env['product.product'].create({
+        self.test_product_order = test_product_order_inv_template.product_variant_id
+        self.test_product_order.write({
             'name': 'The chocolate moose - order',
-            'product_tmpl_id': test_product_order_inv_template.id,
             'standard_price': 42.0,
         })
 
-        self.test_product_delivery = self.env['product.product'].create({
+        self.test_product_delivery = test_product_delivery_inv_template.product_variant_id
+        self.test_product_delivery.write({
             'name': 'The chocolate moose - delivery',
-            'product_tmpl_id': test_product_delivery_inv_template.id,
             'standard_price': 42.0,
         })
 

@@ -15,7 +15,7 @@ class Pricelist(models.Model):
     _order = "sequence asc, id desc"
 
     def _get_default_currency_id(self):
-        return self.env.company_id.currency_id.id
+        return self.env.company.currency_id.id
 
     def _get_default_item_ids(self):
         ProductPricelistItem = self.env['product.pricelist.item']
@@ -221,7 +221,7 @@ class Pricelist(models.Model):
 
                 if rule.base == 'pricelist' and rule.base_pricelist_id:
                     price_tmp = rule.base_pricelist_id._compute_price_rule([(product, qty, partner)])[product.id][0]  # TDE: 0 = price, 1 = rule
-                    price = rule.base_pricelist_id.currency_id._convert(price_tmp, self.currency_id, self.env.company_id, date, round=False)
+                    price = rule.base_pricelist_id.currency_id._convert(price_tmp, self.currency_id, self.env.company, date, round=False)
                 else:
                     # if base option is public price take sale price else cost price of product
                     # price_compute returns the price in the context UoM, i.e. qty_uom_id
@@ -260,7 +260,7 @@ class Pricelist(models.Model):
                     cur = product.cost_currency_id
                 else:
                     cur = product.currency_id
-                price = cur._convert(price, self.currency_id, self.env.company_id, date, round=False)
+                price = cur._convert(price, self.currency_id, self.env.company, date, round=False)
 
             results[product.id] = (price, suitable_rule and suitable_rule.id or False)
 
@@ -290,12 +290,6 @@ class Pricelist(models.Model):
         self.ensure_one()
         return self._compute_price_rule([(product, quantity, partner)], date=date, uom_id=uom_id)[product.id]
 
-    # Compatibility to remove after v10 - DEPRECATED
-    @api.model
-    def _price_rule_get_multi(self, pricelist, products_by_qty_by_partner):
-        """ Low level method computing the result tuple for a given pricelist and multi products - return tuple """
-        return pricelist._compute_price_rule(products_by_qty_by_partner)
-
     @api.multi
     def price_get(self, prod_id, qty, partner=None):
         """ Multi pricelist, mono product - returns price per pricelist """
@@ -317,16 +311,6 @@ class Pricelist(models.Model):
         """ Mono pricelist, multi product - return price per product """
         return pricelist.get_products_price(
             list(zip(**products_by_qty_by_partner)))
-
-    # DEPRECATED (Not used anymore, see d39d583b2) -> Remove me in master (saas12.3)
-    def _get_partner_pricelist(self, partner_id, company_id=None):
-        """ Retrieve the applicable pricelist for a given partner in a given company.
-
-            :param company_id: if passed, used for looking up properties,
-             instead of current user's company
-        """
-        res = self._get_partner_pricelist_multi([partner_id], company_id)
-        return res[partner_id].id
 
     def _get_partner_pricelist_multi_search_domain_hook(self):
         return []
@@ -353,7 +337,7 @@ class Pricelist(models.Model):
         # as we will do a search() later (real case for website public user).
         Partner = self.env['res.partner'].with_context(active_test=False)
 
-        Property = self.env['ir.property'].with_context(force_company=company_id or self.env.company_id.id)
+        Property = self.env['ir.property'].with_context(force_company=company_id or self.env.company.id)
         Pricelist = self.env['product.pricelist']
         pl_domain = self._get_partner_pricelist_multi_search_domain_hook()
 

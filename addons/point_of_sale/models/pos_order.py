@@ -12,6 +12,7 @@ from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.addons import decimal_precision as dp
+from odoo.osv.expression import AND
 
 _logger = logging.getLogger(__name__)
 
@@ -326,6 +327,7 @@ class PosOrder(models.Model):
                     'partner_id': partner_id,
                     'order_id': order.id,
                     'tax_repartition_line_id': tax['tax_repartition_line_id'],
+                    'tax_base_amount': tax['base'],
                     'tag_ids': tax['tag_ids'],
                 }
                 if currency_id != cur_company:
@@ -535,8 +537,10 @@ class PosOrder(models.Model):
     def _default_pricelist(self):
         return self._default_session().config_id.pricelist_id
 
+    def _default_company_id(self):
+        return self._default_session().config_id.company_id
+
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
-    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, default=lambda self: self.env.company_id)
     date_order = fields.Datetime(string='Order Date', readonly=True, index=True, default=fields.Datetime.now)
     user_id = fields.Many2one(
         comodel_name='res.users', string='User',
@@ -551,6 +555,8 @@ class PosOrder(models.Model):
     amount_return = fields.Float(string='Returned', digits=0, required=True, readonly=True)
     lines = fields.One2many('pos.order.line', 'order_id', string='Order Lines', states={'draft': [('readonly', False)]}, readonly=True, copy=True)
     statement_ids = fields.One2many('account.bank.statement.line', 'pos_statement_id', string='Payments', states={'draft': [('readonly', False)]}, readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True,
+                                    default=lambda self: self._default_company_id())
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, states={
                                    'draft': [('readonly', False)]}, readonly=True, default=_default_pricelist)
     partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index=True, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]})
@@ -561,6 +567,9 @@ class PosOrder(models.Model):
         domain="[('state', '=', 'opened')]", states={'draft': [('readonly', False)]},
         readonly=True, default=_default_session)
     config_id = fields.Many2one('pos.config', related='session_id.config_id', string="Point of Sale", readonly=False)
+    currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency")
+    currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, readonly=True, help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
+
     invoice_group = fields.Boolean(related="config_id.module_account", readonly=False)
     state = fields.Selection(
         [('draft', 'New'), ('cancel', 'Cancelled'), ('paid', 'Paid'), ('done', 'Posted'), ('invoiced', 'Invoiced')],
@@ -572,7 +581,7 @@ class PosOrder(models.Model):
     picking_type_id = fields.Many2one('stock.picking.type', related='session_id.config_id.picking_type_id', string="Operation Type", readonly=False)
     location_id = fields.Many2one(
         comodel_name='stock.location',
-        related='session_id.config_id.stock_location_id',
+        related='picking_id.location_id',
         string="Location", store=True,
         readonly=True,
     )
@@ -586,6 +595,12 @@ class PosOrder(models.Model):
         readonly=True,
         states={'draft': [('readonly', False)]},
     )
+
+    @api.depends('date_order', 'company_id', 'currency_id', 'company_id.currency_id')
+    def _compute_currency_rate(self):
+        for order in self:
+            order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order)
+
 
     @api.onchange('statement_ids', 'lines')
     def _onchange_amount_all(self):
@@ -715,7 +730,6 @@ class PosOrder(models.Model):
 
         return {
             'name': _('Customer Invoice'),
-            'view_type': 'form',
             'view_mode': 'form',
             'view_id': self.env.ref('account.invoice_form').id,
             'res_model': 'account.invoice',
@@ -792,7 +806,7 @@ class PosOrder(models.Model):
             order_picking = Picking
             return_picking = Picking
             moves = Move
-            location_id = order.location_id.id
+            location_id = picking_type.default_location_src_id.id
             if order.partner_id:
                 destination_id = order.partner_id.property_stock_customer.id
             else:
@@ -890,7 +904,7 @@ class PosOrder(models.Model):
                             # a serialnumber always has a quantity of 1 product, a lot number takes the full quantity of the order line
                             qty = 1.0
                             if stock_production_lot.product_id.tracking == 'lot':
-                                qty = pos_pack_lot.pos_order_line_id.qty
+                                qty = abs(pos_pack_lot.pos_order_line_id.qty)
                             qty_done += qty
                             pack_lots.append({'lot_id': stock_production_lot.id, 'qty': qty})
                         else:
@@ -920,10 +934,13 @@ class PosOrder(models.Model):
 
     def _prepare_bank_statement_line_payment_values(self, data):
         """Create a new payment for the order"""
+        payment_name = '%s - %s' % (self.name, self.pos_reference)
+        if data.get('payment_name'):
+            payment_name += ': ' + data['payment_name']
         args = {
             'amount': data['amount'],
             'date': data.get('payment_date', fields.Date.context_today(self)),
-            'name': self.name + ': ' + (data.get('payment_name', '') or ''),
+            'name': payment_name,
             'partner_id': self.env["res.partner"]._find_accounting_partner(self.partner_id).id or False,
         }
 
@@ -1016,7 +1033,6 @@ class PosOrder(models.Model):
 
         return {
             'name': _('Return Products'),
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'pos.order',
             'res_id': PosOrder.ids[0],
@@ -1047,7 +1063,7 @@ class PosOrderLine(models.Model):
             line[2]['tax_ids'] = [(6, 0, [x.id for x in product.taxes_id])]
         return line
 
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company_id)
+    company_id = fields.Many2one('res.company', string='Company', related="order_id.company_id", store=True)
     name = fields.Char(string='Line No', required=True, copy=False)
     notice = fields.Char(string='Discount Notice')
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], required=True, change_default=True)
@@ -1058,7 +1074,7 @@ class PosOrderLine(models.Model):
     price_subtotal_incl = fields.Float(string='Subtotal', digits=0,
         readonly=True, required=True)
     discount = fields.Float(string='Discount (%)', digits=0, default=0.0)
-    order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade')
+    order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade', required=True)
     tax_ids = fields.Many2many('account.tax', string='Taxes', readonly=True)
     tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes to Apply')
     pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')
@@ -1175,43 +1191,52 @@ class ReportSaleDetails(models.AbstractModel):
 
 
     @api.model
-    def get_sale_details(self, date_start=False, date_stop=False, configs=False):
-        """ Serialise the orders of the day information
+    def get_sale_details(self, date_start=False, date_stop=False, config_ids=False, session_ids=False):
+        """ Serialise the orders of the requested time period, configs and sessions.
 
-        params: date_start, date_stop string representing the datetime of order
+        :param date_start: The dateTime to start, default today 00:00:00.
+        :type date_start: str.
+        :param date_stop: The dateTime to stop, default date_start + 23:59:59.
+        :type date_stop: str.
+        :param config_ids: Pos Config id's to include.
+        :type config_ids: list of numbers.
+        :param session_ids: Pos Config id's to include.
+        :type session_ids: list of numbers.
+
+        :returns: dict -- Serialised sales.
         """
-        if not configs:
-            configs = self.env['pos.config'].search([])
+        domain = [('state', 'in', ['paid','invoiced','done'])]
 
-        user_tz = pytz.timezone(self.env.context.get('tz') or self.env.user.tz or 'UTC')
-        today = user_tz.localize(fields.Datetime.from_string(fields.Date.context_today(self)))
-        today = today.astimezone(pytz.timezone('UTC'))
-        if date_start:
-            date_start = fields.Datetime.from_string(date_start)
+        if (session_ids):
+            AND([domain, [('session_id', 'in', session_ids)]])
         else:
-            # start by default today 00:00:00
-            date_start = today
+            if date_start:
+                date_start = fields.Datetime.from_string(date_start)
+            else:
+                # start by default today 00:00:00
+                user_tz = pytz.timezone(self.env.context.get('tz') or self.env.user.tz or 'UTC')
+                today = user_tz.localize(fields.Datetime.from_string(fields.Date.context_today(self)))
+                date_start = today.astimezone(pytz.timezone('UTC'))
 
-        if date_stop:
-            # set time to 23:59:59
-            date_stop = fields.Datetime.from_string(date_stop)
-        else:
-            # stop by default today 23:59:59
-            date_stop = today + timedelta(days=1, seconds=-1)
+            if date_stop:
+                date_stop = fields.Datetime.from_string(date_stop)
+                # avoid a date_stop smaller than date_start
+                if (date_stop < date_start):
+                    date_stop = date_start + timedelta(days=1, seconds=-1)
+            else:
+                # stop by default today 23:59:59
+                date_stop = date_start + timedelta(days=1, seconds=-1)
 
-        # avoid a date_stop smaller than date_start
-        date_stop = max(date_stop, date_start)
+            AND(domain, [
+                ('date_order', '>=', fields.Datetime.to_string(date_start)),
+                ('date_order', '<=', fields.Datetime.to_string(date_stop)),])
 
-        date_start = fields.Datetime.to_string(date_start)
-        date_stop = fields.Datetime.to_string(date_stop)
+            if config_ids:
+                AND(domain, [('config_id', 'in', config_ids)])
 
-        orders = self.env['pos.order'].search([
-            ('date_order', '>=', date_start),
-            ('date_order', '<=', date_stop),
-            ('state', 'in', ['paid','invoiced','done']),
-            ('config_id', 'in', configs.ids)])
+        orders = self.env['pos.order'].search(domain)
 
-        user_currency = self.env.company_id.currency_id
+        user_currency = self.env.company.currency_id
 
         total = 0.0
         products_sold = {}
@@ -1259,7 +1284,7 @@ class ReportSaleDetails(models.AbstractModel):
             'currency_precision': user_currency.decimal_places,
             'total_paid': user_currency.round(total),
             'payments': payments,
-            'company_name': self.env.company_id.name,
+            'company_name': self.env.company.name,
             'taxes': list(taxes.values()),
             'products': sorted([{
                 'product_id': product.id,

@@ -3,7 +3,7 @@
     <template id="variants">
         <t t-set="attribute_exclusions" t-value="product._get_attribute_exclusions(parent_combination, parent_name)"/>
         <ul t-attf-class="list-unstyled js_add_cart_variants #{ul_class}" t-att-data-attribute_exclusions="json.dumps(attribute_exclusions)">
-            <t t-foreach="product._get_valid_product_template_attribute_lines()" t-as="variant_id">
+            <t t-foreach="product.valid_product_template_attribute_line_ids" t-as="variant_id">
                 <!-- Attributes selection is hidden if there is only one value available and it's not a custom value -->
                 <li t-att-data-attribute_id="variant_id.attribute_id.id"
                     t-att-data-attribute_name="variant_id.attribute_id.name"

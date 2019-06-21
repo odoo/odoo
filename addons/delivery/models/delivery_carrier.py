@@ -258,7 +258,7 @@ class DeliveryCarrier(models.Model):
                     'warning_message': False}
         price = self.fixed_price
         if self.company_id and self.company_id.currency_id.id != order.currency_id.id:
-            price = self.env['res.currency']._compute(self.company_id.currency_id, order.currency_id, price)
+            price = self.company_id.currency_id._convert(price, order.currency_id, self.company_id, fields.Date.today())
         return {'success': True,
                 'price': price,
                 'error_message': False,

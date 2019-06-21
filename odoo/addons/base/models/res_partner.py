@@ -48,7 +48,7 @@ class FormatAddressMixin(models.AbstractModel):
 
     def _fields_view_get_address(self, arch):
         # consider the country of the user, not the country of the partner we want to display
-        address_view_id = self.env.company_id.country_id.address_view_id
+        address_view_id = self.env.company.country_id.address_view_id
         if address_view_id and not self._context.get('no_address_format'):
             #render the partner address accordingly to address_view_id
             doc = etree.fromstring(arch)
@@ -139,7 +139,7 @@ class Partner(models.Model):
         return self.env['res.partner.category'].browse(self._context.get('category_id'))
 
     def _default_company(self):
-        return self.env.company_id
+        return self.env.company
 
     def _split_street_with_params(self, street_raw, street_format):
         return {'street': street_raw}
@@ -155,10 +155,10 @@ class Partner(models.Model):
     lang = fields.Selection(_lang_get, string='Language', default=lambda self: self.env.lang,
                             help="All the emails and documents sent to this contact will be translated in this language.")
     tz = fields.Selection(_tz_get, string='Timezone', default=lambda self: self._context.get('tz'),
-                          help="The partner's timezone, used to output proper date and time values "
-                               "inside printed reports. It is important to set a value for this field. "
-                               "You should use the same timezone that is otherwise used to pick and "
-                               "render date and time values: your computer's timezone.")
+                          help="When printing documents and exporting/importing data, time values are computed according to this timezone.\n"
+                               "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
+                               "Anywhere else, time values are computed according to the time offset of your web client.")
+
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
     user_id = fields.Many2one('res.users', string='Salesperson',
       help='The internal user in charge of this contact.')
@@ -193,6 +193,8 @@ class Partner(models.Model):
     city = fields.Char()
     state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', domain="[('country_id', '=?', country_id)]")
     country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
+    partner_latitude = fields.Float(string='Geo Latitude', digits=(16, 5))
+    partner_longitude = fields.Float(string='Geo Longitude', digits=(16, 5))
     email = fields.Char()
     email_formatted = fields.Char(
         'Formatted Email', compute='_compute_email_formatted',
@@ -248,7 +250,7 @@ class Partner(models.Model):
 
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name')
     def _compute_display_name(self):
-        diff = dict(show_address=None, show_address_only=None, show_email=None)
+        diff = dict(show_address=None, show_address_only=None, show_email=None, html_format=None, show_vat=False)
         names = dict(self.with_context(**diff).name_get())
         for partner in self:
             partner.display_name = names.get(partner.id)
@@ -266,10 +268,8 @@ class Partner(models.Model):
     @api.depends('vat')
     def _compute_same_vat_partner_id(self):
         for partner in self:
-            partner_id = partner.id
-            if isinstance(partner_id, models.NewId):
-                # deal with onchange(), which is always called on a single record
-                partner_id = self._origin.id
+            # use _origin to deal with onchange()
+            partner_id = partner._origin.id
             domain = [('vat', '=', partner.vat)]
             if partner_id:
                 domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]
@@ -379,7 +379,7 @@ class Partner(models.Model):
         if not self.parent_id:
             return
         result = {}
-        partner = getattr(self, '_origin', self)
+        partner = self._origin
         if partner.parent_id and partner.parent_id != self.parent_id:
             result['warning'] = {
                 'title': _('Warning'),
@@ -982,12 +982,6 @@ class Partner(models.Model):
     @api.multi
     def _get_country_name(self):
         return self.country_id.name or ''
-
-    @api.multi
-    def get_base_url(self):
-        """Get the base URL for the current partner."""
-        self.ensure_one()
-        return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
 
 class ResPartnerIndustry(models.Model):

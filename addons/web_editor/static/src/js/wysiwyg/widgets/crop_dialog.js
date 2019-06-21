@@ -172,9 +172,7 @@ var CropImageDialog = Dialog.extend({
         });
         this.$media.attr('src', canvas.toDataURL(this.imageData.mimetype));
 
-        this.trigger('saved', {
-            media: this.$media[0],
-        });
+        this.final_data = this.media;
         return this._super.apply(this, arguments);
     },
 

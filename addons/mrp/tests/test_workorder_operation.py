@@ -2,18 +2,56 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
-
-from odoo.addons.mrp.tests.common import TestMrpCommon
-from odoo.exceptions import UserError
 from odoo.tests import Form
+from odoo.addons.mrp.tests.common import TestMrpCommon
+from odoo.exceptions import ValidationError, UserError
 
 
 class TestWorkOrderProcess(TestMrpCommon):
+    def full_availability(self):
+        """set full availability for all calendars"""
+        self.env['resource.calendar'].search([]).write({'attendance_ids': [
+            (0, 0, {'name': 'Monday', 'dayofweek': '0', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
+            (0, 0, {'name': 'Tuesday', 'dayofweek': '1', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
+            (0, 0, {'name': 'Wednesday', 'dayofweek': '2', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
+            (0, 0, {'name': 'Thursday', 'dayofweek': '3', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
+            (0, 0, {'name': 'Friday', 'dayofweek': '4', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
+            (0, 0, {'name': 'Saturday', 'dayofweek': '5', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
+            (0, 0, {'name': 'Sunday', 'dayofweek': '6', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
+        ]})
 
-    def setUp(self):
-        super(TestWorkOrderProcess, self).setUp()
-        self.source_location_id = self.ref('stock.stock_location_14')
-        self.warehouse = self.env.ref('stock.warehouse0')
+    @classmethod
+    def setUpClass(cls):
+        super(TestWorkOrderProcess, cls).setUpClass()
+        cls.source_location_id = cls.env.ref('stock.stock_location_14').id
+        cls.warehouse = cls.env.ref('stock.warehouse0')
+        # setting up alternative workcenters
+        cls.wc_alt_1 = cls.env['mrp.workcenter'].create({
+            'name': 'Nuclear Workcenter bis',
+            'capacity': 3,
+            'time_start': 9,
+            'time_stop': 5,
+            'time_efficiency': 80,
+        })
+        cls.wc_alt_2 = cls.env['mrp.workcenter'].create({
+            'name': 'Nuclear Workcenter ter',
+            'capacity': 1,
+            'time_start': 10,
+            'time_stop': 5,
+            'time_efficiency': 85,
+        })
+        cls.product_4.uom_id = cls.uom_unit
+        cls.planning_bom = cls.env['mrp.bom'].create({
+            'product_id': cls.product_4.id,
+            'product_tmpl_id': cls.product_4.product_tmpl_id.id,
+            'product_uom_id': cls.uom_unit.id,
+            'product_qty': 4.0,
+            'routing_id': cls.routing_1.id,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': cls.product_2.id, 'product_qty': 2}),
+                (0, 0, {'product_id': cls.product_1.id, 'product_qty': 4})
+            ]})
 
     def test_00_workorder_process(self):
         """ Testing consume quants and produced quants with workorder """
@@ -50,7 +88,6 @@ class TestWorkOrderProcess(TestMrpCommon):
         # --------------------
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product Table',
-            'filter': 'partial',
             'line_ids': [(0, 0, {
                 'product_id': product_table_sheet.id,
                 'product_uom_id': product_table_sheet.uom_id.id,
@@ -76,6 +113,7 @@ class TestWorkOrderProcess(TestMrpCommon):
                 'location_id': self.source_location_id
             })]
         })
+        inventory.action_start()
         inventory.action_validate()
 
         # Create work order
@@ -94,7 +132,7 @@ class TestWorkOrderProcess(TestMrpCommon):
         # Process assembly line
         # ---------------------------------------------------------
         finished_lot =self.env['stock.production.lot'].create({'product_id': production_table.product_id.id})
-        workorder.write({'final_lot_id': finished_lot.id})
+        workorder.write({'finished_lot_id': finished_lot.id})
         workorder.button_start()
         for workorder_line_id in workorder._workorder_line_ids():
             if workorder_line_id.product_id.id == product_bolt.id:
@@ -157,7 +195,6 @@ class TestWorkOrderProcess(TestMrpCommon):
         # --------------------
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product Table',
-            'filter': 'partial',
             'line_ids': [(0, 0, {
                 'product_id': product_table_sheet.id,
                 'product_uom_id': product_table_sheet.uom_id.id,
@@ -178,6 +215,7 @@ class TestWorkOrderProcess(TestMrpCommon):
                 'location_id': self.source_location_id
             })]
         })
+        inventory.action_start()
         inventory.action_validate()
 
         # Create work order
@@ -198,7 +236,7 @@ class TestWorkOrderProcess(TestMrpCommon):
         # Process cutting operation...
         # ---------------------------------------------------------
         finished_lot = self.env['stock.production.lot'].create({'product_id': production_table.product_id.id})
-        workorders[0].write({'final_lot_id': finished_lot.id, 'qty_producing': 1.0})
+        workorders[0].write({'finished_lot_id': finished_lot.id, 'qty_producing': 1.0})
         workorders[0].button_start()
         workorders[0]._workorder_line_ids()[0].write({'lot_id': lot_sheet.id, 'qty_done': 1})
         self.assertEqual(workorders[0].state, 'progress')
@@ -269,11 +307,11 @@ class TestWorkOrderProcess(TestMrpCommon):
         man_order = man_order_form.save()
         # reset quantities
         self.product_1.type = "product"
-        self.env['stock.change.product.qty'].create({
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': self.product_1.id,
-            'new_quantity': 0.0,
+            'inventory_quantity': 0.0,
             'location_id': self.warehouse_1.lot_stock_id.id,
-        }).change_product_qty()
+        })
 
         (self.product_2 | self.product_4).write({
             'tracking': 'none',
@@ -306,7 +344,6 @@ class TestWorkOrderProcess(TestMrpCommon):
         # refuel stock
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory For Product C',
-            'filter': 'partial',
             'line_ids': [(0, 0, {
                 'product_id': self.product_2.id,
                 'product_uom_id': self.product_2.uom_id.id,
@@ -352,15 +389,15 @@ class TestWorkOrderProcess(TestMrpCommon):
         self.assertEqual(kit_wo.state, 'ready', "Workorder should be in ready state.")
         self.assertEqual(door_wo_1.state, 'ready', "Workorder should be in ready state.")
         self.assertEqual(door_wo_2.state, 'pending', "Workorder should be in pending state.")
-        self.assertEqual(kit_wo.duration_expected, 80, "Workorder duration should be 80 instead of %s." % str(kit_wo.duration_expected))
-        self.assertEqual(door_wo_1.duration_expected, 20, "Workorder duration should be 20 instead of %s." % str(door_wo_1.duration_expected))
-        self.assertEqual(door_wo_2.duration_expected, 20, "Workorder duration should be 20 instead of %s." % str(door_wo_2.duration_expected))
+        self.assertEqual(kit_wo.duration_expected, 960, "Workorder duration should be 960 instead of %s." % str(kit_wo.duration_expected))
+        self.assertEqual(door_wo_1.duration_expected, 480, "Workorder duration should be 480 instead of %s." % str(door_wo_1.duration_expected))
+        self.assertEqual(door_wo_2.duration_expected, 480, "Workorder duration should be 480 instead of %s." % str(door_wo_2.duration_expected))
 
         # subbom: kit for stone tools
         kit_wo.button_start()
         finished_lot = self.env['stock.production.lot'].create({'product_id': man_order.product_id.id})
         kit_wo.write({
-            'final_lot_id': finished_lot.id,
+            'finished_lot_id': finished_lot.id,
             'qty_producing': 48
         })
 
@@ -371,7 +408,7 @@ class TestWorkOrderProcess(TestMrpCommon):
         # first operation of main bom
         finished_lot = self.env['stock.production.lot'].create({'product_id': man_order.product_id.id})
         door_wo_1.write({
-            'final_lot_id': finished_lot.id,
+            'finished_lot_id': finished_lot.id,
             'qty_producing': 48
         })
         door_wo_1.record_production()
@@ -449,7 +486,6 @@ class TestWorkOrderProcess(TestMrpCommon):
         # --------------------
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product Table',
-            'filter': 'partial',
             'line_ids': [(0, 0, {
                 'product_id': product_charger.id,
                 'product_uom_id': product_charger.uom_id.id,
@@ -464,7 +500,7 @@ class TestWorkOrderProcess(TestMrpCommon):
                 'location_id': self.source_location_id
             })]
         })
-        # inventory.action_start()
+        inventory.action_start()
         inventory.action_validate()
 
         # Check consumed move status
@@ -485,7 +521,7 @@ class TestWorkOrderProcess(TestMrpCommon):
         product_form = Form(self.env['mrp.product.produce'].with_context(context))
         product_form.qty_producing = 6.00
         laptop_lot_001 = self.env['stock.production.lot'].create({'product_id': custom_laptop.id})
-        product_form.final_lot_id = laptop_lot_001
+        product_form.finished_lot_id = laptop_lot_001
         product_consume = product_form.save()
         product_consume._workorder_line_ids()[0].qty_done = 12
         product_consume.do_produce()
@@ -512,7 +548,7 @@ class TestWorkOrderProcess(TestMrpCommon):
         produce_form = Form(self.env['mrp.product.produce'].with_context(context))
         produce_form.qty_producing = 4.00
         laptop_lot_002 = self.env['stock.production.lot'].create({'product_id': custom_laptop.id})
-        produce_form.final_lot_id = laptop_lot_002
+        produce_form.finished_lot_id = laptop_lot_002
         product_consume = produce_form.save()
         self.assertEquals(len(product_consume._workorder_line_ids()), 2)
         product_consume._workorder_line_ids()[0].qty_done = 8
@@ -624,7 +660,6 @@ class TestWorkOrderProcess(TestMrpCommon):
         # ----------------
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product B and C',
-            'filter': 'partial',
             'line_ids': [(0, 0, {
                 'product_id': product_B.id,
                 'product_uom_id': product_B.uom_id.id,
@@ -639,7 +674,7 @@ class TestWorkOrderProcess(TestMrpCommon):
                 'location_id': self.source_location_id
             })]
         })
-        # inventory.action_start()
+        inventory.action_start()
         inventory.action_validate()
 
         # Start Production ...
@@ -650,7 +685,7 @@ class TestWorkOrderProcess(TestMrpCommon):
         context = {"active_ids": [mo_custom_product.id], "active_id": mo_custom_product.id}
         produce_form = Form(self.env['mrp.product.produce'].with_context(context))
         produce_form.qty_producing = 10.00
-        produce_form.final_lot_id = lot_a
+        produce_form.finished_lot_id = lot_a
         product_consume = produce_form.save()
         # laptop_lot_002 = self.env['stock.production.lot'].create({'product_id': custom_laptop.id})
         self.assertEquals(len(product_consume._workorder_line_ids()), 2)
@@ -702,22 +737,22 @@ class TestWorkOrderProcess(TestMrpCommon):
 
         workorders[0].button_start()
         serial_a = self.env['stock.production.lot'].create({'product_id': laptop.id})
-        workorders[0].final_lot_id = serial_a
+        workorders[0].finished_lot_id = serial_a
         workorders[0].record_production()
         serial_b = self.env['stock.production.lot'].create({'product_id': laptop.id})
-        workorders[0].final_lot_id = serial_b
+        workorders[0].finished_lot_id = serial_b
         workorders[0].record_production()
         serial_c = self.env['stock.production.lot'].create({'product_id': laptop.id})
-        workorders[0].final_lot_id = serial_c
+        workorders[0].finished_lot_id = serial_c
         workorders[0].record_production()
         self.assertEqual(workorders[0].state, 'done')
 
         for workorder in workorders - workorders[0]:
-            self.assertEqual(workorder.final_lot_id, serial_a)
+            self.assertEqual(workorder.finished_lot_id, serial_a)
             workorder.record_production()
-            self.assertEqual(workorder.final_lot_id, serial_b)
+            self.assertEqual(workorder.finished_lot_id, serial_b)
             workorder.record_production()
-            self.assertEqual(workorder.final_lot_id, serial_c)
+            self.assertEqual(workorder.finished_lot_id, serial_c)
             workorder.record_production()
             self.assertEqual(workorder.state, 'done')
 
@@ -763,12 +798,12 @@ class TestWorkOrderProcess(TestMrpCommon):
 
         workorder_1 = mo.workorder_ids[1]
         with Form(workorder_1) as wo:
-            wo.final_lot_id = lot_1
+            wo.finished_lot_id = lot_1
         workorder_1.record_production()
 
         self.assertTrue(len(workorder_1.allowed_lots_domain) > 1)
         with Form(workorder_1) as wo:
-            wo.final_lot_id = lot_2
+            wo.finished_lot_id = lot_2
         workorder_1.record_production()
 
         workorder_2 = mo.workorder_ids[2]
@@ -781,8 +816,8 @@ class TestWorkOrderProcess(TestMrpCommon):
 
     def test_04_test_planning_date(self):
         """ Test that workorder are planned at the correct time. """
-        # Remove attendances linked to the calendar, this means that the workcenter is working 24/7
-        self.env['resource.calendar'].search([]).write({'attendance_ids': [(5, False, False)]})
+        # The workcenter is working 24/7
+        self.full_availability()
 
         dining_table = self.env.ref("mrp.product_product_computer_desk")
 
@@ -804,8 +839,8 @@ class TestWorkOrderProcess(TestMrpCommon):
 
     def test_04b_test_planning_date(self):
         """ Test that workorder are planned at the correct time when setting a start date """
-        # Remove attendances linked to the calendar, this means that the workcenter is working 24/7
-        self.env['resource.calendar'].search([]).write({'attendance_ids': [(5, False, False)]})
+        # The workcenter is working 24/7
+        self.full_availability()
 
         dining_table = self.env.ref("mrp.product_product_computer_desk")
 
@@ -825,5 +860,172 @@ class TestWorkOrderProcess(TestMrpCommon):
         workorder = production_table.workorder_ids[0]
 
         # Check that the workorder is planned now and that it lasts one hour
-        self.assertEqual(workorder.date_planned_start, date_start, msg="Workorder should be planned tomorrow.")
-        self.assertEqual(workorder.date_planned_finished, date_start + timedelta(hours=1), msg="Workorder should be done one hour later.")
+        self.assertAlmostEqual(workorder.date_planned_start, date_start, delta=timedelta(seconds=1), msg="Workorder should be planned tomorrow.")
+        self.assertAlmostEqual(workorder.date_planned_finished, date_start + timedelta(hours=1), delta=timedelta(seconds=1), msg="Workorder should be done one hour later.")
+
+    def test_change_production_1(self):
+        """Change the quantity to produce on the MO while workorders are already planned."""
+        dining_table = self.env.ref("mrp.product_product_computer_desk")
+        dining_table.tracking = 'lot'
+        production_table_form = Form(self.env['mrp.production'])
+        production_table_form.product_id = dining_table
+        production_table_form.bom_id = self.env.ref("mrp.mrp_bom_desk")
+        production_table_form.product_qty = 1.0
+        production_table_form.product_uom_id = dining_table.uom_id
+        production_table = production_table_form.save()
+        production_table.action_confirm()
+
+        # Create work order
+        production_table.button_plan()
+
+        context = {'active_id': production_table.id, 'active_model': 'mrp.production'}
+        change_qty_form = Form(self.env['change.production.qty'].with_context(context))
+        change_qty_form.product_qty = 2.00
+        change_qty = change_qty_form.save()
+        change_qty.change_prod_qty()
+
+        self.assertEqual(production_table.workorder_ids[0].qty_producing, 2, "Quantity to produce not updated")
+
+    def test_planning_0(self):
+        """ Test alternative conditions
+        1. alternative relation is directionnal
+        2. a workcenter cannot be it's own alternative """
+        self.workcenter_1.alternative_workcenter_ids = self.wc_alt_1 | self.wc_alt_2
+        self.assertEqual(self.wc_alt_1.alternative_workcenter_ids, self.env['mrp.workcenter'], "Alternative workcenter is not reciprocal")
+        self.assertEqual(self.wc_alt_2.alternative_workcenter_ids, self.env['mrp.workcenter'], "Alternative workcenter is not reciprocal")
+        with self.assertRaises(ValidationError):
+            self.workcenter_1.alternative_workcenter_ids |= self.workcenter_1
+
+    def test_planning_1(self):
+        """ Testing planning workorder with alternative workcenters
+        Plan 6 times the same MO, the workorders should be split accross workcenters
+        The 3 workcenters are free, this test plans 3 workorder in a row then three next.
+        The workcenters have not exactly the same parameters (efficiency, start time) so the
+        the last 3 workorder are not dispatched like the 3 first.
+        At the end of the test, the calendars will look like:
+            - calendar wc1 :[mo1][mo4]
+            - calendar wc2 :[mo2 ][mo5 ]
+            - calendar wc3 :[mo3  ][mo6  ]"""
+        self.workcenter_1.alternative_workcenter_ids = self.wc_alt_1 | self.wc_alt_2
+        workcenters = [self.wc_alt_2, self.wc_alt_1, self.workcenter_1]
+        for i in range(3):
+            # Create an MO for product4
+            mo_form = Form(self.env['mrp.production'])
+            mo_form.product_id = self.product_4
+            mo_form.bom_id = self.planning_bom
+            mo_form.product_qty = 1
+            mo = mo_form.save()
+            mo.action_confirm()
+            mo.button_plan()
+            # Check that workcenters change
+            self.assertEqual(mo.workorder_ids.workcenter_id, workcenters[i], "wrong workcenter %d" % i)
+
+        for i in range(3):
+            # Planning 3 more should choose workcenters in opposite order as
+            # - wc_alt_2 as the best efficiency
+            # - wc_alt_1 take a little less start time
+            # - workcenter_1 is the worst
+            mo_form = Form(self.env['mrp.production'])
+            mo_form.product_id = self.product_4
+            mo_form.bom_id = self.planning_bom
+            mo_form.product_qty = 1
+            mo = mo_form.save()
+            mo.action_confirm()
+            mo.button_plan()
+            # Check that workcenters change
+            self.assertEqual(mo.workorder_ids.workcenter_id, workcenters[i], "wrong workcenter %d" % i)
+
+    def test_planning_2(self):
+        """ Plan some manufacturing orders with 2 workorders each
+        Batch size of the operation will influence start dates of workorders
+        The first unit to be produced can go the second workorder before finishing
+        to produce the second unit.
+        calendar wc1 : [q1][q2]
+        calendar wc2 :     [q1][q2]"""
+        self.workcenter_1.alternative_workcenter_ids = self.wc_alt_1 | self.wc_alt_2
+        self.planning_bom.routing_id = self.routing_2
+        # Allow second workorder to start once the first one is not ended yet
+        self.operation_2.batch = 'yes'
+        self.operation_2.batch_size = 1
+        self.env['mrp.workcenter'].search([]).write({'capacity': 1})
+        # workcenters work 24/7
+        self.full_availability()
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_4
+        mo_form.bom_id = self.planning_bom
+        mo_form.product_qty = 2
+        mo = mo_form.save()
+        mo.action_confirm()
+        plan = datetime.now()
+        mo.button_plan()
+        self.assertEqual(mo.workorder_ids[0].workcenter_id, self.wc_alt_2, "wrong workcenter")
+        self.assertEqual(mo.workorder_ids[1].workcenter_id, self.wc_alt_1, "wrong workcenter")
+
+        duration1 = self.operation_2.time_cycle * 100.0 / self.wc_alt_2.time_efficiency + self.wc_alt_2.time_start
+        duration2 = 2.0 * self.operation_2.time_cycle * 100.0 / self.wc_alt_1.time_efficiency + self.wc_alt_1.time_start + self.wc_alt_1.time_stop
+        wo2_start = mo.workorder_ids[1].date_planned_start
+        wo2_stop = mo.workorder_ids[1].date_planned_finished
+
+        wo2_start_theo = self.wc_alt_2.resource_calendar_id.plan_hours(duration1 / 60.0, plan, compute_leaves=False, resource=self.wc_alt_2.resource_id)
+        wo2_stop_theo = self.wc_alt_1.resource_calendar_id.plan_hours(duration2 / 60.0, wo2_start, compute_leaves=False, resource=self.wc_alt_2.resource_id)
+
+        self.assertAlmostEqual(wo2_start, wo2_start_theo, delta=timedelta(seconds=10), msg="Wrong plannification")
+        self.assertAlmostEqual(wo2_stop, wo2_stop_theo, delta=timedelta(seconds=10), msg="Wrong plannification")
+
+    def test_planning_3(self):
+        """ Plan some manufacturing orders with 1 workorder on 1 workcenter
+        the first workorder will be hard set in the future to see if the second
+        one take the free slot before on the calendar
+        calendar after first mo : [   ][mo1]
+        calendar after second mo: [mo2][mo1] """
+
+        self.workcenter_1.alternative_workcenter_ids = self.wc_alt_1 | self.wc_alt_2
+        self.env['mrp.workcenter'].search([]).write({'tz': 'UTC'}) # compute all date in UTC
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_4
+        mo_form.bom_id = self.planning_bom
+        mo_form.product_qty = 1
+        mo_form.date_start_wo = datetime(2019, 5, 13, 14, 0, 0, 0)
+        mo = mo_form.save()
+        start = mo.date_start_wo
+        mo.action_confirm()
+        mo.button_plan()
+        self.assertEqual(mo.workorder_ids[0].workcenter_id, self.wc_alt_2, "wrong workcenter")
+        wo1_start = mo.workorder_ids[0].date_planned_start
+        wo1_stop = mo.workorder_ids[0].date_planned_finished
+        self.assertAlmostEqual(wo1_start, start, delta=timedelta(seconds=10), msg="Wrong plannification")
+        self.assertAlmostEqual(wo1_stop, start + timedelta(minutes=85.58), delta=timedelta(seconds=10), msg="Wrong plannification")
+
+        # second MO should be plan before as there is a free slot before
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_4
+        mo_form.bom_id = self.planning_bom
+        mo_form.product_qty = 1
+        mo_form.date_start_wo = datetime(2019, 5, 13, 9, 0, 0, 0)
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_plan()
+        self.assertEqual(mo.workorder_ids[0].workcenter_id, self.wc_alt_2, "wrong workcenter")
+        wo1_start = mo.workorder_ids[0].date_planned_start
+        wo1_stop = mo.workorder_ids[0].date_planned_finished
+        self.assertAlmostEqual(wo1_start, datetime(2019, 5, 13, 9, 0, 0, 0), delta=timedelta(seconds=10), msg="Wrong plannification")
+        self.assertAlmostEqual(wo1_stop, datetime(2019, 5, 13, 9, 0, 0, 0) + timedelta(minutes=85.59), delta=timedelta(seconds=10), msg="Wrong plannification")
+
+    def test_planning_4(self):
+        """ Plan a manufacturing orders with 1 workorder on 1 workcenter
+        the workcenter calendar is empty. which means the workcenter is never
+        available. Planning a workorder on it should raise an error"""
+
+        self.workcenter_1.alternative_workcenter_ids = self.wc_alt_1 | self.wc_alt_2
+        self.env['resource.calendar'].search([]).write({'attendance_ids': [(5, False, False)]})
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_4
+        mo_form.bom_id = self.planning_bom
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+        with self.assertRaises(UserError):
+            mo.button_plan()

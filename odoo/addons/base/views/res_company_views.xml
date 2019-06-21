@@ -38,7 +38,7 @@
                                     <field name="currency_id" options="{'no_create': True, 'no_open': True}" id="company_currency" context="{'active_test': False}"/>
                                     <field name="parent_id"  groups="base.group_multi_company"/>
                                     <field name="sequence" invisible="1"/>
-                                    <field name="favicon" widget="image" class="float-left oe_avatar"/>
+                                    <field name="favicon" widget="image" class="float-left oe_avatar" groups="base.group_no_one"/>
                                 </group>
                                 <group name="social_media"/>
                             </group>
@@ -98,7 +98,6 @@
             <field name="name">Companies</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.company</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('id','=',active_id)]</field>
         </record>
@@ -106,7 +105,6 @@
             <field name="name">Companies</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.company</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">

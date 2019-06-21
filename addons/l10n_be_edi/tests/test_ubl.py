@@ -20,7 +20,6 @@ class TestUBL(common.TransactionCase):
 
         attachment_id = self.env['ir.attachment'].create({
             'name': 'efff_test.xml',
-            'datas_fname': 'efff_test.xml',
             'datas': base64.encodestring(xml_file),
             'res_id': invoice_id.id,
             'res_model': 'account.invoice',

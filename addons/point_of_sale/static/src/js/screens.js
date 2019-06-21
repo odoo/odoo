@@ -1150,6 +1150,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
         this.$('.new-customer').click(function(){
             self.display_client_details('edit',{
                 'country_id': self.pos.company.country_id,
+                'state_id': self.pos.company.state_id,
             });
         });
 
@@ -1433,21 +1434,16 @@ var ClientListScreenWidget = ScreenWidget.extend({
             });
             return;
         }
-        
-        var reader = new FileReader();
-        reader.onload = function(event){
-            var dataurl = event.target.result;
+        utils.getDataURLFromFile(file).then(function (dataurl) {
             var img     = new Image();
             img.src = dataurl;
             self.resize_image_to_dataurl(img,800,600,callback);
-        };
-        reader.onerror = function(){
+        }).guardedCatch(function () {
             self.gui.show_popup('error',{
                 title :_t('Could Not Read Image'),
                 body  :_t('The provided file could not be read due to an unknown error'),
             });
-        };
-        reader.readAsDataURL(file);
+        });
     },
 
     // This fetches partner changes on the server, and in case of changes, 
@@ -1538,6 +1534,24 @@ var ClientListScreenWidget = ScreenWidget.extend({
                 setTimeout(function() {
                     self.$('.window').scrollTop(0);
                 }, 0);
+            });
+
+            contents.find('.client-address-country').on('change', function (ev) {
+                var $stateSelection = contents.find('.client-address-states');
+                var value = this.value;
+                $stateSelection.empty()
+                $stateSelection.append($("<option/>", {
+                    value: '',
+                    text: 'None',
+                }));
+                self.pos.states.forEach(function (state) {
+                    if (state.country_id[0] == value) {
+                        $stateSelection.append($("<option/>", {
+                            value: state.id,
+                            text: state.name
+                        }));
+                    }
+                });
             });
 
             contents.find('.image-uploader').on('change',function(event){

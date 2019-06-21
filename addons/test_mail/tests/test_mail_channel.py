@@ -248,7 +248,7 @@ class TestChannelModeration(common.Moderation):
         self._init_mock_build_email()
         self.channel_1.sudo(self.user_employee).send_guidelines()
         self.env['mail.mail'].process_email_queue()
-        self.assertEmails(False, self.partner_employee | self.partner_employee_2, email_from=self.env.company_id.catchall or self.env.company_id.email)
+        self.assertEmails(False, self.partner_employee | self.partner_employee_2, email_from=self.env.company.catchall or self.env.company.email)
 
     def test_send_guidelines_crash(self):
         with self.assertRaises(UserError):

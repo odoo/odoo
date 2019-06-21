@@ -1870,7 +1870,7 @@ QUnit.module('basic_fields', {
 
         testUtils.dom.click(form.$('a.o_field_widget[name="document"]'));
 
-        assert.verifySteps([]); // We shoudln't have passed through steps
+        assert.verifySteps([]); // We shouldn't have passed through steps
 
         form.destroy();
         session.get_file = oldGetFile;
@@ -1928,7 +1928,7 @@ QUnit.module('basic_fields', {
         assert.isVisible(form.$('.o_field_widget iframe.o_pdfview_iframe'),
             "there should be an visible iframe");
         assert.hasAttrValue(form.$('.o_field_widget iframe.o_pdfview_iframe'), 'data-src',
-            '/web/static/lib/pdfjs/web/viewer.html?file=%2Fweb%2Fimage%3Fmodel%3Dpartner%26field%3Ddocument%26id%3D1#page=1',
+            '/web/static/lib/pdfjs/web/viewer.html?file=%2Fweb%2Fcontent%3Fmodel%3Dpartner%26field%3Ddocument%26id%3D1#page=1',
             "the src attribute should be correctly set on the iframe");
 
         form.destroy();
@@ -1996,6 +1996,36 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('tbody td.o_list_text:contains(some text)').length, 1,
             "should have a td with the .o_list_text class");
         list.destroy();
+    });
+
+    QUnit.test("binary fields input value is empty whean clearing after uploading", async function (assert) {
+        assert.expect(2);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<field name="document" filename="foo"/>' +
+                '<field name="foo"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+
+        // // We need to convert the input type since we can't programmatically set the value of a file input
+        form.$('.o_input_file').attr('type', 'text').val('coucou.txt');
+
+        assert.strictEqual(form.$('.o_input_file').val(), 'coucou.txt',
+            "input value should be changed to \"coucou.txt\"");
+
+        await testUtils.dom.click(form.$('.o_field_binary_file > .o_clear_file_button'));
+
+        assert.strictEqual(form.$('.o_input_file').val(), '',
+            "input value should be empty");
+
+        form.destroy();
     });
 
     QUnit.test('field text in editable list view', async function (assert) {
@@ -2546,6 +2576,25 @@ QUnit.module('basic_fields', {
         var $span = form.$('span.o_field_widget');
         assert.strictEqual($span.length, 1, "should have one span in the form view");
         assert.strictEqual($span.text(), "", "and it should be empty");
+        form.destroy();
+    });
+
+    QUnit.test('date field should remove the date  if the date is not valid', async function (assert) {
+        assert.expect(1);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners"><field name="date"/></form>',
+            res_id: 4,
+        });
+        // switch to edit mode
+        await testUtils.form.clickEdit(form);
+        // set an invalid date
+        var $input = form.$('.o_field_widget[name=date] input');
+        $input.val('mmmh').trigger('change');
+        assert.strictEqual($input.text(), "", "The date field should be empty");
         form.destroy();
     });
 

@@ -18,6 +18,17 @@
             </field>
         </record>
 
+        <record id="view_users_form_simple_modif_resource" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.resource</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif" />
+            <field name="arch" type="xml">
+                <field name="tz" position="attributes">
+                    <attribute name="required">1</attribute>
+                </field>
+            </field>
+        </record>
+
         <record id="res_users_view_form_profile" model="ir.ui.view">
             <field name="name">res.users.preferences.form.inherit</field>
             <field name="model">res.users</field>
@@ -62,7 +73,7 @@
                                             <field name="work_location"/>
                                         </group>
                                         <group name="managers" string="Managers">
-                                            <field name="parent_id"/>
+                                            <field name="employee_parent_id"/>
                                             <field name="coach_id"/>
                                         </group>
                                     </div>
@@ -87,7 +98,7 @@
                                             It should be different from the work address.
                                         </div>
                                         <field name="km_home_work"/>
-                                        <field name="phone"/>
+                                        <field name="employee_phone"/>
                                         <field name="employee_bank_account_id"/>
                                     </group>
                                     <group string="Citizenship">
@@ -103,6 +114,11 @@
                                         <field name="marital"/>
                                         <field name="spouse_complete_name" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}"/>
                                         <field name="spouse_birthdate" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}"/>
+                                    </group>
+                                    <group string="Education">
+                                        <field name="certificate"/>
+                                        <field name="study_field"/>
+                                        <field name="study_school"/>
                                     </group>
                                     <group string="Dependant">
                                         <field name="children"/>
@@ -144,9 +160,15 @@
         <record id="res_users_action_my" model="ir.actions.act_window">
             <field name="name">Change my Preferences</field>
             <field name="res_model">res.users</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="hr.res_users_view_form_profile"/>
+        </record>
+
+        <record id="hr_employee_action_from_user" model="ir.actions.act_window">
+            <field name="name">Employees</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('user_id', '=', active_id)]</field>
         </record>
 
         <record id="res_users_view_form" model="ir.ui.view">
@@ -154,11 +176,23 @@
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='image']" position="before">
-                    <div groups="hr.group_hr_user" class="alert alert-danger text-center" role="alert" attrs="{'invisible': [('employee_warning', '=', False)]}">
-                        <a class="close" data-dismiss="alert" href="#">x</a>
-                        <field name="employee_warning" nolabel="1" class="oe_inline"/> <button class="oe_inline oe_link p-0" type="object" name="action_create_employee">Click here to create it.</button>.
-                    </div>
+
+                <xpath expr="//header" position="inside">
+                    <field name="share" invisible="1"/>
+                    <field name="employee_ids" invisible="1"/>
+                    <button string="Create employee"
+                            type="object" name="action_create_employee"
+                            attrs="{'invisible': ['|', '|', ('id', '=', False), ('share', '=', True), ('employee_count', '>', 0)]}"/>
+                            <!-- share is not correclty recomputed because it depends on fields of reified view => invisible before saving (id=False) -->
+                </xpath>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="%(hr_employee_action_from_user)d"
+                        class="oe_stat_button"
+                        icon="fa-users"
+                        attrs="{'invisible': [('employee_count', '=', 0)]}"
+                        type="action">
+                        <field name="employee_count" widget="statinfo" string="Employee(s)"/>
+                    </button>
                 </xpath>
             </field>
         </record>

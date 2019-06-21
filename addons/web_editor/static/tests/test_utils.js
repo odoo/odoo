@@ -319,10 +319,6 @@ function wysiwygData(data) {
                     string: "display_name",
                     type: 'char',
                 },
-                datas_fname: {
-                    string: "datas_fname",
-                    type: 'char',
-                },
                 mimetype: {
                     string: "mimetype",
                     type: 'char',
@@ -347,23 +343,41 @@ function wysiwygData(data) {
                     string: "res_model",
                     type: 'char',
                 },
+                public: {
+                    string: "public",
+                    type: 'boolean',
+                },
                 access_token: {
                     string: "access_token",
                     type: 'char',
                 },
+                image_src: {
+                    string: "image_src",
+                    type: 'char',
+                },
+                image_width: {
+                    string: "image_width",
+                    type: 'integer',
+                },
+                image_height: {
+                    string: "image_height",
+                    type: 'integer',
+                },
             },
             records: [{
                 id: 1,
-                public: true,
                 name: 'image',
-                datas_fname: 'image.png',
                 mimetype: 'image/png',
                 checksum: false,
                 url: '/web_editor/static/src/img/transparent.png',
                 type: 'url',
                 res_id: 0,
                 res_model: false,
-                access_token: false
+                public: true,
+                access_token: false,
+                image_src: '/web_editor/static/src/img/transparent.png',
+                image_width: 256,
+                image_height: 256,
             }],
             generate_access_token: function () {
                 return;

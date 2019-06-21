@@ -10,7 +10,6 @@ from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_round, float_is_zero
 
 PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
@@ -36,7 +35,7 @@ class StockMove(models.Model):
         help="Move date: scheduled date until move is done, then date of actual move processing")
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env.company_id,
+        default=lambda self: self.env.company,
         index=True, required=True)
     date_expected = fields.Datetime(
         'Expected Date', default=fields.Datetime.now, index=True, required=True,
@@ -62,7 +61,8 @@ class StockMove(models.Model):
              "be moved. Lowering this quantity does not generate a "
              "backorder. Changing this quantity on assigned moves affects "
              "the product reservation, and should be done with care.")
-    product_uom = fields.Many2one('uom.uom', 'Unit of Measure', required=True)
+    product_uom = fields.Many2one('uom.uom', 'Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     # TDE FIXME: make it stored, otherwise group will not work
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template',
@@ -124,9 +124,13 @@ class StockMove(models.Model):
     scrap_ids = fields.One2many('stock.scrap', 'move_id')
     group_id = fields.Many2one('procurement.group', 'Procurement Group', default=_default_group_id)
     rule_id = fields.Many2one('stock.rule', 'Stock Rule', ondelete='restrict', help='The stock rule that created this stock move')
-    propagate = fields.Boolean(
-        'Propagate cancel and split', default=True,
+    propagate_cancel = fields.Boolean(
+        'Propagate cancel and split', default=True, oldname='propagate',
         help='If checked, when this move is cancelled, cancel the linked move too')
+    propagate_date = fields.Boolean(string="Propagate Rescheduling",
+        help='The rescheduling is propagated to the next move.')
+    propagate_date_minimum_delta = fields.Integer(string='Reschedule if Higher Than',
+        help='The change must be higher than this value to be propagated')
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type')
     inventory_id = fields.Many2one('stock.inventory', 'Inventory')
     move_line_ids = fields.One2many('stock.move.line', 'move_id')
@@ -402,7 +406,6 @@ class StockMove(models.Model):
         # TDE CLEANME: it is a gros bordel + tracking
         Picking = self.env['stock.picking']
 
-        propagated_changes_dict = {}
         #propagation of expected date:
         propagated_date_field = False
         if vals.get('date_expected'):
@@ -412,24 +415,17 @@ class StockMove(models.Model):
             #propagate also any delta observed when setting the move as done
             propagated_date_field = 'date'
 
-        if not self._context.get('do_not_propagate', False) and (propagated_date_field or propagated_changes_dict):
+        if propagated_date_field:
             #any propagation is (maybe) needed
             for move in self:
-                if move.move_dest_ids and move.propagate:
-                    if 'date_expected' in propagated_changes_dict:
-                        propagated_changes_dict.pop('date_expected')
-                    if propagated_date_field:
-                        current_date = move.date_expected
-                        new_date = fields.Datetime.from_string(vals.get(propagated_date_field))
-                        delta_days = (new_date - current_date).total_seconds() / 86400
-                        if abs(delta_days) >= move.company_id.propagation_minimum_delta:
-                            old_move_date = move.move_dest_ids[0].date_expected
-                            new_move_date = (old_move_date + relativedelta.relativedelta(days=delta_days or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-                            propagated_changes_dict['date_expected'] = new_move_date
-                    #For pushed moves as well as for pulled moves, propagate by recursive call of write().
-                    #Note that, for pulled moves we intentionally don't propagate on the procurement.
-                    if propagated_changes_dict:
-                        move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel')).write(propagated_changes_dict)
+                if move.move_dest_ids and move.propagate_date:
+                    new_date = vals.get(propagated_date_field)
+                    delta_days = (new_date - move.date_expected).total_seconds() / 86400
+                    if abs(delta_days) < move.propagate_date_minimum_delta:
+                        continue
+                    for move_dest in move.move_dest_ids:
+                        if move_dest.state not in ('done', 'cancel'):
+                            move_dest.date_expected += relativedelta.relativedelta(days=delta_days)
         track_pickings = not self._context.get('mail_notrack') and any(field in vals for field in ['state', 'picking_id', 'partially_available'])
         if track_pickings:
             to_track_picking_ids = set([move.picking_id.id for move in self if move.picking_id])
@@ -454,10 +450,10 @@ class StockMove(models.Model):
 
         view = self.env.ref('stock.view_stock_move_operations')
 
+        picking_type_id = self.picking_type_id or self.picking_id.picking_type_id
         return {
             'name': _('Detailed Operations'),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'stock.move',
             'views': [(view.id, 'form')],
@@ -466,8 +462,8 @@ class StockMove(models.Model):
             'res_id': self.id,
             'context': dict(
                 self.env.context,
-                show_lots_m2o=self.has_tracking != 'none' and (self.picking_type_id.use_existing_lots or self.state == 'done' or self.origin_returned_move_id.id),  # able to create lots, whatever the value of ` use_create_lots`.
-                show_lots_text=self.has_tracking != 'none' and self.picking_type_id.use_create_lots and not self.picking_type_id.use_existing_lots and self.state != 'done' and not self.origin_returned_move_id.id,
+                show_lots_m2o=self.has_tracking != 'none' and (picking_type_id.use_existing_lots or self.state == 'done' or self.origin_returned_move_id.id),  # able to create lots, whatever the value of ` use_create_lots`.
+                show_lots_text=self.has_tracking != 'none' and picking_type_id.use_create_lots and not picking_type_id.use_existing_lots and self.state != 'done' and not self.origin_returned_move_id.id,
                 show_source_location=self.location_id.child_ids and self.picking_type_id.code != 'incoming',
                 show_destination_location=self.location_dest_id.child_ids and self.picking_type_id.code != 'outgoing',
                 show_package=not self.location_id.usage == 'supplier',
@@ -540,7 +536,7 @@ class StockMove(models.Model):
 
     def _clean_merged(self):
         """Cleanup hook used when merging moves"""
-        self.write({'propagate': False})
+        self.write({'propagate_cancel': False})
 
     def _merge_moves(self, merge_into=False):
         """ This method will, for each move in `self`, go up in their linked picking and try to
@@ -641,7 +637,6 @@ class StockMove(models.Model):
         product = self.product_id.with_context(lang=self.partner_id.lang or self.env.user.lang)
         self.name = product.partner_ref
         self.product_uom = product.uom_id.id
-        return {'domain': {'product_uom': [('category_id', '=', product.uom_id.category_id.id)]}}
 
     @api.onchange('date_expected')
     def onchange_date(self):
@@ -1024,7 +1019,7 @@ class StockMove(models.Model):
 
         for move in moves_to_cancel:
             siblings_states = (move.move_dest_ids.mapped('move_orig_ids') - move).mapped('state')
-            if move.propagate:
+            if move.propagate_cancel:
                 # only cancel the next move if all my siblings are also cancelled
                 if all(state == 'cancel' for state in siblings_states):
                     move.move_dest_ids.filtered(lambda m: m.state != 'done')._action_cancel()
@@ -1141,7 +1136,7 @@ class StockMove(models.Model):
                 .filtered(lambda p: p.quant_ids and len(p.quant_ids) > 1):
             if len(result_package.quant_ids.mapped('location_id')) > 1:
                 raise UserError(_('You cannot move the same package content more than once in the same transfer or split the same package into two location.'))
-        picking = moves_todo and moves_todo[0].picking_id or False
+        picking = moves_todo.mapped('picking_id')
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
         moves_todo.mapped('move_dest_ids')._action_assign()
 
@@ -1217,7 +1212,7 @@ class StockMove(models.Model):
         # compatible with the move's UOM.
         new_product_qty = self.product_id.uom_id._compute_quantity(self.product_qty - qty, self.product_uom, round=False)
         new_product_qty = float_round(new_product_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure'))
-        self.with_context(do_not_propagate=True, do_not_unreserve=True, rounding_method='HALF-UP').write({'product_uom_qty': new_product_qty})
+        self.with_context(do_not_unreserve=True, rounding_method='HALF-UP').write({'product_uom_qty': new_product_qty})
         new_move = new_move._action_confirm(merge=False)
         return new_move.id
 

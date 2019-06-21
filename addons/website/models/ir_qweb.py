@@ -34,8 +34,8 @@ class QWeb(models.AbstractModel):
         'img':    'src',
     }
 
-    def get_asset_bundle(self, xmlid, files, remains=None, env=None):
-        return AssetsBundleMultiWebsite(xmlid, files, remains=remains, env=env)
+    def get_asset_bundle(self, xmlid, files, env=None):
+        return AssetsBundleMultiWebsite(xmlid, files, env=env)
 
     def _post_processing_att(self, tagName, atts, options):
         if atts.get('data-no-post-process'):
@@ -44,7 +44,7 @@ class QWeb(models.AbstractModel):
         atts = super(QWeb, self)._post_processing_att(tagName, atts, options)
 
         if options.get('inherit_branding') or options.get('rendering_bundle') or \
-           options.get('edit_translations') or options.get('debug') or (request and request.debug):
+           options.get('edit_translations') or options.get('debug') or (request and request.session.debug):
             return atts
 
         website = request and getattr(request, 'website', None)

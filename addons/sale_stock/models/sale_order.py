@@ -13,7 +13,7 @@ class SaleOrder(models.Model):
 
     @api.model
     def _default_warehouse_id(self):
-        company = self.env.company_id.id
+        company = self.env.company.id
         warehouse_ids = self.env['stock.warehouse'].search([('company_id', '=', company)], limit=1)
         return warehouse_ids
 
@@ -106,6 +106,21 @@ class SaleOrder(models.Model):
     def _onchange_warehouse_id(self):
         if self.warehouse_id.company_id:
             self.company_id = self.warehouse_id.company_id.id
+
+    @api.onchange('partner_shipping_id')
+    def _onchange_partner_shipping_id(self):
+        res = {}
+        pickings = self.picking_ids.filtered(
+            lambda p: p.state not in ['done', 'cancel'] and p.partner_id != self.partner_shipping_id
+        )
+        if pickings:
+            res['warning'] = {
+                'title': _('Warning!'),
+                'message': _(
+                    'Do not forget to change the partner on the following delivery orders: %s'
+                ) % (','.join(pickings.mapped('name')))
+            }
+        return res
 
     @api.multi
     def action_view_delivery(self):
@@ -355,6 +370,17 @@ class SaleOrderLine(models.Model):
                 qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
         return qty
 
+    def _get_procurement_group(self):
+        return self.order_id.procurement_group_id
+
+    def _prepare_procurement_group_vals(self):
+        return {
+            'name': self.order_id.name,
+            'move_type': self.order_id.picking_policy,
+            'sale_id': self.order_id.id,
+            'partner_id': self.order_id.partner_shipping_id.id,
+        }
+
     @api.multi
     def _action_launch_stock_rule(self, previous_product_uom_qty=False):
         """
@@ -371,13 +397,9 @@ class SaleOrderLine(models.Model):
             if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
                 continue
 
-            group_id = line.order_id.procurement_group_id
+            group_id = line._get_procurement_group()
             if not group_id:
-                group_id = self.env['procurement.group'].create({
-                    'name': line.order_id.name, 'move_type': line.order_id.picking_policy,
-                    'sale_id': line.order_id.id,
-                    'partner_id': line.order_id.partner_shipping_id.id,
-                })
+                group_id = self.env['procurement.group'].create(line._prepare_procurement_group_vals())
                 line.order_id.procurement_group_id = group_id
             else:
                 # In case the procurement group is already created and the order was

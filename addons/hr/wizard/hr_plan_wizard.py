@@ -35,7 +35,6 @@ class HrPlanWizard(models.TransientModel):
             'res_model': 'hr.employee',
             'res_id': self.employee_id.id,
             'name': self.employee_id.display_name,
-            'view_type': 'form',
             'view_mode': 'form',
             'views': [(False, "form")],
         }

@@ -53,6 +53,7 @@ class MailController(http.Controller):
         # to give access to the record to a recipient that has normally no access.
         uid = request.session.uid
         user = request.env['res.users'].sudo().browse(uid)
+        cids = False
 
         # no model / res_id, meaning no possible record -> redirect to login
         if not model or not res_id or model not in request.env:
@@ -73,7 +74,7 @@ class MailController(http.Controller):
                 # We need here to extend the "allowed_company_ids" to allow a redirection
                 # to any record that the user can access, regardless of currently visible
                 # records based on the "currently allowed companies".
-                cids = request.httprequest.cookies.get('cids', str(request.env.user.company_id))
+                cids = request.httprequest.cookies.get('cids', str(user.company_id.id))
                 cids = [int(cid) for cid in cids.split(',')]
                 try:
                     record_sudo.sudo(uid).with_context(allowed_company_ids=cids).check_access_rule('read')
@@ -84,18 +85,13 @@ class MailController(http.Controller):
                     # - Guess the supposed necessary company to access the record via the method
                     #   _get_mail_redirect_suggested_company
                     #   - If no company, then redirect to the messaging
-                    #   - If the multi company per tag group is activated, merge the suggested company
-                    #     withe the companies on the cookie
-                    #   - else, use this company as enabled company
+                    #   - Merge the suggested company with the companies on the cookie
                     # - Make a new access test if it succeeds, redirect to the record. Otherwise, 
                     #   redirect to the messaging.
                     suggested_company = record_sudo._get_mail_redirect_suggested_company()
                     if not suggested_company:
                         raise AccessError()
-                    if user.has_group('base.group_toggle_company'):
-                        cids += [suggested_company]
-                    else:
-                        cids = [suggested_company]
+                    cids += [suggested_company.id]
                     record_sudo.sudo(uid).with_context(allowed_company_ids=cids).check_access_rule('read')
             except AccessError:
                 return cls._redirect_to_messaging()
@@ -115,7 +111,6 @@ class MailController(http.Controller):
             return cls._redirect_to_messaging()
 
         url_params = {
-            'view_type': record_action['view_type'],
             'model': model,
             'id': res_id,
             'active_id': res_id,
@@ -125,7 +120,8 @@ class MailController(http.Controller):
         if view_id:
             url_params['view_id'] = view_id
 
-        url_params['cids'] = ','.join([str(cid) for cid in cids])
+        if cids:
+            url_params['cids'] = ','.join([str(cid) for cid in cids])
         url = '/web?#%s' % url_encode(url_params)
         return werkzeug.utils.redirect(url)
 

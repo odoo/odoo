@@ -889,7 +889,7 @@ class expression(object):
             elif len(path) > 1 and field.store and field.type == 'one2many' and field.auto_join:
                 # res_partner.id = res_partner__bank_ids.partner_id
                 leaf.add_join_context(comodel, 'id', field.inverse_name, path[0])
-                domain = field.domain(model) if callable(field.domain) else field.domain
+                domain = field.get_domain_list(model)
                 push(create_substitution_leaf(leaf, (path[1], operator, right), comodel))
                 if domain:
                     domain = normalize_domain(domain)
@@ -949,9 +949,7 @@ class expression(object):
                     push(create_substitution_leaf(leaf, dom_leaf, model))
 
             elif field.type == 'one2many':
-                domain = field.domain
-                if callable(domain):
-                    domain = domain(model)
+                domain = field.get_domain_list(model)
                 inverse_is_int = comodel._fields[field.inverse_name].type == 'integer'
                 unwrap_inverse = (lambda ids: ids) if inverse_is_int else (lambda recs: recs.ids)
 
@@ -1015,9 +1013,7 @@ class expression(object):
                 elif right is not False:
                     # determine ids2 in comodel
                     if isinstance(right, str):
-                        domain = field.domain
-                        if callable(domain):
-                            domain = domain(model)
+                        domain = field.get_domain_list(model)
                         op2 = (TERM_OPERATORS_NEGATION[operator]
                                if operator in NEGATIVE_TERM_OPERATORS else operator)
                         ids2 = [x[0] for x in comodel.name_search(right, domain or [], op2, limit=None)]
@@ -1268,11 +1264,11 @@ class expression(object):
             column = '%s.%s' % (table_alias, _quote(left))
             query = '(%s %s %s)' % (unaccent(column + cast), sql_operator, unaccent(format))
 
+            if (need_wildcard and not right) or (right and operator in NEGATIVE_TERM_OPERATORS):
+                query = '(%s OR %s."%s" IS NULL)' % (query, table_alias, left)
+
             if need_wildcard:
-                native_str = pycompat.to_text(right)
-                if not native_str:
-                    query = '(%s OR %s."%s" IS NULL)' % (query, table_alias, left)
-                params = ['%%%s%%' % native_str]
+                params = ['%%%s%%' % pycompat.to_text(right)]
             else:
                 field = model._fields[left]
                 params = [field.convert_to_column(right, model, validate=False)]

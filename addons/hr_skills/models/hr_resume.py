@@ -27,6 +27,13 @@ class Employee(models.Model):
         return res
 
 
+class EmployeePublic(models.Model):
+    _inherit = 'hr.employee.public'
+
+    resume_line_ids = fields.One2many('hr.resume.line', 'employee_id', string="Resumé lines")
+    employee_skill_ids = fields.One2many('hr.employee.skill', 'employee_id', string="Skills")
+
+
 class ResumeLine(models.Model):
     _name = 'hr.resume.line'
     _description = "Resumé line of an employee"

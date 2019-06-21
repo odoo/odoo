@@ -42,7 +42,7 @@ class FinancialYearOpeningWizard(models.TransientModel):
 
     @api.multi
     def action_save_onboarding_fiscal_year(self):
-        self.env.company_id.set_onboarding_step_done('account_setup_fy_data_state')
+        self.env.company.set_onboarding_step_done('account_setup_fy_data_state')
 
 
 class SetupBarBankConfigWizard(models.TransientModel):
@@ -71,7 +71,7 @@ class SetupBarBankConfigWizard(models.TransientModel):
     def _onchange_new_journal_code(self):
         for record in self:
             if not record.linked_journal_id:
-                record.new_journal_code = self.env['account.journal'].get_next_bank_cash_default_code('bank', self.env.company_id.id)
+                record.new_journal_code = self.env['account.journal'].get_next_bank_cash_default_code('bank', self.env.company.id)
             else:
                 record.new_journal_code = self.linked_journal_id.code
 
@@ -81,7 +81,7 @@ class SetupBarBankConfigWizard(models.TransientModel):
         company, so we always inject the corresponding partner when creating
         the model.
         """
-        vals['partner_id'] = self.env.company_id.partner_id.id
+        vals['partner_id'] = self.env.company.partner_id.id
         return super(SetupBarBankConfigWizard, self).create(vals)
 
     @api.onchange('linked_journal_id')
@@ -105,7 +105,7 @@ class SetupBarBankConfigWizard(models.TransientModel):
         for record in self:
             selected_journal = record.linked_journal_id
             if record.num_journals_without_account == 0:
-                company = self.env.company_id
+                company = self.env.company
                 selected_journal = self.env['account.journal'].create({
                     'name': record.new_journal_name,
                     'code': record.new_journal_code,

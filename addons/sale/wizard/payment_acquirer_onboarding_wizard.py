@@ -12,7 +12,7 @@ class PaymentWizard(models.TransientModel):
     _description = 'Sale Payment acquire onboarding wizard'
 
     def _get_default_payment_method(self):
-        return self.env.company_id.sale_onboarding_payment_method or 'digital_signature'
+        return self.env.company.sale_onboarding_payment_method or 'digital_signature'
 
     payment_method = fields.Selection([
         ('digital_signature', 'Online signature'),
@@ -25,19 +25,14 @@ class PaymentWizard(models.TransientModel):
 
     def _set_payment_acquirer_onboarding_step_done(self):
         """ Override. """
-        self.env.company_id.set_onboarding_step_done('sale_onboarding_order_confirmation_state')
-
-    def _on_save_payment_acquirer(self, *args, **kwargs):
-        """ Override """
-        self._install_module('sale_payment')
-        return super(PaymentWizard, self)._on_save_payment_acquirer(*args, **kwargs)
+        self.env.company.set_onboarding_step_done('sale_onboarding_order_confirmation_state')
 
     @api.multi
     def add_payment_methods(self, *args, **kwargs):
-        self.env.company_id.sale_onboarding_payment_method = self.payment_method
+        self.env.company.sale_onboarding_payment_method = self.payment_method
         if self.payment_method == 'digital_signature':
-            self.env.company_id.portal_confirmation_sign = True
-        if self.payment_method in ('paypal', 'stripe', 'manual'):
-            self.env.company_id.portal_confirmation_pay = True
+            self.env.company.portal_confirmation_sign = True
+        if self.payment_method in ('paypal', 'stripe', 'other', 'manual'):
+            self.env.company.portal_confirmation_pay = True
 
         return super(PaymentWizard, self).add_payment_methods(*args, **kwargs)

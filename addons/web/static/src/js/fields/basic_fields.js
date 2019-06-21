@@ -8,6 +8,7 @@ odoo.define('web.basic_fields', function (require) {
  */
 
 var AbstractField = require('web.AbstractField');
+var config = require('web.config');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var datepicker = require('web.datepicker');
@@ -1465,13 +1466,10 @@ var AbstractFieldBinary = AbstractField.extend({
                     this.do_warn(_t("File upload"), _.str.sprintf(msg, utils.human_size(this.max_upload_size)));
                     return false;
                 }
-                var filereader = new FileReader();
-                filereader.readAsDataURL(file);
-                filereader.onloadend = function (upload) {
-                    var data = upload.target.result;
+                utils.getDataURLFromFile(file).then(function (data) {
                     data = data.split(',')[1];
                     self.on_file_uploaded(file.size, file.name, file.type, data);
-                };
+                });
             } else {
                 this.$('form.o_form_binary_form').submit();
             }
@@ -1528,6 +1526,7 @@ var AbstractFieldBinary = AbstractField.extend({
      */
     _clearFile: function (){
         var self = this;
+        this.$('.o_input_file').val('');
         this.set_filename('');
         if (!this.isDestroyed()) {
             this._setValue(false).then(function() {
@@ -1732,7 +1731,7 @@ var FieldPdfViewer = FieldBinaryFile.extend({
                 id: this.res_id,
             };
             var queryString = $.param(queryObj);
-            fileURI = '/web/image?' + queryString
+            fileURI = '/web/content?' + queryString;
         }
         fileURI = encodeURIComponent(fileURI);
         var viewerURL = '/web/static/lib/pdfjs/web/viewer.html?file=';
@@ -2773,7 +2772,7 @@ var FieldDomain = AbstractField.extend({
             this.domainSelector = new DomainSelector(this, this._domainModel, value, {
                 readonly: this.mode === "readonly" || this.inDialog,
                 filters: this.fsFilters,
-                debugMode: session.debug,
+                debugMode: config.isDebug(),
             });
             def = this.domainSelector.prependTo(this.$el);
         } else {
@@ -2862,7 +2861,7 @@ var FieldDomain = AbstractField.extend({
         new DomainSelectorDialog(this, this._domainModel, this.value || "[]", {
             readonly: this.mode === "readonly",
             filters: this.fsFilters,
-            debugMode: session.debug,
+            debugMode: config.isDebug(),
         }).open();
     },
     /**

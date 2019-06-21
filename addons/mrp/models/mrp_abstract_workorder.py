@@ -17,7 +17,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
     product_id = fields.Many2one(related='production_id.product_id', readonly=True, store=True)
     qty_producing = fields.Float(string='Currently Produced Quantity', digits=dp.get_precision('Product Unit of Measure'))
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True, readonly=True)
-    final_lot_id = fields.Many2one('stock.production.lot', string='Lot/Serial Number', domain="[('product_id', '=', product_id)]")
+    finished_lot_id = fields.Many2one('stock.production.lot', string='Lot/Serial Number', domain="[('product_id', '=', product_id)]", oldname='final_lot_id')
     product_tracking = fields.Selection(related="product_id.tracking")
     consumption = fields.Selection([
         ('strict', 'Strict'),
@@ -70,8 +70,9 @@ class MrpAbstractWorkorder(models.AbstractModel):
         used in onchange and request that write on db (e.g. workorder creation).
         """
         line_values = {'to_create': [], 'to_delete': [], 'to_update': {}}
-        move_finished_ids = self.move_finished_ids.filtered(lambda move: move.product_id != self.product_id and move.state not in ('done', 'cancel'))
-        move_raw_ids = self.move_raw_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
+        # moves are actual records
+        move_finished_ids = self.move_finished_ids._origin.filtered(lambda move: move.product_id != self.product_id and move.state not in ('done', 'cancel'))
+        move_raw_ids = self.move_raw_ids._origin.filtered(lambda move: move.state not in ('done', 'cancel'))
         for move in move_raw_ids | move_finished_ids:
             move_workorder_lines = self._workorder_line_ids().filtered(lambda w: w.move_id == move)
 
@@ -171,7 +172,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
         """
         lines = []
         is_tracked = move.product_id.tracking != 'none'
-        if move in self.move_raw_ids:
+        if move in self.move_raw_ids._origin:
             # Get the inverse_name (many2one on line) of raw_workorder_line_ids
             initial_line_values = {self.raw_workorder_line_ids._get_raw_workorder_inverse_name(): self.id}
         else:
@@ -241,10 +242,10 @@ class MrpAbstractWorkorder(models.AbstractModel):
             move.state not in ('done', 'cancel')
         )
         if production_move and production_move.product_id.tracking != 'none':
-            if not self.final_lot_id:
+            if not self.finished_lot_id:
                 raise UserError(_('You need to provide a lot for the finished product.'))
             move_line = production_move.move_line_ids.filtered(
-                lambda line: line.lot_id.id == self.final_lot_id.id
+                lambda line: line.lot_id.id == self.finished_lot_id.id
             )
             if move_line:
                 if self.product_id.tracking == 'serial':
@@ -256,7 +257,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
                 move_line.create({
                     'move_id': production_move.id,
                     'product_id': production_move.product_id.id,
-                    'lot_id': self.final_lot_id.id,
+                    'lot_id': self.finished_lot_id.id,
                     'product_uom_qty': self.qty_producing,
                     'product_uom_id': self.product_uom_id.id,
                     'qty_done': self.qty_producing,

@@ -71,7 +71,6 @@ class AccountBankStatementImport(models.TransientModel):
             'name': _('Journal Creation'),
             'type': 'ir.actions.act_window',
             'res_model': 'account.bank.statement.import.journal.creation',
-            'view_type': 'form',
             'view_mode': 'form',
             'target': 'new',
             'context': {
@@ -129,7 +128,7 @@ class AccountBankStatementImport(models.TransientModel):
         """ Look for a res.currency and account.journal using values extracted from the
             statement and make sure it's consistent.
         """
-        company_currency = self.env.company_id.currency_id
+        company_currency = self.env.company.currency_id
         journal_obj = self.env['account.journal']
         currency = None
         sanitized_account_number = sanitize_account_number(account_number)

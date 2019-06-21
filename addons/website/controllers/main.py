@@ -99,7 +99,7 @@ class Website(Home):
             if request.env['res.users'].browse(request.uid).has_group('base.group_user'):
                 redirect = b'/web?' + request.httprequest.query_string
             else:
-                redirect = '/'
+                redirect = '/my'
             return http.redirect_with_hash(redirect)
         return response
 
@@ -283,6 +283,10 @@ class Website(Home):
         views = views.sorted(key=lambda v: (v.inherit_id.id, v.name))
         return views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
 
+    @http.route('/website/toggle_switchable_view', type='json', auth='user', website=True)
+    def toggle_switchable_view(self, view_key):
+        request.website.viewref(view_key).toggle()
+
     @http.route('/website/reset_template', type='http', auth='user', methods=['POST'], website=True, csrf=False)
     def reset_template(self, view_id, mode='soft', redirect='/', **kwargs):
         """ This method will try to reset a broken view.
@@ -350,9 +354,9 @@ class Website(Home):
         if get_bundle:
             context = dict(request.context)
             return {
-                'web.assets_common': request.env["ir.qweb"]._get_asset('web.assets_common', options=context),
-                'web.assets_frontend': request.env["ir.qweb"]._get_asset('web.assets_frontend', options=context),
-                'website.assets_editor': request.env["ir.qweb"]._get_asset('website.assets_editor', options=context),
+                'web.assets_common': request.env['ir.qweb']._get_asset_link_urls('web.assets_common', options=context),
+                'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend', options=context),
+                'website.assets_editor': request.env['ir.qweb']._get_asset_link_urls('website.assets_editor', options=context),
             }
 
         return True
@@ -467,3 +471,8 @@ class WebsiteBinary(http.Controller):
             if unique:
                 kw['unique'] = unique
         return Binary().content_image(**kw)
+
+    @http.route(['/favicon.ico'], type='http', auth='public', website=True)
+    def favicon(self, **kw):
+        # when opening a pdf in chrome, chrome tries to open the default favicon url
+        return self.content_image(model='website', id=str(request.website.id), field='favicon', **kw)

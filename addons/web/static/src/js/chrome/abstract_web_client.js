@@ -101,7 +101,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
         KeyboardNavigationMixin.init.call(this);
         this.origin = undefined;
         this._current_state = null;
-        this.menu_dm = new concurrency.DropMisordered();
+        this.menu_dp = new concurrency.DropPrevious();
         this.action_mutex = new concurrency.Mutex();
         this.set('title_part', {"zopenerp": "Odoo"});
     },
@@ -134,7 +134,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
         session.user_context.allowed_company_ids = stateCompanyIDS;
         $.bbq.pushState(state);
         // Update favicon
-        $("link[type='image/x-icon'").attr('href', '/web/image/res.company/' + String(stateCompanyIDS[0]) + '/favicon/')
+        $("link[type='image/x-icon']").attr('href', '/web/image/res.company/' + String(stateCompanyIDS[0]) + '/favicon/')
 
         return session.is_bound
             .then(function () {
@@ -514,7 +514,11 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
                 new RainbowMan(data).appendTo(this.$el);
             } else {
                 // For instance keep title blank, as we don't have title in data
-                this.notification_manager.notify('', data.message, true);
+                this.call('notification', 'notify', {
+                    title: "",
+                    message: data.message,
+                    sticky: false
+                });
             }
         } else {
             throw new Error('Unknown effect type: ' + type);

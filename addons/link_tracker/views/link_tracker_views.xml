@@ -74,7 +74,6 @@
         <record id="link_tracker_action" model="ir.actions.act_window">
             <field name="name">Link Tracker</field>
             <field name="res_model">link.tracker</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="view_id" ref="link_tracker_view_tree"/>
             <field name="help" type="html">
@@ -145,6 +144,7 @@
             <field name="res_model">link.tracker.click</field>
             <field name="view_mode">graph,tree,form</field>
             <field name="domain">[]</field>
+            <field name="context">{'search_default_groupby_country_id': 1}</field>
         </record>
 
         <!-- MENUS -->

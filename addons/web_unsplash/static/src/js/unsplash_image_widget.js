@@ -56,9 +56,7 @@ widgetsMedia.ImageWidget.include({
      * @override
      */
     start: function () {
-        if (!this.options.document) {
-            this.$('.o_we_search_icon').replaceWith(core.qweb.render('web_unsplash.dialog.media.search_icon'));
-        }
+        this.$('.o_we_search_icon').replaceWith(core.qweb.render('web_unsplash.dialog.media.search_icon'));
         return this._super.apply(this, arguments);
     },
     /**
@@ -78,7 +76,7 @@ widgetsMedia.ImageWidget.include({
     /**
      * @override
      */
-    save: function () {
+    _save: function () {
         if (!this._unsplash.query) {
             return this._super.apply(this, arguments);
         }
@@ -94,11 +92,8 @@ widgetsMedia.ImageWidget.include({
                 query: self._unsplash.query,
             }
         }).then(function (images) {
-            _.each(images, function (image) {
-                image.src = image.url;
-                image.isDocument = !(/gif|jpe|jpg|png/.test(image.mimetype));
-            });
-            self.images = images;
+            self.attachments = images;
+            self.selectedAttachments = images;
             return _super.apply(self, args);
         });
     },
@@ -116,10 +111,9 @@ widgetsMedia.ImageWidget.include({
         var always = function () {
             if (!noRender) {
                 self._renderImages();
-                self._adaptLoadMore();
             }
         };
-        return this.unsplashAPI.getImages(needle, this.IMAGES_DISPLAYED_TOTAL).then(function (res) {
+        return this.unsplashAPI.getImages(needle, this.numberOfAttachmentsToDisplay).then(function (res) {
             self._unsplash.isMaxed = res.isMaxed;
             self._unsplash.records = res.images;
             self._unsplash.error = false;
@@ -133,20 +127,9 @@ widgetsMedia.ImageWidget.include({
     //--------------------------------------------------------------------------
 
     /**
-     * @private
-     */
-    _adaptLoadMore: function () {
-        if (!this._unsplash.isActive) {
-            return this._super.apply(this, arguments);
-        }
-
-        this.$('.o_load_more').toggleClass('d-none', !!this._unsplash.error || this._unsplash.isMaxed);
-        this.$('.o_load_done_msg').toggleClass('d-none', !!this._unsplash.error || !this._unsplash.isMaxed);
-    },
-    /**
      * @override
      */
-    _highlightSelectedImages: function () {
+    _highlightSelected: function () {
         var self = this;
         if (!this._unsplash.isActive) {
             return this._super.apply(this, arguments);
@@ -169,7 +152,6 @@ widgetsMedia.ImageWidget.include({
      * @override
      */
     _renderImages: function () {
-        var self = this;
         if (!this._unsplash.isActive) {
             return this._super.apply(this, arguments);
         }
@@ -183,13 +165,11 @@ widgetsMedia.ImageWidget.include({
             return;
         }
 
-        var rows = _(this._unsplash.records).chain()
-            .groupBy(function (a, index) { return Math.floor(index / self.IMAGES_PER_ROW); })
-            .values()
-            .value();
+        this.$('.unsplash_img_container').html(core.qweb.render('web_unsplash.dialog.image.content', {records: this._unsplash.records}));
+        this._highlightSelected();
 
-        this.$('.unsplash_img_container').html(core.qweb.render('web_unsplash.dialog.image.content', {rows: rows}));
-        this._highlightSelectedImages();
+        this.$('.o_load_more').toggleClass('d-none', !!this._unsplash.error || this._unsplash.isMaxed);
+        this.$('.o_load_done_msg').toggleClass('d-none', !!this._unsplash.error || !this._unsplash.isMaxed);
     },
     /**
      * @private
@@ -242,7 +222,7 @@ widgetsMedia.ImageWidget.include({
         var imgid = $(ev.currentTarget).data('imgid');
         var url = $(ev.currentTarget).data('url');
         var downloadURL = $(ev.currentTarget).data('download-url');
-        if (!this.multiImages) {
+        if (!this.options.multiImages) {
             this._unsplash.selectedImages = {};
         }
         if (imgid in this._unsplash.selectedImages) {
@@ -250,7 +230,7 @@ widgetsMedia.ImageWidget.include({
         } else {
             this._unsplash.selectedImages[imgid] = {url: url, download_url: downloadURL};
         }
-        this._highlightSelectedImages();
+        this._highlightSelected();
     },
     /**
      * @private
@@ -286,18 +266,16 @@ widgetsMedia.ImageWidget.include({
      * @override
      */
     _onSearchInput: function (ev) {
-        if (!this.options.document) {
-            var $input = $(ev.currentTarget);
-            var inputValue = $input.val();
-            this.$('.o_search_value_input').text(inputValue);
+        var $input = $(ev.currentTarget);
+        var inputValue = $input.val();
+        this.$('.o_search_value_input').text(inputValue);
 
-            var $icon = this.$('.o_we_search_icon');
-            if ($icon.parent().is('.show')) {
-                $icon.dropdown('update');
-            } else if (!this.hasSearched) {
-                $icon.dropdown('toggle');
-                $input.focus();
-            }
+        var $icon = this.$('.o_we_search_icon');
+        if ($icon.parent().is('.show')) {
+            $icon.dropdown('update');
+        } else if (!this.hasSearched) {
+            $icon.dropdown('toggle');
+            $input.focus();
         }
         this._super.apply(this, arguments);
     },

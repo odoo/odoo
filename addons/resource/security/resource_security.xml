@@ -6,7 +6,7 @@
         <field name="name">resource.calendar.leaves: employee reads own or global</field>
         <field name="model_id" ref="model_resource_calendar_leaves"/>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-        <field name="domain_force">['|', ('resource_id', '=', False), ('resource_id.user_id', '=', user.id)]</field>
+        <field name="domain_force">['|', ('resource_id', '=', False), ('resource_id.user_id', 'in', [False, user.id])]</field>
 		<field name="perm_write" eval="False"/>
 		<field name="perm_create" eval="False"/>
 		<field name="perm_unlink" eval="False"/>
@@ -16,7 +16,7 @@
         <field name="name">resource.calendar.leaves: employee modifies own</field>
         <field name="model_id" ref="model_resource_calendar_leaves"/>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-        <field name="domain_force">[('resource_id.user_id', '=', user.id)]</field>
+        <field name="domain_force">[('resource_id', '!=', False), ('resource_id.user_id', 'in', [False, user.id])]</field>
 		<field name="perm_read" eval="False"/>
     </record>
 

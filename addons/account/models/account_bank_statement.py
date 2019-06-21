@@ -101,7 +101,7 @@ class AccountBankStatement(models.Model):
     @api.model
     def _default_journal(self):
         journal_type = self.env.context.get('journal_type', False)
-        company_id = self.env.company_id.id
+        company_id = self.env.company.id
         if journal_type:
             journals = self.env['account.journal'].search([('type', '=', journal_type), ('company_id', '=', company_id)])
             if journals:
@@ -145,7 +145,7 @@ class AccountBankStatement(models.Model):
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'confirm': [('readonly', True)]}, default=_default_journal)
     journal_type = fields.Selection(related='journal_id.type', help="Technical field used for usability purposes", readonly=False)
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
-        default=lambda self: self.env.company_id)
+        default=lambda self: self.env.company)
 
     total_entry_encoding = fields.Monetary('Transactions Subtotal', compute='_end_balance', store=True, help="Total of transaction lines.")
     balance_end = fields.Monetary('Computed Balance', compute='_end_balance', store=True, help='Balance as calculated based on Opening Balance and transaction lines')
@@ -210,7 +210,6 @@ class AccountBankStatement(models.Model):
             context['active_id'] = self.id
             return {
                 'name': _('Cash Control'),
-                'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'account.bank.statement.cashbox',
                 'view_id': self.env.ref('account.view_account_bnk_stmt_cashbox').id,
@@ -258,7 +257,6 @@ class AccountBankStatement(models.Model):
         context['journal_id'] = self.journal_id.id
         return {
             'name': _('Journal Entries'),
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.move',
             'view_id': False,
@@ -541,7 +539,8 @@ class AccountBankStatementLine(models.Model):
                 }
                 st_line._prepare_move_line_for_currency(aml_dict, st_line.date or fields.Date.context_today())
                 move_vals['line_ids'] = [(0, 0, aml_dict)]
-                balance_line = self._prepare_reconciliation_move_line(move_vals, st_line.amount)
+                balance_line = self._prepare_reconciliation_move_line(
+                    move_vals, -aml_dict['debit'] if st_line.amount < 0 else aml_dict['credit'])
                 move_vals['line_ids'].append((0, 0, balance_line))
                 move_list.append(move_vals)
 

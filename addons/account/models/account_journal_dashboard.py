@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 from babel.dates import format_datetime, format_date
 from odoo import models, api, _, fields
+from odoo.osv import expression
 from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, safe_eval
 from odoo.tools.misc import formatLang, format_date as odoo_format_date
@@ -317,7 +318,7 @@ class account_journal(models.Model):
         curr_cache = {} if curr_cache is None else curr_cache
         for result in results_dict:
             cur = self.env['res.currency'].browse(result.get('currency'))
-            company = self.env['res.company'].browse(result.get('company_id')) or self.env.company_id
+            company = self.env['res.company'].browse(result.get('company_id')) or self.env.company
             rslt_count += 1
             date = result.get('date_invoice') or fields.Date.today()
 
@@ -353,7 +354,6 @@ class account_journal(models.Model):
         return {
             'name': _('Create invoice/bill'),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': model,
             'view_id': view_id,
@@ -367,7 +367,6 @@ class account_journal(models.Model):
         return {
             'name': _('Create cash statement'),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'account.bank.statement',
             'context': ctx,
@@ -427,10 +426,16 @@ class account_journal(models.Model):
                 action_name = 'action_view_bank_statement_tree'
             elif self.type == 'sale':
                 action_name = 'action_invoice_tree1'
-                self = self.with_context(use_domain=[('journal_id', '=', self.id)])
+                use_domain = expression.AND(
+                    [self.env.context.get('use_domain', []), [('journal_id', '=', self.id)]]
+                )
+                self = self.with_context(use_domain=use_domain)
             elif self.type == 'purchase':
                 action_name = 'action_vendor_bill_template'
-                self = self.with_context(use_domain=[('journal_id', '=', self.id)])
+                use_domain = expression.AND(
+                    [self.env.context.get('use_domain', []), [('journal_id', '=', self.id)]]
+                )
+                self = self.with_context(use_domain=use_domain)
             else:
                 action_name = 'action_move_journal_line'
 

@@ -15,9 +15,9 @@ class AccountAnalyticLine(models.Model):
         return expression.OR([domain, [('qty_delivered_method', '=', 'timesheet')]])
 
     timesheet_invoice_type = fields.Selection([
-        ('billable_time', 'Billable Time'),
-        ('billable_fixed', 'Billable Fixed'),
-        ('non_billable', 'Non Billable'),
+        ('billable_time', 'Billed on Timesheets'),
+        ('billable_fixed', 'Billed at a Fixed price'),
+        ('non_billable', 'Non Billable Tasks'),
         ('non_billable_project', 'No task found')], string="Billable Type", compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
     timesheet_invoice_id = fields.Many2one('account.invoice', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
 
@@ -107,3 +107,11 @@ class AccountAnalyticLine(models.Model):
             elif task.billable_type == 'task_rate':
                 return task.sale_line_id
         return self.env['sale.order.line']
+
+    def _timesheet_get_portal_domain(self):
+        """ Only the timesheets with a product invoiced on delivered quantity are concerned.
+            since in ordered quantity, the timesheet quantity is not invoiced,
+            thus there is no meaning of showing invoice with ordered quantity.
+        """
+        domain = super(AccountAnalyticLine, self)._timesheet_get_portal_domain()
+        return expression.AND([domain, [('timesheet_invoice_type', 'in', ['billable_time', 'non_billable'])]])

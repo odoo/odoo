@@ -38,15 +38,14 @@ class StockRule(models.Model):
         required=True)
     sequence = fields.Integer('Sequence', default=20)
     company_id = fields.Many2one('res.company', 'Company',
-        default=lambda self: self.env.company_id)
+        default=lambda self: self.env.company)
     location_id = fields.Many2one('stock.location', 'Destination Location', required=True)
     location_src_id = fields.Many2one('stock.location', 'Source Location')
     route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
     procure_method = fields.Selection([
         ('make_to_stock', 'Take From Stock'),
         ('make_to_order', 'Trigger Another Rule'),
-        ('mts_else_mto', 'Take From Stock, if unavailable, Trigger Another Rule')], string='Move Supply Method',
-        default='make_to_stock', required=True,
+        ('mts_else_mto', 'Take From Stock, if unavailable, Trigger Another Rule')], string='Supply Method', default='make_to_stock', required=True,
         help="Take From Stock: the products will be taken from the available stock of the source location.\n"
              "Trigger Another Rule: the system will try to find a stock rule to bring the products in the source location. The available stock will be ignored.\n"
              "Take From Stock, if Unavailable, Trigger Another Rule: the products will be taken from the available stock of the source location."
@@ -57,9 +56,9 @@ class StockRule(models.Model):
         required=True)
     delay = fields.Integer('Delay', default=0, help="The expected date of the created transfer will be computed based on this delay.")
     partner_address_id = fields.Many2one('res.partner', 'Partner Address', help="Address where goods should be delivered. Optional.")
-    propagate = fields.Boolean(
-        'Propagate cancel and split', default=True,
-        help="When ticked, if the move is splitted or cancelled, the next move will be too.")
+    propagate_cancel = fields.Boolean(
+        'Cancel Next Move', default=False, oldname='propagate',
+        help="When ticked, if the move created by this rule is cancelled, the next move will be cancelled too.")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse')
     propagate_warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse to Propagate',
@@ -71,6 +70,10 @@ class StockRule(models.Model):
         help="The 'Manual Operation' value will create a stock move after the current one. "
              "With 'Automatic No Step Added', the location is replaced in the original move.")
     rule_message = fields.Html(compute='_compute_action_message')
+    propagate_date = fields.Boolean(string="Propagate Rescheduling", default=True,
+        help='The rescheduling is propagated to the next move.')
+    propagate_date_minimum_delta = fields.Integer(string='Reschedule if Higher Than',
+        help='The change must be higher than this value to be propagated', default=1)
 
     @api.onchange('picking_type_id')
     def _onchange_picking_type(self):
@@ -167,7 +170,7 @@ class StockRule(models.Model):
             'company_id': self.company_id.id,
             'picking_id': False,
             'picking_type_id': self.picking_type_id.id,
-            'propagate': self.propagate,
+            'propagate_cancel': self.propagate_cancel,
             'warehouse_id': self.warehouse_id.id,
         }
         return new_move_vals
@@ -262,7 +265,9 @@ class StockRule(models.Model):
             'warehouse_id': self.propagate_warehouse_id.id or self.warehouse_id.id,
             'date': date_expected,
             'date_expected': date_expected,
-            'propagate': self.propagate,
+            'propagate_cancel': self.propagate_cancel,
+            'propagate_date': self.propagate_date,
+            'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'description_picking': product_id._get_description(self.picking_type_id),
             'priority': values.get('priority', "1"),
         }
@@ -338,7 +343,7 @@ class ProcurementGroup(models.Model):
         actions_to_run = defaultdict(list)
         errors = []
         for procurement in procurements:
-            procurement.values.setdefault('company_id', self.env.company_id)
+            procurement.values.setdefault('company_id', self.env.company)
             procurement.values.setdefault('priority', '1')
             procurement.values.setdefault('date_planned', fields.Datetime.now())
             rule = self._get_rule(procurement.product_id, procurement.location_id, procurement.values)
@@ -486,7 +491,7 @@ class ProcurementGroup(models.Model):
             1000 orderpoints.
             This is appropriate for batch jobs only.
         """
-        if company_id and self.env.company_id.id != company_id:
+        if company_id and self.env.company.id != company_id:
             # To ensure that the company_id is taken into account for
             # all the processes triggered by this method
             # i.e. If a PO is generated by the run of the procurements the

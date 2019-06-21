@@ -52,7 +52,8 @@ from . import tools
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
 from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
-                   Collector, LastOrderedSet, OrderedSet, groupby
+                   Collector, LastOrderedSet, OrderedSet, IterableGenerator, \
+                   groupby
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
@@ -172,15 +173,41 @@ class MetaModel(api.Meta):
 
 
 class NewId(object):
-    """ Pseudo-ids for new records, encapsulating an optional reference. """
-    __slots__ = ['ref']
+    """ Pseudo-ids for new records, encapsulating an optional origin id (actual
+        record id) and an optional reference (any value).
+    """
+    __slots__ = ['origin', 'ref']
 
-    def __init__(self, ref=None):
+    def __init__(self, origin=None, ref=None):
+        self.origin = origin
         self.ref = ref
 
     def __bool__(self):
         return False
-    __nonzero__ = __bool__
+
+    def __eq__(self, other):
+        return isinstance(other, NewId) and (
+            (self.origin and other.origin and self.origin == other.origin)
+            or (self.ref and other.ref and self.ref == other.ref)
+        )
+
+    def __hash__(self):
+        return hash(self.origin or self.ref or id(self))
+
+    def __repr__(self):
+        return (
+            "<NewId origin=%r>" % self.origin if self.origin else
+            "<NewId ref=%r>" % self.ref if self.ref else
+            "<NewId 0x%x>" % id(self)
+        )
+
+
+def origin_ids(ids):
+    """ Return an iterator over the origin ids corresponding to ``ids``.
+        Actual ids are returned as is, and ids without origin are not returned.
+    """
+    return ((id_ or id_.origin) for id_ in ids if (id_ or getattr(id_, "origin", None)))
+
 
 IdType = (int, str, NewId)
 
@@ -1210,7 +1237,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for group_ext_id in not_has_groups:
             if group_ext_id == 'base.group_no_one':
                 # check: the group_no_one is effective in debug mode only
-                if user.has_group(group_ext_id) and request and request.debug:
+                if user.has_group(group_ext_id) and request and request.session.debug:
                     return False
             else:
                 if user.has_group(group_ext_id):
@@ -1219,7 +1246,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for group_ext_id in has_groups:
             if group_ext_id == 'base.group_no_one':
                 # check: the group_no_one is effective in debug mode only
-                if user.has_group(group_ext_id) and request and request.debug:
+                if user.has_group(group_ext_id) and request and request.session.debug:
                     return True
             else:
                 if user.has_group(group_ext_id):
@@ -1457,24 +1484,18 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # Add related action information if aksed
         if toolbar:
+            vt = 'list' if view_type == 'tree' else view_type
             bindings = self.env['ir.actions.actions'].get_bindings(self._name)
             resreport = [action
                          for action in bindings['report']
-                         if view_type == 'tree' or not action.get('multi')]
+                         if vt in (action.get('binding_view_types') or vt).split(',')]
             resaction = [action
                          for action in bindings['action']
-                         if view_type == 'tree' or not action.get('multi')]
-            resrelate = []
-            if view_type == 'form':
-                resrelate = bindings['action_form_only']
-
-            for res in itertools.chain(resreport, resaction):
-                res['string'] = res['name']
+                         if vt in (action.get('binding_view_types') or vt).split(',')]
 
             result['toolbar'] = {
                 'print': resreport,
                 'action': resaction,
-                'relate': resrelate,
             }
         return result
 
@@ -1501,7 +1522,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return {
             'type': 'ir.actions.act_window',
             'res_model': self._name,
-            'view_type': 'form',
             'view_mode': 'form',
             'views': [(view_id, 'form')],
             'target': 'current',
@@ -2517,6 +2537,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 _logger.warning('Field definition for _inherits reference "%s" in "%s" must be marked as "required" with ondelete="cascade" or "restrict", forcing it to required + cascade.', field_name, self._name)
                 field.required = True
                 field.ondelete = "cascade"
+            field.delegate = True
 
         # reflect fields with delegate=True in dictionary self._inherits
         for field in self._fields.values():
@@ -2767,11 +2788,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
 Document type: %(document_kind)s (%(document_model)s)
 Operation: %(operation)s
+User: %(user)s
 Fields:
 %(fields_list)s""") % {
                     'document_model': self._name,
                     'document_kind': description or self._name,
                     'operation': operation,
+                    'user': self._uid,
                     'fields_list': '\n'.join(
                         '- %s (%s)' % (f, format_groups(self._fields[f]))
                         for f in sorted(invalid_fields)
@@ -2859,7 +2882,7 @@ Fields:
         records -= self.env.field_todo(field)
 
         # in onchange mode, discard computed fields and fields in cache
-        if self.env.in_onchange:
+        if not self.id:
             for f in list(fs):
                 if f.compute or self.env.cache.contains(self, f):
                     fs.discard(f)
@@ -3026,6 +3049,21 @@ Fields:
         return res
 
     @api.multi
+    def get_base_url(self):
+        """
+        Returns rooturl for a specific given record.
+
+        By default, it return the ir.config.parameter of base_url
+        but it can be overidden by model.
+
+        :return: the base url for this record
+        :rtype: string
+
+        """
+        self.ensure_one()
+        return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+
+    @api.multi
     def _check_concurrency(self):
         if not (self._log_access and self._context.get(self.CONCURRENCY_CHECK_FIELD)):
             return
@@ -3086,7 +3124,13 @@ Fields:
             # errors for non-transactional search/read sequences coming from clients.
             return
         _logger.info('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, self._uid, self._name)
-        raise MissingError(_('Missing document(s)') + ':' + _('One of the documents you are trying to access has been deleted, please try again after refreshing.'))
+        raise MissingError(
+            _('Missing document(s)') + ':' + _('One of the documents you are trying to access has been deleted, please try again after refreshing.')
+            + '\n\n({} {}, {} {}, {} {}, {} {})'.format(
+                _('Document type:'), self._name, _('Operation:'), operation,
+                _('Records:'), invalid.ids[:6], _('User:'), self._uid,
+            )
+        )
 
     def _filter_access_rules(self, operation):
         """ Return the subset of ``self`` for which ``operation`` is allowed. """
@@ -3110,14 +3154,21 @@ Fields:
         if not where_clause:
             return self
 
-        valid_ids = []
+        # detemine ids in database that satisfy ir.rules
+        valid_ids = set()
         query = "SELECT {}.id FROM {} WHERE {}.id IN %s AND {}".format(
             self._table, ",".join(tables), self._table, " AND ".join(where_clause),
         )
         for sub_ids in self._cr.split_for_in_conditions(self.ids):
             self._cr.execute(query, [sub_ids] + where_params)
-            valid_ids.extend(row[0] for row in self._cr.fetchall())
-        return self.browse(valid_ids)
+            valid_ids.update(row[0] for row in self._cr.fetchall())
+
+        # return new ids without origin and ids with origin in valid_ids
+        return self.browse([
+            it
+            for it in self._ids
+            if not (it or it.origin) or (it or it.origin) in valid_ids
+        ])
 
     @api.multi
     def unlink(self):
@@ -3444,7 +3495,10 @@ Fields:
             for sub_ids in cr.split_for_in_conditions(set(self.ids)):
                 cr.execute(query, params + [sub_ids])
                 if cr.rowcount != len(sub_ids):
-                    raise MissingError(_('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description)
+                    raise MissingError(
+                        _('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description
+                        + '\n\n({} {}, {} {})'.format(_('Records:'), sub_ids[:6], _('User:'), self._uid)
+                    )
 
             for name in updated:
                 field = self._fields[name]
@@ -4006,8 +4060,7 @@ Fields:
             # The quotes surrounding `ir_translation` are important as well.
             unique_translation_subselect = """
                 (SELECT res_id, value FROM "ir_translation"
-                 WHERE name=%s AND lang=%s AND value!=''
-                 ORDER BY res_id, id DESC)
+                 WHERE type='model' AND name=%s AND lang=%s AND value!='')
             """
             alias, alias_statement = query.add_join(
                 (table_alias, unique_translation_subselect, 'id', 'res_id', field),
@@ -4347,7 +4400,10 @@ Fields:
         existing = self.browse(ids + new_ids)
         if len(existing) < len(self):
             # mark missing records in cache with a failed value
-            exc = MissingError(_("Record does not exist or has been deleted."))
+            exc = MissingError(
+                _("Record does not exist or has been deleted.")
+                + '\n\n({} {}, {} {})'.format(_('Records:'), (self - existing).ids[:6], _('User:'), self._uid)
+            )
             self.env.cache.set_failed(self - existing, self._fields.values(), exc)
         return existing
 
@@ -4720,10 +4776,8 @@ Fields:
 
     @property
     def ids(self):
-        """ List of actual record ids in this recordset (ignores placeholder
-        ids for records to create)
-        """
-        return [it for it in self._ids if it]
+        """ Return the list of actual record ids corresponding to ``self``. """
+        return list(origin_ids(self._ids))
 
     # backward-compatibility with former browse records
     _cr = property(lambda self: self.env.cr)
@@ -4811,6 +4865,8 @@ Fields:
 
             The returned recordset has the same prefetch object as ``self``.
         """
+        if args and 'allowed_company_ids' not in args[0] and 'allowed_company_ids' in self._context:
+            args[0]['allowed_company_ids'] = self._context.get('allowed_company_ids') 
         context = dict(args[0] if args else self._context, **kwargs)
         return self.with_env(self.env(context=context))
 
@@ -4951,30 +5007,42 @@ Fields:
     #
 
     @api.model
-    def new(self, values={}, ref=None):
-        """ new([values]) -> record
+    def new(self, values={}, origin=None, ref=None):
+        """ new([values], [origin], [ref]) -> record
 
         Return a new record instance attached to the current environment and
         initialized with the provided ``value``. The record is *not* created
         in database, it only exists in memory.
 
-        One can pass a reference value to identify the record among other new
+        One can pass an ``origin`` record, which is the actual record behind the
+        result. It is retrieved as ``record._origin``. Two new records with the
+        same origin record are considered equal.
+
+        One can also pass a ``ref`` value to identify the record among other new
         records. The reference is encapsulated in the ``id`` of the record.
         """
-        record = self.browse([NewId(ref)])
+        if origin is not None:
+            origin = origin.id
+        record = self.browse([NewId(origin, ref)])
         record._cache.update(record._convert_to_cache(values, update=True))
 
-        if record.env.in_onchange:
-            # The cache update does not set inverse fields, so do it manually.
-            # This is useful for computing a function field on secondary
-            # records, if that field depends on the main record.
-            for name in values:
-                field = self._fields.get(name)
-                if field:
+        # set inverse fields on new records in the comodel
+        for name in values:
+            field = self._fields.get(name)
+            if field and field.relational:
+                inv_recs = record[name].filtered(lambda r: not r.id)
+                if inv_recs:
                     for invf in self._field_inverses[field]:
-                        invf._update(record[name], record)
+                        invf._update(inv_recs, record)
 
         return record
+
+    @property
+    def _origin(self):
+        """ Return the actual records corresponding to ``self``. """
+        ids = tuple(origin_ids(self._ids))
+        prefetch_ids = IterableGenerator(origin_ids, self._prefetch_ids)
+        return self._browse(self.env, ids, prefetch_ids)
 
     #
     # Dirty flags, to mark record fields modified (in draft mode)
@@ -5430,11 +5498,31 @@ Fields:
                 # put record in dict to include it when comparing snapshots
                 super(Snapshot, self).__init__({'<record>': record, '<tree>': tree})
                 for name, subnames in tree.items():
+                    field = record._fields[name]
                     # x2many fields are serialized as a list of line snapshots
                     self[name] = (
                         [Snapshot(line, subnames) for line in record[name]]
-                        if subnames else record[name]
+                        if field.type in ('one2many', 'many2many') else record[name]
                     )
+
+            def has_changed(self, name):
+                """ Return whether a field on record has changed. """
+                record = self['<record>']
+                subnames = self['<tree>'][name]
+                if record._fields[name].type not in ('one2many', 'many2many'):
+                    return self[name] != record[name]
+                return (
+                    len(self[name]) != len(record[name])
+                    or (
+                        set(line_snapshot["<record>"].id for line_snapshot in self[name])
+                        != set(record[name]._ids)
+                    )
+                    or any(
+                        line_snapshot.has_changed(subname)
+                        for line_snapshot in self[name]
+                        for subname in subnames
+                    )
+                )
 
             def diff(self, other):
                 """ Return the values in ``self`` that differ from ``other``.
@@ -5445,14 +5533,15 @@ Fields:
                 for name, subnames in self['<tree>'].items():
                     if (name == 'id') or (other.get(name) == self[name]):
                         continue
-                    if not subnames:
-                        field = record._fields[name]
+                    field = record._fields[name]
+                    if field.type not in ('one2many', 'many2many'):
                         result[name] = field.convert_to_onchange(self[name], record, {})
                     else:
                         # x2many fields: serialize value as commands
                         result[name] = commands = [(5,)]
                         for line_snapshot in self[name]:
                             line = line_snapshot['<record>']
+                            line = line._origin or line
                             if not line.id:
                                 # new line: send diff from scratch
                                 line_diff = line_snapshot.diff({})
@@ -5475,63 +5564,58 @@ Fields:
         # prefetch x2many lines without data (for the initial snapshot)
         for name, subnames in nametree.items():
             if subnames and values.get(name):
-                # retrieve all ids in commands, and read the expected fields
-                line_ids = []
+                # retrieve all ids in commands
+                line_ids = set()
                 for cmd in values[name]:
                     if cmd[0] in (1, 4):
-                        line_ids.append(cmd[1])
+                        line_ids.add(cmd[1])
                     elif cmd[0] == 6:
-                        line_ids.extend(cmd[2])
-                lines = self.browse()[name].browse(line_ids)
-                lines.read(list(subnames), load='_classic_write')
+                        line_ids.update(cmd[2])
+                # build corresponding new lines, and prefetch fields
+                new_lines = self[name].browse(NewId(id_) for id_ in line_ids)
+                for subname in subnames:
+                    new_lines.mapped(subname)
 
         # create a new record with values, and attach ``self`` to it
-        with env.do_in_onchange():
-            record = self.new(values)
-            # attach ``self`` with a different context (for cache consistency)
-            record._origin = self.with_context(__onchange=True)
+        record = self.new(values, origin=self)
 
         # make a snapshot based on the initial values of record
-        with env.do_in_onchange():
-            snapshot0 = snapshot1 = Snapshot(record, nametree)
+        snapshot0 = snapshot1 = Snapshot(record, nametree)
 
         # determine which field(s) should be triggered an onchange
         todo = list(names or nametree)
         done = set()
 
         # dummy assignment: trigger invalidations on the record
-        with env.do_in_onchange():
-            for name in todo:
-                if name == 'id':
-                    continue
-                value = record[name]
-                field = self._fields[name]
-                if field.type == 'many2one' and field.delegate and not value:
-                    # do not nullify all fields of parent record for new records
-                    continue
-                record[name] = value
+        for name in todo:
+            if name == 'id':
+                continue
+            value = record[name]
+            field = self._fields[name]
+            if field.type == 'many2one' and field.delegate and not value:
+                # do not nullify all fields of parent record for new records
+                continue
+            record[name] = value
 
         result = {'warnings': OrderedSet()}
 
-        # process names in order (or the keys of values if no name given)
+        # process names in order
         while todo:
-            name = todo.pop(0)
-            if name in done:
-                continue
-            done.add(name)
-
-            with env.do_in_onchange():
-                # apply field-specific onchange methods
+            # apply field-specific onchange methods
+            for name in todo:
                 if field_onchange.get(name):
                     record._onchange_eval(name, field_onchange[name], result)
+                done.add(name)
 
-                # make a snapshot (this forces evaluation of computed fields)
-                snapshot1 = Snapshot(record, nametree)
+            # determine which fields to process for the next pass
+            todo = [
+                name
+                for name in nametree
+                if name not in done and snapshot0.has_changed(name)
+            ]
 
-                # determine which fields have been modified
-                for name in nametree:
-                    if snapshot1[name] != snapshot0[name]:
-                        todo.append(name)
+        # make the snapshot with the final values of record
+        snapshot1 = Snapshot(record, nametree)
 
         # determine values that have changed by comparing snapshots
         self.invalidate_cache()

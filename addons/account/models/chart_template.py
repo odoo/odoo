@@ -168,10 +168,10 @@ class AccountChartTemplate(models.Model):
         """
         self.ensure_one()
         # do not use `request.env` here, it can cause deadlocks
-        if request and 'allowed_company_ids' in dir(request):
+        if request and hasattr(request, 'allowed_company_ids'):
             company = self.env['res.company'].browse(request.allowed_company_ids[0])
         else:
-            company = self.env.company_id
+            company = self.env.company
         # If we don't have any chart of account on this company, install this chart of account
         if not company.chart_template_id and not self.existing_accounting(company):
             self.load_for_current_company(15.0, 15.0)
@@ -186,10 +186,10 @@ class AccountChartTemplate(models.Model):
         """
         self.ensure_one()
         # do not use `request.env` here, it can cause deadlocks
-        if request and 'allowed_company_ids' in dir(request):
+        if request and hasattr(request, 'allowed_company_ids'):
             company = self.env['res.company'].browse(request.allowed_company_ids[0])
         else:
-            company = self.env.company_id
+            company = self.env.company
         # Ensure everything is translated to the company's language, not the user's one.
         self = self.with_context(lang=company.partner_id.lang)
         if not self.env.user._is_admin():
@@ -894,7 +894,9 @@ class AccountTaxTemplate(models.Model):
                 'account_dict': dictionary containing a to-do list with all the accounts to assign on new taxes
             }
         """
-        ChartTemplate = self.env['account.chart.template']
+        # default_company_id is needed in context to allow creation of default
+        # repartition lines on taxes
+        ChartTemplate = self.env['account.chart.template'].with_context(default_company_id=company.id)
         todo_dict = {'account.tax': {}, 'account.tax.repartition.line': {}}
         tax_template_to_tax = {}
 
@@ -926,7 +928,7 @@ class AccountTaxTemplate(models.Model):
                 # We also have to delay the assignation of accounts to repartition lines
                 all_tax_rep_lines = tax.invoice_repartition_line_ids + tax.refund_repartition_line_ids
                 all_template_rep_lines = template.invoice_repartition_line_ids + template.refund_repartition_line_ids
-                for i in range(0, len(all_tax_rep_lines)):
+                for i in range(0, len(all_template_rep_lines)):
                     # We assume template and tax repartition lines are in the same order
                     template_account = all_template_rep_lines[i].account_id
                     if template_account:

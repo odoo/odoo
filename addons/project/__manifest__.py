@@ -9,6 +9,7 @@
     'sequence': 10,
     'summary': 'Organize and schedule your projects ',
     'depends': [
+        'analytic',
         'base_setup',
         'mail',
         'portal',
@@ -23,6 +24,7 @@
         'security/project_security.xml',
         'security/ir.model.access.csv',
         'report/project_report_views.xml',
+        'views/analytic_views.xml',
         'views/digest_views.xml',
         'views/rating_views.xml',
         'views/project_views.xml',

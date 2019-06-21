@@ -26,7 +26,7 @@ class Project(models.Model):
         return values
 
     def _plan_prepare_values(self):
-        currency = self.env.company_id.currency_id
+        currency = self.env.company.currency_id
         uom_hour = self.env.ref('uom.product_uom_hour')
         hour_rounding = uom_hour.rounding
         billable_types = ['non_billable', 'non_billable_project', 'billable_time', 'billable_fixed']
@@ -53,10 +53,16 @@ class Project(models.Model):
             }
         }
 
+        # hours from non-invoiced timesheets that are linked to canceled so
+        canceled_hours_domain = [('project_id', 'in', self.ids), ('timesheet_invoice_type', '!=', False), ('so_line.state', '=', 'cancel')]
+        total_canceled_hours = sum(self.env['account.analytic.line'].search(canceled_hours_domain).mapped('unit_amount'))
+        dashboard_values['hours']['canceled'] = float_round(total_canceled_hours, precision_rounding=hour_rounding)
+        dashboard_values['hours']['total'] += float_round(total_canceled_hours, precision_rounding=hour_rounding)
+
         # hours (from timesheet) and rates (by billable type)
-        dashboard_domain = [('project_id', 'in', self.ids), ('timesheet_invoice_type', '!=', False)]  # force billable type
+        dashboard_domain = [('project_id', 'in', self.ids), ('timesheet_invoice_type', '!=', False), '|', ('so_line', '=', False), ('so_line.state', '!=', 'cancel')]  # force billable type
         dashboard_data = self.env['account.analytic.line'].read_group(dashboard_domain, ['unit_amount', 'timesheet_invoice_type'], ['timesheet_invoice_type'])
-        dashboard_total_hours = sum([data['unit_amount'] for data in dashboard_data])
+        dashboard_total_hours = sum([data['unit_amount'] for data in dashboard_data]) + total_canceled_hours
         for data in dashboard_data:
             billable_type = data['timesheet_invoice_type']
             dashboard_values['hours'][billable_type] = float_round(data.get('unit_amount'), precision_rounding=hour_rounding)
@@ -65,6 +71,9 @@ class Project(models.Model):
             rate = round(data.get('unit_amount') / dashboard_total_hours * 100, 2) if dashboard_total_hours else 0.0
             dashboard_values['rates'][billable_type] = rate
             dashboard_values['rates']['total'] += rate
+
+        # rates from non-invoiced timesheets that are linked to canceled so
+        dashboard_values['rates']['canceled'] = float_round(100 * total_canceled_hours / (dashboard_total_hours or 1), precision_rounding=hour_rounding)
 
         # profitability, using profitability SQL report
         profit = dict.fromkeys(['invoiced', 'to_invoice', 'cost', 'expense_cost', 'expense_amount_untaxed_invoiced', 'total'], 0.0)
@@ -83,14 +92,22 @@ class Project(models.Model):
         #
         # Time Repartition (per employee per billable types)
         #
-        user_ids = self.env['project.task'].sudo().search_read([('project_id', 'in', self.ids), ('user_id', '!=', False)], ['user_id'])
+        user_ids = self.env['project.task'].sudo().read_group([('project_id', 'in', self.ids), ('user_id', '!=', False)], ['user_id'], ['user_id'])
         user_ids = [user_id['user_id'][0] for user_id in user_ids]
         employee_ids = self.env['res.users'].sudo().search_read([('id', 'in', user_ids)], ['employee_ids'])
         # flatten the list of list
         employee_ids = list(itertools.chain.from_iterable([employee_id['employee_ids'] for employee_id in employee_ids]))
-        employees = self.env['hr.employee'].sudo().browse(employee_ids) | self.env['account.analytic.line'].search([('project_id', 'in', self.ids)]).mapped('employee_id')
+
+        aal_employee_ids = self.env['account.analytic.line'].read_group([('project_id', 'in', self.ids), ('employee_id', '!=', False)], ['employee_id'], ['employee_id'])
+        employee_ids.extend(list(map(lambda x: x['employee_id'][0], aal_employee_ids)))
+
+        employees = self.env['hr.employee'].sudo().browse(employee_ids)
         repartition_domain = [('project_id', 'in', self.ids), ('employee_id', '!=', False), ('timesheet_invoice_type', '!=', False)]  # force billable type
-        repartition_data = self.env['account.analytic.line'].read_group(repartition_domain, ['employee_id', 'timesheet_invoice_type', 'unit_amount'], ['employee_id', 'timesheet_invoice_type'], lazy=False)
+        # repartition data, without timesheet on cancelled so
+        repartition_data = self.env['account.analytic.line'].read_group(repartition_domain + ['|', ('so_line', '=', False), ('so_line.state', '!=', 'cancel')], ['employee_id', 'timesheet_invoice_type', 'unit_amount'], ['employee_id', 'timesheet_invoice_type'], lazy=False)
+        # read timesheet on cancelled so
+        cancelled_so_timesheet = self.env['account.analytic.line'].read_group(repartition_domain + [('so_line.state', '=', 'cancel')], ['employee_id', 'unit_amount'], ['employee_id'], lazy=False)
+        repartition_data += [{**canceled, 'timesheet_invoice_type': 'canceled'} for canceled in cancelled_so_timesheet]
 
         # set repartition per type per employee
         repartition_employee = {}
@@ -102,6 +119,7 @@ class Project(models.Model):
                 non_billable=0.0,
                 billable_time=0.0,
                 billable_fixed=0.0,
+                canceled=0.0,
                 total=0.0,
             )
         for data in repartition_data:
@@ -113,14 +131,13 @@ class Project(models.Model):
                 non_billable=0.0,
                 billable_time=0.0,
                 billable_fixed=0.0,
+                canceled=0.0,
                 total=0.0,
             ))[data['timesheet_invoice_type']] = float_round(data.get('unit_amount', 0.0), precision_rounding=hour_rounding)
             repartition_employee[employee_id]['__domain_' + data['timesheet_invoice_type']] = data['__domain']
-
         # compute total
         for employee_id, vals in repartition_employee.items():
-            repartition_employee[employee_id]['total'] = sum([vals[inv_type] for inv_type in billable_types])
-
+            repartition_employee[employee_id]['total'] = sum([vals[inv_type] for inv_type in [*billable_types, 'canceled']])
         hours_per_employee = [repartition_employee[employee_id]['total'] for employee_id in repartition_employee]
         values['repartition_employee_max'] = (max(hours_per_employee) if hours_per_employee else 1) or 1
         values['repartition_employee'] = repartition_employee
@@ -158,8 +175,10 @@ class Project(models.Model):
             if row[0]['sale_order_id']:
                 sale_order_ids.add(row[0]['sale_order_id'])
 
+        sale_orders = self.env['sale.order'].sudo().browse(sale_order_ids | empty_order_ids)
         sale_order_lines = self.env['sale.order.line'].sudo().browse(sale_line_ids | empty_line_ids)
-        map_so_names = {so.id: so.name for so in self.env['sale.order'].sudo().browse(sale_order_ids | empty_order_ids)}
+        map_so_names = {so.id: so.name for so in sale_orders}
+        map_so_cancel = {so.id: so.state == 'cancel' for so in sale_orders}
         map_sol = {sol.id: sol for sol in sale_order_lines}
         map_sol_names = {sol.id: sol.name.split('\n')[0] if sol.name else _('No Sales Order Line') for sol in sale_order_lines}
         map_sol_so = {sol.id: sol.order_id.id for sol in sale_order_lines}
@@ -199,7 +218,7 @@ class Project(models.Model):
             sale_order_id = row_key[0]
             # sale order row
             if sale_order_id not in rows_sale_order:
-                rows_sale_order[sale_order_id] = [{'label': map_so_names.get(sale_order_id, _('No Sales Order')), 'res_id': sale_order_id, 'res_model': 'sale.order', 'type': 'sale_order'}] + default_row_vals[:]  # INFO, before, M1, M2, M3, Done, M3, M4, M5, After, Forecasted
+                rows_sale_order[sale_order_id] = [{'label': map_so_names.get(sale_order_id, _('No Sales Order')), 'canceled': map_so_cancel.get(sale_order_id, False), 'res_id': sale_order_id, 'res_model': 'sale.order', 'type': 'sale_order'}] + default_row_vals[:]  # INFO, before, M1, M2, M3, Done, M3, M4, M5, After, Forecasted
 
             for index in range(len(rows_sale_line[row_key])):
                 if index != 0:
@@ -239,7 +258,7 @@ class Project(models.Model):
             month_index = fields.Date.from_string(date).month
             return babel.dates.get_month_names('abbreviated', locale=self.env.context.get('lang', 'en_US'))[month_index]
 
-        header_names = [_('Name'), _('Before')] + [_to_short_month_name(date) for date in ts_months] + [_('Done'), _('Sold'), _('Remaining')]
+        header_names = [_('Name'), _('Before')] + [_to_short_month_name(date) for date in ts_months] + [_('Total'), _('Sold'), _('Remaining')]
 
         result = []
         for name in header_names:
@@ -333,8 +352,14 @@ class Project(models.Model):
     def _plan_prepare_actions(self, values):
         actions = []
         if len(self) == 1:
+            task_order_line_ids = []
+            # retrieve all the sale order line that we will need later below
+            if self.env.user.has_group('sales_team.group_sale_salesman') or self.env.user.has_group('sales_team.group_sale_salesman_all_leads'):
+                task_order_line_ids = self.env['project.task'].read_group([('project_id', '=', self.id), ('sale_line_id', '!=', False)], ['sale_line_id'], ['sale_line_id'])
+                task_order_line_ids = [ol['sale_line_id'][0] for ol in task_order_line_ids]
+
             if self.env.user.has_group('sales_team.group_sale_salesman'):
-                if not self.sale_line_id and not self.tasks.mapped('sale_line_id'):
+                if not self.sale_line_id and not task_order_line_ids:
                     actions.append({
                         'label': _("Create a Sales Order"),
                         'type': 'action',
@@ -343,14 +368,19 @@ class Project(models.Model):
                     })
             if self.env.user.has_group('sales_team.group_sale_salesman_all_leads'):
                 to_invoice_amount = values['dashboard']['profit'].get('to_invoice', False)  # plan project only takes services SO line with timesheet into account
-                sale_orders = self.tasks.mapped('sale_line_id.order_id').filtered(lambda so: so.invoice_status == 'to invoice')
-                if to_invoice_amount and sale_orders:
-                    if len(sale_orders) == 1:
+
+                sale_order_ids = self.env['sale.order.line'].read_group([('id', 'in', task_order_line_ids)], ['order_id'], ['order_id'])
+                sale_order_ids = [s['order_id'][0] for s in sale_order_ids]
+                sale_order_ids = self.env['sale.order'].search_read([('id', 'in', sale_order_ids), ('invoice_status', '=', 'to invoice')], ['id'])
+                sale_order_ids = list(map(lambda x: x['id'], sale_order_ids))
+
+                if to_invoice_amount and sale_order_ids:
+                    if len(sale_order_ids) == 1:
                         actions.append({
                             'label': _("Create Invoice"),
                             'type': 'action',
                             'action_id': 'sale.action_view_sale_advance_payment_inv',
-                            'context': json.dumps({'active_ids': sale_orders.ids, 'active_model': 'project.project'}),
+                            'context': json.dumps({'active_ids': sale_order_ids, 'active_model': 'project.project'}),
                         })
                     else:
                         actions.append({
@@ -386,9 +416,13 @@ class Project(models.Model):
         # if only one project, add it in the context as default value
         tasks_domain = [('project_id', 'in', self.ids)]
         tasks_context = self.env.context
-        tasks_projects = self.env['project.task'].sudo().search(tasks_domain).mapped('project_id')
-        if len(tasks_projects) == 1:
-            tasks_context = {**tasks_context, 'default_project_id': tasks_projects.id}
+
+        # filter out all the projects that have no tasks
+        task_projects_ids = self.env['project.task'].read_group([('project_id', 'in', self.ids)], ['project_id'], ['project_id'])
+        task_projects_ids = [p['project_id'][0] for p in task_projects_ids]
+
+        if len(task_projects_ids) == 1:
+            tasks_context = {**tasks_context, 'default_project_id': task_projects_ids[0]}
         stat_buttons.append({
             'name': _('Tasks'),
             'count': sum(self.mapped('task_count')),
@@ -401,8 +435,13 @@ class Project(models.Model):
         })
 
         if self.env.user.has_group('sales_team.group_sale_salesman_all_leads'):
-            sale_orders = self.mapped('sale_line_id.order_id') | self.mapped(
-                'tasks.sale_order_id')
+            # read all the sale orders linked to the projects' tasks
+            task_so_ids = self.env['project.task'].search_read([
+                ('project_id', 'in', self.ids), ('sale_order_id', '!=', False)
+            ], ['sale_order_id'])
+            task_so_ids = [o['sale_order_id'][0] for o in task_so_ids]
+
+            sale_orders = self.mapped('sale_line_id.order_id') | self.env['sale.order'].browse(task_so_ids)
             if sale_orders:
                 stat_buttons.append({
                     'name': _('Sales Orders'),
@@ -414,15 +453,20 @@ class Project(models.Model):
                         context={'create': False, 'edit': False, 'delete': False}
                     )
                 })
-                invoices = sale_orders.mapped('invoice_ids').filtered(lambda inv: inv.type == 'out_invoice')
-                if invoices:
+
+                invoice_ids = self.env['sale.order'].search_read([('id', 'in', sale_orders.ids)], ['invoice_ids'])
+                invoice_ids = list(itertools.chain(*[i['invoice_ids'] for i in invoice_ids]))
+                invoice_ids = self.env['account.invoice'].search_read([('id', 'in', invoice_ids), ('type', '=', 'out_invoice')], ['id'])
+                invoice_ids = list(map(lambda x: x['id'], invoice_ids))
+
+                if invoice_ids:
                     stat_buttons.append({
                         'name': _('Invoices'),
-                        'count': len(invoices),
+                        'count': len(invoice_ids),
                         'icon': 'fa fa-pencil-square-o',
                         'action': _to_action_data(
                             action=self.env.ref('account.action_invoice_tree1'),
-                            domain=[('id', 'in', invoices.ids), ('type', '=', 'out_invoice')],
+                            domain=[('id', 'in', invoice_ids), ('type', '=', 'out_invoice')],
                             context={'create': False, 'delete': False}
                         )
                     })

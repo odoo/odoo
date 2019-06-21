@@ -3,7 +3,6 @@ odoo.define('web.Session', function (require) {
 
 var ajax = require('web.ajax');
 var concurrency = require('web.concurrency');
-var config = require('web.config');
 var core = require('web.core');
 var local_storage = require('web.local_storage');
 var mixins = require('web.mixins');
@@ -35,7 +34,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         this.avoid_recursion = false;
         this.use_cors = options.use_cors || false;
         this.setup(origin);
-        this.debug = config.debug;
 
         // for historic reasons, the session requires a name to properly work
         // (see the methods get_cookie and set_cookie).  We should perhaps
@@ -241,8 +239,11 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         });
     },
     load_qweb: function (mods) {
+        var self = this;
         var lock = this.qweb_mutex.exec(function () {
-            return $.get('/web/webclient/qweb?mods=' + mods).then(function (doc) {
+            var cacheId = self.cache_hashes && self.cache_hashes.qweb;
+            var route  = '/web/webclient/qweb/' + (cacheId ? cacheId : Date.now()) + '?mods=' + mods;
+            return $.get(route).then(function (doc) {
                 if (!doc) { return; }
                 qweb.add_template(doc);
             });
@@ -302,9 +303,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         var self = this;
         options = _.clone(options || {});
         options.headers = _.extend({}, options.headers);
-        if (odoo.debug) {
-            options.headers["X-Debug-Mode"] = $.deparam($.param.querystring()).debug;
-        }
 
         // we add here the user context for ALL queries, mainly to pass
         // the allowed_company_ids key
@@ -344,10 +342,18 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     getTZOffset: function (date) {
         return -new Date(date).getTimezoneOffset();
     },
-
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
+    /**
+     * Replaces the value of a key in cache_hashes (the hash of some resource computed on the back-end by a unique value
+     * @param {string} key the key in the cache_hashes to invalidate
+     */
+    invalidateCacheKey: function(key) {
+        if (this.cache_hashes && this.cache_hashes[key]) {
+            this.cache_hashes[key] = Date.now();
+        }
+    },
 
     /**
      * Reload the currencies (initially given in session_info). This is meant to

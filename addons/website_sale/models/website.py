@@ -25,8 +25,8 @@ class Website(models.Model):
         except ValueError:
             return None
 
-    salesteam_id = fields.Many2one('crm.team', 
-        string='Sales Team', 
+    salesteam_id = fields.Many2one('crm.team',
+        string='Sales Team',
         default=_get_default_website_team)
     pricelist_ids = fields.One2many('product.pricelist', compute="_compute_pricelist_ids",
                                     string='Price list available for this Ecommerce/Website')
@@ -39,6 +39,9 @@ class Website(models.Model):
 
     cart_recovery_mail_template_id = fields.Many2one('mail.template', string='Cart Recovery Email', default=_default_recovery_mail_template, domain="[('model', '=', 'sale.order')]")
     cart_abandoned_delay = fields.Float("Abandoned Delay", default=1.0)
+
+    shop_ppg = fields.Integer(default=20, string="Number of products in the grid on the shop")
+    shop_ppr = fields.Integer(default=4, string="Number of grid columns on the shop")
 
     @api.one
     def _compute_pricelist_ids(self):
@@ -114,11 +117,6 @@ class Website(models.Model):
 
         # This method is cached, must not return records! See also #8795
         return pricelists.ids
-
-    # DEPRECATED (Not used anymore) -> Remove me in master (saas12.3)
-    def _get_pl(self, country_code, show_visible, website_pl, current_pl, all_pl):
-        pl_ids = self._get_pl_partner_order(country_code, show_visible, website_pl, current_pl, all_pl)
-        return self.env['product.pricelist'].browse(pl_ids)
 
     def _get_pricelist_available(self, req, show_visible=False):
         """ Return the list of pricelists that can be used on website for the current user.
@@ -257,7 +255,8 @@ class Website(models.Model):
         sale_order = self.env['sale.order'].sudo().browse(sale_order_id).exists() if sale_order_id else None
 
         if not (sale_order or force_create or code):
-            request.session['sale_order_id'] = None
+            if request.session.get('sale_order_id'):
+                request.session['sale_order_id'] = None
             return self.env['sale.order']
 
         if self.env['product.pricelist'].browse(force_pricelist).exists():

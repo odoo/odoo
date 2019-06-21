@@ -277,10 +277,11 @@ var PosDB = core.Class.extend({
                 if(partner.barcode){
                     this.partner_by_barcode[partner.barcode] = partner;
                 }
-                partner.address = (partner.street || '') +', '+ 
-                                  (partner.zip || '')    +' '+
-                                  (partner.city || '')   +', '+ 
-                                  (partner.country_id[1] || '');
+                partner.address = (partner.street ? partner.street + ', ': '') +
+                                  (partner.zip ? partner.zip + ', ': '') +
+                                  (partner.city ? partner.city + ', ': '') +
+                                  (partner.state_id ? partner.state_id[1] + ', ': '') +
+                                  (partner.country_id ? partner.country_id[1]: '');
                 this.partner_search_string += this._partner_search_string(partner);
             }
         }

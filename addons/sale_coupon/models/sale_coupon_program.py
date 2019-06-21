@@ -48,7 +48,7 @@ class SaleCouponProgram(models.Model):
     coupon_count = fields.Integer(compute='_compute_coupon_count')
     order_count = fields.Integer(compute='_compute_order_count')
     order_line_ids = fields.Many2many('sale.order.line', store=False, search='_search_order_line_ids')
-    company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.company_id)
+    company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.company)
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
     validity_duration = fields.Integer(default=1,
         help="Validity duration for a coupon after its generation")

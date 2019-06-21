@@ -460,7 +460,7 @@ class MassMailing(models.Model):
         return res
 
     active = fields.Boolean(default=True)
-    subject = fields.Char('Subject', help='Subject of emails to send', required=True)
+    subject = fields.Char('Subject', help='Subject of emails to send', required=True, translate=True)
     email_from = fields.Char(string='From', required=True,
         default=lambda self: self.env['mail.message']._get_default_from())
     sent_date = fields.Datetime(string='Sent Date', oldname='date', copy=False)
@@ -704,9 +704,8 @@ class MassMailing(models.Model):
         def _image_to_url(b64image: bytes):
             """Store an image in an attachement and returns an url"""
             attachment = self.env['ir.attachment'].create({
-                'name': "cropped_image",
                 'datas': b64image,
-                'datas_fname': "cropped_image_mailing_{}".format(self.id),
+                'name': "cropped_image_mailing_{}".format(self.id),
                 'type': 'binary',})
 
             attachment.generate_access_token()
@@ -744,7 +743,6 @@ class MassMailing(models.Model):
             context['form_view_initial_mode'] = 'edit'
             return {
                 'type': 'ir.actions.act_window',
-                'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'mail.mass_mailing',
                 'res_id': mass_mailing_copy.id,

@@ -7,8 +7,8 @@ import datetime
 import functools
 import glob
 import hashlib
-import imghdr
 import io
+import ipaddress
 import itertools
 import jinja2
 import json
@@ -36,7 +36,7 @@ import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
 from odoo.modules import get_module_path, get_resource_path
-from odoo.tools import image_process, topological_sort, html_escape, pycompat
+from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlwt, file_open
@@ -62,6 +62,9 @@ env.filters["json"] = json.dumps
 
 # 1 week cache for asset bundles as advised by Google Page Speed
 BUNDLE_MAXAGE = 60 * 60 * 24 * 7
+
+# 1 year cache for content (menus, translations, static qweb)
+CONTENT_MAXAGE = 60 * 60 * 24 * 356
 
 DBNAME_PATTERN = '^[a-zA-Z0-9][a-zA-Z0-9_.-]+$'
 
@@ -424,6 +427,30 @@ def xml2json_from_elementtree(el, preserve_whitespaces=False):
     res["children"] = kids
     return res
 
+def _admin_password_warn(uid):
+    """ Admin still has `admin` password, flash a message via chatter.
+
+    Uses a private mail.channel from the system (/ odoobot) to the user, as
+    using a more generic mail.thread could send an email which is undesirable
+
+    Uses mail.channel directly because using mail.thread might send an email instead.
+    """
+    if request.params['password'] != 'admin':
+        return
+    if ipaddress.ip_address(request.httprequest.remote_addr).is_private:
+        return
+    admin = request.env.ref('base.partner_admin')
+    if uid not in admin.user_ids.ids:
+        return
+
+    MailChannel = request.env['mail.channel'].sudo()
+    MailChannel.browse(MailChannel.channel_get([admin.id])['id'])\
+        .message_post(
+            body=_("Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"),
+            message_type='comment',
+            subtype='mail.mt_comment'
+        )
+
 #----------------------------------------------------------
 # Odoo Web web Controllers
 #----------------------------------------------------------
@@ -450,6 +477,23 @@ class Home(http.Controller):
             return response
         except AccessError:
             return werkzeug.utils.redirect('/web/login?error=access')
+
+    @http.route('/web/webclient/load_menus/<string:unique>', type='http', auth='user', methods=['GET'])
+    def web_load_menus(self, unique):
+        """
+        Loads the menus for the webclient
+        :param unique: this parameters is not used, but mandatory: it is used by the HTTP stack to make a unique request
+        :return: the menus (including the images in Base64)
+        """
+        menus = request.env["ir.ui.menu"].load_menus(request.session.debug)
+        body = json.dumps(menus, default=ustr)
+        response = request.make_response(body, [
+            # this method must specify a content-type application/json instead of using the default text/html set because
+            # the type of the route is set to HTTP, but the rpc is made with a get and expects JSON
+            ('Content-Type', 'application/json'),
+            ('Cache-Control', 'public, max-age=' + str(CONTENT_MAXAGE)),
+        ])
+        return response
 
     @http.route('/web/dbredirect', type='http', auth="none")
     def web_db_redirect(self, redirect='/', **kw):
@@ -479,6 +523,7 @@ class Home(http.Controller):
             old_uid = request.uid
             try:
                 uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
+                _admin_password_warn(uid)
                 request.params['login_success'] = True
                 return http.redirect_with_hash(self._login_redirect(uid, redirect=redirect))
             except odoo.exceptions.AccessDenied as e:
@@ -496,12 +541,6 @@ class Home(http.Controller):
 
         if not odoo.tools.config['list_db']:
             values['disable_database_manager'] = True
-
-        # otherwise no real way to test debug mode in template as ?debug =>
-        # values['debug'] = '' but that's also the fallback value when
-        # missing variables in qweb
-        if 'debug' in values:
-            values['debug'] = True
 
         response = request.render('web.login', values)
         response.headers['X-Frame-Options'] = 'DENY'
@@ -549,18 +588,14 @@ class WebClient(http.Controller):
             ('Cache-Control', 'max-age=36000'),
         ])
 
-    @http.route('/web/webclient/qweb', type='http', auth="none", cors="*")
-    def qweb(self, mods=None, db=None):
+    @http.route('/web/webclient/qweb/<string:unique>', type='http', auth="none", cors="*")
+    def qweb(self, unique, mods=None, db=None):
         files = [f[0] for f in manifest_glob('qweb', addons=mods, db=db)]
-        last_modified = get_last_modified(files)
-        if request.httprequest.if_modified_since and request.httprequest.if_modified_since >= last_modified:
-            return werkzeug.wrappers.Response(status=304)
-
-        content, checksum = concat_xml(files)
-
-        return make_conditional(
-            request.make_response(content, [('Content-Type', 'text/xml')]),
-            last_modified, checksum)
+        content, _dummy = concat_xml(files)
+        return request.make_response(content, [
+                ('Content-Type', 'text/xml'),
+                ('Cache-Control','public, max-age=' + str(CONTENT_MAXAGE))
+            ])
 
     @http.route('/web/webclient/bootstrap_translations', type='json', auth="none")
     def bootstrap_translations(self, mods):
@@ -585,41 +620,34 @@ class WebClient(http.Controller):
         return {"modules": translations_per_module,
                 "lang_parameters": None}
 
-    @http.route('/web/webclient/translations', type='json', auth="none")
-    def translations(self, mods=None, lang=None):
-        request.disable_db = False
-        if mods is None:
-            mods = [x['name'] for x in request.env['ir.module.module'].sudo().search_read(
-                [('state', '=', 'installed')], ['name'])]
-        if lang is None:
-            lang = request.context["lang"]
-        langs = request.env['res.lang'].sudo().search([("code", "=", lang)])
-        lang_params = None
-        if langs:
-            lang_params = langs.read([
-                "name", "direction", "date_format", "time_format",
-                "grouping", "decimal_point", "thousands_sep", "week_start"])[0]
-            lang_params['week_start'] = int(lang_params['week_start'])
+    @http.route('/web/webclient/translations/<string:unique>', type='http', auth="none")
+    def translations(self, unique, mods=None, lang=None):
+        """
+        Load the translations for the specified language and modules
 
-        # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
-        # done server-side when the language is loaded, so we only need to load the user's lang.
-        translations_per_module = {}
-        messages = request.env['ir.translation'].sudo().search_read([
-            ('module', 'in', mods), ('lang', '=', lang),
-            ('comments', 'like', 'openerp-web'), ('value', '!=', False),
-            ('value', '!=', '')],
-            ['module', 'src', 'value', 'lang'], order='module')
-        for mod, msg_group in itertools.groupby(messages, key=operator.itemgetter('module')):
-            translations_per_module.setdefault(mod, {'messages': []})
-            translations_per_module[mod]['messages'].extend({
-                'id': m['src'],
-                'string': m['value']}
-                for m in msg_group)
-        return {
+        :param unique: this parameters is not used, but mandatory: it is used by the HTTP stack to make a unique request
+        :param mods: the modules, a comma separated list
+        :param lang: the language of the user
+        :return:
+        """
+        request.disable_db = False
+
+        if mods:
+            mods = mods.split(',')
+        translations_per_module, lang_params = request.env["ir.translation"].get_translations_for_webclient(mods, lang)
+
+        body = json.dumps({
             'lang_parameters': lang_params,
             'modules': translations_per_module,
             'multi_lang': len(request.env['res.lang'].sudo().get_installed()) > 1,
-        }
+        })
+        response = request.make_response(body, [
+            # this method must specify a content-type application/json instead of using the default text/html set because
+            # the type of the route is set to HTTP, but the rpc is made with a get and expects JSON
+            ('Content-Type', 'application/json'),
+            ('Cache-Control', 'public, max-age=' + str(CONTENT_MAXAGE)),
+        ])
+        return response
 
     @http.route('/web/webclient/version_info', type='json', auth="none")
     def version_info(self):
@@ -981,7 +1009,7 @@ class Binary(http.Controller):
         '/web/content/<string:model>/<int:id>/<string:field>',
         '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>'], type='http', auth="public")
     def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas',
-                       filename=None, filename_field='datas_fname', unique=None, mimetype=None,
+                       filename=None, filename_field='name', unique=None, mimetype=None,
                        download=None, data=None, token=None, access_token=None, **kw):
 
         status, headers, content = request.env['ir.http'].binary_content(
@@ -1025,17 +1053,18 @@ class Binary(http.Controller):
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>',
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
     def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
-                      filename_field='datas_fname', unique=None, filename=None, mimetype=None,
+                      filename_field='name', unique=None, filename=None, mimetype=None,
                       download=None, width=0, height=0, crop=False, access_token=None,
                       **kwargs):
         # other kwargs are ignored on purpose
         return self._content_image(xmlid=xmlid, model=model, id=id, field=field,
             filename_field=filename_field, unique=unique, filename=filename, mimetype=mimetype,
-            download=download, width=width, height=height, crop=crop, access_token=access_token)
+            download=download, width=width, height=height, crop=crop,
+            quality=int(kwargs.get('quality', 0)), access_token=access_token)
 
     def _content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
-                       filename_field='datas_fname', unique=None, filename=None, mimetype=None,
-                       download=None, width=0, height=0, crop=False, access_token=None,
+                       filename_field='name', unique=None, filename=None, mimetype=None,
+                       download=None, width=0, height=0, crop=False, quality=0, access_token=None,
                        placeholder='placeholder.png', **kwargs):
         status, headers, image_base64 = request.env['ir.http'].binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
@@ -1049,7 +1078,7 @@ class Binary(http.Controller):
             if not (width or height):
                 width, height = odoo.tools.image_guess_size_from_field_name(field)
 
-        image_base64 = image_process(image_base64, (width, height), crop=crop)
+        image_base64 = image_process(image_base64, size=(int(width), int(height)), crop=crop, quality=int(quality))
 
         content = base64.b64decode(image_base64)
         headers = http.set_safe_image_headers(headers, content)
@@ -1105,7 +1134,6 @@ class Binary(http.Controller):
                 attachment = Model.create({
                     'name': filename,
                     'datas': base64.encodestring(ufile.read()),
-                    'datas_fname': filename,
                     'res_model': model,
                     'res_id': int(id)
                 })
@@ -1555,8 +1583,7 @@ class Apps(http.Controller):
             action['views'] = [(False, u'form')]
 
         sakey = Session().save_session_action(action)
-        debug = '?debug' if req.debug else ''
-        return werkzeug.utils.redirect('/web{0}#sa={1}'.format(debug, sakey))
+        return werkzeug.utils.redirect('/web#sa={0}'.format(sakey))
 
 
 class ReportController(http.Controller):

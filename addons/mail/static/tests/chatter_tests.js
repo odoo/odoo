@@ -170,15 +170,14 @@ QUnit.module('Chatter', {
                     url:{type:'char', string:'url'},
                     type:{ type:'selection', selection:[['url',"URL"],['binary',"BINARY"]]},
                     mimetype:{type:'char', string:"mimetype"},
-                    datas_fname:{type:'char', string:"filename"},
                 },
                 records:[
-                    {id:1, name:"name1", type:'url', mimetype:'image/png', datas_fname:'filename.jpg',
+                    {id:1, type:'url', mimetype:'image/png', name:'filename.jpg',
                      res_id: 7, res_model: 'partner'},
-                    {id:2, name:"name2", type:'binary', mimetype:"application/x-msdos-program",
-                     datas_fname:"file2.txt", res_id: 7, res_model: 'partner'},
-                    {id:3, name:"name2", type:'binary', mimetype:"application/x-msdos-program",
-                     datas_fname:"file2.txt", res_id: 5, res_model: 'partner'},
+                    {id:2, type:'binary', mimetype:"application/x-msdos-program",
+                     name:"file2.txt", res_id: 7, res_model: 'partner'},
+                    {id:3, type:'binary', mimetype:"application/x-msdos-program",
+                     name:"file3.txt", res_id: 5, res_model: 'partner'},
                 ],
             },
         };
@@ -321,10 +320,9 @@ QUnit.test('Activity Done by uploading a file', async function (assert) {
 
             $(window).trigger(fileuploadID, [{
                 id:3,
-                name:"name2",
                 type:'binary',
                 mimetype:"application/x-msdos-program",
-                datas_fname:"file2.txt",
+                name:"file2.txt",
                 res_id: 5,
                 res_model: 'partner'
             }]);
@@ -438,12 +436,12 @@ QUnit.test('attachmentBox basic rendering', async function (assert) {
     assert.hasAttrValue($resIdInput, 'value', '7');
     assert.hasAttrValue($resIdInput, 'type', 'hidden');
 
-    assert.strictEqual(form.$('.o_attachment_title').text(), 'name1',
+    assert.strictEqual(form.$('.o_attachment_title').text(), 'filename.jpg',
         "the image name should be correct");
     // since there are two elements "Download name2"; one "name" and the other "txt" as text content, the following test
     // asserts both at the same time.
-    assert.strictEqual(form.$('a[title = "Download name2"]').text().trim(), 'name2txt',
-        "the attachment name should be correct");
+    assert.strictEqual(form.$('a[title = "Download file2.txt"]').text().trim(), 'file2.txttxt',
+        "the attachment name and the extension display should be correct");
     assert.ok(form.$('.o_attachment_image').css('background-image').indexOf('/web/image/1/160x160/?crop=true') >= 0,
         "the attachment image URL should be correct");
     assert.hasAttrValue(form.$('.o_attachment_download').eq(0), 'href', '/web/content/1?download=true',
@@ -1036,6 +1034,8 @@ QUnit.test('chatter: receive notif when document is open', async function (asser
     assert.strictEqual(thread.getUnreadCounter(), 1,
         "document thread should now have one unread message");
 
+    // do not destroy form too early. wait rendering to avoid race condition in service call.
+    await testUtils.nextTick();
     form.destroy();
 });
 
@@ -1374,12 +1374,12 @@ QUnit.test('chatter: discard changes on message post with post_refresh "recipien
     form.destroy();
 });
 
-QUnit.test('chatter: discard changes on opening full-composer', async function (assert) {
+QUnit.test('chatter: discard changes on opening full-composer and open missing partner info popup', async function (assert) {
     // When we open the full-composer, any following operations by the user
     // will reload the record (even closing the full-composer). Therefore,
     // we should warn the user when we open the full-composer if the record
     // is dirty (= has some unsaved changes).
-    assert.expect(2);
+    assert.expect(3);
 
     var form = await createView({
         View: FormView,
@@ -1396,11 +1396,24 @@ QUnit.test('chatter: discard changes on opening full-composer', async function (
                         ' \'post_refresh\': \'always\'}"/>' +
                 '</div>' +
             '</form>',
+        archs: {
+            'res.partner,false,form':
+                '<form string="partners">' +
+                '<field name="name"/>' +
+                '</form>',
+        },
         res_id: 2,
         session: {},
         mockRPC: function (route, args) {
             if (route === "/mail/get_suggested_recipients") {
-                return Promise.resolve({2: []});
+                return Promise.resolve({2: [[
+                        false,
+                        'pikapika@pikachu.com',
+                        ''
+                    ]]});
+            }
+            if (route === "/mail/get_partner_info") {
+                return Promise.resolve([{full_name: "pikapika@pikachu.com", partner_id: false}]);
             }
             return this._super(route, args);
         },
@@ -1421,6 +1434,8 @@ QUnit.test('chatter: discard changes on opening full-composer', async function (
     assert.strictEqual($modal.find('.modal-body').text(),
         "The record has been modified, your changes will be discarded. Do you want to proceed?",
         "should warn the user that any unsaved changes will be lost");
+    await testUtils.dom.click($modal.find('.modal-footer .btn.btn-primary'));
+    assert.strictEqual($modal.length, 1, "should have a modal opened");
 
     form.destroy();
 });
@@ -1835,7 +1850,6 @@ QUnit.test('form activity widget: edit next activity', async function (assert) {
                     target: "new",
                     type: "ir.actions.act_window",
                     view_mode: "form",
-                    view_type: "form",
                     views: [
                       [
                         false,
@@ -2638,7 +2652,7 @@ QUnit.test('chatter: suggested partner auto-follow on message post', async funct
         "should have a single follower (widget counter)");
     assert.containsOnce(form, '.o_followers_list > div.o_partner',
         "should have a single follower (listed partners)");
-    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a').text(), "Admin",
+    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a').text().trim(), "Admin",
         "should have 'Admin' as follower");
 
     // open composer
@@ -2665,10 +2679,10 @@ QUnit.test('chatter: suggested partner auto-follow on message post', async funct
         "should have a two followers (widget counter)");
     assert.containsN(form, '.o_followers_list > div.o_partner', 2,
         "should have two followers (listed partners)");
-    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a[data-oe-id="5"]').text(),
+    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a[data-oe-id="5"]').text().trim(),
         "Admin",
         "should have 'Admin' as follower");
-    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a[data-oe-id="8"]').text(),
+    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a[data-oe-id="8"]').text().trim(),
         "Demo User",
         "should have 'Demo User' as follower");
 

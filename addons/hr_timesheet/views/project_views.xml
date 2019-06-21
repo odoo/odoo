@@ -4,7 +4,6 @@
         <record id="act_hr_timesheet_line_by_project" model="ir.actions.act_window">
             <field name="name">Activities</field>
             <field name="res_model">account.analytic.line</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="timesheet_view_tree_user"/>
             <field name="domain">[('project_id', '!=', False)]</field>
@@ -44,9 +43,6 @@
                 </button>
                 <xpath expr="//group[@name='extra_settings']" position="inside">
                     <field name="allow_timesheets"/>
-                </xpath>
-                <xpath expr="//field[@name='partner_id']" position="after">
-                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" />
                 </xpath>
             </field>
         </record>
@@ -178,6 +174,9 @@
                         </div>
                     </a>
                 </xpath>
+                <xpath expr="//a[@name='action_view_account_analytic_line']" position="attributes">
+                    <attribute name="t-if">record.analytic_account_id.raw_value and !record.allow_timesheets.raw_value</attribute>
+                </xpath>
             </field>
         </record>
 
@@ -202,7 +201,8 @@
 
          <act_window id="project_task_action_view_timesheet"
             name="Timesheet Entries"
-            src_model="project.task"
+            binding_model="project.task"
+            binding_views="form"
             res_model="account.analytic.line"
             view_mode="tree"
             view_id="hr_timesheet_line_tree"

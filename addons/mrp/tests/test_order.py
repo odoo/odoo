@@ -46,7 +46,6 @@ class TestMrpOrder(TestMrpCommon):
         self.product_2.type = 'product'
         inventory = self.env['stock.inventory'].create({
             'name': 'Initial inventory',
-            'filter': 'partial',
             'line_ids': [(0, 0, {
                 'product_id': self.product_1.id,
                 'product_uom_id': self.product_1.uom_id.id,
@@ -59,6 +58,7 @@ class TestMrpOrder(TestMrpCommon):
                 'location_id': self.warehouse_1.lot_stock_id.id
             })]
         })
+        inventory.action_start()
         inventory.action_validate()
 
         test_date_planned = Dt.now() - timedelta(days=1)
@@ -128,22 +128,22 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(production_2.reservation_state, 'confirmed', 'Production order should be availability for waiting state')
 
         # Update Inventory
-        inventory_wizard = self.env['stock.change.product.qty'].create({
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': self.product_2.id,
-            'new_quantity': 2.0,
+            'inventory_quantity': 2.0,
+            'location_id': self.ref('stock.stock_location_14')
         })
-        inventory_wizard.change_product_qty()
 
         production_2.action_assign()
         # check sub product availability state is partially available
         self.assertEqual(production_2.reservation_state, 'confirmed', 'Production order should be availability for partially available state')
 
         # Update Inventory
-        inventory_wizard = self.env['stock.change.product.qty'].create({
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': self.product_2.id,
-            'new_quantity': 5.0,
+            'inventory_quantity': 5.0,
+            'location_id': self.ref('stock.stock_location_14')
         })
-        inventory_wizard.change_product_qty()
 
         production_2.action_assign()
         # check sub product availability state is assigned
@@ -195,7 +195,6 @@ class TestMrpOrder(TestMrpCommon):
         quant_before = custom_laptop.qty_available
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product Table',
-            'filter': 'partial',
             'line_ids': [(0, 0, {
                 'product_id': product_charger.id,
                 'product_uom_id': product_charger.uom_id.id,
@@ -208,6 +207,7 @@ class TestMrpOrder(TestMrpCommon):
                 'location_id': source_location_id
             })]
         })
+        inventory.action_start()
         inventory.action_validate()
 
         # create a mo for this bom
@@ -412,7 +412,7 @@ class TestMrpOrder(TestMrpCommon):
             with produce_form.raw_workorder_line_ids.edit(i) as line:
                 line.qty_done += 1
         product_produce = produce_form.save()
-        product_produce.final_lot_id = final_product_lot.id
+        product_produce.finished_lot_id = final_product_lot.id
         # product 1 lot 1 shelf1
         # product 1 lot 1 shelf2
         # product 1 lot 2
@@ -914,11 +914,11 @@ class TestMrpOrder(TestMrpCommon):
             'active_id': mo.id,
             'active_ids': [mo.id],
         }))
-        produce_form.final_lot_id = final_product_lot
+        produce_form.finished_lot_id = final_product_lot
         product_produce = produce_form.save()
         self.assertEqual(product_produce.qty_producing, 1)
         self.assertEqual(product_produce.product_uom_id, unit, 'Should be 1 unit since the tracking is serial.')
-        product_produce.final_lot_id = final_product_lot.id
+        product_produce.finished_lot_id = final_product_lot.id
 
         product_produce.do_produce()
         move_line_raw = mo.move_raw_ids.mapped('move_line_ids').filtered(lambda m: m.qty_done)

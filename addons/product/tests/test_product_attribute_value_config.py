@@ -156,7 +156,7 @@ class TestProductAttributeValueSetup(TransactionCase):
         """
         if not model:
             model = self.computer
-        return model._get_valid_product_template_attribute_lines().filtered(
+        return model.valid_product_template_attribute_line_ids.filtered(
             lambda l: l.attribute_id == product_attribute_value.attribute_id
         ).product_template_value_ids.filtered(
             lambda v: v.product_attribute_value_id == product_attribute_value
@@ -311,6 +311,21 @@ class TestProductAttributeValueConfig(TestProductAttributeValueSetup):
         # CASE: deleted combination
         variant.unlink()
         self.assertFalse(self.computer._is_combination_possible(computer_ssd_256 + computer_ram_8 + computer_hdd_1))
+
+        # CASE: if multiple variants exist for the same combination and at least
+        # one of them is not archived, the combination is possible
+        values = self.ssd_256 + self.ram_8 + self.hdd_1
+        self.env['product.product'].create({
+            'product_tmpl_id': self.computer.id,
+            'attribute_value_ids': [(6, 0, values.ids)],
+            'active': False,
+        })
+        self.env['product.product'].create({
+            'product_tmpl_id': self.computer.id,
+            'attribute_value_ids': [(6, 0, values.ids)],
+            'active': True,
+        })
+        self.assertTrue(self.computer._is_combination_possible(computer_ssd_256 + computer_ram_8 + computer_hdd_1))
 
     def test_get_first_possible_combination(self):
         computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)

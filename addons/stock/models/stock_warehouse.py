@@ -22,10 +22,10 @@ class Warehouse(models.Model):
     # namedtuple used in helper methods generating values for routes
     Routing = namedtuple('Routing', ['from_loc', 'dest_loc', 'picking_type', 'action'])
 
-    name = fields.Char('Warehouse', index=True, required=True, default=lambda self: self.env.company_id.name)
+    name = fields.Char('Warehouse', index=True, required=True, default=lambda self: self.env.company.name)
     active = fields.Boolean('Active', default=True)
     company_id = fields.Many2one(
-        'res.company', 'Company', default=lambda self: self.env.company_id,
+        'res.company', 'Company', default=lambda self: self.env.company,
         index=True, readonly=True, required=True,
         help='The company is automatically set from your user preferences.')
     partner_id = fields.Many2one('res.partner', 'Address')
@@ -241,7 +241,7 @@ class Warehouse(models.Model):
             transit_loc = ResCompany.browse(company_id).internal_transit_location_id.id
             self.env['res.partner'].browse(partner_id).with_context(force_company=company_id).write({'property_stock_customer': transit_loc, 'property_stock_supplier': transit_loc})
         else:
-            transit_loc = self.env.company_id.internal_transit_location_id.id
+            transit_loc = self.env.company.internal_transit_location_id.id
             self.env['res.partner'].browse(partner_id).write({'property_stock_customer': transit_loc, 'property_stock_supplier': transit_loc})
 
     def _create_or_update_sequences_and_picking_types(self):
@@ -338,7 +338,6 @@ class Warehouse(models.Model):
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
-                    'propagate': True,
                     'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Make To Order')).id
                 },
                 'update_values': {
@@ -434,7 +433,8 @@ class Warehouse(models.Model):
                 },
                 'rules_values': {
                     'active': True,
-                    'procure_method': 'make_to_order'
+                    'procure_method': 'make_to_order',
+                    'propagate_cancel': True,
                 }
             },
             'delivery_route_id': {
@@ -675,11 +675,21 @@ class Warehouse(models.Model):
                 'procure_method': first_rule and 'make_to_stock' or 'make_to_order',
                 'warehouse_id': self.id,
                 'company_id': self.company_id.id,
-                'propagate': routing.picking_type != self.pick_type_id,
             }
             route_rule_values.update(values or {})
             rules_list.append(route_rule_values)
             first_rule = False
+        if values.get('propagate_cancel') and rules_list:
+            # In case of rules chain with cancel propagation set, we need to stop
+            # the cancellation for the last step in order to avoid cancelling
+            # any other move after the chain.
+            # Example: In the following flow:
+            # Input -> Quality check -> Stock -> Customer
+            # We want that cancelling I->GC cancel QC -> S but not S -> C
+            # which means:
+            # Input -> Quality check should have propagate_cancel = True
+            # Quality check -> Stock should have propagate_cancel = False
+            rules_list[-1]['propagate_cancel'] = False
         return rules_list
 
     def _get_supply_pull_rules_values(self, route_values, values=None):
@@ -894,7 +904,6 @@ class Warehouse(models.Model):
 
     @api.returns('self')
     def _get_all_routes(self):
-        # TDE FIXME: check overrides
         routes = self.mapped('route_ids') | self.mapped('mto_pull_id').mapped('route_id')
         routes |= self.env["stock.location.route"].search([('supplied_wh_id', 'in', self.ids)])
         return routes
@@ -909,7 +918,6 @@ class Warehouse(models.Model):
             'type': 'ir.actions.act_window',
             'view_id': False,
             'view_mode': 'tree,form',
-            'view_type': 'form',
             'limit': 20
         }
 
@@ -951,7 +959,7 @@ class Orderpoint(models.Model):
         default=lambda self: self._context.get('product_uom', False))
     product_min_qty = fields.Float(
         'Minimum Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True,
-        help="When the virtual stock goes below the Min Quantity specified for this field, Odoo generates "
+        help="When the virtual stock equals to or goes below the Min Quantity specified for this field, Odoo generates "
              "a procurement to bring the forecasted quantity to the Max Quantity.")
     product_max_qty = fields.Float(
         'Maximum Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True,
@@ -966,7 +974,7 @@ class Orderpoint(models.Model):
         help="Moves created through this orderpoint will be put in this procurement group. If none is given, the moves generated by stock rules will be grouped into one big picking.")
     company_id = fields.Many2one(
         'res.company', 'Company', required=True,
-        default=lambda self: self.env.company_id)
+        default=lambda self: self.env.company)
     lead_days = fields.Integer(
         'Lead Time', default=1,
         help="Number of days after the orderpoint is triggered to receive the products or to order to the vendor")

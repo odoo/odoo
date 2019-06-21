@@ -21,7 +21,10 @@ If the automated inventory valuation is active, the necessary accounting entries
     'depends': ['mrp', 'stock_account'],
     "init_xml" : [],
     "demo_xml" : [],
-    "data": ["views/product_views.xml"],
+    "data": [
+        "views/product_views.xml",
+        "views/mrp_production_views.xml",
+    ],
     'installable': True,
     'auto_install': True,
 }

@@ -343,20 +343,22 @@
                             <field context="{'type': type, 'journal_id': journal_id}" name="invoice_line_ids">
                                 <tree string="Bill lines" editable="bottom">
                                     <field name="sequence" widget="handle" />
-                                    <field name="product_id" groups="account.group_products_in_bills"
-                                        context="{'partner_id': parent.partner_id}" domain="[('purchase_ok','=',True)]"/>
+                                    <field name="product_id"
+                                        context="{'partner_id': parent.partner_id}" domain="[('purchase_ok','=',True)]"
+                                        optional="show"/>
                                     <field name="name"/>
                                     <field name="company_id" invisible="1"/>
                                     <field name="account_id" options="{'no_create': True}" groups="account.group_account_user"
                                         domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other'), ('deprecated', '=', False)]"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
                                         domain="[('company_id', '=', parent.company_id)]"
-                                        context="{'default_partner_id': parent.partner_id}"/>
-                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                        context="{'default_partner_id': parent.partner_id}"
+                                        optional="show"/>
+                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                                     <field name="quantity"/>
-                                    <field name="uom_id" string="UoM" groups="uom.group_uom"/>
+                                    <field name="uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
                                     <field name="price_unit"/>
-                                    <field name="discount" string="Disc.%" groups="base.group_no_one"/>
+                                    <field name="discount" string="Disc.%" optional="hide"/>
                                     <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'type':parent.type, 'tree_view_ref': 'account.account_tax_view_tree', 'search_view_ref': 'account.account_tax_view_search'}"
                                         domain="[('type_tax_use','=','purchase'),('company_id', '=', parent.company_id)]"/>
                                     <field name="price_subtotal" string="Amount"/>
@@ -382,6 +384,7 @@
                                                 <field name="amount_total" invisible="1"/>
                                                 <field name="currency_id" invisible="1" force_save="1"/>
                                                 <field name="tax_repartition_line_id" invisible="1"/> <!--Needed in order for the onchange computing the taxes to keep the repartition lines-->
+                                                <field name="tag_ids" invisible="1"/> <!--Needed in order for the onchange computing the taxes to keep the tags-->
                                                 <field name="base" invisible="1"/>
                                             </tree>
                                         </field>
@@ -514,7 +517,7 @@
                                     </control>
 
                                     <field name="sequence" widget="handle"/>
-                                    <field name="product_id" domain="[('sale_ok','=',True)]"/>
+                                    <field name="product_id" domain="[('sale_ok','=',True)]" optional="show"/>
                                     <field name="origin" invisible="1"/>
                                     <field name="is_rounding_line" invisible="1"/>
                                     <field name="name" widget="section_and_note_text"/>
@@ -529,12 +532,14 @@
                                     />
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
                                         domain="[('company_id', '=', parent.company_id)]"
-                                        context="{'default_partner_id': parent.partner_id}"/>
-                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                        context="{'default_partner_id': parent.partner_id}"
+                                        optional="show"/>
+                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}"
+                                     optional="show"/>
                                     <field name="quantity"/>
-                                    <field name="uom_id" string="UoM" groups="uom.group_uom"/>
+                                    <field name="uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
                                     <field name="price_unit" string="Price"/>
-                                    <field name="discount" groups="base.group_no_one" string="Disc.%"/>
+                                    <field name="discount" string="Disc.%" optional="hide"/>
                                     <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'type':parent.type, 'tree_view_ref': 'account.account_tax_view_tree', 'search_view_ref': 'account.account_tax_view_search'}"
                                         domain="[('type_tax_use','=','sale'),('company_id', '=', parent.company_id)]"/>
                                     <field name="price_subtotal" string="Subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
@@ -650,6 +655,7 @@
                                     <field name="amount_total"/>
                                     <field name="currency_id" invisible="1" force_save="1"/>
                                     <field name="tax_repartition_line_id" invisible="1"/> <!--Needed in order for the onchange computing the taxes to keep the repartition lines-->
+                                    <field name="tag_ids" invisible="1"/> <!--Needed in order for the onchange computing the taxes to keep the tags-->
                                     <field name="base" invisible="1"/>
                                 </tree>
                             </field>
@@ -719,7 +725,6 @@
         <record id="action_invoice_tree" model="ir.actions.act_window">
             <field name="name">Invoices</field>
             <field name="res_model">account.invoice</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="view_id" ref="invoice_tree"/>
             <field name="context">{'type':'out_invoice'}</field>
@@ -729,7 +734,6 @@
         <record id="action_invoice_refund_out_tree" model="ir.actions.act_window">
             <field name="name">Invoices</field>
             <field name="res_model">account.invoice</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form,kanban,calendar,graph,pivot</field>
             <field name="view_id" ref="invoice_tree"/>
             <field name="domain">[('type','in', ['out_invoice', 'out_refund']), ('state', 'not in', ['draft', 'cancel'])]</field>
@@ -752,9 +756,8 @@
         </record>
 
         <record id="action_invoice_tree_pending_invoice" model="ir.actions.act_window">
-            <field name="name">Pending Invoice</field>
+            <field name="name">Pending Invoices</field>
             <field name="res_model">account.invoice</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="view_id" ref="invoice_tree"/>
             <field name="context">{'type':'out_invoice'}</field>
@@ -778,7 +781,6 @@
         <record id="action_invoice_tree1" model="ir.actions.act_window">
             <field name="name">Invoices</field>
             <field name="res_model">account.invoice</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_invoice')]</field>
@@ -812,7 +814,6 @@
         <record id="action_invoice_out_refund" model="ir.actions.act_window">
             <field name="name">Credit Notes</field>
             <field name="res_model">account.invoice</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_refund')]</field>
@@ -850,7 +851,6 @@
         <record id="action_vendor_bill_template" model="ir.actions.act_window">
             <field name="name">Vendor Bills</field>
             <field name="res_model">account.invoice</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_invoice')]</field>
@@ -897,7 +897,6 @@ action = action_values
         <record id="action_invoice_in_refund" model="ir.actions.act_window">
             <field name="name">Refund</field>
             <field name="res_model">account.invoice</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_refund')]</field>
@@ -937,6 +936,8 @@ action = action_values
            context="{'search_default_journal_id': [active_id], 'search_default_unpaid':1, 'default_journal_id': active_id}"
            domain="[('journal_id','=', active_id)]"
            res_model="account.invoice"
-           src_model="account.journal"/>
+           binding_model="account.journal"
+           binding_views="form"/>
+
     </data>
 </odoo>

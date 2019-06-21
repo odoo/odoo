@@ -40,6 +40,8 @@ class PosSession(models.Model):
             orders_to_reconcile = session.order_ids._filtered_for_reconciliation()
             orders_to_reconcile.sudo()._reconcile_payments()
 
+    company_id = fields.Many2one('res.company', related='config_id.company_id', string="Company", readonly=True)
+    
     config_id = fields.Many2one(
         'pos.config', string='Point of Sale',
         help="The physical point of sale you will use.",
@@ -102,6 +104,7 @@ class PosSession(models.Model):
         readonly=True,
         string='Available Payment Methods')
     order_ids = fields.One2many('pos.order', 'session_id',  string='Orders')
+    order_count = fields.Integer(compute='_compute_order_count')
     statement_ids = fields.One2many('account.bank.statement', 'pos_session_id', string='Bank Statement', readonly=True)
     picking_count = fields.Integer(compute='_compute_picking_count')
     rescue = fields.Boolean(string='Recovery Session',
@@ -110,6 +113,13 @@ class PosSession(models.Model):
         copy=False)
 
     _sql_constraints = [('uniq_name', 'unique(name)', "The name of this POS Session must be unique !")]
+
+    @api.multi
+    def _compute_order_count(self):
+        orders_data = self.env['pos.order'].read_group([('session_id', 'in', self.ids)], ['session_id'], ['session_id'])
+        sessions_data = {order_data['session_id'][0]: order_data['session_id_count'] for order_data in orders_data}
+        for session in self:
+            session.order_count = sessions_data.get(session.id, 0)
 
     @api.multi
     def _compute_picking_count(self):
@@ -214,7 +224,8 @@ class PosSession(models.Model):
             st_values = {
                 'journal_id': journal.id,
                 'user_id': self.env.user.id,
-                'name': pos_name
+                'name': pos_name,
+                'balance_start': self.env["account.bank.statement"]._get_opening_balance(journal.id)
             }
 
             statements.append(ABS.with_context(ctx).sudo(uid).create(st_values).id)
@@ -326,7 +337,6 @@ class PosSession(models.Model):
 
         action = {
             'name': _('Cash Control'),
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'account.bank.statement.cashbox',
             'view_id': self.env.ref('account.view_account_bnk_stmt_cashbox').id,
@@ -344,6 +354,15 @@ class PosSession(models.Model):
             action['res_id'] = cashbox_id
 
         return action
+
+    def action_view_order(self):
+        return {
+            'name': _('Orders'),
+            'res_model': 'pos.order',
+            'view_mode': 'tree,form',
+            'type': 'ir.actions.act_window',
+            'domain': [('session_id', 'in', self.ids)],
+        }
 
     @api.model
     def _alert_old_session(self):

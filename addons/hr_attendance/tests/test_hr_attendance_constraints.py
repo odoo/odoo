@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from odoo.tests.common import TransactionCase
 import time
+
+from odoo.tests.common import TransactionCase
 
 
 class TestHrAttendance(TransactionCase):
@@ -12,6 +13,10 @@ class TestHrAttendance(TransactionCase):
         self.attendance = self.env['hr.attendance']
         self.test_employee = self.browse_ref('hr.employee_qdp')
         # demo data contains set up for self.test_employee
+        self.open_attendance = self.attendance.create({
+            'employee_id': self.test_employee.id,
+            'check_in': time.strftime('%Y-%m-10 10:00'),
+        })
 
     def test_attendance_in_before_out(self):
         # Make sure check_out is before check_in
@@ -24,10 +29,6 @@ class TestHrAttendance(TransactionCase):
 
     def test_attendance_no_check_out(self):
         # Make sure no second attandance without check_out can be created
-        self.attendance.create({
-            'employee_id': self.test_employee.id,
-            'check_in': time.strftime('%Y-%m-10 10:00'),
-        })
         with self.assertRaises(Exception):
             self.attendance.create({
                 'employee_id': self.test_employee.id,
@@ -68,10 +69,6 @@ class TestHrAttendance(TransactionCase):
             })
 
     def test_attendance_5(self):
-        self.attendance.create({
-            'employee_id': self.test_employee.id,
-            'check_in': time.strftime('%Y-%m-10 10:00'),
-        })
         with self.assertRaises(Exception):
             self.attendance.create({
                 'employee_id': self.test_employee.id,
@@ -86,11 +83,7 @@ class TestHrAttendance(TransactionCase):
             'check_in': time.strftime('%Y-%m-10 11:00'),
             'check_out': time.strftime('%Y-%m-10 12:00'),
         })
-        open_attendance = self.attendance.create({
-            'employee_id': self.test_employee.id,
-            'check_in': time.strftime('%Y-%m-10 10:00'),
-        })
         with self.assertRaises(Exception):
-            open_attendance.write({
+            self.open_attendance.write({
                 'check_out': time.strftime('%Y-%m-10 11:30'),
             })

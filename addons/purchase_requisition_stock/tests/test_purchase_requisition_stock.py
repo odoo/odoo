@@ -19,7 +19,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             warehouse.lot_stock_id,
             '/',
             '/',
-            self.env.company_id,
+            self.env.company,
             {
                 'warehouse_id': warehouse,
                 'date_planned': date_planned,

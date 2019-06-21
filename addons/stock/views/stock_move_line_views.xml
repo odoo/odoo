@@ -6,8 +6,10 @@
         <field name="arch" type="xml">
             <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done'))" string="Move Lines" create="0" default_order="date">
                 <field name="date"/>
-                <field name="reference" string="Reference"/>
+                <field name="reference" string="Reference"
+                       invisible="context.get('no_reference', False)"/>
                 <field name="product_id"/>
+                <field name="lot_id" groups="stock.group_production_lot"/>
                 <field name="location_id"/>
                 <field name="location_dest_id"/>
                 <field name="qty_done" string="Quantity Done"/>
@@ -33,8 +35,8 @@
                             <field name="reference" string="Reference"/>
                             <field name="origin"/>
                             <field name="product_id"/>
-                            <field name="location_id" groups="stock.group_stock_multi_locations"/>
-                            <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
+                            <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                            <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                         </group>
                         <group>
                             <label for="product_uom_qty" string="Quantity Reserved" attrs="{'invisible': [('state', '=', 'done')]}"/>
@@ -118,7 +120,6 @@
             <field name="name">Product Moves</field>
             <field name="res_model">stock.move.line</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,pivot,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="context">{'search_default_done': 1, 'search_default_groupby_product_id': 1}</field>

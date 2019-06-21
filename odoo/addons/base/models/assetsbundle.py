@@ -86,8 +86,7 @@ class AssetsBundle(object):
     rx_preprocess_imports = re.compile("""(@import\s?['"]([^'"]+)['"](;?))""")
     rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
 
-    # remains attribute is depreciated and will remove after v11
-    def __init__(self, name, files, remains=None, env=None):
+    def __init__(self, name, files, env=None):
         self.name = name
         self.env = request.env if env is None else env
         self.javascripts = []
@@ -110,32 +109,12 @@ class AssetsBundle(object):
             elif f['atype'] == 'text/javascript':
                 self.javascripts.append(JavascriptAsset(self, url=f['url'], filename=f['filename'], inline=f['content']))
 
-    # depreciated and will remove after v11
-    def to_html(self, sep=None, css=True, js=True, debug=False, async_load=False, url_for=(lambda url: url)):
-        nodes = self.to_node(css=css, js=js, debug=debug, async_load=async_load)
-
-        if sep is None:
-            sep = u'\n            '
-        response = []
-        for tagName, attributes, content in nodes:
-            html = u"<%s " % tagName
-            for name, value in attributes.items():
-                if value or isinstance(value, str):
-                    html += u' %s="%s"' % (name, escape(to_text(value)))
-            if content is None:
-                html += u'/>'
-            else:
-                html += u'>%s</%s>' % (escape(to_text(content)), tagName)
-            response.append(html)
-
-        return sep + sep.join(response)
-
-    def to_node(self, css=True, js=True, debug=False, async_load=False):
+    def to_node(self, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False):
         """
         :returns [(tagName, attributes, content)] if the tag is auto close
         """
         response = []
-        if debug == 'assets':
+        if debug and 'assets' in debug:
             if css and self.stylesheets:
                 is_css_preprocessed, old_attachments = self.is_css_preprocessed()
                 if not is_css_preprocessed:
@@ -167,8 +146,9 @@ class AssetsBundle(object):
             if js and self.javascripts:
                 attr = OrderedDict([
                     ["async", "async" if async_load else None],
+                    ["defer", "defer" if defer_load or lazy_load else None],
                     ["type", "text/javascript"],
-                    ["src", self.js().url],
+                    ["data-src" if lazy_load else "src", self.js().url],
                 ])
                 response.append(("script", attr, None))
 
@@ -227,7 +207,8 @@ class AssetsBundle(object):
         url = self.get_asset_url(
             extra='%s' % ('rtl/' if type == 'css' and self.user_direction == 'rtl' else ''),
             name=self.name,
-            type=type
+            sep='',
+            type='.%s' % type
         )
         domain = [
             ('url', '=like', url),
@@ -260,8 +241,8 @@ class AssetsBundle(object):
                FROM ir_attachment
               WHERE create_uid = %s
                 AND url like %s
-           GROUP BY datas_fname
-           ORDER BY datas_fname
+           GROUP BY name
+           ORDER BY name
          """, [SUPERUSER_ID, url_pattern])
         attachment_ids = [r[0] for r in self.env.cr.fetchall()]
         return self.env['ir.attachment'].sudo().browse(attachment_ids)
@@ -277,8 +258,7 @@ class AssetsBundle(object):
         fname = '%s.%s' % (self.name, type)
         mimetype = 'application/javascript' if type == 'js' else 'text/css'
         values = {
-            'name': "/web/content/%s" % type,
-            'datas_fname': fname,
+            'name': fname,
             'mimetype': mimetype,
             'res_model': 'ir.ui.view',
             'res_id': False,
@@ -297,7 +277,6 @@ class AssetsBundle(object):
             type=''
         )
         values = {
-            'name': url,
             'url': url,
         }
         attachment.write(values)
@@ -446,9 +425,8 @@ class AssetsBundle(object):
                                 datas=base64.b64encode(asset.content.encode('utf8')),
                                 mimetype='text/css',
                                 type='binary',
-                                name=url,
+                                name=fname,
                                 url=url,
-                                datas_fname=fname,
                                 res_model=False,
                                 res_id=False,
                             ))
@@ -599,19 +577,6 @@ class WebAsset(object):
                 self._ir_attach = attach[0]
             except Exception:
                 raise AssetNotFound("Could not find %s" % self.name)
-
-    # depreciated and will remove after v11
-    def to_html(self):
-        tagName, attributes, content = self.to_node()
-        html = u"<%s " % tagName
-        for name, value in attributes.items():
-            if value or isinstance(value, str):
-                html += u' %s="%s"' % (name, escape(to_text(value)))
-        if content is None:
-            html += u'/>'
-        else:
-            html += u'>%s</%s>' % (escape(to_text(content)), tagName)
-        return html
 
     def to_node(self):
         raise NotImplementedError()

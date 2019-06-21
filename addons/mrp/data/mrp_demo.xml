@@ -509,7 +509,6 @@
 
         <record id="stock_inventory_drawer" model="stock.inventory">
             <field name="name">Inventory: Drawer + Kit</field>
-            <field name="filter">partial</field>
         </record>
 
         <record id="stock_inventory_drawer_lot0" model="stock.inventory.line">
@@ -698,7 +697,7 @@
                 obj().with_context(active_id=ref('mrp.mrp_production_laptop_cust')).default_get(list(obj().fields_get())),
                 **{
                     'qty_producing': obj().env.ref('mrp.mrp_production_laptop_cust').product_qty,
-                    'final_lot_id': ref('mrp.lot_product_27_0'),
+                    'finished_lot_id': ref('mrp.lot_product_27_0'),
                 }
             )"/>
         </function>

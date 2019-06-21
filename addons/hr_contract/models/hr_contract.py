@@ -9,42 +9,6 @@ from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
 
-class Employee(models.Model):
-    _inherit = "hr.employee"
-
-    medic_exam = fields.Date(string='Medical Examination Date', groups="hr.group_hr_user")
-    vehicle = fields.Char(string='Company Vehicle', groups="hr.group_hr_user")
-    contract_ids = fields.One2many('hr.contract', 'employee_id', string='Employee Contracts')
-    contract_id = fields.Many2one('hr.contract', string='Current Contract', help='Current contract of the employee')
-    contracts_count = fields.Integer(compute='_compute_contracts_count', string='Contract Count')
-
-    def _compute_contracts_count(self):
-        # read_group as sudo, since contract count is displayed on form view
-        contract_data = self.env['hr.contract'].sudo().read_group([('employee_id', 'in', self.ids)], ['employee_id'], ['employee_id'])
-        result = dict((data['employee_id'][0], data['employee_id_count']) for data in contract_data)
-        for employee in self:
-            employee.contracts_count = result.get(employee.id, 0)
-
-    def _get_contracts(self, date_from, date_to, states=['open', 'pending']):
-        """
-        Returns the contracts of the employee between date_from and date_to
-        """
-        return self.env['hr.contract'].search([
-            '&', '&', '&',
-            ('employee_id', 'in', self.ids),
-            ('state', 'in', states),
-            ('date_start', '<=', date_to),
-            '|', ('date_end', '=', False), ('date_end', '>=', date_from)
-        ])
-
-    @api.model
-    def _get_all_contracts(self, date_from, date_to, states=['open', 'pending']):
-        """
-        Returns the contracts of all employees between date_from and date_to
-        """
-        return self.search([])._get_contracts(date_from, date_to, states=states)
-
-
 class Contract(models.Model):
     _name = 'hr.contract'
     _description = 'Contract'
@@ -63,7 +27,7 @@ class Contract(models.Model):
         help="End date of the trial period (if there is one).")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Working Schedule',
-        default=lambda self: self.env.company_id.resource_calendar_id.id)
+        default=lambda self: self.env.company.resource_calendar_id.id)
     wage = fields.Monetary('Wage', digits=(16, 2), required=True, tracking=True, help="Employee's monthly gross wage.")
     advantages = fields.Text('Advantages')
     notes = fields.Text('Notes')
@@ -76,15 +40,19 @@ class Contract(models.Model):
         ('cancel', 'Cancelled')
     ], string='Status', group_expand='_expand_states',
        tracking=True, help='Status of the contract', default='draft')
-    company_id = fields.Many2one('res.company', default=lambda self: self.env.company_id)
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
     permit_no = fields.Char('Work Permit No', related="employee_id.permit_no", readonly=False)
     visa_no = fields.Char('Visa No', related="employee_id.visa_no", readonly=False)
     visa_expire = fields.Date('Visa Expire Date', related="employee_id.visa_expire", readonly=False)
-    reported_to_secretariat = fields.Boolean('Social Secretariat',
-        help='Green this button when the contract information has been transfered to the social secretariat.')
     hr_responsible_id = fields.Many2one('res.users', 'HR Responsible', tracking=True,
         help='Person responsible for validating the employee\'s contracts.')
+    calendar_mismatch = fields.Boolean(compute='_compute_calendar_mismatch')
+
+    @api.depends('employee_id.resource_calendar_id', 'resource_calendar_id')
+    def _compute_calendar_mismatch(self):
+        for contract in self:
+            contract.calendar_mismatch = contract.resource_calendar_id != contract.employee_id.resource_calendar_id
 
     def _expand_states(self, states, domain, order):
         return [key for key, val in type(self).state.selection]
@@ -98,12 +66,12 @@ class Contract(models.Model):
 
     @api.constrains('employee_id', 'state', 'date_start', 'date_end')
     def _check_current_contract(self):
-        """ Two contracts in state [incoming | pending | open | close] cannot overlap """
-        for contract in self.filtered(lambda c: c.state not in ['draft', 'cancel']):
+        """ Two contracts in state [incoming | pending | open] cannot overlap """
+        for contract in self.filtered(lambda c: c.state not in ['draft', 'cancel', 'close']):
             domain = [
                 ('id', '!=', contract.id),
                 ('employee_id', '=', contract.employee_id.id),
-                ('state', 'in', ['incoming', 'pending', 'open', 'close']),
+                ('state', 'in', ['incoming', 'pending', 'open']),
             ]
 
             if not contract.date_end:
@@ -151,12 +119,28 @@ class Contract(models.Model):
         })
         return True
 
+    @api.model
+    def create(self, vals_list):
+        contracts = super().create(vals_list)
+        open_contracts = contracts.filtered(lambda c: c.state in ['open', 'pending'])
+        # sync contract -> employee
+        for contract in open_contracts:
+            contract.employee_id.contract_id = contract
+        # sync contract calendar -> calendar employee
+        for contract in open_contracts.filtered(lambda c: c.resource_calendar_id):
+            contract.employee_id.resource_calendar_id = contract.resource_calendar_id
+        return contracts
+
     @api.multi
     def write(self, vals):
+        res = super(Contract, self).write(vals)
         if vals.get('state') == 'open':
             for contract in self:
-                contract.employee_id.contract_id = contract
-        return super(Contract, self).write(vals)
+                contract.employee_id.sudo().write({'contract_id': contract.id})
+        calendar = vals.get('resource_calendar_id')
+        if calendar and self.state in ['open', 'pending']:
+            self.mapped('employee_id').write({'resource_calendar_id': calendar})
+        return res
 
     @api.multi
     def _track_subtype(self, init_values):

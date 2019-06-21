@@ -139,7 +139,7 @@ var Chatter = Widget.extend({
         if (this.fields.activity) {
             this.fields.activity.$el.detach();
         }
-        if (this.fields.thread) {
+        if (this.fields.thread && this.fields.thread.$el ) {
             this.fields.thread.$el.detach();
         }
 
@@ -258,7 +258,7 @@ var Chatter = Widget.extend({
             model: 'ir.attachment',
             method: 'search_read',
             domain: domain,
-            fields: ['id', 'name', 'datas_fname', 'mimetype'],
+            fields: ['id', 'name', 'mimetype'],
         }).then(function (result) {
             self._areAttachmentsLoaded = true;
             self.attachments = result;
@@ -404,7 +404,7 @@ var Chatter = Widget.extend({
                     self.fields.followers.$el.insertBefore(self.$('.o_chatter_button_attachment'));
                 }
             }
-            if (self.fields.thread) {
+            if (self.fields.thread && self.fields.thread.$el) {
                 self.fields.thread.$el.appendTo(self.$el);
             }
         }).then(always).guardedCatch(always);

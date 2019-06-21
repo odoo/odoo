@@ -62,8 +62,8 @@
                                 <field name="show_entire_packs"/>
                             </group>
                             <group string="Locations" groups="stock.group_stock_multi_locations">
-                                <field name="default_location_src_id" attrs="{'required': [('code', 'in', ('internal', 'outgoing'))]}"/>
-                                <field name="default_location_dest_id" attrs="{'required': [('code', 'in', ('internal', 'incoming'))]}"/>
+                                <field name="default_location_src_id" options="{'no_create': True}" attrs="{'required': [('code', 'in', ('internal', 'outgoing'))]}"/>
+                                <field name="default_location_dest_id" options="{'no_create': True}" attrs="{'required': [('code', 'in', ('internal', 'incoming'))]}"/>
                             </group>
                         </group>
                     </sheet>
@@ -75,7 +75,6 @@
             <field name="name">Inventory Overview</field>
             <field name="res_model">stock.picking.type</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -109,7 +108,6 @@
             <field name="name">Operations Types</field>
             <field name="res_model">stock.picking.type</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -184,8 +182,8 @@
             <field name="arch" type="xml">
                 <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" decoration-danger="state not in ('cancel', 'done') and scheduled_date &lt; current_date" string="Picking list">
                     <field name="name"/>
-                    <field name="location_id" string="From" groups="stock.group_stock_multi_locations"/>
-                    <field name="location_dest_id" string="To" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_id" options="{'no_create': True}" string="From" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_dest_id" options="{'no_create': True}" string="To" groups="stock.group_stock_multi_locations"/>
                     <field name="partner_id"/>
                     <field name="date" invisible="1"/>
                     <field name="scheduled_date"/>
@@ -262,8 +260,8 @@
                     <group>
                         <group>
                             <field name="partner_id"/>
-                            <field name="location_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
-                            <field name="location_dest_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
+                            <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
+                            <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
                             <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="backorder_id" readonly="1" attrs="{'invisible': [('backorder_id','=',False)]}"/>
                         </group>
@@ -285,8 +283,8 @@
                                     <field name="product_id" required="1" attrs="{'readonly': ['|', ('state', '=', 'done'), ('move_id', '!=', False)]}"/>
                                     <field name="move_id" invisible="1"/>
                                     <field name="product_uom_id" force_save="1" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="uom.group_uom"/>
-                                    <field name="location_id" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'incoming')]}" groups="stock.group_stock_multi_locations" domain="[('id', 'child_of', parent.location_id)]"/>
-                                    <field name="location_dest_id" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'outgoing')]}" groups="stock.group_stock_multi_locations" domain="[('id', 'child_of', parent.location_dest_id)]"/>
+                                    <field name="location_id" options="{'no_create': True}" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'incoming')]}" groups="stock.group_stock_multi_locations" domain="[('id', 'child_of', parent.location_id)]"/>
+                                    <field name="location_dest_id" options="{'no_create': True}" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'outgoing')]}" groups="stock.group_stock_multi_locations" domain="[('id', 'child_of', parent.location_dest_id)]"/>
                                     <field name="package_id" groups="stock.group_tracking_lot" domain="[('location_id', '=', location_id)]"/>
                                     <field name="result_package_id" groups="stock.group_tracking_lot" domain="['|', '|', ('location_id', '=', False), ('location_id', '=', location_dest_id), ('id', '=', package_id)]"/>
                                     <field name="lots_visible" invisible="1"/>
@@ -322,6 +320,7 @@
                                     <field name="additional" invisible="1"/>
                                     <field name="has_move_lines" invisible="1"/>
                                     <field name="is_locked" invisible="1"/>
+                                    <field name="product_uom_category_id" invisible="1"/>
                                     <field name="product_id" required="1" attrs="{'readonly': ['|', '&amp;', ('state', '!=', 'draft'), ('additional', '=', False), ('has_move_lines', '=', True)]}"/>
                                     <field name="description_picking" string="Description"/>
                                     <field name="is_initial_demand_editable" invisible="1"/>
@@ -379,7 +378,7 @@
                     <separator/>
                     <filter name="late" string="Late" domain="[('scheduled_date','&lt;', time.strftime('%%Y-%%m-%%d %%H:%%M:%%S')), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]" help="Pickings that are late on scheduled time"/>
                     <separator/>
-                    <filter name="backorder" string="Backorders" domain="[('backorder_id','!=', False)]" help="Remaining parts of picking partially processed"/>
+                    <filter name="backorder" string="Backorders" domain="[('backorder_id','!=', False), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]" help="Remaining parts of picking partially processed"/>
                     <separator/>
                     <filter string="My Activities" name="activities_my"
                         domain="[('activity_ids.user_id', '=', uid)]"/>
@@ -426,7 +425,6 @@ action = action_values
             <field name="name">Transfers</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{
@@ -447,7 +445,6 @@ action = action_values
             <field name="name">All Transfers</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{
@@ -468,7 +465,6 @@ action = action_values
             <field name="name">Done Transfers</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{
@@ -490,7 +486,6 @@ action = action_values
             <field name="name">To Do</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{
@@ -512,7 +507,6 @@ action = action_values
             <field name="name">Done Transfers by Date</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{
@@ -535,7 +529,6 @@ action = action_values
             <field name="name">Waiting Transfers</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{
@@ -557,7 +550,6 @@ action = action_values
             <field name="name">Late Transfers</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{
@@ -565,7 +557,6 @@ action = action_values
                     'default_picking_type_id': active_id,
                     'contact_display': 'partner_address',
                     'search_default_late': 1,
-                    'search_default_confirmed': 1,
             }
             </field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
@@ -580,7 +571,6 @@ action = action_values
             <field name="name">Backorders</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{
@@ -588,7 +578,6 @@ action = action_values
                     'default_picking_type_id': active_id,
                     'contact_display': 'partner_address',
                     'search_default_backorder': 1,
-                    'search_default_confirmed': 1,
             }
             </field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
@@ -603,7 +592,6 @@ action = action_values
             <field name="name">Transfers</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{
@@ -629,7 +617,6 @@ action = action_values
             <field name="name">New Transfer</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="domain"></field>
             <field name="context">{
@@ -648,7 +635,6 @@ action = action_values
         <record id="do_view_pickings" model="ir.actions.act_window">
             <field name="name">Pickings for Groups</field>
             <field name="res_model">stock.picking</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('group_id','=',active_id)]</field>
         </record>

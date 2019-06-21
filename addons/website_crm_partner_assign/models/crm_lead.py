@@ -40,7 +40,7 @@ class CrmLead(models.Model):
     def assign_salesman_of_assigned_partner(self):
         salesmans_leads = {}
         for lead in self:
-            if (lead.stage_id.probability > 0 and lead.stage_id.probability < 100) or lead.stage_id.sequence == 1:
+            if (lead.probability > 0 and lead.probability < 100) or lead.stage_id.sequence == 1:
                 if lead.partner_assigned_id and lead.partner_assigned_id.user_id != lead.user_id:
                     salesmans_leads.setdefault(lead.partner_assigned_id.user_id.id, []).append(lead.id)
 
@@ -183,7 +183,7 @@ class CrmLead(models.Model):
         if comment:
             message += '<p>%s</p>' % comment
         for lead in self:
-            lead.message_post(body=message, subtype="mail.mt_note")
+            lead.message_post(body=message)
             lead.sudo().convert_opportunity(lead.partner_id.id)  # sudo required to convert partner data
 
     @api.multi
@@ -197,7 +197,7 @@ class CrmLead(models.Model):
         self.message_unsubscribe(partner_ids=partner_ids.ids)
         if comment:
             message += '<p>%s</p>' % comment
-        self.message_post(body=message, subtype="mail.mt_note")
+        self.message_post(body=message)
         values = {
             'partner_assigned_id': False,
         }

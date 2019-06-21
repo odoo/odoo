@@ -13,7 +13,6 @@ var Widget = require('web.Widget');
  */
 var Notification = Widget.extend({
     template: 'Notification',
-    xmlDependencies: ['/web/static/src/xml/notification.xml'],
     events: {
         'hidden.bs.toast': '_onClose',
         'click .o_notification_buttons button': '_onClickButton'

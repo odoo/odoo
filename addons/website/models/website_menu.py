@@ -26,6 +26,8 @@ class Menu(models.Model):
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
     parent_path = fields.Char(index=True)
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
+    group_ids = fields.Many2many('res.groups', string='Visible Groups',
+                                 help="User need to be at least in one of these groups to see the menu")
 
     @api.multi
     def name_get(self):

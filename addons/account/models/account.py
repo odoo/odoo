@@ -208,7 +208,7 @@ class AccountAccount(models.Model):
         'account_id', 'tax_id', string='Default Taxes', context={'append_type_to_tax_name': True})
     note = fields.Text('Internal Notes')
     company_id = fields.Many2one('res.company', string='Company', required=True,
-        default=lambda self: self.env.company_id)
+        default=lambda self: self.env.company)
     tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
     group_id = fields.Many2one('account.group')
 
@@ -507,7 +507,7 @@ class AccountJournalGroup(models.Model):
     _description = "Account Journal Group"
 
     name = fields.Char(required=True, translate=True)
-    company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company_id)
+    company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company)
     account_journal_ids = fields.Many2many('account.journal', string="Journals")
     sequence = fields.Integer(default=10)
 
@@ -574,7 +574,7 @@ class AccountJournal(models.Model):
 
     #groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
     currency_id = fields.Many2one('res.currency', help='The currency used to enter statement', string="Currency", oldname='currency')
-    company_id = fields.Many2one('res.company', string='Company', required=True, index=True, default=lambda self: self.env.company_id,
+    company_id = fields.Many2one('res.company', string='Company', required=True, index=True, default=lambda self: self.env.company,
         help="Company related to this journal")
 
     refund_sequence = fields.Boolean(string='Dedicated Credit Note Sequence', help="Check this box if you don't want to share the same sequence for invoices and credit notes made from this journal", default=False)
@@ -877,7 +877,7 @@ class AccountJournal(models.Model):
 
     @api.model
     def create(self, vals):
-        company_id = vals.get('company_id', self.env.company_id.id)
+        company_id = vals.get('company_id', self.env.company.id)
         if vals.get('type') in ('bank', 'cash'):
             # For convenience, the name can be inferred from account number
             if not vals.get('name') and 'bank_acc_number' in vals:
@@ -949,16 +949,16 @@ class AccountJournal(models.Model):
     @api.depends('company_id')
     def _belong_to_company(self):
         for journal in self:
-            journal.belong_to_company = (journal.company_id.id == self.env.company_id.id)
+            journal.belong_to_company = (journal.company_id.id == self.env.company.id)
 
     @api.multi
     def _search_company_journals(self, operator, value):
         if value:
-            recs = self.search([('company_id', operator, self.env.company_id.id)])
+            recs = self.search([('company_id', operator, self.env.company.id)])
         elif operator == '=':
-            recs = self.search([('company_id', '!=', self.env.company_id.id)])
+            recs = self.search([('company_id', '!=', self.env.company.id)])
         else:
-            recs = self.search([('company_id', operator, self.env.company_id.id)])
+            recs = self.search([('company_id', operator, self.env.company.id)])
         return [('id', 'in', [x.id for x in recs])]
 
     @api.multi
@@ -1030,7 +1030,7 @@ class AccountTax(models.Model):
         e.g 200 * (1 - 10%) = 180 (price included)
         """)
     active = fields.Boolean(default=True, help="Set active to false to hide the tax without removing it.")
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company_id)
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     children_tax_ids = fields.Many2many('account.tax', 'account_tax_filiation_rel', 'parent_tax', 'child_tax', string='Children Taxes')
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
@@ -1067,18 +1067,20 @@ class AccountTax(models.Model):
 
     @api.model
     def default_get(self, vals):
-        rslt = super(AccountTax, self).default_get(vals)
+        # company_id is added so that we are sure to fetch a default value from it to use in repartition lines, below
+        rslt = super(AccountTax, self).default_get(vals + ['company_id'])
 
+        company_id = rslt.get('company_id')
         if 'refund_repartition_line_ids' in vals:
             rslt['refund_repartition_line_ids'] = [
-                (0, 0, { 'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': rslt.get('company_id')}),
-                (0, 0, { 'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': rslt.get('company_id')}),
+                (0, 0, { 'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id}),
+                (0, 0, { 'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id}),
             ]
 
         if 'invoice_repartition_line_ids' in vals:
             rslt['invoice_repartition_line_ids'] = [
-                (0, 0, { 'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': rslt.get('company_id')}),
-                (0, 0, { 'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': rslt.get('company_id')}),
+                (0, 0, { 'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id}),
+                (0, 0, { 'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id}),
             ]
 
         return rslt
@@ -1095,10 +1097,17 @@ class AccountTax(models.Model):
         for record in self:
             record._check_repartition_lines(record.invoice_repartition_line_ids)
             record._check_repartition_lines(record.refund_repartition_line_ids)
-            sum_inv_tax = sum(record.mapped('invoice_repartition_line_ids.factor_percent'))
-            sum_refund_tax = sum(record.mapped('refund_repartition_line_ids.factor_percent'))
-            if float_compare(sum_inv_tax, sum_refund_tax, precision_digits=4) != 0:
-                raise ValidationError(_("You should impact the same total percentage of the tax amount for invoices and refunds."))
+
+            if len(record.invoice_repartition_line_ids) != len(record.refund_repartition_line_ids):
+                raise ValidationError(_("Invoice and credit note repartition should have the same number of lines."))
+
+            index = 0
+            while index < len(record.invoice_repartition_line_ids):
+                inv_rep_ln = record.invoice_repartition_line_ids[index]
+                ref_rep_ln = record.refund_repartition_line_ids[index]
+                if inv_rep_ln.repartition_type != ref_rep_ln.repartition_type or inv_rep_ln.factor_percent != ref_rep_ln.factor_percent:
+                    raise ValidationError(_("Invoice and credit note repartitions should match (same percentages, in the same order)."))
+                index += 1
 
     @api.one
     @api.constrains('children_tax_ids', 'type_tax_use')
@@ -1174,7 +1183,8 @@ class AccountTax(models.Model):
                str(invoice_tax_val['account_id']) + '-' + \
                str(invoice_tax_val['account_analytic_id']) + '-' + \
                str(invoice_tax_val.get('analytic_tag_ids', [])) + '-' + \
-               str(invoice_tax_val.get('tax_ids') or [])
+               str(invoice_tax_val.get('tax_ids') or []) + '-' + \
+               str(invoice_tax_val.get('tag_ids') or [])
 
     def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
         """ Returns the amount of a single tax. base_amount is the actual amount on which the tax is applied, which is
@@ -1235,6 +1245,10 @@ class AccountTax(models.Model):
                 all_taxes += tax
         return all_taxes
 
+    def get_tax_tags(self, is_refund, repartition_type):
+        rep_lines = self.mapped(is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids')
+        return rep_lines.filtered(lambda x: x.repartition_type == repartition_type).mapped('tag_ids')
+
     @api.multi
     def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, is_refund=False):
         """ Returns all information required to apply taxes (in self + their children in case of a tax group).
@@ -1257,7 +1271,7 @@ class AccountTax(models.Model):
             }],
         } """
         if not self:
-            company = self.env.company_id
+            company = self.env.company
         else:
             company = self[0].company_id
 
@@ -1392,12 +1406,23 @@ class AccountTax(models.Model):
             if tax.price_include and not total_included_checkpoints.get(i):
                 cumulated_tax_included_amount += tax_amount
 
+            # If the tax affects the base of subsequent taxes, its tax move lines must
+            # receive the base tags and tag_ids of these taxes, so that the tax report computes
+            # the right total
+            subsequent_taxes = self.env['account.tax']
+            subsequent_tags = self.env['account.account.tag']
+            if tax.include_base_amount:
+                subsequent_taxes = taxes[i+1:]
+                subsequent_tags = subsequent_taxes.get_tax_tags(is_refund, 'base')
+
+            # Compute the tax lines
             tax_repartition_lines = is_refund and tax.refund_repartition_line_ids or tax.invoice_repartition_line_ids
             repartition_lines_to_treat = len(tax_repartition_lines)
             total_amount = 0
             for repartition_line in tax_repartition_lines.filtered(lambda x: x.repartition_type == 'tax'):
                 # In case some rounding error occurs, we compensate for it on the last line
                 line_amount = round(sign * tax_amount * repartition_line.factor if repartition_lines_to_treat != 1 else tax_amount - total_amount, prec)
+
                 taxes_vals.append({
                     'id': tax.id,
                     'name': partner and tax.with_context(lang=partner.lang).name or tax.name,
@@ -1409,7 +1434,8 @@ class AccountTax(models.Model):
                     'price_include': tax.price_include,
                     'tax_exigibility': tax.tax_exigibility,
                     'tax_repartition_line_id': repartition_line.id,
-                    'tag_ids': [(6, False, repartition_line.tag_ids.ids)],
+                    'tag_ids': [(6, False, (repartition_line.tag_ids + subsequent_tags).ids)],
+                    'tax_ids': [(6, False, subsequent_taxes.ids)]
                 })
 
                 total_amount += line_amount
@@ -1436,6 +1462,8 @@ class AccountTax(models.Model):
     def _fix_tax_included_price(self, price, prod_taxes, line_taxes):
         """Subtract tax amount from price when corresponding "price included" taxes do not apply"""
         # FIXME get currency in param?
+        prod_taxes = prod_taxes._origin
+        line_taxes = line_taxes._origin
         incl_tax = prod_taxes.filtered(lambda tax: tax not in line_taxes and tax.price_include)
         if incl_tax:
             return incl_tax.compute_all(price)['total_excluded']

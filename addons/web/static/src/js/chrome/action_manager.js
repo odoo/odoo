@@ -527,9 +527,6 @@ var ActionManager = Widget.extend({
      */
     _executeURLAction: function (action, options) {
         var url = action.url;
-        if (config.debug && url && url.length && url[0] === '/') {
-            url = $.param.querystring(url, {debug: config.debug});
-        }
 
         if (action.target === 'self') {
             framework.redirect(url);
@@ -926,7 +923,6 @@ var ActionManager = Widget.extend({
     _onRedirect: function (ev) {
         this.do_action({
             type:'ir.actions.act_window',
-            view_type: 'form',
             view_mode: 'form',
             res_model: ev.data.res_model,
             views: [[false, 'form']],

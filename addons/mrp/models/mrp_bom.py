@@ -43,7 +43,8 @@ class MrpBom(models.Model):
     product_uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
         default=_get_default_product_uom_id, oldname='product_uom', required=True,
-        help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control")
+        help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control", domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of bills of material.")
     routing_id = fields.Many2one(
         'mrp.routing', 'Routing',
@@ -60,7 +61,7 @@ class MrpBom(models.Model):
              "to define stock rules which trigger different manufacturing orders with different BoMs.")
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env.company_id,
+        default=lambda self: self.env.company,
         required=True)
     consumption = fields.Selection([
         ('strict', 'Strict'),
@@ -233,7 +234,8 @@ class MrpBomLine(models.Model):
         'uom.uom', 'Product Unit of Measure',
         default=_get_default_product_uom_id,
         oldname='product_uom', required=True,
-        help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control")
+        help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control", domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     sequence = fields.Integer(
         'Sequence', default=1,
         help="Gives the sequence order when displaying.")
@@ -247,6 +249,7 @@ class MrpBomLine(models.Model):
         'mrp.bom', 'Parent BoM',
         index=True, ondelete='cascade', required=True)
     parent_product_tmpl_id = fields.Many2one('product.template', 'Parent Product Template', related='bom_id.product_tmpl_id')
+    valid_product_attribute_value_ids = fields.Many2many('product.attribute.value', related='bom_id.product_tmpl_id.valid_product_attribute_value_ids')
     attribute_value_ids = fields.Many2many(
         'product.attribute.value', string='Apply on Variants',
         help="BOM Product Variants needed form apply this line.")
@@ -312,7 +315,7 @@ class MrpBomLine(models.Model):
         if not self.parent_product_tmpl_id:
             return {}
         return {'domain': {'attribute_value_ids': [
-            ('id', 'in', self.parent_product_tmpl_id._get_valid_product_attribute_values().ids),
+            ('id', 'in', self.parent_product_tmpl_id.valid_product_attribute_value_ids.ids),
             ('attribute_id.create_variant', '!=', 'no_variant')
         ]}}
 
@@ -349,7 +352,6 @@ class MrpBomLine(models.Model):
             'view_id': attachment_view.id,
             'views': [(attachment_view.id, 'kanban'), (False, 'form')],
             'view_mode': 'kanban,tree,form',
-            'view_type': 'form',
             'help': _('''<p class="o_view_nocontent_smiling_face">
                         Upload files to your product
                     </p><p>

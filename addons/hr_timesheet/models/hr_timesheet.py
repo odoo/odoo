@@ -90,7 +90,7 @@ class AccountAnalyticLine(models.Model):
     @api.model
     def _apply_timesheet_label(self, view_arch):
         doc = etree.XML(view_arch)
-        encoding_uom = self.env.company_id.timesheet_encode_uom_id
+        encoding_uom = self.env.company.timesheet_encode_uom_id
         # Here, we select only the unit_amount field having no string set to give priority to
         # custom inheretied view stored in database. Even if normally, no xpath can be done on
         # 'string' attribute.
@@ -101,6 +101,14 @@ class AccountAnalyticLine(models.Model):
     # ----------------------------------------------------
     # Business Methods
     # ----------------------------------------------------
+
+    def _timesheet_get_portal_domain(self):
+        return ['|', '&',
+                ('task_id.project_id.privacy_visibility', '=', 'portal'),
+                ('task_id.project_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
+                '&',
+                ('task_id.project_id.privacy_visibility', '=', 'portal'),
+                ('task_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id])]
 
     def _timesheet_preprocess(self, vals):
         """ Deduce other field values from the one given.
@@ -159,7 +167,7 @@ class AccountAnalyticLine(models.Model):
                 cost = timesheet.employee_id.timesheet_cost or 0.0
                 amount = -timesheet.unit_amount * cost
                 amount_converted = timesheet.employee_id.currency_id._convert(
-                    amount, timesheet.account_id.currency_id, self.env.company_id, timesheet.date)
+                    amount, timesheet.account_id.currency_id, self.env.company, timesheet.date)
                 result[timesheet.id].update({
                     'amount': amount_converted,
                 })

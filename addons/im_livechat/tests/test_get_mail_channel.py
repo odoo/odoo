@@ -24,6 +24,12 @@ class TestGetMailChannel(TransactionCase):
             'login': 'georges'
         }])
 
+        self.visitor_user = self.env['res.users'].create({
+            'name': 'Rajesh',
+            'login': 'rajesh',
+            'country_id': self.ref('base.in'),
+        })
+
         self.livechat_channel = self.env['im_livechat.channel'].create({
             'name': 'The channel',
             'user_ids': (6, 0, self.operators.ids)
@@ -45,6 +51,10 @@ class TestGetMailChannel(TransactionCase):
             channel_operators = [channel_info['operator_pid'] for channel_info in mail_channels]
             channel_operator_ids = [channel_operator[0] for channel_operator in channel_operators]
             self.assertTrue(all(partner_id in channel_operator_ids for partner_id in self.operators.mapped('partner_id').ids))
+
+        visitor_user_channel = self.livechat_channel._get_mail_channel('Visitor', user_id=self.visitor_user.id)
+        chat_title = '%s (%s)' % (self.visitor_user.name, self.visitor_user.country_id.name)
+        self.assertEqual(visitor_user_channel['correspondent_name'], chat_title, "Chat title should be correct and should contain visitor's country name")
 
     def _get_mail_channels(self):
         mail_channels = []

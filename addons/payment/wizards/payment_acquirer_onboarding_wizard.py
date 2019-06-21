@@ -31,7 +31,7 @@ class PaymentWizard(models.TransientModel):
     @api.onchange('journal_name', 'acc_number')
     def _set_manual_post_msg_value(self):
         self.manual_post_msg = _('<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: %s</li><li>Account Holder: %s</li></ul>') %\
-                               (self.journal_name or _("Bank") , self.acc_number or _("Account"), self.env.company_id.name)
+                               (self.journal_name or _("Bank") , self.acc_number or _("Account"), self.env.company.name)
 
     _payment_acquirer_onboarding_cache = {}
     _data_fetched = False
@@ -41,7 +41,7 @@ class PaymentWizard(models.TransientModel):
             env = self.env
         module_id = env.ref('base.module_payment_transfer').id
         return env['payment.acquirer'].search([('module_id', '=', module_id),
-            ('company_id', '=', env.company_id.id)], limit=1)
+            ('company_id', '=', env.company.id)], limit=1)
 
     def _get_default_payment_acquirer_onboarding_value(self, key):
         if not self.env.user._is_admin():
@@ -52,7 +52,7 @@ class PaymentWizard(models.TransientModel):
 
         self._data_fetched = True
 
-        self._payment_acquirer_onboarding_cache['payment_method'] = self.env.company_id.payment_onboarding_payment_method
+        self._payment_acquirer_onboarding_cache['payment_method'] = self.env.company.payment_onboarding_payment_method
 
         installed_modules = self.env['ir.module.module'].sudo().search([
             ('name', 'in', ('payment_paypal', 'payment_stripe')),
@@ -103,7 +103,7 @@ class PaymentWizard(models.TransientModel):
 
             self._on_save_payment_acquirer()
 
-            self.env.company_id.payment_onboarding_payment_method = self.payment_method
+            self.env.company.payment_onboarding_payment_method = self.payment_method
 
             # create a new env including the freshly installed module(s)
             new_env = api.Environment(self.env.cr, self.env.uid, self.env.context)
@@ -149,7 +149,7 @@ class PaymentWizard(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
     def _set_payment_acquirer_onboarding_step_done(self):
-        self.env.company_id.set_onboarding_step_done('payment_acquirer_onboarding_state')
+        self.env.company.set_onboarding_step_done('payment_acquirer_onboarding_state')
 
     def action_onboarding_other_payment_acquirer(self):
         self._set_payment_acquirer_onboarding_step_done()

@@ -97,7 +97,7 @@ class Web_Unsplash(http.Controller):
                 logger.exception("Timeout: " + str(e))
                 continue
 
-            image_base64 = tools.image_process(image_base64)
+            image_base64 = tools.image_process(image_base64, verify_resolution=True)
             mimetype = guess_mimetype(base64.b64decode(image_base64))
             # append image extension in name
             query += mimetypes.guess_extension(mimetype) or ''
@@ -106,9 +106,8 @@ class Web_Unsplash(http.Controller):
             url_frags = ['unsplash', key, query]
 
             attachment = Attachments.create({
-                'name': query,
+                'name': '_'.join(url_frags),
                 'url': '/' + '/'.join(url_frags),
-                'datas_fname': '_'.join(url_frags),
                 'mimetype': mimetype,
                 'datas': image_base64,
                 'public': res_model == 'ir.ui.view',
@@ -116,7 +115,7 @@ class Web_Unsplash(http.Controller):
                 'res_model': res_model,
             })
             attachment.generate_access_token()
-            uploads.extend(attachment.read(['name', 'mimetype', 'checksum', 'res_id', 'res_model', 'access_token', 'url']))
+            uploads.append(attachment._get_media_info())
 
             # Notifies Unsplash from an image download. (API requirement)
             self._notify_download(value.get('download_url'))

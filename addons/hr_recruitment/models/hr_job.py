@@ -10,7 +10,7 @@ class Job(models.Model):
 
     @api.model
     def _default_address_id(self):
-        return self.env.company_id.partner_id
+        return self.env.company.partner_id
 
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]

@@ -59,7 +59,6 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.template</field>
             <field name="view_mode">kanban,tree,form,activity</field>
-            <field name="view_type">form</field>
             <field name="view_id" ref="product.product_template_kanban_view"/>
             <field name="search_view_id" ref="product.product_template_search_view"/>
             <field name="context">{"search_default_filter_to_sell":1, "sale_multi_pricelist_product_template": 1}</field>
@@ -236,7 +235,7 @@
             <field name="name">sale.order.form</field>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
-                <form string="Sales Order" class="o_sale_order">
+              <form string="Sales Order" class="o_sale_order">
                 <header>
                     <field name="authorized_transaction_ids" invisible="1"/>
                     <button name="payment_action_capture" type="object"
@@ -330,7 +329,7 @@
                                             <field name="price_tax" invisible="1"/>
                                             <field name="price_subtotal" invisible="1"/>
                                             <label for="product_uom_qty"/>
-                                            <div class="o_row">
+                                            <div class="o_row" name="ordered_qty">
                                                 <field
                                                     context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'uom_qty_change':True, 'company_id': parent.company_id}"
                                                     name="product_uom_qty"/>
@@ -346,11 +345,11 @@
                                                 />
                                             </div>
                                             <label for="qty_delivered" string="Delivered" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
-                                            <div attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}">
+                                            <div name="delivered_qty" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}">
                                                 <field name="qty_delivered" attrs="{'readonly': [('qty_delivered_method', '!=', 'manual')]}"/>
                                             </div>
                                             <label for="qty_invoiced" string="Invoiced" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
-                                            <div attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}">
+                                            <div name="invoiced_qty" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}">
                                                 <field name="qty_invoiced" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
                                             </div>
                                             <field name="price_unit"/>
@@ -370,7 +369,7 @@
                                         </group>
                                         <group attrs="{'invisible': [('display_type', '!=', False)]}">
                                             <label for="customer_lead"/>
-                                            <div>
+                                            <div name="lead">
                                                 <field name="customer_lead" class="oe_inline"/> days
                                             </div>
                                             <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" options="{'color_field': 'color'}"/>
@@ -380,7 +379,7 @@
                                     <label for="name" string="Section Name (eg. Products, Services)" attrs="{'invisible': [('display_type', '!=', 'line_section')]}"/>
                                     <label for="name" string="Note" attrs="{'invisible': [('display_type', '!=', 'line_note')]}"/>
                                     <field name="name"/>
-                                    <div groups="base.group_no_one" attrs="{'invisible': [('display_type', '!=', False)]}">
+                                    <div name="invoice_lines" groups="base.group_no_one" attrs="{'invisible': [('display_type', '!=', False)]}">
                                         <label for="invoice_lines"/>
                                         <field name="invoice_lines"/>
                                     </div>
@@ -418,12 +417,33 @@
                                             'default_lst_price': price_unit,
                                             'default_description_sale': name
                                         }"
+                                        widget="product_configurator"
                                     />
-                                    <field name="name" widget="section_and_note_text"/>
+                                    <field name="product_template_id"
+                                      string="Product"
+                                      invisible="1"
+                                      attrs="{
+                                          'readonly': [('product_updatable', '=', False)],
+                                          'required': [('display_type', '=', False)],
+                                      }"
+                                      options="{'no_open': True}"
+                                      context="{
+                                          'partner_id': parent.partner_id,
+                                          'quantity': product_uom_qty,
+                                          'pricelist': parent.pricelist_id,
+                                          'uom':product_uom,
+                                          'company_id': parent.company_id,
+                                          'default_lst_price': price_unit,
+                                          'default_description_sale': name
+                                      }"
+                                      widget="product_configurator"/>
+                                    <field name="name" widget="section_and_note_text" optional="show"/>
                                     <field
                                         name="analytic_tag_ids"
+                                        optional="hide"
                                         groups="analytic.group_analytic_tags"
                                         widget="many2many_tags"
+                                        options="{'color_field': 'color'}"
                                     />
                                     <field
                                         name="product_uom_qty"
@@ -442,6 +462,7 @@
                                             'column_invisible': [('parent.state', 'not in', ['sale', 'done'])],
                                             'readonly': [('qty_delivered_method', '!=', 'manual')]
                                         }"
+                                        optional="show"
                                     />
                                     <field name="qty_delivered_manual" invisible="1"/>
                                     <field name="qty_delivered_method" invisible="1"/>
@@ -449,6 +470,7 @@
                                         name="qty_invoiced"
                                         string="Invoiced"
                                         attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"
+                                        optional="show"
                                     />
                                     <field name="qty_to_invoice" invisible="1"/>
                                     <field
@@ -462,8 +484,9 @@
                                         context="{'company_id': parent.company_id}"
                                         groups="uom.group_uom"
                                         options='{"no_open": True}'
+                                        optional="show"
                                     />
-                                    <field name="customer_lead" />
+                                    <field name="customer_lead" optional="hide"/>
                                     <field
                                         name="price_unit"
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
@@ -474,8 +497,9 @@
                                         options="{'no_create': True}"
                                         domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
+                                        optional="show"
                                     />
-                                    <field name="discount" string="Disc.%" groups="sale.group_discount_per_so_line"/>
+                                    <field name="discount" string="Disc.%" groups="sale.group_discount_per_so_line" optional="show"/>
                                     <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded"/>
                                     <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included"/>
                                     <field name="state" invisible="1"/>
@@ -493,6 +517,7 @@
                                     <field name="price_total" invisible="1"/>
                                     <field name="price_unit"/>
                                     <field name="display_type"/>
+                                    <field name="tax_id" invisible="1"/>
                                     <templates>
                                         <t t-name="kanban-box">
                                             <div t-attf-class="oe_kanban_card oe_kanban_global_click {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
@@ -608,7 +633,7 @@
                     <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
-                </form>
+              </form>
             </field>
         </record>
 
@@ -688,7 +713,6 @@
             <field name="name">Sales Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field name="search_view_id" ref="sale_order_view_search_inherit_sale"/>
             <field name="context">{}</field>
@@ -754,7 +778,6 @@
             <field name="name">Orders to Invoice</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,pivot,kanban,activity</field>
             <field name="context">{'create': False}</field>
             <field name="domain">[('invoice_status','=','to invoice')]</field>
@@ -783,7 +806,6 @@
             <field name="name">Orders to Upsell</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,pivot,kanban,activity</field>
             <field name="domain">[('invoice_status','=','upselling')]</field>
             <field name="context">{'create': False}</field>
@@ -811,7 +833,6 @@
             <field name="name">Quotations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
-            <field name="view_type">form</field>
             <field name="view_id" ref="view_quotation_tree_with_onboarding"/>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field name="search_view_id" ref="sale_order_view_search_inherit_quotation"/>
@@ -1164,7 +1185,6 @@
             <field name="name">Sales Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
             <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
             <field name="domain">[('state','not in',('draft','sent','cancel'))]</field>
@@ -1185,7 +1205,6 @@
             <field name="name">Sales Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
             <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
             <field name="domain">[('state', '=', 'sale'),('invoice_status','=','to invoice')]</field>
@@ -1199,7 +1218,6 @@
             <field name="name">Quotations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
-            <field name="view_type">form</field>
             <field name="view_id" ref="sale.view_quotation_tree"/>
             <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
             <field name="context">{
@@ -1221,7 +1239,6 @@
         <record id="action_invoice_salesteams" model="ir.actions.act_window">
             <field name="name">Invoices</field>
             <field name="res_model">account.invoice</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
             <field name="view_id" ref="account.invoice_tree"/>
             <field name="domain">[

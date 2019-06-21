@@ -168,10 +168,12 @@ class MailMail(models.Model):
                         'failure_type': failure_type,
                         'failure_reason': failure_reason,
                     })
-                    messages = notifications.mapped('mail_message_id').filtered(lambda m: m.res_id and m.model)
+                    messages = notifications.mapped('mail_message_id').filtered(lambda m: m.is_thread_message())
                     messages._notify_failure_update()  # notify user that we have a failure
                 (notifications - failed).sudo().write({
                     'email_status': 'sent',
+                    'failure_type': '',
+                    'failure_reason': '',
                 })
         if not failure_type or failure_type == 'RECIPIENT':  # if we have another error, we want to keep the mail.
             mail_to_delete_ids = [mail.id for mail in self if mail.auto_delete]
@@ -294,8 +296,8 @@ class MailMail(models.Model):
                 # load attachment binary data with a separate read(), as prefetching all
                 # `datas` (binary field) could bloat the browse cache, triggerring
                 # soft/hard mem limits with temporary data.
-                attachments = [(a['datas_fname'], base64.b64decode(a['datas']), a['mimetype'])
-                               for a in attachments.sudo().read(['datas_fname', 'datas', 'mimetype'])]
+                attachments = [(a['name'], base64.b64decode(a['datas']), a['mimetype'])
+                               for a in attachments.sudo().read(['name', 'datas', 'mimetype'])]
 
                 # specific behavior to customize the send email for notified partners
                 email_list = []
@@ -312,7 +314,7 @@ class MailMail(models.Model):
                 bounce_alias = ICP.get_param("mail.bounce.alias")
                 catchall_domain = ICP.get_param("mail.catchall.domain")
                 if bounce_alias and catchall_domain:
-                    if mail.model and mail.res_id:
+                    if mail.mail_message_id.is_thread_message():
                         headers['Return-Path'] = '%s+%d-%s-%d@%s' % (bounce_alias, mail.id, mail.model, mail.res_id, catchall_domain)
                     else:
                         headers['Return-Path'] = '%s+%d@%s' % (bounce_alias, mail.id, catchall_domain)

@@ -21,6 +21,7 @@ class HolidaysAllocation(models.Model):
     """ Allocation Requests Access specifications: similar to leave requests """
     _name = "hr.leave.allocation"
     _description = "Time Off Allocation"
+    _order = "create_date desc"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _mail_post_access = 'read'
 
@@ -126,6 +127,8 @@ class HolidaysAllocation(models.Model):
         ('years', 'Year(s)')
         ], string="Unit of time between two intervals", default='weeks', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     nextcall = fields.Date("Date of the next accrual allocation", default=False, readonly=True)
+    max_leaves = fields.Float(compute='_compute_leaves')
+    leaves_taken = fields.Float(compute='_compute_leaves')
 
     _sql_constraints = [
         ('type_value',
@@ -198,6 +201,14 @@ class HolidaysAllocation(models.Model):
             holiday.write(values)
 
     @api.multi
+    @api.depends('employee_id', 'holiday_status_id')
+    def _compute_leaves(self):
+        for allocation in self:
+            leave_type = allocation.holiday_status_id.with_context(employee_id=allocation.employee_id.id)
+            allocation.max_leaves = leave_type.max_leaves
+            allocation.leaves_taken = leave_type.leaves_taken
+
+    @api.multi
     @api.depends('number_of_days')
     def _compute_number_of_days_display(self):
         for allocation in self:
@@ -207,7 +218,10 @@ class HolidaysAllocation(models.Model):
     @api.depends('number_of_days', 'employee_id')
     def _compute_number_of_hours_display(self):
         for allocation in self:
-            allocation.number_of_hours_display = allocation.number_of_days * (allocation.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
+            if allocation.parent_id and allocation.parent_id.type_request_unit == "hour":
+                allocation.number_of_hours_display = allocation.number_of_days * HOURS_PER_DAY
+            else:
+                allocation.number_of_hours_display = allocation.number_of_days * (allocation.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
 
     @api.multi
     @api.depends('number_of_hours_display', 'number_of_days_display')
@@ -511,7 +525,7 @@ class HolidaysAllocation(models.Model):
     def _check_approval_update(self, state):
         """ Check if target state is achievable. """
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
-        if not current_employee or self.env.in_onchange:
+        if not current_employee:
             return
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         is_manager = self.env.user.has_group('hr_holidays.group_hr_holidays_manager')
@@ -550,7 +564,7 @@ class HolidaysAllocation(models.Model):
 
     def _get_responsible_for_approval(self):
         self.ensure_one()
-        responsible = self.env.user
+        responsible = self.env['res.users']
 
         if self.validation_type == 'hr' or (self.validation_type == 'both' and self.state == 'validate1'):
             if self.holiday_status_id.responsible_id:
@@ -565,17 +579,20 @@ class HolidaysAllocation(models.Model):
     def activity_update(self):
         to_clean, to_do = self.env['hr.leave.allocation'], self.env['hr.leave.allocation']
         for allocation in self:
+            note = _('New Allocation Request created by %s: %s Days of %s') % (allocation.create_uid.name, allocation.number_of_days, allocation.holiday_status_id.name)
             if allocation.state == 'draft':
                 to_clean |= allocation
             elif allocation.state == 'confirm':
                 allocation.activity_schedule(
                     'hr_holidays.mail_act_leave_allocation_approval',
-                    user_id=allocation.sudo()._get_responsible_for_approval().id)
+                    note=note,
+                    user_id=allocation.sudo()._get_responsible_for_approval().id or self.env.user.id)
             elif allocation.state == 'validate1':
                 allocation.activity_feedback(['hr_holidays.mail_act_leave_allocation_approval'])
                 allocation.activity_schedule(
                     'hr_holidays.mail_act_leave_allocation_second_approval',
-                    user_id=allocation.sudo()._get_responsible_for_approval().id)
+                    note=note,
+                    user_id=allocation.sudo()._get_responsible_for_approval().id or self.env.user.id)
             elif allocation.state == 'validate':
                 to_do |= allocation
             elif allocation.state == 'refuse':
@@ -597,10 +614,10 @@ class HolidaysAllocation(models.Model):
         return super(HolidaysAllocation, self)._track_subtype(init_values)
 
     @api.multi
-    def _notify_get_groups(self, message, groups):
+    def _notify_get_groups(self):
         """ Handle HR users and officers recipients that can validate or refuse holidays
         directly from email. """
-        groups = super(HolidaysAllocation, self)._notify_get_groups(message, groups)
+        groups = super(HolidaysAllocation, self)._notify_get_groups()
 
         self.ensure_one()
         hr_actions = []

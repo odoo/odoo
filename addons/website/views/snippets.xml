@@ -843,7 +843,7 @@
 
             <div id="snippet_feature" class="o_panel">
                 <div class="o_panel_header">
-                    <i class="fa fa-diamond"/> Feature
+                    <i class="fa fa-diamond"/> Features
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_image_gallery" t-thumbnail="/website/static/src/img/snippets_thumbs/s_image_gallery.png"/>
@@ -859,7 +859,7 @@
 
             <div id="snippet_effect" class="o_panel">
                 <div class="o_panel_header">
-                    <i class="fa fa-magic icon-fix"/> Effect
+                    <i class="fa fa-magic icon-fix"/> Effects
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_parallax" t-thumbnail="/website/static/src/img/snippets_thumbs/s_parallax.png"/>
@@ -1078,6 +1078,8 @@
     <!-- Carousel | .s_carousel | .s_quotes_carousel -->
     <div data-js="carousel"
         data-selector=":not(.o_gallery > .container) > .carousel">
+        <a href="#" class="dropdown-item" data-add-slide="true" data-no-preview="true"><i class="fa fa-plus-circle"/>Add Slide</a>
+        <a href="#" class="dropdown-item" data-remove-slide="true" data-no-preview="true"><i class="fa fa-trash-o"/>Remove Slide</a>
         <div class="dropdown-submenu">
             <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-clone"/>Transition</a>
             <div class="dropdown-menu" role="menu">
@@ -1108,30 +1110,11 @@
                 <a href="#" class="dropdown-item" role="menuitem" data-interval="0">Disable autoplay</a>
             </div>
         </div>
-        <a href="#" class="dropdown-item" data-add-slide="true" data-no-preview="true"><i class="fa fa-plus-circle"/>Add Slide</a>
-        <a href="#" class="dropdown-item" data-remove-slide="true" data-no-preview="true"><i class="fa fa-trash-o"/>Remove Slide</a>
     </div>
 
     <div data-js="navTabs" data-selector="section .row > div" data-target=".nav-tabs">
         <a href="#" class="dropdown-item" data-add-tab="1" data-no-preview="true"><i class="fa fa-plus"/>Add Tab</a>
         <a href="#" class="dropdown-item" data-remove-tab="1" data-no-preview="true"><i class="fa fa-minus"/>Remove Tab</a>
-    </div>
-
-    <!-- Parallax -->
-    <div data-js="parallax" data-selector=".parallax">
-        <div class="dropdown-submenu">
-            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-clock-o"/>Scroll Speed</a>
-            <div class="dropdown-menu" role="menu" name="parallax-scroll">
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="0">No-scroll</a>
-                <div class="dropdown-divider" role="separator"/>
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1">Fixed</a>
-                <div class="dropdown-divider" role="separator"/>
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="0.6">Very Slow</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1.2">Slow</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1.6">Fast</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="2">Very Fast</a>
-            </div>
-        </div>
     </div>
 
     <div data-js="gallery" data-selector=".o_gallery">
@@ -1254,6 +1237,23 @@
     <div data-js="background_position"
         data-selector="section, .parallax, :not(.o_gallery > .container) > .carousel">
         <a tabindex="-1" href="#" class="dropdown-item background_position_li" data-background-position="true" data-no-preview="true"><i class="fa fa-arrows"/>Background Image Sizing</a>
+    </div>
+
+    <!-- Parallax -->
+    <div data-js="parallax" data-selector=".parallax">
+        <div class="dropdown-submenu">
+            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-clock-o"/>Scroll Speed</a>
+            <div class="dropdown-menu" role="menu" name="parallax-scroll">
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="0">No-scroll</a>
+                <div class="dropdown-divider" role="separator"/>
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1">Fixed</a>
+                <div class="dropdown-divider" role="separator"/>
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="0.6">Very Slow</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1.2">Slow</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1.6">Fast</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="2">Very Fast</a>
+            </div>
+        </div>
     </div>
 
     <!-- Color | Section -->

@@ -45,7 +45,16 @@
 
         <record id="stock_inventory_icecream" model="stock.inventory">
             <field name="name">Inventory for Cable Management Box</field>
-            <field name="filter">product</field>
+            <field name="product_ids" eval="[(4, ref('stock.product_cable_management_box'))]"/>
+        </record>
+
+        <record id="lot_product_product_cable_management_box_0" model="stock.production.lot">
+            <field name="name">CM-BOX-00001</field>
+            <field name="product_id" ref="stock.product_cable_management_box"/>
+        </record>
+
+        <record id="lot_product_product_cable_management_box_1" model="stock.production.lot">
+            <field name="name">CM-BOX-00002</field>
             <field name="product_id" ref="stock.product_cable_management_box"/>
         </record>
 
@@ -55,6 +64,7 @@
             <field name="inventory_id" ref="stock.stock_inventory_icecream"/>
             <field name="product_qty">50.0</field>
             <field name="location_id" ref="stock.stock_location_14"/>
+            <field name="prod_lot_id" ref="lot_product_product_cable_management_box_0"/>
         </record>
 
         <record id="stock_inventory_line_icecream_lot1" model="stock.inventory.line">
@@ -63,6 +73,7 @@
             <field name="inventory_id" ref="stock.stock_inventory_icecream"/>
             <field name="product_qty">40.0</field>
             <field name="location_id" ref="stock.stock_location_14"/>
+            <field name="prod_lot_id" ref="lot_product_product_cable_management_box_1"/>
         </record>
 
         <!-- Create STOCK_MOVE for OUT -->

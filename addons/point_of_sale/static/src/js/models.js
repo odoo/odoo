@@ -45,13 +45,12 @@ exports.PosModel = Backbone.Model.extend({
 
         this.proxy_queue = new devices.JobQueue();           // used to prevent parallels communications to the proxy
         this.db = new PosDB();                       // a local database used to search trough products and categories & store pending orders
-        this.debug = config.debug; //debug mode
+        this.debug = config.isDebug(); //debug mode
 
         // Business data; loaded from the server at launch
         this.company_logo = null;
         this.company_logo_base64 = '';
         this.currency = null;
-        this.shop = null;
         this.company = null;
         this.user = null;
         this.users = [];
@@ -182,7 +181,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'res.company',
-        fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id', 'tax_calculation_rounding_method'],
+        fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id', 'state_id', 'tax_calculation_rounding_method'],
         ids:    function(self){ return [self.user.company_id[0]]; },
         loaded: function(self,companies){ self.company = companies[0]; },
     },{
@@ -207,6 +206,7 @@ exports.PosModel = Backbone.Model.extend({
         }
     },{
         model:  'res.partner',
+        label: 'load_partners',
         fields: ['name','street','city','state_id','country_id','vat',
                  'phone','zip','mobile','email','barcode','write_date',
                  'property_account_position_id','property_product_pricelist'],
@@ -214,6 +214,12 @@ exports.PosModel = Backbone.Model.extend({
         loaded: function(self,partners){
             self.partners = partners;
             self.db.add_partners(partners);
+        },
+    },{
+        model:  'res.country.state',
+        fields: ['name', 'country_id'],
+        loaded: function(self,states){
+            self.states = states;
         },
     },{
         model:  'res.country',
@@ -263,10 +269,6 @@ exports.PosModel = Backbone.Model.extend({
                                     self.config.iface_cashdrawer       ||
                                     self.config.iface_customer_facing_display;
 
-            if (self.config.company_id[0] !== self.user.company_id[0]) {
-                throw new Error(_t("Error: The Point of Sale User must belong to the same company as the Point of Sale. You are probably trying to load the point of sale as an administrator in a multi-company setup, with the administrator account set to the wrong company."));
-            }
-
             self.db.set_uuid(self.config.uuid);
             self.set_cashier(self.get_cashier());
             // We need to do it here, since only then the local storage has the correct uuid
@@ -277,11 +279,6 @@ exports.PosModel = Backbone.Model.extend({
                 self.pos_session.sequence_number = Math.max(self.pos_session.sequence_number, orders[i].data.sequence_number+1);
             }
        },
-    },{
-        model: 'stock.location',
-        fields: [],
-        ids:    function(self){ return [self.config.stock_location_id[0]]; },
-        loaded: function(self, locations){ self.shop = locations[0]; },
     },{
         model:  'product.pricelist',
         fields: ['name', 'display_name', 'discount_policy'],
@@ -350,7 +347,7 @@ exports.PosModel = Backbone.Model.extend({
                  'product_tmpl_id','tracking'],
         order:  _.map(['sequence','default_code','name'], function (name) { return {name: name}; }),
         domain: function(self){
-            var domain = [['sale_ok','=',true],['available_in_pos','=',true]];
+            var domain = [['sale_ok','=',true],['available_in_pos','=',true],'|',['company_id','=',self.config.company_id[0]],['company_id','=',false]];
             if (self.config.limit_categories &&  self.config.iface_available_categ_ids.length) {
                 domain.push(['pos_categ_id', 'in', self.config.iface_available_categ_ids]);
             }
@@ -594,7 +591,7 @@ exports.PosModel = Backbone.Model.extend({
     load_new_partners: function(){
         var self = this;
         return new Promise(function (resolve, reject) {
-            var fields = _.find(self.models, function(model){ return model.model === 'res.partner'; }).fields;
+            var fields = _.find(self.models, function(model){ return model.label === 'load_partners'; }).fields;
             var domain = [['customer','=',true],['write_date','>',self.db.get_partner_write_date()]];
             rpc.query({
                 model: 'res.partner',
@@ -1450,7 +1447,7 @@ exports.Orderline = Backbone.Model.extend({
         var lots_required = 1;
 
         if (this.product.tracking == 'serial') {
-            lots_required = this.quantity;
+            lots_required = Math.abs(this.quantity);
         }
 
         return lots_required;
@@ -1998,8 +1995,11 @@ var PacklotlineCollection = Backbone.Collection.extend({
 
     set_quantity_by_lot: function() {
         if (this.order_line.product.tracking == 'serial') {
-            var valid_lots = this.get_valid_lots();
-            this.order_line.set_quantity(valid_lots.length);
+            var valid_lots_quantity = this.get_valid_lots().length;
+            if (this.order_line.quantity < 0){
+                valid_lots_quantity = -valid_lots_quantity;
+            }
+            this.order_line.set_quantity(valid_lots_quantity);
         }
     }
 });
@@ -2242,7 +2242,6 @@ exports.Order = Backbone.Model.extend({
         var client  = this.get('client');
         var cashier = this.pos.get_cashier();
         var company = this.pos.company;
-        var shop    = this.pos.shop;
         var date    = new Date();
 
         function is_xml(subreceipt){
@@ -2255,7 +2254,7 @@ exports.Order = Backbone.Model.extend({
             } else {
                 subreceipt = subreceipt.split('\n').slice(1).join('\n');
                 var qweb = new QWeb2.Engine();
-                    qweb.debug = config.debug;
+                    qweb.debug = config.isDebug();
                     qweb.default_dict = _.clone(QWeb.default_dict);
                     qweb.add_template('<templates><t t-name="subreceipt">'+subreceipt+'</t></templates>');
 
@@ -2303,9 +2302,6 @@ exports.Order = Backbone.Model.extend({
                 name: company.name,
                 phone: company.phone,
                 logo:  this.pos.company_logo_base64,
-            },
-            shop:{
-                name: shop.name,
             },
             currency: this.pos.currency,
         };

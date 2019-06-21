@@ -37,9 +37,8 @@ class TestInventory(SavepointCase):
         # remove them with an inventory adjustment
         inventory = self.env['stock.inventory'].create({
             'name': 'remove product1',
-            'filter': 'product',
-            'location_id': self.stock_location.id,
-            'product_id': self.product1.id,
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product1.id)],
         })
         inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1)
@@ -56,22 +55,25 @@ class TestInventory(SavepointCase):
         """
         inventory = self.env['stock.inventory'].create({
             'name': 'remove product1',
-            'filter': 'product',
-            'location_id': self.stock_location.id,
-            'product_id': self.product2.id,
-            'exhausted': True,  # should be set by an onchange
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product2.id)]
         })
         inventory.action_start()
-        self.assertEqual(len(inventory.line_ids), 1)
-        self.assertEqual(inventory.line_ids.theoretical_qty, 0)
+        self.assertEqual(len(inventory.line_ids), 0)
 
         lot1 = self.env['stock.production.lot'].create({
             'name': 'sn2',
             'product_id': self.product2.id,
         })
-
-        inventory.line_ids.prod_lot_id = lot1
-        inventory.line_ids.product_qty = 1
+        self.env['stock.inventory.line'].create({
+            'inventory_id': inventory.id,
+            'location_id': self.stock_location.id,
+            'product_id': self.product2.id,
+            'prod_lot_id': lot1.id,
+            'product_qty': 1
+        })
+        self.assertEqual(len(inventory.line_ids), 1)
+        self.assertEqual(inventory.line_ids.theoretical_qty, 0)
 
         inventory.action_validate()
 
@@ -86,22 +88,25 @@ class TestInventory(SavepointCase):
         """
         inventory = self.env['stock.inventory'].create({
             'name': 'remove product1',
-            'filter': 'product',
-            'location_id': self.stock_location.id,
-            'product_id': self.product2.id,
-            'exhausted': True,  # should be set by an onchange
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product2.id)]
         })
         inventory.action_start()
-        self.assertEqual(len(inventory.line_ids), 1)
-        self.assertEqual(inventory.line_ids.theoretical_qty, 0)
+        self.assertEqual(len(inventory.line_ids), 0)
 
         lot1 = self.env['stock.production.lot'].create({
             'name': 'sn2',
             'product_id': self.product2.id,
         })
-
-        inventory.line_ids.prod_lot_id = lot1
-        inventory.line_ids.product_qty = 2
+        self.env['stock.inventory.line'].create({
+            'inventory_id': inventory.id,
+            'location_id': self.stock_location.id,
+            'product_id': self.product2.id,
+            'prod_lot_id': lot1.id,
+            'product_qty': 2
+        })
+        self.assertEqual(len(inventory.line_ids), 1)
+        self.assertEqual(inventory.line_ids.theoretical_qty, 0)
 
         with self.assertRaises(ValidationError):
             inventory.action_validate()
@@ -112,22 +117,24 @@ class TestInventory(SavepointCase):
         """
         inventory = self.env['stock.inventory'].create({
             'name': 'remove product1',
-            'filter': 'product',
-            'location_id': self.stock_location.id,
-            'product_id': self.product2.id,
-            'exhausted': True,  # should be set by an onchange
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product2.id)]
         })
         inventory.action_start()
-        self.assertEqual(len(inventory.line_ids), 1)
-        self.assertEqual(inventory.line_ids.theoretical_qty, 0)
-
+        self.assertEqual(len(inventory.line_ids), 0)
         lot1 = self.env['stock.production.lot'].create({
             'name': 'sn2',
             'product_id': self.product2.id,
         })
-
-        inventory.line_ids.prod_lot_id = lot1
-        inventory.line_ids.product_qty = 1
+        self.env['stock.inventory.line'].create({
+            'inventory_id': inventory.id,
+            'product_id': self.product2.id,
+            'prod_lot_id': lot1.id,
+            'product_qty': 1,
+            'location_id': self.stock_location.id,
+        })
+        self.assertEqual(len(inventory.line_ids), 1)
+        self.assertEqual(inventory.line_ids.theoretical_qty, 0)
 
         self.env['stock.inventory.line'].create({
             'inventory_id': inventory.id,
@@ -136,6 +143,7 @@ class TestInventory(SavepointCase):
             'product_qty': 10,
             'location_id': self.stock_location.id,
         })
+        self.assertEqual(len(inventory.line_ids), 2)
         res_dict_for_warning_lot = inventory.action_validate()
         wizard_warning_lot = self.env[(res_dict_for_warning_lot.get('res_model'))].browse(res_dict_for_warning_lot.get('res_id'))
         wizard_warning_lot.action_confirm()
@@ -155,16 +163,21 @@ class TestInventory(SavepointCase):
 
         inventory = self.env['stock.inventory'].create({
             'name': 'remove product1',
-            'filter': 'product',
-            'location_id': self.stock_location.id,
-            'product_id': self.product1.id,
-            'exhausted': True,
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product1.id)]
         })
         inventory.action_start()
+        self.assertEqual(len(inventory.line_ids), 0)
+
+        self.env['stock.inventory.line'].create({
+            'inventory_id': inventory.id,
+            'product_id': self.product1.id,
+            'partner_id': owner1.id,
+            'product_qty': 5,
+            'location_id': self.stock_location.id,
+        })
         self.assertEqual(len(inventory.line_ids), 1)
         self.assertEqual(inventory.line_ids.theoretical_qty, 0)
-        inventory.line_ids.partner_id = owner1
-        inventory.line_ids.product_qty = 5
         inventory.action_validate()
 
         quant = self.env['stock.quant']._gather(self.product1, self.stock_location)
@@ -180,13 +193,16 @@ class TestInventory(SavepointCase):
         # add 10 products in stock
         inventory = self.env['stock.inventory'].create({
             'name': 'add 10 products 1',
-            'filter': 'product',
-            'location_id': self.stock_location.id,
-            'product_id': self.product1.id,
-            'exhausted': True,  # should be set by an onchange
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product1.id)]
         })
         inventory.action_start()
-        inventory.line_ids.product_qty = 10
+        self.env['stock.inventory.line'].create({
+            'inventory_id': inventory.id,
+            'product_id': self.product1.id,
+            'product_qty': 10,
+            'location_id': self.stock_location.id
+        })
         inventory.action_validate()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 10.0)
 
@@ -224,9 +240,8 @@ class TestInventory(SavepointCase):
         # free the reservation of the second move.
         inventory = self.env['stock.inventory'].create({
             'name': 'remove 2 products 1',
-            'filter': 'product',
-            'location_id': self.pack_location.id,
-            'product_id': self.product1.id,
+            'location_ids': [(4, self.pack_location.id)],
+            'product_ids': [(4, self.product1.id)],
         })
         inventory.action_start()
         inventory.line_ids.product_qty = 8
@@ -245,9 +260,8 @@ class TestInventory(SavepointCase):
         # Make a new inventory adjustment and bring two now products.
         inventory = self.env['stock.inventory'].create({
             'name': 'remove 2 products 1',
-            'filter': 'product',
-            'location_id': self.pack_location.id,
-            'product_id': self.product1.id,
+            'location_ids': [(4, self.pack_location.id)],
+            'product_ids': [(4, self.product1.id)],
         })
         inventory.action_start()
         inventory.line_ids.product_qty = 10
@@ -287,14 +301,275 @@ class TestInventory(SavepointCase):
         self.env['stock.quant'].create(vals)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.stock_location)), 2.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 2.0)
-        
+
         inventory = self.env['stock.inventory'].create({
             'name': 'product1',
-            'filter': 'product',
-            'location_id': self.stock_location.id,
-            'product_id': self.product1.id,
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product1.id)],
         })
         inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1)
         self.assertEqual(inventory.line_ids.theoretical_qty, 2)
 
+    def test_inventory_outdate_1(self):
+        """ Checks that inventory adjustment line is marked as outdated after
+        its corresponding quant is modify and its value was correctly updated
+        after user refreshed it.
+        """
+        # Set initial quantity to 7
+        vals = {
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': self.stock_location.id,
+            'quantity': 7,
+            'reserved_quantity': 0,
+        }
+        self.env['stock.quant'].create(vals)
+
+        inventory = self.env['stock.inventory'].create({
+            'name': 'product1',
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product1.id)],
+        })
+        inventory.action_start()
+        # When a inventory line is created, it must not be marked as outdated
+        # and its `theoretical_qty` must be equals to quant quantity.
+        self.assertEqual(inventory.line_ids.outdated, False)
+        self.assertEqual(inventory.line_ids.theoretical_qty, 7)
+
+        # Creates a new quant who'll update the existing one and so set product
+        # quantity to 5. Then expects inventory line has been marked as outdated.
+        vals = {
+            'product_id': self.product1.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': 5,
+        }
+        self.env['stock.quant'].with_context(inventory_mode=True).create(vals)
+        self.assertEqual(inventory.line_ids.outdated, True)
+        self.assertEqual(inventory.line_ids.theoretical_qty, 7)
+        # Refreshes inventory line and expects quantity was recomputed to 5
+        inventory.line_ids.action_refresh_quantity()
+        self.assertEqual(inventory.line_ids.outdated, False)
+        self.assertEqual(inventory.line_ids.theoretical_qty, 5)
+
+    def test_inventory_outdate_2(self):
+        """ Checks that inventory adjustment line is marked as outdated when a
+        quant is manually updated and its value is correctly updated when action
+        to refresh is called.
+        """
+        # Set initial quantity to 7
+        vals = {
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': self.stock_location.id,
+            'quantity': 7,
+            'reserved_quantity': 0,
+        }
+        quant = self.env['stock.quant'].create(vals)
+
+        inventory = self.env['stock.inventory'].create({
+            'name': 'product1',
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product1.id)],
+        })
+        inventory.action_start()
+        self.assertEqual(inventory.line_ids.outdated, False)
+        self.assertEqual(inventory.line_ids.theoretical_qty, 7)
+
+        # Decreases quant to 3 and expects inventory line is now outdated
+        quant.with_context(inventory_mode=True).write({'inventory_quantity': 3})
+        self.assertEqual(inventory.line_ids.outdated, True)
+        self.assertEqual(inventory.line_ids.theoretical_qty, 7)
+        # Refreshes inventory line and expects quantity was recomputed to 3
+        inventory.line_ids.action_refresh_quantity()
+        self.assertEqual(inventory.line_ids.outdated, False)
+        self.assertEqual(inventory.line_ids.theoretical_qty, 3)
+
+    def test_inventory_outdate_3(self):
+        """  Checks that outdated inventory adjustment line without difference
+        doesn't change quant when validated.
+        """
+        # Set initial quantity to 10
+        vals = {
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': self.stock_location.id,
+            'quantity': 10,
+            'reserved_quantity': 0,
+        }
+        quant = self.env['stock.quant'].create(vals)
+
+        inventory = self.env['stock.inventory'].create({
+            'name': 'product1',
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product1.id)],
+        })
+        inventory.action_start()
+        self.assertEqual(inventory.line_ids.outdated, False)
+        self.assertEqual(inventory.line_ids.theoretical_qty, 10)
+
+        # increases quant to 15 and expects inventory line is now outdated
+        quant.with_context(inventory_mode=True).write({'inventory_quantity': 15})
+        self.assertEqual(inventory.line_ids.outdated, True)
+        # Don't refresh inventory line but valid it, and expect quantity is
+        # still equal to 15
+        inventory.action_validate()
+        self.assertEqual(inventory.line_ids.theoretical_qty, 10)
+        self.assertEqual(quant.quantity, 15)
+
+    def test_inventory_outdate_4(self):
+        """ Checks that outdated inventory adjustment line with difference
+        changes quant when validated.
+        """
+        # Set initial quantity to 10
+        vals = {
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': self.stock_location.id,
+            'quantity': 10,
+            'reserved_quantity': 0,
+        }
+        quant = self.env['stock.quant'].create(vals)
+
+        inventory = self.env['stock.inventory'].create({
+            'name': 'product1',
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product1.id)],
+        })
+        inventory.action_start()
+        self.assertEqual(inventory.line_ids.outdated, False)
+        self.assertEqual(inventory.line_ids.theoretical_qty, 10)
+
+        # increases quant to 15 and expects inventory line is now outdated
+        quant.with_context(inventory_mode=True).write({'inventory_quantity': 15})
+        self.assertEqual(inventory.line_ids.outdated, True)
+        # Don't refresh inventory line but changes its value and valid it, and
+        # expects quantity is correctly adapted (15 + inventory line diff)
+        inventory.line_ids.product_qty = 12
+        inventory.action_validate()
+        self.assertEqual(inventory.line_ids.theoretical_qty, 10)
+        self.assertEqual(quant.quantity, 17)
+
+    def test_inventory_outdate_5(self):
+        """ Checks that inventory adjustment line is marked as outdated when an
+        another inventory adjustment line with common product/location is
+        validated and its value is updated when action to refresh is called.
+        """
+        # Set initial quantity to 7
+        vals = {
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': self.stock_location.id,
+            'quantity': 7,
+            'reserved_quantity': 0,
+        }
+        self.env['stock.quant'].create(vals)
+
+        inventory_1 = self.env['stock.inventory'].create({
+            'name': 'product1',
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product1.id)],
+        })
+        inventory_1.action_start()
+        inventory_2 = self.env['stock.inventory'].create({
+            'name': 'product1',
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product1.id)],
+        })
+        inventory_2.action_start()
+        self.assertEqual(inventory_1.line_ids.outdated, False)
+        self.assertEqual(inventory_1.line_ids.theoretical_qty, inventory_2.line_ids.theoretical_qty)
+
+        # Set product quantity to 8 in inventory 2 then validates it
+        inventory_2.line_ids.product_qty = 8
+        inventory_2.action_validate()
+        # Expects line of inventory 1 is now marked as outdated
+        self.assertEqual(inventory_1.line_ids.outdated, True)
+        self.assertEqual(inventory_1.line_ids.theoretical_qty, 7)
+        # Refreshes inventory line and expects quantity was recomputed to 8
+        inventory_1.line_ids.action_refresh_quantity()
+        self.assertEqual(inventory_1.line_ids.theoretical_qty, 8)
+
+    def test_inventory_dont_outdate_1(self):
+        """ Checks that inventory adjustment line isn't marked as outdated when
+        a not corresponding quant is created.
+        """
+        # Set initial quantity to 7 and create inventory adjustment for product1
+        vals = {
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': self.stock_location.id,
+            'quantity': 7,
+            'reserved_quantity': 0,
+        }
+        self.env['stock.quant'].create(vals)
+        inventory = self.env['stock.inventory'].create({
+            'name': 'product1',
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product1.id)],
+        })
+        inventory.action_start()
+        self.assertEqual(inventory.line_ids.outdated, False)
+
+        # Create quant for product3
+        product3 = self.env['product.product'].create({
+            'name': 'Product C',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        vals = {
+            'product_id': product3.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': 22,
+            'reserved_quantity': 0,
+        }
+        self.env['stock.quant'].create(vals)
+        # Expect inventory line is still up to date
+        self.assertEqual(inventory.line_ids.outdated, False)
+
+    def test_inventory_dont_outdate_2(self):
+        """ Checks that inventory adjustment line isn't marked as outdated when
+        an another inventory adjustment line without common product/location is
+        validated.
+        """
+        # Set initial quantity for product1 and product3
+        self.env['stock.quant'].create({
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': self.stock_location.id,
+            'quantity': 7,
+            'reserved_quantity': 0,
+        })
+        product3 = self.env['product.product'].create({
+            'name': 'Product C',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        self.env['stock.quant'].create({
+            'product_id': product3.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': self.stock_location.id,
+            'quantity': 10,
+            'reserved_quantity': 0,
+        })
+
+        inventory_1 = self.env['stock.inventory'].create({
+            'name': 'product1',
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product1.id)],
+        })
+        inventory_1.action_start()
+        inventory_2 = self.env['stock.inventory'].create({
+            'name': 'product3',
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, product3.id)],
+        })
+        inventory_2.action_start()
+        self.assertEqual(inventory_1.line_ids.outdated, False)
+
+        # Set product3 quantity to 16 in inventory 2 then validates it
+        inventory_2.line_ids.product_qty = 16
+        inventory_2.action_validate()
+        # Expect line of inventory 1 is still up to date
+        self.assertEqual(inventory_1.line_ids.outdated, False)

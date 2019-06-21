@@ -98,8 +98,8 @@ var ParentedMixin = {
      * resource it could have reserved.
      */
     destroy : function () {
-        _.each(this.getChildren(), function (el) {
-            el.destroy();
+        this.getChildren().forEach(function (child) {
+            child.destroy();
         });
         this.setParent(undefined);
         this.__parentedDestroyed = true;

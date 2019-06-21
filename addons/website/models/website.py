@@ -119,8 +119,9 @@ class Website(models.Model):
 
     @api.onchange('language_ids')
     def _onchange_language_ids(self):
-        if self.language_ids and self.default_lang_id not in self.language_ids:
-            self.default_lang_id = self.language_ids[0]
+        language_ids = self.language_ids._origin
+        if language_ids and self.default_lang_id not in language_ids:
+            self.default_lang_id = language_ids[0]
 
     @api.multi
     def _compute_menu(self):
@@ -148,14 +149,17 @@ class Website(models.Model):
 
     @api.multi
     def write(self, values):
+        public_user_to_change_websites = self.env['website']
         self._handle_favicon(values)
 
         self._get_languages.clear_cache(self)
         if 'company_id' in values and 'user_id' not in values:
-            company = self.env['res.company'].browse(values['company_id'])
-            values['user_id'] = company._get_public_user().id
+            public_user_to_change_websites = self.filtered(lambda w: w.sudo().user_id.company_id.id != values['company_id'])
+            if public_user_to_change_websites:
+                company = self.env['res.company'].browse(values['company_id'])
+                super(Website, public_user_to_change_websites).write(dict(values, user_id=company._get_public_user().id))
 
-        result = super(Website, self).write(values)
+        result = super(Website, self - public_user_to_change_websites).write(values)
         if 'cdn_activated' in values or 'cdn_url' in values or 'cdn_filters' in values:
             # invalidate the caches from static node at compile time
             self.env['ir.qweb'].clear_caches()
@@ -184,6 +188,8 @@ class Website(models.Model):
 
         self.homepage_id = self.env['website.page'].search([('website_id', '=', self.id),
                                                             ('key', '=', standard_homepage.key)])
+        # prevent /-1 as homepage URL
+        self.homepage_id.url = '/'
 
         # Bootstrap default menu hierarchy, create a new minimalist one if no default
         default_menu = self.env.ref('website.main_menu')
@@ -814,3 +820,24 @@ class Website(models.Model):
             return ''
         res = urls.url_parse(self.domain)
         return 'http://' + self.domain if not res.scheme else self.domain
+
+
+class BaseModel(models.AbstractModel):
+    _inherit = 'base'
+
+    @api.multi
+    def get_base_url(self):
+        """
+        Returns baseurl about one given record.
+        If a website_id field exists in the current record we use the url
+        from this website as base url.
+
+        :return: the base url for this record
+        :rtype: string
+
+        """
+        self.ensure_one()
+        if 'website_id' in self and self.website_id.domain:
+            return self.website_id._get_http_domain()
+        else:
+            return super(BaseModel, self).get_base_url()

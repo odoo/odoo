@@ -8,9 +8,9 @@ odoo.define('website_links.website_links_menu', function (require) {
 'use strict';
 
 var publicWidget = require('web.public.widget');
+var websiteNavbarData = require('website.navbar');
 
-publicWidget.registry.websiteLinksMenu = publicWidget.Widget.extend({
-    selector: '#o_website_links_share_page',
+var WebsiteLinksMenu = publicWidget.Widget.extend({
 
     /**
      * @override
@@ -20,4 +20,7 @@ publicWidget.registry.websiteLinksMenu = publicWidget.Widget.extend({
         return this._super.apply(this, arguments);
     },
 });
+
+websiteNavbarData.websiteNavbarRegistry.add(WebsiteLinksMenu, '#o_website_links_share_page');
+
 });

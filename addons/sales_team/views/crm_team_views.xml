@@ -22,7 +22,6 @@
         <record id="crm_team_salesteams_act" model="ir.actions.act_window">
             <field name="name">Sales Teams</field>
             <field name="res_model">crm.team</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,form</field>
             <field name="view_id" ref="crm_team_salesteams_search"/>
             <field name="context">{'in_sales_app': True}</field>
@@ -39,7 +38,6 @@
           <record id="crm_team_salesteams_pipelines_act" model="ir.actions.act_window">
             <field name="name">Team Pipelines</field>
             <field name="res_model">crm.team</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,form</field>
             <field name="view_id" ref="crm_team_salesteams_search"/>
             <field name="context">{}</field>
@@ -160,7 +158,6 @@
         <record id="sales_team_config_action" model="ir.actions.act_window">
             <field name="name">Sales Teams</field>
             <field name="res_model">crm.team</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{}</field>
             <field name="view_id" ref="crm_team_salesteams_search"/>
@@ -177,7 +174,6 @@
         <record id="mail_activity_type_action_config_sales" model="ir.actions.act_window">
             <field name="name">Activity Types</field>
             <field name="res_model">mail.activity.type</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">['|', ('res_model_id', '=', False), ('res_model_id.model', '=', 'res.partner')]</field>
         </record>

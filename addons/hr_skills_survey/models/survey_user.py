@@ -8,12 +8,14 @@ from odoo.tools import html2plaintext
 class SurveyUserInput(models.Model):
     _inherit = 'survey.user_input'
 
-    def _send_certification(self):
+    def _mark_done(self):
         """ Will add certification to employee's resumé if
         - The survey is a certification
         - The user is linked to an employee
-        - The user succeeded the test
-        At the end, super is call to send by mail"""
+        - The user succeeded the test """
+
+        super(SurveyUserInput, self)._mark_done()
+
         certificate_user_inputs = self.filtered(lambda user_input: user_input.survey_id.certificate and user_input.quizz_passed)
         partner_has_completed = {user_input.partner_id.id: user_input.survey_id for user_input in certificate_user_inputs}
         employees = self.env['hr.employee'].sudo().search([('user_id.partner_id', 'in', certificate_user_inputs.mapped('partner_id').ids)])
@@ -30,7 +32,6 @@ class SurveyUserInput(models.Model):
                 'display_type': 'certification',
                 'survey_id': survey.id
             })
-        return super(SurveyUserInput, self)._send_certification()
 
 
 class ResumeLine(models.Model):
