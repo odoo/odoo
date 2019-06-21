@@ -1676,9 +1676,7 @@ QUnit.module('fields', {}, function () {
                     obj.turtles,
                     [
                         [4, 2, false],
-                        [1, 2, { turtle_foo: 'blip' }],
                         [4, 3, false],
-                        [1, 3, { turtle_foo: 'kawa' }]
                     ],
                     "should have properly created the x2many command list");
             };
@@ -1702,14 +1700,9 @@ QUnit.module('fields', {}, function () {
                         return Promise.resolve({ turtles: [[6, 0, [2, 3]]] });
                     }
                     if (args.method === 'create') {
-                        // it would be even better if we did not send the current
-                        // unchanged state with the command 1, but this seems more
-                        // difficult.
                         assert.deepEqual(args.args[0].turtles, [
                             [4, 2, false],
-                            [1, 2, { turtle_foo: 'blip' }],
                             [4, 3, false],
-                            [1, 3, { turtle_foo: 'kawa' }]
                         ], 'should send proper commands to create method');
                     }
                     return this._super.apply(this, arguments);
