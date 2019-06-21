@@ -33,7 +33,9 @@ var CodeviewPlugin = Plugins.codeview.extend({
             this.$codable.focus();
             return;
         }
-        this._super();
+        if (!this.isBeingDestroyed) {
+            this._super();
+        }
         this.$editable.css('height', '');
     },
     /**
