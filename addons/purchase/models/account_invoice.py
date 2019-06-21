@@ -45,7 +45,7 @@ class AccountMove(models.Model):
         # Copy purchase lines.
         po_lines = self.purchase_id.order_line - self.line_ids.mapped('purchase_line_id')
         new_lines = self.env['account.move.line']
-        for line in po_lines:
+        for line in po_lines.filtered(lambda l: not l.display_type):
             new_line = new_lines.new(line._prepare_account_move_line(self))
             new_line.account_id = new_line._get_computed_account()
             new_line._onchange_price_subtotal()
