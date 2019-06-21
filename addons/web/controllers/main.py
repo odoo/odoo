@@ -429,7 +429,7 @@ def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', un
                    default_mimetype='application/octet-stream', related_id=None, access_mode=None, access_token=None,
                    env=None):
     return request.registry['ir.http'].binary_content(
-        xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
+        xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=None,
         filename_field=filename_field, download=download, mimetype=mimetype,
         default_mimetype=default_mimetype, related_id=related_id, access_mode=access_mode, access_token=access_token,
         env=env)
