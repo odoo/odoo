@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from datetime import datetime
 from dateutil import relativedelta
 from itertools import groupby
@@ -290,11 +291,26 @@ class StockMove(models.Model):
         field will be used in `_action_done` in order to know if the move will need a backorder or
         an extra move.
         """
+        move_lines = self.env['stock.move.line']
         for move in self:
-            quantity_done = 0
-            for move_line in move._get_move_lines():
-                quantity_done += move_line.product_uom_id._compute_quantity(move_line.qty_done, move.product_uom, round=False)
-            move.quantity_done = quantity_done
+            move_lines |= move._get_move_lines()
+
+        data = self.env['stock.move.line'].read_group(
+            [('id', 'in', move_lines.ids)],
+            ['move_id', 'product_uom_id', 'qty_done'], ['move_id', 'product_uom_id'],
+            lazy=False
+        )
+
+        rec = defaultdict(list)
+        for d in data:
+            rec[d['move_id'][0]] += [(d['product_uom_id'][0], d['qty_done'])]
+
+        for move in self:
+            uom = move.product_uom
+            move.quantity_done = sum(
+                self.env['uom.uom'].browse(line_uom_id)._compute_quantity(qty, uom, round=False)
+                for line_uom_id, qty in rec.get(move.id, [])
+            )
 
     def _quantity_done_set(self):
         quantity_done = self[0].quantity_done  # any call to create will invalidate `move.quantity_done`
