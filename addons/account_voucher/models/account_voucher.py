@@ -305,9 +305,12 @@ class AccountVoucher(models.Model):
             }
             # Create one line per tax and fix debit-credit for the move line if there are tax included
             if (line.tax_ids):
-                tax_group = line.tax_ids.compute_all(line.price_unit, line.currency_id, line.quantity, line.product_id, self.partner_id)
+                tax_group = line.tax_ids.compute_all(self._convert(line.price_unit), self.company_id.currency_id, line.quantity, line.product_id, self.partner_id)
                 if move_line['debit']: move_line['debit'] = tax_group['total_excluded']
                 if move_line['credit']: move_line['credit'] = tax_group['total_excluded']
+                Currency = self.env['res.currency']
+                company_cur = Currency.browse(company_currency)
+                current_cur = Currency.browse(current_currency)
                 for tax_vals in tax_group['taxes']:
                     if tax_vals['amount']:
                         tax = self.env['account.tax'].browse([tax_vals['id']])
@@ -328,8 +331,8 @@ class AccountVoucher(models.Model):
                             ctx = {}
                             if self.account_date:
                                 ctx['date'] = self.account_date
-                            temp['currency_id'] = current_currency.id
-                            temp['amount_currency'] = company_currency._convert(tax_vals['amount'], current_currency, line.company_id, self.account_date or fields.Date.today(), round=True)
+                            temp['currency_id'] = current_currency
+                            temp['amount_currency'] = company_cur._convert(tax_vals['amount'], current_cur, line.company_id, self.account_date or fields.Date.today(), round=True)
                         self.env['account.move.line'].create(temp)
 
             self.env['account.move.line'].create(move_line)
