@@ -21,7 +21,12 @@
                             </div>
                         </div>
                         <div class="mt16"/>
-                        <div></div>
+                        <div class="mt16"/>
+                        <div>
+                            <t t-foreach="o.invoice_ids.mapped('l10n_it_ddt_id')" t-as="ddt_id">
+                                <h1 t-esc="ddt_id.name"/>
+                            </t>
+                        </div>
                         <div class="clearfix"/>
                         <div class="mb32"/>
                         <table class="table table-bordered">
@@ -165,6 +170,6 @@
         report_type="qweb-pdf"
         name="l10n_it_ddt.report_ddt_view"
         file="report_ddt"
-        print_report_name="'DDT'"
+        print_report_name="(object.report_name())"
     />
 </odoo>

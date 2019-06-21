@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+     <template id="my_view_name" inherit_id="l10n_it_edi.account_invoice_it_FatturaPA_export">
+            <xpath expr='//DatiDDT' position="after">
+                <t t-if="ddt_dict">
+                    <t t-set="picking_count" t-value="1"/>
+                    <t t-foreach="ddt_dict" t-as="picking">
+                        <DatiDDT>
+                            <NumeroDDT t-esc="picking.name"/>
+                            <DataDDT t-esc="format_date(picking.date)"/>
+                            <t t-esc="picking_count"/>
+                            <t t-if="len(ddt_dict) > 1">
+                                <RiferimentoNumeroLinea t-esc="picking_count"/>
+                            </t>
+                            <t t-set="picking_count" t-value ="1 + picking_count"/>
+                        </DatiDDT>
+                    </t>
+                </t>
+            </xpath>
+        </template>
+</odoo>
