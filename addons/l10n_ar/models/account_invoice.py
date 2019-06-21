@@ -350,7 +350,7 @@ class AccountInvoice(models.Model):
     def check_afip_responsability_set(self):
         if self.company_id.country_id == self.env.ref('base.ar') and \
            self.l10n_latam_use_documents and self.partner_id and \
-           not self.partner_id.l10n_ar_afip_responsability_type_id:
+           not self.partner_id.commercial_partner_id.l10n_ar_afip_responsability_type_id:
             return {'warning': {
                 'title': 'Missing Partner Configuration',
                 'message': 'Please configure the AFIP Responsability for '
