@@ -597,7 +597,10 @@
                                     <field name="fiscal_position_id" options="{'no_create': True}" />
                                     <field name="move_id" groups="account.group_account_user" attrs="{'invisible': [('move_id', '=', False)]}"/>
                                     <field name="origin" groups="base.group_user" attrs="{'invisible': [('origin', '=', False)]}"/>
-                                    <field name="partner_bank_id" domain="[('partner_id.ref_company_ids', 'in', [company_id])]" context="{'default_partner_id':company_id}"/>
+                                    <!-- Since the same form view is used for customer invoices and credit notes,
+                                    we can't set a domain or a default value context on partner_bank_id. We must
+                                    rely on the onchange -->
+                                    <field name="partner_bank_id"/>
                                 </group>
                             </group>
                             <field name="tax_line_ids">

@@ -839,6 +839,8 @@ class AccountInvoice(models.Model):
             bank_id = bank_ids[0].id if bank_ids else False
             self.partner_bank_id = bank_id
             domain = {'partner_bank_id': [('id', 'in', bank_ids.ids)]}
+        elif type == 'out_invoice':
+            domain = {'partner_bank_id': [('partner_id.ref_company_ids', 'in', [self.company_id.id])]}
 
         res = {}
         if warning:
