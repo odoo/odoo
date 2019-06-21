@@ -63,11 +63,11 @@
         </t>
     </p>
     <t t-if="context &amp;&amp; context.active_model">
-        <p t-if="context['active_model'] === 'account.journal' || context['active_model'] === 'account.bank.statement'" class="actions_buttons">
+        <p t-if="context['active_model'] === 'account.journal' || context['active_model'] === 'account.bank.statement' || context['active_model'] === 'account.bank.statement.import'" class="actions_buttons">
             <t t-if="context.journal_id">
                 <button class="button_back_to_statement btn btn-secondary" t-att-data_journal_id='context.journal_id'>Go to bank statement(s)</button>
             </t>
-            <t t-if="context['active_model'] === 'account.bank.statement'">
+            <t t-if="context['active_model'] === 'account.bank.statement.line'">
                 <button class="button_close_statement btn btn-primary" style="display: inline-block;">Close statement</button>
             </t>
         </p>
@@ -188,7 +188,7 @@
             <td class="o_td_field"></td>
         </tr>
         <tr class="create_tax_id">
-            <td class="o_td_label">Tax</td>
+            <td class="o_td_label">Taxes</td>
             <td class="o_td_field"></td>
         </tr>
         <tr class="create_analytic_account_id" groups="analytic.group_analytic_accounting">
@@ -236,7 +236,7 @@
 
 <t t-name="reconciliation.line.mv_line.amount">
     <span t-att-class="(line.is_move_line &amp;&amp; proposition == true) ? 'cell' : ''">
-        
+
         <span class="line_amount">
             <span t-if="line.amount_currency_str"
                   t-attf-class="o_multi_currency o_multi_currency_color_#{line.currency_id%8} line_info_button fa fa-money"

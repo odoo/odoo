@@ -348,6 +348,15 @@ var FormController = BasicController.extend({
         this.renderer.enableButtons();
     },
     /**
+     * Only display the pager if we are not on a new record.
+     *
+     * @override
+     * @private
+     */
+    _isPagerVisible: function () {
+        return !this.model.isNew(this.handle);
+    },
+    /**
      * Hook method, called when record(s) has been deleted.
      *
      * @override
@@ -373,6 +382,19 @@ var FormController = BasicController.extend({
         var env = this.model.get(this.handle, {env: true});
         state.id = env.currentId;
         this._super(state);
+    },
+    /**
+     * Overrides to reload the form when saving failed in readonly (e.g. after
+     * a change on a widget like priority or statusbar).
+     *
+     * @override
+     * @private
+     */
+    _rejectSave: function () {
+        if (this.mode === 'readonly') {
+            return this.reload();
+        }
+        return this._super.apply(this, arguments);
     },
     /**
      * Calls unfreezeOrder when changing the mode.
@@ -489,6 +511,9 @@ var FormController = BasicController.extend({
         } else if (!attrs.special || attrs.special === 'save') {
             // save the record but don't switch to readonly mode
             def = saveAndExecuteAction();
+        } else {
+            console.warn('Unhandled button event', ev);
+            return;
         }
 
         def.then(this._enableButtons.bind(this)).guardedCatch(this._enableButtons.bind(this));

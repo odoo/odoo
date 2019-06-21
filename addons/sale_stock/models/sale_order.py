@@ -13,12 +13,12 @@ class SaleOrder(models.Model):
 
     @api.model
     def _default_warehouse_id(self):
-        company = self.env.user.company_id.id
+        company = self.env.company.id
         warehouse_ids = self.env['stock.warehouse'].search([('company_id', '=', company)], limit=1)
         return warehouse_ids
 
     incoterm = fields.Many2one(
-        'account.incoterms', 'Incoterms',
+        'account.incoterms', 'Incoterm',
         help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
     picking_policy = fields.Selection([
         ('direct', 'As soon as possible'),
@@ -48,7 +48,7 @@ class SaleOrder(models.Model):
         super(SaleOrder, self)._compute_expected_date()
         for order in self:
             dates_list = []
-            confirm_date = fields.Datetime.from_string((order.confirmation_date or order.write_date) if order.state == 'sale' else fields.Datetime.now())
+            confirm_date = fields.Datetime.from_string(order.confirmation_date if order.state in ['sale', 'done'] else fields.Datetime.now())
             for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery()):
                 dt = confirm_date + timedelta(days=line.customer_lead or 0.0)
                 dates_list.append(dt)
@@ -61,6 +61,17 @@ class SaleOrder(models.Model):
         if values.get('order_line') and self.state == 'sale':
             for order in self:
                 pre_order_line_qty = {order_line: order_line.product_uom_qty for order_line in order.mapped('order_line') if not order_line.is_expense}
+
+        if values.get('partner_shipping_id'):
+            new_partner = self.env['res.partner'].browse(values.get('partner_shipping_id'))
+            for record in self:
+                picking = record.mapped('picking_ids').filtered(lambda x: x.state not in ('done', 'cancel'))
+                addresses = (record.partner_shipping_id.display_name, new_partner.display_name)
+                message = _("""The delivery address has been changed on the Sales Order<br/>
+                        From <strong>"%s"</strong> To <strong>"%s"</strong>,
+                        You should probably update the partner on this document.""") % addresses
+                picking.activity_schedule('mail.mail_activity_data_warning', note=message, user_id=self.env.user.id)
+
         res = super(SaleOrder, self).write(values)
         if values.get('order_line') and self.state == 'sale':
             for order in self:
@@ -95,6 +106,21 @@ class SaleOrder(models.Model):
     def _onchange_warehouse_id(self):
         if self.warehouse_id.company_id:
             self.company_id = self.warehouse_id.company_id.id
+
+    @api.onchange('partner_shipping_id')
+    def _onchange_partner_shipping_id(self):
+        res = {}
+        pickings = self.picking_ids.filtered(
+            lambda p: p.state not in ['done', 'cancel'] and p.partner_id != self.partner_shipping_id
+        )
+        if pickings:
+            res['warning'] = {
+                'title': _('Warning!'),
+                'message': _(
+                    'Do not forget to change the partner on the following delivery orders: %s'
+                ) % (','.join(pickings.mapped('name')))
+            }
+        return res
 
     @api.multi
     def action_view_delivery(self):
@@ -290,7 +316,7 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):
-        # When modifying a one2many, _origin doesn't guarantee that its values will be the ones 
+        # When modifying a one2many, _origin doesn't guarantee that its values will be the ones
         # in database. Hence, we need to explicitly read them from there.
         if self._origin:
             product_uom_qty_origin = self._origin.read(["product_uom_qty"])[0]["product_uom_qty"]
@@ -344,6 +370,17 @@ class SaleOrderLine(models.Model):
                 qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
         return qty
 
+    def _get_procurement_group(self):
+        return self.order_id.procurement_group_id
+
+    def _prepare_procurement_group_vals(self):
+        return {
+            'name': self.order_id.name,
+            'move_type': self.order_id.picking_policy,
+            'sale_id': self.order_id.id,
+            'partner_id': self.order_id.partner_shipping_id.id,
+        }
+
     @api.multi
     def _action_launch_stock_rule(self, previous_product_uom_qty=False):
         """
@@ -360,13 +397,9 @@ class SaleOrderLine(models.Model):
             if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
                 continue
 
-            group_id = line.order_id.procurement_group_id
+            group_id = line._get_procurement_group()
             if not group_id:
-                group_id = self.env['procurement.group'].create({
-                    'name': line.order_id.name, 'move_type': line.order_id.picking_policy,
-                    'sale_id': line.order_id.id,
-                    'partner_id': line.order_id.partner_shipping_id.id,
-                })
+                group_id = self.env['procurement.group'].create(line._prepare_procurement_group_vals())
                 line.order_id.procurement_group_id = group_id
             else:
                 # In case the procurement group is already created and the order was
@@ -443,7 +476,8 @@ class SaleOrderLine(models.Model):
 
     def _update_line_quantity(self, values):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        if self.mapped('qty_delivered') and float_compare(values['product_uom_qty'], max(self.mapped('qty_delivered')), precision_digits=precision) == -1:
+        line_products = self.filtered(lambda l: l.product_id.type in ['product', 'consu'])
+        if line_products.mapped('qty_delivered') and float_compare(values['product_uom_qty'], max(line_products.mapped('qty_delivered')), precision_digits=precision) == -1:
             raise UserError(_('You cannot decrease the ordered quantity below the delivered quantity.\n'
                               'Create a return first.'))
         super(SaleOrderLine, self)._update_line_quantity(values)

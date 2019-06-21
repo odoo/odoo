@@ -10,19 +10,7 @@ odoo.define('web.config', function () {
  * this file someday.
  */
 
-var debugParam = $.deparam($.param.querystring()).debug;
-var debug = false;
-if (debugParam !== undefined) {
-    debug = debugParam === 'assets' ? 'assets' : true;
-}
-
 var config = {
-    /**
-     * debug can be either a boolean, or the special value 'assets'
-     *
-     * @type boolean|string
-     */
-    debug: debug,
     device: {
         /**
          * touch is a boolean, true if the device supports touch interaction
@@ -50,6 +38,18 @@ var config = {
          * Mapping between the numbers 0,1,2,3,4,5,6 and some descriptions
          */
         SIZES: { XS: 0, VSM: 1, SM: 2, MD: 3, LG: 4, XL: 5, XXL: 6 },
+    },
+    /**
+     * States whether the current environment is in debug or not.
+     *
+     * @param debugMode the debug mode to check, empty for simple debug mode
+     * @returns {boolean}
+     */
+    isDebug: function (debugMode) {
+        if (debugMode) {
+            return odoo.debug && odoo.debug.indexOf(debugMode) !== -1;
+        }
+        return odoo.debug;
     },
 };
 

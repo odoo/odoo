@@ -36,6 +36,7 @@ Here is how it works:
         'data/account.account.template.csv',
         'data/l10n_ch_chart_post_data.xml',
         'data/account_data.xml',
+        'data/account_tax_report_data.xml',
         'data/account_vat2011_data.xml',
         'data/account_fiscal_position_data.xml',
         'data/account_chart_template_data.xml',

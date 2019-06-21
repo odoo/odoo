@@ -5,10 +5,9 @@
    <record model="ir.actions.act_window" id="action_mrp_unbuild_moves">
         <field name="name">Stock Moves</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">stock.move</field>
-        <field name="view_type">form</field>
+        <field name="res_model">stock.move.line</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">['|', ('unbuild_id', '=', active_id), ('consume_unbuild_id', '=', active_id)]</field>
+        <field name="domain">['|', ('move_id.unbuild_id', '=', active_id), ('move_id.consume_unbuild_id', '=', active_id)]</field>
     </record>
 
         <record id="mrp_unbuild_search_view" model="ir.ui.view">
@@ -47,7 +46,6 @@
             <field name="name">Product Moves</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.move.line</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">['|', ('move_id.unbuild_id', '=', active_id), ('move_id.consume_unbuild_id', '=', active_id)]</field>
             <field name="help" type="html">
@@ -108,7 +106,7 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" name="%(action_mrp_unbuild_moves)d"
-                                    string="Product Moves" type="action" icon="fa-arrows-v" states="done"/>
+                                    string="Product Moves" type="action" icon="fa-exchange" states="done"/>
                         </div>
                         <div class="oe_title">
                             <h1><field name="name" placeholder="Unbuild Order" nolabel="1"/></h1>
@@ -130,8 +128,8 @@
                             </group>
                             <group>
                                 <field name="mo_id" domain="[('state','=','done')]"/>
-                                <field name="location_id" groups="stock.group_stock_multi_locations" domain="[('usage','=','internal')]"/>
-                                <field name="location_dest_id" groups="stock.group_stock_multi_locations" domain="[('usage','=','internal')]"/>
+                                <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" domain="[('usage','=','internal')]"/>
+                                <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" domain="[('usage','=','internal')]"/>
                                 <field name="has_tracking" invisible="1"/>
                                 <field name="lot_id" attrs="{'invisible': [('has_tracking', '=', 'none')], 'required': [('has_tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
                             </group>
@@ -158,7 +156,7 @@
                     <field name="product_qty"/>
                     <field name="product_uom_id" groups="uom.group_uom"/>
                     <field name="state"/>
-                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                 </tree>
             </field>
         </record>
@@ -167,7 +165,6 @@
         <field name="name">Unbuild Orders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.unbuild</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">

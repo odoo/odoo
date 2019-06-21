@@ -22,6 +22,7 @@ $bronze: #eea91e;
             font-style: italic;
             font-weight: lighter;
         }
+        word-wrap: break-word;
     }
 
     .vote {
@@ -220,6 +221,15 @@ img.o_forum_avatar_big {
 }
 
 .o_wforum_elearning_navtabs_container {
-    height: $owprofile-tabs-height;
-    background-color: #66445e;
+    @include media-breakpoint-up(md) {
+        background-color: theme-color('secondary');
+    }
+}
+
+.website_forum {
+    margin-bottom: $spacer;
+}
+
+.o_wforum_forum_card_bg {
+    background: linear-gradient(99deg, theme-color('secondary') 10%, darken(theme-color('secondary'), 10%) 90%);
 }

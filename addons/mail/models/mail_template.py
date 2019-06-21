@@ -266,8 +266,6 @@ class MailTemplate(models.Model):
                 'name': button_name,
                 'type': 'ir.actions.act_window',
                 'res_model': 'mail.compose.message',
-                'src_model': template.model_id.model,
-                'view_type': 'form',
                 'context': "{'default_composition_mode': 'mass_mail', 'default_template_id' : %d, 'default_use_template': True}" % (template.id),
                 'view_mode': 'form,tree',
                 'view_id': view.id,
@@ -360,13 +358,18 @@ class MailTemplate(models.Model):
             return results
         self.ensure_one()
 
-        langs = self._render_template(self.lang, self.model, res_ids)
-        for res_id, lang in langs.items():
-            if lang:
-                template = self.with_context(lang=lang)
-            else:
-                template = self
-            results[res_id] = template
+        if self.env.context.get('template_preview_lang'):
+            lang = self.env.context.get('template_preview_lang')
+            for res_id in res_ids:
+                results[res_id] = self.with_context(lang=lang)
+        else:
+            langs = self._render_template(self.lang, self.model, res_ids)
+            for res_id, lang in langs.items():
+                if lang:
+                    template = self.with_context(lang=lang)
+                else:
+                    template = self
+                results[res_id] = template
 
         return multi_mode and results or results[res_ids[0]]
 
@@ -379,7 +382,8 @@ class MailTemplate(models.Model):
         self.ensure_one()
 
         if self.use_default_to or self._context.get('tpl_force_default_to'):
-            default_recipients = self.env['mail.thread'].message_get_default_recipients(res_model=self.model, res_ids=res_ids)
+            records = self.env[self.model].browse(res_ids).sudo()
+            default_recipients = self.env['mail.thread']._message_get_default_recipients_on_records(records)
             for res_id, recipients in default_recipients.items():
                 results[res_id].pop('partner_to', None)
                 results[res_id].update(recipients)
@@ -387,7 +391,7 @@ class MailTemplate(models.Model):
         records_company = None
         if self._context.get('tpl_partners_only') and self.model and results and 'company_id' in self.env[self.model]._fields:
             records = self.env[self.model].browse(results.keys()).read(['company_id'])
-            records_company = {rec['id']: rec['company_id'][0] for rec in records}
+            records_company = {rec['id']: (rec['company_id'][0] if rec['company_id'] else None) for rec in records}
 
         for res_id, values in results.items():
             partner_ids = values.get('partner_ids', list())
@@ -476,9 +480,13 @@ class MailTemplate(models.Model):
                     report = template.report_template
                     report_service = report.report_name
 
-                    if report.report_type not in ['qweb-html', 'qweb-pdf']:
-                        raise UserError(_('Unsupported report type %s found.') % report.report_type)
-                    result, format = report.render_qweb_pdf([res_id])
+                    if report.report_type in ['qweb-html', 'qweb-pdf']:
+                        result, format = report.render_qweb_pdf([res_id])
+                    else:
+                        res = report.render([res_id])
+                        if not res:
+                            raise UserError(_('Unsupported report type %s found.') % report.report_type)
+                        result, format = res
 
                     # TODO in trunk, change return format to binary to match message_post expected format
                     result = base64.b64encode(result)
@@ -507,11 +515,12 @@ class MailTemplate(models.Model):
         :returns: id of the mail.mail that was created """
         self.ensure_one()
         Mail = self.env['mail.mail']
-        Attachment = self.env['ir.attachment']  # TDE FIXME: should remove dfeault_type from context
+        Attachment = self.env['ir.attachment']  # TDE FIXME: should remove default_type from context
 
         # create a mail_mail based on values, without attachments
         values = self.generate_email(res_id)
         values['recipient_ids'] = [(4, pid) for pid in values.get('partner_ids', list())]
+        values['attachment_ids'] = [(4, aid) for aid in values.get('attachment_ids', list())]
         values.update(email_values or {})
         attachment_ids = values.pop('attachment_ids', [])
         attachments = values.pop('attachments', [])
@@ -529,7 +538,7 @@ class MailTemplate(models.Model):
                 template_ctx = {
                     'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=record.display_name)),
                     'model_description': self.env['ir.model']._get(record._name).display_name,
-                    'company': 'company_id' in record and record['company_id'] or self.env.user.company_id,
+                    'company': 'company_id' in record and record['company_id'] or self.env.company,
                 }
                 body = template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
                 values['body_html'] = self.env['mail.thread']._replace_local_links(body)
@@ -539,16 +548,14 @@ class MailTemplate(models.Model):
         for attachment in attachments:
             attachment_data = {
                 'name': attachment[0],
-                'datas_fname': attachment[0],
                 'datas': attachment[1],
                 'type': 'binary',
                 'res_model': 'mail.message',
                 'res_id': mail.mail_message_id.id,
             }
-            attachment_ids.append(Attachment.create(attachment_data).id)
+            attachment_ids.append((4, Attachment.create(attachment_data).id))
         if attachment_ids:
-            values['attachment_ids'] = [(6, 0, attachment_ids)]
-            mail.write({'attachment_ids': [(6, 0, attachment_ids)]})
+            mail.write({'attachment_ids': attachment_ids})
 
         if force_send:
             mail.send(raise_exception=raise_exception)

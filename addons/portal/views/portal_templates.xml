@@ -1,81 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="frontend_layout" name="Main Frontend Layout">
-        <t t-call="web.layout">
-            <t t-set="head_website">
-                <script type="text/javascript">
-                    odoo.session_info = {
-                        is_admin: <t t-esc="json.dumps(request.env.user._is_admin())"/>,
-                        is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,
-                        is_website_user: <t t-esc="json.dumps(request.env.user._is_public())"/>,
-                        user_id: <t t-esc="json.dumps(request.env.user.id)" />,
-                        is_frontend: true,
-                        translationURL: '/website/translations',
-                    };
-                </script>
-
-                <t t-call-assets="web.assets_common" t-js="false"/>
-                <t t-call-assets="web.assets_frontend" t-js="false"/>
-
-                <t t-call-assets="web.assets_common" t-css="false"/>
-                <t t-call-assets="web.assets_frontend" t-css="false"/>
-            </t>
-            <t t-set="head" t-value="head_website + (head or '')"/>
-
-            <t t-set="direction" t-value="request.env['res.lang'].search([('code', '=', request.env.lang)]).direction"/>
-            <div id="wrapwrap" t-attf-class="#{pageName or ''} #{direction == 'rtl' and 'o_rtl' or ''} #{'o_portal' if is_portal else ''}">
-                <header id="top" data-anchor="true">
-                    <nav class="navbar navbar-expand-md navbar-light bg-light">
-                        <div class="container">
-                            <a href="/" class="navbar-brand logo">
-                                <img t-att-src="'/logo.png?company=%s' % res_company.id" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
-                            </a>
-                            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#top_menu_collapse">
-                                <span class="navbar-toggler-icon"/>
-                            </button>
-                            <div class="collapse navbar-collapse" id="top_menu_collapse">
-                                <!-- FIXME We want menu to open to the right by default (except cases handled in JS) -->
-                                <ul class="nav navbar-nav ml-auto text-right" id="top_menu">
-                                    <li class="nav-item divider" t-ignore="true" t-if="not user_id._is_public()"/>
-                                    <li class="nav-item dropdown" t-ignore="true" t-if="not user_id._is_public()">
-                                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                                            <b>
-                                                <span t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
-                                            </b>
-                                        </a>
-                                        <div class="dropdown-menu js_usermenu" role="menu">
-                                            <a id="o_logout" class="dropdown-item" t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </nav>
-                </header>
-                <main>
-                    <t t-raw="0"/>
-                </main>
-                <footer id="bottom" data-anchor="true" class="bg-light o_footer">
-                    <div class="container mt16 mb16" id="footer">
-                        <div class="float-right mb16" t-ignore="true" t-if="not editable">
-                            Powered by <a target="_blank" href="http://www.odoo.com?utm_source=db&amp;utm_medium=portal">Odoo</a>
-                        </div>
+    <template id="frontend_layout" name="Main Frontend Layout" inherit_id="web.frontend_layout">
+        <xpath expr="//div[@id='wrapwrap']" position="attributes">
+            <attribute name="t-attf-class" add="#{request.env['res.lang'].search([('code', '=', request.env.lang)]).direction == 'rtl' and 'o_rtl' or ''}" separator=" "/>
+            <attribute name="t-attf-class" add="#{'o_portal' if is_portal else ''}" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@id='wrapwrap']/header/img" position="replace">
+            <nav class="navbar navbar-expand-md navbar-light bg-light">
+                <div class="container">
+                    <a href="/" class="navbar-brand logo">
+                        <img t-att-src="'/logo.png?company=%s' % res_company.id" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
+                    </a>
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#top_menu_collapse">
+                        <span class="navbar-toggler-icon"/>
+                    </button>
+                    <div class="collapse navbar-collapse" id="top_menu_collapse">
+                        <!-- FIXME We want menu to open to the right by default (except cases handled in JS) -->
+                        <ul class="nav navbar-nav ml-auto text-right" id="top_menu">
+                            <li class="nav-item divider" t-ignore="true" t-if="not user_id._is_public()"/>
+                            <li class="nav-item dropdown" t-ignore="true" t-if="not user_id._is_public()">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                                    <b>
+                                        <span t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
+                                    </b>
+                                </a>
+                                <div class="dropdown-menu js_usermenu" role="menu">
+                                    <a id="o_logout" class="dropdown-item" t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
-                </footer>
+                </div>
+            </nav>
+        </xpath>
+        <xpath expr="//div[@id='wrapwrap']/main/t[@t-raw='0']" position="before">
+            <div t-if="o_portal_fullwidth_alert" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
+                <div class="container">
+                    <t t-raw="o_portal_fullwidth_alert"/>
+                </div>
             </div>
-        </t>
+        </xpath>
     </template>
 
     <template id="portal_breadcrumbs" name="Portal Breadcrumbs">
         <ol t-if="page_name != 'home'" class="o_portal_submenu breadcrumb mb-0 py-2 flex-grow-1">
             <li class="breadcrumb-item"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
-            <li t-if="page_name == 'my_details'" class="breadcrumb-item">Your Details</li>
+            <li t-if="page_name == 'my_details'" class="breadcrumb-item">Details</li>
         </ol>
     </template>
 
     <template id="portal_back_in_edit_mode" name="Back to edit mode">
         <div t-ignore="true" class="text-center">
-            This is a preview of the customer portal. <a t-att-href="backend_url"><i class="fa fa-arrow-right"/> Back to edit mode</a>
+            <t t-if="custom_html" t-raw="custom_html"/>
+            <t t-else="">This is a preview of the customer portal.</t>
+            <a t-att-href="backend_url"><i class="fa fa-arrow-right mr-1"/>Back to edit mode</a>
         </div>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"> &#215; </button>
     </template>
@@ -83,13 +61,6 @@
     <template id="portal_layout" name="Portal Layout">
         <t t-call="portal.frontend_layout">
             <t t-set="is_portal" t-value="True"/>
-
-            <div t-if="o_portal_fullwidth_alert" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
-                <div class="container">
-                    <t t-raw="o_portal_fullwidth_alert"/>
-                </div>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"> &#215; </button>
-            </div>
 
             <div t-if="not no_breadcrumbs and not my_details and not breadcrumbs_searchbar" class="o_portal container mt-3">
                 <div class="row align-items-center bg-white no-gutters border rounded">
@@ -113,7 +84,7 @@
                                     <t t-call="portal.portal_contact"/>
                                 </div>
                                 <div class="o_portal_my_details">
-                                    <h4>Your Details <a role="button" href="/my/account" class="btn btn-sm btn-link"><i class="fa fa-pencil"/> Edit</a></h4>
+                                    <h4>Details <a role="button" href="/my/account" class="btn btn-sm btn-link"><i class="fa fa-pencil"/> Edit</a></h4>
                                     <hr class="mt-1 mb-0"/>
                                     <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
                                 </div>
@@ -147,7 +118,7 @@
             <t t-set="my_details" t-value="True"/>
             <div class="o_portal_my_home">
                 <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
-                <h3>Your Documents</h3>
+                <h3>Documents</h3>
                 <div class="o_portal_docs list-group">
                 </div>
             </div>
@@ -174,8 +145,8 @@
     </template>
 
     <template id="portal_record_sidebar" name="My Portal Record Sidebar">
-        <div t-attf-class="col-12 col-lg flex-lg-grow-0 #{classes}">
-            <div class="card bg-white mb-4" id="sidebar_content">
+        <div t-attf-class="#{classes}">
+            <div class="card bg-white mb-4 sticky-top" id="sidebar_content">
                 <div t-if="title" class="card-body text-center pb-2 pt-3">
                     <t t-raw="title"/>
                 </div>
@@ -350,8 +321,7 @@
 
     <template id="portal_my_details">
         <t t-call="portal.portal_layout">
-            <t t-set="additional_title">Your Contact Details</t>
-            <h3>Your Details</h3>
+            <t t-set="additional_title">Contact Details</t>
             <form action="/my/account" method="post">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <div class="row o_portal_details">
@@ -363,7 +333,7 @@
                               </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('name') and 'o_has_error' or ''} col-xl-6">
-                                <label class="col-form-label" for="name">Your Name</label>
+                                <label class="col-form-label" for="name">Name</label>
                                 <input type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" t-att-value="name or partner.name" />
                             </div>
                             <div t-attf-class="form-group #{error.get('email') and 'o_has_error' or ''} col-xl-6">

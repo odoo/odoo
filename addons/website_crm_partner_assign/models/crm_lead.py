@@ -4,7 +4,7 @@
 import random
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessDenied
+from odoo.exceptions import AccessDenied, AccessError
 
 
 class CrmLead(models.Model):
@@ -40,7 +40,7 @@ class CrmLead(models.Model):
     def assign_salesman_of_assigned_partner(self):
         salesmans_leads = {}
         for lead in self:
-            if (lead.stage_id.probability > 0 and lead.stage_id.probability < 100) or lead.stage_id.sequence == 1:
+            if (lead.probability > 0 and lead.probability < 100) or lead.stage_id.sequence == 1:
                 if lead.partner_assigned_id and lead.partner_assigned_id.user_id != lead.user_id:
                     salesmans_leads.setdefault(lead.partner_assigned_id.user_id.id, []).append(lead.id)
 
@@ -183,7 +183,7 @@ class CrmLead(models.Model):
         if comment:
             message += '<p>%s</p>' % comment
         for lead in self:
-            lead.message_post(body=message, subtype="mail.mt_note")
+            lead.message_post(body=message)
             lead.sudo().convert_opportunity(lead.partner_id.id)  # sudo required to convert partner data
 
     @api.multi
@@ -197,7 +197,7 @@ class CrmLead(models.Model):
         self.message_unsubscribe(partner_ids=partner_ids.ids)
         if comment:
             message += '<p>%s</p>' % comment
-        self.message_post(body=message, subtype="mail.mt_note")
+        self.message_post(body=message)
         values = {
             'partner_assigned_id': False,
         }
@@ -270,3 +270,35 @@ class CrmLead(models.Model):
         return {
             'id': lead.id
         }
+
+    #
+    #   DO NOT FORWARD PORT IN MASTER
+    #   instead, crm.lead should implement portal.mixin
+    #
+    @api.multi
+    def get_access_action(self, access_uid=None):
+        """ Instead of the classic form view, redirect to the online document for
+        portal users or if force_website=True in the context. """
+        self.ensure_one()
+
+        user, record = self.env.user, self
+        if access_uid:
+            try:
+                record.check_access_rights('read')
+                record.check_access_rule("read")
+            except AccessError:
+                return super(CrmLead, self).get_access_action(access_uid)
+            user = self.env['res.users'].sudo().browse(access_uid)
+            record = self.sudo(user)
+        if user.share or self.env.context.get('force_website'):
+            try:
+                record.check_access_rights('read')
+                record.check_access_rule('read')
+            except AccessError:
+                pass
+            else:
+                return {
+                    'type': 'ir.actions.act_url',
+                    'url': '/my/opportunity/%s' % record.id,
+                }
+        return super(CrmLead, self).get_access_action(access_uid)

@@ -50,6 +50,7 @@ from .service.server import memory_info
 from .service import security, model as service_model
 from .tools.func import lazy_property
 from .tools import ustr, consteq, frozendict, pycompat, unique, date_utils
+from .tools.mimetypes import guess_mimetype
 
 from .modules.module import module_manifest
 
@@ -62,6 +63,21 @@ STATIC_CACHE = 60 * 60 * 24 * 7
 
 # To remove when corrected in Babel
 babel.core.LOCALE_ALIASES['nb'] = 'nb_NO'
+
+""" Debug mode is stored in session and should always be a string.
+    It can be activated with an URL query string `debug=<mode>` where
+    mode is either:
+    - 'tests' to load tests assets
+    - 'assets' to load assets non minified
+    - any other truthy value to enable simple debug mode (to show some
+      technical feature, to show complete traceback in frontend error..)
+    - any falsy value to disable debug mode
+
+    You can use any truthy/falsy value from `str2bool` (eg: 'on', 'f'..)
+    Multiple debug modes can be activated simultaneously, separated with
+    a comma (eg: 'tests, assets').
+"""
+ALLOWED_DEBUG_MODES = ['', '1', 'assets', 'tests']
 
 #----------------------------------------------------------
 # RequestHandler
@@ -142,15 +158,10 @@ def dispatch_rpc(service_name, method, params):
         odoo.tools.debugger.post_mortem(odoo.tools.config, sys.exc_info())
         raise
 
-def local_redirect(path, query=None, keep_hash=False, forward_debug=True, code=303):
+def local_redirect(path, query=None, keep_hash=False, code=303):
     url = path
     if not query:
         query = {}
-    if request and request.debug:
-        if forward_debug:
-            query['debug'] = ''
-        else:
-            query['debug'] = None
     if query:
         url += '?' + werkzeug.url_encode(query)
     if keep_hash:
@@ -280,13 +291,15 @@ class WebRequest(object):
         _request_stack.pop()
 
         if self._cr:
-            if exc_type is None and not self._failed:
-                self._cr.commit()
-                if self.registry:
-                    self.registry.signal_changes()
-            elif self.registry:
-                self.registry.reset_changes()
-            self._cr.close()
+            try:
+                if exc_type is None and not self._failed:
+                    self._cr.commit()
+                    if self.registry:
+                        self.registry.signal_changes()
+                elif self.registry:
+                    self.registry.reset_changes()
+            finally:
+                self._cr.close()
         # just to be sure no one tries to re-use the request
         self.disable_db = True
         self.uid = None
@@ -343,22 +356,6 @@ class WebRequest(object):
         if self.db:
             return checked_call(self.db, *args, **kwargs)
         return self.endpoint(*args, **kwargs)
-
-    @property
-    def debug(self):
-        """ Indicates whether the current request is in "debug" mode
-        """
-        debug = 'debug' in self.httprequest.args
-        if debug and self.httprequest.args.get('debug') == 'assets':
-            debug = 'assets'
-
-        # check if request from rpc in debug mode
-        if not debug:
-            debug = self.httprequest.environ.get('HTTP_X_DEBUG_MODE')
-
-        if not debug and self.httprequest.referrer:
-            debug = 'debug' in urls.url_parse(self.httprequest.referrer).decode_query()
-        return debug
 
     @contextlib.contextmanager
     def registry_cr(self):
@@ -512,8 +509,16 @@ def route(route=None, **kw):
             else:
                 routes = [route]
             routing['routes'] = routes
+
         @functools.wraps(f)
         def response_wrap(*args, **kw):
+            # if controller cannot be called with extra args (utm, debug, ...), call endpoint ignoring them
+            spec = inspect.getargspec(f)
+            if not spec.keywords:
+                ignored = ['<%s=%s>' % (k, kw.pop(k)) for k in list(kw) if k not in spec.args]
+                if ignored:
+                    _logger.info("<function %s.%s> called ignoring args %s" % (f.__module__, f.__name__, ', '.join(ignored)))
+
             response = f(*args, **kw)
             if isinstance(response, Response) or f.routing_type == 'json':
                 return response
@@ -762,7 +767,7 @@ class HttpRequest(WebRequest):
         if request.httprequest.method == 'OPTIONS' and request.endpoint and request.endpoint.routing.get('cors'):
             headers = {
                 'Access-Control-Max-Age': 60 * 60 * 24,
-                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, X-Debug-Mode'
+                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
             }
             return Response(status=200, headers=headers)
 
@@ -1037,7 +1042,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
 
     def logout(self, keep_db=False):
         for k in list(self):
-            if not (keep_db and k == 'db'):
+            if not (keep_db and k == 'db') and k != 'debug':
                 del self[k]
         self._default_values()
         self.rotate = True
@@ -1048,6 +1053,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.setdefault("login", None)
         self.setdefault("session_token", None)
         self.setdefault("context", {})
+        self.setdefault("debug", '')
 
     def get_context(self):
         """
@@ -1241,23 +1247,21 @@ class Response(werkzeug.wrappers.Response):
 class DisableCacheMiddleware(object):
     def __init__(self, app):
         self.app = app
+
     def __call__(self, environ, start_response):
         def start_wrapped(status, headers):
-            referer = environ.get('HTTP_REFERER', '')
-            parsed = urls.url_parse(referer)
-            debug = parsed.query.count('debug') >= 1
-
-            new_headers = []
-            unwanted_keys = ['Last-Modified']
-            if debug:
+            req = werkzeug.wrappers.Request(environ)
+            root.setup_session(req)
+            if req.session and req.session.debug:
                 new_headers = [('Cache-Control', 'no-cache')]
-                unwanted_keys += ['Expires', 'Etag', 'Cache-Control']
 
-            for k, v in headers:
-                if k not in unwanted_keys:
-                    new_headers.append((k, v))
+                for k, v in headers:
+                    if k.lower() != 'cache-control':
+                        new_headers.append((k, v))
 
-            start_response(status, new_headers)
+                start_response(status, new_headers)
+            else:
+                start_response(status, headers)
         return self.app(environ, start_wrapped)
 
 class Root(object):
@@ -1410,10 +1414,12 @@ class Root(object):
             httprequest = werkzeug.wrappers.Request(environ)
             httprequest.app = self
             httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
-            threading.current_thread().url = httprequest.url
-            threading.current_thread().query_count = 0
-            threading.current_thread().query_time = 0
-            threading.current_thread().perf_t0 = time.time()
+            
+            current_thread = threading.current_thread()
+            current_thread.url = httprequest.url
+            current_thread.query_count = 0
+            current_thread.query_time = 0
+            current_thread.perf_t0 = time.time()
 
             explicit_session = self.setup_session(httprequest)
             self.setup_db(httprequest)
@@ -1614,6 +1620,40 @@ def content_disposition(filename):
     escaped = urls.url_quote(filename, safe='')
 
     return "attachment; filename*=UTF-8''%s" % escaped
+
+
+def set_safe_image_headers(headers, content):
+    """Return new headers based on `headers` but with `Content-Length` and
+    `Content-Type` set appropriately depending on the given `content` only if it
+    is safe to do."""
+    content_type = guess_mimetype(content)
+    safe_types = ['image/jpeg', 'image/png', 'image/gif', 'image/x-icon']
+    if content_type in safe_types:
+        headers = set_header_field(headers, 'Content-Type', content_type)
+    set_header_field(headers, 'Content-Length', len(content))
+    return headers
+
+
+def set_header_field(headers, name, value):
+    """ Return new headers based on `headers` but with `value` set for the
+    header field `name`.
+
+    :param headers: the existing headers
+    :type headers: list of tuples (name, value)
+
+    :param name: the header field name
+    :type name: string
+
+    :param value: the value to set for the `name` header
+    :type value: string
+
+    :return: the updated headers
+    :rtype: list of tuples (name, value)
+    """
+    dictheaders = dict(headers)
+    dictheaders[name] = value
+    return list(dictheaders.items())
+
 
 #  main wsgi handler
 root = Root()

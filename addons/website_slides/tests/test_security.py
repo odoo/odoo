@@ -143,7 +143,7 @@ class TestAccessFeatures(common.SlidesCase):
         new_user = self.env['res.users'].create({
             'name': 'NewUser',
             'login': 'NewUser',
-            'groups_id': [(4, self.ref('base.group_user'))]
+            'groups_id': [(6, 0, [self.ref('base.group_user')])]
         })
         channel.invalidate_cache()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id)

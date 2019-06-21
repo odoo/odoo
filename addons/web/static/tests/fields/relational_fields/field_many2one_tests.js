@@ -356,7 +356,7 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            assert.strictEqual($('a.o_form_uri').html(), 'aaa<br>Street<br>City ZIP',
+            assert.strictEqual(form.$('a.o_form_uri').html(), '<span>aaa</span><br><span>Street</span><br><span>City ZIP</span>',
                 "input should have a multi-line content in readonly due to show_address");
             await testUtils.form.clickEdit(form);
             assert.containsOnce(form, 'button.o_external_button:visible',
@@ -1805,7 +1805,7 @@ QUnit.module('fields', {}, function () {
                 data: this.data,
                 arch: '<form>' +
                     '<field name="name"/>' +
-                    '<field name="turtle_ids" widget="one2many_list">' +
+                    '<field name="turtle_ids" widget="one2many">' +
                     '<tree string="Turtles" editable="bottom">' +
                     '<field name="type_id"/>' +
                     '</tree>' +
@@ -2689,6 +2689,35 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('many2one dropdown disappears on scroll', async function (assert) {
+            assert.expect(2);
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch:
+                    '<form>' +
+                        '<div style="height: 2000px;">' +
+                            '<field name="trululu"/>' +
+                        '</div>' +
+                    '</form>',
+                res_id: 1,
+            });
+
+            await testUtils.form.clickEdit(form);
+
+            var $input = form.$('.o_field_many2one input');
+
+            await testUtils.dom.click($input);
+            assert.isVisible($input.autocomplete('widget'), "dropdown should be opened");
+
+            form.el.dispatchEvent(new Event('scroll'));
+            assert.isNotVisible($input.autocomplete('widget'), "dropdown should be closed");
+
+            form.destroy();
+        });
+
         QUnit.test('x2many list sorted by many2one', async function (assert) {
             assert.expect(3);
 
@@ -2915,14 +2944,14 @@ QUnit.module('fields', {}, function () {
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
             await testUtils.dom.click($('li.ui-menu-item a:contains(xpad)').trigger('mouseenter'));
-            assert.containsOnce(form, 'th',
+            assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column when the product_id is set");
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
             '', 'keyup');
-            assert.containsN(form, 'th', 2,
+            assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many when product_id is not set");
             await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
-            assert.containsOnce(form, 'th',
+            assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column after the value change");
             form.destroy();
         });
@@ -2969,7 +2998,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.fields.editInput(form.$('.o_field_one2many input:first'), 'New line');
             await testUtils.dom.click(form.$el);
 
-            assert.containsN(form, 'th', 2, "should be 2 columns('foo' + 'int_field')");
+            assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2, "should be 2 columns('foo' + 'int_field')");
 
             form.destroy();
         });
@@ -3008,14 +3037,14 @@ QUnit.module('fields', {}, function () {
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
             await testUtils.dom.click($('li.ui-menu-item a:contains(xpad)').trigger('mouseenter'));
-            assert.containsOnce(form, 'th',
+            assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column when the product_id is set");
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
                 '', 'keyup');
-            assert.containsN(form, 'th', 2,
+            assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many when product_id is not set");
             await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
-            assert.containsOnce(form, 'th',
+            assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column after the value change");
             form.destroy();
         });

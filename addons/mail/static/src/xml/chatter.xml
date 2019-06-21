@@ -60,7 +60,7 @@
                 <!-- List of followers -->
                 <div class="o_composer_suggested_partners">
                     <t t-foreach='widget.suggestedPartners' t-as='recipient'>
-                        <div t-attf-title="Add as recipient and follower (reason: #{recipient.reason})">
+                        <div t-attf-title="Add as recipient and follower (reason: #{recipient.reason})" t-att-class="recipient_index > 2 ? 'o_suggested_toggle o_hidden' : ''">
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox"
                                        class="custom-control-input"
@@ -73,6 +73,14 @@
                                 </label>
                             </div>
                         </div>
+                    </t>
+                    <t t-if='widget.suggestedPartners.length > 3'>
+                        <a href="#" class='o_suggested_show_more_less o_suggested_toggle'>
+                            Show <t t-esc="widget.suggestedPartners.length - 3"/> more
+                        </a>
+                        <a href="#" class='o_suggested_show_more_less o_suggested_toggle o_hidden'>
+                            Show <t t-esc="widget.suggestedPartners.length - 3"/> less
+                        </a>
                     </t>
                 </div>
             </t>

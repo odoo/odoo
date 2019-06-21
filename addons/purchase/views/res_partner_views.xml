@@ -16,7 +16,6 @@
     <record id="act_res_partner_2_purchase_order" model="ir.actions.act_window">
             <field name="name">RFQs and Purchases</field>
             <field name="res_model">purchase.order</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="context">{'search_default_partner_id': active_id}</field>
             <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
@@ -50,7 +49,6 @@
     <record id="act_res_partner_2_supplier_invoices" model="ir.actions.act_window">
             <field name="name">Vendor Bills</field>
             <field name="res_model">account.invoice</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('type','in',('in_invoice', 'in_refund'))]</field>
             <field name="context">{'search_default_partner_id': active_id, 'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>

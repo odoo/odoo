@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common, Form
+from odoo.tests.common import Form, TransactionCase
 
 
-class TestSaleMrpFlow(common.TransactionCase):
+class TestSaleMrpFlow(TransactionCase):
 
     def setUp(self):
         super(TestSaleMrpFlow, self).setUp()
@@ -355,14 +355,10 @@ class TestSaleMrpFlow(common.TransactionCase):
         self.assertEquals(order_line.qty_received, 7.0)
 
         # Return all components processed by backorder_3
-        default_data = self.env['stock.return.picking'].with_context(
-            active_ids=backorder_3.ids,
-            active_id=backorder_3.ids[0]
-        ).default_get(['move_dest_exists', 'original_location_id', 'product_return_moves', 'parent_location_id', 'location_id'])
-        return_wiz = self.env['stock.return.picking'].with_context(
-            active_ids=backorder_3.ids,
-            active_id=backorder_3.ids[0]
-        ).create(default_data)
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=backorder_3.ids, active_id=backorder_3.ids[0],
+            active_model='stock.picking'))
+        return_wiz = stock_return_picking_form.save()
         for return_move in return_wiz.product_return_moves:
             return_move.write({
                 'quantity': expected_quantities[return_move.product_id],
@@ -379,14 +375,10 @@ class TestSaleMrpFlow(common.TransactionCase):
         # Now quantity received should be 3 again
         self.assertEquals(order_line.qty_received, 3)
 
-        default_data = self.env['stock.return.picking'].with_context(
-            active_ids=return_pick.ids,
-            active_id=return_pick.ids[0]
-        ).default_get(['move_dest_exists', 'original_location_id', 'product_return_moves', 'parent_location_id', 'location_id'])
-        return_wiz = self.env['stock.return.picking'].with_context(
-            active_ids=return_pick.ids,
-            active_id=return_pick.ids[0]
-        ).create(default_data)
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=return_pick.ids, active_id=return_pick.ids[0],
+            active_model='stock.picking'))
+        return_wiz = stock_return_picking_form.save()
         for move in return_wiz.product_return_moves:
             move.quantity = expected_quantities[move.product_id]
         res = return_wiz.create_returns()

@@ -1,8 +1,10 @@
 odoo.define('web.DataManager', function (require) {
 "use strict";
 
+var config = require('web.config');
 var core = require('web.core');
 var rpc = require('web.rpc');
+var session = require('web.session');
 var utils = require('web.utils');
 
 return core.Class.extend({
@@ -25,6 +27,7 @@ return core.Class.extend({
      * Suggestion: could be refined to invalidate some part of the cache
      */
     invalidate: function () {
+        session.invalidateCacheKey('load_menus');
         this._init_cache();
     },
 
@@ -39,12 +42,12 @@ return core.Class.extend({
         var self = this;
         var key = this._gen_key(action_id, additional_context || {});
 
-        if (!this._cache.actions[key]) {
+        if (config.isDebug('assets') || !this._cache.actions[key]) {
             this._cache.actions[key] = rpc.query({
                 route: "/web/action/load",
                 params: {
                     action_id: action_id,
-                    additional_context : additional_context,
+                    additional_context: additional_context,
                 },
             }).then(function (action) {
                 self._cache.actions[key] = action.no_cache ? null : self._cache.actions[key];
@@ -79,7 +82,7 @@ return core.Class.extend({
         var views_descr = params.views_descr;
         var key = this._gen_key(model, views_descr, options || {}, context);
 
-        if (!this._cache.views[key]) {
+        if (config.isDebug('assets') || !this._cache.views[key]) {
             // Don't load filters if already in cache
             var filters_key;
             if (options.load_filters) {
@@ -134,7 +137,7 @@ return core.Class.extend({
      */
     load_filters: function (params) {
         var key = this._gen_key(params.modelName, params.actionId);
-        if (!this._cache.filters[key]) {
+        if (config.isDebug('assets') || !this._cache.filters[key]) {
             this._cache.filters[key] = rpc.query({
                 args: [params.modelName, params.actionId],
                 kwargs: {

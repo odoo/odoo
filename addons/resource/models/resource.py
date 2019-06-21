@@ -151,29 +151,28 @@ class ResourceCalendar(models.Model):
         res = super(ResourceCalendar, self).default_get(fields)
         if not res.get('name') and res.get('company_id'):
             res['name'] = _('Working Hours of %s') % self.env['res.company'].browse(res['company_id']).name
+        if 'attendance_ids' in fields and not res.get('attendance_ids'):
+            res['attendance_ids'] = [
+                (0, 0, {'name': _('Monday Morning'), 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': _('Monday Afternoon'), 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': _('Tuesday Morning'), 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': _('Tuesday Afternoon'), 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': _('Wednesday Morning'), 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': _('Wednesday Afternoon'), 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': _('Thursday Morning'), 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': _('Thursday Afternoon'), 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': _('Friday Morning'), 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': _('Friday Afternoon'), 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+            ]
         return res
-
-    def _get_default_attendance_ids(self):
-        return [
-            (0, 0, {'name': _('Monday Morning'), 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'name': _('Monday Afternoon'), 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-            (0, 0, {'name': _('Tuesday Morning'), 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'name': _('Tuesday Afternoon'), 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-            (0, 0, {'name': _('Wednesday Morning'), 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'name': _('Wednesday Afternoon'), 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-            (0, 0, {'name': _('Thursday Morning'), 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'name': _('Thursday Afternoon'), 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-            (0, 0, {'name': _('Friday Morning'), 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'name': _('Friday Afternoon'), 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
-        ]
 
     name = fields.Char(required=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get())
+        default=lambda self: self.env.company)
     attendance_ids = fields.One2many(
         'resource.calendar.attendance', 'calendar_id', 'Working Time',
-        copy=True, default=_get_default_attendance_ids)
+        copy=True)
     leave_ids = fields.One2many(
         'resource.calendar.leaves', 'calendar_id', 'Time Off')
     global_leave_ids = fields.One2many(
@@ -447,7 +446,7 @@ class ResourceResource(models.Model):
     active = fields.Boolean(
         'Active', default=True, tracking=True,
         help="If the active field is set to False, it will allow you to hide the resource record without removing it.")
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env['res.company']._company_default_get())
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     resource_type = fields.Selection([
         ('user', 'Human'),
         ('material', 'Material')], string='Resource Type',
@@ -458,7 +457,7 @@ class ResourceResource(models.Model):
         help="This field is used to calculate the the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes.")
     calendar_id = fields.Many2one(
         "resource.calendar", string='Working Time',
-        default=lambda self: self.env['res.company']._company_default_get().resource_calendar_id,
+        default=lambda self: self.env.company.resource_calendar_id,
         required=True,
         help="Define the schedule of resource")
     tz = fields.Selection(
@@ -513,6 +512,7 @@ class ResourceResource(models.Model):
 class ResourceCalendarLeaves(models.Model):
     _name = "resource.calendar.leaves"
     _description = "Resource Time Off Detail"
+    _order = "date_from"
 
     name = fields.Char('Reason')
     company_id = fields.Many2one(

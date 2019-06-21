@@ -30,7 +30,6 @@ odoo.define('web.AbstractField', function (require) {
  * @module web.AbstractField
  */
 
-var ajax = require('web.ajax');
 var field_utils = require('web.field_utils');
 var Widget = require('web.Widget');
 
@@ -71,6 +70,17 @@ var AbstractField = Widget.extend({
      */
     supportedFieldTypes: [],
 
+    /**
+     * To override to give a user friendly name to the widget.
+     *
+     * @type <string>
+     */
+    description: "",
+    /**
+     * Currently only used in list view.
+     * If this flag is set to true, the list column name will be empty.
+     */
+    noLabel: false,
     /**
      * Abstract field class
      *

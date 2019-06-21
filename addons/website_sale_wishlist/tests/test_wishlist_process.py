@@ -7,4 +7,4 @@ import odoo.tests
 @odoo.tests.common.post_install(True)
 class TestUi(odoo.tests.HttpCase):
     def test_01_wishlist_tour(self):
-        self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('shop_wishlist')", "odoo.__DEBUG__.services['web_tour.tour'].tours.shop_wishlist.ready")
+        self.start_tour("/", 'shop_wishlist')

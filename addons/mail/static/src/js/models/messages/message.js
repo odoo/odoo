@@ -260,6 +260,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
             messageID: this.getID(),
             status: this.status,
             title: title,
+            isLinkedToDocumentThread: this.isLinkedToDocumentThread(),
         };
     },
     /**
@@ -367,7 +368,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @return {boolean}
      */
     isLinkedToDocumentThread: function () {
-        return !!(this._documentModel !== 'mail.channel' && this._documentID);
+        return !!(this._documentModel !== 'mail.channel' && this._documentID && this._type !== 'user_notification');
     },
     /**
      * State whether the current user is the author of this message
@@ -578,7 +579,8 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @return {boolean}
      */
     _isOdoobotAuthor: function () {
-        return this._serverAuthorID === this.call('mail_service', 'getOdoobotID');
+        return this._serverAuthorID &&
+            this._serverAuthorID[0] === this.call('mail_service', 'getOdoobotID')[0];
     },
     /**
      * State whether the message is transient or not

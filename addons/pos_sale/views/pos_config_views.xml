@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="pos_config_view_form_pos_sale" model="ir.ui.view"> 
+    <record id="pos_config_view_form_pos_sale" model="ir.ui.view">
         <field name="name">pos.config.form.pos.sale</field>
         <field name="model">pos.config</field>
         <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
@@ -15,7 +15,7 @@
                             <div class="text-muted">
                                 Sales are reported to the following sales team
                             </div>
-                            <field name="crm_team_id"/>
+                            <field name="crm_team_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
                         </div>
                     </div>
                 </div>

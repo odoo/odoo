@@ -16,7 +16,7 @@
         Here is your payment receipt <strong>${(object.name or '').replace('/','-')}</strong> amounting
         to <strong>${format_amount(object.amount, object.currency_id)}</strong> from ${object.company_id.name}.
         <br /><br />
-        Do not hesitate to contact us if you have any question.
+        Do not hesitate to contact us if you have any questions.
         <br/><br/>
         Best regards,<br/>
         % if user and user.signature:
@@ -34,10 +34,10 @@
 
         <act_window name="Send Receipt By Email"
             res_model="mail.compose.message"
-            src_model="account.payment"
+            binding_model="account.payment"
             view_mode="form"
             target="new"
-            key2="client_action_relate"
+            binding_views="form"
             id="account_send_payment_receipt_by_email_action"
             context="{
                 'default_model': 'account.payment',

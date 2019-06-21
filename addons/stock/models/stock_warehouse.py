@@ -22,10 +22,10 @@ class Warehouse(models.Model):
     # namedtuple used in helper methods generating values for routes
     Routing = namedtuple('Routing', ['from_loc', 'dest_loc', 'picking_type', 'action'])
 
-    name = fields.Char('Warehouse', index=True, required=True, default=lambda self: self.env['res.company']._company_default_get('stock.inventory').name)
+    name = fields.Char('Warehouse', index=True, required=True, default=lambda self: self.env.company.name)
     active = fields.Boolean('Active', default=True)
     company_id = fields.Many2one(
-        'res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('stock.inventory'),
+        'res.company', 'Company', default=lambda self: self.env.company,
         index=True, readonly=True, required=True,
         help='The company is automatically set from your user preferences.')
     partner_id = fields.Many2one('res.partner', 'Address')
@@ -68,7 +68,6 @@ class Warehouse(models.Model):
     resupply_route_ids = fields.One2many(
         'stock.location.route', 'supplied_wh_id', 'Resupply Routes',
         help="Routes will be created for these resupply warehouses and you can select them on products and product categories")
-    warehouse_count = fields.Integer(compute='_compute_warehouse_count')
     show_resupply = fields.Boolean(compute="_compute_show_resupply")
     _sql_constraints = [
         ('warehouse_name_uniq', 'unique(name, company_id)', 'The name of the warehouse must be unique per company!'),
@@ -149,7 +148,7 @@ class Warehouse(models.Model):
 
         for warehouse in warehouses:
             # check if we need to delete and recreate route
-            depends = [depend for depends in [value['depends'] for value in warehouse._get_routes_values().values()] for depend in depends]
+            depends = [depend for depends in [value.get('depends', []) for value in warehouse._get_routes_values().values()] for depend in depends]
             if any(depend in vals for depend in depends):
                 picking_type_vals = warehouse._create_or_update_sequences_and_picking_types()
                 if picking_type_vals:
@@ -162,7 +161,7 @@ class Warehouse(models.Model):
             # _get_global_route_rules_values method under the key named
             # 'depends'.
             global_rules = warehouse._get_global_route_rules_values()
-            depends = [depend for depends in [value['depends'] for value in global_rules.values()] for depend in depends]
+            depends = [depend for depends in [value.get('depends', []) for value in global_rules.values()] for depend in depends]
             if any(rule in vals for rule in global_rules) or\
                     any(depend in vals for depend in depends):
                 warehouse._create_or_update_global_routes_rules()
@@ -242,7 +241,7 @@ class Warehouse(models.Model):
             transit_loc = ResCompany.browse(company_id).internal_transit_location_id.id
             self.env['res.partner'].browse(partner_id).with_context(force_company=company_id).write({'property_stock_customer': transit_loc, 'property_stock_supplier': transit_loc})
         else:
-            transit_loc = ResCompany._company_default_get('stock.warehouse').internal_transit_location_id.id
+            transit_loc = self.env.company.internal_transit_location_id.id
             self.env['res.partner'].browse(partner_id).write({'property_stock_customer': transit_loc, 'property_stock_supplier': transit_loc})
 
     def _create_or_update_sequences_and_picking_types(self):
@@ -293,7 +292,7 @@ class Warehouse(models.Model):
         with the wanted reception, delivery,... steps.
         """
         for rule_field, rule_details in self._get_global_route_rules_values().items():
-            values = rule_details['update_values']
+            values = rule_details.get('update_values', {})
             if self[rule_field]:
                 self[rule_field].write(values)
             else:
@@ -335,11 +334,10 @@ class Warehouse(models.Model):
                 'depends': ['delivery_steps'],
                 'create_values': {
                     'active': True,
-                    'procure_method': 'make_to_order',
+                    'procure_method': 'mts_else_mto',
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
-                    'propagate': True,
                     'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Make To Order')).id
                 },
                 'update_values': {
@@ -377,11 +375,13 @@ class Warehouse(models.Model):
             # If the route exists update it
             if self[route_field]:
                 route = self[route_field]
-                route.write(route_data['route_update_values'])
+                if 'route_update_values' in route_data:
+                    route.write(route_data['route_update_values'])
                 route.rule_ids.write({'active': False})
             # Create the route
             else:
-                route_data['route_create_values'].update(route_data['route_update_values'])
+                if 'route_update_values' in route_data:
+                    route_data['route_create_values'].update(route_data['route_update_values'])
                 route = self.env['stock.location.route'].create(route_data['route_create_values'])
                 self[route_field] = route
             # Get rules needed for the route
@@ -433,7 +433,8 @@ class Warehouse(models.Model):
                 },
                 'rules_values': {
                     'active': True,
-                    'procure_method': 'make_to_order'
+                    'procure_method': 'make_to_order',
+                    'propagate_cancel': True,
                 }
             },
             'delivery_route_id': {
@@ -491,46 +492,54 @@ class Warehouse(models.Model):
             else:
                 existing_rule.write({'active': True})
 
-    def _get_locations_values(self, vals):
+    def _get_locations_values(self, vals, code=False):
         """ Update the warehouse locations. """
         def_values = self.default_get(['reception_steps', 'delivery_steps'])
         reception_steps = vals.get('reception_steps', def_values['reception_steps'])
         delivery_steps = vals.get('delivery_steps', def_values['delivery_steps'])
-        code = vals.get('code') or self.code
+        code = vals.get('code') or code
         code = code.replace(' ', '').upper()
+        company_id = vals.get('company_id', self.company_id.id)
         sub_locations = {
             'lot_stock_id': {
                 'name': _('Stock'),
                 'active': True,
                 'usage': 'internal',
-                'barcode': code + '-STOCK'
+                'barcode': self._valid_barcode(code + '-STOCK', company_id)
             },
             'wh_input_stock_loc_id': {
                 'name': _('Input'),
                 'active': reception_steps != 'one_step',
                 'usage': 'internal',
-                'barcode': code + '-INPUT'
+                'barcode': self._valid_barcode(code + '-INPUT', company_id)
             },
             'wh_qc_stock_loc_id': {
                 'name': _('Quality Control'),
                 'active': reception_steps == 'three_steps',
                 'usage': 'internal',
-                'barcode': code + '-QUALITY'
+                'barcode': self._valid_barcode(code + '-QUALITY', company_id)
             },
             'wh_output_stock_loc_id': {
                 'name': _('Output'),
                 'active': delivery_steps != 'ship_only',
                 'usage': 'internal',
-                'barcode': code + '-OUTPUT'
+                'barcode': self._valid_barcode(code + '-OUTPUT', company_id)
             },
             'wh_pack_stock_loc_id': {
                 'name': _('Packing Zone'),
                 'active': delivery_steps == 'pick_pack_ship',
                 'usage': 'internal',
-                'barcode': code + '-PACKING'
+                'barcode': self._valid_barcode(code + '-PACKING', company_id)
             },
         }
         return sub_locations
+
+    def _valid_barcode(self, barcode, company_id):
+        location = self.env['stock.location'].with_context(active_test=False).search([
+            ('barcode', '=', barcode),
+            ('company_id', '=', company_id)
+        ])
+        return not location and barcode
 
     def _create_missing_locations(self, vals):
         """ It could happen that the user delete a mandatory location or a
@@ -538,8 +547,8 @@ class Warehouse(models.Model):
         In this case, this function will create missing locations in order to
         avoid mistakes during picking types and rules creation.
         """
-        sub_locations = self._get_locations_values(vals)
         for warehouse in self:
+            sub_locations = warehouse._get_locations_values(vals, warehouse.code)
             missing_location = {}
             for location, location_values in sub_locations.items():
                 if not warehouse[location] and location not in vals:
@@ -666,11 +675,21 @@ class Warehouse(models.Model):
                 'procure_method': first_rule and 'make_to_stock' or 'make_to_order',
                 'warehouse_id': self.id,
                 'company_id': self.company_id.id,
-                'propagate': routing.picking_type != self.pick_type_id,
             }
             route_rule_values.update(values or {})
             rules_list.append(route_rule_values)
             first_rule = False
+        if values.get('propagate_cancel') and rules_list:
+            # In case of rules chain with cancel propagation set, we need to stop
+            # the cancellation for the last step in order to avoid cancelling
+            # any other move after the chain.
+            # Example: In the following flow:
+            # Input -> Quality check -> Stock -> Customer
+            # We want that cancelling I->GC cancel QC -> S but not S -> C
+            # which means:
+            # Input -> Quality check should have propagate_cancel = True
+            # Quality check -> Stock should have propagate_cancel = False
+            rules_list[-1]['propagate_cancel'] = False
         return rules_list
 
     def _get_supply_pull_rules_values(self, route_values, values=None):
@@ -885,7 +904,6 @@ class Warehouse(models.Model):
 
     @api.returns('self')
     def _get_all_routes(self):
-        # TDE FIXME: check overrides
         routes = self.mapped('route_ids') | self.mapped('mto_pull_id').mapped('route_id')
         routes |= self.env["stock.location.route"].search([('supplied_wh_id', 'in', self.ids)])
         return routes
@@ -900,7 +918,6 @@ class Warehouse(models.Model):
             'type': 'ir.actions.act_window',
             'view_id': False,
             'view_mode': 'tree,form',
-            'view_type': 'form',
             'limit': 20
         }
 
@@ -942,7 +959,7 @@ class Orderpoint(models.Model):
         default=lambda self: self._context.get('product_uom', False))
     product_min_qty = fields.Float(
         'Minimum Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True,
-        help="When the virtual stock goes below the Min Quantity specified for this field, Odoo generates "
+        help="When the virtual stock equals to or goes below the Min Quantity specified for this field, Odoo generates "
              "a procurement to bring the forecasted quantity to the Max Quantity.")
     product_max_qty = fields.Float(
         'Maximum Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True,
@@ -957,7 +974,7 @@ class Orderpoint(models.Model):
         help="Moves created through this orderpoint will be put in this procurement group. If none is given, the moves generated by stock rules will be grouped into one big picking.")
     company_id = fields.Many2one(
         'res.company', 'Company', required=True,
-        default=lambda self: self.env['res.company']._company_default_get('stock.warehouse.orderpoint'))
+        default=lambda self: self.env.company)
     lead_days = fields.Integer(
         'Lead Time', default=1,
         help="Number of days after the orderpoint is triggered to receive the products or to order to the vendor")

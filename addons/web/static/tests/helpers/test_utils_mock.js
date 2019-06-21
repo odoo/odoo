@@ -173,7 +173,7 @@ function addMockEnvironment(widget, params) {
             _.extend(config.device, params.config.device);
         }
         if ('debug' in params.config) {
-            config.debug = params.config.debug;
+            odoo.debug = params.config.debug;
         }
     }
     if ('translateParameters' in params) {

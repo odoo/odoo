@@ -5,7 +5,9 @@ var core = require('web.core');
 var Wysiwyg = require('web_editor.wysiwyg.root');
 var publicWidget = require('web.public.widget');
 var session = require('web.session');
+var utils = require('web.utils');
 var qweb = core.qweb;
+var WebsiteProfile = require('website_profile.website_profile');
 
 var _t = core._t;
 
@@ -29,8 +31,6 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         'click .favourite_question': '_onFavoriteQuestionClick',
         'click .comment_delete': '_onDeleteCommentClick',
         'click .notification_close': '_onCloseNotificationClick',
-        'click .send_validation_email': '_onSendValidationEmailClick',
-        'click .validated_email_close': '_onCloseValidatedEmailClick',
         'click .js_close_intro': '_onCloseIntroClick',
     },
 
@@ -180,15 +180,19 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     _onKarmaRequiredClick: function (ev) {
         var $karma = $(ev.currentTarget);
         var karma = $karma.data('karma');
+        var forum_id = $('#wrapwrap').data('forum_id');
         if (!karma) {
             return;
         }
         ev.preventDefault();
-        var msg = karma + ' ' + _t("karma is required to perform this action. You can earn karma by having your answers upvoted by the community.");
+        var msg = karma + ' ' + _t("karma is required to perform this action. ");
+        if (forum_id) {
+            msg += '<a class="alert-link" href="/forum/' + forum_id + '/faq">' + _t("Read the guidelines to know how to gain karma.") + '</a>';
+        }
         if (session.is_website_user) {
             msg = _t("Sorry you must be logged in to perform this action");
         }
-        var $warning = $('<div class="alert alert-danger alert-dismissable oe_forum_alert" id="karma_alert">' +
+        var $warning = $('<div class="alert alert-danger alert-dismissible oe_forum_alert" id="karma_alert">' +
             '<button type="button" class="close notification_close" data-dismiss="alert">&times;</button>' +
             msg + '</div>');
         var $voteAlert = $('#karma_alert');
@@ -228,11 +232,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             return;
         }
         var $form = $(ev.currentTarget).closest('form');
-        var reader = new window.FileReader();
-        reader.onload = function (ev) {
-            $form.find('.o_forum_avatar_img').attr('src', ev.target.result);
-        };
-        reader.readAsDataURL(ev.currentTarget.files[0]);
+        utils.getDataURLFromFile(ev.currentTarget.files[0]).then(function (result) {
+            $form.find('.o_forum_avatar_img').attr('src', result);
+        });
         $form.find('#forum_clear_image').remove();
     },
     /**
@@ -469,32 +471,6 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onSendValidationEmailClick: function (ev) {
-        ev.preventDefault();
-        var $link = $(ev.currentTarget);
-        this._rpc({
-            route: '/forum/send_validation_email',
-            params: {
-                forum_id: $link.attr('forum-id'),
-            },
-        }).then(function (data) {
-            if (data) {
-                $('button.validation_email_close').click();
-            }
-        });
-    },
-    /**
-     * @private
-     */
-    _onCloseValidatedEmailClick: function () {
-        this._rpc({
-            route: '/forum/validate_email/close',
-        });
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
     _onCloseIntroClick: function (ev) {
         ev.preventDefault();
         document.cookie = 'forum_welcome_message = false';
@@ -579,4 +555,5 @@ publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
         });
     },
 });
+
 });

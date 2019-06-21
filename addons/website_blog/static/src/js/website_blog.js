@@ -85,6 +85,7 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
      */
     _onShareArticle: function (ev) {
         var url = '';
+        ev.preventDefault();
         var $element = $(ev.currentTarget);
         if ($element.is('*[class*="_complete"]')) {
             var blogTitleComplete = $('#blog_post_name').html() || '';
@@ -98,7 +99,7 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
                 url = 'https://plus.google.com/share?url=' + window.location.href;
             }
         } else {
-            var blogPost = $element.parents('[name="blogPost"]');
+            var blogPost = $element.parents('[name="blog_post"]');
             var blogPostTitle = blogPost.find('.o_blog_post_title').html() || '';
             var blogArticleLink = blogPost.find('.o_blog_post_title').parent('a').attr('href');
             if ($element.hasClass('o_twitter')) {

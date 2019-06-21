@@ -48,6 +48,11 @@
             </label>
         </div>
     </t>
+    <t t-name="website.theme_customize_dropdown_option">
+        <div t-attf-class="dropdown o_theme_customize_dropdown">
+            <div class="dropdown-menu rounded-0 o_theme_customize_selection" role="menu"/>
+        </div>
+    </t>
     <t t-name="website.theme_customize_widget_color">
         <div t-attf-class="o_theme_customize_color o_theme_customize_color_#{color}"
             t-att-data-color="color"
@@ -66,7 +71,6 @@
             <input type="text" class="form-control" t-att-value="widget.value"/>
             <div class="input-group-append">
                 <div t-if="widget.unit" class="input-group-text"><t t-esc="widget.unit"/></div>
-                <button type="button" class="btn btn-primary fa fa-check" title="Save"/>
                 <button type="button" class="btn btn-secondary fa fa-undo" title="Reset"/>
             </div>
         </div>
@@ -74,7 +78,7 @@
 
     <t t-extend="wysiwyg.widgets.link">
         <t t-jquery="#o_link_dialog_url_input" t-operation="after">
-            <small class="form-text">Hint: Type '/' to link to an existing page and '#' to an anchor.</small>
+            <small class="form-text text-muted">Hint: Type '/' to link to an existing page and '#' to an anchor.</small>
         </t>
         <t t-jquery="div.o_url_input" t-operation="after">
             <div class="form-group row o_link_dialog_page_anchor d-none">

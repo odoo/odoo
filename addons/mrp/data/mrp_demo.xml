@@ -304,6 +304,7 @@
             <field name="product_tmpl_id" ref="product_product_computer_desk_product_template"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">3</field>
+            <field name="consumption">flexible</field>
             <field name="routing_id" ref="mrp_routing_3"/>
         </record>
 
@@ -508,7 +509,6 @@
 
         <record id="stock_inventory_drawer" model="stock.inventory">
             <field name="name">Inventory: Drawer + Kit</field>
-            <field name="filter">partial</field>
         </record>
 
         <record id="stock_inventory_drawer_lot0" model="stock.inventory.line">
@@ -697,7 +697,7 @@
                 obj().with_context(active_id=ref('mrp.mrp_production_laptop_cust')).default_get(list(obj().fields_get())),
                 **{
                     'qty_producing': obj().env.ref('mrp.mrp_production_laptop_cust').product_qty,
-                    'final_lot_id': ref('mrp.lot_product_27_0'),
+                    'finished_lot_id': ref('mrp.lot_product_27_0'),
                 }
             )"/>
         </function>
@@ -705,7 +705,7 @@
         <function model="mrp.product.produce.line" name="create">
             <value model="mrp.product.produce.line" eval="[dict(item,
                  **{
-                     'product_produce_id': obj().env['mrp.product.produce'].search([('production_id', '=', obj().env.ref('mrp.mrp_production_laptop_cust').id)]).id
+                     'raw_product_produce_id': obj().env['mrp.product.produce'].search([('production_id', '=', obj().env.ref('mrp.mrp_production_laptop_cust').id)]).id
                  }) for item in  obj().env['mrp.product.produce'].search([('production_id', '=', obj().env.ref('mrp.mrp_production_laptop_cust').id)])._update_workorder_lines()['to_create']]"/>
         </function>
 
@@ -720,6 +720,19 @@
         <function model="mrp.production" name="button_mark_done">
             <value eval="[ref('mrp.mrp_production_laptop_cust')]"/>
         </function>
+
+        <!-- set 'create component' as True for the demo manufacturing picking type
+        while leaving the default value to False for the others -->
+        <function model="stock.warehouse" name="write">
+            <value model="stock.warehouse" eval="obj().env['stock.warehouse'].search([]).ids"/>
+            <value eval="{'manufacture_to_resupply': True}"/>
+        </function>
+
+        <function model="stock.picking.type" name="write">
+            <value model="stock.picking.type" eval="obj().env['stock.picking.type'].search([('code', '=', 'mrp_operation')]).ids"/>
+            <value eval="{'use_create_components_lots': True}"/>
+        </function>
+
 
     </data>
 </odoo>

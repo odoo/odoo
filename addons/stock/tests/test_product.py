@@ -8,7 +8,6 @@ from odoo.addons.stock.tests.common2 import TestStockCommon
 
 
 class TestVirtualAvailable(TestStockCommon):
-
     def setUp(self):
         super(TestVirtualAvailable, self).setUp()
 

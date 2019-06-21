@@ -38,25 +38,27 @@ class StockRule(models.Model):
         required=True)
     sequence = fields.Integer('Sequence', default=20)
     company_id = fields.Many2one('res.company', 'Company',
-        default=lambda self: self.env.user.company_id)
+        default=lambda self: self.env.company)
     location_id = fields.Many2one('stock.location', 'Destination Location', required=True)
     location_src_id = fields.Many2one('stock.location', 'Source Location')
     route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
     procure_method = fields.Selection([
         ('make_to_stock', 'Take From Stock'),
-        ('make_to_order', 'Trigger Another Rule')], string='Move Supply Method',
-        default='make_to_stock', required=True,
-        help="""Create Procurement: A procurement will be created in the source location and the system will try to find a rule to resolve it. The available stock will be ignored.
-             Take from Stock: The products will be taken from the available stock.""")
+        ('make_to_order', 'Trigger Another Rule'),
+        ('mts_else_mto', 'Take From Stock, if unavailable, Trigger Another Rule')], string='Supply Method', default='make_to_stock', required=True,
+        help="Take From Stock: the products will be taken from the available stock of the source location.\n"
+             "Trigger Another Rule: the system will try to find a stock rule to bring the products in the source location. The available stock will be ignored.\n"
+             "Take From Stock, if Unavailable, Trigger Another Rule: the products will be taken from the available stock of the source location."
+             "If there is no stock available, the system will try to find a  rule to bring the products in the source location.")
     route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True, readonly=False)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
         required=True)
     delay = fields.Integer('Delay', default=0, help="The expected date of the created transfer will be computed based on this delay.")
     partner_address_id = fields.Many2one('res.partner', 'Partner Address', help="Address where goods should be delivered. Optional.")
-    propagate = fields.Boolean(
-        'Propagate cancel and split', default=True,
-        help="When ticked, if the move is splitted or cancelled, the next move will be too.")
+    propagate_cancel = fields.Boolean(
+        'Cancel Next Move', default=False, oldname='propagate',
+        help="When ticked, if the move created by this rule is cancelled, the next move will be cancelled too.")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse')
     propagate_warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse to Propagate',
@@ -68,6 +70,10 @@ class StockRule(models.Model):
         help="The 'Manual Operation' value will create a stock move after the current one. "
              "With 'Automatic No Step Added', the location is replaced in the original move.")
     rule_message = fields.Html(compute='_compute_action_message')
+    propagate_date = fields.Boolean(string="Propagate Rescheduling", default=True,
+        help='The rescheduling is propagated to the next move.')
+    propagate_date_minimum_delta = fields.Integer(string='Reschedule if Higher Than',
+        help='The change must be higher than this value to be propagated', default=1)
 
     @api.onchange('picking_type_id')
     def _onchange_picking_type(self):
@@ -109,6 +115,8 @@ class StockRule(models.Model):
             suffix = ""
             if self.procure_method == 'make_to_order' and self.location_src_id:
                 suffix = _("<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill it.") % (source)
+            if self.procure_method == 'mts_else_mto' and self.location_src_id:
+                suffix = _("<br>If the products are not available in <b>%s</b>, a rule will be triggered to bring products in this location.") % source
             message_dict = {
                 'pull': _('When products are needed in <b>%s</b>, <br/> <b>%s</b> are created from <b>%s</b> to fulfill the need.') % (destination, operation, source) + suffix,
                 'push': _('When products arrive in <b>%s</b>, <br/> <b>%s</b> are created to send them in <b>%s</b>.') % (source, operation, destination)
@@ -162,7 +170,7 @@ class StockRule(models.Model):
             'company_id': self.company_id.id,
             'picking_id': False,
             'picking_type_id': self.picking_type_id.id,
-            'propagate': self.propagate,
+            'propagate_cancel': self.propagate_cancel,
             'warehouse_id': self.warehouse_id.id,
         }
         return new_move_vals
@@ -170,12 +178,42 @@ class StockRule(models.Model):
     @api.model
     def _run_pull(self, procurements):
         moves_values_by_company = defaultdict(list)
+        mtso_products_by_locations = defaultdict(list)
+
+        # To handle the `mts_else_mto` procure method, we do a preliminary loop to
+        # isolate the products we would need to read the forecasted quantity,
+        # in order to to batch the read. We also make a sanitary check on the
+        # `location_src_id` field.
         for procurement, rule in procurements:
             if not rule.location_src_id:
                 msg = _('No source location defined on stock rule: %s!') % (rule.name, )
                 raise UserError(msg)
 
-            moves_values_by_company[procurement.company_id.id].append(rule._get_stock_move_values(*procurement))
+            if rule.procure_method == 'mts_else_mto':
+                mtso_products_by_locations[rule.location_src_id].append(procurement.product_id.id)
+
+        # Get the forecasted quantity for the `mts_else_mto` procurement.
+        forecasted_qties_by_loc = {}
+        for location, product_ids in mtso_products_by_locations.items():
+            products = self.env['product.product'].browse(product_ids).with_context(location=location.id)
+            forecasted_qties_by_loc[location] = {product.id: product.virtual_available for product in products}
+
+        # Prepare the move values, adapt the `procure_method` if needed.
+        for procurement, rule in procurements:
+            procure_method = rule.procure_method
+            if rule.procure_method == 'mts_else_mto':
+                qty_needed = procurement.product_uom._compute_quantity(procurement.product_qty, procurement.product_id.uom_id)
+                qty_available = forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id]
+                if float_compare(qty_needed, qty_available, precision_rounding=procurement.product_id.uom_id.rounding) <= 0:
+                    procure_method = 'make_to_stock'
+                    forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id] -= qty_needed
+                else:
+                    procure_method = 'make_to_order'
+
+            move_values = rule._get_stock_move_values(*procurement)
+            move_values['procure_method'] = procure_method
+            moves_values_by_company[procurement.company_id.id].append(move_values)
+
         for company_id, moves_values in moves_values_by_company.items():
             # create the move as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
             moves = self.env['stock.move'].sudo().with_context(force_company=company_id).create(moves_values)
@@ -227,7 +265,9 @@ class StockRule(models.Model):
             'warehouse_id': self.propagate_warehouse_id.id or self.warehouse_id.id,
             'date': date_expected,
             'date_expected': date_expected,
-            'propagate': self.propagate,
+            'propagate_cancel': self.propagate_cancel,
+            'propagate_date': self.propagate_date,
+            'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'description_picking': product_id._get_description(self.picking_type_id),
             'priority': values.get('priority', "1"),
         }
@@ -303,7 +343,7 @@ class ProcurementGroup(models.Model):
         actions_to_run = defaultdict(list)
         errors = []
         for procurement in procurements:
-            procurement.values.setdefault('company_id', self.env['res.company']._company_default_get('procurement.group'))
+            procurement.values.setdefault('company_id', self.env.company)
             procurement.values.setdefault('priority', '1')
             procurement.values.setdefault('date_planned', fields.Datetime.now())
             rule = self._get_rule(procurement.product_id, procurement.location_id, procurement.values)
@@ -376,14 +416,21 @@ class ProcurementGroup(models.Model):
             ('product_id', '=', values['product_id'].id)]
 
     @api.model
+    def _get_moves_to_assign_domain(self):
+        return expression.AND([
+            [('state', 'in', ['confirmed', 'partially_available'])],
+            [('product_uom_qty', '!=', 0.0)]
+        ])
+
+    @api.model
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
         # Minimum stock rules
         self.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id)
 
         # Search all confirmed stock_moves and try to assign them
-        moves_to_assign = self.env['stock.move'].search([
-            ('state', 'in', ['confirmed', 'partially_available']), ('product_uom_qty', '!=', 0.0)
-        ], limit=None, order='priority desc, date_expected asc')
+        domain = self._get_moves_to_assign_domain()
+        moves_to_assign = self.env['stock.move'].search(domain, limit=None,
+            order='priority desc, date_expected asc')
         for moves_chunk in split_every(100, moves_to_assign.ids):
             self.env['stock.move'].browse(moves_chunk)._action_assign()
             if use_new_cursor:
@@ -444,7 +491,7 @@ class ProcurementGroup(models.Model):
             1000 orderpoints.
             This is appropriate for batch jobs only.
         """
-        if company_id and self.env.user.company_id.id != company_id:
+        if company_id and self.env.company.id != company_id:
             # To ensure that the company_id is taken into account for
             # all the processes triggered by this method
             # i.e. If a PO is generated by the run of the procurements the

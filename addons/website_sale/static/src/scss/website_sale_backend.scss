@@ -49,9 +49,7 @@
 
             > img {
                 border: 1px solid gray('400');
-                min-height: 200px;
-                max-height: 350px; // Fallback for browsers that dosn't support responsive units
-                max-height: 50vh;
+                height: 200px;
                 width: auto;
             }
 
@@ -59,6 +57,16 @@
                 @include o-hover-opacity(0.7, 1);
                 padding: 2%;
             }
+        }
+    }
+    .o_video_container {
+        height: 200px;
+        position: relative;
+        @include o-we-preview-box($text-muted);
+        .o_invalid_warning {
+            width: 90%;
+            @include o-position-absolute($top: 50%, $left: 50%);
+            transform: translate(-50%, -50%);
         }
     }
 }

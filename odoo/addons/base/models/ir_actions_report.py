@@ -104,7 +104,7 @@ class IrActionsReport(models.Model):
     multi = fields.Boolean(string='On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view.")
 
     paperformat_id = fields.Many2one('report.paperformat', 'Paper Format')
-    print_report_name = fields.Char('Printed Report Name',
+    print_report_name = fields.Char('Printed Report Name', translate=True,
                                     help="This is the filename of the report going to download. Keep empty to not change the report filename. You can use a python expression with the 'object' and 'time' variables.")
     attachment_use = fields.Boolean(string='Reload from Attachment',
                                     help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.')
@@ -154,7 +154,7 @@ class IrActionsReport(models.Model):
         if not attachment_name:
             return None
         return self.env['ir.attachment'].search([
-                ('datas_fname', '=', attachment_name),
+                ('name', '=', attachment_name),
                 ('res_model', '=', self.model),
                 ('res_id', '=', record.id)
         ], limit=1)
@@ -175,7 +175,6 @@ class IrActionsReport(models.Model):
         attachment_vals = {
             'name': attachment_name,
             'datas': base64.encodestring(buffer.getvalue()),
-            'datas_fname': attachment_name,
             'res_model': self.model,
             'res_id': record.id,
         }
@@ -202,7 +201,7 @@ class IrActionsReport(models.Model):
 
     @api.model
     def get_paperformat(self):
-        return self.paperformat_id or self.env.user.company_id.paperformat_id
+        return self.paperformat_id or self.env.company.paperformat_id
 
     @api.model
     def _build_wkhtmltopdf_args(
@@ -721,11 +720,15 @@ class IrActionsReport(models.Model):
         return self.render_template(self.report_name, data), 'html'
 
     @api.model
+    def _get_rendering_context_model(self):
+        report_model_name = 'report.%s' % self.report_name
+        return self.env.get(report_model_name)
+
+    @api.model
     def _get_rendering_context(self, docids, data):
         # If the report is using a custom model to render its html, we must use it.
         # Otherwise, fallback on the generic html rendering.
-        report_model_name = 'report.%s' % self.report_name
-        report_model = self.env.get(report_model_name)
+        report_model = self._get_rendering_context_model()
 
         data = data and dict(data) or {}
 
@@ -756,15 +759,14 @@ class IrActionsReport(models.Model):
         :param report_name: Name of the template to generate an action for
         """
         discard_logo_check = self.env.context.get('discard_logo_check')
-        if (self.env.user._is_admin()) and ((not self.env.user.company_id.external_report_layout_id) or (not discard_logo_check and not self.env.user.company_id.logo)) and config:
+        if (self.env.user._is_admin()) and ((not self.env.company.external_report_layout_id) or (not discard_logo_check and not self.env.company.logo)) and config:
             template = self.env.ref('base.view_company_report_form_with_print') if self.env.context.get('from_transient_model', False) else self.env.ref('base.view_company_report_form')
             return {
                 'name': _('Choose Your Document Layout'),
                 'type': 'ir.actions.act_window',
                 'context': {'default_report_name': self.report_name, 'discard_logo_check': True},
-                'view_type': 'form',
                 'view_mode': 'form',
-                'res_id': self.env.user.company_id.id,
+                'res_id': self.env.company.id,
                 'res_model': 'res.company',
                 'views': [(template.id, 'form')],
                 'view_id': template.id,

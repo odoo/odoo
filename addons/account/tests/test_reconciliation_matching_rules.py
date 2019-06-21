@@ -24,8 +24,10 @@ class TestReconciliationMatchingRules(AccountingTestCase):
         lines = invoice.move_id.line_ids
         return lines.filtered(lambda l: l.account_id == invoice.account_id)
 
-    def _check_statement_matching(self, rules, expected_values):
-        statement_lines = (self.bank_st + self.cash_st).mapped('line_ids')
+    def _check_statement_matching(self, rules, expected_values, statements=None):
+        if statements is None:
+            statements = self.bank_st + self.cash_st
+        statement_lines = statements.mapped('line_ids')
         matching_values = rules._apply_rules(statement_lines)
         for st_line_id, values in matching_values.items():
             values.pop('reconciled_lines', None)
@@ -33,6 +35,10 @@ class TestReconciliationMatchingRules(AccountingTestCase):
 
     def setUp(self):
         super(AccountingTestCase, self).setUp()
+
+        self.account_pay = self.env['account.account'].search([('internal_type', '=', 'payable')], limit=1)
+        self.account_liq = self.env['account.account'].search([('internal_type', '=', 'liquidity')], limit=1)
+        self.account_rcv = self.env['account.account'].search([('internal_type', '=', 'receivable')], limit=1)
 
         self.partner_1 = self.env['res.partner'].create({'name': 'partner_1'})
         self.partner_2 = self.env['res.partner'].create({'name': 'partner_2'})
@@ -45,7 +51,8 @@ class TestReconciliationMatchingRules(AccountingTestCase):
         current_assets_account = self.env['account.account'].search(
             [('user_type_id', '=', self.env.ref('account.data_account_type_current_assets').id)], limit=1)
 
-        self.rule_1 = self.env.ref('account.reconciliation_model_default_rule')
+        self.rule_0 = self.env.ref('account.reconciliation_model_default_rule')
+        self.rule_1 = self.rule_0.copy()
         self.rule_1.account_id = current_assets_account
         self.rule_1.match_partner = True
         self.rule_1.match_partner_ids |= self.partner_1 + self.partner_2
@@ -59,10 +66,10 @@ class TestReconciliationMatchingRules(AccountingTestCase):
 
         invoice_number = self.invoice_line_1.move_id.name
 
-        bank_journal = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
+        self.bank_journal = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
 
         self.bank_st = self.env['account.bank.statement'].create({
-            'name': 'test bank journal', 'journal_id': bank_journal.id,
+            'name': 'test bank journal', 'journal_id': self.bank_journal.id,
         })
         self.bank_line_1 = self.env['account.bank.statement.line'].create({
             'statement_id': self.bank_st.id,
@@ -296,3 +303,47 @@ class TestReconciliationMatchingRules(AccountingTestCase):
             {'partner_id': self.partner_2.id, 'debit': 0.0, 'credit': 1000.0},
             {'partner_id': self.partner_2.id, 'debit': 1000.0, 'credit': 0.0},
         ])
+
+    def test_reverted_move_matching(self):
+        AccountMove = self.env['account.move']
+        move = AccountMove.create({
+            'name': 'To Revert',
+            'journal_id': self.bank_journal.id,
+        })
+
+        partner = self.env['res.partner'].create({'name': 'Eugene'})
+        AccountMoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
+        payment_payable_line = AccountMoveLine.create({
+            'account_id': self.account_pay.id,
+            'move_id': move.id,
+            'partner_id': partner.id,
+            'name': 'One of these days',
+            'debit': 10,
+        })
+        payment_bnk_line = AccountMoveLine.create({
+            'account_id': self.account_liq.id,
+            'move_id': move.id,
+            'partner_id': partner.id,
+            'name': 'I\'m gonna cut you into little pieces',
+            'credit': 10,
+        })
+
+        move.post()
+        move_reversed = AccountMove.browse(move.reverse_moves())
+        self.assertTrue(move_reversed.exists())
+
+        bank_st = self.env['account.bank.statement'].create({
+            'name': 'test bank journal', 'journal_id': self.bank_journal.id,
+        })
+        bank_line_1 = self.env['account.bank.statement.line'].create({
+            'statement_id': bank_st.id,
+            'name': '8',
+            'partner_id': partner.id,
+            'amount': -10,
+            'sequence': 1,
+        })
+
+        expected_values = {
+            bank_line_1.id: {'aml_ids': [payment_bnk_line.id], 'model': self.rule_0}
+        }
+        self._check_statement_matching(self.rule_0, expected_values, statements=bank_st)

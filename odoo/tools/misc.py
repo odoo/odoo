@@ -422,20 +422,6 @@ def scan_languages():
 
     return sorted(result or [('en_US', u'English')], key=itemgetter(1))
 
-def get_user_companies(cr, user):
-    def _get_company_children(cr, ids):
-        if not ids:
-            return []
-        cr.execute('SELECT id FROM res_company WHERE parent_id IN %s', (tuple(ids),))
-        res = [x[0] for x in cr.fetchall()]
-        res.extend(_get_company_children(cr, res))
-        return res
-    cr.execute('SELECT company_id FROM res_users WHERE id=%s', (user,))
-    user_comp = cr.fetchone()[0]
-    if not user_comp:
-        return []
-    return [user_comp] + _get_company_children(cr, [user_comp])
-
 def mod10r(number):
     """
     Input number : account or invoice number
@@ -467,7 +453,7 @@ def human_size(sz):
     """
     if not sz:
         return False
-    units = ('bytes', 'Kb', 'Mb', 'Gb')
+    units = ('bytes', 'Kb', 'Mb', 'Gb', 'Tb')
     if isinstance(sz, str):
         sz=len(sz)
     s, i = float(sz), 0
@@ -1059,11 +1045,27 @@ class OrderedSet(MutableSet):
     def discard(self, elem):
         self._map.pop(elem, None)
 
+
 class LastOrderedSet(OrderedSet):
     """ A set collection that remembers the elements last insertion order. """
     def add(self, elem):
         OrderedSet.discard(self, elem)
         OrderedSet.add(self, elem)
+
+
+class IterableGenerator:
+    """ An iterable object based on a generator function, which is called each
+        time the object is iterated over.
+    """
+    __slots__ = ['func', 'args']
+
+    def __init__(self, func, *args):
+        self.func = func
+        self.args = args
+
+    def __iter__(self):
+        return self.func(*self.args)
+
 
 def groupby(iterable, key=None):
     """ Return a collection of pairs ``(key, elements)`` from ``iterable``. The
@@ -1241,3 +1243,15 @@ def wrap_module(module, attr_list):
             raise AttributeError(attrib)
     # module and attr_list are in the closure
     return WrappedModule()
+
+
+class DotDict(dict):
+    """Helper for dot.notation access to dictionary attributes
+
+        E.g.
+          foo = DotDict({'bar': False})
+          return foo.bar
+    """
+    def __getattr__(self, attrib):
+        val = self.get(attrib)
+        return DotDict(val) if type(val) is dict else val

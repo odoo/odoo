@@ -19,7 +19,10 @@ return {
     ColorpickerDialog: ColorpickerDialog,
 
     MediaWidget: media.MediaWidget,
+    SearchableMediaWidget: media.SearchableMediaWidget,
+    FileWidget: media.FileWidget,
     ImageWidget: media.ImageWidget,
+    DocumentWidget: media.DocumentWidget,
     IconWidget: media.IconWidget,
     VideoWidget: media.VideoWidget,
 };

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="report_saleorder_document_inherit_sale_management" inherit_id="sale.report_saleorder_document">
-    <xpath expr="//div[hasclass('page')]/p[@id='fiscal_position_remark']" position="after">
+    <xpath expr="//div[@name='signature']" position="after">
         <div t-if="doc.sale_order_option_ids and doc.state in ['draft', 'sent']">
             <t t-set="has_option_discount" t-value="any(doc.sale_order_option_ids.filtered(lambda o: o.discount != 0.0))" />
             <h4>
-                <span>Optional Products</span>
+                <span>Options</span>
             </h4>
             <table class="table table-sm">
                 <thead>

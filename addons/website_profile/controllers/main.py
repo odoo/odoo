@@ -6,6 +6,7 @@ import werkzeug
 import werkzeug.exceptions
 import werkzeug.urls
 import werkzeug.wrappers
+import math
 
 from odoo import http, modules, tools
 from odoo.http import request
@@ -13,8 +14,9 @@ from odoo.osv import expression
 
 
 class WebsiteProfile(http.Controller):
-    PAGER_MAX_PAGE = 5
-
+    _users_per_page = 30
+    _pager_max_pages = 5
+    
     # Profile
     # ---------------------------------------------------
 
@@ -30,18 +32,10 @@ class WebsiteProfile(http.Controller):
             return user.website_published and user.karma > 0
         return False
 
-    def _get_default_avatar(self, field, headers, width, height):
+    def _get_default_avatar(self):
         img_path = modules.get_module_resource('web', 'static/src/img', 'placeholder.png')
         with open(img_path, 'rb') as f:
-            image = f.read()
-        content = base64.b64encode(image)
-        dictheaders = dict(headers) if headers else {}
-        dictheaders['Content-Type'] = 'image/png'
-        if not (width or height):
-            suffix = field.split('_')[-1] if '_' in field else 'large'
-            if suffix in ('small', 'medium', 'large', 'big'):
-                content = getattr(tools, 'image_resize_image_%s' % suffix)(content)
-        return content
+            return base64.b64encode(f.read())
 
     def _check_user_profile_access(self, user_id):
         user_sudo = request.env['res.users'].sudo().browse(user_id)
@@ -57,6 +51,8 @@ class WebsiteProfile(http.Controller):
         values = {
             'user': request.env.user,
             'is_public_user': request.website.is_public_user(),
+            'validation_email_sent': request.session.get('validation_email_sent', False),
+            'validation_email_done': request.session.get('validation_email_done', False),
         }
         values.update(kwargs)
         return values
@@ -76,33 +72,34 @@ class WebsiteProfile(http.Controller):
     @http.route([
         '/profile/avatar/<int:user_id>',
     ], type='http', auth="public", website=True, sitemap=False)
-    def get_user_profile_avatar(self, user_id, field='image_large', width=0, height=0, crop=False, avoid_if_small=False, upper_limit=False, **post):
+    def get_user_profile_avatar(self, user_id, field='image_large', width=0, height=0, crop=False, **post):
         if field not in ('image_small', 'image_medium', 'image_large'):
             return werkzeug.exceptions.Forbidden()
 
         can_sudo = self._check_avatar_access(user_id, **post)
         if can_sudo:
-            status, headers, content = request.env['ir.http'].sudo().binary_content(
+            status, headers, image_base64 = request.env['ir.http'].sudo().binary_content(
                 model='res.users', id=user_id, field=field,
                 default_mimetype='image/png')
         else:
-            status, headers, content = request.env['ir.http'].binary_content(
+            status, headers, image_base64 = request.env['ir.http'].binary_content(
                 model='res.users', id=user_id, field=field,
                 default_mimetype='image/png')
         if status == 301:
-            return request.env['ir.http']._response_by_status(status, headers, content)
+            return request.env['ir.http']._response_by_status(status, headers, image_base64)
         if status == 304:
             return werkzeug.wrappers.Response(status=304)
 
-        if not content:
-            content = self._get_default_avatar(field, headers, width, height)
+        if not image_base64:
+            image_base64 = self._get_default_avatar()
+            if not (width or height):
+                width, height = tools.image_guess_size_from_field_name(field)
 
-        content = tools.limited_image_resize(
-            content, width=width, height=height, crop=crop, upper_limit=upper_limit, avoid_if_small=avoid_if_small)
+        image_base64 = tools.image_process(image_base64, size=(int(width), int(height)), crop=crop)
 
-        image_base64 = base64.b64decode(content)
-        headers.append(('Content-Length', len(image_base64)))
-        response = request.make_response(image_base64, headers)
+        content = base64.b64decode(image_base64)
+        headers = http.set_safe_image_headers(headers, content)
+        response = request.make_response(content, headers)
         response.status_code = status
         return response
 
@@ -111,8 +108,9 @@ class WebsiteProfile(http.Controller):
         user = self._check_user_profile_access(user_id)
         if not user:
             return request.render("website_profile.private_profile")
+        values = self._prepare_user_values(**post)
         params = self._prepare_user_profile_parameters(**post)
-        values = self._prepare_user_profile_values(user, **params)
+        values.update(self._prepare_user_profile_values(user, **params))
         return request.render("website_profile.user_profile_main", values)
 
     # Edit Profile
@@ -158,51 +156,48 @@ class WebsiteProfile(http.Controller):
             return werkzeug.utils.redirect("/profile/user/%d?%s" % (user.id, kwargs['url_param']))
         else:
             return werkzeug.utils.redirect("/profile/user/%d" % user.id)
-    # Ranks
-    # ---------------------------------------------------
-    @http.route('/profile/ranks', type='http', auth="public", website=True)
-    def ranks(self, **kwargs):
-        Rank = request.env['gamification.karma.rank']
-        ranks = Rank.sudo().search([])
-        ranks = ranks.sorted(key=lambda b: b.karma_min)
-        values = {
-            'ranks': ranks,
-            'user': request.env.user,
-        }
-        return request.render("website_profile.rank_main", values)
 
-    # Badges
+    # Ranks and Badges
     # ---------------------------------------------------
     def _prepare_badges_domain(self, **kwargs):
         """
         Hook for other modules to restrict the badges showed on profile page, depending of the context
         """
         domain = [('website_published', '=', True)]
-        if 'category' in kwargs:
-            domain = expression.AND([[('challenge_ids.category', '=', kwargs.get('category'))], domain])
+        if 'badge_category' in kwargs:
+            domain = expression.AND([[('challenge_ids.category', '=', kwargs.get('badge_category'))], domain])
         return domain
 
-    @http.route('/profile/badge', type='http', auth="public", website=True)
-    def badges(self, **kwargs):
+    @http.route('/profile/ranks_badges', type='http', auth="public", website=True)
+    def view_ranks_badges(self, **kwargs):
+        ranks = []
+        if 'badge_category' not in kwargs:
+            Rank = request.env['gamification.karma.rank']
+            ranks = Rank.sudo().search([], order='karma_min DESC')
+
         Badge = request.env['gamification.badge']
         badges = Badge.sudo().search(self._prepare_badges_domain(**kwargs))
         badges = sorted(badges, key=lambda b: b.stat_count_distinct, reverse=True)
         values = self._prepare_user_values(searches={'badges': True})
+
         values.update({
+            'ranks': ranks,
             'badges': badges,
+            'user': request.env.user,
         })
-        return request.render("website_profile.badge_main", values)
+        return request.render("website_profile.rank_badge_main", values)
 
     # All Users Page
     # ---------------------------------------------------
-    def _prepare_all_users_values(self, user, position):
+    def _prepare_all_users_values(self, user):
         return {
-            'position': position,
             'id': user.id,
             'name': user.name,
+            'company_name': user.partner_id.company_name,
             'rank': user.rank_id.name,
             'karma': user.karma,
             'badge_count': len(user.badge_ids),
+            'website_published': user.website_published
         }
 
     @http.route(['/profile/users',
@@ -211,26 +206,81 @@ class WebsiteProfile(http.Controller):
         User = request.env['res.users']
         dom = [('karma', '>', 1), ('website_published', '=', True)]
 
-        # Get the Top 3 users
-        top3_users = User.sudo().search(dom, limit=3, order='karma DESC')
-        top3_user_values = [self._prepare_all_users_values(user, position+1) for position, user in enumerate(top3_users)]
+        # Searches
+        search_term = searches.get('search')
+        if search_term:
+            dom = expression.AND([['|', ('name', 'ilike', search_term), ('company_id.name', 'ilike', search_term)], dom])
 
-        # Get the other users
-        if top3_users:
-           dom += [('id', 'not in', top3_users.ids)]
-        step = 30
         user_count = User.sudo().search_count(dom)
-        pager = request.website.pager(url="/profile/users", total=user_count, page=page, step=step, scope=step)
 
-        if searches.get('user'):
-            dom += [('name', 'ilike', searches.get('user'))]
+        if user_count:
+            page_count = math.ceil(user_count / self._users_per_page)
+            pager = request.website.pager(url="/profile/users", total=user_count, page=page, step=self._users_per_page,
+                                          scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages)
 
-        users = User.sudo().search(dom, limit=step, offset=pager['offset'], order='karma DESC')
+            users = User.sudo().search(dom, limit=self._users_per_page, offset=pager['offset'], order='karma DESC')
+            user_values = [self._prepare_all_users_values(user) for user in users]
 
-        user_values = [self._prepare_all_users_values(user, position + 4 + ((page-1) * step)) for position, user in enumerate(users)]
-        values = {
-            'top3_users': top3_user_values,
-            'users': user_values,
-            'pager': pager
-        }
+            # Get karma position for users (only website_published)
+            position_domain = [('karma', '>', 1), ('website_published', '=', True)]
+            position_map = self._get_users_karma_position(position_domain, users.ids)
+            for user in user_values:
+                user['position'] = position_map.get(user['id'], 0)
+
+            values = {
+                'top3_users': user_values[:3] if not search_term and page == 1 else None,
+                'users': user_values[3:] if not search_term and page == 1 else user_values,
+                'pager': pager
+            }
+        else:
+            values = {'top3_users': [], 'users': [], 'pager': dict(page_count=0)}
+
         return request.render("website_profile.users_page_main", values)
+
+    def _get_users_karma_position(self, domain, user_ids):
+        if not user_ids:
+            return {}
+
+        Users = request.env['res.users']
+        where_query = Users._where_calc(domain)
+        Users._apply_ir_rules(where_query, 'read')
+        from_clause, where_clause, where_clause_params = where_query.get_sql()
+
+        # we search on every user in the DB to get the real positioning (not the one inside the subset)
+        # then, we filter to get only the subset.
+        query = """
+            SELECT sub.id, sub.karma_position
+            FROM (
+                SELECT "res_users"."id", row_number() OVER (ORDER BY res_users.karma DESC) AS karma_position
+                FROM {from_clause}
+                WHERE {where_clause}
+            ) sub
+            WHERE sub.id IN %s
+            """.format(from_clause=from_clause, where_clause=where_clause)
+
+        request.env.cr.execute(query, where_clause_params + [tuple(user_ids)])
+
+        return {item['id']: item['karma_position'] for item in request.env.cr.dictfetchall()}
+
+    # User and validation
+    # --------------------------------------------------
+
+    @http.route('/profile/send_validation_email', type='json', auth='user', website=True)
+    def send_validation_email(self, **kwargs):
+        if request.env.uid != request.website.user_id.id:
+            request.env.user._send_profile_validation_email(**kwargs)
+        request.session['validation_email_sent'] = True
+        return True
+
+    @http.route('/profile/validate_email', type='http', auth='public', website=True, sitemap=False)
+    def validate_email(self, token, user_id, email, **kwargs):
+        done = request.env['res.users'].sudo().browse(int(user_id))._process_profile_validation_token(token, email)
+        if done:
+            request.session['validation_email_done'] = True
+        url = kwargs.get('redirect_url', '/')
+        return request.redirect(url)
+
+    @http.route('/profile/validate_email/close', type='json', auth='public', website=True)
+    def validate_email_done(self, **kwargs):
+        request.session['validation_email_done'] = False
+        return True

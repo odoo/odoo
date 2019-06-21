@@ -6,8 +6,8 @@
             <field name="name">Event: Registration Badge</field>
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="subject">Your badge for ${object.event_id.name}</field>
-            <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
-            <field name="email_to">${('"%s" &lt;%s&gt;' % (object.partner_id.name or object.name, object.partner_id.email or object.email)) | safe}</field>
+            <field name="email_from">${(object.event_id.organizer_id.email_formatted or object.event_id.user_id.email_formatted or '') | safe}</field>
+            <field name="email_to">${(object.partner_id.email_formatted or '"%s" &lt;%s&gt;' % (object.name, object.email) or '') | safe}</field>
             <field name="body_html" type="html">
 <div>
     Dear ${object.name},<br/>
@@ -24,15 +24,15 @@
             <field name="report_name">badge_of_${(object.event_id.name or '').replace('/','_')}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="False"/>
         </record>
 
         <record id="event_subscription" model="mail.template">
             <field name="name">Event: Registration</field>
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="subject">Your registration at ${object.event_id.name}</field>
-            <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
-            <field name="email_to">${('"%s" &lt;%s&gt;' % (object.partner_id.name or object.name, object.partner_id.email or object.email)) | safe}</field>
-            <field name="reply_to" eval="False"/>
+            <field name="email_from">${(object.event_id.organizer_id.email_formatted or object.event_id.user_id.email_formatted or '') | safe}</field>
+            <field name="email_to">${(object.partner_id.email_formatted or '"%s" &lt;%s&gt;' % (object.name, object.email) or '') | safe}</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 % set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')
@@ -221,15 +221,15 @@
 </table>
             </field>
             <field name="lang">${object.partner_id.lang}</field>
+            <field name="user_signature" eval="False"/>
         </record>
 
         <record id="event_reminder" model="mail.template">
             <field name="name">Event: Reminder</field>
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="subject">${object.event_id.name}: ${object.get_date_range_str()}</field>
-            <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
-            <field name="email_to">${('"%s" &lt;%s&gt;' % (object.partner_id.name or object.name, object.partner_id.email or object.email)) | safe}</field>
-            <field name="reply_to" eval="False"/>
+            <field name="email_from">${(object.event_id.organizer_id.email_formatted or object.event_id.user_id.email_formatted or '') | safe}</field>
+            <field name="email_to">${(object.partner_id.email_formatted or '"%s" &lt;%s&gt;' % (object.name, object.email) or '') | safe}</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 % set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')
@@ -418,6 +418,7 @@
 </table>
             </field>
             <field name="lang">${object.partner_id.lang}</field>
+            <field name="user_signature" eval="False"/>
         </record>
 
     </data>

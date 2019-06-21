@@ -31,6 +31,9 @@ var BasicRenderer = AbstractRenderer.extend({
         this.viewType = params.viewType;
         this.mode = params.mode || 'readonly';
         this.widgets = [];
+        // This attribute lets us know if there is a handle widget on a field,
+        // and on which field it is set.
+        this.handleField = null;
     },
     /**
      * This method has two responsabilities: find every invalid fields in the
@@ -91,8 +94,7 @@ var BasicRenderer = AbstractRenderer.extend({
      */
     confirmChange: function (state, id, fields, ev) {
         this.state = state;
-
-        var record = state.id === id ? state : _.findWhere(state.data, {id: id});
+        var record = this._getRecord(id);
         if (!record) {
             return this._render().then(_.constant([]));
         }
@@ -233,7 +235,7 @@ var BasicRenderer = AbstractRenderer.extend({
         $node.tooltip({
             title: function () {
                 return qweb.render('WidgetLabel.tooltip', {
-                    debug: config.debug,
+                    debug: config.isDebug(),
                     widget: widget,
                 });
             }
@@ -351,6 +353,19 @@ var BasicRenderer = AbstractRenderer.extend({
         return _.findWhere(this.allModifiersData, {node: node});
     },
     /**
+     * This function is meant to be overriden in renderers. It takes a dataPoint
+     * id (for a dataPoint of type record), and should return the corresponding
+     * dataPoint.
+     *
+     * @abstract
+     * @private
+     * @param {string} [recordId]
+     * @returns {Object|null}
+     */
+    _getRecord: function (recordId) {
+        return null;
+    },
+    /**
      * @private
      * @param {jQueryElement} $el
      * @param {Object} node
@@ -365,6 +380,9 @@ var BasicRenderer = AbstractRenderer.extend({
         if (node.attrs.style) {
             $el.attr('style', node.attrs.style);
         }
+        if (node.attrs.placeholder) {
+            $el.attr('placeholder', node.attrs.placeholder);
+        }
     },
     /**
      * Used by list and kanban renderers to determine whether or not to display
@@ -375,6 +393,61 @@ var BasicRenderer = AbstractRenderer.extend({
      */
     _hasContent: function () {
         return this.state.count !== 0;
+    },
+    /**
+     * Force the resequencing of the records after moving one of them to a given
+     * index.
+     *
+     * @private
+     * @param {string} recordId datapoint id of the moved record
+     * @param {integer} toIndex new index of the moved record
+     */
+    _moveRecord: function (recordId, toIndex) {
+        var self = this;
+        var records = this.state.data;
+        var record = _.findWhere(records, {id: recordId});
+        var fromIndex = records.indexOf(record);
+        var lowerIndex = Math.min(fromIndex, toIndex);
+        var upperIndex = Math.max(fromIndex, toIndex) + 1;
+        var order = _.findWhere(this.state.orderedBy, {name: this.handleField});
+        var asc = !order || order.asc;
+        var reorderAll = false;
+        var sequence = (asc ? -1 : 1) * Infinity;
+
+        // determine if we need to reorder all records
+        _.each(records, function (record, index) {
+            if ((index < lowerIndex || index >= upperIndex) &&
+                ((asc && sequence >= record.data[self.handleField]) ||
+                 (!asc && sequence <= record.data[self.handleField]))) {
+                reorderAll = true;
+            }
+            sequence = record.data[self.handleField];
+        });
+
+        if (reorderAll) {
+            records = _.without(records, record);
+            records.splice(toIndex, 0, record);
+        } else {
+            records = records.slice(lowerIndex, upperIndex);
+            records = _.without(records, record);
+            if (fromIndex > toIndex) {
+                records.unshift(record);
+            } else {
+                records.push(record);
+            }
+        }
+
+        var sequences = _.pluck(_.pluck(records, 'data'), this.handleField);
+        var recordIds = _.pluck(records, 'id');
+        if (!asc) {
+            recordIds.reverse();
+        }
+
+        this.trigger_up('resequence_records', {
+            handleField: this.handleField,
+            offset: _.min(sequences),
+            recordIds: recordIds,
+        });
     },
     /**
      * This function is called each time a field widget is created, when it is
@@ -510,12 +583,15 @@ var BasicRenderer = AbstractRenderer.extend({
         var oldAllFieldWidgets = this.allFieldWidgets;
         this.allFieldWidgets = {}; // TODO maybe merging allFieldWidgets and allModifiersData into "nodesData" in some way could be great
         this.allModifiersData = [];
+        var oldWidgets = this.widgets;
+        this.widgets = [];
         return this._renderView().then(function () {
             _.each(oldAllFieldWidgets, function (recordWidgets) {
                 _.each(recordWidgets, function (widget) {
                     widget.destroy();
                 });
             });
+            _.invoke(oldWidgets, 'destroy');
         });
     },
     /**
@@ -716,8 +792,12 @@ var BasicRenderer = AbstractRenderer.extend({
         var defs = [];
         this.defs = defs; // Potentially filled by widget rerendering
         _.each(this.allModifiersData, function (modifiersData) {
-            modifiersData.evaluatedModifiers[record.id] = record.evalModifiers(modifiersData.modifiers);
-            self._applyModifiers(modifiersData, record);
+            // `allModifiersData` might contain modifiers registered for other
+            // records than the given record (e.g. <groupby> in list)
+            if (record.id in modifiersData.evaluatedModifiers) {
+                modifiersData.evaluatedModifiers[record.id] = record.evalModifiers(modifiersData.modifiers);
+                self._applyModifiers(modifiersData, record);
+            }
         });
         delete this.defs;
 

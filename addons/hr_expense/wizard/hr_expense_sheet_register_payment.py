@@ -23,12 +23,13 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True, required=True)
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Type', required=True)
     amount = fields.Monetary(string='Payment Amount', required=True)
-    currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.user.company_id.currency_id)
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.company.currency_id)
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True)
     communication = fields.Char(string='Memo')
     hide_payment_method = fields.Boolean(compute='_compute_hide_payment_method',
         help="Technical field used to hide the payment method if the selected journal has only one available which is 'manual'")
     show_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be displayed or not in the payments form views')
+    require_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be required or not in the payments form views')
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -53,6 +54,7 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
         won't be displayed but some modules might change that, depending on the payment type."""
         for payment in self:
             payment.show_partner_bank_account = payment.payment_method_id.code in self.env['account.payment']._get_method_codes_using_bank_account()
+            payment.require_partner_bank_account = payment.payment_method_id.code in self.env['account.payment']._get_method_codes_needing_bank_account()
 
     @api.one
     @api.depends('journal_id')

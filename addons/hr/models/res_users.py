@@ -15,13 +15,13 @@ class User(models.Model):
     job_title = fields.Char(related='employee_id.job_title', readonly=False)
     work_phone = fields.Char(related='employee_id.work_phone', readonly=False)
     mobile_phone = fields.Char(related='employee_id.mobile_phone', readonly=False)
-    phone = fields.Char(related='employee_id.phone', readonly=False, related_sudo=False)
+    employee_phone = fields.Char(related='employee_id.phone', readonly=False, related_sudo=False)
     work_email = fields.Char(related='employee_id.work_email', readonly=False, related_sudo=False)
     category_ids = fields.Many2many(related='employee_id.category_ids', string="Employee Tags", readonly=False, related_sudo=False)
     department_id = fields.Many2one(related='employee_id.department_id', readonly=False, related_sudo=False)
     address_id = fields.Many2one(related='employee_id.address_id', readonly=False, related_sudo=False)
     work_location = fields.Char(related='employee_id.work_location', readonly=False, related_sudo=False)
-    parent_id = fields.Many2one(related='employee_id.parent_id', related_sudo=False)
+    employee_parent_id = fields.Many2one(related='employee_id.parent_id', related_sudo=False)
     coach_id = fields.Many2one(related='employee_id.coach_id', readonly=False, related_sudo=False)
     address_home_id = fields.Many2one(related='employee_id.address_home_id', readonly=False, related_sudo=False)
     is_address_home_a_company = fields.Boolean(related='employee_id.is_address_home_a_company', readonly=False, related_sudo=False)
@@ -48,6 +48,15 @@ class User(models.Model):
     additional_note = fields.Text(related='employee_id.additional_note', readonly=False, related_sudo=False)
     barcode = fields.Char(related='employee_id.barcode', readonly=False, related_sudo=False)
     pin = fields.Char(related='employee_id.pin', readonly=False, related_sudo=False)
+    certificate = fields.Selection(related='employee_id.certificate', readonly=False, related_sudo=False)
+    study_field = fields.Char(related='employee_id.study_field', readonly=False, related_sudo=False)
+    study_school = fields.Char(related='employee_id.study_school', readonly=False, related_sudo=False)
+    employee_count = fields.Integer(compute='_compute_employee_count')
+
+    @api.depends('employee_ids')
+    def _compute_employee_count(self):
+        for user in self:
+            user.employee_count = len(user.employee_ids)
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights.
@@ -59,7 +68,7 @@ class User(models.Model):
             'child_ids',
             'employee_id',
             'employee_ids',
-            'parent_id',
+            'employee_parent_id',
         ]
 
         hr_writable_fields = [
@@ -87,10 +96,10 @@ class User(models.Model):
             'marital',
             'mobile_phone',
             'notes',
-            'parent_id',
+            'employee_parent_id',
             'passport_id',
             'permit_no',
-            'phone',
+            'employee_phone',
             'pin',
             'place_of_birth',
             'spouse_birthdate',
@@ -99,7 +108,10 @@ class User(models.Model):
             'visa_no',
             'work_email',
             'work_location',
-            'work_phone'
+            'work_phone',
+            'certificate',
+            'study_field',
+            'study_school',
         ]
 
         init_res = super(User, self).__init__(pool, cr)
@@ -116,8 +128,13 @@ class User(models.Model):
         # However, in this case, we want the user to be able to read/write its own data,
         # even if they are protected by groups.
         # We make the front-end aware of those fields by sending all field definitions.
-        if not self.env.user.share:
-            self = self.sudo()
+        # Note: limit the `sudo` to the only action of "editing own profile" action in order to
+        # avoid breaking `groups` mecanism on res.users form view.
+        context_params = self._context.get('params', {})
+        if view_type == 'form' and context_params.get('id') == self.env.user.id and not self.env.user.share:
+            action_id = self.env['ir.model.data'].xmlid_to_res_id('hr.res_users_action_my', raise_if_not_found=False)
+            if action_id and context_params.get('action') == action_id:
+                self = self.sudo()
         return super(User, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
     @api.multi
@@ -158,3 +175,11 @@ class User(models.Model):
     def _compute_company_employee(self):
         for user in self:
             user.employee_id = self.env['hr.employee'].search([('id', 'in', user.employee_ids.ids), ('company_id', '=', user.company_id.id)], limit=1)
+
+    @api.multi
+    def action_create_employee(self):
+        self.ensure_one()
+        self.env['hr.employee'].create(dict(
+            user_id=self.id,
+            **self.env['hr.employee']._sync_user(self)
+        ))

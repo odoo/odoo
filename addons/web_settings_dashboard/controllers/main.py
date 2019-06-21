@@ -73,11 +73,11 @@ class WebSettingsDashboard(http.Controller):
             'share': {
                 'server_version': release.version,
                 'expiration_date': expiration_date,
-                'debug': request.debug,
+                'debug': request.session.debug,
                 'demo_active': demo_active,
             },
             'company': {
-                'company_id': request.env.user.company_id.id,
-                'company_name': request.env.user.company_id.name
+                'company_id': request.env.company.id,
+                'company_name': request.env.company.name
             }
         }

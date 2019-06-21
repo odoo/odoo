@@ -43,6 +43,23 @@ var FormRenderer = BasicRenderer.extend({
         }
         return this._super.apply(this, arguments);
     },
+    /**
+     * Called each time the form view is attached into the DOM
+     */
+    on_attach_callback: function () {
+        this._isInDom = true;
+        _.forEach(this.allFieldWidgets, function (widgets){
+            _.invoke(widgets, 'on_attach_callback');
+        });
+        this._super.apply(this, arguments);
+    },
+    /**
+     * Called each time the renderer is detached from the DOM.
+     */
+    on_detach_callback: function () {
+        this._isInDom = false;
+        this._super.apply(this, arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -236,15 +253,6 @@ var FormRenderer = BasicRenderer.extend({
         });
     },
     /**
-     * Called each time the form view is attached into the DOM
-     */
-    on_attach_callback: function () {
-        _.forEach(this.allFieldWidgets, function (widgets){
-            _.invoke(widgets, 'on_attach_callback');
-        });
-        this._super.apply(this, arguments);
-    },
-    /**
      * @override method from AbstractRenderer
      * @param {Object} state a valid state given by the model
      * @param {Object} params
@@ -302,7 +310,7 @@ var FormRenderer = BasicRenderer.extend({
         $button.tooltip({
             title: function () {
                 return qweb.render('WidgetButton.tooltip', {
-                    debug: config.debug,
+                    debug: config.isDebug(),
                     state: self.state,
                     node: node,
                 });
@@ -315,13 +323,15 @@ var FormRenderer = BasicRenderer.extend({
      * @param {Object} node
      */
     _addOnClickAction: function ($el, node) {
-        var self = this;
-        $el.click(function () {
-            self.trigger_up('button_clicked', {
-                attrs: node.attrs,
-                record: self.state,
+        if (node.attrs.special || node.attrs.confirm || node.attrs.type || $el.hasClass('oe_stat_button')) {
+            var self = this;
+            $el.click(function () {
+                self.trigger_up('button_clicked', {
+                    attrs: node.attrs,
+                    record: self.state,
+                });
             });
-        });
+        }
     },
     /**
             excludedElements: ".o_notebook .nav.nav-tabs",
@@ -336,6 +346,13 @@ var FormRenderer = BasicRenderer.extend({
             this.idsForLabels[name] = idForLabel;
         }
         return idForLabel;
+    },
+    /**
+     * @override
+     * @private
+     */
+    _getRecord: function (recordId) {
+        return this.state.id === recordId ? this.state : null;
     },
     /**
      * @override
@@ -390,7 +407,7 @@ var FormRenderer = BasicRenderer.extend({
             var visible_buttons = buttons_partition[1];
 
             // Get the unfolded buttons according to window size
-            var nb_buttons = [2, 2, 4, 6][config.device.size_class] || 7;
+            var nb_buttons = self._renderButtonBoxNbButtons();
             var unfolded_buttons = visible_buttons.slice(0, nb_buttons).concat(invisible_buttons);
 
             // Get the folded buttons
@@ -432,6 +449,13 @@ var FormRenderer = BasicRenderer.extend({
         return $result;
     },
     /**
+    * @private
+    * @returns {integer}
+    */
+    _renderButtonBoxNbButtons: function () {
+        return [2, 2, 4, 6][config.device.size_class] || 7;
+    },
+    /**
      * @private
      * @param {Object} node
      * @returns {jQueryElement}
@@ -467,7 +491,7 @@ var FormRenderer = BasicRenderer.extend({
         this._registerModifiers(node, this.state, $button);
 
         // Display tooltip
-        if (config.debug || node.attrs.help) {
+        if (config.isDebug() || node.attrs.help) {
             this._addButtonTooltip(node, $button);
         }
         return $button;
@@ -703,7 +727,7 @@ var FormRenderer = BasicRenderer.extend({
         this._registerModifiers(node, this.state, $button);
 
         // Display tooltip
-        if (config.debug || node.attrs.help) {
+        if (config.isDebug() || node.attrs.help) {
             this._addButtonTooltip(node, $button);
         }
 
@@ -933,6 +957,11 @@ var FormRenderer = BasicRenderer.extend({
             if (self.lastActivatedFieldIndex >= 0) {
                 self._activateNextFieldWidget(self.state, self.lastActivatedFieldIndex);
             }
+            if (self._isInDom) {
+                _.forEach(self.allFieldWidgets, function (widgets){
+                    _.invoke(widgets, 'on_attach_callback');
+                });
+            }
         }).guardedCatch(function () {
             $form.remove();
         });
@@ -969,7 +998,7 @@ var FormRenderer = BasicRenderer.extend({
             var $widgets = self.$('.o_field_widget[name=' + widget.name + ']');
             var $label = idForLabel ? self.$('.o_form_label[for=' + idForLabel + ']') : $();
             $label = $label.eq($widgets.index(widget.$el));
-            if (config.debug || widget.attrs.help || widget.field.help) {
+            if (config.isDebug() || widget.attrs.help || widget.field.help) {
                 self._addFieldTooltip(widget, $label);
             }
             if (widget.attrs.widget === 'upgrade_boolean') {

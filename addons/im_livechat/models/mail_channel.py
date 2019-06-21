@@ -30,7 +30,6 @@ class MailChannel(models.Model):
 
     _name = 'mail.channel'
     _inherit = ['mail.channel', 'rating.mixin']
-    _description = 'Discussion channel'
 
     anonymous_name = fields.Char('Anonymous Name')
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')])
@@ -49,7 +48,7 @@ class MailChannel(models.Model):
                 record.is_chat = True
 
     @api.multi
-    def _channel_message_notifications(self, message):
+    def _channel_message_notifications(self, message, message_format=False):
         """ When a anonymous user create a mail.channel, the operator is not notify (to avoid massive polling when
             clicking on livechat button). So when the anonymous person is sending its FIRST message, the channel header
             should be added to the notification, since the user cannot be listining to the channel.
@@ -57,7 +56,7 @@ class MailChannel(models.Model):
         livechat_channels = self.filtered(lambda x: x.channel_type == 'livechat')
         other_channels = self.filtered(lambda x: x.channel_type != 'livechat')
         notifications = super(MailChannel, livechat_channels)._channel_message_notifications(message.with_context(im_livechat_use_username=True)) + \
-                        super(MailChannel, other_channels)._channel_message_notifications(message)
+                        super(MailChannel, other_channels)._channel_message_notifications(message, message_format)
         for channel in self:
             # add uuid for private livechat channels to allow anonymous to listen
             if channel.channel_type == 'livechat' and channel.public == 'private':
@@ -106,7 +105,15 @@ class MailChannel(models.Model):
         if self.livechat_operator_id in self.channel_partner_ids:
             partners = self.channel_partner_ids - self.livechat_operator_id
             if partners:
-                return ', '.join(partners.mapped('name'))
+                partner_name = False
+                for partner in partners:
+                    if not partner_name:
+                        partner_name = partner.name
+                    else:
+                        partner_name += ', %s' % partner.name
+                    if partner.country_id:
+                        partner_name += ' (%s)' % partner.country_id.name
+                return partner_name
         if self.anonymous_name:
             return self.anonymous_name
         return _("Visitor")

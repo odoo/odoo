@@ -18,8 +18,8 @@ var QuickEdit = Widget.extend({
     template: 'website.theme_customize_active_input',
     events: {
         'keydown input': '_onInputKeydown',
-        'click .btn-primary': '_onSaveClick',
         'click .btn-secondary': '_onResetClick',
+        'focusout': '_onFocusOut',
     },
 
     /**
@@ -29,6 +29,7 @@ var QuickEdit = Widget.extend({
         this._super.apply(this, arguments);
         this.value = value;
         this.unit = unit;
+        this._onFocusOut = _.debounce(this._onFocusOut, 100);
     },
     /**
      * @override
@@ -92,8 +93,10 @@ var QuickEdit = Widget.extend({
     /**
      * @private
      */
-    _onSaveClick: function () {
-        this._save();
+    _onFocusOut: function () {
+        if (!this.$el.has(document.activeElement).length) {
+            this._save();
+        }
     },
     /**
      * @private
@@ -219,12 +222,12 @@ var ThemeCustomizeDialog = Dialog.extend({
         var def = new Promise(function (resolve, reject) {
             var $image = $('<img/>');
             var editor = new weWidgets.MediaDialog(self, {
+                mediaWidth: 1920,
                 onlyImages: true,
                 firstFilters: ['background'],
             }, $image[0]);
 
             editor.on('save', self, function (media) { // TODO use scss customization instead (like for user colors)
-                var src = $(media).attr('src');
                 self._rpc({
                     model: 'ir.model.data',
                     method: 'get_object_reference',
@@ -235,7 +238,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                         method: 'save',
                         args: [
                             data[1],
-                            '#wrapwrap { background-image: url("' + src + '"); }',
+                            '#wrapwrap { background-image: url("' + media.src + '"); }',
                             '//style',
                         ],
                     });
@@ -290,7 +293,7 @@ var ThemeCustomizeDialog = Dialog.extend({
             var $optionsContainer = $navContent.find('.o_options_container');
 
             // Process content items
-            _processItems($content.children(), $optionsContainer);
+            _processItems($content.children(), $optionsContainer, false);
         });
 
         this.$('[title]').tooltip();
@@ -307,13 +310,13 @@ var ThemeCustomizeDialog = Dialog.extend({
         this._setActive();
         this._updateValues();
 
-        function _processItems($items, $container) {
+        function _processItems($items, $container, isSelectionContainer) {
             var optionsName = _.uniqueId('option-');
             var alone = ($items.length === 1);
 
             _.each($items, function (item) {
                 var $item = $(item);
-                var $col;
+                var $element;
 
                 switch (item.tagName) {
                     case 'OPT':
@@ -328,14 +331,14 @@ var ThemeCustomizeDialog = Dialog.extend({
                         }, $item.data());
 
                         // Build the options template
-                        var $option = $(core.qweb.render('website.theme_customize_modal_option', _.extend({
+                        $element = $(core.qweb.render('website.theme_customize_modal_option', _.extend({
                             alone: alone,
                             name: xmlid === undefined ? _.uniqueId('option-') : optionsName,
                             id: $item.attr('id') || _.uniqueId('o_theme_customize_input_id_'),
                             checked: xmlid === undefined || xmlid && (!_.difference(self._getXMLIDs($item), data.enabled).length),
                             widget: widgetName,
                         }, renderingOptions)));
-                        $option.find('input')
+                        $element.find('input')
                             .addClass('o_theme_customize_option_input')
                             .attr({
                                 'data-xmlid': xmlid,
@@ -346,36 +349,48 @@ var ThemeCustomizeDialog = Dialog.extend({
 
                         if (widgetName) {
                             var $widget = $(core.qweb.render('website.theme_customize_widget_' + widgetName, renderingOptions));
-                            $option.find('label').append($widget);
+                            $element.find('label').append($widget);
                         }
 
-                        var $final;
-                        if ($container.hasClass('form-row')) {
-                            $final = $('<div/>', {
-                                class: _.str.sprintf('col-%s', $item.data('col') || 6),
-                            });
-                            $final.append($option);
-                        } else {
-                            $final = $option;
+                        if (isSelectionContainer) {
+                            $element.removeClass("my-1 flex-grow-0").addClass("dropdown-item p-0");
+                            $element.find('label')
+                                .addClass('justify-content-start')
+                                .attr('data-font-id', $item.data('font'));
                         }
-                        $final.attr('data-depends', $item.data('depends'));
-                        $container.append($final);
                         break;
 
                     case 'LIST':
-                        var $listContainer = $('<div/>', {class: 'py-1 px-2 o_theme_customize_option_list'});
-                        $col = $('<div/>', {
-                            class: _.str.sprintf('col-%s mt-2', $item.data('col') || 6),
-                            'data-depends': $item.data('depends'),
-                        }).append($('<h6/>', {text: $item.attr('string')}), $listContainer);
-                        $container.append($col);
-                        _processItems($item.children(), $listContainer);
+                        $element = $('<div/>', {class: 'py-1 px-2 o_theme_customize_option_list'});
+                        _processItems($item.children(), $element, false);
+                        break;
+
+                    case 'SELECTION':
+                        $element = $(core.qweb.render('website.theme_customize_dropdown_option'));
+                        _processItems($item.children(), $element.find('.o_theme_customize_selection'), true);
                         break;
 
                     default:
-                        _processItems($item.children(), $container);
-                        break;
+                        _processItems($item.children(), $container, false);
+                        return;
                 }
+
+                if ($container.hasClass('form-row')) {
+                    var $col = $('<div/>', {
+                        class: _.str.sprintf('col-%s', $item.data('col') || 6),
+                    });
+
+                    if (item.tagName === 'LIST') {
+                        $col.addClass('mt-2');
+                        $col.append($('<h6/>', {text: $item.attr('string')}));
+                    }
+
+                    $col.append($element);
+                    $element = $col;
+                }
+
+                $element.attr('data-depends', $item.data('depends'));
+                $container.append($element);
             });
         }
     },
@@ -577,7 +592,7 @@ var ThemeCustomizeDialog = Dialog.extend({
         var $loading = $('<i/>', {class: 'fa fa-refresh fa-spin'});
         this.$modal.find('.modal-title').append($loading);
 
-        if (reload || config.debug === 'assets') {
+        if (reload || config.isDebug('assets')) {
             window.location.href = $.param.querystring('/website/theme_customize_reload', {
                 href: window.location.href,
                 enable: (enable || []).join(','),
@@ -596,11 +611,17 @@ var ThemeCustomizeDialog = Dialog.extend({
             },
         }).then(function (bundles) {
             var $allLinks = $();
-            var defs = _.map(bundles, function (bundleContent, bundleName) {
-                var linkSelector = 'link[href*="' + bundleName + '"]';
-                var $links = $(linkSelector);
+            var defs = _.map(bundles, function (bundleURLs, bundleName) {
+                var $links = $('link[href*="' + bundleName + '"]');
                 $allLinks = $allLinks.add($links);
-                var $newLinks = $(bundleContent).filter(linkSelector);
+                var $newLinks = $();
+                _.each(bundleURLs, function (url) {
+                    $newLinks = $newLinks.add($('<link/>', {
+                        type: 'text/css',
+                        rel: 'stylesheet',
+                        href: url,
+                    }));
+                });
 
                 var linksLoaded = new Promise(function (resolve, reject) {
                     var nbLoaded = 0;
@@ -664,6 +685,25 @@ var ThemeCustomizeDialog = Dialog.extend({
                 default:
                     $span.text(value);
             }
+        });
+        _.each(this.$('.o_theme_customize_dropdown'), function (dropdown) {
+            var $dropdown = $(dropdown);
+            $dropdown.find('.dropdown-item.active').removeClass('active');
+            var $checked = $dropdown.find('label.checked');
+            $checked.closest('.dropdown-item').addClass('active');
+
+            var classes = 'btn btn-light dropdown-toggle w-100 o_theme_customize_dropdown_btn';
+            if ($checked.data('font-id')) {
+                classes += _.str.sprintf(' o_theme_customize_option_font_%s', $checked.data('font-id'));
+            }
+            var $btn = $('<button/>', {
+                type: 'button',
+                class: classes,
+                'data-toggle': 'dropdown',
+                html: $dropdown.find('label.checked > span').text() || '&#8203;',
+            });
+            $dropdown.find('.o_theme_customize_dropdown_btn').remove();
+            $dropdown.prepend($btn);
         });
     },
 

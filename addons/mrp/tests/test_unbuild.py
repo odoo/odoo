@@ -101,7 +101,7 @@ class TestUnbuild(TestMrpCommon):
             'active_ids': [mo.id],
         }))
         produce_form.qty_producing = 5.0
-        produce_form.final_lot_id = lot
+        produce_form.finished_lot_id = lot
         produce_wizard = produce_form.save()
 
         produce_wizard.do_produce()
@@ -218,7 +218,7 @@ class TestUnbuild(TestMrpCommon):
         unbuild_order.action_unbuild()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location), 2, 'You should have consumed 3 final product in stock')
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(p1, self.stock_location, lot_id=lot), 92, 'You should have 80 products in stock')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p1, self.stock_location, lot_id=lot), 92, 'You should have 92 products in stock')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p2, self.stock_location), 3, 'You should have consumed all the 5 product in stock')
 
         self.env['mrp.unbuild'].create({
@@ -276,7 +276,7 @@ class TestUnbuild(TestMrpCommon):
             'active_ids': [mo.id],
         }))
         produce_form.qty_producing = 5.0
-        produce_form.final_lot_id = lot_final
+        produce_form.finished_lot_id = lot_final
         produce_wizard = produce_form.save()
 
         produce_wizard.do_produce()
@@ -420,9 +420,9 @@ class TestUnbuild(TestMrpCommon):
             'active_ids': [mo.id],
         }))
         produce_form.qty_producing = 3.0
-        produce_form.final_lot_id = lot_finished_1
+        produce_form.finished_lot_id = lot_finished_1
         produce_wizard = produce_form.save()
-        produce_wizard.workorder_line_ids[0].lot_id = lot_1
+        produce_wizard._workorder_line_ids()[0].lot_id = lot_1
         produce_wizard.do_produce()
 
         lot_2 = self.env['stock.production.lot'].create({
@@ -441,15 +441,15 @@ class TestUnbuild(TestMrpCommon):
             'active_ids': [mo.id],
         }))
         produce_form.qty_producing = 2.0
-        produce_form.final_lot_id = lot_finished_2
+        produce_form.finished_lot_id = lot_finished_2
 
         produce_wizard = produce_form.save()
-        produce_wizard.workorder_line_ids[0].lot_id = lot_2
+        produce_wizard._workorder_line_ids()[0].lot_id = lot_2
         produce_wizard.do_produce()
         mo.button_mark_done()
-        ml = mo.finished_move_line_ids[0].consume_line_ids.filtered(lambda m: m.product_id == p1 and m.lot_produced_id == lot_finished_1)
+        ml = mo.finished_move_line_ids[0].consume_line_ids.filtered(lambda m: m.product_id == p1 and lot_finished_1 in m.lot_produced_ids)
         self.assertEqual(ml[0].qty_done, 12.0, 'Should have consumed 12 for the first lot')
-        ml = mo.finished_move_line_ids[1].consume_line_ids.filtered(lambda m: m.product_id == p1 and m.lot_produced_id == lot_finished_2)
+        ml = mo.finished_move_line_ids[1].consume_line_ids.filtered(lambda m: m.product_id == p1 and lot_finished_2 in m.lot_produced_ids)
         self.assertEqual(ml[0].qty_done, 8.0, 'Should have consumed 8 for the second lot')
 
     def test_unbuild_with_routes(self):

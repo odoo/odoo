@@ -7,9 +7,8 @@ from odoo import api, fields, models, _
 class Company(models.Model):
     _inherit = "res.company"
 
-    propagation_minimum_delta = fields.Integer('Minimum Delta for Propagation of a Date Change on moves linked together', default=1)
     internal_transit_location_id = fields.Many2one(
-        'stock.location', 'Internal Transit Location', on_delete="restrict",
+        'stock.location', 'Internal Transit Location', ondelete="restrict",
         help="Technical field used for resupply routes between warehouses that belong to this company")
 
     def _create_transit_location(self):
@@ -126,13 +125,16 @@ class Company(models.Model):
         for company in company_without_property:
             company._create_scrap_location()
 
+    def _create_per_company_locations(self):
+        self.ensure_one()
+        self._create_transit_location()
+        self._create_inventory_loss_location()
+        self._create_production_location()
+        self._create_scrap_location()
+
     @api.model
     def create(self, vals):
         company = super(Company, self).create(vals)
-
-        company.sudo()._create_transit_location()
-        company.sudo()._create_inventory_loss_location()
-        company.sudo()._create_production_location()
-        company.sudo()._create_scrap_location()
+        company.sudo()._create_per_company_locations()
         self.env['stock.warehouse'].sudo().create({'name': company.name, 'code': company.name[:5], 'company_id': company.id, 'partner_id': company.partner_id.id})
         return company

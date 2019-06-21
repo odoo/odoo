@@ -1,32 +1,22 @@
 odoo.define('payment.processing', function (require) {
     'use strict';
 
-    var Widget = require('web.Widget');
-    var Ajax = require('web.ajax');
-    var Core = require('web.core');
-    var Qweb = Core.qweb;
-    var _t = Core._t;
+    var publicWidget = require('web.public.widget');
+    var ajax = require('web.ajax');
+    var core = require('web.core');
+
+    var _t = core._t;
 
     $.blockUI.defaults.css.border = '0';
     $.blockUI.defaults.css["background-color"] = '';
     $.blockUI.defaults.overlayCSS["opacity"] = '0.9';
 
-    return Widget.extend({
-        /* Members */
-        _payment_tx_ids: null,
-        _pollCount: 0,
-        /* Events */
-        events: {
-
-        },
-        /* deps */
+    publicWidget.registry.PaymentProcessing = publicWidget.Widget.extend({
+        selector: '.o_payment_processing',
         xmlDependencies: ['/payment/static/src/xml/payment_processing.xml'],
-        /* Widget overrides */
-        init: function (parent, payment_tx_ids) {
-            this._super.apply(this, arguments);
-            //
-            this._payment_tx_ids = payment_tx_ids;
-        },
+
+        _pollCount: 0,
+
         start: function() {
             this.displayLoading();
             this.poll();
@@ -48,12 +38,14 @@ odoo.define('payment.processing', function (require) {
         },
         poll: function () {
             var self = this;
-            Ajax.jsonRpc('/payment/process/poll', 'call', {}).then(function(data) {
+            ajax.jsonRpc('/payment/process/poll', 'call', {}).then(function(data) {
                 if(data.success === true) {
                     self.processPolledData(data.transactions);
                 }
                 else {
                     switch(data.error) {
+                    case "tx_process_retry":
+                        break;
                     case "no_tx_found":
                         self.displayContent("payment.no_tx_found", {});
                         break;
@@ -63,14 +55,8 @@ odoo.define('payment.processing', function (require) {
                     }
                 }
                 self.startPolling();
-            }).then(function() {
-                if ($.blockUI) {
-                    $.unblockUI();
-                }
+
             }).guardedCatch(function() {
-                if ($.blockUI) {
-                    $.unblockUI();
-                }
                 self.displayContent("payment.rpc_error", {});
                 self.startPolling();
             });
@@ -84,14 +70,16 @@ odoo.define('payment.processing', function (require) {
                 'tx_cancel': [],
                 'tx_error': [],
             };
+
+            if (transactions.length > 0 && transactions[0].acquirer_provider == 'transfer') {
+                window.location = transactions[0].return_url;
+                return;
+            }
+
             // group the transaction according to their state
             transactions.forEach(function (tx) {
                 var key = 'tx_' + tx.state;
                 if(key in render_values) {
-                    if (tx.acquirer_provider === 'transfer') {
-                        window.location = tx.return_url;
-                        return;
-                    }
                     render_values[key].push(tx);
                 }
             });
@@ -117,7 +105,8 @@ odoo.define('payment.processing', function (require) {
             this.displayContent("payment.display_tx_list", render_values);
         },
         displayContent: function (xmlid, render_values) {
-            var html = Qweb.render(xmlid, render_values);
+            var html = core.qweb.render(xmlid, render_values);
+            $.unblockUI();
             this.$el.find('.o_payment_processing_content').html(html);
         },
         displayLoading: function () {

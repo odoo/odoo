@@ -119,9 +119,9 @@ class IrSequence(models.Model):
     code = fields.Char(string='Sequence Code')
     implementation = fields.Selection([('standard', 'Standard'), ('no_gap', 'No gap')],
                                       string='Implementation', required=True, default='standard',
-                                      help="Two sequence object implementations are offered: Standard "
-                                           "and 'No gap'. The later is slower than the former but forbids any "
-                                           "gap in the sequence (while they are possible in the former).")
+                                      help="While assigning a sequence number to a record, the 'no gap' sequence implementation ensures that each previous sequence number has been assigned already. "
+                                      "While this sequence implementation will not skip any sequence number upon assignation, there can still be gaps in the sequence if records are deleted. "
+                                      "The 'no gap' implementation is slower than the standard one.")
     active = fields.Boolean(default=True)
     prefix = fields.Char(help="Prefix value of the record for the sequence", trim=False)
     suffix = fields.Char(help="Suffix value of the record for the sequence", trim=False)
@@ -136,7 +136,7 @@ class IrSequence(models.Model):
                              help="Odoo will automatically adds some '0' on the left of the "
                                   "'Next Number' to get the required padding size.")
     company_id = fields.Many2one('res.company', string='Company',
-                                 default=lambda s: s.env['res.company']._company_default_get('ir.sequence'))
+                                 default=lambda s: s.env.company)
     use_date_range = fields.Boolean(string='Use subsequences per date_range')
     date_range_ids = fields.One2many('ir.sequence.date_range', 'sequence_id', string='Subsequences')
 
@@ -277,7 +277,7 @@ class IrSequence(models.Model):
         self.check_access_rights('read')
         force_company = self._context.get('force_company')
         if not force_company:
-            force_company = self.env.user.company_id.id
+            force_company = self.env.company.id
         seq_ids = self.search([('code', '=', sequence_code), ('company_id', 'in', [force_company, False])], order='company_id')
         if not seq_ids:
             _logger.debug("No ir.sequence has been found for code '%s'. Please make sure a sequence is set for current company." % sequence_code)

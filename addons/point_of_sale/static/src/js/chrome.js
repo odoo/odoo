@@ -406,9 +406,11 @@ var ProxyStatusWidget = StatusWidget.extend({
 
 /* --------- The Sale Details --------- */
 
-// Generates a report to print the sales of the
-// day on a ticket
-
+/** Print an overview of todays sales.
+ *
+ * If the current cashier is a manager all sales of the day will be printed, else only the sales of the current
+ * session will be printed.
+ */
 var SaleDetailsButton = PosBaseWidget.extend({
     template: 'SaleDetailsButton',
     start: function(){
@@ -720,9 +722,6 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
         if(err.message === 'XmlHttpRequestError '){
             title = 'Network Failure (XmlHttpRequestError)';
             body  = 'The Point of Sale could not be loaded due to a network problem.\n Please check your internet connection.';
-        }else if(err.message === 'TLSError'){
-            title = 'Https connection to IoT Box failed';
-            body = 'Make sure you are using IoT Box v18.12 or higher.\n\n Navigate to ' + err.url + ' to accept the certificate of your IoT Box.';
         }else if(err.code === 200){
             title = err.data.message;
             body  = err.data.debug;

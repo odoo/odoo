@@ -69,7 +69,7 @@ class LunchProductReport(models.Model):
         self._cr.execute("""
             CREATE or REPLACE view %s AS (
                 SELECT
-                    row_number() over () AS id,
+                    row_number() over (ORDER BY user_id,product.id) AS id,
                     product.id AS product_id,
                     product.name,
                     product.category_id,
@@ -81,11 +81,12 @@ class LunchProductReport(models.Model):
                     users.id AS user_id,
                     fav.user_id IS NOT NULL AS is_favorite,
                     product.new_until >= current_date AS is_new,
-                    (SELECT date FROM lunch_order WHERE product_id = product.id AND user_id = users.id AND date <= current_date ORDER BY date DESC LIMIT 1) AS last_order_date
+                    orders.last_order_date
                 FROM lunch_product product
-                RIGHT JOIN res_users users ON users.company_id = product.company_id -- multi company
-                LEFT JOIN lunch_product_favorite_user_rel fav ON fav.product_id = product.id AND fav.user_id = users.id
-                JOIN res_groups_users_rel groups ON groups.uid = users.id -- only generate for internal users
+                INNER JOIN res_users users ON users.company_id = product.company_id -- multi company
+                INNER JOIN res_groups_users_rel groups ON groups.uid = users.id -- only generate for internal users
+                LEFT JOIN LATERAL (select max(date) AS last_order_date FROM lunch_order where user_id=users.id and product_id=product.id) AS orders ON TRUE
+                LEFT JOIN LATERAL (select user_id FROM lunch_product_favorite_user_rel where user_id=users.id and product_id=product.id) AS fav ON TRUE
                 WHERE users.active AND product.active AND groups.gid = %%s --only take into account active products and users
             );
         """ % self._table, (self.env.ref('base.group_user').id,))

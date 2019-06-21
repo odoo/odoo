@@ -18,7 +18,7 @@
                     <field name="quant_ids" style="margin-top:10px;">
                         <tree>
                             <field name="product_id"/>
-                            <field name="location_id"/>
+                            <field name="location_id" options="{'no_create': True}"/>
                             <field name="lot_id" groups="stock.group_production_lot"/>
                             <field name="quantity"/>
                         </tree>
@@ -43,6 +43,9 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_id']" position="after">
                 <field name="scrap_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='cancel_button']" position="replace">
+                <button string="Discard" name="action_cancel" type="object" class="btn-primary"/>
             </xpath>
         </field>
     </record>

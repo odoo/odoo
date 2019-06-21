@@ -37,6 +37,7 @@ QUnit.module('Views', {
                     date: {string: "Date Field", type: 'date'},
                     datetime: {string: "Datetime Field", type: 'datetime'},
                     image: {string: "Image", type: "binary"},
+                    displayed_image_id: {string: "cover", type: "many2one", relation: "ir.attachment"},
                 },
                 records: [
                     {id: 1, bar: true, foo: "yop", int_field: 10, qux: 0.4, product_id: 3, state: "abc", category_ids: [], 'image': 'R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA=='},
@@ -65,6 +66,18 @@ QUnit.module('Views', {
                     {id: 7, name: "silver", color: 5},
                 ]
             },
+            'ir.attachment': {
+                fields: {
+                    mimetype: {type: "char"},
+                    name: {type: "char"},
+                    res_model: {type: "char"},
+                    res_id: {type: "integer"},
+                },
+                records: [
+                    {id: 1, name: "1.png", mimetype: 'image/png', res_model: 'partner', res_id: 1},
+                    {id: 2, name: "2.png", mimetype: 'image/png', res_model: 'partner', res_id: 2},
+                ]
+            },
         };
     },
 }, function () {
@@ -72,7 +85,7 @@ QUnit.module('Views', {
     QUnit.module('KanbanView');
 
     QUnit.test('basic ungrouped rendering', async function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         var kanban = await createView({
             View: KanbanView,
@@ -84,6 +97,11 @@ QUnit.module('Views', {
                     '<field name="foo"/>' +
                     '</div>' +
                 '</t></templates></kanban>',
+            mockRPC: function (route, args) {
+                assert.ok(args.context.bin_size,
+                    "should not request direct binary payload");
+                return this._super(route, args);
+            },
         });
 
         assert.hasClass(kanban.$('.o_kanban_view'), 'o_kanban_ungrouped');
@@ -108,7 +126,7 @@ QUnit.module('Views', {
                     '</t></templates></kanban>',
             groupBy: ['bar'],
             mockRPC: function (route, args) {
-                if (args.method === 'read_group') {
+                if (args.method === 'web_read_group') {
                     // the lazy option is important, so the server can fill in
                     // the empty groups
                     assert.ok(args.kwargs.lazy, "should use lazy read_group");
@@ -485,7 +503,7 @@ QUnit.module('Views', {
             "first column should contain two records");
 
         assert.verifySteps([
-            'read_group', // initial read_group
+            'web_read_group', // initial read_group
             '/web/dataset/search_read', // initial search_read (first column)
             '/web/dataset/search_read', // initial search_read (second column)
             'default_get', // quick create
@@ -558,7 +576,7 @@ QUnit.module('Views', {
             "first column should contain two records");
 
         assert.verifySteps([
-            'read_group', // initial read_group
+            'web_read_group', // initial read_group
             '/web/dataset/search_read', // initial search_read (first column)
             '/web/dataset/search_read', // initial search_read (second column)
             'load_views', // form view in quick create
@@ -616,7 +634,7 @@ QUnit.module('Views', {
             "first column should contain three records");
 
         assert.verifySteps([
-            'read_group', // initial read_group
+            'web_read_group', // initial read_group
             '/web/dataset/search_read', // initial search_read (first column)
             '/web/dataset/search_read', // initial search_read (second column)
             'default_get', // quick create
@@ -683,7 +701,7 @@ QUnit.module('Views', {
             "first column should contain three records");
 
         assert.verifySteps([
-            'read_group', // initial read_group
+            'web_read_group', // initial read_group
             '/web/dataset/search_read', // initial search_read (first column)
             '/web/dataset/search_read', // initial search_read (second column)
             'load_views', // form view in quick create
@@ -735,7 +753,6 @@ QUnit.module('Views', {
         await testUtils.kanban.clickCreate(kanban);
         var $quickCreate = kanban.$('.o_kanban_group:first .o_kanban_quick_create');
 
-        var $quickCreate = kanban.$('.o_kanban_group:first .o_kanban_quick_create');
         assert.strictEqual($quickCreate.length, 1,
             "should have a quick create element in the first column");
         assert.strictEqual($quickCreate.find('.o_field_widget[name=int_field]').val(), '4',
@@ -748,7 +765,7 @@ QUnit.module('Views', {
             "onchange should have been triggered");
 
         assert.verifySteps([
-            'read_group', // initial read_group
+            'web_read_group', // initial read_group
             '/web/dataset/search_read', // initial search_read (first column)
             '/web/dataset/search_read', // initial search_read (second column)
             'load_views', // form view in quick create
@@ -1824,14 +1841,17 @@ QUnit.module('Views', {
                 '</kanban>',
             groupBy: ['product_id'],
             mockRPC: function (route, args) {
-                if (args.method === 'read_group') {
+                if (args.method === 'web_read_group') {
                     // override read_group to return empty groups, as this is
                     // the case for several models (e.g. project.task grouped
                     // by stage_id)
-                    var result = [
-                        {__domain: [['product_id', '=', 3]], product_id_count: 0},
-                        {__domain: [['product_id', '=', 5]], product_id_count: 0},
-                    ];
+                    var result = {
+                        groups: [
+                            {__domain: [['product_id', '=', 3]], product_id_count: 0},
+                            {__domain: [['product_id', '=', 5]], product_id_count: 0},
+                        ],
+                        length: 2,
+                    };
                     return Promise.resolve(result);
                 }
                 return this._super.apply(this, arguments);
@@ -2408,11 +2428,11 @@ QUnit.module('Views', {
 
         await kanban.reload();
         assert.verifySteps([
-            'read_group',
+            'web_read_group',
             '/web/dataset/search_read',
             '/web/dataset/search_read',
             'read',
-            'read_group',
+            'web_read_group',
             '/web/dataset/search_read',
             '/web/dataset/search_read',
             'read',
@@ -2444,11 +2464,11 @@ QUnit.module('Views', {
 
         await kanban.reload(kanban);
         assert.verifySteps([
-            'read_group',
+            'web_read_group',
             '/web/dataset/search_read',
             '/web/dataset/search_read',
             'read',
-            'read_group',
+            'web_read_group',
             '/web/dataset/search_read',
             '/web/dataset/search_read',
             'read',
@@ -2487,11 +2507,11 @@ QUnit.module('Views', {
 
         await kanban.reload();
         assert.verifySteps([
-            'read_group',
+            'web_read_group',
             '/web/dataset/search_read',
             '/web/dataset/search_read',
             'name_get',
-            'read_group',
+            'web_read_group',
             '/web/dataset/search_read',
             '/web/dataset/search_read',
             'name_get',
@@ -2766,7 +2786,7 @@ QUnit.module('Views', {
                         '<div><field name="foo"/></div>' +
                     '</t></templates></kanban>',
             mockRPC: function (route, args) {
-                if (route === '/web/dataset/call_kw/partner/read_group') {
+                if (route === '/web/dataset/call_kw/partner/web_read_group') {
                     readGroupCount++;
                     var correctGroupBy;
                     if (readGroupCount === 2) {
@@ -2976,10 +2996,10 @@ QUnit.module('Views', {
                     '</kanban>',
             groupBy: ['product_id'],
             mockRPC: function (route, args) {
-                if (args.method === 'read_group') {
+                if (args.method === 'web_read_group') {
                     return this._super.apply(this, arguments).then(function (result) {
-                        result[2].__fold = true;
-                        result[8].__fold = true;
+                        result.groups[2].__fold = true;
+                        result.groups[8].__fold = true;
                         return result;
                     });
                 }
@@ -3119,7 +3139,7 @@ QUnit.module('Views', {
             'Undefined column could not be edited');
         assert.ok(!kanban.$('.o_kanban_group:first .o_column_archive_records').length, "Records of undefined column could not be archived");
         assert.ok(!kanban.$('.o_kanban_group:first .o_column_unarchive_records').length, "Records of undefined column could not be restored");
-        assert.verifySteps(['read_group', 'unlink', 'read_group']);
+        assert.verifySteps(['web_read_group', 'unlink', 'web_read_group']);
         assert.strictEqual(kanban.renderer.widgets.length, 2,
             "the old widgets should have been correctly deleted");
 
@@ -3139,14 +3159,14 @@ QUnit.module('Views', {
             kanban.$('.o_kanban_header_title:last'), {position: 'right'}
         );
         assert.deepEqual([3, newColumnID], resequencedIDs,
-            "moving the Undefined column should not affect order of other columns")
+            "moving the Undefined column should not affect order of other columns");
         await testUtils.dom.dragAndDrop(
             kanban.$('.o_kanban_header_title:first'),
             kanban.$('.o_kanban_header_title:nth(1)'), {position: 'right'}
         );
         await nextTick(); // wait for resequence after drag and drop
         assert.deepEqual([newColumnID, 3], resequencedIDs,
-            "moved column should be resequenced accordingly")
+            "moved column should be resequenced accordingly");
         assert.verifySteps(['name_create', 'read', 'read', 'read']);
 
         kanban.destroy();
@@ -3335,14 +3355,16 @@ QUnit.module('Views', {
     QUnit.test('quick create column and examples', async function (assert) {
         assert.expect(12);
 
-        kanbanExamplesRegistry.add('test', [{
-            name: "A first example",
-            columns: ["Column 1", "Column 2", "Column 3"],
-            description: "Some description",
-        }, {
-            name: "A second example",
-            columns: ["Col 1", "Col 2"],
-        }]);
+        kanbanExamplesRegistry.add('test', {
+            examples:[{
+                name: "A first example",
+                columns: ["Column 1", "Column 2", "Column 3"],
+                description: "Some description",
+            }, {
+                name: "A second example",
+                columns: ["Col 1", "Col 2"],
+            }],
+        });
 
         var kanban = await createView({
             View: KanbanView,
@@ -3393,6 +3415,78 @@ QUnit.module('Views', {
             "column titles should be correct");
         assert.strictEqual($secondPane.find('.o_kanban_examples_description').text().trim(),
             "", "there should be no description for the second example");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('quick create column and examples background with ghostColumns titles', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records = [];
+
+        kanbanExamplesRegistry.add('test', {
+            ghostColumns: ["Ghost 1", "Ghost 2", "Ghost 3", "Ghost 4"],
+            examples:[{
+                name: "A first example",
+                columns: ["Column 1", "Column 2", "Column 3"],
+                description: "Some description",
+            }, {
+                name: "A second example",
+                columns: ["Col 1", "Col 2"],
+            }],
+        });
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban examples="test">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+        });
+
+        assert.containsOnce(kanban, '.o_kanban_example_background',
+            "should have ExamplesBackground when no data");
+        assert.strictEqual(kanban.$('.o_kanban_examples_group h6').text(), 'Ghost 1Ghost 2Ghost 3Ghost 4',
+            "ghost title should be correct");
+        assert.containsOnce(kanban, '.o_column_quick_create',
+            "should have a ColumnQuickCreate widget");
+        assert.containsOnce(kanban, '.o_column_quick_create .o_kanban_examples:visible',
+            "should not have a link to see examples as there is no examples registered");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('quick create column and examples background without ghostColumns titles', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records = [];
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+        });
+
+        assert.containsOnce(kanban, '.o_kanban_example_background',
+            "should have ExamplesBackground when no data");
+        assert.strictEqual(kanban.$('.o_kanban_examples_group h6').text(), 'Column 1Column 2Column 3Column 4',
+            "ghost title should be correct");
+        assert.containsOnce(kanban, '.o_column_quick_create',
+            "should have a ColumnQuickCreate widget");
+        assert.containsNone(kanban, '.o_column_quick_create .o_kanban_examples:visible',
+            "should not have a link to see examples as there is no examples registered");
 
         kanban.destroy();
     });
@@ -3474,12 +3568,12 @@ QUnit.module('Views', {
                     '</kanban>',
             groupBy: ['product_id'],
             mockRPC: function (route, args) {
-                if (args.method === 'read_group') {
+                if (args.method === 'web_read_group') {
                     // override read_group to return empty groups, as this is
                     // the case for several models (e.g. project.task grouped
                     // by stage_id)
                     return this._super.apply(this, arguments).then(function (result) {
-                        _.each(result, function (group) {
+                        _.each(result.groups, function (group) {
                             group[args.kwargs.groupby[0] + '_count'] = 0;
                         });
                         return result;
@@ -3595,10 +3689,13 @@ QUnit.module('Views', {
                     '</kanban>',
             groupBy: ['product_id'],
             mockRPC: function (route, args) {
-                if (args.method === 'read_group') {
-                    var result = [
-                        {__domain: [['product_id', '=', 3]], product_id_count: 0, product_id: [3, 'hello']},
-                    ];
+                if (args.method === 'web_read_group') {
+                    var result = {
+                        groups: [
+                            {__domain: [['product_id', '=', 3]], product_id_count: 0, product_id: [3, 'hello']},
+                        ],
+                        length: 1,
+                    };
                     return Promise.resolve(result);
                 }
                 return this._super.apply(this, arguments);
@@ -3637,10 +3734,13 @@ QUnit.module('Views', {
                     '</kanban>',
             groupBy: ['product_id'],
             mockRPC: function (route, args) {
-                if (args.method === 'read_group') {
-                    var result = [
-                        {__domain: [['product_id', '=', 3]], product_id_count: 0, product_id: [3, 'hello']},
-                    ];
+                if (args.method === 'web_read_group') {
+                    var result = {
+                        groups: [
+                            {__domain: [['product_id', '=', 3]], product_id_count: 0, product_id: [3, 'hello']},
+                        ],
+                        length: 1,
+                    };
                     return Promise.resolve(result);
                 }
                 return this._super.apply(this, arguments);
@@ -3682,10 +3782,13 @@ QUnit.module('Views', {
                     '</kanban>',
             groupBy: ['product_id'],
             mockRPC: function (route, args) {
-                if (args.method === 'read_group') {
-                    var result = [
-                        {__domain: [['product_id', '=', 3]], product_id_count: 0, product_id: [3, 'hello']},
-                    ];
+                if (args.method === 'web_read_group') {
+                    var result = {
+                        groups: [
+                            {__domain: [['product_id', '=', 3]], product_id_count: 0, product_id: [3, 'hello']},
+                        ],
+                        length: 1,
+                    };
                     return Promise.resolve(result);
                 }
                 return this._super.apply(this, arguments);
@@ -3726,10 +3829,13 @@ QUnit.module('Views', {
                     '</kanban>',
             groupBy: ['product_id'],
             mockRPC: function (route, args) {
-                if (args.method === 'read_group') {
-                    var result = [
-                        {__domain: [['product_id', '=', 3]], product_id_count: 0, product_id: [3, 'hello']},
-                    ];
+                if (args.method === 'web_read_group') {
+                    var result = {
+                        groups: [
+                            {__domain: [['product_id', '=', 3]], product_id_count: 0, product_id: [3, 'hello']},
+                        ],
+                        length: 1,
+                    };
                     return Promise.resolve(result);
                 }
                 return this._super.apply(this, arguments);
@@ -4727,12 +4833,12 @@ QUnit.module('Views', {
 
         assert.verifySteps([
             // initial load
-            'read_group',
+            'web_read_group',
             'read_progress_bar',
             '/web/dataset/search_read',
             '/web/dataset/search_read',
             // reload
-            'read_group',
+            'web_read_group',
             'read_progress_bar',
             '/web/dataset/search_read',
             '/web/dataset/search_read',
@@ -4898,7 +5004,7 @@ QUnit.module('Views', {
         }
     });
 
-    QUnit.test('test displaying image (URL)', async function (assert) {
+    QUnit.test('test displaying image (URL, image field not set)', async function (assert) {
         assert.expect(1);
 
         var kanban = await createView({
@@ -4946,6 +5052,39 @@ QUnit.module('Views', {
         var placeholders = kanban.$('img[data-src$="/web/static/src/img/placeholder.png"]');
         assert.strictEqual(placeholders.length, this.data.partner.records.length - 1,
             "partner with no image should display the placeholder");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('test displaying image (for another record)', async function (assert) {
+        assert.expect(2);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                      '<field name="id"/>' +
+                      '<field name="image"/>' +
+                      '<templates><t t-name="kanban-box"><div>' +
+                          '<img t-att-src="kanban_image(\'partner\', \'image\', 1)"/>' +
+                      '</div></t></templates>' +
+                  '</kanban>',
+            mockRPC: function (route, args) {
+                if (route === 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==') {
+                    assert.ok("The view's image should have been fetched.");
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // the field image is set, but we request the image for a specific id
+        // -> for the record matching the ID, the base64 should be returned
+        // -> for all the other records, the image should be displayed by url
+        var imageOnRecord = kanban.$('img[data-src*="/web/image"][data-src*="&id=1"]');
+        assert.strictEqual(imageOnRecord.length, this.data.partner.records.length - 1,
+            "display image by url when requested for another record");
 
         kanban.destroy();
     });
@@ -5028,7 +5167,7 @@ QUnit.module('Views', {
             groupBy: ['bar'],
             mockRPC: function (route, args) {
                 var result = this._super(route, args);
-                if (args.method === 'read_group') {
+                if (args.method === 'web_read_group') {
                     var isFirstUpdate = _.isEmpty(args.kwargs.domain) &&
                                         args.kwargs.groupby &&
                                         args.kwargs.groupby[0] === 'bar';
@@ -5167,22 +5306,22 @@ QUnit.module('Views', {
                     '</t></templates></kanban>',
             groupBy: ['state'],
             mockRPC: function (route, args) {
-                if (args.method === 'read_group') {
+                if (args.method === 'web_read_group') {
                     // override read_group to return empty groups, as this is
                     // the case for several models (e.g. project.task grouped
                     // by stage_id)
                     return this._super.apply(this, arguments).then(function (result) {
                         // add 2 empty columns in the middle
-                        result.splice(1,0,{state_count:0,state:'def',
-                                           __domain:[["state","=","def"]]});
-                        result.splice(1,0,{state_count:0,state:'def',
-                                           __domain:[["state","=","def"]]});
+                        result.groups.splice(1, 0, {state_count: 0, state: 'def',
+                                           __domain: [["state", "=", "def"]]});
+                        result.groups.splice(1, 0, {state_count: 0, state: 'def',
+                                           __domain: [["state", "=", "def"]]});
 
                         // add 1 empty column in the beginning and the end
-                        result.unshift({state_count:0,state:'def',
-                                        __domain:[["state","=","def"]]});
-                        result.push({state_count:0,state:'def',
-                                    __domain:[["state","=","def"]]});
+                        result.groups.unshift({state_count: 0, state: 'def',
+                                        __domain: [["state", "=", "def"]]});
+                        result.groups.push({state_count: 0, state: 'def',
+                                    __domain: [["state", "=", "def"]]});
                         return result;
                     });
                 }
@@ -5454,6 +5593,139 @@ QUnit.module('Views', {
         kanban.destroy();
         delete widgetRegistry.map.asyncWidget;
     });
+
+    QUnit.test('set cover image', async function (assert) {
+        assert.expect(6);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                    '<templates>' +
+                        '<t t-name="kanban-box">' +
+                            '<div>' +
+                                '<field name="name"/>' +
+                                '<div class="o_dropdown_kanban dropdown">' +
+                                    '<a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#">' +
+                                        '<span class="fa fa-bars fa-lg"/>' +
+                                    '</a>' +
+                                    '<div class="dropdown-menu" role="menu">' +
+                                        '<a type="set_cover" data-field="displayed_image_id" class="dropdown-item">Set Cover Image</a>'+
+                                    '</div>' +
+                                '</div>' +
+                                '<div>'+
+                                    '<field name="displayed_image_id" widget="attachment_image"/>'+
+                                '</div>'+
+                            '</div>' +
+                        '</t>' +
+                    '</templates>' +
+                '</kanban>',
+            mockRPC: function (route, args) {
+                if (args.model === 'partner' && args.method === 'write') {
+                    assert.step(String(args.args[0][0]));
+                    return this._super(route, args);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        var $firstRecord = kanban.$('.o_kanban_record:first');
+        testUtils.kanban.toggleRecordDropdown($firstRecord);
+        await testUtils.dom.click($firstRecord.find('[data-type=set_cover]'));
+        assert.containsNone($firstRecord, 'img', "Initially there is no image.");
+
+        await testUtils.dom.click($('.modal').find("img[data-id='1']"));
+        await testUtils.modal.clickButton('Select');
+        assert.containsOnce(kanban, 'img[data-src*="/web/image/1"]');
+
+        var $secondRecord = kanban.$('.o_kanban_record:nth(1)');
+        testUtils.kanban.toggleRecordDropdown($secondRecord);
+        await testUtils.dom.click($secondRecord.find('[data-type=set_cover]'));
+        $('.modal').find("img[data-id='2']").dblclick();
+        await testUtils.nextTick();
+        assert.containsOnce(kanban, 'img[data-src*="/web/image/2"]');
+        assert.verifySteps(["1", "2"], "should writes on both kanban records");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('ungrouped kanban with handle field', async function (assert) {
+        assert.expect(4);
+
+        var envIDs = [1, 2, 3, 4]; // the ids that should be in the environment during this test
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                    '<field name="int_field" widget="handle" />' +
+                    '<templates><t t-name="kanban-box">' +
+                    '<div>' +
+                        '<field name="foo"/>' +
+                    '</div>' +
+                '</t></templates></kanban>',
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/resequence') {
+                    assert.deepEqual(args.ids, envIDs,
+                        "should write the sequence in correct order");
+                    return Promise.resolve(true);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        assert.hasClass(kanban.$('.o_kanban_view'), 'ui-sortable');
+        assert.strictEqual(kanban.$('.o_kanban_record:not(.o_kanban_ghost)').text(),
+            'yopblipgnapblip');
+
+        var $record = kanban.$('.o_kanban_view .o_kanban_record:first');
+        var $to = kanban.$('.o_kanban_view .o_kanban_record:nth-child(4)');
+        envIDs = [2, 3, 4, 1]; // first record of moved after last one
+        await testUtils.dom.dragAndDrop($record, $to, {position: "bottom"});
+
+        assert.strictEqual(kanban.$('.o_kanban_record:not(.o_kanban_ghost)').text(),
+            'blipgnapblipyop');
+
+        kanban.destroy();
+    });
+
+    QUnit.test('ungrouped kanban without handle field', async function (assert) {
+        assert.expect(3);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                    '<templates><t t-name="kanban-box">' +
+                    '<div>' +
+                        '<field name="foo"/>' +
+                    '</div>' +
+                '</t></templates></kanban>',
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/resequence') {
+                    assert.ok(false, "should not trigger a resequencing");
+                }
+                return this._super(route, args);
+            },
+        });
+
+        assert.doesNotHaveClass(kanban.$('.o_kanban_view'), 'ui-sortable');
+        assert.strictEqual(kanban.$('.o_kanban_record:not(.o_kanban_ghost)').text(),
+            'yopblipgnapblip');
+
+        var $draggedRecord = kanban.$('.o_kanban_view .o_kanban_record:first');
+        var $to = kanban.$('.o_kanban_view .o_kanban_record:nth-child(4)');
+        await testUtils.dom.dragAndDrop($draggedRecord, $to, {position: "bottom"});
+
+        assert.strictEqual(kanban.$('.o_kanban_record:not(.o_kanban_ghost)').text(),
+            'yopblipgnapblip');
+
+        kanban.destroy();
+    });
+
 });
 
 });

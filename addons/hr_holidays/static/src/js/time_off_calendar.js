@@ -117,7 +117,7 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
             return this._rpc({
                 model: 'hr.leave.type',
                 method: 'get_days_all_request',
-                args: [this.context],
+                context: this.context,
             })
             .then(function (leaves) {
                 $('#counter_leaves').children().remove();
@@ -150,13 +150,8 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
          */
         _onNewTimeOff: function () {
             var self = this;
-            this.do_action({
-                type: 'ir.actions.act_window',
-                res_model: 'hr.leave',
-                view_type: 'form',
-                views: [[false,'form']],
-                target: 'new',
-            }, {
+
+            this.do_action('hr_holidays.hr_leave_action_my_request', {
                 on_close: function () {
                     self.reload();
                 }
@@ -173,7 +168,6 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
             this.do_action({
                 type: 'ir.actions.act_window',
                 res_model: 'hr.leave.allocation',
-                view_type: 'form',
                 views: [[false,'form']],
                 target: 'new',
             }, {

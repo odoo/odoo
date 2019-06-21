@@ -13,9 +13,13 @@ var DateWidget = Widget.extend({
     type_of_date: "date",
     events: {
         'change.datetimepicker': 'changeDatetime',
+        'error.datetimepicker': 'errorDatetime',
         'change .o_datepicker_input': 'changeDatetime',
+        'click input': '_onInputClicked',
         'input input': '_onInput',
+        'keydown': '_onKeydown',
         'show.datetimepicker': '_onDateTimePickerShow',
+        'hide.datetimepicker': '_onDateTimePickerHide',
     },
     /**
      * @override
@@ -49,10 +53,13 @@ var DateWidget = Widget.extend({
             },
             widgetParent: 'body',
             keyBinds: null,
-            allowInputToggle: true,
         }, options || {});
 
         this.__libInput = 0;
+        // tempusdominus doesn't offer any elegant way to check whether the
+        // datepicker is open or not, so we have to listen to hide/show events
+        // and manually keep track of the 'open' state
+        this.__isOpen = false;
     },
     /**
      * @override
@@ -68,6 +75,9 @@ var DateWidget = Widget.extend({
      * @override
      */
     destroy: function () {
+        if (this._onScroll) {
+            window.removeEventListener('scroll', this._onScroll, true);
+        }
         this.__libInput++;
         this.$el.datetimepicker('destroy');
         this.__libInput--;
@@ -101,6 +111,12 @@ var DateWidget = Widget.extend({
                 this.trigger("datetime_changed");
             }
         }
+    },
+    /**
+     * Library clears the wrong date format so just ignore error
+     */
+    errorDatetime: function (e) {
+        return false;
     },
     /**
      * Focuses the datepicker input. This function must be called in order to
@@ -228,6 +244,18 @@ var DateWidget = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Reacts to the datetimepicker being hidden
+     * Used to unbind the scroll event from the datetimepicker
+     *
+     * @private
+     */
+    _onDateTimePickerHide: function () {
+        this.__isOpen = false;
+        if (this._onScroll) {
+            window.removeEventListener('scroll', this._onScroll, true);
+        }
+    },
+    /**
      * Reacts to the datetimepicker being shown
      * Could set/verify our widget value
      * And subsequently update the datetimepicker
@@ -235,8 +263,35 @@ var DateWidget = Widget.extend({
      * @private
      */
     _onDateTimePickerShow: function () {
+        this.__isOpen = true;
         if (this.$input.val().length !== 0 && this.isValid()) {
             this.$input.select();
+        }
+        var self = this;
+        this._onScroll = function (ev) {
+            if (ev.target !== self.$input.get(0)) {
+                self.__libInput++;
+                self.$el.datetimepicker('hide');
+                self.__libInput--;
+            }
+        };
+        window.addEventListener('scroll', this._onScroll, true);
+    },
+    /**
+     * @private
+     * @param {KeyEvent} ev
+     */
+    _onKeydown: function (ev) {
+        if (ev.which === $.ui.keyCode.ESCAPE) {
+            if (this.__isOpen) {
+                // we don't want any other effects than closing the datepicker,
+                // like leaving the edition of a row in editable list view
+                ev.stopImmediatePropagation();
+                this.__libInput++;
+                this.$el.datetimepicker('hide');
+                this.__libInput--;
+                this.focus();
+            }
         }
     },
     /**
@@ -251,6 +306,15 @@ var DateWidget = Widget.extend({
         if (this.__libInput > 0) {
             ev.stopImmediatePropagation();
         }
+    },
+    /**
+     * @private
+     */
+    _onInputClicked: function () {
+        this.__libInput++;
+        this.$el.datetimepicker('toggle');
+        this.__libInput--;
+        this.focus();
     },
 });
 

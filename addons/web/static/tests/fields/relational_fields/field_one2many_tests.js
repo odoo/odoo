@@ -2,9 +2,10 @@ odoo.define('web.field_one_to_many_tests', function (require) {
 "use strict";
 
 var AbstractField = require('web.AbstractField');
-var concurrency = require('web.concurrency');
 var FormView = require('web.FormView');
+var KanbanRecord = require('web.KanbanRecord');
 var ListRenderer = require('web.ListRenderer');
+var NotificationService = require('web.NotificationService');
 var relationalFields = require('web.relational_fields');
 var testUtils = require('web.test_utils');
 var fieldUtils = require('web.field_utils');
@@ -119,6 +120,7 @@ QUnit.module('fields', {}, function () {
                         display_name: "leonardo",
                         turtle_bar: true,
                         turtle_foo: "yop",
+                        turle_int: 1,
                         partner_ids: [],
                     }, {
                         id: 2,
@@ -829,10 +831,10 @@ QUnit.module('fields', {}, function () {
                             'The right values should be written');
                     }
                     return this._super.apply(this, arguments);
-                }
+                },
             });
 
-            assert.deepEqual(form.$('.o_many2many_tags_cell').text().trim(), "second record",
+            assert.deepEqual(form.$('.o_data_cell.o_many2many_tags_cell').text().trim(), "second record",
                 "the partner_ids should be as specified at initialization");
 
             await testUtils.form.clickEdit(form);
@@ -841,7 +843,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.fields.editSelect($cell, "hop");
             await testUtils.form.clickSave(form);
 
-            assert.deepEqual(form.$('.o_many2many_tags_cell').text().trim().split(/\s+/),
+            assert.deepEqual(form.$('.o_data_cell.o_many2many_tags_cell').text().trim().split(/\s+/),
                 ["second", "record", "aaa"],
                 'The partner_ids should have been updated');
 
@@ -3020,11 +3022,11 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            // edit mode, then click on Add an item, then click elsewhere
+            // edit mode, then click on Add an item, then press enter
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             await testUtils.fields.triggerKeydown(form.$('input[name="turtle_foo"]'), 'enter');
-            assert.hasClass(form.$('input[name="turtle_foo"]'),'o_field_invalid',
+            assert.hasClass(form.$('input[name="turtle_foo"]'), 'o_field_invalid',
                 "input should be marked invalid");
             assert.verifySteps(['read', 'default_get']);
             form.destroy();
@@ -3426,11 +3428,6 @@ QUnit.module('fields', {}, function () {
             await testUtils.dom.click($('.bootstrap-datetimepicker-widget .year:contains(2017)'));
             await testUtils.dom.click($('.bootstrap-datetimepicker-widget .month').eq(1));
             await testUtils.dom.click($('.day:contains(22)'));
-            // trigger the blur of input before the click on Save, to closely mock what actually
-            // happens when we really click on Save
-            // this is required to close the datepicker before removing the input from the DOM
-            // (because of the re-rendering in readonly), otherwise tempusdominus crashes
-            await testUtils.dom.triggerEvents(form.$('.o_datepicker_input'), 'blur');
             await testUtils.form.clickSave(form);
 
             assert.verifySteps(['read', 'read', 'onchange', 'write', 'read', 'read']);
@@ -5409,6 +5406,145 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('.o_field_widget .o_kanban_view .o_kanban_record:not(.o_kanban_ghost) .o_test_foo').text(),
                 'My little Foo Value', "should still have a value for the foo field");
 
+            form.destroy();
+        });
+
+        QUnit.test('one2many field with virtual ids with kanban button', async function (assert) {
+            assert.expect(25);
+
+            testUtils.mock.patch(KanbanRecord, {
+                init: function () {
+                    this._super.apply(this, arguments);
+                    this._onKanbanActionClicked = this.__proto__._onKanbanActionClicked;
+                },
+            });
+
+            this.data.partner.records[0].p = [4];
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form>' +
+                    '<field name="p" mode="kanban">' +
+                    '<kanban>' +
+                        '<templates>' +
+                        '<field name="foo"/>' +
+                        '<t t-name="kanban-box">' +
+                            '<div>' +
+                                '<span><t t-esc="record.foo.value"/></span>' +
+                                '<button type="object" class="btn btn-link fa fa-shopping-cart" name="button_warn" string="button_warn" warn="warn" />' +
+                                '<button type="object" class="btn btn-link fa fa-shopping-cart" name="button_disabled" string="button_disabled" />' +
+                            '</div>' +
+                        '</t>' +
+                        '</templates>' +
+                    '</kanban>' +
+                    '</field>' +
+                '</form>',
+                archs: {
+                    'partner,false,form': '<form><field name="foo"/></form>',
+                },
+                res_id: 1,
+                services: {
+                    notification: NotificationService.extend({
+                        notify: function (params) {
+                            assert.step(params.type);
+                        }
+                    }),
+                },
+                intercepts: {
+                    execute_action: function (event) {
+                        assert.step(event.data.action_data.name + '_' + event.data.env.model + '_' + event.data.env.currentID);
+                        event.data.on_success();
+                    },
+                },
+            });
+
+            // 1. Define all css selector
+            var oKanbanView = '.o_field_widget .o_kanban_view';
+            var oKanbanRecordActive = oKanbanView + ' .o_kanban_record:not(.o_kanban_ghost)';
+            var oAllKanbanButton = oKanbanRecordActive + ' button[data-type="object"]';
+            var btn1 = oKanbanRecordActive + ':nth-child(1) button[data-type="object"]';
+            var btn2 = oKanbanRecordActive + ':nth-child(2) button[data-type="object"]';
+            var btn1Warn = btn1 + '[data-name="button_warn"]';
+            var btn1Disabled = btn1 + '[data-name="button_disabled"]';
+            var btn2Warn = btn2 + '[data-name="button_warn"]';
+            var btn2Disabled = btn2 + '[data-name="button_disabled"]';
+
+            // check if we already have one kanban card
+            assert.containsOnce(form, oKanbanView, "should have one inner kanban view for the one2many field");
+            assert.containsOnce(form, oKanbanRecordActive, "should have one kanban records yet");
+
+            // we have 2 buttons
+            assert.containsN(form, oAllKanbanButton, 2, "should have 2 buttons type object");
+
+            // disabled ?
+            assert.containsNone(form, oAllKanbanButton + '[disabled]', "should not have button type object disabled");
+
+            // click on the button
+            await testUtils.dom.click(form.$(btn1Disabled));
+            await testUtils.dom.click(form.$(btn1Warn));
+
+            // switch to edit mode
+            await testUtils.form.clickEdit(form);
+
+            // click on existing buttons
+            await testUtils.dom.click(form.$(btn1Disabled));
+            await testUtils.dom.click(form.$(btn1Warn));
+
+            // create new kanban
+            await testUtils.dom.click(form.$('.o_field_widget .o-kanban-button-new'));
+
+            // save & close the modal
+            assert.strictEqual($('.modal-content input.o_field_widget').val(), 'My little Foo Value',
+                "should already have the default value for field foo");
+            await testUtils.dom.click($('.modal-content .btn-primary').first());
+
+            // check new item
+            assert.containsN(form, oAllKanbanButton, 4, "should have 4 buttons type object");
+            assert.containsN(form, btn1, 2, "should have 2 buttons type object in area 1");
+            assert.containsN(form, btn2, 2, "should have 2 buttons type object in area 2");
+            assert.containsOnce(form, oAllKanbanButton + '[disabled]',  "should have 1 button type object disabled");
+
+            assert.strictEqual(form.$(btn2Disabled).attr('disabled'), 'disabled', 'Should have a button type object disabled in area 2');
+            assert.strictEqual(form.$(btn2Warn).attr('disabled'), undefined, 'Should have a button type object not disabled in area 2');
+            assert.strictEqual(form.$(btn2Warn).attr('warn'), 'warn', 'Should have a button type object with warn attr in area 2');
+
+            // click all buttons
+            await testUtils.dom.click(form.$(btn1Disabled));
+            await testUtils.dom.click(form.$(btn1Warn));
+            await testUtils.dom.click(form.$(btn2Disabled));
+            await testUtils.dom.click(form.$(btn2Warn));
+
+            // save the form
+            await testUtils.form.clickSave(form);
+
+            assert.containsNone(form, oAllKanbanButton + '[disabled]', "should not have button type object disabled after save");
+
+            // click all buttons
+            await testUtils.dom.click(form.$(btn1Disabled));
+            await testUtils.dom.click(form.$(btn1Warn));
+            await testUtils.dom.click(form.$(btn2Disabled));
+            await testUtils.dom.click(form.$(btn2Warn));
+
+            assert.verifySteps([
+                "button_disabled_partner_4",
+                "button_warn_partner_4",
+
+                "button_disabled_partner_4",
+                "button_warn_partner_4",
+
+                "button_disabled_partner_4",
+                "button_warn_partner_4",
+                "danger", // warn btn8
+
+                "button_disabled_partner_4",
+                "button_warn_partner_4",
+                "button_disabled_partner_8",
+                "button_warn_partner_8"
+            ], "should have triggered theses 11 clicks event");
+
+            testUtils.mock.unpatch(KanbanRecord);
             form.destroy();
         });
 
@@ -8012,14 +8148,14 @@ QUnit.module('fields', {}, function () {
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
             await testUtils.dom.click($('li.ui-menu-item a:contains(xpad)').trigger('mouseenter'));
-            assert.containsOnce(form, 'th',
+            assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column when the product_id is set");
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
                 '', 'keyup');
-            assert.containsN(form, 'th', 2,
+            assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many when product_id is not set");
             await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
-            assert.containsOnce(form, 'th',
+            assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column after the value change");
             form.destroy();
         });
@@ -8066,7 +8202,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.fields.editInput(form.$('.o_field_one2many input:first'), 'New line');
             await testUtils.dom.click(form.$el);
 
-            assert.containsN(form, 'th', 2, "should be 2 columns('foo' + 'int_field')");
+            assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2, "should be 2 columns('foo' + 'int_field')");
 
             form.destroy();
         });
@@ -8105,14 +8241,14 @@ QUnit.module('fields', {}, function () {
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
             await testUtils.dom.click($('li.ui-menu-item a:contains(xpad)').trigger('mouseenter'));
-            assert.containsOnce(form, 'th',
+            assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column when the product_id is set");
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
                 '', 'keyup');
-            assert.containsN(form, 'th', 2,
+            assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many when product_id is not set");
             await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
-            assert.containsOnce(form, 'th',
+            assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column after the value change");
             form.destroy();
         });
@@ -8146,6 +8282,118 @@ QUnit.module('fields', {}, function () {
                 "should have a record in the relation");
             assert.strictEqual(form.$('.o_kanban_record span:contains(blip)').length, 1,
                 "condition in the kanban template should have been correctly evaluated");
+
+            form.destroy();
+        });
+
+        QUnit.test('one2many kanban with widget handle', async function (assert) {
+            assert.expect(5);
+
+            this.data.partner.records[0].turtles = [1, 2, 3];
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form>' +
+                        '<field name="turtles">' +
+                            '<kanban>' +
+                                '<field name="turtle_int" widget="handle"/>' +
+                                '<templates>' +
+                                    '<t t-name="kanban-box">' +
+                                        '<div><field name="turtle_foo"/></div>' +
+                                    '</t>' +
+                                '</templates>' +
+                            '</kanban>' +
+                        '</field>' +
+                    '</form>',
+                mockRPC: function (route, args) {
+                    if (args.method === 'write') {
+                        assert.deepEqual(args.args[1], {
+                            turtles: [
+                                [1, 2, {turtle_int: 0}],
+                                [1, 3, {turtle_int: 1}],
+                                [1, 1, {turtle_int: 2}],
+                            ],
+                        });
+                    }
+                    return this._super.apply(this, arguments);
+                },
+                res_id: 1,
+            });
+
+            assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').text(), 'yopblipkawa');
+            assert.doesNotHaveClass(form.$('.o_field_one2many .o_kanban_view'), 'ui-sortable');
+
+            await testUtils.form.clickEdit(form);
+
+            assert.hasClass(form.$('.o_field_one2many .o_kanban_view'), 'ui-sortable');
+
+            var $record = form.$('.o_field_one2many[name=turtles] .o_kanban_view .o_kanban_record:first');
+            var $to = form.$('.o_field_one2many[name=turtles] .o_kanban_view .o_kanban_record:nth-child(3)');
+            await testUtils.dom.dragAndDrop($record, $to, {position: "bottom"});
+
+            assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').text(), 'blipkawayop');
+
+            await testUtils.form.clickSave(form);
+
+            form.destroy();
+        });
+
+        QUnit.test('one2many editable list: edit and click on add a line', async function (assert) {
+            assert.expect(9);
+
+            this.data.turtle.onchanges = {
+                turtle_int: function () {},
+            };
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form>' +
+                        '<field name="turtles">' +
+                            '<tree editable="bottom"><field name="turtle_int"/></tree>' +
+                        '</field>' +
+                    '</form>',
+                res_id: 1,
+                mockRPC: function (route, args) {
+                    if (args.method === 'onchange') {
+                        assert.step('onchange');
+                    }
+                    return this._super.apply(this, arguments);
+                },
+                // in this test, we want to to accurately mock what really happens, that is, input
+                // fields only trigger their changes on 'change' event, not on 'input'
+                fieldDebounce: 100000,
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            assert.containsOnce(form, '.o_data_row');
+
+            // edit first row
+            await testUtils.dom.click(form.$('.o_data_row:first .o_data_cell:first'));
+            assert.hasClass(form.$('.o_data_row:first'), 'o_selected_row');
+            await testUtils.fields.editInput(form.$('.o_selected_row input[name=turtle_int]'), '44');
+
+            assert.verifySteps([]);
+            // simulate a long click on 'Add a line' (mousedown [delay] mouseup and click events)
+            var $addLine = form.$('.o_field_x2many_list_row_add a');
+            testUtils.dom.triggerEvents($addLine, 'mousedown');
+            // mousedown is supposed to trigger the change event on the edited input, but it doesn't
+            // in the test environment, for an unknown reason, so we trigger it manually to reproduce
+            // what really happens
+            testUtils.dom.triggerEvents(form.$('.o_selected_row input[name=turtle_int]'), 'change');
+            await testUtils.nextTick();
+
+            // release the click
+            await testUtils.dom.triggerEvents($addLine, ['mouseup', 'click']);
+            assert.verifySteps(['onchange', 'onchange']);
+
+            assert.containsN(form, '.o_data_row', 2);
+            assert.strictEqual(form.$('.o_data_row:first').text(), '44');
+            assert.hasClass(form.$('.o_data_row:nth(1)'), 'o_selected_row');
 
             form.destroy();
         });

@@ -2,7 +2,6 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_product_product_account_user,product.product.account.user,product.model_product_product,group_account_user,1,0,0,0
 access_product_product_account_manager,product.product.account.manager,product.model_product_product,account.group_account_manager,1,1,1,1
 access_product_template_account_manager,product.template.account.manager,product.model_product_template,account.group_account_manager,1,1,1,1
-access_product_price_history_account_manager,product.price.history.account.manager,product.model_product_price_history,account.group_account_manager,1,1,1,1
 access_account_payment_term,account.payment.term,model_account_payment_term,account.group_account_user,1,0,0,0
 access_account_payment_term_line,account.payment.term.line,model_account_payment_term_line,account.group_account_user,1,0,0,0
 access_account_account_type_manager,account.account.type,model_account_account_type,account.group_account_manager,1,1,1,1
@@ -84,3 +83,11 @@ access_account_fiscal_year_user,account.fiscal.year.user,model_account_fiscal_ye
 access_account_fiscal_year_manager,account.fiscal.year.manager,model_account_fiscal_year,account.group_account_manager,1,1,1,1
 access_account_incoterms_all,account.incoterms all,model_account_incoterms,,1,0,0,0
 access_account_incoterms_manager,account.incoterms manager,model_account_incoterms,account.group_account_manager,1,1,1,1
+access_account_journal_group_all,account.journal.group all,model_account_journal_group,,1,0,0,0
+access_account_journal_group_manager,account.journal.group manager,model_account_journal_group,account.group_account_manager,1,1,1,1
+access_account_tax_repartition_line_user,account.tax repartition.line.user,model_account_tax_repartition_line,base.group_user,1,0,0,0
+access_account_tax_repartition_line_invoice,account.tax repartition.line.invoice,model_account_tax_repartition_line,account.group_account_invoice,1,0,0,0
+access_account_tax_repartition_line_manager,account.tax repartition.line.manager,model_account_tax_repartition_line,account.group_account_manager,1,1,1,1
+access_account_tax_repartition_line_template_manager,account.tax repartition.line.template.manager,model_account_tax_repartition_line_template,account.group_account_manager,1,1,1,1
+access_account_tax_report_line_invoice,account.tax.report.line.invoice,model_account_tax_report_line,account.group_account_invoice,1,0,0,0
+access_account_tax_report_line_ac_user,account.tax.report.line.ac.user,model_account_tax_report_line,account.group_account_manager,1,1,1,1

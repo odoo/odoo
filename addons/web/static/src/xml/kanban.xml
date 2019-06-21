@@ -121,6 +121,25 @@
     </div>
 </t>
 
+<t t-name="KanbanView.SetCoverModal">
+    <div t-if="attachmentIds.length" class="ml32 mr0 o_kanban_cover_container">
+        <t t-foreach="attachmentIds" t-as="attachment">
+            <div t-attf-class="o_kanban_cover_image#{coverId === attachment.id ? ' o_selected' : ''}">
+                <img t-attf-src="/web/image/#{attachment.id}?unique=1" t-att-data-id="attachment.id" t-att-data-name="attachment.name" alt="Attachment"/>
+            </div>
+        </t>
+    </div>
+    <div t-else="">There is no available image to be set as cover.</div>
+    <span class="d-none">
+        <t t-call="HiddenInputFile">
+            <t t-set="fileupload_id" t-value="widget.imageUploadID" />
+            <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
+            <input type="hidden" name="model" t-att-value="widget.modelName" />
+            <input type="hidden" name="id" t-att-value="widget.id" />
+        </t>
+    </span>
+</t>
+
 <!-- Note: this dialog isn't responsive, but it is not accessible on mobile -->
 <div t-name="KanbanView.ExamplesDialog" class="o_kanban_examples_dialog">
     <div class="o_kanban_examples_dialog_nav">
@@ -172,9 +191,9 @@
     <div class="o_kanban_example_background_container">
         <div class="o_kanban_example_background">
             <div class="o_kanban_examples">
-                <t t-foreach="_.range(1,5)" t-as="num">
+                <t t-foreach="ghostColumns" t-as="column">
                     <div class="o_kanban_examples_group">
-                        <h6><b>Column <t t-esc="num"/></b></h6>
+                        <h6><b><t t-esc="column"/></b></h6>
                         <t t-foreach="_.random(2,6)">
                             <t t-call="KanbanView.ExamplesBackground.RecordGhost"/>
                         </t>
@@ -263,6 +282,7 @@
             <input type="checkbox" t-att-id="inputId" t-att-checked="group.state === 'checked' ? 'checked' : undefined" class="custom-control-input"/>
             <label t-att-for="inputId" class="o_search_panel_label custom-control-label d-block" t-att-title="group.tooltip">
                 <i t-att-class="'fa fa-fw pull-right o_toggle_fold ' + (group.folded ? 'fa-caret-left' : 'fa-caret-down')"/>
+                <span t-if="group.hex_color" t-att-style="'color: ' + group.hex_color + ';'">●</span>
                 <span class="o_search_panel_label_title"><t t-esc="group.name"/></span>
             </label>
         </div>

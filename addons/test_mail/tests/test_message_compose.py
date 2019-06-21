@@ -86,11 +86,11 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
             ('List2', b'My second attachment')
         ]
         _attach_1 = self.env['ir.attachment'].sudo(self.user_employee).create({
-            'name': 'Attach1', 'datas_fname': 'Attach1',
+            'name': 'Attach1',
             'datas': 'bWlncmF0aW9uIHRlc3Q=',
             'res_model': 'mail.compose.message', 'res_id': 0})
         _attach_2 = self.env['ir.attachment'].sudo(self.user_employee).create({
-            'name': 'Attach2', 'datas_fname': 'Attach2',
+            'name': 'Attach2',
             'datas': 'bWlncmF0aW9uIHRlc3Q=',
             'res_model': 'mail.compose.message', 'res_id': 0})
 
@@ -182,11 +182,10 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
         self.assertEqual(msg.needaction_partner_ids, self.env['res.partner'])
 
         self.format_and_process(
-            MAIL_TEMPLATE_PLAINTEXT,
-            email_from=self.user_admin.email,
+            MAIL_TEMPLATE_PLAINTEXT, self.user_admin.email, 'not_my_businesss@example.com',
             msg_id='<1198923581.41972151344608186800.JavaMail.diff1@agrolait.com>',
-            to='not_my_businesss@example.com',
-            extra='In-Reply-To:\r\n\t%s\n' % msg.message_id)
+            extra='In-Reply-To:\r\n\t%s\n' % msg.message_id,
+            target_model='mail.test.simple')
         reply = self.test_record.message_ids - msg
         self.assertTrue(reply)
         self.assertEqual(reply.subtype_id, self.env.ref('mail.mt_note'))
@@ -206,17 +205,20 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
 
     def test_post_notify(self):
         self.user_employee.write({'notification_type': 'inbox'})
-        new_notification = self.env['mail.thread'].message_notify(
+        new_notification = self.test_record.message_notify(
             subject='This should be a subject',
             body='<p>You have received a notification</p>',
-            partner_ids=[(4, self.partner_1.id), (4, self.user_employee.partner_id.id)],
+            partner_ids=[self.partner_1.id, self.user_employee.partner_id.id],
         )
 
         self.assertEqual(new_notification.subtype_id, self.env.ref('mail.mt_note'))
+        self.assertEqual(new_notification.message_type, 'user_notification')
         self.assertEqual(new_notification.body, '<p>You have received a notification</p>')
         self.assertEqual(new_notification.author_id, self.env.user.partner_id)
         self.assertEqual(new_notification.email_from, formataddr((self.env.user.name, self.env.user.email)))
         self.assertEqual(new_notification.needaction_partner_ids, self.partner_1 | self.user_employee.partner_id)
+        self.assertNotIn(new_notification, self.test_record.message_ids)
+        # todo xdo add test message_notify on thread with followers and stuff
 
 
 class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):

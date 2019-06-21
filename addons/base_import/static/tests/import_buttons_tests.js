@@ -106,4 +106,35 @@ QUnit.test('kanban without import button', async function(assert) {
     kanban.destroy();
 });
 
+QUnit.test('import attrs in list views', async function (assert) {
+    assert.expect(1);
+
+    var list = await createView({
+        View: ListView,
+        model: 'foo',
+        data: this.data,
+        arch: '<tree import="0"><field name="foo"/></tree>',
+    });
+
+    assert.containsNone(list.$buttons, '.o_button_import');
+    list.destroy();
+});
+
+QUnit.test('import attrs in kanban views', async function (assert) {
+    assert.expect(1);
+
+    var kanban = await createView({
+        View: KanbanView,
+        model: 'foo',
+        data: this.data,
+        arch: '<kanban import="0">' +
+                '<templates><t t-name="kanban-box">' +
+                    '<div><field name="foo"/></div>' +
+                '</t></templates>' +
+            '</kanban>',
+    });
+
+    assert.containsNone(kanban.$buttons, '.o_button_import');
+    kanban.destroy();
+});
 });

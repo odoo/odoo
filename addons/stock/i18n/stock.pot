@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.1\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-16 07:58+0000\n"
-"PO-Revision-Date: 2019-01-16 07:58+0000\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
+"PO-Revision-Date: 2019-03-20 13:49+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:337
+#: code:addons/stock/models/stock_move.py:343
 #, python-format
 msgid "\n"
 "\n"
@@ -24,7 +24,7 @@ msgid "\n"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:338
+#: code:addons/stock/models/stock_move.py:344
 #, python-format
 msgid "\n"
 "\n"
@@ -32,25 +32,29 @@ msgid "\n"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:325
+#: code:addons/stock/models/stock_move.py:331
 #, python-format
 msgid " (%s reserved)"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:328
+#: code:addons/stock/models/stock_move.py:334
 #, python-format
 msgid " (reserved)"
 msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
-msgid " * Draft: not confirmed yet and will not be scheduled until confirmed.\n"
-" * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows).\n"
-" * Waiting: if it is not ready to be sent because the required products could not be reserved.\n"
-" * Ready: products are reserved and ready to be sent. If the shipping policy is 'As soon as possible' this happens as soon as anything is reserved.\n"
-" * Done: has been processed, can't be modified or cancelled anymore.\n"
-" * Cancelled: has been cancelled, can't be confirmed anymore."
+msgid " * Draft: The transfer is not confirmed yet. Reservation doesn't apply.\n"
+" * Waiting another operation: This transfer is waiting for another operation before being ready.\n"
+" * Waiting: The transfer is waiting for the availability of some products.\n"
+"(a) The shipping policy is \"As soon as possible\": no product could be reserved.\n"
+"(b) The shipping policy is \"When all products are ready\": not all the products could be reserved.\n"
+" * Ready: The transfer is ready to be processed.\n"
+"(a) The shipping policy is \"As soon as possible\": at least one product has been reserved.\n"
+"(b) The shipping policy is \"When all products are ready\": all product have been reserved.\n"
+" * Done: The transfer has been processed.\n"
+" * Cancelled: The transfer has been cancelled."
 msgstr ""
 
 #. module: stock
@@ -65,7 +69,7 @@ msgid "%s use default source or destination locations                        fro
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:615
+#: code:addons/stock/models/stock_warehouse.py:642
 #, python-format
 msgid "%s: Supply Product from %s"
 msgstr ""
@@ -115,7 +119,7 @@ msgid "<br/>\n"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_rule.py:112
+#: code:addons/stock/models/stock_rule.py:111
 #, python-format
 msgid "<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill it."
 msgstr ""
@@ -134,6 +138,12 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                All products could not be reserved. Click on the \"Check Availability\" button to try to reserve products"
 msgstr ""
 
 #. module: stock
@@ -336,7 +346,7 @@ msgid "A Pack"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:95
+#: code:addons/stock/models/stock_move_line.py:96
 #, python-format
 msgid "A done move line should never have a reserved quantity."
 msgstr ""
@@ -488,11 +498,6 @@ msgid "All products"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "All products could not be reserved. Click on the \"Check Availability\" button to try to reserve products"
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
 msgid "All returned moves"
 msgstr ""
@@ -560,16 +565,6 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Assign Owner"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-msgid "Assign Partner"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-msgid "Assign the partner to the Operations. Use only if the partner is manually changed!"
 msgstr ""
 
 #. module: stock
@@ -648,7 +643,7 @@ msgid "Backorder creation"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:72
+#: code:addons/stock/models/stock_picking.py:73
 #, python-format
 msgid "Backorder exists"
 msgstr ""
@@ -685,6 +680,11 @@ msgid "Barcode Scanner"
 msgstr ""
 
 #. module: stock
+#: model:ir.actions.report,name:stock.label_transfer_template
+msgid "Barcodes (ZPL)"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
 msgid "Batch Pickings"
 msgstr ""
@@ -715,7 +715,7 @@ msgid "By Unique Serial Number"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:641
+#: code:addons/stock/models/stock_move.py:647
 #, python-format
 msgid "By changing this quantity here, you accept the new quantity as complete: Odoo will not automatically generate a back order."
 msgstr ""
@@ -742,7 +742,7 @@ msgid "Calendar View"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:576
+#: code:addons/stock/models/stock_warehouse.py:603
 #, python-format
 msgid "Can't find any customer or supplier location."
 msgstr ""
@@ -785,7 +785,7 @@ msgid "Cancelled Moves"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:273
+#: code:addons/stock/models/stock_move.py:279
 #, python-format
 msgid "Cannot set the done quantity from this stock move, work directly with the move lines."
 msgstr ""
@@ -863,7 +863,7 @@ msgid "Choose a date to get the inventory at that date"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:1024
+#: code:addons/stock/models/stock_picking.py:1034
 #, python-format
 msgid "Choose destination location"
 msgstr ""
@@ -1065,7 +1065,7 @@ msgid "Create Backorder"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:776
+#: code:addons/stock/models/stock_picking.py:786
 #, python-format
 msgid "Create Backorder?"
 msgstr ""
@@ -1229,7 +1229,7 @@ msgid "Credit Card"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:581
+#: code:addons/stock/models/stock_warehouse.py:608
 #, python-format
 msgid "Cross-Dock"
 msgstr ""
@@ -1265,7 +1265,7 @@ msgid "Current quantity of products.\n"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:110
+#: code:addons/stock/models/stock_picking.py:111
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 #, python-format
 msgid "Customer"
@@ -1328,6 +1328,11 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date_done
 msgid "Date of Transfer"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
+msgid "Day"
 msgstr ""
 
 #. module: stock
@@ -1444,25 +1449,25 @@ msgid "Deliver goods directly (1 step)"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:582
+#: code:addons/stock/models/stock_warehouse.py:609
 #, python-format
 msgid "Deliver in 1 step (ship)"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:582
+#: code:addons/stock/models/stock_warehouse.py:609
 #, python-format
 msgid "Deliver in 2 steps (pick + ship)"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:583
+#: code:addons/stock/models/stock_warehouse.py:610
 #, python-format
 msgid "Deliver in 3 steps (pick + pack + ship)"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:334
+#: code:addons/stock/models/product.py:350
 #, python-format
 msgid "Delivered Qty"
 msgstr ""
@@ -1473,7 +1478,7 @@ msgid "Deliveries"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:776
+#: code:addons/stock/models/stock_warehouse.py:803
 #: model:stock.picking.type,name:stock.chi_picking_type_out
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
@@ -1514,6 +1519,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__name
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Description"
 msgstr ""
 
@@ -1530,6 +1536,11 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Receipts"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__description_picking
+msgid "Description of Picking"
 msgstr ""
 
 #. module: stock
@@ -1551,6 +1562,11 @@ msgid "Description on Receptions"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_line__description_picking
+msgid "Description picking"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Destination"
 msgstr ""
@@ -1561,7 +1577,7 @@ msgid "Destination Address "
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_rule.py:97
+#: code:addons/stock/models/stock_rule.py:96
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_dest_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__location_dest_id
 #: model:ir.model.fields,field_description:stock.field_stock_rule__location_id
@@ -1603,7 +1619,7 @@ msgid "Destination route"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:466
+#: code:addons/stock/models/stock_move.py:472
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Detailed Operations"
@@ -1881,7 +1897,13 @@ msgid "Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:329
+#: model:ir.actions.act_window,name:stock.action_stock_level_forecast_report_all_product
+#: model:ir.ui.menu,name:stock.menu_forecast_inventory
+msgid "Forecasted Inventory"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:345
 #: model:ir.model.fields,field_description:stock.field_product_template__virtual_available
 #: model:ir.model.fields,field_description:stock.field_stock_move__availability
 #, python-format
@@ -1915,25 +1937,25 @@ msgid "Future Activities"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:332
+#: code:addons/stock/models/product.py:348
 #, python-format
 msgid "Future Deliveries"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:337
+#: code:addons/stock/models/product.py:353
 #, python-format
 msgid "Future P&L"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:342
+#: code:addons/stock/models/product.py:358
 #, python-format
 msgid "Future Productions"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:324
+#: code:addons/stock/models/product.py:340
 #, python-format
 msgid "Future Receipts"
 msgstr ""
@@ -1951,11 +1973,6 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_fixed_putaway_strat__sequence
 msgid "Give to the more specialized category, a higher priority to have them in top of the list."
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
-msgid "Graph"
 msgstr ""
 
 #. module: stock
@@ -2184,7 +2201,7 @@ msgid "Immediate Transfer"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:739
+#: code:addons/stock/models/stock_picking.py:749
 #, python-format
 msgid "Immediate Transfer?"
 msgstr ""
@@ -2245,7 +2262,7 @@ msgid "Initial Demand"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:500
+#: code:addons/stock/models/stock_warehouse.py:508
 #, python-format
 msgid "Input"
 msgstr ""
@@ -2256,7 +2273,7 @@ msgid "Input Location"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_scrap.py:138
+#: code:addons/stock/models/stock_scrap.py:140
 #, python-format
 msgid "Insufficient Quantity"
 msgstr ""
@@ -2285,7 +2302,7 @@ msgid "Internal Reference"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:801
+#: code:addons/stock/models/stock_warehouse.py:828
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
@@ -2307,19 +2324,19 @@ msgid "Internal reference number in case it differs from the manufacturer's lot/
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:253
+#: code:addons/stock/models/product.py:267
 #, python-format
 msgid "Invalid domain left operand %s"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:255
+#: code:addons/stock/models/product.py:269
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:257
+#: code:addons/stock/models/product.py:271
 #, python-format
 msgid "Invalid domain right operand %s"
 msgstr ""
@@ -2664,7 +2681,7 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:70
+#: code:addons/stock/models/stock_picking.py:71
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #, python-format
@@ -2841,6 +2858,11 @@ msgid "Lot/Serial Number (PDF)"
 msgstr ""
 
 #. module: stock
+#: model:ir.actions.report,name:stock.label_lot_template
+msgid "Lot/Serial Number (ZPL)"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_tree
 msgid "Lot/Serial Number Inventory"
 msgstr ""
@@ -2892,7 +2914,7 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:342
-#: code:addons/stock/models/stock_warehouse.py:685
+#: code:addons/stock/models/stock_warehouse.py:712
 #, python-format
 msgid "Make To Order"
 msgstr ""
@@ -3036,6 +3058,11 @@ msgid "Misc"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
+msgid "Month"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree
 msgid "Most operations are prepared automatically by Odoo according\n"
 "                to your preconfigured logistics rules, but you can also record\n"
@@ -3154,8 +3181,8 @@ msgid "New"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:176
-#: code:addons/stock/models/stock_picking.py:613
+#: code:addons/stock/models/stock_move_line.py:179
+#: code:addons/stock/models/stock_picking.py:622
 #, python-format
 msgid "New Move:"
 msgstr ""
@@ -3219,7 +3246,7 @@ msgid "No inventory found"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:417
+#: code:addons/stock/models/stock_move_line.py:420
 #, python-format
 msgid "No negative quantities allowed"
 msgstr ""
@@ -3230,7 +3257,7 @@ msgid "No operation made on this lot."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_rule.py:306
+#: code:addons/stock/models/stock_rule.py:314
 #, python-format
 msgid "No procurement rule found in location \"%s\" for product \"%s\".\n"
 " Check routes configuration."
@@ -3243,7 +3270,7 @@ msgid "No products to return (only lines in Done state and not fully returned ye
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_rule.py:173
+#: code:addons/stock/models/stock_rule.py:175
 #, python-format
 msgid "No source location defined on stock rule: %s!"
 msgstr ""
@@ -3273,7 +3300,7 @@ msgid "Notes"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:563
+#: code:addons/stock/models/stock_picking.py:572
 #, python-format
 msgid "Nothing to check the availability for."
 msgstr ""
@@ -3314,7 +3341,7 @@ msgid "Number of unread messages"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:74
+#: code:addons/stock/models/stock_picking.py:75
 #, python-format
 msgid "OK"
 msgstr ""
@@ -3367,7 +3394,7 @@ msgid "One product only"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_rule.py:98
+#: code:addons/stock/models/stock_rule.py:97
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__name
@@ -3394,6 +3421,11 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking_type_label
 msgid "Operation type (PDF)"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.report,name:stock.label_picking_type
+msgid "Operation type (ZPL)"
 msgstr ""
 
 #. module: stock
@@ -3502,7 +3534,7 @@ msgid "Outgoing Shipments"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:502
+#: code:addons/stock/models/stock_warehouse.py:520
 #, python-format
 msgid "Output"
 msgstr ""
@@ -3557,7 +3589,7 @@ msgid "Owner of the quants"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:339
+#: code:addons/stock/models/product.py:355
 #, python-format
 msgid "P&L Qty"
 msgstr ""
@@ -3570,7 +3602,7 @@ msgid "PRINT"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:784
+#: code:addons/stock/models/stock_warehouse.py:811
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__package_id
 #, python-format
 msgid "Pack"
@@ -3602,6 +3634,11 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
 msgid "Package Barcode (PDF)"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.report,name:stock.label_package_template
+msgid "Package Barcode (ZPL)"
 msgstr ""
 
 #. module: stock
@@ -3685,7 +3722,7 @@ msgid "Packing Location"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:503
+#: code:addons/stock/models/stock_warehouse.py:526
 #, python-format
 msgid "Packing Zone"
 msgstr ""
@@ -3735,7 +3772,7 @@ msgid "Physical Inventories by Date"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:793
+#: code:addons/stock/models/stock_warehouse.py:820
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__pick_ids
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer__pick_ids
 #, python-format
@@ -3748,6 +3785,7 @@ msgid "Pick Type"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_report_stock_forecast__picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_overprocessed_transfer__picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__picking_id
@@ -3808,11 +3846,6 @@ msgid "Pickings that are late on scheduled time"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
-msgid "Pivot"
-msgstr ""
-
-#. module: stock
 #: selection:stock.picking,activity_state:0
 #: selection:stock.production.lot,activity_state:0
 msgid "Planned"
@@ -3824,7 +3857,7 @@ msgid "Planned Transfer"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:711
+#: code:addons/stock/models/stock_picking.py:721
 #, python-format
 msgid "Please add some items to move."
 msgstr ""
@@ -3923,7 +3956,7 @@ msgid "Produce Line"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:344
+#: code:addons/stock/models/product.py:360
 #, python-format
 msgid "Produced Qty"
 msgstr ""
@@ -3955,11 +3988,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_search_view
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
 msgid "Product"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:207
+#: model:ir.actions.report,name:stock.label_barcode_product_product
+#: model:ir.actions.report,name:stock.label_barcode_product_template
+msgid "Product Barcode (ZPL)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_location.py:211
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__categ_ids
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -3972,6 +4012,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__category_id
 msgid "Product Category"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.report,name:stock.label_product_product
+#: model:ir.actions.report,name:stock.label_product_template
+msgid "Product Label (ZPL)"
 msgstr ""
 
 #. module: stock
@@ -4000,6 +4046,11 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.report,name:stock.label_product_packaging
+msgid "Product Packaging (ZPL)"
 msgstr ""
 
 #. module: stock
@@ -4076,7 +4127,7 @@ msgid "Production Location"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:197
+#: code:addons/stock/models/stock_location.py:201
 #: code:addons/stock/wizard/stock_quantity_history.py:29
 #: model:ir.actions.act_window,name:stock.act_product_location_open
 #: model:ir.actions.act_window,name:stock.product_template_action_product
@@ -4091,7 +4142,7 @@ msgid "Products"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:312
+#: code:addons/stock/models/product.py:328
 #, python-format
 msgid "Products: "
 msgstr ""
@@ -4185,7 +4236,7 @@ msgid "Qty Multiple must be greater than or equal to zero."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:501
+#: code:addons/stock/models/stock_warehouse.py:514
 #, python-format
 msgid "Quality Control"
 msgstr ""
@@ -4255,7 +4306,7 @@ msgid "Quantity cannot be negative."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:640
+#: code:addons/stock/models/stock_move.py:646
 #, python-format
 msgid "Quantity decreased!"
 msgstr ""
@@ -4351,7 +4402,7 @@ msgid "Receipt Route"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:768
+#: code:addons/stock/models/stock_warehouse.py:795
 #: model:stock.picking.type,name:stock.chi_picking_type_in
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
@@ -4374,25 +4425,25 @@ msgid "Receive goods in input, then quality and then stock (3 steps)"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:580
+#: code:addons/stock/models/stock_warehouse.py:607
 #, python-format
 msgid "Receive in 1 step (stock)"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:580
+#: code:addons/stock/models/stock_warehouse.py:607
 #, python-format
 msgid "Receive in 2 steps (input + stock)"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:581
+#: code:addons/stock/models/stock_warehouse.py:608
 #, python-format
 msgid "Receive in 3 steps (input + quality + stock)"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:326
+#: code:addons/stock/models/product.py:342
 #, python-format
 msgid "Received Qty"
 msgstr ""
@@ -4404,6 +4455,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__name
+#: model:ir.model.fields,field_description:stock.field_report_stock_forecast__reference
 #: model:ir.model.fields,field_description:stock.field_stock_move__reference
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__reference
 #: model:ir.model.fields,field_description:stock.field_stock_picking__name
@@ -4725,7 +4777,7 @@ msgid "Scheduled time for the first part of the shipment to be processed. Settin
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:1088
+#: code:addons/stock/models/stock_picking.py:1098
 #: model:ir.model,name:stock.model_stock_scrap
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrap_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__scrap_id
@@ -4832,31 +4884,31 @@ msgid "Sequence"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:819
+#: code:addons/stock/models/stock_warehouse.py:846
 #, python-format
 msgid "Sequence in"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:839
+#: code:addons/stock/models/stock_warehouse.py:866
 #, python-format
 msgid "Sequence internal"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:824
+#: code:addons/stock/models/stock_warehouse.py:851
 #, python-format
 msgid "Sequence out"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:829
+#: code:addons/stock/models/stock_warehouse.py:856
 #, python-format
 msgid "Sequence packing"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:834
+#: code:addons/stock/models/stock_warehouse.py:861
 #, python-format
 msgid "Sequence picking"
 msgstr ""
@@ -5029,7 +5081,7 @@ msgid "Source Document"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_rule.py:96
+#: code:addons/stock/models/stock_rule.py:95
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__location_id
 #: model:ir.model.fields,field_description:stock.field_stock_rule__location_src_id
@@ -5113,7 +5165,7 @@ msgid "Status based on activities\n"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:499
+#: code:addons/stock/models/stock_warehouse.py:502
 #, python-format
 msgid "Stock"
 msgstr ""
@@ -5130,6 +5182,7 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_level_forecast_tree
 msgid "Stock Inventory Lines"
 msgstr ""
 
@@ -5141,7 +5194,6 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_level_forecast_graph
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_level_forecast_pivot
 msgid "Stock Level forecast"
 msgstr ""
@@ -5382,7 +5434,7 @@ msgid "The 'Manual Operation' value will create a stock move after the current o
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:846
+#: code:addons/stock/models/stock_picking.py:856
 #, python-format
 msgid "The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has been created."
 msgstr ""
@@ -5413,7 +5465,7 @@ msgid "The expected date of the created transfer will be computed based on this 
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:81
+#: code:addons/stock/models/stock_move_line.py:82
 #, python-format
 msgid "The move line a a different company than its move"
 msgstr ""
@@ -5452,14 +5504,14 @@ msgid "The product"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:386
+#: code:addons/stock/models/stock_move_line.py:389
 #, python-format
 msgid "The quantity done for the product \"%s\" doesn't respect the rounding precision                                   defined on the unit of measure \"%s\". Please change the quantity done or the                                   rounding precision of your unit of measure."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:280
-#: code:addons/stock/models/stock_move_line.py:89
+#: code:addons/stock/models/stock_move.py:286
+#: code:addons/stock/models/stock_move_line.py:90
 #, python-format
 msgid "The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`."
 msgstr ""
@@ -5531,6 +5583,11 @@ msgid "Theoretical Quantity"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.actions.act_window,help:stock.action_stock_level_forecast_report_all_product
+msgid "There is nothing to forecast yet."
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid "There's no product move yet"
 msgstr ""
@@ -5577,13 +5634,13 @@ msgid "This is used to correct the product quantities you have in stock."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:85
+#: code:addons/stock/models/stock_location.py:86
 #, python-format
 msgid "This location's usage cannot be changed to view as it contains products."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:75
+#: code:addons/stock/models/stock_move_line.py:76
 #, python-format
 msgid "This lot %s is incompatible with this product %s"
 msgstr ""
@@ -5888,7 +5945,7 @@ msgid "Unity of measure"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:907
+#: code:addons/stock/models/stock_picking.py:917
 #, python-format
 msgid "Unknow stream."
 msgstr ""
@@ -5956,7 +6013,7 @@ msgid "Update Qty On Hand"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:565
+#: code:addons/stock/models/product.py:581
 #, python-format
 msgid "Update quantity on hand"
 msgstr ""
@@ -6133,7 +6190,7 @@ msgid "Warehouse view location"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:869
+#: code:addons/stock/models/stock_warehouse.py:896
 #, python-format
 msgid "Warehouse's Routes"
 msgstr ""
@@ -6159,8 +6216,8 @@ msgid "Warn Insufficient Scrap Quantity"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:136
-#: code:addons/stock/models/stock_move_line.py:148
+#: code:addons/stock/models/stock_move_line.py:139
+#: code:addons/stock/models/stock_move_line.py:151
 #: selection:res.partner,picking_warn:0
 #, python-format
 msgid "Warning"
@@ -6172,7 +6229,7 @@ msgid "Warning on the Picking"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:305
+#: code:addons/stock/models/product.py:321
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -6197,6 +6254,11 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_picking__website_message_ids
 #: model:ir.model.fields,help:stock.field_stock_production_lot__website_message_ids
 msgid "Website communication history"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
+msgid "Week"
 msgstr ""
 
 #. module: stock
@@ -6225,13 +6287,13 @@ msgid "When checked, the route will be selectable on the Product Category.  It w
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_rule.py:114
+#: code:addons/stock/models/stock_rule.py:113
 #, python-format
 msgid "When products are needed in <b>%s</b>, <br/> <b>%s</b> are created from <b>%s</b> to fulfill the need."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_rule.py:115
+#: code:addons/stock/models/stock_rule.py:114
 #, python-format
 msgid "When products arrive in <b>%s</b>, <br/> <b>%s</b> are created to send them in <b>%s</b>."
 msgstr ""
@@ -6285,7 +6347,7 @@ msgid "You are trying to put products going to different locations into the same
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:665
+#: code:addons/stock/models/stock_move.py:671
 #, python-format
 msgid "You are using a unit of measure smaller than the one you are using in order to stock your product. This can lead to rounding problem on reserved quantity. You should use the smaller unit of measure possible in order to valuate your stock or change its rounding precision to a smaller value (example: 0.00001)."
 msgstr ""
@@ -6304,19 +6366,19 @@ msgid "You can delete lines to ignore some products."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:547
+#: code:addons/stock/models/product.py:563
 #, python-format
 msgid "You can not change the type of a product that is currently reserved on a stock move. If you need to change the type, you should first unreserve the stock move."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:347
+#: code:addons/stock/models/stock_move_line.py:350
 #, python-format
 msgid "You can not delete product moves if the picking is done. You can only correct the done quantities."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:154
+#: code:addons/stock/models/stock_move_line.py:157
 #, python-format
 msgid "You can not enter negative quantities."
 msgstr ""
@@ -6328,43 +6390,43 @@ msgid "You can only adjust storable products."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1148
+#: code:addons/stock/models/stock_move.py:1167
 #, python-format
 msgid "You can only delete draft moves."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:147
+#: code:addons/stock/models/stock_move_line.py:150
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:106
+#: code:addons/stock/models/stock_location.py:107
 #, python-format
 msgid "You cannot archive the location %s as it is used by your warehouse %s"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1011
+#: code:addons/stock/models/stock_move.py:1027
 #, python-format
 msgid "You cannot cancel a stock move that has been set to 'Done'."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:96
+#: code:addons/stock/models/stock_location.py:97
 #, python-format
 msgid "You cannot change the location type or its use as a scrap location as there are products reserved in this location. Please unreserve the products first."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:650
+#: code:addons/stock/models/product.py:666
 #, python-format
 msgid "You cannot change the ratio of this unit of mesure as some products with this UoM have already been moved or are currently reserved."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:538
+#: code:addons/stock/models/product.py:554
 #, python-format
 msgid "You cannot change the unit of measure as there are already stock moves for this product. If you want to change the unit of measure, you should rather archive this product and create a new one."
 msgstr ""
@@ -6388,13 +6450,13 @@ msgid "You cannot have two inventory adjustments in state 'In Progress' with the
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1133
+#: code:addons/stock/models/stock_move.py:1151
 #, python-format
 msgid "You cannot move the same package content more than once in the same transfer or split the same package into two location."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:335
+#: code:addons/stock/models/stock_move.py:341
 #, python-format
 msgid "You cannot perform the move because the unit of measure has a different category as the product unit of measure."
 msgstr ""
@@ -6407,13 +6469,13 @@ msgid "You cannot set a negative product quantity in an inventory line:\n"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1179
+#: code:addons/stock/models/stock_move.py:1198
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1175
+#: code:addons/stock/models/stock_move.py:1194
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done'."
 msgstr ""
@@ -6425,20 +6487,20 @@ msgid "You cannot take products from or deliver products to a location of type \
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:497
+#: code:addons/stock/models/stock_move.py:503
 #, python-format
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:129
-#: code:addons/stock/models/stock_move_line.py:133
+#: code:addons/stock/models/stock_move_line.py:132
+#: code:addons/stock/models/stock_move_line.py:136
 #, python-format
 msgid "You cannot use the same serial number twice. Please correct the serial numbers encoded."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:719
+#: code:addons/stock/models/stock_picking.py:729
 #, python-format
 msgid "You cannot validate a transfer if no quantites are reserved nor done. To force the transfer, switch in edit more and encode the done quantities."
 msgstr ""
@@ -6467,25 +6529,25 @@ msgid "You have processed more than what was initially\n"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:306
+#: code:addons/stock/models/product.py:322
 #, python-format
 msgid "You have products in stock that have no lot number.  You can assign serial numbers by doing an inventory.  "
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:891
+#: code:addons/stock/models/stock_picking.py:901
 #, python-format
 msgid "You have to define a groupby and sorted method and pass them as arguments."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:953
+#: code:addons/stock/models/stock_warehouse.py:980
 #, python-format
 msgid "You have to select a product unit of measure that is in the same category than the default unit of measure of the product"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:129
+#: code:addons/stock/models/stock_location.py:130
 #, python-format
 msgid "You have to set a name for this location."
 msgstr ""
@@ -6509,14 +6571,14 @@ msgid "You must define a warehouse for the company: %s."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:1071
+#: code:addons/stock/models/stock_picking.py:1081
 #, python-format
 msgid "You must first set the quantity you will put in the pack."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:415
-#: code:addons/stock/models/stock_picking.py:733
+#: code:addons/stock/models/stock_move_line.py:418
+#: code:addons/stock/models/stock_picking.py:743
 #, python-format
 msgid "You need to supply a Lot/Serial number for product %s."
 msgstr ""
@@ -6528,14 +6590,14 @@ msgid "You still have ongoing operations for picking                        type
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:396
-#: code:addons/stock/models/product.py:540
+#: code:addons/stock/models/product.py:412
+#: code:addons/stock/models/product.py:556
 #, python-format
 msgid "You still have some active reordering rules on this product. Please archive or delete them first."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:114
+#: code:addons/stock/models/stock_location.py:115
 #, python-format
 msgid "You still have some product in locations %s"
 msgstr ""

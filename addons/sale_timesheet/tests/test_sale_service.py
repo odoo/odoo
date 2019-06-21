@@ -363,8 +363,8 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         # check each line has or no generate something
         self.assertTrue(so_line1.project_id, "Line1 should have create a project based on template A")
         self.assertTrue(so_line2.project_id, "Line2 should have create an empty project")
-        self.assertFalse(so_line3.project_id, "Line3 should not have create a project, since line1 already create a project based on template A")
-        self.assertFalse(so_line4.project_id, "Line4 should not have create a project, since line1 already create an empty project")
+        self.assertEqual(so_line3.project_id, so_line1.project_id, "Line3 should reuse project of line1")
+        self.assertEqual(so_line4.project_id, so_line2.project_id, "Line4 should reuse project of line2")
         self.assertTrue(so_line4.task_id, "Line4 should have create a new task, even if no project created.")
         self.assertTrue(so_line5.project_id, "Line5 should have create a project based on template B")
 

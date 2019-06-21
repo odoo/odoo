@@ -89,7 +89,11 @@ function wrap_context(context) {
     for (var k in context) {
         if (!context.hasOwnProperty(k)) { continue; }
         var val = context[k];
-
+        // Don't add a test case like ``val === undefined``
+        // this is intended to prevent letting crap pass
+        // on the context without even knowing it.
+        // If you face an issue from here, try to sanitize
+        // the context upstream instead
         if (val === null) { continue; }
         if (val.constructor === Array) {
             context[k] = wrapping_list.fromJSON(val);

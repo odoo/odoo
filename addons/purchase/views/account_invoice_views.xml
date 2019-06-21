@@ -3,7 +3,6 @@
     <record id="action_invoice_pending" model="ir.actions.act_window">
         <field name="name">Vendor Bills</field>
         <field name="res_model">account.invoice</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
         <field eval="False" name="view_id"/>
         <field name="domain">[('type','=','in_invoice')]</field>
@@ -24,7 +23,6 @@
     <record id="purchase_open_invoice" model="ir.actions.act_window">
         <field name="name">Vendor Bills</field>
         <field name="res_model">account.invoice</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
         <field eval="False" name="view_id"/>
         <field name="domain">[('type','in',('in_invoice', 'in_refund')),('purchase_id','=',active_id)]</field>

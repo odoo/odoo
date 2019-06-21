@@ -13,7 +13,7 @@
                           <field name="new_price" string="Cost"/>
                       </group>
                       <group>
-                          <field name="counterpart_account_id"
+                          <field name="counterpart_account_id" options="{'no_create': True}"
                               attrs="{'invisible': [('counterpart_account_id_required', '=', False)], 'required': [('counterpart_account_id_required', '=', True)]}"/>
                       </group>
                   </group>
@@ -29,7 +29,6 @@
             <field name="name">Change Standard Price</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.change.standard.price</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_change_standard_price"/>
             <field name="target">new</field>

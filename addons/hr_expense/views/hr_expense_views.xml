@@ -81,7 +81,7 @@
                             />
                             <field name="unit_amount" required="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <label for="quantity"/>
-                            <div>
+                            <div class="o_row">
                                 <field name="quantity" class="oe_inline"/>
                                 <field name="product_uom_id" required="1" widget="selection" class="oe_inline" groups="uom.group_uom"/>
                             </div>
@@ -89,7 +89,7 @@
                         </group><group>
                             <field name="reference"/>
                             <field name="date"/>
-                            <field name="account_id" domain="[('internal_type', '=', 'other')]" groups="account.group_account_user"/>
+                            <field name="account_id" options="{'no_create': True}" domain="[('internal_type', '=', 'other')]" groups="account.group_account_user"/>
                             <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver"/>
                             <field name="sheet_id" invisible="1"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
@@ -239,6 +239,26 @@
             </field>
         </record>
 
+        <record id="hr_expense_view_activity" model="ir.ui.view">
+            <field name="name">hr.expense.activity</field>
+            <field name="model">hr.expense</field>
+            <field name="arch" type="xml">
+                <activity string="Expenses">
+                    <field name="employee_id"/>
+                    <field name="currency_id"/>
+                    <templates>
+                        <div t-name="activity-box">
+                            <img t-att-src="activity_image('hr.employee', 'image_small', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value"/>
+                            <div>
+                                <field name="name" display="full"/>
+                                <field name="total_amount" widget="monetary" muted="1" display="full"/>
+                            </div>
+                        </div>
+                    </templates>
+                </activity>
+            </field>
+        </record>
+
         <record id="hr_expense_actions_all" model="ir.actions.act_window">
             <field name="name">All Expenses</field>
             <field name="res_model">hr.expense</field>
@@ -347,7 +367,6 @@
         <record id="hr_expense_product" model="ir.actions.act_window">
             <field name="name">Expense Products</field>
             <field name="res_model">product.product</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref="product.product_search_form_view"/>
             <field name="context">{"default_can_be_expensed": 1, 'default_type': 'service'}</field>
@@ -383,7 +402,6 @@
         <record id="action_approved_expense" model="ir.actions.act_window">
             <field name="name">Employee Expenses</field>
             <field name="res_model">hr.expense</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="view_id" ref="view_expenses_tree"/>
             <field name="domain">[]</field>
@@ -400,7 +418,6 @@
         <record id="action_unsubmitted_expense" model="ir.actions.act_window">
             <field name="name">Unreported Expenses</field>
             <field name="res_model">hr.expense</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="view_id" ref="view_expenses_tree"/>
             <field name="domain">[]</field>
@@ -417,7 +434,6 @@
         <record id="hr_expense_action" model="ir.actions.act_window">
             <field name="name">Expenses Analysis</field>
             <field name="res_model">hr.expense</field>
-            <field name="view_type">form</field>
             <field name="view_mode">graph,pivot</field>
             <field name="context">{
                 'search_default_approved': 1,
@@ -486,7 +502,7 @@
                     </group>
                      <notebook>
                         <page name="expenses" string="Expense">
-                        <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft')]" options="{'reload_on_button': True}" context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'expense_adding_line': True}">
+                        <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft'), ('employee_id', '=', employee_id)]" options="{'reload_on_button': True}" context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'expense_adding_line': True}">
                             <tree decoration-danger="is_refused">
                                 <field name="date"/>
                                 <field name="name"/>
@@ -639,6 +655,27 @@
             </field>
         </record>
 
+        <record id="hr_expense_sheet_view_activity" model="ir.ui.view">
+            <field name="name">hr.expense.sheet.activity</field>
+            <field name="model">hr.expense.sheet</field>
+            <field name="arch" type="xml">
+                <activity string="Expenses">
+                    <field name="employee_id"/>
+                    <field name="currency_id"/>
+                    <templates>
+                        <div t-name="activity-box">
+                            <img t-att-src="activity_image('hr.employee', 'image_small', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value"/>
+                            <div>
+                                <field name="name" display="full"/>
+                                <field name="total_amount" widget="monetary" muted="1" display="full"/>
+                                <field name="state" display="right"/>
+                            </div>
+                        </div>
+                    </templates>
+                </activity>
+            </field>
+        </record>
+
         <record id="action_hr_expense_sheet_my_all" model="ir.actions.act_window">
             <field name="name">My Expense Reports</field>
             <field name="res_model">hr.expense.sheet</field>
@@ -720,7 +757,6 @@
         <record id="action_request_approve_expense_sheet" model="ir.actions.act_window">
             <field name="name">Reports to Approve</field>
             <field name="res_model">hr.expense.sheet</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="context">{'search_default_submitted': 1}</field>
             <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
@@ -737,7 +773,6 @@
         <record id="action_request_to_post_expense_sheet" model="ir.actions.act_window">
             <field name="name">Reports to Post</field>
             <field name="res_model">hr.expense.sheet</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="context">{'search_default_to_post': 1}</field>
             <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
@@ -754,7 +789,6 @@
         <record id="action_request_to_pay_expense_sheet" model="ir.actions.act_window">
             <field name="name">Reports to Pay</field>
             <field name="res_model">hr.expense.sheet</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="context">{'search_default_approved': 1}</field>
             <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
@@ -771,7 +805,6 @@
         <record id="action_hr_expense_sheet_department_to_approve" model="ir.actions.act_window">
             <field name="name">Expense Reports to Approve</field>
             <field name="res_model">hr.expense.sheet</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
             <field name="context">{
@@ -785,7 +818,6 @@
         <record id="action_hr_expense_sheet_department_filtered" model="ir.actions.act_window">
             <field name="name">Expense Reports Analysis</field>
             <field name="res_model">hr.expense.sheet</field>
-            <field name="view_type">form</field>
             <field name="view_mode">graph,pivot</field>
             <field name="context">{
                 'search_default_department_id': [active_id],

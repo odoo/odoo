@@ -109,7 +109,7 @@ QUnit.test('display the no content helper', async function (assert) {
 });
 
 QUnit.test('basic functionality, with one sub action', async function (assert) {
-    assert.expect(25);
+    assert.expect(26);
 
     var form = await createView({
         View: BoardView,
@@ -118,7 +118,7 @@ QUnit.test('basic functionality, with one sub action', async function (assert) {
         arch: '<form string="My Dashboard">' +
                 '<board style="2-1">' +
                     '<column>' +
-                        '<action context="{}" view_mode="list" string="ABC" name="51" domain="[[\'foo\', \'!=\', \'False\']]"></action>' +
+                        '<action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" view_mode="list" string="ABC" name="51" domain="[[\'foo\', \'!=\', \'False\']]"></action>' +
                     '</column>' +
                 '</board>' +
             '</form>',
@@ -132,6 +132,12 @@ QUnit.test('basic functionality, with one sub action', async function (assert) {
             }
             if (route === '/web/dataset/search_read') {
                 assert.deepEqual(args.domain, [['foo', '!=', 'False']], "the domain should be passed");
+                assert.deepEqual(args.context.orderedBy, [{
+                        'name': 'foo',
+                        'asc': true,
+                    }],
+                    'orderedBy is present in the search read when specified on the custom action'
+                );
             }
             if (route === '/web/view/edit_custom') {
                 assert.step('edit custom');
@@ -687,7 +693,19 @@ QUnit.test('dashboard intercepts custom events triggered by sub controllers', as
 });
 
 QUnit.test('save actions to dashboard', async function (assert) {
-    assert.expect(3);
+    assert.expect(6);
+
+    testUtils.patch(ListController, {
+        getOwnedQueryParams: function () {
+            var result = this._super.apply(this, arguments);
+            result.context = {
+                'fire': 'on the bayou',
+            }
+            return result;
+        }
+    });
+
+    this.data['partner'].fields.foo.sortable = true;
 
     var actionManager = await createActionManager({
         data: this.data,
@@ -697,6 +715,16 @@ QUnit.test('save actions to dashboard', async function (assert) {
         },
         mockRPC: function (route, args) {
             if (route === '/board/add_to_dashboard') {
+                assert.deepEqual(args.context_to_save.group_by, ['foo'],
+                    'The group_by should have been saved');
+                assert.deepEqual(args.context_to_save.orderedBy,
+                    [{
+                        name: 'foo',
+                        asc: true,
+                    }],
+                    'The orderedBy should have been saved');
+                assert.strictEqual(args.context_to_save.fire, 'on the bayou',
+                    'The context of a controller should be passed and flattened');
                 assert.strictEqual(args.action_id, 1,
                     "should save the correct action");
                 assert.strictEqual(args.view_mode, 'list',
@@ -717,11 +745,21 @@ QUnit.test('save actions to dashboard', async function (assert) {
     assert.containsOnce(actionManager, '.o_list_view',
         "should display the list view");
 
+    // Sort the list
+    await testUtils.dom.click($('.o_column_sortable'));
+
+    // Group It
+    await testUtils.dom.click($('.o_search_options .o_dropdown button:contains(Group By)'));
+    await testUtils.dom.click($('.o_search_options .o_group_by_menu button'));
+    await testUtils.dom.click($('.o_search_options .o_group_by_menu button.o_apply_group'));
+
     // add this action to dashboard
     await testUtils.dom.click($('.o_search_options .o_dropdown button:contains(Favorites)'));
     await testUtils.dom.click($('.o_add_to_board.o_menu_header'));
     testUtils.fields.editInput($('input.o_add_to_board_input'), 'a name');
     await testUtils.dom.click($('.o_add_to_board_confirm_button'));
+
+    testUtils.unpatch(ListController);
 
     actionManager.destroy();
 });
@@ -769,12 +807,71 @@ QUnit.test('save two searches to dashboard', async function (assert) {
     await testUtils.dom.click(actionManager.$('.o_apply_filter'));
     // Add it to dashboard
     await testUtils.dom.click(actionManager.$('.o_favorites_menu_button'));
+    $('.o_search_options .dropdown-menu.o_favorites_menu').one('click', function (ev) {
+        // This handler is on the webClient
+        // But since the test suite doesn't have one
+        // We manually set it here
+        ev.stopPropagation();
+    });
     await testUtils.dom.click(actionManager.$('.o_add_to_board'));
     await testUtils.dom.click(actionManager.$('.o_add_to_board_confirm_button'));
     // Remove it
     await testUtils.dom.click(actionManager.$('.o_facet_remove'));
 
     // Add the second filter
+    await testUtils.dom.click(actionManager.$('.o_filters_menu_button'));
+    await testUtils.dom.click(actionManager.$('.o_add_custom_filter'));
+    actionManager.$('.o_searchview_extended_prop_value .o_input').val('b');
+    await testUtils.dom.click(actionManager.$('.o_apply_filter'));
+    // Add it to dashboard
+    await testUtils.dom.click(actionManager.$('.o_favorites_menu_button'));
+    $('.o_search_options .dropdown-menu.o_favorites_menu').one('click', function (ev) {
+        // This handler is on the webClient
+        // But since the test suite doesn't have one
+        // We manually set it here
+        ev.stopPropagation();
+    });
+    await testUtils.dom.click(actionManager.$('.o_add_to_board'));
+    await testUtils.dom.click(actionManager.$('.o_add_to_board_confirm_button'));
+
+    actionManager.destroy();
+});
+
+QUnit.test('save a action domain to dashboard', async function (assert) {
+    // View domains are to be added to the dashboard domain
+    assert.expect(1);
+
+    var view_domain = ["display_name", "ilike", "a"];
+    var filter_domain = ["display_name", "ilike", "b"];
+
+    // The filter domain already contains the view domain, but is always added by dashboard..,
+    var expected_domain = ['&', '&', view_domain, view_domain, filter_domain]
+
+    var actionManager = await createActionManager({
+        data: this.data,
+        archs: {
+            'partner,false,list': '<list><field name="foo"/></list>',
+            'partner,false,search': '<search></search>',
+        },
+        mockRPC: function (route, args) {
+            if (route === '/board/add_to_dashboard') {
+                assert.deepEqual(args.domain, expected_domain,
+                    "the correct domain should be sent");
+                return Promise.resolve(true);
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    await actionManager.doAction({
+        id: 1,
+        res_model: 'partner',
+        type: 'ir.actions.act_window',
+        views: [[false, 'list']],
+        domain: [view_domain],
+    });
+
+    // Add a filter
     await testUtils.dom.click(actionManager.$('.o_filters_menu_button'));
     await testUtils.dom.click(actionManager.$('.o_add_custom_filter'));
     actionManager.$('.o_searchview_extended_prop_value .o_input').val('b');
@@ -807,7 +904,7 @@ QUnit.test("Views should be loaded in the user's language", async function (asse
                     'The views should be loaded with the correct context');
             }
             if (route === "/web/dataset/search_read") {
-                assert.deepEqual(args.context, {lang: 'fr_FR'},
+                assert.equal(args.context.lang, 'fr_FR',
                     'The data should be loaded with the correct context');
             }
             if (route === '/web/action/load') {
@@ -841,7 +938,45 @@ QUnit.test("Dashboard should use correct groupby", async function (assert) {
                 '</board>' +
             '</form>',
         mockRPC: function (route, args) {
-            if (args.method === 'read_group') {
+            if (args.method === 'web_read_group') {
+                assert.deepEqual(args.kwargs.groupby, ['bar'],
+                    'user defined groupby should have precedence on action groupby');
+            }
+            if (route === '/web/action/load') {
+                return Promise.resolve({
+                    res_model: 'partner',
+                    context: {
+                        group_by: 'some_field',
+                    },
+                    views: [[4, 'list']],
+                });
+            }
+            return this._super.apply(this, arguments);
+        },
+        archs: {
+            'partner,4,list':
+                '<list string="Partner"><field name="foo"/></list>',
+        },
+    });
+
+    form.destroy();
+});
+
+QUnit.test("Dashboard should use correct groupby when defined as a string of one field", async function (assert) {
+    assert.expect(1);
+    var form = await createView({
+        View: BoardView,
+        model: 'board',
+        data: this.data,
+        arch: '<form string="My Dashboard">' +
+                '<board style="2-1">' +
+                    '<column>' +
+                        '<action context="{\'group_by\': \'bar\'}" string="ABC" name="51"></action>' +
+                    '</column>' +
+                '</board>' +
+            '</form>',
+        mockRPC: function (route, args) {
+            if (args.method === 'web_read_group') {
                 assert.deepEqual(args.kwargs.groupby, ['bar'],
                     'user defined groupby should have precedence on action groupby');
             }

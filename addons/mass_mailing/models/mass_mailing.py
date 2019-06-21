@@ -211,7 +211,7 @@ class MassMailingContact(models.Model):
     be able to deal with large contact list to email without bloating the partner
     base."""
     _name = 'mail.mass_mailing.contact'
-    _inherit = ['mail.thread', 'mail.blacklist.mixin']
+    _inherit = ['mail.thread.blacklist']
     _description = 'Mass Mailing Contact'
     _order = 'email'
     _rec_name = 'email'
@@ -226,7 +226,6 @@ class MassMailingContact(models.Model):
         'contact_id', 'list_id', string='Mailing Lists')
     subscription_list_ids = fields.One2many('mail.mass_mailing.list_contact_rel',
         'contact_id', string='Subscription Information')
-    message_bounce = fields.Integer(string='Bounced', help='Counter of the number of bounced emails for this contact.', default=0)
     country_id = fields.Many2one('res.country', string='Country')
     tag_ids = fields.Many2many('res.partner.category', string='Tags')
     opt_out = fields.Boolean('Opt Out', compute='_compute_opt_out', search='_search_opt_out',
@@ -287,8 +286,12 @@ class MassMailingContact(models.Model):
         return contact.name_get()[0]
 
     @api.multi
-    def message_get_default_recipients(self):
-        return dict((record.id, {'partner_ids': [], 'email_to': record.email_normalized, 'email_cc': False}) for record in self)
+    def _message_get_default_recipients(self):
+        return {r.id: {
+            'partner_ids': [],
+            'email_to': r.email_normalized,
+            'email_cc': False}
+            for r in self}
 
 
 class MassMailingStage(models.Model):
@@ -318,9 +321,9 @@ class MassMailingCampaign(models.Model):
     campaign_id = fields.Many2one('utm.campaign', 'campaign_id',
         required=True, ondelete='cascade',  help="This name helps you tracking your different campaign efforts, e.g. Fall_Drive, Christmas_Special")
     source_id = fields.Many2one('utm.source', string='Source',
-            help="This is the link source, e.g. Search Engine, another domain,or name of email list", default=lambda self: self.env.ref('utm.utm_source_newsletter'))
+            help="This is the link source, e.g. Search Engine, another domain,or name of email list", default=lambda self: self.env.ref('utm.utm_source_newsletter', False))
     medium_id = fields.Many2one('utm.medium', string='Medium',
-            help="This is the delivery method, e.g. Postcard, Email, or Banner Ad", default=lambda self: self.env.ref('utm.utm_medium_email'))
+            help="This is the delivery method, e.g. Postcard, Email, or Banner Ad", default=lambda self: self.env.ref('utm.utm_medium_email', False))
     tag_ids = fields.Many2many(
         'mail.mass_mailing.tag', 'mail_mass_mailing_tag_rel',
         'tag_id', 'campaign_id', string='Tags')
@@ -457,7 +460,7 @@ class MassMailing(models.Model):
         return res
 
     active = fields.Boolean(default=True)
-    subject = fields.Char('Subject', help='Subject of emails to send', required=True)
+    subject = fields.Char('Subject', help='Subject of emails to send', required=True, translate=True)
     email_from = fields.Char(string='From', required=True,
         default=lambda self: self.env['mail.message']._get_default_from())
     sent_date = fields.Datetime(string='Sent Date', oldname='date', copy=False)
@@ -701,9 +704,8 @@ class MassMailing(models.Model):
         def _image_to_url(b64image: bytes):
             """Store an image in an attachement and returns an url"""
             attachment = self.env['ir.attachment'].create({
-                'name': "cropped_image",
                 'datas': b64image,
-                'datas_fname': "cropped_image_mailing_{}".format(self.id),
+                'name': "cropped_image_mailing_{}".format(self.id),
                 'type': 'binary',})
 
             attachment.generate_access_token()
@@ -741,7 +743,6 @@ class MassMailing(models.Model):
             context['form_view_initial_mode'] = 'edit'
             return {
                 'type': 'ir.actions.act_window',
-                'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'mail.mass_mailing',
                 'res_id': mass_mailing_copy.id,
@@ -870,17 +871,18 @@ class MassMailing(models.Model):
         """Returns a set of emails already targeted by current mailing/campaign (no duplicates)"""
         self.ensure_one()
         target = self.env[self.mailing_model_real]
-        if set(['email', 'email_from']) & set(target._fields):
-            mail_field = 'email' if 'email' in target._fields else 'email_from'
-            # avoid loading a large number of records in memory
-            # + use a basic heuristic for extracting emails
-            query = """
-                SELECT lower(substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
-                  FROM mail_mail_statistics s
-                  JOIN %(target)s t ON (s.res_id = t.id)
-                 WHERE substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
-            """
-        elif 'partner_id' in target._fields:
+
+        # avoid loading a large number of records in memory
+        # + use a basic heuristic for extracting emails
+        query = """
+            SELECT lower(substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
+              FROM mail_mail_statistics s
+              JOIN %(target)s t ON (s.res_id = t.id)
+             WHERE substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
+        """
+
+        # Apply same 'get email field' rule from mail_thread.message_get_default_recipients
+        if 'partner_id' in target._fields:
             mail_field = 'email'
             query = """
                 SELECT lower(substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
@@ -889,6 +891,14 @@ class MassMailing(models.Model):
                   JOIN res_partner p ON (t.partner_id = p.id)
                  WHERE substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
             """
+        elif issubclass(type(target), self.pool['mail.address.mixin']):
+            mail_field = 'email_normalized'
+        elif 'email_from' in target._fields:
+            mail_field = 'email_from'
+        elif 'partner_email' in target._fields:
+            mail_field = 'partner_email'
+        elif 'email' in target._fields:
+            mail_field = 'email'
         else:
             raise UserError(_("Unsupported mass mailing model %s") % self.mailing_model_id.name)
 

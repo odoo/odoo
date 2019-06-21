@@ -17,22 +17,15 @@ class TestChatterTweaks(BaseFunctionalTest, TestRecipients):
     def test_post_no_subscribe_recipients(self):
         original = self.test_record.message_follower_ids
         self.test_record.sudo(self.user_employee).with_context({'mail_create_nosubscribe': True}).message_post(
-            body='Test Body', message_type='comment', subtype='mt_comment', partner_ids=[(4, self.partner_1.id), (4, self.partner_2.id)])
+            body='Test Body', message_type='comment', subtype='mt_comment', partner_ids=[self.partner_1.id, self.partner_2.id])
         self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id'))
         self.assertEqual(self.test_record.message_follower_ids.mapped('channel_id'), original.mapped('channel_id'))
 
     def test_post_subscribe_recipients(self):
         original = self.test_record.message_follower_ids
         self.test_record.sudo(self.user_employee).with_context({'mail_create_nosubscribe': True, 'mail_post_autofollow': True}).message_post(
-            body='Test Body', message_type='comment', subtype='mt_comment', partner_ids=[(4, self.partner_1.id), (4, self.partner_2.id)])
+            body='Test Body', message_type='comment', subtype='mt_comment', partner_ids=[self.partner_1.id, self.partner_2.id])
         self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id') | self.partner_1 | self.partner_2)
-        self.assertEqual(self.test_record.message_follower_ids.mapped('channel_id'), original.mapped('channel_id'))
-
-    def test_post_subscribe_recipients_partial(self):
-        original = self.test_record.message_follower_ids
-        self.test_record.sudo(self.user_employee).with_context({'mail_create_nosubscribe': True, 'mail_post_autofollow': True, 'mail_post_autofollow_partner_ids': [self.partner_2.id]}).message_post(
-            body='Test Body', message_type='comment', subtype='mt_comment', partner_ids=[(4, self.partner_1.id), (4, self.partner_2.id)])
-        self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id') | self.partner_2)
         self.assertEqual(self.test_record.message_follower_ids.mapped('channel_id'), original.mapped('channel_id'))
 
     def test_chatter_mail_create_nolog(self):
@@ -45,17 +38,21 @@ class TestChatterTweaks(BaseFunctionalTest, TestRecipients):
 
     def test_chatter_mail_notrack(self):
         """ Test disable of automatic value tracking at create and write """
-        rec = self.env['mail.test.track'].sudo(self.user_employee).with_context({'mail_notrack': False}).create({'name': 'Test', 'user_id': self.user_employee.id})
-        self.assertEqual(len(rec.sudo().mapped('message_ids.tracking_value_ids')), 1)
+        rec = self.env['mail.test.track'].sudo(self.user_employee).create({'name': 'Test', 'user_id': self.user_employee.id})
+        self.assertEqual(len(rec.message_ids), 1,
+                         "A creation message without tracking values should have been posted")
+        self.assertEqual(len(rec.message_ids.sudo().tracking_value_ids), 0,
+                         "A creation message without tracking values should have been posted")
 
-        rec = self.env['mail.test.track'].sudo(self.user_employee).with_context({'mail_notrack': True}).create({'name': 'Test', 'user_id': self.user_employee.id})
-        self.assertEqual(rec.sudo().mapped('message_ids.tracking_value_ids'), self.env['mail.tracking.value'])
-
-        rec.write({'user_id': self.user_admin.id})
-        self.assertEqual(rec.sudo().mapped('message_ids.tracking_value_ids'), self.env['mail.tracking.value'])
+        rec.with_context({'mail_notrack': True}).write({'user_id': self.user_admin.id})
+        self.assertEqual(len(rec.message_ids), 1,
+                         "No new message should have been posted with mail_notrack key")
 
         rec.with_context({'mail_notrack': False}).write({'user_id': self.user_employee.id})
-        self.assertEqual(len(rec.sudo().mapped('message_ids.tracking_value_ids')), 1)
+        self.assertEqual(len(rec.message_ids), 2,
+                         "A tracking message should have been posted")
+        self.assertEqual(len(rec.message_ids.sudo().mapped('tracking_value_ids')), 1,
+                         "New tracking message should have tracking values")
 
     def test_chatter_tracking_disable(self):
         """ Test disable of all chatter features at create and write """
@@ -70,8 +67,10 @@ class TestChatterTweaks(BaseFunctionalTest, TestRecipients):
         self.assertEqual(len(rec.sudo().mapped('message_ids.tracking_value_ids')), 1)
 
         rec = self.env['mail.test.track'].sudo(self.user_employee).with_context({'tracking_disable': False}).create({'name': 'Test', 'user_id': self.user_employee.id})
-        self.assertEqual(len(rec.sudo().message_ids), 2)
-        self.assertEqual(len(rec.sudo().mapped('message_ids.tracking_value_ids')), 1)
+        self.assertEqual(len(rec.sudo().message_ids), 1,
+                         "Creation message without tracking values should have been posted")
+        self.assertEqual(len(rec.sudo().mapped('message_ids.tracking_value_ids')), 0,
+                         "Creation message without tracking values should have been posted")
 
 
 class TestNotifications(BaseFunctionalTest, MockEmails):
@@ -95,6 +94,20 @@ class TestNotifications(BaseFunctionalTest, MockEmails):
             self.test_record.message_post(
                 body='Test', message_type='comment', subtype='mail.mt_comment',
                 partner_ids=[self.user_employee.partner_id.id])
+
+    def test_inactive_follower(self):
+        # In some case odoobot is follower of a record.
+        # Even if it shouldn't be the case, we want to be sure that odoobot is not notified
+        self.test_record._message_subscribe(self.user_employee.partner_id.ids)
+        with self.assertNotifications(partner_employee=(1, 'inbox', 'unread')):
+            self.test_record.message_post(
+                body='Test', message_type='comment', subtype='mail.mt_comment')
+        self.user_employee.active = False
+        # at this point, partner is still active and would receive an email notification
+        self.user_employee.partner_id._write({'active': False})
+        with self.assertNotifications(partner_employee=(0, '', '')):
+            self.test_record.message_post(
+                body='Test', message_type='comment', subtype='mail.mt_comment')
 
     def test_set_message_done_user(self):
         with self.assertNotifications(partner_employee=(0, '', '')):

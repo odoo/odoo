@@ -5,7 +5,7 @@
         <record model="survey.survey" id="vendor_certification">
             <field name="title">MyCompany Vendor Certification</field>
             <field name="access_token">4ead4bc8-b8f2-4760-a682-1fde8ddb95ac</field>
-            <field name="stage_id" ref="survey.stage_in_progress" />
+            <field name="state">open</field>
             <field name="access_mode">public</field>
             <field name="users_can_go_back" eval="True" />
             <field name="users_login_required" eval="True" />
@@ -115,7 +115,7 @@
             <field name="sequence">3</field>
             <field name="value">Width</field>
             <field name="is_correct" eval="True" />
-            <field name="answer_score">-1.0</field>
+            <field name="answer_score">1.0</field>
         </record>
         <record model="survey.label" id="vendor_certification_page_1_question_3_choice_4">
             <field name="question_id" ref="vendor_certification_page_1_question_3"/>

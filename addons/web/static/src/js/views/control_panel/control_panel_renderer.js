@@ -18,7 +18,6 @@ var ControlPanelRenderer = Renderer.extend({
         get_action_info: '_onGetActionInfo',
     },
     events: _.extend({}, Renderer.prototype.events, {
-        'click.bs.dropdown .o_search_options .dropdown-menu': '_onDropdownClicked',
         'click .o_searchview_more': '_onMore',
     }),
 
@@ -255,6 +254,12 @@ var ControlPanelRenderer = Renderer.extend({
                 self.trigger_up('breadcrumb_clicked', {controllerID: bc.controllerID});
             });
         }
+
+        var secondLast = index === length - 2;
+        if (secondLast) {
+            $bc.attr('accessKey', 'b');
+        }
+
         return $bc;
     },
     /**
@@ -367,15 +372,6 @@ var ControlPanelRenderer = Renderer.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * Prevent the search dropdowns from closing when clicking inside them.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onDropdownClicked: function (ev) {
-        ev.stopPropagation();
-    },
     /**
      * Toggle the search menus visibility.
      *

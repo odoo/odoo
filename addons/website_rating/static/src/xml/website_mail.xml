@@ -13,7 +13,7 @@
                 <i class="fa fa-star-half-o" role="img" aria-label="Half a star" title="Half a star"></i>
             </t>
             <t t-foreach="_.range(0, empty_star)" t-as="num" role="img" t-attf-aria-label="#{empty_star} on 5" t-attf-title="#{empty_star} on 5">
-                <i class="fa fa-star-o"></i>
+                <i class="fa fa-star text-black-25"></i>
             </t>
         </div>
     </t>
@@ -49,7 +49,10 @@
                                     <strong><t t-esc="Math.round(percent['percent'] * 100) / 100"/>%</strong>
                                 </td>
                                 <td class="o_website_rating_table_reset">
-                                    <a href="#" role="button" class="btn btn-link o_website_rating_select_text" t-att-data-star="percent['num']">Remove selection</a>
+                                    <button class="btn btn-link o_website_rating_select_text" t-att-data-star="percent['num']">
+                                        <i class="fa fa-times d-block d-sm-none" role="img" aria-label="Remove Selection"/>
+                                        <span class="d-none d-sm-block">Remove Selection</span>
+                                    </button>
                                 </td>
                             </tr>
                         </t>
@@ -73,7 +76,7 @@
                     <i class="fa fa-star-half-o" role="img" aria-label="Half a star" title="Half a star"></i>
                 </t>
                 <t t-foreach="_.range(0, empty_star)" t-as="num" role="img" t-attf-aria-label="#{empty_star} on 5" t-attf-title="#{empty_star} on 5">
-                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o text-black-25"></i>
                 </t>
             </div>
             <div class="rate_text">

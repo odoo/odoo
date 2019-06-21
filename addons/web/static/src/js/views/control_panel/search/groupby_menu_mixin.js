@@ -42,7 +42,7 @@ var GroupByMenuMixin = {
             return groupableFields[fieldName].string;
         });
         this.groupableFields = groupableFields;
-        var groupBys = this._getGroupBys(this.model.get().groupedBy);
+        var groupBys = this._getGroupBys(this.model.get().groupBy);
         this.groupByMenu = new GroupByMenu(this, groupBys, this.groupableFields);
         this.groupByMenu.insertAfter($node.find('div:first'));
     },
@@ -110,7 +110,7 @@ var GroupByMenuMixin = {
     _onItemOptionClicked: function (ev) {
         var fieldName = ev.data.id;
         var optionId = ev.data.optionId;
-        var activeGroupBys = this.model.get().groupedBy;
+        var activeGroupBys = this.model.get().groupBy;
         var currentOptionId = activeGroupBys.reduce(
             function (optionId, groupby) {
                 if (groupby.split(':')[0] === fieldName){
@@ -140,7 +140,7 @@ var GroupByMenuMixin = {
      */
     _onMenuItemClicked: function (ev) {
         var fieldName = ev.data.id;
-        var activeGroupBys = this.model.get().groupedBy;
+        var activeGroupBys = this.model.get().groupBy;
         var groupByFieldNames = _.map(activeGroupBys, function (groupby) {
             return groupby.split(':')[0];
         });

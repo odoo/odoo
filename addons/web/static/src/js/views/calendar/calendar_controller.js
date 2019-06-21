@@ -19,6 +19,10 @@ var QuickCreate = require('web.CalendarQuickCreate');
 var _t = core._t;
 var QWeb = core.qweb;
 
+function dateToServer (date) {
+    return date.clone().utc().locale('en').format('YYYY-MM-DD HH:mm:ss');
+}
+
 var CalendarController = AbstractController.extend({
     custom_events: _.extend({}, AbstractController.prototype.custom_events, {
         changeDate: '_onChangeDate',
@@ -156,7 +160,8 @@ var CalendarController = AbstractController.extend({
      * @returns {Promise}
      */
     _updateRecord: function (record) {
-        return this.model.updateRecord(record).then(this.reload.bind(this, {}));
+        var reload = this.reload.bind(this, {});
+        return this.model.updateRecord(record).then(reload, reload);
     },
 
     //--------------------------------------------------------------------------
@@ -200,7 +205,9 @@ var CalendarController = AbstractController.extend({
      * @param {OdooEvent} event
      */
     _onDropRecord: function (event) {
-        this._updateRecord(event.data);
+        this._updateRecord(_.extend({}, event.data, {
+            'drop': true,
+        }));
     },
     /**
      * @private
@@ -236,7 +243,7 @@ var CalendarController = AbstractController.extend({
 
         for (var k in context) {
             if (context[k] && context[k]._isAMomentObject) {
-                context[k] = context[k].clone().utc().format('YYYY-MM-DD HH:mm:ss');
+                context[k] = dateToServer(context[k]);
             }
         }
 
@@ -268,6 +275,7 @@ var CalendarController = AbstractController.extend({
                 res_model: this.modelName,
                 context: context,
                 title: title,
+                view_id: this.formViewId || false,
                 disable_multiple_selection: true,
                 on_saved: function () {
                     if (event.data.on_save) {
@@ -300,7 +308,8 @@ var CalendarController = AbstractController.extend({
                 model: self.modelName,
                 method: 'get_formview_id',
                 //The event can be called by a view that can have another context than the default one.
-                args: [[id], event.context || self.context],
+                args: [[id]],
+                context: event.context || self.context,
             }).then(function (viewId) {
                 self.do_action({
                     type:'ir.actions.act_window',

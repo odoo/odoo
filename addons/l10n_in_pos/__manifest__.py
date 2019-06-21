@@ -11,6 +11,7 @@
         'point_of_sale'
     ],
     'data': [
+        'data/product_demo.xml',
     ],
     'auto_install': True,
 }

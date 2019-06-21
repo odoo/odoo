@@ -2,11 +2,12 @@ import json
 from datetime import datetime, timedelta
 
 from babel.dates import format_datetime, format_date
-
 from odoo import models, api, _, fields
+from odoo.osv import expression
 from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, safe_eval
-from odoo.tools.misc import formatLang
+from odoo.tools.misc import formatLang, format_date as odoo_format_date
+import random
 
 class account_journal(models.Model):
     _inherit = "account.journal"
@@ -22,8 +23,41 @@ class account_journal(models.Model):
         elif (self.type in ['cash', 'bank']):
             self.kanban_dashboard_graph = json.dumps(self.get_line_graph_datas())
 
+    def _get_json_activity_data(self):
+        for journal in self:
+            activities = []
+            # search activity on move on the journal
+            sql_query = '''
+                SELECT act.id,
+                    act.res_id,
+                    act.res_model,
+                    act.summary,
+                    act_type.name as act_type_name,
+                    act_type.category as activity_category,
+                    act.date_deadline,
+                    CASE WHEN act.date_deadline < CURRENT_DATE THEN 'late' ELSE 'future' END as status
+                FROM account_move m
+                    LEFT JOIN mail_activity act ON act.res_id = m.id
+                    LEFT JOIN mail_activity_type act_type ON act.activity_type_id = act_type.id
+                WHERE act.res_model = 'account.move'
+                    AND m.journal_id = %s
+            '''
+            self.env.cr.execute(sql_query, (journal.id,))
+            for activity in self.env.cr.dictfetchall():
+                activities.append({
+                    'id': activity.get('id'),
+                    'res_id': activity.get('res_id'),
+                    'res_model': activity.get('res_model'),
+                    'status': activity.get('status'),
+                    'name': activity.get('summary') or activity.get('act_type_name'),
+                    'activity_category': activity.get('activity_category'),
+                    'date': odoo_format_date(self.env, activity.get('date_deadline'))
+                })
+            journal.json_activity_data = json.dumps({'activities': activities})
+
     kanban_dashboard = fields.Text(compute='_kanban_dashboard')
     kanban_dashboard_graph = fields.Text(compute='_kanban_dashboard_graph')
+    json_activity_data = fields.Text(compute='_get_json_activity_data')
     show_on_dashboard = fields.Boolean(string='Show journal on dashboard', help="Whether this journal should be displayed on the dashboard or not", default=True)
     color = fields.Integer("Color Index", default=0)
 
@@ -55,8 +89,7 @@ class account_journal(models.Model):
 
         #starting point of the graph is the last statement
         last_stmt = BankStatement.search([('journal_id', '=', self.id), ('date', '<=', today.strftime(DF))], order='date desc, id desc', limit=1)
-        if not last_stmt:
-            last_stmt = BankStatement.search([('journal_id', '=', self.id), ('date', '<=', last_month.strftime(DF))], order='date desc, id desc', limit=1)
+
         last_balance = last_stmt and last_stmt.balance_end_real or 0
         data.append(build_graph_data(today, last_balance))
 
@@ -74,9 +107,10 @@ class account_journal(models.Model):
                         ORDER BY l.date desc
                         """
         self.env.cr.execute(query, (self.id, last_month, today))
-        for val in self.env.cr.dictfetchall():
+        query_result = self.env.cr.dictfetchall()
+        for val in query_result:
             date = val['date']
-            if val['date'] != today.strftime(DF):  # make sure the last point in the graph is today
+            if date != today.strftime(DF):  # make sure the last point in the graph is today
                 data[:0] = [build_graph_data(date, amount)]
             amount -= val['amount']
 
@@ -86,7 +120,15 @@ class account_journal(models.Model):
 
         [graph_title, graph_key] = self._graph_title_and_key()
         color = '#875A7B' if 'e' in version else '#7c7bad'
-        return [{'values': data, 'title': graph_title, 'key': graph_key, 'area': True, 'color': color}]
+
+        is_sample_data = not last_stmt and len(query_result) == 0
+        if is_sample_data:
+            data = []
+            for i in range(30, 0, -5):
+                current_date = today + timedelta(days=-i)
+                data.append(build_graph_data(current_date, random.randint(-5, 15)))
+
+        return [{'values': data, 'title': graph_title, 'key': graph_key, 'area': True, 'color': color, 'is_sample_data': is_sample_data}]
 
     @api.multi
     def get_bar_graph_datas(self):
@@ -125,12 +167,22 @@ class account_journal(models.Model):
 
         self.env.cr.execute(query, query_args)
         query_results = self.env.cr.dictfetchall()
+        is_sample_data = True
         for index in range(0, len(query_results)):
             if query_results[index].get('aggr_date') != None:
+                is_sample_data = False
                 data[index]['value'] = query_results[index].get('total')
 
         [graph_title, graph_key] = self._graph_title_and_key()
-        return [{'values': data, 'title': graph_title, 'key': graph_key}]
+
+        if is_sample_data:
+            for index in range(0, len(query_results)):
+                data[index]['type'] = 'o_sample_data'
+                # we use unrealistic values for the sample data
+                data[index]['value'] = random.randint(0, 20)
+                graph_key = _('Sample data')
+
+        return [{'values': data, 'title': graph_title, 'key': graph_key, 'is_sample_data': is_sample_data}]
 
     def _get_bar_graph_select_query(self):
         """
@@ -196,8 +248,15 @@ class account_journal(models.Model):
             (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay, currency, curr_cache=curr_cache)
             (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts, currency, curr_cache=curr_cache)
             (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results, currency, curr_cache=curr_cache)
+            read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount'], 'journal_id', lazy=False)
+            if read:
+                number_to_check = read[0]['__count']
+                to_check_balance = read[0]['amount']
 
         difference = currency.round(last_balance-account_sum) + 0.0
+
+        is_sample_data = self.kanban_dashboard_graph and any(data.get('is_sample_data', False) for data in json.loads(self.kanban_dashboard_graph))
+
         return {
             'number_to_check': number_to_check,
             'to_check_balance': formatLang(self.env, to_check_balance, currency_obj=currency),
@@ -214,6 +273,7 @@ class account_journal(models.Model):
             'currency_id': currency.id,
             'bank_statements_source': self.bank_statements_source,
             'title': title,
+            'is_sample_data': is_sample_data,
         }
 
     def _get_open_bills_to_pay_query(self):
@@ -258,7 +318,7 @@ class account_journal(models.Model):
         curr_cache = {} if curr_cache is None else curr_cache
         for result in results_dict:
             cur = self.env['res.currency'].browse(result.get('currency'))
-            company = self.env['res.company'].browse(result.get('company_id')) or self.env.user.company_id
+            company = self.env['res.company'].browse(result.get('company_id')) or self.env.company
             rslt_count += 1
             date = result.get('date_invoice') or fields.Date.today()
 
@@ -294,7 +354,6 @@ class account_journal(models.Model):
         return {
             'name': _('Create invoice/bill'),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': model,
             'view_id': view_id,
@@ -308,7 +367,6 @@ class account_journal(models.Model):
         return {
             'name': _('Create cash statement'),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'account.bank.statement',
             'context': ctx,
@@ -368,10 +426,16 @@ class account_journal(models.Model):
                 action_name = 'action_view_bank_statement_tree'
             elif self.type == 'sale':
                 action_name = 'action_invoice_tree1'
-                self = self.with_context(use_domain=[('type', 'in', ['out_invoice', 'out_refund'])])
+                use_domain = expression.AND(
+                    [self.env.context.get('use_domain', []), [('journal_id', '=', self.id)]]
+                )
+                self = self.with_context(use_domain=use_domain)
             elif self.type == 'purchase':
                 action_name = 'action_vendor_bill_template'
-                self = self.with_context(use_domain=[('type', 'in', ['in_invoice', 'in_refund'])])
+                use_domain = expression.AND(
+                    [self.env.context.get('use_domain', []), [('journal_id', '=', self.id)]]
+                )
+                self = self.with_context(use_domain=use_domain)
             else:
                 action_name = 'action_move_journal_line'
 

@@ -24,6 +24,9 @@ from odoo.tools import pycompat, consteq
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.modules.module import get_resource_path, get_module_path
 
+from odoo.http import ALLOWED_DEBUG_MODES
+from odoo.tools.misc import str2bool
+
 _logger = logging.getLogger(__name__)
 
 
@@ -126,6 +129,21 @@ class IrHttp(models.AbstractModel):
         return auth_method
 
     @classmethod
+    def _handle_debug(cls):
+        # Store URL debug mode (might be empty) into session
+        if 'debug' in request.httprequest.args:
+            debug_mode = []
+            for debug in request.httprequest.args['debug'].split(','):
+                if debug not in ALLOWED_DEBUG_MODES:
+                    debug = '1' if str2bool(debug, debug) else ''
+                debug_mode.append(debug)
+            debug_mode = ','.join(debug_mode)
+
+            # Write on session only when needed
+            if debug_mode != request.session.debug:
+                request.session.debug = debug_mode
+
+    @classmethod
     def _serve_attachment(cls):
         env = api.Environment(request.cr, SUPERUSER_ID, request.context)
         attach = env['ir.attachment'].get_serve_attachment(request.httprequest.path, extra_fields=['name', 'checksum'])
@@ -162,6 +180,9 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _handle_exception(cls, exception):
+        # in case of Exception, e.g. 404, we don't step into _dispatch
+        cls._handle_debug()
+
         # If handle_exception returns something different than None, it will be used as a response
 
         # This is done first as the attachment path may
@@ -182,6 +203,8 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _dispatch(cls):
+        cls._handle_debug()
+
         # locate the controller method
         try:
             rule, arguments = cls._find_handler(return_rule=True)
@@ -260,15 +283,23 @@ class IrHttp(models.AbstractModel):
         if not record or not record.exists() or field not in record:
             return None, 404
 
-        # access token grant access
-        if model == 'ir.attachment' and access_token:
-            record = record.sudo()
-            if not consteq(record.access_token or '', access_token):
+        if model == 'ir.attachment':
+            record_sudo = record.sudo()
+            if access_token and not consteq(record_sudo.access_token or '', access_token):
                 return None, 403
+            elif (access_token and consteq(record_sudo.access_token or '', access_token)):
+                record = record_sudo
+            elif record_sudo.public:
+                record = record_sudo
+            elif self.env.user.has_group('base.group_portal'):
+                # Check the read access on the record linked to the attachment
+                # eg: Allow to download an attachment on a task from /my/task/task_id 
+                record.check('read')
+                record = record_sudo
 
         # check read access
         try:
-            last_update = record['__last_update']
+            record['__last_update']
         except AccessError:
             return None, 403
 
@@ -307,7 +338,7 @@ class IrHttp(models.AbstractModel):
 
     def _binary_record_content(
             self, record, field='datas', filename=None,
-            filename_field='datas_fname', default_mimetype='application/octet-stream'):
+            filename_field='name', default_mimetype='application/octet-stream'):
 
         model = record._name
         mimetype = 'mimetype' in record and record.mimetype or False
@@ -316,7 +347,7 @@ class IrHttp(models.AbstractModel):
 
         field_def = record._fields[field]
         if field_def.type == 'binary' and field_def.attachment:
-            field_attachment = self.env['ir.attachment'].search_read(domain=[('res_model', '=', model), ('res_id', '=', record.id), ('res_field', '=', field)], fields=['datas', 'mimetype', 'checksum'], limit=1)
+            field_attachment = self.env['ir.attachment'].sudo().search_read(domain=[('res_model', '=', model), ('res_id', '=', record.id), ('res_field', '=', field)], fields=['datas', 'mimetype', 'checksum'], limit=1)
             if field_attachment:
                 mimetype = field_attachment[0]['mimetype']
                 content = field_attachment[0]['datas']
@@ -356,7 +387,7 @@ class IrHttp(models.AbstractModel):
         return (status, headers, content)
 
     def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas',
-                       unique=False, filename=None, filename_field='datas_fname', download=False,
+                       unique=False, filename=None, filename_field='name', download=False,
                        mimetype=None, default_mimetype='application/octet-stream',
                        access_token=None):
         """ Get file, attachment or downloadable content

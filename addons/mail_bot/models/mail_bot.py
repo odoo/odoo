@@ -214,7 +214,7 @@ class MailBot(models.AbstractModel):
 
     def _is_bot_pinged(self, values):
         odoobot_id = self.env['ir.model.data'].xmlid_to_res_id("base.partner_root")
-        return (4, odoobot_id) in values.get('partner_ids', [])
+        return odoobot_id in values.get('partner_ids', [])
 
     def _is_bot_in_private_channel(self, record):
         odoobot_id = self.env['ir.model.data'].xmlid_to_res_id("base.partner_root")

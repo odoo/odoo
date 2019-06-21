@@ -15,6 +15,7 @@ from odoo.tools import float_compare
 _logger = logging.getLogger(__name__)
 
 
+
 class ProductCategory(models.Model):
     _name = "product.category"
     _description = "Product Category"
@@ -62,28 +63,11 @@ class ProductCategory(models.Model):
         return self.create({'name': name}).name_get()[0]
 
 
-class ProductPriceHistory(models.Model):
-    """ Keep track of the ``product.template`` standard prices as they are changed. """
-    _name = 'product.price.history'
-    _rec_name = 'datetime'
-    _order = 'datetime desc'
-    _description = 'Product Price List History'
-
-    def _get_default_company_id(self):
-        return self._context.get('force_company', self.env.user.company_id.id)
-
-    company_id = fields.Many2one('res.company', string='Company',
-        default=_get_default_company_id, required=True)
-    product_id = fields.Many2one('product.product', 'Product', ondelete='cascade', required=True)
-    datetime = fields.Datetime('Date', default=fields.Datetime.now)
-    cost = fields.Float('Cost', digits=dp.get_precision('Product Price'))
-
-
 class ProductProduct(models.Model):
     _name = "product.product"
     _description = "Product"
     _inherits = {'product.template': 'product_tmpl_id'}
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'image.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'default_code, name, id'
 
     # price: total price, context dependent (partner, pricelist, quantity)
@@ -136,6 +120,114 @@ class ProductProduct(models.Model):
     packaging_ids = fields.One2many(
         'product.packaging', 'product_id', 'Product Packages',
         help="Gives the different ways to package the same product.")
+
+    # all image fields are base64 encoded and PIL-supported
+
+    # all image_raw fields are technical and should not be displayed to the user
+    image_raw_original = fields.Binary("Raw Original Image")
+
+    # resized fields stored (as attachment) for performance
+    image_raw_big = fields.Binary("Raw Big-sized Image", compute='_compute_images', store=True)
+    image_raw_large = fields.Binary("Raw Large-sized Image", compute='_compute_images', store=True)
+    image_raw_medium = fields.Binary("Raw Medium-sized Image", compute='_compute_images', store=True)
+    image_raw_small = fields.Binary("Raw Small-sized Image", compute='_compute_images', store=True)
+
+    can_image_raw_be_zoomed = fields.Boolean("Can image raw be zoomed", compute='_compute_images', store=True)
+
+    # Computed fields that are used to create a fallback to the template if
+    # necessary, it's recommended to display those fields to the user.
+    image_original = fields.Binary("Original Image", compute='_compute_image_original', inverse='_set_image_original', help="Image in its original size, as it was uploaded.")
+    image_big = fields.Binary("Big-sized Image", compute='_compute_image_big', help="1024px * 1024px")
+    image_large = fields.Binary("Large-sized Image", compute='_compute_image_large', help="256px * 256px")
+    image_medium = fields.Binary("Medium-sized Image", compute='_compute_image_medium', help="128px * 128px")
+    image_small = fields.Binary("Small-sized Image", compute='_compute_image_small', help="64px * 64px")
+    can_image_be_zoomed = fields.Boolean("Can image be zoomed", compute='_compute_can_image_be_zoomed')
+
+    image = fields.Binary("Image", compute='_compute_image', inverse='_set_image')
+
+    @api.multi
+    @api.depends('image_raw_original')
+    def _compute_images(self):
+        for record in self:
+            images = tools.image_get_resized_images(record.image_raw_original, big_name=False)
+            record.image_raw_big = tools.image_get_resized_images(record.image_raw_original,
+                large_name=False, medium_name=False, small_name=False)['image']
+            record.image_raw_large = images['image_large']
+            record.image_raw_medium = images['image_medium']
+            record.image_raw_small = images['image_small']
+            record.can_image_raw_be_zoomed = tools.is_image_size_above(record.image_raw_original)
+
+    @api.multi
+    def _compute_image_original(self):
+        """Get the image from the template if no image is set on the variant."""
+        for record in self:
+            record.image_original = record.image_raw_original or record.product_tmpl_id.image_original
+
+    @api.multi
+    def _set_image_original(self):
+        for record in self:
+            if (
+                # We are trying to remove an image even though it is already
+                # not set, remove it from the template instead.
+                not record.image_original and not record.image_raw_original or
+                # We are trying to add an image, but the template image is
+                # not set, write on the template instead.
+                record.image_original and not record.product_tmpl_id.image_original or
+                # There is only one variant, always write on the template.
+                self.search_count([
+                    ('product_tmpl_id', '=', record.product_tmpl_id.id),
+                    ('active', '=', True),
+                ]) <= 1
+            ):
+                record.image_raw_original = False
+                record.product_tmpl_id.image_original = record.image_original
+            else:
+                record.image_raw_original = record.image_original
+
+    @api.multi
+    def _compute_image_big(self):
+        """Get the image from the template if no image is set on the variant."""
+        for record in self:
+            record.image_big = record.image_raw_big or record.product_tmpl_id.image_big
+
+    @api.multi
+    def _compute_image_large(self):
+        """Get the image from the template if no image is set on the variant."""
+        for record in self:
+            record.image_large = record.image_raw_large or record.product_tmpl_id.image_large
+
+    @api.multi
+    def _compute_image_medium(self):
+        """Get the image from the template if no image is set on the variant."""
+        for record in self:
+            record.image_medium = record.image_raw_medium or record.product_tmpl_id.image_medium
+
+    @api.multi
+    def _compute_image_small(self):
+        """Get the image from the template if no image is set on the variant."""
+        for record in self:
+            record.image_small = record.image_raw_small or record.product_tmpl_id.image_small
+
+    @api.multi
+    def _compute_can_image_be_zoomed(self):
+        """Get the image from the template if no image is set on the variant."""
+        for record in self:
+            record.can_image_be_zoomed = record.can_image_raw_be_zoomed if record.image_raw_original else record.product_tmpl_id.can_image_be_zoomed
+
+    @api.multi
+    @api.depends('image_big')
+    def _compute_image(self):
+        for record in self:
+            record.image = record.image_big
+
+    @api.multi
+    def _set_image(self):
+        for record in self:
+            record.image_original = record.image
+        # We want the image field to be recomputed to have a correct size.
+        # Without this `invalidate_cache`, the image field will keep holding the
+        # image_original instead of the big-sized image.
+        self.invalidate_cache()
 
     _sql_constraints = [
         ('barcode_uniq', 'unique(barcode)', "A barcode can only be assigned to one product !"),
@@ -199,7 +291,7 @@ class ProductProduct(models.Model):
     def _compute_product_lst_price(self):
         to_uom = None
         if 'uom' in self._context:
-            to_uom = self.env['uom.uom'].browse([self._context['uom']])
+            to_uom = self.env['uom.uom'].browse(self._context['uom'])
 
         for product in self:
             if to_uom:
@@ -251,26 +343,6 @@ class ProductProduct(models.Model):
                 else:
                     product.product_template_attribute_value_ids += values_per_template[product.product_tmpl_id.id][pav.id]
 
-    @api.multi
-    def _get_image_fallback_record(self):
-        """Override to get the image from the template if no image is set on the
-        variant."""
-        return self.product_tmpl_id
-
-    @api.multi
-    def _force_write_image_on_fallback(self):
-        """Override to always write on the template if there is only one
-        variant.
-
-        This is needed because when there is only one variant, the user doesn't
-        know there is a difference between template and variant, he expects both
-        images to be the same.
-        """
-        return self.env['product.product'].search_count([
-            ('product_tmpl_id', '=', self.product_tmpl_id.id),
-            ('active', '=', True),
-        ]) <= 1
-
     @api.one
     def _get_pricelist_items(self):
         self.pricelist_item_ids = self.env['product.pricelist.item'].search([
@@ -297,20 +369,21 @@ class ProductProduct(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         products = super(ProductProduct, self.with_context(create_product_product=True)).create(vals_list)
-        for product, vals in zip(products, vals_list):
-            # When a unique variant is created from tmpl then the standard price is set by _set_standard_price
-            if not (self.env.context.get('create_from_tmpl') and len(product.product_tmpl_id.product_variant_ids) == 1):
-                product._set_standard_price(vals.get('standard_price') or 0.0)
         # `_get_variant_id_for_combination` depends on existing variants
         self.clear_caches()
+        self.env['product.template'].invalidate_cache(
+            fnames=[
+                'product_variant_ids',
+                'product_variant_id',
+                'product_variant_count'
+            ],
+            ids=products.mapped('product_tmpl_id').ids
+        )
         return products
 
     @api.multi
     def write(self, values):
-        ''' Store the standard price change in order to be able to retrieve the cost of a product for a given date'''
         res = super(ProductProduct, self).write(values)
-        if 'standard_price' in values:
-            self._set_standard_price(values['standard_price'])
         if 'attribute_value_ids' in values:
             # `_get_variant_id_for_combination` depends on `attribute_value_ids`
             self.clear_caches()
@@ -318,6 +391,8 @@ class ProductProduct(models.Model):
             # prefetched o2m have to be reloaded (because of active_test)
             # (eg. product.template: product_variant_ids)
             self.invalidate_cache()
+            # `_get_first_possible_variant_id` depends on variants active state
+            self.clear_caches()
         return res
 
     @api.multi
@@ -325,6 +400,10 @@ class ProductProduct(models.Model):
         unlink_products = self.env['product.product']
         unlink_templates = self.env['product.template']
         for product in self:
+            # If there is an image set on the variant and no image set on the
+            # template, move the image to the template.
+            if product.image_raw_original and not product.product_tmpl_id.image_original:
+                product.product_tmpl_id.image_original = product.image_raw_original
             # Check if product still exists, in case it has been unlinked by unlinking its template
             if not product.exists():
                 continue
@@ -519,7 +598,10 @@ class ProductProduct(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
         res = self.env['product.supplierinfo']
-        for seller in self._prepare_sellers(params):
+        sellers = self._prepare_sellers(params)
+        if self.env.context.get('force_company'):
+            sellers = sellers.filtered(lambda s: not s.company_id or s.company_id.id == self.env.context['force_company'])
+        for seller in sellers:
             # Set quantity in UoM of seller
             quantity_uom_seller = quantity
             if quantity_uom_seller and uom_id and uom_id != seller.product_uom:
@@ -554,7 +636,7 @@ class ProductProduct(models.Model):
             # standard_price field can only be seen by users in base.group_user
             # Thus, in order to compute the sale price from the cost for users not in this group
             # We fetch the standard price as the superuser
-            products = self.with_context(force_company=company and company.id or self._context.get('force_company', self.env.user.company_id.id)).sudo()
+            products = self.with_context(force_company=company and company.id or self._context.get('force_company', self.env.company.id)).sudo()
 
         prices = dict.fromkeys(self.ids, 0.0)
         for product in products:
@@ -577,31 +659,6 @@ class ProductProduct(models.Model):
                     prices[product.id], currency, product.company_id, fields.Date.today())
 
         return prices
-
-
-    # compatibility to remove after v10 - DEPRECATED
-    @api.multi
-    def price_get(self, ptype='list_price'):
-        return self.price_compute(ptype)
-
-    @api.multi
-    def _set_standard_price(self, value):
-        ''' Store the standard price change in order to be able to retrieve the cost of a product for a given date'''
-        PriceHistory = self.env['product.price.history']
-        for product in self:
-            PriceHistory.create({
-                'product_id': product.id,
-                'cost': value,
-                'company_id': self._context.get('force_company', self.env.user.company_id.id),
-            })
-
-    @api.multi
-    def get_history_price(self, company_id, date=None):
-        history = self.env['product.price.history'].search([
-            ('company_id', '=', company_id),
-            ('product_id', 'in', self.ids),
-            ('datetime', '<=', date or fields.Datetime.now())], order='datetime desc,id desc', limit=1)
-        return history.cost or 0.0
 
     @api.model
     def get_empty_list_help(self, help):
@@ -717,10 +774,10 @@ class SupplierInfo(models.Model):
         required=True, help="The price to purchase a product")
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env.user.company_id.id, index=1)
+        default=lambda self: self.env.company.id, index=1)
     currency_id = fields.Many2one(
         'res.currency', 'Currency',
-        default=lambda self: self.env.user.company_id.currency_id.id,
+        default=lambda self: self.env.company.currency_id.id,
         required=True)
     date_start = fields.Date('Start Date', help="Start date for this vendor price")
     date_end = fields.Date('End Date', help="End date for this vendor price")

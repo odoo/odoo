@@ -3,7 +3,7 @@
 import time
 
 from .common import TestPurchase
-
+from odoo.tests.common import Form
 
 class TestFifoReturns(TestPurchase):
 
@@ -72,8 +72,10 @@ class TestFifoReturns(TestPurchase):
 
         # Return the goods of purchase order 2
         picking = purchase_order_2.picking_ids[0]
-        return_pick_wiz = self.env['stock.return.picking'].with_context(
-            active_model='stock.picking', active_id=picking.id).create({})
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking.ids, active_id=picking.ids[0],
+            active_model='stock.picking'))
+        return_pick_wiz = stock_return_picking_form.save()
         return_picking_id, dummy = return_pick_wiz.with_context(active_id=picking.id)._create_returns()
 
         # Important to pass through confirmation and assignation
@@ -84,4 +86,4 @@ class TestFifoReturns(TestPurchase):
 
         #  After the return only 10 of the second purchase order should still be in stock as it applies fifo on the return too
         self.assertEqual(product_fiforet_icecream.qty_available, 10.0, 'Qty available should be 10.0')
-        self.assertEqual(product_fiforet_icecream.stock_value, 800.0, 'Stock value should be 800')
+        self.assertEqual(product_fiforet_icecream.value_svl, 800.0, 'Stock value should be 800')

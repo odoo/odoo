@@ -8,7 +8,7 @@ import io
 
 from odoo import api, fields, models, _
 from odoo.exceptions import Warning
-from odoo.tools import pycompat
+from odoo.tools import float_is_zero, pycompat
 
 
 class AccountFrFec(models.TransientModel):
@@ -65,7 +65,7 @@ class AccountFrFec(models.TransientModel):
             sql_query += '''
             AND am.state = 'posted'
             '''
-        company = self.env.user.company_id
+        company = self.env.company
         formatted_date_from = fields.Date.to_string(self.date_from).replace('-', '')
         date_from = self.date_from
         formatted_date_year = date_from.year
@@ -108,7 +108,7 @@ class AccountFrFec(models.TransientModel):
         # 2) CSV files are easier to read/use for a regular accountant.
         # So it will be easier for the accountant to check the file before
         # sending it to the fiscal administration
-        company = self.env.user.company_id
+        company = self.env.company
         company_legal_data = self._get_company_legal_data(company)
 
         header = [
@@ -182,14 +182,16 @@ class AccountFrFec(models.TransientModel):
 
         sql_query += '''
         GROUP BY aml.account_id, aat.type
-        HAVING sum(aml.balance) != 0
+        HAVING round(sum(aml.balance), %s) != 0
         AND aat.type not in ('receivable', 'payable')
         '''
         formatted_date_from = fields.Date.to_string(self.date_from).replace('-', '')
         date_from = self.date_from
         formatted_date_year = date_from.year
+        currency_digits = 2
+
         self._cr.execute(
-            sql_query, (formatted_date_year, formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id))
+            sql_query, (formatted_date_year, formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id, currency_digits))
 
         for row in self._cr.fetchall():
             listrow = list(row)
@@ -202,6 +204,8 @@ class AccountFrFec(models.TransientModel):
                     current_amount = float(listrow[11].replace(',', '.')) - float(listrow[12].replace(',', '.'))
                     unaffected_earnings_amount = float(unaffected_earnings_results[11].replace(',', '.')) - float(unaffected_earnings_results[12].replace(',', '.'))
                     listrow_amount = current_amount + unaffected_earnings_amount
+                    if float_is_zero(listrow_amount, precision_digits=currency_digits):
+                        continue
                     if listrow_amount > 0:
                         listrow[11] = str(listrow_amount).replace('.', ',')
                         listrow[12] = '0,00'
@@ -269,11 +273,11 @@ class AccountFrFec(models.TransientModel):
 
         sql_query += '''
         GROUP BY aml.account_id, aat.type, rp.ref, rp.id
-        HAVING sum(aml.balance) != 0
+        HAVING round(sum(aml.balance), %s) != 0
         AND aat.type in ('receivable', 'payable')
         '''
         self._cr.execute(
-            sql_query, (formatted_date_year, formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id))
+            sql_query, (formatted_date_year, formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id, currency_digits))
 
         for row in self._cr.fetchall():
             listrow = list(row)
@@ -301,7 +305,7 @@ class AccountFrFec(models.TransientModel):
             END
             AS PieceRef,
             TO_CHAR(am.date, 'YYYYMMDD') AS PieceDate,
-            CASE WHEN aml.name IS NULL THEN '/' ELSE replace(replace(aml.name, '|', '/'), '\t', '') END AS EcritureLib,
+            CASE WHEN aml.name IS NULL OR aml.name = '' THEN '/' ELSE replace(replace(aml.name, '|', '/'), '\t', '') END AS EcritureLib,
             replace(CASE WHEN aml.debit = 0 THEN '0,00' ELSE to_char(aml.debit, '000000000000000D99') END, '.', ',') AS Debit,
             replace(CASE WHEN aml.credit = 0 THEN '0,00' ELSE to_char(aml.credit, '000000000000000D99') END, '.', ',') AS Credit,
             CASE WHEN rec.name IS NULL THEN '' ELSE rec.name END AS EcritureLet,
@@ -384,7 +388,7 @@ class AccountFrFec(models.TransientModel):
         rows_length = len(rows)
         for i, row in enumerate(rows):
             if not i == rows_length - 1:
-                row.append(lineterminator)
+                row[-1] += lineterminator
             writer.writerow(row)
 
         fecvalue = fecfile.getvalue()

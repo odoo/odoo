@@ -1673,9 +1673,10 @@ order.
 
 
 - handle (HandleWidget)
-    This field's job is to be displayed as a *handle* in a list view, and allows
-    reordering the various records by drag and dropping lines.
+    This field's job is to be displayed as a *handle*, and allows reordering the
+    various records by drag and dropping them.
 
+    .. warning:: It has to be specified on the field by which records are sorted.
     .. warning:: Having more than one field with a handle widget on the same list is not supported.
 
     - Supported field types: *integer*
@@ -2142,10 +2143,6 @@ Relational fields
     arbitrary model.
 
     - Supported field types: *char, reference*
-
-- one2many_list (FieldOne2Many)
-    This widget is exactly the same as a FieldOne2Many.  It is registered at this
-    key only for backward compatibility reasons.  Please avoid using this.
 
 
 Client actions

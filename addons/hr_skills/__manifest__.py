@@ -21,7 +21,11 @@ This module introduces skills and resumé management for employees.
         'views/hr_templates.xml',
         'data/hr_resume_data.xml',
     ],
-    'demo': ['data/hr_resume_demo.xml'],
+    'demo': [
+        'data/hr_resume_demo.xml',
+        'data/hr.employee.skill.csv',
+        'data/hr.resume.line.csv',
+    ],
     'qweb': [
         'static/src/xml/resume_templates.xml',
         'static/src/xml/skills_templates.xml',

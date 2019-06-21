@@ -3,12 +3,12 @@ odoo.define('website_sale_wishlist.wishlist', function (require) {
 
 var publicWidget = require('web.public.widget');
 var wSaleUtils = require('website_sale.utils');
-var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
+var VariantMixin = require('sale.VariantMixin');
 
-// ProductConfiguratorMixin events are overridden on purpose here
+// VariantMixin events are overridden on purpose here
 // to avoid registering them more than once since they are already registered
 // in website_sale.js
-publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(ProductConfiguratorMixin, {
+publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin, {
     selector: '.oe_website_sale',
     events: {
         'click #my_wish': '_onClickMyWish',
@@ -162,9 +162,9 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(ProductConfig
         wSaleUtils.animateClone($('#my_cart'), tr, 25, 40);
 
         if ($('#b2b_wish').is(':checked')) {
-            return this._addToCart(product, tr.find('qty').val() || 1);
+            return this._addToCart(product, tr.find('add_qty').val() || 1);
         } else {
-            var adding_deffered = this._addToCart(product, tr.find('qty').val() || 1);
+            var adding_deffered = this._addToCart(product, tr.find('add_qty').val() || 1);
             this._removeWish(e, adding_deffered);
             return adding_deffered;
         }

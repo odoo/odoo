@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 
 class DeliveryCarrier(models.Model):
     _name = 'delivery.carrier'
-    _description = "Delivery Methods"
+    _description = "Shipping Methods"
     _order = 'sequence, id'
 
     ''' A Shipping Provider
@@ -87,7 +87,7 @@ class DeliveryCarrier(models.Model):
             'name': 'New Providers',
             'view_mode': 'kanban,form',
             'res_model': 'ir.module.module',
-            'domain': [['name', 'ilike', 'delivery_']],
+            'domain': [['name', '=like', 'delivery_%'], ['name', '!=', 'delivery_barcode']],
             'type': 'ir.actions.act_window',
             'help': _('''<p class="o_view_nocontent">
                     Buy Odoo Enterprise now to get more providers.
@@ -108,6 +108,11 @@ class DeliveryCarrier(models.Model):
         if self.zip_to and (partner.zip or '').upper() > self.zip_to.upper():
             return False
         return True
+
+    @api.onchange('integration_level')
+    def _onchange_integration_level(self):
+        if self.integration_level == 'rate':
+            self.invoice_policy = 'estimated'
 
     @api.onchange('can_generate_return')
     def _onchange_can_generate_return(self):
@@ -146,9 +151,11 @@ class DeliveryCarrier(models.Model):
             res = getattr(self, '%s_rate_shipment' % self.delivery_type)(order)
             # apply margin on computed price
             res['price'] = float(res['price']) * (1.0 + (self.margin / 100.0))
+            # save the real price in case a free_over rule overide it to 0
+            res['carrier_price'] = res['price']
             # free when order is large enough
             if res['success'] and self.free_over and order._compute_amount_total_without_delivery() >= self.amount:
-                res['warning_message'] = _('Info:\nThe shipping is free because the order amount exceeds %.2f.\n(The actual shipping cost is: %.2f)') % (self.amount, res['price'])
+                res['warning_message'] = _('The shipping is free since the order amount exceeds %.2f.') % (self.amount)
                 res['price'] = 0.0
             return res
 
@@ -251,7 +258,7 @@ class DeliveryCarrier(models.Model):
                     'warning_message': False}
         price = self.fixed_price
         if self.company_id and self.company_id.currency_id.id != order.currency_id.id:
-            price = self.env['res.currency']._compute(self.company_id.currency_id, order.currency_id, price)
+            price = self.company_id.currency_id._convert(price, order.currency_id, self.company_id, fields.Date.today())
         return {'success': True,
                 'price': price,
                 'error_message': False,

@@ -10,7 +10,6 @@ var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
-var session = require('web.session');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -731,7 +730,7 @@ var Discuss = AbstractAction.extend({
      * @private
      */
     _renderButtons: function () {
-        this.$buttons = $(QWeb.render('mail.discuss.ControlButtons', { debug: session.debug }));
+        this.$buttons = $(QWeb.render('mail.discuss.ControlButtons', { debug: config.isDebug() }));
         this.$buttons.find('button').css({display:'inline-block'});
         this.$buttons
             .on('click', '.o_mail_discuss_button_invite', this._onInviteButtonClicked.bind(this))
@@ -1461,8 +1460,9 @@ var Discuss = AbstractAction.extend({
     /**
      * @private
      * @param {Object} messageData
+     * @param {Function} callback
      */
-    _onPostMessage: function (messageData) {
+    _onPostMessage: function (messageData, callback) {
         var self = this;
         var options = {};
         if (this._selectedMessage) {
@@ -1483,6 +1483,7 @@ var Discuss = AbstractAction.extend({
                 } else {
                     self._threadWidget.scrollToBottom();
                 }
+                callback();
             });
     },
     /**

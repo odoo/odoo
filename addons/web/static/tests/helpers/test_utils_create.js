@@ -14,7 +14,7 @@ var ActionManager = require('web.ActionManager');
 var config = require('web.config');
 var ControlPanelView = require('web.ControlPanelView');
 var concurrency = require('web.concurrency');
-var DebugManager = require('web.DebugManager');
+var DebugManager = require('web.DebugManager.Backend');
 var dom = require('web.dom');
 var testUtilsMock = require('web.test_utils_mock');
 var Widget = require('web.Widget');
@@ -142,7 +142,7 @@ async function createView(params) {
             this.loadParams.groupedBy = params.groupBy || viewOptions.groupBy || [];
         },
     });
-    if (params.hasSelectors) {
+    if ('hasSelectors' in params) {
         viewOptions.hasSelectors = params.hasSelectors;
     }
 
@@ -392,7 +392,6 @@ function createParent(params) {
 
 return {
     createActionManager: createActionManager,
-    createView: createView,
     createCalendarView: createCalendarView,
     createControlPanel: createControlPanel,
     createDebugManager: createDebugManager,

@@ -65,6 +65,41 @@
             <field name="product_qty">26.0</field>
             <field name="location_id" ref="stock_location_components"/>
         </record>
+        <record id="stock_inventory_line_6b" model="stock.inventory.line">
+            <field name="product_id" ref="product.product_product_11b"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_0"/>
+            <field name="product_qty">30.0</field>
+            <field name="location_id" ref="stock_location_components"/>
+        </record>
+        <record id="stock_inventory_line_7" model="stock.inventory.line">
+            <field name="product_id" ref="product.product_product_4"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_0"/>
+            <field name="product_qty">45.0</field>
+            <field name="location_id" ref="stock_location_components"/>
+        </record>
+        <record id="stock_inventory_line_7b" model="stock.inventory.line">
+            <field name="product_id" ref="product.product_product_4b"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_0"/>
+            <field name="product_qty">50.0</field>
+            <field name="location_id" ref="stock_location_components"/>
+        </record>
+        <record id="stock_inventory_line_7c" model="stock.inventory.line">
+            <field name="product_id" ref="product.product_product_4c"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_0"/>
+            <field name="product_qty">55.0</field>
+            <field name="location_id" ref="stock_location_components"/>
+        </record>
+        <record id="stock_inventory_line_7d" model="stock.inventory.line">
+            <field name="product_id" ref="product.product_product_4d"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_0"/>
+            <field name="product_qty">60.0</field>
+            <field name="location_id" ref="stock_location_components"/>
+        </record>
         <record id="stock_inventory_line_11" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
@@ -84,11 +119,14 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">80.0</field>
-            <field name="location_id" ref="stock_location_components"/>
+             <field name="location_id" ref="stock_location_components"/>
         </record>
 
-        <function model="stock.inventory" name="action_validate">
+        <function model="stock.inventory" name="_action_start">
             <function eval="[[('state','=','draft'),('id', '=', ref('stock_inventory_0'))]]" model="stock.inventory" name="search"/>
+        </function>
+        <function model="stock.inventory" name="action_validate">
+            <function eval="[[('state','=','confirm'),('id', '=', ref('stock_inventory_0'))]]" model="stock.inventory" name="search"/>
         </function>
 
 
@@ -122,8 +160,12 @@
         <record id="res_company_1" model="res.company">
             <field name="currency_id" ref="base.USD"/>
             <field name="partner_id" ref="res_partner_company_1"/>
-            <field name="parent_id" ref="base.main_company"/>
             <field name="name">My Company (Chicago)</field>
+            <field name="user_ids" eval="[(4, ref('base.user_admin')), (4, ref('base.user_demo'))]"/>
+        </record>
+
+        <record id="base.group_multi_company" model="res.groups">
+            <field name="users" eval="[(4, ref('base.user_admin')), (4, ref('base.user_demo'))]"/>
         </record>
 
         <record id="base.main_company" model="res.company">

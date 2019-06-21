@@ -18,60 +18,28 @@
             <field name="image" eval="obj(ref('base.partner_admin')).image" model="res.partner"/>
         </record>
 
-        <record id="activity_type_setup_it_materials" model="mail.activity.type">
-            <field name="name">Setup IT Materials</field>
-            <field name="res_model_id" ref="hr.model_hr_employee"/>
-        </record>
-
-        <record id="activity_type_setup_it_materials" model="mail.activity.type">
-            <field name="name">Setup IT Materials</field>
-            <field name="res_model_id" ref="hr.model_hr_employee"/>
-        </record>
-
-        <record id="activity_type_plan_training" model="mail.activity.type">
-            <field name="name">Plan Training</field>
-            <field name="res_model_id" ref="hr.model_hr_employee"/>
-        </record>
-
-        <record id="activity_type_training" model="mail.activity.type">
-            <field name="name">Training</field>
-            <field name="res_model_id" ref="hr.model_hr_employee"/>
-            <field name="delay_unit">weeks</field>
-            <field name="delay_count">1</field>
-        </record>
-
-        <record id="activity_type_compute_out_delais" model="mail.activity.type">
-            <field name="name">Compute Out Delais</field>
-	        <field name="res_model_id" ref="hr.model_hr_employee"/>
-        </record>
-
-        <record id="activity_type_take_back_hr_materials" model="mail.activity.type">
-            <field name="name">Take Back HR Materials</field>
-            <field name="res_model_id" ref="hr.model_hr_employee"/>
-        </record>
-
         <record id="onboarding_setup_it_materials" model="hr.plan.activity.type">
-            <field name="activity_type_id" ref="hr.activity_type_setup_it_materials"/>
+            <field name="summary">Setup IT Materials</field>
             <field name="responsible">manager</field>
         </record>
 
         <record id="onboarding_plan_training" model="hr.plan.activity.type">
-            <field name="activity_type_id" ref="hr.activity_type_plan_training"/>
+            <field name="summary">Plan Training</field>
             <field name="responsible">manager</field>
         </record>
 
         <record id="onboarding_training" model="hr.plan.activity.type">
-            <field name="activity_type_id" ref="hr.activity_type_training"/>
+            <field name="summary">Training</field>
             <field name="responsible">employee</field>
         </record>
 
         <record id="offboarding_setup_compute_out_delais" model="hr.plan.activity.type">
-            <field name="activity_type_id" ref="hr.activity_type_compute_out_delais"/>
+            <field name="summary">Compute Out Delais</field>
             <field name="responsible">manager</field>
         </record>
 
         <record id="offboarding_take_back_hr_materials" model="hr.plan.activity.type">
-            <field name="activity_type_id" ref="hr.activity_type_take_back_hr_materials"/>
+            <field name="summary">Take Back HR Materials</field>
             <field name="responsible">manager</field>
         </record>
 
@@ -96,7 +64,7 @@
             <field name="name">HR: mailgateway unknown employee bounce</field>
             <field name="model_id" ref="base.model_ir_module_module"/>
             <field name="subject">Your document has not been created</field>
-            <field name="email_from">${user.email}</field>
+            <field name="email_from">${user.email_formatted | safe}</field>
             <field name="email_to">${ctx['email_to']|safe}</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">

@@ -68,7 +68,7 @@
                             </div>
                             <field name="country_ids" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}" required="True" options="{'no_create': True, 'no_open': True}"/>
                             <field name="state_ids" widget="many2many_tags" attrs="{'invisible': [('country_ids', '=', [])], 'readonly': [('state', '!=', 'draft')]}" domain="[('country_id', 'in', country_ids)]" options="{'no_create': True, 'no_open': True}"/>
-                            <field name="technology_ids" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="industry_ids" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True, 'no_open': True}"/>
                         </group>
                         <group string="Contacts" attrs="{'invisible': [('search_type', '!=', 'people')]}">
                             <field name="contact_number" attrs="{'readonly': [('state', '!=', 'draft')], 'required': [('search_type', '=', 'people')]}"/>
@@ -86,17 +86,10 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="alert alert-info" role="alert">
-                                Up to
-                                <field name="lead_total_credit" class="mb0"/>
-                                credits will be consumed to find
-                                <field name="lead_number_info" class="mb0"/>
-                                companies.
+                                <field name="lead_credits"/>
                                 <br/>
                                 <span attrs="{'invisible': [('search_type', '!=', 'people')]}">
-                                    Up to
-                                    <field name="contact_credit_per_company" class="mb0"/>
-                                    additional credits will be consumed per company to identify contacts.
-                                    (<field name="contact_total_credit" class="mb0"/>)
+                                    <field name="lead_contacts_credits"/>
                                     <br/>
                                 </span>
                             </div>
@@ -163,7 +156,6 @@
         <field name="name">Lead Mining Requests</field>
         <field name="res_model">crm.iap.lead.mining.request</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_type">form</field>
     </record>
 
     <!-- This menu is display in CRM app when crm_iap_lead is installed-->
@@ -175,7 +167,6 @@
 
     <menuitem
         id="crm_iap_lead_mining_request_menu_action"
-        name="Lead Mining"
         action="crm_iap_lead_mining_request_action"
         parent="crm_menu_lead_generation"
         sequence="0"/>

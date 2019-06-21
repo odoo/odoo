@@ -20,7 +20,7 @@ class CrmLead(models.Model):
             total = 0.0
             quotation_cnt = 0
             sale_order_cnt = 0
-            company_currency = lead.company_currency or self.env.user.company_id.currency_id
+            company_currency = lead.company_currency or self.env.company.currency_id
             for order in lead.order_ids:
                 if order.state in ('draft', 'sent'):
                     quotation_cnt += 1
@@ -60,3 +60,25 @@ class CrmLead(models.Model):
 
         res['invoiced']['target'] = self.env.user.target_sales_invoiced
         return res
+
+    def action_sale_quotations_new(self):
+        if not self.partner_id:
+            return self.env.ref("sale_crm.crm_quotation_partner_action").read()[0]
+        else:
+            return self.action_new_quotation()
+
+    def action_new_quotation(self):
+        action = self.env.ref("sale_crm.sale_action_quotations_new").read()[0]
+        action['context'] = {
+            'search_default_opportunity_id': self.id,
+            'default_opportunity_id': self.id,
+            'search_default_partner_id': self.partner_id.id,
+            'default_partner_id': self.partner_id.id,
+            'default_team_id': self.team_id.id,
+            'default_campaign_id': self.campaign_id.id,
+            'default_medium_id': self.medium_id.id,
+            'default_origin': self.name,
+            'default_name': self.name,
+            'default_source_id': self.source_id.id
+        }
+        return action

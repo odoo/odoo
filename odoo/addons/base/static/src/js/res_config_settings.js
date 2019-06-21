@@ -10,6 +10,7 @@ var FormRenderer = require('web.FormRenderer');
 var view_registry = require('web.view_registry');
 
 var QWeb = core.qweb;
+var _t = core._t;
 
 var BaseSettingRenderer = FormRenderer.extend({
     events: _.extend({}, FormRenderer.prototype.events, {
@@ -33,6 +34,19 @@ var BaseSettingRenderer = FormRenderer.extend({
         return prom;
     },
 
+    /**
+     * @override
+     * overridden to show a message, informing user that there are changes
+     */
+    confirmChange: function () {
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            if (!self.$(".o_dirty_warning").length) {
+                self.$('.o_statusbar_buttons')
+                    .append($('<span/>', {text: _t("Unsaved changes"), class: 'text-muted ml-2 o_dirty_warning'}))
+            }
+        });
+    },
     /**
      * @override
      */
@@ -181,19 +195,6 @@ var BaseSettingRenderer = FormRenderer.extend({
         }));
     },
     /**
-     * add placeholder attr in input element
-     * @override
-     * @private
-     * @param {jQueryElement} $el
-     * @param {Object} node
-     */
-    _handleAttributes: function ($el, node) {
-        this._super.apply(this, arguments);
-        if (node.attrs.placeholder) {
-            $el.attr('placeholder', node.attrs.placeholder);
-        }
-    },
-    /**
      * move to selected setting
      *
      * @private
@@ -308,7 +309,7 @@ var BaseSettingRenderer = FormRenderer.extend({
             module.settingView.find('h2').addClass('o_hidden');
             module.settingView.find('.settingSearchHeader').addClass('o_hidden');
             module.settingView.find('.o_settings_container').removeClass('mt16');
-            var resultSetting = module.settingView.find("label:containsTextLike('" + self.searchText + "')");
+            var resultSetting = module.settingView.find(".o_form_label:containsTextLike('" + self.searchText + "')");
             if (resultSetting.length > 0) {
                 resultSetting.each(function () {
                     var settingBox = $(this).closest('.o_setting_box');
@@ -346,8 +347,8 @@ var BaseSettingRenderer = FormRenderer.extend({
         }
         var match = text.search(new RegExp(word, "i"));
         word = text.substring(match, match + word.length);
-        var hilitedWord = "<span class='highlighter'>" + word + '</span>';
-        return text.replace(word, hilitedWord);
+        var highlightedWord = "<span class='highlighter'>" + word + '</span>';
+        return text.replace(word, highlightedWord);
     },
 });
 

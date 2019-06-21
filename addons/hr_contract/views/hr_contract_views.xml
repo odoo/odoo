@@ -4,7 +4,6 @@
         <record id="act_hr_employee_2_hr_contract" model="ir.actions.act_window">
             <field name="name">Contracts</field>
             <field name="res_model">hr.contract</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{
                 'search_default_employee_id': [active_id],
@@ -24,7 +23,7 @@
                             class="oe_stat_button"
                             icon="fa-book"
                             type="action"
-                            groups="hr.group_hr_manager">
+                            groups="hr_contract.group_hr_contract_manager">
                             <field name="contracts_count" widget="statinfo" string="Contracts"/>
                         </button>
                     </xpath>
@@ -35,7 +34,20 @@
                         </group>
                     </xpath>
                     <xpath expr="//field[@name='bank_account_id']" position="replace">
-                        <field name="bank_account_id" context="{'display_partner':True}"/>
+                        <field name="bank_account_id" context="{'display_partner':True}" attrs="{'invisible' : [('address_home_id', '=', False)]}"/>
+                    </xpath>
+                    <xpath expr="//field[@name='resource_calendar_id']" position="replace">
+                        <field name="calendar_mismatch" invisible="1"/>
+                        <label for="resource_calendar_id"/>
+                        <div>
+                            <field name="resource_calendar_id" required="1" nolabel="1"/>
+                            <span attrs="{'invisible': [('calendar_mismatch', '=', False)]}"
+                                class="fa fa-exclamation-triangle text-danger o_calendar_warning pl-3">
+                            </span>
+                            <span class="o_calendar_warning_tooltip text-danger">
+                                Calendar Mismatch : The employee's calendar does not match its current contract calendar. This could lead to unexpected behaviors.
+                            </span>
+                        </div>
                     </xpath>
                 </data>
             </field>
@@ -75,8 +87,6 @@
                     <separator />
                     <filter string="Current Employee" name="current_employee" domain="[('employee_id.active','=',True)]"/>
                     <separator/>
-                    <filter string="To Report to Social Secretariat" name="to_report" domain="[('reported_to_secretariat', '=', False)]"/>
-                    <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <separator/>
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
@@ -113,10 +123,9 @@
                         <group>
                             <field name="employee_id"/>
                             <field name="department_id"/>
-                            <field name="job_id"/>
                         </group>
                         <group>
-                            <field name="reported_to_secretariat" widget="toggle_button" options='{"active": "Reported to the social secretariat", "inactive": "To report to the social secretariat"}'/>
+                            <field name="job_id"/>
                         </group>
                     </group>
                     <notebook>
@@ -130,7 +139,18 @@
                                         <span class="text-muted">(If fixed-term contract)</span>
                                     </div>
                                     <field name="trial_date_end"/>
-                                    <field name="resource_calendar_id"/>
+                                    <field name="calendar_mismatch" invisible="1"/>
+                                    <label for="resource_calendar_id"/>
+                                    <div>
+                                        <field name="resource_calendar_id" required="1" nolabel="1"/>
+                                        <span attrs="{'invisible': ['|', ('calendar_mismatch', '=', False), ('state', 'not in', ['open', 'pending'])]}"
+                                            class="fa fa-exclamation-triangle text-danger o_calendar_warning pl-3">
+                                        </span>
+                                        <span class="o_calendar_warning_tooltip text-danger">
+                                            Calendar Mismatch : The employee's calendar does not match this contract's calendar. This could lead to unexpected behaviors.
+                                        </span>
+                                    </div>
+                                    <field name="hr_responsible_id"/>
                                 </group>
                             </group>
                             <group string="Notes">
@@ -221,10 +241,28 @@
             </field>
          </record>
 
+        <record id="hr_contract_view_activity" model="ir.ui.view">
+            <field name="name">hr.contract.activity</field>
+            <field name="model">hr.contract</field>
+            <field name="arch" type="xml">
+                <activity string="Contracts">
+                    <field name="employee_id"/>
+                    <templates>
+                        <div t-name="activity-box">
+                            <img t-att-src="activity_image('hr.employee', 'image_medium', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value"/>
+                            <div>
+                                <field name="name" display="full"/>
+                                <field name="job_id" muted="1" display="full"/>
+                            </div>
+                        </div>
+                    </templates>
+                </activity>
+            </field>
+        </record>
+
         <record id="action_hr_contract" model="ir.actions.act_window">
             <field name="name">Contracts</field>
             <field name="res_model">hr.contract</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form,activity</field>
             <field name="domain">[('employee_id', '!=', False)]</field>
             <field name="context">{'search_default_current':1, 'search_default_group_by_state': 1}</field>
@@ -246,7 +284,7 @@
             id="hr_menu_contract"
             name="Contracts"
             action="action_hr_contract"
-            parent="hr.menu_hr_root"
+            parent="hr.menu_hr_employee_payroll"
             sequence="4"
             groups="hr_contract.group_hr_contract_manager"/>
 

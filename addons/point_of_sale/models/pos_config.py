@@ -39,20 +39,20 @@ class PosConfig(models.Model):
     _name = 'pos.config'
     _description = 'Point of Sale Configuration'
 
+    def _default_picking_type_id(self):
+        return self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).pos_type_id.id
+
     def _default_sale_journal(self):
         journal = self.env.ref('point_of_sale.pos_sale_journal', raise_if_not_found=False)
-        if journal and journal.sudo().company_id == self.env.user.company_id:
+        if journal and journal.sudo().company_id == self.env.company:
             return journal
         return self._default_invoice_journal()
 
     def _default_invoice_journal(self):
-        return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.user.company_id.id)], limit=1)
+        return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
 
     def _default_pricelist(self):
-        return self.env['product.pricelist'].search([('currency_id', '=', self.env.user.company_id.currency_id.id)], limit=1)
-
-    def _get_default_location(self):
-        return self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
+        return self.env['product.pricelist'].search([('currency_id', '=', self.env.company.currency_id.id)], limit=1)
 
     def _get_group_pos_manager(self):
         return self.env.ref('point_of_sale.group_pos_manager')
@@ -63,25 +63,19 @@ class PosConfig(models.Model):
     def _compute_default_customer_html(self):
         return self.env['ir.qweb'].render('point_of_sale.customer_facing_display_html')
 
-    @api.depends('limit_categories', 'iface_available_categ_ids')
-    def _compute_iface_start_categ_domain_ids(self):
-        if self.limit_categories:
-            self.iface_start_categ_domain_ids =  self.iface_available_categ_ids
-        else:
-            self.iface_start_categ_domain_ids = self.env['pos.category'].search([])
-
-    name = fields.Char(string='Point of Sale Name', index=True, required=True, help="An internal identification of the point of sale.")
+    name = fields.Char(string='Point of Sale', index=True, required=True, help="An internal identification of the point of sale.")
     is_installed_account_accountant = fields.Boolean(string="Is the Full Accounting Installed",
         compute="_compute_is_installed_account_accountant")
     journal_ids = fields.Many2many(
         'account.journal', 'pos_config_journal_rel',
         'pos_config_id', 'journal_id', string='Available Payment Methods',
         domain="[('journal_user', '=', True ), ('type', 'in', ['bank', 'cash'])]",)
-    picking_type_id = fields.Many2one('stock.picking.type', string='Operation Type')
+    picking_type_id = fields.Many2one(
+        'stock.picking.type',
+        string='Operation Type',
+        default=_default_picking_type_id,
+        domain="[('code', '=', 'outgoing'), ('warehouse_id.company_id', '=', company_id)]")
     use_existing_lots = fields.Boolean(related='picking_type_id.use_existing_lots', readonly=False)
-    stock_location_id = fields.Many2one(
-        'stock.location', string='Stock Location',
-        domain=[('usage', '=', 'internal')], required=True, default=_get_default_location)
     journal_id = fields.Many2one(
         'account.journal', string='Sales Journal',
         domain=[('type', '=', 'sale')],
@@ -110,10 +104,8 @@ class PosConfig(models.Model):
     iface_tax_included = fields.Selection([('subtotal', 'Tax-Excluded Price'), ('total', 'Tax-Included Price')], string="Tax Display", default='subtotal', required=True)
     iface_start_categ_id = fields.Many2one('pos.category', string='Initial Category',
         help='The point of sale will display this product category by default. If no category is specified, all available products will be shown.')
-    iface_available_categ_ids = fields.Many2many('pos.category', string='Available Category Tree',
+    iface_available_categ_ids = fields.Many2many('pos.category', string='Available PoS Product Categories',
         help='The point of sale will only display products which are within one of the selected category trees. If no category is specified, all available products will be shown')
-    iface_start_categ_domain_ids = fields.Many2many('pos.category', compute='_compute_iface_start_categ_domain_ids', store=False,
-        help='Technical field used as a domain for iface_start_categ_id.')
     iface_display_categ_images = fields.Boolean(string='Display Category Pictures',
         help="The product categories will be displayed with pictures.")
     restrict_price_control = fields.Boolean(string='Restrict Price Modifications to Managers',
@@ -146,10 +138,10 @@ class PosConfig(models.Model):
         help="The pricelist used if no customer is selected or if the customer has no Sale Pricelist configured.")
     available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', default=_default_pricelist,
         help="Make several pricelists available in the Point of Sale. You can also apply a pricelist to specific customers from their contact form (in Sales tab). To be valid, this pricelist must be listed here as an available pricelist. Otherwise the default pricelist will apply.")
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', string='Barcode Nomenclature',
         help='Defines what kind of barcodes are available and how they are assigned to products, customers and cashiers.',
-        default=lambda self: self.env.user.company_id.nomenclature_id, required=True)
+        default=lambda self: self.env.company.nomenclature_id, required=True)
     group_pos_manager_id = fields.Many2one('res.groups', string='Point of Sale Manager Group', default=_get_group_pos_manager,
         help='This field is there to pass the id of the pos manager group to the point of sale client.')
     group_pos_user_id = fields.Many2one('res.groups', string='Point of Sale User Group', default=_get_group_pos_user,
@@ -164,7 +156,7 @@ class PosConfig(models.Model):
     use_pricelist = fields.Boolean("Use a pricelist.")
     tax_regime = fields.Boolean("Tax Regime")
     tax_regime_selection = fields.Boolean("Tax Regime Selection value")
-    start_category = fields.Boolean("Set Start Category")
+    start_category = fields.Boolean("Set Start Category", default=False)
     limit_categories = fields.Boolean("Restrict Available Product Categories")
     module_account = fields.Boolean(string='Invoicing', help='Enables invoice generation from the Point of Sale.')
     module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
@@ -181,13 +173,13 @@ class PosConfig(models.Model):
         for pos_config in self:
             pos_config.is_installed_account_accountant = account_accountant and account_accountant.id
 
-    @api.depends('journal_id.currency_id', 'journal_id.company_id.currency_id')
+    @api.depends('journal_id.currency_id', 'journal_id.company_id.currency_id', 'company_id', 'company_id.currency_id')
     def _compute_currency(self):
         for pos_config in self:
             if pos_config.journal_id:
                 pos_config.currency_id = pos_config.journal_id.currency_id.id or pos_config.journal_id.company_id.currency_id.id
             else:
-                pos_config.currency_id = self.env.user.company_id.currency_id.id
+                pos_config.currency_id = pos_config.company_id.currency_id.id
 
     @api.depends('session_ids')
     def _compute_current_session(self):
@@ -228,11 +220,6 @@ class PosConfig(models.Model):
                 pos_config.pos_session_username = False
                 pos_config.pos_session_state = False
                 pos_config.pos_session_duration = 0
-
-    @api.constrains('company_id', 'stock_location_id')
-    def _check_company_location(self):
-        if self.stock_location_id.company_id and self.stock_location_id.company_id.id != self.company_id.id:
-            raise ValidationError(_("The stock location and the point of sale must belong to the same company."))
 
     @api.constrains('company_id', 'journal_id')
     def _check_company_journal(self):
@@ -276,11 +263,6 @@ class PosConfig(models.Model):
         if self.module_account:
             self.invoice_journal_id = self.env.ref('point_of_sale.pos_sale_journal')
 
-    @api.onchange('picking_type_id')
-    def _onchange_picking_type_id(self):
-        if self.picking_type_id.default_location_src_id.usage == 'internal' and self.picking_type_id.default_location_dest_id.usage == 'customer':
-            self.stock_location_id = self.picking_type_id.default_location_src_id.id
-
     @api.onchange('use_pricelist')
     def _onchange_use_pricelist(self):
         """
@@ -292,7 +274,7 @@ class PosConfig(models.Model):
 
     @api.onchange('available_pricelist_ids')
     def _onchange_available_pricelist_ids(self):
-        if self.pricelist_id not in self.available_pricelist_ids:
+        if self.pricelist_id not in self.available_pricelist_ids._origin:
             self.pricelist_id = False
 
     @api.onchange('is_posbox')
@@ -322,10 +304,16 @@ class PosConfig(models.Model):
 
     @api.onchange('limit_categories', 'iface_available_categ_ids', 'iface_start_categ_id')
     def _onchange_limit_categories(self):
+        res = {}
         if not self.limit_categories:
             self.iface_available_categ_ids = False
+        elif not len(self.iface_available_categ_ids):
+             res = {'domain': {'iface_start_categ_id': [('id', 'in', self.env['pos.category'].search([]).ids)]}}
         elif self.iface_start_categ_id not in self.iface_available_categ_ids:
             self.iface_start_categ_id = False
+        if self.iface_available_categ_ids:
+            res = {'domain': {'iface_start_categ_id': [('id', 'in', self.iface_available_categ_ids.ids)]}}
+        return res
 
     @api.onchange('is_header_or_footer')
     def _onchange_header_footer(self):
@@ -444,7 +432,6 @@ class PosConfig(models.Model):
         """
         self.ensure_one()
         if not self.current_session_id:
-            self._check_company_location()
             self._check_company_journal()
             self._check_company_invoice_journal()
             self._check_company_payment()
@@ -470,7 +457,6 @@ class PosConfig(models.Model):
     def _open_session(self, session_id):
         return {
             'name': _('Session'),
-            'view_type': 'form',
             'view_mode': 'form,tree',
             'res_model': 'pos.session',
             'res_id': session_id,

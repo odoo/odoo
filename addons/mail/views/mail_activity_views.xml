@@ -32,7 +32,7 @@
                                 </div>
                                 <field name="delay_from"/>
                             </div>
-                            <field name="is_master_data" groups="base.group_no_one"/>
+                            <field name="default_user_id" widget="selection"/>
                         </group>
                         <group name="activity_planning">
                             <field name="force_next"/>
@@ -43,6 +43,9 @@
                                 domain="[('model_id', '=', res_model_id)]"
                                 attrs="{'invisible': [('res_model_id', '=', False)]}"
                                 context="{'default_model_id': res_model_id}"/>
+                        </group>
+                        <group>
+                            <field name="default_description"/>
                         </group>
                     </group>
                     <p class="alert alert-info" role="alert" attrs="{'invisible': [('res_model_change', '=', False)]}">Modifying the model can have an impact on existing activities using this activity type, be careful.</p>
@@ -82,13 +85,24 @@
     <record id="mail_activity_type_action" model="ir.actions.act_window">
         <field name="name">Activity Types</field>
         <field name="res_model">mail.activity.type</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 
     <menuitem
       id="menu_mail_activity_type"
       action="mail_activity_type_action"
+      parent="base.menu_email"
+    />
+
+    <record id="mail_activity_action" model="ir.actions.act_window">
+        <field name="name">Activities</field>
+        <field name="res_model">mail.activity</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+      id="menu_mail_activities"
+      action="mail_activity_action"
       parent="base.menu_email"
     />
 

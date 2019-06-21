@@ -34,12 +34,22 @@ publicWidget.registry.affixMenu = publicWidget.Widget.extend({
             $source.attr('data-target', targetIDSelector + '_clone');
             $target.attr('id', targetIDSelector.substr(1) + '_clone');
         });
+        // While scrolling through navbar menus, body should not be scrolled with it
+        this.$headerClone.find('div.navbar-collapse').on('show.bs.collapse', function () {
+            $(document.body).addClass('overflow-hidden');
+        }).on('hide.bs.collapse', function () {
+            $(document.body).removeClass('overflow-hidden');
+        });
 
         // Window Handlers
         $(window).on('resize.affixMenu scroll.affixMenu', _.throttle(this._onWindowUpdate.bind(this), 200));
         setTimeout(this._onWindowUpdate.bind(this), 0); // setTimeout to allow override with advanced stuff... see themes
 
-        return def;
+        return def.then(function () {
+            self.trigger_up('widgets_start_request', {
+                $target: self.$headerClone,
+            });
+        });
     },
     /**
      * @override

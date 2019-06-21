@@ -40,7 +40,6 @@
         'report/product_templates.xml',
         'report/product_packaging.xml',
 
-        'wizard/stock_change_product_qty_views.xml',
         'wizard/stock_picking_return_views.xml',
         'wizard/stock_scheduler_compute_views.xml',
         'wizard/stock_immediate_transfer_views.xml',
@@ -52,6 +51,7 @@
         'wizard/product_replenish_views.xml',
         'wizard/stock_track_confirmation_views.xml',
         'wizard/stock_package_destination_views.xml',
+        'wizard/stock_picking_responsible.xml',
 
         'views/res_partner_views.xml',
         'views/product_strategy_views.xml',
@@ -76,6 +76,7 @@
         'data/stock_sequence_data.xml',
     ],
     'qweb': [
+        'static/src/xml/inventory_lines.xml',
         'static/src/xml/stock_traceability_report_backend.xml',
     ],
     'installable': True,

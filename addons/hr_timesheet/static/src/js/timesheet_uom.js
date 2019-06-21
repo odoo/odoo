@@ -6,6 +6,11 @@ var basicFields = require('web.basic_fields');
 var fieldUtils = require('web.field_utils');
 
 var fieldRegistry = require('web.field_registry');
+
+// We need the field registry to be populated, as we bind the
+// timesheet_uom widget on existing field widgets.
+require('web._field_registry');
+
 var session = require('web.session');
 
 /**
@@ -80,6 +85,7 @@ var widgetName = 'timesheet_uom' in session ?
          session.timesheet_uom.timesheet_widget : 'float_factor';
 var FieldTimesheetUom = widgetName === 'float_toggle' ?
          FieldTimesheetToggle : (fieldRegistry.get(widgetName) || FieldTimesheetFactor);
+FieldTimesheetUom.prototype.description = "";
 
 fieldRegistry.add('timesheet_uom', FieldTimesheetUom);
 

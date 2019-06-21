@@ -32,7 +32,7 @@ class MaintenanceEquipmentCategory(models.Model):
 
     name = fields.Char('Category Name', required=True, translate=True)
     company_id = fields.Many2one('res.company', string='Company',
-        default=lambda self: self.env.user.company_id)
+        default=lambda self: self.env.company)
     technician_user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.uid, oldname='user_id')
     color = fields.Integer('Color Index')
     note = fields.Text('Comments', translate=True)
@@ -81,7 +81,7 @@ class MaintenanceEquipmentCategory(models.Model):
         return res
 
     def get_alias_model_name(self, vals):
-        return vals.get('alias_model', 'maintenance.equipment')
+        return vals.get('alias_model', 'maintenance.request')
 
     def get_alias_values(self):
         values = super(MaintenanceEquipmentCategory, self).get_alias_values()
@@ -123,7 +123,7 @@ class MaintenanceEquipment(models.Model):
 
     name = fields.Char('Equipment Name', required=True, translate=True)
     company_id = fields.Many2one('res.company', string='Company',
-        default=lambda self: self.env.user.company_id)
+        default=lambda self: self.env.company)
     active = fields.Boolean(default=True)
     technician_user_id = fields.Many2one('res.users', string='Technician', tracking=True, oldname='user_id')
     owner_user_id = fields.Many2one('res.users', string='Owner', tracking=True)
@@ -253,9 +253,10 @@ class MaintenanceEquipment(models.Model):
             if not next_requests:
                 equipment._create_new_request(equipment.next_action_date)
 
+
 class MaintenanceRequest(models.Model):
     _name = 'maintenance.request'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread.cc', 'mail.activity.mixin']
     _description = 'Maintenance Request'
     _order = "id desc"
 
@@ -264,24 +265,26 @@ class MaintenanceRequest(models.Model):
         return self.env['maintenance.stage'].search([], limit=1)
 
     @api.multi
+    def _creation_subtype(self):
+        return self.env.ref('maintenance.mt_req_created')
+
+    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
-        if 'stage_id' in init_values and self.stage_id.sequence <= 1:
-            return self.env.ref('maintenance.mt_req_created')
-        elif 'stage_id' in init_values and self.stage_id.sequence > 1:
+        if 'stage_id' in init_values:
             return self.env.ref('maintenance.mt_req_status')
         return super(MaintenanceRequest, self)._track_subtype(init_values)
 
     def _get_default_team_id(self):
         MT = self.env['maintenance.team']
-        team = MT.search([('company_id', '=', self.env.user.company_id.id)], limit=1)
+        team = MT.search([('company_id', '=', self.env.company.id)], limit=1)
         if not team:
             team = MT.search([], limit=1)
         return team.id
 
     name = fields.Char('Subjects', required=True)
     company_id = fields.Many2one('res.company', string='Company',
-        default=lambda self: self.env.user.company_id)
+        default=lambda self: self.env.company)
     description = fields.Text('Description')
     request_date = fields.Date('Request Date', tracking=True, default=fields.Date.context_today,
                                help="Date requested for the maintenance to happen")
@@ -331,7 +334,6 @@ class MaintenanceRequest(models.Model):
     @api.model
     def create(self, vals):
         # context: no_log, because subtype already handle this
-        self = self.with_context(mail_create_nolog=True)
         request = super(MaintenanceRequest, self).create(vals)
         if request.owner_user_id or request.user_id:
             request._add_followers()
@@ -402,7 +404,7 @@ class MaintenanceTeam(models.Model):
     name = fields.Char(required=True, translate=True)
     active = fields.Boolean(default=True)
     company_id = fields.Many2one('res.company', string='Company',
-        default=lambda self: self.env.user.company_id)
+        default=lambda self: self.env.company)
     member_ids = fields.Many2many('res.users', 'maintenance_team_users_rel', string="Team Members")
     color = fields.Integer("Color Index", default=0)
     request_ids = fields.One2many('maintenance.request', 'maintenance_team_id', copy=False)

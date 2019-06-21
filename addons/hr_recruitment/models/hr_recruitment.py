@@ -92,7 +92,7 @@ class Applicant(models.Model):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "priority desc, id desc"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin']
+    _inherit = ['mail.thread.cc', 'mail.activity.mixin', 'utm.mixin']
 
     def _default_stage_id(self):
         if self._context.get('default_job_id'):
@@ -110,15 +110,13 @@ class Applicant(models.Model):
             department = self.env['hr.department'].browse(self._context['default_department_id'])
             company_id = department.company_id.id
         if not company_id:
-            company_id = self.env['res.company']._company_default_get('hr.applicant')
+            company_id = self.env.company
         return company_id
 
     name = fields.Char("Subject / Application Name", required=True)
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
     description = fields.Text("Description")
     email_from = fields.Char("Email", size=128, help="Applicant email")
-    email_cc = fields.Text("Watchers Emails", size=252,
-                           help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma")
     probability = fields.Float("Probability")
     partner_id = fields.Many2one('res.partner', "Contact")
     create_date = fields.Datetime("Creation Date", readonly=True, index=True)
@@ -222,12 +220,12 @@ class Applicant(models.Model):
     def _onchange_job_id_internal(self, job_id):
         department_id = False
         user_id = False
-        stage_id = self.stage_id.id
+        stage_id = self.stage_id.id or self._context.get('default_stage_id')
         if job_id:
             job = self.env['hr.job'].browse(job_id)
             department_id = job.department_id.id
             user_id = job.user_id.id
-            if not self.stage_id:
+            if not stage_id:
                 stage_ids = self.env['hr.recruitment.stage'].search([
                     '|',
                     ('job_id', '=', False),
@@ -275,7 +273,7 @@ class Applicant(models.Model):
             vals['date_open'] = fields.Datetime.now()
         if 'stage_id' in vals:
             vals.update(self._onchange_stage_id_internal(vals.get('stage_id'))['value'])
-        return super(Applicant, self.with_context(mail_create_nolog=True)).create(vals)
+        return super(Applicant, self).create(vals)
 
     @api.multi
     def write(self, vals):
@@ -342,32 +340,32 @@ class Applicant(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Applications'),
             'res_model': self._name,
-            'view_type': 'kanban',
             'view_mode': 'kanban,tree,form,pivot,graph,calendar,activity',
             'domain': [('email_from', 'in', self.mapped('email_from'))],
         }
 
     @api.multi
-    def _track_template(self, tracking):
-        res = super(Applicant, self)._track_template(tracking)
+    def _track_template(self, changes):
+        res = super(Applicant, self)._track_template(changes)
         applicant = self[0]
-        changes, dummy = tracking[applicant.id]
         if 'stage_id' in changes and applicant.stage_id.template_id:
             res['stage_id'] = (applicant.stage_id.template_id, {
                 'auto_delete_message': True,
                 'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
-                'notif_layout': 'mail.mail_notification_light'
+                'email_layout_xmlid': 'mail.mail_notification_light'
             })
         return res
+
+    @api.multi
+    def _creation_subtype(self):
+        return self.env.ref('hr_recruitment.mt_applicant_new')
 
     @api.multi
     def _track_subtype(self, init_values):
         record = self[0]
         if 'emp_id' in init_values and record.emp_id and record.emp_id.active:
             return self.env.ref('hr_recruitment.mt_applicant_hired')
-        elif 'stage_id' in init_values and record.stage_id and record.stage_id.sequence <= 1:
-            return self.env.ref('hr_recruitment.mt_applicant_new')
-        elif 'stage_id' in init_values and record.stage_id and record.stage_id.sequence > 1:
+        elif 'stage_id' in init_values and record.stage_id:
             return self.env.ref('hr_recruitment.mt_applicant_stage_changed')
         return super(Applicant, self)._track_subtype(init_values)
 
@@ -382,8 +380,8 @@ class Applicant(models.Model):
         return res
 
     @api.multi
-    def message_get_suggested_recipients(self):
-        recipients = super(Applicant, self).message_get_suggested_recipients()
+    def _message_get_suggested_recipients(self):
+        recipients = super(Applicant, self)._message_get_suggested_recipients()
         for applicant in self:
             if applicant.partner_id:
                 applicant._message_add_suggested_recipient(recipients, partner=applicant.partner_id, reason=_('Contact'))
@@ -407,7 +405,6 @@ class Applicant(models.Model):
             'name': msg.get('subject') or _("No Subject"),
             'partner_name': val,
             'email_from': msg.get('from'),
-            'email_cc': msg.get('cc'),
             'partner_id': msg.get('author_id', False),
         }
         if msg.get('priority'):
@@ -416,7 +413,7 @@ class Applicant(models.Model):
             defaults.update(custom_values)
         return super(Applicant, self).message_new(msg, custom_values=defaults)
 
-    def _message_post_after_hook(self, message, *args, **kwargs):
+    def _message_post_after_hook(self, message, msg_vals):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -427,7 +424,7 @@ class Applicant(models.Model):
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
                     ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Applicant, self)._message_post_after_hook(message, *args, **kwargs)
+        return super(Applicant, self)._message_post_after_hook(message, msg_vals)
 
     @api.multi
     def create_employee_from_applicant(self):
