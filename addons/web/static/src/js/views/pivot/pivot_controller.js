@@ -53,7 +53,6 @@ var PivotController = AbstractController.extend({
      * @override
      */
     start: function () {
-        this.$el.toggleClass('o_enable_linking', this.enableLinking);
         this.$fieldSelection = this.$('.o_field_selection');
         core.bus.on('click', this, function () {
             this.$fieldSelection.empty();

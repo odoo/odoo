@@ -283,7 +283,7 @@ var PivotRenderer = AbstractRenderer.extend({
                     $cell = $('<td>')
                                 .data('id', rows[i].id)
                                 .data('col_id', rows[i].col_ids[Math.floor(j / nbrMeasures)])
-                                .toggleClass('o_empty', !value)
+                                .toggleClass('o_empty', _.isUndefined(value))
                                 .addClass('o_pivot_cell_value text-right');
                     if (value !== undefined) {
                         $cell.append($('<div>', {class: 'o_value'}).html(formatter(value, measure)));

@@ -47,7 +47,7 @@ class TestACLFeedback(Feedback):
             self.record.sudo(self.user).write({'val': 10})
         self.assertEqual(
             ctx.exception.args[0],
-            """Sorry, you are not allowed to modify documents of type 'Object For Test Access Right' (test_access_right.some_obj). No group currently allows this operation."""
+            """Sorry, you are not allowed to modify documents of type 'Object For Test Access Right' (test_access_right.some_obj). No group currently allows this operation. - (Operation: write, User: %d)""" % self.user.id
         )
 
     def test_one_group(self):
@@ -57,12 +57,12 @@ class TestACLFeedback(Feedback):
             })
         self.assertEqual(
             ctx.exception.args[0],
-            """Sorry, you are not allowed to create documents of type 'Object For Test Access Right' (test_access_right.some_obj). This operation is allowed for the groups:\n\t- Group 0"""
+            """Sorry, you are not allowed to create documents of type 'Object For Test Access Right' (test_access_right.some_obj). This operation is allowed for the groups:\n\t- Group 0 - (Operation: create, User: %d)""" % self.user.id
         )
 
     def test_two_groups(self):
         r = self.record.sudo(self.user)
-        expected = """Sorry, you are not allowed to access documents of type 'Object For Test Access Right' (test_access_right.some_obj). This operation is allowed for the groups:\n\t- Group 0\n\t- Group 1"""
+        expected = """Sorry, you are not allowed to access documents of type 'Object For Test Access Right' (test_access_right.some_obj). This operation is allowed for the groups:\n\t- Group 0\n\t- Group 1 - (Operation: read, User: %d)""" % self.user.id
         with self.assertRaises(AccessError) as ctx:
             # noinspection PyStatementEffect
             r.val

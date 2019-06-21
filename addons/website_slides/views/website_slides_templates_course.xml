@@ -7,30 +7,34 @@
         <div class="container">
             <div class="row align-items-center justify-content-between">
                 <!-- Desktop Mode -->
-                <nav aria-label="breadcrumb" class="col d-none d-md-flex">
+                <nav aria-label="breadcrumb" class="col-md-8 d-none d-md-flex">
                     <ol class="breadcrumb bg-transparent mb-0 pl-0 py-0">
                         <li class="breadcrumb-item">
                             <a href="/slides">Home</a>
                         </li>
-                        <li t-att-class="'breadcrumb-item %s' % ('active' if not search_category and not search_tag and not search_slide_type else '')">
+                        <t t-set="breadcrumb_class" t-value="'breadcrumb-item %s' % ('active' if not slide else '')" />
+                        <li t-att-class="'breadcrumb-item %s' % ('active' if not search_category and not search_tag and not search_slide_type and not slide else '')">
                             <a t-att-href="'/slides/%s' % slug(channel)"><span t-esc="channel.name"/></a>
                         </li>
-                        <li class="breadcrumb-item active" t-att-aria-current="'page' and search_category" t-if="search_category">
+                        <li t-att-class="breadcrumb_class" t-att-aria-current="'page' and search_category" t-if="search_category">
                             <a t-att-href="'/slides/%s/category/%s' % (slug(channel), slug(search_category))"><span t-esc="search_category.name"/></a>
                         </li>
-                        <li class="breadcrumb-item active" t-att-aria-current="'page' and search_tag" t-if="search_tag">
+                        <li t-att-class="breadcrumb_class" t-att-aria-current="'page' and search_tag" t-if="search_tag">
                             <a t-att-href="'/slides/%s/tag/%s' % (slug(channel), slug(search_tag))"><span t-esc="search_tag.name"/></a>
                         </li>
-                        <li class="breadcrumb-item active" t-att-aria-current="'page' and search_uncategorized" t-if="search_uncategorized">
+                        <li t-att-class="breadcrumb_class" t-att-aria-current="'page' and search_uncategorized" t-if="search_uncategorized">
                             <a t-att-href="'/slides/%s?search_uncategorized=1' % (slug(channel))">Uncategorized</a>
                         </li>
-                        <li class="breadcrumb-item active" t-att-aria-current="'page' and search_slide_type" t-if="search_slide_type">
+                        <li t-att-class="breadcrumb_class" t-att-aria-current="'page' and search_slide_type" t-if="search_slide_type">
                             <a t-att-href="'/slides/%s?slide_type=%s' % (slug(channel), search_slide_type)"><span t-esc="slide_types[search_slide_type]"/></a>
+                        </li>
+                        <li t-if="slide" class="breadcrumb-item active">
+                            <a t-att-href="'/slides/slide/%s' % slug(slide)"><span t-esc="slide.name"/></a>
                         </li>
                     </ol>
                 </nav>
 
-                <div class="col d-none d-md-flex flex-row align-items-center justify-content-end">
+                <div class="col-md-4 d-none d-md-flex flex-row align-items-center justify-content-end">
                     <!-- search -->
                     <form t-attf-action="/slides/all" role="search" method="get">
                         <div class="input-group o_wslides_course_nav_search ml-1 position-relative">
@@ -52,20 +56,24 @@
 
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="/slides">Home</a>
+                                <t t-set="dropdown_class" t-value="'dropdown-item %s' % ('active' if not slide else '')"/>
                                 <a t-att-class="'dropdown-item %s' % ('active' if not search_category and not search_tag and not search_slide_type else '')" t-att-href="'/slides/%s' % slug(channel)">
                                     &#9492;<span class="ml-1" t-esc="channel.name"/>
                                 </a>
-                                <a class="dropdown-item active" t-att-aria-current="'page' and search_category" t-if="search_category" t-att-href="'/slides/%s/category/%s' % (slug(channel), slug(search_category))">
+                                <a t-att-class="dropdown_class" t-att-aria-current="'page' and search_category" t-if="search_category" t-att-href="'/slides/%s/category/%s' % (slug(channel), slug(search_category))">
                                     &#9492;<span class="ml-1" t-esc="search_category.name"/>
                                 </a>
-                                <a class="dropdown-item active" t-att-aria-current="'page' and search_tag" t-if="search_tag" t-att-href="'/slides/%s/tag/%s' % (slug(channel), slug(search_tag))">
+                                <a t-att-class="dropdown_class" t-att-aria-current="'page' and search_tag" t-if="search_tag" t-att-href="'/slides/%s/tag/%s' % (slug(channel), slug(search_tag))">
                                     &#9492;<span class="ml-1" t-esc="search_tag.name"/>
                                 </a>
-                                <a class="dropdown-item active" t-att-aria-current="'page' and search_uncategorized" t-if="search_uncategorized" t-att-href="'/slides/%s?search_uncategorized=1' % (slug(channel))">
+                                <a t-att-class="dropdown_class" t-att-aria-current="'page' and search_uncategorized" t-if="search_uncategorized" t-att-href="'/slides/%s?search_uncategorized=1' % (slug(channel))">
                                     &#9492;<span class="ml-1">Uncategorized</span>
                                 </a>
-                                <a class="dropdown-item active" t-att-aria-current="'page' and search_slide_type" t-if="search_slide_type" t-att-href="'/slides/%s?slide_type=%s' % (slug(channel), search_slide_type)">
+                                <a t-att-class="dropdown_class" t-att-aria-current="'page' and search_slide_type" t-if="search_slide_type" t-att-href="'/slides/%s?slide_type=%s' % (slug(channel), search_slide_type)">
                                     &#9492;<span class="ml-1" t-esc="slide_types[search_slide_type]"/>
+                                </a>
+                                 <a t-if="slide" class="dropdown-item active" t-att-href="'/slides/slide/%s' % (slug(slide))">
+                                    &#9492;<span class="ml-1" t-esc="slide.name"/>
                                 </a>
                             </div>
                         </div>
@@ -519,7 +527,7 @@
             <t t-set="image_url" t-value="'/web/image/slide.slide/%s/image' % slide_promoted.id"/>
 
             <a t-if="slide_promoted.is_preview or channel.is_member or is_slides_publisher"
-               t-attf-href="/slides/slide/#{slug(slide_promoted)}" class="w-100 w-lg-50 flex-shrink-0 rounded">
+               t-attf-href="/slides/slide/#{slug(slide_promoted)}#{query_string}" class="w-100 w-lg-50 flex-shrink-0 rounded">
                 <div t-attf-style="background-image:url(#{image_url}); background-size: cover; background-position:center; padding-bottom: 35%;" class="h-lg-100"/>
             </a>
             <div t-else="" class="w-100 w-lg-50 flex-shrink-0 rounded">
@@ -528,7 +536,7 @@
 
             <div class="card-body">
                 <a t-if="slide_promoted.is_preview or channel.is_member or is_slides_publisher"
-                   t-attf-href="/slides/slide/#{slug(slide_promoted)}"
+                   t-attf-href="/slides/slide/#{slug(slide_promoted)}#{query_string}"
                    class="h4 d-block" t-att-title="slide_promoted.name" t-field="slide_promoted.name"/>
                 <h4 t-else="" class="text-muted" t-field="slide_promoted.name"/>
 
@@ -597,20 +605,20 @@
 
         <t t-if="slide.image">
             <t t-set="lesson_image" t-value="'/web/image/slide.slide/%s/image' % slide.id"/>
-            <a t-if="can_access" t-attf-href="/slides/slide/#{slug(slide)}" t-title="slide.name">
+            <a t-if="can_access" t-attf-href="/slides/slide/#{slug(slide)}#{query_string}" t-title="slide.name">
                 <div class="card-img-top border-bottom" t-attf-style="padding-top: 50%; background-image: url(#{lesson_image}); background-size: cover; background-position:center"/>
             </a>
             <div t-else="" class="card-img-top border-bottom" t-attf-style="padding-top: 50%; background-image: url(#{lesson_image}); background-size: cover; background-position:center"/>
         </t>
         <t t-else="">
-            <a t-if="can_access" t-attf-href="/slides/slide/#{slug(slide)}" t-title="slide.name">
+            <a t-if="can_access" t-attf-href="/slides/slide/#{slug(slide)}#{query_string}" t-title="slide.name">
                 <div class="card-img-top border-bottom o_wslides_gradient" t-attf-style="padding-top: 50%;"/>
             </a>
             <div t-else="" class="card-img-top border-bottom o_wslides_gradient" t-attf-style="padding-top: 50%;"/>
         </t>
 
         <div class="card-body p-3">
-            <a t-if="can_access" class="card-title h5 mb-2o_wslides_desc_truncate_2" t-attf-href="/slides/slide/#{slug(slide)}" t-esc="slide.name"/>
+            <a t-if="can_access" class="card-title h5 mb-2o_wslides_desc_truncate_2" t-attf-href="/slides/slide/#{slug(slide)}#{query_string}" t-esc="slide.name"/>
             <span t-else="" class="card-title h5 mb-2 o_wslides_desc_truncate_2 text-muted" t-esc="slide.name"/>
             <div class="card-subtitle mb-2 text-muted" t-if="slide.is_preview or (not slide.is_published and user.has_group('website.group_website_publisher'))">
                 <t t-if="slide.is_preview">
@@ -624,7 +632,7 @@
                 <div class="o_wslides_desc_truncate_3 font-weight-light oe_no_empty" t-field="slide.description"/>
                 <div t-if="slide.tag_ids" class="mt-2 pt-1 o_wslides_desc_truncate_2">
                     <t t-foreach="slide.tag_ids" t-as="tag">
-                        <a t-att-href="'/slides/all?channel_tag_id=%s' % tag.id" class="badge badge-light" t-esc="tag.name"/>
+                        <a t-att-href="'/slides/%s/tag/%s' % (slug(slide.channel_id), slug(tag))" class="badge badge-light" t-esc="tag.name"/>
                     </t>
                 </div>
             </div>

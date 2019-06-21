@@ -17,6 +17,7 @@ class TestOutOfOffice(TestHrHolidaysBase):
             'name': 'Legal Leaves',
             'time_type': 'leave',
             'allocation_type': 'no',
+            'validity_start': False,
         })
 
     def test_leave_ooo(self):
@@ -87,6 +88,7 @@ class TestOutOfOfficePerformance(TestHrHolidaysBase):
             'name': 'Legal Leaves',
             'time_type': 'leave',
             'allocation_type': 'no',
+            'validity_start': False,
         })
         self.leave_date_end = (datetime.today() + relativedelta(days=3))
         self.leave = self.env['hr.leave'].create({
