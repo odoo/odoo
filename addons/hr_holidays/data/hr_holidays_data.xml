@@ -16,6 +16,7 @@
         <record id="holiday_status_hw" model="hr.leave.type">
             <field name="name">Home Workings</field>
             <field name="color_name">lightgreen</field>
+            <field name="validity_start" eval="False"/>
             <field name="leave_notif_subtype_id" eval="ref('mt_leave_home_working')"/>
         </record>
 
