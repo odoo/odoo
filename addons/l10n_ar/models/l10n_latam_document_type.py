@@ -20,13 +20,6 @@ class L10nLatamDocumentType(models.Model):
         '* T\n'
         '* I\n',
     )
-    internal_type = fields.Selection(
-        selection_add=[
-            ('invoice', 'Invoices'),
-            ('debit_note', 'Debit Notes'),
-            ('credit_note', 'Credit Notes'),
-        ],
-    )
     purchase_cuit_required = fields.Boolean(
         help='Verdadero si la declaración del CITI compras requiere informar '
         'CUIT'

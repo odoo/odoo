@@ -20,9 +20,13 @@ class AccountInvoice(models.Model):
         compute="_compute_l10n_latam_amount_and_taxes",
         comodel_name='account.invoice.tax',
     )
+    l10n_latam_default_document_type_id = fields.Many2one(
+        'l10n_latam.document.type',
+        compute='_compute_l10n_latam_documents',
+    )
     l10n_latam_available_document_type_ids = fields.Many2many(
         'l10n_latam.document.type',
-        compute='_compute_l10n_latam_available_document_types',
+        compute='_compute_l10n_latam_documents',
     )
     l10n_latam_document_type_id = fields.Many2one(
         'l10n_latam.document.type',
@@ -151,59 +155,43 @@ class AccountInvoice(models.Model):
                     'You can not use a %s document type with a invoice') % (
                     internal_type))
 
-    @api.onchange('journal_id', 'partner_id', 'company_id')
+    @api.onchange('l10n_latam_default_document_type_id')
     def onchange_journal_partner_company(self):
-        res = self._get_available_document_types(
-            self.journal_id, self.type, self.partner_id)
-        self.l10n_latam_document_type_id = res['document_type']
+        self.l10n_latam_document_type_id = self.l10n_latam_default_document_type_id
+
+    def _get_l10n_latam_documents_domain(self):
+        self.ensure_one()
+        if self.type in ['out_refund', 'in_refund']:
+            internal_types = ['credit_note']
+        else:
+            internal_types = ['invoice', 'debit_note']
+        return [
+            ('internal_type', 'in', internal_types),
+            ('country_id', '=', self.company_id.country_id.id),
+        ]
 
     @api.depends('journal_id', 'partner_id', 'company_id')
-    def _compute_l10n_latam_available_document_types(self):
-        """ This function should not be inherited, you should inherit
-        _get_available_document_types instead """
-        for invoice in self:
-            res = invoice._get_available_document_types(
-                invoice.journal_id, invoice.type, invoice.partner_id)
-            invoice.l10n_latam_available_document_type_ids = res[
-                'available_document_types']
+    def _compute_l10n_latam_documents(self):
+        internal_type = self._context.get('internal_type', False)
+        for rec in self.filtered(lambda x: x.journal_id and x.l10n_latam_use_documents and x.partner_id):
+            document_types = self.env['l10n_latam.document.type'].search(rec._get_l10n_latam_documents_domain())
+
+            # If internal_type is in context we try to search for an specific document. for eg used on debit notes
+            document_type = internal_type and document_types.filtered(lambda x: x.internal_type == internal_type) or document_types
+
+            rec.l10n_latam_available_document_type_ids = document_types
+            rec.l10n_latam_default_document_type_id = document_type and document_type[0]
 
     @api.multi
     def write(self, vals):
         """ If someone change the type (for eg from
         sale_order.action_invoice_create), we update the document type"""
-        inv_type = vals.get('type')
-        # if len(vals) == 1 and vals.get('type'):
-        # podrian pasarse otras cosas ademas del type
-        if not inv_type:
+        if 'type' not in vals:
             return super(AccountInvoice, self).write(vals)
-
-        for rec in self:
-            res = rec._get_available_document_types(
-                rec.journal_id, inv_type, rec.partner_id)
-            vals['l10n_latam_document_type_id'] = res['document_type'].id
-            # call write for each invoice
-            super(AccountInvoice, rec).write(vals)
-        return True
-
-    @api.model
-    def _get_available_document_types(
-            self, journal, invoice_type, partner):
-        """ This function is to be inherited by different localizations and
-        MUST return a dictionary with two keys:
-        * 'available_document_types': available document types on
-        this invoice
-        * 'document_type': suggested document type on this invoice
-        """
-        if not journal.l10n_latam_use_documents:
-            return {
-                'available_document_types':
-                    self.env['l10n_latam.document.type'],
-                'document_type':
-                    self.env['l10n_latam.document.type'],
-            }
-        raise UserError(_(
-            'Method not implemented by localization of %s') % (
-                journal.company_id.country_id.name))
+        res = super(AccountInvoice, rec).write(vals)
+        for rec in self.filtered('l10n_latam_use_documents'):
+            rec.l10n_latam_document_type_id = rec.l10n_latam_default_document_type_id
+        return res
 
     @api.model
     def _prepare_refund(

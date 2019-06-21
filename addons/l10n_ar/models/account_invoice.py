@@ -212,50 +212,16 @@ class AccountInvoice(models.Model):
             rec.l10n_ar_currency_rate = l10n_ar_currency_rate
         return super(AccountInvoice, self).action_invoice_open()
 
-    @api.model
-    def _get_available_document_types(self, journal, invoice_type, partner):
-        if journal.company_id.country_id != self.env.ref('base.ar'):
-            return super(AccountInvoice, self)._get_available_document_types(
-                journal, invoice_type, partner)
-
-        document_types = document_type = self.env['l10n_latam.document.type']
-        commercial_partner = partner.commercial_partner_id
-        if journal.l10n_latam_use_documents and commercial_partner:
-            letters = journal.get_journal_letter(
-                counterpart_partner=commercial_partner)
-
-            if invoice_type in ['out_refund', 'in_refund']:
-                internal_types = ['credit_note']
-            else:
-                internal_types = ['invoice', 'debit_note', 'receipt']
-
-            domain = [
-                ('internal_type', 'in', internal_types),
-                '|', ('l10n_ar_letter', '=', False),
-                ('l10n_ar_letter', 'in', letters),
-            ]
-
-            codes = journal.get_journal_codes()
+    def _get_l10n_latam_documents_domain(self):
+        self.ensure_one()
+        domain = super()._get_l10n_latam_documents_domain()
+        if self.journal_id.company_id.country_id == self.env.ref('base.ar'):
+            letters = self.journal_id.get_journal_letter(counterpart_partner=self.partner_id.commercial_partner_id)
+            domain += ['|', ('l10n_ar_letter', '=', False), ('l10n_ar_letter', 'in', letters)]
+            codes = self.journal_id.get_journal_codes()
             if codes:
                 domain.append(('code', 'in', codes))
-
-            document_types = document_types.search(domain)
-
-            # If internal_type is in context we try to search for an
-            # specific document. for eg used on debit notes
-            internal_type = self._context.get('internal_type', False)
-            if internal_type:
-                document_type = document_type.search(
-                    [('internal_type', '=', internal_type)] + domain, limit=1)
-
-            # If not specific document type found, we choose first one
-            if not document_type and document_types:
-                document_type = document_types[0]
-
-        return {
-            'available_document_types': document_types,
-            'document_type': document_type,
-        }
+        return domain
 
     @api.multi
     def action_move_create(self):

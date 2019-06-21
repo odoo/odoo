@@ -41,7 +41,8 @@ class L10nLatamDocumentType(models.Model):
         'Name on Reports',
         help='Name that will be printed in reports, for example "CREDIT NOTE"'
     )
-    internal_type = fields.Selection([],
+    internal_type = fields.Selection(
+        [('invoice', 'Invoices'), ('debit_note', 'Debit Notes'), ('credit_note', 'Credit Notes')],
         index=True,
         help='Analog to odoo account.invoice.type but with more options'
         ' allowing to identify the kind of document we are working with.'

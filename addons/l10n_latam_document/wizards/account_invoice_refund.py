@@ -42,10 +42,14 @@ class AccountInvoiceRefund(models.TransientModel):
     def _onchange_l10n_latam_invoice(self):
         if self.l10n_latam_invoice_id:
             invoice = self.l10n_latam_invoice_id
-            invoice_type = TYPE2REFUND[invoice.type]
-            res = invoice._get_available_document_types(invoice.journal_id, invoice_type, invoice.partner_id)
-            self.l10n_latam_document_type_id = res['document_type']
-            return {'domain': {'l10n_latam_document_type_id': [('id', 'in', res['available_document_types'].ids)]}}
+            refund = self.l10n_latam_invoice_id.new({
+                'type': TYPE2REFUND[self.l10n_latam_invoice_id.type],
+                'journal_id': self.l10n_latam_invoice_id.journal_id.id,
+                'partner_id': self.l10n_latam_invoice_id.partner_id.id,
+                'company_id': self.l10n_latam_invoice_id.company_id.id,
+            })
+            self.l10n_latam_document_type_id = refund.l10n_latam_default_document_type_id
+            return {'domain': {'l10n_latam_document_type_id': [('id', 'in', refund.l10n_latam_available_document_type_ids.ids)]}}
 
     @api.multi
     def compute_refund(self, mode='refund'):
