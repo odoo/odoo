@@ -18,6 +18,7 @@ class TestChangeDepartment(TestHrHolidaysBase):
             'name': 'NotLimitedHR',
             'allocation_type': 'no',
             'validation_type': 'hr',
+            'validity_start': False,
         })
 
         def create_holiday(name, start, end):
