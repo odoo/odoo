@@ -647,8 +647,8 @@ class ChromeBrowser():
             self.catch_next_event(ignore_errors=True)
         self.catch_next_event(ids={self._websocket_send('Page.stopLoading')}, ignore_errors=True)
         self._encode_screencast()
-        for i in range(10):
-            print( 'Zzzz... ' * 10)
+        for i in range(5):
+            self._logger.info( 'Zzzzzzzzz... ')
             time.sleep(1)
 
     # main loop
