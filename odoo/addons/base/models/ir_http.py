@@ -356,15 +356,15 @@ class IrHttp(models.AbstractModel):
         if not content:
             content = record[field] or ''
 
+        if not mimetype:
+            mimetype = guess_mimetype(base64.b64decode(content), default=default_mimetype)
+
         # filename
         if not filename:
             if filename_field in record:
                 filename = record[filename_field]
             else:
-                filename = "%s-%s-%s" % (record._name, record.id, field)
-
-        if not mimetype:
-            mimetype = guess_mimetype(base64.b64decode(content), default=default_mimetype)
+                filename = "%s-%s-%s%s" % (record._name, record.id, field, mimetypes.guess_extension(mimetype))
 
         if not filehash:
             filehash = '"%s"' % hashlib.md5(pycompat.to_text(content).encode('utf-8')).hexdigest()
