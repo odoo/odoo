@@ -57,6 +57,9 @@ class ChangeProductionQty(models.TransientModel):
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
             documents = {}
             for line, line_data in lines:
+                if line.child_bom_id and line.child_bom_id.type == 'phantom' or\
+                        line.product_id.type not in ['product', 'consu']:
+                    continue
                 move, old_qty, new_qty = production._update_raw_move(line, line_data)
                 iterate_key = production._get_document_iterate_key(move)
                 if iterate_key:

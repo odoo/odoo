@@ -379,6 +379,16 @@ class WebsiteSlides(WebsiteProfile):
                                       step=self._slides_per_page, url_args=pager_args,
                                       scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages)
 
+        query_string = None
+        if category:
+            query_string = "?search_category=%s" % category.id
+        elif tag:
+            query_string = "?search_tag=%s" % tag.id
+        elif slide_type:
+            query_string = "?search_slide_type=%s" % slide_type
+        elif uncategorized:
+            query_string = "?search_uncategorized=1"
+
         values = {
             'channel': channel,
             'active_tab': kw.get('active_tab', 'home'),
@@ -387,6 +397,7 @@ class WebsiteSlides(WebsiteProfile):
             'search_tag': tag,
             'search_slide_type': slide_type,
             'search_uncategorized': uncategorized,
+            'query_string': query_string,
             'slide_types': slide_types,
             'sorting': actual_sorting,
             'search': search,
@@ -506,7 +517,7 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route('''/slides/slide/<model("slide.slide", "[('website_id', 'in', (False, current_website_id))]"):slide>''', type='http', auth="public", website=True)
     def slide_view(self, slide, **kwargs):
-        if not slide.channel_id.can_access_from_current_website():
+        if not slide.channel_id.can_access_from_current_website() or not slide.active:
             raise werkzeug.exceptions.NotFound()
         self._set_viewed_slide(slide)
 
@@ -516,6 +527,15 @@ class WebsiteSlides(WebsiteProfile):
             values.update(self._get_slide_quiz_data(slide))
         # sidebar: update with user channel progress
         values['channel_progress'] = self._get_channel_progress(slide.channel_id, include_quiz=True)
+
+        # Allows to have breadcrumb for the previously used filter
+        values.update({
+            'search_category': slide.category_id.id if kwargs.get('search_category') else None,
+            'search_tag': request.env['slide.tag'].browse(int(kwargs.get('search_tag'))) if kwargs.get('search_tag') else None,
+            'slide_types': dict(request.env['slide.slide']._fields['slide_type']._description_selection(request.env)) if kwargs.get('search_slide_type') else None,
+            'search_slide_type': kwargs.get('search_slide_type'),
+            'search_uncategorized': kwargs.get('search_uncategorized')
+        })
 
         if kwargs.get('fullscreen') == '1':
             return request.render("website_slides.slide_fullscreen", values)

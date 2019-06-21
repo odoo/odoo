@@ -185,7 +185,7 @@
     <div class="row align-items-center my-3">
         <div class="col-12 col-md order-2 order-md-1 d-flex">
             <div class="d-flex align-items-center">
-                <h1 class="h5 my-0">
+                <h1 class="h4 my-0">
                     <t t-call="website_slides.slide_icon">
                         <t t-set="icon_class">mr-1</t>
                     </t>
@@ -245,36 +245,7 @@
             <div t-field="slide.html_content"/>
         </div>
     </div>
-    <div class="row" t-if="slide.question_ids">
-        <t t-call="website_slides.lesson_content_quiz"/>
-    </div>
-    <div class="row mt-3 mb-3">
-        <div class="col-12 col-md d-flex align-items-start mb-4 mb-md-0" t-if="len(slide.link_ids)">
-            <span t-if="slide.link_ids" class="text-muted font-weight-bold mr-3">External sources</span>
-            <div class="text-muted mr-auto border-left pl-3">
-                <t t-foreach="slide.link_ids" t-as="link">
-                    <a t-att-href="link.link" t-esc="link.name"/><br />
-                </t>
-            </div>
-        </div>
-        <div t-if="slide.channel_id.allow_comment and slide.channel_id.channel_type == 'documentation'"
-             class="col-12 col-md d-flex align-items-start justify-content-md-end mb-2 mb-md-0">
-            <span class="text-muted font-weight-bold mr-3">Rating</span>
-            <div class="text-muted border-left pl-3">
-                <div class="o_wslides_js_slide_like mr-2">
-                    <span t-att-class="('o_wslides_js_slide_like_up %s') % ('disabled' if not slide.channel_id.can_vote else '')" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
-                        <i class="fa fa-thumbs-up fa-1x" role="img" aria-label="Likes" title="Likes"></i>
-                        <span t-esc="slide.likes"/>
-                    </span>
-                    <span t-att-class="('o_wslides_js_slide_like_down ml-3 %s') % ('disabled' if not slide.channel_id.can_vote else '')" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
-                        <i class="fa fa-thumbs-down fa-1x" role="img" aria-label="Dislikes" title="Dislikes"></i>
-                        <span t-esc="slide.dislikes"/>
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="mb-5">
+    <div class="my-3">
         <ul class="nav nav-tabs o_wslides_lesson_nav" role="tablist">
             <li class="nav-item">
                 <a href="#about" aria-controls="about" class="nav-link active" role="tab" data-toggle="tab">
@@ -362,27 +333,6 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-12 col-md">
-                        <table class="table table-sm">
-                            <tbody>
-                                <tr>
-                                    <th colspan="2" class="border-top-0">Share count</th>
-                                </tr>
-                                <tr class="border-top-0">
-                                    <th class="border-top-0"><span id="facebook-badge">0</span></th>
-                                    <td class="border-top-0 w-100">Facebook</td>
-                                </tr>
-                                <tr>
-                                    <th><span id="twitter-badge">0</span></th>
-                                    <td>Twitter</td>
-                                </tr>
-                                <tr>
-                                    <th><span id="linkedin-badge"/></th>
-                                    <td>LinkedIn</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
                 </div>
             </div>
             <div role="tabpanel" class="tab-pane fade" t-if="slide.website_published" id="share">
@@ -409,6 +359,35 @@
             </div>
         </div>
     </div>
+    <div class="row" t-if="slide.question_ids">
+        <t t-call="website_slides.lesson_content_quiz"/>
+    </div>
+    <div class="row mt-3 mb-3">
+        <div class="col-12 col-md d-flex align-items-start mb-4 mb-md-0" t-if="len(slide.link_ids)">
+            <span t-if="slide.link_ids" class="text-muted font-weight-bold mr-3">External sources</span>
+            <div class="text-muted mr-auto border-left pl-3">
+                <t t-foreach="slide.link_ids" t-as="link">
+                    <a t-att-href="link.link" t-esc="link.name"/><br />
+                </t>
+            </div>
+        </div>
+        <div t-if="slide.channel_id.allow_comment and slide.channel_id.channel_type == 'documentation'"
+             class="col-12 col-md d-flex align-items-start justify-content-md-end mb-2 mb-md-0">
+            <span class="text-muted font-weight-bold mr-3">Rating</span>
+            <div class="text-muted border-left pl-3">
+                <div class="o_wslides_js_slide_like mr-2">
+                    <span t-att-class="('o_wslides_js_slide_like_up %s') % ('disabled' if not slide.channel_id.can_vote else '')" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
+                        <i class="fa fa-thumbs-up fa-1x" role="img" aria-label="Likes" title="Likes"></i>
+                        <span t-esc="slide.likes"/>
+                    </span>
+                    <span t-att-class="('o_wslides_js_slide_like_down ml-3 %s') % ('disabled' if not slide.channel_id.can_vote else '')" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
+                        <i class="fa fa-thumbs-down fa-1x" role="img" aria-label="Dislikes" title="Dislikes"></i>
+                        <span t-esc="slide.dislikes"/>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <!-- Slide sub-tempalte: render a quiz serverside. Should be sync with JS qweb template "slide.slide.quiz" -->
@@ -427,7 +406,7 @@
         t-att-data-has-next="1 if next_slide else 0"
         t-att-data-next-slide-url="'/slides/slide/%s' % (slug(next_slide)) if next_slide else None">
         <div t-foreach="slide_questions" t-as="question"
-            t-att-class="'o_wslides_js_lesson_quiz_question mt-3 mb-4 %s' % ('completed-disabled' if slide_completed else ('disabled' if not slide.channel_id.is_member else ''))" t-att-data-question-id="question['id']" t-att-data-title="question['question']">
+            t-att-class="'o_wslides_js_lesson_quiz_question my-5 %s' % ('completed-disabled' if slide_completed else ('disabled' if not slide.channel_id.is_member else ''))" t-att-data-question-id="question['id']" t-att-data-title="question['question']">
             <div class="h4">
                 <small class="text-muted"><span t-esc="question_index+1"/>. </small> <span t-esc="question['question']"/>
             </div>
