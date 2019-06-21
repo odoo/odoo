@@ -36,8 +36,3 @@ class AccountJournal(models.Model):
                 raise ValidationError(_(
                     'You can not modify the field "Use Documents?"'
                     ' if invoices already exist in the journal!'))
-
-    def create_document_type_sequences(self):
-        """ Method to be inherited by different localizations.
-        """
-        return True

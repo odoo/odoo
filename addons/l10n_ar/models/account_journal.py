@@ -127,12 +127,30 @@ class AccountJournal(models.Model):
         elif self.l10n_ar_afip_pos_system in ['FEERCEL', 'FEEWS', 'FEERCELP']:
             return expo_codes
 
-    def create_document_type_sequences(self):
-        """ Create new sequences for document types, update if can be updated
-        """
+    # TODO make it with crate/write or with
+    # https://github.com/odoo/odoo/pull/31059
+    @api.constrains('type', 'l10n_ar_afip_pos_system',
+                    'l10n_ar_afip_pos_number', 'l10n_ar_share_sequences',
+                    'l10n_latam_use_documents')
+    def check_afip_configurations(self):
+        """ IF AFIP Configuration change try to review if this can be done
+        and then create / update the document sequences """
         self.ensure_one()
         if self.company_id.country_id != self.env.ref('base.ar'):
-            return super().create_document_type_sequences()
+            return True
+
+        invoices = self.env['account.invoice'].search([
+            ('journal_id', '=', self.id),
+            ('state', 'in', ['open', 'in_payment', 'paid']),
+        ])
+        if invoices:
+            raise ValidationError(_(
+                'You can not change the journal configuration for a'
+                ' journal that already have validate invoices: %s' % (
+                    ', '.join(invoices.mapped('display_name'))
+                )
+            ))
+
         if not self.type == 'sale':
             return False
         if not self.l10n_latam_use_documents:
@@ -164,27 +182,6 @@ class AccountJournal(models.Model):
             sequences |= self.env['ir.sequence'].create(
                 document.get_document_sequence_vals(self))
         return sequences
-
-    @api.constrains('type', 'l10n_ar_afip_pos_system',
-                    'l10n_ar_afip_pos_number', 'l10n_ar_share_sequences',
-                    'l10n_latam_use_documents')
-    def check_afip_configurations(self):
-        """ IF AFIP Configuration change try to review if this can be done
-        and then create / update the document sequences """
-        invoices = self.env['account.invoice'].search([
-            ('journal_id', 'in', self.ids),
-            ('state', 'in', ['open', 'in_payment', 'paid']),
-        ])
-        if invoices:
-            raise ValidationError(_(
-                'You can not change the journal configuration for a'
-                ' journal that already have validate invoices: %s' % (
-                    ', '.join(invoices.mapped('display_name'))
-                )
-            ))
-
-        for rec in self:
-            rec.create_document_type_sequences()
 
     @api.constrains('l10n_ar_afip_pos_number')
     def check_afip_pos_number(self):
