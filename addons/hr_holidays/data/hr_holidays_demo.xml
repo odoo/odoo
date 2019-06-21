@@ -334,9 +334,9 @@
         <field name="name">Sick day</field>
         <field name="holiday_status_id" ref="holiday_status_sl"/>
         <field eval="time.strftime('%Y-%m-1 1:0:0')" name="date_from"/>
-        <field eval="time.strftime('%Y-%m-1 23:0:0')" name="date_to"/>
+        <field eval="time.strftime('%Y-%m-3 23:0:0')" name="date_to"/>
         <field eval="time.strftime('%Y-%m-1 1:0:0')" name="request_date_from"/>
-        <field eval="time.strftime('%Y-%m-1 23:0:0')" name="request_date_to"/>
+        <field eval="time.strftime('%Y-%m-3 23:0:0')" name="request_date_to"/>
         <field name="number_of_days">1</field>
         <field name="employee_id" ref="hr.employee_qdp"/>
         <field name="state">confirm</field>
