@@ -9,8 +9,9 @@ class AccountInvoiceRefund(models.TransientModel):
 
     @api.multi
     def compute_refund(self, mode='refund'):
+        # TODO when moving to master check if we could fix modify option
         res = super(AccountInvoiceRefund, self).compute_refund(mode=mode)
-        if isinstance(res, dict):
+        if isinstance(res, dict) and self.refund_only != 'modify':
             domain = res.get('domain', [])
             refund_invoices = self.env['account.invoice'].search(domain)
             invoice = self.l10n_latam_invoice_id

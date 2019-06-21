@@ -248,7 +248,7 @@ class AccountInvoice(models.Model):
                 document_type = document_type.search(
                     [('internal_type', '=', internal_type)] + domain, limit=1)
 
-            # If not specific document type found, we choose another one
+            # If not specific document type found, we choose first one
             if not document_type and document_types:
                 document_type = document_types[0]
 
