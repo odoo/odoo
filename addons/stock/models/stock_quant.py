@@ -277,20 +277,30 @@ class StockQuant(models.Model):
 
     @api.onchange('location_id', 'product_id', 'lot_id', 'package_id', 'owner_id')
     def _onchange_location_or_product_id(self):
-        if self.lot_id and self.tracking == 'none':
-            self.lot_id = None
+        vals = {}
+
+        # Once the new line is complete, fetch the new theoretical values.
         if self.product_id and self.location_id:
+            # Sanity check if a lot has been set.
+            if self.lot_id:
+                if self.tracking == 'none' or self.product_id != self.lot_id.product_id:
+                    vals['lot_id'] = None
+
             quants = self._gather(self.product_id, self.location_id, lot_id=self.lot_id, package_id=self.package_id, owner_id=self.owner_id, strict=True)
-            quantity_on_hand = sum(quants.mapped('quantity'))
             reserved_quantity = sum(quants.mapped('reserved_quantity'))
-            values_to_update = {
-                'quantity': quantity_on_hand,
-                'reserved_quantity': reserved_quantity
-            }
-            # We update 'inventory_quantity' only if user didn't modify it
-            if self.inventory_quantity == self.quantity:
-                values_to_update['inventory_quantity'] = quantity_on_hand
-            self.update(values_to_update)
+            quantity = sum(quants.mapped('quantity'))
+
+            vals['reserved_quantity'] = reserved_quantity
+            # Update `quantity` only if the user manually updated `inventory_quantity`.
+            if float_compare(self.quantity, self.inventory_quantity, precision_rounding=self.product_uom_id.rounding) == 0:
+                vals['quantity'] = quantity
+            # Special case: directly set the quantity to one for serial numbers,
+            # it'll trigger `inventory_quantity` compute.
+            if self.lot_id and self.tracking == 'serial':
+                vals['quantity'] = 1
+
+        if vals:
+            self.update(vals)
 
     @api.model
     def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, in_date=None):
