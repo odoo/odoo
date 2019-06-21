@@ -80,8 +80,10 @@ SlidesUpload.SlideUploadDialog.include({
         var result = this._super.apply(this, arguments);
 
         var certificateValue = this.$('#certification_id').select2('data');
-        if (certificateValue) {
-            result['survey_id'] =  certificateValue.id;
+        if (certificateValue && certificateValue.create) {
+            result['survey_id'] =  [0, {'title': certificateValue.text}];
+        } else if (certificateValue) {
+            result['survey_id'] =  [certificateValue.id];
         }
         return result;
     }

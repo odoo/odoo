@@ -284,11 +284,25 @@ var SlideUploadDialog = Dialog.extend({
             fill_data: function (query, data) {
                 var that = this,
                     tags = {results: []};
-                _.each(data, function (obj) {
-                    if (that.matcher(query.term, obj[nameKey])) {
-                        tags.results.push({id: obj.id, text: obj[nameKey]});
-                    }
-                });
+                if($(query.element)[0].id == 'certification_id' && data.length == 0 && !this.can_create){
+                    var $select2Container = $(query.element)
+                        .closest('.form-group')
+                        .find('.select2-container');
+                    $select2Container.removeClass('is-invalid is-valid');
+                    $select2Container.addClass('is-invalid');
+                    $('#warning-no-certif').removeClass('o_hidden');
+                }else{
+                    var $select2Container = $(query.element)
+                        .closest('.form-group')
+                        .find('.select2-container');
+                    $select2Container.removeClass('is-invalid is-valid');
+                    $('#warning-no-certif').addClass('o_hidden');
+                    _.each(data, function (obj) {
+                        if (that.matcher(query.term, obj[nameKey])) {
+                            tags.results.push({id: obj.id, text: obj[nameKey]});
+                        }
+                    });
+                }
                 query.callback(tags);
             },
             query: function (query) {

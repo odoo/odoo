@@ -797,6 +797,26 @@ class WebsiteSlides(WebsiteProfile):
             else:
                 values['category_id'] = post['category_id'][0]
 
+        new_certification = False
+        if post.get('survey_id'):
+            if post['survey_id'][0] == 0:
+                survey_id = request.env['survey.survey'].create({
+                    'title': post['survey_id'][1]['title'],
+                    'questions_layout': 'page_per_question',
+                    'is_attempts_limited': True,
+                    'attempts_limit': 1,
+                    'is_time_limited': True,
+                    'time_limit': 60.0,
+                    'scoring_type': 'scoring_without_answers',
+                    'certificate': True,
+                    'passing_score': 70.0,
+                    'certification_mail_template_id': request.env['mail.template'].search([('name','=','Certification: Send by email')]).id
+                    })
+                values['survey_id'] = survey_id.id
+                new_certification = True
+            else:
+                values['survey_id'] = post['survey_id'][0]
+                
         # handle exception during creation of slide and sent error notification to the client
         # otherwise client slide create dialog box continue processing even server fail to create a slide
         try:
@@ -829,6 +849,9 @@ class WebsiteSlides(WebsiteProfile):
         if slide.slide_type == "quiz":
             action_id = request.env.ref('website_slides.action_slides_slides').id
             redirect_url = '/web#id=%s&action=%s&model=slide.slide&view_type=form' %(slide.id,action_id)
+        if slide.slide_type == "certification" and new_certification:
+            action_id = request.env.ref('survey.action_survey_form').id
+            redirect_url = '/web#id=%s&action=%s&model=survey.survey&view_type=form' %(survey_id.id,action_id)
         return {
             'url': redirect_url,
             'channel_type': channel.channel_type,
