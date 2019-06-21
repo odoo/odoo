@@ -19,6 +19,7 @@ class TestLeavesRights(TestHrHolidaysBase):
             'name': 'Unlimited',
             'validation_type': 'hr',
             'allocation_type': 'no',
+            'validity_start': False,
         })
         self.rd_dept.manager_id = False
         self.hr_dept.manager_id = False

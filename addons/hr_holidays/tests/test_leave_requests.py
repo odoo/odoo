@@ -32,11 +32,13 @@ class TestLeaveRequests(TestHrHolidaysBase):
             'name': 'NotLimitedHR',
             'allocation_type': 'no',
             'validation_type': 'hr',
+            'validity_start': False,
         })
         self.holidays_type_2 = LeaveType.create({
             'name': 'Limited',
             'allocation_type': 'fixed',
             'validation_type': 'hr',
+            'validity_start': False,
         })
         self.holidays_type_3 = LeaveType.create({
             'name': 'TimeNotLimited',

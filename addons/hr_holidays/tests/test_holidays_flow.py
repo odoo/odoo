@@ -29,11 +29,13 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'name': 'NotLimitedHR',
             'allocation_type': 'no',
             'validation_type': 'hr',
+            'validity_start': False,
         })
         self.holidays_status_manager = HolidayStatusManagerGroup.create({
             'name': 'NotLimitedManager',
             'allocation_type': 'no',
             'validation_type': 'manager',
+            'validity_start': False,
         })
 
         HolidaysEmployeeGroup = Requests.sudo(self.user_employee_id)
@@ -95,13 +97,15 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         HolidayStatusManagerGroup.create({
             'name': 'WithMeetingType',
             'allocation_type': 'no',
-            'categ_id': self.env['calendar.event.type'].sudo(self.user_hrmanager_id).create({'name': 'NotLimitedMeetingType'}).id
+            'categ_id': self.env['calendar.event.type'].sudo(self.user_hrmanager_id).create({'name': 'NotLimitedMeetingType'}).id,
+            'validity_start': False,
         })
 
         self.holidays_status_limited = HolidayStatusManagerGroup.create({
             'name': 'Limited',
             'allocation_type': 'fixed',
             'validation_type': 'both',
+            'validity_start': False,
         })
         HolidaysEmployeeGroup = Requests.sudo(self.user_employee_id)
 
