@@ -1144,7 +1144,7 @@ var FieldBinary = common.AbstractField.extend(common.ReinitializeFieldMixin, {
                     'id': this.view.datarecord.id,
                     'field': this.name,
                     'filename_field': filename_fieldname,
-                    'filename': filename_field ? filename_field.get('value') : null,
+                    'filename': filename_field ? filename_field.get('value') : "",
                     'download': true,
                     'data': utils.is_bin_size(value) ? null : value,
                 },
