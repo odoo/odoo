@@ -188,7 +188,7 @@ class AccountInvoice(models.Model):
         sale_order.action_invoice_create), we update the document type"""
         if 'type' not in vals:
             return super(AccountInvoice, self).write(vals)
-        res = super(AccountInvoice, rec).write(vals)
+        res = super(AccountInvoice, self).write(vals)
         for rec in self.filtered('l10n_latam_use_documents'):
             rec.l10n_latam_document_type_id = rec.l10n_latam_default_document_type_id
         return res

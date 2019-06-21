@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<data>
+    <record model='l10n_latam.identification.type' id='l10n_latam_base.it_vat'>
+        <field name='l10n_ar_afip_code'>80</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='l10n_latam_base.it_id'>
+        <field name='l10n_ar_afip_code'>96</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='l10n_latam_base.it_pass'>
+        <field name='l10n_ar_afip_code'>94</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CPF'>
+        <field name='short_name'>CPF</field>
+        <field name='name'>CI Policía Federal</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>0</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CBA'>
+        <field name='short_name'>CBA</field>
+        <field name='name'>CI Buenos Aires</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>1</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CCat'>
+        <field name='short_name'>CCat</field>
+        <field name='name'>CI Catamarca</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>2</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CCor'>
+        <field name='short_name'>CCor</field>
+        <field name='name'>CI Córdoba</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>3</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CCorr'>
+        <field name='short_name'>CCorr</field>
+        <field name='name'>CI Corrientes</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>4</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIER'>
+        <field name='short_name'>CIER</field>
+        <field name='name'>CI Entre Ríos</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>5</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIJ'>
+        <field name='short_name'>CIJ</field>
+        <field name='name'>CI Jujuy</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>6</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIMen'>
+        <field name='short_name'>CIMen</field>
+        <field name='name'>CI Mendoza</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>7</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CILR'>
+        <field name='short_name'>CILR</field>
+        <field name='name'>CI La Rioja</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>8</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIS'>
+        <field name='short_name'>CIS</field>
+        <field name='name'>CI Salta</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>9</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CISJ'>
+        <field name='short_name'>CISJ</field>
+        <field name='name'>CI San Juan</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>10</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CISL'>
+        <field name='short_name'>CISL</field>
+        <field name='name'>CI San Luis</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>11</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CISF'>
+        <field name='short_name'>CISF</field>
+        <field name='name'>CI Santa Fe</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>12</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CISdE'>
+        <field name='short_name'>CISdE</field>
+        <field name='name'>CI Santiago del Estero</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>13</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIT'>
+        <field name='short_name'>CIT</field>
+        <field name='name'>CI Tucumán</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>14</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CICha'>
+        <field name='short_name'>CICha</field>
+        <field name='name'>CI Chaco</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>16</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIChu'>
+        <field name='short_name'>CIChu</field>
+        <field name='name'>CI Chubut</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>17</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIF'>
+        <field name='short_name'>CIF</field>
+        <field name='name'>CI Formosa</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>18</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIMis'>
+        <field name='short_name'>CIMis</field>
+        <field name='name'>CI Misiones</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>19</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIN'>
+        <field name='short_name'>CIN</field>
+        <field name='name'>CI Neuquén</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>20</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CILP'>
+        <field name='short_name'>CILP</field>
+        <field name='name'>CI La Pampa</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>21</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIRN'>
+        <field name='short_name'>CIRN</field>
+        <field name='name'>CI Río Negro</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>22</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CISC'>
+        <field name='short_name'>CISC</field>
+        <field name='name'>CI Santa Cruz</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>23</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CITdF'>
+        <field name='short_name'>CITdF</field>
+        <field name='name'>CI Tierra del Fuego</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>24</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CUIL'>
+        <field name='short_name'>CUIL</field>
+        <field name='name'>Código Único de Identificación Laboral</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>86</field>
+        <field name='sequence'>40</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CDI'>
+        <field name='short_name'>CDI</field>
+        <field name='name'>CDI</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>87</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_LE'>
+        <field name='short_name'>LE</field>
+        <field name='name'>LE</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>89</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_LC'>
+        <field name='short_name'>LC</field>
+        <field name='name'>LC</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>90</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIe'>
+        <field name='short_name'>CIe</field>
+        <field name='name'>CI extranjera</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='sequence'>70</field>
+        <field name='l10n_ar_afip_code'>91</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_ET'>
+        <field name='short_name'>ET</field>
+        <field name='name'>en trámite</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>92</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_AN'>
+        <field name='short_name'>AN</field>
+        <field name='name'>Acta nacimiento</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>93</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIBAR'>
+        <field name='short_name'>CIBAR</field>
+        <field name='name'>CI Bs. As. RNP</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>95</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_Sigd'>
+        <field name='short_name'>Sigd</field>
+        <field name='name'>Sin identificar/venta global diaria</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='sequence'>90</field>
+        <field name='l10n_ar_afip_code'>99</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CdM'>
+        <field name='short_name'>CdM</field>
+        <field name='name'>Certificado de Migración</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>30</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_UpApP'>
+        <field name='short_name'>UpApP</field>
+        <field name='name'>Usado por Anses para Padrón</field>
+        <field name='country_id' ref='base.ar'/>
+        <field name='l10n_ar_afip_code'>88</field>
+    </record>
+</data>
+<data noupdate="True">
+    <record model='l10n_latam.identification.type' id='it_CBA'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CCat'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CCor'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CCorr'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIER'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIJ'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIMen'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CILR'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIS'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CISJ'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CISL'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CISF'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CISdE'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIT'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CICha'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIChu'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIF'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIMis'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIN'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CILP'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIRN'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CISC'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CITdF'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CDI'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_LE'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_LC'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_ET'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_AN'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CIBAR'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CdM'>
+        <field name='active' eval='False'/>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_UpApP'>
+        <field name='active' eval='False'/>
+    </record>
+</data>
+</odoo>

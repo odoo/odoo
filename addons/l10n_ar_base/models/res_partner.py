@@ -21,14 +21,6 @@ class ResPartner(models.Model):
         help='Computed field that will convert the given cuit number to the'
         ' format {person_category:2}-{number:10}-{validation_number:1}',
     )
-    l10n_ar_identification_type_id = fields.Many2one(
-        string="Identification Type",
-        comodel_name='l10n_ar.identification.type',
-        index=True,
-        auto_join=True,
-        help='The type od identifications defined by AFIP that could identify'
-        ' a person or a legal entity when trying to made operations',
-    )
 
     @api.multi
     def ensure_cuit(self):
@@ -57,7 +49,7 @@ class ResPartner(models.Model):
         for rec in self.filtered('l10n_ar_cuit'):
             rec.l10n_ar_formated_cuit = stdnum.ar.cuit.format(rec.l10n_ar_cuit)
 
-    @api.depends('vat', 'l10n_ar_identification_type_id')
+    @api.depends('vat', 'l10n_latam_identification_type_id')
     def _compute_l10n_ar_cuit(self):
         """ We add this computed field that returns cuit or nothing ig this one
         is not set for the partner. This Validation can be also done by calling
@@ -66,7 +58,7 @@ class ResPartner(models.Model):
         """
         for rec in self:
             commercial_partner = rec.commercial_partner_id
-            if rec.l10n_ar_identification_type_id.afip_code == 80:
+            if rec.l10n_latam_identification_type_id.l10n_ar_afip_code == 80:
                 rec.l10n_ar_cuit = rec.vat
             # If the partner is outside Argentina then we return the defined
             # country cuit defined by AFIP for that specific partner
@@ -76,17 +68,17 @@ class ResPartner(models.Model):
                     commercial_partner.is_company and
                     'l10n_ar_cuit_juridica' or 'l10n_ar_cuit_fisica']
 
-    @api.constrains('vat', 'l10n_ar_identification_type_id')
+    @api.constrains('vat', 'l10n_latam_identification_type_id')
     def check_vat(self):
-        l10n_ar_partners = self.filtered('l10n_ar_identification_type_id')
+        l10n_ar_partners = self.filtered('l10n_latam_identification_type_id')
         l10n_ar_partners.l10n_ar_identification_validation()
         return super(ResPartner, self - l10n_ar_partners).check_vat()
 
     def _get_validation_module(self):
         self.ensure_one()
-        if self.l10n_ar_identification_type_id.afip_code in [80, 86]:
+        if self.l10n_latam_identification_type_id.l10n_ar_afip_code in [80, 86]:
             return stdnum.ar.cuit
-        elif self.l10n_ar_identification_type_id.afip_code == 96:
+        elif self.l10n_latam_identification_type_id.l10n_ar_afip_code == 96:
             return stdnum.ar.dni
 
     def l10n_ar_identification_validation(self):
@@ -107,5 +99,4 @@ class ResPartner(models.Model):
 
     @api.model
     def _commercial_fields(self):
-        return super()._commercial_fields() + [
-            'l10n_ar_identification_type_id']
+        return super()._commercial_fields() + ['l10n_ar_afip_responsability_type_id']

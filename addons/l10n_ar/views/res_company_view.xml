@@ -2,16 +2,13 @@
 <odoo>
     <record model="ir.ui.view" id="view_company_form">
         <field name="name">res.company.form.inherit</field>
-        <field name="inherit_id" ref="l10n_ar_base.view_company_form"/>
+        <field name="inherit_id" ref="base.view_company_form"/>
         <field name="model">res.company</field>
         <field name="arch" type="xml">
             <form>
                 <field name="l10n_ar_country_code" invisible="1"/>
             </form>
 
-            <field name="l10n_ar_identification_type_id" position="attributes">
-                <attribute name="attrs">{'required': [('l10n_ar_country_code', '=', 'AR')]}</attribute>
-            </field>
             <field name="vat" position="attributes">
                 <attribute name="attrs">{'required': [('l10n_ar_country_code', '=', 'AR')]}</attribute>
             </field>

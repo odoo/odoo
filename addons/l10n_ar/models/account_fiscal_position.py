@@ -23,7 +23,7 @@ class AccountFiscalPosition(models.Model):
             domain = [
                 ('auto_apply', '=', True),
                 ('l10n_ar_afip_responsability_type_ids', '=', self.env['res.partner'].browse(
-                    partner_id).commercial_partner_id.l10n_ar_afip_responsability_type_id.id),
+                    partner_id).l10n_ar_afip_responsability_type_id.id),
             ]
             if self.env.context.get('force_company'):
                 domain.append(

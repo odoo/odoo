@@ -6,11 +6,13 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="model">res.partner</field>
         <field type="xml" name="arch">
+            <field name="vat" position="attributes">
+                <attribute name="string">Identification Number</attribute>
+            </field>
             <field name="vat" position="before">
-                <field name="l10n_latam_identification_type_id" options="{'no_open': True, 'no_create': True}" placeholder="Type"
-                        attrs="{'required': [('l10n_latam_identification_type_required', '=', True)]}"/>
-                <field name="l10n_latam_identification_type_required" invisible="1"/>
+                <field name="l10n_latam_identification_type_id" options="{'no_open': True, 'no_create': True}" placeholder="Type" attrs="{'readonly': [('parent_id','!=',False)]}"/>
             </field>
         </field>
     </record>
+
 </odoo>

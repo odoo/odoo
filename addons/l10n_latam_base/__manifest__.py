@@ -15,11 +15,13 @@ A lot of Latin American countries need to verify
 
     """,
     'depends': [
-        'base',
+        'contacts',
     ],
     'data': [
+        'data/l10n_latam_identification_type_data.xml',
         'security/ir.model.access.csv',
         'views/res_partner_view.xml',
+        'views/l10n_latam_identification_type_view.xml',
     ],
     'installable': True,
     'auto_install': False,

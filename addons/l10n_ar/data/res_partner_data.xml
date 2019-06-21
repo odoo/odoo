@@ -3,7 +3,7 @@
 
     <record model='res.partner' id='par_cfa'>
         <field name='name'>Consumidor Final Anónimo</field>
-        <field name='l10n_ar_identification_type_id' ref='l10n_ar_base.dt_Sigd'/>
+        <field name='l10n_latam_identification_type_id' ref='l10n_ar_base.it_Sigd'/>
         <field name='l10n_ar_afip_responsability_type_id' ref="res_CF"/>
     </record>
 
@@ -16,7 +16,7 @@
         <field name="is_company" eval="True"/>
         <field name="customer" eval="True"/>
         <field name="supplier" eval="True"/>
-        <field name='l10n_ar_identification_type_id' ref="l10n_ar_base.dt_CUIT"/>
+        <field name='l10n_latam_identification_type_id' ref="l10n_latam_base.it_vat"/>
         <field name='vat'>33693450239</field>
         <field name='l10n_ar_afip_responsability_type_id' ref="res_IVANR"/>
         <field name='l10n_ar_special_purchase_document_type_ids' eval='[(4, ref("dc_desp_imp"), False), (4, ref("dc_imp_serv"), False)]'/>

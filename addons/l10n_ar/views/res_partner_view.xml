@@ -6,13 +6,8 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <field name="ref" position="replace">
-            </field>
-            <field name="parent_id" position="after">
-                <field name="ref" placeholder="Reference/Name fantasy"/>
-            </field>
             <field name="vat" position="after">
-                <field name="l10n_ar_afip_responsability_type_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('is_company','=',False), ('parent_id','!=',False)]}"/>
+                <field name="l10n_ar_afip_responsability_type_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': [('parent_id','!=',False)]}"/>
             </field>
         </field>
     </record>
