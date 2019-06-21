@@ -19,7 +19,6 @@ class AccountMoveReversal(models.TransientModel):
             return {
                 'name': _('Reverse Moves'),
                 'type': 'ir.actions.act_window',
-                'view_type': 'form',
                 'view_mode': 'tree,form',
                 'res_model': 'account.move',
                 'domain': [('id', 'in', res)],

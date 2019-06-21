@@ -154,4 +154,5 @@ class Event(models.Model):
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.date_begin
         res['default_twitter']['twitter:card'] = 'summary'
+        res['default_meta_description'] = self.date_begin
         return res

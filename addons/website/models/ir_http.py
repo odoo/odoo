@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import logging
 from lxml import etree
 import traceback
@@ -40,6 +39,23 @@ def sitemap_qs2dom(qs, route, field='name'):
         else:
             dom = FALSE_DOMAIN
     return dom
+
+
+def get_request_website():
+    """ Return the website set on `request` if called in a frontend context
+    (website=True on route).
+    This method can typically be used to check if we are in the frontend.
+
+    This method is easy to mock during python tests to simulate frontend
+    context, rather than mocking every method accessing request.website.
+
+    Don't import directly the method or it won't be mocked during tests, do:
+    ```
+    from odoo.addons.website.models import ir_http
+    my_var = ir_http.get_request_website()
+    ```
+    """
+    return request and getattr(request, 'website', False) or False
 
 
 class Http(models.AbstractModel):
@@ -90,6 +106,9 @@ class Http(models.AbstractModel):
 
         request.website = request.env['website'].get_current_website()  # can use `request.env` since auth methods are called
         context['website_id'] = request.website.id
+        # This is mainly to avoid access errors in website controllers where there is no
+        # context (eg: /shop), and it's not going to propagate to the global context of the tab
+        context['allowed_company_ids'] = [request.website.company_id.id]
 
         # modify bound context
         request.context = dict(request.context, **context)
@@ -233,39 +252,31 @@ class Http(models.AbstractModel):
                 if code == 500:
                     logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
                     View = env["ir.ui.view"]
+                    values['view'] = View
                     if 'qweb_exception' in values:
-                        if 'load could not load template' in exception.args:
-                            # When t-calling an inexisting template, we don't have reference to
-                            # the view that did the t-call. We need to find it.
-                            values['views'] = View.search([
-                                ('type', '=', 'qweb'),
-                                '|',
-                                ('arch_db', 'ilike', 't-call="%s"' % exception.name),
-                                ('arch_db', 'ilike', "t-call='%s'" % exception.name)
-                            ], order='write_date desc', limit=1)
+                        try:
+                            # exception.name might be int, string
+                            exception_template = int(exception.name)
+                        except:
+                            exception_template = exception.name
+                        view = View._view_obj(exception_template)
+                        if exception.html and exception.html in view.arch:
+                            values['view'] = view
                         else:
-                            try:
-                                # exception.name might be int, string
-                                exception_template = int(exception.name)
-                            except:
-                                exception_template = exception.name
-                            view = View._view_obj(exception_template)
+                            # There might be 2 cases where the exception code can't be found
+                            # in the view, either the error is in a child view or the code
+                            # contains branding (<div t-att-data="request.browse('ok')"/>).
                             et = etree.fromstring(view.with_context(inherit_branding=False).read_combined(['arch'])['arch'])
                             node = et.xpath(exception.path)
                             line = node is not None and etree.tostring(node[0], encoding='unicode')
-                            # line = exception.html  # FALSE -> contains branding <div t-att-data="request.browse('ok')"/>
                             if line:
-                                # If QWebException occurs in a child view, the parent view is raised
-                                values['editable'] = request.uid and request.website.is_publisher()
-                                values['views'] = View._views_get(exception_template).filtered(
+                                values['view'] = View._views_get(exception_template).filtered(
                                     lambda v: line in v.arch
                                 )
-                            else:
-                                values['views'] = view
-                        # Keep only views that we can reset
-                        values['views'] = values['views'].filtered(
-                            lambda view: view._get_original_view().arch_fs or 'oe_structure' in view.key
-                        )
+                                values['view'] = values['view'] and values['view'][0]
+
+                        # Needed to show reset template on translated pages (`_prepare_qcontext` will set it for main lang)
+                        values['editable'] = request.uid and request.website.is_publisher()
                 elif code == 403:
                     logger.warn("403 Forbidden:\n\n%s", values['traceback'])
                 try:
@@ -276,7 +287,7 @@ class Http(models.AbstractModel):
             return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
 
     def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas',
-                       unique=False, filename=None, filename_field='datas_fname', download=False,
+                       unique=False, filename=None, filename_field='name', download=False,
                        mimetype=None, default_mimetype='application/octet-stream',
                        access_token=None):
         obj = None
@@ -301,6 +312,19 @@ class Http(models.AbstractModel):
                 return obj[0]
 
         return super(Http, cls)._xmlid_to_obj(env, xmlid)
+
+    @api.model
+    def get_frontend_session_info(self):
+        session_info = super(Http, self).get_frontend_session_info()
+        session_info.update({
+            'is_website_user': request.env.user.id == request.website.user_id.id,
+        })
+        if request.env.user.has_group('website.group_website_publisher'):
+            session_info.update({
+                'website_id': request.website.id,
+                'website_company_id': request.website.company_id.id,
+            })
+        return session_info
 
 
 class ModelConverter(ModelConverter):

@@ -3,6 +3,7 @@ odoo.define('web.KanbanRenderer', function (require) {
 
 var BasicRenderer = require('web.BasicRenderer');
 var ColumnQuickCreate = require('web.kanban_column_quick_create');
+var config = require('web.config');
 var core = require('web.core');
 var KanbanColumn = require('web.KanbanColumn');
 var KanbanRecord = require('web.KanbanRecord');
@@ -12,6 +13,7 @@ var utils = require('web.utils');
 var viewUtils = require('web.viewUtils');
 
 var qweb = core.qweb;
+var _t = core._t;
 
 function findInNode(node, predicate) {
     if (predicate(node)) {
@@ -107,7 +109,7 @@ var KanbanRenderer = BasicRenderer.extend({
         this._super.apply(this, arguments);
 
         this.widgets = [];
-        this.qweb = new QWeb(session.debug, {_s: session.origin}, false);
+        this.qweb = new QWeb(config.isDebug(), {_s: session.origin}, false);
         var templates = findInNode(this.arch, function (n) { return n.tag === 'templates';});
         transformQwebTemplate(templates, state.fields);
         this.qweb.add_template(utils.json_node_to_xml(templates));
@@ -121,6 +123,10 @@ var KanbanRenderer = BasicRenderer.extend({
             this.columnOptions.progressBarStates = {};
         }
         this.quickCreateEnabled = params.quickCreateEnabled;
+        if (!params.readOnlyMode) {
+            var handleField = _.findWhere(this.state.fieldsInfo.kanban, {widget: 'handle'});
+            this.handleField = handleField && handleField.name;
+        }
         this._setState(state);
     },
     /**
@@ -277,13 +283,27 @@ var KanbanRenderer = BasicRenderer.extend({
         }
     },
     /**
+     * Returns the default columns for the kanban view example background.
+     * You can override this method to easily customize the column names.
+     *
+     * @private
+     */
+    _getGhostColumns: function () {
+        if (this.examples && this.examples.ghostColumns) {
+            return this.examples.ghostColumns;
+        }
+        return _.map(_.range(1, 5), function (num) {
+            return _.str.sprintf(_t("Column %s"), num);
+        });
+    },
+    /**
      * Render the Example Ghost Kanban card on the background
      *
      * @private
      * @param {DocumentFragment} fragment
      */
     _renderExampleBackground: function (fragment) {
-        var $background = $(qweb.render('KanbanView.ExamplesBackground'));
+        var $background = $(qweb.render('KanbanView.ExamplesBackground', {ghostColumns: this._getGhostColumns()}));
         $background.appendTo(fragment);
     },
     /**
@@ -353,10 +373,9 @@ var KanbanRenderer = BasicRenderer.extend({
                 },
             });
 
-            // Enable column quickcreate
             if (this.createColumnEnabled) {
                 this.quickCreate = new ColumnQuickCreate(this, {
-                    examples: this.examples,
+                    examples: this.examples && this.examples.examples,
                 });
                 this.defs.push(this.quickCreate.appendTo(fragment).then(function () {
                     // Open it directly if there is no column yet
@@ -384,6 +403,27 @@ var KanbanRenderer = BasicRenderer.extend({
             self.defs.push(def);
         });
 
+        // enable record resequencing if there is a field with widget='handle'
+        // and if there is no orderBy (in this case we assume that the widget
+        // has been put on the first default order field of the model), or if
+        // the first orderBy field is the one with widget='handle'
+        var orderedBy = this.state.orderedBy;
+        var hasHandle = this.handleField &&
+                        (orderedBy.length === 0 || orderedBy[0].name === this.handleField);
+        if (hasHandle) {
+            this.$el.sortable({
+                items: '.o_kanban_record:not(.o_kanban_ghost)',
+                cursor: 'move',
+                revert: 0,
+                delay: 0,
+                tolerance: 'pointer',
+                forcePlaceholderSize: true,
+                stop: function (event, ui) {
+                    self._moveRecord(ui.item.data('record').db_id, ui.item.index());
+                },
+            });
+        }
+
         // append ghost divs to ensure that all kanban records are left aligned
         var prom = Promise.all(self.defs).then(function () {
             return self._renderGhostDivs(fragment, 6);
@@ -396,8 +436,6 @@ var KanbanRenderer = BasicRenderer.extend({
      */
     _renderView: function () {
         var self = this;
-        var oldWidgets = this.widgets;
-        this.widgets = [];
 
         // render the kanban view
         var isGrouped = !!this.state.groupedBy.length;
@@ -418,7 +456,6 @@ var KanbanRenderer = BasicRenderer.extend({
                 self.$el.toggleClass('o_kanban_ungrouped', !isGrouped);
                 self.$el.append(fragment);
                 self._toggleNoContentHelper();
-                _.invoke(oldWidgets, 'destroy');
                 if (self._isInDom) {
                     _.invoke(self.widgets, 'on_attach_callback');
                 }

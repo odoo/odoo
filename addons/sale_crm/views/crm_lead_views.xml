@@ -7,15 +7,8 @@
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_set_won_rainbowman']" position="before">
-                    <button string="New Quotation" name="%(sale_action_quotations_new)d" type="action" class="oe_highlight"
-                        attrs="{'invisible': ['&amp;', ('probability', '=', 0), ('active', '=', False)]}"
-                        context="{'search_default_partner_id': partner_id,
-                                  'default_partner_id': partner_id,
-                                  'default_team_id': team_id,
-                                  'default_campaign_id': campaign_id,
-                                  'default_medium_id': medium_id,
-                                  'default_origin': name,
-                                  'default_source_id': source_id}"/>
+                    <button string="New Quotation" name="action_sale_quotations_new" type="object" class="oe_highlight"
+                        attrs="{'invisible': ['&amp;', ('probability', '=', 0), ('active', '=', False)]}"/>
                 </xpath>
                 <button name="action_schedule_meeting" position="after">
                     <button class="oe_stat_button" type="action"

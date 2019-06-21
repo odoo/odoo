@@ -16,6 +16,7 @@ var FieldChar = basic_fields.FieldChar;
  * "website" and "image" fields of records of this model).
  */
 var FieldAutocomplete = FieldChar.extend(AutocompleteMixin, {
+    description: "",
     className: 'o_field_partner_autocomplete',
     debounceSuggestions: 400,
     resetOnAnyFieldChange: true,
@@ -125,9 +126,6 @@ var FieldAutocomplete = FieldChar.extend(AutocompleteMixin, {
                     delete data.company[field];
                 });
             }
-
-            self._setOne2ManyField('child_ids', data.company.child_ids);
-            delete data.company.child_ids;
 
             self._setOne2ManyField('bank_ids', data.company.bank_ids);
             delete data.company.bank_ids;

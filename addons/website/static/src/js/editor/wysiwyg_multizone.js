@@ -331,7 +331,7 @@ var WysiwygMultizone = Wysiwyg.extend({
         var data = this._super();
         var res_id = $editable.data('oe-id');
         var res_model = $editable.data('oe-model');
-        if (!$editable.data('oe-model')) {
+        if (!$editable.data('oe-model') && $('html').data('editable')) {
             var object = $('html').data('main-object');
             res_model = object.split('(')[0];
             res_id = +object.split('(')[1].split(',')[0];
@@ -434,7 +434,6 @@ var WysiwygMultizone = Wysiwyg.extend({
                         res_model: resModel,
                         res_id: resID,
                         name: name,
-                        datas_fname: name,
                         datas: datas,
                         mimetype: mimetype,
                         url: originalSrc, // To save the original image that was cropped

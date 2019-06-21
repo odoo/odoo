@@ -193,21 +193,9 @@ QUnit.module('web_editor', {}, function () {
                         if (args.method === "generate_access_token") {
                             return Promise.resolve();
                         }
-                        if (args.kwargs.domain[7][2].join(',') === "image/gif,image/jpe,image/jpeg,image/jpg,image/gif,image/png") {
-                            return Promise.resolve([{
-                                "id": 1,
-                                "public": true,
-                                "name": "image",
-                                "datas_fname": "image.png",
-                                "mimetype": "image/png",
-                                "checksum": false,
-                                "url": "/web_editor/static/src/img/transparent.png",
-                                "type": "url",
-                                "res_id": 0,
-                                "res_model": false,
-                                "access_token": false
-                            }]);
-                        }
+                    }
+                    if (route.indexOf('/web_editor/static/src/img/') === 0) {
+                        return Promise.resolve();
                     }
                     return this._super(route, args);
                 },
@@ -231,7 +219,7 @@ QUnit.module('web_editor', {}, function () {
 
             // load static xml file (dialog, media dialog, unsplash image widget)
             await defMediaDialog;
-            await testUtils.dom.click($('.modal #editor-media-image .o_image:first'));
+            await testUtils.dom.click($('.modal #editor-media-image .o_existing_attachment_cell:first'));
             await testUtils.dom.click($('.modal .modal-footer button.btn-primary'));
 
             var $editable = form.$('.oe_form_field[name="body"] .note-editable');
@@ -510,6 +498,26 @@ QUnit.test('save immediately before iframe is rendered in edit mode', async func
     assert.ok(true, "No traceback encountered. The wysiwyg was cut while not loaded.");
     form.destroy();
 });
+
+        QUnit.test('save immediately before iframe is rendered in edit mode with style-inline', async function (assert) {
+            assert.expect(1);
+
+            var form = await testUtils.createAsyncView({
+                View: FormView,
+                model: 'note.note',
+                data: this.data,
+                arch: '<form>' +
+                    '<field name="body" widget="html" style="height: 100px" options="{\'cssEdit\': \'template.assets\', \'style-inline\': true}"/>' +
+                    '</form>',
+                res_id: 1,
+            });
+            testUtils.form.clickEdit(form);
+            await testUtils.nextTick();
+            testUtils.form.clickSave(form);
+            await testUtils.nextTick();
+            assert.ok(true, "No traceback encountered. The wysiwyg was cut while not loaded.");
+            form.destroy();
+        });
 
         QUnit.test('use colorpicker and save', async function (assert) {
             assert.expect(1);
@@ -804,7 +812,7 @@ QUnit.test('save immediately before iframe is rendered in edit mode', async func
                 res_id: 1,
                 mockRPC: function (route, args) {
                     if (route === '/web/dataset/call_button' && args.method === 'translate_fields') {
-                        assert.deepEqual(args.args, ['note.note', 1, 'body', {}], "should call 'call_button' route");
+                        assert.deepEqual(args.args, ['note.note', 1, 'body'], "should call 'call_button' route");
                         return Promise.resolve();
                     }
                     return this._super.apply(this, arguments);
@@ -840,7 +848,7 @@ QUnit.test('save immediately before iframe is rendered in edit mode', async func
                 res_id: 1,
                 mockRPC: function (route, args) {
                     if (route === '/web/dataset/call_button' && args.method === 'translate_fields') {
-                        assert.deepEqual(args.args, ['note.note', 1, 'body', {}], "should call 'call_button' route");
+                        assert.deepEqual(args.args, ['note.note', 1, 'body'], "should call 'call_button' route");
                         return Promise.resolve();
                     }
                     return this._super.apply(this, arguments);

@@ -20,6 +20,7 @@
                                 <thead>
                                     <tr>
                                         <th>Picking Reference</th>
+                                        <th>Barcode</th>
                                         <th>Status</th>
                                         <th>Commitment Date</th>
                                         <th>Scheduled Date</th>
@@ -29,6 +30,9 @@
                                     <tr t-foreach="o.picking_ids" t-as="pick">
                                         <td>
                                             <span t-field="pick.name"/>
+                                        </td>
+                                        <td>
+                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', pick.name, 300, 50)" alt="Barcode"/>
                                         </td>
                                         <td>
                                             <span t-field="pick.state"/>

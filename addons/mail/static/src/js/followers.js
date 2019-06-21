@@ -113,6 +113,12 @@ var Followers = AbstractField.extend({
         $(QWeb.render('mail.Followers.add_more', {widget: this})).appendTo($followers_list);
         var $follower_li;
         _.each(this.followers, function (record) {
+            if(!record.active) {
+                record.title = _.str.sprintf(_t('%s \n(inactive)'), record.name);
+            } else {
+                record.title = record.name;
+            }
+
             $follower_li = $(QWeb.render('mail.Followers.partner', {
                 'record': _.extend(record, {'avatar_url': '/web/image/' + record.res_model + '/' + record.res_id + '/image_small'}),
                 'widget': self})
@@ -168,7 +174,6 @@ var Followers = AbstractField.extend({
             type: 'ir.actions.act_window',
             res_model: 'mail.wizard.invite',
             view_mode: 'form',
-            view_type: 'form',
             views: [[false, 'form']],
             name: _t("Invite Follower"),
             target: 'new',
@@ -242,14 +247,15 @@ var Followers = AbstractField.extend({
     _unfollow: function (ids) {
         var self = this;
         return new Promise(function (resolve, reject) {
-            var text = _t("Warning! \n If you remove a follower, he won't be notified of any email or discussion on this document.\n Do you really want to remove this follower ?");
+            var follower = _.find(self.followers, { res_id: ids.partner_ids ? ids.partner_ids[0] : ids.channel_ids[0] });
+            var text = _.str.sprintf(_t("If you remove a follower, he won't be notified of any email or discussion on this document. Do you really want to remove %s?"), follower.name);
             Dialog.confirm(this, text, {
+                title: _t("Warning"),
                 confirm_callback: function () {
                     var args = [
                         [self.res_id],
                         ids.partner_ids,
                         ids.channel_ids,
-                        {}, // FIXME
                     ];
                     self._rpc({
                         model: self.model,
@@ -394,7 +400,6 @@ var Followers = AbstractField.extend({
         var $target = $(ev.target);
         this.do_action({
             type: 'ir.actions.act_window',
-            view_type: 'form',
             view_mode: 'form',
             res_model: $target.data('oe-model'),
             views: [[false, 'form']],

@@ -373,7 +373,7 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
         data.isNewWindow = data.new_window;
 
         this._super(parent, _.extend({
-            title: _t("Create Menu"),
+            title: _t("Add a menu item"),
         }, options || {}), _.extend({
             needLabel: true,
         }, data || {}));
@@ -390,8 +390,6 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
 
         // Adapt URL label
         this.$('label[for="o_link_dialog_label_input"]').text(_t("Menu Label"));
-
-        this.$('#o_link_dialog_url_input').after(qweb.render('website.contentMenu.dialog.edit.link_menu_hint'));
 
         return this._super.apply(this, arguments);
     },

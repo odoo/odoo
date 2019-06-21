@@ -12,9 +12,9 @@ odoo.define('web.Loading', function (require) {
  * After a delay of 3s, if a rpc is still not completed, we also block the UI.
  */
 
+var config = require('web.config');
 var core = require('web.core');
 var framework = require('web.framework');
-var session = require('web.session');
 var Widget = require('web.Widget');
 
 var _t = core._t;
@@ -54,7 +54,7 @@ var Loading = Widget.extend({
 
         this.count += increment;
         if (this.count > 0) {
-            if (session.debug) {
+            if (config.isDebug()) {
                 this.$el.text(_.str.sprintf( _t("Loading (%d)"), this.count));
             } else {
                 this.$el.text(_t("Loading"));

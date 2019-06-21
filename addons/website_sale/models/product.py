@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools, _
-from odoo.addons import decimal_precision as dp
+from odoo.exceptions import ValidationError, UserError
+from odoo.addons.website.models import ir_http
 from odoo.tools.translate import html_translate
 from odoo.osv import expression
 
@@ -19,14 +20,21 @@ class ProductPricelist(models.Model):
     _inherit = "product.pricelist"
 
     def _default_website(self):
-        return self.env['website'].search([], limit=1)
+        """ Find the first company's website, if there is one. """
+        company_id = self.env.company.id
 
-    website_id = fields.Many2one('website', string="website", default=_default_website)
+        if self._context.get('default_company_id'):
+            company_id = self._context.get('default_company_id')
+
+        domain = [('company_id', '=', company_id)]
+        return self.env['website'].search(domain, limit=1)
+
+    website_id = fields.Many2one('website', string="Website", default=_default_website)
     code = fields.Char(string='E-commerce Promotional Code', groups="base.group_user")
     selectable = fields.Boolean(help="Allow the end user to choose this price list")
 
     def clear_cache(self):
-        # website._get_pl() is cached to avoid to recompute at each request the
+        # website._get_pl_partner_order() is cached to avoid to recompute at each request the
         # list of available pricelists. So, we need to invalidate the cache when
         # we change the config of website price list to force to recompute.
         website = self.env['website']
@@ -34,6 +42,11 @@ class ProductPricelist(models.Model):
 
     @api.model
     def create(self, data):
+        if data.get('company_id') and not data.get('website_id'):
+            # l10n modules install will change the company currency, creating a
+            # pricelist for that currency. Do not use user's company in that
+            # case as module install are done with OdooBot (company 1)
+            self = self.with_context(default_company_id=data['company_id'])
         res = super(ProductPricelist, self).create(data)
         self.clear_cache()
         return res
@@ -41,14 +54,88 @@ class ProductPricelist(models.Model):
     @api.multi
     def write(self, data):
         res = super(ProductPricelist, self).write(data)
+        if data.keys() & {'code', 'active', 'website_id', 'selectable'}:
+            self._check_website_pricelist()
         self.clear_cache()
         return res
 
     @api.multi
     def unlink(self):
         res = super(ProductPricelist, self).unlink()
+        self._check_website_pricelist()
         self.clear_cache()
         return res
+
+    def _get_partner_pricelist_multi_search_domain_hook(self):
+        domain = super(ProductPricelist, self)._get_partner_pricelist_multi_search_domain_hook()
+        website = ir_http.get_request_website()
+        if website:
+            domain += self._get_website_pricelists_domain(website.id)
+        return domain
+
+    def _get_partner_pricelist_multi_filter_hook(self):
+        res = super(ProductPricelist, self)._get_partner_pricelist_multi_filter_hook()
+        website = ir_http.get_request_website()
+        if website:
+            res = res.filtered(lambda pl: pl._is_available_on_website(website.id))
+        return res
+
+    def _check_website_pricelist(self):
+        for website in self.env['website'].search([]):
+            if not website.pricelist_ids:
+                raise UserError(_("With this action, '%s' website would not have any pricelist available.") % (website.name))
+
+    @api.multi
+    def _is_available_on_website(self, website_id):
+        """ To be able to be used on a website, a pricelist should either:
+        - Have its `website_id` set to current website (specific pricelist).
+        - Have no `website_id` set and should be `selectable` (generic pricelist)
+          or should have a `code` (generic promotion).
+
+        Note: A pricelist without a website_id, not selectable and without a
+              code is a backend pricelist.
+
+        Change in this method should be reflected in `_get_website_pricelists_domain`.
+        """
+        self.ensure_one()
+        return self.website_id.id == website_id or (not self.website_id and (self.selectable or self.sudo().code))
+
+    def _get_website_pricelists_domain(self, website_id):
+        ''' Check above `_is_available_on_website` for explanation.
+        Change in this method should be reflected in `_is_available_on_website`.
+        '''
+        return [
+            '|', ('website_id', '=', website_id),
+            '&', ('website_id', '=', False),
+            '|', ('selectable', '=', True), ('code', '!=', False),
+        ]
+
+    def _get_partner_pricelist_multi(self, partner_ids, company_id=None):
+        ''' If `property_product_pricelist` is read from website, we should use
+            the website's company and not the user's one.
+            Passing a `company_id` to super will avoid using the current user's
+            company.
+        '''
+        website = ir_http.get_request_website()
+        if not company_id and website:
+            company_id = website.company_id.id
+        return super(ProductPricelist, self)._get_partner_pricelist_multi(partner_ids, company_id)
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        ''' Show only the company's website '''
+        domain = self.company_id and [('company_id', '=', self.company_id.id)] or []
+        return {'domain': {'website_id': domain}}
+
+    @api.constrains('company_id', 'website_id')
+    def _check_websites_in_company(self):
+        '''Prevent misconfiguration multi-website/multi-companies.
+           If the record has a company, the website should be from that company.
+        '''
+        for record in self.filtered(lambda pl: pl.website_id and pl.company_id):
+            if record.website_id.company_id != record.company_id:
+                raise ValidationError(_("Only the company's websites are allowed. \
+                    Leave the Company field empty or select a website from that company."))
 
 
 class ProductPublicCategory(models.Model):
@@ -116,7 +203,7 @@ class ProductTemplate(models.Model):
                                                '(upsell strategy).Those product show up on the product page.')
     accessory_product_ids = fields.Many2many('product.product', 'product_accessory_rel', 'src_id', 'dest_id',
                                              string='Accessory Products', help='Accessories show up when the customer'
-                                            'reviews the cart before payment (cross-sell strategy).')
+                                             'reviews the cart before payment (cross-sell strategy).')
     website_size_x = fields.Integer('Size X', default=1)
     website_size_y = fields.Integer('Size Y', default=1)
     website_style_ids = fields.Many2many('product.style', string='Styles')
@@ -126,22 +213,7 @@ class ProductTemplate(models.Model):
                                         help="The product will be available in each mentioned e-commerce category. Go to"
                                         "Shop > Customize and enable 'E-commerce categories' to view all e-commerce categories.")
 
-    product_template_image_ids = fields.One2many('product.image', 'product_tmpl_id', string="Extra Product Images", copy=True)
-
-    # website_price deprecated, directly use _get_combination_info instead
-    website_price = fields.Float('Website price', compute='_website_price', digits=dp.get_precision('Product Price'))
-    # website_public_price deprecated, directly use _get_combination_info instead
-    website_public_price = fields.Float('Website public price', compute='_website_price', digits=dp.get_precision('Product Price'))
-    # website_price_difference deprecated, directly use _get_combination_info instead
-    website_price_difference = fields.Boolean('Website price difference', compute='_website_price')
-
-    def _website_price(self):
-        current_website = self.env['website'].get_current_website()
-        for template in self.with_context(website_id=current_website.id):
-            res = template._get_combination_info()
-            template.website_price = res.get('price')
-            template.website_public_price = res.get('list_price')
-            template.website_price_difference = res.get('has_discounted_price')
+    product_template_image_ids = fields.One2many('product.image', 'product_tmpl_id', string="Extra Product Media", copy=True)
 
     @api.multi
     def _has_no_variant_attributes(self):
@@ -152,7 +224,7 @@ class ProductTemplate(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        return any(a.create_variant == 'no_variant' for a in self._get_valid_product_attributes())
+        return any(a.create_variant == 'no_variant' for a in self.valid_product_attribute_ids)
 
     @api.multi
     def _has_is_custom_values(self):
@@ -163,39 +235,7 @@ class ProductTemplate(models.Model):
         :return: True if at least one is_custom attribute value, False otherwise
         :rtype: bool
         """
-        return any(v.is_custom for v in self._get_valid_product_attribute_values())
-
-    @api.multi
-    def _is_quick_add_to_cart_possible(self, parent_combination=None):
-        """
-        It's possible to quickly add to cart if there's no optional product,
-        there's only one possible combination and no value is set to is_custom.
-
-        Attributes set to dynamic or no_variant don't have to be tested
-        specifically because they will be taken into account when checking for
-        the possible combinations.
-
-        :param parent_combination: combination from which `self` is an
-            optional or accessory product
-        :type parent_combination: recordset `product.template.attribute.value`
-
-        :return: True if it's possible to quickly add to cart, else False
-        :rtype: bool
-        """
-        self.ensure_one()
-
-        if not self._is_add_to_cart_possible(parent_combination):
-            return False
-        gen = self._get_possible_combinations(parent_combination)
-        first_possible_combination = next(gen)
-        if next(gen, False) is not False:
-            # there are at least 2 possible combinations.
-            return False
-        if self._has_is_custom_values():
-            return False
-        if self.optional_product_ids.filtered(lambda p: p._is_add_to_cart_possible(first_possible_combination)):
-            return False
-        return True
+        return any(v.is_custom for v in self.valid_product_attribute_value_ids)
 
     @api.multi
     def _get_possible_variants_sorted(self, parent_combination=None):
@@ -304,27 +344,41 @@ class ProductTemplate(models.Model):
         return website and website.company_id or res
 
     def _default_website_sequence(self):
-        self._cr.execute("SELECT MIN(website_sequence) FROM %s" % self._table)
-        min_sequence = self._cr.fetchone()[0]
-        return min_sequence and min_sequence - 1 or 10
+        ''' We want new product to be the last (highest seq).
+        Every product should ideally have an unique sequence.
+        Default sequence (10000) should only be used for DB first product.
+        As we don't resequence the whole tree (as `sequence` does), this field
+        might have negative value.
+        '''
+        self._cr.execute("SELECT MAX(website_sequence) FROM %s" % self._table)
+        max_sequence = self._cr.fetchone()[0]
+        if max_sequence is None:
+            return 10000
+        return max_sequence + 5
 
     def set_sequence_top(self):
-        self.website_sequence = self.sudo().search([], order='website_sequence desc', limit=1).website_sequence + 1
+        min_sequence = self.sudo().search([], order='website_sequence ASC', limit=1)
+        self.website_sequence = min_sequence.website_sequence - 5
 
     def set_sequence_bottom(self):
-        self.website_sequence = self.sudo().search([], order='website_sequence', limit=1).website_sequence - 1
+        max_sequence = self.sudo().search([], order='website_sequence DESC', limit=1)
+        self.website_sequence = max_sequence.website_sequence + 5
 
     def set_sequence_up(self):
-        previous_product_tmpl = self.sudo().search(
-            [('website_sequence', '>', self.website_sequence), ('website_published', '=', self.website_published)],
-            order='website_sequence', limit=1)
+        previous_product_tmpl = self.sudo().search([
+            ('website_sequence', '<', self.website_sequence),
+            ('website_published', '=', self.website_published),
+        ], order='website_sequence DESC', limit=1)
         if previous_product_tmpl:
             previous_product_tmpl.website_sequence, self.website_sequence = self.website_sequence, previous_product_tmpl.website_sequence
         else:
             self.set_sequence_top()
 
     def set_sequence_down(self):
-        next_prodcut_tmpl = self.search([('website_sequence', '<', self.website_sequence), ('website_published', '=', self.website_published)], order='website_sequence desc', limit=1)
+        next_prodcut_tmpl = self.search([
+            ('website_sequence', '>', self.website_sequence),
+            ('website_published', '=', self.website_published),
+        ], order='website_sequence ASC', limit=1)
         if next_prodcut_tmpl:
             next_prodcut_tmpl.website_sequence, self.website_sequence = self.website_sequence, next_prodcut_tmpl.website_sequence
         else:
@@ -335,6 +389,7 @@ class ProductTemplate(models.Model):
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.description_sale
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/product.template/%s/image" % (self.id)
+        res['default_meta_description'] = self.description_sale
         return res
 
     @api.multi
@@ -375,24 +430,23 @@ class Product(models.Model):
 
     product_variant_image_ids = fields.One2many('product.image', 'product_variant_id', string="Extra Variant Images")
 
-    # website_price deprecated, directly use _get_combination_info instead
-    website_price = fields.Float('Website price', compute='_website_price', digits=dp.get_precision('Product Price'))
-    # website_public_price deprecated, directly use _get_combination_info instead
-    website_public_price = fields.Float('Website public price', compute='_website_price', digits=dp.get_precision('Product Price'))
-    # website_price_difference deprecated, directly use _get_combination_info instead
-    website_price_difference = fields.Boolean('Website price difference', compute='_website_price')
+    website_url = fields.Char('Website URL', compute='_compute_product_website_url', help='The full URL to access the document through the website.')
 
-    def _website_price(self):
+    @api.depends('product_tmpl_id.website_url', 'attribute_value_ids')
+    def _compute_product_website_url(self):
         for product in self:
-            res = product._get_combination_info_variant()
-            product.website_price = res.get('price')
-            product.website_public_price = res.get('list_price')
-            product.website_price_difference = res.get('has_discounted_price')
+            attributes = ','.join(str(x) for x in product.attribute_value_ids.ids)
+            product.website_url = "%s#attr=%s" % (product.product_tmpl_id.website_url, attributes)
 
     @api.multi
     def website_publish_button(self):
         self.ensure_one()
-        return self.product_tmpl_id.website_publish_button()
+        res = self.product_tmpl_id.website_publish_button()
+
+        # res can be the result of write() if not website_publisher
+        if type(res) == dict and res.get('type') == 'ir.actions.act_url':
+            res['url'] = self.website_url
+        return res
 
     @api.multi
     def _get_images(self):

@@ -13,7 +13,7 @@ class Feedback(TransactionCase):
         self.user = self.env['res.users'].create({
             'login': 'bob',
             'name': "Bob Bobman",
-            'groups_id': [(4, self.group2.id),]
+            'groups_id': [(6, 0, self.group2.ids)],
         })
 
 
@@ -57,15 +57,12 @@ class TestACLFeedback(Feedback):
             })
         self.assertEqual(
             ctx.exception.args[0],
-            """Sorry, you are not allowed to create documents of type 'Object For Test Access Right' (test_access_right.some_obj). This operation is allowed for the groups:
-	- Group 0"""
+            """Sorry, you are not allowed to create documents of type 'Object For Test Access Right' (test_access_right.some_obj). This operation is allowed for the groups:\n\t- Group 0"""
         )
 
     def test_two_groups(self):
         r = self.record.sudo(self.user)
-        expected = """Sorry, you are not allowed to access documents of type 'Object For Test Access Right' (test_access_right.some_obj). This operation is allowed for the groups:
-	- Group 0
-	- Group 1"""
+        expected = """Sorry, you are not allowed to access documents of type 'Object For Test Access Right' (test_access_right.some_obj). This operation is allowed for the groups:\n\t- Group 0\n\t- Group 1"""
         with self.assertRaises(AccessError) as ctx:
             # noinspection PyStatementEffect
             r.val
@@ -115,7 +112,7 @@ class TestIRRuleFeedback(Feedback):
             """The requested operation ("write" on "Object For Test Access Right" (test_access_right.some_obj)) was rejected because of the following rules:
 - rule 0
 
-(records: [%s], uid: %d)""" % (self.record.id, self.user.id)
+(Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
 
@@ -140,7 +137,7 @@ class TestIRRuleFeedback(Feedback):
 - rule 0
 - rule 1
 
-(records: [%s], uid: %d)""" % (self.record.id, self.user.id)
+(Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
     def test_globals_all(self):
@@ -156,7 +153,7 @@ class TestIRRuleFeedback(Feedback):
 - rule 0
 - rule 1
 
-(records: [%s], uid: %d)""" % (self.record.id, self.user.id)
+(Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
     def test_globals_any(self):
@@ -174,7 +171,7 @@ class TestIRRuleFeedback(Feedback):
             """The requested operation ("write" on "Object For Test Access Right" (test_access_right.some_obj)) was rejected because of the following rules:
 - rule 0
 
-(records: [%s], uid: %d)""" % (self.record.id, self.user.id)
+(Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
     def test_combination(self):
@@ -193,7 +190,7 @@ class TestIRRuleFeedback(Feedback):
 - rule 2
 - rule 3
 
-(records: [%s], uid: %d)""" % (self.record.id, self.user.id)
+(Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
     def test_warn_company(self):
@@ -202,7 +199,7 @@ class TestIRRuleFeedback(Feedback):
         """
         self.env.ref('base.group_no_one').write(
             {'users': [(4, self.user.id)]})
-        self._make_rule('rule 0', "[('company_id', 'child_of', user.company_id.id)]")
+        self._make_rule('rule 0', "[('company_id', '=', user.company_id.id)]")
         self._make_rule('rule 1', '[("val", "=", 0)]', global_=True)
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
@@ -213,7 +210,7 @@ class TestIRRuleFeedback(Feedback):
 
 Note: this might be a multi-company issue.
 
-(records: [%s], uid: %d)""" % (self.record.id, self.user.id)
+(Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
     def test_read(self):
@@ -222,7 +219,7 @@ Note: this might be a multi-company issue.
         """
         self.env.ref('base.group_no_one').write(
             {'users': [(4, self.user.id)]})
-        self._make_rule('rule 0', "[('company_id', 'child_of', user.company_id.id)]", attr='read')
+        self._make_rule('rule 0', "[('company_id', '=', user.company_id.id)]", attr='read')
         self._make_rule('rule 1', '[("val", "=", 1)]', global_=True, attr='read')
         with self.assertRaises(AccessError) as ctx:
             _ = self.record.val
@@ -234,7 +231,7 @@ Note: this might be a multi-company issue.
 
 Note: this might be a multi-company issue.
 
-(records: [%s], uid: %d)""" % (self.record.id, self.user.id)
+(Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
         p = self.env['test_access_right.parent'].create({'obj_id': self.record.id})
@@ -266,8 +263,10 @@ class TestFieldGroupFeedback(Feedback):
 
 Document type: Object For Test Access Right (test_access_right.some_obj)
 Operation: read
+User: %s
 Fields:
 - forbidden (allowed for groups 'User types / Internal User', 'Test Group'; forbidden for groups 'Extra Rights / Technical Features', 'User types / Public')"""
+    % self.user.id
         )
 
     def test_write(self):
@@ -283,7 +282,9 @@ Fields:
 
 Document type: Object For Test Access Right (test_access_right.some_obj)
 Operation: write
+User: %s
 Fields:
 - forbidden (allowed for groups 'User types / Internal User', 'Test Group'; forbidden for groups 'Extra Rights / Technical Features', 'User types / Public')
 - forbidden2 (allowed for groups 'Test Group')"""
+    % self.user.id
         )

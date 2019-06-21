@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 class PosController(http.Controller):
 
     @http.route('/pos/web', type='http', auth='user')
-    def pos_web(self, debug=False, **k):
+    def pos_web(self, **k):
         # if user not logged in, log him in
         pos_sessions = request.env['pos.session'].search([
             ('state', '=', 'opened'),
@@ -22,7 +22,7 @@ class PosController(http.Controller):
             return werkzeug.utils.redirect('/web#action=point_of_sale.action_client_pos_menu')
         pos_sessions.login()
         context = {
-            'session_info': json.dumps(request.env['ir.http'].session_info())
+            'session_info': request.env['ir.http'].session_info()
         }
         return request.render('point_of_sale.index', qcontext=context)
 

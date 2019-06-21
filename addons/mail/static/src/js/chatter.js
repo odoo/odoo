@@ -81,6 +81,7 @@ var Chatter = Widget.extend({
             var nodeOptions = fieldsInfo[mailFields.mail_thread].options || {};
             this.hasLogButton = options.display_log_button || nodeOptions.display_log_button;
             this.postRefresh = nodeOptions.post_refresh || 'never';
+            this.reloadOnUploadAttachment = this.postRefresh === 'always';
         }
     },
     /**
@@ -138,7 +139,7 @@ var Chatter = Widget.extend({
         if (this.fields.activity) {
             this.fields.activity.$el.detach();
         }
-        if (this.fields.thread) {
+        if (this.fields.thread && this.fields.thread.$el ) {
             this.fields.thread.$el.detach();
         }
 
@@ -257,7 +258,7 @@ var Chatter = Widget.extend({
             model: 'ir.attachment',
             method: 'search_read',
             domain: domain,
-            fields: ['id', 'name', 'datas_fname', 'mimetype'],
+            fields: ['id', 'name', 'mimetype'],
         }).then(function (result) {
             self._areAttachmentsLoaded = true;
             self.attachments = result;
@@ -365,7 +366,7 @@ var Chatter = Widget.extend({
             this._fetchAttachments().then(this._openAttachmentBox.bind(this));
         }
         if (this.fields.thread) {
-            this.trigger_up('reload', { fieldNames: ['message_attachment_count'] });
+            this.trigger_up('reload', { fieldNames: ['message_attachment_count'], keepChanges: true });
         }
     },
     /**
@@ -403,7 +404,7 @@ var Chatter = Widget.extend({
                     self.fields.followers.$el.insertBefore(self.$('.o_chatter_button_attachment'));
                 }
             }
-            if (self.fields.thread) {
+            if (self.fields.thread && self.fields.thread.$el) {
                 self.fields.thread.$el.appendTo(self.$el);
             }
         }).then(always).guardedCatch(always);
@@ -537,10 +538,13 @@ var Chatter = Widget.extend({
         var self = this;
         if (!this.suggested_partners_def) {
             this.suggested_partners_def = new Promise(function (resolve, reject) {
-                var method = 'message_get_suggested_recipients';
-                var args = [[self.context.default_res_id], self.context];
-                self._rpc({model: self.record.model, method: method, args: args})
-                .then(function (result) {
+                self._rpc({
+                    route: '/mail/get_suggested_recipients',
+                    params: {
+                        model: self.record.model,
+                        res_ids: [self.context.default_res_id],
+                    },
+                }).then(function (result) {
                     if (!self.suggested_partners_def) {
                         return; // widget has been reset (e.g. we just switched to another record)
                     }
@@ -575,6 +579,9 @@ var Chatter = Widget.extend({
      * @private
      */
     _onReloadAttachmentBox: function () {
+        if (this.reloadOnUploadAttachment) {
+            this.trigger_up('reload');
+        }
         this._reloadAttachmentBox();
     },
     /**

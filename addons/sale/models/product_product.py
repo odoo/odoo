@@ -5,16 +5,6 @@ from odoo import api, fields, models
 from odoo.tools.float_utils import float_round
 
 
-class ProductTemplate(models.Model):
-    _inherit = "product.template"
-
-    optional_product_ids = fields.Many2many(
-        'product.template', 'product_optional_rel', 'src_id', 'dest_id',
-        string='Optional Products', help="Optional Products are suggested "
-        "whenever the customer hits *Add to Cart* (cross-sell strategy, "
-        "e.g. for computers: warranty, software, etc.).")
-
-
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
@@ -27,12 +17,13 @@ class ProductProduct(models.Model):
             return r
         date_from = fields.Datetime.to_string(fields.datetime.combine(fields.datetime.now() - timedelta(days=365),
                                                                       time.min))
-        date_to = fields.Datetime.to_string(fields.datetime.combine(fields.datetime.today(), time.min))
+
+        done_states = self.env['sale.report']._get_done_states()
+
         domain = [
-            ('state', 'in', ['sale', 'done', 'paid']),
+            ('state', 'in', done_states),
             ('product_id', 'in', self.ids),
             ('date', '>=', date_from),
-            ('date', '<', date_to)
         ]
         for group in self.env['sale.report'].read_group(domain, ['product_id', 'product_uom_qty'], ['product_id']):
             r[group['product_id'][0]] = group['product_uom_qty']
@@ -98,6 +89,6 @@ class ProductAttributeCustomValue(models.Model):
     _rec_name = 'custom_value'
     _description = 'Product Attribute Custom Value'
 
-    attribute_value_id = fields.Many2one('product.attribute.value', string='Attribute')
+    attribute_value_id = fields.Many2one('product.attribute.value', string='Attribute Value')
     sale_order_line_id = fields.Many2one('sale.order.line', string='Sale order line')
     custom_value = fields.Char('Custom value')

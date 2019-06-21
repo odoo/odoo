@@ -56,7 +56,7 @@ def initialize(cr):
             info['author'],
             info['website'], i, info['name'],
             info['description'], category_id,
-            info['auto_install'], state,
+            info['auto_install'] is not False, state,
             info['web'],
             info['license'],
             info['application'], info['icon'],
@@ -67,8 +67,11 @@ def initialize(cr):
                 'module_'+i, 'ir.module.module', 'base', id, True))
         dependencies = info['depends']
         for d in dependencies:
-            cr.execute('INSERT INTO ir_module_module_dependency \
-                    (module_id,name) VALUES (%s, %s)', (id, d))
+            cr.execute(
+                'INSERT INTO ir_module_module_dependency (module_id, name, auto_install_required)'
+                ' VALUES (%s, %s, %s)',
+                (id, d, d in (info['auto_install'] or ()))
+            )
 
     # Install recursively all auto-installing modules
     while True:
@@ -105,8 +108,8 @@ def create_categories(cr, categories):
                     (name, parent_id) \
                     VALUES (%s, %s) RETURNING id', (categories[0], p_id))
             c_id = cr.fetchone()[0]
-            cr.execute('INSERT INTO ir_model_data (module, name, res_id, model) \
-                       VALUES (%s, %s, %s, %s)', ('base', xml_id, c_id, 'ir.module.category'))
+            cr.execute('INSERT INTO ir_model_data (module, name, res_id, model, noupdate) \
+                       VALUES (%s, %s, %s, %s, %s)', ('base', xml_id, c_id, 'ir.module.category', True))
         else:
             c_id = c_id[0]
         p_id = c_id

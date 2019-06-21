@@ -45,9 +45,9 @@ class IrActions(models.Model):
     binding_model_id = fields.Many2one('ir.model', ondelete='cascade',
                                        help="Setting a value makes this action available in the sidebar for the given model.")
     binding_type = fields.Selection([('action', 'Action'),
-                                     ('action_form_only', "Form-only"),
                                      ('report', 'Report')],
                                     required=True, default='action')
+    binding_view_types = fields.Char(default='list,form')
 
     def _compute_xml_id(self):
         res = self.get_external_id()
@@ -134,13 +134,13 @@ class IrActionsActWindow(models.Model):
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
 
-    @api.constrains('res_model', 'src_model')
+    @api.constrains('res_model', 'binding_model_id')
     def _check_model(self):
         for action in self:
             if action.res_model not in self.env:
                 raise ValidationError(_('Invalid model name %r in action definition.') % action.res_model)
-            if action.src_model and action.src_model not in self.env:
-                raise ValidationError(_('Invalid model name %r in action definition.') % action.src_model)
+            if action.binding_model_id and action.binding_model_id.model not in self.env:
+                raise ValidationError(_('Invalid model name %r in action definition.') % action.binding_model_id.model)
 
     @api.depends('view_ids.view_mode', 'view_mode', 'view_id.type')
     def _compute_views(self):
@@ -180,13 +180,9 @@ class IrActionsActWindow(models.Model):
     res_id = fields.Integer(string='Record ID', help="Database ID of record to open in form view, when ``view_mode`` is set to 'form' only")
     res_model = fields.Char(string='Destination Model', required=True,
                             help="Model name of the object to open in the view window")
-    src_model = fields.Char(string='Source Model',
-                            help="Optional model name of the objects on which this action should be visible")
     target = fields.Selection([('current', 'Current Window'), ('new', 'New Window'), ('inline', 'Inline Edit'), ('fullscreen', 'Full Screen'), ('main', 'Main action of Current Window')], default="current", string='Target Window')
     view_mode = fields.Char(required=True, default='tree,form',
                             help="Comma-separated list of allowed view modes, such as 'form', 'tree', 'calendar', etc. (Default: tree,form)")
-    view_type = fields.Selection([('tree', 'Tree'), ('form', 'Form')], default="form", string='View Type', required=True,
-                                 help="View type: Tree type to use for the tree view, set to 'tree' for a hierarchical tree view, or 'form' for a regular list view")
     usage = fields.Char(string='Action Usage',
                         help="Used to filter menu and home actions from the user form.")
     view_ids = fields.One2many('ir.actions.act_window.view', 'act_window_id', string='No of Views')
@@ -199,9 +195,7 @@ class IrActionsActWindow(models.Model):
                                  'act_id', 'gid', string='Groups')
     search_view_id = fields.Many2one('ir.ui.view', string='Search View Ref.')
     filter = fields.Boolean()
-    auto_search = fields.Boolean(default=True)
     search_view = fields.Text(compute='_compute_search_view')
-    multi = fields.Boolean(string='Restrict to lists', help="If checked and the action is bound to a model, it will only appear in the More menu on list views")
 
     @api.multi
     def read(self, fields=None, load='_classic_read'):
@@ -403,6 +397,8 @@ class IrActionsServer(models.Model):
                                     help="Provide the field used to link the newly created record "
                                          "on the record on used by the server action.")
     fields_lines = fields.One2many('ir.server.object.lines', 'server_id', string='Value Mapping', copy=True)
+    groups_id = fields.Many2many('res.groups', 'ir_act_server_group_rel',
+                                 'act_id', 'gid', string='Groups')
 
     @api.constrains('code')
     def _check_python_code(self):
@@ -564,6 +560,10 @@ class IrActionsServer(models.Model):
         """
         res = False
         for action in self:
+            action_groups = action.groups_id
+            if action_groups and not (action_groups & self.env.user.groups_id):
+                raise AccessError(_("You don't have enough access rights to run this action."))
+
             eval_context = self._get_eval_context(action)
             if hasattr(self, 'run_action_%s_multi' % action.state):
                 # call the multi method
@@ -787,3 +787,11 @@ class IrActionsActClient(models.Model):
         for record in self:
             params = record.params
             record.params_store = repr(params) if isinstance(params, dict) else params
+
+    def _get_default_form_view(self):
+        doc = super(IrActionsActClient, self)._get_default_form_view()
+        params = doc.find(".//field[@name='params']")
+        params.getparent().remove(params)
+        params_store = doc.find(".//field[@name='params_store']")
+        params_store.getparent().remove(params_store)
+        return doc

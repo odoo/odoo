@@ -13,15 +13,16 @@
         Slide Type Selection template
     -->
     <t t-name="website.slide.upload.modal.select">
-        <div class="d-flex flex-wrap justify-content-between align-items-stretch text-primary p-1 mt-4">
-            <t t-foreach="widget.slide_type_data" t-as="slide_type">
+        <div class="row p-1 mt-4">
+            <div t-foreach="widget.slide_type_data" t-as="slide_type" class="col-6 col-md-3">
                 <t t-set="type_data" t-value="widget.slide_type_data[slide_type]"/>
 
-                <div class="content-type d-flex flex-column align-items-center p-1 mb-4 o_wslides_select_type" t-att-data-slide-type="slide_type">
-                    <i t-attf-class="fa #{type_data['icon']} mb-2" style="font-size:4rem;"></i>
+                <a href="#" t-att-data-slide-type="slide_type"
+                    class="content-type d-flex flex-column align-items-center mb-4 o_wslides_select_type btn rounded border text-600 p-3">
+                    <i t-attf-class="fa #{type_data['icon']} mb-2 fa-3x"/>
                     <t t-esc="type_data['label']"/>
-                </div>
-            </t>
+                </a>
+            </div>
         </div>
     </t>
 

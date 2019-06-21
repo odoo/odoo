@@ -279,6 +279,28 @@ var utils = {
         return "";
     },
     /**
+     * Gets dataURL (base64 data) from the given file or blob.
+     * Technically wraps FileReader.readAsDataURL in Promise.
+     *
+     * @param {Blob|File} file
+     * @returns {Promise} resolved with the dataURL, or rejected if the file is
+     *  empty or if an error occurs.
+     */
+    getDataURLFromFile: function (file) {
+        if (!file) {
+            return Promise.reject();
+        }
+        return new Promise(function (resolve, reject) {
+            var reader = new FileReader();
+            reader.addEventListener('load', function () {
+                resolve(reader.result);
+            });
+            reader.addEventListener('abort', reject);
+            reader.addEventListener('error', reject);
+            reader.readAsDataURL(file);
+        });
+    },
+    /**
      * Returns a human readable number (e.g. 34000 -> 34k).
      *
      * @param {number} number

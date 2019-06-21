@@ -11,7 +11,8 @@
                     <field name="delivery_type" invisible="1"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="order_id" invisible="1"/>
-                    <field name='delivery_price' string="Cost" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'invisible': [('carrier_id','=', False)]}" force_save="1"/>
+                    <field name='delivery_price' invisible="1"/>
+                    <field name='display_price' string="Cost" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'invisible': [('carrier_id','=', False)]}"/>
                 </group>
                 <button name="update_price" type="object" attrs="{'invisible': [('delivery_type','in', ('fixed', 'base_on_rule'))]}">
                     <i class="fa fa-arrow-right"/>
@@ -19,6 +20,9 @@
                 </button>
                 <div role="alert" class="alert alert-warning" attrs="{'invisible': [('invoicing_message', '=', '')]}">
                     <field name="invoicing_message" nolabel="1"/>
+                </div>
+                <div role="alert" class="alert alert-info" attrs="{'invisible': [('delivery_message', '=', False)]}">
+                    <field name="delivery_message" nolabel="1"/>
                 </div>
                 <footer>
                     <button name="button_confirm" type="object" string="Add" class="btn-primary"/>

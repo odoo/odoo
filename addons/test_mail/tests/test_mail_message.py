@@ -31,7 +31,7 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
             'reply_to': 'test.reply@example.com',
             'email_from': 'test.from@example.com',
         })
-        self.assertIn('-private', msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
+        self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
         self.assertEqual(msg.reply_to, 'test.reply@example.com')
         self.assertEqual(msg.email_from, 'test.from@example.com')
 
@@ -39,7 +39,7 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
 
         msg = self.Message.create({})
-        self.assertIn('-private', msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
+        self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
         self.assertEqual(msg.reply_to, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
         self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
 
@@ -50,7 +50,7 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.alias')]).unlink()
 
         msg = self.Message.create({})
-        self.assertIn('-private', msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
+        self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
         self.assertEqual(msg.reply_to, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
         self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
 
@@ -61,8 +61,8 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
         self.env['ir.config_parameter'].set_param('mail.catchall.alias', alias_catchall)
 
         msg = self.Message.create({})
-        self.assertIn('-private', msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
-        reply_to_name = self.env.user.company_id.name
+        self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
+        reply_to_name = self.env.company.name
         reply_to_email = '%s@%s' % (alias_catchall, alias_domain)
         self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
         self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
@@ -74,7 +74,7 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
             'model': 'mail.test',
             'res_id': self.alias_record.id
         })
-        self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id)
+        self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
         self.assertEqual(msg.reply_to, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
         self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
 
@@ -88,8 +88,8 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
             'model': 'mail.test',
             'res_id': self.alias_record.id
         })
-        self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id)
-        reply_to_name = '%s %s' % (self.env.user.company_id.name, self.alias_record.name)
+        self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
+        reply_to_name = '%s %s' % (self.env.company.name, self.alias_record.name)
         reply_to_email = '%s@%s' % (self.alias_record.alias_name, alias_domain)
         self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
         self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
@@ -104,8 +104,8 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
             'model': 'mail.test',
             'res_id': self.alias_record.id
         })
-        self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id)
-        reply_to_name = '%s %s' % (self.env.user.company_id.name, self.alias_record.name)
+        self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
+        reply_to_name = '%s %s' % (self.env.company.name, self.alias_record.name)
         reply_to_email = '%s@%s' % (self.alias_record.alias_name, alias_domain)
         self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
         self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
@@ -116,9 +116,9 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
             'res_id': self.alias_record.id,
             'no_auto_thread': True,
         })
-        self.assertIn('reply_to', msg.message_id)
-        self.assertNotIn('mail.test', msg.message_id)
-        self.assertNotIn('-%d-' % self.alias_record.id, msg.message_id)
+        self.assertIn('reply_to', msg.message_id.split('@')[0])
+        self.assertNotIn('mail.test', msg.message_id.split('@')[0])
+        self.assertNotIn('-%d-' % self.alias_record.id, msg.message_id.split('@')[0])
 
     def test_mail_message_base64_image(self):
         msg = self.env['mail.message'].sudo(self.user_employee).create({
@@ -237,8 +237,7 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
     def test_mail_message_access_read_notification(self):
         attachment = self.env['ir.attachment'].create({
             'datas': base64.b64encode(b'My attachment'),
-            'name': 'doc.txt',
-            'datas_fname': 'doc.txt'})
+            'name': 'doc.txt'})
         # attach the attachment to the message
         self.message.write({'attachment_ids': [(4, attachment.id)]})
         self.message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
@@ -452,4 +451,4 @@ class TestMessageModeration(common.Moderation):
         msg_emp_pending_c2 = self._create_new_message(self.channel_2.id, status='pending_moderation', author=self.partner_employee)
 
         self.env['mail.message']._notify_moderators()
-        self.assertEmails(False, self.partner_employee | self.partner_employee_2, subject='Message are pending moderation', email_from=self.env.user.company_id.catchall or self.env.user.company_id.email)
+        self.assertEmails(False, self.partner_employee | self.partner_employee_2, subject='Message are pending moderation', email_from=self.env.company.catchall or self.env.company.email)

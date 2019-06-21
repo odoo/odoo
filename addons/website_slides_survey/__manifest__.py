@@ -6,7 +6,7 @@
     'description': """This module lets you use the full power of certifications within your courses.""",
     'category': 'Hidden',
     'version': '1.0',
-    'depends': ['website_slides', 'website_survey'],
+    'depends': ['website_slides', 'survey'],
     'installable': True,
     'auto_install': True,
     'data': [
@@ -19,6 +19,7 @@
         'views/website_slides_templates_homepage.xml',
         'views/survey_templates.xml',
         'views/website_profile.xml',
+        'data/mail_template_data.xml',
         'data/gamification_data.xml',
     ],
     'demo': [

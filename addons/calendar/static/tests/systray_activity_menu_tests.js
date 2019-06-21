@@ -38,7 +38,7 @@ QUnit.module('ActivityMenu', {
 });
 
 QUnit.test('activity menu widget:today meetings', async function (assert) {
-    assert.expect(8);
+    assert.expect(6);
     var self = this;
     var activityMenu = new ActivityMenu();
     testUtils.mock.addMockEnvironment(activityMenu, {
@@ -55,12 +55,7 @@ QUnit.test('activity menu widget:today meetings', async function (assert) {
 
     assert.hasClass(activityMenu.$el,'o_mail_systray_item', 'should be the instance of widget');
 
-    testUtils.mock.intercept(activityMenu, 'do_action', function (event) {
-        assert.ok(true, "should have triggered a do_action");
-        assert.strictEqual(event.data.action.res_id,  activityMenu.$('.o_meeting_filter').eq(0).data('res_id'), 'should open particular meeting form view');
-    });
     await testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
-    await testUtils.dom.click(activityMenu.$('.o_meeting_filter').eq(0));
 
     testUtils.mock.intercept(activityMenu, 'do_action', function (event) {
         assert.strictEqual(event.data.action,  "calendar.action_calendar_event", 'should open meeting calendar view in day mode');

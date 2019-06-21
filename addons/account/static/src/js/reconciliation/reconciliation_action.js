@@ -259,7 +259,7 @@ var StatementAction = AbstractAction.extend({
             }
         });
     },
-    
+
     /**
      * @private
      * @param {OdooEvent} ev
@@ -308,11 +308,10 @@ var StatementAction = AbstractAction.extend({
         return this.model.closeStatement().then(function (result) {
             self.do_action({
                 name: 'Bank Statements',
-                res_model: 'account.bank.statement',
+                res_model: 'account.bank.statement.line',
                 res_id: result,
                 views: [[false, 'form']],
                 type: 'ir.actions.act_window',
-                view_type: 'form',
                 view_mode: 'form',
             });
         });
@@ -346,9 +345,12 @@ var StatementAction = AbstractAction.extend({
                 'context': self.model.getContext(),
             });
             _.each(result.handles, function (handle) {
-                self._getWidget(handle).destroy();
-                var index = _.findIndex(self.widgets, function (widget) {return widget.handle===handle;});
-                self.widgets.splice(index, 1);
+                var widget = self._getWidget(handle);
+                if (widget) {
+                    widget.destroy();
+                    var index = _.findIndex(self.widgets, function (widget) {return widget.handle===handle;});
+                    self.widgets.splice(index, 1);
+                }
             });
             // Get number of widget and if less than constant and if there are more to laod, load until constant
             if (self.widgets.length < self.model.defaultDisplayQty

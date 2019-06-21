@@ -15,11 +15,11 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
         'click .js_change_lang': '_onLangChangeClick',
         'click .js_publish_management .js_publish_btn': '_onPublishBtnClick',
         'click .js_multi_website_switch': '_onWebsiteSwitch',
-        'click .js_multi_company_switch': '_onCompanySwitch',
         'shown.bs.modal': '_onModalShown',
     }),
     custom_events: _.extend({}, publicRootData.PublicRoot.prototype.custom_events || {}, {
         'ready_to_clean_for_save': '_onWidgetsStopRequest',
+        seo_object_request: '_onSeoObjectRequest',
     }),
 
     /**
@@ -112,6 +112,36 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
         window.location.href = _.str.sprintf("/website/lang/%(lang)s?r=%(url)s%(hash)s", redirect);
     },
     /**
+    /**
+     * Checks information about the page SEO object.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSeoObjectRequest: function (ev) {
+        var res = this._unslugHtmlDataObject('seo-object');
+        ev.data.callback(res);
+    },
+    /**
+     * Returns a model/id object constructed from html data attribute.
+     *
+     * @private
+     * @param {string} dataAttr
+     * @returns {Object} an object with 2 keys: model and id, or null
+     * if not found
+     */
+    _unslugHtmlDataObject: function (dataAttr) {
+        var repr = $('html').data(dataAttr);
+        var match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
+        if (!match) {
+            return null;
+        }
+        return {
+            model: match[1],
+            id: match[2] | 0,
+        };
+    },
+    /**
      * @todo review
      * @private
      */
@@ -166,19 +196,6 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
             url.hostname = websiteDomain;
         }
         window.location.href = url;
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onCompanySwitch: function (ev) {
-        var companyID = parseInt(ev.currentTarget.getAttribute('company-id'), 10);
-        this._rpc({model: 'res.users',
-            method: 'write',
-            args: [odoo.session_info.user_id, {'company_id': companyID}],
-        }).then(function () {
-            window.location.reload(true);
-        });
     },
     /**
      * @private

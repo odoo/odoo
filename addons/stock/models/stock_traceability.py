@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, _
+from odoo.tools import config
 
 
 rec = 0
@@ -21,7 +22,7 @@ class MrpStockReport(models.TransientModel):
     _description = 'Traceability Report'
 
     @api.model
-    def _get_move_lines(self, move_lines):
+    def _get_move_lines(self, move_lines, line_id=None):
         lines_seen = move_lines
         lines_todo = list(move_lines)
         while lines_todo:
@@ -43,7 +44,8 @@ class MrpStockReport(models.TransientModel):
                 ])
             else:
                 continue
-            lines_todo += list(lines)
+            if line_id is None or line_id in lines.ids:
+                lines_todo += list(lines)
             lines_seen |= lines
         return lines_seen - move_lines
 
@@ -81,10 +83,11 @@ class MrpStockReport(models.TransientModel):
         res_model = ''
         ref = ''
         res_id = False
-        if move_line.picking_id:
+        picking_id = move_line.picking_id or move_line.move_id.picking_id
+        if picking_id:
             res_model = 'stock.picking'
-            res_id = move_line.picking_id.id
-            ref = move_line.picking_id.name
+            res_id = picking_id.id
+            ref = picking_id.name
         elif move_line.move_id.inventory_id:
             res_model = 'stock.inventory'
             res_id = move_line.move_id.inventory_id.id
@@ -177,7 +180,7 @@ class MrpStockReport(models.TransientModel):
                 lines = move_lines
             else:
                 # Traceability in case of consumed in.
-                lines = self._get_move_lines(move_line)
+                lines = self._get_move_lines(move_line, line_id=line_id)
         for line in lines:
             unfoldable = False
             if line.consume_line_ids or ( line.lot_id and self._get_move_lines(line) and model != "stock.production.lot"):
@@ -204,7 +207,11 @@ class MrpStockReport(models.TransientModel):
             'base_url': base_url,
         }
 
-        body = self.env['ir.ui.view'].render_template(
+        context = dict(self.env.context)
+        if not config['test_enable']:
+            context['commit_assetsbundle'] = True
+
+        body = self.env['ir.ui.view'].with_context(context).render_template(
             "stock.report_stock_inventory_print",
             values=dict(rcontext, lines=lines, report=self, context=self),
         )

@@ -17,6 +17,7 @@ import uuid
 
 from odoo import api, fields, models
 from odoo import tools
+from odoo.addons.base.models.res_partner import _tz_get
 from odoo.osv import expression
 from odoo.tools.translate import _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
@@ -127,9 +128,9 @@ class Attendee(models.Model):
     state = fields.Selection(STATE_SELECTION, string='Status', readonly=True, default='needsAction',
         help="Status of the attendee's participation")
     common_name = fields.Char('Common name', compute='_compute_common_name', store=True)
-    partner_id = fields.Many2one('res.partner', 'Contact', readonly="True")
+    partner_id = fields.Many2one('res.partner', 'Contact', readonly=True)
     email = fields.Char('Email', help="Email of Invited Person")
-    availability = fields.Selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly="True")
+    availability = fields.Selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly=True)
     access_token = fields.Char('Invitation Token', default=_default_access_token)
     event_id = fields.Many2one('calendar.event', 'Meeting linked', ondelete='cascade')
 
@@ -192,27 +193,26 @@ class Attendee(models.Model):
         invitation_template = invitation_template.with_context(rendering_context)
 
         # send email with attachments
-        mails_to_send = self.env['mail.mail']
+        mail_ids = []
         for attendee in self:
             if attendee.email or attendee.partner_id.email:
                 # FIXME: is ics_file text or bytes?
                 ics_file = ics_files.get(attendee.event_id.id)
-                mail_id = invitation_template.send_mail(attendee.id, notif_layout='mail.mail_notification_light')
 
-                vals = {}
+                email_values = {
+                    'model': None,  # We don't want to have the mail in the tchatter while in queue!
+                    'res_id': None,
+                }
                 if ics_file:
-                    vals['attachment_ids'] = [(0, 0, {'name': 'invitation.ics',
-                                                      'mimetype': 'text/calendar',
-                                                      'datas_fname': 'invitation.ics',
-                                                      'datas': base64.b64encode(ics_file)})]
-                vals['model'] = None  # We don't want to have the mail in the tchatter while in queue!
-                vals['res_id'] = False
-                current_mail = self.env['mail.mail'].browse(mail_id)
-                current_mail.mail_message_id.write(vals)
-                mails_to_send |= current_mail
+                    email_values['attachment_ids'] = [
+                        (0, 0, {'name': 'invitation.ics',
+                                'mimetype': 'text/calendar',
+                                'datas': base64.b64encode(ics_file)})
+                    ]
+                mail_ids.append(invitation_template.send_mail(attendee.id, email_values=email_values, notif_layout='mail.mail_notification_light'))
 
-        if force_send and mails_to_send:
-            res = mails_to_send.send()
+        if force_send and mail_ids:
+            res = self.env['mail.mail'].browse(mail_ids).send()
 
         return res
 
@@ -226,7 +226,8 @@ class Attendee(models.Model):
         """ Marks event invitation as Accepted. """
         result = self.write({'state': 'accepted'})
         for attendee in self:
-            attendee.event_id.message_post(body=_("%s has accepted invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
+            if attendee.event_id:
+                attendee.event_id.message_post(body=_("%s has accepted invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
         return result
 
     @api.multi
@@ -234,7 +235,8 @@ class Attendee(models.Model):
         """ Marks event invitation as Declined. """
         res = self.write({'state': 'declined'})
         for attendee in self:
-            attendee.event_id.message_post(body=_("%s has declined invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
+            if attendee.event_id:
+                attendee.event_id.message_post(body=_("%s has declined invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
         return res
 
 
@@ -243,7 +245,7 @@ class AlarmManager(models.AbstractModel):
     _name = 'calendar.alarm_manager'
     _description = 'Event Alarm Manager'
 
-    def get_next_potential_limit_alarm(self, alarm_type, seconds=None, partner_id=None):
+    def _get_next_potential_limit_alarm(self, alarm_type, seconds=None, partner_id=None):
         result = {}
         delta_request = """
             SELECT
@@ -323,6 +325,12 @@ class AlarmManager(models.AbstractModel):
                 'rrule': rule
             }
 
+        # determine accessible events
+        events = self.env['calendar.event'].browse(result)
+        result = {
+            key: result[key]
+            for key in set(events._filter_access_rules('read').ids)
+        }
         return result
 
     def do_check_alarm_for_one_date(self, one_date, event, event_maxdelta, in_the_next_X_seconds, alarm_type, after=False, missing=False):
@@ -374,7 +382,7 @@ class AlarmManager(models.AbstractModel):
 
         cron_interval = cron.interval_number * interval_to_second[cron.interval_type]
 
-        all_meetings = self.get_next_potential_limit_alarm('email', seconds=cron_interval)
+        all_meetings = self._get_next_potential_limit_alarm('email', seconds=cron_interval)
 
         for meeting in self.env['calendar.event'].browse(all_meetings):
             max_delta = all_meetings[meeting.id]['max_duration']
@@ -404,7 +412,7 @@ class AlarmManager(models.AbstractModel):
         if not partner:
             return []
 
-        all_meetings = self.get_next_potential_limit_alarm('notification', partner_id=partner.id)
+        all_meetings = self._get_next_potential_limit_alarm('notification', partner_id=partner.id)
         time_limit = 3600 * 24  # return alarms of the next 24 hours
         for event_id in all_meetings:
             max_delta = all_meetings[event_id]['max_duration']
@@ -457,7 +465,7 @@ class AlarmManager(models.AbstractModel):
                 'notify_at': fields.Datetime.to_string(alert['notify_at']),
             }
 
-    def notify_next_alarm(self, partner_ids):
+    def _notify_next_alarm(self, partner_ids):
         """ Sends through the bus the next alarm of given partners """
         notifications = []
         users = self.env['res.users'].search([('partner_id', 'in', tuple(partner_ids))])
@@ -599,7 +607,7 @@ class Meeting(models.Model):
         else:
             reference_date = self.start
 
-        timezone = pytz.timezone(self._context.get('tz') or 'UTC')
+        timezone = pytz.timezone(self.event_tz) if self.event_tz else pytz.timezone(self._context.get('tz') or 'UTC')
         event_date = pytz.UTC.localize(fields.Datetime.from_string(reference_date))  # Add "+hh:mm" timezone
         if not event_date:
             event_date = datetime.datetime.now()
@@ -637,7 +645,7 @@ class Meeting(models.Model):
             invalidate = True
 
         def naive_tz_to_utc(d):
-            return timezone.localize(d).astimezone(pytz.UTC)
+            return timezone.localize(d.replace(tzinfo=None), is_dst=True).astimezone(pytz.UTC)
         return [naive_tz_to_utc(d) if not use_naive_datetime else d for d in rset1 if d.year < MAXYEAR]
 
     @api.multi
@@ -780,6 +788,7 @@ class Meeting(models.Model):
     start_datetime = fields.Datetime('Start DateTime', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, tracking=True)
     stop_date = fields.Date('End Date', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, tracking=True)
     stop_datetime = fields.Datetime('End Datetime', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, tracking=True)  # old date_deadline
+    event_tz = fields.Selection('_event_tz_get', string='Timezone', default=lambda self: self.env.context.get('tz') or self.user_id.tz)
     duration = fields.Float('Duration', states={'done': [('readonly', True)]})
     description = fields.Text('Description', states={'done': [('readonly', True)]})
     privacy = fields.Selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', default='public', states={'done': [('readonly', True)]}, oldname="class")
@@ -934,6 +943,10 @@ class Meeting(models.Model):
                 data['recurrency'] = True
                 data.update(self._rrule_parse(meeting.rrule, data, meeting.start))
                 meeting.update(data)
+
+    @api.model
+    def _event_tz_get(self):
+        return _tz_get(self)
 
     @api.constrains('start_datetime', 'stop_datetime', 'start_date', 'stop_date')
     def _check_closing_date(self):
@@ -1232,10 +1245,10 @@ class Meeting(models.Model):
         """ Compute rule string according to value type RECUR of iCalendar
             :return: string containing recurring rule (empty if no rule)
         """
-        if self.interval and self.interval < 0:
-            raise UserError(_('interval cannot be negative.'))
-        if self.count and self.count <= 0:
-            raise UserError(_('Event recurrence interval cannot be negative.'))
+        if self.interval <= 0:
+            raise UserError(_('The interval cannot be negative.'))
+        if self.end_type == 'count' and self.count <= 0:
+            raise UserError(_('The number of repetitions  cannot be negative.'))
 
         def get_week_string(freq):
             weekdays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
@@ -1539,7 +1552,7 @@ class Meeting(models.Model):
                 else:
                     data = meeting.read(['start', 'stop', 'rrule', 'duration'])[0]
                     if data.get('rrule'):
-                        new_ids = meeting.with_context(dont_notify=True).detach_recurring_event(values).ids  # to prevent multiple notify_next_alarm
+                        new_ids = meeting.with_context(dont_notify=True).detach_recurring_event(values).ids  # to prevent multiple _notify_next_alarm
 
             new_meetings = self.browse(new_ids)
             real_meetings = self.browse(real_ids)
@@ -1555,7 +1568,7 @@ class Meeting(models.Model):
 
             attendees_create = False
             if values.get('partner_ids', False):
-                attendees_create = all_meetings.with_context(dont_notify=True).create_attendees()  # to prevent multiple notify_next_alarm
+                attendees_create = all_meetings.with_context(dont_notify=True).create_attendees()  # to prevent multiple _notify_next_alarm
 
             # Notify attendees if there is an alarm on the modified event, or if there was an alarm
             # that has just been removed, as it might have changed their next event notification
@@ -1565,7 +1578,7 @@ class Meeting(models.Model):
                     event_attendees_changes = attendees_create and real_ids and attendees_create[real_ids[0]]
                     if event_attendees_changes:
                         partners_to_notify.extend(event_attendees_changes['removed_partners'].ids)
-                    self.env['calendar.alarm_manager'].notify_next_alarm(partners_to_notify)
+                    self.env['calendar.alarm_manager']._notify_next_alarm(partners_to_notify)
 
             if (values.get('start_date') or values.get('start_datetime') or
                     (values.get('start') and self.env.context.get('from_ui'))) and values.get('active', True):
@@ -1616,7 +1629,7 @@ class Meeting(models.Model):
         meeting._sync_activities(values)
 
         final_date = meeting._get_recurrency_end_date()
-        # `dont_notify=True` in context to prevent multiple notify_next_alarm
+        # `dont_notify=True` in context to prevent multiple _notify_next_alarm
         meeting.with_context(dont_notify=True).write({'final_date': final_date})
         meeting.with_context(dont_notify=True).create_attendees()
 
@@ -1624,7 +1637,7 @@ class Meeting(models.Model):
         # next event notification
         if not self._context.get('dont_notify'):
             if len(meeting.alarm_ids) > 0:
-                self.env['calendar.alarm_manager'].notify_next_alarm(meeting.partner_ids.ids)
+                self.env['calendar.alarm_manager']._notify_next_alarm(meeting.partner_ids.ids)
         return meeting
 
     @api.multi
@@ -1728,7 +1741,7 @@ class Meeting(models.Model):
             result = records_to_exclude.with_context(dont_notify=True).write({'active': False})
 
         # Notify the concerned attendees (must be done after removing the events)
-        self.env['calendar.alarm_manager'].notify_next_alarm(partner_ids)
+        self.env['calendar.alarm_manager']._notify_next_alarm(partner_ids)
         return result
 
     @api.model

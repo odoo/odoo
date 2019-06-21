@@ -10,7 +10,7 @@ class Job(models.Model):
 
     @api.model
     def _default_address_id(self):
-        return self.env.user.company_id.partner_id
+        return self.env.company.partner_id
 
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
@@ -109,13 +109,11 @@ class Job(models.Model):
     @api.model
     def create(self, vals):
         vals['favorite_user_ids'] = vals.get('favorite_user_ids', []) + [(4, self.env.uid)]
-        return super(Job, self.with_context(mail_create_nolog=True)).create(vals)
+        return super(Job, self).create(vals)
 
     @api.multi
-    def _track_subtype(self, init_values):
-        if 'state' in init_values and self.state == 'open':
-            return self.env.ref('hr_recruitment.mt_job_new')
-        return super(Job, self)._track_subtype(init_values)
+    def _creation_subtype(self):
+        return self.env.ref('hr_recruitment.mt_job_new')
 
     @api.multi
     def action_get_attachment_tree_view(self):

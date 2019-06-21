@@ -346,9 +346,9 @@ QUnit.module('basic_fields', {
             res_id: 2,
         });
 
-        assert.strictEqual(form.$('.o_stat_text.o_not_hover:contains(Production Environment)').length, 1,
+        assert.containsOnce(form, ".o_stat_text.o_not_hover:contains(Production Environment)",
             "button should contain correct string");
-        assert.strictEqual(form.$('.o_stat_text.o_hover:contains(Switch to test environment)').length, 1,
+        assert.containsOnce(form, ".o_stat_text.o_hover:contains(Switch to test environment)",
             "button should display correct string when hovering");
         form.destroy();
     });
@@ -1031,7 +1031,7 @@ QUnit.module('basic_fields', {
             res_id: 1,
             mockRPC: function (route, args) {
                 if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
-                    assert.deepEqual(args.args, ["partner",1,"foo",{}], 'should call "call_button" route');
+                    assert.deepEqual(args.args, ["partner",1,"foo"], 'should call "call_button" route');
                     return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);
@@ -1666,7 +1666,7 @@ QUnit.module('basic_fields', {
             res_id: 1,
             mockRPC: function (route, args) {
                 if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
-                    assert.deepEqual(args.args, ["partner",1,"txt",{}], 'should call "call_button" route');
+                    assert.deepEqual(args.args, ["partner",1,"txt"], 'should call "call_button" route');
                     return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);
@@ -1870,7 +1870,7 @@ QUnit.module('basic_fields', {
 
         testUtils.dom.click(form.$('a.o_field_widget[name="document"]'));
 
-        assert.verifySteps([]); // We shoudln't have passed through steps
+        assert.verifySteps([]); // We shouldn't have passed through steps
 
         form.destroy();
         session.get_file = oldGetFile;
@@ -1928,7 +1928,7 @@ QUnit.module('basic_fields', {
         assert.isVisible(form.$('.o_field_widget iframe.o_pdfview_iframe'),
             "there should be an visible iframe");
         assert.hasAttrValue(form.$('.o_field_widget iframe.o_pdfview_iframe'), 'data-src',
-            '/web/static/lib/pdfjs/web/viewer.html?file=%2Fweb%2Fimage%3Fmodel%3Dpartner%26field%3Ddocument%26id%3D1#page=1',
+            '/web/static/lib/pdfjs/web/viewer.html?file=%2Fweb%2Fcontent%3Fmodel%3Dpartner%26field%3Ddocument%26id%3D1#page=1',
             "the src attribute should be correctly set on the iframe");
 
         form.destroy();
@@ -1996,6 +1996,36 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('tbody td.o_list_text:contains(some text)').length, 1,
             "should have a td with the .o_list_text class");
         list.destroy();
+    });
+
+    QUnit.test("binary fields input value is empty whean clearing after uploading", async function (assert) {
+        assert.expect(2);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<field name="document" filename="foo"/>' +
+                '<field name="foo"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+
+        // // We need to convert the input type since we can't programmatically set the value of a file input
+        form.$('.o_input_file').attr('type', 'text').val('coucou.txt');
+
+        assert.strictEqual(form.$('.o_input_file').val(), 'coucou.txt',
+            "input value should be changed to \"coucou.txt\"");
+
+        await testUtils.dom.click(form.$('.o_field_binary_file > .o_clear_file_button'));
+
+        assert.strictEqual(form.$('.o_input_file').val(), '',
+            "input value should be empty");
+
+        form.destroy();
     });
 
     QUnit.test('field text in editable list view', async function (assert) {
@@ -2269,10 +2299,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('graph dashboard widget attach/detach callbacks', async function (assert) {
-        // This widget is rendered with nvd3, and nvd3 renders the graphs when
-        // the svg is in the DOM. The intent of this test is to determine when
-        // the field widgets are in the DOM, so that we can tell nvd3 to render
-        // them.
+        // This widget is rendered with Chart.js.
         var done = assert.async();
         assert.expect(6);
 
@@ -2319,9 +2346,8 @@ QUnit.module('basic_fields', {
 
     QUnit.test('graph dashboard widget is rendered correctly', async function (assert) {
         var done = assert.async();
-        assert.expect(4);
+        assert.expect(3);
 
-        var graph_key = JSON.parse(this.data.partner.records[0].graph_data)[0].key;
         createView({
             View: KanbanView,
             model: 'partner',
@@ -2336,121 +2362,26 @@ QUnit.module('basic_fields', {
                 '</templates></kanban>',
             domain: [['id', 'in', [1, 2]]],
         }).then(function (kanban) {
-            // nvd3 seems to do a setTimeout(0) each time the addGraph function is
-            // called, which is done twice in this case as there are 2 records.
-            // for that reason, we need to do two setTimeout(0) as well here to ensure
-            // that both graphs are rendered before starting to check if the rendering
-            // is correct.
             concurrency.delay(0).then(function () {
-                return concurrency.delay(0);
-            }).then(function () {
-                assert.strictEqual(kanban.$('.o_kanban_record:first() .o_graph_barchart svg').length, 1,
+                assert.strictEqual(kanban.$('.o_kanban_record:first() .o_graph_barchart').length, 1,
                     "graph of first record should be a barchart");
-                assert.strictEqual(kanban.$('.o_kanban_record:nth(1) .o_graph_linechart svg').length, 1,
+                assert.strictEqual(kanban.$('.o_kanban_record:nth(1) .o_dashboard_graph').length, 1,
                     "graph of second record should be a linechart");
-
-                var evt = document.createEvent("MouseEvents"); //taken ref from https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/initMouseEvent
-                evt.initMouseEvent("mouseover", true, true, window, 0, 0, 0, 80, 20, false, false, false, false, 0, null);
-                $('.discreteBar')[0].dispatchEvent(evt);
-                var tooltip = $('.nvtooltip').find('table').find('.key')[0].innerText.trim();
-                assert.equal(tooltip, graph_key, "graph tooltip should be generated ");
-                $('.nvtooltip').remove();
 
                 // force a re-rendering of the first record (to check if the
                 // previous rendered graph is correctly removed from the DOM)
                 var firstRecordState = kanban.model.get(kanban.handle).data[0];
                 return kanban.renderer.updateRecord(firstRecordState);
             }).then(function () {
-                return concurrency.delay(0); // one graph is re-rendered
+                return concurrency.delay(0);
             }).then(function () {
-                assert.strictEqual(kanban.$('.o_kanban_record:first() svg').length, 1,
+                assert.strictEqual(kanban.$('.o_kanban_record:first() canvas').length, 1,
                     "there should be only one rendered graph by record");
 
                 kanban.destroy();
                 done();
             });
         });
-    });
-
-    QUnit.test('graph dashboard widget does not need nv to be destroyed', async function (assert) {
-        // this test ensures that the JournalDashboardGraph widget doesn't crash
-        // when being destroyed before nv has been loaded
-        assert.expect(2);
-
-        testUtils.mock.patch(basicFields.JournalDashboardGraph, {
-            destroy: function () {
-                assert.step('destroy');
-                var nv = window.nv;
-                delete window.nv;
-                this._super.apply(this, arguments);
-                window.nv = nv;
-            }
-        });
-
-        var kanban = await createView({
-            View: KanbanView,
-            model: 'partner',
-            data: this.data,
-            arch: '<kanban class="o_kanban_test">' +
-                    '<field name="graph_type"/>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                        '<field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>' +
-                        '</div>' +
-                    '</t>' +
-                '</templates></kanban>',
-            domain: [['id', 'in', [1]]],
-        });
-
-        kanban.destroy();
-        testUtils.mock.unpatch(basicFields.JournalDashboardGraph);
-
-        assert.verifySteps(['destroy']);
-
-        // Wait nvd3 to fully render the graph. If ommited, may slow down following tests.
-        return concurrency.delay(0);
-    });
-
-    QUnit.test('graph dashboard widget can be destroyed when nv is partially loaded', async function (assert) {
-        // this test ensures that the JournalDashboardGraph widget doesn't crash
-        // when being destroyed before nv has been completely loaded
-        assert.expect(2);
-
-        testUtils.mock.patch(basicFields.JournalDashboardGraph, {
-            destroy: function () {
-                assert.step('destroy');
-                // nv is fully loaded only when nvd3.js has been loaded
-                // which happens sequentially after nv.d3.js
-                // we simulate this race condition with:
-                var offWindowResize = window.nv.utils.offWindowResize;
-                window.nv.utils.offWindowResize = undefined;
-                this._super.apply(this, arguments);
-                window.nv.utils.offWindowResize = offWindowResize;
-            },
-        });
-
-        var kanban = await createView({
-            View: KanbanView,
-            model: 'partner',
-            data: this.data,
-            arch: '<kanban class="o_kanban_test">' +
-                    '<field name="graph_type"/>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                        '<field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>' +
-                        '</div>' +
-                    '</t>' +
-                '</templates></kanban>',
-            domain: [['id', 'in', [1]]],
-        });
-
-        kanban.destroy();
-        testUtils.mock.unpatch(basicFields.JournalDashboardGraph);
-
-        assert.verifySteps(['destroy']);
-
-        // Wait nvd3 to fully render the graph. If ommited, may slow down following tests.
-        return concurrency.delay(0);
     });
 
     QUnit.test('rendering of a field with dashboard_graph widget in an updated kanban view (ungrouped)', async function (assert) {
@@ -2473,16 +2404,12 @@ QUnit.module('basic_fields', {
             domain: [['id', 'in', [1, 2]]],
         }).then(function (kanban) {
             concurrency.delay(0).then(function () {
-                return concurrency.delay(0);
-            }).then(function () {
-                assert.containsN(kanban, '.o_dashboard_graph svg', 2, "there should be two graph rendered");
+                assert.containsN(kanban, '.o_dashboard_graph canvas', 2, "there should be two graph rendered");
                 return kanban.update({});
             }).then(function () {
                 return concurrency.delay(0); // one graph is re-rendered
             }).then(function () {
-                return concurrency.delay(0); // one graph is re-rendered
-            }).then(function () {
-                assert.containsN(kanban, '.o_dashboard_graph svg', 2, "there should be one graph rendered");
+                assert.containsN(kanban, '.o_dashboard_graph canvas', 2, "there should be one graph rendered");
                 kanban.destroy();
                 done();
             });
@@ -2509,14 +2436,10 @@ QUnit.module('basic_fields', {
             domain: [['id', 'in', [1, 2]]],
         }).then(function (kanban) {
             concurrency.delay(0).then(function () {
-                return concurrency.delay(0);
-            }).then(function () {
-                assert.containsN(kanban, '.o_dashboard_graph svg', 2, "there should be two graph rendered");
+                assert.containsN(kanban, '.o_dashboard_graph canvas', 2, "there should be two graph rendered");
                 return kanban.update({groupBy: ['selection'], domain: [['int_field', '=', 10]]});
             }).then(function () {
-                return concurrency.delay(0);
-            }).then(function () {
-                assert.containsOnce(kanban, '.o_dashboard_graph svg', "there should be one graph rendered");
+                assert.containsOnce(kanban, '.o_dashboard_graph canvas', "there should be one graph rendered");
                 kanban.destroy();
                 done();
             });
@@ -2656,6 +2579,25 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('date field should remove the date  if the date is not valid', async function (assert) {
+        assert.expect(1);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners"><field name="date"/></form>',
+            res_id: 4,
+        });
+        // switch to edit mode
+        await testUtils.form.clickEdit(form);
+        // set an invalid date
+        var $input = form.$('.o_field_widget[name=date] input');
+        $input.val('mmmh').trigger('change');
+        assert.strictEqual($input.text(), "", "The date field should be empty");
+        form.destroy();
+    });
+
     QUnit.test('date field value should not set on first click', async function (assert) {
         assert.expect(2);
 
@@ -2761,6 +2703,33 @@ QUnit.module('basic_fields', {
         await testUtils.form.clickEdit(form);
         assert.strictEqual(form.$('.o_datepicker_input').val(), '02/03/2017',
             'the date should be correct in edit mode');
+
+        form.destroy();
+    });
+
+    QUnit.test('date field dropdown disappears on scroll', async function (assert) {
+        assert.expect(2);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<div class="scrollable" style="height: 2000px;">' +
+                        '<field name="date"/>' +
+                    '</div>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.dom.openDatepicker(form.$('.o_datepicker'));
+        
+        assert.containsOnce($('body'), '.bootstrap-datetimepicker-widget', "datepicker should be opened");
+
+        form.el.dispatchEvent(new Event('scroll'));
+        assert.containsNone($('body'), '.bootstrap-datetimepicker-widget', "datepicker should be closed");
 
         form.destroy();
     });
@@ -2967,10 +2936,7 @@ QUnit.module('basic_fields', {
             View: FormView,
             model: 'partner',
             data: this.data,
-            arch:'<form string="Partners">' +
-                    '<field name="display_name" /> ' + // Do not focus on the date field right away
-                    '<field name="date" />' +
-                '</form>',
+            arch: '<form><field name="date"/></form>',
             res_id: 1,
             viewOptions: {
                 mode: 'edit',
@@ -2986,7 +2952,8 @@ QUnit.module('basic_fields', {
                 done();
             }
         });
-        form.$('.o_input[name="date"]').mouseenter().trigger('focus');
+
+        testUtils.dom.openDatepicker(form.$('.o_datepicker'));
 
         form.destroy();
     });
@@ -3035,13 +3002,13 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldDatetime');
 
     QUnit.test('datetime field in form view', async function (assert) {
-        assert.expect(6);
+        assert.expect(7);
 
         var form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
-            arch:'<form string="Partners"><field name="datetime"/></form>',
+            arch: '<form string="Partners"><field name="datetime"/></form>',
             res_id: 1,
             translateParameters: {  // Avoid issues due to localization formats
                 date_format: '%m/%d/%Y',
@@ -3062,8 +3029,14 @@ QUnit.module('basic_fields', {
         await testUtils.form.clickEdit(form);
         assert.strictEqual(form.$('.o_datepicker_input').val(), expectedDateString,
             'the datetime should be correct in edit mode');
+
+        // datepicker should not open on focus
+        assert.containsNone($('body'), '.bootstrap-datetimepicker-widget');
+
+        testUtils.dom.openDatepicker(form.$('.o_datepicker'));
+        assert.containsOnce($('body'), '.bootstrap-datetimepicker-widget');
+
         // select 22 February at 8:23:33
-        assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
         await testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch').first());
         await testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch:eq(1)'));
         await testUtils.dom.click($('.bootstrap-datetimepicker-widget .year:contains(2017)'));
@@ -3145,7 +3118,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('datetime field in editable list view', async function (assert) {
-        assert.expect(8);
+        assert.expect(9);
 
         var list = await createView({
             View: ListView,
@@ -3181,8 +3154,11 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('input.o_datepicker_input').val(), expectedDateString,
             'the date should be correct in edit mode');
 
+        assert.containsNone($('body'), '.bootstrap-datetimepicker-widget');
+        testUtils.dom.openDatepicker(list.$('.o_datepicker'));
+        assert.containsOnce($('body'), '.bootstrap-datetimepicker-widget');
+
         // select 22 February at 8:23:33
-        assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
         await testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch').first());
         await testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch:eq(1)'));
         await testUtils.dom.click($('.bootstrap-datetimepicker-widget .year:contains(2017)'));
@@ -3358,6 +3334,7 @@ QUnit.module('basic_fields', {
         });
 
         await testUtils.form.clickCreate(form);
+        testUtils.dom.openDatepicker(form.$('.o_datepicker'));
         $.each($('.day:last-child(),.day:nth-child(2)'), function (index, value) {
             assert.hasClass(value, 'disabled', 'first and last days must be disabled');
         });

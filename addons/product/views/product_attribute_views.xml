@@ -17,22 +17,22 @@
         <field name="model">product.attribute</field>
         <field name="arch" type="xml">
             <form string="Product Attribute">
-                <group>
-                    <group name="main_fields">
-                        <label for="name" string="Attribute Name"/>
-                        <field name="name" nolabel="1"/>
-                        <field name="create_variant" widget="radio"/>
-                    </group>
+            <sheet>
+                <group name="main_fields">
+                    <label for="name" string="Attribute Name"/>
+                    <field name="name" nolabel="1"/>
+                    <field name="create_variant" widget="radio"/>
                 </group>
                 <group name="values_ids">
                     <label for="value_ids" string="Attribute Values"/>
-                    <field name="value_ids" widget="one2many_list" nolabel="1">
+                    <field name="value_ids" widget="one2many" nolabel="1">
                         <tree string="Values" editable="bottom">
                             <field name="sequence" widget="handle"/>
                             <field name="name"/>
                         </tree>
                     </field>
                 </group>
+            </sheet>
             </form>
         </field>
     </record>
@@ -42,7 +42,6 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.attribute</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_type">form</field>
     </record>
 
     <record id="variants_tree_view" model="ir.ui.view">
@@ -62,7 +61,6 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.attribute.value</field>
         <field name="view_mode">tree</field>
-        <field name="view_type">form</field>
     </record>
 
     <record id="product_template_attribute_line_form" model="ir.ui.view">
@@ -75,7 +73,7 @@
                 <group name="main_field">
                     <label for="attribute_id" string="Attribute Name"/>
                     <field name="attribute_id" nolabel="1"/>
-                    <field name="value_ids" widget="one2many_list">
+                    <field name="value_ids" widget="one2many">
                         <tree string="Values">
                             <field name="name"/>
                         </tree>
@@ -93,7 +91,7 @@
         <field name="model">product.template.attribute.value</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Attributes" create="0" delete="0" editable="bottom">
+            <tree string="Attributes" create="0" delete="0">
                 <field name="attribute_id"/>
                 <field name="name"/>
                 <field name="price_extra"/>
@@ -110,7 +108,7 @@
                 <group>
                     <field name="name" />
                     <field name="price_extra" />
-                    <field name="exclude_for" widget="one2many_list" mode="tree">
+                    <field name="exclude_for" widget="one2many" mode="tree">
                         <tree editable="top">
                             <field name="product_tmpl_id" />
                             <field name="value_ids" widget="many2many_tags" options="{'no_create': true}" />

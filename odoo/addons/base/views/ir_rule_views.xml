@@ -73,6 +73,8 @@
                     <field name="name" string="Record Rule"/>
                     <filter string="Global" name="global" domain="[('global','=',True)]"/>
                     <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <separator/>
                     <filter string="Full Access Right" name="full_access_right" domain="[('perm_read','=',True),('perm_write','=',True),('perm_create','=',True),('perm_unlink','=',True)]"/>
                     <filter string="Read Access Right" name="read_access_right" domain="[('perm_read','=',True)]"/>
                     <filter string="Write Access Right" name="write_access_right" domain="[('perm_write','=',True)]"/>
@@ -87,7 +89,6 @@
         <record id="action_rule" model="ir.actions.act_window">
             <field name="name">Record Rules</field>
             <field name="res_model">ir.rule</field>
-            <field name="view_type">form</field>
             <field name="view_id" ref="view_rule_tree"/>
             <field name="search_view_id" ref="view_rule_search"/>
         </record>
@@ -98,7 +99,7 @@
             <field name="name">Property multi-company</field>
             <field name="model_id" ref="model_ir_property"/>
             <field eval="True" name="global"/>
-            <field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+            <field name="domain_force">['|',('company_id', 'in', company_ids),('company_id','=',False)]</field>
         </record>
 
 

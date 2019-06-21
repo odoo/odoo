@@ -4,7 +4,6 @@
 import logging
 import math
 import re
-import uuid
 
 from datetime import datetime
 from odoo.addons.gamification.models.gamification_karma_rank import KarmaError
@@ -12,6 +11,7 @@ from odoo.addons.gamification.models.gamification_karma_rank import KarmaError
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import misc
+from odoo.tools.translate import html_translate
 
 _logger = logging.getLogger(__name__)
 
@@ -19,16 +19,8 @@ _logger = logging.getLogger(__name__)
 class Forum(models.Model):
     _name = 'forum.forum'
     _description = 'Forum'
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.multi.mixin']
-
-    @api.model_cr
-    def init(self):
-        """ Add forum uuid for user email validation.
-
-        TDE TODO: move me somewhere else, auto_init ? """
-        forum_uuids = self.env['ir.config_parameter'].search([('key', '=', 'website_forum.uuid')])
-        if not forum_uuids:
-            forum_uuids.set_param('website_forum.uuid', str(uuid.uuid4()))
+    _inherit = ['mail.thread', 'image.mixin', 'website.seo.metadata', 'website.multi.mixin']
+    _order = "sequence"
 
     @api.model
     def _get_default_faq(self):
@@ -37,8 +29,9 @@ class Forum(models.Model):
 
     # description and use
     name = fields.Char('Forum Name', required=True, translate=True)
+    sequence = fields.Integer('Sequence', default=1)
     active = fields.Boolean(default=True)
-    faq = fields.Html('Guidelines', default=_get_default_faq, translate=True, sanitize=False)
+    faq = fields.Html('Guidelines', default=_get_default_faq, translate=html_translate, sanitize=False)
     description = fields.Text(
         'Description',
         translate=True,
@@ -260,10 +253,11 @@ class Post(models.Model):
             operator = operator == "=" and '!=' or '='
             value = True
 
-        if self._uid == SUPERUSER_ID:
+        user = self.env.user
+        # Won't impact sitemap, search() in converter is forced as public user
+        if user._is_admin():
             return [(1, '=', 1)]
 
-        user = self.env['res.users'].browse(self._uid)
         req = """
             SELECT p.id
             FROM forum_post p
@@ -399,6 +393,7 @@ class Post(models.Model):
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.plain_content
         res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/res.users/%s/image" % (self.create_uid.id)
         res['default_twitter']['twitter:card'] = 'summary'
+        res['default_meta_description'] = self.plain_content
         return res
 
     @api.constrains('parent_id')
@@ -430,12 +425,13 @@ class Post(models.Model):
         return post
 
     @api.model
-    def check_mail_message_access(self, res_ids, operation, model_name=None):
+    def get_mail_message_access(self, res_ids, operation, model_name=None):
+        # XDO FIXME: to be correctly fixed with new get_mail_message_access and filter access rule
         if operation in ('write', 'unlink') and (not model_name or model_name == 'forum.post'):
             # Make sure only author or moderator can edit/delete messages
             if any(not post.can_edit for post in self.browse(res_ids)):
                 raise KarmaError('Not enough karma to edit a post.')
-        return super(Post, self).check_mail_message_access(res_ids, operation, model_name=model_name)
+        return super(Post, self).get_mail_message_access(res_ids, operation, model_name=model_name)
 
     @api.multi
     def write(self, vals):
@@ -492,21 +488,18 @@ class Post(models.Model):
     def post_notification(self):
         for post in self:
             tag_partners = post.tag_ids.mapped('message_partner_ids')
-            tag_channels = post.tag_ids.mapped('message_channel_ids')
 
             if post.state == 'active' and post.parent_id:
                 post.parent_id.message_post_with_view(
                     'website_forum.forum_post_template_new_answer',
                     subject=_('Re: %s') % post.parent_id.name,
                     partner_ids=[(4, p.id) for p in tag_partners],
-                    channel_ids=[(4, c.id) for c in tag_channels],
                     subtype_id=self.env['ir.model.data'].xmlid_to_res_id('website_forum.mt_answer_new'))
             elif post.state == 'active' and not post.parent_id:
                 post.message_post_with_view(
                     'website_forum.forum_post_template_new_question',
                     subject=post.name,
                     partner_ids=[(4, p.id) for p in tag_partners],
-                    channel_ids=[(4, c.id) for c in tag_channels],
                     subtype_id=self.env['ir.model.data'].xmlid_to_res_id('website_forum.mt_question_new'))
             elif post.state == 'pending' and not post.parent_id:
                 # TDE FIXME: in master, you should probably use a subtype;
@@ -590,7 +583,7 @@ class Post(models.Model):
     @api.one
     def refuse(self):
         if not self.can_moderate:
-            raise KarmaError('Not enough karma to refuse a post')
+            raise KarmaError(_('Not enough karma to refuse a post'))
 
         self.moderator_id = self.env.user
         return True
@@ -698,8 +691,10 @@ class Post(models.Model):
 
         # post the message
         question = self.parent_id
+        self_sudo = self.sudo()
         values = {
-            'author_id': self.sudo().create_uid.partner_id.id,  # use sudo here because of access to res.users model
+            'author_id': self_sudo.create_uid.partner_id.id,  # use sudo here because of access to res.users model
+            'email_from': self_sudo.create_uid.email_formatted,  # use sudo here because of access to res.users model
             'body': tools.html_sanitize(self.content, sanitize_attributes=True, strip_style=True, strip_classes=True),
             'message_type': 'comment',
             'subtype': 'mail.mt_comment',
@@ -780,9 +775,9 @@ class Post(models.Model):
         }
 
     @api.multi
-    def _notify_get_groups(self, message, groups):
+    def _notify_get_groups(self):
         """ Add access button to everyone if the document is active. """
-        groups = super(Post, self)._notify_get_groups(message, groups)
+        groups = super(Post, self)._notify_get_groups()
 
         if self.state == 'active':
             for group_name, group_method, group_data in groups:
@@ -793,7 +788,6 @@ class Post(models.Model):
     @api.multi
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, message_type='notification', **kwargs):
-        question_followers = self.env['res.partner']
         if self.ids and message_type == 'comment':  # user comments have a restriction on karma
             # add followers of comments on the parent post
             if self.parent_id:
@@ -804,25 +798,25 @@ class Post(models.Model):
                     ('res_id', '=', self.parent_id.id),
                     ('partner_id', '!=', False),
                 ]).filtered(lambda fol: comment_subtype in fol.subtype_ids).mapped('partner_id')
-                partner_ids += [(4, partner.id) for partner in question_followers]
+                partner_ids += question_followers.ids
                 kwargs['partner_ids'] = partner_ids
 
             self.ensure_one()
             if not self.can_comment:
-                raise KarmaError('Not enough karma to comment')
+                raise KarmaError(_('Not enough karma to comment'))
             if not kwargs.get('record_name') and self.parent_id:
                 kwargs['record_name'] = self.parent_id.name
         return super(Post, self).message_post(message_type=message_type, **kwargs)
 
     @api.multi
-    def _notify_customize_recipients(self, message, msg_vals, recipients_vals):
+    def _notify_customize_recipients(self, message, msg_vals):
         """ Override to avoid keeping all notified recipients of a comment.
         We avoid tracking needaction on post comments. Only emails should be
         sufficient. """
         msg_type = msg_vals.get('message_type') or message.message_type
         if msg_type == 'comment':
             return {'needaction_partner_ids': [], 'partner_ids': []}
-        return {}
+        return super(Post, self)._notify_customize_recipients(message, msg_vals)
 
 
 class PostReason(models.Model):

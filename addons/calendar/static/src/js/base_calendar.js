@@ -2,17 +2,19 @@ odoo.define('base_calendar.base_calendar', function (require) {
 "use strict";
 
 var BasicModel = require('web.BasicModel');
-var field_registry = require('web.field_registry');
+var fieldRegistry = require('web.field_registry');
 var Notification = require('web.Notification');
-var relational_fields = require('web.relational_fields');
+var relationalFields = require('web.relational_fields');
 var session = require('web.session');
 var WebClient = require('web.WebClient');
 
-var FieldMany2ManyTags = relational_fields.FieldMany2ManyTags;
+var FieldMany2ManyTags = relationalFields.FieldMany2ManyTags;
 
 
 var CalendarNotification = Notification.extend({
     template: "CalendarNotification",
+    xmlDependencies: (Notification.prototype.xmlDependencies || [])
+        .concat(['/calendar/static/src/xml/notification_calendar.xml']),
 
     init: function(parent, params) {
         this._super(parent, params);
@@ -137,6 +139,7 @@ var Many2ManyAttendee = FieldMany2ManyTags.extend({
     // as this widget is model dependant (rpc on res.partner), use it in another
     // context probably won't work
     // supportedFieldTypes: ['many2many'],
+    description: "",
     tag_template: "Many2ManyAttendeeTag",
     specialData: "_fetchSpecialAttendeeStatus",
 
@@ -155,6 +158,6 @@ var Many2ManyAttendee = FieldMany2ManyTags.extend({
     },
 });
 
-field_registry.add('many2manyattendee', Many2ManyAttendee);
+fieldRegistry.add('many2manyattendee', Many2ManyAttendee);
 
 });

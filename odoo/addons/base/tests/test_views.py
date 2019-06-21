@@ -1609,6 +1609,64 @@ class TestViews(ViewCase):
                 'arch': arch % ('', '<field name="model"/>'),
             })
 
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_tree_groupby(self):
+        arch = """
+            <tree>
+                <field name="name"/>
+                <groupby name="%s">
+                    <button type="object" name="method1"/>
+                </groupby>
+            </tree>
+        """
+        self.View.create({
+            'name': 'valid groupby',
+            'model': 'ir.ui.view',
+            'arch': arch % ('model_data_id'),
+        })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'invalid groupby',
+                'model': 'ir.ui.view',
+                'arch': arch % ('type'),
+            })
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_tree_groupby_many2one(self):
+        arch = """
+            <tree>
+                <field name="name"/>
+                %s
+                <groupby name="model_data_id">
+                    %s
+                    <button type="object" name="method" attrs="{'invisible': [('noupdate', '=', True)]}" string="Button1"/>
+                </groupby>
+            </tree>
+        """
+        self.View.create({
+            'name': 'valid groupby',
+            'model': 'ir.ui.view',
+            'arch': arch % ('', '<field name="noupdate"/>'),
+        })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'invalid groupby',
+                'model': 'ir.ui.view',
+                'arch': arch % ('', ''),
+            })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'invalid groupby',
+                'model': 'ir.ui.view',
+                'arch': arch % ('<field name="noupdate"/>', ''),
+            })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'invalid groupby',
+                'model': 'ir.ui.view',
+                'arch': arch % ('', '<field name="noupdate"/><field name="fake_field"/>'),
+            })
+
 
 class ViewModeField(ViewCase):
     """

@@ -20,6 +20,7 @@
             - 'acquirers' the list of both server2server and form payment acquirers
             - 'verify_validity' if we need to verify if the payment method is valid when adding a new one
             - 'prepare_tx_url' the url of the route which will handle the creation of a transaction for a form base payment (handles if the transaction is form or form_save)
+            - 'show_manage_btn' if True, a button is added in the footer to manage payment methods
         -->
         <form t-if="pms or acquirers" method="post" class="o_payment_form mt-3 clearfix"
                 t-att-action="form_action if form_action else '#'"
@@ -30,7 +31,6 @@
                 t-att-data-callback-method="callback_method or ''"
                 t-att-data-order-id="order_id or ''">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-            <input type="hidden" t-if="verify_validity==True" name="verify_validity" value="1"/>
             <input type="hidden" t-if="prepare_tx_url" name="prepare_tx_url" t-att-value="prepare_tx_url"/>
             <input type="hidden" t-if="order_id" name="order_id" t-att-value="order_id"/>
             <!-- s2s form submission -->
@@ -63,6 +63,12 @@
                                        t-att-checked="acquirers_count==1 and pms_count==0 or acquirers[0] == acq"/>
                             </t>
                             <span class="payment_option_name" t-esc="acq.name"/>
+                            <t t-if="acq_extra_fees and acq_extra_fees.get(acq)">
+                                <span class="badge badge-pill badge-secondary"> + <t t-esc="acq_extra_fees[acq]" t-options='{"widget": "monetary", "display_currency": acq_extra_fees["currency_id"]}'/> Fee </span>
+                            </t>
+                            <t t-elif="acq.fees_active">
+                                <small class="text-muted">(Some fees may apply)</small>
+                            </t>
                         </label>
                         <ul class="float-right list-inline payment_icon_list">
                             <t t-set="i" t-value="0"/>
@@ -87,12 +93,16 @@
                                 <input type="checkbox" name="o_payment_form_save_token" data-remove-me=""/>
                                 Save my payment data
                             </label>
+                            <t t-if="acq.save_token == 'always'">
+                                <input type="checkbox" name="o_payment_form_save_token" checked="'checked'" class="o_hidden" data-remove-me=""/>
+                            </t>
                         </div>
                     </t>
                     <t t-else="acq.payment_flow == 's2s'">
                         <div t-attf-id="o_payment_add_token_acq_{{acq.id}}"
                              t-attf-class="card-footer {{'d-none' if(acquirers_count &gt; 1 and pms_count==0 and acquirers[0]!=acq) else 'd-none' if pms_count &gt;0 else ''}}">
                             <div class="clearfix">
+                                <input type="hidden" t-if="(verify_validity==True or mode == 'manage') and acq.check_validity" name="verify_validity" t-att-value="acq.check_validity"/>
                                 <t t-call="{{acq.sudo().get_s2s_form_xml_id()}}">
                                     <t t-set="id" t-value="acq.id"/>
                                     <t t-set="partner_id" t-value="partner_id"/>
@@ -103,21 +113,23 @@
                     </t>
                 </t>
                 <t t-foreach="pms" t-as="pm">
-                    <div class="card-body o_payment_acquirer_select">
-                        <label>
-                            <input t-if="mode == 'payment'" type="radio" name="pm_id" t-att-value="pm.id" t-att-checked="checked_pm_id == pm.id"/>
-                            <span class="payment_option_name" t-esc="pm.name"/>
-                            <t t-if="pm.verified">
-                                <i class="fa fa-check text-success" title="This payment method is verified by our system." role="img" aria-label="Ok"></i>
-                            </t>
-                            <t t-else="">
-                                <i class="fa fa-close text-danger" title="This payment method has not been verified by our system." role="img" aria-label="Not verified"></i>
-                            </t>
-                        </label>
-                        <button t-if="mode == 'manage'" name="delete_pm" t-att-value="pm.id" class="btn btn-primary btn-sm float-right">
-                            <i class="fa fa-trash"></i> Delete
-                        </button>
-                    </div>
+                    <t t-if="not verify_validity or (pm.acquirer_id.check_validity and pm.verified) or not pm.acquirer_id.check_validity">
+                        <div class="card-body o_payment_acquirer_select">
+                            <label>
+                                <input t-if="mode == 'payment'" type="radio" name="pm_id" t-att-value="pm.id" t-att-checked="checked_pm_id == pm.id"/>
+                                <span class="payment_option_name" t-esc="pm.name"/>
+                                <t t-if="pm.verified">
+                                    <i class="fa fa-check text-success" title="This payment method is verified by our system." role="img" aria-label="Ok"></i>
+                                </t>
+                                <t t-else="">
+                                    <i class="fa fa-check text-muted" title="This payment method has not been verified by our system." role="img" aria-label="Not verified"></i>
+                                </t>
+                            </label>
+                            <button t-if="mode == 'manage'" name="delete_pm" t-att-value="pm.id" class="btn btn-primary btn-sm float-right">
+                                <i class="fa fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </t>
                 </t>
             </div>
             <div t-if='back_button_txt' class="float-left mt-2">
@@ -134,40 +146,32 @@
                         <i t-if="icon_class and icon_right" t-attf-class="fa {{icon_class}}"/>
                     </t>
                     <t t-else="">
-                        <i class="fa fa-lock"> Pay</i>
+                        <i class="fa fa-lock"/> Pay
                     </t>
                 </button>
+                <t t-if="show_manage_btn">
+                    <a class="btn btn-link mb8 mt8" href="/my/payment_method">Manage your payment methods</a>
+                </t>
                 <button t-if="mode == 'manage' and list(filter(lambda x: x.payment_flow == 's2s', acquirers))" id="o_payment_form_add_pm" class="btn btn-primary btn-lg mb8 mt8">
-                    <i class="fa fa-plus-circle"> Add new card</i>
+                    <i class="fa fa-plus-circle"/> Add new card
                 </button>
             </div>
         </form>
     </template>
 
     <template id="payment_process_page" name="Payment processing page">
-        <!-- If you are looking at this template and tries to understand how it works,
-            You should take a look at the file located in /static/src/js/payment_processing.js
-        -->
         <t t-call="portal.frontend_layout">
             <div class="wrap">
                 <div class="container o_website_payment">
                     <div class="o_payment_processing">
                         <div class="row">
                             <div class="o_payment_processing_content col-sm-6 col-sm-offset-3">
-                                <!-- here should be the content generated by payment_processing.js -->
+                                <!-- The content here is generated in JS -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- We load and attach the payment processing widget -->
-            <script>
-                odoo.define('payment.processing_bootstrap', function(require) {
-                    var PaymentProcessing = require('payment.processing');
-                    var processingWidget = new PaymentProcessing(null, <t t-esc="payment_tx_ids"/>);
-                    processingWidget.attachTo($('.o_payment_processing'));
-                });
-            </script>
         </t>
     </template>
 </odoo>

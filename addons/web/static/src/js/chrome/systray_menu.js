@@ -1,6 +1,7 @@
 odoo.define('web.SystrayMenu', function (require) {
 "use strict";
 
+var dom = require('web.dom');
 var Widget = require('web.Widget');
 
 /**
@@ -18,35 +19,35 @@ var SystrayMenu = Widget.extend({
         this.widgets = [];
     },
     /**
+     * Instanciate the items and add them into a temporary fragmenet
      * @override
-     * @returns {Promise}
      */
-    start: function () {
+    willStart: function () {
         var self = this;
-        self._super.apply(this, arguments);
-        self._loadItems();
-
-        return new Promise(function (resolve, reject) {
-            Promise.all(self.items).then(resolve).guardedCatch(resolve);
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Instantiate items, using the classes located in SystrayMenu.items.
-     */
-    _loadItems: function () {
-        var self = this;
+        var proms = [];
         SystrayMenu.Items = _.sortBy(SystrayMenu.Items, function (item) {
             return !_.isUndefined(item.prototype.sequence) ? item.prototype.sequence : 50;
         });
-        _.each(SystrayMenu.Items, function (WidgetClass) {
+
+        SystrayMenu.Items.forEach(function (WidgetClass) {
             var cur_systray_item = new WidgetClass(self);
             self.widgets.push(cur_systray_item);
-            self.items.push(cur_systray_item.prependTo(self.$el));
+            proms.push(cur_systray_item.appendTo($('<div>')));
+        });
+
+        return this._super.apply(this, arguments).then(function () {
+            return Promise.all(proms);
+        });
+    },
+    /**
+     * Add the instanciated items, using the object located in this.wisgets
+     */
+    start: function () {
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self.widgets.forEach(function (widget) {
+                dom.prepend(self.$el, widget.$el);
+            });
         });
     },
 });

@@ -69,10 +69,10 @@ class Survey(http.Controller):
         if survey_sudo.users_login_required and request.env.user._is_public():
             return 'survey_auth'
 
-        if (survey_sudo.is_closed or not survey_sudo.active) and (not answer_sudo or not answer_sudo.test_entry):
+        if (survey_sudo.state == 'closed' or survey_sudo.state == 'draft' or not survey_sudo.active) and (not answer_sudo or not answer_sudo.test_entry):
             return 'survey_closed'
 
-        if not survey_sudo.page_ids and survey_sudo.questions_layout != 'page_per_question':
+        if (not survey_sudo.page_ids and survey_sudo.questions_layout == 'page_per_section') or not survey_sudo.question_ids:
             return 'survey_void'
 
         if answer_sudo and answer_sudo.state == 'done':
@@ -367,7 +367,7 @@ class Survey(http.Controller):
             return {}
 
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
-        if not survey_sudo._has_attempts_left(answer_sudo.partner_id, answer_sudo.email, answer_sudo.invite_token):
+        if not answer_sudo.test_entry and not survey_sudo._has_attempts_left(answer_sudo.partner_id, answer_sudo.email, answer_sudo.invite_token):
             # prevent cheating with users creating multiple 'user_input' before their last attempt
             return {}
 
@@ -405,20 +405,18 @@ class Survey(http.Controller):
 
             if answer_sudo.is_time_limit_reached or survey_sudo.questions_layout == 'one_page':
                 go_back = False
-                answer_sudo._send_certification()
-                vals = {'state': 'done'}
+                answer_sudo._mark_done()
             else:
                 go_back = post['button_submit'] == 'previous'
                 next_page, last = request.env['survey.survey'].next_page_or_question(answer_sudo, page_or_question_id, go_back=go_back)
                 vals = {'last_displayed_page_id': page_or_question_id}
 
                 if next_page is None and not go_back:
-                    answer_sudo._send_certification()
-                    vals.update({'state': 'done'})
+                    answer_sudo._mark_done()
                 else:
                     vals.update({'state': 'skip'})
+                answer_sudo.write(vals)
 
-            answer_sudo.write(vals)
             ret['redirect'] = '/survey/fill/%s/%s' % (survey_sudo.access_token, answer_token)
             if go_back:
                 ret['redirect'] += '?prev=prev'
@@ -426,7 +424,7 @@ class Survey(http.Controller):
         return json.dumps(ret)
 
     @http.route('/survey/print/<string:survey_token>', type='http', auth='public', website=True)
-    def survey_print(self, survey_token, answer_token=None, **post):
+    def survey_print(self, survey_token, review=False, answer_token=None, **post):
         '''Display an survey in printable view; if <answer_token> is set, it will
         grab the answers of the user_input_id that has <answer_token>.'''
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=False)
@@ -441,6 +439,7 @@ class Survey(http.Controller):
             return request.render("survey.403", {'survey': survey_sudo})
 
         return request.render('survey.survey_print', {
+            'review': review,
             'survey': survey_sudo,
             'answer': answer_sudo,
             'page_nr': 0,
@@ -509,7 +508,7 @@ class Survey(http.Controller):
         #     filter_finish: boolean => only finished surveys or not
         #
 
-    @http.route(['/survey/<int:survey_id>/get_certification'], type='http', auth='user', methods=['POST'], website=True)
+    @http.route(['/survey/<int:survey_id>/get_certification'], type='http', auth='user', methods=['GET'], website=True)
     def survey_get_certification(self, survey_id, **kwargs):
         """ The certification document can be downloaded as long as the user has succeeded the certification """
         survey = request.env['survey.survey'].sudo().search([

@@ -125,6 +125,7 @@ _mime_mappings = (
     _Entry('image/svg+xml', [b'<'], [
         _check_svg,
     ]),
+    _Entry('image/x-icon', [b'\x00\x00\x01\x00'], []),
     # OLECF files in general (Word, Excel, PPT, default to word because why not?)
     _Entry('application/msword', [b'\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1', b'\x0D\x44\x4F\x43'], [
         _check_olecf

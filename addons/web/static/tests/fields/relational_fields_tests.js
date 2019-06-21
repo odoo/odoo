@@ -1,8 +1,10 @@
 odoo.define('web.relational_fields_tests', function (require) {
 "use strict";
 
+var AbstractStorageService = require('web.AbstractStorageService');
 var FormView = require('web.FormView');
 var ListView = require('web.ListView');
+var RamStorage = require('web.RamStorage');
 var relationalFields = require('web.relational_fields');
 var testUtils = require('web.test_utils');
 
@@ -285,6 +287,68 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('focus when closing many2one modal in many2one modal', async function (assert) {
+        assert.expect(12);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="trululu"/>' +
+                  '</form>',
+            res_id: 2,
+            archs: {
+                'partner,false,form': '<form><field name="trululu"/></form>'
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'get_formview_id') {
+                    return Promise.resolve(false);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        // Open many2one modal
+        await testUtils.form.clickEdit(form);
+        await testUtils.dom.click(form.$('.o_external_button'));
+
+        var $originalModal = $('.modal-dialog');
+        var $focusedModal = $(document.activeElement).closest('.modal-dialog');
+
+        assert.equal($originalModal.length, 1, 'There should be one modal');
+        assert.equal($originalModal[0], $focusedModal[0], 'Modal is focused');
+        assert.ok($('body').hasClass('modal-open'), 'Modal is said opened');
+
+        // Open many2one modal of field in many2one modal
+        await testUtils.dom.click($originalModal.find('.o_external_button'));
+        var $modals = $('.modal-dialog');
+        $focusedModal = $(document.activeElement).closest('.modal-dialog');
+
+        assert.equal($modals.length, 2, 'There should be two modals');
+        assert.equal($modals[1], $focusedModal[0], 'Last modal is focused');
+        assert.ok($('body').hasClass('modal-open'), 'Modal is said opened');
+
+        // Close second modal
+        await testUtils.dom.click($modals.last().find('button[class="close"]'));
+        var $modal = $('.modal-dialog');
+        $focusedModal = $(document.activeElement).closest('.modal-dialog');
+
+        assert.equal($modal.length, 1, 'There should be one modal');
+        assert.equal($modal[0], $originalModal[0], 'First modal is still opened');
+        assert.equal($modal[0], $focusedModal[0], 'Modal is focused');
+        assert.ok($('body').hasClass('modal-open'), 'Modal is said opened');
+
+        // Close first modal
+        await testUtils.dom.click($modal.find('button[class="close"]'));
+        $modal = $('.modal-dialog.modal-lg');
+
+        assert.equal($modal.length, 0, 'There should be no modal');
+        assert.notOk($('body').hasClass('modal-open'), 'Modal is not said opened');
+
+        form.destroy();
+    });
+
 
     QUnit.test('one2many from a model that has been sorted', async function (assert) {
         assert.expect(1);
@@ -358,6 +422,43 @@ QUnit.module('relational_fields', {
         var $secondCheckbox = $('.modal .custom-control-input').eq(1);
         await testUtils.dom.click($secondCheckbox);
         assert.notOk($secondCheckbox.prop('checked'), "the checkbox should be unticked");
+        form.destroy();
+    });
+
+    QUnit.test('embedded readonly one2many with handle widget', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records[0].turtles = [1, 2, 3];
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="turtles" readonly="1">' +
+                            '<tree editable="top">' +
+                                '<field name="turtle_int" widget="handle"/>' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                 '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_row_handle').length, 3,
+            "there should be 3 handles (one for each row)");
+        assert.strictEqual(form.$('.o_row_handle:visible').length, 0,
+            "the handles should be hidden in readonly mode");
+
+        await testUtils.form.clickEdit(form);
+
+        assert.strictEqual(form.$('.o_row_handle').length, 3,
+            "the handles should still be there");
+        assert.strictEqual(form.$('.o_row_handle:visible').length, 0,
+            "the handles should still be hidden (on readonly fields)");
+
         form.destroy();
     });
 
@@ -2146,7 +2247,7 @@ QUnit.module('relational_fields', {
             mockRPC: function (route, args) {
                 assert.step(route);
                 if (route === '/web/dataset/call_kw/ir.attachment/read') {
-                    assert.deepEqual(args.args[1], ['name', 'datas_fname', 'mimetype']);
+                    assert.deepEqual(args.args[1], ['name', 'mimetype']);
                 }
                 return this._super.apply(this, arguments);
             },
@@ -2154,11 +2255,11 @@ QUnit.module('relational_fields', {
 
         assert.containsOnce(form, 'div.o_field_widget.oe_fileupload',
             "there should be the attachment widget");
-        assert.strictEqual(form.$('div.o_field_widget.oe_fileupload .oe_attachments').children().length, 1,
+        assert.strictEqual(form.$('div.o_field_widget.oe_fileupload .o_attachments').children().length, 1,
             "there should be no attachment");
         assert.containsNone(form, 'div.o_field_widget.oe_fileupload .o_attach',
             "there should not be an Add button (readonly)");
-        assert.containsNone(form, 'div.o_field_widget.oe_fileupload .oe_attachment .oe_delete',
+        assert.containsNone(form, 'div.o_field_widget.oe_fileupload .o_attachment .o_attachment_delete',
             "there should not be a Delete button (readonly)");
 
         // to edit mode
@@ -2174,8 +2275,7 @@ QUnit.module('relational_fields', {
         // no idea how to test this
 
         // delete the attachment
-        await testUtils.dom.click(form.$('div.o_field_widget.oe_fileupload .oe_attachment .oe_delete'));
-
+        await testUtils.dom.click(form.$('div.o_field_widget.oe_fileupload .o_attachment .o_attachment_delete'));
 
         assert.verifySteps([
             '/web/dataset/call_kw/turtle/read',
@@ -2184,7 +2284,7 @@ QUnit.module('relational_fields', {
 
         await testUtils.form.clickSave(form);
 
-        assert.strictEqual(form.$('div.o_field_widget.oe_fileupload .oe_attachments').children().length, 0,
+        assert.strictEqual(form.$('div.o_field_widget.oe_fileupload .o_attachments').children().length, 0,
             "there should be no attachment");
 
         assert.verifySteps([
@@ -2659,7 +2759,7 @@ QUnit.module('relational_fields', {
             View: FormView,
             model: 'partner',
             data: this.data,
-            arch:'<form string="Partners">' +
+            arch: '<form string="Partners">' +
                     '<sheet>' +
                         '<group>' +
                             '<field name="product_id"/>' +
@@ -2684,14 +2784,14 @@ QUnit.module('relational_fields', {
         await testUtils.form.clickEdit(form);
         await testUtils.fields.many2one.clickOpenDropdown("product_id");
         await testUtils.fields.many2one.clickHighlightedItem("product_id");
-        assert.containsOnce(form, 'th',
+        assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
             "should be 1 column when the product_id is set");
         await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
             '', 'keyup');
-        assert.containsN(form, 'th', 2,
+        assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
             "should be 2 columns in the one2many when product_id is not set");
         await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
-        assert.containsOnce(form, 'th',
+        assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
             "should be 1 column after the value change");
         form.destroy();
     });
@@ -2713,7 +2813,7 @@ QUnit.module('relational_fields', {
             View: FormView,
             model: 'partner',
             data: this.data,
-            arch:'<form>' +
+            arch: '<form>' +
                     '<field name="bar"/>' +
                     '<field name="p">' +
                         '<tree editable="bottom">' +
@@ -2738,7 +2838,8 @@ QUnit.module('relational_fields', {
         await testUtils.fields.editInput(form.$('.o_field_one2many input:first'), 'New line');
         await testUtils.dom.click(form.$el);
 
-        assert.containsN(form, 'th', 2, "should be 2 columns('foo' + 'int_field')");
+        assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
+            "should be 2 columns('foo' + 'int_field')");
 
         form.destroy();
     });
@@ -2751,7 +2852,7 @@ QUnit.module('relational_fields', {
             View: FormView,
             model: 'partner',
             data: this.data,
-            arch:'<form string="Partners">' +
+            arch: '<form string="Partners">' +
                     '<sheet>' +
                         '<group>' +
                             '<field name="product_id"/>' +
@@ -2777,15 +2878,90 @@ QUnit.module('relational_fields', {
         await testUtils.form.clickEdit(form);
         await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
         await testUtils.fields.many2one.clickHighlightedItem("product_id");
-        assert.containsOnce(form, 'th',
+        assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
             "should be 1 column when the product_id is set");
         await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
             '', 'keyup');
-        assert.containsN(form, 'th', 2,
+        assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
             "should be 2 columns in the one2many when product_id is not set");
         await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
-        assert.containsOnce(form, 'th',
+        assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
             "should be 1 column after the value change");
+        form.destroy();
+    });
+
+    QUnit.test('one2many field in edit mode with optional fields and trash icon', async function (assert) {
+        assert.expect(13);
+
+        var RamStorageService = AbstractStorageService.extend({
+            storage: new RamStorage(),
+        });
+
+        this.data.partner.records[0].p = [2];
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="p"/>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                'partner,false,list': '<tree editable="top">' +
+                    '<field name="foo" optional="show"/>' +
+                    '<field name="bar" optional="hide"/>' +
+                '</tree>',
+            },
+            services: {
+                local_storage: RamStorageService,
+            },
+        });
+
+        // should have 2 columns 1 for foo and 1 for advanced dropdown
+        assert.containsN(form.$('.o_field_one2many'), 'th', 1,
+            "should be 1 th in the one2many in readonly mode");
+        assert.containsOnce(form.$('.o_field_one2many table'), '.o_optional_columns_dropdown_toggle',
+            "should have the optional columns dropdown toggle inside the table");
+        await testUtils.form.clickEdit(form);
+        // should have 2 columns 1 for foo and 1 for trash icon, dropdown is displayed
+        // on trash icon cell, no separate cell created for trash icon and advanced field dropdown
+        assert.containsN(form.$('.o_field_one2many'), 'th', 2,
+            "should be 2 th in the one2many edit mode");
+        assert.containsN(form.$('.o_field_one2many'), '.o_data_row:first > td', 2,
+            "should be 2 cells in the one2many in edit mode");
+
+        await testUtils.dom.click(form.$('.o_field_one2many table .o_optional_columns_dropdown_toggle'));
+        assert.containsN(form.$('.o_field_one2many'), 'div.o_optional_columns div.dropdown-item:visible', 2,
+            "dropdown have 2 advanced field foo with checked and bar with unchecked");
+        await testUtils.dom.click(form.$('div.o_optional_columns div.dropdown-item:eq(1) input'));
+        assert.containsN(form.$('.o_field_one2many'), 'th', 3,
+            "should be 3 th in the one2many after enabling bar column from advanced dropdown");
+
+        await testUtils.dom.click(form.$('div.o_optional_columns div.dropdown-item:first input'));
+        assert.containsN(form.$('.o_field_one2many'), 'th', 2,
+            "should be 2 th in the one2many after disabling foo column from advanced dropdown");
+
+        assert.containsN(form.$('.o_field_one2many'), 'div.o_optional_columns div.dropdown-item:visible', 2,
+            "dropdown is still open");
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        assert.containsN(form.$('.o_field_one2many'), 'div.o_optional_columns div.dropdown-item:visible', 0,
+            "dropdown is closed");
+        var $selectedRow = form.$('.o_field_one2many tr.o_selected_row');
+        assert.strictEqual($selectedRow.length, 1, "should have selected row i.e. edition mode");
+
+        await testUtils.dom.click(form.$('.o_field_one2many table .o_optional_columns_dropdown_toggle'));
+        await testUtils.dom.click(form.$('div.o_optional_columns div.dropdown-item:first input'));
+        $selectedRow = form.$('.o_field_one2many tr.o_selected_row');
+        assert.strictEqual($selectedRow.length, 0,
+            "current edition mode discarded when selecting advanced field");
+        assert.containsN(form.$('.o_field_one2many'), 'th', 3,
+            "should be 3 th in the one2many after re-enabling foo column from advanced dropdown");
+
+        // check after form reload advanced column hidden or shown are still preserved
+        await form.reload();
+        assert.containsN(form.$('.o_field_one2many .o_list_view'), 'th', 3,
+            "should still have 3 th in the one2many after reloading whole form view");
+
         form.destroy();
     });
 

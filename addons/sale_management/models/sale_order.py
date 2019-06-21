@@ -31,7 +31,8 @@ class SaleOrder(models.Model):
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         super(SaleOrder, self).onchange_partner_id()
-        self.note = self.sale_order_template_id.note or self.note
+        template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
+        self.note = template.note or self.note
 
     def _compute_line_data_for_template_change(self, line):
         return {
@@ -154,7 +155,7 @@ class SaleOrderOption(models.Model):
     _order = 'sequence, id'
 
     order_id = fields.Many2one('sale.order', 'Sales Order Reference', ondelete='cascade', index=True)
-    line_id = fields.Many2one('sale.order.line', on_delete="set null")
+    line_id = fields.Many2one('sale.order.line', ondelete="set null")
     name = fields.Text('Description', required=True)
     product_id = fields.Many2one('product.product', 'Product', required=True, domain=[('sale_ok', '=', True)])
     price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'))

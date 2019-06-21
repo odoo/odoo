@@ -123,7 +123,6 @@
         <record id="action_view_mail_message" model="ir.actions.act_window">
             <field name="name">Messages</field>
             <field name="res_model">mail.message</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_message_search"/>
         </record>
@@ -139,7 +138,6 @@
                     <field name="id"/>
                     <field name="mimetype"/>
                     <field name="type"/>
-                    <field name="datas_fname"/>
                     <field name="create_uid"/>
                     <field name="url"/>
                     <field name="type"/>
@@ -159,13 +157,8 @@
                                 </div>
                                 <div class="o_kanban_details">
                                     <div class="o_kanban_details_wrapper">
-                                        <div t-att-title="record.datas_fname.raw_value" class="o_kanban_record_title">
-                                            <t t-if="record.type.raw_value == 'url'">
-                                                <field name="name" class="o_text_overflow"/>
-                                            </t>
-                                            <t t-else="">
-                                                <field name="datas_fname" class="o_text_overflow"/>
-                                            </t>
+                                        <div t-att-title="record.name.raw_value" class="o_kanban_record_title">
+                                            <field name="name" class="o_text_overflow"/>
                                         </div>
                                         <div class="o_kanban_record_body">
                                             <t t-if="record.type.raw_value == 'url'">

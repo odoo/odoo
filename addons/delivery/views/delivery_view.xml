@@ -84,7 +84,7 @@
                                 <field name="integration_level" widget="radio" attrs="{'invisible': ['|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"/>
                             </group>
                             <group name="delivery_details">
-                                <field name="invoice_policy" widget="radio" attrs="{'invisible': [('delivery_type', 'in', ('fixed', 'base_on_rule'))]}"/>
+                                <field name="invoice_policy" widget="radio" attrs="{'invisible': ['|', ('delivery_type', 'in', ('fixed', 'base_on_rule')), ('integration_level', '=', 'rate')]}"/>
                                 <label for="margin" string="Margin on Rate"/>
                                 <div>
                                     <field name="margin" class="oe_inline"/>%
@@ -94,7 +94,7 @@
                                     <label for="free_over"/>
                                 </div>
                                 <field nolabel="1" name="amount" attrs="{'required':[('free_over','!=', False)], 'invisible':[('free_over','=', False)]}"/>
-                                <field name="product_id" context="{'default_type': 'service', 'sale_ok': False, 'purchase_ok': False}" />
+                                <field name="product_id" context="{'default_type': 'service', 'default_sale_ok': False, 'default_purchase_ok': False}" />
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="can_generate_return" invisible="1"/>
                                 <field name="return_label_on_delivery" attrs="{'invisible': [('can_generate_return', '=', False)]}"/>
@@ -139,10 +139,9 @@
         </record>
 
         <record id="action_delivery_carrier_form" model="ir.actions.act_window">
-            <field name="name">Delivery Methods</field>
+            <field name="name">Shipping Methods</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">delivery.carrier</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_group_by_provider': True}</field>
             <field name="help" type="html">
@@ -298,15 +297,9 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <data>
-                  <xpath expr="//field[@name='payment_term_id']" position="after">
-                      <div name='carrier_selection'>
-                          <div class="alert alert-info" role="status" attrs="{'invisible': [('delivery_message','=',False)]}">
-                            <field name='delivery_message' force_save="1"/>
-                          </div>
-                      </div>
-                  </xpath>
                     <xpath expr="//field[@name='partner_id']" position='after'>
                         <field name="delivery_set" invisible="1"/>
+                        <field name="is_all_service" invisible="1"/>
                         <field name="recompute_delivery_price" invisible="1"/>
                     </xpath>
                     <xpath expr="//group[@name='note_group']" position="before">
@@ -315,20 +308,20 @@
                                 string="Add a shipping method"
                                 name="action_open_delivery_wizard"
                                 type="object"
-                                attrs="{'invisible': ['|', '|', ('order_line', '=', []), ('delivery_set', '=', True), ('state', 'not in', ('draft', 'sent'))]}"
+                                attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('order_line', '=', []), ('delivery_set', '=', True)]}"
                             />
                             <button
                                 string="Recompute shipping cost"
                                 name="recompute_delivery_cost"
                                 type="object"
                                 class="text-warning btn-secondary"
-                                attrs="{'invisible': ['|', '|', ('recompute_delivery_price', '=', False), ('delivery_set', '=', False), ('state', 'not in', ('draft', 'sent'))]}"
+                                attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('recompute_delivery_price', '=', False), ('delivery_set', '=', False)]}"
                             />
                             <button
                                 string="Recompute shipping cost"
                                 name="recompute_delivery_cost"
                                 type="object"
-                                attrs="{'invisible': ['|', '|', ('recompute_delivery_price', '=', True), ('delivery_set', '=', False), ('state', 'not in', ('draft', 'sent'))]}"
+                                attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('recompute_delivery_price', '=', True), ('delivery_set', '=', False)]}"
                             />
                         </div>
                     </xpath>
@@ -368,7 +361,6 @@
             <field name="name">Display tracking links</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.picking</field>
-            <field name="view_type">form</field>
             <field name="view_id" ref="delivery.delivery_tracking_url_warning_form"/>
             <field name="view_mode">form</field>
             <field name="target">new</field>

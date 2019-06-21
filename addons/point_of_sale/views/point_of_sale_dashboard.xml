@@ -5,7 +5,6 @@
         <field name="name">Sessions</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.session</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_pos_session_search" />
         <field name="context">{
@@ -18,7 +17,6 @@
         <field name="name">Orders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.order</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_pos_order_search"/>
         <field name="context">{
@@ -30,7 +28,6 @@
     <record id="action_report_pos_order_all_filtered" model="ir.actions.act_window">
         <field name="name">Orders Analysis</field>
         <field name="res_model">report.pos.order</field>
-        <field name="view_type">form</field>
         <field name="view_mode">graph,pivot</field>
         <field name="search_view_id" ref="view_report_pos_order_search"/>
         <field name="context">{
@@ -47,7 +44,6 @@
         <field name="arch" type="xml">
             <kanban create="false" class="o_kanban_dashboard o_pos_kanban">
                 <field name="name"/>
-                <field name="session_ids"/>
                 <field name="current_session_id"/>
                 <field name="current_session_state"/>
                 <field name="last_session_closing_date"/>
@@ -66,9 +62,6 @@
                                     <t t-if="record.pos_session_state.raw_value == 'opening_control'">
                                         <div class="badge badge-info o_kanban_inline_block">Opening Control</div>
                                     </t>
-                                    <t t-if="record.pos_session_state.raw_value == 'opened'">
-                                        <div class="badge badge-success o_kanban_inline_block">In Progress</div>
-                                    </t>
                                     <t t-if="record.pos_session_state.raw_value == 'closing_control'">
                                         <div class="badge badge-info o_kanban_inline_block">Closing Control</div>
                                     </t>
@@ -78,8 +71,6 @@
                                              To Close
                                         </div>
                                     </t>
-                                    <t t-set="unused_message">Unused</t>
-                                    <div class="o_secondary mt16"><t t-esc="record.pos_session_username.value || unused_message"/></div>
                                 </div>
                                 <div class="o_kanban_manage_button_section">
                                     <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
@@ -125,10 +116,10 @@
                                             <span>View</span>
                                         </div>
                                         <div role="menuitem">
-                                            <a name="%(action_pos_session_filtered)d" type="action">Sessions</a>
+                                            <a name="%(action_pos_order_filtered)d" type="action">Orders</a>
                                         </div>
                                         <div role="menuitem">
-                                            <a name="%(action_pos_order_filtered)d" type="action">Sales Orders</a>
+                                            <a name="%(action_pos_session_filtered)d" type="action">Sessions</a>
                                         </div>
                                     </div>
                                     <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">

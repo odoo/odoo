@@ -90,6 +90,8 @@ var AbstractView = Factory.extend({
      * @param {boolean} [params.withControlPanel=true]
      */
     init: function (viewInfo, params) {
+        this._super.apply(this, arguments);
+
         var action = params.action || {};
         params = _.defaults(params, this._extractParamsFromAction(action));
 
@@ -330,6 +332,7 @@ var AbstractView = Factory.extend({
         var timeRangeDescription = timeRangeMenuData.timeRangeDescription || '';
         this.loadParams = _.extend(this.loadParams, {
             compare: comparisonTimeRange.length > 0,
+            comparisonField: timeRangeMenuData.comparisonField,
             comparisonTimeRange: comparisonTimeRange,
             comparisonTimeRangeDescription: comparisonTimeRangeDescription,
             context: searchQuery.context,

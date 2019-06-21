@@ -48,19 +48,19 @@ class TestCommonTimesheet(TransactionCase):
             'name': 'User Employee',
             'login': 'user_employee',
             'email': 'useremployee@test.com',
-            'groups_id': [(4, self.ref('hr_timesheet.group_hr_timesheet_user'))],
+            'groups_id': [(6, 0, [self.ref('hr_timesheet.group_hr_timesheet_user')])],
         })
         self.user_employee2 = self.env['res.users'].create({
             'name': 'User Employee 2',
             'login': 'user_employee2',
             'email': 'useremployee2@test.com',
-            'groups_id': [(4, self.ref('hr_timesheet.group_hr_timesheet_user'))],
+            'groups_id': [(6, 0, [self.ref('hr_timesheet.group_hr_timesheet_user')])],
         })
         self.user_manager = self.env['res.users'].create({
             'name': 'User Officer',
             'login': 'user_manager',
             'email': 'usermanager@test.com',
-            'groups_id': [(4, self.ref('hr_timesheet.group_timesheet_manager'))],
+            'groups_id': [(6, 0, [self.ref('hr_timesheet.group_timesheet_manager')])],
         })
         # employees
         self.empl_employee = self.env['hr.employee'].create({
@@ -232,3 +232,35 @@ class TestTimesheet(TestCommonTimesheet):
             self.task1.write({
                 'project_id': False
             })
+
+    def test_recompute_amount_for_multiple_timesheets(self):
+        """ Check that amount is recomputed correctly when setting unit_amount for multiple timesheets at once. """
+        Timesheet = self.env['account.analytic.line']
+        self.empl_employee.timesheet_cost = 5.0
+        self.empl_employee2.timesheet_cost = 6.0
+        # create a timesheet for each employee
+        timesheet_1 = Timesheet.sudo(self.user_employee).create({
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'name': '/',
+            'unit_amount': 1,
+        })
+        timesheet_2 = Timesheet.sudo(self.user_employee2).create({
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'name': '/',
+            'unit_amount': 1,
+        })
+        timesheets = timesheet_1 + timesheet_2
+
+        # increase unit_amount to trigger amount recomputation
+        timesheets.sudo().write({
+            'unit_amount': 2,
+        })
+
+        # since timesheet costs are different for both employees, we should get different amounts
+        self.assertRecordValues(timesheets, [{
+            'amount': -10.0,
+        }, {
+            'amount': -12.0,
+        }])

@@ -21,6 +21,7 @@ var ChatterComposer = BasicComposer.extend({
     template: 'mail.chatter.Composer',
     events: _.extend({}, BasicComposer.prototype.events, {
         'click .o_composer_button_full_composer': '_onOpenFullComposer',
+        'click .o_suggested_show_more_less': '_onClickPartnerSuggestionsReadMoreLess',
     }),
     init: function (parent, model, suggestedPartners, options) {
         this._super(parent, options);
@@ -88,10 +89,13 @@ var ChatterComposer = BasicComposer.extend({
             var def;
             if (namesToFind.length > 0) {
                 def = self._rpc({
+                    route: '/mail/get_partner_info',
+                    params: {
                         model: self._model,
-                        method: 'message_partner_info_from_emails',
-                        args: [[self.context.default_res_id], namesToFind],
-                    });
+                        res_ids: [self.context.default_res_id],
+                        emails: namesToFind,
+                    },
+                });
             }
 
             // for unknown names + incomplete partners
@@ -142,10 +146,14 @@ var ChatterComposer = BasicComposer.extend({
                     var def;
                     if (newNamesToFind.length > 0) {
                         def = self._rpc({
+                            route: '/mail/get_partner_info',
+                            params: {
                                 model: self._model,
-                                method: 'message_partner_info_from_emails',
-                                args: [[self.context.default_res_id], newNamesToFind, true],
-                            });
+                                res_ids: [self.context.default_res_id],
+                                emails: namesToFind,
+                                link_mail: true,
+                            },
+                        });
                     }
                     Promise.resolve(def).then(function (result) {
                         result = result || [];
@@ -239,6 +247,14 @@ var ChatterComposer = BasicComposer.extend({
 
     /**
      * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickPartnerSuggestionsReadMoreLess: function (ev) {
+        ev.preventDefault();
+        this.$('.o_suggested_toggle').toggleClass('o_hidden');
+    },
+    /**
+     * @private
      */
     _onOpenFullComposer: function () {
         if (!this._doCheckAttachmentUpload()){
@@ -281,7 +297,6 @@ var ChatterComposer = BasicComposer.extend({
                 type: 'ir.actions.act_window',
                 res_model: 'mail.compose.message',
                 view_mode: 'form',
-                view_type: 'form',
                 views: [[false, 'form']],
                 target: 'new',
                 context: context,

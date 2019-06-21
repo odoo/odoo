@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import itertools
 import logging
+import operator
 from collections import defaultdict
 from difflib import get_close_matches
 
@@ -53,37 +54,6 @@ class IrTranslationImport(object):
     def push(self, trans_dict):
         """ Feed a translation, as a dictionary, into the cursor """
         params = dict(trans_dict, state="translated")
-
-        if params['type'] == 'view':
-            # ugly hack for QWeb views - pending refactoring of translations in master
-            if params['imd_model'] == 'website':
-                params['imd_model'] = "ir.ui.view"
-            # non-QWeb views do not need a matching res_id in case they do not
-            # have an xml id -> force to 0 to avoid dropping them
-            elif params['res_id'] is None and not params['imd_name']:
-                # maybe we should insert this translation for all views of the
-                # given model?
-                params['res_id'] = 0
-
-        # backward compatibility: convert 'field', 'help', 'view' into 'model'
-        if params['type'] == 'field':
-            model, field = params['name'].split(',')
-            params['type'] = 'model'
-            params['name'] = 'ir.model.fields,field_description'
-            params['imd_model'] = 'ir.model.fields'
-            params['imd_name'] = 'field_%s__%s' % (model.replace('.', '_'), field)
-
-        elif params['type'] == 'help':
-            model, field = params['name'].split(',')
-            params['type'] = 'model'
-            params['name'] = 'ir.model.fields,help'
-            params['imd_model'] = 'ir.model.fields'
-            params['imd_name'] = 'field_%s__%s' % (model.replace('.', '_'), field)
-
-        elif params['type'] == 'view':
-            params['type'] = 'model'
-            params['name'] = 'ir.ui.view,arch_db'
-            params['imd_model'] = "ir.ui.view"
 
         self._rows.append((params['name'], params['lang'], params['res_id'],
                            params['src'], params['type'], params['imd_model'],
@@ -246,7 +216,13 @@ class IrTranslation(models.Model):
                 continue
             if not callable(field.translate):
                 # Pass context without lang, need to read real stored field, not translation
-                result = model.browse(record.res_id).with_context(lang=None).read([field_name])
+                try:
+                    result = model.browse(record.res_id).with_context(lang=None).read([field_name])
+                except AccessError:
+                    # because we can read self but not the record,
+                    # that means we would get an access error when accessing the translations
+                    # so instead we defer the access right to the "check" method
+                    result = [{field_name: _("Cannot be translated; record not accessible.")}]
                 record.source = result[0][field_name] if result else False
 
     def _inverse_source(self):
@@ -538,7 +514,7 @@ class IrTranslation(models.Model):
         """ Check access rights of operation ``mode`` on ``self`` for the
         current user. Raise an AccessError in case conditions are not met.
         """
-        if self.env.user._is_admin():
+        if self.env.user._is_superuser():
             return
 
         # collect translated field records (model_ids) and other translations
@@ -668,6 +644,47 @@ class IrTranslation(models.Model):
                     'module': module
                 })
         self._modified_model(field.model_name)
+
+    @api.model
+    def _upsert_translations(self, vals_list):
+        """ Insert or update translations of type 'model' or 'model_terms'.
+
+            This method is used for creations of translations where the given
+            ``vals_list`` is trusted to be the right values and potential
+            conflicts should be updated to the new given value.
+        """
+        rows_by_type = defaultdict(list)
+        for vals in vals_list:
+            rows_by_type[vals['type']].append((
+                vals['name'], vals['lang'], vals['res_id'], vals['src'] or '', vals['type'],
+                vals.get('module'), vals['value'] or '', vals.get('state'), vals.get('comments'),
+            ))
+
+        if rows_by_type['model']:
+            query = """
+                INSERT INTO ir_translation (name, lang, res_id, src, type,
+                                            module, value, state, comments)
+                VALUES {}
+                ON CONFLICT (type, lang, name, res_id) WHERE type='model'
+                DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) =
+                    (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type,
+                     EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments)
+                WHERE EXCLUDED.value IS NOT NULL AND EXCLUDED.value != '';
+            """.format(", ".join(["%s"] * len(rows_by_type['model'])))
+            self.env.cr.execute(query, rows_by_type['model'])
+
+        if rows_by_type['model_terms']:
+            query = """
+                INSERT INTO ir_translation (name, lang, res_id, src, type,
+                                            module, value, state, comments)
+                VALUES {}
+                ON CONFLICT (type, name, lang, res_id, md5(src))
+                DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) =
+                    (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type,
+                     EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments)
+                WHERE EXCLUDED.value IS NOT NULL AND EXCLUDED.value != '';
+            """.format(", ".join(["%s"] * len(rows_by_type['model_terms'])))
+            self.env.cr.execute(query, rows_by_type['model_terms'])
 
     @api.model
     def translate_fields(self, model, id, field=None):
@@ -810,3 +827,35 @@ class IrTranslation(models.Model):
                          ('name', 'like', model_name+','),
             ],
         }
+
+    @api.model
+    def get_translations_for_webclient(self, mods, lang):
+        if not mods:
+            mods = [x['name'] for x in self.env['ir.module.module'].sudo().search_read(
+                [('state', '=', 'installed')], ['name'])]
+        if not lang:
+            lang = self._context["lang"]
+        langs = self.env['res.lang'].sudo().search([("code", "=", lang)])
+        lang_params = None
+        if langs:
+            lang_params = langs.read([
+                "name", "direction", "date_format", "time_format",
+                "grouping", "decimal_point", "thousands_sep", "week_start"])[0]
+            lang_params['week_start'] = int(lang_params['week_start'])
+
+        # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
+        # done server-side when the language is loaded, so we only need to load the user's lang.
+        translations_per_module = {}
+        messages = self.env['ir.translation'].sudo().search_read([
+            ('module', 'in', mods), ('lang', '=', lang),
+            ('comments', 'like', 'openerp-web'), ('value', '!=', False),
+            ('value', '!=', '')],
+            ['module', 'src', 'value', 'lang'], order='module')
+        for mod, msg_group in itertools.groupby(messages, key=operator.itemgetter('module')):
+            translations_per_module.setdefault(mod, {'messages': []})
+            translations_per_module[mod]['messages'].extend({
+                'id': m['src'],
+                'string': m['value']}
+                for m in msg_group)
+
+        return translations_per_module, lang_params

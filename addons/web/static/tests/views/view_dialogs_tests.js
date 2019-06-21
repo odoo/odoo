@@ -146,31 +146,32 @@ QUnit.module('Views', {
                     '</search>',
             },
             mockRPC: function (route, args) {
-                if (args.method === 'read_group') {
+                if (args.method === 'web_read_group') {
                     assert.deepEqual(args.kwargs, {
                         context: {},
-                        domain: [["display_name","like","a"], "&", ["display_name","ilike","piou"], ["foo","ilike","piou"]],
-                        fields: ["display_name","foo","bar"],
+                        domain: [["display_name", "like", "a"], "&", ["display_name", "ilike", "piou"], ["foo", "ilike", "piou"]],
+                        fields: ["display_name", "foo", "bar"],
                         groupby: ["bar"],
                         orderby: '',
-                        lazy: true
+                        lazy: true,
+                        limit: 80,
                     }, "should search with the complete domain (domain + search), and group by 'bar'");
                 }
                 if (search === 0 && route === '/web/dataset/search_read') {
                     search++;
                     assert.deepEqual(args, {
-                        context: {},
-                        domain: [["display_name","like","a"], "&", ["display_name","ilike","piou"], ["foo","ilike","piou"]],
-                        fields: ["display_name","foo"],
+                        context: {'bin_size': true},  // not part of the test, may change
+                        domain: [["display_name", "like", "a"], "&", ["display_name", "ilike", "piou"], ["foo", "ilike", "piou"]],
+                        fields: ["display_name", "foo"],
                         model: "partner",
                         limit: 80,
                         sort: ""
                     }, "should search with the complete domain (domain + search)");
                 } else if (search === 1 && route === '/web/dataset/search_read') {
                     assert.deepEqual(args, {
-                        context: {},
-                        domain: [["display_name","like","a"]],
-                        fields: ["display_name","foo"],
+                        context: {'bin_size': true},  // not part of the test, may change
+                        domain: [["display_name", "like", "a"]],
+                        fields: ["display_name", "foo"],
                         model: "partner",
                         limit: 80,
                         sort: ""
@@ -283,7 +284,7 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<form>' +
                      '<field name="name"/>' +
-                     '<field name="partner" widget="one2many_list" >' +
+                     '<field name="partner" widget="one2many" >' +
                         '<tree editable="top">' +
                             '<field name="display_name"/>' +
                             '<field name="instrument"/>' +
@@ -294,7 +295,7 @@ QUnit.module('Views', {
             archs: {
                 'partner,false,form': '<form>' +
                                            '<field name="name"/>' +
-                                           '<field name="instrument" widget="one2many_list" mode="tree"/>' +
+                                           '<field name="instrument" widget="one2many" mode="tree"/>' +
                                         '</form>',
 
                 'instrument,false,form': '<form>'+
@@ -349,7 +350,7 @@ QUnit.module('Views', {
             'There should be two modals');
 
         var $second_modal = $modals.not($modal);
-        await testUtils.dom.click($second_modal.find('.o_list_view.table.table-sm.table-striped.o_list_view_ungrouped .o_data_row input[type=checkbox]'));
+        await testUtils.dom.click($second_modal.find('.o_list_table.table.table-sm.table-striped.o_list_table_ungrouped .o_data_row input[type=checkbox]'));
 
         await testUtils.dom.click($second_modal.find('.o_select_button'));
 

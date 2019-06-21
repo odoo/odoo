@@ -164,13 +164,9 @@
     <t t-if="any([p.website_published for p in partner.implemented_partner_ids])">
         <h3 id="references">References</h3>
         <div t-foreach="partner.implemented_partner_ids" t-if="reference.website_published" t-as="reference" class="media mt-3">
-            <a t-attf-href="/customers/#{slug(reference)}">
-                <span t-field="reference.image_medium" t-options='{"widget": "image", "class": "d-block mr-3"}'/>
-            </a>
+            <span t-field="reference.image_medium" t-options='{"widget": "image", "class": "d-block mr-3"}'/>
             <div class="media-body" style="min-height: 64px;">
-                <a t-attf-href="/customers/#{slug(reference)}">
-                    <span t-field="reference.self"/>
-                </a>
+                <span t-field="reference.self"/>
                 <div t-field='reference.website_short_description'/>
             </div>
         </div>
@@ -187,10 +183,10 @@
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'lead' or lead" t-attf-class="breadcrumb-item #{'active ' if not lead else ''}">
                 <a t-if="lead" t-attf-href="/my/leads?{{ keep_query() }}">
-                    My Leads
+                    Leads
                 </a>
                 <t t-else="">
-                    My Leads
+                    Leads
                 </t>
             </li>
             <li t-if="lead" class="breadcrumb-item active">
@@ -198,10 +194,10 @@
             </li>
             <li t-if="page_name == 'opportunity' or opportunity" t-attf-class="breadcrumb-item #{'active ' if not opportunity else ''}">
                 <a t-if="opportunity" t-attf-href="/my/opportunities?{{ keep_query() }}">
-                    My Opportunities
+                    Opportunities
                 </a>
                 <t t-else="">
-                    My Opportunities
+                    Opportunities
                 </t>
             </li>
             <li t-if="opportunity" class="breadcrumb-item active">
@@ -213,12 +209,12 @@
     <template id="portal_my_home_lead" name="Portal My Home : lead entries" inherit_id="portal.portal_my_home" priority="15">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
             <t t-if="lead_count" t-call="portal.portal_docs_entry">
-                <t t-set="title">My Leads</t>
+                <t t-set="title">Leads</t>
                 <t t-set="url" t-value="'/my/leads'"/>
                 <t t-set="count" t-value="lead_count"/>
             </t>
             <t t-call="portal.portal_docs_entry">
-                <t t-set="title">My Opportunities</t>
+                <t t-set="title">Opportunities</t>
                 <t t-set="url" t-value="'/my/opportunities'"/>
                 <t t-set="count" t-value="opp_count"/>
             </t>
@@ -227,8 +223,10 @@
 
     <template id="portal_my_leads" name="My Leads">
         <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
             <t t-call="portal.portal_searchbar">
-                <t t-set="title">My Leads</t>
+                <t t-set="title">Leads</t>
             </t>
             <div t-if="not leads" class="alert alert-warning mt8" role="alert">
                 There are no leads.
@@ -259,7 +257,7 @@
             <t t-set="breadcrumbs_searchbar" t-value="True"/>
 
             <t t-call="portal.portal_searchbar">
-                <t t-set="title">My Opportunities</t>
+                <t t-set="title">Opportunities</t>
 
                 <div class="form-inline ml-lg-4" t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id">
                     <button class="btn btn-success btn-sm" name='new_opp' data-toggle="modal" data-target=".modal_new_opp" title="Add an opportunity" aria-label="Add an opportunity">
@@ -348,72 +346,74 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-body row">
-                    <div class="col-lg-6">
-                        <div class="row" t-if="lead.partner_name or lead.email_from or lead.partner_id">
-                            <label class="col-4">Customer</label>
-                            <address class="col-8">
-                                <div>
-                                    <span t-if="lead.partner_name" itemprop="name" t-field="lead.partner_name" />
-                                    <span t-if="not lead.partner_name" itemprop="name" t-field="lead.contact_name"/>
-                                </div>
-                                <div t-if="lead.phone">
-                                    <span class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span itemprop="telephone" t-field="lead.phone" />
-                                </div>
-                                <div t-if="lead.mobile">
-                                    <span class="fa fa-mobile" role="img" aria-label="Mobile" title="Mobile"/> <span itemprop="telephone" t-field="lead.mobile" />
-                                </div>
-                                <div t-if="lead.email_from">
-                                    <span class="fa fa-envelope" role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-field="lead.email_from" />
-                                </div>
-                            </address>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="row" t-if="lead.partner_name or lead.email_from or lead.partner_id">
+                                <label class="col-4">Customer</label>
+                                <address class="col-8">
+                                    <div>
+                                        <span t-if="lead.partner_name" itemprop="name" t-field="lead.partner_name" />
+                                        <span t-if="not lead.partner_name" itemprop="name" t-field="lead.contact_name"/>
+                                    </div>
+                                    <div t-if="lead.phone">
+                                        <span class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span itemprop="telephone" t-field="lead.phone" />
+                                    </div>
+                                    <div t-if="lead.mobile">
+                                        <span class="fa fa-mobile" role="img" aria-label="Mobile" title="Mobile"/> <span itemprop="telephone" t-field="lead.mobile" />
+                                    </div>
+                                    <div t-if="lead.email_from">
+                                        <span class="fa fa-envelope" role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-field="lead.email_from" />
+                                    </div>
+                                </address>
+                            </div>
+                            <div class="row" t-if="lead.street or lead.street2 or lead.city or lead.state_id or lead.country_id">
+                                <label class="col-4">Address</label>
+                                <address class="col-8">
+                                    <div t-if="lead.street"><span t-field="lead.street"/></div>
+                                    <div t-if="lead.street2"><span t-field="lead.street2"/></div>
+                                    <div t-if="lead.city or lead.zip">
+                                        <span t-field="lead.city"/> <span t-field="lead.zip"/>
+                                    </div>
+                                    <div t-if="lead.state_id or country_id">
+                                        <span t-field="lead.state_id"/> <span t-field="lead.country_id"/>
+                                    </div>
+                                </address>
+                            </div>
+                            <div class="row" t-if="lead.user_id">
+                                <label class="col-4">Salesperson</label>
+                                <span class="col-8" t-field="lead.user_id" />
+                            </div>
+                            <div class="row" t-if="lead.team_id">
+                                <label class="col-4">Sales Team</label>
+                                <span class="col-8" t-field="lead.team_id" />
+                            </div>
                         </div>
-                        <div class="row" t-if="lead.street or lead.street2 or lead.city or lead.state_id or lead.country_id">
-                            <label class="col-4">Address</label>
-                            <address class="col-8">
-                                <div t-if="lead.street"><span t-field="lead.street"/></div>
-                                <div t-if="lead.street2"><span t-field="lead.street2"/></div>
-                                <div t-if="lead.city or lead.zip">
-                                    <span t-field="lead.city"/> <span t-field="lead.zip"/>
-                                </div>
-                                <div t-if="lead.state_id or country_id">
-                                    <span t-field="lead.state_id"/> <span t-field="lead.country_id"/>
-                                </div>
-                            </address>
-                        </div>
-                        <div class="row" t-if="lead.user_id">
-                            <label class="col-4">Salesperson</label>
-                            <span class="col-8" t-field="lead.user_id" />
-                        </div>
-                        <div class="row" t-if="lead.team_id">
-                            <label class="col-4">Sales Team</label>
-                            <span class="col-8" t-field="lead.team_id" />
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="row" t-if="lead.date_deadline">
-                            <label class="col-4">Expected Closing</label>
-                            <span class="col-8" t-field="lead.date_deadline" />
-                        </div>
-                        <div class="row" groups="!base.group_portal" t-if="lead.tag_ids">
-                            <label class="col-4">Tags</label>
-                            <span class="col-8">
-                                <t t-foreach="lead.tag_ids" t-as="tag">
-                                    <span class="badge badge-info" t-esc="tag.name" />
-                                </t>
-                            </span>
-                        </div>
-                        <div class="row mt16" t-if="lead.partner_assigned_id">
-                            <label class="col-4">Assigned Partner</label>
-                            <address class="col-8" t-field="lead.partner_assigned_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"], "no_marker": True}'/>
-                        </div>
-                        <div class="row mt16" t-if="lead.campaign_id">
-                            <label class="col-4">Campaign</label>
-                            <span class="col-8" t-field="lead.campaign_id" />
-                        </div>
-                        <div class="row" t-if="lead.medium_id">
-                            <label class="col-4">Medium</label>
-                            <span class="col-8" t-field="lead.medium_id" />
+                        <div class="col-lg-6">
+                            <div class="row" t-if="lead.date_deadline">
+                                <label class="col-4">Expected Closing</label>
+                                <span class="col-8" t-field="lead.date_deadline" />
+                            </div>
+                            <div class="row" groups="!base.group_portal" t-if="lead.tag_ids">
+                                <label class="col-4">Tags</label>
+                                <span class="col-8">
+                                    <t t-foreach="lead.tag_ids" t-as="tag">
+                                        <span class="badge badge-info" t-esc="tag.name" />
+                                    </t>
+                                </span>
+                            </div>
+                            <div class="row mt16" t-if="lead.partner_assigned_id">
+                                <label class="col-4">Assigned Partner</label>
+                                <address class="col-8" t-field="lead.partner_assigned_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"], "no_marker": True}'/>
+                            </div>
+                            <div class="row mt16" t-if="lead.campaign_id">
+                                <label class="col-4">Campaign</label>
+                                <span class="col-8" t-field="lead.campaign_id" />
+                            </div>
+                            <div class="row" t-if="lead.medium_id">
+                                <label class="col-4">Medium</label>
+                                <span class="col-8" t-field="lead.medium_id" />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -673,9 +673,10 @@
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label>Expected Closing:</label>
-                                                        <div class="input-group date">
-                                                            <input type="text" name="date_deadline" t-att-value="opportunity.date_deadline" class="form-control date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD"/>
-                                                            <div class="input-group-append">
+                                                        <div class="input-group date" id="exp_closing_div" data-target-input="nearest">
+                                                            <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="opportunity.date_deadline"/></t>
+                                                            <input  type="text" name="date_deadline" t-att-value="date_formatted" class="datetimepicker-input form-control date_deadline" t-att-name="prefix"/>
+                                                            <div class="input-group-append" data-target="#exp_closing_div" data-toggle="datetimepicker">
                                                                 <span class="input-group-text">
                                                                     <span class="fa fa-calendar" role="img" aria-label="Calendar"></span>
                                                                 </span>
@@ -688,7 +689,7 @@
                                                 <label class="col-form-label" for="next_activity">Next Activity</label>
                                                 <select class="form-control next_activity" name="next_activity">
                                                     <t t-foreach="activity_types" t-as="activity_type">
-                                                        <option t-att-data="activity_type.id" t-att-selected="activity_type.id == user_activity.activity_type_id.id" t-att-name="activity_type.name" t-att-summary="activity_type.summary"><t t-esc="activity_type.name"/></option>
+                                                        <option t-att-data="activity_type.id" t-att-selected="activity_type.id == user_activity.activity_type_id.id" t-att-name="activity_type.name" t-att-delay_count="activity_type.delay_count" t-att-delay_unit="activity_type.delay_unit" t-att-summary="activity_type.summary"><t t-esc="activity_type.name"/></option>
                                                     </t>
                                                 </select>
                                             </div>
@@ -698,9 +699,10 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-form-label" for="activity_date_deadline">Next Activity Date</label>
-                                                <div class="input-group date">
-                                                    <input type="text" name="activity_date_deadline" t-att-value="user_activity.date_deadline" class="form-control activity_date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD"/>
-                                                    <div class="input-group-append">
+                                                <div class="input-group date" id="next_activity_div" data-target-input="nearest">
+                                                    <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="user_activity.date_deadline"/></t>
+                                                    <input type="text" name="activity_date_deadline" t-att-value="date_formatted" class="form-control activity_date_deadline datetimepicker-input" t-att-name="prefix"/>
+                                                    <div class="input-group-append" data-target="#next_activity_div" data-toggle="datetimepicker">
                                                         <span class="input-group-text">
                                                             <span class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"></span>
                                                         </span>

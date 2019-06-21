@@ -419,7 +419,6 @@ class IrModuleModule(models.Model):
                     IrAttachment.create({
                         'type': 'url',
                         'name': image_name,
-                        'datas_fname': image_name,
                         'url': image_path,
                         'res_model': self._name,
                         'res_id': app.id,

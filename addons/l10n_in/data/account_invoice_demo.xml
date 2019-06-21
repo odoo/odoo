@@ -22,8 +22,9 @@
         <field name="invoice_line_tax_ids" model="account.tax"
             eval="[(6, 0, obj().search([
                 ('type_tax_use', '=', 'sale'),
-                ('children_tax_ids.amount','=', 14),
-                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+                ('amount','=', 28),
+                ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id),
+                ('company_id', '=', obj().env.company.id)], limit=1).ids)]"/>
     </record>
     <record id="demo_invoice_b2b_line_2" model="account.invoice.line">
         <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_9').partner_ref"/>
@@ -36,8 +37,9 @@
         <field name="invoice_line_tax_ids" model="account.tax"
             eval="[(6, 0, obj().search([
                 ('type_tax_use', '=', 'sale'),
-                ('children_tax_ids.amount','=', 9),
-                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+                ('amount','=', 18),
+                ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id),
+                ('company_id', '=', obj().env.company.id)], limit=1).ids)]"/>
     </record>
     <record id="demo_invoice_b2b_line_3" model="account.invoice.line">
         <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_10').partner_ref"/>
@@ -50,9 +52,11 @@
         <field name="invoice_line_tax_ids" model="account.tax"
             eval="[(6, 0, obj().search([
                     ('type_tax_use', '=', 'sale'),
-                    ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id),
+                    ('company_id', '=', obj().env.company.id),
                 '|',
-                    ('children_tax_ids.amount', '=', 9),
+                    '&amp;',
+                    ('amount', '=', 18),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id),
                     '&amp;',
                     ('tax_group_id', '=', obj().env.ref('l10n_in.cess_group').id),
                     ('children_tax_ids.amount','=', 5)
@@ -62,7 +66,7 @@
     <function model="account.invoice" name="_onchange_invoice_line_ids">
         <value eval="[ref('demo_invoice_b2b')]"/>
     </function>
-    
+
 
     <function model="account.invoice" name="action_invoice_open">
         <value eval="[ref('demo_invoice_b2b')]"/>
@@ -88,8 +92,9 @@
         <field name="invoice_line_tax_ids" model="account.tax"
             eval="[(6, 0, obj().search([
                 ('type_tax_use', '=', 'sale'),
-                ('children_tax_ids.amount','=', 9),
-                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+                ('amount','=', 18),
+                ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id),
+                ('company_id', '=', obj().env.company.id)], limit=1).ids)]"/>
     </record>
     <record id="demo_invoice_b2cs_line_2" model="account.invoice.line">
         <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_20').partner_ref"/>
@@ -102,8 +107,9 @@
         <field name="invoice_line_tax_ids" model="account.tax"
             eval="[(6, 0, obj().search([
                 ('type_tax_use', '=', 'sale'),
-                ('children_tax_ids.amount','=', 9),
-                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+                ('amount','=', 18),
+                ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id),
+                ('company_id', '=', obj().env.company.id)], limit=1).ids)]"/>
     </record>
     <record id="demo_invoice_b2cs_line_3" model="account.invoice.line">
         <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_22').partner_ref"/>
@@ -116,8 +122,9 @@
         <field name="invoice_line_tax_ids" model="account.tax"
             eval="[(6, 0, obj().search([
                 ('type_tax_use', '=', 'sale'),
-                ('children_tax_ids.amount','=', 2.5),
-                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+                ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id),
+                ('amount','=', 5),
+                ('company_id', '=', obj().env.company.id)], limit=1).ids)]"/>
     </record>
     <record id="demo_invoice_b2cs_line_4" model="account.invoice.line">
         <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_24').partner_ref"/>
@@ -130,8 +137,9 @@
         <field name="invoice_line_tax_ids" model="account.tax"
             eval="[(6, 0, obj().search([
                 ('type_tax_use', '=', 'sale'),
-                ('children_tax_ids.amount','=', 2.5),
-                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+                ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id),
+                ('amount','=', 5),
+                ('company_id', '=', obj().env.company.id)], limit=1).ids)]"/>
     </record>
 
     <function model="account.invoice" name="_onchange_invoice_line_ids">
@@ -164,7 +172,7 @@
                 ('type_tax_use', '=', 'sale'),
                 ('tax_group_id', '=', obj().env.ref('l10n_in.igst_group').id),
                 ('amount','=', 18),
-                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+                ('company_id', '=', obj().env.company.id)], limit=1).ids)]"/>
     </record>
 
     <function model="account.invoice" name="_onchange_invoice_line_ids">
@@ -187,7 +195,7 @@
             eval="obj().search([
                 ('type', '=', 'sale'),
                 ('l10n_in_import_export', '=', True),
-                ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)], limit=1).id
+                ('company_id', '=', obj().env.company.id)], limit=1).id
                 or obj().search([('type', '=', 'sale')], limit=1).id"/>
         <field name="l10n_in_shipping_bill_number">999704</field>
         <field name="l10n_in_shipping_bill_date" eval="time.strftime('%Y-%m')+'-02'"/>
@@ -207,9 +215,9 @@
                 ('type_tax_use', '=', 'sale'),
                 ('tax_group_id', '=', obj().env.ref('l10n_in.igst_group').id),
                 ('amount','=', 18),
-                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+                ('company_id', '=', obj().env.company.id)], limit=1).ids)]"/>
     </record>
-    
+
     <function model="account.invoice" name="_onchange_invoice_line_ids">
         <value eval="[ref('demo_invoice_exp')]"/>
     </function>
@@ -239,7 +247,7 @@
             eval="[(6, 0, obj().search([
                 ('type_tax_use', '=', 'sale'),
                 ('tax_group_id', '=', obj().env.ref('l10n_in.exempt_group').id),
-                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+                ('company_id', '=', obj().env.company.id)], limit=1).ids)]"/>
     </record>
     <record id="demo_invoice_nill_line_2" model="account.invoice.line">
         <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_5').partner_ref"/>
@@ -253,14 +261,14 @@
             eval="[(6, 0, obj().search([
                 ('type_tax_use', '=', 'sale'),
                 ('tax_group_id', '=', obj().env.ref('l10n_in.nil_rated_group').id),
-                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+                ('company_id', '=', obj().env.company.id)], limit=1).ids)]"/>
     </record>
-    
+
 
     <function model="account.invoice" name="_onchange_invoice_line_ids">
         <value eval="[ref('demo_invoice_nill')]"/>
     </function>
-    
+
 
     <function model="account.invoice" name="action_invoice_open">
         <value eval="[ref('demo_invoice_nill')]"/>
@@ -288,8 +296,9 @@
         <field name="invoice_line_tax_ids" model="account.tax"
             eval="[(6, 0, obj().search([
                 ('type_tax_use', '=', 'sale'),
-                ('children_tax_ids.amount','=', 14),
-                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+                ('amount','=', 28),
+                ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id),
+                ('company_id', '=', obj().env.company.id)], limit=1).ids)]"/>
     </record>
     <record id="demo_invoice_cdnr_line_2" model="account.invoice.line">
         <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_9').partner_ref"/>
@@ -302,8 +311,9 @@
         <field name="invoice_line_tax_ids" model="account.tax"
             eval="[(6, 0, obj().search([
                 ('type_tax_use', '=', 'sale'),
-                ('children_tax_ids.amount','=', 9),
-                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+                ('amount','=', 18),
+                ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id),
+                ('company_id', '=', obj().env.company.id)], limit=1).ids)]"/>
     </record>
     <record id="demo_invoice_cdnr_line_3" model="account.invoice.line">
         <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_10').partner_ref"/>
@@ -316,9 +326,11 @@
         <field name="invoice_line_tax_ids" model="account.tax"
             eval="[(6, 0, obj().search([
                     ('type_tax_use', '=', 'sale'),
-                    ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id),
+                    ('company_id', '=', obj().env.company.id),
                 '|',
-                    ('children_tax_ids.amount', '=', 9),
+                    '&amp;',
+                    ('amount', '=', 18),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id),
                     '&amp;',
                     ('tax_group_id', '=', obj().env.ref('l10n_in.cess_group').id),
                     ('children_tax_ids.amount','=', 5)
@@ -328,7 +340,7 @@
     <function model="account.invoice" name="_onchange_invoice_line_ids">
         <value eval="[ref('demo_invoice_cdnr')]"/>
     </function>
-    
+
 
     <function model="account.invoice" name="action_invoice_open">
         <value eval="[ref('demo_invoice_cdnr')]"/>
@@ -355,8 +367,9 @@
         <field name="invoice_line_tax_ids" model="account.tax"
             eval="[(6, 0, obj().search([
                 ('type_tax_use', '=', 'sale'),
-                ('children_tax_ids.amount','=', 9),
-                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+                ('amount','=', 18),
+                ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id),
+                ('company_id', '=', obj().env.company.id)], limit=1).ids)]"/>
     </record>
 
     <function model="account.invoice" name="_onchange_invoice_line_ids">
@@ -388,8 +401,9 @@
         <field name="invoice_line_tax_ids" model="account.tax"
             eval="[(6, 0, obj().search([
                 ('type_tax_use', '=', 'sale'),
-                ('children_tax_ids.amount','=', 9),
-                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+                ('amount','=', 18),
+                ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id),
+                ('company_id', '=', obj().env.company.id)], limit=1).ids)]"/>
     </record>
 
     <function model="account.invoice" name="_onchange_invoice_line_ids">

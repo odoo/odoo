@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.1\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-16 07:59+0000\n"
-"PO-Revision-Date: 2019-01-16 07:59+0000\n"
+"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"PO-Revision-Date: 2019-03-20 13:50+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: snailmail_account
-#: code:addons/snailmail_account/wizard/account_invoice_send.py:93
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:76
 #, python-format
 msgid "%s of the selected invoice(s) had an invalid address and were not sent"
 msgstr ""
@@ -35,8 +35,15 @@ msgstr ""
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
 msgid "<span class=\"text-danger\">\n"
-"                                            Incomplete customer address\n"
+"                                            The customer address is not complete.\n"
 "                                        </span>"
+msgstr ""
+
+#. module: snailmail_account
+#: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
+msgid "<span class=\"text-danger\">\n"
+"                                        Some customer addresses are not complete.\n"
+"                                    </span>"
 msgstr ""
 
 #. module: snailmail_account
@@ -51,14 +58,7 @@ msgstr ""
 
 #. module: snailmail_account
 #: model:ir.model.fields,help:snailmail_account.field_account_invoice_send__snailmail_is_letter
-msgid "Allows to send the document by snail mail (coventional posting delivery service)"
-msgstr ""
-
-#. module: snailmail_account
-#: code:addons/snailmail_account/wizard/account_invoice_send.py:89
-#, python-format
-msgid "Cannot send by post to an incomplete address.\n"
-"                    Please update the customer's address or uncheck 'Send by Post'."
+msgid "Allows to send the document by Snailmail (coventional posting delivery service)"
 msgstr ""
 
 #. module: snailmail_account
@@ -72,15 +72,16 @@ msgid "Config Settings"
 msgstr ""
 
 #. module: snailmail_account
-#: code:addons/snailmail_account/wizard/account_invoice_send.py:85
-#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_addresses
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:75
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:82
+#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_invoice_ids
 #, python-format
 msgid "Invalid Addresses"
 msgstr ""
 
 #. module: snailmail_account
-#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__letter_ids
-msgid "Letter"
+#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_addresses
+msgid "Invalid Addresses Count"
 msgstr ""
 
 #. module: snailmail_account
@@ -89,28 +90,10 @@ msgid "Partner"
 msgstr ""
 
 #. module: snailmail_account
-#: model_terms:ir.ui.view,arch_db:snailmail_account.res_config_settings_view_form
-msgid "Print in Color"
-msgstr ""
-
-#. module: snailmail_account
-#: model_terms:ir.ui.view,arch_db:snailmail_account.res_config_settings_view_form
-msgid "Print on Both Sides"
-msgstr ""
-
-#. module: snailmail_account
-#: model:ir.model.fields,field_description:snailmail_account.field_res_company__invoice_is_snailmail
-msgid "Send by Letter by default"
-msgstr ""
-
-#. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__snailmail_is_letter
-msgid "Send by Post"
-msgstr ""
-
-#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_res_company__invoice_is_snailmail
 #: model:ir.model.fields,field_description:snailmail_account.field_res_config_settings__invoice_is_snailmail
-msgid "Send by Post with Snailmail"
+msgid "Send by Post"
 msgstr ""
 
 #. module: snailmail_account
@@ -126,6 +109,6 @@ msgstr ""
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
-msgid "invoice(s) do not have a complete customer address"
+msgid "invoices"
 msgstr ""
 

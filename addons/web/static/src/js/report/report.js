@@ -24,7 +24,6 @@ $('[res-id][res-model][view-type]')
         ev.preventDefault();
         var action = {
             'type': 'ir.actions.act_window',
-            'view_type': $(this).attr('view-type'),
             'view_mode': $(this).attr('view-mode') || $(this).attr('view-type'),
             'res_id': Number($(this).attr('res-id')),
             'res_model': $(this).attr('res-model'),

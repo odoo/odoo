@@ -45,7 +45,7 @@ class ProductTemplate(models.Model):
     description_purchase = fields.Text(
         'Purchase Description', translate=True)
     description_sale = fields.Text(
-        'Sale Description', translate=True,
+        'Sales Description', translate=True,
         help="A description of the Product that you want to communicate to your customers. "
              "This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note")
     type = fields.Selection([
@@ -109,7 +109,7 @@ class ProductTemplate(models.Model):
         help="Default unit of measure used for purchase orders. It must be in the same category as the default unit of measure.")
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get('product.template'), index=1)
+        default=lambda self: self.env.company, index=1)
     packaging_ids = fields.One2many(
         'product.packaging', string="Product Packages", compute="_compute_packaging_ids", inverse="_set_packaging_ids",
         help="Gives the different ways to package the same product.")
@@ -120,7 +120,7 @@ class ProductTemplate(models.Model):
     color = fields.Integer('Color Index')
 
     is_product_variant = fields.Boolean(string='Is a product variant', compute='_compute_is_product_variant')
-    attribute_line_ids = fields.One2many('product.template.attribute.line', 'product_tmpl_id', 'Product Attributes')
+    attribute_line_ids = fields.One2many('product.template.attribute.line', 'product_tmpl_id', 'Product Attributes', copy=True)
 
     valid_product_template_attribute_line_ids = fields.Many2many('product.template.attribute.line',
         compute="_compute_valid_attributes", string='Valid Product Attribute Lines', help="Technical compute")
@@ -135,10 +135,6 @@ class ProductTemplate(models.Model):
         compute="_compute_valid_attributes", string='Valid Product Attribute Values Without No Variant Attributes', help="Technical compute")
     valid_product_attribute_wnva_ids = fields.Many2many('product.attribute',
         compute="_compute_valid_attributes", string='Valid Product Attributes Without No Variant Attributes', help="Technical compute")
-    valid_archived_variant_ids = fields.Many2many('product.product',
-        compute="_compute_valid_attributes", string='Valid Archived Variants', help="Technical compute")
-    valid_existing_variant_ids = fields.Many2many('product.product',
-        compute="_compute_valid_existing_variant_ids", string='Valid Existing Variants', help="Technical compute")
 
     product_variant_ids = fields.One2many('product.product', 'product_tmpl_id', 'Products', required=True)
     # performance: product_variant_id provides prefetching on the first product variant only
@@ -168,7 +164,7 @@ class ProductTemplate(models.Model):
 
     def _compute_cost_currency_id(self):
         for template in self:
-            template.cost_currency_id = self.env.user.company_id.currency_id.id
+            template.cost_currency_id = self.env.company.currency_id.id
 
     @api.multi
     def _compute_template_price(self):
@@ -331,6 +327,12 @@ class ProductTemplate(models.Model):
             raise ValidationError(_('The default Unit of Measure and the purchase Unit of Measure must be in the same category.'))
         return True
 
+    @api.constrains('attribute_line_ids')
+    def _check_attribute_line(self):
+        if any(len(template.attribute_line_ids) != len(template.attribute_line_ids.mapped('attribute_id')) for template in self):
+            raise ValidationError(_('You cannot define two attribute lines for the same attribute.'))
+        return True
+
     @api.onchange('uom_id')
     def _onchange_uom_id(self):
         if self.uom_id:
@@ -346,7 +348,7 @@ class ProductTemplate(models.Model):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
         templates = super(ProductTemplate, self).create(vals_list)
         if "create_product_product" not in self._context:
-            templates.with_context(create_from_tmpl=True).create_variant_ids()
+            templates.create_variant_ids()
 
         # This is needed to set given values to first variant after creation
         for template, vals in zip(templates, vals_list):
@@ -361,6 +363,9 @@ class ProductTemplate(models.Model):
                 related_vals['volume'] = vals['volume']
             if vals.get('weight'):
                 related_vals['weight'] = vals['weight']
+            # Please do forward port
+            if vals.get('packaging_ids'):
+                related_vals['packaging_ids'] = vals['packaging_ids']
             if related_vals:
                 template.write(related_vals)
 
@@ -411,9 +416,23 @@ class ProductTemplate(models.Model):
             if (not products) or (limit and (len(templates) > limit)):
                 break
 
+        searched_ids = set(templates.ids)
+        # some product.templates do not have product.products yet (dynamic variants configuration),
+        # we need to add the base _name_search to the results
+        # FIXME awa: this is really not performant at all but after discussing with the team
+        # we don't see another way to do it
+        if not limit or len(searched_ids) < limit:
+            searched_ids |= set([template_id[0] for template_id in
+                super(ProductTemplate, self)._name_search(
+                    name,
+                    args=args,
+                    operator=operator,
+                    limit=limit,
+                    name_get_uid=name_get_uid)])
+
         # re-apply product.template order + name_get
         return super(ProductTemplate, self)._name_search(
-            '', args=[('id', 'in', list(set(templates.ids)))],
+            '', args=[('id', 'in', list(searched_ids))],
             operator='ilike', limit=limit, name_get_uid=name_get_uid)
 
     @api.multi
@@ -430,12 +449,12 @@ class ProductTemplate(models.Model):
             # standard_price field can only be seen by users in base.group_user
             # Thus, in order to compute the sale price from the cost for users not in this group
             # We fetch the standard price as the superuser
-            templates = self.with_context(force_company=company and company.id or self._context.get('force_company', self.env.user.company_id.id)).sudo()
+            templates = self.with_context(force_company=company and company.id or self._context.get('force_company', self.env.company.id)).sudo()
         if not company:
             if self._context.get('force_company'):
                 company = self.env['res.company'].browse(self._context['force_company'])
             else:
-                company = self.env.user.company_id
+                company = self.env.company
         date = self.env.context.get('date') or fields.Date.today()
 
         prices = dict.fromkeys(self.ids, 0.0)
@@ -457,11 +476,6 @@ class ProductTemplate(models.Model):
 
         return prices
 
-    # compatibility to remove after v10 - DEPRECATED
-    @api.model
-    def _price_get(self, products, ptype='list_price'):
-        return products.price_compute(ptype)
-
     @api.multi
     def create_variant_ids(self):
         Product = self.env["product.product"]
@@ -475,7 +489,7 @@ class ProductTemplate(models.Model):
             variants_to_unlink = self.env['product.product']
             # adding an attribute with only one value should not recreate product
             # write this attribute on every product to make sure we don't lose them
-            variant_alone = tmpl_id._get_valid_product_template_attribute_lines().filtered(lambda line: line.attribute_id.create_variant == 'always' and len(line.value_ids) == 1).mapped('value_ids')
+            variant_alone = tmpl_id.valid_product_template_attribute_line_ids.filtered(lambda line: line.attribute_id.create_variant == 'always' and len(line.value_ids) == 1).mapped('value_ids')
             for value_id in variant_alone:
                 updated_products = tmpl_id.product_variant_ids.filtered(lambda product: value_id.attribute_id not in product.mapped('attribute_value_ids.attribute_id'))
                 updated_products.write({'attribute_value_ids': [(4, value_id.id)]})
@@ -503,6 +517,7 @@ class ProductTemplate(models.Model):
                         variants_to_create.append({
                             'product_tmpl_id': tmpl_id.id,
                             'attribute_value_ids': [(6, 0, list(value_ids))],
+                            'active': tmpl_id.active,
                         })
                         if len(variants_to_create) > 1000:
                             raise UserError(_(
@@ -562,7 +577,7 @@ class ProductTemplate(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        return any(a.create_variant == 'dynamic' for a in self._get_valid_product_attributes())
+        return any(a.create_variant == 'dynamic' for a in self.valid_product_attribute_ids)
 
     @api.multi
     def _compute_valid_attributes(self):
@@ -582,8 +597,6 @@ class ProductTemplate(models.Model):
 
         For what is considered an archived variant, see `_has_valid_attributes`.
         """
-        archived_variants = self.env['product.product'].search([('product_tmpl_id', 'in', self.ids), ('active', '=', False)])
-
         # prefetch
         self.mapped('attribute_line_ids.value_ids.id')
         self.mapped('attribute_line_ids.attribute_id.create_variant')
@@ -597,45 +610,6 @@ class ProductTemplate(models.Model):
 
             record.valid_product_attribute_ids = record.valid_product_template_attribute_line_ids.mapped('attribute_id')
             record.valid_product_attribute_wnva_ids = record.valid_product_template_attribute_line_wnva_ids.mapped('attribute_id')
-
-            valid_value_ids = record.valid_product_attribute_value_wnva_ids
-            valid_attribute_ids = record.valid_product_attribute_wnva_ids
-
-            record.valid_archived_variant_ids = archived_variants.filtered(
-                lambda v: v.product_tmpl_id == record and v._has_valid_attributes(valid_attribute_ids, valid_value_ids)
-            )
-
-    @api.multi
-    def _compute_valid_existing_variant_ids(self):
-        """This compute is done outside of `_compute_valid_attributes` because
-        it is often not needed, and it can be very bad on performance."""
-        existing_variants = self.env['product.product'].search([('product_tmpl_id', 'in', self.ids), ('active', '=', True)])
-        for record in self:
-
-            valid_value_ids = record.valid_product_attribute_value_wnva_ids
-            valid_attribute_ids = record.valid_product_attribute_wnva_ids
-
-            record.valid_existing_variant_ids = existing_variants.filtered(
-                lambda v: v.product_tmpl_id == record and v._has_valid_attributes(valid_attribute_ids, valid_value_ids)
-            )
-
-    @api.multi
-    def _get_valid_product_template_attribute_lines(self):
-        """deprecated, use `valid_product_template_attribute_line_ids`"""
-        self.ensure_one()
-        return self.valid_product_template_attribute_line_ids
-
-    @api.multi
-    def _get_valid_product_attributes(self):
-        """deprecated, use `valid_product_attribute_ids`"""
-        self.ensure_one()
-        return self.valid_product_attribute_ids
-
-    @api.multi
-    def _get_valid_product_attribute_values(self):
-        """deprecated, use `valid_product_attribute_value_ids`"""
-        self.ensure_one()
-        return self.valid_product_attribute_value_ids
 
     @api.multi
     def _get_possible_variants(self, parent_combination=None):
@@ -663,60 +637,62 @@ class ProductTemplate(models.Model):
         return self.product_variant_ids.filtered(lambda p: p._is_variant_possible(parent_combination))
 
     @api.multi
-    def get_filtered_variants(self, reference_product=None):
-        """deprecated, use _get_possible_variants instead"""
-        self.ensure_one()
-
-        parent_combination = self.env['product.template.attribute.value']
-
-        if reference_product:
-            # append the reference_product if provided
-            parent_combination |= reference_product.product_template_attribute_value_ids
-            if reference_product.env.context.get('no_variant_attribute_values'):
-                # Add "no_variant" attribute values' exclusions
-                # They are kept in the context since they are not linked to this product variant
-                parent_combination |= reference_product.env.context.get('no_variant_attribute_values')
-        return self._get_possible_variants(parent_combination)
-
-    @api.multi
-    def _get_attribute_exclusions(self, parent_combination=None):
+    def _get_attribute_exclusions(self, parent_combination=None, parent_name=None):
         """Return the list of attribute exclusions of a product.
 
         :param parent_combination: the combination from which
             `self` is an optional or accessory product. Indeed exclusions
             rules on one product can concern another product.
         :type parent_combination: recordset `product.template.attribute.value`
+        :param parent_name: the name of the parent product combination.
+        :type parent_name: str
 
         :return: dict of exclusions
             - exclusions: from this product itself
+            - parent_combination: ids of the given parent_combination
             - parent_exclusions: from the parent_combination
-            - archived_combinations: variants that are archived
-            - existing_combinations: variants that are existing (as opposed to
-                deleted, because deleted need to be considered impossible if
-                there are no dynamic attributes).
-            - has_dynamic_attributes: whether there is a dynamic attribute
-            - no_variant_product_template_attribute_value_ids: values that are
-                no_variant
+           - parent_product_name: the name of the parent product if any, used in the interface
+               to explain why some combinations are not available.
+               (e.g: Not available with Customizable Desk (Legs: Steel))
+           - mapped_attribute_names: the name of every attribute values based on their id,
+               used to explain in the interface why that combination is not available
+               (e.g: Not available with Color: Black)
         """
         self.ensure_one()
+        parent_combination = parent_combination or self.env['product.template.attribute.value']
         return {
-            'exclusions': self._get_own_attribute_exclusions(),
+            'exclusions': self._complete_inverse_exclusions(self._get_own_attribute_exclusions()),
             'parent_exclusions': self._get_parent_attribute_exclusions(parent_combination),
-            'archived_combinations': self._get_archived_combinations(),
-            'has_dynamic_attributes': self.has_dynamic_attributes(),
-            'existing_combinations': self._get_existing_combinations(),
-            'no_variant_product_template_attribute_value_ids': self._get_no_variant_product_template_attribute_values(),
+            'parent_combination': parent_combination.ids,
+            'parent_product_name': parent_name,
+            'mapped_attribute_names': self._get_mapped_attribute_names(parent_combination),
         }
+
+    @api.model
+    def _complete_inverse_exclusions(self, exclusions):
+        """Will complete the dictionnary of exclusions with their respective inverse
+        e.g: Black excludes XL and L
+        -> XL excludes Black
+        -> L excludes Black"""
+        result = dict(exclusions)
+        for key, value in exclusions.items():
+            for exclusion in value:
+                if exclusion in result and key not in result[exclusion]:
+                    result[exclusion].append(key)
+                else:
+                    result[exclusion] = [key]
+
+        return result
 
     @api.multi
     def _get_own_attribute_exclusions(self):
         """Get exclusions coming from the current template.
 
-        Dictionnary, each ptav is a key, and for each of them the value is
-        an array with the other ptav that they exclude (empty if no exclusion).
+        Dictionnary, each product template attribute value is a key, and for each of them
+        the value is an array with the other ptav that they exclude (empty if no exclusion).
         """
         self.ensure_one()
-        product_template_attribute_values = self._get_valid_product_template_attribute_lines().mapped('product_template_value_ids')
+        product_template_attribute_values = self.valid_product_template_attribute_line_ids.product_template_value_ids
         return {
             ptav.id: [
                 value_id
@@ -731,48 +707,46 @@ class ProductTemplate(models.Model):
     def _get_parent_attribute_exclusions(self, parent_combination):
         """Get exclusions coming from the parent combination.
 
-        Array, each element is a ptav that is excluded because of the parent.
+        Dictionnary, each parent's ptav is a key, and for each of them the value is
+        an array with the other ptav that are excluded because of the parent.
         """
         self.ensure_one()
         if not parent_combination:
-            return []
-        return [
-            value_id
-            for filter_line in parent_combination.mapped('exclude_for').filtered(
+            return {}
+
+        result = {}
+        for product_attribute_value in parent_combination:
+            for filter_line in product_attribute_value.exclude_for.filtered(
                 lambda filter_line: filter_line.product_tmpl_id == self
-            ) for value_id in filter_line.value_ids.ids
-        ]
+            ):
+                # Some exclusions don't have attribute value. This means that the template is not
+                # compatible with the parent combination. If such an exclusion is found, it means that all
+                # attribute values are excluded.
+                if filter_line.value_ids:
+                    result[product_attribute_value.id] = filter_line.value_ids.ids
+                else:
+                    result[product_attribute_value.id] = filter_line.product_tmpl_id.mapped('attribute_line_ids.product_template_value_ids').ids
+
+        return result
 
     @api.multi
-    def _get_archived_combinations(self):
-        self.ensure_one()
-        """Get archived combinations.
+    def _get_mapped_attribute_names(self, parent_combination=None):
+        """ The name of every attribute values based on their id,
+        used to explain in the interface why that combination is not available
+        (e.g: Not available with Color: Black).
 
-        Array, each element is an array with ids of an archived combination.
+        It contains both attribute value names from this product and from
+        the parent combination if provided.
         """
-        return [archived_variant.product_template_attribute_value_ids.ids
-            for archived_variant in self.valid_archived_variant_ids]
-
-    @api.multi
-    def _get_existing_combinations(self):
         self.ensure_one()
-        """Get existing combinations.
+        all_product_attribute_values = self.valid_product_template_attribute_line_ids.product_template_value_ids
+        if parent_combination:
+            all_product_attribute_values |= parent_combination
 
-        Needed because when not using dynamic attributes, the combination is
-        not ok if it doesn't exist (= if the variant has been deleted).
-
-        Array, each element is an array with ids of an existing combination.
-        """
-        return [variant.product_template_attribute_value_ids.ids
-            for variant in self.valid_existing_variant_ids]
-
-    @api.multi
-    def _get_no_variant_product_template_attribute_values(self):
-        self.ensure_one()
-        product_template_attribute_values = self._get_valid_product_template_attribute_lines().mapped('product_template_value_ids')
-        return product_template_attribute_values.filtered(
-            lambda v: v.attribute_id.create_variant == 'no_variant'
-        ).ids
+        return {
+            attribute_value.id: attribute_value.display_name
+            for attribute_value in all_product_attribute_values
+        }
 
     @api.multi
     def _is_combination_possible(self, combination, parent_combination=None):
@@ -813,9 +787,16 @@ class ProductTemplate(models.Model):
             # combination has different values than the ones configured on the template
             return False
 
-        if not self.has_dynamic_attributes() and not self._get_variant_for_combination(combination):
-            # the variant has been deleted
-            return False
+        variant = self._get_variant_for_combination(combination)
+
+        if self.has_dynamic_attributes():
+            if variant and not variant.active:
+                # dynamic and the variant has been archived
+                return False
+        else:
+            if not variant or not variant.active:
+                # not dynamic, the variant has been archived or deleted
+                return False
 
         exclusions = self._get_own_attribute_exclusions()
         if exclusions:
@@ -828,14 +809,12 @@ class ProductTemplate(models.Model):
 
         parent_exclusions = self._get_parent_attribute_exclusions(parent_combination)
         if parent_exclusions:
-            for exclusion in parent_exclusions:
-                if exclusion in combination.ids:
-                    return False
-
-        filtered_combination = combination._without_no_variant_attributes()
-        archived_combinations = self._get_archived_combinations()
-        if archived_combinations and filtered_combination.ids in archived_combinations:
-            return False
+            # parent_exclusion are mapped by ptav but here we don't need to know
+            # where the exclusion comes from so we loop directly on the dict values
+            for exclusions_values in parent_exclusions.values():
+                for exclusion in exclusions_values:
+                    if exclusion in combination.ids:
+                        return False
 
         return True
 
@@ -870,7 +849,7 @@ class ProductTemplate(models.Model):
         for pav in attribute_values:
             domain = expression.AND([[('attribute_value_ids', 'in', pav.id)], domain])
 
-        res = self.env['product.product'].with_context(active_test=False).search(domain)
+        res = self.env['product.product'].with_context(active_test=False).search(domain, order='active DESC')
 
         # The domain above is checking for the `product.attribute.value`, but we
         # need to make sure it's the same `product.template.attribute.value`.
@@ -929,8 +908,10 @@ class ProductTemplate(models.Model):
         if not self.active:
             return _("The product template is archived so no combination is possible.")
 
-        ptal_stack = [self._get_valid_product_template_attribute_lines()]
-        combination_stack = [self.env['product.template.attribute.value']]
+        necessary_values = necessary_values or self.env['product.template.attribute.value']
+        necessary_attributes = necessary_values.mapped('attribute_id')
+        ptal_stack = [self.valid_product_template_attribute_line_ids.filtered(lambda ptal: ptal.attribute_id not in necessary_attributes)]
+        combination_stack = [necessary_values]
 
         # keep going while we have attribute lines to test
         while len(ptal_stack):
@@ -939,7 +920,7 @@ class ProductTemplate(models.Model):
 
             if not attribute_lines:
                 # full combination, if it's possible return it, otherwise skip it
-                if self._is_combination_possible(combination, parent_combination) and all(v in combination for v in (necessary_values or [])):
+                if self._is_combination_possible(combination, parent_combination):
                     yield(combination)
             else:
                 # we have remaining attribute lines to consider
@@ -1025,7 +1006,7 @@ class ProductTemplate(models.Model):
         :rtype: recordset of one `res.company`
         """
         self.ensure_one()
-        return self.env.user.company_id
+        return self.env.company
 
     @api.model
     def get_empty_list_help(self, help):

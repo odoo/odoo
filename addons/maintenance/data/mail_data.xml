@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<data>
+<data noupdate="1">
     <!-- Maintenance-specific activities, for automatic generation mainly -->
     <record id="mail_act_maintenance_request" model="mail.activity.type">
         <field name="name">Maintenance Request</field>
         <field name="icon">fa-wrench</field>
         <field name="res_model_id" ref="maintenance.model_maintenance_request"/>
-        <field name="is_master_data">True</field>
     </record>
 
     <!-- email alias for maintenance requests -->

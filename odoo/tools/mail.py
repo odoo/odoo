@@ -20,6 +20,30 @@ from odoo.tools import misc
 
 _logger = logging.getLogger(__name__)
 
+# Optional Flanker dependency for email validation.
+_flanker_warning = False
+try:
+    from flanker.addresslib import address
+    if hasattr(address, 'six'):
+        # Python 3 supported
+        def checkmail(mail):
+            return bool(address.validate_address(mail))
+    else:
+        def checkmail(mail):
+            global _flanker_warning
+            if not _flanker_warning:
+                _logger.info("Flanker version 0.9 or greater required for Python 3 compatibility")
+                _flanker_warning = True
+            return True
+
+except ImportError:
+    _logger.info('The flanker Python module is not installed, so email validation with flanker is unavailable')
+    def checkmail(mail):
+        global _flanker_warning
+        if not _flanker_warning:
+            _logger.info('The flanker Python module is not installed, so email validation with flanker is unavailable')
+            _flanker_warning = True
+        return True
 
 #----------------------------------------------------------
 # HTML Sanitizer
@@ -50,7 +74,7 @@ class _Cleaner(clean.Cleaner):
         'margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right',
         'white-space',
         # box model
-        'border', 'border-color', 'border-radius', 'border-style', 'border-width', 'border-top',
+        'border', 'border-color', 'border-radius', 'border-style', 'border-width', 'border-top', 'border-bottom',
         'height', 'width', 'max-width', 'min-width', 'min-height',
         # tables
         'border-collapse', 'border-spacing', 'caption-side', 'empty-cells', 'table-layout']
@@ -474,28 +498,29 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
             cr.close()
     return res
 
-def email_split(text):
-    """ Return a list of the email addresses found in ``text`` """
+def email_split_tuples(text):
+    """ Return a list of (name, email) addresse tuples found in ``text``"""
     if not text:
         return []
-    return [addr[1] for addr in getaddresses([text])
+    return [(addr[0], addr[1]) for addr in getaddresses([text])
                 # getaddresses() returns '' when email parsing fails, and
                 # sometimes returns emails without at least '@'. The '@'
                 # is strictly required in RFC2822's `addr-spec`.
                 if addr[1]
                 if '@' in addr[1]]
 
+def email_split(text):
+    """ Return a list of the email addresses found in ``text`` """
+    if not text:
+        return []
+    return [email for (name, email) in email_split_tuples(text)]
+
 def email_split_and_format(text):
     """ Return a list of email addresses found in ``text``, formatted using
     formataddr. """
     if not text:
         return []
-    return [formataddr((addr[0], addr[1])) for addr in getaddresses([text])
-                # getaddresses() returns '' when email parsing fails, and
-                # sometimes returns emails without at least '@'. The '@'
-                # is strictly required in RFC2822's `addr-spec`.
-                if addr[1]
-                if '@' in addr[1]]
+    return [formataddr((name, email)) for (name, email) in email_split_tuples(text)]
 
 def email_normalize(text):
     """ Sanitize and standardize email address entries.
@@ -511,6 +536,16 @@ def email_normalize(text):
     if not emails or len(emails) != 1:
         return False
     return emails[0].lower()
+
+def email_validate(email):
+    """
+    Check is the email is valid using email normalization + optional Flanker module.
+    If Flanker is installed, it will check if email is valid (checking DNS and other stuff).
+    If Flanker is not installed, this method only normalizes the email
+    :param text: string containing the email to validate
+    :return: normalized email if mail is valid or False
+    """
+    return email_normalize(email) if checkmail(email) else False
 
 def email_escape_char(email_address):
     """ Escape problematic characters in the given email address string"""

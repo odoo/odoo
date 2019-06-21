@@ -23,10 +23,10 @@ class CRMHelpers(models.Model):
         res = self.env['res.users'].search_read([('id', 'in', list(uids))], ['email'])
         emails = set(r['email'] for r in res if r.get('email'))
 
-        mail_values = mail_template.generate_email(iap_account.id)
-        mail_values['email_to'] = ','.join(emails)
-        mail = self.env['mail.mail'].create(mail_values)
-        mail.send()
+        email_values = {
+            'email_to': ','.join(emails)
+        }
+        mail_template.send_mail(iap_account.id, force_send=True, email_values=email_values)
         self.env['ir.config_parameter'].sudo().set_param(notification_parameter, True)
 
     @api.model

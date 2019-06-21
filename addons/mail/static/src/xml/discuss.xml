@@ -183,7 +183,7 @@
         <span t-att-class="partnerID ? 'o_updatable_im_status' : ''" t-att-data-partner-id="partnerID">
             <i t-if="status == 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online" role="img" aria-label="User is online"/>
             <i t-if="status == 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle" role="img" aria-label="User is idle"/>
-            <i t-if="status == 'offline'" class="o_mail_user_status fa fa-circle" title="Offline" role="img" aria-label="User is offline"/>
+            <i t-if="status == 'offline'" class="o_mail_user_status fa fa-circle-o" title="Offline" role="img" aria-label="User is offline"/>
         </span>
     </t>
 
@@ -316,7 +316,8 @@
                     <span class="o_preview_counter">
                         <t t-if="preview.unreadCounter &gt; 0">&amp;nbsp;(<t t-esc="preview.unreadCounter"/>)</t>
                     </span>
-                    <span class="o_last_message_date"> <t t-esc="preview.date ? preview.date.fromNow() : ''"/> </span>
+                    <span t-if="preview.isLinkedToDocumentThread" class="o_discuss_icon o_thread_window_expand fa fa-expand"/>
+                    <span class="o_last_message_date ml-auto mr-2"> <t t-esc="preview.date ? preview.date.fromNow() : ''"/> </span>
                 </div>
                 <div class="o_last_message_preview">
                     <t t-if="preview.body">

@@ -160,7 +160,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         if len(el):
             raise SyntaxError("t-call-assets cannot contain children nodes")
 
-        # nodes = self._get_asset(xmlid, options, css=css, js=js, debug=values.get('debug'), async=async, values=values)
+        # nodes = self._get_asset_nodes(xmlid, options, css=css, js=js, debug=values.get('debug'), async=async, values=values)
         #
         # for index, (tagName, t_attrs, content) in enumerate(nodes):
         #     if index:
@@ -215,6 +215,8 @@ class IrQWeb(models.AbstractModel, QWeb):
                             keywords=[], starargs=None, kwargs=None
                         )),
                         ast.keyword('async_load', self._get_attr_bool(el.get('async_load', False))),
+                        ast.keyword('defer_load', self._get_attr_bool(el.get('defer_load', False))),
+                        ast.keyword('lazy_load', self._get_attr_bool(el.get('lazy_load', False))),
                         ast.keyword('values', ast.Name(id='values', ctx=ast.Load())),
                     ],
                     starargs=None, kwargs=None
@@ -280,30 +282,24 @@ class IrQWeb(models.AbstractModel, QWeb):
 
     # method called by computing code
 
-    def get_asset_bundle(self, xmlid, files, remains=None, env=None):
-        return AssetsBundle(xmlid, files, remains=remains, env=env)
-
-    # compatibility to remove after v11 - DEPRECATED
-    @tools.conditional(
-        'xml' not in tools.config['dev_mode'],
-        tools.ormcache_context('xmlid', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'async_load', keys=("website_id",)),
-    )
-    def _get_asset(self, xmlid, options, css=True, js=True, debug=False, async_load=False, values=None):
-        files, remains = self._get_asset_content(xmlid, options)
-        asset = self.get_asset_bundle(xmlid, files, remains, env=self.env)
-        return asset.to_html(css=css, js=js, debug=debug, async_load=async_load, url_for=(values or {}).get('url_for', lambda url: url))
+    def get_asset_bundle(self, xmlid, files, env=None):
+        return AssetsBundle(xmlid, files, env=env)
 
     @tools.conditional(
         # in non-xml-debug mode we want assets to be cached forever, and the admin can force a cache clear
         # by restarting the server after updating the source code (or using the "Clear server cache" in debug tools)
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache_context('xmlid', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'async_load', keys=("website_id",)),
+        tools.ormcache_context('xmlid', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'async_load', 'defer_load', 'lazy_load', keys=("website_id",)),
     )
-    def _get_asset_nodes(self, xmlid, options, css=True, js=True, debug=False, async_load=False, values=None):
+    def _get_asset_nodes(self, xmlid, options, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, values=None):
         files, remains = self._get_asset_content(xmlid, options)
         asset = self.get_asset_bundle(xmlid, files, env=self.env)
         remains = [node for node in remains if (css and node[0] == 'link') or (js and node[0] != 'link')]
-        return remains + asset.to_node(css=css, js=js, debug=debug, async_load=async_load)
+        return remains + asset.to_node(css=css, js=js, debug=debug, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load)
+
+    def _get_asset_link_urls(self, xmlid, options):
+        asset_nodes = self._get_asset_nodes(xmlid, options, js=False)
+        return [node[1]['href'] for node in asset_nodes if node[0] == 'link']
 
     @tools.ormcache_context('xmlid', 'options.get("lang", "en_US")', keys=("website_id",))
     def _get_asset_content(self, xmlid, options):

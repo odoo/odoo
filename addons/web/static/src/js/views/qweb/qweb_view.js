@@ -65,8 +65,9 @@ var Model = AbstractModel.extend({
     /**
      * reload
      */
-    reload: function (_id, _params) {
-        // FIXME: update this._state or something?
+    reload: function (_id, params) {
+        _.extend(this._state, _.pick(params, ['domain', 'context']));
+
         return this._fetch();
     }
 });

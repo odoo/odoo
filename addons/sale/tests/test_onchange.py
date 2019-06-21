@@ -42,7 +42,7 @@ class TestOnchangeProductId(TransactionCase):
                                                               list_price=121,
                                                               taxes_id=[(6, 0, [tax_include_id.id])]))
 
-        product_id = self.product_model.create(dict(product_tmpl_id=product_tmpl_id.id))
+        product_id = product_tmpl_id.product_variant_id
 
         fp_id = self.fiscal_position_model.create(dict(name="fiscal position", sequence=1))
 
@@ -226,9 +226,9 @@ class TestOnchangeProductId(TransactionCase):
         self.env['res.currency.rate'].create({'name': '2018-07-11',
             'rate': 2.0,
             'currency_id': other_currency.id,
-            'company_id': self.env.user.company_id.id})
+            'company_id': self.env.company.id})
         self.env['res.currency.rate'].search(
-            [('currency_id', '=', self.env.user.company_id.currency_id.id)]
+            [('currency_id', '=', self.env.company.currency_id.id)]
         ).unlink()
         new_uom = self.env['uom.uom'].create({
             'name': '10 units',

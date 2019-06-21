@@ -33,16 +33,6 @@ class PortalMixin(models.AbstractModel):
             self.sudo().write({'access_token': str(uuid.uuid4())})
         return self.access_token
 
-    @api.multi
-    def get_base_url(self):
-        """Get the base URL for the current model.
-
-        Defined here to be overriden by website specific models.
-        The method has to be public because it is called from mail templates.
-        """
-        self.ensure_one()
-        return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-
     def _get_share_url(self, redirect=False, signup_partner=False, pid=None):
         """
         Build the url of the record  that will be sent by mail and adds additional parameters such as
@@ -72,10 +62,10 @@ class PortalMixin(models.AbstractModel):
         return '%s?%s' % ('/mail/view' if redirect else self.access_url, url_encode(params))
 
     @api.multi
-    def _notify_get_groups(self, message, groups):
+    def _notify_get_groups(self):
         access_token = self._portal_ensure_token()
         customer = self['partner_id']
-
+        groups = super(PortalMixin, self)._notify_get_groups()
         if access_token and customer:
             additional_params = {
                 'access_token': self.access_token,
@@ -88,13 +78,12 @@ class PortalMixin(models.AbstractModel):
                     'has_button_access': False,
                     'button_access': {
                         'url': access_link,
-                        'title': _('View %s') % self.env['ir.model']._get(message.model).display_name,
                     },
                 })
             ]
         else:
             new_group = []
-        return super(PortalMixin, self)._notify_get_groups(message, new_group + groups)
+        return new_group + groups
 
     @api.multi
     def get_access_action(self, access_uid=None):

@@ -32,7 +32,6 @@
         <record id="action_ir_slide_category" model="ir.actions.act_window">
             <field name="name">Categories</field>
             <field name="res_model">slide.category</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -111,6 +110,20 @@
                                     <field name="allow_comment"/>
                                 </group>
                             </page>
+                            <page string="Karma Rules" name="karma_rules">
+                                <group>
+                                    <group string="Karma generation">
+                                        <field name="karma_gen_slide_vote"/>
+                                        <field name="karma_gen_channel_rank"/>
+                                        <field name="karma_gen_channel_finish"/>
+                                    </group>
+                                    <group string="Karma based actions">
+                                        <field name="karma_review"/>
+                                        <field name="karma_slide_comment"/>
+                                        <field name="karma_slide_vote"/>
+                                    </group>
+                                </group>
+                            </page>
                             <page string="Statistics" groups="base.group_no_one">
                                 <group>
                                     <group>
@@ -167,7 +180,6 @@
         <record id="action_slide_channels" model="ir.actions.act_window">
             <field name="name">Channels</field>
             <field name="res_model">slide.channel</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="website_slides.slide_channel_view_search"/>
             <field name="help" type="html">

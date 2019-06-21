@@ -90,6 +90,7 @@ var core = require('web.core');
 var Domain = require('web.Domain');
 var session = require('web.session');
 var utils = require('web.utils');
+var viewUtils = require('web.viewUtils');
 
 var _t = core._t;
 
@@ -178,7 +179,7 @@ var BasicModel = AbstractModel.extend({
     addDefaultRecord: function (listID, options) {
         var self = this;
         var list = this.localData[listID];
-        var context = this._getContext(list);
+        var context = _.extend({}, this._getDefaultContext(list), this._getContext(list));
 
         var position = (options && options.position) || 'top';
         var params = {
@@ -563,9 +564,16 @@ var BasicModel = AbstractModel.extend({
                     }
                 } else if (field.type === 'one2many' || field.type === 'many2many') {
                     if (options.raw) {
-                        relDataPoint = this.localData[data[fieldName]];
-                        relDataPoint = this._applyX2ManyOperations(relDataPoint);
-                        data[fieldName] = relDataPoint.res_ids;
+                        if (typeof data[fieldName] === 'string') {
+                            relDataPoint = this.localData[data[fieldName]];
+                            relDataPoint = this._applyX2ManyOperations(relDataPoint);
+                            data[fieldName] = relDataPoint.res_ids;
+                        } else {
+                            // no datapoint has been created yet (because the loading of relational
+                            // data has been batched, and hasn't started yet), so the value is still
+                            // the list of ids in the relation
+                            data[fieldName] = data[fieldName] || [];
+                        }
                     } else {
                         data[fieldName] = this.get(data[fieldName]) || [];
                     }
@@ -637,6 +645,9 @@ var BasicModel = AbstractModel.extend({
             getDomain: element.getDomain,
             getFieldNames: element.getFieldNames,
             groupedBy: element.groupedBy,
+            groupsCount: element.groupsCount,
+            groupsLimit: element.groupsLimit,
+            groupsOffset: element.groupsOffset,
             id: element.id,
             isDirty: element.isDirty,
             isOpen: element.isOpen,
@@ -1347,7 +1358,7 @@ var BasicModel = AbstractModel.extend({
         for (var fieldName in changes) {
             field = record.fields[fieldName];
             if (field.type === 'one2many' || field.type === 'many2many') {
-                defs.push(this._applyX2ManyChange(record, fieldName, changes[fieldName], options.viewType, options.allowWarning));
+                defs.push(this._applyX2ManyChange(record, fieldName, changes[fieldName], options));
             } else if (field.type === 'many2one' || field.type === 'reference') {
                 defs.push(this._applyX2OneChange(record, fieldName, changes[fieldName]));
             } else {
@@ -1677,14 +1688,15 @@ var BasicModel = AbstractModel.extend({
      * @param {string} fieldName
      * @param {Object} command A command object.  It should have a 'operation'
      *   key.  For example, it looks like {operation: ADD, id: 'partner_1'}
-     * @param {string} [viewType] current viewType. If not set, we will assume
+     * @param {Object} [options]
+     * @param {string} [options.viewType] current viewType. If not set, we will assume
      *   main viewType from the record
-     * @param {boolean} [allowWarning=false] if true, change
+     * @param {boolean} [options.allowWarning=false] if true, change
      *   operation can complete, even if a warning is raised
      *   (only supported by the 'CREATE' command.operation)
      * @returns {Promise}
      */
-    _applyX2ManyChange: function (record, fieldName, command, viewType, allowWarning) {
+    _applyX2ManyChange: function (record, fieldName, command, options) {
         if (command.operation === 'TRIGGER_ONCHANGE') {
             // the purpose of this operation is to trigger an onchange RPC, so
             // there is no need to apply any change on the record (the changes
@@ -1697,7 +1709,8 @@ var BasicModel = AbstractModel.extend({
         var localID = (record._changes && record._changes[fieldName]) || record.data[fieldName];
         var list = this.localData[localID];
         var field = record.fields[fieldName];
-        var fieldInfo = record.fieldsInfo[viewType || record.viewType][fieldName];
+        var viewType = (options && options.viewType) || record.viewType;
+        var fieldInfo = record.fieldsInfo[viewType][fieldName];
         var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
         var def, rec;
         var defs = [];
@@ -1776,12 +1789,12 @@ var BasicModel = AbstractModel.extend({
                 }
                 break;
             case 'CREATE':
-                var options = {
+                var createOptions = _.extend({
                     context: command.context,
-                    position: command.position,
-                    allowWarning: allowWarning
-                };
-                def = this._addX2ManyDefaultRecord(list, options).then(function (ids) {
+                    position: command.position
+                }, options || {});
+
+                def = this._addX2ManyDefaultRecord(list, createOptions).then(function (ids) {
                     _.each(ids, function(id){
                         if (command.position === 'bottom' && list.orderedResIDs && list.orderedResIDs.length >= list.limit) {
                             list.tempLimitIncrement = (list.tempLimitIncrement || 0) + 1;
@@ -1822,6 +1835,17 @@ var BasicModel = AbstractModel.extend({
                     list._changes.push({operation: operation, id: id});
                 });
                 break;
+            case 'DELETE_ALL':
+                // first remove all pending 'ADD' operations
+                list._changes = _.reject(list._changes, function (change) {
+                    return change.operation === 'ADD';
+                });
+
+                // then apply 'DELETE' on existing records
+                return this._applyX2ManyChange(record, fieldName, {
+                    operation: 'DELETE',
+                    ids: list.res_ids
+                }, options);
             case 'REPLACE_WITH':
                 // this is certainly not optimal... and not sure that it is
                 // correct if some ids are added and some other are removed
@@ -1836,7 +1860,7 @@ var BasicModel = AbstractModel.extend({
                     addDef = this._applyX2ManyChange(record, fieldName, {
                         operation: 'ADD_M2M',
                         ids: values
-                    }, viewType);
+                    }, options);
                 }
                 if (removedIds.length) {
                     var listData = _.map(list.data, function (localId) {
@@ -1850,9 +1874,20 @@ var BasicModel = AbstractModel.extend({
                             }
                             return _.findWhere(listData, {res_id: resID}).id;
                         }),
-                    }, viewType);
+                    }, options);
                 }
                 return Promise.all([addDef, removedDef]);
+            case 'MULTI':
+                // allows batching multiple operations
+                _.each(command.commands, function (innerCommand){
+                    defs.push(self._applyX2ManyChange(
+                        record,
+                        fieldName,
+                        innerCommand,
+                        options
+                    ));
+                });
+                break;
         }
 
         return Promise.all(defs).then(function () {
@@ -1911,7 +1946,10 @@ var BasicModel = AbstractModel.extend({
                 case 'FORGET':
                 case 'DELETE':
                     list.count--;
-                    list.res_ids = _.without(list.res_ids, relRecord.res_id);
+                    // FIXME awa: there is no "relRecord" for o2m field
+                    // seems like using change.id does the trick -> check with framework JS
+                    var deletedResID = relRecord ? relRecord.res_id : change.id;
+                    list.res_ids = _.without(list.res_ids, deletedResID);
                     break;
                 case 'REMOVE_ALL':
                     list.count = 0;
@@ -3306,6 +3344,27 @@ var BasicModel = AbstractModel.extend({
         return toFetch;
     },
     /**
+     * Given a dataPoint of type list (that may be a group), returns an object
+     * with 'default_' keys to be used to create new records in that group.
+     *
+     * @private
+     * @param {Object} dataPoint
+     * @returns {Object}
+     */
+    _getDefaultContext: function (dataPoint) {
+        var defaultContext = {};
+        while (dataPoint.parentID) {
+            var parent = this.localData[dataPoint.parentID];
+            var groupByField = parent.groupedBy[0].split(':')[0];
+            var value = viewUtils.getGroupValue(dataPoint, groupByField);
+            if (value) {
+                defaultContext['default_' + groupByField] = value;
+            }
+            dataPoint = parent;
+        }
+        return defaultContext;
+    },
+    /**
      * Some records are associated to a/some domain(s). This method allows to
      * retrieve them, evaluated.
      *
@@ -3371,12 +3430,20 @@ var BasicModel = AbstractModel.extend({
                 evalContext.parent = this._getRecordEvalContext(parent, forDomain);
             }
         }
+        // Uses "current_company_id" because "company_id" would conflict with all the company_id fields
+        // in general, the actual "company_id" field of the form should be used for m2o domains, not this fallback
+        if (session.user_context.allowed_company_ids) {
+            var current_company = session.user_context.allowed_company_ids[0];
+        } else {
+            var current_company = session.user_companies ? session.user_companies.current_company[0] : false;
+        }
         return _.extend({
             active_id: evalContext.id || false,
             active_ids: evalContext.id ? [evalContext.id] : [],
             active_model: element.model,
             current_date: moment().format('YYYY-MM-DD'),
             id: evalContext.id || false,
+            current_company_id: current_company,
         }, session.user_context, element.context, evalContext);
     },
     /**
@@ -3647,6 +3714,7 @@ var BasicModel = AbstractModel.extend({
         var res_id, value;
         var res_ids = params.res_ids || [];
         var data = params.data || (type === 'record' ? {} : []);
+        var context = params.context;
         if (type === 'record') {
             res_id = params.res_id || (params.data && params.data.id);
             if (res_id) {
@@ -3654,6 +3722,9 @@ var BasicModel = AbstractModel.extend({
             } else {
                 res_id = _.uniqueId('virtual_');
             }
+            // it doesn't make sense for a record datapoint to have those keys
+            // besides, it will mess up x2m and actions down the line
+            context = _.omit(context, ['orderedBy', 'group_by']);
         } else {
             var isValueArray = params.value instanceof Array;
             res_id = isValueArray ? params.value[0] : undefined;
@@ -3671,13 +3742,16 @@ var BasicModel = AbstractModel.extend({
             _domains: {},
             _rawChanges: {},
             aggregateValues: params.aggregateValues || {},
-            context: params.context,
+            context: context,
             count: params.count || res_ids.length,
             data: data,
             domain: params.domain || [],
             fields: fields,
             fieldsInfo: params.fieldsInfo,
             groupedBy: params.groupedBy || [],
+            groupsCount: 0,
+            groupsLimit: type === 'list' && params.groupsLimit || null,
+            groupsOffset: 0,
             id: _.uniqueId(params.modelName + '_'),
             isOpen: params.isOpen,
             limit: type === 'record' ? 1 : params.limit,
@@ -3897,7 +3971,8 @@ var BasicModel = AbstractModel.extend({
         return self._rpc({
                 model: record.model,
                 method: 'onchange',
-                args: [idList, currentData, fields, onchangeSpec, context],
+                args: [idList, currentData, fields, onchangeSpec],
+                context: context,
             })
             .then(function (result) {
                 if (!record._changes) {
@@ -4187,23 +4262,33 @@ var BasicModel = AbstractModel.extend({
      */
     _readGroup: function (list, options) {
         var self = this;
+        options = options || {};
         var groupByField = list.groupedBy[0];
         var rawGroupBy = groupByField.split(':')[0];
         var fields = _.uniq(list.getFieldNames().concat(rawGroupBy));
-        var orderedBy = _.filter(list.orderedBy, function(order){
+        var orderedBy = _.filter(list.orderedBy, function (order) {
             return order.name === rawGroupBy || list.fields[order.name].group_operator !== undefined;
         });
+        var openGroupsLimit = list.groupsLimit || self.OPEN_GROUP_LIMIT;
+        var expand = list.openGroupByDefault && options.fetchRecordsWithGroups;
         return this._rpc({
                 model: list.model,
-                method: 'read_group',
+                method: 'web_read_group',
                 fields: fields,
                 domain: list.domain,
                 context: list.context,
                 groupBy: list.groupedBy,
+                limit: list.groupsLimit,
+                offset: list.groupsOffset,
                 orderBy: orderedBy,
                 lazy: true,
+                expand: expand,
+                expand_limit: expand ? list.limit : null,
+                expand_orderby: expand ? list.orderedBy : null,
             })
-            .then(function (groups) {
+            .then(function (result) {
+                var groups = result.groups;
+                list.groupsCount = result.length;
                 var previousGroups = _.map(list.data, function (groupID) {
                     return self.localData[groupID];
                 });
@@ -4250,36 +4335,44 @@ var BasicModel = AbstractModel.extend({
                         return g.res_id === newGroup.res_id && g.value === newGroup.value;
                     });
                     if (oldGroup) {
-                        // restore the internal state of the group
                         delete self.localData[newGroup.id];
-                        var updatedProps = _.omit(newGroup, 'limit', 'isOpen', 'offset', 'id');
-                        if (options && options.onlyGroups || oldGroup.isOpen && newGroup.groupedBy.length) {
+                        // restore the internal state of the group
+                        var updatedProps = _.pick(oldGroup, 'isOpen', 'offset', 'id');
+                        if (options.onlyGroups || oldGroup.isOpen && newGroup.groupedBy.length) {
                             // If the group is opened and contains subgroups,
                             // also keep its data to keep internal state of
                             // sub-groups
                             // Also keep data if we only reload groups' own data
-                            delete updatedProps.data;
+                            updatedProps.data = oldGroup.data;
                         }
+                        _.extend(newGroup, updatedProps);
                         // set the limit such that all previously loaded records
                         // (e.g. if we are coming back to the kanban view from a
                         // form view) are reloaded
-                        oldGroup.limit = oldGroup.limit + oldGroup.loadMoreOffset;
-                        _.extend(oldGroup, updatedProps);
-                        newGroup = oldGroup;
-                    } else if (!newGroup.openGroupByDefault || openGroupCount >= self.OPEN_GROUP_LIMIT) {
+                        newGroup.limit = oldGroup.limit + oldGroup.loadMoreOffset;
+                        self.localData[newGroup.id] = newGroup;
+                    } else if (!newGroup.openGroupByDefault || openGroupCount >= openGroupsLimit) {
                         newGroup.isOpen = false;
+                    } else if ('__fold' in group) {
+                        newGroup.isOpen = !group.__fold;
                     } else {
-                        newGroup.isOpen = '__fold' in group ? !group.__fold : true;
+                        // open the group iff it is a first level group
+                        newGroup.isOpen = !self.localData[newGroup.parentID].parentID;
                     }
                     list.data.push(newGroup.id);
                     list.count += newGroup.count;
                     if (newGroup.isOpen && newGroup.count > 0) {
                         openGroupCount++;
+                        if (group.__data) {
+                            // bypass the search_read when the group's records have been obtained
+                            // by the call to 'web_read_group' (see @_searchReadUngroupedList)
+                            newGroup.__data = group.__data;
+                        }
                         options = _.defaults({enableRelationalFetch: false}, options);
                         defs.push(self._load(newGroup, options));
                     }
                 });
-                if (options && options.keepEmptyGroups) {
+                if (options.keepEmptyGroups) {
                     // Find the groups that were available in a previous
                     // readGroup but are not there anymore.
                     // Note that these groups are put after existing groups so
@@ -4295,7 +4388,7 @@ var BasicModel = AbstractModel.extend({
                 }
 
                 return Promise.all(defs).then(function (groups) {
-                    if (!options || !options.onlyGroups) {
+                    if (!options.onlyGroups) {
                         // generate the res_ids of the main list, being the concatenation
                         // of the fetched res_ids in each group
                         list.res_ids = _.flatten(_.map(groups, function (group) {
@@ -4428,6 +4521,12 @@ var BasicModel = AbstractModel.extend({
         if (options.offset !== undefined) {
             this._setOffset(element.id, options.offset);
         }
+        if (options.groupsLimit !== undefined) {
+            element.groupsLimit = options.groupsLimit;
+        }
+        if (options.groupsOffset !== undefined) {
+            element.groupsOffset = options.groupsOffset;
+        }
         if (options.loadMoreOffset !== undefined) {
             element.loadMoreOffset = options.loadMoreOffset;
         } else {
@@ -4478,17 +4577,25 @@ var BasicModel = AbstractModel.extend({
     _searchReadUngroupedList: function (list) {
         var self = this;
         var fieldNames = list.getFieldNames();
-        return this._rpc({
-            route: '/web/dataset/search_read',
-            model: list.model,
-            fields: fieldNames,
-            context: list.getContext(),
-            domain: list.domain || [],
-            limit: list.limit,
-            offset: list.loadMoreOffset + list.offset,
-            orderBy: list.orderedBy,
-        })
-        .then(function (result) {
+        var prom;
+        if (list.__data) {
+            // the data have already been fetched (alonside the groups by the
+            // call to 'web_read_group'), so we can bypass the search_read
+            prom = Promise.resolve(list.__data);
+        } else {
+            prom = this._rpc({
+                route: '/web/dataset/search_read',
+                model: list.model,
+                fields: fieldNames,
+                context: _.extend({}, list.getContext(), {bin_size: true}),
+                domain: list.domain || [],
+                limit: list.limit,
+                offset: list.loadMoreOffset + list.offset,
+                orderBy: list.orderedBy,
+            });
+        }
+        return prom.then(function (result) {
+            delete list.__data;
             list.count = result.length;
             var ids = _.pluck(result.records, 'id');
             var data = _.map(result.records, function (record) {

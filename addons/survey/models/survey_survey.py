@@ -21,24 +21,28 @@ class Survey(models.Model):
     _rec_name = 'title'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    def _get_default_stage_id(self):
-        return self.env['survey.stage'].search([], limit=1).id
-
     def _get_default_access_token(self):
         return str(uuid.uuid4())
 
     # description
     title = fields.Char('Title', required=True, translate=True)
-    description = fields.Html("Description", translate=True, help="A long description of the purpose of the survey")
+    description = fields.Html("Description", translate=True,
+        help="The description will be displayed on the home page of the survey. You can use this to give the purpose and guidelines to your candidates before they start it.")
     color = fields.Integer('Color Index', default=0)
     thank_you_message = fields.Html("Thanks Message", translate=True, help="This message will be displayed when survey is completed")
     active = fields.Boolean("Active", default=True)
     question_and_page_ids = fields.One2many('survey.question', 'survey_id', string='Sections and Questions', copy=True)
     page_ids = fields.One2many('survey.question', string='Pages', compute="_compute_page_and_question_ids")
     question_ids = fields.One2many('survey.question', string='Questions', compute="_compute_page_and_question_ids")
-    stage_id = fields.Many2one('survey.stage', string="Stage", default=lambda self: self._get_default_stage_id(),
-                               ondelete="restrict", copy=False, group_expand='_read_group_stage_ids')
-    is_closed = fields.Boolean("Is closed", related='stage_id.closed', readonly=True)
+    state = fields.Selection(
+        string="Survey Stage",
+        selection=[
+                ('draft', 'Draft'),
+                ('open', 'In Progress'),
+                ('closed', 'Closed'),
+        ], default='draft', required=True,
+        group_expand='_read_group_states'
+    )
     questions_layout = fields.Selection([
         ('one_page', 'One page with all the questions'),
         ('page_per_section', 'One page per section'),
@@ -62,7 +66,7 @@ class Survey(models.Model):
         ('token', 'Invited people only')], string='Access Mode',
         default='public', required=True)
     access_token = fields.Char('Access Token', default=lambda self: self._get_default_access_token(), copy=False)
-    users_login_required = fields.Boolean('Login required', help="If checked, users have to login before answering even with a valid token.")
+    users_login_required = fields.Boolean('Login Required', help="If checked, users have to login before answering even with a valid token.")
     users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.")
     users_can_signup = fields.Boolean('Users can signup', compute='_compute_users_can_signup')
     public_url = fields.Char("Public link", compute="_compute_survey_url")
@@ -86,7 +90,7 @@ class Survey(models.Model):
     time_limit = fields.Float("Time limit (minutes)")
     certificate = fields.Boolean('Certificate')
     certification_mail_template_id = fields.Many2one(
-        'mail.template', 'Certification Email Template',
+        'mail.template', 'Email Template',
         domain="[('model', '=', 'survey.user_input')]",
         help="Automated email sent to the user when he succeeds the certification, containing his certification document.")
 
@@ -155,7 +159,7 @@ class Survey(models.Model):
 
     @api.onchange('scoring_type')
     def _onchange_scoring_type(self):
-        if self.scoring_type != 'no_scoring':
+        if self.scoring_type == 'no_scoring':
             self.certificate = False
 
     @api.onchange('users_login_required', 'access_mode')
@@ -173,13 +177,9 @@ class Survey(models.Model):
         if self.is_time_limited and (not self.time_limit or self.time_limit <= 0):
             self.time_limit = 10
 
-    @api.model
-    def _read_group_stage_ids(self, stages, domain, order):
-        """ Read group customization in order to display all the stages in the
-            kanban view, even if they are empty
-        """
-        stage_ids = stages._search([], order=order, access_rights_uid=SUPERUSER_ID)
-        return stages.browse(stage_ids)
+    def _read_group_states(self, values, domain, order):
+        selection = self.env['survey.survey'].fields_get(allfields=['state'])['state']['selection']
+        return [s[0] for s in selection]
 
     # Public methods #
     def copy_data(self, default=None):
@@ -239,12 +239,13 @@ class Survey(models.Model):
         """ Ensure conditions to create new tokens are met. """
         self.ensure_one()
         if test_entry:
-            if not user.has_group('survey.group_survey_manager') or not user.has_group('survey.group_survey_user'):
+            # the current user must have the access rights to survey
+            if not user.has_group('survey.group_survey_user'):
                 raise UserError(_('Creating test token is not allowed for you.'))
         else:
             if not self.active:
                 raise UserError(_('Creating token for archived surveys is not allowed.'))
-            elif self.is_closed:
+            elif self.state == 'closed':
                 raise UserError(_('Creating token for closed surveys is not allowed.'))
             if self.access_mode == 'authentication':
                 # signup possible -> should have at least a partner to create an account
@@ -278,7 +279,9 @@ class Survey(models.Model):
         """
         survey = user_input.survey_id
 
-        if survey.questions_layout == 'page_per_question' and survey.questions_selection == 'random':
+        if survey.questions_layout == 'one_page':
+            return (None, False)
+        elif survey.questions_layout == 'page_per_question' and survey.questions_selection == 'random':
             pages_or_questions = list(enumerate(
                 user_input.question_ids
             ))
@@ -398,7 +401,7 @@ class Survey(models.Model):
             result_summary = {'answers': answers, 'rows': rows, 'result': res, 'comments': comments}
 
         # Calculate and return statistics for free_text, textbox, date
-        if question.question_type in ['free_text', 'textbox', 'date']:
+        if question.question_type in ['free_text', 'textbox', 'date', 'datetime']:
             result_summary = []
             for input_line in input_lines:
                 if not(current_filters) or input_line.user_input_id.id in current_filters:
@@ -435,6 +438,18 @@ class Survey(models.Model):
     # Actions
 
     @api.multi
+    def action_draft(self):
+        self.write({'state': 'draft'})
+
+    @api.multi
+    def action_open(self):
+        self.write({'state': 'open'})
+
+    @api.multi
+    def action_close(self):
+        self.write({'state': 'closed'})
+
+    @api.multi
     def action_start_survey(self):
         """ Open the website page with the survey form """
         self.ensure_one()
@@ -451,10 +466,10 @@ class Survey(models.Model):
     def action_send_survey(self):
         """ Open a window to compose an email, pre-filled with the survey message """
         # Ensure that this survey has at least one page with at least one question.
-        if (not self.page_ids and self.questions_layout != 'page_per_question') or not self.question_ids:
+        if (not self.page_ids and self.questions_layout == 'page_per_section') or not self.question_ids:
             raise UserError(_('You cannot send an invitation for a survey that has no questions.'))
 
-        if self.stage_id.closed:
+        if self.state == 'closed':
             raise UserError(_("You cannot send invitations for closed surveys."))
 
         template = self.env.ref('survey.mail_template_user_input_invite', raise_if_not_found=False)
@@ -468,7 +483,6 @@ class Survey(models.Model):
         )
         return {
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'survey.invite',
             'target': 'new',

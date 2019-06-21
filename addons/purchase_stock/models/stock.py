@@ -50,16 +50,22 @@ class StockMove(models.Model):
             return price_unit
         return super(StockMove, self)._get_price_unit()
 
-    def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id):
+    def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description):
         """ Overridden from stock_account to support amount_currency on valuation lines generated from po
         """
         self.ensure_one()
 
-        rslt = super(StockMove, self)._generate_valuation_lines_data(partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id)
+        rslt = super(StockMove, self)._generate_valuation_lines_data(partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description)
         if self.purchase_line_id:
             purchase_currency = self.purchase_line_id.currency_id
             if purchase_currency != self.company_id.currency_id:
-                purchase_price_unit = self.purchase_line_id.price_unit
+                # Do not use price_unit since we want the price tax excluded. And by the way, qty
+                # is in the UOM of the product, not the UOM of the PO line.
+                purchase_price_unit = (
+                    self.purchase_line_id.price_subtotal / self.purchase_line_id.product_uom_qty
+                    if self.purchase_line_id.product_uom_qty
+                    else self.purchase_line_id.price_unit
+                )
                 currency_move_valuation = purchase_currency.round(purchase_price_unit * abs(qty))
                 rslt['credit_line_vals']['amount_currency'] = rslt['credit_line_vals']['credit'] and -currency_move_valuation or currency_move_valuation
                 rslt['credit_line_vals']['currency_id'] = purchase_currency.id
@@ -113,12 +119,14 @@ class StockWarehouse(models.Model):
                     'picking_type_id': self.in_type_id.id,
                     'group_propagation_option': 'none',
                     'company_id': self.company_id.id,
-                    'route_id': self._find_global_route('purchase_stock.route_warehouse0_buy', _('Buy')).id
+                    'route_id': self._find_global_route('purchase_stock.route_warehouse0_buy', _('Buy')).id,
+                    'propagate_cancel': self.reception_steps != 'one_step',
                 },
                 'update_values': {
                     'active': self.buy_to_resupply,
                     'name': self._format_rulename(location_id, False, 'Buy'),
                     'location_id': location_id.id,
+                    'propagate_cancel': self.reception_steps != 'one_step',
                 }
             }
         })
@@ -126,7 +134,7 @@ class StockWarehouse(models.Model):
 
     @api.multi
     def _get_all_routes(self):
-        routes = super(StockWarehouse, self).get_all_routes_for_wh()
+        routes = super(StockWarehouse, self)._get_all_routes()
         routes |= self.filtered(lambda self: self.buy_to_resupply and self.buy_pull_id and self.buy_pull_id.route_id).mapped('buy_pull_id').mapped('route_id')
         return routes
 

@@ -468,6 +468,20 @@ QUnit.module('core', {}, function () {
         slowWillStartPromise.resolve();
     });
 
+    QUnit.test("don't destroy twice widget's children", function (assert) {
+        assert.expect(2);
+
+        var parent = new Widget();
+        var child = new (Widget.extend({
+            destroy: function () {
+                assert.step('destroy');
+            }
+        }))(parent);
+
+        parent.destroy();
+        assert.verifySteps(['destroy'], "child should have been detroyed only once");
+    });
+
 });
 
 });

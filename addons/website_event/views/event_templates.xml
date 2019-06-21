@@ -14,7 +14,7 @@
 <template id="assets_editor" inherit_id="website.assets_editor" name="Event Editor">
     <xpath expr="." position="inside">
         <script type="text/javascript" src="/website_event/static/src/js/website_event.editor.js"></script>
-        <script type="text/javascript" src="/website_event/static/src/js/website.tour.event.js"></script>
+        <script type="text/javascript" src="/website_event/static/src/js/tours/website_event.js"></script>
     </xpath>
 </template>
 
@@ -125,13 +125,13 @@
     </xpath>
 </template>
 
-<template id="event_left_column" active="True" inherit_id="website_event.index" customize_show="True" name="Filters Column on the Left">
+<template id="event_left_column" inherit_id="website_event.index" customize_show="True" name="Filters Column on the Left">
     <xpath expr="//div[@id='middle_column']" position="before">
         <div class="col-lg-3 css_noprint" id="left_column"/>
     </xpath>
 </template>
 
-<template id="event_time" active="True" customize_show="True" inherit_id="website_event.event_left_column" name="Filter by Date">
+<template id="event_time" customize_show="True" inherit_id="website_event.event_left_column" name="Filter by Date">
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills flex-column mb-3">
             <t t-foreach="dates" t-as="date">
@@ -218,6 +218,10 @@
             </div>
         </div>
         <t t-raw="0"/>
+        <div class="alert alert-info alert-dismissable mt16 css_non_editable_mode_hidden o_not_editable" t-ignore="True" role="status">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+            Following content will appear on all events
+        </div>
         <div class="oe_structure" id="oe_structure_website_event_layout_1"/>
       </div>
     </t>
@@ -309,7 +313,7 @@
 
 <template id="event_description_full">
     <t t-call="website_event.event_details">
-        <div class="col-lg-9">
+        <div class="col">
             <div t-if="event.state == 'done' or not registrable" class="alert alert-info" role="status">Registration for this event is now closed</div>
             <t t-if="event.state != 'done' and registrable" t-call="website_event.registration_template"/>
             <div class="clearfix"/>
@@ -332,7 +336,7 @@
                 </li>
             </ul>
         </div>
-        <div class="col-lg-3 css_noprint">
+        <div class="col-lg-4 css_noprint">
             <div class="clearfix"/>
             <t t-if="not event.is_online">
                 <div class="card bg-secondary" t-if="event.address_id">
@@ -343,7 +347,7 @@
                                <img t-att-src="event.google_map_img()" width="100%%" alt="Google Maps"/>
                             </a>
                         </t>
-                        <h4 t-field="event.address_id" class="text-secondary font-weight-bold" t-options='{
+                        <div t-field="event.address_id" class="text-secondary font-weight-bold" t-options='{
                             "widget": "contact",
                             "fields": ["name"]
                         }'/>
@@ -361,17 +365,19 @@
             <div class="card bg-secondary my-3">
                 <h4 class="card-header">When</h4>
                 <div class="card-body">
-                    <span class="font-weight-bold small">From</span>
+                    <i class="fa fa-clock-o"/>
+                    <span>From</span>
                     <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'/>
                     <hr/>
-                    <span class="font-weight-bold small">To</span>
+                    <i class="fa fa-clock-o"/>
+                    <span>To</span>
                     <span t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'/>
                 </div>
             </div>
             <div class="card bg-secondary my-3" t-if="event.organizer_id">
                 <h4 class="card-header">Organizer</h4>
                 <div class="card-body">
-                    <h4 t-field="event.organizer_id" class="text-secondary font-weight-bold"/>
+                    <div t-field="event.organizer_id" class="text-secondary font-weight-bold"/>
                     <div itemprop="location" t-field="event.organizer_id" t-options='{
                         "widget": "contact",
                         "fields": ["phone", "mobile", "email"]
@@ -527,20 +533,20 @@
                                     </strong>
                                 </h4>
                                 <div class="row d-none d-lg-flex">
-                                    <div class="col-4">
+                                    <div class="col-md">
                                         <strong>Name</strong>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-md">
                                         <strong>Email</strong>
                                     </div>
-                                    <div class="col-4">
-                                        <strong>Phone <small>(optional)</small></strong>
+                                    <div class="col-md">
+                                        <strong>Phone <small class='lbl_optional'>(optional)</small></strong>
                                     </div>
                                 </div>
                                 <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter" name="attendee_loop">
                                     <t t-set="counter" t-value="counter + 1"/>
                                     <div class="row py-2 o_wevent_registration_list_attendees">
-                                        <div class="col-12 col-lg-4">
+                                        <div class="col-md">
                                             <div class="mb-1 d-lg-none">
                                                 <strong>Name</strong>
                                             </div>
@@ -548,7 +554,7 @@
                                             <input class='form-control' type='text' t-attf-name="#{counter}-name" required="This field is required" t-att-placeholder="attendee_placeholder %counter"/>
                                         </div>
 
-                                        <div class="col-12 col-lg-4">
+                                        <div class="col-md">
                                             <div class="mt-1 d-lg-none">
                                                 <strong>Email</strong>
                                             </div>
@@ -556,9 +562,9 @@
                                                 <input class='form-control' type='email' t-attf-name="#{counter}-email" required="This field is required"/>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-lg-4">
+                                        <div class="col-md">
                                             <div class="mt-1 d-lg-none">
-                                                <strong>Phone <small>(optional)</small></strong>
+                                                <strong>Phone <small class='lbl_optional'>(optional)</small></strong>
                                             </div>
                                             <input class='form-control' type='tel' t-attf-name="#{counter}-phone"/>
                                         </div>

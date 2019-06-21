@@ -204,7 +204,7 @@ class ResPartner(models.Model):
 
     @api.multi
     def _credit_debit_get(self):
-        tables, where_clause, where_params = self.env['account.move.line'].with_context(company_id=self.env.user.company_id.id)._query_get()
+        tables, where_clause, where_params = self.env['account.move.line'].with_context(company_id=self.env.company.id)._query_get()
         where_params = [tuple(self.ids)] + where_params
         if where_clause:
             where_clause = 'AND ' + where_clause
@@ -263,7 +263,7 @@ class ResPartner(models.Model):
             self.total_invoiced = 0.0
             return True
 
-        user_currency_id = self.env.user.company_id.currency_id.id
+        user_currency_id = self.env.company.currency_id.id
         all_partners_and_children = {}
         all_partner_ids = []
         for partner in self:
@@ -309,7 +309,7 @@ class ResPartner(models.Model):
             partner.contracts_count = AccountAnalyticAccount.search_count([('partner_id', '=', partner.id)])
 
     def get_followup_lines_domain(self, date, overdue_only=False, only_unblocked=False):
-        domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable'), '|', ('debit', '!=', 0), ('credit', '!=', 0), ('company_id', '=', self.env.user.company_id.id)]
+        domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable'), '|', ('debit', '!=', 0), ('credit', '!=', 0), ('company_id', '=', self.env.company.id)]
         if only_unblocked:
             domain += [('blocked', '=', False)]
         if self.ids:
@@ -362,14 +362,14 @@ class ResPartner(models.Model):
     @api.multi
     def mark_as_reconciled(self):
         self.env['account.partial.reconcile'].check_access_rights('write')
-        return self.sudo().with_context(company_id=self.env.user.company_id.id).write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        return self.sudo().with_context(company_id=self.env.company.id).write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
     @api.one
     def _get_company_currency(self):
         if self.company_id:
             self.currency_id = self.sudo().company_id.currency_id
         else:
-            self.currency_id = self.env.user.company_id.currency_id
+            self.currency_id = self.env.company.currency_id
 
     credit = fields.Monetary(compute='_credit_debit_get', search=_credit_search,
         string='Total Receivable', help="Total amount this customer owes you.")
@@ -438,8 +438,9 @@ class ResPartner(models.Model):
     def action_view_partner_invoices(self):
         self.ensure_one()
         action = self.env.ref('account.action_invoice_refund_out_tree').read()[0]
-        action['domain'] = literal_eval(action['domain'])
+        action['domain'] = [('type','in', ['out_invoice', 'out_refund']), ('state', '!=', 'cancel')]
         action['domain'].append(('partner_id', 'child_of', self.id))
+        action['context'] = {'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale', 'search_default_unpaid': 1}
         return action
 
     @api.onchange('company_id')
@@ -448,7 +449,7 @@ class ResPartner(models.Model):
         if self.company_id:
             company = self.company_id
         else:
-            company = self.env.user.company_id
+            company = self.env.company
         return {'domain': {'property_account_position_id': [('company_id', 'in', [company.id, False])]}}
 
     def can_edit_vat(self):

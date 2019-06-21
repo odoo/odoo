@@ -21,7 +21,7 @@ class LunchOrderWizard(models.TransientModel):
                                                                 order="date desc, id desc", limit=1)
         return last_time_ordered
 
-    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.user.company_id.currency_id)
+    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
 
     product_id = fields.Many2one('lunch.product', string='Product ID')
     product_description = fields.Text('Description', related='product_id.description')
@@ -86,7 +86,7 @@ class LunchOrderWizard(models.TransientModel):
                                                     sum((wizard.topping_ids_1 | wizard.topping_ids_2 | wizard.topping_ids_3).mapped('price')))
 
     def _get_matching_lines(self):
-        domain = [('product_id', '=', self.product_id.id), ('date', '=', fields.Date.today()), ('note', '=', self._get_note())]
+        domain = [('user_id', '=', self.user_id.id), ('product_id', '=', self.product_id.id), ('date', '=', fields.Date.today()), ('note', '=', self._get_note())]
         lines = self.env['lunch.order'].search(domain)
         return lines.filtered(lambda line: (line.topping_ids_1 | line.topping_ids_2 | line.topping_ids_3) == self.topping_ids_1)
 

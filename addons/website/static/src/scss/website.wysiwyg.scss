@@ -531,7 +531,7 @@ body.editor_enable {
             height: $o-navbar-height;
 
             .btn {
-                height: $o-navbar-height;
+                height: $o-navbar-height !important; // force this because of themes
             }
         }
 
@@ -554,87 +554,88 @@ body.editor_enable {
 
     .wysiwyg_multizone.note-popover,
     .wysiwyg_multizone.note-editor>.note-toolbar-wrapper .note-toolbar {
-        background-color: $o-we-color-dark;
+        // force this because of themes
+        background-color: $o-we-color-dark !important;
 
         .btn {
-            background-color: $o-we-color-dark;
-            color: $o-we-color-text-normal;
-            border: none;
-            padding: 0.0625rem 0.3125rem !important; // force this because of themes
+            background-color: $o-we-color-dark !important;
+            color: $o-we-color-text-normal !important;
+            border: none !important;
+            padding: 0.0625rem 0.3125rem !important;
 
             >.fa {
-                color: $o-we-color-text-normal;
+                color: $o-we-color-text-normal !important;
             }
 
             &:hover {
-                color: $o-we-color-text-light;
+                color: $o-we-color-text-light !important;
 
                 >.fa {
-                    color: $o-we-color-text-light;
+                    color: $o-we-color-text-light !important;
                 }
             }
 
             &.active {
-                background-color: $o-we-color-dark;
-                color: $o-we-color-text-light;
+                background-color: $o-we-color-dark !important;
+                color: $o-we-color-text-light !important;
 
                 >.fa {
-                    color: $o-we-color-text-light;
+                    color: $o-we-color-text-light !important;
                 }
             }
         }
 
         >.btn-group {
-            margin-top: 0;
+            margin-top: 0 !important;
 
             &.show,
             .btn-group.show {
                 .dropdown-toggle {
-                    border-top: 2px solid white;
-                    background-color: $o-we-color-darker;
-                    color: white;
-                    box-shadow: none;
+                    border-top: 2px solid white !important;
+                    background-color: $o-we-color-darker !important;
+                    color: white !important;
+                    box-shadow: none !important;
 
                     >.fa,
                     >span {
-                        color: white;
+                        color: white !important;
                     }
                 }
             }
         }
 
         .dropdown-menu {
-            margin: 0;
-            border-radius: 0;
-            background-color: $o-we-color-darker;
-            color: $o-we-color-text-normal;
-            white-space: normal;
+            margin: 0 !important;
+            border-radius: 0 !important;
+            background-color: $o-we-color-darker !important;
+            color: $o-we-color-text-normal !important;
+            white-space: normal !important;
 
             .dropdown-item {
-                width: 100%;
-                color: $o-we-color-text-light;
+                width: 100% !important;
+                color: $o-we-color-text-light !important;
 
                 >.fa {
-                    color: $o-we-color-text-light;
+                    color: $o-we-color-text-light !important;
                 }
 
                 &:hover {
-                    background-color: $o-we-tab-active-bg;
-                    color: white;
+                    background-color: $o-we-tab-active-bg !important;
+                    color: white !important;
 
                     >.fa {
-                        color: white;
+                        color: white !important;
                     }
                 }
             }
         }
 
         .note-para .dropdown-menu {
-            min-width: 147px;
+            min-width: 147px !important;
         }
 
         .note-style .dropdown-item * {
-            color: $o-we-color-text-light;
+            color: $o-we-color-text-light !important;
         }
     }
 }

@@ -27,13 +27,11 @@ class PaymentTransaction(models.Model):
     def _compute_sale_order_reference(self, order):
         self.ensure_one()
         if self.acquirer_id.so_reference_type == 'so_name':
-            identification_number = int(re.match('.*?([0-9]+)$', order.name).group(1))
-            prefix = order.name
+            return order.name
         else:
             # self.acquirer_id.so_reference_type == 'partner'
             identification_number = order.partner_id.id
-            prefix = 'CUST'
-        return '%s/%s' % (prefix, str(identification_number % 97).rjust(2, '0'))
+            return '%s/%s' % ('CUST', str(identification_number % 97).rjust(2, '0'))
 
     @api.depends('sale_order_ids')
     def _compute_sale_order_ids_nbr(self):
@@ -63,24 +61,27 @@ class PaymentTransaction(models.Model):
         super(PaymentTransaction, self)._set_transaction_pending()
 
         for record in self:
-            sales_orders = record.sale_order_ids.filtered(lambda so: so.state == 'draft')
-            sales_orders.force_quotation_send()
+            sales_orders = record.sale_order_ids.filtered(lambda so: so.state in ['draft', 'sent'])
+            sales_orders.filtered(lambda so: so.state == 'draft').with_context(tracking_disable=True).write({'state': 'sent'})
 
             if record.acquirer_id.provider == 'transfer':
                 for so in record.sale_order_ids:
                     so.reference = record._compute_sale_order_reference(so)
+            # send order confirmation mail
+            sales_orders._send_order_confirmation_mail()
 
     @api.multi
     def _set_transaction_authorized(self):
         # Override of '_set_transaction_authorized' in the 'payment' module
         # to confirm the quotations automatically.
         super(PaymentTransaction, self)._set_transaction_authorized()
-        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state == 'draft')
-        sales_orders.force_quotation_send()
-        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state == 'sent')
+        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state in ['draft', 'sent'])
         for so in sales_orders:
             # For loop because some override of action_confirm are ensure_one.
             so.action_confirm()
+
+        # send order confirmation mail
+        sales_orders._send_order_confirmation_mail()
 
     @api.multi
     def _reconcile_after_transaction_done(self):
@@ -89,29 +90,31 @@ class PaymentTransaction(models.Model):
         sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state in ('draft', 'sent'))
         for so in sales_orders:
             # For loop because some override of action_confirm are ensure_one.
-            so.with_context(send_email=True).action_confirm()
+            so.action_confirm()
+        # send order confirmation mail
+        sales_orders._send_order_confirmation_mail()
         # invoice the sale orders if needed
         self._invoice_sale_orders()
         res = super(PaymentTransaction, self)._reconcile_after_transaction_done()
         if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'):
             default_template = self.env['ir.config_parameter'].sudo().get_param('sale.default_email_template')
             if default_template:
-                ctx_company = {'company_id': self.acquirer_id.company_id.id,
-                               'force_company': self.acquirer_id.company_id.id,
-                               'mark_invoice_as_sent': True,
-                               }
                 for trans in self.filtered(lambda t: t.sale_order_ids):
+                    ctx_company = {'company_id': trans.acquirer_id.company_id.id,
+                                   'force_company': trans.acquirer_id.company_id.id,
+                                   'mark_invoice_as_sent': True,
+                                   }
                     trans = trans.with_context(ctx_company)
                     for invoice in trans.invoice_ids:
-                        invoice.message_post_with_template(int(default_template), notif_layout="mail.mail_notification_paynow")
+                        invoice.message_post_with_template(int(default_template), email_layout_xmlid="mail.mail_notification_paynow")
         return res
 
     @api.multi
     def _invoice_sale_orders(self):
         if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'):
-            ctx_company = {'company_id': self.acquirer_id.company_id.id,
-                           'force_company': self.acquirer_id.company_id.id}
             for trans in self.filtered(lambda t: t.sale_order_ids):
+                ctx_company = {'company_id': trans.acquirer_id.company_id.id,
+                               'force_company': trans.acquirer_id.company_id.id}
                 trans = trans.with_context(**ctx_company)
                 trans.sale_order_ids._force_lines_to_invoice_policy_order()
                 invoices = trans.sale_order_ids._create_invoices()

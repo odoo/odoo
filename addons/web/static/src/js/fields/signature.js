@@ -13,6 +13,7 @@ odoo.define('web.Signature', function (require) {
 
     var qweb = core.qweb;
     var _t = core._t;
+    var _lt = core._lt;
 
 // The goal of this dialog is to ask the user a signature request.
 // It uses @see SignNameAndSignature for the name and signature fields.
@@ -55,7 +56,18 @@ var SignatureDialog = Dialog.extend({
         this.nameAndSignature = new NameAndSignature(this, options.nameAndSignatureOptions);
     },
     /**
-     * Inserts the name and signature.
+     * Start the nameAndSignature widget and wait for it.
+     *
+     * @override
+     */
+    willStart: function () {
+        return Promise.all([
+            this.nameAndSignature.appendTo($('<div>')),
+            this._super.apply(this, arguments)
+        ]);
+    },
+    /**
+     * Initialize the name and signature widget when the modal is opened.
      *
      * @override
      */
@@ -64,7 +76,9 @@ var SignatureDialog = Dialog.extend({
         this.$primaryButton = this.$footer.find('.btn-primary');
 
         this.opened().then(function () {
-            self.nameAndSignature.replace(self.$('.o_web_sign_name_and_signature'));
+            self.$('.o_web_sign_name_and_signature').replaceWith(self.nameAndSignature.$el);
+            // initialize the signature area
+            self.nameAndSignature.resetSignature();
         });
 
         return this._super.apply(this, arguments);
@@ -111,9 +125,11 @@ var SignatureDialog = Dialog.extend({
 });
 
 var FieldBinarySignature = AbstractFieldBinary.extend({
+    description: _lt("Signature"),
     fieldDependencies: _.extend({}, AbstractFieldBinary.prototype.fieldDependencies, {
         __last_update: {type: 'datetime'},
     }),
+    resetOnAnyFieldChange: true,
     custom_events: _.extend({}, AbstractFieldBinary.prototype.custom_events, {
         upload_signature: '_onUploadSignature',
     }),
@@ -229,18 +245,13 @@ var FieldBinarySignature = AbstractFieldBinary.extend({
             };
 
             if (this.nodeOptions.full_name) {
-                var $search = $("[name='" + this.nodeOptions.full_name + "']");
-                // If full_name correspond to field in read-only mode
-                var signName = $($search).text();
-
-                // If full_name correspond to field to fill
-                if (!signName && $($search)[0]) {
-                    signName = $($search)[0].value;
-                }
-                if (!signName) {
-                    // If full_name is in the recordData. Last option because this value might not be the last value.
-                    signName = this.recordData[this.nodeOptions.full_name] || '';
-                }
+                var signName;
+                if (this.fields[this.nodeOptions.full_name].type === 'many2one') {
+                    // If m2o is empty, it will have falsy value in recordData
+                    signName = this.recordData[this.nodeOptions.full_name] && this.recordData[this.nodeOptions.full_name].data.display_name;
+                } else {
+                     signName = this.recordData[this.nodeOptions.full_name];
+                 }
                 nameAndSignatureOptions.defaultName = (signName === '') ? undefined : signName;
             }
 

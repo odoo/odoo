@@ -42,7 +42,8 @@ class Repair(models.Model):
         readonly=True, required=True, states={'draft': [('readonly', False)]})
     product_uom = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
-        readonly=True, required=True, states={'draft': [('readonly', False)]})
+        readonly=True, required=True, states={'draft': [('readonly', False)]}, domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     partner_id = fields.Many2one(
         'res.partner', 'Customer',
         index=True, states={'confirmed': [('readonly', True)]},
@@ -108,7 +109,7 @@ class Repair(models.Model):
     quotation_notes = fields.Text('Quotation Notes')
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get('repair.order'))
+        default=lambda self: self.env.company)
     invoiced = fields.Boolean('Invoiced', copy=False, readonly=True)
     repaired = fields.Boolean('Repaired', copy=False, readonly=True)
     amount_untaxed = fields.Float('Untaxed Amount', compute='_amount_untaxed', store=True)
@@ -159,7 +160,8 @@ class Repair(models.Model):
     @api.onchange('product_id')
     def onchange_product_id(self):
         self.guarantee_limit = False
-        self.lot_id = False
+        if (self.product_id and self.lot_id and self.lot_id.product_id != self.product_id) or not self.product_id:
+            self.lot_id = False
         if self.product_id:
             self.product_uom = self.product_id.uom_id.id
 
@@ -208,7 +210,6 @@ class Repair(models.Model):
         else:
             return {
                 'name': _('Insufficient Quantity'),
-                'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'stock.warn.insufficient.qty.repair',
                 'view_id': self.env.ref('repair.stock_warn_insufficient_qty_repair_form_view').id,
@@ -261,7 +262,6 @@ class Repair(models.Model):
         }
         return {
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
             'target': 'new',
@@ -517,7 +517,8 @@ class RepairLine(models.Model):
         digits=dp.get_precision('Product Unit of Measure'), required=True)
     product_uom = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
-        required=True)
+        required=True, domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     invoice_line_id = fields.Many2one(
         'account.invoice.line', 'Invoice Line',
         copy=False, readonly=True)
@@ -598,17 +599,24 @@ class RepairLine(models.Model):
                     'title': _('No pricelist found.'),
                     'message':
                         _('You have to select a pricelist in the Repair form !\n Please set one before choosing a product.')}
-            else:
-                price = pricelist.get_product_price(self.product_id, self.product_uom_qty, partner)
-                if price is False:
-                    warning = {
-                        'title': _('No valid pricelist line found.'),
-                        'message':
-                            _("Couldn't find a pricelist line matching this product and quantity.\nYou have to change either the product, the quantity or the pricelist.")}
-                else:
-                    self.price_unit = price
-            if warning:
                 return {'warning': warning}
+            else:
+                self._onchange_product_uom()
+
+    @api.onchange('product_uom')
+    def _onchange_product_uom(self):
+        partner = self.repair_id.partner_id
+        pricelist = self.repair_id.pricelist_id
+        if pricelist and self.product_id and self.type != 'remove':
+            price = pricelist.get_product_price(self.product_id, self.product_uom_qty, partner, uom_id=self.product_uom.id)
+            if price is False:
+                warning = {
+                    'title': _('No valid pricelist line found.'),
+                    'message':
+                        _("Couldn't find a pricelist line matching this product and quantity.\nYou have to change either the product, the quantity or the pricelist.")}
+                return {'warning': warning}
+            else:
+                self.price_unit = price
 
 
 class RepairFee(models.Model):
@@ -622,7 +630,8 @@ class RepairFee(models.Model):
     product_id = fields.Many2one('product.product', 'Product')
     product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     price_unit = fields.Float('Unit Price', required=True)
-    product_uom = fields.Many2one('uom.uom', 'Product Unit of Measure', required=True)
+    product_uom = fields.Many2one('uom.uom', 'Product Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     price_subtotal = fields.Float('Subtotal', compute='_compute_price_subtotal', store=True, digits=0)
     tax_id = fields.Many2many('account.tax', 'repair_fee_line_tax', 'repair_fee_line_id', 'tax_id', 'Taxes')
     invoice_line_id = fields.Many2one('account.invoice.line', 'Invoice Line', copy=False, readonly=True)
@@ -658,14 +667,21 @@ class RepairFee(models.Model):
                 'title': _('No pricelist found.'),
                 'message':
                     _('You have to select a pricelist in the Repair form !\n Please set one before choosing a product.')}
+            return {'warning': warning}
         else:
-            price = pricelist.get_product_price(self.product_id, self.product_uom_qty, partner)
+            self._onchange_product_uom()
+
+    @api.onchange('product_uom')
+    def _onchange_product_uom(self):
+        partner = self.repair_id.partner_id
+        pricelist = self.repair_id.pricelist_id
+        if pricelist and self.product_id:
+            price = pricelist.get_product_price(self.product_id, self.product_uom_qty, partner, uom_id=self.product_uom.id)
             if price is False:
                 warning = {
                     'title': _('No valid pricelist line found.'),
                     'message':
                         _("Couldn't find a pricelist line matching this product and quantity.\nYou have to change either the product, the quantity or the pricelist.")}
+                return {'warning': warning}
             else:
                 self.price_unit = price
-        if warning:
-            return {'warning': warning}

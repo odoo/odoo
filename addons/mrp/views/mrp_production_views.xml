@@ -25,6 +25,7 @@
             <field name="name">Mrp: Plan Production Orders</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+            <field name="groups_id" eval="[(4, ref('mrp.group_mrp_routings'))]"/>
             <field name="state">code</field>
             <field name="code">records.button_plan()</field>
         </record>
@@ -35,9 +36,7 @@
             <field name="arch" type="xml">
                 <form string="Manufacturing Orders">
                 <header>
-                    <field name="consumed_less_than_planned" invisible="1"/>
-                    <button name="button_mark_done" attrs="{'invisible': ['|', ('state', '!=', 'to_close'), ('consumed_less_than_planned', '=', True)]}" string="Mark as Done" type="object" class="oe_highlight"/>
-                    <button name="button_mark_done" attrs="{'invisible': ['|', ('state', '!=', 'to_close'), ('consumed_less_than_planned', '=', False)]}" string="Mark as Done" type="object" class="oe_highlight" confirm="You have consumed less material than what was planned. Are you sure you want to close this MO?"/>
+                    <button name="button_mark_done" attrs="{'invisible': [('state', '!=', 'to_close')]}" string="Mark as Done" type="object" class="oe_highlight"/>
                     <button name="action_confirm" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('is_locked', '=', False)]}" string="Mark as Todo" type="object" class="oe_highlight"/>
                     <button name="action_assign" attrs="{'invisible': ['|', '|', ('is_locked', '=', False), ('state', 'in', ('draft', 'done', 'cancel')), ('reservation_state', '=', 'assigned')]}" string="Check availability" type="object" class="oe_highlight"/>
                     <button name="button_plan" attrs="{'invisible': ['|', ('state', 'not in', ('confirmed', 'planned')), '|', ('routing_id', '=', False), '|', ('date_planned_start_wo', '!=', False), ('date_planned_finished_wo', '!=', False)]}" type="object" string="Plan" class="oe_highlight"/>
@@ -64,7 +63,7 @@
                                 <span class="o_stat_text">Work Orders</span>
                             </div>
                         </button>
-                        <button name="%(action_mrp_production_moves)d" type="action" string="Inventory Moves" class="oe_stat_button" icon="fa-arrows-v" attrs="{'invisible': [('state', 'not in', ('progress', 'done'))]}"/>
+                        <button name="%(action_mrp_production_moves)d" type="action" string="Product Moves" class="oe_stat_button" icon="fa-exchange" attrs="{'invisible': [('state', 'not in', ('progress', 'done'))]}"/>
                         <button type="object" name="action_view_mo_delivery" class="oe_stat_button" icon="fa-truck" attrs="{'invisible': [('delivery_count', '=', 0)]}" groups="base.group_user">
                             <field name="delivery_count" widget="statinfo" string="Picking"/>
                         </button>
@@ -120,7 +119,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Consumed Materials">
+                        <page string="Components">
                             <field name="move_raw_ids" context="{'final_lots': show_final_lots, 'form_view_ref': 'mrp.view_stock_move_lots', 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id}" attrs="{'readonly': ['&amp;', ('state', '!=', 'draft'), ('is_locked', '=', True)]}">
                                 <tree delete="0" default_order="is_done,sequence" decoration-muted="is_done" decoration-warning="quantity_done&gt;product_uom_qty" decoration-success="not is_done and quantity_done==product_uom_qty" decoration-danger="not is_done and reserved_availability &lt; product_uom_qty">
                                     <field name="product_id" required="1"/>
@@ -166,8 +165,8 @@
                             <group>
                                 <group groups="stock.group_stock_multi_locations">
                                     <field name="picking_type_id" domain="[('code', '=', 'mrp_operation')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                    <field name="location_src_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                    <field name="location_dest_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="location_src_id" options="{'no_create': True}" domain="[('usage','=','internal')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="location_dest_id" options="{'no_create': True}" domain="[('usage','=','internal')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </group>
                             </group>
                             <group>
@@ -237,7 +236,7 @@
             <field name="name">mrp.production.gantt</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
-                <gantt date_stop="date_finished" date_start="date_start" progress="progress" string="Productions" default_group_by="routing_id">
+                <gantt date_stop="date_finished" date_start="date_start" progress="progress" string="Productions" default_group_by="routing_id" create="0">
                 </gantt>
             </field>
         </record>
@@ -285,7 +284,7 @@
                         domain="[('activity_ids.user_id', '=', uid)]"/>
                     <separator/>
                     <field name="product_id"/>
-                    <field name="move_raw_ids" string="Raw Material" filter_domain="[('move_raw_ids.product_id','ilike',self)]"/>
+                    <field name="move_raw_ids" string="Components" filter_domain="[('move_raw_ids.product_id','ilike',self)]"/>
                     <field name="name" string="Work Center" filter_domain="[('routing_id.operation_ids.workcenter_id','ilike',self)]"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
                     <separator/>
@@ -312,11 +311,11 @@
             <field name="name">Manufacturing Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
             <field name="context">{'search_default_todo': True}</field>
+            <field name="domain">[('picking_type_id.active', '=', True)]</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new manufacturing order
@@ -328,7 +327,6 @@
             <field name="name">Manufacturing Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
@@ -346,7 +344,6 @@
         <field name="name">Manufacturing Orders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.production</field>
-        <field name="view_type">form</field>
         <field name="view_mode">graph,pivot,form</field>
         <field name="target">current</field>
     </record>
@@ -381,7 +378,6 @@
         <field name="name">Manufacturing Orders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.production</field>
-        <field name="view_type">form</field>
         <field name="view_mode">form</field>
     </record>
     </data>

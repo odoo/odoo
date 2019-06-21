@@ -19,7 +19,7 @@ var Wysiwyg = Widget.extend({
         wysiwyg_blur: '_onWysiwygBlur',
     },
     defaultOptions: {
-        codeview: config.debug,
+        codeview: config.isDebug(),
         recordInfo: {
             context: {},
         },

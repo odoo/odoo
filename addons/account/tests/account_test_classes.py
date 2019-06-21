@@ -27,7 +27,7 @@ class AccountingTestCase(HttpCase):
 
         :param property_name: The name of the property.
         '''
-        company_id = self.env.user.company_id
+        company_id = self.env.company
         field_id = self.env['ir.model.fields'].search(
             [('model', '=', 'product.template'), ('name', '=', property_name)], limit=1)
         property_id = self.env['ir.property'].search([

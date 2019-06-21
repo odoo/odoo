@@ -17,6 +17,7 @@
     <br/>
 </div>
         </field>
+            <field name="lang">${object.partner_id.lang}</field>
             <field name="auto_delete" eval="True"/>
             <field name="user_signature" eval="True"/>
         </record>
@@ -26,7 +27,7 @@
             <field name="name">Task: Rating Request</field>
             <field name="model_id" ref="project.model_project_task"/>
             <field name="subject">${object.project_id.company_id.name}: Satisfaction Survey</field>
-            <field name="email_from">${('"%s" &lt;%s&gt;' % (object.rating_get_rated_partner_id().name, object.rating_get_rated_partner_id().email) if object.rating_get_rated_partner_id().email else '') | safe}</field>
+            <field name="email_from">${(object.rating_get_rated_partner_id().email_formatted if object.rating_get_rated_partner_id() else user.email_formatted) | safe}</field>
             <field name="partner_to" >${object.rating_get_partner_id().id}</field>
             <field name="body_html" type="html">
 <div>
@@ -85,6 +86,7 @@
     </table>
 </div>
             </field>
+            <field name="lang">${object.rating_get_partner_id().lang}</field>
             <field name="auto_delete" eval="True"/>
             <field name="user_signature" eval="False"/>
         </record>

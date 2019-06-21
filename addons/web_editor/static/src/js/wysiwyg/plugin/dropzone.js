@@ -4,6 +4,7 @@ odoo.define('web_editor.wysiwyg.plugin.dropzone', function (require) {
 var core = require('web.core');
 var Plugins = require('web_editor.wysiwyg.plugins');
 var registry = require('web_editor.wysiwyg.plugin.registry');
+var utils = require('web.utils');
 
 var _t = core._t;
 var dom = $.summernote.dom;
@@ -19,6 +20,7 @@ var DropzonePlugin = Plugins.dropzone.extend({
     attachDragAndDropEvent: function () {
         this._super.apply(this, arguments);
         this.$dropzone.off('drop');
+        this.$dropzone.on('dragenter', this._onDragenter.bind(this));
         this.$dropzone.on('drop', this._onDrop.bind(this));
     },
 
@@ -71,7 +73,7 @@ var DropzonePlugin = Plugins.dropzone.extend({
                 if (range.so >= dom.nodeLength(range.sc)) {
                     $(range.sc).append(spinner);
                 } else {
-                    $(range.sc).before(range.sc.childNodes[range.so]);
+                    $(range.sc.childNodes[range.so]).before(spinner);
                 }
             } else {
                 range.sc.splitText(range.so);
@@ -82,9 +84,8 @@ var DropzonePlugin = Plugins.dropzone.extend({
             // save images as attachments
             var def = new Promise(function (resolve) {
                 // Get image's Base64 string
-                var reader = new FileReader();
-                reader.addEventListener('load', function (e) {
-                    self._uploadImage(e.target.result, file.name).then(function (attachment) {
+                utils.getDataURLFromFile(file).then(function (result) {
+                    self._uploadImage(result, file.name).then(function (attachment) {
                         // Make the HTML
                         var image = self.document.createElement('img');
                         image.setAttribute('style', 'width: 100%;');
@@ -96,7 +97,6 @@ var DropzonePlugin = Plugins.dropzone.extend({
                         $(image).trigger('dropped');
                     });
                 });
-                reader.readAsDataURL(file);
             });
             defs.push(def);
         });
@@ -148,12 +148,12 @@ var DropzonePlugin = Plugins.dropzone.extend({
         });
 
         return this._rpc({
-            route: '/web_editor/add_image_base64',
+            route: '/web_editor/attachment/add_data',
             params: {
-                res_model: options.res_model,
-                res_id: options.res_id,
-                image_base64: imageBase64.split(';base64,').pop(),
-                filename: fileName,
+                'data': imageBase64.split(';base64,').pop(),
+                'name': fileName,
+                'res_id': options.res_id || 0,
+                'res_model': options.res_model,
             },
         });
     },
@@ -161,8 +161,25 @@ var DropzonePlugin = Plugins.dropzone.extend({
      * @private
      * @param {JQueryEvent} e
      */
+    _onDragenter: function (e) {
+        var range = this.context.invoke('editor.createRange');
+        if (!this.editable.contains(range.sc)) {
+            var node = this.editable;
+            if (node && node.firstChild) {
+                node = node.firstChild;
+            }
+            range = this.context.invoke('editor.setRange', node, 0, node, 0);
+            range.select();
+        }
+    },
+    /**
+     * @private
+     * @param {JQueryEvent} e
+     */
     _onDrop: function (e) {
         e.preventDefault();
+
+        this.$editor.removeClass('dragover');
 
         if (this.options.disableDragAndDrop) {
             return;

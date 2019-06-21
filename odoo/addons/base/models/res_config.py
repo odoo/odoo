@@ -543,7 +543,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                         _logger.warning(WARNING_MESSAGE, value, field, icp)
                         value = 0.0
                 elif field.type == 'boolean':
-                    value = value.lower() == 'true'
+                    value = bool(value)
             res[name] = value
 
         # other fields: call the method 'get_values'
@@ -584,7 +584,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                     groups.write({'implied_ids': [(4, implied_group.id)]})
                 else:
                     groups.write({'implied_ids': [(3, implied_group.id)]})
-                    implied_group.write({'users': [(3, user.id) for user in groups.mapped('users')]})
+                    implied_group.write({'users': [(3, user.id) for user in groups.users]})
         self.recompute()
 
         # config fields: store ir.config_parameters
