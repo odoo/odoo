@@ -29,19 +29,19 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:922
 #, python-format
 msgid " This channel is private. People must be invited to join it."
-msgstr "이 채널은 비공개 채널입니다. 사람들은 이곳에 가입하도록 초대 받아야합니다."
+msgstr "이 채널은 비공개 채널이므로 초대를 받아야 합니다."
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:29
 #, python-format
 msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
-msgstr ""
+msgstr "%(user_name)s 님이 %(document)s 문서를 팔로우하도록 초대했습니다 : %(title)s"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:31
 #, python-format
 msgid "%(user_name)s invited you to follow a new document."
-msgstr ""
+msgstr "%(user_name)s님이 새 문서를 팔로우하도록 초대했습니다."
 
 #. module: mail
 #. openerp-web
@@ -55,7 +55,7 @@ msgstr "메시지 %d"
 #: code:addons/mail/static/src/js/activity.js:89
 #, python-format
 msgid "%d days overdue"
-msgstr "연체 된 %d 일"
+msgstr "%d 일 지연"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:249
@@ -68,33 +68,33 @@ msgstr "%s (사본)"
 #: code:addons/mail/static/src/js/models/threads/thread_typing_mixin/thread_typing_mixin.js:133
 #, python-format
 msgid "%s and %s are typing..."
-msgstr ""
+msgstr "%s 및 %s 입력중..."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:278
 #, python-format
 msgid "%s created"
-msgstr "작성 된 %s"
+msgstr "%s 작성함"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/models/threads/thread_typing_mixin/thread_typing_mixin.js:131
 #, python-format
 msgid "%s is typing..."
-msgstr ""
+msgstr "%s 입력중..."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/models/threads/thread_typing_mixin/thread_typing_mixin.js:137
 #, python-format
 msgid "%s, %s and more are typing..."
-msgstr ""
+msgstr "%s, %s 등등이 입력중..."
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:341
 #, python-format
 msgid "%s: %s assigned to you"
-msgstr ""
+msgstr "%s: 귀하에게 할당된 %s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_paynow
@@ -106,7 +106,7 @@ msgstr "&amp;nbsp;"
 #: code:addons/mail/static/src/xml/discuss.xml:285
 #, python-format
 msgid "&nbsp;("
-msgstr ""
+msgstr "&nbsp;("
 
 #. module: mail
 #. openerp-web
@@ -127,7 +127,7 @@ msgstr ", 에 만기가 되는"
 #: code:addons/mail/static/src/xml/thread.xml:547
 #, python-format
 msgid "-------- Show older messages --------"
-msgstr "-------- 오래된 메시지보기 --------"
+msgstr "-------- 오래된 메시지 보기 --------"
 
 #. module: mail
 #. openerp-web
@@ -160,6 +160,11 @@ msgid ""
 "            Type <b>/command</b> to execute a command.<br>\n"
 "            Type <b>:shortcut</b> to insert canned responses in your message.<br>"
 msgstr ""
+"<br><br>\n"
+"  <b>@username</b>을 입력하여 다른 사람을 언급하고, 그의 주의를 끕니다.<br>\n"
+"  <b>#channel</b>을 입력하여 해당 채널을 언급합니다.<br>\n"
+"<b>/command</b>를 입력해서 명령을 실행하십시오.<br>\n"
+"    <b>:shortcut</b>을 입력해서 메시지에 미리 준비된 응답을 삽입하십시오.<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:722
@@ -169,6 +174,9 @@ msgid ""
 "href=\"#\" class=\"o_channel_redirect\" data-oe-"
 "id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">%(author)s 이(가) %(new_partner)s 을(를) <a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s(으)로 초대함</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:829
@@ -177,6 +185,8 @@ msgid ""
 "<div class=\"o_mail_notification\">created <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\"><a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s 채널을 생성했습니다</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:729
@@ -186,6 +196,8 @@ msgid ""
 "<div class=\"o_mail_notification\">joined <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\"><a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s 채널에 참여했습니다</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:295
@@ -194,6 +206,8 @@ msgid ""
 "<div class=\"o_mail_notification\">left <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\"><a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s채널을 떠났습니다</a></div>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
@@ -230,9 +244,9 @@ msgid ""
 " notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
-"<p>여기 채널의 참여자에게<b>메세지를 쓰세요.</b></p> <p><i>'@'</i>를 사용하여 다른 사용자에게 알리거나 "
-"<i>'#'</i>를 사용하여 다른 채널을 연결 할 수 있습니다. 가능한 명령 목록을 보려면 <i>'/'</i>를 사용하여 메시지를 "
-"시작하십시오."
+"<p>여기 채널의 참여자에게<b>메시지를 쓰세요.</b></p> <p><i>'@'</i>를 사용하여 다른 사용자에게 알리거나 "
+"<i>'#'</i>를 사용하여 다른 채널을 연결할 수 있습니다. 가능한 명령 목록을 보려면 <i>'/'</i>를 사용하여 메시지를 "
+"시작하십시오.</p>"
 
 #. module: mail
 #. openerp-web
@@ -243,22 +257,22 @@ msgid ""
 " groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
 "marketing, product XYZ, after work party, etc).</p>"
 msgstr ""
-"<p>채널을 통해 서로 다른 주제와 그룹에서 정보를 쉽게 구성 할 수 있습니다.</p> <p><b>첫 번째 채널을 만드십시오</b>(예 "
-": 영업, 마케팅, 제품 XYZ, 업무용 파티 등).</p>"
+"<p>채널을 통해 서로 다른 주제와 그룹에서 정보를 쉽게 구성할 수 있습니다.</p> <p><b>첫 번째 채널을 만드십시오</b>(예 :"
+" 영업, 마케팅, 제품 XYZ, 업무용 파티 등).</p>"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/tour.js:27
 #, python-format
 msgid "<p>Create a channel here.</p>"
-msgstr ""
+msgstr "<p>여기서 채널을 만듭니다.</p>"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/models/threads/create_mode_document_thread.js:65
 #, python-format
 msgid "<p>Creating a new record...</p>"
-msgstr ""
+msgstr "<p>새 레코드 작성중...</p>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -270,6 +284,12 @@ msgid ""
 "                            </span>\n"
 "                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
+"                                 <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">현재 검색 필터로</span>\n"
+"                                 <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\"> 선택한 레코드에</span>\n"
+"                                 <strong> 일괄 메일 보내기</strong>.\n"
+"                             </span>\n"
+"                                <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">문서 팔로워 및</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -282,10 +302,10 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">\n"
-"                                    검색 기준과 일치하는 모든 레코드를 보내려면 이 상자를 선택하십시오:\n"
+"                                    검색 기준과 일치하는 모든 레코드를 보내려면 이 상자를 선택하십시오 :\n"
 "                                </span>\n"
 "                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">\n"
-"                                     선택한 레코드 만 사용하려면 이 선택 상자를 선택 취소하십시오:\n"
+"                                     선택한 레코드만 사용하려면 이 상자를 선택하지 마십시오 :\n"
 "                                </span>"
 
 #. module: mail
@@ -294,11 +314,12 @@ msgid ""
 "<span class=\"fa fa-info-circle\"/> Caution: It won't be possible to send "
 "this mail again to the recipients you did not select."
 msgstr ""
+"<span class=\"fa fa-info-circle\"/> 주의 : 선택하지 않은 수신자에게 이 이메일을 다시 보낼 수 없습니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Activities</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">활동</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -307,7 +328,7 @@ msgid ""
 "                                    <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
 "<span class=\"o_stat_text\">추가</span>\n"
-"                                    <span class=\"o_stat_text\">Context Action</span>"
+"                                    <span class=\"o_stat_text\">상황별 행동 </span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -316,7 +337,7 @@ msgid ""
 "                                    <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
 "<span class=\"o_stat_text\">삭제</span>\n"
-"                                    <span class=\"o_stat_text\">Context Action</span>"
+"                                    <span class=\"o_stat_text\">상황별 행동</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -329,11 +350,11 @@ msgid ""
 "                                Confirming this wizard will probably take a few minutes blocking your browser."
 msgstr ""
 "<strong>\n"
-"                                    현재 검색 필터와 일치하는 모든 레코드는,\n"
-"                                    목록보기에서 선택된 ID뿐만 아니라 메일로 발송됩니다.\n"
+"                                    현재 검색 필터와 일치하는 모든 레코드가\n"
+"                                    목록보기에서 선택된 ID뿐만 아니라 메일로도 전송됩니다.\n"
 "                                </strong><br/>\n"
-"                                목록에 선택된 모든 레코드에 대해 이메일이 발송됩니다.<br/>\n"
-"                                이 마법사를 확인하면 브라우저를 차단하는데 몇 분 정도 걸릴 것입니다."
+"                                목록에서 선택한 모든 레코드에 대해 이메일이 전송됩니다.<br/>\n"
+"                                이로 인해 몇 분 내에 브라우저를 열 수 없게 될 수도 있습니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
@@ -346,6 +367,7 @@ msgid ""
 "<strong>Internal communication</strong>: Replying will post an internal "
 "note. Followers won't receive any email notification."
 msgstr ""
+"<strong>내부 통신</strong>: 회신은 내부 노트를 통해 전달됩니다. 팔로워에게는 이메일 알림이 전송되지 않습니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -353,7 +375,7 @@ msgid ""
 "<strong>Only records checked in list view will be used.</strong><br/>\n"
 "                                The email will be sent for all the records selected in the list."
 msgstr ""
-"<strong>목록보기에 선택된 레코드 만 사용됩니다.</strong><br/>\n"
+"<strong>목록보기에 선택된 레코드만 사용됩니다.</strong><br/>\n"
 "                                목록에서 선택한 모든 레코드에 대해 이메일이 전송됩니다."
 
 #. module: mail
@@ -368,20 +390,20 @@ msgstr "<strong> 추천 활동 </strong>"
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr "이 별칭에 대한 새 레코드를 만들 때 기본값을 제공하도록 평가되는 Phyton dictionary입니다."
+msgstr "파이썬 사전은 이 별명에 대한 새 레코드를 작성할 때 기본값을 제공합니다."
 
 #. module: mail
 #: code:addons/mail/models/ir_actions.py:69
 #, python-format
 msgid "A next activity can only be planned on models that use the chatter"
-msgstr ""
+msgstr "채팅하는 동안 새 채팅 활동을 예약하십시오."
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_shortcode_action
 msgid ""
 "A shortcode is a keyboard shortcut. For instance, you type #gm and it will "
 "be transformed into \"Good Morning\"."
-msgstr "단축 코드는 바로 가기 키보드입니다. 예를 들어 #gm을 입력하면 \"Good Morning\"으로 변환됩니다."
+msgstr "단축 코드는 입력 바로 가기입니다. 예를 들어 #gm을 입력하면 \"Good Morning\"으로 변환됩니다."
 
 #. module: mail
 #. openerp-web
@@ -396,14 +418,14 @@ msgstr "수락"
 #: code:addons/mail/static/src/xml/discuss.xml:185
 #, python-format
 msgid "Accept selected messages"
-msgstr ""
+msgstr "선택한 메시지 수락"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:412
 #, python-format
 msgid "Accept |"
-msgstr ""
+msgstr "수략 |"
 
 #. module: mail
 #: selection:mail.compose.message,moderation_status:0
@@ -414,7 +436,7 @@ msgstr "수락됨"
 #. module: mail
 #: model:ir.model,name:mail.model_res_groups
 msgid "Access Groups"
-msgstr "접근 그룹"
+msgstr "사용가능 그룹"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_needaction
@@ -428,12 +450,12 @@ msgstr "작업이 필요함"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__state
 msgid "Action To Do"
-msgstr "필요한 작업"
+msgstr "수행할 작업"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr "동작 윈도우 보기"
+msgstr "작업 윈도우 보기"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__default
@@ -450,7 +472,7 @@ msgstr "활성"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__active_domain
 msgid "Active domain"
-msgstr "도메인 활성"
+msgstr "활성 도메인"
 
 #. module: mail
 #. openerp-web
@@ -487,7 +509,7 @@ msgstr "활동"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_mixin
 msgid "Activity Mixin"
-msgstr ""
+msgstr "활동 혼합"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_state
@@ -507,12 +529,12 @@ msgstr "활동 유형"
 #: model:ir.ui.menu,name:mail.menu_mail_activity_type
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Activity Types"
-msgstr "활동 종류"
+msgstr "활동 유형"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_type
 msgid "Activity User Type"
-msgstr "활성 사용자 유형"
+msgstr "활동 사용자 유형"
 
 #. module: mail
 #. openerp-web
@@ -533,7 +555,7 @@ msgstr "추가"
 #: code:addons/mail/static/src/xml/chatter.xml:30
 #, python-format
 msgid "Add Attachments"
-msgstr ""
+msgstr "첨부 파일 추가"
 
 #. module: mail
 #. openerp-web
@@ -546,7 +568,7 @@ msgstr "채널 추가"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 msgid "Add Email Blacklist"
-msgstr ""
+msgstr "이메일 블랙리스트 추가"
 
 #. module: mail
 #. openerp-web
@@ -562,7 +584,7 @@ msgstr "팔로워 추가"
 #: code:addons/mail/models/ir_actions.py:63
 #, python-format
 msgid "Add Followers can only be done on a mail thread model"
-msgstr "팔로워 추가는 메일 thread(스레드) 모델에서만 수행 할 수 있습니다."
+msgstr "팔로워 추가는 메일 스레드 모델에서만 수행할 수 있습니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__add_sign
@@ -589,7 +611,7 @@ msgstr "채널 추가"
 #: code:addons/mail/models/mail_thread.py:383
 #, python-format
 msgid "Add a new %(document)s or send an email to %(email_link)s"
-msgstr ""
+msgstr "새 %(document)s를 추가하거나 %(email_link)s에 이메일 보내기"
 
 #. module: mail
 #. openerp-web
@@ -601,19 +623,19 @@ msgstr "비공개 채널 추가"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
 msgid "Add an email address in the blacklist"
-msgstr ""
+msgstr "블랙리스트에 이메일 주소 추가"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/composer.xml:15
 #, python-format
 msgid "Add attachment"
-msgstr ""
+msgstr "첨부 파일 추가"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 msgid "Add channels to notify..."
-msgstr "알림 채널 추가 ..."
+msgstr "채널 알림 추가 ..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -626,7 +648,7 @@ msgstr "알림을 보낼 연락처 추가 ..."
 #: code:addons/mail/static/src/xml/thread.xml:418
 #, python-format
 msgid "Add this email address to white list of people"
-msgstr ""
+msgstr "화이트리스트에 이 이메일 주소 추가하기"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_ids
@@ -653,12 +675,12 @@ msgstr "이후"
 #: code:addons/mail/static/src/xml/followers.xml:26
 #, python-format
 msgid "Alarm menu"
-msgstr ""
+msgstr "알림 메뉴"
 
 #. module: mail
 #: selection:mail.activity.type,decoration_type:0
 msgid "Alert"
-msgstr "경고"
+msgstr "알림"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_id
@@ -715,19 +737,19 @@ msgstr "별칭"
 #: code:addons/mail/static/src/xml/systray.xml:31
 #, python-format
 msgid "All"
-msgstr "모두"
+msgstr "전체"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:46
 #, python-format
 msgid "All pages:&nbsp;"
-msgstr ""
+msgstr "전체 페이지 :&nbsp;"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
 msgid "Allowed Emails"
-msgstr ""
+msgstr "허용된 이메일"
 
 #. module: mail
 #: selection:ir.model.fields,track_visibility:0
@@ -737,21 +759,21 @@ msgstr "항상"
 #. module: mail
 #: selection:mail.moderation,status:0
 msgid "Always Allow"
-msgstr ""
+msgstr "항상 허용"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:418
 #, python-format
 msgid "Always Allow |"
-msgstr ""
+msgstr "항상 허용 |"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/models/mail_failure.js:80
 #, python-format
 msgid "An error occured when sending an email"
-msgstr ""
+msgstr "이메일을 보낼 때 오류 발생"
 
 #. module: mail
 #. openerp-web
@@ -768,7 +790,7 @@ msgstr "익명"
 msgid ""
 "Answers do not go in the original document discussion thread. This has an "
 "impact on the generated message-id."
-msgstr "원본 문서 의논/토의 thread에는 답변이 포함되지 않습니다. 이는 생성 된 메시지 ID에 영향을 미칩니다."
+msgstr "답변은 원본 문서 토론 영역에 없으며 생성된 메시지 ID에 영향을 미칩니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__model_id
@@ -787,7 +809,7 @@ msgstr "적용"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_search
 msgid "Archived"
-msgstr "아카이브됨"
+msgstr "보관"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_resend_message.py:122
@@ -795,7 +817,7 @@ msgstr "아카이브됨"
 msgid ""
 "Are you sure you want to discard %s mail delivery failures. You won't be "
 "able to re-send these mails later!"
-msgstr ""
+msgstr "%s 메일 전송 실패를 삭제 하시겠습니까? 나중에 이 메일을 다시 보낼 수 없습니다!"
 
 #. module: mail
 #. openerp-web
@@ -803,7 +825,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_activity__user_id
 #, python-format
 msgid "Assigned to"
-msgstr "지정 된"
+msgstr "담당자"
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:258
@@ -812,7 +834,7 @@ msgstr "지정 된"
 msgid ""
 "Assigned user %s has no access to the document and is not able to handle "
 "this activity."
-msgstr ""
+msgstr "할당된 사용자 %s는 문서에 대한 사용 권한이 없으므로 이 활동을 처리할 수 없습니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -858,12 +880,12 @@ msgstr "첨부 파일은 model / res_id를 통해 문서에 연결되고 이 필
 #. module: mail
 #: selection:mail.alias,alias_contact:0
 msgid "Authenticated Employees"
-msgstr "인증 된 직원"
+msgstr "인증된 직원"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
 msgid "Authenticated Partners"
-msgstr "인증된 파트너"
+msgstr "인증된 협력사"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__author_id
@@ -876,7 +898,7 @@ msgstr "작성자"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Author Signature (mass mail only)"
-msgstr "작성자 서명 (대량 메일 전용)"
+msgstr "작성자 서명 (일괄 메일 전용)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__author_id
@@ -885,19 +907,19 @@ msgstr "작성자 서명 (대량 메일 전용)"
 msgid ""
 "Author of the message. If not set, email_from may hold an email address that"
 " did not match any partner."
-msgstr "메시지 작성자. 설정하지 않으면 이메일_보낸사람에 파트너와 일치하지 않는 이메일 주소가 있을 수 있습니다."
+msgstr "메시지 작성자. 설정하지 않으면 email_from에 협력사와 일치하지 않는 이메일 주소가 있을 수 있습니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__author_avatar
 #: model:ir.model.fields,field_description:mail.field_mail_mail__author_avatar
 #: model:ir.model.fields,field_description:mail.field_mail_message__author_avatar
 msgid "Author's avatar"
-msgstr "작성자의 아바타"
+msgstr "작성자 아바타"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__group_public_id
 msgid "Authorized Group"
-msgstr "승인 된 그룹"
+msgstr "인증 그룹"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__auto_delete
@@ -910,27 +932,27 @@ msgstr "자동 삭제"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__force_next
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__force_next
 msgid "Auto Schedule Next Activity"
-msgstr ""
+msgstr "다음 활동 자동 예약"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Auto Subscribe Groups"
-msgstr ""
+msgstr "자동 가입 그룹"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__group_ids
 msgid "Auto Subscription"
-msgstr "자동 수신"
+msgstr "자동 구독"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
 msgid "Auto subscription"
-msgstr "자동 수신"
+msgstr "자동 구독"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__automated
 msgid "Automated activity"
-msgstr ""
+msgstr "자동화된 활동"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_autovacuum
@@ -940,7 +962,7 @@ msgstr "자동 비우기"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_notify
 msgid "Automatic notification"
-msgstr ""
+msgstr "자동 알림"
 
 #. module: mail
 #. openerp-web
@@ -955,31 +977,31 @@ msgstr "아바타"
 #: code:addons/mail/static/src/xml/thread.xml:420
 #, python-format
 msgid "Ban"
-msgstr ""
+msgstr "금지"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Ban List"
-msgstr ""
+msgstr "금지 목록"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:420
 #, python-format
 msgid "Ban this email address"
-msgstr ""
+msgstr "이 이메일 주소 금지"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
 msgid "Banned Emails"
-msgstr ""
+msgstr "금지된 이메일"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/followers.xml:90
 #, python-format
 msgid "Be careful with channels following internal notifications"
-msgstr "내부 알림을 따르는 채널에 주의하십시오."
+msgstr "구독중인 채널의 내부 알림에 주의하십시오"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_paynow
@@ -998,7 +1020,7 @@ msgstr "블랙리스트"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
 msgid "Blacklist Date"
-msgstr ""
+msgstr "블랙리스트 날짜"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__body_html
@@ -1020,7 +1042,7 @@ msgstr "반송"
 #: selection:mail.notification,email_status:0
 #, python-format
 msgid "Bounced"
-msgstr "반송 됨"
+msgstr "반송됨"
 
 #. module: mail
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -1054,7 +1076,7 @@ msgstr "이메일 취소"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
 msgid "Cancel notification in failure"
-msgstr ""
+msgstr "실패 시 알림 취소"
 
 #. module: mail
 #. openerp-web
@@ -1067,12 +1089,12 @@ msgstr "취소됨"
 #. module: mail
 #: selection:mail.mail,state:0
 msgid "Cancelled"
-msgstr "취소 됨"
+msgstr "취소됨"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_shortcode
 msgid "Canned Response / Shortcode"
-msgstr "취소 된 답볍 / 단축 코드"
+msgstr "취소된 답변 / 단축 코드"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_cc
@@ -1088,19 +1110,19 @@ msgstr "참조 대상자 (사전 표시 문자를 여기에 사용할 수 있습
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall
 msgid "Catchall Email"
-msgstr ""
+msgstr "캣치올 이메일"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_category
 #: model:ir.model.fields,help:mail.field_mail_activity_type__category
 msgid "Categories may trigger specific behavior like opening calendar view"
-msgstr "카테고리가 일정보기를 여는 것과 같은 특정 동작을 trigger(트리거)할 수 있습니다."
+msgstr "범주가 일정 보기를 여는 것과 같은 특정 동작을 유발할 수 있습니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_category
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__category
 msgid "Category"
-msgstr "분류"
+msgstr "범주"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__email_cc
@@ -1118,14 +1140,14 @@ msgstr "변경"
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_decoration
 #: model:ir.model.fields,help:mail.field_mail_activity_type__decoration_type
 msgid "Change the background color of the related activities of this type."
-msgstr ""
+msgstr "이 유형과 관련된 활동의 배경색을 변경합니다."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:443
 #, python-format
 msgid "Changed"
-msgstr ""
+msgstr "변경됨"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field
@@ -1152,24 +1174,24 @@ msgstr "채널 메시지"
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_moderation_menu
 msgid "Channel Moderation"
-msgstr ""
+msgstr "채널 운영"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__channel_type
 msgid "Channel Type"
-msgstr "채널 타입"
+msgstr "채널 유형"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_moderation
 msgid "Channel black/white list"
-msgstr ""
+msgstr "채널 블랙/화이트리스트"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:144
 #, python-format
 msgid "Channel settings"
-msgstr ""
+msgstr "채널 설정"
 
 #. module: mail
 #. openerp-web
@@ -1193,7 +1215,7 @@ msgstr "채널"
 #: model:ir.actions.act_window,name:mail.mail_channel_partner_action
 #: model:ir.ui.menu,name:mail.mail_channel_partner_menu
 msgid "Channels/Partner"
-msgstr "채널/파트너"
+msgstr "채널/협력서"
 
 #. module: mail
 #. openerp-web
@@ -1207,7 +1229,7 @@ msgstr "채팅"
 #. module: mail
 #: selection:mail.channel,channel_type:0
 msgid "Chat Discussion"
-msgstr "채팅 의논/토의"
+msgstr "채팅 토론"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
@@ -1231,19 +1253,19 @@ msgstr "예제 선택"
 #: code:addons/mail/static/src/xml/thread.xml:50
 #, python-format
 msgid "Close"
-msgstr "마감"
+msgstr "닫기"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/abstract_thread_window.xml:67
 #, python-format
 msgid "Close chat window"
-msgstr ""
+msgstr "채팅창 닫기"
 
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
 msgid "Closed"
-msgstr "마감됨"
+msgstr "종료됨"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -1253,37 +1275,37 @@ msgstr "쉼표로 구분한 참조 대상자 주소"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated ids of recipient partners"
-msgstr "쉼표로 구분 된 수신자의 ids"
+msgstr "쉼표로 구분된 수신자 id"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview__partner_to
 #: model:ir.model.fields,help:mail.field_mail_template__partner_to
 msgid ""
 "Comma-separated ids of recipient partners (placeholders may be used here)"
-msgstr "심표로 구분 된 받는 사람 파트너의 ID (placeholders may be used here)"
+msgstr "쉼표로 구분된 수신 협력사 ID (사전 표시 문자를 여기에 사용할 수 있습니다)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated recipient addresses"
-msgstr "쉼표로 구분 된 받는 사람 주소"
+msgstr "쉼표로 구분된 수신자 주소"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview__email_to
 #: model:ir.model.fields,help:mail.field_mail_template__email_to
 msgid "Comma-separated recipient addresses (placeholders may be used here)"
-msgstr "쉼표로 구분된 받는 사람 주소 (사전 표시 문자를 여기에 사용할 수 있습니다)"
+msgstr "쉼표로 구분된 수신자 주소 (사전 표시 문자를 여기에 사용할 수 있습니다)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 #: selection:mail.compose.message,message_type:0
 #: selection:mail.message,message_type:0
 msgid "Comment"
-msgstr "코멘트"
+msgstr "의견"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_company
 msgid "Companies"
-msgstr "회사들"
+msgstr "회사"
 
 #. module: mail
 #. openerp-web
@@ -1307,26 +1329,26 @@ msgstr "설정 구성"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your activity types"
-msgstr ""
+msgstr "활동 유형 환경 설정"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:130
 #, python-format
 msgid "Congratulations, your inbox is empty"
-msgstr "축하합니다, 수신함이 비어 있습니다."
+msgstr "축하합니다, 받은 편지함이 비었습니다."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/discuss.js:944
 #, python-format
 msgid "Congratulations, your inbox is empty!"
-msgstr "축하합니다, 수신함이 비어 있습니다!"
+msgstr "축하합니다, 받은 편지함이 비었습니다."
 
 #. module: mail
 #: selection:mail.notification,failure_type:0
 msgid "Connection failed (outgoing mail server problem)"
-msgstr ""
+msgstr "연결 실패 (보내는 메일 서버 문제 발생)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
@@ -1337,14 +1359,14 @@ msgstr "연락처"
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Content"
-msgstr "컨텐츠"
+msgstr "내용"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__body
 #: model:ir.model.fields,field_description:mail.field_mail_mail__body
 #: model:ir.model.fields,field_description:mail.field_mail_message__body
 msgid "Contents"
-msgstr "컨텐츠"
+msgstr "내용"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__fold_state
@@ -1367,31 +1389,31 @@ msgstr "대화"
 #: model:ir.model.fields,help:mail.field_res_partner__message_bounce
 #: model:ir.model.fields,help:mail.field_res_users__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr "이 연락처의 반송 된 이메일 수의 계산"
+msgstr "이 연락처로 반송된  이메일 수 계산"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/discuss.js:566
 #, python-format
 msgid "Create %s"
-msgstr "작성 %s"
+msgstr "%s 만들기"
 
 #. module: mail
 #: selection:ir.actions.server,state:0
 msgid "Create Next Activity"
-msgstr ""
+msgstr "신규 활동 작성"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:400
 #, python-format
 msgid "Create a new %(document)s"
-msgstr ""
+msgstr "새 %(document)s 만들기"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:392
 #, python-format
 msgid "Create a new %(document)s by sending an email to %(email_link)s"
-msgstr ""
+msgstr "%(email_link)s로 이메일을 보내서 새 %(document)s 만들기"
 
 #. module: mail
 #: selection:ir.actions.server,state:0
@@ -1458,24 +1480,24 @@ msgstr "작성일"
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Creation Date"
-msgstr "작성 날짜"
+msgstr "작성일"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__create_user_id
 msgid "Creator"
-msgstr "생성자"
+msgstr "작성자"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__starred
 #: model:ir.model.fields,help:mail.field_mail_mail__starred
 #: model:ir.model.fields,help:mail.field_mail_message__starred
 msgid "Current user has a starred notification linked to this message"
-msgstr "현재 사용자에게 이 메시지에 연결된 별표가 표시된 알림이 있습니다."
+msgstr "현재 사용자에게 이 메시지와 연결된 별표가 표시된 알림이 있습니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__is_moderator
 msgid "Current user is a moderator of the channel"
-msgstr ""
+msgstr "현재 사용자가 채널의 운영자입니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__date
@@ -1508,13 +1530,13 @@ msgstr "마감 시한"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "Dear"
-msgstr "....에게"
+msgstr "친애하는"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_decoration
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__decoration_type
 msgid "Decoration Type"
-msgstr ""
+msgstr "장식 유형"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__default
@@ -1524,20 +1546,20 @@ msgstr "기본"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_next_type_id
 msgid "Default Next Activity"
-msgstr ""
+msgstr "기본 다음 활동"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__null_value
 #: model:ir.model.fields,field_description:mail.field_mail_template__null_value
 msgid "Default Value"
-msgstr "기본 값"
+msgstr "기본값"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_defaults
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_defaults
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_defaults
 msgid "Default Values"
-msgstr "기본 값"
+msgstr "기본값"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__use_default_to
@@ -1553,24 +1575,24 @@ msgid ""
 "- partner (using id on a partner or the partner_id field) OR\n"
 "- email (using email_from or email field)"
 msgstr ""
-"레코드의 기본 수신자:\n"
-"- 파트너 (parter id 또는 partner_id 필드의 ID 사용) 또는\n"
+"레코드의 기본 수신자 :\n"
+"- 협력사 (협력사 ID 또는 partner_id 필드 사용) 또는\n"
 "- 이메일 (email_from 또는 email field 사용)"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_shortcode_action
 msgid "Define a new chat shortcode"
-msgstr ""
+msgstr "새 채팅 단축코드 정의"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_from
 msgid "Delay Type"
-msgstr "지연 형태"
+msgstr "지연 유형"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_unit
 msgid "Delay units"
-msgstr ""
+msgstr "지연 단위"
 
 #. module: mail
 #. openerp-web
@@ -1593,7 +1615,7 @@ msgstr "메시지 사본 삭제"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__auto_delete
 msgid "Delete sent emails (mass mailing only)"
-msgstr "보낸 이메일 삭제 (대량 메일 발송에만 해당)"
+msgstr "보낸 이메일 삭제 (일괄 메일 전용)"
 
 #. module: mail
 #: selection:mail.mail,state:0
@@ -1613,7 +1635,7 @@ msgstr "내용"
 msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
-msgstr "이 하위 유형에 대해 게시 된 메시지에 추가 될 설명입니다. 비워두면 이름이 대신 추가됩니다."
+msgstr "이 하위 유형에 대해 게시된 메시지에 추가할 설명입니다. 비워두면 이름이 대신 추가됩니다."
 
 #. module: mail
 #: selection:ir.ui.view,type:0
@@ -1636,38 +1658,38 @@ msgstr "개인 메시지"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Discard"
-msgstr "작성취소"
+msgstr "작성 취소"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
 msgid "Discard delivery failures"
-msgstr ""
+msgstr "전송 실패 취소"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_cancel_action
 msgid "Discard mail delivery failures"
-msgstr ""
+msgstr "메일 전송 실패 취소"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:187
 #, python-format
 msgid "Discard selected messages"
-msgstr ""
+msgstr "선택한 메시지 취소"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:416
 #, python-format
 msgid "Discard |"
-msgstr "작성취소 |"
+msgstr "작성 취소 |"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.menu_root_discuss
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Discuss"
-msgstr "의논/토의"
+msgstr "토론"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel
@@ -1677,12 +1699,12 @@ msgstr "토론 채널"
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_comment
 msgid "Discussions"
-msgstr "의논/토의"
+msgstr "토론"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_cancel
 msgid "Dismiss notification for resend by model"
-msgstr ""
+msgstr "모델별 재전송에 대한 알림 취소"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__display_name
@@ -1719,7 +1741,7 @@ msgstr "제목"
 msgid ""
 "Display an option on related documents to open a composition wizard with "
 "this template"
-msgstr "관련 문서에 옵션을 표시하여 이 템플릿(서식)으로 구성 마법사를 엽니다."
+msgstr "관련 문서에 옵션을 표시하여 이 서식을 사용하여 구성 마법사를 열도록 합니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__res_name
@@ -1731,14 +1753,14 @@ msgstr "관련 문서의 제목을 표시합니다."
 msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
-msgstr "문서 대화 기록에 이메일 복사본을 보관하지 마십시오 (대량 메일 발송에만 해당)"
+msgstr "이메일 복사본을 문서 통신 기록에 보관하지 마십시오 (일괄 메일 전용)"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/chatter.js:498
 #, python-format
 msgid "Do you really want to delete %s?"
-msgstr ""
+msgstr "정말로 %s을 삭제하시겠습니까?"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -1773,7 +1795,7 @@ msgstr "완료"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Done & Launch Next"
-msgstr ""
+msgstr "완료 및 다음 실행"
 
 #. module: mail
 #. openerp-web
@@ -1781,7 +1803,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Done & Schedule Next"
-msgstr ""
+msgstr "완료 및 다음 예정"
 
 #. module: mail
 #. openerp-web
@@ -1796,7 +1818,7 @@ msgstr "다운로드"
 #: code:addons/mail/static/src/xml/followers.xml:11
 #, python-format
 msgid "Dropdown menu - Followers"
-msgstr ""
+msgstr "드롭다운 메뉴 - 팔로워"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_deadline
@@ -1835,7 +1857,7 @@ msgstr "편집"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Edit Partners"
-msgstr ""
+msgstr "협력사 편집"
 
 #. module: mail
 #. openerp-web
@@ -1886,7 +1908,7 @@ msgstr "이메일 별칭 혼합"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
 msgid "Email Blacklist"
-msgstr ""
+msgstr "이메일 블랙리스트"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -1911,17 +1933,17 @@ msgstr "이메일 상태"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__template_id
 msgid "Email Template"
-msgstr "이메일 템플릿(서식)"
+msgstr "이메일 서식"
 
 #. module: mail
 #: model:ir.model,name:mail.model_email_template_preview
 msgid "Email Template Preview"
-msgstr "이메일 템플릿(서식) 미리보기"
+msgstr "이메일 서식 미리보기"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_template
 msgid "Email Templates"
-msgstr "이메일 템플릿(서식)"
+msgstr "이메일 서식"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
@@ -1931,7 +1953,7 @@ msgstr "이메일 스레드"
 #. module: mail
 #: sql_constraint:mail.blacklist:0
 msgid "Email address already exists!"
-msgstr ""
+msgstr "이메일 주소가 이미 존재합니다!"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users__alias_id
@@ -1947,29 +1969,31 @@ msgstr "내부적으로 이 사용자와 연결된 이메일 주소입니다. �
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
-msgstr "보낸 사람의 이메일 주소. 이 필드는 수신 메일에서 일치하는 파트너를 찾을 수 없을 때 설정합니다."
+msgstr ""
+"보낸 사람의 이메일 주소. 일치하는 파트너를 찾을 수 없을 때 이 필드가 설정됩니다. 그리고 대화에서 author_id 필드를 "
+"대체합니다."
 
 #. module: mail
 #: selection:mail.notification,failure_type:0
 msgid "Email address rejected by destination"
-msgstr ""
+msgstr "수신자가 거부한 이메일 주소"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Email address to redirect replies..."
-msgstr "답장을 전달할 이메일주소..."
+msgstr "답장을 전달할 이메일 주소..."
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
 msgid ""
 "Email addresses that are blacklisted means that the recipient won't receive "
 "any mass mailing anymore."
-msgstr ""
+msgstr "블랙리스트에 포함된 이메일 주소는 수신자가 더 이상 일괄 메일을 받지 않는다는 것을 의미합니다."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "이메일 작성 마법사"
+msgstr "이메일 구성 마법사"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -1980,7 +2004,7 @@ msgstr "이메일 메시지"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_message
 msgid "Email resend wizard"
-msgstr ""
+msgstr "이메일 재전송 마법사"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_mail
@@ -1994,12 +2018,12 @@ msgstr "이메일"
 #: code:addons/mail/static/src/xml/composer.xml:14
 #, python-format
 msgid "Emojis"
-msgstr ""
+msgstr "이모지"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
 msgid "Envelope Example"
-msgstr ""
+msgstr "봉투 예제"
 
 #. module: mail
 #. openerp-web
@@ -2021,7 +2045,7 @@ msgstr "게시자 보증 서버와의 통신 중 오류가 발생했습니다."
 msgid ""
 "Error without exception. Probably due do concurrent access update of "
 "notification records. Please see with an administrator."
-msgstr ""
+msgstr "예외 없는 오류. 아마도 알림 레코드의 동시 액세스 업데이트가필요합니다. 관리자에게 문의하십시오."
 
 #. module: mail
 #: code:addons/mail/models/mail_mail.py:329
@@ -2029,23 +2053,23 @@ msgstr ""
 msgid ""
 "Error without exception. Probably due do sending an email without computed "
 "recipients."
-msgstr "예외없이 오류. 아마도 계산 된 수신자가 없이 이메일을 보내서 오류가 발생."
+msgstr "예외 없는 오류. 아마도 계산된 수신자가 없이 이메일을 보내서 오류가 발생."
 
 #. module: mail
 #: sql_constraint:mail.followers:0
 msgid "Error, a channel cannot follow twice the same object."
-msgstr "오류, 채널이 동일한 object를 두 번 팔로우 할 수 없습니다."
+msgstr "오류. 채널은 동일한 객체를 두 번 팔로우할 수 없습니다."
 
 #. module: mail
 #: sql_constraint:mail.followers:0
 msgid "Error, a partner cannot follow twice the same object."
-msgstr "오류, 파트너가 동일한 object를 두 번 팔로우 할 수 없습니다."
+msgstr "오류, 협력사가 동일한 객체를 두 번 팔로우할 수 없습니다."
 
 #. module: mail
 #: sql_constraint:mail.followers:0
 msgid ""
 "Error: A follower must be either a partner or a channel (but not both)."
-msgstr "오류: 팔로워는 파트너 또는 채널 중 하나 여야합니다 (둘 다 포함 할 수 없음)."
+msgstr "오류 : 팔로워는 협력사 또는 채널 중 하나 여야 합니다 (둘 다 포함 할 수 없음)."
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0 selection:mail.channel,public:0
@@ -2078,7 +2102,7 @@ msgstr "필터 확장..."
 #: code:addons/mail/static/src/xml/thread.xml:45
 #, python-format
 msgid "Extract pages:&nbsp;"
-msgstr ""
+msgstr "페이지 추출 :&nbsp;"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__fail_counter
@@ -2094,7 +2118,7 @@ msgstr "실패함"
 #: code:addons/mail/models/mail_template.py:338
 #, python-format
 msgid "Failed to render template %r using values %r"
-msgstr "값 %r을 사용하여 %r 템플릿(서식)을 render(제시)하지 못했습니다"
+msgstr "%r 서식이 %r 값을 이용하여 서식을 만들지 못했습니다"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_reason
@@ -2105,26 +2129,26 @@ msgstr "실패 이유"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__failure_reason
 msgid "Failure reason"
-msgstr ""
+msgstr "실패 이유"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__failure_reason
 msgid ""
 "Failure reason. This is usually the exception thrown by the email server, "
 "stored to ease the debugging of mailing issues."
-msgstr "실패 이유. 이는 일반적으로 메일 문제의 디버깅을 쉽게하기 위해, 저장된 이메일 서버에 의해 발생되는 예외입니다."
+msgstr "실패 이유. 이메일 서버가 보낸 예외는 일반적으로 메일 문제의 디버깅을 쉽게 하기 위해 저장됩니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__failure_type
 msgid "Failure type"
-msgstr ""
+msgstr "실패 유형"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__starred_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail__starred_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__starred_partner_ids
 msgid "Favorited By"
-msgstr "로 즐겨찾기"
+msgstr "즐겨찾기"
 
 #. module: mail
 #. openerp-web

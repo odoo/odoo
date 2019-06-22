@@ -33,21 +33,21 @@
 # Liping Wang <lynn.config@gmail.com>, 2019
 # 开阖软件 Jeff Wang <jeff@osbzr.com>, 2019
 # Martin Trigaux, 2019
-# 菜小蛇 <lttlsnk@gmail.com>, 2019
+# lttlsnk <lttlsnk@gmail.com>, 2019
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2019
 # John An <johnxan@163.com>, 2019
 # 张宏奎 <zhanghongkui@inspur.com>, 2019
 # 红瑜 陶 <823103015@qq.com>, 2019
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # Jerry Pan <panjianyu@inspur.com>, 2019
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-29 10:09+0000\n"
+"POT-Creation-Date: 2019-06-21 11:06+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Jerry Pan <panjianyu@inspur.com>, 2019\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -475,6 +475,15 @@ msgid ""
 msgstr "<span class=\"text-muted\">只显示没有与银行账户链接起来的账目</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
+"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
+msgstr ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">金额</span>\n"
+"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">总价格</span>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span name=\"button_import_placeholder\"/> Statements"
 msgstr "<span name=\"button_import_placeholder\"/> 对账单"
@@ -887,17 +896,12 @@ msgid "Account"
 msgstr "科目"
 
 #. module: account
-#: code:addons/account/models/account_move.py:914
+#: code:addons/account/models/account_move.py:948
 #, python-format
 msgid ""
 "Account %s (%s) does not allow reconciliation. First change the "
 "configuration of this account to allow it."
 msgstr "科目%s（%s）不允许核销。首先更改这个科目的配置以允许核销."
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
-msgid "Account Accountant"
-msgstr "会计账户"
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -1198,6 +1202,7 @@ msgid "Account; Reverse entries"
 msgstr "会计逆转分录"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 #: model:ir.ui.menu,name:account.menu_finance_entries
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
@@ -1591,7 +1596,6 @@ msgstr "允许使用分析会计"
 #: model:ir.model.fields,field_description:account.field_cash_box_out__amount
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__amount
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_supplier_payment_tree
@@ -10185,7 +10189,7 @@ msgstr "为保证全部总量被分配，最后一行的计算类型应该是 \"
 #: code:addons/account/models/company.py:145
 #, python-format
 msgid "The lock date for advisors is irreversible and can't be removed."
-msgstr "锁定日期是不可删除."
+msgstr "锁定日期是不可移除."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
@@ -11732,7 +11736,7 @@ msgstr ""
 #: code:addons/account/models/account.py:644
 #, python-format
 msgid "You cannot remove the bank account from the journal once set."
-msgstr "一旦设置，您不能从日记账中删除银行帐户。"
+msgstr "一旦设置，您不能从日记账中移除银行帐户。"
 
 #. module: account
 #: code:addons/account/models/account.py:332
@@ -11740,7 +11744,7 @@ msgstr "一旦设置，您不能从日记账中删除银行帐户。"
 msgid ""
 "You cannot remove/deactivate an account which is set on a customer or "
 "vendor."
-msgstr "你不能删除／关闭一个已经被设置在供应商／客户上的科目 ."
+msgstr "你不能移除／关闭一个已经被设置在供应商／客户上的科目 ."
 
 #. module: account
 #: code:addons/account/models/account.py:320
