@@ -138,13 +138,13 @@ msgstr ""
 #: code:addons/mail/wizard/invite.py:29
 #, python-format
 msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
-msgstr ""
+msgstr "%(user_name)s 님이 %(document)s 문서를 팔로우하도록 초대했습니다 : %(title)s"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:31
 #, python-format
 msgid "%(user_name)s invited you to follow a new document."
-msgstr ""
+msgstr "%(user_name)s님이 새 문서를 팔로우하도록 초대했습니다."
 
 #. module: mail
 #. openerp-web
@@ -183,7 +183,7 @@ msgstr "%s 님이 %s 네트워크에 가입했습니다."
 #: code:addons/mail/static/src/xml/client_action.xml:211
 #, python-format
 msgid "&nbsp;("
-msgstr ""
+msgstr "&nbsp;("
 
 #. module: mail
 #. openerp-web
@@ -259,6 +259,9 @@ msgid ""
 "href=\"#\" class=\"o_channel_redirect\" data-oe-"
 "id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">%(author)s 이(가) %(new_partner)s 을(를) <a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s(으)로 초대함</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:592
@@ -267,6 +270,8 @@ msgid ""
 "<div class=\"o_mail_notification\">created <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\"><a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s 작성함</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:516
@@ -276,6 +281,8 @@ msgid ""
 "<div class=\"o_mail_notification\">joined <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\"><a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s 참여함</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:182
@@ -284,6 +291,8 @@ msgid ""
 "<div class=\"o_mail_notification\">left <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\"><a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s채널을 떠났습니다</a></div>"
 
 #. module: mail
 #. openerp-web
@@ -558,7 +567,7 @@ msgstr "활동"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_mixin
 msgid "Activity Mixin"
-msgstr ""
+msgstr "활동 혼합"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_type
@@ -1106,7 +1115,7 @@ msgstr "작성 모드"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your activity types"
-msgstr ""
+msgstr "활동 유형 환경 설정"
 
 #. module: mail
 #. openerp-web
@@ -1504,7 +1513,7 @@ msgstr "완료"
 #: code:addons/mail/static/src/xml/activity.xml:77
 #, python-format
 msgid "Done & Schedule Next"
-msgstr ""
+msgstr "완료 및 다음 예정"
 
 #. module: mail
 #. openerp-web

@@ -11,6 +11,7 @@
 # laznikd <laznik@mentis.si>, 2018
 # Martin Trigaux, 2019
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
+# Tadej Lupšina <tadej@hbs.si>, 2019
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Matjaz Mozetic <m.mozetic@matmoz.si>, 2019\n"
+"Last-Translator: Tadej Lupšina <tadej@hbs.si>, 2019\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1267,7 +1268,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.account_tag_action
 msgid "Account Tags"
-msgstr ""
+msgstr "Oznake računa"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_tax_form
@@ -2153,7 +2154,7 @@ msgstr ""
 #. module: account
 #: selection:res.partner,trust:0
 msgid "Bad Debtor"
-msgstr ""
+msgstr "Slab dolžnik"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -4882,7 +4883,7 @@ msgstr "Pojdi na nastavitveno nadzorno ploščo."
 #. module: account
 #: selection:res.partner,trust:0
 msgid "Good Debtor"
-msgstr ""
+msgstr "Dober dolžnik"
 
 #. module: account
 #. openerp-web
@@ -4951,7 +4952,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_partner_has_unreconciled_entries
 #: model:ir.model.fields,field_description:account.field_res_users_has_unreconciled_entries
 msgid "Has Unreconciled Entries"
-msgstr ""
+msgstr "Ima neusklajene postavke"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_hide_payment_method
@@ -5385,7 +5386,7 @@ msgstr "Začetna stanja"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_account_input_categ_id
 #: model:ir.model.fields,field_description:account.field_res_company_property_stock_account_input_categ_id
 msgid "Input Account for Stock Valuation"
-msgstr ""
+msgstr "Vhodni konto za vrednotenje zaloge"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5400,7 +5401,7 @@ msgstr "Namesti več paketov programske opreme"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_transfer_account_id
 msgid "Inter-Banks Transfer Account"
-msgstr ""
+msgstr "Račun za prenos med bankami"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_transfer_account_id
@@ -6238,6 +6239,9 @@ msgid ""
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
 msgstr ""
+"Nazadnje, ko je bilo za tega partnerja izvedeno usklajevanje računov in "
+"plačil. Nastavi se, če ni vsaj enega neusklajenega debeta in neusklajenega "
+"kredita ali če kliknete gumb \"Končano\"."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_last_time_entries_checked
@@ -6257,7 +6261,7 @@ msgstr "Aktivnosti z zamudo"
 #: model:ir.model.fields,field_description:account.field_res_partner_last_time_entries_checked
 #: model:ir.model.fields,field_description:account.field_res_users_last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
-msgstr ""
+msgstr "Zadnji računi in datum usklajevanja plačil"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group_parent_left
@@ -6846,7 +6850,7 @@ msgstr "Ni prenosa"
 #. module: account
 #: selection:res.partner,trust:0
 msgid "Normal Debtor"
-msgstr ""
+msgstr "Običajen dolžnik"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -7095,7 +7099,7 @@ msgstr "Datum odprtja"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_opening_journal_id
 msgid "Opening Journal"
-msgstr ""
+msgstr "Otvoritveni dnevnik"
 
 #. module: account
 #: code:addons/account/models/company.py:339
@@ -7103,7 +7107,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_company_account_opening_move_id
 #, python-format
 msgid "Opening Journal Entry"
-msgstr ""
+msgstr "Otvoritvene temeljnica"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_opening_opening_move_line_ids
@@ -7215,7 +7219,7 @@ msgstr "Izhodno"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_account_output_categ_id
 #: model:ir.model.fields,field_description:account.field_res_company_property_stock_account_output_categ_id
 msgid "Output Account for Stock Valuation"
-msgstr ""
+msgstr "Izhodni konto za vrednotenje zaloge"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_outstanding_credits_debits_widget
@@ -7784,12 +7788,12 @@ msgstr "Zaključene postavke"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_bank_account_code_prefix
 #: model:ir.model.fields,field_description:account.field_res_company_bank_account_code_prefix
 msgid "Prefix of the bank accounts"
-msgstr ""
+msgstr "Predpona bančnih računov"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_cash_account_code_prefix
 msgid "Prefix of the cash accounts"
-msgstr ""
+msgstr "Predpona denarnih računov"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_cash_account_code_prefix
@@ -9733,6 +9737,8 @@ msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
 msgstr ""
+"Partner ima vsaj eno neusklajeno debetno in kreditno zadolžitev od zadnjega "
+"usklajevanja računov in plačil."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_reference
@@ -10114,6 +10120,8 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
 msgstr ""
+"Ti plačilni pogoji bodo uporabljeni namesto privzetih za naročila in račune "
+"dobaviteljev"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_payment_term_id
@@ -10122,6 +10130,8 @@ msgid ""
 "This payment term will be used instead of the default one for sales orders "
 "and customer invoices"
 msgstr ""
+"Ti plačilni pogoji bodo uporabljeni namesto privzetih za ponudbe in račune "
+"za stranke"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10651,7 +10661,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_partner_currency_id
 #: model:ir.model.fields,help:account.field_res_users_currency_id
 msgid "Utility field to express amount currency"
-msgstr ""
+msgstr "Pomožno polje za izražanje zneska valute"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_vat_required
