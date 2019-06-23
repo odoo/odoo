@@ -25,7 +25,7 @@ msgstr ""
 #: code:addons/mrp_subcontracting/models/res_company.py:20
 #, python-format
 msgid "%s: Subcontracting Location"
-msgstr ""
+msgstr "%s: Місцезнаходження субпідряду"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__type
@@ -47,7 +47,7 @@ msgstr "Тип специфікації"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__bom_id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__bom_id
 msgid "Bom"
-msgstr ""
+msgstr "Специфікація"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_company
@@ -68,12 +68,12 @@ msgstr "Адреса доставки"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__display_action_record_components
 msgid "Display Action Record Components"
-msgstr ""
+msgstr "Відображати компоненти запису дії"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__display_view_subcontracted_move_lines
 msgid "Display View Subcontracted Move Lines"
-msgstr ""
+msgstr "Відображати перегляд рядків переміщення субпідряду"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_move.py:36
@@ -82,6 +82,8 @@ msgid ""
 "If there is well a BoM of type subcontracting defined, check if you have set"
 " the correct subcontractors on it."
 msgstr ""
+"Якщо є чітка специфікація типу субпідряду, перевірте, чи на ньому "
+"встановлені правильні субпідрядники."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_partner__type
@@ -127,6 +129,8 @@ msgid ""
 "don't want to subcontract the product \"%s\", do not select a partner of "
 "type subcontractor."
 msgstr ""
+"Визначте специфікацію типу субпідряду для товару \"%s\". Якщо ви не хочете "
+"субпідряд для товару \"%s\", не обирайте партнера типу субпідряду."
 
 #. module: mrp_subcontracting
 #: selection:res.partner,type:0
@@ -136,14 +140,14 @@ msgstr "Приватна адреса"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 msgid "Record components"
-msgstr ""
+msgstr "Запис компонентів"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:49
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_route_id
 #, python-format
 msgid "Resupply Subcontractor"
-msgstr ""
+msgstr "Постачання субпідрядника"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/res_company.py:39
@@ -151,23 +155,23 @@ msgstr ""
 #: model:stock.location.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
 #, python-format
 msgid "Resupply Subcontractor on Order"
-msgstr ""
+msgstr "Постачання субпідрядника на замовленні"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_to_resupply
 msgid "Resupply Subcontractors"
-msgstr ""
+msgstr "Постачання субпідрядників"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_stock_warehouse__subcontracting_to_resupply
 msgid "Resupply subcontractors with components"
-msgstr ""
+msgstr "Постачання субпідрядників з компонентами"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:122
 #, python-format
 msgid "Sequence subcontracting"
-msgstr ""
+msgstr "Послідовність субпідряду"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move
@@ -177,7 +181,7 @@ msgstr "Складське переміщення "
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 msgid "Subcontracted Moves"
-msgstr ""
+msgstr "Переміщення субпідряду"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:110
@@ -189,22 +193,22 @@ msgstr "Субпідряд"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__subcontracting_location_id
 msgid "Subcontracting Location"
-msgstr ""
+msgstr "Місцезнаходження субпідряду"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
 msgid "Subcontracting MTO Rule"
-msgstr ""
+msgstr "Правило субпідряду MTO"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_pull_id
 msgid "Subcontracting MTS Rule"
-msgstr ""
+msgstr "Правило субпідряду MTS"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_type_id
 msgid "Subcontracting Operation Type"
-msgstr ""
+msgstr "Тип операції субпідряду"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/res_partner.py:16
