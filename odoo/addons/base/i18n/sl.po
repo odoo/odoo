@@ -12,6 +12,7 @@
 # jl2035 <jaka.luthar@gmail.com>, 2018
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
 # Grega Vavtar <grega@hbs.si>, 2019
+# Tadej Lupšina <tadej@hbs.si>, 2019
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:05+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Grega Vavtar <grega@hbs.si>, 2019\n"
+"Last-Translator: Tadej Lupšina <tadej@hbs.si>, 2019\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8181,7 +8182,7 @@ msgstr "Naziv družbe"
 #: model:ir.model.fields,field_description:base.field_res_partner_commercial_company_name
 #: model:ir.model.fields,field_description:base.field_res_users_commercial_company_name
 msgid "Company Name Entity"
-msgstr ""
+msgstr "Entiteta naziva družbe "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_property_form
@@ -8203,7 +8204,7 @@ msgstr "Slogan družbe"
 #: model:ir.model.fields,field_description:base.field_res_partner_company_type
 #: model:ir.model.fields,field_description:base.field_res_users_company_type
 msgid "Company Type"
-msgstr ""
+msgstr "Vrsta družbe"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_forecast_sale
@@ -10797,7 +10798,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_email_formatted
 #: model:ir.model.fields,field_description:base.field_res_users_email_formatted
 msgid "Formatted Email"
-msgstr ""
+msgstr "Oblikovano e-poštno sporočilo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum
@@ -12159,7 +12160,7 @@ msgstr "Indijski plačni sistem"
 #. module: base
 #: selection:res.partner,company_type:0
 msgid "Individual"
-msgstr ""
+msgstr "Posameznik"
 
 #. module: base
 #: model:res.country,name:base.id
@@ -12502,7 +12503,7 @@ msgstr ""
 #. module: base
 #: selection:res.partner,type:0
 msgid "Invoice address"
-msgstr ""
+msgstr "Naslov za račun"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account
@@ -13329,7 +13330,7 @@ msgstr "Prijava"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_logo_web
 msgid "Logo Web"
-msgstr ""
+msgstr "Spletni logotip"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_logging_search_view
@@ -14471,7 +14472,7 @@ msgstr "Število klicev"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_companies_count
 msgid "Number of Companies"
-msgstr ""
+msgstr "Število družb"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_update_added
@@ -16123,7 +16124,7 @@ msgstr "Druge storitve"
 #. module: base
 #: selection:res.partner,type:0
 msgid "Other address"
-msgstr ""
+msgstr "Drugi naslovi"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -17981,7 +17982,7 @@ msgstr "Možnosti izbire"
 #: model:ir.model.fields,field_description:base.field_res_partner_self
 #: model:ir.model.fields,field_description:base.field_res_users_self
 msgid "Self"
-msgstr ""
+msgstr "Isti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_sale_timesheet
@@ -18211,7 +18212,7 @@ msgstr "Skupina souporabe"
 #: model:ir.model.fields,field_description:base.field_res_partner_partner_share
 #: model:ir.model.fields,field_description:base.field_res_users_partner_share
 msgid "Share Partner"
-msgstr ""
+msgstr "Deli partnerja"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_share
@@ -18231,7 +18232,7 @@ msgstr "Souporaba"
 #. module: base
 #: selection:res.partner,type:0
 msgid "Shipping address"
-msgstr ""
+msgstr "Naslov za odpremo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall_show_all
@@ -19615,6 +19616,10 @@ msgid ""
 " 1,06,500; [1,2,-1] will represent it to be 106,50,0;[3] will represent it "
 "as 106,500. Provided ',' as the thousand separator in each case."
 msgstr ""
+"Format ločilnika mora biti podoben [, n] kjer je 0 <n: od številke enote. -1"
+" končala ločitev. npr. [3,2, -1] bo predstavljalo 106500, kar bo 1,06,500; "
+"[1,2, -1] bo predstavljal 106,50,0; [3] bo predstavljal 106,500.  Pod "
+"pogojem, da je v \",\" vsakem primeru kot ločilo tisoč."
 
 #. module: base
 #: code:addons/base/res/res_lang.py:67
@@ -19625,6 +19630,10 @@ msgid ""
 " 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as"
 " 106,500. Provided as the thousand separator in each case."
 msgstr ""
+"Format ločilnika mora biti podoben [, n] kjer je 0 <n: od številke enote. -1"
+" končala ločitev. npr. [3,2, -1] bo predstavljalo 106500, kar bo 1,06,500; "
+"[1,2, -1] bo predstavljal 106,50,0; [3] bo predstavljal 106,500.  Pod "
+"pogojem, da je v vsakem primeru kot ločilo tisoč."
 
 #. module: base
 #: code:addons/base/module/module.py:758
