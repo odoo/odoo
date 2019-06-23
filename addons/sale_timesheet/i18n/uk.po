@@ -102,7 +102,7 @@ msgid ""
 msgstr ""
 "Відповідно до налаштування товару, доставлена кількість може автоматично обчислюватися за допомогою механізму:\n"
 "   - Вручну: кількість на рядку встановлюється вручну\n"
-"   - Аналітика з витрат: кількість - сума від витрачених витрат\n"
+"   - Аналітика з витрат: кількість - сума від опублікованих витрат\n"
 "   - Табель: кількість - це сума годин, записаних на завданні, пов'язані з цим рядком продажу\n"
 "   - Складські переміщення: кількість надходить від підтверджених комплектувань\n"
 
@@ -118,7 +118,7 @@ msgid ""
 "An employee cannot be selected more than once in the mapping. Please remove "
 "duplicate(s) and try again."
 msgstr ""
-"Працівника не можна вибрати більше одного разу у відображенні. Видаліть "
+"Працівника не можна вибрати більше одного разу у співставленні. Видаліть "
 "дублікати та повторіть спробу."
 
 #. module: sale_timesheet
@@ -193,6 +193,10 @@ msgid ""
 " - At employee rate: each employee log time billed at his rate.\n"
 " - No Billable: track time without invoicing it"
 msgstr ""
+"За якою ставкою табелів буде виставлений рахунок:\n"
+" - За ставкою завдання: кожна година, витрачена на завдання, виставляється за ставку завдання.\n"
+" - За ставкою співробітника: кожна година журналу працівників виставляється за його ставкою.\n"
+" - Не виставляється у рахунку: відстеження час без виставлення у рахунку"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:241
@@ -377,7 +381,7 @@ msgstr "Обслуговування клієнтів (Передплачені 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__partner_id
 msgid "Customer of the sales order"
-msgstr "Клієнт замовлення а продаж"
+msgstr "Клієнт замовлення на продаж"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__display_name
@@ -418,6 +422,8 @@ msgid ""
 "Employee/Sale Order Item Mapping:\n"
 " Defines to which sales order item an employee's timesheet entry will be linked.By extension, it defines the rate at which an employee's time on the project is billed."
 msgstr ""
+"Співставлення співробітника/елемента замовлення на продаж:\n"
+" Визначає, до якої позиції замовлення клієнта буде пов'язаний запис робочого часу."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_search
@@ -587,7 +593,7 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
 "Вручну встановлювати величини на замовлення: рахунок-фактура на основі введеної вручну кількості, без створення аналітичного обліку.\n"
-"Табкль на контракті: рахунок-фактура на основі годин, що відстежуються, у відповідному табелі.\n"
+"Табель на контракті: рахунок-фактура на основі годин, що відстежуються, у відповідному табелі.\n"
 "Створення завдання та відстеження годин: створіть завдання з перевірки замовлення на продаж та відстежуйте години роботи."
 
 #. module: sale_timesheet
@@ -802,7 +808,7 @@ msgstr "Шаблон проекту"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__project_id
 msgid "Project for which we are creating a sales order"
-msgstr "Проект, для якого ми створюємо замовлення клієнта"
+msgstr "Проект, для якого ми створюємо замовлення на продаж"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__project_id
@@ -927,6 +933,11 @@ msgid ""
 "timesheet entry will be linked to the sales order item defined on the "
 "project."
 msgstr ""
+"Елемент замовлення на продаж, з яким пов'язаний проект. Якщо табелі "
+"співробітника на завданні, яке не має визначеного елемента замовлення на "
+"продаж, і якщо цей співробітник не входить до розділу \"Співробітник/Елемент"
+" замовлення на продаж\" проекту, запис табеля буде пов'язано з елементом "
+"замовлення на продаж, визначеним на проекті."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_line_id
@@ -944,12 +955,12 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_order_id
 msgid "Sales order to which the project is linked."
-msgstr ""
+msgstr "Замовлення на продаж, до якого належить цей проект."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr ""
+msgstr "Замовлення на продаж, із яким пов'язане це завдання."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__project_id
@@ -1050,7 +1061,7 @@ msgstr "Статистика"
 #. module: sale_timesheet
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Stock Moves"
-msgstr "Переміщення запасів"
+msgstr "Складські переміщення"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task
@@ -1210,7 +1221,7 @@ msgstr "Час виконавця"
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_plan_pivot
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_pivot_revenue
 msgid "Timesheet"
-msgstr "Табель часу"
+msgstr "Табель"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_cost
@@ -1225,7 +1236,7 @@ msgstr "Сума одиниці табеля"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_count
 msgid "Timesheet activities"
-msgstr "Дї по табелю"
+msgstr "Дії по табелю"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_ids
@@ -1258,7 +1269,7 @@ msgstr "Табелі %s"
 #. module: sale_timesheet
 #: selection:product.template,service_type:0
 msgid "Timesheets on project (one fare per SO/Project)"
-msgstr "Табель на проекті (одна ціна за SO/проект)"
+msgstr "Табель на проекті (одна ціна за ЗНП/проект)"
 
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
@@ -1268,7 +1279,7 @@ msgstr "Табелі на завданнях"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "To invoice"
-msgstr "На виписку"
+msgstr "До включення у рахунок"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__amount_to_invoice
@@ -1302,7 +1313,7 @@ msgstr "Ціна за одиницю елемента замовлення на 
 #: model:product.product,uom_name:sale_timesheet.product_service_deliver_manual
 #: model:product.template,uom_name:sale_timesheet.product_service_deliver_manual_product_template
 msgid "Unit(s)"
-msgstr "Штука(и)"
+msgstr "Одиниця(і)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_invoiced
@@ -1385,19 +1396,19 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "billable_fixed"
-msgstr ""
+msgstr "billable_fixed"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "billable_time"
-msgstr ""
+msgstr "billable_time"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "non_billable"
-msgstr ""
+msgstr "non_billable"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "non_billable_project"
-msgstr ""
+msgstr "non_billable_project"
