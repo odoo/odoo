@@ -7,6 +7,7 @@ from collections import OrderedDict
 from odoo import http
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
+from odoo.osv.expression import OR
 from odoo.tools import image_process
 from odoo.tools.translate import _
 from odoo.addons.portal.controllers.portal import pager as portal_pager, CustomerPortal
@@ -37,7 +38,7 @@ class CustomerPortal(CustomerPortal):
         return self._get_page_view_values(order, access_token, values, 'my_purchases_history', True, **kwargs)
 
     @http.route(['/my/purchase', '/my/purchase/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_purchase_orders(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
+    def portal_my_purchase_orders(self, page=1, date_begin=None, date_end=None, search=None, search_in='content', sortby=None, filterby=None, **kw):
         values = self._prepare_portal_layout_values()
         partner = request.env.user.partner_id
         PurchaseOrder = request.env['purchase.order']
@@ -50,8 +51,15 @@ class CustomerPortal(CustomerPortal):
 
         searchbar_sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc, id desc'},
-            'name': {'label': _('Name'), 'order': 'name asc, id asc'},
+            'vendor': {'label': _('Vendor'), 'order': 'partner_id, id'},
+            'name': {'label': _('Name'), 'order': 'name, id'},
             'amount_total': {'label': _('Total'), 'order': 'amount_total desc, id desc'},
+        }
+        searchbar_inputs = {
+            'content': {'input': 'content', 'label': _('Search <span class="nolabel"> (in Content)</span>')},
+            'product': {'input': 'product', 'label': _('Search in Product')},
+            'vendor': {'input': 'vendor', 'label': _('Search in Vendor')},
+            'all': {'input': 'all', 'label': _('Search in All')},
         }
         # default sort by value
         if not sortby:
@@ -68,6 +76,17 @@ class CustomerPortal(CustomerPortal):
         if not filterby:
             filterby = 'all'
         domain += searchbar_filters[filterby]['domain']
+
+        # search
+        if search and search_in:
+            search_domain = []
+            if search_in in ('content', 'all'):
+                search_domain = OR([search_domain, [('name', 'ilike', search)]])
+            if search_in in ('product', 'all'):
+                search_domain = OR([search_domain, [('order_line.product_id', 'ilike', search)]])
+            if search_in in ('vendor', 'all'):
+                search_domain = OR([search_domain, [('partner_id', 'ilike', search)]])
+            domain += search_domain
 
         # count for pager
         purchase_count = PurchaseOrder.search_count(domain)
@@ -97,6 +116,8 @@ class CustomerPortal(CustomerPortal):
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
+            'searchbar_inputs': searchbar_inputs,
+            'search_in': search_in,
             'filterby': filterby,
             'default_url': '/my/purchase',
         })

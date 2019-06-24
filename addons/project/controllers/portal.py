@@ -32,14 +32,20 @@ class CustomerPortal(CustomerPortal):
         return self._get_page_view_values(project, access_token, values, 'my_projects_history', False, **kwargs)
 
     @http.route(['/my/projects', '/my/projects/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_projects(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
+    def portal_my_projects(self, page=1, date_begin=None, date_end=None, search=None, search_in='content', sortby=None, **kw):
         values = self._prepare_portal_layout_values()
         Project = request.env['project.project']
         domain = []
 
         searchbar_sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
+            'projectmanager': {'label': _('Project Manager'), 'order': 'user_id'},
             'name': {'label': _('Name'), 'order': 'name'},
+        }
+        searchbar_inputs = {
+            'content': {'input': 'content', 'label': _('Search <span class="nolabel"> (in Content)</span>')},
+            'projectmanager': {'input': 'projectmanager', 'label': _('Search in Project Manager')},
+            'all': {'input': 'all', 'label': _('Search in All')},
         }
         if not sortby:
             sortby = 'date'
@@ -49,6 +55,16 @@ class CustomerPortal(CustomerPortal):
         archive_groups = self._get_archive_groups('project.project', domain)
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
+
+        # search
+        if search and search_in:
+            search_domain = []
+            if search_in in ('content', 'all'):
+                search_domain = OR([search_domain, [('name', 'ilike', search)]])
+            if search_in in ('projectmanager', 'all'):
+                search_domain = OR([search_domain, [('user_id', 'ilike', search)]])
+            domain += search_domain
+
         # projects count
         project_count = Project.search_count(domain)
         # pager
@@ -61,7 +77,7 @@ class CustomerPortal(CustomerPortal):
         )
 
         # content according to pager and archive selected
-        projects = Project.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        projects = Project.sudo().search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
         request.session['my_projects_history'] = projects.ids[:100]
 
         values.update({
@@ -73,6 +89,8 @@ class CustomerPortal(CustomerPortal):
             'default_url': '/my/projects',
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
+            'searchbar_inputs': searchbar_inputs,
+            'search_in': search_in,
             'sortby': sortby
         })
         return request.render("project.portal_my_projects", values)

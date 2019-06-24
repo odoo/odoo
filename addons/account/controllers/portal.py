@@ -5,6 +5,7 @@ from odoo import http, _
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
+from odoo.osv.expression import OR
 
 
 class PortalAccount(CustomerPortal):
@@ -29,7 +30,7 @@ class PortalAccount(CustomerPortal):
         return self._get_page_view_values(invoice, access_token, values, 'my_invoices_history', False, **kwargs)
 
     @http.route(['/my/invoices', '/my/invoices/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_invoices(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
+    def portal_my_invoices(self, page=1, date_begin=None, date_end=None, search=None, search_in='content', sortby=None, **kw):
         values = self._prepare_portal_layout_values()
         AccountInvoice = request.env['account.move']
 
@@ -37,9 +38,17 @@ class PortalAccount(CustomerPortal):
 
         searchbar_sortings = {
             'date': {'label': _('Invoice Date'), 'order': 'invoice_date desc'},
+            'salesperson': {'label': _('Salesperson'), 'order': 'invoice_user_id'},
             'duedate': {'label': _('Due Date'), 'order': 'invoice_date_due desc'},
             'name': {'label': _('Reference'), 'order': 'name desc'},
             'state': {'label': _('Status'), 'order': 'state'},
+        }
+        searchbar_inputs = {
+            'content': {'input': 'content', 'label': _('Search <span class="nolabel"> (in Content)</span>')},
+            'product': {'input': 'product', 'label': _('Search in Product')},
+            'salesperson': {'input': 'salesperson', 'label': _('Search in Salesperson')},
+            'message': {'input': 'message', 'label': _('Search in Message')},
+            'all': {'input': 'all', 'label': _('Search in All')},
         }
         # default sort by order
         if not sortby:
@@ -50,8 +59,21 @@ class PortalAccount(CustomerPortal):
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
+        # search
+        if search and search_in:
+            search_domain = []
+            if search_in in ('content', 'all'):
+                search_domain = OR([search_domain, [('name', 'ilike', search)]])
+            if search_in in ('product', 'all'):
+                search_domain = OR([search_domain, [('invoice_line_ids.product_id', 'ilike', search)]])
+            if search_in in ('salesperson', 'all'):
+                search_domain = OR([search_domain, [('invoice_user_id', 'ilike', search)]])
+            if search_in in ('message', 'all'):
+                search_domain = OR([search_domain, [('message_ids.body', 'ilike', search)]])
+            domain += search_domain
+
         # count for pager
-        invoice_count = AccountInvoice.search_count(domain)
+        invoice_count = AccountInvoice.sudo().search_count(domain)
         # pager
         pager = portal_pager(
             url="/my/invoices",
@@ -72,6 +94,8 @@ class PortalAccount(CustomerPortal):
             'archive_groups': archive_groups,
             'default_url': '/my/invoices',
             'searchbar_sortings': searchbar_sortings,
+            'searchbar_inputs': searchbar_inputs,
+            'search_in': search_in,
             'sortby': sortby,
         })
         return request.render("account.portal_my_invoices", values)

@@ -10,6 +10,7 @@ from werkzeug.exceptions import NotFound
 from odoo import fields
 from odoo import http
 from odoo.http import request
+from odoo.osv.expression import OR
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import CustomerPortal
@@ -43,7 +44,7 @@ class WebsiteAccount(CustomerPortal):
         return values
 
     @http.route(['/my/leads', '/my/leads/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_leads(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
+    def portal_my_leads(self, page=1, date_begin=None, date_end=None, search=None, search_in='content', sortby=None, **kw):
         values = self._prepare_portal_layout_values()
         CrmLead = request.env['crm.lead']
         domain = self.get_domain_my_lead(request.env.user)
@@ -52,6 +53,12 @@ class WebsiteAccount(CustomerPortal):
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
             'name': {'label': _('Name'), 'order': 'name'},
             'contact_name': {'label': _('Contact Name'), 'order': 'contact_name'},
+        }
+        searchbar_inputs = {
+            'content': {'input': 'content', 'label': _('Search <span class="nolabel"> (in Content)</span>')},
+            'contact_name': {'input': 'contact', 'label': _('Search in Contact')},
+            'message': {'input': 'message', 'label': _('Search in Message')},
+            'all': {'input': 'all', 'label': _('Search in All')},
         }
 
         # default sort by value
@@ -63,6 +70,18 @@ class WebsiteAccount(CustomerPortal):
         archive_groups = self._get_archive_groups('crm.lead', domain)
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
+
+        # search
+        if search and search_in:
+            search_domain = []
+            if search_in in ('content', 'all'):
+                search_domain = OR([search_domain, [('name', 'ilike', search)]])
+            if search_in in ('contact', 'all'):
+                search_domain = OR([search_domain, [('contact_name', 'ilike', search)]])
+            if search_in in ('message', 'all'):
+                search_domain = OR([search_domain, [('message_ids.body', 'ilike', search)]])
+            domain += search_domain
+
         # pager
         lead_count = CrmLead.search_count(domain)
         pager = request.website.pager(
@@ -83,12 +102,14 @@ class WebsiteAccount(CustomerPortal):
             'default_url': '/my/leads',
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
+            'searchbar_inputs': searchbar_inputs,
+            'search_in': search_in,
             'sortby': sortby,
         })
         return request.render("website_crm_partner_assign.portal_my_leads", values)
 
     @http.route(['/my/opportunities', '/my/opportunities/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_opportunities(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
+    def portal_my_opportunities(self, page=1, date_begin=None, date_end=None, search=None, search_in='content', sortby=None, filterby=None, **kw):
         values = self._prepare_portal_layout_values()
         CrmLead = request.env['crm.lead']
         domain = self.get_domain_my_opp(request.env.user)
@@ -113,6 +134,12 @@ class WebsiteAccount(CustomerPortal):
             'probability': {'label': _('Probability'), 'order': 'probability desc'},
             'stage': {'label': _('Stage'), 'order': 'stage_id'},
         }
+        searchbar_inputs = {
+            'content': {'input': 'content', 'label': _('Search <span class="nolabel"> (in Content)</span>')},
+            'contact_name': {'input': 'contact', 'label': _('Search in Contact')},
+            'message': {'input': 'message', 'label': _('Search in Message')},
+            'all': {'input': 'all', 'label': _('Search in All')},
+        }
 
         # default sort by value
         if not sortby:
@@ -129,6 +156,18 @@ class WebsiteAccount(CustomerPortal):
         archive_groups = self._get_archive_groups('crm.lead', domain)
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
+
+        # search
+        if search and search_in:
+            search_domain = []
+            if search_in in ('content', 'all'):
+                search_domain = OR([search_domain, [('name', 'ilike', search)]])
+            if search_in in ('contact', 'all'):
+                search_domain = OR([search_domain, [('contact_name', 'ilike', search)]])
+            if search_in in ('message', 'all'):
+                search_domain = OR([search_domain, [('message_ids.body', 'ilike', search)]])
+            domain += search_domain
+
         # pager
         opp_count = CrmLead.search_count(domain)
         pager = request.website.pager(
@@ -149,6 +188,8 @@ class WebsiteAccount(CustomerPortal):
             'default_url': '/my/opportunities',
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
+            'searchbar_inputs': searchbar_inputs,
+            'search_in': search_in,
             'sortby': sortby,
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
             'filterby': filterby,
