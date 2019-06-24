@@ -56,10 +56,12 @@ class Event(models.Model):
 
     @api.multi
     def _is_event_registrable(self):
-        self.ensure_one()
-        if not self.event_ticket_ids:
-            return True
-        return all(self.event_ticket_ids.with_context(active_test=False).mapped(lambda t: t.product_id.active))
+        if super(Event, self)._is_event_registrable():
+            self.ensure_one()
+            return all(self.event_ticket_ids.with_context(active_test=False).mapped(lambda t: t.product_id.active))
+        else:
+            return False
+
 
 class EventTicket(models.Model):
     _name = 'event.event.ticket'
