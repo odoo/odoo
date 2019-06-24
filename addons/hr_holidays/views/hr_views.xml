@@ -135,6 +135,11 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//button[@id='hr_presence_button']" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': ['|', '|', '|', ('last_activity', '=', False), ('is_absent', '=', True), ('user_id', '=', False), ('id', '=', False)]}
+                </attribute>
+            </xpath>
             <xpath expr="//group[@name='managers']" position="inside">
                 <field name="leave_manager_id"/>
             </xpath>
@@ -142,10 +147,11 @@
                 <field name="current_leave_id" invisible="1"/>
                 <field name="show_leaves" invisible="1"/>
                 <field name="is_absent" invisible="1"/>
-                <button name="%(hr_leave_action_new_request)d" type="action"
+                <button disabled="1"
                         class="oe_stat_button"
+                        context="{'search_default_employee_id': active_id}"
                         attrs="{'invisible': [('is_absent', '=', False)]}">
-                    <div role="img" class="fa fa-fw fa-circle o_button_icon text-danger" aria-label="Absent Until" title="Absent Until"/>
+                    <div role="img" class="fa fa-fw fa-plane o_button_icon text-danger" aria-label="Absent Until" title="Absent Until"/>
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
                             <field name="leave_date_to"/>
@@ -160,6 +166,7 @@
                         class="oe_stat_button"
                         icon="fa-calendar"
                         attrs="{'invisible': [('show_leaves','=', False)]}"
+                        context="{'search_default_employee_id': active_id}"
                         groups="base.group_user"
                         help="Remaining leaves">
                     <div class="o_field_widget o_stat_info">
@@ -188,10 +195,10 @@
                 <field name="current_leave_id" invisible="1"/>
                 <field name="show_leaves" invisible="1"/>
                 <field name="is_absent" invisible="1"/>
-                <button name="%(hr_leave_action_new_request)d" type="action"
+                <button disabled="1"
                         class="oe_stat_button"
                         attrs="{'invisible': [('is_absent', '=', False)]}">
-                    <div role="img" class="fa fa-fw fa-circle o_button_icon text-danger" aria-label="Absent Until" title="Absent Until"/>
+                    <div role="img" class="fa fa-fw fa-plane o_button_icon text-danger" aria-label="Absent Until" title="Absent Until"/>
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
                             <field name="leave_date_to"/>
@@ -232,7 +239,7 @@
                 <button name="%(hr_leave_action_new_request)d" type="action"
                         class="oe_stat_button"
                         attrs="{'invisible': [('is_absent', '=', False)]}">
-                    <div role="img" class="fa fa-fw fa-circle o_button_icon text-danger" aria-label="Absent Until" title="Absent Until"/>
+                    <div role="img" class="fa fa-fw fa-plane o_button_icon text-danger" aria-label="Absent Until" title="Absent Until"/>
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
                             <field name="leave_date_to"/>

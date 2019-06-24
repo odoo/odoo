@@ -4,14 +4,24 @@
         <field name="name">hr.employee</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
-        <field name="priority">10</field>
+        <field name="priority">20</field>
         <field name="groups_id" eval="[(4,ref('hr_attendance.group_hr_attendance_user'))]"/>
         <field name="arch" type="xml">
-            <div name="button_box" position="inside">
+            <xpath expr="//button[@id='hr_presence_button']" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': ['|', '|', ('user_id', '=', False), ('hr_presence_state', '=', 'absent'), ('attendance_state', '=', 'checked_in')]}
+                </attribute>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="attendance_state" invisible="1"/>
                 <button name="%(hr_attendance_action_employee)d"
+                    id="hr_attendance_button"
                     class="oe_stat_button"
-                    type="action" attrs="{'invisible': [('attendance_state', '=', False)]}">
+                    type="action" attrs="{'invisible': [
+                        '|', ('attendance_state', '=', False),
+                        '&amp;',
+                            ('hr_presence_state', '=', 'present'),
+                            ('attendance_state', '=', 'checked_out')]}">
                     <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon oe_hr_attendance_status_green" attrs="{'invisible': [('attendance_state', '=', 'checked_out')]}" aria-label="Available" title="Available"/>
                     <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon oe_hr_attendance_status_red" attrs="{'invisible': [('attendance_state', '=', 'checked_in')]}" aria-label="Not available" title="Not available"/>
                     <div class="o_stat_info">
@@ -34,7 +44,7 @@
                         </span>
                     </div>
                 </button>
-            </div>
+            </xpath>
         </field>
     </record>
 
@@ -43,11 +53,17 @@
         <field name="model">res.users</field>
         <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
         <field name="arch" type="xml">
+            <xpath expr="//button[@id='hr_presence_button']" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': ['|', '|', ('hr_presence_state', '=', 'absent'), ('attendance_state', '=', 'checked_in')]}
+                </attribute>
+            </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="attendance_state" invisible="1"/>
                 <button name="%(hr_attendance_action_my_attendances)d"
+                    id="hr_attendance_button"
                     class="oe_stat_button"
-                    type="action" attrs="{'invisible': [('attendance_state', '=', False)]}">
+                    type="action" attrs="{'invisible': ['|', ('attendance_state', '=', False), '&amp;', ('hr_presence_state', '=', 'present'), ('attendance_state', '=', 'checked_out')]}">
                     <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon oe_hr_attendance_status_green" attrs="{'invisible': [('attendance_state', '=', 'checked_out')]}" aria-label="Available" title="Available"/>
                     <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon oe_hr_attendance_status_red" attrs="{'invisible': [('attendance_state', '=', 'checked_in')]}" aria-label="Not available" title="Not available"/>
                     <div class="o_stat_info">
@@ -128,31 +144,6 @@
                     </t>
                 </templates>
             </kanban>
-        </field>
-    </record>
-
-    <record id="view_employee_kanban_inherit_hr_attendance" model="ir.ui.view">
-        <field name="name">hr.employee</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
-        <field name="priority">1</field>
-        <field name="arch" type="xml">
-            <templates position="before">
-                <field name="attendance_state"/>
-            </templates>
-            <field name="name" position="replace">
-                <div>
-                    <div class="float-right" t-if="record.attendance_state.raw_value == 'checked_in'">
-                        <span id="oe_hr_attendance_status" class="fa fa-circle oe_hr_attendance_status_green" role="img" aria-label="Available" title="Available"></span>
-                    </div>
-                    <div class="float-right" t-if="record.attendance_state.raw_value == 'checked_out'">
-                        <span id="oe_hr_attendance_status" class="fa fa-circle oe_hr_attendance_status_red" role="img" aria-label="Not available" title="Not available"></span>
-                    </div>
-                    <strong>
-                        <field name="name" placeholder="Employee's Name"/>
-                    </strong>
-                </div>
-            </field>
         </field>
     </record>
 

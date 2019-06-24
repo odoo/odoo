@@ -36,9 +36,31 @@
             <field name="arch" type="xml">
                 <form position="replace">
                 <form>
+                    <field name="hr_presence_state" invisible="1"/>
                     <header></header> <!-- Used by other modules to add buttons -->
                     <sheet>
                         <div class="oe_button_box" name="button_box">
+                            <button
+                                id="hr_presence_button"
+                                class="oe_stat_button"
+                                disabled="1"
+                                attrs="{'invisible': [('hr_presence_state', '=', 'absent')]}">
+                                <div role="img" class="fa fa-fw fa-circle text-success o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}" aria-label="Available" title="Available"/>
+                                <div role="img" class="fa fa-fw fa-circle text-warning o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'to_define')]}" aria-label="Away" title="Away"/>
+                                <div role="img" class="fa fa-fw fa-circle text-danger o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'absent')]}" aria-label="Not available" title="Not available"/>
+
+                                <div class="o_stat_info" attrs="{'invisible': [('hr_presence_state', '=', 'present')]}">
+                                    <span class="o_stat_value">
+                                        <field name="last_activity"/>
+                                    </span>
+                                    <span class="o_stat_text">
+                                        Last Activity
+                                    </span>
+                                </div>
+                                <div class="o_stat_info" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}">
+                                    <span class="o_stat_text">Connected</span>
+                                </div>
+                            </button>
                         </div>
                         <field name="image" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"image_medium"}'/>
                         <div class="oe_title">

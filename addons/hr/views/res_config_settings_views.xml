@@ -20,6 +20,50 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 col-lg-6 o_setting_box" title="Presence of employees">
+
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Control presence of employees</span>
+                                <div class="content-group" name="hr_presence_options">
+                                    <div class="row">
+                                        <field name="module_hr_attendance" class="col-lg-1 ml16"/>
+                                        <label for="module_hr_attendance" class="col-lg-10 o_light_label"/>
+                                    </div>
+                                    <div class="row">
+                                        <field name="hr_presence_control_login" class="col-lg-1 ml16"/>
+                                        <label for="hr_presence_control_login" class="col-lg-10 o_light_label"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" title="Advanced presence of employees">
+                            <div class="o_setting_left_pane">
+                                <field name="module_hr_presence"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_hr_presence"/>
+                                <div class="text-muted" name="hr_presence_options_advanced">
+                                    Presence reporting screen, email and IP address control.
+                                </div>
+                                <div class="row mt-1" attrs="{'invisible': [('module_hr_presence', '=', False)]}">
+                                    <field name="hr_presence_control_email" class="col-lg-1 ml16"/>
+                                    <label for="hr_presence_control_email" class="col-lg-10 o_light_label"/>
+                                </div>
+                                <div class="row ml-4" attrs="{'invisible': ['|', ('module_hr_presence', '=', False), ('hr_presence_control_email', '=', False)]}">
+                                    <span class="mr-2">At least </span>
+                                    <field name="hr_presence_control_email_amount"/>
+                                    <span> sent emails</span>
+                                </div>
+                                <div class="row" attrs="{'invisible': [('module_hr_presence', '=', False)]}">
+                                    <field name="hr_presence_control_ip" class="col-lg-1 ml16"/>
+                                    <label for="hr_presence_control_ip" class="col-lg-10 o_light_label"/>
+                                </div>
+                                <div class="row ml-4" attrs="{'invisible': ['|', ('module_hr_presence', '=', False), ('hr_presence_control_ip', '=', False)]}">
+                                    <span class="mr-2">IP List (comma separated):</span>
+                                    <field name="hr_presence_control_ip_list"/>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <h2>Work Organization</h2>
                     <div class="row mt16 o_settings_container">
