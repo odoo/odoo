@@ -144,7 +144,7 @@ class ProductTemplateAttributeLine(models.Model):
             raise ValidationError(_('You cannot use this attribute with the following value.'))
         return True
 
-    @api.model
+    @api.model_create_multi
     def create(self, values):
         res = super(ProductTemplateAttributeLine, self).create(values)
         res._update_product_template_attribute_values()
