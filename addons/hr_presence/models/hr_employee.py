@@ -10,21 +10,28 @@ from odoo.fields import Datetime
 _logger = logging.getLogger(__name__)
 
 
-class ResCompany(models.Model):
-    _inherit = 'hr.employee'
+class Employee(models.AbstractModel):
+    _inherit = 'hr.employee.base'
 
-    hr_presence_state = fields.Selection([
+    email_sent = fields.Boolean(default=False)
+    ip_connected = fields.Boolean(default=False)
+    manually_set_present = fields.Boolean(default=False)
+
+    # Stored field used in the presence kanban reporting view
+    # to allow group by state.
+    hr_presence_state_display = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
-        ('to_define', 'To Define')], groups="hr.group_hr_user", default='to_define')
-    last_activity = fields.Date(compute="_compute_last_activity")
+        ('to_define', 'To Define')])
 
-    def _compute_last_activity(self):
-        employees = self.filtered(lambda e: e.user_id)
-        presences = self.env['bus.presence'].search([('user_id', 'in', employees.mapped('user_id.id'))])
-
-        for presence in presences:
-            presence.user_id.employee_ids.last_activity = presence.last_presence.date()
+    def _compute_presence_state(self):
+        super()._compute_presence_state()
+        employees = self.filtered(lambda employee: employee.hr_presence_state != 'present' and not employee.is_absent)
+        company = self.env.company
+        for employee in employees:
+            if not employee.is_absent and company.hr_presence_last_compute_date and company.hr_presence_last_compute_date.day == Datetime.now().day and \
+                    (employee.email_sent or employee.ip_connected or employee.manually_set_present):
+                employee.hr_presence_state = 'present'
 
     @api.model
     def _check_presence(self):
@@ -32,28 +39,16 @@ class ResCompany(models.Model):
         if not company.hr_presence_last_compute_date or \
                 company.hr_presence_last_compute_date.day != Datetime.now().day:
             self.env['hr.employee'].search([
-                ('department_id.company_id', '=', company.id)
-            ]).write({'hr_presence_state': 'to_define'})
+                ('company_id', '=', company.id)
+            ]).write({
+                'email_sent': False,
+                'ip_connected': False,
+                'manually_set_present': False
+            })
 
-        employees = self.env['hr.employee'].search([
-            ('department_id.company_id', '=', company.id),
-            ('user_id', '!=', False),
-            ('hr_presence_state', '=', 'to_define')])
+        employees = self.env['hr.employee'].search([('company_id', '=', company.id)])
+        all_employees = employees
 
-        # Remove employees on holidays
-        leaves = self.env['hr.leave'].search([
-            ('state', '=', 'validate'),
-            ('date_from', '<=', Datetime.to_string(Datetime.now())),
-            ('date_to', '>=', Datetime.to_string(Datetime.now()))])
-        employees_on_holiday = leaves.mapped('employee_id')
-        employees_on_holiday.write({'hr_presence_state': 'absent'})
-        employees = employees - employees_on_holiday
-
-        # Check on system login
-        if self.env['ir.config_parameter'].sudo().get_param('hr_presence.hr_presence_control_login'):
-            online_employees = employees.filtered(lambda employee: employee.user_id.im_status in ['away', 'online'])
-            online_employees.write({'hr_presence_state': 'present'})
-            employees = employees - online_employees
 
         # Check on IP
         if self.env['ir.config_parameter'].sudo().get_param('hr_presence.hr_presence_control_ip'):
@@ -68,7 +63,7 @@ class ResCompany(models.Model):
                 ).mapped('ip')
                 if any([ip in ip_list for ip in employee_ips]):
                     ip_employees |= employee
-            ip_employees.write({'hr_presence_state': 'present'})
+            ip_employees.write({'ip_connected': True})
             employees = employees - ip_employees
 
         # Check on sent emails
@@ -82,10 +77,13 @@ class ResCompany(models.Model):
                     ('date', '<=', Datetime.to_string(Datetime.now()))])
                 if sent_emails >= threshold:
                     email_employees |= employee
-            email_employees.write({'hr_presence_state': 'present'})
+            email_employees.write({'email_sent': True})
             employees = employees - email_employees
 
-        company.hr_presence_last_compute_date = Datetime.now()
+        company.sudo().hr_presence_last_compute_date = Datetime.now()
+
+        for employee in all_employees:
+            employee.hr_presence_state_display = employee.hr_presence_state
 
     @api.model
     def _action_open_presence_view(self):
@@ -110,7 +108,12 @@ class ResCompany(models.Model):
     def action_set_present(self):
         if not self.env.user.has_group('hr.group_hr_manager'):
             raise UserError(_("You don't have the right to do this. Please contact an Administrator."))
-        self.write({'hr_presence_state': 'present'})
+        self.write({'manually_set_present': True})
+
+    def write(self, vals):
+        if vals.get('hr_presence_state_display') == 'present':
+            vals['manually_set_present'] = True
+        return super().write(vals)
 
     def action_open_leave_request(self):
         self.ensure_one()

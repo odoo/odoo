@@ -17,6 +17,20 @@ class HrEmployeeBase(models.AbstractModel):
     hours_last_month = fields.Float(compute='_compute_hours_last_month')
     hours_today = fields.Float(compute='_compute_hours_today')
 
+    def _compute_presence_state(self):
+        """
+        Override to include checkin/checkout in the presence state
+        Attendance has the second highest priority after login
+        """
+        super()._compute_presence_state()
+        employees = self.filtered(lambda employee: employee.hr_presence_state != 'present')
+        for employee in employees:
+            if employee.attendance_state == 'checked_out' and employee.hr_presence_state == 'to_define':
+                employee.hr_presence_state = 'absent'
+        for employee in employees:
+            if employee.attendance_state == 'checked_in':
+                employee.hr_presence_state = 'present'
+
     def _compute_hours_last_month(self):
         for employee in self:
             now = datetime.now()
