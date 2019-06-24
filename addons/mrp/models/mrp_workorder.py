@@ -202,6 +202,11 @@ class MrpWorkorder(models.Model):
     def name_get(self):
         return [(wo.id, "%s - %s - %s" % (wo.production_id.name, wo.product_id.name, wo.name)) for wo in self]
 
+    def unlink(self):
+        # Removes references to workorder to avoid Validation Error
+        (self.mapped('move_raw_ids') | self.mapped('move_finished_ids')).write({'workorder_id': False})
+        return super(MrpWorkorder, self).unlink()
+
     @api.depends('production_id.product_qty', 'qty_produced')
     def _compute_is_produced(self):
         for order in self:
@@ -563,8 +568,10 @@ class MrpWorkorderLine(models.Model):
     _inherit = ["mrp.abstract.workorder.line"]
     _description = "Workorder move line"
 
-    raw_workorder_id = fields.Many2one('mrp.workorder', 'Component for Workorder')
-    finished_workorder_id = fields.Many2one('mrp.workorder', 'Finished Product for Workorder')
+    raw_workorder_id = fields.Many2one('mrp.workorder', 'Component for Workorder',
+        ondelete='cascade')
+    finished_workorder_id = fields.Many2one('mrp.workorder', 'Finished Product for Workorder',
+        ondelete='cascade')
 
     @api.model
     def _get_raw_workorder_inverse_name(self):

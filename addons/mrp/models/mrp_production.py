@@ -468,8 +468,17 @@ class MrpProduction(models.Model):
         return super(MrpProduction, self).create(values)
 
     def unlink(self):
-        if any(production.state != 'cancel' for production in self):
-            raise UserError(_('Cannot delete a manufacturing order not in cancel state'))
+        if any(production.state == 'done' for production in self):
+            raise UserError(_('Cannot delete a manufacturing order in done state.'))
+        self.action_cancel()
+        not_cancel = self.filtered(lambda m: m.state != 'cancel')
+        if not_cancel:
+            productions_name = ', '.join([prod.display_name for prod in not_cancel])
+            raise UserError(_('%s cannot be deleted. Try to cancel them before.') % productions_name)
+
+        workorders_to_delete = self.workorder_ids.filtered(lambda wo: wo.state != 'done')
+        if workorders_to_delete:
+            workorders_to_delete.unlink()
         return super(MrpProduction, self).unlink()
 
     def action_toggle_is_locked(self):
