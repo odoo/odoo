@@ -1043,10 +1043,6 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def __set__(self, records, value):
         """ set the value of field ``self`` on ``records`` """
-        # DLE P34: `test_01_basic_set_assertion
-        # You should not be able to assign on a single record. Or if you believe we should from now on, then the test must be changed.
-        # only a single record may be updated
-        records.ensure_one()
         # DLE P18: need to convert to write the value, at least for *2many
         # Some write overwrites expects the *2many values to be tuple commands and not browse record
         # See https://github.com/odoo/odoo/blob/659ff0da13951d0b940c24a070a4a7e51b0897bb/odoo/addons/base/models/res_users.py#L934

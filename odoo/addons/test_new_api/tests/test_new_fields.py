@@ -46,11 +46,10 @@ class TestFields(common.TransactionCase):
         self.assertEqual(len(record), 1)
         record.body = 'OK'
 
-        # field assignment fails on multiple records
+        # field assignment on multiple records should assign value to all records
         records = self.env['test_new_api.message'].search([])
-        assert len(records) > 1
-        with self.assertRaises(ValueError):
-            records.body = 'Faulty'
+        records.body = 'Updated'
+        self.assertTrue(all(map(lambda record:record.body=='Updated', records)))
 
         # field assigmenent does not cache the wrong value when write overridden
         record.priority = 4
