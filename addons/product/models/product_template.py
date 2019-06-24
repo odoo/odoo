@@ -130,7 +130,7 @@ class ProductTemplate(models.Model):
         '# Product Variants', compute='_compute_product_variant_count')
 
     # related to display product product information if is_product_variant
-    barcode = fields.Char('Barcode', related='product_variant_ids.barcode', readonly=False)
+    barcode = fields.Char('Barcode', compute='_compute_barcode', inverse='_set_barcode', search='_search_barcode')
     default_code = fields.Char(
         'Internal Reference', compute='_compute_default_code',
         inverse='_set_default_code', store=True)
@@ -261,6 +261,21 @@ class ProductTemplate(models.Model):
     def _compute_is_product_variant(self):
         for template in self:
             template.is_product_variant = False
+
+    @api.depends('product_variant_ids.barcode')
+    def _compute_barcode(self):
+        self.barcode = False
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.barcode = template.product_variant_ids.barcode
+
+    def _search_barcode(self, operator, value):
+        templates = self.with_context(active_test=False).search([('product_variant_ids.barcode', operator, value)])
+        return [('id', 'in', templates.ids)]
+
+    def _set_barcode(self):
+        if len(self.product_variant_ids) == 1:
+            self.product_variant_ids.barcode = self.barcode
 
     @api.model
     def _get_weight_uom_id_from_ir_config_parameter(self):
