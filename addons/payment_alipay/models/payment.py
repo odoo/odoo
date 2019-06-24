@@ -24,12 +24,12 @@ class PaymentAcquirer(models.Model):
     ], string='Account', default='express_checkout',
         help="  * Cross-border: For the Overseas seller \n  * Express Checkout: For the Chinese Seller")
     alipay_merchant_partner_id = fields.Char(
-        string='Merchant Partner ID', required_if_provider='alipay', groups='base.group_user',
+        string='Merchant Partner ID', required_if_provider='alipay', groups='base.group_system',
         help='The Merchant Partner ID is used to ensure communications coming from Alipay are valid and secured.')
     alipay_md5_signature_key = fields.Char(
-        string='MD5 Signature Key', required_if_provider='alipay', groups='base.group_user',
+        string='MD5 Signature Key', required_if_provider='alipay', groups='base.group_system',
         help="The MD5 private key is the 32-byte string which is composed of English letters and numbers.")
-    alipay_seller_email = fields.Char(string='Alipay Seller Email', groups='base.group_user')
+    alipay_seller_email = fields.Char(string='Alipay Seller Email', groups='base.group_system')
 
     def _get_feature_support(self):
         res = super(PaymentAcquirer, self)._get_feature_support()

@@ -75,10 +75,12 @@ class PaymentAcquirer(models.Model):
         default=lambda self: self.env.company.id, required=True)
     view_template_id = fields.Many2one(
         'ir.ui.view', 'Form Button Template',
-        default=_get_default_view_template_id)
+        default=_get_default_view_template_id,
+        groups="base.group_system")
     registration_view_template_id = fields.Many2one(
         'ir.ui.view', 'S2S Form Template', domain=[('type', '=', 'qweb')],
-        help="Template for method registration")
+        help="Template for method registration",
+        groups="base.group_system")
     environment = fields.Selection([
         ('test', 'Test'),
         ('prod', 'Production')], string='Environment',
@@ -97,12 +99,14 @@ class PaymentAcquirer(models.Model):
                 the amount in a temporary transfer account of your books (created automatically when you create
                 the payment journal). Then when you get paid on your bank account by the payment acquirer, you
                 reconcile the bank statement line with this temporary transfer account. Use reconciliation
-                templates to do it in one-click.""")
+                templates to do it in one-click.""",
+        groups="base.group_system,account.group_account_manager")
     specific_countries = fields.Boolean(string="Specific Countries",
         help="If you leave it empty, the payment acquirer will be available for all the countries.")
     check_validity = fields.Boolean(string="Verify Card Validity",
         help="""Trigger a transaction of 1 currency unit and its refund to check the validity of new credit cards entered in the customer portal.
-        Without this check, the validity will be verified at the very first transaction.""")
+        Without this check, the validity will be verified at the very first transaction.""",
+        groups="base.group_system")
     country_ids = fields.Many2many(
         'res.country', 'payment_country_rel',
         'payment_id', 'country_id', 'Countries',
@@ -137,7 +141,8 @@ class PaymentAcquirer(models.Model):
         string='Save Cards', default='none',
         help="This option allows customers to save their credit card as a payment token and to reuse it for a later purchase. "
              "If you manage subscriptions (recurring invoicing), you need it to automatically charge the customer when you "
-             "issue an invoice.")
+             "issue an invoice.",
+        groups="base.group_system")
     token_implemented = fields.Boolean('Saving Card Data supported', compute='_compute_feature_support', search='_search_is_tokenized')
     authorize_implemented = fields.Boolean('Authorize Mechanism Supported', compute='_compute_feature_support')
     fees_implemented = fields.Boolean('Fees Computation Supported', compute='_compute_feature_support')
@@ -169,7 +174,8 @@ class PaymentAcquirer(models.Model):
     payment_flow = fields.Selection(selection=[('form', 'Redirection to the acquirer website'),
         ('s2s','Payment from Odoo')],
         default='form', required=True, string='Payment Flow',
-        help="""Note: Subscriptions does not take this field in account, it uses server to server by default.""")
+        help="""Note: Subscriptions does not take this field in account, it uses server to server by default.""",
+        groups="base.group_system")
     inbound_payment_method_ids = fields.Many2many('account.payment.method', related='journal_id.inbound_payment_method_ids', readonly=False)
 
     @api.onchange('payment_flow')
@@ -370,10 +376,11 @@ class PaymentAcquirer(models.Model):
          - context: Odoo context
 
         """
+        acquirer_sudo = self.sudo()
         if values is None:
             values = {}
 
-        if not self.view_template_id:
+        if not acquirer_sudo.view_template_id:
             return None
 
         values.setdefault('return_url', '/payment/process')
@@ -455,7 +462,7 @@ class PaymentAcquirer(models.Model):
 
         # call <name>_form_generate_values to update the tx dict with acqurier specific values
         cust_method_name = '%s_form_generate_values' % (self.provider)
-        if hasattr(self, cust_method_name):
+        if hasattr(acquirer_sudo, cust_method_name):
             method = getattr(self, cust_method_name)
             values = method(values)
 
@@ -610,7 +617,7 @@ class PaymentTransaction(models.Model):
     partner_city = fields.Char('City')
     partner_country_id = fields.Many2one('res.country', 'Country', default=_get_default_partner_country_id, required=True)
     partner_phone = fields.Char('Phone')
-    html_3ds = fields.Char('3D Secure HTML')
+    html_3ds = fields.Char('3D Secure HTML', groups="base.group_system")
 
     callback_model_id = fields.Many2one('ir.model', 'Callback Document Model', groups="base.group_system")
     callback_res_id = fields.Integer('Callback Document ID', groups="base.group_system")
@@ -1063,7 +1070,7 @@ class PaymentToken(models.Model):
     short_name = fields.Char('Short name', compute='_compute_short_name')
     partner_id = fields.Many2one('res.partner', 'Partner', required=True)
     acquirer_id = fields.Many2one('payment.acquirer', 'Acquirer Account', required=True)
-    acquirer_ref = fields.Char('Acquirer Ref.', required=True)
+    acquirer_ref = fields.Char('Acquirer Ref.', required=True, groups='base.group_system')
     active = fields.Boolean('Active', default=True)
     payment_ids = fields.One2many('payment.transaction', 'payment_token_id', 'Payment Transactions')
     verified = fields.Boolean(string='Verified', default=False)

@@ -28,8 +28,8 @@ class PaymentAcquirerStripe(models.Model):
     _inherit = 'payment.acquirer'
 
     provider = fields.Selection(selection_add=[('stripe', 'Stripe')])
-    stripe_secret_key = fields.Char(required_if_provider='stripe', groups='base.group_user')
-    stripe_publishable_key = fields.Char(required_if_provider='stripe', groups='base.group_user')
+    stripe_secret_key = fields.Char(required_if_provider='stripe', groups='base.group_system')
+    stripe_publishable_key = fields.Char(required_if_provider='stripe', groups='base.group_system')
     stripe_image_url = fields.Char(
         "Checkout Image URL", groups='base.group_user',
         help="A relative or absolute URL pointing to a square image of your "

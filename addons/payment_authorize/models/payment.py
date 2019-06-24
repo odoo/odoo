@@ -23,8 +23,8 @@ class PaymentAcquirerAuthorize(models.Model):
     _inherit = 'payment.acquirer'
 
     provider = fields.Selection(selection_add=[('authorize', 'Authorize.Net')])
-    authorize_login = fields.Char(string='API Login Id', required_if_provider='authorize', groups='base.group_user')
-    authorize_transaction_key = fields.Char(string='API Transaction Key', required_if_provider='authorize', groups='base.group_user')
+    authorize_login = fields.Char(string='API Login Id', required_if_provider='authorize', groups='base.group_system')
+    authorize_transaction_key = fields.Char(string='API Transaction Key', required_if_provider='authorize', groups='base.group_system')
 
     def _get_feature_support(self):
         """Get advanced feature support by provider.
@@ -352,7 +352,8 @@ class PaymentToken(models.Model):
     _inherit = 'payment.token'
 
     authorize_profile = fields.Char(string='Authorize.net Profile ID', help='This contains the unique reference '
-                                    'for this partner/payment token combination in the Authorize.net backend')
+                                    'for this partner/payment token combination in the Authorize.net backend',
+                                    groups="base.group_system")
     provider = fields.Selection(string='Provider', related='acquirer_id.provider', readonly=False)
     save_token = fields.Selection(string='Save Cards', related='acquirer_id.save_token', readonly=False)
 
