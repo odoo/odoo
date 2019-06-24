@@ -5185,13 +5185,27 @@ Fields:
         else:
             # flush self's model if any of the fields must be flushed
             self.recompute(fnames)
-            if any(
-                fname in vals
-                for vals in self.env.all.towrite.get(self._name, {}).values()
-                for fname in fnames
-            ):
-                id_vals = self.env.all.towrite.pop(self._name)
-                process(self, id_vals)
+            # DLE P76: test_onchange_one2many_with_domain_on_related_field
+            # ```
+            # email.important = True
+            # self.assertIn(email, discussion.important_emails)
+            # ```
+            # When a search on a field coming from a related occurs (the domain on discussion.important_emails field)
+            # make sure the related field is flushed
+            model_fields = {}
+            for fname in fnames:
+                field = self._fields[fname]
+                model_fields.setdefault(field.model_name, []).append(field)
+                if field.related_field:
+                    model_fields.setdefault(field.related_field.model_name, []).append(field.related_field)
+            for model_name, fields in model_fields.items():
+                if any(
+                    field.name in vals
+                    for vals in self.env.all.towrite.get(model_name, {}).values()
+                    for field in fields
+                ):
+                    id_vals = self.env.all.towrite.pop(model_name)
+                    process(self.env[model_name], id_vals)
 
     #
     # New records - represent records that do not exist in the database yet;
@@ -5217,6 +5231,17 @@ Fields:
             origin = origin.id
         record = self.browse([NewId(origin, ref)])
         record._update_cache(values, validate=False)
+
+        # set inverse fields on new records in the comodel
+        for name in values:
+            field = self._fields.get(name)
+            if field and field.relational:
+                inv_recs = record[name].filtered(lambda r: not r.id)
+                if inv_recs:
+                    inv_values = {invf.name: record._ids for invf in self._field_inverses[field]}
+                    for inv_rec in inv_recs:
+                        inv_rec._update_cache(inv_values, validate=False)
+
         return record
 
     @property

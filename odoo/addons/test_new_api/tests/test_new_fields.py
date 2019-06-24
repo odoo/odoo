@@ -1150,8 +1150,11 @@ class TestFields(common.TransactionCase):
         # read the related field discussion_name
         self.assertEqual(message.discussion.env, env)
         self.assertEqual(message.discussion_name, discussion.name)
-        with self.assertRaises(AccessError):
-            message.discussion.name
+        # DLE P75: message.discussion.name is put in the cache as sudo thanks to the computation of message.discussion_name
+        # As we decided that now if we had the chance to access the value at some point in the code, and that it was stored in the cache
+        # it's not a big deal to no longer raise the accesserror, as we had the chance to get the value at some point
+        # with self.assertRaises(AccessError):
+        #     message.discussion.name
 
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_42_new_related(self):
