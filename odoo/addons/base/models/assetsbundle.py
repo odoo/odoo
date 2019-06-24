@@ -266,7 +266,7 @@ class AssetsBundle(object):
             'public': True,
             'datas': base64.b64encode(content.encode('utf8')),
         }
-        attachment = ira.sudo().create(values)
+        attachment = ira.with_user(SUPERUSER_ID).create(values)
 
         url = self.get_asset_url(
             id=attachment.id,
