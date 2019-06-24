@@ -793,7 +793,6 @@ class HolidaysRequest(models.Model):
             # FIXME RLi: This does not make sense, only the parent should be in validation_type both
             if leaves and leaves[0].validation_type == 'both':
                 leaves.action_validate()
-
         employee_requests = self.filtered(lambda hol: hol.holiday_type == 'employee')
         employee_requests._validate_leave_request()
         if not self.env.context.get('leave_fast_create'):
