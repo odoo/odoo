@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import models, fields, api, SUPERUSER_ID
 from odoo.http import request
 
 
@@ -60,7 +60,7 @@ class website_form_model(models.Model):
             fields_get.pop(val, None)
 
         # Unrequire fields with default values
-        default_values = model.default_get(list(fields_get))
+        default_values = model.with_user(SUPERUSER_ID).default_get(list(fields_get))
         for field in [f for f in fields_get if f in default_values]:
             fields_get[field]['required'] = False
 
