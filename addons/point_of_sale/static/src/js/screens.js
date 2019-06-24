@@ -1156,7 +1156,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
             self.display_client_details('edit',{
                 'country_id': self.pos.company.country_id,
                 'state_id': self.pos.company.state_id,
-                'lang': self.pos.lang,
+                'lang': self.pos.user.lang,
             });
         });
 
@@ -1659,28 +1659,6 @@ var ReceiptScreenWidget = ScreenWidget.extend({
             paymentlines: order.get_paymentlines(),
         };
     },
-    get_qweb_translation_env: function (xmlPath) {
-        xmlPath = _.str.sprintf('%s?unique=%s', xmlPath, _.uniqueId());
-        // changed qweb lang environment by client lang for print receipt
-        var client = this.pos.get_client();
-        var client_lang = client && client.lang;
-        if (!client_lang) {
-            return Promise.resolve(QWeb);
-        } else if (_t_qweb[client_lang]){
-            return Promise.resolve(_t_qweb[client_lang]);
-        } else {
-            var new_t = new translation.TranslationDataBase().build_translation_function();
-            return new_t.database.load_translations(session, ['point_of_sale'], client_lang, undefined).then(function () {
-                var newQweb = new webQWeb(false, {
-                    _t: new_t
-                });
-                return ajax.loadXML(xmlPath, newQweb).then(function () {
-                    _t_qweb[client_lang] = newQweb;
-                    return newQweb;
-                });
-            });
-        }
-    },
     print_web: function() {
         if ($.browser.safari) {
             document.execCommand('print', false, null);
@@ -1795,7 +1773,29 @@ var ReceiptScreenWidget = ScreenWidget.extend({
     },
     // load qweb receipt in user lang
     load_qweb: function () {
-        return this.get_qweb_translation_env('/point_of_sale/static/src/xml/pos.xml');
+        return this.get_translation_qweb('/point_of_sale/static/src/xml/receipt.xml');
+    },
+    get_translation_qweb: function (xmlPath) {
+        xmlPath = _.str.sprintf('%s?unique=%s', xmlPath, _.uniqueId());  // Qweb is not loading same path again
+        // changed qweb lang environment by client lang for print receipt
+        var client = this.pos.get_client();
+        var client_lang = client && client.lang;
+        if (!client_lang) {
+            return Promise.resolve(QWeb);
+        } else if (_t_qweb[client_lang]) {
+            return Promise.resolve(_t_qweb[client_lang]);
+        } else {
+            var new_t = new translation.TranslationDataBase().build_translation_function();
+            return new_t.database.load_translations(session, ['point_of_sale'], client_lang, undefined).then(function () {
+                var newQweb = new webQWeb(false, {
+                    _t: new_t
+                });
+                return ajax.loadXML(xmlPath, newQweb).then(function () {
+                    _t_qweb[client_lang] = newQweb;
+                    return newQweb;
+                });
+            });
+        }
     }
 });
 gui.define_screen({name:'receipt', widget: ReceiptScreenWidget});

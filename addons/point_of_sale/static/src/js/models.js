@@ -169,7 +169,7 @@ exports.PosModel = Backbone.Model.extend({
 
     },{
         model:  'res.users',
-        fields: ['name','company_id', 'id'],
+        fields: ['name','company_id', 'id', 'lang'],
         ids:    function(self){ return [session.uid]; },
         loaded: function(self,users){
             self.user = users[0];
