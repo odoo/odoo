@@ -9,6 +9,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import fields
 from odoo import http
+from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
 from odoo.osv.expression import OR
 from odoo.addons.http_routing.models.ir_http import slug, unslug
@@ -42,6 +43,25 @@ class WebsiteAccount(CustomerPortal):
             'opp_count': opp_count,
         })
         return values
+
+    def _lead_get_page_view_values(self, lead, access_token, **kwargs):
+        values = {
+            'page_name': 'lead',
+            'lead': lead,
+        }
+        return self._get_page_view_values(lead, access_token, values, 'my_leads_history', False, **kwargs)
+
+    def _opportunity_get_page_view_values(self, opportunity, access_token, **kwargs):
+        values = {
+            'page_name': 'opportunity',
+            'opportunity': opportunity,
+            'user_activity': opportunity.sudo().activity_ids.filtered(lambda activity: activity.user_id == request.env.user)[:1],
+            'stages': request.env['crm.stage'].search([('is_won', '!=', True)], order='sequence desc, name desc, id desc'),
+            'activity_types': request.env['mail.activity.type'].sudo().search([]),
+            'states': request.env['res.country.state'].sudo().search([]),
+            'countries': request.env['res.country'].sudo().search([]),
+        }
+        return self._get_page_view_values(opportunity, access_token, values, 'my_opportunities_history', False, **kwargs)
 
     @http.route(['/my/leads', '/my/leads/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_leads(self, page=1, date_begin=None, date_end=None, search=None, search_in='content', sortby=None, **kw):
@@ -93,6 +113,7 @@ class WebsiteAccount(CustomerPortal):
         )
         # content according to pager and archive selected
         leads = CrmLead.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        request.session['my_leads_history'] = leads.ids[:100]
 
         values.update({
             'date': date_begin,
@@ -179,6 +200,7 @@ class WebsiteAccount(CustomerPortal):
         )
         # content according to pager and archive selected
         opportunities = CrmLead.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        request.session['my_opportunities_history'] = opportunities.ids[:100]
 
         values.update({
             'date': date_begin,
@@ -197,25 +219,29 @@ class WebsiteAccount(CustomerPortal):
         return request.render("website_crm_partner_assign.portal_my_opportunities", values)
 
     @http.route(['''/my/lead/<model('crm.lead', "[('type','=', 'lead')]"):lead>'''], type='http', auth="user", website=True)
-    def portal_my_lead(self, lead, **kw):
+    def portal_my_lead(self, lead, access_token=None, **kw):
         if lead.type != 'lead':
             raise NotFound()
-        return request.render("website_crm_partner_assign.portal_my_lead", {'lead': lead})
+        try:
+            lead_sudo = self._document_check_access('crm.lead', lead.id, access_token)
+        except (AccessError, MissingError):
+            return request.redirect('/my')
+
+        values = self._lead_get_page_view_values(lead_sudo, access_token, **kw)
+        return request.render("website_crm_partner_assign.portal_my_lead", values)
 
     @http.route(['''/my/opportunity/<model('crm.lead', "[('type','=', 'opportunity')]"):opp>'''], type='http', auth="user", website=True)
-    def portal_my_opportunity(self, opp, **kw):
+    def portal_my_opportunity(self, opp, access_token=None, **kw):
         if opp.type != 'opportunity':
             raise NotFound()
 
-        return request.render(
-            "website_crm_partner_assign.portal_my_opportunity", {
-                'opportunity': opp,
-                'user_activity': opp.sudo().activity_ids.filtered(lambda activity: activity.user_id == request.env.user)[:1],
-                'stages': request.env['crm.stage'].search([('is_won', '!=', True)], order='sequence desc, name desc, id desc'),
-                'activity_types': request.env['mail.activity.type'].sudo().search([]),
-                'states': request.env['res.country.state'].sudo().search([]),
-                'countries': request.env['res.country'].sudo().search([]),
-            })
+        try:
+            opportunity_sudo = self._document_check_access('crm.lead', opp.id, access_token)
+        except (AccessError, MissingError):
+            return request.redirect('/my')
+
+        values = self._opportunity_get_page_view_values(opportunity_sudo, access_token, **kw)
+        return request.render("website_crm_partner_assign.portal_my_opportunity", values)
 
 
 class WebsiteCrmPartnerAssign(WebsitePartnerPage):
