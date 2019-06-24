@@ -340,7 +340,7 @@ class EventEvent(models.Model):
 
     @api.multi
     def _is_event_registrable(self):
-        return True
+        return self.date_end > fields.Datetime.now()
 
     @api.multi
     def _get_ics_file(self):
