@@ -11,7 +11,7 @@ var VariantMixin = require('sale.VariantMixin');
 publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin, {
     selector: '.oe_website_sale',
     events: {
-        'click #my_wish': '_onClickMyWish',
+        'click .o_wsale_my_wish': '_onClickMyWish',
         'click .o_add_wishlist, .o_add_wishlist_dyn': '_onClickAddWish',
         'change input.product_id': '_onChangeVariant',
         'change input.js_product_change': '_onChangeProduct',
@@ -69,6 +69,23 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
     //--------------------------------------------------------------------------
 
     /**
+     * Gets the element in the navbar currently displayed.
+     * Depending on the scroll position, it could either be the one in the main
+     * top bar or the one in the affixed navbar.
+     *
+     * @private
+     * @param {string} selector
+     * @returns {jQuery}
+     */
+    _getNavBarButton: function (selector) {
+        var $affixedHeaderButton = $('header.affixed ' + selector);
+        if ($affixedHeaderButton.length) {
+            return $affixedHeaderButton;
+        } else {
+            return $('header ' + selector).first();
+        }
+    },
+    /**
      * @private
      */
     _addNewProducts: function ($el) {
@@ -105,9 +122,10 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
                         product_id: productId,
                     },
                 }).then(function () {
+                    var $navButton = self._getNavBarButton('.o_wsale_my_wish');
                     self.wishlistProductIDs.push(productId);
                     self._updateWishlistView();
-                    wSaleUtils.animateClone($('#my_wish'), $el.closest('form'), 25, 40);
+                    wSaleUtils.animateClone($navButton, $el.closest('form'), 25, 40);
                 }).guardedCatch(function () {
                     $el.prop("disabled", false).removeClass('disabled');
                 });
@@ -121,16 +139,16 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      */
     _updateWishlistView: function () {
         if (this.wishlistProductIDs.length > 0) {
-            $('#my_wish').show();
+            $('.o_wsale_my_wish').show();
             $('.my_wish_quantity').text(this.wishlistProductIDs.length);
         } else {
-            $('#my_wish').hide();
+            $('.o_wsale_my_wish').hide();
         }
     },
     /**
      * @private
      */
-    _removeWish: function (e, deferred_redirect){
+    _removeWish: function (e, deferred_redirect) {
         var tr = $(e.currentTarget).parents('tr');
         var wish = tr.data('wish-id');
         var product = tr.data('product-id');
@@ -156,10 +174,11 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      * @private
      */
     _addOrMoveWish: function (e) {
+        var $navButton = this._getNavBarButton('.o_wsale_my_cart');
         var tr = $(e.currentTarget).parents('tr');
         var product = tr.data('product-id');
-        $('#my_cart').removeClass('d-none');
-        wSaleUtils.animateClone($('#my_cart'), tr, 25, 40);
+        $('.o_wsale_my_cart').removeClass('d-none');
+        wSaleUtils.animateClone($navButton, tr, 25, 40);
 
         if ($('#b2b_wish').is(':checked')) {
             return this._addToCart(product, tr.find('add_qty').val() || 1);
