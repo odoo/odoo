@@ -115,3 +115,30 @@ class TestMrpCancelMO(TestMrpCommon):
             "Due to 'post_inventory', a move finished must stay in done state")
         self.assertEqual(manufacturing_order.move_finished_ids[1].state, 'cancel',
             "The other move finished is cancelled like its MO.")
+
+    def test_unlink_mo(self):
+        """ Try to unlink a Manufacturing Order, and check it's possible or not
+        depending of the MO state (must be in cancel state to be unlinked, but
+        the unlink method will try to cancel MO before unlink them).
+        """
+        # Case #1: Create MO, do nothing and try to unlink it (can be deleted)
+        manufacturing_order = self.generate_mo()[0]
+        self.assertEqual(manufacturing_order.exists().state, 'confirmed')
+        manufacturing_order.unlink()
+        # Check the MO is deleted.
+        self.assertEqual(manufacturing_order.exists().state, False)
+
+        # Case #2: Create MO, make and post some production, then try to unlink
+        # it (cannot be deleted)
+        manufacturing_order = self.generate_mo()[0]
+        # Produce some quantity (not all to avoid to done the MO when post inventory)
+        produce_form = Form(self.env['mrp.product.produce'].with_context(active_id=manufacturing_order.id))
+        produce_form.qty_producing = 2
+        produce = produce_form.save()
+        produce.do_produce()
+        # Post Inventory
+        manufacturing_order.post_inventory()
+        # Unlink the MO must raises an UserError since it cannot be really cancelled
+        self.assertEqual(manufacturing_order.exists().state, 'progress')
+        with self.assertRaises(UserError):
+            manufacturing_order.unlink()
