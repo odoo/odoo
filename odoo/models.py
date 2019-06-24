@@ -3295,11 +3295,11 @@ Fields:
 
         # protect fields being written against recomputation
         with env.protecting(protected, self):
-            # DLE P39: for monetary field, their related currency field must be cached before the amount so it can be rounded correctly
-            # test `test_20_monetary`
-            for fname, value in self._sort_values(vals):
+            # for monetary field, their related currency field must be cached before the amount so it can be rounded correctly
+            for fname in sorted(vals, key=lambda x: self._fields[x].type=='monetary'):
                 if fname in bad_names:
                     continue
+                value = vals[fname]
                 field = self._fields.get(fname)
                 # DLE P59: `test_write_base_one2many` `test_performance.py`
                 # Write x2many inverses at the same time
