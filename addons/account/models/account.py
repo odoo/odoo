@@ -1071,16 +1071,18 @@ class AccountTax(models.Model):
         rslt = super(AccountTax, self).default_get(vals + ['company_id'])
 
         company_id = rslt.get('company_id')
+        company_rec = self.env['res.company'].browse(company_id)
+        country_id = company_rec.country_id if company_rec else self.env.company.country_id
         if 'refund_repartition_line_ids' in vals:
             rslt['refund_repartition_line_ids'] = [
-                (0, 0, { 'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id}),
-                (0, 0, { 'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id}),
+                (0, 0, { 'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'country_id': country_id.id}),
+                (0, 0, { 'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'country_id': country_id.id}),
             ]
 
         if 'invoice_repartition_line_ids' in vals:
             rslt['invoice_repartition_line_ids'] = [
-                (0, 0, { 'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id}),
-                (0, 0, { 'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id}),
+                (0, 0, { 'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'country_id': country_id.id}),
+                (0, 0, { 'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'country_id': country_id.id}),
             ]
 
         return rslt
