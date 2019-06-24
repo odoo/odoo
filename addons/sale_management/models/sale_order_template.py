@@ -29,6 +29,7 @@ class SaleOrderTemplate(models.Model):
         domain=[('model', '=', 'sale.order')],
         help="This e-mail template will be sent on confirmation. Leave empty to send nothing.")
     active = fields.Boolean(default=True, help="If unchecked, it will allow you to hide the quotation template without removing it.")
+    company_id = fields.Many2one('res.company', string='Company')
 
     @api.multi
     def write(self, vals):
