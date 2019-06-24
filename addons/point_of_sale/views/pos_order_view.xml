@@ -24,7 +24,7 @@
                     </button>
                 </div>
                 <group col="4" colspan="4" name="order_fields">
-                    <field name="name"/>
+                    <field name="pos_reference"/>
                     <field name="date_order"/>
                     <field name="session_id" />
                     <field string="User" name="user_id"/>
@@ -91,7 +91,6 @@
                             <field name="location_id" widget="selection" groups="stock.group_stock_multi_locations"/>
                             <field name="pricelist_id" groups="product.group_sale_pricelist"/>
                             <field name="picking_id" readonly="1"/>
-                            <field name="pos_reference"/>
                         </group>
                         <group string="Accounting Information" groups="account.group_account_manager">
                             <group>
@@ -186,15 +185,28 @@
         <field name="arch" type="xml">
             <tree string="POS Orders" decoration-info="state == 'draft'" decoration-muted="state in ('done','cancel')" create="0">
                 <field name="currency_id" invisible="1"/>
-                <field name="name"/>
+                <field name="state" invisible="1"/>
+                <field name="session_id" />
+                <field name="date_order"/>
                 <field name="pos_reference"/>
                 <field name="partner_id"/>
-                <field name="date_order"/>
-                <field name="user_id"/>
                 <field name="amount_total" sum="Amount total" widget="monetary"/>
-                <field name="company_id" groups="base.group_multi_company"/>
-                <field name="state"/>
-                <field name="session_id" />
+                <field name="user_id"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_pos_order_tree_no_session_id" model="ir.ui.view">
+        <field name="name">pos.order.tree_no_session_id</field>
+        <field name="model">pos.order</field>
+        <field name="arch" type="xml">
+            <tree string="POS Orders" decoration-info="state == 'draft'" decoration-muted="state in ('done','cancel')" create="0">
+                <field name="currency_id" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <field name="date_order"/>
+                <field name="pos_reference"/>
+                <field name="partner_id"/>
+                <field name="amount_total" sum="Amount total" widget="monetary"/>
+                <field name="user_id"/>
             </tree>
         </field>
     </record>

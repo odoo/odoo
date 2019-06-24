@@ -541,9 +541,9 @@ class PosOrder(models.Model):
         return self._default_session().config_id.company_id
 
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
-    date_order = fields.Datetime(string='Order Date', readonly=True, index=True, default=fields.Datetime.now)
+    date_order = fields.Datetime(string='Date', readonly=True, index=True, default=fields.Datetime.now)
     user_id = fields.Many2one(
-        comodel_name='res.users', string='User',
+        comodel_name='res.users', string='Cashier',
         help="Person who uses the cash register. It can be a reliever, a student or an interim employee.",
         default=lambda self: self.env.uid,
         states={'done': [('readonly', True)], 'invoiced': [('readonly', True)]},
@@ -587,7 +587,7 @@ class PosOrder(models.Model):
     )
     note = fields.Text(string='Internal Notes')
     nb_print = fields.Integer(string='Number of Print', readonly=True, copy=False, default=0)
-    pos_reference = fields.Char(string='Receipt Ref', readonly=True, copy=False)
+    pos_reference = fields.Char(string='PoS Order Reference', readonly=True, copy=False)
     sale_journal = fields.Many2one('account.journal', related='session_id.config_id.journal_id', string='Sales Journal', store=True, readonly=True)
     fiscal_position_id = fields.Many2one(
         comodel_name='account.fiscal.position', string='Fiscal Position',

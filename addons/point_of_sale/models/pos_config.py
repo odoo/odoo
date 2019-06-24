@@ -43,13 +43,26 @@ class PosConfig(models.Model):
         return self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).pos_type_id.id
 
     def _default_sale_journal(self):
-        journal = self.env.ref('point_of_sale.pos_sale_journal', raise_if_not_found=False)
+        journal = self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id), ('code', '=', 'POSS')], limit=1)
         if journal and journal.sudo().company_id == self.env.company:
             return journal
-        return self._default_invoice_journal()
+        return self.env['account.journal'].create({
+            'name': 'Point of Sale',
+            'code': 'POSS',
+            'type': 'sale',
+            'sequence': 20
+            }).id
 
     def _default_invoice_journal(self):
-        return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
+        company_journal = self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id), ('code', '=', 'INV')], limit=1)
+        if company_journal:
+            return company_journal
+        return self.env['account.journal'].create({
+            'name': 'Customer Invoices',
+            'code': 'INV',
+            'type': 'sale',
+            'sequence': 20
+            }).id
 
     def _default_pricelist(self):
         return self.env['product.pricelist'].search([('currency_id', '=', self.env.company.currency_id.id)], limit=1)
@@ -257,11 +270,6 @@ class PosConfig(models.Model):
     @api.onchange('iface_print_via_proxy')
     def _onchange_iface_print_via_proxy(self):
         self.iface_print_auto = self.iface_print_via_proxy
-
-    @api.onchange('module_account')
-    def _onchange_module_account(self):
-        if self.module_account:
-            self.invoice_journal_id = self.env.ref('point_of_sale.pos_sale_journal')
 
     @api.onchange('use_pricelist')
     def _onchange_use_pricelist(self):

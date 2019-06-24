@@ -12,6 +12,7 @@ class ResConfigSettings(models.TransientModel):
         help="Share your product to all companies defined in your instance.\n"
              " * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
              " * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies.")
+    group_discount_per_so_line = fields.Boolean("Discounts", implied_group='product.group_discount_per_so_line')
     group_uom = fields.Boolean("Units of Measure", implied_group='uom.group_uom')
     group_product_variant = fields.Boolean("Variants", implied_group='product.group_product_variant')
     module_sale_product_configurator = fields.Boolean("Product Configurator")
@@ -61,3 +62,6 @@ class ResConfigSettings(models.TransientModel):
         super(ResConfigSettings, self).set_values()
         product_rule = self.env.ref('product.product_comp_rule')
         product_rule.write({'active': not bool(self.company_share_product)})
+        if not self.group_discount_per_so_line:
+            pl = self.env['product.pricelist'].search([('discount_policy', '=', 'without_discount')])
+            pl.write({'discount_policy': 'with_discount'})
