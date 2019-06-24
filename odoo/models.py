@@ -5565,8 +5565,8 @@ Fields:
                 for subname in subnames:
                     new_lines.mapped(subname)
 
-        # Isolate changed x2many values, to handle inconsistent data sent from
-        # the client side: when a form view contains two one2many fields that
+        # Isolate changed values, to handle inconsistent data sent from the
+        # client side: when a form view contains two one2many fields that
         # overlap, the lines that appear in both fields may be sent with
         # different data. Consider, for instance:
         #
@@ -5581,22 +5581,26 @@ Fields:
         # The idea is to put 'foo_ids' in cache first, so that the snapshot
         # contains value=1 for line in 'foo_ids'. The snapshot is then updated
         # with the value of `bar_ids`, which will contain value=2 on line.
-        values = dict(values)
-        changed_x2many = {
-            name: values.pop(name, [])
-            for name in names
-            if self._fields[name].type in ('one2many', 'many2many')
-        }
+        #
+        # The issue also occurs with other fields. For instance, an onchange on
+        # a move line has a value for the field 'move_id' that contains the
+        # values of the move, among which the one2many that contains the line
+        # itself, with old values!
+        #
+        changed_values = {name: values[name] for name in names}
+        # set changed values to null in initial_values; not setting them
+        # triggers default_get() on the new record when creating snapshot0
+        initial_values = dict(values, **dict.fromkeys(names, False))
 
-        # create a new record with values, and attach ``self`` to it
-        record = self.new(values, origin=self)
+        # create a new record with values
+        record = self.new(initial_values, origin=self)
 
         # make a snapshot based on the initial values of record
         snapshot0 = Snapshot(record, nametree)
 
         # store changed values in cache, and update snapshot0
-        for name, value in changed_x2many.items():
-            record._update_cache({name: value}, validate=False)
+        record._update_cache(changed_values, validate=False)
+        for name in names:
             snapshot0.fetch(name)
 
         # determine which field(s) should be triggered an onchange
