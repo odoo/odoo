@@ -66,6 +66,45 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         self.assertEqual(len(order.order_line.ids), 0)
         self.assertEqual(coupon.state, 'new')
 
+    def test_coupon_code_with_pricelist(self):
+        # Test case: Generate a coupon (10% discount) and apply it on an order with a specific pricelist (10% discount)
+
+        self.env['sale.coupon.generate'].with_context(active_id=self.code_promotion_program_with_discount.id).create({
+            'generation_type': 'nbr_coupon',
+            'nbr_coupons': 1,
+        }).generate_coupon()
+        coupon = self.code_promotion_program_with_discount.coupon_ids
+
+        first_pricelist = self.env['product.pricelist'].create({
+            'name': 'First pricelist',
+            'discount_policy': 'with_discount',
+            'item_ids': [(0, 0, {
+                'compute_price': 'percentage',
+                'base': 'list_price',
+                'percent_price': 10,
+                'applied_on': '3_global',
+                'name': 'First discount'
+            })]
+        })
+
+        order = self.empty_order
+        order.pricelist_id = first_pricelist
+        order.write({'order_line': [
+            (0, False, {
+                'product_id': self.product_C.id,
+                'name': '1 Product C',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            })
+        ]})
+        self.env['sale.coupon.apply.code'].with_context(active_id=order.id).create({
+            'coupon_code': coupon.code
+        }).process_coupon()
+        order.recompute_coupon_lines()
+        self.assertEqual(len(order.order_line.ids), 2)
+        self.assertEqual(coupon.state, 'used')
+        self.assertEqual(order.amount_total, 81, "SO total should be 81: (10% of 100 with pricelist) + 10% of 90 with coupon code")
+
     def test_on_next_order_reward_promotion_program(self):
         # The flow:
         # 1. Create a program `A` that gives a free `Product B` on next order if you buy a an `product A`
