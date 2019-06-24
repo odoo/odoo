@@ -36,6 +36,7 @@
             <thead>
                 <tr class="active">
                     <th>Invoice #</th>
+                    <th>Salesperson</th>
                     <th>Invoice Date</th>
                     <th class='d-none d-md-table-cell'>Due Date</th>
                     <th/>
@@ -51,6 +52,7 @@
                                 <em t-else="">Draft Invoice</em>
                             </a>
                         </td>
+                        <td><span t-field="invoice.invoice_user_id"/></td>
                         <td><span t-field="invoice.invoice_date"/></td>
                         <td class='d-none d-md-table-cell'><span t-field="invoice.invoice_date_due"/></td>
                         <td class="tx_status">

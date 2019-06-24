@@ -32,6 +32,7 @@
         <thead>
           <tr class="active">
             <th>Purchase Orders #</th>
+            <th>Vendor</th>
             <th>Order Date</th>
             <th></th>
             <th>Total</th>
@@ -41,6 +42,7 @@
           <t t-foreach="orders" t-as="order">
             <tr>
               <td><a t-attf-href="/my/purchase/#{order.id}?#{keep_query()}"><t t-esc="order.name"/></a></td>
+              <td><span t-field="order.partner_id"/></td>
               <td><span t-field="order.date_order"/></td>
               <td>
                 <t t-if="order.invoice_status == 'to invoice'">
@@ -80,6 +82,9 @@
               </div>
             </div>
             <div class="card-body">
+              <div class="mb8">
+                  <strong>Vendor:</strong> <span t-field="order.partner_id"/>
+              </div>
               <div class="mb8">
                   <strong>Date:</strong> <span t-field="order.date_order" t-options='{"widget": "date"}'/>
               </div>
