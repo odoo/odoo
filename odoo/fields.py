@@ -672,7 +672,7 @@ class Field(MetaField('DummyField', (object,), {})):
             context = dict(context, force_company=company.id)
         Property = records.env(context=context, su=True)['ir.property']
         values = {
-            record.id: self.convert_to_write(record[self.name], record)
+            record.id: self.convert_to_read(record[self.name], record) if self.type == 'many2many' else self.convert_to_write(record[self.name], record)
             for record in records
         }
         Property.set_multi(self.name, self.model_name, values)

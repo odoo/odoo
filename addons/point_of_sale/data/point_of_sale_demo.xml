@@ -49,12 +49,18 @@
           <field name="weight">0.01</field>
           <field name="to_weight">True</field>
           <field name="barcode">2100002000003</field>
-          <field name="taxes_id">False</field>
           <field name="categ_id" ref="product.product_category_5"/>
           <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
           <field name="uom_id" ref="uom.product_uom_kgm" />
           <field name="uom_po_id" ref="uom.product_uom_kgm" />
           <field name="image" type="base64" file="point_of_sale/static/img/wall_shelf_unit.png"/>
+        </record>
+        <record forcecreate="True" id="wall_shelf_no_tax" model="ir.property">
+            <field name="name">taxes_id</field>
+            <field name="fields_id" search="[('model', '=', 'product.template'), ('name', '=', 'taxes_id')]"/>
+            <field name="res_id" model="product.template" eval="'product.template,'+str(obj().env.ref('point_of_sale.wall_shelf').product_tmpl_id.id)"/>
+            <field name="value">account.tax,[]</field>
+            <field name="type">many2many</field>
         </record>
         <record id="small_shelf" model="product.product">
           <field name="available_in_pos">True</field>
@@ -63,7 +69,7 @@
           <field name="default_code">FURN_0008</field>
           <field name="type">product</field>
           <field name="weight">0.01</field>
-          <field name="taxes_id">False</field>
+          <!-- <field name="taxes_id" eval='[(5, 0, 0)]'/> -->
           <field name="categ_id" ref="product.product_category_5"/>
           <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
           <field name="to_weight">True</field>
@@ -100,7 +106,7 @@
           <field name="uom_id" ref="uom.product_uom_kgm" />
           <field name="uom_po_id" ref="uom.product_uom_kgm" />
           <field name="image" type="base64" file="point_of_sale/static/img/desk_organizer.png"/>
-          <field name="taxes_id" eval='[(5,)]'/>  <!-- no taxes -->
+          <!-- <field name="taxes_id" eval='[(5, 0, 0)]'/> -->
         </record>
 
         <record id="magnetic_board" model="product.product">
