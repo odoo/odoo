@@ -287,6 +287,7 @@ class InventoryLine(models.Model):
     product_qty = fields.Float(
         'Counted Quantity',
         digits=dp.get_precision('Product Unit of Measure'), default=0)
+    categ_id = fields.Many2one(related='product_id.categ_id', store=True)
     location_id = fields.Many2one(
         'stock.location', 'Location',
         domain=lambda self: self._domain_location_id(),
