@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.exceptions import ValidationError
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import Form, SavepointCase
 
 
 class TestInventory(SavepointCase):
@@ -310,6 +310,21 @@ class TestInventory(SavepointCase):
         inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1)
         self.assertEqual(inventory.line_ids.theoretical_qty, 2)
+
+    def test_inventory_8(self):
+        """ Check inventory lines product quantity is 0 when inventory is
+        started with `prefill_counted_quantity` disable.
+        """
+        inventory_form = Form(self.env['stock.inventory'].with_context(
+                default_prefill_counted_quantity=False,
+             ), view='stock.view_inventory_form')
+        inventory = inventory_form.save()
+        inventory.action_start()
+        self.assertNotEqual(len(inventory.line_ids), 0)
+        # Checks all inventory lines quantities are correctly set.
+        for line in inventory.line_ids:
+            self.assertEqual(line.product_qty, 0)
+            self.assertNotEqual(line.theoretical_qty, 0)
 
     def test_inventory_outdate_1(self):
         """ Checks that inventory adjustment line is marked as outdated after
