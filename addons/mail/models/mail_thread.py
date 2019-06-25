@@ -297,9 +297,9 @@ class MailThread(models.AbstractModel):
         # post track template if a tracked field changed
         if not self._context.get('mail_notrack'):
             track_threads = threads.with_lang()
+            tracked_fields = self._get_tracked_fields()
             for thread in track_threads:
                 create_values = create_values_list[thread.id]
-                tracked_fields = self._get_tracked_fields(list(create_values))
                 changes = [field for field in tracked_fields if create_values.get(field)]
                 # based on tracked field to stay consistent with write
                 # we don't consider that a falsy field is a change, to stay consistent with previous implementation,
@@ -318,7 +318,7 @@ class MailThread(models.AbstractModel):
         
         tracked_fields = None
         if not self._context.get('mail_notrack'):
-            tracked_fields = track_self._get_tracked_fields(list(values))
+            tracked_fields = track_self._get_tracked_fields()
         if tracked_fields:
             initial_values = dict((record.id, dict((key, getattr(record, key)) for key in tracked_fields))
                                   for record in track_self)
@@ -547,9 +547,8 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
 
     @api.model
-    def _get_tracked_fields(self, updated_fields):
+    def _get_tracked_fields(self):
         """ Return a structure of tracked fields for the current model.
-            :param list updated_fields: modified field names
             :return dict: a dict mapping field name to description, containing on_change fields
         """
         tracked_fields = []
