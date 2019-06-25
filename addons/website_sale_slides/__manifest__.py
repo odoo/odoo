@@ -9,7 +9,6 @@
 
     'depends': ['website_slides', 'website_sale'],
     'installable': True,
-    'auto_install': True,
     'data': [
         'views/assets.xml',
         'views/slide_channel_views.xml',
