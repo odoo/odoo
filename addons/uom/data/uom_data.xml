@@ -16,10 +16,6 @@
             <field name="name">Working Time</field>
             <field name="measure_type">working_time</field>
         </record>
-        <record id="uom_categ_time" model="uom.category">
-            <field name="name">Time</field>
-            <field name="measure_type">time</field>
-        </record>
         <record id="uom_categ_length" model="uom.category">
             <field name="name">Length / Distance</field>
             <field name="measure_type">length</field>
@@ -56,25 +52,6 @@
             <field name="factor" eval="1000"/>
             <field name="uom_type">smaller</field>
         </record>
-
-        <record id="uom_time_day" model="uom.uom">
-            <field name="name">Day(s)</field>
-            <field name="category_id" ref="uom_categ_time"/>
-            <field name="factor" eval="1.0"/>
-        </record>
-        <record id="uom_time_week" model="uom.uom">
-            <field name="name">Week(s)</field>
-            <field name="category_id" ref="uom_categ_time"/>
-            <field name="factor" eval="7.0"/>
-            <field name="uom_type">bigger</field>
-        </record>
-        <record id="uom_time_hour" model="uom.uom">
-            <field name="name">Hour(s)</field>
-            <field name="category_id" ref="uom_categ_time"/>
-            <field name="factor" eval="24.0"/>
-            <field name="uom_type">smaller</field>
-        </record>
-
         <record id="product_uom_day" model="uom.uom">
             <field name="name">Day(s)</field>
             <field eval="uom_categ_wtime" name="category_id"/>
