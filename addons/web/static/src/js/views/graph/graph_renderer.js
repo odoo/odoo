@@ -465,6 +465,7 @@ return AbstractRenderer.extend({
                     },
                     ticks: {
                         callback: this._formatValue.bind(this),
+                        suggestedMax: 0,
                         suggestedMin: 0,
                     }
                 }],
