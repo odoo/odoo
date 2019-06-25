@@ -287,10 +287,6 @@ class MassMailingCampaign(models.Model):
     mass_mailing_ids = fields.One2many(
         'mail.mass_mailing', 'campaign_id',
         string='Mass Mailings')
-    unique_ab_testing = fields.Boolean(string='Allow A/B Testing', default=False,
-        help='If checked, recipients will be mailed only once for the whole campaign. '
-             'This lets you send different mailings to randomly selected recipients and test '
-             'the effectiveness of the mailings, without causing duplicate messages.')
     clicks_ratio = fields.Integer(default=0, compute="_compute_clicks_ratio", string="Number of clicks")
     # stat fields
     total = fields.Integer(compute="_compute_statistics")
@@ -447,6 +443,10 @@ class MassMailing(models.Model):
         string='Mailing Lists')
     contact_ab_pc = fields.Integer(string='A/B Testing percentage',
         help='Percentage of the contacts that will be mailed. Recipients will be taken randomly.', default=100)
+    unique_ab_testing = fields.Boolean(string='Allow A/B Testing', default=False,
+        help='If checked, recipients will be mailed only once for the whole campaign. '
+             'This lets you send different mailings to randomly selected recipients and test '
+             'the effectiveness of the mailings, without causing duplicate messages.')
     # statistics data
     statistics_ids = fields.One2many('mail.mail.statistics', 'mass_mailing_id', string='Emails Statistics')
     total = fields.Integer(compute="_compute_total")
@@ -837,7 +837,7 @@ class MassMailing(models.Model):
         else:
             raise UserError(_("Unsupported mass mailing model %s") % self.mailing_model_id.name)
 
-        if self.campaign_id.unique_ab_testing:
+        if self.unique_ab_testing:
             query +="""
                AND s.campaign_id = %%(mailing_campaign_id)s;
             """
@@ -874,7 +874,7 @@ class MassMailing(models.Model):
         if self.contact_ab_pc < 100:
             contact_nbr = self.env[self.mailing_model_real].search_count(domain)
             topick = int(contact_nbr / 100.0 * self.contact_ab_pc)
-            if self.campaign_id and self.campaign_id.unique_ab_testing:
+            if self.campaign_id and self.unique_ab_testing:
                 already_mailed = self.campaign_id.get_recipients()[self.campaign_id.id]
             else:
                 already_mailed = set([])
