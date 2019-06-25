@@ -51,7 +51,6 @@ class TestImage(HttpCase):
             'datas': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
             'name': 'testEtag.gif',
             'public': True,
-            'datas_fname': 'testEtag.gif',
             'mimetype': 'image/gif',
         })
         response = self.url_open('/web/image/%s' % attachment.id)
