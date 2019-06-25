@@ -20,7 +20,7 @@ class PaymentAcquirer(models.Model):
             ("website_id", "=", request.website.id),
         ]
         extra_domain = (
-            extra_domain and expression.AND(extra_domain, website_domain) or website_domain
+            extra_domain and expression.AND([extra_domain, website_domain]) or website_domain
         )
         return super()._get_available_acquirers(
             partner=partner, company=company, extra_domain=extra_domain
