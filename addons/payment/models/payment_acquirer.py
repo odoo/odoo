@@ -549,7 +549,7 @@ class PaymentAcquirer(models.Model):
         })
 
         _logger.info('payment.acquirer._render: <%s> values rendered for form payment:\n%s', acquirer_sudo.provider, pprint.pformat(values))
-        return acquirer_sudo.view_template_id._render(values, engine='ir.qweb')
+        return acquirer_sudo.view_template_id.render(values, engine='ir.qweb')
 
     def _get_s2s_form_xml_id(self):
         res = dict.fromkeys(self.ids)
