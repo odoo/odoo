@@ -843,17 +843,9 @@ class WebsiteSale(http.Controller):
             ['|', ('website_id', '=', False), ('website_id', '=', request.website.id)],
             ['|', ('specific_countries', '=', False), ('country_ids', 'in', [order.partner_id.country_id.id])]
         ])
-        acquirers = request.env['payment.acquirer'].search(domain)
-
-        values['access_token'] = order.access_token
-        values['acquirers'] = [acq for acq in acquirers if (acq.payment_flow == 'form' and acq.view_template_id) or
-                                    (acq.payment_flow == 's2s' and acq.registration_view_template_id)]
-        values['tokens'] = request.env['payment.token'].search(
-            [('partner_id', '=', order.partner_id.id),
-            ('acquirer_id', 'in', acquirers.ids)])
-
-        if order:
-            values['acq_extra_fees'] = acquirers._get_acquirer_extra_fees(order.amount_total, order.currency_id, order.partner_id.country_id.id)
+        acquirers = request.env['payment.acquirer'].sudo()._get_available_acquirers(partner=order.partner_id, company=order.company_id)
+        acq_values = acquirers._get_payment_form_values(partner=order.partner_id, amount=order.amount_total, currency=order.currency_id)
+        values.update(acq_values)
         return values
 
     @http.route(['/shop/payment'], type='http', auth="public", website=True)
@@ -877,7 +869,7 @@ class WebsiteSale(http.Controller):
 
         if render_values['errors']:
             render_values.pop('acquirers', '')
-            render_values.pop('tokens', '')
+            render_values.pop('pms', '')
 
         return request.render("website_sale.payment", render_values)
 

@@ -11,6 +11,8 @@ from odoo import api, exceptions, fields, models, _, SUPERUSER_ID
 from odoo.tools import consteq, float_round, image_resize_images, image_process, ustr
 from odoo.addons.base.models import ir_module
 from odoo.exceptions import ValidationError
+from odoo.http import request
+from odoo.osv import expression
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import formatLang
 
@@ -314,7 +316,7 @@ class PaymentAcquirer(models.Model):
             custom_method_name = '%s_compute_fees' % acq.provider
             if hasattr(acq, custom_method_name):
                 fees = getattr(acq, custom_method_name)(amount, currency_id, country_id)
-                extra_fees[acq] = fees
+                extra_fees[acq.id] = fees
         return extra_fees
 
     @api.multi
@@ -324,31 +326,101 @@ class PaymentAcquirer(models.Model):
             return getattr(self, '_%s_get_form_action_url' % self.provider)()
         return False
 
+    
+    def _get_payment_form_values(self, partner, amount=None, currency=None):
+        """
+        Returns a qweb evaluation context suitable for the payment_tokens_list template.
+
+        This method will return a qweb evaluation context in the form of a dictionnary
+        containing the necessary values read from the acquirer model as well as some extra
+        information like the payment icons, extra fees, etc. to correctly render the
+        payment.payment_tokens_list template. It will also include all payment tokens for the
+        current website visitor matching the acquirer's recordset.
+        This template should be used every time you need to display a payment form in a
+        "checkout" flow (e.g. website_sale) or in a portal (e.g. sale).
+
+        :param partner: res.partner record, used to find payment.token for that partner and
+                        to calculate extra fees based on their country
+        :param amount: float, used to compute extra fees
+        :param currency: res.currency record, used to compute extra fees
+        """
+        values = dict()
+        fields = [
+            "id",
+            "name",
+            "provider",
+            "payment_flow",
+            "fees_active",
+            "save_token",
+            "payment_icon_ids",
+            "check_validity",
+            "view_template_id",
+            "registration_view_template_id",
+        ]
+        acq_values = self.read(fields)
+        s2s_form_xmlids = self.filtered(
+            lambda a: a.payment_flow == "s2s"
+        )._get_s2s_form_xml_id()
+        for acq in acq_values:
+            if acq["payment_flow"] == "s2s":
+                acq["s2s_form_xmlid"] = s2s_form_xmlids[acq["id"]]
+
+        icons = self.mapped("payment_icon_ids")
+
+        values["acquirers"] = [
+            acq
+            for acq in acq_values
+            if (acq["payment_flow"] == "form" and acq["view_template_id"])
+            or (acq["payment_flow"] == "s2s" and acq["registration_view_template_id"])
+        ]
+        values["icons"] = icons
+        # avoid including the public user's token (in case any exist)
+        if request and not request.env.user._is_public():
+            values["pms"] = self.env["payment.token"].search(
+                [("partner_id", "=", partner.id), ("acquirer_id", "in", self.ids)]
+            )
+
+        if amount and currency:
+            values["acq_extra_fees"] = self._get_acquirer_extra_fees(
+                amount, currency, partner.country_id.id
+            )
+        return values
+
     @api.model
-    def _get_available_payment_input(self, partner=None, company=None):
-        """ Generic (model) method that fetches available payment mechanisms
-        to use in all portal / eshop pages that want to use the payment form.
+    def _get_available_acquirers(self, partner=None, company=None, extra_domain=None):
+        """ Generic method that fetches available payment acquirers.
 
-        It contains
+        These acquirers can then be used in all portal / eshop pages that want to
+        use the payment form. Acquirers are filtered based on countries, companies and
+        their publication status (published/unpublished), as well as the consistency
+        of their configuration (e.g. an acquirer configured for s2s flow but without the
+        proper view).
 
-         * acquirers: record set of both form and s2s acquirers;
-         * pms: record set of stored credit card data (aka payment.token)
-                connected to a given partner to allow customers to reuse them """
+        Ideally, the method _get_payment_form_values should then be called on the returned
+        recordset to get the values necessary for the rendering of a payment form.
+
+        :param partner: res.partner record, used to filter acquirers based on countries
+        :param company: res.company record, used to filter acquirers based on companies
+        :param extra_domain: list (valid domain for payment.acquirer model): if provided,
+                             will be combined with the computed domain with a logical AND
+                             (useful for extensions, notable in website_payment where
+                             acquirers can be restricted to a specific website)
+        :return: payment.acquirer recordset available under the provided conditions
+        """
         if not company:
             company = self.env.company
         if not partner:
             partner = self.env.user.partner_id
-        acquirers = self.search([('website_published', '=', True), ('company_id', '=', company.id),
-                                  '|',
-                                     '&', ('payment_flow', '=', 'form'), ('view_template_id', '!=', False),
-                                     '&', ('payment_flow', '=', 's2s', ('registration_view_template_id', '!=', False))])
-        return {
-            'acquirers': acquirers,
-            'pms': self.env['payment.token'].search([
-                ('partner_id', '=', partner.id),
-                # TODO DBO: uniform logic; only current partner's pms or commercial_partner_id as well?
-                ('acquirer_id', 'in', acquirers.ids)]),
-        }
+        domain = [('website_published', '=', True), ('company_id', '=', company.id),
+                   '|',
+                       '&', ('payment_flow', '=', 'form'), ('view_template_id', '!=', False),
+                       '&', ('payment_flow', '=', 's2s'), ('registration_view_template_id', '!=', False)]
+        if partner:
+            partner_domain = ['|', ('specific_countries', '=', False), ('country_ids', 'in', [partner.country_id.id])]
+            domain = expression.AND([domain, partner_domain])
+        if extra_domain:
+            domain = expression.AND([domain, extra_domain])
+        return self.search(domain)
 
     @api.multi
     def _render(self, reference, amount, currency_id, partner_id=False, values=None):
@@ -480,10 +552,12 @@ class PaymentAcquirer(models.Model):
         return acquirer_sudo.view_template_id._render(values, engine='ir.qweb')
 
     def _get_s2s_form_xml_id(self):
-        if self.registration_view_template_id:
-            model_data = self.env['ir.model.data'].search([('model', '=', 'ir.ui.view'), ('res_id', '=', self.registration_view_template_id.id)])
-            return ('%s.%s') % (model_data.module, model_data.name)
-        return False
+        res = dict.fromkeys(self.ids)
+        xmlids = self.registration_view_template_id.get_external_id()
+        for acquirer in self:
+            if acquirer.registration_view_template_id:
+                res[acquirer.id] = xmlids[acquirer.registration_view_template_id.id]
+        return res
 
     @api.multi
     def _s2s_process(self, data):

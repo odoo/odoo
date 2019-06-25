@@ -174,18 +174,9 @@ class CustomerPortal(CustomerPortal):
             values['res_company'] = order_sudo.company_id
 
         if order_sudo.has_to_be_paid():
-            domain = expression.AND([
-                ['&', ('website_published', '=', True), ('company_id', '=', order_sudo.company_id.id)],
-                ['|', ('specific_countries', '=', False), ('country_ids', 'in', [order_sudo.partner_id.country_id.id])]
-            ])
-            acquirers = request.env['payment.acquirer'].sudo().search(domain)
-
-            values['acquirers'] = acquirers.filtered(lambda acq: (acq.payment_flow == 'form' and acq.view_template_id) or
-                                                     (acq.payment_flow == 's2s' and acq.registration_view_template_id))
-            values['pms'] = request.env['payment.token'].search(
-                [('partner_id', '=', order_sudo.partner_id.id),
-                ('acquirer_id', 'in', acquirers.filtered(lambda acq: acq.payment_flow == 's2s').ids)])
-            values['acq_extra_fees'] = acquirers._get_acquirer_extra_fees(order_sudo.amount_total, order_sudo.currency_id, order_sudo.partner_id.country_id.id)
+            acquirers_sudo = request.env['payment.acquirer'].sudo()._get_available_acquirers(partner=order_sudo.partner_id, company=order_sudo.company_id)
+            acq_values = acquirers_sudo._get_payment_form_values(partner=order_sudo.partner_id, amount=order_sudo.amount_total, currency=order_sudo.currency_id)
+            values.update(acq_values)
 
         if order_sudo.state in ('draft', 'sent', 'cancel'):
             history = request.session.get('my_quotations_history', [])
