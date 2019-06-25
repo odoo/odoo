@@ -3363,7 +3363,11 @@ Fields:
                     # and the `write` in `ir.attachment` was done through the `towrite` and the `flush`, which do not guarantee
                     # the user.
                     # Maybe there is something to do for performance, for instance by batching the field.write to all records
-                    if record.id and not field.column_type:
+                    # DLE P76: do not set delegate the write to the field for related fields,
+                    # they are delayed in their inverse (determine_inverse)
+                    # e.g. `test_10_sellers`, write on `product.product.seller_ids`, which actually should write on `product.template.seller_ids`
+                    # `product.product.seller_ids` store attribute is False, while `product.template.seller_ids` store attribute is True
+                    if record.id and not field.column_type and field.store:
                         field.write(record, value)
                     elif record.id and field.store:
                         # FP NOTE: we could simplify and keep the one in cache instead
