@@ -18,7 +18,7 @@ function QWeb(debug, default_dict, enableTranslation) {
         enableTranslation = true;
     }
     var qweb = new QWeb2.Engine();
-    qweb.default_dict = _.defaults({}, default_dict || {}, {
+    qweb.default_dict = _.extend({}, default_dict || {}, {
         '_' : _,
         'JSON': JSON,
         '_t' : translation._t,

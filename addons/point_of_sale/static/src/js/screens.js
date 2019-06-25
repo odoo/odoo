@@ -1777,7 +1777,6 @@ var ReceiptScreenWidget = ScreenWidget.extend({
     },
     get_translation_qweb: function (xmlPath) {
         xmlPath = _.str.sprintf('%s?unique=%s', xmlPath, _.uniqueId());  // Qweb is not loading same path again
-        // changed qweb lang environment by client lang for print receipt
         var client = this.pos.get_client();
         var client_lang = client && client.lang;
         if (!client_lang) {
@@ -1785,11 +1784,11 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         } else if (_t_qweb[client_lang]) {
             return Promise.resolve(_t_qweb[client_lang]);
         } else {
+            // Created new qweb instance with the language of the client
             var new_t = new translation.TranslationDataBase().build_translation_function();
             return new_t.database.load_translations(session, ['point_of_sale'], client_lang, undefined).then(function () {
-                var newQweb = new webQWeb(false, {
-                    _t: new_t
-                });
+                var newQweb = new webQWeb();
+                newQweb.default_dict._t = new_t;
                 return ajax.loadXML(xmlPath, newQweb).then(function () {
                     _t_qweb[client_lang] = newQweb;
                     return newQweb;
