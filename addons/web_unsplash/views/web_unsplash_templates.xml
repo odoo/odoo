@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="web_unsplash_assets" inherit_id="web_editor.assets_wysiwyg" name="Unsplash Images Editor Assets">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/web_unsplash/static/src/scss/unsplash.scss"/>
+            <script type="text/javascript" src="/web_unsplash/static/src/js/unsplashapi.js"></script>
+            <script type="text/javascript" src="/web_unsplash/static/src/js/unsplash_image_widget.js"></script>
+        </xpath>
+    </template>
+    <template id="assets_frontend" inherit_id="web.assets_frontend" name="Unsplash Images Assets">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/web_unsplash/static/src/js/unsplash_beacon.js"></script>
+        </xpath>
+    </template>
+</odoo>

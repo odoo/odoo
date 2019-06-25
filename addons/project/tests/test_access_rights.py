@@ -30,7 +30,7 @@ class TestPortalProjectBase(TestProjectBase):
 
 class TestPortalProject(TestPortalProjectBase):
 
-    @mute_logger('odoo.addons.base.ir.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_model')
     def test_employee_project_access_rights(self):
         pigs = self.project_pigs
 
@@ -52,7 +52,7 @@ class TestPortalProject(TestPortalProjectBase):
             'project_id': pigs.id})
         tmp_task.sudo(self.user_projectuser).unlink()
 
-    @mute_logger('odoo.addons.base.ir.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_model')
     def test_favorite_project_access_rights(self):
         pigs = self.project_pigs.sudo(self.user_projectuser)
 
@@ -79,12 +79,12 @@ class TestPortalProject(TestPortalProjectBase):
         # Do: Donovan reads project -> ko (public ko employee)
         self.assertRaises(AccessError, pigs.sudo(self.user_public).read, ['user_id'])
 
-        pigs.message_subscribe_users(user_ids=[self.user_projectuser.id])
+        pigs.message_subscribe(partner_ids=[self.user_projectuser.partner_id.id])
 
         # Do: Alfred reads project -> ok (follower ok followers)
-        prout = pigs.sudo(self.user_projectuser)
-        prout.invalidate_cache()
-        prout.read(['user_id'])
+        donkey = pigs.sudo(self.user_projectuser)
+        donkey.invalidate_cache()
+        donkey.read(['user_id'])
 
         # Do: Donovan reads project -> ko (public ko follower even if follower)
         self.assertRaises(AccessError, pigs.sudo(self.user_public).read, ['user_id'])
@@ -93,7 +93,7 @@ class TestPortalProject(TestPortalProjectBase):
             'name': 'Pigs task', 'project_id': pigs.id
         })
         # not follower user should not be able to create a task
-        pigs.sudo(self.user_projectuser).message_unsubscribe_users(user_ids=[self.user_projectuser.id])
+        pigs.sudo(self.user_projectuser).message_unsubscribe(partner_ids=[self.user_projectuser.partner_id.id])
         self.assertRaises(AccessError, self.env['project.task'].sudo(self.user_projectuser).with_context({
             'mail_create_nolog': True}).create, {'name': 'Pigs task', 'project_id': pigs.id})
 

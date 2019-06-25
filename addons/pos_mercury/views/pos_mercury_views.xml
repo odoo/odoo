@@ -20,7 +20,7 @@
                                 configuration you should associate it with a Point Of Sale payment method.
                             </p><p>
                                 We currently support the MagTek Dynamag card reader device. It can be connected
-                                directly to the Point Of Sale device or it can be connected to the POSBox.
+                                directly to the Point Of Sale device or it can be connected to the IoTBox.
                             </p><p>
                                 Using the Mercury integration in the Point Of Sale is easy: just press the
                                 associated payment method. After that the amount can be adjusted (eg. for cashback)
@@ -59,11 +59,10 @@
             <field name="name">Mercury Configurations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos_mercury.configuration</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to configure your card reader.
+              <p class="o_view_nocontent_smiling_face">
+                Configure your card reader
               </p>
             </field>
         </record>
@@ -80,16 +79,6 @@
                 </xpath>
             </field>
         </record>
-        <record id="view_account_bank_journal_form_inherited_pos_mercury" model="ir.ui.view">
-            <field name="name">account.bank.journal.form.inherited.pos.mercury</field>
-            <field name="model">account.journal</field>
-            <field name="inherit_id" ref="point_of_sale.view_account_bank_journal_form_inherited_pos"></field>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='journal_user']" position="after">
-                    <field name="pos_mercury_config_id" attrs="{'invisible': [('journal_user', '=', False)]}"/>
-                </xpath>
-            </field>
-        </record>
 
         <record id="view_pos_order" model="ir.ui.view">
           <field name="name">POS orders</field>
@@ -97,7 +86,7 @@
           <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
           <field name="arch" type="xml">
             <xpath expr="//field[@name='amount']" position="before">
-              <field name="mercury_prefixed_card_number"/>
+              <field name="mercury_prefixed_card_number" string="Card Number"/>
               <field name="mercury_card_brand"/>
               <field name="mercury_card_owner_name"/>
             </xpath>

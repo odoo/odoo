@@ -5,7 +5,7 @@
     'name': 'Forum',
     'category': 'Website',
     'sequence': 150,
-    'summary': 'Forum, FAQ, Q&A',
+    'summary': 'Manage a forum with FAQ and Q&A',
     'version': '1.0',
     'description': """
 Ask questions, get answers, no distractions
@@ -13,15 +13,15 @@ Ask questions, get answers, no distractions
     'website': 'https://www.odoo.com/page/community-builder',
     'depends': [
         'auth_signup',
-        'gamification',
         'website_mail',
-        'website_partner'
+        'website_profile',
     ],
     'data': [
         'data/forum_data.xml',
         'views/forum.xml',
-        'views/res_users.xml',
+        'views/res_users_views.xml',
         'views/website_forum.xml',
+        'views/website_forum_profile.xml',
         'views/ir_qweb.xml',
         'security/ir.model.access.csv',
         'data/badges_question.xml',

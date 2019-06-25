@@ -4,8 +4,7 @@
 # 
 # Translators:
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Martin Trigaux, 2017
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
@@ -21,19 +20,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: website_sale_wishlist
-#: model:ir.ui.view,arch_db:website_sale_wishlist.header
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header
 msgid ""
 "<i class=\"fa fa-heart\"/>\n"
 "                        Wishlist"
 msgstr ""
-"<i class=\"fa fa-heart\"/>\n"
-"                        Norų sąrašas"
 
 #. module: website_sale_wishlist
-#: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "<small><i class=\"fa fa-trash-o\"/> Remove</small>"
 msgstr "<small><i class=\"fa fa-trash-o\"/> Pašalinti</small>"
 
@@ -43,25 +40,25 @@ msgid "Active"
 msgstr "Aktyvus"
 
 #. module: website_sale_wishlist
-#: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Add <span class=\"hidden-xs\">to Cart</span>"
-msgstr "Pridėti <span class=\"hidden-xs\">į krepšelį</span>"
+msgstr ""
 
 #. module: website_sale_wishlist
-#: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Add product to my cart but keep it in my wishlist"
-msgstr "Pridėti produktą į krepšelį, bet palikti jį ir norų sąraše"
+msgstr ""
 
 #. module: website_sale_wishlist
-#: model:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
-#: model:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid "Add to Wishlist"
-msgstr "Pridėti į norų sąrašą"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist_create_date
 msgid "Added Date"
-msgstr "Pridėjimo data"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_partner
@@ -81,17 +78,17 @@ msgstr "Valiuta"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users_current_session
 msgid "Current Session"
-msgstr "Ši sesija"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist_price_new
 msgid "Current price"
-msgstr "Dabartinė kaina"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist_price_new
 msgid "Current price of this product, using same pricelist, ..."
-msgstr "Dabartinė šio produkto kainą pagal tą patį kainoraštį, ..."
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist_display_name
@@ -119,9 +116,9 @@ msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: website_sale_wishlist
-#: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "My Wishlist"
-msgstr "Mano norų sąrašas"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist_partner_id
@@ -131,12 +128,12 @@ msgstr "Savininkas"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist_price
 msgid "Price"
-msgstr "Kaina"
+msgstr "Suma"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist_price
 msgid "Price of the product when it has been added in the wishlist"
-msgstr "Produkto kaina tada, kai jis buvo pridėtas į norų sąrašą"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist_pricelist_id
@@ -146,7 +143,7 @@ msgstr "Kainoraštis"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist_pricelist_id
 msgid "Pricelist when added"
-msgstr "Kainoraštis, kai pridėta"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist_product_id
@@ -159,9 +156,9 @@ msgid "Session"
 msgstr "Sesija"
 
 #. module: website_sale_wishlist
-#: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Shop Wishlist"
-msgstr "Parduotuvės norų sąrašas"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_users
@@ -171,20 +168,18 @@ msgstr "Vartotojai"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist_website_id
 msgid "Website"
-msgstr "Svetainė"
+msgstr "Tinklalapis"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist_session
 msgid "Website session identifier where this product was wishlisted."
 msgstr ""
-"Svetainės sesijos identifikatorius, sakantis, iš kur produktas buvo pridėtas"
-" į norų sąrašą"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner_wishlist_ids
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users_wishlist_ids
 msgid "Wishlist"
-msgstr "Norų sąrašas"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_ir_autovacuum
@@ -194,4 +189,4 @@ msgstr "ir.autovacuum"
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_product_wishlist
 msgid "product.wishlist"
-msgstr "product.wishlist"
+msgstr ""

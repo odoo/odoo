@@ -17,9 +17,9 @@ class ProductProduct(models.Model):
             ('open_paid', 'Open and Paid'),
             ('draft_open_paid', 'Draft, Open and Paid')
         ], string='Invoice State', readonly=True)
-    sale_avg_price = fields.Float(compute='_compute_product_margin_fields_values', string='Avg. Unit Price',
+    sale_avg_price = fields.Float(compute='_compute_product_margin_fields_values', string='Avg. Sale Unit Price',
         help="Avg. Price in Customer Invoices.")
-    purchase_avg_price = fields.Float(compute='_compute_product_margin_fields_values', string='Avg. Unit Price',
+    purchase_avg_price = fields.Float(compute='_compute_product_margin_fields_values', string='Avg. Purchase Unit Price',
         help="Avg. Price in Vendor Bills ")
     sale_num_invoiced = fields.Float(compute='_compute_product_margin_fields_values', string='# Invoiced in Sale',
         help="Sum of Quantity in Customer Invoices")
@@ -100,7 +100,7 @@ class ProductProduct(models.Model):
             if "force_company" in self.env.context:
                 company_id = self.env.context['force_company']
             else:
-                company_id = self.env.user.company_id.id
+                company_id = self.env.company.id
 
             #Cost price is calculated afterwards as it is a property
             sqlstr = """

@@ -17,14 +17,22 @@ var _t = core._t;
  *   always exists during the lifecycle of the dialog.
  **/
 var Dialog = Widget.extend({
+    tagName: 'main',
     xmlDependencies: ['/web/static/src/xml/dialog.xml'],
-
+    custom_events: _.extend({}, Widget.prototype.custom_events, {
+        focus_control_button: '_onFocusControlButton',
+    }),
+    events: _.extend({} , Widget.prototype.events, {
+        'keydown .modal-footer button':'_onFooterButtonKeyDown',
+    }),
     /**
      * @param {Widget} parent
      * @param {Object} [options]
      * @param {string} [options.title=Odoo]
      * @param {string} [options.subtitle]
      * @param {string} [options.size=large] - 'large', 'medium' or 'small'
+     * @param {boolean} [options.fullscreen=false] - whether or not the dialog
+     *        should be open in fullscreen mode (the main usecase is mobile)
      * @param {string} [options.dialogClass] - class to add to the modal-body
      * @param {jQuery} [options.$content]
      *        Element which will be the $el, replace the .modal-body and get the
@@ -34,7 +42,7 @@ var Dialog = Widget.extend({
      *        button is added to allow closing the dialog
      * @param {string} [options.buttons[].text]
      * @param {string} [options.buttons[].classes]
-     *        Default to 'btn-primary' if only one button, 'btn-default'
+     *        Default to 'btn-primary' if only one button, 'btn-secondary'
      *        otherwise
      * @param {boolean} [options.buttons[].close=false]
      * @param {function} [options.buttons[].click]
@@ -42,27 +50,48 @@ var Dialog = Widget.extend({
      * @param {boolean} [options.technical=true]
      *        If set to false, the modal will have the standard frontend style
      *        (use this for non-editor frontend features)
+     * @param {jQueryElement} [options.$parentNode]
+     *        Element in which dialog will be appended, by default it will be
+     *        in the body
+     * @param {boolean} [options.backdrop=true]
+     *        Whether modal rendered with backdrop or not
+     * @param {boolean} [options.renderHeader=true]
+     *        Whether or not the dialog should be rendered with header
+     * @param {boolean} [options.renderFooter=true]
+     *        Whether or not the dialog should be rendered with footer
      */
     init: function (parent, options) {
+        var self = this;
         this._super(parent);
-        this._opened = $.Deferred();
-
+        this._opened = new Promise(function (resolve) {
+            self._openedResolver = resolve;
+        });
         options = _.defaults(options || {}, {
             title: _t('Odoo'), subtitle: '',
             size: 'large',
+            fullscreen: false,
             dialogClass: '',
             $content: false,
             buttons: [{text: _t("Ok"), close: true}],
             technical: true,
+            $parentNode: false,
+            backdrop: true,
+            renderHeader: true,
+            renderFooter: true,
         });
 
         this.$content = options.$content;
         this.title = options.title;
         this.subtitle = options.subtitle;
+        this.fullscreen = options.fullscreen;
         this.dialogClass = options.dialogClass;
         this.size = options.size;
         this.buttons = options.buttons;
         this.technical = options.technical;
+        this.$parentNode = options.$parentNode;
+        this.backdrop = options.backdrop;
+        this.renderHeader = options.renderHeader;
+        this.renderFooter = options.renderFooter;
     },
     /**
      * Wait for XML dependencies and instantiate the modal structure (except
@@ -75,9 +104,12 @@ var Dialog = Widget.extend({
         return this._super.apply(this, arguments).then(function () {
             // Render modal once xml dependencies are loaded
             self.$modal = $(QWeb.render('Dialog', {
+                fullscreen: self.fullscreen,
                 title: self.title,
                 subtitle: self.subtitle,
                 technical: self.technical,
+                renderHeader: self.renderHeader,
+                renderFooter: self.renderFooter,
             }));
             switch (self.size) {
                 case 'large':
@@ -87,8 +119,10 @@ var Dialog = Widget.extend({
                     self.$modal.find('.modal-dialog').addClass('modal-sm');
                     break;
             }
-            self.$footer = self.$modal.find(".modal-footer");
-            self.set_buttons(self.buttons);
+            if (self.renderFooter) {
+                self.$footer = self.$modal.find(".modal-footer");
+                self.set_buttons(self.buttons);
+            }
             self.$modal.on('hidden.bs.modal', _.bind(self.destroy, self));
         });
     },
@@ -97,11 +131,17 @@ var Dialog = Widget.extend({
      */
     renderElement: function () {
         this._super();
+        // Note: ideally, the $el which is created/set here should use the
+        // 'main' tag, we cannot enforce this as it would require to re-create
+        // the whole element.
         if (this.$content) {
             this.setElement(this.$content);
         }
         this.$el.addClass('modal-body ' + this.dialogClass);
     },
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
     /**
      * @param {Object[]} buttons - @see init
      */
@@ -111,7 +151,7 @@ var Dialog = Widget.extend({
         _.each(buttons, function (buttonData) {
             var $button = dom.renderButton({
                 attrs: {
-                    class: buttonData.classes || (buttons.length > 1 ? 'btn-default' : 'btn-primary'),
+                    class: buttonData.classes || (buttons.length > 1 ? 'btn-secondary' : 'btn-primary'),
                     disabled: buttonData.disabled,
                 },
                 icon: buttonData.icon,
@@ -123,10 +163,14 @@ var Dialog = Widget.extend({
                     def = buttonData.click.call(self, e);
                 }
                 if (buttonData.close) {
-                    $.when(def).always(self.close.bind(self));
+                    Promise.resolve(def).then(self.close.bind(self)).guardedCatch(self.close.bind(self));
                 }
             });
-            self.$footer.append($button);
+            if (self.technical) {
+                self.$footer.append($button);
+            } else {
+                self.$footer.prepend($button);
+            }
         });
     },
 
@@ -148,14 +192,32 @@ var Dialog = Widget.extend({
         return (handler)? this._opened.then(handler) : this._opened;
     },
 
-    open: function () {
+    /**
+     * Show a dialog
+     *
+     * @param {Object} options
+     * @param {boolean} options.shouldFocusButtons  if true, put the focus on
+     * the first button primary when the dialog opens
+     */
+    open: function (options) {
         $('.tooltip').remove(); // remove open tooltip if any to prevent them staying when modal is opened
 
         var self = this;
         this.appendTo($('<div/>')).then(function () {
             self.$modal.find(".modal-body").replaceWith(self.$el);
-            self.$modal.modal('show');
-            self._opened.resolve();
+            self.$modal.attr('open', true);
+            self.$modal.removeAttr("aria-hidden");
+            if (self.$parentNode) {
+                self.$modal.appendTo(self.$parentNode);
+            }
+            self.$modal.modal({
+                show: true,
+                backdrop: self.backdrop,
+            });
+            self._openedResolver();
+            if (options && options.shouldFocusButtons) {
+                self._onFocusControlButton();
+            }
         });
 
         return self;
@@ -165,17 +227,29 @@ var Dialog = Widget.extend({
         this.destroy();
     },
 
-    destroy: function (reason) {
+    /**
+     * Close and destroy the dialog.
+     *
+     * @param {Object} [options]
+     * @param {Object} [options.infos] if provided and `silent` is unset, the
+     *   `on_close` handler will pass this information related to closing this
+     *   information.
+     * @param {boolean} [options.silent=false] if set, do not call the
+     *   `on_close` handler.
+     */
+    destroy: function (options) {
         // Need to trigger before real destroy but if 'closed' handler destroys
         // the widget again, we want to avoid infinite recursion
         if (!this.__closed) {
             this.__closed = true;
-            this.trigger("closed", reason);
+            this.trigger('closed', options);
         }
 
         if (this.isDestroyed()) {
             return;
         }
+        var isFocusSet = this._focusOnClose();
+
         this._super();
 
         $('.tooltip').remove(); //remove open tooltip if any to prevent them staying when modal has disappeared
@@ -186,9 +260,73 @@ var Dialog = Widget.extend({
 
         var modals = $('body > .modal').filter(':visible');
         if (modals.length) {
-            modals.last().focus();
+            if (!isFocusSet) {
+                modals.last().focus();
+            }
             // Keep class modal-open (deleted by bootstrap hide fnct) on body to allow scrolling inside the modal
             $('body').addClass('modal-open');
+        }
+    },
+    /**
+     * adds the keydown behavior to the dialogs after external files modifies
+     * its DOM.
+     */
+    rebindButtonBehavior: function () {
+        this.$footer.on('keydown', this._onFooterButtonKeyDown);
+    },
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+    /**
+     * Manages the focus when the dialog closes. The default behavior is to set the focus on the top-most opened popup.
+     * The goal of this function is to be overridden by all children of the dialog class.
+     *
+     * @returns: boolean  should return true if the focus has already been set else false.
+     */
+    _focusOnClose: function() {
+        return false;
+    },
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+    /**
+     * Moves the focus to the first button primary in the footer of the dialog
+     *
+     * @private
+     * @param {odooEvent} e
+     */
+    _onFocusControlButton: function (e) {
+        if (this.$footer) {
+            if (e) {
+                e.stopPropagation();
+            }
+            this.$footer.find('.btn-primary:visible:first()').focus();
+        }
+    },
+    /**
+     * Manages the TAB key on the buttons. If you the focus is on a primary
+     * button and the users tries to tab to go to the next button, display
+     * a tooltip
+     *
+     * @param {jQueryEvent} e
+     * @private
+     */
+    _onFooterButtonKeyDown: function (e) {
+        switch(e.which) {
+            case $.ui.keyCode.TAB:
+                if (!e.shiftKey && e.target.classList.contains("btn-primary")) {
+                    e.preventDefault();
+                    var $primaryButton = $(e.target);
+                    $primaryButton.tooltip({
+                        delay: {show: 200, hide:0},
+                        title: function(){
+                            return QWeb.render('FormButton.tooltip',{title:$primaryButton.text().toUpperCase()});
+                        },
+                        trigger: 'manual',
+                    });
+                    $primaryButton.tooltip('show');
+                }
+                break;
         }
     }
 });
@@ -203,11 +341,12 @@ Dialog.alert = function (owner, message, options) {
     return new Dialog(owner, _.extend({
         size: 'medium',
         buttons: buttons,
-        $content: $('<div>', {
+        $content: $('<main/>', {
+            role: 'alert',
             text: message,
         }),
         title: _t("Alert"),
-    }, options)).open();
+    }, options)).open({shouldFocusButtons:true});
 };
 
 // static method to open simple confirm dialog
@@ -228,11 +367,12 @@ Dialog.confirm = function (owner, message, options) {
     return new Dialog(owner, _.extend({
         size: 'medium',
         buttons: buttons,
-        $content: $('<div>', {
+        $content: $('<main/>', {
+            role: 'alert',
             text: message,
         }),
         title: _t("Confirmation"),
-    }, options)).open();
+    }, options)).open({shouldFocusButtons:true});
 };
 
 /**
@@ -261,7 +401,7 @@ Dialog.safeConfirm = function (owner, message, options) {
             text: message,
         });
     }
-    $content = $('<div/>').append($content, $securityCheck);
+    $content = $('<main/>', {role: 'alert'}).append($content, $securityCheck);
 
     var buttons = [
         {

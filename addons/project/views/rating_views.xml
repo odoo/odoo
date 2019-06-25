@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="rating_rating_view_search_project" model="ir.ui.view">
+        <field name="name">rating.rating.search.project</field>
+        <field name="model">rating.rating</field>
+        <field name="inherit_id" ref="rating.rating_rating_view_search"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='resource']" position="after">
+                <filter string="Project" name="groupby_project" context="{'group_by': 'parent_res_name'}"/>
+            </xpath>
+            <xpath expr="/search" position="inside">
+                <filter string="Creation Date" name="rating_last_30_days" date="create_date" default_period="last_30_days"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="rating_rating_action_view_project_rating" model="ir.actions.act_window">
+        <field name="name">Rating</field>
+        <field name="res_model">rating.rating</field>
+        <field name="view_mode">kanban,tree,graph,pivot,form</field>
+        <field name="domain">[('consumed','=',True), ('parent_res_model','=','project.project')]</field>
+        <field name="search_view_id" ref="rating_rating_view_search_project"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                There is no rating for this object at the moment
+            </p>
+        </field>
+    </record>
+
+    <record id="rating_rating_action_task" model="ir.actions.act_window">
+        <field name="name">Customer Ratings</field>
+        <field name="res_model">rating.rating</field>
+        <field name="view_mode">kanban,tree,pivot,graph,form</field>
+        <field name="domain">[('res_model', '=', 'project.task'), ('res_id', '=', active_id), ('consumed', '=', True)]</field>
+        <field name="search_view_id" ref="rating_rating_view_search_project"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No customer ratings yet
+            </p><p>
+                Customer ratings on tasks. If you have no rating, change your project Settings to activate it.
+            </p>
+        </field>
+    </record>
+
+    <record id="rating_rating_action_project_report" model="ir.actions.act_window">
+        <field name="name">Customer Ratings</field>
+        <field name="res_model">rating.rating</field>
+        <field name="view_mode">kanban,tree,pivot,graph,form</field>
+        <field name="domain">[('parent_res_model','=','project.project'), ('consumed', '=', True)]</field>
+        <field name="search_view_id" ref="rating_rating_view_search_project"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No customer ratings yet
+            </p><p>
+                Customer ratings on tasks. If you have no rating, change your project Settings to activate it.
+            </p>
+        </field>
+        <field name="context">{}</field>
+    </record>
+
+</odoo>

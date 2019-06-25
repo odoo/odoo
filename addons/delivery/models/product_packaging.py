@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class ProductPackaging(models.Model):
@@ -20,3 +20,11 @@ class ProductPackaging(models.Model):
         ('positive_length', 'CHECK(length>=0)', 'Length must be positive'),
         ('positive_max_weight', 'CHECK(max_weight>=0.0)', 'Max Weight must be positive'),
     ]
+
+    @api.onchange('package_carrier_type')
+    def _onchange_carrier_type(self):
+        carrier_id = self.env['delivery.carrier'].search([('delivery_type', '=', self.package_carrier_type)], limit=1)
+        if carrier_id:
+            self.shipper_package_code = carrier_id._get_default_custom_package_code()
+        else:
+            self.shipper_package_code = False

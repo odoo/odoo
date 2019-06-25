@@ -3,7 +3,6 @@
     <record id="action_invoices_ecommerce" model="ir.actions.act_window">
         <field name="name">Invoices</field>
         <field name="res_model">account.invoice</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('team_id.website_ids', '!=', False)]</field>
         <field name="view_id" ref="account.invoice_tree"/>
@@ -15,10 +14,20 @@
         <field name="name">Pricelists</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.pricelist</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('website_id', '!=', False)]</field>
         <field name="search_view_id" ref="product.product_pricelist_view_search" />
         <field name="context">{"default_base":'list_price'}</field>
+    </record>
+
+    <record id="account_invoice_view_form" model="ir.ui.view">
+        <field name="name">account.invoice.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='other_info']//field[@name='company_id']" position="after">
+                <field name="website_id" groups="website.group_multi_website"/>
+            </xpath>
+        </field>
     </record>
 </odoo>

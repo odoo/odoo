@@ -5,10 +5,9 @@
         <record id="rounding_list_action" model="ir.actions.act_window">
             <field name="name">Cash Roundings</field>
             <field name="res_model">account.cash.rounding</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">Create the first cash rounding</p>
+                <p class="o_view_nocontent_smiling_face">Create the first cash rounding</p>
             </field>
         </record>
 
@@ -26,7 +25,7 @@
                         <group>
                             <field name="rounding"/>
                             <field name="strategy"/>
-                            <field name="account_id" attrs="{'invisible': [('strategy', '!=', 'add_invoice_line')], 'required': [('strategy', '=', 'add_invoice_line')]}"
+                            <field name="account_id" options="{'no_create': True}" attrs="{'invisible': [('strategy', '!=', 'add_invoice_line')], 'required': [('strategy', '=', 'add_invoice_line')]}"
                                 groups="account.group_account_user"/>
                             <field name="rounding_method"/>
                         </group>

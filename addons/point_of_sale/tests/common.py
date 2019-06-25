@@ -17,9 +17,9 @@ class TestPointOfSaleCommon(common.TransactionCase):
         self.partner1 = self.env.ref('base.res_partner_1')
         self.partner4 = self.env.ref('base.res_partner_4')
         self.pos_config = self.env.ref('point_of_sale.pos_config_main')
-        self.carotte = self.env.ref('point_of_sale.carotte')
-        self.courgette = self.env.ref('point_of_sale.courgette')
-        self.onions = self.env.ref('point_of_sale.Onions')
+        self.led_lamp = self.env.ref('point_of_sale.led_lamp')
+        self.whiteboard_pen = self.env.ref('point_of_sale.whiteboard_pen')
+        self.newspaper_rack = self.env.ref('point_of_sale.newspaper_rack')
 
         # create a new session
         self.pos_order_session0 = self.env['pos.session'].create({
@@ -51,12 +51,11 @@ class TestPointOfSaleCommon(common.TransactionCase):
         # create a second VAT tax of 5% but this time for a child company, to
         # ensure that only product taxes of the current session's company are considered
         #(this tax should be ignore when computing order's taxes in following tests)
-        account_tax_05_incl_chicago = Tax.create({
+        account_tax_05_incl_chicago = Tax.with_context(default_company_id=self.ref('stock.res_company_1')).create({
             'name': 'VAT 05 perc Excl (US)',
             'amount_type': 'percent',
             'amount': 5.0,
             'price_include': 0,
-            'company_id': self.ref('stock.res_company_1')
         })
 
         self.product4.company_id = False

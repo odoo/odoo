@@ -7,7 +7,6 @@ from datetime import date, datetime, timedelta
 
 from odoo import api, fields, models, _, exceptions
 from odoo.osv import expression
-from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -21,7 +20,7 @@ class GoalDefinition(models.Model):
     a new gamification_goal_definition
     """
     _name = 'gamification.goal.definition'
-    _description = 'Gamification goal definition'
+    _description = 'Gamification Goal Definition'
 
     name = fields.Char("Goal Definition", required=True, translate=True)
     description = fields.Text("Goal Description")
@@ -67,7 +66,7 @@ class GoalDefinition(models.Model):
             items = []
 
             if goal.monetary:
-                items.append(self.env.user.company_id.currency_id.symbol or u'¤')
+                items.append(self.env.company.currency_id.symbol or u'¤')
             if goal.suffix:
                 items.append(goal.suffix)
 
@@ -146,7 +145,8 @@ class Goal(models.Model):
     An individual goal for a user on a specified time period"""
 
     _name = 'gamification.goal'
-    _description = 'Gamification goal instance'
+    _description = 'Gamification Goal'
+    _rec_name = 'definition_id'
     _order = 'start_date desc, end_date desc, definition_id, id'
 
     definition_id = fields.Many2one('gamification.goal.definition', string="Goal Definition", required=True, ondelete="cascade")
@@ -158,9 +158,9 @@ class Goal(models.Model):
              "to generate goals with a value in this field.")
     start_date = fields.Date("Start Date", default=fields.Date.today)
     end_date = fields.Date("End Date")  # no start and end = always active
-    target_goal = fields.Float('To Reach', required=True, track_visibility='always')
+    target_goal = fields.Float('To Reach', required=True, tracking=True)
 # no goal = global index
-    current = fields.Float("Current Value", required=True, default=0, track_visibility='always')
+    current = fields.Float("Current Value", required=True, default=0, tracking=True)
     completeness = fields.Float("Completeness", compute='_get_completion')
     state = fields.Selection([
         ('draft', "Draft"),
@@ -168,11 +168,11 @@ class Goal(models.Model):
         ('reached', "Reached"),
         ('failed', "Failed"),
         ('canceled', "Canceled"),
-    ], default='draft', string='State', required=True, track_visibility='always')
+    ], default='draft', string='State', required=True, tracking=True)
     to_update = fields.Boolean('To update')
     closed = fields.Boolean('Closed goal', help="These goals will not be recomputed.")
 
-    computation_mode = fields.Selection(related='definition_id.computation_mode')
+    computation_mode = fields.Selection(related='definition_id.computation_mode', readonly=False)
     remind_update_delay = fields.Integer(
         "Remind delay", help="The number of days after which the user "
                              "assigned to a manual goal will be reminded. "
@@ -221,11 +221,12 @@ class Goal(models.Model):
         template = self.env.ref('gamification.email_template_goal_reminder')\
                            .get_email_template(self.id)
         body_html = self.env['mail.template'].with_context(template._context)\
-            .render_template(template.body_html, 'gamification.goal', self.id)
-        self.env['mail.thread'].message_post(
+            ._render_template(template.body_html, 'gamification.goal', self.id)
+        self.message_notify(
             body=body_html,
-            partner_ids=[ self.user_id.partner_id.id],
-            subtype='mail.mt_comment'
+            partner_ids=[self.user_id.partner_id.id],
+            subtype='mail.mt_comment',
+            email_layout_xmlid='mail.mail_notification_light',
         )
 
         return {'to_update': True}
@@ -284,7 +285,7 @@ class Goal(models.Model):
                     safe_eval(code, cxt, mode="exec", nocopy=True)
                     # the result of the evaluated codeis put in the 'result' local variable, propagated to the context
                     result = cxt.get('result')
-                    if result is not None and isinstance(result, (float, pycompat.integer_types)):
+                    if isinstance(result, (float, int)):
                         goals_to_write.update(goal._get_write_values(result))
                     else:
                         _logger.error(
@@ -325,7 +326,7 @@ class Goal(models.Model):
                         for goal in [g for g in goals if g.id in query_goals]:
                             for user_value in user_values:
                                 queried_value = field_name in user_value and user_value[field_name] or False
-                                if isinstance(queried_value, tuple) and len(queried_value) == 2 and isinstance(queried_value[0], pycompat.integer_types):
+                                if isinstance(queried_value, tuple) and len(queried_value) == 2 and isinstance(queried_value[0], int):
                                     queried_value = queried_value[0]
                                 if queried_value == query_goals[goal.id]:
                                     new_value = user_value.get(field_name+'_count', goal.current)

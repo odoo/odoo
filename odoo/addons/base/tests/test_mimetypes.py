@@ -1,6 +1,7 @@
 import base64
 import unittest
 
+from odoo.tests.common import tagged
 from odoo.tools.mimetypes import guess_mimetype
 
 PNG = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQI12P4//8/AAX+Av7czFnnAAAAAElFTkSuQmCC'
@@ -15,8 +16,14 @@ AAAAAAAAAAAAA/9oACAEBAAEFAn//xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oACAEDAQE/AX//xAAUEQE
 AA/9oACAECAQE/AX//xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oACAEBAAY/An//xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oACAEBA
 AE/IX//2gAMAwEAAgADAAAAEB//xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oACAEDAQE/EH//xAAUEQEAAAAAAAAAAAAAAAAAAAAA
 /9oACAECAQE/EH//xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oACAEBAAE/EH//2Q=="""
+SVG = b"""PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiL
+S8vVzNDLy9EVEQgU1ZHIDIwMDAxMTAyLy9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAwL0NSLVNWRy0yMDAwMTEwMi9E
+VEQvc3ZnLTIwMDAxMTAyLmR0ZCI+Cgo8c3ZnIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPgogIDxnIHRyYW5zZm9ybT0idHJ
+hbnNsYXRlKDUwLDUwKSI+CiAgICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTUwIiBoZWlnaHQ9IjUwIiBzdHlsZT0iZmlsbD
+pyZWQ7IiAvPgogIDwvZz4KCjwvc3ZnPgo="""
 
 
+@tagged('standard', 'at_install')
 class test_guess_mimetype(unittest.TestCase):
 
     def test_default_mimetype_empty(self):
@@ -54,6 +61,15 @@ class test_guess_mimetype(unittest.TestCase):
         content = base64.b64decode(GIF)
         mimetype = guess_mimetype(content, default='test')
         self.assertEqual(mimetype, 'image/gif')
+
+    def test_mimetype_svg(self):
+        content = base64.b64decode(SVG)
+        mimetype = guess_mimetype(content, default='test')
+        self.assertTrue(mimetype.startswith('image/svg'))
+        # Tests that whitespace padded SVG are not detected as SVG
+        mimetype = guess_mimetype(b"   " + content, default='test')
+        self.assertNotIn("svg", mimetype)
+
 
 
 if __name__ == '__main__':

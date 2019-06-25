@@ -22,10 +22,11 @@ import sys
 import threading
 import time
 import types
+import unicodedata
 import werkzeug.utils
 import zipfile
-from collections import defaultdict, Iterable, Mapping, MutableSet, OrderedDict
-from itertools import islice, groupby, repeat
+from collections import defaultdict, Iterable, Mapping, MutableMapping, MutableSet, OrderedDict
+from itertools import islice, groupby as itergroupby, repeat
 from lxml import etree
 
 from .which import which
@@ -252,7 +253,7 @@ def _fileopen(path, mode, basedir, pathinfo, basename=None):
                 pass
     # Not found
     if name.endswith('.rml'):
-        raise IOError('Report %r doesn\'t exist or deleted' % basename)
+        raise IOError('Report %r does not exist or has been deleted' % basename)
     raise IOError('File not found: %s' % basename)
 
 
@@ -260,7 +261,7 @@ def _fileopen(path, mode, basedir, pathinfo, basename=None):
 # iterables
 #----------------------------------------------------------
 def flatten(list):
-    """Flatten a list of elements into a uniqu list
+    """Flatten a list of elements into a unique list
     Author: Christophe Simonis (christophe@tinyerp.com)
 
     Examples::
@@ -280,7 +281,7 @@ def flatten(list):
     """
     r = []
     for e in list:
-        if isinstance(e, (bytes, pycompat.text_type)) or not isinstance(e, collections.Iterable):
+        if isinstance(e, (bytes, str)) or not isinstance(e, collections.Iterable):
             r.append(e)
         else:
             r.extend(flatten(e))
@@ -303,7 +304,7 @@ def reverse_enumerate(l):
       File "<stdin>", line 1, in <module>
     StopIteration
     """
-    return pycompat.izip(range(len(l)-1, -1, -1), reversed(l))
+    return zip(range(len(l)-1, -1, -1), reversed(l))
 
 def partition(pred, elems):
     """ Return a pair equivalent to:
@@ -349,7 +350,7 @@ def topological_sort(elems):
 try:
     import xlwt
 
-    # add some sanitizations to respect the excel sheet name restrictions
+    # add some sanitization to respect the excel sheet name restrictions
     # as the sheet name is often translatable, can not control the input
     class PatchedWorkbook(xlwt.Workbook):
         def add_sheet(self, name, cell_overwrite_ok=False):
@@ -368,7 +369,7 @@ except ImportError:
 try:
     import xlsxwriter
 
-    # add some sanitizations to respect the excel sheet name restrictions
+    # add some sanitization to respect the excel sheet name restrictions
     # as the sheet name is often translatable, can not control the input
     class PatchedXlsxWorkbook(xlsxwriter.Workbook):
 
@@ -403,9 +404,9 @@ def scan_languages():
     :returns: a list of (lang_code, lang_name) pairs
     :rtype: [(str, unicode)]
     """
-    csvpath = odoo.modules.module.get_resource_path('base', 'res', 'res.lang.csv')
+    csvpath = odoo.modules.module.get_resource_path('base', 'data', 'res.lang.csv')
     try:
-        # read (code, name) from languages in base/res/res.lang.csv
+        # read (code, name) from languages in base/data/res.lang.csv
         with open(csvpath, 'rb') as csvfile:
             reader = pycompat.csv_reader(csvfile, delimiter=',', quotechar='"')
             fields = next(reader)
@@ -420,20 +421,6 @@ def scan_languages():
         result = []
 
     return sorted(result or [('en_US', u'English')], key=itemgetter(1))
-
-def get_user_companies(cr, user):
-    def _get_company_children(cr, ids):
-        if not ids:
-            return []
-        cr.execute('SELECT id FROM res_company WHERE parent_id IN %s', (tuple(ids),))
-        res = [x[0] for x in cr.fetchall()]
-        res.extend(_get_company_children(cr, res))
-        return res
-    cr.execute('SELECT company_id FROM res_users WHERE id=%s', (user,))
-    user_comp = cr.fetchone()[0]
-    if not user_comp:
-        return []
-    return [user_comp] + _get_company_children(cr, [user_comp])
 
 def mod10r(number):
     """
@@ -466,8 +453,8 @@ def human_size(sz):
     """
     if not sz:
         return False
-    units = ('bytes', 'Kb', 'Mb', 'Gb')
-    if isinstance(sz,pycompat.string_types):
+    units = ('bytes', 'Kb', 'Mb', 'Gb', 'Tb')
+    if isinstance(sz, str):
         sz=len(sz)
     s, i = float(sz), 0
     while s >= 1024 and i < len(units)-1:
@@ -732,6 +719,19 @@ def attrgetter(*items):
             return tuple(resolve_attr(obj, attr) for attr in items)
     return g
 
+# ---------------------------------------------
+# String management
+# ---------------------------------------------
+
+# Inspired by http://stackoverflow.com/questions/517923
+def remove_accents(input_str):
+    """Suboptimal-but-better-than-nothing way to replace accented
+    latin letters by an ASCII equivalent. Will obviously change the
+    meaning of input_str and work only for some cases"""
+    input_str = ustr(input_str)
+    nkfd_form = unicodedata.normalize('NFKD', input_str)
+    return u''.join([c for c in nkfd_form if not unicodedata.combining(c)])
+
 class unquote(str):
     """A subclass of str that implements repr() without enclosing quotation marks
        or escaping, keeping the original string untouched. The name come from Lisp's unquote.
@@ -800,7 +800,7 @@ class mute_logger(object):
 
     def __enter__(self):
         for logger in self.loggers:
-            assert isinstance(logger, pycompat.string_types),\
+            assert isinstance(logger, str),\
                 "A logger name must be a string, got %s" % type(logger)
             logging.getLogger(logger).addFilter(self)
 
@@ -855,7 +855,7 @@ def stripped_sys_argv(*strip_args):
     assert all(config.parser.has_option(s) for s in strip_args)
     takes_value = dict((s, config.parser.get_option(s).takes_value()) for s in strip_args)
 
-    longs, shorts = list(tuple(y) for _, y in groupby(strip_args, lambda x: x.startswith('--')))
+    longs, shorts = list(tuple(y) for _, y in itergroupby(strip_args, lambda x: x.startswith('--')))
     longs_eq = tuple(l + '=' for l in longs if takes_value[l])
 
     args = sys.argv[:]
@@ -886,7 +886,7 @@ class ConstantMapping(Mapping):
 
     def __iter__(self):
         """
-        same as len, defaultdict udpates its iterable keyset with each key
+        same as len, defaultdict updates its iterable keyset with each key
         requested, is there a point for this?
         """
         return iter([])
@@ -946,6 +946,10 @@ def freehash(arg):
         else:
             return id(arg)
 
+def clean_context(context):
+    """ This function take a dictionary and remove each entry with its key starting with 'default_' """
+    return {k: v for k, v in context.items() if not k.startswith('default_')}
+
 class frozendict(dict):
     """ An implementation of an immutable dictionary. """
     def __delitem__(self, key):
@@ -983,6 +987,48 @@ class Collector(Mapping):
     def __len__(self):
         return len(self._map)
 
+
+class StackMap(MutableMapping):
+    """ A stack of mappings behaving as a single mapping, and used to implement
+        nested scopes. The lookups search the stack from top to bottom, and
+        returns the first value found. Mutable operations modify the topmost
+        mapping only.
+    """
+    __slots__ = ['_maps']
+
+    def __init__(self, m=None):
+        self._maps = [] if m is None else [m]
+
+    def __getitem__(self, key):
+        for mapping in reversed(self._maps):
+            try:
+                return mapping[key]
+            except KeyError:
+                pass
+        raise KeyError(key)
+
+    def __setitem__(self, key, val):
+        self._maps[-1][key] = val
+
+    def __delitem__(self, key):
+        del self._maps[-1][key]
+
+    def __iter__(self):
+        return iter({key for mapping in self._maps for key in mapping})
+
+    def __len__(self):
+        return sum(1 for key in self)
+
+    def __str__(self):
+        return u"<StackMap %s>" % self._maps
+
+    def pushmap(self, m=None):
+        self._maps.append({} if m is None else m)
+
+    def popmap(self):
+        return self._maps.pop()
+
+
 class OrderedSet(MutableSet):
     """ A set collection that remembers the elements first insertion order. """
     __slots__ = ['_map']
@@ -999,11 +1045,40 @@ class OrderedSet(MutableSet):
     def discard(self, elem):
         self._map.pop(elem, None)
 
+
 class LastOrderedSet(OrderedSet):
     """ A set collection that remembers the elements last insertion order. """
     def add(self, elem):
         OrderedSet.discard(self, elem)
         OrderedSet.add(self, elem)
+
+
+class IterableGenerator:
+    """ An iterable object based on a generator function, which is called each
+        time the object is iterated over.
+    """
+    __slots__ = ['func', 'args']
+
+    def __init__(self, func, *args):
+        self.func = func
+        self.args = args
+
+    def __iter__(self):
+        return self.func(*self.args)
+
+
+def groupby(iterable, key=None):
+    """ Return a collection of pairs ``(key, elements)`` from ``iterable``. The
+        ``key`` is a function computing a key value for each element. This
+        function is similar to ``itertools.groupby``, but aggregates all
+        elements under the same key, not only consecutive elements.
+    """
+    if key is None:
+        key = lambda arg: arg
+    groups = defaultdict(list)
+    for elem in iterable:
+        groups[key(elem)].append(elem)
+    return groups.items()
 
 def unique(it):
     """ "Uniquifier" for the provided iterable: will output each element of
@@ -1074,7 +1149,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
                 if not digits and digits is not 0:
                     digits = DEFAULT_DIGITS
 
-    if isinstance(value, pycompat.string_types) and not value:
+    if isinstance(value, str) and not value:
         return ''
 
     lang = env.context.get('lang') or env.user.company_id.partner_id.lang or 'en_US'
@@ -1104,7 +1179,7 @@ def format_date(env, value, lang_code=False, date_format=False):
     '''
     if not value:
         return ''
-    if isinstance(value, pycompat.string_types):
+    if isinstance(value, str):
         if len(value) < DATE_LENGTH:
             return ''
         if len(value) > DATE_LENGTH:
@@ -1124,7 +1199,7 @@ def format_date(env, value, lang_code=False, date_format=False):
 def _consteq(str1, str2):
     """ Constant-time string comparison. Suitable to compare bytestrings of fixed,
         known length only, because length difference is optimized. """
-    return len(str1) == len(str2) and sum(ord(x)^ord(y) for x, y in pycompat.izip(str1, str2)) == 0
+    return len(str1) == len(str2) and sum(ord(x)^ord(y) for x, y in zip(str1, str2)) == 0
 
 consteq = getattr(passlib.utils, 'consteq', _consteq)
 
@@ -1168,3 +1243,15 @@ def wrap_module(module, attr_list):
             raise AttributeError(attrib)
     # module and attr_list are in the closure
     return WrappedModule()
+
+
+class DotDict(dict):
+    """Helper for dot.notation access to dictionary attributes
+
+        E.g.
+          foo = DotDict({'bar': False})
+          return foo.bar
+    """
+    def __getattr__(self, attrib):
+        val = self.get(attrib)
+        return DotDict(val) if type(val) is dict else val

@@ -56,20 +56,18 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
         this.isChromeMobile = isMobile && navigator.userAgent.match(/Chrome/i);
 
         // Creates an input who will receive the barcode scanner value.
-        if (this.isChromeMobile) {
-            this.$barcodeInput = $('<input/>', {
-                name: 'barcode',
-                type: 'text',
-                css: {
-                    'position': 'fixed',
-                    'top': '50%',
-                    'transform': 'translateY(-50%)',
-                    'z-index': '-1',
-                },
-            });
-            // Avoid to show autocomplete for a non appearing input
-            this.$barcodeInput.attr('autocomplete', 'off');
-        }
+        this.$barcodeInput = $('<input/>', {
+            name: 'barcode',
+            type: 'text',
+            css: {
+                'position': 'fixed',
+                'top': '50%',
+                'transform': 'translateY(-50%)',
+                'z-index': '-1',
+            },
+        });
+        // Avoid to show autocomplete for a non appearing input
+        this.$barcodeInput.attr('autocomplete', 'off');
 
         this.__blurBarcodeInput = _.debounce(this._blurBarcodeInput, this.inputTimeOut);
     },
@@ -220,7 +218,8 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
      * @param  {jQuery.Event} e keydown event
      */
     _listenBarcodeScanner: function (e) {
-        if (!$('input:text:focus, textarea:focus, [contenteditable]:focus').length) {
+        if ($(document.activeElement).not('input:text, textarea, [contenteditable], ' +
+            '[type="email"], [type="number"], [type="password"], [type="tel"]').length) {
             $('body').append(this.$barcodeInput);
             this.$barcodeInput.focus();
         }
@@ -263,11 +262,9 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
      * @private
      */
     _blurBarcodeInput: function () {
-        if (this.$barcodeInput) {
-            // Close the virtual keyboard on mobile browsers
-            // FIXME: actually we can't prevent keyboard from opening
-            this.$barcodeInput.val('').blur();
-        }
+        // Close the virtual keyboard on mobile browsers
+        // FIXME: actually we can't prevent keyboard from opening
+        this.$barcodeInput.val('').blur();
     },
 
     start: function(prevent_key_repeat){
@@ -289,9 +286,9 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
     },
 
     stop: function(){
-        $('body').unbind("keypress", this.__handler);
-        $('body').unbind("keydown", this.__keydown_handler);
-        $('body').unbind('keyup', this.__keyup_handler);
+        $('body').off("keypress", this.__handler);
+        $('body').off("keydown", this.__keydown_handler);
+        $('body').off('keyup', this.__keyup_handler);
     },
 });
 

@@ -18,11 +18,17 @@ msgstr ""
 # This line is present in the POT and removed here to test the translation
 # import behavior.
 #. module: test_translation_import
-#: model:ir.model.fields,field_description:test_translation_import.field_test_translation_import_name
+#: model:ir.model.fields,field_description:test_translation_import.field_test_translation_import__name
 #, python-format
 msgid "1XBUO5PUYH2RYZSA1FTLRYS8SPCNU1UYXMEYMM25ASV7JC2KTJZQESZYRV9L8CGB"
 msgstr "1XBUO5PUYH2RYZSA1FTLRYS8SPCNU1UYXMEYMM25ASV7JC2KTJZQESZYRV9L8CGB in french"
 
+#. module: test_translation_import
+#: selection:test.translation.import,import_type:0
+msgid "Bar Import Type"
+msgstr "Bar in french"
+
+# Note: the line in pot is 21 and is 14 here
 #. module: test_translation_import
 #: code:addons/test_translation_import/models.py:14
 #, python-format
@@ -30,14 +36,19 @@ msgid "Ijkl"
 msgstr "Ijkl in french"
 
 #. module: test_translation_import
-#: model:ir.model,name:test_translation_import.model_test_translation_import
-msgid "test.translation.import"
-msgstr "test.translation.import in french"
+#: selection:test.translation.import,import_type:0
+msgid "Foo Import Type"
+msgstr "Foo in french"
 
 #. module: test_translation_import
-#: help:test.translation.import,name:0
+#: model:ir.model.fields,help:test_translation_import.field_test_translation_import__name
 msgid "Efgh"
 msgstr "Efgh in french"
+
+#. module: test_translation_import
+#: model:ir.model,name:test_translation_import.model_test_translation_import
+msgid "Test: Translation Import"
+msgstr "Test: Import de traductions"
 
 #. module: test_translation_import
 #: model:ir.actions.act_window,name:test_translation_import.action_test_translation_import
@@ -62,7 +73,7 @@ msgid "Test translation with a code type but different line number in pot"
 msgstr "Test traduction avec un type code mais différent numéro de ligne dans le pot"
 
 #. module: test_translation_import
-#: model:ir.model.fields,field_description:test_translation_import.field_test_translation_import_other_name
+#: model:ir.model.fields,field_description:test_translation_import.field_test_translation_import__other_name
 #: code:addons/base/models/marvin.py:42
 #: code:addons/base/models/trillian.py:42
 msgid "Test translation with two code type and model"

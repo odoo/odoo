@@ -3,10 +3,12 @@
 
 import unittest
 
+from odoo.tests.common import tagged
 from odoo.tools import html_sanitize, append_content_to_html, plaintext2html, email_split, misc
 from . import test_mail_examples
 
 
+@tagged('standard', 'at_install')
 class TestSanitizer(unittest.TestCase):
     """ Test the html sanitizer that filters html to remove unwanted attributes """
 
@@ -89,16 +91,6 @@ class TestSanitizer(unittest.TestCase):
             self.assertIn(tag, sanitized_html, 'html_sanitize stripped too much of original html')
         for attr in ['javascript']:
             self.assertNotIn(attr, sanitized_html, 'html_sanitize did not remove enough unwanted attributes')
-
-    def test_sanitize_escape_emails(self):
-        emails = [
-            "Charles <charles.bidule@truc.fr>",
-            "Dupuis <'tr/-: ${dupuis#$'@truc.baz.fr>",
-            "Technical <service/technical+2@open.com>",
-            "Div nico <div-nico@open.com>"
-        ]
-        for email in emails:
-            self.assertIn(misc.html_escape(email), html_sanitize(email), 'html_sanitize stripped emails of original html')
 
     def test_sanitize_unescape_emails(self):
         not_emails = [
@@ -279,6 +271,11 @@ class TestSanitizer(unittest.TestCase):
         self.assertNotIn('<title>404 - Not Found</title>', html)
         self.assertIn('<h1>404 - Not Found</h1>', html)
 
+    def test_cid_with_at(self):
+        img_tag = '<img src="@">'
+        sanitized = html_sanitize(img_tag, sanitize_tags=False, strip_classes=True)
+        self.assertEqual(img_tag, sanitized, "img with can have cid containing @ and shouldn't be escaped")
+
     # ms office is currently not supported, have to find a way to support it
     # def test_30_email_msoffice(self):
     #     new_html = html_sanitize(test_mail_examples.MSOFFICE_1, remove=True)
@@ -288,6 +285,7 @@ class TestSanitizer(unittest.TestCase):
     #         self.assertNotIn(ext, new_html)
 
 
+@tagged('standard', 'at_install')
 class TestHtmlTools(unittest.TestCase):
     """ Test some of our generic utility functions about html """
 
@@ -315,6 +313,7 @@ class TestHtmlTools(unittest.TestCase):
             self.assertEqual(append_content_to_html(html, content, plaintext_flag, preserve_flag, container_tag), expected, 'append_content_to_html is broken')
 
 
+@tagged('standard', 'at_install')
 class TestEmailTools(unittest.TestCase):
     """ Test some of our generic utility functions for emails """
 

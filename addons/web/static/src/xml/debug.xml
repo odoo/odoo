@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="WebClient.DebugManager">
+    <li class="o_debug_manager" role="menuitem">
+        <a role="button" href="#" class="o_debug_mode" t-attf-title="Open Developer Tools#{widget.debug_mode_help}"
+                         t-att-data-debug-mode="widget.debug_mode" aria-label="Open Developer Tools#{widget.debug_mode_help}"
+                         data-toggle="dropdown" aria-expanded="false" tabindex="-1" data-display="static">
+            <span class="fa fa-bug"/>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right o_debug_dropdown" role="menu"/>
+    </li>
+</t>
+<t t-name="WebClient.DebugManager.Global">
+    <a role="menuitem" href="#" data-action="split_assets" class="dropdown-item o_debug_split_assets">Activate Assets Debugging</a>
+    <a role="menuitem" href="#" data-action="tests_assets" class="dropdown-item">Activate Tests Assets Debugging</a>
+    <a role="menuitem" href="#" data-action="regenerateAssets" class="dropdown-item">Regenerate Assets Bundles</a>
+    <a t-if="manager._is_admin" role="menuitem" href="/web/become" class="dropdown-item">Become Superuser</a>
+    <a role="menuitem" href="#" data-action="leave_debug_mode" class="dropdown-item">Leave the Developer Tools</a>
+</t>
+<t t-name="WebClient.DebugManager.Backend">
+    <a role="menuitem" href="#" data-action="perform_js_tests" class="dropdown-item">Run JS Tests</a>
+    <a role="menuitem" href="#" data-action="perform_js_mobile_tests" class="dropdown-item">Run JS Mobile Tests</a>
+    <a role="menuitem" href="#" data-action="perform_click_everywhere_test" class="dropdown-item">Run Click Everywhere Test</a>
+    <a role="menuitem" href="#" data-action="select_view" class="dropdown-item">Open View</a>
+    <t t-if="manager._events">
+        <div class="dropdown-divider" role="separator"/>
+        <a role="menuitem" href="#" data-action="show_timelines" class="dropdown-item">Toggle Timelines</a>
+        <a role="menuitem" href="#" data-action="requests_clear" class="dropdown-item">Clear Events</a>
+    </t>
+    <div class="dropdown-divider o_debug_leave_section" role="separator"/>
+</t>
+<t t-name="WebClient.DebugManager.Action">
+    <t t-if="action">
+        <div class="dropdown-divider" role="separator"/>
+        <a role="menuitem" href="#" data-action="edit" t-att-data-model="action.type" t-att-data-id="action.id" class="dropdown-item">Edit Action</a>
+        <t t-if="action.res_model">
+            <a role="menuitem" href="#" data-action="get_view_fields" class="dropdown-item">View Fields</a>
+            <a role="menuitem" href="#" data-action="manage_filters" class="dropdown-item">Manage Filters</a>
+            <a role="menuitem" href="#" data-action="translate" class="dropdown-item">Technical Translation</a>
+        </t>
+    </t>
+</t>
+<t t-name="WebClient.DebugManager.View">
+    <t t-if="view">
+        <div role="separator" class="dropdown-divider"/>
+        <t t-if="view.type === 'form'">
+            <a role="menuitem" href="#" data-action="set_defaults" class="dropdown-item">Set Defaults</a>
+            <t t-if="controller.getSelectedIds().length === 1">
+                <a role="menuitem" href="#" data-action="get_metadata" class="dropdown-item">View Metadata</a>
+                <a role="menuitem" href="#" data-action="get_attachments" class="dropdown-item">Manage Attachments</a>
+            </t>
+        </t>
+        <a role="menuitem" href="#" data-action="fvg" class="dropdown-item">Fields View Get</a>
+        <t t-if="can_edit">
+            <a role="menuitem" href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="view.fieldsView.view_id" class="dropdown-item">
+                Edit View: <t t-esc="view.displayName"/>
+            </a>
+            <a t-if="controlPanelView and controlPanelView.$el.is(':visible')" role="menuitem" href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="action.controlPanelFieldsView.view_id" class="dropdown-item">Edit ControlPanelView</a>
+        </t>
+    </t>
+</t>
+<t t-name="WebClient.DebugViewLog">
+    <table class="table table-sm table-striped">
+        <tr>
+            <th>ID:</th>
+            <td><t t-esc="perm.id"/></td>
+        </tr>
+        <tr>
+            <th>XML ID:</th>
+            <td><t t-esc="perm.xmlid or '/'"/></td>
+        </tr>
+        <tr>
+            <th>No Update:</th>
+            <td>
+                <t t-esc="perm.noupdate"/>
+                <t t-if="perm.xmlid">
+                    <a data-action="toggle_noupdate">(change)</a>
+                </t>
+            </td>
+        </tr>
+        <tr>
+            <th>Creation User:</th>
+            <td><t t-esc="perm.creator"/></td>
+        </tr>
+        <tr>
+            <th>Creation Date:</th>
+            <td><t t-esc="perm.create_date"/></td>
+        </tr>
+        <tr>
+            <th>Latest Modification by:</th>
+            <td><t t-esc="perm.lastModifiedBy"/></td>
+        </tr>
+        <tr>
+            <th>Latest Modification Date:</th>
+            <td><t t-esc="perm.write_date"/></td>
+        </tr>
+    </table>
+</t>
+<div t-name="WebClient.DebugManager.RequestsOverlay" class="o_debug_manager_overlay">
+    <header>
+        <!-- enough height to display all tracks + 1px spacing between tracks -->
+        <t t-set="canvas_height" t-value="widget.TRACKS * (widget.TRACK_WIDTH + 1)"/>
+        <canvas t-att-height="canvas_height" id="o_debug_requests_summary"/>
+        <!-- transparent overlay to display selected range -->
+        <canvas t-att-height="canvas_height" id="o_debug_requests_selector"/>
+    </header>
+    <div class="o_debug_requests"/>
+    <div class="o_debug_tooltip"/>
+</div>
+
+</templates>

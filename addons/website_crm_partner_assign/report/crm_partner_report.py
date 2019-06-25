@@ -9,7 +9,7 @@ class CrmPartnerReportAssign(models.Model):
     """ CRM Lead Report """
     _name = "crm.partner.report.assign"
     _auto = False
-    _description = "CRM Partner Report"
+    _description = "CRM Partnership Analysis"
 
     partner_id = fields.Many2one('res.partner', 'Partner', required=False, readonly=True)
     grade_id = fields.Many2one('res.partner.grade', 'Grade', readonly=True)
@@ -18,7 +18,7 @@ class CrmPartnerReportAssign(models.Model):
     date_review = fields.Date('Latest Partner Review')
     date_partnership = fields.Date('Partnership Date')
     country_id = fields.Many2one('res.country', 'Country', readonly=True)
-    team_id = fields.Many2one('crm.team', 'Sales Channel', oldname='section_id', readonly=True)
+    team_id = fields.Many2one('crm.team', 'Sales Team', oldname='section_id', readonly=True)
     nbr_opportunities = fields.Integer('# of Opportunity', readonly=True, oldname='opp')
     turnover = fields.Float('Turnover', readonly=True)
     date = fields.Date('Invoice Account Date', readonly=True)
@@ -55,5 +55,5 @@ class CrmPartnerReportAssign(models.Model):
                 FROM
                     res_partner p
                     left join account_invoice_report i
-                        on (i.partner_id=p.id and i.type in ('out_invoice','out_refund') and i.state in ('open','paid'))
+                        on (i.partner_id=p.id and i.type in ('out_invoice','out_refund') and i.state in ('open','in_payment','paid'))
             )""")

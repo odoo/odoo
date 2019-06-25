@@ -11,7 +11,8 @@
                 <div class="app_settings_block" data-string="CRM" string="CRM" data-key="crm" groups="sales_team.group_sale_manager">
                     <h2>CRM</h2>
                     <div class="row mt16 o_settings_container">
-                        <div class="col-xs-12 col-md-6 o_setting_box" id="crm_lead">
+                        <div class="col-12 col-lg-6 o_setting_box" id="crm_lead"
+                            title="Use leads if you need a qualification step before creating an opportunity or a customer. It can be a business card you received, a contact form filled in your website, or a file of unqualified prospects you import, etc. Once qualified, the lead can be converted into a business opportunity and/or a new customer in your address book.">
                             <div class="o_setting_left_pane">
                                 <field name="group_use_lead"/>
                             </div>
@@ -22,25 +23,24 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box" id="crm_lead"
+                        <div class="col-12 col-lg-6 o_setting_box" id="crm_lead"
                                 attrs="{'invisible': [('group_use_lead','=',False)]}"
-                                title="Emails received to that address generate new leads not assigned to any sales channel yet. This can be made when converting them into opportunities. Incoming emails can be automatically assigned to specific sales channels. To do so, set an email alias on the sales channel."
-                                groups="base.group_no_one">
+                                title="Emails received to that address generate new leads not assigned to any Sales Team yet. This can be made when converting them into opportunities. Incoming emails can be automatically assigned to specific Sales Teams. To do so, set an email alias on the Sales Team.">
                             <div class="o_setting_left_pane">
                                 <field name="generate_lead_from_alias"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label string="Manually Assignation of Incoming Emails"/>
+                                <label for="generate_lead_from_alias" string="Manual Assignation of Incoming Emails"/>
                                 <div class="text-muted">
-                                    Generate unassigned leads from incoming emails. Leads coming from
-                                    that email will be assigned manually.
+                                    Generate leads from incoming emails and assign them
+                                    to a Sales Team manually
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('generate_lead_from_alias','=',False)]}">
                                     <div class="mt16">
-                                        <label string="Alias" class="o_light_label"/>
+                                        <label for="crm_alias_prefix" string="Alias" class="o_light_label"/>
                                         <field name="crm_alias_prefix" class="oe_inline"
                                             attrs="{'required': [('generate_lead_from_alias', '=', True)]}"/>
-                                        <span>@</span>
+                                        <label for="alias_domain" string="@"/>
                                         <field name="alias_domain" readonly="1" class="oe_inline"/>
                                     </div>
                                     <div attrs="{'invisible': [('alias_domain', 'not in', ['localhost', '', False])]}">
@@ -51,10 +51,58 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 col-lg-6 o_setting_box" title="This can be used to compute statistical probability to close a lead">
+                            <div class="o_setting_left_pane"></div>
+                            <div class="o_setting_right_pane">
+                                <b>Predictive Lead Scoring</b>
+                                <div class="text-muted">
+                                    Let statistical analysis determine the probability to close a lead
+                                </div>
+                                <div>
+                                    Consider leads created as of the
+                                    <field name="predictive_lead_scoring_start_date_str" invisible="1"/>
+                                    <field name="predictive_lead_scoring_start_date"/>
+                                </div>
+                                <div>
+                                    Consider following fields in computation
+                                    <field name="predictive_lead_scoring_fields" widget="many2many_checkboxes"/>
+                                    <field name="predictive_lead_scoring_fields_str" invisible="1"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Lead Generation</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_crm_iap_lead_website"/>
+                            </div>
+
+                            <div class="o_setting_right_pane" id="crm_iap_lead_website_settings">
+                                <label string="Website Lead Generation" for="module_crm_iap_lead_website"/>
+                                <div class="text-muted">
+                                    Convert visitors of your website into leads and perform data enrichment based on their IP address.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_crm_iap_lead"/>
+                            </div>
+
+                            <div class="o_setting_right_pane" id="crm_iap_lead_settings">
+                                <label string="Lead Mining" for="module_crm_iap_lead"/>
+                                <div class="text-muted">
+                                    Generate new leads based on their country, industries, size, etc.
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <h2>Contacts</h2>
                     <div class="row mt16 o_settings_container">
-                        <div class="col-md-6 o_setting_box">
+                        <div class="col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
                                 <field name="module_crm_phone_validation"/>
                             </div>
@@ -63,16 +111,11 @@
                                 <div class="text-muted" id="module_crm_phone_validation">
                                     Format phone numbers based on national conventions
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box" title="When populating your address book, Odoo relies on Clearbit’s API to provide you with a list of matching contacts or companies.When selecting one item, the partner name, logo and website get automatically set.">
-                            <div class="o_setting_left_pane">
-                                <field name="module_web_clearbit" widget="upgrade_boolean"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="module_web_clearbit"/>
-                                <div class="text-muted">
-                                    Look up company information (name, logo, etc.)
+                                <div class="content-group">
+                                    <div class="mt16" attrs="{'invisible': [('module_crm_phone_validation','=',False)]}">
+                                        <label for="crm_phone_valid_method" class="o_light_label"/>
+                                        <field name="crm_phone_valid_method" widget="radio" class="o_light_label"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -6,7 +6,7 @@
     'category': 'Point of Sale',
     'sequence': 6,
     'summary': 'Hardware Driver for Belgian Fiscal Data Modules',
-    'website': 'https://www.odoo.com/page/point-of-sale',
+    'website': 'https://www.odoo.com/page/point-of-sale-hardware',
     'description': """
 Fiscal Data Module Hardware Driver
 ==================================
@@ -20,4 +20,5 @@ Data Module but will not modify the behaviour of the Point of Sale.
 """,
     'depends': ['hw_proxy'],
     'external_dependencies': {'python': ['serial']},
+    'installable': False,
 }

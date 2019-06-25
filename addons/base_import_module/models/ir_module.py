@@ -11,7 +11,7 @@ from os.path import join as opj
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.modules import load_information_from_description_file
-from odoo.tools import convert_file, exception_to_unicode, pycompat
+from odoo.tools import convert_file, exception_to_unicode
 from odoo.tools.osutil import tempdir
 
 _logger = logging.getLogger(__name__)
@@ -38,6 +38,8 @@ class IrModule(models.Model):
         installed_mods = [m.name for m in known_mods if m.state == 'installed']
 
         terp = load_information_from_description_file(module, mod_path=path)
+        if not terp:
+            return False
         values = self.get_values_from_terp(terp)
         if 'version' in terp:
             values['latest_version'] = terp['version']
@@ -49,12 +51,12 @@ class IrModule(models.Model):
                     _is_studio_custom(path)):
                 err = _("Studio customizations require Studio")
             else:
-                err = _("Unmet module dependencies: %s") % ', '.join(
-                    unmet_dependencies,
+                err = _("Unmet module dependencies: \n\n - %s") % '\n - '.join(
+                    known_mods.filtered(lambda mod: mod.name in unmet_dependencies).mapped('shortdesc')
                 )
             raise UserError(err)
         elif 'web_studio' not in installed_mods and _is_studio_custom(path):
-            raise UserError(_("Studio customizations require Studio"))
+            raise UserError(_("Studio customizations require the Odoo Studio app."))
 
         mod = known_mods_names.get(module)
         if mod:
@@ -88,12 +90,11 @@ class IrModule(models.Model):
                     with open(full_path, 'rb') as fp:
                         data = base64.b64encode(fp.read())
                     url_path = '/{}{}'.format(module, full_path.split(path)[1].replace(os.path.sep, '/'))
-                    if not isinstance(url_path, pycompat.text_type):
+                    if not isinstance(url_path, str):
                         url_path = url_path.decode(sys.getfilesystemencoding())
                     filename = os.path.split(url_path)[1]
                     values = dict(
                         name=filename,
-                        datas_fname=filename,
                         url=url_path,
                         res_model='ir.ui.view',
                         type='binary',
@@ -112,7 +113,7 @@ class IrModule(models.Model):
         if not module_file:
             raise Exception(_("No file sent."))
         if not zipfile.is_zipfile(module_file):
-            raise UserError(_('File is not a zip file!'))
+            raise UserError(_('Only zip files are supported.'))
 
         success = []
         errors = dict()
@@ -133,8 +134,8 @@ class IrModule(models.Model):
                         try:
                             # assert mod_name.startswith('theme_')
                             path = opj(module_dir, mod_name)
-                            self._import_module(mod_name, path, force=force)
-                            success.append(mod_name)
+                            if self._import_module(mod_name, path, force=force):
+                                success.append(mod_name)
                         except Exception as e:
                             _logger.exception('Error while importing module')
                             errors[mod_name] = exception_to_unicode(e)
@@ -142,7 +143,7 @@ class IrModule(models.Model):
                     module.ad_paths.remove(module_dir)
         r = ["Successfully imported module '%s'" % mod for mod in success]
         for mod, error in errors.items():
-            r.append("Error while importing module '%s': %r" % (mod, error))
+            r.append("Error while importing module '%s'.\n\n %s \n Make sure those modules are installed and try again." % (mod, error))
         return '\n'.join(r), module_names
 
 

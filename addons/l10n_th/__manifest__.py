@@ -17,7 +17,11 @@ Thai accounting chart and localization.
     'data': [
         'data/account_data.xml',
         'data/l10n_th_chart_data.xml',
-        'data/account_chart_template_data.yml',
+        'data/account.account.template.csv',
+        'data/l10n_th_chart_post_data.xml',
+        'data/account_tax_report_data.xml',
+        'data/account_tax_template_data.xml',
+        'data/account_chart_template_data.xml',
     ],
     'post_init_hook': '_preserve_tag_on_taxes',
 }

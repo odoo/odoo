@@ -16,6 +16,7 @@
         <record id="message_0_0" model="test_new_api.message">
             <field name="discussion" ref="discussion_0"/>
             <field name="body">Hey dude!</field>
+            <field name="label">hello</field>
         </record>
         <record id="message_0_1" model="test_new_api.message">
             <field name="discussion" ref="discussion_0"/>
@@ -25,6 +26,11 @@
         <record id="message_0_2" model="test_new_api.message">
             <field name="discussion" ref="discussion_0"/>
             <field name="body">This is a much longer message</field>
+        </record>
+
+        <record id="emailmessage_0_0" model="test_new_api.emailmessage">
+            <field name="message" ref="message_0_0"/>
+            <field name="email_to">first@example.localhost</field>
         </record>
 
         <record id="bool_1" model="domain.bool">

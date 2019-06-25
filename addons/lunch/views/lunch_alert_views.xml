@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="lunch_alert_view_search" model="ir.ui.view">
+        <field name="name">lunch.alert.search</field>
+        <field name="model">lunch.alert</field>
+        <field name="arch" type="xml">
+            <search string="Search">
+                <field name="message"/>
+                <filter name="inactive_today" string="Currently inactive" domain="[('available_today', '=', False)]"/>
+                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="lunch_alert_view_tree" model="ir.ui.view">
+        <field name="name">lunch.alert.tree</field>
+        <field name="model">lunch.alert</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="name"/>
+                <field name="message" invisible="1"/>
+                <field name="available_today"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="lunch_alert_view_form" model="ir.ui.view">
+        <field name="name">lunch.alert.form</field>
+        <field name="model">lunch.alert</field>
+        <field name="arch" type="xml">
+            <form string="alert form">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object"
+                            class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <div class="oe_title" name="title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="location_ids" widget="many2many_tags"/>
+                            <field name="until"/>
+                        </group>
+                        <group>
+                            <field name="recurrency_monday"/>
+                            <field name="recurrency_tuesday"/>
+                            <field name="recurrency_wednesday"/>
+                            <field name="recurrency_thursday"/>
+                            <field name="recurrency_friday"/>
+                            <field name="recurrency_saturday"/>
+                            <field name="recurrency_sunday"/>
+                        </group>
+                        <group>
+                            <field name="message"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="lunch_alert_action" model="ir.actions.act_window">
+        <field name="name">Lunch Alerts</field>
+        <field name="res_model">lunch.alert</field>
+        <field name="search_view_id" ref="lunch_alert_view_search"/>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="lunch_alert_view_tree"/>
+        <field name="context">{'search_default_inactive': 1, 'search_default_active': 1}</field>
+    </record>
+</odoo>

@@ -49,7 +49,10 @@ class MailGroup(http.Controller):
             [], ['res_id'])
         message_data = dict((message['res_id'], message['res_id_count']) for message in messages)
 
-        group_data = dict((group.id, {'monthly_message_nbr': message_data.get(group.id, 0)}) for group in groups)
+        group_data = dict(
+            (group.id, {'monthly_message_nbr': message_data.get(group.id, 0),
+                        'members_count': len(group.channel_partner_ids)})
+            for group in groups.sudo())
         return request.render('website_mail_channel.mail_channels', {'groups': groups, 'group_data': group_data})
 
     @http.route(["/groups/is_member"], type='json', auth="public", website=True)
@@ -108,7 +111,7 @@ class MailGroup(http.Controller):
 
         else:
             # public users will recieve confirmation email
-            partner_ids = channel.sudo()._find_partner_from_emails([email], check_followers=True)
+            partner_ids = [p.id for p in self.env['mail.thread'].sudo()._mail_find_partner_from_emails([email], records=channel.sudo(), check_followers=True) if p]
             if not partner_ids or not partner_ids[0]:
                 name = email.split('@')[0]
                 partner_ids = [request.env['res.partner'].sudo().create({'name': name, 'email': email}).id]

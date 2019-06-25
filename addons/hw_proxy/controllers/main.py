@@ -57,7 +57,7 @@ class Proxy(http.Controller):
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>Odoo's PosBox</title>
+        <title>Odoo's IoTBox</title>
         <style>
         body {
             width: 480px;
@@ -98,10 +98,10 @@ class Proxy(http.Controller):
             resp += "</ul>\n"
         resp += """
             <h2>Connected Devices</h2>
-            <p>The list of connected USB devices as seen by the posbox</p>
+            <p>The list of connected USB devices as seen by the IoTBox</p>
         """
         if debug is None:
-            resp += """(<a href="/hw_proxy/status?debug">debug version</a>)"""
+            resp += """(<a href="/hw_proxy/status?debug=1">debug version</a>)"""
         devices = subprocess.check_output("lsusb").decode('utf-8').split('\n')
         count   = 0
         resp += "<div class='devices'>\n"

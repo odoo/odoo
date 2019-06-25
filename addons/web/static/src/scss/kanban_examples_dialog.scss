@@ -1,0 +1,96 @@
+// container ghost card in modal
+.o_kanban_examples_dialog {
+    display: flex;
+    padding: 0px;
+    background: theme-color('light');
+
+    // sidebar
+    .o_kanban_examples_dialog_nav {
+        flex: 0 0 auto;
+        border-right: 1px solid gray('300');
+        background: white;
+
+        > ul > li {
+            margin: 0;
+            border-bottom: 1px solid gray('300');
+
+            > a {
+                padding: 12px 15px;
+                color: $o-main-text-color;
+                border-left: 3px solid transparent;
+                &:focus {
+                    outline: none;
+                }
+            }
+            &.active > a {
+                color: $headings-color;
+                border-left-color: $o-brand-primary;
+                font-weight: bold;
+            }
+        }
+    }
+
+    // content
+    .o_kanban_examples_dialog_content {
+        flex: 1 1 100%;
+
+        .o_kanban_examples_description {
+            padding: 16px 16px 0;
+            text-align: justify;
+        }
+    }
+}
+
+// container ghost card in background
+.o_kanban_example_background_container {
+    display: flex;
+    padding: 0px;
+    opacity: 0.4;
+
+    // content
+    .o_kanban_example_background {
+        flex: 1 1 100%;
+
+        .o_kanban_examples {
+            .o_kanban_examples_group {
+                .o_kanban_examples_ghost {
+                    width: 224px;
+                    margin-bottom: 10px;
+                }
+            }
+        }
+    }
+}
+
+
+// kanban ghost card
+.o_kanban_examples {
+    display: flex;
+    padding: 0 6px;
+
+    .o_kanban_examples_group {
+        flex: 1 1 100%;
+        margin: 10px;
+
+        .o_kanban_examples_ghost {
+            padding: 5px;
+            margin-top: -1px;
+            border: thin solid gray('300');
+            background-color: white;
+            .o_ghost_content {
+                height: 12px;
+                background: gray('300');
+                &.o_ghost_tag {
+                    display: inline-block;
+                    width: 40%;
+                    margin-top: 10px;
+                }
+            }
+            .o_ghost_avatar {
+                height: 20px;
+                width: 20px;
+                margin-top: 6px;
+            }
+        }
+    }
+}

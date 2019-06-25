@@ -7,10 +7,10 @@
 # Otgonbayar.A <gobi.mn@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: Otgonbayar.A <gobi.mn@gmail.com>, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -20,19 +20,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:70
+#: code:addons/payment_transfer/models/payment.py:83
 #, python-format
 msgid "; multiple order found"
 msgstr "; олон захиалга олдлоо"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:68
+#: code:addons/payment_transfer/models/payment.py:81
 #, python-format
 msgid "; no order found"
 msgstr "; захиалга олдсонгүй"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:28
+#: code:addons/payment_transfer/models/payment.py:41
 #, python-format
 msgid ""
 "<div>\n"
@@ -52,16 +52,46 @@ msgstr ""
 "</div>"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:26
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:39
 #, python-format
 msgid "Bank Account"
 msgstr "Банкны данс"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:26
+#: code:addons/payment_transfer/models/payment.py:39
 #, python-format
 msgid "Bank Accounts"
 msgstr "Банкны дансууд"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Гар Тохиргоо"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_acquirer
@@ -74,7 +104,32 @@ msgid "Payment Transaction"
 msgstr "Төлбөрийн гүйлгээ"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:66
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_transfer
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Нийлүүлэгч"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Wire Transfer"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:79
 #, python-format
 msgid "received data for reference %s"
 msgstr "%s кодод хүлээн авсан өгөгдөл"

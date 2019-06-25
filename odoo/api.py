@@ -52,10 +52,11 @@ from inspect import currentframe, getargspec
 from pprint import pformat
 from weakref import WeakSet
 
-from decorator import decorator
+from decorator import decorate, decorator
 from werkzeug.local import Local, release_local
 
-from odoo.tools import frozendict, classproperty
+from odoo.tools import frozendict, classproperty, StackMap
+from odoo.exceptions import CacheMiss
 
 _logger = logging.getLogger(__name__)
 
@@ -291,11 +292,7 @@ def split_context(method, args, kwargs):
     """ Extract the context from a pair of positional and keyword arguments.
         Return a triple ``context, args, kwargs``.
     """
-    pos = len(getargspec(method).args) - 1
-    if pos < len(args):
-        return args[pos], args[:pos], kwargs
-    else:
-        return kwargs.pop('context', None), args, kwargs
+    return kwargs.pop('context', None), args, kwargs
 
 
 def model(method):
@@ -315,6 +312,8 @@ def model(method):
 
         Notice that no ``ids`` are passed to the method in the traditional style.
     """
+    if method.__name__ == 'create':
+        return model_create_single(method)
     method._api = 'model'
     return method
 
@@ -416,6 +415,50 @@ def model_cr_context(method):
     """
     method._api = 'model_cr_context'
     return method
+
+
+_create_logger = logging.getLogger(__name__ + '.create')
+
+
+def _model_create_single(create, self, arg):
+    # 'create' expects a dict and returns a record
+    if isinstance(arg, Mapping):
+        return create(self, arg)
+    if len(arg) > 1:
+        _create_logger.debug("%s.create() called with %d dicts", self, len(arg))
+    return self.browse().concat(*(create(self, vals) for vals in arg))
+
+
+def model_create_single(method):
+    """ Decorate a method that takes a dictionary and creates a single record.
+        The method may be called with either a single dict or a list of dicts::
+
+            record = model.create(vals)
+            records = model.create([vals, ...])
+    """
+    wrapper = decorate(method, _model_create_single)
+    wrapper._api = 'model_create'
+    return wrapper
+
+
+def _model_create_multi(create, self, arg):
+    # 'create' expects a list of dicts and returns a recordset
+    if isinstance(arg, Mapping):
+        return create(self, [arg])
+    return create(self, arg)
+
+
+def model_create_multi(method):
+    """ Decorate a method that takes a list of dictionaries and creates multiple
+        records. The method may be called with either a single dict or a list of
+        dicts::
+
+            record = model.create(vals)
+            records = model.create([vals, ...])
+    """
+    wrapper = decorate(method, _model_create_multi)
+    wrapper._api = 'model_create'
+    return wrapper
 
 
 def cr(method):
@@ -664,15 +707,24 @@ def expected(decorator, func):
     return decorator(func) if not hasattr(func, '_api') else func
 
 
-
-def call_kw_model(method, self, args, kwargs):
+def _call_kw_model(method, self, args, kwargs):
     context, args, kwargs = split_context(method, args, kwargs)
     recs = self.with_context(context or {})
     _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
     result = method(recs, *args, **kwargs)
     return downgrade(method, result, recs, args, kwargs)
 
-def call_kw_multi(method, self, args, kwargs):
+
+def _call_kw_model_create(method, self, args, kwargs):
+    # special case for method 'create'
+    context, args, kwargs = split_context(method, args, kwargs)
+    recs = self.with_context(context or {})
+    _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
+    result = method(recs, *args, **kwargs)
+    return result.id if isinstance(args[0], Mapping) else result.ids
+
+
+def _call_kw_multi(method, self, args, kwargs):
     ids, args = args[0], args[1:]
     context, args, kwargs = split_context(method, args, kwargs)
     recs = self.with_context(context or {}).browse(ids)
@@ -680,13 +732,17 @@ def call_kw_multi(method, self, args, kwargs):
     result = method(recs, *args, **kwargs)
     return downgrade(method, result, recs, args, kwargs)
 
+
 def call_kw(model, name, args, kwargs):
     """ Invoke the given method ``name`` on the recordset ``model``. """
     method = getattr(type(model), name)
-    if getattr(method, '_api', None) == 'model':
-        return call_kw_model(method, model, args, kwargs)
+    api = getattr(method, '_api', None)
+    if api == 'model':
+        return _call_kw_model(method, model, args, kwargs)
+    elif api == 'model_create':
+        return _call_kw_model_create(method, model, args, kwargs)
     else:
-        return call_kw_multi(method, model, args, kwargs)
+        return _call_kw_multi(method, model, args, kwargs)
 
 
 class Environment(Mapping):
@@ -741,7 +797,8 @@ class Environment(Mapping):
         self.cr, self.uid, self.context = self.args = (cr, uid, frozendict(context))
         self.registry = Registry(cr.dbname)
         self.cache = envs.cache
-        self._protected = defaultdict(frozenset)    # {field: ids, ...}
+        self._cache_key = (cr, uid)
+        self._protected = StackMap()                # {field: ids, ...}
         self.dirty = defaultdict(set)               # {record: set(field_name), ...}
         self.all = envs
         envs.add(self)
@@ -757,7 +814,7 @@ class Environment(Mapping):
 
     def __getitem__(self, model_name):
         """ Return an empty recordset from the given model. """
-        return self.registry[model_name]._browse((), self)
+        return self.registry[model_name]._browse(self, (), ())
 
     def __iter__(self):
         """ Return an iterator on model names. """
@@ -798,43 +855,62 @@ class Environment(Mapping):
         return self(user=SUPERUSER_ID)['res.users'].browse(self.uid)
 
     @property
+    def company(self):
+        """ return the company in which the user is logged in (as an instance) """
+        try:
+            company_id = int(self.context.get('allowed_company_ids')[0])
+            if company_id in self.user.company_ids.ids:
+                return self['res.company'].browse(company_id)
+            return self.user.company_id
+        except Exception:
+            return self.user.company_id
+
+    @property
+    def companies(self):
+        """ return a recordset of the enabled companies by the user """
+        try:  # In case the user tries to bidouille the url (eg: cids=1,foo,bar)
+            allowed_company_ids = self.context.get('allowed_company_ids')
+            # Prevent the user to enable companies for which he doesn't have any access
+            users_company_ids = self.user.company_ids.ids
+            allowed_company_ids = [company_id for company_id in allowed_company_ids if company_id in users_company_ids]
+        except Exception:
+            # By setting the default companies to all user companies instead of the main one
+            # we save a lot of potential trouble in all "out of context" calls, such as
+            # /mail/redirect or /web/image, etc. And it is not unsafe because the user does
+            # have access to these other companies. The risk of exposing foreign records
+            # (wrt to the context) is low because all normal RPCs will have a proper
+            # allowed_company_ids.
+            # Examples:
+            #   - when printing a report for several records from several companies
+            #   - when accessing to a record from the notification email template
+            #   - when loading an binary image on a template
+            allowed_company_ids = self.user.company_ids.ids
+        return self['res.company'].browse(allowed_company_ids)
+
+    @property
     def lang(self):
         """ return the current language code """
         return self.context.get('lang')
 
     @contextmanager
-    def _do_in_mode(self, mode):
-        if self.all.mode:
-            yield
-        else:
-            try:
-                self.all.mode = mode
-                yield
-            finally:
-                self.all.mode = False
-                self.dirty.clear()
-
     def do_in_draft(self):
         """ Context-switch to draft mode, where all field updates are done in
             cache only.
         """
-        return self._do_in_mode(True)
+        if self.all.in_draft:
+            yield
+        else:
+            try:
+                self.all.in_draft = True
+                yield
+            finally:
+                self.all.in_draft = False
+                self.dirty.clear()
 
     @property
     def in_draft(self):
         """ Return whether we are in draft mode. """
-        return bool(self.all.mode)
-
-    def do_in_onchange(self):
-        """ Context-switch to 'onchange' draft mode, which is a specialized
-            draft mode used during execution of onchange methods.
-        """
-        return self._do_in_mode('onchange')
-
-    @property
-    def in_onchange(self):
-        """ Return whether we are in 'onchange' draft mode. """
-        return self.all.mode == 'onchange'
+        return self.all.in_draft
 
     def clear(self):
         """ Clear all record caches, and discard all fields to recompute.
@@ -859,16 +935,23 @@ class Environment(Mapping):
         return self[field.model_name].browse(self._protected.get(field, ()))
 
     @contextmanager
-    def protecting(self, fields, records):
-        """ Prevent the invalidation or recomputation of ``fields`` on ``records``. """
-        saved = {}
+    def protecting(self, what, records=None):
+        """ Prevent the invalidation or recomputation of fields on records.
+            The parameters are either:
+             - ``what`` a collection of fields and ``records`` a recordset, or
+             - ``what`` a collection of pairs ``(fields, records)``.
+        """
+        protected = self._protected
         try:
-            for field in fields:
-                ids = saved[field] = self._protected[field]
-                self._protected[field] = ids.union(records._ids)
+            protected.pushmap()
+            what = what if records is None else [(what, records)]
+            for fields, records in what:
+                for field in fields:
+                    ids = protected.get(field, frozenset())
+                    protected[field] = ids.union(records._ids)
             yield
         finally:
-            self._protected.update(saved)
+            protected.popmap()
 
     def field_todo(self, field):
         """ Return a recordset with all records to recompute for ``field``. """
@@ -888,7 +971,11 @@ class Environment(Mapping):
         recs_list = self.all.todo.setdefault(field, [])
         for i, recs in enumerate(recs_list):
             if recs.env == records.env:
-                recs_list[i] |= records
+                # only add records if not already in the recordset, much much
+                # cheaper in case recs is big and records is a singleton
+                # already present
+                if not records <= recs:
+                    recs_list[i] |= records
                 break
         else:
             recs_list.append(records)
@@ -924,6 +1011,12 @@ class Environment(Mapping):
         finally:
             self.all.recompute = tmp
 
+    def cache_key(self, field):
+        """ Return the key to store the value of ``field`` in cache, the full
+            cache key being ``(key, field, record.id)``.
+        """
+        return self if field.context_dependent else self._cache_key
+
 
 class Environments(object):
     """ A common object for all environments in a request. """
@@ -931,7 +1024,7 @@ class Environments(object):
         self.envs = WeakSet()           # weak set of environments
         self.cache = Cache()            # cache for all records
         self.todo = {}                  # recomputations {field: [records]}
-        self.mode = False               # flag for draft/onchange
+        self.in_draft = False           # flag for draft
         self.recompute = True
 
     def add(self, env):
@@ -946,46 +1039,69 @@ class Environments(object):
 class Cache(object):
     """ Implementation of the cache of records. """
     def __init__(self):
-        # {field: {record_id: {key: value}}}
+        # {key: {field: {record_id: value}}}
         self._data = defaultdict(lambda: defaultdict(dict))
 
     def contains(self, record, field):
         """ Return whether ``record`` has a value for ``field``. """
-        key = field.cache_key(record)
-        return key in self._data[field].get(record.id, ())
+        key = record.env.cache_key(field)
+        return record.id in self._data[key].get(field, ())
 
     def get(self, record, field):
         """ Return the value of ``field`` for ``record``. """
-        key = field.cache_key(record)
-        value = self._data[field][record.id][key]
+        key = record.env.cache_key(field)
+        try:
+            value = self._data[key][field][record._ids[0]]
+        except KeyError:
+            raise CacheMiss(record, field)
+
         return value.get() if isinstance(value, SpecialValue) else value
 
     def set(self, record, field, value):
         """ Set the value of ``field`` for ``record``. """
-        key = field.cache_key(record)
-        self._data[field][record.id][key] = value
+        key = record.env.cache_key(field)
+        self._data[key][field][record._ids[0]] = value
+
+    def update(self, records, field, values):
+        """ Set the values of ``field`` for several ``records``. """
+        key = records.env.cache_key(field)
+        self._data[key][field].update(zip(records._ids, values))
 
     def remove(self, record, field):
         """ Remove the value of ``field`` for ``record``. """
-        key = field.cache_key(record)
-        del self._data[field][record.id][key]
+        key = record.env.cache_key(field)
+        del self._data[key][field][record.id]
 
     def contains_value(self, record, field):
         """ Return whether ``record`` has a regular value for ``field``. """
-        key = field.cache_key(record)
-        value = self._data[field][record.id].get(key, SpecialValue(None))
+        key = record.env.cache_key(field)
+        value = self._data[key][field].get(record.id, SpecialValue(None))
         return not isinstance(value, SpecialValue)
 
     def get_value(self, record, field, default=None):
         """ Return the regular value of ``field`` for ``record``. """
-        key = field.cache_key(record)
-        value = self._data[field][record.id].get(key, SpecialValue(None))
+        key = record.env.cache_key(field)
+        value = self._data[key][field].get(record.id, SpecialValue(None))
         return default if isinstance(value, SpecialValue) else value
+
+    def get_values(self, records, field, default=None):
+        """ Return the regular values of ``field`` for ``records``. """
+        key = records.env.cache_key(field)
+        field_cache = self._data[key][field]
+        for record_id in records._ids:
+            value = field_cache.get(record_id, SpecialValue(None))
+            yield default if isinstance(value, SpecialValue) else value
+
+    def get_special(self, record, field, default=None):
+        """ Return the special value of ``field`` for ``record``. """
+        key = record.env.cache_key(field)
+        value = self._data[key][field].get(record.id)
+        return value.get if isinstance(value, SpecialValue) else default
 
     def set_special(self, record, field, getter):
         """ Set the value of ``field`` for ``record`` to return ``getter()``. """
-        key = field.cache_key(record)
-        self._data[field][record.id][key] = SpecialValue(getter)
+        key = record.env.cache_key(field)
+        self._data[key][field][record.id] = SpecialValue(getter)
 
     def set_failed(self, records, fields, exception):
         """ Mark ``fields`` on ``records`` with the given exception. """
@@ -998,67 +1114,66 @@ class Cache(object):
     def get_fields(self, record):
         """ Return the fields with a value for ``record``. """
         for name, field in record._fields.items():
-            key = field.cache_key(record)
-            if name != 'id' and key in self._data[field].get(record.id, ()):
+            key = record.env.cache_key(field)
+            if name != 'id' and record.id in self._data[key].get(field, ()):
                 yield field
 
     def get_records(self, model, field):
         """ Return the records of ``model`` that have a value for ``field``. """
-        key = field.cache_key(model)
-        # optimization: do not field.cache_key(record) for each record in cache
-        ids = [
-            record_id
-            for record_id, field_record_cache in self._data[field].items()
-            if key in field_record_cache
-        ]
+        key = model.env.cache_key(field)
+        ids = list(self._data[key][field])
         return model.browse(ids)
 
     def get_missing_ids(self, records, field):
         """ Return the ids of ``records`` that have no value for ``field``. """
-        key = field.cache_key(records)
-        field_cache = self._data[field]
+        key = records.env.cache_key(field)
+        field_cache = self._data[key][field]
         for record_id in records._ids:
-            if key not in field_cache.get(record_id, ()):
+            if record_id not in field_cache:
                 yield record_id
 
     def copy(self, records, env):
         """ Copy the cache of ``records`` to ``env``. """
-        src = records
-        dst = records.with_env(env)
-        for field, field_cache in self._data.items():
-            src_key = field.cache_key(src)
-            dst_key = field.cache_key(dst)
-            for record_cache in field_cache.values():
-                if src_key in record_cache and not isinstance(record_cache[src_key], SpecialValue):
-                    # But not if it's a SpecialValue, which often is an access error
-                    # because the other environment (eg. sudo()) is well expected to have access.
-                    record_cache[dst_key] = record_cache[src_key]
+        src, dst = records.env, env
+        for src_key, dst_key in [(src, dst), (src._cache_key, dst._cache_key)]:
+            if src_key == dst_key:
+                break
+            src_cache = self._data[src_key]
+            dst_cache = self._data[dst_key]
+            for field, src_field_cache in src_cache.items():
+                dst_field_cache = dst_cache[field]
+                for record_id, value in src_field_cache.items():
+                    if not isinstance(value, SpecialValue):
+                        # But not if it's a SpecialValue, which often is an access error
+                        # because the other environment (eg. sudo()) is well expected to have access.
+                        dst_field_cache[record_id] = value
 
     def invalidate(self, spec=None):
         """ Invalidate the cache, partially or totally depending on ``spec``. """
         if spec is None:
             self._data.clear()
         elif spec:
-            data = self._data
             for field, ids in spec:
                 if ids is None:
-                    data.pop(field, None)
+                    for data in self._data.values():
+                        data.pop(field, None)
                 else:
-                    field_cache = data[field]
-                    for id in ids:
-                        field_cache.pop(id, None)
+                    for data in self._data.values():
+                        field_cache = data.get(field)
+                        if field_cache:
+                            for id in ids:
+                                field_cache.pop(id, None)
 
     def check(self, env):
         """ Check the consistency of the cache for the given environment. """
         # make a full copy of the cache, and invalidate it
         dump = defaultdict(dict)
-        for field, field_cache in self._data.items():
-            browse = env[field.model_name].browse
-            for record_id, field_record_cache in field_cache.items():
-                if record_id:
-                    key = field.cache_key(browse(record_id))
-                    if key in field_record_cache:
-                        dump[field][record_id] = field_record_cache[key]
+        for key in [env, env._cache_key]:
+            key_cache = self._data[key]
+            for field, field_cache in key_cache.items():
+                for record_id, value in field_cache.items():
+                    if record_id:
+                        dump[field][record_id] = value
 
         self.invalidate()
 

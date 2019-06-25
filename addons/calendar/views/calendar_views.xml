@@ -15,7 +15,6 @@
     <record id="action_calendar_event_type" model="ir.actions.act_window">
         <field name="name">Meeting Types</field>
         <field name="res_model">calendar.event.type</field>
-        <field name="view_type">form</field>
         <field name="view_id" ref="view_calendar_event_type_tree"/>
     </record>
 
@@ -25,8 +24,8 @@
         <field name="model">calendar.alarm</field>
         <field name="arch" type="xml">
             <tree string="Calendar Alarm" editable="bottom">
-                <field name="name"/>
-                <field name="type"/>
+                <field name="name" invisible="1"/>
+                <field name="alarm_type"/>
                 <field name="duration"/>
                 <field name="interval"/>
             </tree>
@@ -40,14 +39,14 @@
                 <form string="Calendar Alarm">
                  <group>
                     <group>
-                        <field name="name"/>
-                        <field name="type" groups="base.group_no_one"/>
+                        <field name="name" invisible="1"/>
+                        <field name="alarm_type"/>
                     </group>
                     <group>
                         <label for="duration"/>
-                        <div>
-                            <field name="duration" class="oe_inline"/>
-                            <field name="interval" class="oe_inline ml8"/>
+                        <div class="o_row">
+                            <field name="duration"/>
+                            <field name="interval"/>
                         </div>
                     </group>
                 </group>
@@ -58,7 +57,6 @@
     <record id="action_calendar_alarm" model="ir.actions.act_window">
         <field name="name">Calendar Alarm</field>
         <field name="res_model">calendar.alarm</field>
-        <field name="view_type">form</field>
         <field name="view_id" ref="view_calendar_alarm_tree"/>
     </record>
 
@@ -88,7 +86,7 @@
         <field name="arch" type="xml">
             <form string="Meetings">
                 <sheet>
-                    <button string="Document" class="oe_stat_button pull-right" icon="fa-bars" type="object" name="action_open_calendar_event" attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', False)]}"/>
+                    <button string="Document" class="oe_stat_button float-right" icon="fa-bars" type="object" name="action_open_calendar_event" attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', False)]}"/>
                     <field name="res_model" invisible="1" />
                     <field name="res_id" invisible="1" />
                     <field name="state" invisible="1"/>
@@ -112,7 +110,7 @@
                     <notebook>
                         <page name="page_details" string="Meeting Details">
                             <group attrs="{'invisible': [('recurrency','==',False)]}" class="oe_edit_only ">
-                                <p class='alert alert-warning'> This event is linked to a recurrence...<br/>
+                                <p class='alert alert-warning' role="status"> This event is linked to a recurrence...<br/>
                                     <button type="object" name="action_detach_recurring_event"  string="Update only this instance"  help="Click here to update only this instance and not all recurrences. " class="oe_link"/>
                                 </p>
                             </group>
@@ -139,6 +137,7 @@
                                     {'no_create_edit': True}"/>
                                     <field name="alarm_ids" widget="many2many_tags" />
                                     <field name="location" />
+                                    <field name="event_tz" attrs="{'invisible': [('recurrency', '=', False)]}"/>
                                 </group>
 
                             </group>
@@ -162,7 +161,7 @@
                                             <div class="o_row">
                                                 <field name="end_type" attrs="{'required': [('recurrency', '=', True)]}"/>
                                                 <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency', '=', True)]}"/>
-                                                <field name="final_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}"/>
+                                                <field name="final_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date'), ('recurrency', '=', True)]}"/>
                                             </div>
                                         </group>
                                         <group attrs="{'invisible': [('rrule_type', '!=', 'weekly')]}" name="weekdays">
@@ -182,10 +181,10 @@
                                                     attrs="{'required': [('month_by', '=', 'date'), ('rrule_type', '=', 'monthly')],
                                                             'invisible': [('month_by', '!=', 'date')]}"/>
                                                 <field name="byday" string="The"
-                                                    attrs="{'required': [('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],
+                                                    attrs="{'required': [('recurrency', '=', True), ('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],
                                                             'invisible': [('month_by', '!=', 'day')]}"/>
                                                 <field name="week_list" nolabel="1"
-                                                    attrs="{'required': [('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],
+                                                    attrs="{'required': [('recurrency', '=', True), ('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],
                                                             'invisible': [('month_by', '!=', 'day')]}"/>
                                             </div>
                                         </group>
@@ -235,7 +234,7 @@
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <form string="Meetings">
-                <button string="Document" class="oe_stat_button pull-right" icon="fa-bars" type="object" name="action_open_calendar_event" attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', False)]}"/>
+                <button string="Document" class="oe_stat_button float-right" icon="fa-bars" type="object" name="action_open_calendar_event" attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', False)]}"/>
                 <field name="res_model" invisible="1" />
                 <field name="res_id" invisible="1" />
                 <field name="state" invisible="1"/>
@@ -291,14 +290,12 @@
                 <field name="user_id"/>
                 <field name="show_as"/>
                 <field name="privacy" string="Privacy"/>
-                <filter string="My Events" domain="[('user_id','=',uid)]" help="My Events"/>
                 <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
-                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
                 <group expand="0" string="Group By">
-                    <filter string="Responsible" domain="[]" context="{'group_by':'user_id'}"/>
-                    <filter string="Availability" domain="[]" context="{'group_by':'show_as'}"/>
-                    <filter string="Privacy" domain="[]" context="{'group_by':'privacy'}"/>
+                    <filter string="Responsible" name="responsible" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Availability" name="availability" domain="[]" context="{'group_by':'show_as'}"/>
+                    <filter string="Privacy" name="privacy" domain="[]" context="{'group_by':'privacy'}"/>
                 </group>
             </search>
         </field>
@@ -311,8 +308,8 @@
         <field name="view_id" ref="view_calendar_event_calendar"/>
         <field name="search_view_id" ref="view_calendar_event_search"/>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to schedule a new meeting.
+          <p class="o_view_nocontent_smiling_face">
+            Schedule a new meeting
           </p><p>
             The calendar is shared between employees and fully integrated with
             other applications such as the employee leaves or the business

@@ -2,9 +2,9 @@
 # Parent 22f8d180a7f9ad209d7e98cf7d1bd0fee1f05350
 Index: addons/openacademy/models.py
 ===================================================================
---- addons.orig/openacademy/models.py	2014-08-27 10:35:29.179933749 +0200
-+++ addons/openacademy/models.py	2014-08-27 10:35:56.000000000 +0200
-@@ -7,3 +7,12 @@
+--- addons.orig/openacademy/models.py
++++ addons/openacademy/models.py
+@@ -8,3 +8,13 @@
  
      name = fields.Char(string="Title", required=True)
      description = fields.Text()
@@ -12,6 +12,7 @@ Index: addons/openacademy/models.py
 +
 +class Session(models.Model):
 +    _name = 'openacademy.session'
++    _description = "OpenAcademy Sessions"
 +
 +    name = fields.Char(required=True)
 +    start_date = fields.Date()
@@ -19,13 +20,12 @@ Index: addons/openacademy/models.py
 +    seats = fields.Integer(string="Number of seats")
 Index: addons/openacademy/views/openacademy.xml
 ===================================================================
---- addons.orig/openacademy/views/openacademy.xml	2014-08-27 10:35:29.179933749 +0200
-+++ addons/openacademy/views/openacademy.xml	2014-08-27 10:36:54.643932480 +0200
-@@ -64,5 +64,34 @@
-         <!-- Full id location:
+--- addons.orig/openacademy/views/openacademy.xml
++++ addons/openacademy/views/openacademy.xml
+@@ -64,4 +64,32 @@
               action="openacademy.course_list_action"
               It is not required when it is the same module -->
-+
+ 
 +        <!-- session form view -->
 +        <record model="ir.ui.view" id="session_form_view">
 +            <field name="name">session.form</field>
@@ -47,12 +47,11 @@ Index: addons/openacademy/views/openacademy.xml
 +        <record model="ir.actions.act_window" id="session_list_action">
 +            <field name="name">Sessions</field>
 +            <field name="res_model">openacademy.session</field>
-+            <field name="view_type">form</field>
 +            <field name="view_mode">tree,form</field>
 +        </record>
 +
 +        <menuitem id="session_menu" name="Sessions"
 +                  parent="openacademy_menu"
 +                  action="session_list_action"/>
- 
++
  </odoo>

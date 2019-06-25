@@ -14,7 +14,7 @@ var DiagramRenderer = AbstractRenderer.extend({
     template: 'DiagramView',
     /**
      * @override
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     start: function () {
         var $header = this.$el.filter('.o_diagram_header');
@@ -32,7 +32,7 @@ var DiagramRenderer = AbstractRenderer.extend({
 
     /**
      * @override
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _render: function () {
         var self = this;
@@ -109,10 +109,10 @@ var DiagramRenderer = AbstractRenderer.extend({
         };
         CuteNode.destruction_callback = function (cutenode) {
             self.trigger_up('remove_node', {id: cutenode.id});
-            // return a rejected deferred to prevent the library from removing
+            // return a rejected promise to prevent the library from removing
             // the node directly,as the diagram will be redrawn once the node is
             // deleted
-            return $.Deferred().reject();
+            return Promise.reject();
         };
         CuteEdge.double_click_callback = function (cuteedge) {
             self.trigger_up('edit_edge', {id: cuteedge.id});
@@ -129,10 +129,10 @@ var DiagramRenderer = AbstractRenderer.extend({
         };
         CuteEdge.destruction_callback = function (cuteedge) {
             self.trigger_up('remove_edge', {id: cuteedge.id});
-            // return a rejected deferred to prevent the library from removing
+            // return a rejected promise to prevent the library from removing
             // the edge directly, as the diagram will be redrawn once the edge
             // is deleted
-            return $.Deferred().reject();
+            return Promise.reject();
         };
         return this._super.apply(this, arguments);
     },

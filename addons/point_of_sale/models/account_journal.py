@@ -15,13 +15,13 @@ class AccountJournal(models.Model):
              "the closing of his session saying that he needs to contact his manager.")
 
     @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         session_id = self.env.context.get('pos_session_id', False)
         if session_id:
             session = self.env['pos.session'].browse(session_id)
             if session:
                 args += [('id', 'in', session.config_id.journal_ids.ids)]
-        return super(AccountJournal, self).search(args=args, offset=offset, limit=limit, order=order, count=count)
+        return super(AccountJournal, self)._search(args=args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
     @api.onchange('type')
     def onchange_type(self):

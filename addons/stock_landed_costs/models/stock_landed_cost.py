@@ -9,25 +9,19 @@ from odoo.addons.stock_landed_costs.models import product
 from odoo.exceptions import UserError
 
 
-class StockMove(models.Model):
-    _inherit = 'stock.move'
-
-    landed_cost_value = fields.Float('Landed Cost')
-
-
 class LandedCost(models.Model):
     _name = 'stock.landed.cost'
     _description = 'Stock Landed Cost'
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(
         'Name', default=lambda self: _('New'),
-        copy=False, readonly=True, track_visibility='always')
+        copy=False, readonly=True, tracking=True)
     date = fields.Date(
         'Date', default=fields.Date.context_today,
-        copy=False, required=True, states={'done': [('readonly', True)]}, track_visibility='onchange')
+        copy=False, required=True, states={'done': [('readonly', True)]}, tracking=True)
     picking_ids = fields.Many2many(
-        'stock.picking', string='Pickings',
+        'stock.picking', string='Transfers',
         copy=False, states={'done': [('readonly', True)]})
     cost_lines = fields.One2many(
         'stock.landed.cost.lines', 'cost_id', 'Cost Lines',
@@ -39,12 +33,12 @@ class LandedCost(models.Model):
         'Item Description', states={'done': [('readonly', True)]})
     amount_total = fields.Float(
         'Total', compute='_compute_total_amount',
-        digits=0, store=True, track_visibility='always')
+        digits=0, store=True, tracking=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Posted'),
         ('cancel', 'Cancelled')], 'State', default='draft',
-        copy=False, readonly=True, track_visibility='onchange')
+        copy=False, readonly=True, tracking=True)
     account_move_id = fields.Many2one(
         'account.move', 'Journal Entry',
         copy=False, readonly=True)
@@ -52,7 +46,8 @@ class LandedCost(models.Model):
         'account.journal', 'Account Journal',
         required=True, states={'done': [('readonly', True)]})
     company_id = fields.Many2one('res.company', string="Company",
-        related='account_journal_id.company_id')
+        related='account_journal_id.company_id', readonly=False)
+    stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_landed_cost_id')
 
     @api.one
     @api.depends('cost_lines.price_unit')
@@ -73,7 +68,7 @@ class LandedCost(models.Model):
     @api.multi
     def _track_subtype(self, init_values):
         if 'state' in init_values and self.state == 'done':
-            return 'stock_landed_costs.mt_stock_landed_cost_open'
+            return self.env.ref('stock_landed_costs.mt_stock_landed_cost_open')
         return super(LandedCost, self)._track_subtype(init_values)
 
     @api.multi
@@ -101,25 +96,33 @@ class LandedCost(models.Model):
                 'line_ids': [],
             }
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
-                # Prorate the value at what's still in stock
-                cost_to_add = (line.move_id.remaining_qty / line.move_id.product_qty) * line.additional_landed_cost
+                remaining_qty = sum(line.move_id.stock_valuation_layer_ids.mapped('remaining_qty'))
+                linked_layer = line.move_id.stock_valuation_layer_ids[-1]  # Maybe the LC layer should be linked to multiple IN layer?
 
-                new_landed_cost_value = line.move_id.landed_cost_value + line.additional_landed_cost
-                line.move_id.write({
-                    'landed_cost_value': new_landed_cost_value,
-                    'value': line.move_id.value + line.additional_landed_cost,
-                    'remaining_value': line.move_id.remaining_value + cost_to_add,
-                    'price_unit': (line.move_id.value + line.additional_landed_cost) / line.move_id.product_qty,
+                # Prorate the value at what's still in stock
+                cost_to_add = (remaining_qty / line.move_id.product_qty) * line.additional_landed_cost
+                valuation_layer = self.env['stock.valuation.layer'].create({
+                    'value': cost_to_add,
+                    'unit_cost': 0,
+                    'quantity': 0,
+                    'remaining_qty': 0,
+                    'stock_valuation_layer_id': linked_layer.id,
+                    'description': cost.name,
+                    'stock_move_id': line.move_id.id,
+                    'product_id': line.move_id.product_id.id,
+                    'stock_landed_cost_id': self.id,
+                    'company_id': self.company_id.id,
                 })
                 # `remaining_qty` is negative if the move is out and delivered proudcts that were not
                 # in stock.
                 qty_out = 0
                 if line.move_id._is_in():
-                    qty_out = line.move_id.product_qty - line.move_id.remaining_qty
+                    qty_out = line.move_id.product_qty - remaining_qty
                 elif line.move_id._is_out():
                     qty_out = line.move_id.product_qty
                 move_vals['line_ids'] += line._create_accounting_entries(move, qty_out)
 
+            move_vals['stock_valuation_layer_ids'] = [(6, None, [valuation_layer.id])]
             move = move.create(move_vals)
             cost.write({'state': 'done', 'account_move_id': move.id})
             move.post()
@@ -128,7 +131,7 @@ class LandedCost(models.Model):
     def _check_sum(self):
         """ Check if each cost line its valuation lines sum to the correct amount
         and if the overall total amount is correct also """
-        prec_digits = self.env['decimal.precision'].precision_get('Account')
+        prec_digits = self.env.company.currency_id.decimal_places
         for landed_cost in self:
             total_amount = sum(landed_cost.valuation_adjustment_lines.mapped('additional_landed_cost'))
             if not tools.float_compare(total_amount, landed_cost.amount_total, precision_digits=prec_digits) == 0:
@@ -153,14 +156,14 @@ class LandedCost(models.Model):
                 'product_id': move.product_id.id,
                 'move_id': move.id,
                 'quantity': move.product_qty,
-                'former_cost': move.value,
+                'former_cost': sum(move.stock_valuation_layer_ids.mapped('value')),
                 'weight': move.product_id.weight * move.product_qty,
                 'volume': move.product_id.volume * move.product_qty
             }
             lines.append(vals)
 
         if not lines and self.mapped('picking_ids'):
-            raise UserError(_('The selected picking does not contain any move that would be impacted by landed costs. Landed costs are only possible for products configured in real time valuation with real price costing method. Please make sure it is the case, or you selected the correct picking'))
+            raise UserError(_("You cannot apply landed costs on the chosen transfer(s). Landed costs can only be applied for products with automated inventory valuation and FIFO costing method."))
         return lines
 
     @api.multi
@@ -227,10 +230,16 @@ class LandedCost(models.Model):
             AdjustementLines.browse(key).write({'additional_landed_cost': value})
         return True
 
+    def action_view_stock_valuation_layers(self):
+        self.ensure_one()
+        domain = [('id', 'in', self.stock_valuation_layer_ids.ids)]
+        action = self.env.ref('stock_account.stock_valuation_layer_action').read()[0]
+        return dict(action, domain=domain)
+
 
 class LandedCostLine(models.Model):
     _name = 'stock.landed.cost.lines'
-    _description = 'Stock Landed Cost Lines'
+    _description = 'Stock Landed Cost Line'
 
     name = fields.Char('Description')
     cost_id = fields.Many2one(
@@ -253,7 +262,7 @@ class LandedCostLine(models.Model):
 
 class AdjustmentLines(models.Model):
     _name = 'stock.valuation.adjustment.lines'
-    _description = 'Stock Valuation Adjustment Lines'
+    _description = 'Valuation Adjustment Lines'
 
     name = fields.Char(
         'Description', compute='_compute_name', store=True)
@@ -307,6 +316,9 @@ class AdjustmentLines(models.Model):
             return False
         accounts = self.product_id.product_tmpl_id.get_product_accounts()
         debit_account_id = accounts.get('stock_valuation') and accounts['stock_valuation'].id or False
+        # If the stock move is dropshipped move we need to get the cost account instead the stock valuation account
+        if self.move_id._is_dropshipped():
+            debit_account_id = accounts.get('expense') and accounts['expense'].id or False
         already_out_account_id = accounts['stock_output'].id
         credit_account_id = self.cost_line_id.account_id.id or cost_product.property_account_expense_id.id or cost_product.categ_id.property_account_expense_categ_id.id
 
@@ -362,7 +374,7 @@ class AdjustmentLines(models.Model):
             AccountMoveLine.append([0, 0, credit_line])
 
             # TDE FIXME: oh dear
-            if self.env.user.company_id.anglo_saxon_accounting:
+            if self.env.company.anglo_saxon_accounting:
                 debit_line = dict(base_line,
                                   name=(self.name + ": " + str(qty_out) + _(' already out')),
                                   quantity=0,

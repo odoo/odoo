@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem name="Slides"
+            id="menu_website_slides_root"
+            sequence="32"
+            parent="website.menu_website_configuration"
+            groups="website.group_website_designer"
+            action="action_slides_slides"/>
+
+        <menuitem name="Slides"
+            id="menu_website_slides_root_global"
+            sequence="140"
+            parent="website.menu_website_global_configuration"
+            groups="website.group_website_designer"/>
+
+        <menuitem action="website_slides.action_slide_channels" id="menu_action_slide_channels_global"
+            parent="menu_website_slides_root_global" sequence="1"/>
+
+        <menuitem action="website_slides.action_ir_slide_category" id="menu_action_ir_slide_category_global" parent="menu_website_slides_root_global" sequence="2"/>
+
+        <menuitem action="website_slides.action_slide_tag" id="menu_slide_tag" parent="menu_website_slides_root_global" sequence="10" groups="base.group_no_one"/>
+
+        <!-- Channel tags -->
+        <menuitem id="slide_channel_tag_menu"
+            action="website_slides.slide_channel_tag_action"
+            parent="menu_website_slides_root_global"
+            sequence="20"
+            groups="base.group_no_one"/>
+        <menuitem id="slide_channel_tag_group_menu"
+            action="website_slides.slide_channel_tag_group_action"
+            parent="menu_website_slides_root_global"
+            sequence="21"
+            groups="base.group_no_one"/>
+    </data>
+</odoo>

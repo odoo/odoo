@@ -2,31 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
-from odoo.addons.mail.tests.common import BaseFunctionalTest
-
-class TestCrm(BaseFunctionalTest):
-
-    @classmethod
-    def setUpClass(cls):
-        super(TestCrm, cls).setUpClass()
-
-        user_group_employee = cls.env.ref('base.group_user')
-        user_group_salesman_all = cls.env.ref('sales_team.group_sale_salesman_all_leads')
-
-        # Test users to use through the various tests
-        Users = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True})
-        cls.user_salesman_all = Users.create({
-            'name': 'Riton La Chignole',
-            'login': 'riton',
-            'email': 'riton.salesman_all@example.com',
-            'notification_type': 'inbox',
-            'groups_id': [(6, 0, [user_group_employee.id, user_group_salesman_all.id])]
-        })
-
-        cls.sales_team_1 = cls.env['crm.team'].create({
-            'name': 'Test Sales Channel',
-            'alias_name': 'test_sales_team',
-        })
 
 
 class TestCrmCases(TransactionCase):
@@ -49,5 +24,6 @@ class TestCrmCases(TransactionCase):
             'name': "Crm Salesman",
             'login': "csu",
             'email': "crmuser@yourcompany.com",
+            'notification_type': 'inbox',
             'groups_id': [(6, 0, [self.env.ref('sales_team.group_sale_salesman_all_leads').id, self.env.ref('base.group_partner_manager').id])]
         })

@@ -1,25 +1,26 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
 from odoo import api, fields, models
+from odoo.tools.float_utils import float_round
 
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
+    bom_line_ids = fields.One2many('mrp.bom.line', 'product_tmpl_id', 'BoM Components')
     bom_ids = fields.One2many('mrp.bom', 'product_tmpl_id', 'Bill of Materials')
     bom_count = fields.Integer('# Bill of Material', compute='_compute_bom_count')
     used_in_bom_count = fields.Integer('# of BoM Where is Used', compute='_compute_used_in_bom_count')
-    mo_count = fields.Integer('# Manufacturing Orders', compute='_compute_mo_count')
+    mrp_product_qty = fields.Float('Manufactured', compute='_compute_mrp_product_qty')
     produce_delay = fields.Float(
         'Manufacturing Lead Time', default=0.0,
-        help="Average delay in days to produce this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added.")
+        help="Average lead time in days to manufacture this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added.")
 
     def _compute_bom_count(self):
-        read_group_res = self.env['mrp.bom'].read_group([('product_tmpl_id', 'in', self.ids)], ['product_tmpl_id'], ['product_tmpl_id'])
-        mapped_data = dict([(data['product_tmpl_id'][0], data['product_tmpl_id_count']) for data in read_group_res])
         for product in self:
-            product.bom_count = mapped_data.get(product.id, 0)
+            product.bom_count = self.env['mrp.bom'].search_count([('product_tmpl_id', '=', product.id)])
 
     @api.multi
     def _compute_used_in_bom_count(self):
@@ -35,38 +36,32 @@ class ProductTemplate(models.Model):
         return action
 
     @api.one
-    def _compute_mo_count(self):
-        # TDE FIXME: directly use a read_group
-        self.mo_count = sum(self.mapped('product_variant_ids').mapped('mo_count'))
+    def _compute_mrp_product_qty(self):
+        self.mrp_product_qty = float_round(sum(self.mapped('product_variant_ids').mapped('mrp_product_qty')), precision_rounding=self.uom_id.rounding)
 
     @api.multi
     def action_view_mos(self):
-        product_ids = self.mapped('product_variant_ids').ids
-        action = self.env.ref('mrp.act_product_mrp_production').read()[0]
-        action['domain'] = [('product_id', 'in', product_ids)]
-        action['context'] = {}
+        action = self.env.ref('mrp.mrp_production_report').read()[0]
+        action['domain'] = [('state', '=', 'done'), ('product_tmpl_id', 'in', self.ids)]
+        action['context'] = {
+            'graph_measure': 'product_uom_qty',
+            'time_ranges': {'field': 'date_planned_start', 'range': 'last_365_days'}
+        }
         return action
 
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
+    variant_bom_ids = fields.One2many('mrp.bom', 'product_id', 'BOM Product Variants')
+    bom_line_ids = fields.One2many('mrp.bom.line', 'product_id', 'BoM Components')
     bom_count = fields.Integer('# Bill of Material', compute='_compute_bom_count')
     used_in_bom_count = fields.Integer('# BoM Where Used', compute='_compute_used_in_bom_count')
-    mo_count = fields.Integer('# Manufacturing Orders', compute='_compute_mo_count')
+    mrp_product_qty = fields.Float('Manufactured', compute='_compute_mrp_product_qty')
 
     def _compute_bom_count(self):
-        # read_group_res: BOM where product_id is set
-        # read_group_res_tmpl: BOM where product_tmpl_id is set and product_id is not set
-        # The total count is the sum of both.
-        read_group_res = self.env['mrp.bom'].read_group([('product_id', 'in', self.ids)], ['product_id'], ['product_id'])
-        mapped_data = dict([(data['product_id'][0], data['product_id_count']) for data in read_group_res])
-        read_group_res_tmpl = self.env['mrp.bom'].read_group([
-            ('product_tmpl_id', 'in', self.mapped('product_tmpl_id.id')), ('product_id', '=', False)
-        ], ['product_tmpl_id'], ['product_tmpl_id'])
-        mapped_data_tmpl = dict([(data['product_tmpl_id'][0], data['product_tmpl_id_count']) for data in read_group_res_tmpl])
         for product in self:
-            product.bom_count = mapped_data.get(product.id, 0) + mapped_data_tmpl.get(product.product_tmpl_id.id, 0)
+            product.bom_count = self.env['mrp.bom'].search_count(['|', ('product_id', '=', product.id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product.product_tmpl_id.id)])
 
     @api.multi
     def _compute_used_in_bom_count(self):
@@ -80,11 +75,45 @@ class ProductProduct(models.Model):
         action['domain'] = [('bom_line_ids.product_id', '=', self.id)]
         return action
 
-    def _compute_mo_count(self):
-        read_group_res = self.env['mrp.production'].read_group([('product_id', 'in', self.ids)], ['product_id'], ['product_id'])
-        mapped_data = dict([(data['product_id'][0], data['product_id_count']) for data in read_group_res])
+    def _compute_mrp_product_qty(self):
+        date_from = fields.Datetime.to_string(fields.datetime.now() - timedelta(days=365))
+        #TODO: state = done?
+        domain = [('state', '=', 'done'), ('product_id', 'in', self.ids), ('date_planned_start', '>', date_from)]
+        read_group_res = self.env['mrp.production'].read_group(domain, ['product_id', 'product_uom_qty'], ['product_id'])
+        mapped_data = dict([(data['product_id'][0], data['product_uom_qty']) for data in read_group_res])
         for product in self:
-            product.mo_count = mapped_data.get(product.id, 0)
+            product.mrp_product_qty = float_round(mapped_data.get(product.id, 0), precision_rounding=product.uom_id.rounding)
+
+    def _compute_quantities(self):
+        """ When the product is a kit, this override computes the fields :
+         - 'virtual_available'
+         - 'qty_available'
+         - 'incoming_qty'
+         - 'outgoing_qty'
+         """
+        for product in self:
+            bom_kit = self.env['mrp.bom']._bom_find(product=product, bom_type='phantom')
+            if bom_kit:
+                boms, bom_sub_lines = bom_kit.explode(product, 1)
+                ratios_virtual_available = []
+                ratios_qty_available = []
+                ratios_incoming_qty = []
+                ratios_outgoing_qty = []
+                for bom_line, bom_line_data in bom_sub_lines:
+                    component = bom_line.product_id
+                    uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
+                    qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id)
+                    ratios_virtual_available.append(component.virtual_available / qty_per_kit)
+                    ratios_qty_available.append(component.qty_available / qty_per_kit)
+                    ratios_incoming_qty.append(component.incoming_qty / qty_per_kit)
+                    ratios_outgoing_qty.append(component.outgoing_qty / qty_per_kit)
+                if bom_sub_lines:
+                    product.virtual_available = min(ratios_virtual_available) // 1
+                    product.qty_available = min(ratios_qty_available) // 1
+                    product.incoming_qty = min(ratios_incoming_qty) // 1
+                    product.outgoing_qty = min(ratios_incoming_qty) // 1
+            else:
+                super(ProductProduct, self)._compute_quantities()
 
     @api.multi
     def action_view_bom(self):
@@ -96,4 +125,14 @@ class ProductProduct(models.Model):
             'default_product_id': self.ids[0],
         }
         action['domain'] = ['|', ('product_id', 'in', self.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', template_ids)]
+        return action
+
+    @api.multi
+    def action_view_mos(self):
+        action = self.env.ref('mrp.mrp_production_report').read()[0]
+        action['domain'] = [('state', '=', 'done'), ('product_id', 'in', self.ids)]
+        action['context'] = {
+            'time_ranges': {'field': 'date_planned_start', 'range': 'last_365_days'},
+            'graph_measure': 'product_uom_qty',
+        }
         return action

@@ -58,5 +58,58 @@ QUnit.module('core', {}, function () {
         assert.ok(new Domain(1).compute({}));
         assert.notOk(new Domain(0).compute({}));
     });
+
+    QUnit.test("domain <=> condition", function (assert) {
+        assert.expect(3);
+
+        var domain = [
+            '|',
+                '|',
+                    '|',
+                        '&', ['doc.amount', '>', 33], ['doc.toto', '!=', null],
+                        '&', ['doc.bidule.active', '=', true], ['truc', 'in', [2, 3]],
+                    ['gogo', '=', 'gogo value'],
+                ['gogo', '!=', false]
+        ];
+        var condition = '((doc.amount > 33 and doc.toto is not None or doc.bidule.active is True and truc in [2,3]) or gogo == "gogo value") or gogo';
+
+        assert.equal(Domain.prototype.domainToCondition(domain), condition);
+        assert.deepEqual(Domain.prototype.conditionToDomain(condition), domain);
+        assert.deepEqual(Domain.prototype.conditionToDomain(
+            'doc and toto is None or not tata'),
+            ['|', '&', ['doc', '!=', false], ['toto', '=', null], ['tata', '=', false]]);
+    });
+
+    QUnit.test("condition 'a field is set' does not convert to a domain", function (assert) {
+        assert.expect(1);
+        var expected = [["doc.blabla","!=",false]];
+        var condition = "doc.blabla";
+
+        var actual = Domain.prototype.conditionToDomain(condition);
+
+        assert.deepEqual(actual, expected);
+    });
+
+    QUnit.test("condition with a function should fail", function (assert) {
+        assert.expect(1);
+        var condition = "doc.blabla()";
+
+        assert.throws(function() { Domain.prototype.conditionToDomain(condition); });
+    });
+
+    QUnit.test("empty condition should not fail", function (assert) {
+        assert.expect(2);
+        var condition = "";
+        var actual = Domain.prototype.conditionToDomain(condition);
+        assert.strictEqual(typeof(actual),typeof([]));
+        assert.strictEqual(actual.length, 0);
+    });
+    QUnit.test("undefined condition should not fail", function (assert) {
+        assert.expect(2);
+        var condition = undefined;
+        var actual = Domain.prototype.conditionToDomain(condition);
+        assert.strictEqual(typeof(actual),typeof([]));
+        assert.strictEqual(actual.length, 0);
+    });
 });
 });

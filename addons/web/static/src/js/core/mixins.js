@@ -3,7 +3,6 @@ odoo.define('web.mixins', function (require) {
 
 var Class = require('web.Class');
 var utils = require('web.utils');
-var AbstractService = require('web.AbstractService');
 
 /**
  * Mixin to structure objects' life-cycles folowing a parent-children
@@ -63,45 +62,44 @@ var ParentedMixin = {
      * Utility method to only execute asynchronous actions if the current
      * object has not been destroyed.
      *
-     * @param {$.Deferred} promise The promise representing the asynchronous
+     * @param {Promise} promise The promise representing the asynchronous
      *                             action.
-     * @param {bool} [reject=false] If true, the returned promise will be
+     * @param {bool} [shouldReject=false] If true, the returned promise will be
      *                              rejected with no arguments if the current
      *                              object is destroyed. If false, the
      *                              returned promise will never be resolved
      *                              or rejected.
-     * @returns {$.Deferred} A promise that will mirror the given promise if
+     * @returns {Promise} A promise that will mirror the given promise if
      *                       everything goes fine but will either be rejected
      *                       with no arguments or never resolved if the
      *                       current object is destroyed.
      */
-    alive: function (promise, reject) {
+    alive: function (promise, shouldReject) {
         var self = this;
-        return $.Deferred(function (def) {
-            promise.then(function () {
+
+        return new Promise(function (resolve, reject) {
+            promise.then(function (result) {
                 if (!self.isDestroyed()) {
-                    def.resolve.apply(def, arguments);
+                    resolve(result);
+                } else if (shouldReject) {
+                    reject();
                 }
-            }, function () {
+            }).guardedCatch(function (reason) {
                 if (!self.isDestroyed()) {
-                    def.reject.apply(def, arguments);
+                    reject(reason);
+                } else if (shouldReject) {
+                    reject();
                 }
-            }).always(function () {
-                if (reject) {
-                    // noop if def already resolved or rejected
-                    def.reject();
-                }
-                // otherwise leave promise in limbo
             });
-        }).promise();
+        });
     },
     /**
      * Inform the object it should destroy itself, releasing any
      * resource it could have reserved.
      */
     destroy : function () {
-        _.each(this.getChildren(), function (el) {
-            el.destroy();
+        this.getChildren().forEach(function (child) {
+            child.destroy();
         });
         this.setParent(undefined);
         this.__parentedDestroyed = true;
@@ -332,7 +330,9 @@ var EventDispatcherMixin = _.extend({}, ParentedMixin, {
     },
     trigger_up: function (name, info) {
         var event = new OdooEvent(this, name, info);
+        //console.info('event: ', name, info);
         this._trigger_up(event);
+        return event;
     },
     _trigger_up: function (event) {
         var parent;
@@ -409,134 +409,10 @@ var PropertiesMixin = _.extend({}, EventDispatcherMixin, {
     }
 });
 
-var ServiceProvider = {
-    services: {},
-    init: function () {
-        var self = this;
-        _.each(AbstractService.prototype.Services, function (Service) {
-            var service = new Service();
-            self.services[service.name] = service;
-        });
-        this.custom_events = _.clone(this.custom_events);
-        this.custom_events.call_service = this._call_service.bind(this);
-    },
-    _call_service: function (event) {
-        var service = this.services[event.data.service];
-        var args = event.data.args.concat(event.target);
-        var result = service[event.data.method].apply(service, args);
-        event.data.callback(result);
-    },
-};
-
 return {
     ParentedMixin: ParentedMixin,
     EventDispatcherMixin: EventDispatcherMixin,
     PropertiesMixin: PropertiesMixin,
-    ServiceProvider: ServiceProvider,
 };
-
-});
-
-odoo.define('web.ServicesMixin', function (require) {
-"use strict";
-
-var rpc = require('web.rpc');
-
-/**
- * @mixin
- * @name ServicesMixin
- */
-var ServicesMixin = {
-    call: function (service, method) {
-        var args = Array.prototype.slice.call(arguments, 2);
-        var result;
-        this.trigger_up('call_service', {
-            service: service,
-            method: method,
-            args: args,
-            callback: function (r) {
-                result = r;
-            },
-        });
-        return result;
-    },
-    /**
-     * Builds and executes RPC query. Returns a deferred's promise resolved with
-     * the RPC result.
-     *
-     * @param {string} params either a route or a model
-     * @param {string} options if a model is given, this argument is a method
-     * @returns {Promise}
-     */
-    _rpc: function (params, options) {
-        var query = rpc.buildQuery(params);
-        var def = this.call('ajax', 'rpc', query.route, query.params, options);
-        return def ? def.promise() : $.Deferred().promise();
-    },
-    loadFieldView: function (dataset, view_id, view_type, options) {
-        return this.loadViews(dataset.model, dataset.get_context(), [[view_id, view_type]], options).then(function (result) {
-            return result[view_type];
-        });
-    },
-    loadViews: function (modelName, context, views, options) {
-        var def = $.Deferred();
-        this.trigger_up('load_views', {
-            modelName: modelName,
-            context: context,
-            views: views,
-            options: options,
-            on_success: def.resolve.bind(def),
-        });
-        return def;
-    },
-    loadFilters: function (dataset, action_id) {
-        var def = $.Deferred();
-        this.trigger_up('load_filters', {
-            dataset: dataset,
-            action_id: action_id,
-            on_success: def.resolve.bind(def),
-        });
-        return def;
-    },
-    // Session stuff
-    getSession: function () {
-        var session;
-        this.trigger_up('get_session', {
-            callback: function (result) {
-                session = result;
-            }
-        });
-        return session;
-    },
-    /**
-     * Informs the action manager to do an action. This supposes that the action
-     * manager can be found amongst the ancestors of the current widget.
-     * If that's not the case this method will simply return an unresolved
-     * deferred.
-     *
-     * @param {any} action
-     * @param {any} options
-     * @returns {Deferred}
-     */
-    do_action: function (action, options) {
-        var def = $.Deferred();
-
-        this.trigger_up('do_action', {
-            action: action,
-            options: options,
-            on_success: function (result) { def.resolve(result); },
-            on_fail: function (result) { def.reject(result); },
-        });
-        return def;
-    },
-    do_notify: function (title, message, sticky, className) {
-        this.trigger_up('notification', {title: title, message: message, sticky: sticky, className: className});
-    },
-    do_warn: function (title, message, sticky, className) {
-        this.trigger_up('warning', {title: title, message: message, sticky: sticky, className: className});
-    },
-};
-
-return ServicesMixin;
 
 });

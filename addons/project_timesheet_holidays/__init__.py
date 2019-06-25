@@ -12,9 +12,9 @@ def post_init(cr, registry):
     from odoo import api, SUPERUSER_ID
 
     env = api.Environment(cr, SUPERUSER_ID, {})
-    for leave_type in env['hr.holidays.status'].search([('timesheet_generate', '=', True), ('timesheet_project_id', '=', False)]):
-        company = leave_type.company_id or env.user.company_id
-        leave_type.write({
+    for hr_leave_type in env['hr.leave.type'].search([('timesheet_generate', '=', True), ('timesheet_project_id', '=', False)]):
+        company = hr_leave_type.company_id or env.company
+        hr_leave_type.write({
             'timesheet_project_id': company.leave_timesheet_project_id.id,
             'timesheet_task_id': company.leave_timesheet_task_id.id,
         })

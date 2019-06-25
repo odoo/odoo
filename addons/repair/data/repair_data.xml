@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mail_template_repair_quotation" model="mail.template">
+            <field name="name">Repair Quotation: Send by email</field>
+            <field name="model_id" ref="repair.model_repair_order"/>
+            <field name="subject">${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })</field>
+            <field name="email_from">${(object.create_uid.email_formatted or user.email_formatted) | safe}</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="body_html" type="xml">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px;font-size: 13px;">
+        Hello ${object.partner_id.name},<br/>
+        Here is your repair order ${doc_name} <strong>${object.name}</strong>
+        % if object.origin:
+            (with reference: ${object.origin} )
+        % endif
+        % if object.invoice_method != 'none':
+            amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong><br/>
+        % else:
+            .<br/>
+        % endif
+        You can reply to this email if you have any questions.
+        <br/><br/>
+        Thank you,
+    </p>
+</div></field>
+            <field name="report_template" ref="action_report_repair_order"/>
+            <field name="report_name">${(object.name or '').replace('/','_')}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="True"/>
+        </record>
+    </data>
+</odoo>

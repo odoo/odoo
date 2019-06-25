@@ -23,8 +23,8 @@
         'data/account.account.template.csv',
         'data/account_chart_template_data.xml',
         'data/account.tax.group.csv',
-        'data/account.tax.template.csv',
-        'data/account_chart_template_data.yml',
+        'data/account_tax_template.xml',
+        'data/account_chart_template_configure_data.xml',
         'views/res_partner.xml',
     ],
 }

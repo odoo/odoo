@@ -6,7 +6,7 @@ import re
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
-STREET_FIELDS = ('street_name', 'street_number', 'street_number2')
+STREET_FIELDS = ['street_name', 'street_number', 'street_number2']
 
 
 class ResCountry(models.Model):
@@ -28,15 +28,14 @@ class Partner(models.Model):
 
     street_name = fields.Char('Street Name', compute='_split_street',
                               inverse='_set_street', store=True)
-    street_number = fields.Char('House Number', compute='_split_street',
+    street_number = fields.Char('House', compute='_split_street', help="House Number",
                                 inverse='_set_street', store=True)
-    street_number2 = fields.Char('Door Number', compute='_split_street',
+    street_number2 = fields.Char('Door', compute='_split_street', help="Door Number",
                                  inverse='_set_street', store=True)
 
-    @api.model
-    def _address_fields(self):
-        """Returns the list of address fields that are synced from the parent."""
-        return super(Partner, self)._address_fields() + ['street_name', 'street_number', 'street_number2']
+    def _formatting_address_fields(self):
+        """Returns the list of address fields usable to format addresses."""
+        return super(Partner, self)._formatting_address_fields() + self.get_street_fields()
 
     def get_street_fields(self):
         """Returns the fields that can be used in a street format.
@@ -79,12 +78,7 @@ class Partner(models.Model):
 
             # add trailing chars in street_format
             street_value += street_format[previous_pos:]
-
-            # /!\ Note that we must use a sql query to bypass the orm as it would call _split_street()
-            # that would try to set the fields we just modified.
-            self._cr.execute('UPDATE res_partner SET street = %s WHERE ID = %s', (street_value, partner.id))
-            #invalidate the cache for the field we manually set
-            self.invalidate_cache(['street'], [partner.id])
+            partner.street = street_value
 
     def _split_street_with_params(self, street_raw, street_format):
         street_fields = self.get_street_fields()
@@ -144,13 +138,12 @@ class Partner(models.Model):
             street_raw = partner.street
             vals = self._split_street_with_params(street_raw, street_format)
             # assign the values to the fields
-            # /!\ Note that a write(vals) would cause a recursion since it would bypass the cache
             for k, v in vals.items():
                 partner[k] = v
 
     def write(self, vals):
         res = super(Partner, self).write(vals)
-        if 'country_id' in vals:
+        if 'country_id' in vals and 'street' not in vals:
             self._set_street()
         return res
 

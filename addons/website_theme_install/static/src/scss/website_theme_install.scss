@@ -1,0 +1,148 @@
+
+.o_kanban_view.o_theme_kanban {
+    $o-theme-kanban-gray: #fcfcfc;
+    background-color: $o-theme-kanban-gray;
+
+    /// Un-grouped Layout (default)
+    &.o_kanban_ungrouped {
+        justify-content: space-between;
+        margin: 0 0 0 ($o-kanban-record-margin - 2 * $grid-gutter-width);
+
+        @include media-breakpoint-down(sm) {
+            padding-left: $o-horizontal-padding - $o-kanban-record-margin;
+            padding-right: $o-horizontal-padding;
+        }
+
+        .o_kanban_record {
+            flex: 1 0 220px;
+        }
+    }
+
+    .o_kanban_record {
+        margin-left: $grid-gutter-width * 2;
+        padding: 0;
+        box-shadow: none;
+        background: none;
+        border: none;
+
+        .o_theme_preview_top {
+            position: relative;
+            border: 1px solid darken($o-theme-kanban-gray, 20%);
+            border-radius: 2px;
+            transform-origin: center bottom;
+            transition: all .1s ease 0s;
+
+            .o_theme_cover, .o_theme_logo, .o_theme_screenshot {
+                width: 100%;
+                padding-bottom: 127%;
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-size: 40% 32%;
+            }
+
+            .o_theme_cover {
+                background-size: contain;
+            }
+
+            .o_theme_screenshot {
+                background-size: cover;
+            }
+        }
+
+        .o_theme_preview_bottom {
+            h5, h6 {
+                line-height: 16px;
+            }
+        }
+
+        .o_button_area {
+            @include o-position-absolute(0, 0, 0, 0);
+            transition: opacity 100ms ease 0s;
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: center;
+            transform: translate3d(0,0,0);
+            background-image: linear-gradient(0deg, rgba(black, 0.6), rgba(black, 0.3));
+            padding: 10% 20%;
+            opacity: 0;
+            visibility: hidden;
+
+            > .btn {
+                padding: $btn-padding-y-lg $btn-padding-x-lg;
+            }
+
+            hr {
+                width: 100%;
+            }
+        }
+
+        .o_theme_preview_top:hover {
+            transition: all .3s ease 0s;
+            transform: translateY(-10px);
+            border-color: darken($o-theme-kanban-gray, 26%);
+            box-shadow: 0 15px 12px -8px rgba(0, 0, 0, .4);
+
+            .o_button_area {
+                opacity: 1;
+                visibility: visible;
+                transition: opacity 0.2s ease 0.1s;
+            }
+        }
+
+        &.o_theme_installed .o_theme_preview_top {
+            border: 3px solid $o-brand-primary;
+        }
+    }
+
+    /// Grouped Layout
+    &.o_kanban_grouped {
+        .o_kanban_group {
+            background-color: $o-theme-kanban-gray;
+            padding: 0 20px;
+
+            .o_kanban_header {
+                height: 30px;
+
+                .o_column_title {
+                    padding: 0;
+                    color: $body-color;
+                }
+
+                &:hover, &.show {
+                    .o_kanban_config {
+                        display: none;
+                    }
+                }
+            }
+
+            .o_theme_preview_top {
+                border-color: darken($o-theme-kanban-gray, 16%);
+            }
+
+            &:nth-child(even) {
+                background-color: darken($o-theme-kanban-gray, 4%);
+
+                .o_theme_cover, .o_theme_logo {
+                    background-color: white;
+                }
+            }
+        }
+
+        .o_kanban_record {
+            width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+
+            .o_theme_preview_top {
+                .o_theme_cover, .o_theme_logo {
+                    padding-bottom: 50%;
+                    background-size: 32% 62%;
+                }
+
+                .o_theme_cover {
+                    background-size: cover;
+                }
+            }
+        }
+    }
+}

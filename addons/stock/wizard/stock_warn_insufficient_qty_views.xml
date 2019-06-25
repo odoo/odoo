@@ -18,7 +18,7 @@
                     <field name="quant_ids" style="margin-top:10px;">
                         <tree>
                             <field name="product_id"/>
-                            <field name="location_id"/>
+                            <field name="location_id" options="{'no_create': True}"/>
                             <field name="lot_id" groups="stock.group_production_lot"/>
                             <field name="quantity"/>
                         </tree>
@@ -29,7 +29,7 @@
                 </div>
                 <footer>
                     <button name="cancel_button" string="Discard" class="btn-primary" special="cancel"/>
-                    <button string="Confirm" name="action_done" type="object" class="btn-default"/>
+                    <button string="Confirm" name="action_done" type="object" class="btn-secondary"/>
                 </footer>
             </form>
         </field>
@@ -43,6 +43,9 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_id']" position="after">
                 <field name="scrap_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='cancel_button']" position="replace">
+                <button string="Discard" name="action_cancel" type="object" class="btn-primary"/>
             </xpath>
         </field>
     </record>

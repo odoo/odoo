@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.stock.tests.common import TestStockCommon
+from odoo.tests import Form
 from odoo.tools import mute_logger, float_round
 from odoo.exceptions import UserError
 
 class TestStockFlow(TestStockCommon):
 
-    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_00_picking_create_and_transfer_quantity(self):
         """ Basic stock operation on incoming and outgoing shipment. """
         LotObj = self.env['stock.production.lot']
@@ -283,16 +284,16 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(sum(total_qty), 2.0, 'Expecting 2.0 Unit , got %.4f Unit on location stock!' % (sum(total_qty)))
         self.assertEqual(self.productA.qty_available, 2.0, 'Wrong quantity available (%s found instead of 2.0)' % (self.productA.qty_available))
         # Check quants and available quantity for product B
-        quants = self.StockQuantObj.search([('product_id', '=', self.productB.id), ('location_id', '=', self.stock_location)])
+        quants = self.StockQuantObj.search([('product_id', '=', self.productB.id), ('location_id', '=', self.stock_location), ('quantity', '!=', 0)])
         self.assertFalse(quants, 'No quant should found as outgoing shipment took everything out of stock.')
         self.assertEqual(self.productB.qty_available, 0.0, 'Product B should have zero quantity available.')
         # Check quants and available quantity for product C
-        quants = self.StockQuantObj.search([('product_id', '=', self.productC.id), ('location_id', '=', self.stock_location)])
+        quants = self.StockQuantObj.search([('product_id', '=', self.productC.id), ('location_id', '=', self.stock_location), ('quantity', '!=', 0)])
         total_qty = [quant.quantity for quant in quants]
         self.assertEqual(sum(total_qty), 2.0, 'Expecting 2.0 Unit, got %.4f Unit on location stock!' % (sum(total_qty)))
         self.assertEqual(self.productC.qty_available, 2.0, 'Wrong quantity available (%s found instead of 2.0)' % (self.productC.qty_available))
         # Check quants and available quantity for product D
-        quant = self.StockQuantObj.search([('product_id', '=', self.productD.id), ('location_id', '=', self.stock_location)], limit=1)
+        quant = self.StockQuantObj.search([('product_id', '=', self.productD.id), ('location_id', '=', self.stock_location), ('quantity', '!=', 0)], limit=1)
         self.assertEqual(quant.quantity, 1.0, 'Expecting 1.0 Unit , got %.4f Unit on location stock!' % (quant.quantity))
         self.assertEqual(self.productD.qty_available, 1.0, 'Wrong quantity available (%s found instead of 1.0)' % (self.productD.qty_available))
 
@@ -395,21 +396,21 @@ class TestStockFlow(TestStockCommon):
         # -----------------------------------------------------------------------
 
         # Check quants and available quantity for product A.
-        quants = self.StockQuantObj.search([('product_id', '=', self.productA.id), ('location_id', '=', self.stock_location)])
+        quants = self.StockQuantObj.search([('product_id', '=', self.productA.id), ('location_id', '=', self.stock_location), ('quantity', '!=', 0)])
         total_qty = [quant.quantity for quant in quants]
         self.assertEqual(sum(total_qty), 12.0, 'Wrong total stock location quantity (%s found instead of 12)' % (sum(total_qty)))
         self.assertEqual(self.productA.qty_available, 12.0, 'Wrong quantity available (%s found instead of 12)' % (self.productA.qty_available))
         # Check quants and available quantity for product B.
-        quants = self.StockQuantObj.search([('product_id', '=', self.productB.id), ('location_id', '=', self.stock_location)])
+        quants = self.StockQuantObj.search([('product_id', '=', self.productB.id), ('location_id', '=', self.stock_location), ('quantity', '!=', 0)])
         self.assertFalse(quants, 'No quant should found as outgoing shipment took everything out of stock')
         self.assertEqual(self.productB.qty_available, 0.0, 'Total quantity in stock should be 0 as the backorder took everything out of stock')
         # Check quants and available quantity for product C.
-        quants = self.StockQuantObj.search([('product_id', '=', self.productC.id), ('location_id', '=', self.stock_location)])
+        quants = self.StockQuantObj.search([('product_id', '=', self.productC.id), ('location_id', '=', self.stock_location), ('quantity', '!=', 0)])
         total_qty = [quant.quantity for quant in quants]
         self.assertEqual(sum(total_qty), 8.0, 'Wrong total stock location quantity (%s found instead of 8)' % (sum(total_qty)))
         self.assertEqual(self.productC.qty_available, 8.0, 'Wrong quantity available (%s found instead of 8)' % (self.productC.qty_available))
         # Check quants and available quantity for product D.
-        quants = self.StockQuantObj.search([('product_id', '=', self.productD.id), ('location_id', '=', self.stock_location)])
+        quants = self.StockQuantObj.search([('product_id', '=', self.productD.id), ('location_id', '=', self.stock_location), ('quantity', '!=', 0)])
         total_qty = [quant.quantity for quant in quants]
         self.assertEqual(sum(total_qty), 9.0, 'Wrong total stock location quantity (%s found instead of 9)' % (sum(total_qty)))
         self.assertEqual(self.productD.qty_available, 9.0, 'Wrong quantity available (%s found instead of 9)' % (self.productD.qty_available))
@@ -418,10 +419,10 @@ class TestStockFlow(TestStockCommon):
         # Back order of Outgoing shipment
         # ----------------------------------------------------------------------
 
-        back_order_out.do_transfer()
+        back_order_out.action_done()
 
         # Check stock location quants and available quantity for product A.
-        quants = self.StockQuantObj.search([('product_id', '=', self.productA.id), ('location_id', '=', self.stock_location)])
+        quants = self.StockQuantObj.search([('product_id', '=', self.productA.id), ('location_id', '=', self.stock_location), ('quantity', '!=', 0)])
         total_qty = [quant.quantity for quant in quants]
         self.assertGreaterEqual(float_round(sum(total_qty), precision_rounding=0.0001), 1, 'Total stock location quantity for product A should not be nagative.')
 
@@ -1066,8 +1067,7 @@ class TestStockFlow(TestStockCommon):
         # ------------------------------------------------
 
         inventory = self.InvObj.create({'name': 'Test',
-                                        'product_id': self.UnitA.id,
-                                        'filter': 'product'})
+                                        'product_ids': [(4, self.UnitA.id)]})
         inventory.action_start()
         self.assertFalse(inventory.line_ids, "Inventory line should not created.")
         inventory_line = self.InvLineObj.create({
@@ -1076,7 +1076,7 @@ class TestStockFlow(TestStockCommon):
             'product_uom_id': self.uom_dozen.id,
             'product_qty': 10,
             'location_id': self.stock_location})
-        inventory.action_done()
+        inventory.action_validate()
         # Check quantity available of product UnitA.
         quants = self.StockQuantObj.search([('product_id', '=', self.UnitA.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
@@ -1084,15 +1084,14 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(self.UnitA.qty_available, 120, 'Expecting 120 Units , got %.4f Units of quantity available!' % (self.UnitA.qty_available))
         # Create Inventory again for product UnitA.
         inventory = self.InvObj.create({'name': 'Test',
-                                        'product_id': self.UnitA.id,
-                                        'filter': 'product'})
+                                        'product_ids': [(4, self.UnitA.id)]})
         inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1, "One inventory line should be created.")
         inventory_line = self.InvLineObj.search([('product_id', '=', self.UnitA.id), ('inventory_id', '=', inventory.id)], limit=1)
         self.assertEqual(inventory_line.product_qty, 120, "Wrong product quantity in inventory line.")
         # Modify the inventory line and set the quantity to 144 product on this new inventory.
         inventory_line.write({'product_qty': 144})
-        inventory.action_done()
+        inventory.action_validate()
         move = self.MoveObj.search([('product_id', '=', self.UnitA.id), ('inventory_id', '=', inventory.id)], limit=1)
         self.assertEqual(move.product_uom_qty, 24, "Wrong move quantity of product UnitA.")
         # Check quantity available of product UnitA.
@@ -1108,8 +1107,7 @@ class TestStockFlow(TestStockCommon):
 
         productKG = self.ProductObj.create({'name': 'Product KG', 'uom_id': self.uom_kg.id, 'uom_po_id': self.uom_kg.id, 'type': 'product'})
         inventory = self.InvObj.create({'name': 'Inventory Product KG',
-                                        'product_id': productKG.id,
-                                        'filter': 'product'})
+                                        'product_ids': [(4, productKG.id)]})
         inventory.action_start()
         self.assertFalse(inventory.line_ids, "Inventory line should not created.")
         inventory_line = self.InvLineObj.create({
@@ -1118,22 +1116,21 @@ class TestStockFlow(TestStockCommon):
             'product_uom_id': self.uom_tone.id,
             'product_qty': 5,
             'location_id': self.stock_location})
-        inventory.action_done()
+        inventory.action_validate()
         quants = self.StockQuantObj.search([('product_id', '=', productKG.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
         self.assertEqual(sum(total_qty), 5000, 'Expecting 5000 kg , got %.4f kg on location stock!' % (sum(total_qty)))
         self.assertEqual(productKG.qty_available, 5000, 'Expecting 5000 kg , got %.4f kg of quantity available!' % (productKG.qty_available))
         # Create Inventory again.
         inventory = self.InvObj.create({'name': 'Test',
-                                        'product_id': productKG.id,
-                                        'filter': 'product'})
+                                        'product_ids': [(4, productKG.id)]})
         inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1, "One inventory line should be created.")
         inventory_line = self.InvLineObj.search([('product_id', '=', productKG.id), ('inventory_id', '=', inventory.id)], limit=1)
         self.assertEqual(inventory_line.product_qty, 5000, "Wrong product quantity in inventory line.")
         # Modify the inventory line and set the quantity to 4000 product on this new inventory.
         inventory_line.write({'product_qty': 4000})
-        inventory.action_done()
+        inventory.action_validate()
         # Check inventory move quantity of product KG.
         move = self.MoveObj.search([('product_id', '=', productKG.id), ('inventory_id', '=', inventory.id)], limit=1)
         self.assertEqual(move.product_uom_qty, 1000, "Wrong move quantity of product KG.")
@@ -1145,14 +1142,14 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(productKG.qty_available, 4000, 'Expecting 4000 kg , got %.4f of quantity available!' % (productKG.qty_available))
 
         # --------------------------------------------------------
-        # TEST PARTIAL INVENTORY WITH PACKS and LOTS
+        # TEST EMPTY INVENTORY WITH PACKS and LOTS
         # ---------------------------------------------------------
 
         packproduct = self.ProductObj.create({'name': 'Pack Product', 'uom_id': self.uom_unit.id, 'uom_po_id': self.uom_unit.id, 'type': 'product'})
         lotproduct = self.ProductObj.create({'name': 'Lot Product', 'uom_id': self.uom_unit.id, 'uom_po_id': self.uom_unit.id, 'type': 'product'})
         inventory = self.InvObj.create({'name': 'Test Partial and Pack',
-                                        'filter': 'partial',
-                                        'location_id': self.stock_location})
+                                        'start_empty': True,
+                                        'location_ids': [(4, self.stock_location)]})
         inventory.action_start()
         pack_obj = self.env['stock.quant.package']
         lot_obj = self.env['stock.production.lot']
@@ -1168,7 +1165,7 @@ class TestStockFlow(TestStockCommon):
         line_vals += [{'location_id': self.stock_location, 'product_id': lotproduct.id, 'product_qty': 30, 'product_uom_id': lotproduct.uom_id.id, 'prod_lot_id': lot1.id}]
         line_vals += [{'location_id': self.stock_location, 'product_id': lotproduct.id, 'product_qty': 25, 'product_uom_id': lotproduct.uom_id.id, 'prod_lot_id': False}]
         inventory.write({'line_ids': [(0, 0, x) for x in line_vals]})
-        inventory.action_done()
+        inventory.action_validate()
         self.assertEqual(packproduct.qty_available, 30, "Wrong qty available for packproduct")
         self.assertEqual(lotproduct.qty_available, 55, "Wrong qty available for lotproduct")
         quants = self.StockQuantObj.search([('product_id', '=', packproduct.id), ('location_id', '=', self.stock_location), ('package_id', '=', pack1.id)])
@@ -1177,15 +1174,15 @@ class TestStockFlow(TestStockCommon):
 
         # Create an inventory that will put the lots without lot to 0 and check that taking without pack will not take it from the pack
         inventory2 = self.InvObj.create({'name': 'Test Partial Lot and Pack2',
-                                         'filter': 'partial',
-                                         'location_id': self.stock_location})
+                                         'start_empty': True,
+                                         'location_ids': [(4, self.stock_location)]})
         inventory2.action_start()
         line_vals = []
         line_vals += [{'location_id': self.stock_location, 'product_id': packproduct.id, 'product_qty': 20, 'product_uom_id': packproduct.uom_id.id}]
         line_vals += [{'location_id': self.stock_location, 'product_id': lotproduct.id, 'product_qty': 0, 'product_uom_id': lotproduct.uom_id.id, 'prod_lot_id': False}]
         line_vals += [{'location_id': self.stock_location, 'product_id': lotproduct.id, 'product_qty': 10, 'product_uom_id': lotproduct.uom_id.id, 'prod_lot_id': lot1.id}]
         inventory2.write({'line_ids': [(0, 0, x) for x in line_vals]})
-        inventory2.action_done()
+        inventory2.action_validate()
         self.assertEqual(packproduct.qty_available, 40, "Wrong qty available for packproduct")
         self.assertEqual(lotproduct.qty_available, 10, "Wrong qty available for lotproduct")
         quants = self.StockQuantObj.search([('product_id', '=', lotproduct.id), ('location_id', '=', self.stock_location), ('lot_id', '=', lot1.id)])
@@ -1194,49 +1191,6 @@ class TestStockFlow(TestStockCommon):
         quants = self.StockQuantObj.search([('product_id', '=', lotproduct.id), ('location_id', '=', self.stock_location), ('lot_id', '=', False)])
         total_qty = sum([quant.quantity for quant in quants])
         self.assertEqual(total_qty, 0, 'Expecting 0 units lot of lotproduct, but we got %.4f on location stock!' % (total_qty))
-
-        # check product available of saleable category in stock location
-        category_id = self.ref('product.product_category_5')
-        inventory3 = self.InvObj.create({
-                                    'name': 'Test Category',
-                                    'filter': 'category',
-                                    'location_id': self.stock_location,
-                                    'category_id': category_id
-                                })
-        # Start Inventory
-        inventory3.action_start()
-        # check all products have given category id
-        products_category = inventory3.line_ids.mapped('product_id.categ_id')
-        self.assertEqual(len(products_category), 1, "Inventory line should have only one category")
-        inventory3.action_done()
-        # check category with exhausted in stock location
-        inventory4 = self.InvObj.create({
-                                    'name': 'Test Exhausted Product',
-                                    'filter': 'category',
-                                    'location_id': self.stock_location,
-                                    'category_id': category_id,
-                                    'exhausted': True,
-                                })
-        inventory4.action_start()
-        inventory4._get_inventory_lines_values()
-        inventory4_lines_count = len(inventory4.line_ids)
-        inventory4.action_done()
-        # Add one product in this product category
-        product = self.ProductObj.create({'name': 'Product A', 'type': 'product', 'categ_id': category_id})
-        # Check that this exhausted product is in the product category inventory adjustment
-        inventory5 = self.InvObj.create({
-                                    'name': 'Test Exhausted Product',
-                                    'filter': 'category',
-                                    'location_id': self.stock_location,
-                                    'category_id': category_id,
-                                    'exhausted': True,
-                                })
-        inventory5.action_start()
-        inventory5._get_inventory_lines_values()
-        inventory5_lines_count = len(inventory5.line_ids)
-        inventory5.action_done()
-        self.assertEqual(inventory5_lines_count, inventory4_lines_count + 1, "The new product is not taken into account in the inventory valuation.")
-        self.assertTrue(product.id in inventory5.line_ids.mapped('product_id').ids, "The new product is not take into account in the inventory valuation.")
 
     def test_30_check_with_no_incoming_lot(self):
         """ Picking in without lots and picking out with"""
@@ -1549,7 +1503,7 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(neg_quants.location_id.id, self.supplier_location, 'There shoud be 1 negative quants for supplier!')
         # We should also make sure that when matching stock moves with pack operations, it takes the correct
         quants = self.env['stock.quant']._gather(self.productE, self.env['stock.location'].browse(self.stock_location))
-        self.assertEqual(len(quants), 0, 'We should have no quants in the end')
+        self.assertEqual(sum(quants.mapped('quantity')), 0, 'We should have no quants in the end')
 
     def test_70_picking_state_all_at_once_reserve(self):
         """ This test will check that the state of the picking is correctly computed according
@@ -1564,7 +1518,6 @@ class TestStockFlow(TestStockCommon):
         # get one product in stock
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product Table',
-            'filter': 'partial',
             'line_ids': [(0, 0, {
                 'product_id': self.productA.id,
                 'product_uom_id': self.productA.uom_id.id,
@@ -1572,7 +1525,8 @@ class TestStockFlow(TestStockCommon):
                 'location_id': self.stock_location
             })]
         })
-        inventory.action_done()
+        inventory.action_start()
+        inventory.action_validate()
 
         # create a "all at once" delivery order for two products
         picking_out = self.PickingObj.create({
@@ -1597,7 +1551,6 @@ class TestStockFlow(TestStockCommon):
         # receive one product in stock
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product Table',
-            'filter': 'partial',
             'line_ids': [(0, 0, {
                 'product_id': self.productA.id,
                 'product_uom_id': self.productA.uom_id.id,
@@ -1605,7 +1558,8 @@ class TestStockFlow(TestStockCommon):
                 'location_id': self.stock_location
             })]
         })
-        inventory.action_done()
+        inventory.action_start()
+        inventory.action_validate()
         # recheck availability of the delivery order, it should be assigned
         picking_out.action_assign()
         self.assertEquals(len(picking_out.move_lines), 1.0)
@@ -1643,10 +1597,6 @@ class TestStockFlow(TestStockCommon):
         picking_out.action_assign()
         self.assertEquals(picking_out.state, "confirmed")
 
-        # force assign on the delivery order, it should be assigned
-        picking_out.force_assign()
-        self.assertEquals(picking_out.state, "assigned")
-
     def test_72_picking_state_partial_reserve(self):
         """ This test will check that the state of the picking is correctly computed according
         to the state of its move lines and its move type.
@@ -1660,7 +1610,6 @@ class TestStockFlow(TestStockCommon):
         # get one product in stock
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product Table',
-            'filter': 'partial',
             'line_ids': [(0, 0, {
                 'product_id': self.productA.id,
                 'product_uom_id': self.productA.uom_id.id,
@@ -1668,7 +1617,8 @@ class TestStockFlow(TestStockCommon):
                 'location_id': self.stock_location
             })]
         })
-        inventory.action_done()
+        inventory.action_start()
+        inventory.action_validate()
 
         # create a "partial" delivery order for two products
         picking_out = self.PickingObj.create({
@@ -1694,7 +1644,6 @@ class TestStockFlow(TestStockCommon):
         # receive one product in stock
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product Table',
-            'filter': 'partial',
             'line_ids': [(0, 0, {
                 'product_id': self.productA.id,
                 'product_uom_id': self.productA.uom_id.id,
@@ -1702,7 +1651,8 @@ class TestStockFlow(TestStockCommon):
                 'location_id': self.stock_location
             })]
         })
-        inventory.action_done()
+        inventory.action_start()
+        inventory.action_validate()
 
         # recheck availability of the delivery order, it should be assigned
         picking_out.action_assign()
@@ -1737,10 +1687,6 @@ class TestStockFlow(TestStockCommon):
         # validate this delivery order, it should be in the waiting state
         picking_out.action_assign()
         self.assertEquals(picking_out.state, "confirmed")
-
-        # force assign on the delivery order, it should be assigned
-        picking_out.force_assign()
-        self.assertEquals(picking_out.state, "assigned")
 
     def test_74_move_state_waiting_mto(self):
         """ This test will check that when a move is unreserved, its state changes to 'waiting' if
@@ -1799,3 +1745,213 @@ class TestStockFlow(TestStockCommon):
         self.assertEquals(move_mto_alone.state, "draft")
         self.assertEquals(move_with_ancestors.state, "waiting")
         self.assertEquals(other_move.state, "confirmed")
+
+    def test_80_partial_picking_without_backorder(self):
+        """ This test will create a picking with an initial demand for a product
+        then process a lesser quantity than the expected quantity to be processed.
+        When the wizard ask for a backorder, the 'NO BACKORDER' option will be selected
+        and no backorder should be created afterwards
+        """
+
+        picking = self.PickingObj.create({
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location})
+        move_a = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location})
+
+        picking.action_confirm()
+
+        # Only 4 items are processed
+        move_a.move_line_ids.qty_done = 4
+        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, picking.id)]})
+        backorder_wizard.process_cancel_backorder()
+
+        # Checking that no backorders were attached to the picking
+        self.assertFalse(picking.backorder_id)
+
+        # Checking that the original move is still in the same picking
+        self.assertEquals(move_a.picking_id.id, picking.id)
+
+        move_lines = picking.move_lines
+        move_done = move_lines.browse(move_a.id)
+        move_canceled = move_lines - move_done
+
+        # Checking that the original move was set to done
+        self.assertEquals(move_done.product_uom_qty, 4)
+        self.assertEquals(move_done.state, 'done')
+
+        # Checking that the new move created was canceled
+        self.assertEquals(move_canceled.product_uom_qty, 6)
+        self.assertEquals(move_canceled.state, 'cancel')
+
+        # Checking that the canceled move is in the original picking
+        self.assertIn(move_canceled.id, picking.move_lines.mapped('id'))
+
+    def test_transit_multi_companies(self):
+        """ Ensure that inter company rules set the correct company on picking
+        and their moves.
+        """
+        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        grp_multi_routes = self.env.ref('stock.group_adv_location')
+        grp_multi_companies = self.env.ref('base.group_multi_company')
+        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'groups_id': [(4, grp_multi_routes.id)]})
+        self.env.user.write({'groups_id': [(4, grp_multi_companies.id)]})
+
+        company_2 = self.env.ref('stock.res_company_1')
+        # Need to add a new company on user.
+        self.env.user.write({'company_ids': [(4, company_2.id)]})
+
+        warehouse_company_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+
+        f = Form(self.env['stock.location.route'])
+        f.name = 'From Company 1 to InterCompany'
+        f.company_id = self.env.company
+        with f.rule_ids.new() as rule:
+            rule.name = 'From Company 1 to InterCompany'
+            rule.action = 'pull'
+            rule.picking_type_id = warehouse_company_1.in_type_id
+            rule.location_src_id = self.env.ref('stock.stock_location_inter_wh')
+            rule.procure_method = 'make_to_order'
+        route_a = f.save()
+        warehouse_company_2 = self.env['stock.warehouse'].search([('company_id', '=', company_2.id)], limit=1)
+        f = Form(self.env['stock.location.route'])
+        f.name = 'From InterCompany to Company 2'
+        f.company_id = company_2
+        with f.rule_ids.new() as rule:
+            rule.name = 'From InterCompany to Company 2'
+            rule.action = 'pull'
+            rule.picking_type_id = warehouse_company_2.out_type_id
+            rule.location_id = self.env.ref('stock.stock_location_inter_wh')
+            rule.procure_method = 'make_to_stock'
+        route_b = f.save()
+
+        product = self.env['product.product'].create({
+            'name': 'The product from the other company that I absolutely want',
+            'type': 'product',
+            'route_ids': [(4, route_a.id), (4, route_b.id)]
+        })
+
+        replenish_wizard = self.env['product.replenish'].create({
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'quantity': '5',
+            'warehouse_id': warehouse_company_1.id,
+        })
+        replenish_wizard.launch_replenishment()
+        incoming_picking = self.env['stock.picking'].search([('product_id', '=', product.id), ('picking_type_id', '=', warehouse_company_1.in_type_id.id)])
+        outgoing_picking = self.env['stock.picking'].search([('product_id', '=', product.id), ('picking_type_id', '=', warehouse_company_2.out_type_id.id)])
+
+        self.assertEqual(incoming_picking.company_id, self.env.company)
+        self.assertEqual(incoming_picking.move_lines.company_id, self.env.company)
+        self.assertEqual(outgoing_picking.company_id, company_2)
+        self.assertEqual(outgoing_picking.move_lines.company_id, company_2)
+
+    def test_transit_multi_companies_ultimate(self):
+        """ Ensure that inter company rules set the correct company on picking
+        and their moves. This test validate a picking with make_to_order moves.
+        Moves are created in batch with a force_company. This test should create
+        moves for company_2 and company_3 at the same time. Ensure they are not
+        create in the same batch.
+        """
+        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        grp_multi_routes = self.env.ref('stock.group_adv_location')
+        grp_multi_companies = self.env.ref('base.group_multi_company')
+        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'groups_id': [(4, grp_multi_routes.id)]})
+        self.env.user.write({'groups_id': [(4, grp_multi_companies.id)]})
+
+        company_2 = self.env.ref('stock.res_company_1')
+        # Need to add a new company on user.
+        self.env.user.write({'company_ids': [(4, company_2.id)]})
+
+        warehouse_company_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+
+        f = Form(self.env['stock.location.route'])
+        f.name = 'From Company 1 to InterCompany'
+        f.company_id = self.env.company
+        with f.rule_ids.new() as rule:
+            rule.name = 'From Company 1 to InterCompany'
+            rule.action = 'pull'
+            rule.picking_type_id = warehouse_company_1.in_type_id
+            rule.location_src_id = self.env.ref('stock.stock_location_inter_wh')
+            rule.procure_method = 'make_to_order'
+        route_a = f.save()
+
+        warehouse_company_2 = self.env['stock.warehouse'].search([('company_id', '=', company_2.id)], limit=1)
+        f = Form(self.env['stock.location.route'])
+        f.name = 'From InterCompany to Company 2'
+        f.company_id = company_2
+        with f.rule_ids.new() as rule:
+            rule.name = 'From InterCompany to Company 2'
+            rule.action = 'pull'
+            rule.picking_type_id = warehouse_company_2.out_type_id
+            rule.location_id = self.env.ref('stock.stock_location_inter_wh')
+            rule.procure_method = 'make_to_stock'
+        route_b = f.save()
+
+        company_3 = self.env['res.company'].create({
+            'name': 'Alaska Company'
+        })
+
+        warehouse_company_3 = self.env['stock.warehouse'].search([('company_id', '=', company_3.id)], limit=1)
+        f = Form(self.env['stock.location.route'])
+        f.name = 'From InterCompany to Company 3'
+        f.company_id = company_3
+        with f.rule_ids.new() as rule:
+            rule.name = 'From InterCompany to Company 3'
+            rule.action = 'pull'
+            rule.picking_type_id = warehouse_company_3.out_type_id
+            rule.location_id = self.env.ref('stock.stock_location_inter_wh')
+            rule.procure_method = 'make_to_stock'
+        route_c = f.save()
+
+        product_from_company_2 = self.env['product.product'].create({
+            'name': 'The product from the other company that I absolutely want',
+            'type': 'product',
+            'route_ids': [(4, route_a.id), (4, route_b.id)]
+        })
+
+        product_from_company_3 = self.env['product.product'].create({
+            'name': 'Ice',
+            'type': 'product',
+            'route_ids': [(4, route_a.id), (4, route_c.id)]
+        })
+
+        f = Form(self.env['stock.picking'], view='stock.view_picking_form')
+        f.picking_type_id = warehouse_company_1.out_type_id
+        with f.move_ids_without_package.new() as move:
+            move.product_id = product_from_company_2
+            move.product_uom_qty = 5
+        with f.move_ids_without_package.new() as move:
+            move.product_id = product_from_company_3
+            move.product_uom_qty = 5
+        picking = f.save()
+
+        picking.move_ids_without_package.write({'procure_method': 'make_to_order'})
+        picking.action_confirm()
+
+        incoming_picking = self.env['stock.picking'].search([('product_id', '=', product_from_company_2.id), ('picking_type_id', '=', warehouse_company_1.in_type_id.id)])
+        outgoing_picking = self.env['stock.picking'].search([('product_id', '=', product_from_company_2.id), ('picking_type_id', '=', warehouse_company_2.out_type_id.id)])
+
+        self.assertEqual(incoming_picking.company_id, self.env.company)
+        self.assertEqual(incoming_picking.move_lines.mapped('company_id'), self.env.company)
+        self.assertEqual(outgoing_picking.company_id, company_2)
+        self.assertEqual(outgoing_picking.move_lines.company_id, company_2)
+
+        incoming_picking = self.env['stock.picking'].search([('product_id', '=', product_from_company_3.id), ('picking_type_id', '=', warehouse_company_1.in_type_id.id)])
+        outgoing_picking = self.env['stock.picking'].search([('product_id', '=', product_from_company_3.id), ('picking_type_id', '=', warehouse_company_3.out_type_id.id)])
+
+        self.assertEqual(incoming_picking.company_id, self.env.company)
+        self.assertEqual(incoming_picking.move_lines.mapped('company_id'), self.env.company)
+        self.assertEqual(outgoing_picking.company_id, company_3)
+        self.assertEqual(outgoing_picking.move_lines.company_id, company_3)

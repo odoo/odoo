@@ -3,7 +3,7 @@
 
 #
 # Order Point Method:
-#    - Order if the virtual stock of today is bellow the min of the defined order point
+#    - Order if the virtual stock of today is below the min of the defined order point
 #
 
 from odoo import api, models, tools
@@ -35,7 +35,8 @@ class StockSchedulerCompute(models.TransientModel):
                 return {}
 
             for company in self.env.user.company_ids:
-                self.env['procurement.group'].run_scheduler(
+                cids = (self.env.user.company_id | self.env.user.company_ids).ids
+                self.env['procurement.group'].with_context(allowed_company_ids=cids).run_scheduler(
                     use_new_cursor=self._cr.dbname,
                     company_id=company.id)
             new_cr.close()

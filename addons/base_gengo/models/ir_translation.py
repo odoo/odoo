@@ -72,6 +72,11 @@ class IrTranslation(models.Model):
     @api.model
     def _get_source_query(self, name, types, lang, source, res_id):
         query, params = super(IrTranslation, self)._get_source_query(name, types, lang, source, res_id)
+
+        # disable gengo during module installation and uninstallation
+        if not self.pool.ready:
+            return query, params
+
         query += """
                     ORDER BY
                         CASE
@@ -88,6 +93,11 @@ class IrTranslation(models.Model):
     @api.model
     def _get_terms_query(self, field, records):
         query, params = super(IrTranslation, self)._get_terms_query(field, records)
+
+        # disable gengo during module installation and uninstallation
+        if not self.pool.ready:
+            return query, params
+
         # order translations from worst to best
         query += """
                     ORDER BY

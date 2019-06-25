@@ -7,7 +7,6 @@ from lxml import etree, html
 
 from odoo.exceptions import AccessError
 from odoo import api, fields, models
-from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -16,7 +15,7 @@ class IrUiView(models.Model):
     _inherit = 'ir.ui.view'
 
     @api.multi
-    def render(self, values=None, engine='ir.qweb'):
+    def render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
         if values and values.get('editable'):
             try:
                 self.check_access_rights('write')
@@ -24,7 +23,7 @@ class IrUiView(models.Model):
             except AccessError:
                 values['editable'] = False
 
-        return super(IrUiView, self).render(values=values, engine=engine)
+        return super(IrUiView, self).render(values=values, engine=engine, minimal_qcontext=minimal_qcontext)
 
     #------------------------------------------------------
     # Save from html
@@ -33,6 +32,10 @@ class IrUiView(models.Model):
     @api.model
     def extract_embedded_fields(self, arch):
         return arch.xpath('//*[@data-oe-model != "ir.ui.view"]')
+
+    @api.model
+    def extract_oe_structures(self, arch):
+        return arch.xpath('//*[hasclass("oe_structure")][contains(@id, "oe_structure")]')
 
     @api.model
     def get_default_lang_code(self):
@@ -54,6 +57,39 @@ class IrUiView(models.Model):
             else:
                 Model.browse(int(el.get('data-oe-id'))).write({field: value})
 
+    @api.multi
+    def save_oe_structure(self, el):
+        self.ensure_one()
+
+        if el.get('id') in self.key:
+            # Do not inherit if the oe_structure already has its own inheriting view
+            return False
+
+        arch = etree.Element('data')
+        xpath = etree.Element('xpath', expr="//*[hasclass('oe_structure')][@id='{}']".format(el.get('id')), position="replace")
+        arch.append(xpath)
+        structure = etree.Element(el.tag, attrib=el.attrib)
+        xpath.append(structure)
+        for child in el.iterchildren(tag=etree.Element):
+            structure.append(copy.deepcopy(child))
+
+        vals = {
+            'inherit_id': self.id,
+            'name': '%s (%s)' % (self.name, el.get('id')),
+            'arch': self._pretty_arch(arch),
+            'key': '%s_%s' % (self.key, el.get('id')),
+            'type': 'qweb',
+        }
+        vals.update(self._save_oe_structure_hook())
+        self.create(vals)
+
+        return True
+
+    @api.model
+    def _save_oe_structure_hook(self):
+        return {}
+
+    @api.model
     def _pretty_arch(self, arch):
         # remove_blank_string does not seem to work on HTMLParser, and
         # pretty-printing with lxml more or less requires stripping
@@ -66,8 +102,24 @@ class IrUiView(models.Model):
         return etree.tostring(
             arch_no_whitespace, encoding='unicode', pretty_print=True)
 
+    @api.model
+    def _are_archs_equal(self, arch1, arch2):
+        # Note that comparing the strings would not be ok as attributes order
+        # must not be relevant
+        if arch1.tag != arch2.tag:
+            return False
+        if arch1.text != arch2.text:
+            return False
+        if arch1.tail != arch2.tail:
+            return False
+        if arch1.attrib != arch2.attrib:
+            return False
+        if len(arch1) != len(arch2):
+            return False
+        return all(self._are_archs_equal(arch1, arch2) for arch1, arch2 in zip(arch1, arch2))
+
     @api.multi
-    def replace_arch_section(self, section_xpath, replacement):
+    def replace_arch_section(self, section_xpath, replacement, replace_tail=False):
         # the root of the arch section shouldn't actually be replaced as it's
         # not really editable itself, only the content truly is editable.
         self.ensure_one()
@@ -80,7 +132,9 @@ class IrUiView(models.Model):
             [root] = arch.xpath(section_xpath)
 
         root.text = replacement.text
-        root.tail = replacement.tail
+        # Note: after a standard edition, the tail *must not* be replaced
+        if replace_tail:
+            root.tail = replacement.tail
         # replace all children
         del root[:]
         for child in replacement:
@@ -99,12 +153,26 @@ class IrUiView(models.Model):
         out.tail = el.tail
         return out
 
+    @api.model
+    def to_empty_oe_structure(self, el):
+        out = html.html_parser.makeelement(el.tag, attrib=el.attrib)
+        out.tail = el.tail
+        return out
+
+    @api.model
+    def _set_noupdate(self):
+        self.sudo().mapped('model_data_id').write({'noupdate': True})
+
     @api.multi
     def save(self, value, xpath=None):
         """ Update a view section. The view section may embed fields to write
 
+        Note that `self` record might not exist when saving an embed field
+
         :param str xpath: valid xpath to the tag to replace
         """
+        self.ensure_one()
+
         arch_section = html.fromstring(
             value, parser=html.HTMLParser(encoding='utf-8'))
 
@@ -119,19 +187,33 @@ class IrUiView(models.Model):
             # transform embedded field back to t-field
             el.getparent().replace(el, self.to_field_ref(el))
 
-        for view in self:
-            arch = view.replace_arch_section(xpath, arch_section)
-            view.write({'arch': view._pretty_arch(arch)})
+        for el in self.extract_oe_structures(arch_section):
+            if self.save_oe_structure(el):
+                # empty oe_structure in parent view
+                empty = self.to_empty_oe_structure(el)
+                if el == arch_section:
+                    arch_section = empty
+                else:
+                    el.getparent().replace(el, empty)
 
-        self.sudo().mapped('model_data_id').write({'noupdate': True})
+        new_arch = self.replace_arch_section(xpath, arch_section)
+        old_arch = etree.fromstring(self.arch.encode('utf-8'))
+        if not self._are_archs_equal(old_arch, new_arch):
+            self._set_noupdate()
+            self.write({'arch': self._pretty_arch(new_arch)})
+
+    @api.model
+    def _view_get_inherited_children(self, view, options):
+        return view.inherit_children_ids
 
     @api.model
     def _view_obj(self, view_id):
-        if isinstance(view_id, pycompat.string_types):
-            return self.env.ref(view_id)
-        elif isinstance(view_id, pycompat.integer_types):
+        if isinstance(view_id, str):
+            return self.search([('key', '=', view_id)], limit=1) or self.env.ref(view_id)
+        elif isinstance(view_id, int):
             return self.browse(view_id)
-        # assume it's already a view object (WTF?)
+        # It can already be a view object when called by '_views_get()' that is calling '_view_obj'
+        # for it's inherit_children_ids, passing them directly as object record.
         return view_id
 
     # Returns all views (called and inherited) related to a view
@@ -150,7 +232,7 @@ class IrUiView(models.Model):
             view = self._view_obj(view_id)
         except ValueError:
             _logger.warning("Could not find view object with view_id '%s'", view_id)
-            return []
+            return self.env['ir.ui.view']
 
         while root and view.inherit_id:
             view = view.inherit_id
@@ -166,13 +248,13 @@ class IrUiView(models.Model):
                 called_view = self._view_obj(child.get('t-call', child.get('t-call-assets')))
             except ValueError:
                 continue
-            if called_view not in views_to_return:
+            if called_view and called_view not in views_to_return:
                 views_to_return += self._views_get(called_view, options=options, bundles=bundles)
 
-        extensions = view.inherit_children_ids
+        extensions = self._view_get_inherited_children(view, options)
         if not options:
             # only active children
-            extensions = view.inherit_children_ids.filtered(lambda view: view.active)
+            extensions = extensions.filtered(lambda view: view.active)
 
         # Keep options in a deterministic order regardless of their applicability
         for extension in extensions.sorted(key=lambda v: v.id):
@@ -189,5 +271,6 @@ class IrUiView(models.Model):
             ``bundles=True`` returns also the asset bundles
         """
         user_groups = set(self.env.user.groups_id)
-        views = self.with_context(active_test=False)._views_get(key, bundles=bundles)
+        View = self.with_context(active_test=False, lang=None)
+        views = View._views_get(key, bundles=bundles)
         return views.filtered(lambda v: not v.groups_id or len(user_groups.intersection(v.groups_id)))

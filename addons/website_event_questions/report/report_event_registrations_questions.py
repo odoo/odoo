@@ -7,6 +7,7 @@ from odoo import api, fields, models, tools
 class ReportEventRegistrationQuestions(models.Model):
     _name = "event.question.report"
     _auto = False
+    _description = 'Event Question Report'
 
     attendee_id = fields.Many2one(comodel_name='event.registration', string='Registration')
     question_id = fields.Many2one(comodel_name='event.question', string='Question')

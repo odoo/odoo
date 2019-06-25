@@ -39,7 +39,7 @@ var QuickCreate = Dialog.extend({
 
         var self = this;
         this._super(parent, {
-            title: this._getTitle(),
+            title: options.title,
             size: 'small',
             buttons: this._buttons ? [
                 {text: _t("Create"), classes: 'btn-primary', click: function () {
@@ -68,31 +68,28 @@ var QuickCreate = Dialog.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Public
+    // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * @returns {string}
-     */
-    _getTitle: function () {
-        var parent = this.getParent();
-        if (_.isUndefined(parent)) {
-            return _t("Create");
-        }
-        var title = (_.isUndefined(parent.field_widget)) ?
-                (parent.title || parent.string || parent.name) :
-                (parent.field_widget.string || parent.field_widget.name || '');
-        return _t("Create: ") + title;
-    },
     /**
      * Gathers data from the quick create dialog a launch quick_create(data) method
      */
     _quickAdd: function (dataCalendar) {
         dataCalendar = $.extend({}, this.dataTemplate, dataCalendar);
         var val = this.$('input').val().trim();
+        if (!val) {
+            this.$('label, input').addClass('o_field_invalid');
+            var warnings = _.str.sprintf('<ul><li>%s</li></ul>', _t("Summary"));
+            this.do_warn(_t("The following field is invalid:"), warnings);
+        }
         dataCalendar.title = val;
         return (val)? this.trigger_up('quickCreate', {data: dataCalendar, options: this.options}) : false;
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
     /**
      * @private
      * @param {keyEvent} event

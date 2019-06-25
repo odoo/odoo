@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_departure_wizard_view_form" model="ir.ui.view">
+            <field name="name">hr.departure.wizard.view.form</field>
+            <field name="model">hr.departure.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="plan_id"/>
+                            <field name="employee_id" invisible="1"/>
+                            <field name="departure_reason"/>
+                            <field name="departure_description"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_register_departure" string="Save" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_departure_wizard_action" model="ir.actions.act_window">
+            <field name="name">Register Departure</field>
+            <field name="res_model">hr.departure.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

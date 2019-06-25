@@ -2,22 +2,6 @@
 <odoo>
     <data noupdate="1">
 
-        <!-- Contract Types -->
-        <record id="hr_contract_type_emp" model="hr.contract.type">
-            <field name="name">Employee</field>
-            <field name="sequence">5</field>
-        </record>
-
-        <record id="hr_contract_type_wrkr" model="hr.contract.type">
-            <field name="name">Worker</field>
-            <field name="sequence">10</field>
-        </record>
-
-        <record id="hr_contract_type_sub" model="hr.contract.type">
-            <field name="name">Subcontractor</field>
-            <field name="sequence">15</field>
-        </record>
-
         <!-- Contract-related subtypes for messaging / Chatter -->
         <record id="mt_contract_pending" model="mail.message.subtype">
             <field name="name">To Renew</field>

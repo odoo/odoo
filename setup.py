@@ -31,6 +31,7 @@ setup(
         'html2text',
         'Jinja2',
         'lxml',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
+        'libsass',
         'mako',
         'mock',
         'ofxparse',
@@ -39,18 +40,16 @@ setup(
         'psutil',  # windows binary code.google.com/p/psutil/downloads/list
         'psycopg2 >= 2.2',
         'pydot',
-        'pyldap',  # optional
         'pyparsing',
         'pypdf2',
         'pyserial',
         'python-dateutil',
         'pytz',
         'pyusb >= 1.0.0b1',
-        'pyyaml',
         'qrcode',
         'reportlab',  # windows binary pypi.python.org/pypi/reportlab
         'requests',
-        'suds-jurko',
+        'zeep',
         'vatnumber',
         'vobject',
         'werkzeug',
@@ -59,6 +58,7 @@ setup(
     ],
     python_requires='>=3.5',
     extras_require={
+        'ldap': ['pyldap'],
         'SSL': ['pyopenssl'],
     },
     tests_require=[

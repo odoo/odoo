@@ -4,7 +4,7 @@
     <t t-call="web.html_container">
         <t t-call="web.internal_layout">
             <div class="page">
-                <h2>Accouting tests on <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')"/></h2>
+                <h2>Accounting tests on <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')"/></h2>
                 <div t-foreach="docs" t-as="o">
                     <p>
                         <strong>Name:</strong> <span t-field="o.name"/><br/>

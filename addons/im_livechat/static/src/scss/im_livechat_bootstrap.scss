@@ -1,0 +1,27 @@
+
+.text-muted {
+  color: gray('600');
+}
+
+.text-center {
+  text-align: center;
+}
+
+.o_thread_window {
+  &,* {
+    box-sizing: border-box;
+  }
+  .o_thread_window_header {
+    height: 28px;
+    .fa-close {
+      text-decoration: none;
+      font-weight: bold;
+      &:before {
+        content: "X";
+      }
+    }
+    > span {
+      margin: auto 0;
+    }
+  }
+}

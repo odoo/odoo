@@ -77,15 +77,14 @@ to manage followers on your record:
 
 .. rubric:: Posting messages
 
-.. method:: message_post(self, body='', subject=None, message_type='notification', subtype=None, parent_id=False, attachments=None, content_subtype='html', **kwargs)
+.. method:: message_post(self, body='', subject=None, message_type='notification', subtype=None, parent_id=False, attachments=None, **kwargs)
     
     Post a new message in an existing thread, returning the new
     mail.message ID.
     
     :param str body: body of the message, usually raw HTML that will
         be sanitized
-    :param str message_type: see mail_message.type field
-    :param str content_subtype: if plaintext: convert body into html
+    :param str message_type: see mail_message.message_type field
     :param int parent_id: handle reply to a previous message by adding the
         parent partners to the message in case of private discussion
     :param list(tuple(str,str)) attachments: list of attachment tuples in the form
@@ -171,17 +170,7 @@ a date or an e-mail address, add CC's addresses as followers, etc.).
         using the subtypes given in the parameters
     :return: Success/Failure
     :rtype: bool
-    
-.. method:: message_subscribe_users(user_ids=None, subtype_ids=None)
 
-    Wrapper on message_subscribe, using users instead of partners.
-    
-    :param list(int) user_ids: IDs of the users that will be subscribed
-        to the record; if ``None``, subscribe the current user instead.
-    :param list(int) subtype_ids: IDs of the subtypes that the channels/partners
-        will be subscribed to
-    :return: Success
-    :rtype: bool
 
 .. method:: message_unsubscribe(partner_ids=None, channel_ids=None)
 
@@ -209,13 +198,8 @@ Logging changes
 '''''''''''''''
 
 The ``mail`` module adds a powerful tracking system on fields, allowing you
-to log changes to specific fields in the record's chatter.
-
-To add tracking to a field, simple add the track_visibility attribute with the
-value ``onchange`` (if it should be displayed in the notification only if the
-field changed) or ``always`` (if the value should always be displayed in change
-notifications even if this particular field did not change - useful to make
-notification more explanatory by always adding the name field, for example).
+to log changes to specific fields in the record's chatter. To add tracking
+to a field, simple set the tracking attribute to True.
 
 .. admonition:: Example
 
@@ -228,9 +212,9 @@ notification more explanatory by always adding the name field, for example).
             _inherit = ['mail.thread']
             _description = 'Business Trip'
             
-            name = fields.Char(track_visibility='always')
+            name = fields.Char(tracking=True)
             partner_id = fields.Many2one('res.partner', 'Responsible',
-                                         track_visibility='onchange')
+                                         tracking=True)
             guest_ids = fields.Many2many('res.partner', 'Participants')
     
     From now on, every change to a trip's name or responsible will log a note
@@ -318,12 +302,12 @@ can override the ``_track_subtype()`` function:
             _inherit = ['mail.thread']
             _description = 'Business Trip'
             
-            name = fields.Char(track_visibility='onchange')
+            name = fields.Char(tracking=True)
             partner_id = fields.Many2one('res.partner', 'Responsible',
-                                         track_visibility='onchange')
+                                         tracking=True)
             guest_ids = fields.Many2many('res.partner', 'Participants')
             state = fields.Selection([('draft', 'New'), ('confirmed', 'Confirmed')],
-                                     track_visibility='onchange')
+                                     tracking=True)
 
             def _track_subtype(self, init_values):
                 # init_values contains the modified fields' values before the changes
@@ -332,7 +316,7 @@ can override the ``_track_subtype()`` function:
                 # in cache
                 self.ensure_one()
                 if 'state' in init_values and self.state == 'confirmed':
-                    return 'my_module.mt_state_change'  # Full external id
+                    return self.env.ref('my_module.mt_state_change')
                 return super(BusinessTrip, self)._track_subtype(init_values)
 
 
@@ -552,7 +536,7 @@ Alias support integration
 
 Aliases are usually configured on a parent model which will then create specific
 record when contacted by e-mail. For example, Project have aliases to create tasks
-or issues, Sales Channel have aliases to generate Leads.
+or issues, Sales Team have aliases to generate Leads.
 
 .. note:: The model that will be created by the alias **must** inherit the
           ``mail_thread`` model.
@@ -638,12 +622,12 @@ you to make your alias easily configurable from the record's form view.
             _inherit = ['mail.thread', 'mail.alias.mixin']
             _description = 'Business Trip'
 
-            name = fields.Char(track_visibility='onchange')
+            name = fields.Char(tracking=True)
             partner_id = fields.Many2one('res.partner', 'Responsible',
-                                         track_visibility='onchange')
+                                         tracking=True)
             guest_ids = fields.Many2many('res.partner', 'Participants')
             state = fields.Selection([('draft', 'New'), ('confirmed', 'Confirmed')],
-                                     track_visibility='onchange')
+                                     tracking=True)
             expense_ids = fields.One2many('business.expense', 'trip_id', 'Expenses')
             alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict",
                                        required=True)
@@ -925,7 +909,7 @@ buttons to website visitors:
 
 .. code-block:: xml
 
-    <div id="website_published_button" class="pull-right"
+    <div id="website_published_button" class="float-right"
          groups="base.group_website_publisher"> <!-- or any other meaningful group -->
         <t t-call="website.publish_management">
           <t t-set="object" t-value="blog_post"/>

@@ -2,16 +2,6 @@
 <odoo>
     <data>
         <report 
-            string="BOM Structure" 
-            id="action_report_bom_structure" 
-            model="mrp.bom" 
-            name="mrp.mrp_bom_structure_report"
-            file="mrp.report.mrp_bom_templates" 
-            report_type="qweb-pdf"
-            print_report_name="'BOM - %s' % (object.product_id.name or object.product_tmpl_id.name or '')"
-        />
-
-        <report 
             string="Production Order" 
             id="action_report_production_order" 
             model="mrp.production" 
@@ -20,15 +10,30 @@
             report_type="qweb-pdf"
             print_report_name="'Production Order - %s' % object.name"
         />
-
+        <report 
+            string="BoM Structure" 
+            id="action_report_bom_structure" 
+            model="mrp.bom" 
+            name="mrp.report_bom_structure"
+            file="mrp.report_bom_structure"
+            report_type="qweb-pdf"
+            print_report_name="'Bom Structure - %s' % object.display_name"
+        />
+        <report id="label_manufacture_template"
+            model="mrp.production"
+            string="Finished Product Label (ZPL)"
+            name="mrp.label_production_view"
+            file="mrp.label_production_view"
+            report_type="qweb-text"
+        />
         <report
-            string="BOM Cost"
-            id="action_report_bom_price"
-            model="mrp.bom"
-            name="mrp.mrp_bom_cost_report"
-            file="mrp.mrp_bom_cost_report"
-            report_type="qweb-html"
-            print_report_name="'BOM Cost - %s' % (object.product_id.name or object.product_tmpl_id.name or '')"
+            string="Finished Product Label (PDF)"
+            id="action_report_finished_product"
+            model="mrp.production"
+            name="mrp.label_production_view_pdf"
+            file="mrp.label_production_view_pdf"
+            report_type="qweb-pdf"
+            print_report_name="'Finished products - %s' % object.name"
         />
     </data>
 </odoo>

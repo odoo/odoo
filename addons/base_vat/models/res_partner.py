@@ -17,6 +17,40 @@ except ImportError:
 from odoo import api, models, _
 from odoo.tools.misc import ustr
 from odoo.exceptions import ValidationError
+from stdnum.at.uid import compact as compact_at
+from stdnum.be.vat import compact as compact_be
+from stdnum.bg.vat import compact as compact_bg
+from stdnum.ch.vat import compact as compact_ch
+from stdnum.cy.vat import compact as compact_cy
+from stdnum.cz.dic import compact as compact_cz
+from stdnum.de.vat import compact as compact_de
+from stdnum.ee.kmkr import compact as compact_ee
+# el not in stdnum
+from stdnum.es.nif import compact as compact_es
+from stdnum.fi.alv import compact as compact_fi
+from stdnum.fr.tva import compact as compact_fr
+from stdnum.gb.vat import compact as compact_gb
+from stdnum.gr.vat import compact as compact_gr
+from stdnum.hu.anum import compact as compact_hu
+from stdnum.hr.oib import compact as compact_hr
+from stdnum.ie.vat import compact as compact_ie
+from stdnum.it.iva import compact as compact_it
+from stdnum.lt.pvm import compact as compact_lt
+from stdnum.lu.tva import compact as compact_lu
+from stdnum.lv.pvn import compact as compact_lv
+from stdnum.mt.vat import compact as compact_mt
+from stdnum.mx.rfc import compact as compact_mx
+from stdnum.nl.btw import compact as compact_nl
+from stdnum.no.mva import compact as compact_no
+# pe is not in stdnum
+from stdnum.pl.nip import compact as compact_pl
+from stdnum.pt.nif import compact as compact_pt
+from stdnum.ro.cf import compact as compact_ro
+from stdnum.se.vat import compact as compact_se
+from stdnum.si.ddv import compact as compact_si
+from stdnum.sk.dph import compact as compact_sk
+# tr compact vat is not in stdnum
+
 
 _eu_country_vat = {
     'GR': 'EL'
@@ -116,12 +150,12 @@ class ResPartner(models.Model):
                 vat = country_code + vat
         return vat
 
-    @api.constrains('vat', 'commercial_partner_country_id')
+    @api.constrains('vat')
     def check_vat(self):
         if self.env.context.get('company_id'):
             company = self.env['res.company'].browse(self.env.context['company_id'])
         else:
-            company = self.env.user.company_id
+            company = self.env.company
         if company.vat_check_vies:
             # force full VIES online check
             check_func = self.vies_vat_check
@@ -148,7 +182,7 @@ class ResPartner(models.Model):
         if self.env.context.get('company_id'):
             company = self.env['res.company'].browse(self.env.context['company_id'])
         else:
-            company = self.env.user.company_id
+            company = self.env.company
         if company.vat_check_vies:
             return '\n' + _('The VAT number [%s] for partner [%s] either failed the VIES VAT validation check or did not respect the expected format %s.') % (self.vat, self.name, vat_no)
         return '\n' + _('The VAT number [%s] for partner [%s] does not seem to be valid. \nNote: the expected format is %s') % (self.vat, self.name, vat_no)
@@ -356,3 +390,32 @@ class ResPartner(models.Model):
             return int(vat[9]) == c1 and int(vat[10]) == c2
 
         return False
+
+    def check_vat_al(self, vat):
+        try:
+            import stdnum.al
+            return stdnum.al.vat.is_valid(vat)
+        except ImportError:
+            return True
+
+    def default_compact(self, vat):
+        return vat
+
+    def _fix_vat_number(self, vat):
+        vat_country, vat_number = self._split_vat(vat)
+        check_func_name = 'compact_' + vat_country
+        check_func = globals().get(check_func_name) or getattr(self, 'default_compact')
+        vat_number = check_func(vat_number)
+        return vat_country.upper() + vat_number
+
+    @api.model
+    def create(self, values):
+        if values.get('vat'):
+            values['vat'] = self._fix_vat_number(values['vat'])
+        return super(ResPartner, self).create(values)
+
+    @api.multi
+    def write(self, values):
+        if values.get('vat'):
+            values['vat'] = self._fix_vat_number(values['vat'])
+        return super(ResPartner, self).write(values)

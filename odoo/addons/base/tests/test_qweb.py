@@ -6,11 +6,12 @@ import json
 import os.path
 import re
 
-from lxml import etree
+from lxml import etree, html
+from lxml.builder import E
 
 from odoo.modules import get_module_resource
 from odoo.tests.common import TransactionCase
-from odoo.addons.base.ir.ir_qweb import QWebException
+from odoo.addons.base.models.qweb import QWebException
 from odoo.tools import misc, ustr
 
 
@@ -63,6 +64,34 @@ class TestQWebTField(TransactionCase):
         with self.assertRaisesRegexp(QWebException, r'^t-field can not be used on a t element'):
             self.engine.render(field, {'company': None})
 
+    def test_render_t_options(self):
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': u"""
+                <t t-name="base.dummy"><root><span t-esc="5" t-options="{'widget': 'char'}" t-options-widget="'float'" t-options-precision="4"/></root></t>
+            """
+        })
+        text = etree.fromstring(view1.render()).find('span').text
+        self.assertEqual(text, u'5.0000')
+
+    def test_xss_breakout(self):
+        view = self.env['ir.ui.view'].create({
+            'name': 'dummy', 'type': 'qweb',
+            'arch': u"""
+                <t t-name="base.dummy">
+                    <root>
+                        <script type="application/javascript">
+                            var s = <t t-raw="json.dumps({'key': malicious})"/>;
+                        </script>
+                    </root>
+                </t>
+            """
+        })
+        rendered = view.render({'malicious': '1</script><script>alert("pwned")</script><script>'}).decode()
+        self.assertIn('alert', rendered, "%r doesn't seem to be rendered" % rendered)
+        doc = etree.fromstring(rendered)
+        self.assertEqual(len(doc.xpath('//script')), 1)
 
 class TestQWebNS(TransactionCase):
     def test_render_static_xml_with_namespace(self):
@@ -489,6 +518,47 @@ class TestQWebNS(TransactionCase):
         with self.assertRaises(QWebException, msg=error_msg):
             view1.render()
 
+    def test_render_t_call_propagates_t_lang(self):
+        current_lang = 'en_US'
+        other_lang = 'fr_FR'
+
+        self.env['res.lang'].load_lang(lang=other_lang)
+
+        self.env['res.lang'].search([('code', '=', other_lang)], limit=1).write({
+            'active': True,
+            'decimal_point': '*',
+            'thousands_sep': '/'
+        })
+
+        view1 = self.env['ir.ui.view'].create({
+            'name': "callee",
+            'type': 'qweb',
+            'arch': u"""
+                <t t-name="base.callee">
+                    <t t-esc="9000000.00" t-options="{'widget': 'float', 'precision': 2}" />
+                </t>
+            """
+        })
+        self.env['ir.model.data'].create({
+            'name': 'callee',
+            'model': 'ir.ui.view',
+            'module': 'base',
+            'res_id': view1.id,
+        })
+
+        view2 = self.env['ir.ui.view'].create({
+            'name': "calling",
+            'type': 'qweb',
+            'arch': u"""
+                <t t-name="base.calling">
+                    <t t-call="base.callee" t-lang="'%s'" />
+                </t>
+            """ % other_lang
+        })
+
+        rendered = view2.with_context(lang=current_lang).render().strip()
+        self.assertEqual(rendered, b'9/000/000*00')
+
 
 from copy import deepcopy
 class FileSystemLoader(object):
@@ -557,6 +627,79 @@ class TestQWeb(TransactionCase):
                 (result or u'').strip().encode('utf-8'),
                 template
             )
+
+class TestPageSplit(TransactionCase):
+    # need to explicitly assertTreesEqual because I guess it's registered for
+    # equality between _Element *or* HtmlElement but we're comparing a parsed
+    # HtmlElement and a convenience _Element
+    def test_split_before(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name='test'>
+            <div>
+                <table>
+                    <tr></tr>
+                    <tr data-pagebreak="before"></tr>
+                    <tr></tr>
+                </table>
+            </div>
+            </t>
+            '''
+        })
+        rendered = html.fromstring(self.env['ir.qweb'].render(t.id))
+        ref = E.div(
+            E.table(E.tr()),
+            E.div({'style': 'page-break-after: always'}),
+            E.table(E.tr({'data-pagebreak': 'before'}), E.tr())
+        )
+        self.assertTreesEqual(rendered, ref)
+
+    def test_split_after(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name='test'>
+            <div>
+                <table>
+                    <tr></tr>
+                    <tr data-pagebreak="after"></tr>
+                    <tr></tr>
+                </table>
+            </div>
+            </t>
+            '''
+        })
+        rendered = html.fromstring(self.env['ir.qweb'].render(t.id))
+        self.assertTreesEqual(
+            rendered,
+            E.div(
+                E.table(E.tr(), E.tr({'data-pagebreak': 'after'})),
+                E.div({'style': 'page-break-after: always'}),
+                E.table(E.tr())
+            )
+        )
+
+    def test_dontsplit(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name='test'>
+            <div>
+                <table>
+                    <tr></tr>
+                    <tr></tr>
+                    <tr></tr>
+                </table>
+            </div>
+            </t>
+            '''
+        })
+        rendered = html.fromstring(self.env['ir.qweb'].render(t.id))
+        self.assertTreesEqual(
+            rendered,
+            E.div(E.table(E.tr(), E.tr(), E.tr()))
+        )
 
 def load_tests(loader, suite, _):
     # can't override TestQWeb.__dir__ because dir() called on *class* not

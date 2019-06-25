@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from odoo.tests import common
+from odoo.tests import common, Form
 from odoo.tools import float_compare
 
 
-@common.at_install(False)
-@common.post_install(True)
+@common.tagged('post_install', '-at_install')
 class TestDeliveryCost(common.TransactionCase):
 
     def setUp(self):
@@ -19,11 +18,11 @@ class TestDeliveryCost(common.TransactionCase):
         self.partner_18 = self.env.ref('base.res_partner_18')
         self.pricelist = self.env.ref('product.list0')
         self.product_4 = self.env.ref('product.product_product_4')
-        self.product_uom_unit = self.env.ref('product.product_uom_unit')
+        self.product_uom_unit = self.env.ref('uom.product_uom_unit')
         self.normal_delivery = self.env.ref('delivery.normal_delivery_carrier')
         self.partner_4 = self.env.ref('base.res_partner_4')
         self.partner_address_13 = self.env.ref('base.res_partner_address_13')
-        self.product_uom_hour = self.env.ref('product.product_uom_hour')
+        self.product_uom_hour = self.env.ref('uom.product_uom_hour')
         self.account_data = self.env.ref('account.data_account_type_revenue')
         self.account_tag_operating = self.env.ref('account.account_tag_operating')
         self.product_2 = self.env.ref('product.product_product_2')
@@ -33,7 +32,7 @@ class TestDeliveryCost(common.TransactionCase):
         # that the company actually uses USD
         self.env.cr.execute(
             "UPDATE res_company SET currency_id = %s WHERE id = %s",
-            [self.env.ref('base.USD').id, self.env.user.company_id.id])
+            [self.env.ref('base.USD').id, self.env.company.id])
         self.pricelist.currency_id = self.env.ref('base.USD').id
 
     def test_00_delivery_cost(self):
@@ -52,7 +51,6 @@ class TestDeliveryCost(common.TransactionCase):
                 'product_uom': self.product_uom_unit.id,
                 'price_unit': 750.00,
             })],
-            'carrier_id': self.normal_delivery.id
         })
         # I add delivery cost in Sales order
 
@@ -77,13 +75,17 @@ class TestDeliveryCost(common.TransactionCase):
         })
 
         # I add delivery cost in Sales order
-        self.sale_normal_delivery_charges.get_delivery_price()
-        self.sale_normal_delivery_charges.set_delivery_line()
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': self.sale_normal_delivery_charges.id,
+            'default_carrier_id': self.normal_delivery.id
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
 
         # I check sales order after added delivery cost
 
         line = self.SaleOrderLine.search([('order_id', '=', self.sale_normal_delivery_charges.id),
-            ('product_id', '=', self.sale_normal_delivery_charges.carrier_id.product_id.id)])
+            ('product_id', '=', self.normal_delivery.product_id.id)])
         self.assertEqual(len(line), 1, "Delivery cost is not Added")
 
         self.assertEqual(float_compare(line.price_subtotal, 10.0, precision_digits=2), 0,
@@ -113,16 +115,19 @@ class TestDeliveryCost(common.TransactionCase):
                 'product_uom': self.product_uom_hour.id,
                 'price_unit': 38.25,
             })],
-            'carrier_id': self.free_delivery.id
         })
 
         # I add free delivery cost in Sales order
-        self.delivery_sale_order_cost.get_delivery_price()
-        self.delivery_sale_order_cost.set_delivery_line()
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': self.delivery_sale_order_cost.id,
+            'default_carrier_id': self.free_delivery.id
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
 
         # I check sales order after adding delivery cost
         line = self.SaleOrderLine.search([('order_id', '=', self.delivery_sale_order_cost.id),
-            ('product_id', '=', self.delivery_sale_order_cost.carrier_id.product_id.id)])
+            ('product_id', '=', self.free_delivery.product_id.id)])
 
         self.assertEqual(len(line), 1, "Delivery cost is not Added")
         self.assertEqual(float_compare(line.price_subtotal, 0, precision_digits=2), 0,

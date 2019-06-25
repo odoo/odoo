@@ -28,4 +28,4 @@ class BuckarooController(http.Controller):
         request.env['payment.transaction'].sudo().form_feedback(post, 'buckaroo')
         post = {key.upper(): value for key, value in post.items()}
         return_url = post.get('ADD_RETURNDATA') or '/'
-        return werkzeug.utils.redirect(return_url)
+        return werkzeug.utils.redirect('/payment/process')

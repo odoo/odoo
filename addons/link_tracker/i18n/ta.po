@@ -1,23 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * link_tracker
-# 
+#
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-02-11 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Tamil (http://www.transifex.com/odoo/odoo-9/language/ta/)\n"
+"Language: ta\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ta\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_link_click_ids
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
 msgid "Clicks"
 msgstr ""
 
@@ -34,7 +36,7 @@ msgstr ""
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_country_id
 msgid "Country"
-msgstr ""
+msgstr "தேசம்"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_click_date
@@ -46,7 +48,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_create_uid
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "உருவாக்கியவர்"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_create_date
@@ -54,13 +56,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_create_date
 msgid "Created on"
 msgstr ""
+"உருவாக்கப்பட்ட \n"
+"தேதி"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_display_name
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_display_name
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "காட்சி பெயர்"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_favicon
@@ -82,7 +86,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_id
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_ip
@@ -94,21 +98,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click___last_update
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "கடைசியாக திருத்திய"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_write_uid
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_write_uid
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "கடைசியாக புதுப்பிக்கப்பட்டது"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_write_date
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_write_date
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "கடைசியாக புதுப்பிக்கப்பட்டது"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_link_id
@@ -120,7 +124,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:link_tracker.action_link_tracker
 #: model:ir.ui.menu,name:link_tracker.menu_url_shortener_main
 msgid "Link Tracker"
-msgstr ""
+msgstr "இணைப்பு தட"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_count
@@ -158,13 +162,19 @@ msgid "Target URL"
 msgstr ""
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
 msgid "Title and URL"
 msgstr ""
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
 msgid "Tracked Link"
+msgstr ""
+
+#. module: link_tracker
+#: model:ir.actions.act_window,name:link_tracker.action_link_tracker_click
+#: model:ir.ui.menu,name:link_tracker.menu_url_shortener_links
+msgid "Tracked Links"
 msgstr ""
 
 #. module: link_tracker
@@ -173,40 +183,40 @@ msgid "Tracked URL"
 msgstr ""
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
 msgid "Visit Page"
 msgstr ""
 
 #. module: link_tracker
-#: code:addons/link_tracker/models/link_tracker.py:141
+#: code:addons/link_tracker/models/link_tracker.py:139
 #, python-format
 msgid "Visit Webpage"
 msgstr ""
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
 msgid "Website Link"
 msgstr ""
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_form
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_graph
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_form
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_graph
 msgid "Website Link Clicks"
 msgstr ""
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_form_stats
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_form_stats
 msgid "Website Link Graph"
 msgstr ""
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_graph
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_tree
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_graph
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_tree
 msgid "Website Links"
 msgstr ""
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_tree
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_tree
 msgid "Website Links Clicks"
 msgstr ""
 
@@ -229,3 +239,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:link_tracker.action_link_tracker_stats
 msgid "link.tracker.form.graph.action"
 msgstr ""
+
+#~ msgid "Campaign"
+#~ msgstr "பிரச்சாரம்"
+
+#~ msgid "Medium"
+#~ msgstr "நடுத்தரம்"
+
+#~ msgid "Source"
+#~ msgstr "ஆதாரம்"

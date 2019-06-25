@@ -80,6 +80,7 @@ var ShowPaymentLineWidget = AbstractField.extend({
                 title: 'Payment Information',
                 trigger: 'focus',
                 delay: { "show": 0, "hide": 100 },
+                container: $(k).parent(), // FIXME Ugly, should use the default body container but system & tests to adapt to properly destroy the popover
             };
             $(k).popover(options);
         });
@@ -127,6 +128,8 @@ var ShowPaymentLineWidget = AbstractField.extend({
      * @param {MouseEvent} event
      */
     _onOutstandingCreditAssign: function (event) {
+        event.stopPropagation();
+        event.preventDefault();
         var self = this;
         var id = $(event.target).data('id') || false;
         this._rpc({
@@ -149,7 +152,8 @@ var ShowPaymentLineWidget = AbstractField.extend({
             this._rpc({
                 model: 'account.move.line',
                 method: 'remove_move_reconcile',
-                args: [paymentId, {'invoice_id': this.res_id}]
+                args: [paymentId],
+                context: {'invoice_id': this.res_id},
             }).then(function () {
                 self.trigger_up('reload');
             });
@@ -159,4 +163,8 @@ var ShowPaymentLineWidget = AbstractField.extend({
 
 field_registry.add('payment', ShowPaymentLineWidget);
 
+return {
+    ShowPaymentLineWidget: ShowPaymentLineWidget
+};
+    
 });

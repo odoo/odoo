@@ -10,10 +10,12 @@
             <field name="model">res.partner.activation</field>
             <field name="arch" type="xml">
                 <form string="Activation">
-                    <group col="4">
-                        <field name="name" />
-                        <field name="sequence" />
-                    </group>
+                    <sheet>
+                        <group col="4">
+                            <field name="name" />
+                            <field name="sequence" />
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -30,7 +32,6 @@
         <record model="ir.actions.act_window" id="res_partner_activation_act">
             <field name="name">Partner Activations</field>
             <field name="res_model">res.partner.activation</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 
@@ -58,7 +59,7 @@
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" name="website_publish_button"
                                 type="object" icon="fa-globe">
-                            <field name="website_published" widget="website_button"/>
+                            <field name="is_published" widget="website_button"/>
                         </button>
                     </div>
                     <div class="oe_title">
@@ -79,7 +80,6 @@
     <record id="res_partner_grade_action" model="ir.actions.act_window">
         <field name="name">Partner Level</field>
         <field name="res_model">res.partner.grade</field>
-        <field name="view_type">form</field>
     </record>
     <menuitem action="res_partner_grade_action" id="menu_res_partner_grade_action"
         parent="crm_menu_resellers"
@@ -105,7 +105,7 @@
         <field name="inherit_id" ref="base.view_res_partner_filter"/>
         <field name="arch" type="xml">
             <filter name="salesperson" position="after">
-                <filter string="Activation" context="{'group_by' : 'activation'}" domain="[]"/>
+                <filter string="Activation" name="activation" context="{'group_by' : 'activation'}" domain="[]"/>
             </filter>
             <field name="category_id" position="after">
                 <field name="grade_id"/>
@@ -136,7 +136,7 @@
                     </group>
                 </xpath>
                 <xpath expr="//group[@name='sale']" position="inside">
-                    <field name="assigned_partner_id" groups="base.group_no_one"/>
+                    <field name="assigned_partner_id" groups="base.group_no_one" attrs="{'invisible': [('customer','=', False)]}"/>
                 </xpath>
             </data>
         </field>

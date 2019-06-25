@@ -23,7 +23,7 @@
                            icon="fa-puzzle-piece"
                            string="Project(s) Overview"
                            attrs="{'invisible': [('project_ids', '=', [])]}"
-                           groups="project.group_project_user">
+                           groups="project.group_project_manager">
                           <field name="project_ids" invisible="1"/>
                        </button>
                     </xpath>
@@ -36,6 +36,10 @@
                            groups="project.group_project_user">
                            <field name="tasks_count" widget="statinfo" string="Tasks"/>
                        </button>
+                    </xpath>
+                    <xpath expr="//field[@name='analytic_account_id']" position="after">
+                       <field name="visible_project" invisible="1"/>
+                       <field name="project_id" options="{'no_create': True}" attrs="{'invisible': [('visible_project', '=', False)]}"/>
                     </xpath>
                 </data>
            </field>

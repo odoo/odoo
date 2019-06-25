@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import hashlib
-import hmac
 import time
-import unittest
-from lxml import objectify
 from werkzeug import urls
+from lxml import objectify
 
 import odoo
 from odoo.addons.payment.models.payment_acquirer import ValidationError
@@ -14,8 +11,7 @@ from odoo.addons.payment_authorize.controllers.main import AuthorizeController
 from odoo.tools import mute_logger
 
 
-@odoo.tests.common.at_install(True)
-@odoo.tests.common.post_install(True)
+@odoo.tests.tagged('post_install', '-at_install')
 class AuthorizeCommon(PaymentAcquirerCommon):
 
     def setUp(self):
@@ -28,18 +24,8 @@ class AuthorizeCommon(PaymentAcquirerCommon):
         # self.authorize.auto_confirm = 'confirm_so'
 
 
-@odoo.tests.common.at_install(True)
-@odoo.tests.common.post_install(True)
+@odoo.tests.tagged('post_install', '-at_install', '-standard', 'external')
 class AuthorizeForm(AuthorizeCommon):
-
-    def _authorize_generate_hashing(self, values):
-        data = '^'.join([
-            values['x_login'],
-            values['x_fp_sequence'],
-            values['x_fp_timestamp'],
-            values['x_amount'],
-        ]) + '^'
-        return hmac.new(values['x_trans_key'].encode('utf-8'), data.encode('utf-8'), hashlib.md5).hexdigest()
 
     def test_10_Authorize_form_render(self):
         self.assertEqual(self.authorize.environment, 'test', 'test without test environment')
@@ -85,7 +71,7 @@ class AuthorizeForm(AuthorizeCommon):
             'x_ship_to_state': None,
         }
 
-        form_values['x_fp_hash'] = self._authorize_generate_hashing(form_values)
+        form_values['x_fp_hash'] = self.env['payment.acquirer']._authorize_generate_hashing(form_values)
         # render the button
         res = self.authorize.render('SO004', 56.16, self.currency_usd.id, values=self.buyer_values)
         # check form result
@@ -112,7 +98,9 @@ class AuthorizeForm(AuthorizeCommon):
         # typical data posted by authorize after client has successfully paid
         authorize_post_data = {
             'return_url': u'/shop/payment/validate',
+            # x_MD5_Hash will be empty starting the 28th March 2019
             'x_MD5_Hash': u'7934485E1C105940BE854208D10FAB4F',
+            'x_SHA2_Hash': u'7D3AC844BE8CA3F649AB885A90D22CFE35B850338EC91D1A5ADD819A85FF948A3D777334A18CDE36821DC8F2B42A6E1950C1FF96B52B60F23201483A656195FB',
             'x_account_number': u'XXXX0027',
             'x_address': u'Huge Street 2/543',
             'x_amount': u'320.00',
@@ -164,25 +152,35 @@ class AuthorizeForm(AuthorizeCommon):
             'amount': 320.0,
             'acquirer_id': self.authorize.id,
             'currency_id': self.currency_usd.id,
-            'reference': 'SO004',
+            'reference': 'SO004-1',
             'partner_name': 'Norbert Buyer',
             'partner_country_id': self.country_france.id})
+        tx._set_transaction_done()
+
         # validate it
         self.env['payment.transaction'].form_feedback(authorize_post_data, 'authorize')
         # check state
         self.assertEqual(tx.state, 'done', 'Authorize: validation did not put tx into done state')
         self.assertEqual(tx.acquirer_reference, authorize_post_data.get('x_trans_id'), 'Authorize: validation did not update tx payid')
 
-        # reset tx
-        tx.write({'state': 'draft', 'date_validate': False, 'acquirer_reference': False})
+        tx = self.env['payment.transaction'].create({
+            'amount': 320.0,
+            'acquirer_id': self.authorize.id,
+            'currency_id': self.currency_usd.id,
+            'reference': 'SO004-2',
+            'partner_name': 'Norbert Buyer',
+            'partner_country_id': self.country_france.id})
+        tx._set_transaction_done()
 
         # simulate an error
         authorize_post_data['x_response_code'] = u'3'
         self.env['payment.transaction'].form_feedback(authorize_post_data, 'authorize')
         # check state
-        self.assertEqual(tx.state, 'error', 'Authorize: erroneous validation did not put tx into error state')
+        self.assertEqual(tx.state, 'cancel', 'Authorize: erroneous validation did not put tx into error state')
 
-    @unittest.skip("Authorize s2s test disabled: We do not want to overload Authorize.net with runbot's requests")
+
+@odoo.tests.tagged('post_install', '-at_install', '-standard')
+class AuthorizeForm(AuthorizeCommon):
     def test_30_authorize_s2s(self):
         # be sure not to do stupid thing
         authorize = self.authorize
@@ -271,4 +269,4 @@ class AuthorizeForm(AuthorizeCommon):
 
         })
         transaction.authorize_s2s_do_transaction()
-        self.assertEqual(transaction.state, 'error')
+        self.assertEqual(transaction.state, 'cancel')

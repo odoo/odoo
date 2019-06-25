@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!-- notify all employees of module installation -->
-        <function model="mail.channel" name="message_post">
-            <value eval="[ref('mail.channel_all_employees')]"/>
-            <value>From the top menu Events, you can organize events, manage registrations, automate communication around your event and sell events through your quotations.</value>
-            <value>Module Events has been installed</value>
-        </function>
-
         <!-- Event Mail Scheduler-->
         <record model="ir.cron" forcecreate="True" id="event_mail_scheduler">
             <field name="name">Event: Mail Scheduler</field>

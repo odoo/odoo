@@ -4,8 +4,6 @@ import os.path
 
 from werkzeug import urls
 
-from odoo.tools import pycompat
-
 """
 * adds github_link(mode) context variable: provides URL (in relevant mode) of
   current document on github
@@ -100,7 +98,7 @@ def add_doc_link(app, pagename, templatename, context, doctree):
     # in 1.3 source_suffix can be a list
     # in 1.8 source_suffix can be a mapping
     # FIXME: will break if we ever add support for !rst markdown documents maybe
-    if not isinstance(source_suffix, pycompat.string_types):
+    if not isinstance(source_suffix, str):
         source_suffix = next(iter(source_suffix))
     # can't use functools.partial because 3rd positional is line not mode
     context['github_link'] = lambda mode='edit': make_github_link(

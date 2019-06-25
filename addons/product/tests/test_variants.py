@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+import io
+from PIL import Image
+
 from . import common
+from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase
 
 class TestVariantsSearch(TransactionCase):
@@ -177,7 +182,7 @@ class TestVariantsNoCreate(common.TestProductCommon):
         super(TestVariantsNoCreate, self).setUp()
         self.size = self.env['product.attribute'].create({
             'name': 'Size',
-            'create_variant': False,
+            'create_variant': 'no_variant',
             'value_ids': [(0, 0, {'name': 'S'}), (0, 0, {'name': 'M'}), (0, 0, {'name': 'L'})],
         })
         self.size_S = self.size.value_ids[0]
@@ -357,13 +362,183 @@ class TestVariantsNoCreate(common.TestProductCommon):
             'attribute_line_ids': [
                 (0, 0, { # one variant for this one
                     'attribute_id': self.prod_att_1.id,
-                    'value_ids': [(4, self.prod_attr1_v1.id)],
+                    'value_ids': [(6, 0, self.prod_attr1_v1.ids)],
                 }),
             ],
         })
         self.assertEqual(len(template.product_variant_ids), 1)
-
-        for variant_id in template.product_variant_ids:
-            variant_id.attribute_value_ids += self.size_S
-        template.attribute_line_ids += template.attribute_line_ids.browse()
+        template.attribute_line_ids = [(0, 0, {
+            'attribute_id': self.size.id,
+            'value_ids': [(6, 0, self.size_S.ids)],
+        })]
         self.assertEqual(len(template.product_variant_ids), 1)
+        # no_variant attribute should not appear on the variant
+        self.assertNotIn(self.size_S, template.product_variant_ids.attribute_value_ids)
+
+
+class TestVariantsManyAttributes(common.TestAttributesCommon):
+
+    def test_01_create_no_variant(self):
+        toto = self.env['product.template'].create({
+            'name': 'Toto',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': attribute.id,
+                'value_ids': [(6, 0, attribute.value_ids.ids)],
+            }) for attribute in self.attributes],
+        })
+        self.assertEqual(len(toto.attribute_line_ids.mapped('attribute_id')), 10)
+        self.assertEqual(len(toto.attribute_line_ids.mapped('value_ids')), 100)
+        self.assertEqual(len(toto.product_variant_ids), 1)
+
+    def test_02_create_dynamic(self):
+        self.attributes.write({'create_variant': 'dynamic'})
+        toto = self.env['product.template'].create({
+            'name': 'Toto',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': attribute.id,
+                'value_ids': [(6, 0, attribute.value_ids.ids)],
+            }) for attribute in self.attributes],
+        })
+        self.assertEqual(len(toto.attribute_line_ids.mapped('attribute_id')), 10)
+        self.assertEqual(len(toto.attribute_line_ids.mapped('value_ids')), 100)
+        self.assertEqual(len(toto.product_variant_ids), 0)
+
+    def test_03_create_always(self):
+        self.attributes.write({'create_variant': 'always'})
+        with self.assertRaises(UserError):
+            self.env['product.template'].create({
+                'name': 'Toto',
+                'attribute_line_ids': [(0, 0, {
+                    'attribute_id': attribute.id,
+                    'value_ids': [(6, 0, attribute.value_ids.ids)],
+                }) for attribute in self.attributes],
+            })
+
+    def test_04_create_no_variant_dynamic(self):
+        self.attributes[:5].write({'create_variant': 'dynamic'})
+        toto = self.env['product.template'].create({
+            'name': 'Toto',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': attribute.id,
+                'value_ids': [(6, 0, attribute.value_ids.ids)],
+            }) for attribute in self.attributes],
+        })
+        self.assertEqual(len(toto.attribute_line_ids.mapped('attribute_id')), 10)
+        self.assertEqual(len(toto.attribute_line_ids.mapped('value_ids')), 100)
+        self.assertEqual(len(toto.product_variant_ids), 0)
+
+    def test_05_create_no_variant_always(self):
+        self.attributes[:2].write({'create_variant': 'always'})
+        toto = self.env['product.template'].create({
+            'name': 'Toto',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': attribute.id,
+                'value_ids': [(6, 0, attribute.value_ids.ids)],
+            }) for attribute in self.attributes],
+        })
+        self.assertEqual(len(toto.attribute_line_ids.mapped('attribute_id')), 10)
+        self.assertEqual(len(toto.attribute_line_ids.mapped('value_ids')), 100)
+        self.assertEqual(len(toto.product_variant_ids), 100)
+
+    def test_06_create_dynamic_always(self):
+        self.attributes[:5].write({'create_variant': 'dynamic'})
+        self.attributes[5:].write({'create_variant': 'always'})
+        toto = self.env['product.template'].create({
+            'name': 'Toto',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': attribute.id,
+                'value_ids': [(6, 0, attribute.value_ids.ids)],
+            }) for attribute in self.attributes],
+        })
+        self.assertEqual(len(toto.attribute_line_ids.mapped('attribute_id')), 10)
+        self.assertEqual(len(toto.attribute_line_ids.mapped('value_ids')), 100)
+        self.assertEqual(len(toto.product_variant_ids), 0)
+
+    def test_07_create_no_create_dynamic_always(self):
+        self.attributes[3:6].write({'create_variant': 'dynamic'})
+        self.attributes[6:].write({'create_variant': 'always'})
+        toto = self.env['product.template'].create({
+            'name': 'Toto',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': attribute.id,
+                'value_ids': [(6, 0, attribute.value_ids.ids)],
+            }) for attribute in self.attributes],
+        })
+        self.assertEqual(len(toto.attribute_line_ids.mapped('attribute_id')), 10)
+        self.assertEqual(len(toto.attribute_line_ids.mapped('value_ids')), 100)
+        self.assertEqual(len(toto.product_variant_ids), 0)
+
+
+class TestVariantsImages(common.TestProductCommon):
+
+    def setUp(self):
+        res = super(TestVariantsImages, self).setUp()
+
+        self.colors = {'red': '#FF0000', 'green': '#00FF00', 'blue': '#0000FF'}
+        self.images = {}
+
+        product_attribute = self.env['product.attribute'].create({'name': 'Color'})
+
+        self.template = self.env['product.template'].create({
+            'name': 'template',
+        })
+
+        color_values = self.env['product.attribute.value'].create([{
+            'name': color,
+            'attribute_id': product_attribute.id,
+        } for color in self.colors])
+
+        self.env['product.template.attribute.line'].create({
+            'attribute_id': product_attribute.id,
+            'product_tmpl_id': self.template.id,
+            'value_ids': [(6, 0, color_values.ids)],
+        })
+
+        for color, color_value in zip(self.colors, color_values):
+            f = io.BytesIO()
+            Image.new('RGB', (800, 500), self.colors[color]).save(f, 'PNG')
+            f.seek(0)
+            self.images.update({color: base64.b64encode(f.read())})
+
+            self.env['product.product'].create({
+                'image_raw_original': self.images[color],
+                'attribute_value_ids': [(6, 0, [color_value.id])],
+                'product_tmpl_id': self.template.id,
+            })
+        # the first one has no image, no color
+        self.variants = self.template.product_variant_ids.sorted('id')
+
+        return res
+
+    def test_variant_images(self):
+        """Check that on variant, the image used is the image_raw_original if set,
+        and defaults to the template image otherwise.
+        """
+        f = io.BytesIO()
+        Image.new('RGB', (800, 500), '#000000').save(f, 'PNG')
+        f.seek(0)
+        image_black = base64.b64encode(f.read())
+
+        images = self.variants.mapped('image_original')
+        self.assertEqual(len(set(images)), 4)
+
+        variant_no_image = self.variants[0]
+        self.assertFalse(variant_no_image.image)
+        self.template.image = image_black
+
+        # the first has no image variant, all the others do
+        self.assertFalse(variant_no_image.image_raw_original)
+        self.assertTrue(all(images[1:]))
+
+        # template image is the same as this one, since it has no image variant
+        self.assertEqual(variant_no_image.image, self.template.image)
+        # having changed the template image should not have changed these
+        self.assertEqual(images[1:], self.variants.mapped('image')[1:])
+
+    def test_update_images_with_archived_variants(self):
+        """Update images after variants have been archived"""
+        self.variants[1:].write({'active': False})
+        self.variants[0].image = self.images['red']
+        self.assertEqual(self.template.image, self.images['red'])
+        self.assertEqual(self.variants[0].image_raw_original, False)
+        self.assertEqual(self.variants[0].image, self.images['red'])

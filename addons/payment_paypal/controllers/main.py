@@ -20,14 +20,6 @@ class PaypalController(http.Controller):
     _return_url = '/payment/paypal/dpn/'
     _cancel_url = '/payment/paypal/cancel/'
 
-    def _get_return_url(self, **post):
-        """ Extract the return URL from the data coming from paypal. """
-        return_url = post.pop('return_url', '')
-        if not return_url:
-            custom = json.loads(urls.url_unquote_plus(post.pop('custom', False) or post.pop('cm', False) or '{}'))
-            return_url = custom.get('return_url', '/')
-        return return_url
-
     def _parse_pdt_response(self, response):
         """ Parse a text response for a PDT verification.
 
@@ -63,20 +55,20 @@ class PaypalController(http.Controller):
 
         Once data is validated, process it. """
         res = False
-        new_post = dict(post, cmd='_notify-validate', charset='UTF-8')
+        post['cmd'] = '_notify-validate'
         reference = post.get('item_number')
         tx = None
         if reference:
             tx = request.env['payment.transaction'].search([('reference', '=', reference)])
         paypal_urls = request.env['payment.acquirer']._get_paypal_urls(tx and tx.acquirer_id.environment or 'prod')
-        pdt_request = bool(new_post.get('amt'))  # check for spefific pdt param
+        pdt_request = bool(post.get('amt'))  # check for spefific pdt param
         if pdt_request:
             # this means we are in PDT instead of DPN like before
             # fetch the PDT token
-            new_post['at'] = tx and tx.acquirer_id.paypal_pdt_token or ''
-            new_post['cmd'] = '_notify-synch'  # command is different in PDT than IPN/DPN
+            post['at'] = tx and tx.acquirer_id.paypal_pdt_token or ''
+            post['cmd'] = '_notify-synch'  # command is different in PDT than IPN/DPN
         validate_url = paypal_urls['paypal_form_url']
-        urequest = requests.post(validate_url, new_post)
+        urequest = requests.post(validate_url, post)
         urequest.raise_for_status()
         resp = urequest.text
         if pdt_request:
@@ -84,10 +76,14 @@ class PaypalController(http.Controller):
         if resp in ['VERIFIED', 'SUCCESS']:
             _logger.info('Paypal: validated data')
             res = request.env['payment.transaction'].sudo().form_feedback(post, 'paypal')
+            if not res:
+                tx.sudo()._set_transaction_error('Validation error occured. Please contact your administrator.')
         elif resp in ['INVALID', 'FAIL']:
             _logger.warning('Paypal: answered INVALID/FAIL on data verification')
+            tx.sudo()._set_transaction_error('Invalid response from Paypal. Please contact your administrator.')
         else:
             _logger.warning('Paypal: unrecognized paypal answer, received %s instead of VERIFIED/SUCCESS or INVALID/FAIL (validation: %s)' % (resp, 'PDT' if pdt_request else 'IPN/DPN'))
+            tx.sudo()._set_transaction_error('Unrecognized error from Paypal. Please contact your administrator.')
         return res
 
     @http.route('/payment/paypal/ipn/', type='http', auth='none', methods=['POST'], csrf=False)
@@ -104,13 +100,14 @@ class PaypalController(http.Controller):
     def paypal_dpn(self, **post):
         """ Paypal DPN """
         _logger.info('Beginning Paypal DPN form_feedback with post data %s', pprint.pformat(post))  # debug
-        return_url = self._get_return_url(**post)
-        self.paypal_validate_data(**post)
-        return werkzeug.utils.redirect(return_url)
+        try:
+            res = self.paypal_validate_data(**post)
+        except ValidationError:
+            _logger.exception('Unable to validate the Paypal payment')
+        return werkzeug.utils.redirect('/payment/process')
 
     @http.route('/payment/paypal/cancel', type='http', auth="none", csrf=False)
     def paypal_cancel(self, **post):
         """ When the user cancels its Paypal payment: GET on this route """
         _logger.info('Beginning Paypal cancel with post data %s', pprint.pformat(post))  # debug
-        return_url = self._get_return_url(**post)
-        return werkzeug.utils.redirect(return_url)
+        return werkzeug.utils.redirect('/payment/process')

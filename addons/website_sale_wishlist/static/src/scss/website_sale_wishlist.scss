@@ -1,0 +1,23 @@
+.oe_website_sale {
+    .td-wish-btn {
+        width: 140px;
+    }
+
+    div.css_not_available .o_add_wishlist_dyn {
+        display: none;
+    }
+}
+
+// XS size
+@include media-breakpoint-down(sm) {
+    .oe_website_sale {
+        .td-wish-btn {
+            width: 100px;
+        }
+    }
+}
+
+table.table-comparator .td-img img {
+    // allows sizing the placeholder image to the "image" size of 100px
+    max-height: 100px;
+}

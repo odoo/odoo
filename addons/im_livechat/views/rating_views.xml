@@ -7,12 +7,15 @@
         <field name="inherit_id" ref="rating.rating_rating_view_search"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
+            <xpath expr="//filter[@name='resource']" position="replace">
+                <filter string="Code" name="resource" context="{'group_by':'res_name'}"/>
+            </xpath>
             <xpath expr="//filter[@name='resource']" position="after">
                 <field name="parent_res_name"/>
                 <filter string="Livechat Channel" name="groupby_livechat_channel" context="{'group_by': 'parent_res_name'}"/>
             </xpath>
             <xpath expr="/search" position="inside">
-                <filter string="Last 7 days" name="rating_last_7_days" domain="[('create_date', '>=', (context_today()-datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Creation Date" name="creation_date_filter" date="create_date" default_period="this_week"/>
             </xpath>
         </field>
     </record>
@@ -24,8 +27,8 @@
         <field name="domain">[('parent_res_model','=','im_livechat.channel'), ('consumed','=',True)]</field>
         <field name="search_view_id" ref="rating_rating_view_search_livechat"/>
         <field name="help" type="html">
-            <p>
-                There is no rating for this channel at the moment.
+            <p class="o_view_nocontent_empty_folder">
+                There is no rating for this channel at the moment
             </p>
         </field>
         <field name="context">{'search_default_rating_last_7_days': 1}</field>
@@ -38,8 +41,8 @@
         <field name="domain">[('parent_res_model','=','im_livechat.channel'), ('consumed', '=', True)]</field>
         <field name="search_view_id" ref="rating_rating_view_search_livechat"/>
         <field name="help" type="html">
-            <p>
-                Customer ratings on livechat session.
+            <p class="o_view_nocontent_empty_folder">
+                No customer ratings on live chat session yet
             </p>
         </field>
     </record>

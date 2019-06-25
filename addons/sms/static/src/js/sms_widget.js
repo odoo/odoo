@@ -4,17 +4,21 @@ odoo.define('sms.sms_widget', function (require) {
 var basicFields = require('web.basic_fields');
 var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
+var dom = require('web.dom');
 var framework = require('web.framework');
 
+
 var FieldText = basicFields.FieldText;
+var InputField = basicFields.InputField;
 var QWeb = core.qweb;
 
+var _t = core._t
 /**
  * SmsWidget is a widget to display a textarea (the body) and a text representing
  * the number of SMS and the number of characters. This text is computed every
  * time the user changes the body.
  */
-var SmsWidget = FieldText.extend({
+var SmsWidget = InputField.extend({
     /**
      * @constructor
      */
@@ -89,7 +93,7 @@ var SmsWidget = FieldText.extend({
      * @private
      */
     _renderSMS: function () {
-        this.$('.o_sms_count').text(this.nbrChar + ' / ' + this.nbrSMS + ' SMS (' + this.encoding + ') ');
+        this.$('.o_sms_count').text(_.str.sprintf(_t('%s chars, fits in %s SMS (%s) '), this.nbrChar, this.nbrSMS, this.encoding));
     },
 
     //--------------------------------------------------------------------------

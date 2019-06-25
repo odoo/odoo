@@ -25,6 +25,7 @@ from os.path import join as opj
 from zlib import adler32
 
 import babel.core
+from datetime import datetime, date
 import passlib.utils
 import psycopg2
 import json
@@ -44,10 +45,12 @@ except ImportError:
     psutil = None
 
 import odoo
+from odoo import fields
 from .service.server import memory_info
 from .service import security, model as service_model
 from .tools.func import lazy_property
-from .tools import ustr, consteq, frozendict, pycompat, unique
+from .tools import ustr, consteq, frozendict, pycompat, unique, date_utils
+from .tools.mimetypes import guess_mimetype
 
 from .modules.module import module_manifest
 
@@ -60,6 +63,21 @@ STATIC_CACHE = 60 * 60 * 24 * 7
 
 # To remove when corrected in Babel
 babel.core.LOCALE_ALIASES['nb'] = 'nb_NO'
+
+""" Debug mode is stored in session and should always be a string.
+    It can be activated with an URL query string `debug=<mode>` where
+    mode is either:
+    - 'tests' to load tests assets
+    - 'assets' to load assets non minified
+    - any other truthy value to enable simple debug mode (to show some
+      technical feature, to show complete traceback in frontend error..)
+    - any falsy value to disable debug mode
+
+    You can use any truthy/falsy value from `str2bool` (eg: 'on', 'f'..)
+    Multiple debug modes can be activated simultaneously, separated with
+    a comma (eg: 'tests, assets').
+"""
+ALLOWED_DEBUG_MODES = ['', '1', 'assets', 'tests']
 
 #----------------------------------------------------------
 # RequestHandler
@@ -101,9 +119,9 @@ def dispatch_rpc(service_name, method, params):
         rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
         if rpc_request_flag or rpc_response_flag:
             start_time = time.time()
-            start_rss, start_vms = 0, 0
+            start_memory = 0
             if psutil:
-                start_rss, start_vms = memory_info(psutil.Process(os.getpid()))
+                start_memory = memory_info(psutil.Process(os.getpid()))
             if rpc_request and rpc_response_flag:
                 odoo.netsvc.log(rpc_request, logging.DEBUG, '%s.%s' % (service_name, method), replace_request_password(params))
 
@@ -119,10 +137,10 @@ def dispatch_rpc(service_name, method, params):
 
         if rpc_request_flag or rpc_response_flag:
             end_time = time.time()
-            end_rss, end_vms = 0, 0
+            end_memory = 0
             if psutil:
-                end_rss, end_vms = memory_info(psutil.Process(os.getpid()))
-            logline = '%s.%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (service_name, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
+                end_memory = memory_info(psutil.Process(os.getpid()))
+            logline = '%s.%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (service_name, method, end_time - start_time, start_memory / 1024, end_memory / 1024, (end_memory - start_memory)/1024)
             if rpc_response_flag:
                 odoo.netsvc.log(rpc_response, logging.DEBUG, logline, result)
             else:
@@ -140,15 +158,10 @@ def dispatch_rpc(service_name, method, params):
         odoo.tools.debugger.post_mortem(odoo.tools.config, sys.exc_info())
         raise
 
-def local_redirect(path, query=None, keep_hash=False, forward_debug=True, code=303):
+def local_redirect(path, query=None, keep_hash=False, code=303):
     url = path
     if not query:
         query = {}
-    if request and request.debug:
-        if forward_debug:
-            query['debug'] = ''
-        else:
-            query['debug'] = None
     if query:
         url += '?' + werkzeug.url_encode(query)
     if keep_hash:
@@ -278,13 +291,15 @@ class WebRequest(object):
         _request_stack.pop()
 
         if self._cr:
-            if exc_type is None and not self._failed:
-                self._cr.commit()
-                if self.registry:
-                    self.registry.signal_changes()
-            elif self.registry:
-                self.registry.reset_changes()
-            self._cr.close()
+            try:
+                if exc_type is None and not self._failed:
+                    self._cr.commit()
+                    if self.registry:
+                        self.registry.signal_changes()
+                elif self.registry:
+                    self.registry.reset_changes()
+            finally:
+                self._cr.close()
         # just to be sure no one tries to re-use the request
         self.disable_db = True
         self.uid = None
@@ -300,7 +315,7 @@ class WebRequest(object):
     def _handle_exception(self, exception):
         """Called within an except block to allow converting exceptions
            to abitrary responses. Anything returned (except None) will
-           be used as response.""" 
+           be used as response."""
         self._failed = exception # prevent tx commit
         if not isinstance(exception, NO_POSTMORTEM) \
                 and not isinstance(exception, werkzeug.exceptions.HTTPException):
@@ -341,22 +356,6 @@ class WebRequest(object):
         if self.db:
             return checked_call(self.db, *args, **kwargs)
         return self.endpoint(*args, **kwargs)
-
-    @property
-    def debug(self):
-        """ Indicates whether the current request is in "debug" mode
-        """
-        debug = 'debug' in self.httprequest.args
-        if debug and self.httprequest.args.get('debug') == 'assets':
-            debug = 'assets'
-
-        # check if request from rpc in debug mode
-        if not debug:
-            debug = self.httprequest.environ.get('HTTP_X_DEBUG_MODE')
-
-        if not debug and self.httprequest.referrer:
-            debug = 'debug' in urls.url_parse(self.httprequest.referrer).decode_query()
-        return debug
 
     @contextlib.contextmanager
     def registry_cr(self):
@@ -510,13 +509,21 @@ def route(route=None, **kw):
             else:
                 routes = [route]
             routing['routes'] = routes
+
         @functools.wraps(f)
         def response_wrap(*args, **kw):
+            # if controller cannot be called with extra args (utm, debug, ...), call endpoint ignoring them
+            spec = inspect.getargspec(f)
+            if not spec.keywords:
+                ignored = ['<%s=%s>' % (k, kw.pop(k)) for k in list(kw) if k not in spec.args]
+                if ignored:
+                    _logger.info("<function %s.%s> called ignoring args %s" % (f.__module__, f.__name__, ', '.join(ignored)))
+
             response = f(*args, **kw)
             if isinstance(response, Response) or f.routing_type == 'json':
                 return response
 
-            if isinstance(response, (bytes, pycompat.text_type)):
+            if isinstance(response, (bytes, str)):
                 return Response(response)
 
             if isinstance(response, werkzeug.exceptions.HTTPException):
@@ -577,33 +584,14 @@ class JsonRequest(WebRequest):
     def __init__(self, *args):
         super(JsonRequest, self).__init__(*args)
 
-        self.jsonp_handler = None
+        self.params = {}
 
         args = self.httprequest.args
-        jsonp = args.get('jsonp')
-        self.jsonp = jsonp
         request = None
         request_id = args.get('id')
-        
-        if jsonp and self.httprequest.method == 'POST':
-            # jsonp 2 steps step1 POST: save call
-            def handler():
-                self.session['jsonp_request_%s' % (request_id,)] = self.httprequest.form['r']
-                self.session.modified = True
-                headers=[('Content-Type', 'text/plain; charset=utf-8')]
-                r = werkzeug.wrappers.Response(request_id, headers=headers)
-                return r
-            self.jsonp_handler = handler
-            return
-        elif jsonp and args.get('r'):
-            # jsonp method GET
-            request = args.get('r')
-        elif jsonp and request_id:
-            # jsonp 2 steps step2 GET: run and return result
-            request = self.session.pop('jsonp_request_%s' % (request_id,), '{}')
-        else:
-            # regular jsonrpc2
-            request = self.httprequest.get_data().decode(self.httprequest.charset)
+
+        # regular jsonrpc2
+        request = self.httprequest.get_data().decode(self.httprequest.charset)
 
         # Read POST content or POST Form Data named "request"
         try:
@@ -617,6 +605,7 @@ class JsonRequest(WebRequest):
         self.context = self.params.pop('context', dict(self.session.context))
 
     def _json_response(self, result=None, error=None):
+
         response = {
             'jsonrpc': '2.0',
             'id': self.jsonrequest.get('id')
@@ -626,16 +615,8 @@ class JsonRequest(WebRequest):
         if result is not None:
             response['result'] = result
 
-        if self.jsonp:
-            # If we use jsonp, that's mean we are called from another host
-            # Some browser (IE and Safari) do no allow third party cookies
-            # We need then to manage http sessions manually.
-            response['session_id'] = self.session.sid
-            mime = 'application/javascript'
-            body = "%s(%s);" % (self.jsonp, json.dumps(response, default=ustr),)
-        else:
-            mime = 'application/json'
-            body = json.dumps(response, default=ustr)
+        mime = 'application/json'
+        body = json.dumps(response, default=date_utils.json_default)
 
         return Response(
             body, status=error and error.pop('http_status', 200) or 200,
@@ -670,8 +651,6 @@ class JsonRequest(WebRequest):
             return self._json_response(error=error)
 
     def dispatch(self):
-        if self.jsonp_handler:
-            return self.jsonp_handler()
         try:
             rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
             rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
@@ -682,9 +661,9 @@ class JsonRequest(WebRequest):
                 args = self.params.get('args', [])
 
                 start_time = time.time()
-                _, start_vms = 0, 0
+                start_memory = 0
                 if psutil:
-                    _, start_vms = memory_info(psutil.Process(os.getpid()))
+                    start_memory = memory_info(psutil.Process(os.getpid()))
                 if rpc_request and rpc_response_flag:
                     rpc_request.debug('%s: %s %s, %s',
                         endpoint, model, method, pprint.pformat(args))
@@ -693,11 +672,11 @@ class JsonRequest(WebRequest):
 
             if rpc_request_flag or rpc_response_flag:
                 end_time = time.time()
-                _, end_vms = 0, 0
+                end_memory = 0
                 if psutil:
-                    _, end_vms = memory_info(psutil.Process(os.getpid()))
+                    end_memory = memory_info(psutil.Process(os.getpid()))
                 logline = '%s: %s %s: time:%.3fs mem: %sk -> %sk (diff: %sk)' % (
-                    endpoint, model, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
+                    endpoint, model, method, end_time - start_time, start_memory / 1024, end_memory / 1024, (end_memory - start_memory)/1024)
                 if rpc_response_flag:
                     rpc_response.debug('%s, %s', logline, pprint.pformat(result))
                 else:
@@ -788,7 +767,7 @@ class HttpRequest(WebRequest):
         if request.httprequest.method == 'OPTIONS' and request.endpoint and request.endpoint.routing.get('cors'):
             headers = {
                 'Access-Control-Max-Age': 60 * 60 * 24,
-                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, X-Debug-Mode'
+                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
             }
             return Response(status=200, headers=headers)
 
@@ -804,7 +783,7 @@ class HttpRequest(WebRequest):
 
 Odoo URLs are CSRF-protected by default (when accessed with unsafe
 HTTP methods). See
-https://www.odoo.com/documentation/11.0/reference/http.html#csrf for
+https://www.odoo.com/documentation/12.0/reference/http.html#csrf for
 more details.
 
 * if this endpoint is accessed through Odoo via py-QWeb form, embed a CSRF
@@ -879,7 +858,6 @@ more details.
 #----------------------------------------------------------
 # Controller and route registration
 #----------------------------------------------------------
-addons_module = {}
 addons_manifest = {}
 controllers_per_module = collections.defaultdict(list)
 
@@ -1033,9 +1011,10 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
                 HTTP_HOST=wsgienv['HTTP_HOST'],
                 REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
             )
-            uid = dispatch_rpc('common', 'authenticate', [db, login, password, env])
+            uid = odoo.registry(db)['res.users'].authenticate(db, login, password, env)
         else:
             security.check(db, uid, password)
+        self.rotate = True
         self.db = db
         self.uid = uid
         self.login = login
@@ -1057,19 +1036,13 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         # We create our own environment instead of the request's one.
         # to avoid creating it without the uid since request.uid isn't set yet
         env = odoo.api.Environment(request.cr, self.uid, self.context)
-        #  == BACKWARD COMPATIBILITY TO CONVERT OLD SESSION TYPE TO THE NEW ONES ! REMOVE ME AFTER 11.0 ==
-        if self.get('password'):
-            security.check(self.db, self.uid, self.password)
-            self.session_token = security.compute_session_token(self, env)
-            self.pop('password')
-        # =================================================================================================
         # here we check if the session is still valid
         if not security.check_session(self, env):
             raise SessionExpiredException("Session expired")
 
     def logout(self, keep_db=False):
         for k in list(self):
-            if not (keep_db and k == 'db'):
+            if not (keep_db and k == 'db') and k != 'debug':
                 del self[k]
         self._default_values()
         self.rotate = True
@@ -1080,6 +1053,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.setdefault("login", None)
         self.setdefault("session_token", None)
         self.setdefault("context", {})
+        self.setdefault("debug", '')
 
     def get_context(self):
         """
@@ -1239,6 +1213,7 @@ class Response(werkzeug.wrappers.Response):
     def set_default(self, template=None, qcontext=None, uid=None):
         self.template = template
         self.qcontext = qcontext or dict()
+        self.qcontext['response_template'] = self.template
         self.uid = uid
         # Support for Cross-Origin Resource Sharing
         if request.endpoint and 'cors' in request.endpoint.routing:
@@ -1272,23 +1247,21 @@ class Response(werkzeug.wrappers.Response):
 class DisableCacheMiddleware(object):
     def __init__(self, app):
         self.app = app
+
     def __call__(self, environ, start_response):
         def start_wrapped(status, headers):
-            referer = environ.get('HTTP_REFERER', '')
-            parsed = urls.url_parse(referer)
-            debug = parsed.query.count('debug') >= 1
-
-            new_headers = []
-            unwanted_keys = ['Last-Modified']
-            if debug:
+            req = werkzeug.wrappers.Request(environ)
+            root.setup_session(req)
+            if req.session and req.session.debug:
                 new_headers = [('Cache-Control', 'no-cache')]
-                unwanted_keys += ['Expires', 'Etag', 'Cache-Control']
 
-            for k, v in headers:
-                if k not in unwanted_keys:
-                    new_headers.append((k, v))
+                for k, v in headers:
+                    if k.lower() != 'cache-control':
+                        new_headers.append((k, v))
 
-            start_response(status, new_headers)
+                start_response(status, new_headers)
+            else:
+                start_response(status, headers)
         return self.app(environ, start_wrapped)
 
 class Root(object):
@@ -1302,7 +1275,8 @@ class Root(object):
         # Setup http sessions
         path = odoo.tools.config.session_dir
         _logger.debug('HTTP sessions stored in: %s', path)
-        return werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
+        return werkzeug.contrib.sessions.FilesystemSessionStore(
+            path, session_class=OpenERPSession, renew_missing=True)
 
     @lazy_property
     def nodb_routing_map(self):
@@ -1320,34 +1294,21 @@ class Root(object):
     def load_addons(self):
         """ Load all addons from addons path containing static files and
         controllers and configure them.  """
-        # The ODOO_PRELOAD_ADDONS environment variable is available for version 11.0 only.
-        # Due to two implementation changes in Python 3's GIL and import system, early
-        # requests have some chances to trigger an invalid RegistryManager if they are
-        # accepted just after the server listen on the socket. This bug is only reproducible
-        # in threaded mode and the odds to happen are pretty low except when using socket
-        # activation in such case ` ODOO_PRELOAD_ADDONS=no ` should be used.
-        # Note: Odoo versions > 11.0 does not preload addons anymore.
-        preload_addons = os.environ.get('ODOO_PRELOAD_ADDONS', 'yes') == 'yes'
-
         # TODO should we move this to ir.http so that only configured modules are served ?
         statics = {}
         for addons_path in odoo.modules.module.ad_paths:
             for module in sorted(os.listdir(str(addons_path))):
-                if module not in addons_module:
+                if module not in addons_manifest:
                     mod_path = opj(addons_path, module)
                     manifest_path = module_manifest(mod_path)
                     path_static = opj(addons_path, module, 'static')
                     if manifest_path and os.path.isdir(path_static):
                         manifest_data = open(manifest_path, 'rb').read()
-                        manifest = ast.literal_eval(pycompat.to_native(manifest_data))
+                        manifest = ast.literal_eval(pycompat.to_text(manifest_data))
                         if not manifest.get('installable', True):
                             continue
                         manifest['addons_path'] = addons_path
                         _logger.debug("Loading %s", module)
-                        m = None
-                        if 'odoo.addons' in sys.modules and preload_addons:
-                            m = __import__('odoo.addons.' + module)
-                        addons_module[module] = m
                         addons_manifest[module] = manifest
                         statics['/%s/static' % module] = path_static
 
@@ -1401,8 +1362,6 @@ class Root(object):
 
     def get_request(self, httprequest):
         # deduce type of request
-        if httprequest.args.get('jsonp'):
-            return JsonRequest(httprequest)
         if httprequest.mimetype in ("application/json", "application/json-rpc"):
             return JsonRequest(httprequest)
         else:
@@ -1418,15 +1377,21 @@ class Root(object):
                 else:
                     raise
 
-        if isinstance(result, (bytes, pycompat.text_type)):
+        if isinstance(result, (bytes, str)):
             response = Response(result, mimetype='text/html')
         else:
             response = result
+
+        save_session = (not request.endpoint) or request.endpoint.routing.get('save_session', True)
+        if not save_session:
+            return response
 
         if httprequest.session.should_save:
             if httprequest.session.rotate:
                 self.session_store.delete(httprequest.session)
                 httprequest.session.sid = self.session_store.generate_key()
+                if httprequest.session.uid:
+                    httprequest.session.session_token = security.compute_session_token(httprequest.session, request.env)
                 httprequest.session.modified = True
             self.session_store.save(httprequest.session)
         # We must not set the cookie if the session id was specified using a http header or a GET parameter.
@@ -1449,7 +1414,12 @@ class Root(object):
             httprequest = werkzeug.wrappers.Request(environ)
             httprequest.app = self
             httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
-            threading.current_thread().url = httprequest.url
+            
+            current_thread = threading.current_thread()
+            current_thread.url = httprequest.url
+            current_thread.query_count = 0
+            current_thread.query_time = 0
+            current_thread.perf_t0 = time.time()
 
             explicit_session = self.setup_session(httprequest)
             self.setup_db(httprequest)
@@ -1583,7 +1553,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
 
     :param cache_timeout: the timeout in seconds for the headers.
     """
-    if isinstance(filepath_or_fp, pycompat.string_types):
+    if isinstance(filepath_or_fp, str):
         if not filename:
             filename = os.path.basename(filepath_or_fp)
         file = open(filepath_or_fp, 'rb')
@@ -1633,7 +1603,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
             mtime,
             size,
             adler32(
-                filename.encode('utf-8') if isinstance(filename, pycompat.text_type)
+                filename.encode('utf-8') if isinstance(filename, str)
                 else filename
             ) & 0xffffffff
         ))
@@ -1647,24 +1617,43 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
 
 def content_disposition(filename):
     filename = odoo.tools.ustr(filename)
-    escaped = urls.url_quote(filename)
+    escaped = urls.url_quote(filename, safe='')
 
     return "attachment; filename*=UTF-8''%s" % escaped
 
-#----------------------------------------------------------
-# RPC controller
-#----------------------------------------------------------
-class CommonController(Controller):
 
-    @route('/jsonrpc', type='json', auth="none")
-    def jsonrpc(self, service, method, args):
-        """ Method used by client APIs to contact OpenERP. """
-        return dispatch_rpc(service, method, args)
+def set_safe_image_headers(headers, content):
+    """Return new headers based on `headers` but with `Content-Length` and
+    `Content-Type` set appropriately depending on the given `content` only if it
+    is safe to do."""
+    content_type = guess_mimetype(content)
+    safe_types = ['image/jpeg', 'image/png', 'image/gif', 'image/x-icon']
+    if content_type in safe_types:
+        headers = set_header_field(headers, 'Content-Type', content_type)
+    set_header_field(headers, 'Content-Length', len(content))
+    return headers
 
-    @route('/gen_session_id', type='json', auth="none")
-    def gen_session_id(self):
-        nsession = root.session_store.new()
-        return nsession.sid
+
+def set_header_field(headers, name, value):
+    """ Return new headers based on `headers` but with `value` set for the
+    header field `name`.
+
+    :param headers: the existing headers
+    :type headers: list of tuples (name, value)
+
+    :param name: the header field name
+    :type name: string
+
+    :param value: the value to set for the `name` header
+    :type value: string
+
+    :return: the updated headers
+    :rtype: list of tuples (name, value)
+    """
+    dictheaders = dict(headers)
+    dictheaders[name] = value
+    return list(dictheaders.items())
+
 
 #  main wsgi handler
 root = Root()

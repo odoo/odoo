@@ -1,6 +1,9 @@
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.tests import tagged
 import time
 
+
+@tagged('post_install', '-at_install')
 class TestProductIdChange(AccountingTestCase):
     """Test that when an included tax is mapped by a fiscal position, the included tax must be
     subtracted to the price of the product.
@@ -40,8 +43,8 @@ class TestProductIdChange(AccountingTestCase):
                                                            list_price='121',
                                                            taxes_id=[(6, 0, [tax_include_sale.id])],
                                                            supplier_taxes_id=[(6, 0, [tax_include_purchase.id])]))
-        product = self.product_model.create(dict(product_tmpl_id=product_tmpl.id,
-                                                 standard_price='242'))
+        product = product_tmpl.product_variant_id
+        product.standard_price = '242'
         fp = self.fiscal_position_model.create(dict(name="fiscal position", sequence=1))
         fp_tax_sale = self.fiscal_position_tax_model.create(dict(position_id=fp.id,
                                                             tax_src_id=tax_include_sale.id,
@@ -52,7 +55,6 @@ class TestProductIdChange(AccountingTestCase):
 
         out_invoice = self.invoice_model.create({
             'partner_id': partner.id,
-            'reference_type': 'none',
             'name': 'invoice to client',
             'account_id': self.account_receivable.id,
             'type': 'out_invoice',
@@ -70,7 +72,6 @@ class TestProductIdChange(AccountingTestCase):
 
         in_invoice = self.invoice_model.create({
             'partner_id': partner.id,
-            'reference_type': 'none',
             'name': 'invoice to supplier',
             'account_id': self.account_receivable.id,
             'type': 'in_invoice',

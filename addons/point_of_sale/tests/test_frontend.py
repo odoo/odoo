@@ -10,14 +10,7 @@ import odoo.tests
 
 class TestUi(odoo.tests.HttpCase):
     def test_01_pos_basic_order(self):
-        cr = self.registry.cursor()
-        assert cr == self.registry.test_cr
-        env = Environment(cr, self.uid, {})
-
-        # By default parent_store computation is deferred until end of
-        # tests. Pricelist items however are sorted based on these
-        # fields, so they need to be computed.
-        env['product.category']._parent_store_compute()
+        env = self.env(user=self.env.ref('base.user_admin'))
 
         journal_obj = env['account.journal']
         account_obj = env['account.account']
@@ -28,27 +21,24 @@ class TestUi(odoo.tests.HttpCase):
                                                  'name': 'Account Receivable - Test',
                                                  'user_type_id': env.ref('account.data_account_type_receivable').id,
                                                  'reconcile': True})
-        field = self.env['ir.model.fields'].search([('name', '=', 'property_account_receivable_id'),
-                                                    ('model', '=', 'res.partner'),
-                                                    ('relation', '=', 'account.account')], limit=1)
+        field = env['ir.model.fields']._get('res.partner', 'property_account_receivable_id')
         env['ir.property'].create({'name': 'property_account_receivable_id',
                                    'company_id': main_company.id,
                                    'fields_id': field.id,
                                    'value': 'account.account,' + str(account_receivable.id)})
 
         # test an extra price on an attribute
-        pear = env.ref('point_of_sale.poire_conference')
+        pear = env.ref('point_of_sale.whiteboard')
         attribute_value = env['product.attribute.value'].create({
             'name': 'add 2',
-            'product_ids': [(6, 0, [pear.id])],
             'attribute_id': env['product.attribute'].create({
                 'name': 'add 2',
             }).id,
         })
-        env['product.attribute.price'].create({
+        env['product.template.attribute.value'].create({
             'product_tmpl_id': pear.product_tmpl_id.id,
             'price_extra': 2,
-            'value_id': attribute_value.id,
+            'product_attribute_value_id': attribute_value.id,
         })
 
         fixed_pricelist = env['product.pricelist'].create({
@@ -60,12 +50,12 @@ class TestUi(odoo.tests.HttpCase):
                 'compute_price': 'fixed',
                 'fixed_price': 2,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.boni_orange').id,
+                'product_id': env.ref('point_of_sale.wall_shelf').id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 13.95,  # test for issues like in 7f260ab517ebde634fc274e928eb062463f0d88f
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.papillon_orange').id,
+                'product_id': env.ref('point_of_sale.small_shelf').id,
             })],
         })
 
@@ -75,17 +65,17 @@ class TestUi(odoo.tests.HttpCase):
                 'compute_price': 'percentage',
                 'percent_price': 100,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.boni_orange').id,
+                'product_id': env.ref('point_of_sale.wall_shelf').id,
             }), (0, 0, {
                 'compute_price': 'percentage',
                 'percent_price': 99,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.papillon_orange').id,
+                'product_id': env.ref('point_of_sale.small_shelf').id,
             }), (0, 0, {
                 'compute_price': 'percentage',
                 'percent_price': 0,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.citron').id,
+                'product_id': env.ref('point_of_sale.magnetic_board').id,
             })],
         })
 
@@ -96,33 +86,33 @@ class TestUi(odoo.tests.HttpCase):
                 'price_discount': 6,
                 'price_surcharge': 5,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.boni_orange').id,
+                'product_id': env.ref('point_of_sale.wall_shelf').id,
             }), (0, 0, {
                 # .99 prices
                 'compute_price': 'formula',
                 'price_surcharge': -0.01,
                 'price_round': 1,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.papillon_orange').id,
+                'product_id': env.ref('point_of_sale.small_shelf').id,
             }), (0, 0, {
                 'compute_price': 'formula',
                 'price_min_margin': 10,
                 'price_max_margin': 100,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.citron').id,
+                'product_id': env.ref('point_of_sale.magnetic_board').id,
             }), (0, 0, {
                 'compute_price': 'formula',
                 'price_surcharge': 10,
                 'price_max_margin': 5,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.limon').id,
+                'product_id': env.ref('point_of_sale.monitor_stand').id,
             }), (0, 0, {
                 'compute_price': 'formula',
                 'price_discount': -100,
                 'price_min_margin': 5,
                 'price_max_margin': 20,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.pamplemousse_rouge_pamplemousse').id,
+                'product_id': env.ref('point_of_sale.desk_pad').id,
             })],
         })
 
@@ -133,13 +123,13 @@ class TestUi(odoo.tests.HttpCase):
                 'fixed_price': 1,
                 'applied_on': '0_product_variant',
                 'min_quantity': 2,
-                'product_id': env.ref('point_of_sale.boni_orange').id,
+                'product_id': env.ref('point_of_sale.wall_shelf').id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
                 'applied_on': '0_product_variant',
                 'min_quantity': 1,
-                'product_id': env.ref('point_of_sale.boni_orange').id,
+                'product_id': env.ref('point_of_sale.wall_shelf').id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
@@ -155,7 +145,7 @@ class TestUi(odoo.tests.HttpCase):
                 'compute_price': 'fixed',
                 'fixed_price': 1,
                 'applied_on': '1_product',
-                'product_tmpl_id': env.ref('point_of_sale.boni_orange_product_template').id,
+                'product_tmpl_id': env.ref('point_of_sale.wall_shelf_product_template').id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
@@ -196,6 +186,10 @@ class TestUi(odoo.tests.HttpCase):
         two_weeks_ago = today - timedelta(weeks=2)
         one_week_from_now = today + timedelta(weeks=1)
         two_weeks_from_now = today + timedelta(weeks=2)
+
+        public_pricelist = env['product.pricelist'].create({
+            'name': 'Public Pricelist',
+        })
 
         env['product.pricelist'].create({
             'name': 'Dates',
@@ -275,7 +269,22 @@ class TestUi(odoo.tests.HttpCase):
         all_pricelists = env['product.pricelist'].search([('id', '!=', excluded_pricelist.id)])
         all_pricelists.write(dict(currency_id=main_company.currency_id.id))
 
+        src_tax = env['account.tax'].create({'name': "SRC", 'amount': 10})
+        dst_tax = env['account.tax'].create({'name': "DST", 'amount': 5})
+
+        env.ref('point_of_sale.letter_tray').taxes_id = [(6, 0, [src_tax.id])]
+
+
         main_pos_config.write({
+            'tax_regime_selection': True,
+            'fiscal_position_ids': [(0, 0, {
+                                            'name': "FP-POS-2M",
+                                            'tax_ids': [
+                                                (0,0,{'tax_src_id': src_tax.id,
+                                                      'tax_dest_id': src_tax.id}),
+                                                (0,0,{'tax_src_id': src_tax.id,
+                                                      'tax_dest_id': dst_tax.id})]
+                                            })],
             'journal_id': test_sale_journal.id,
             'invoice_journal_id': test_sale_journal.id,
             'journal_ids': [(0, 0, {'name': 'Cash Journal - Test',
@@ -283,8 +292,19 @@ class TestUi(odoo.tests.HttpCase):
                                                        'type': 'cash',
                                                        'company_id': main_company.id,
                                                        'journal_user': True})],
+            'use_pricelist': True,
+            'pricelist_id': public_pricelist.id,
             'available_pricelist_ids': [(4, pricelist.id) for pricelist in all_pricelists],
         })
+
+        # Change the default sale pricelist of customers,
+        # so the js tests can expect deterministically this pricelist when selecting a customer.
+        field = env['ir.model.fields']._get('res.partner', 'property_product_pricelist')
+        env['ir.property'].search([
+            ('name', '=', 'property_product_pricelist'),
+            ('fields_id', '=', field.id),
+            ('res_id', '=', False)
+        ]).write({'value_reference': 'product.pricelist,%s' % public_pricelist.id})
 
         # open a session, the /pos/web controller will redirect to it
         main_pos_config.open_session_cb()
@@ -294,17 +314,10 @@ class TestUi(odoo.tests.HttpCase):
         # that are returned by the backend in module_boot. Without
         # this you end up with js, css but no qweb.
         env['ir.module.module'].search([('name', '=', 'point_of_sale')], limit=1).state = 'installed'
-        cr.release()
 
-        self.phantom_js("/pos/web",
-                        "odoo.__DEBUG__.services['web_tour.tour'].run('pos_pricelist')",
-                        "odoo.__DEBUG__.services['web_tour.tour'].tours.pos_pricelist.ready",
-                        login="admin")
+        self.start_tour("/pos/web", 'pos_pricelist', login="admin")
 
-        self.phantom_js("/pos/web",
-                        "odoo.__DEBUG__.services['web_tour.tour'].run('pos_basic_order')",
-                        "odoo.__DEBUG__.services['web_tour.tour'].tours.pos_basic_order.ready",
-                        login="admin")
+        self.start_tour("/pos/web", 'pos_basic_order', login="admin")
 
         for order in env['pos.order'].search([]):
             self.assertEqual(order.state, 'paid', "Validated order has payment of " + str(order.amount_paid) + " and total of " + str(order.amount_total))

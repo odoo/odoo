@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo.exceptions import AccessError, MissingError
 from odoo.tests.common import TransactionCase
-from odoo.tools import mute_logger, pycompat
+from odoo.tools import mute_logger
 
 
 class TestORM(TransactionCase):
@@ -26,7 +26,7 @@ class TestORM(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'test user',
             'login': 'test2',
-            'groups_id': [4, self.ref('base.group_user')],
+            'groups_id': [(6, 0, [self.ref('base.group_user')])],
         })
         ps = (p1 + p2).sudo(user)
         self.assertEqual([{'id': p2.id, 'name': 'Y'}], ps.read(['name']), "read() should skip deleted records")
@@ -47,7 +47,7 @@ class TestORM(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'test user',
             'login': 'test2',
-            'groups_id': [4, self.ref('base.group_user')],
+            'groups_id': [(6, 0, [self.ref('base.group_user')])],
         })
 
         partner_model = self.env['ir.model'].search([('model','=','res.partner')])
@@ -208,7 +208,7 @@ class TestORM(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'Justine Bridou',
             'login': 'saucisson',
-            'groups_id': [4, self.ref('base.group_partner_manager')],
+            'groups_id': [(6, 0, [self.ref('base.group_partner_manager')])],
         })
         p1 = self.env['res.partner'].sudo(user).create({'name': 'Zorro'})
         p1_prop = self.env['ir.property'].sudo(user).create({
@@ -227,6 +227,49 @@ class TestORM(TransactionCase):
         self.assertEqual(
             p1_prop.exists(), self.env['ir.property'], 'p1_prop should have been deleted')
 
+    def test_create_multi(self):
+        """ create for multiple records """
+        # assumption: 'res.bank' does not override 'create'
+        vals_list = [{'name': name} for name in ('Foo', 'Bar', 'Baz')]
+        vals_list[0]['email'] = 'foo@example.com'
+        for vals in vals_list:
+            record = self.env['res.bank'].create(vals)
+            self.assertEqual(len(record), 1)
+            self.assertEqual(record.name, vals['name'])
+            self.assertEqual(record.email, vals.get('email', False))
+
+        records = self.env['res.bank'].create([])
+        self.assertFalse(records)
+
+        records = self.env['res.bank'].create(vals_list)
+        self.assertEqual(len(records), len(vals_list))
+        for record, vals in zip(records, vals_list):
+            self.assertEqual(record.name, vals['name'])
+            self.assertEqual(record.email, vals.get('email', False))
+
+        # create countries and states
+        vals_list = [{
+            'name': 'Foo',
+            'state_ids': [
+                (0, 0, {'name': 'North Foo', 'code': 'NF'}),
+                (0, 0, {'name': 'South Foo', 'code': 'SF'}),
+                (0, 0, {'name': 'West Foo', 'code': 'WF'}),
+                (0, 0, {'name': 'East Foo', 'code': 'EF'}),
+            ],
+        }, {
+            'name': 'Bar',
+            'state_ids': [
+                (0, 0, {'name': 'North Bar', 'code': 'NB'}),
+                (0, 0, {'name': 'South Bar', 'code': 'SB'}),
+            ],
+        }]
+        foo, bar = self.env['res.country'].create(vals_list)
+        self.assertEqual(foo.name, 'Foo')
+        self.assertCountEqual(foo.mapped('state_ids.code'), ['NF', 'SF', 'WF', 'EF'])
+        self.assertEqual(bar.name, 'Bar')
+        self.assertCountEqual(bar.mapped('state_ids.code'), ['NB', 'SB'])
+
+
 class TestInherits(TransactionCase):
     """ test the behavior of the orm for models that use _inherits;
         specifically: res.users, that inherits from res.partner
@@ -236,7 +279,7 @@ class TestInherits(TransactionCase):
         """ `default_get` cannot return a dictionary or a new id """
         defaults = self.env['res.users'].default_get(['partner_id'])
         if 'partner_id' in defaults:
-            self.assertIsInstance(defaults['partner_id'], (bool, pycompat.integer_types))
+            self.assertIsInstance(defaults['partner_id'], (bool, int))
 
     def test_create(self):
         """ creating a user should automatically create a new partner """
@@ -291,8 +334,7 @@ class TestInherits(TransactionCase):
     @mute_logger('odoo.models')
     def test_copy_with_ancestor(self):
         """ copying a user with 'parent_id' in defaults should not duplicate the partner """
-        user_foo = self.env['res.users'].create({'name': 'Foo', 'login': 'foo', 'password': 'foo',
-                                                 'login_date': '2016-01-01', 'signature': 'XXX'})
+        user_foo = self.env['res.users'].create({'login': 'foo', 'name': 'Foo', 'signature': 'Foo'})
         partner_bar = self.env['res.partner'].create({'name': 'Bar'})
 
         foo_before, = user_foo.read()
@@ -314,6 +356,17 @@ class TestInherits(TransactionCase):
         self.assertFalse(user_bar.password, "password should not be copied from original record")
         self.assertEqual(user_bar.name, 'Bar', "name is given from specific partner")
         self.assertEqual(user_bar.signature, user_foo.signature, "signature should be copied")
+
+    @mute_logger('odoo.models')
+    def test_write_date(self):
+        """ modifying inherited fields must update write_date """
+        user = self.env.user
+        write_date_before = user.write_date
+
+        # write base64 image
+        user.write({'image': 'R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='})
+        write_date_after = user.write_date
+        self.assertNotEqual(write_date_before, write_date_after)
 
 
 CREATE = lambda values: (0, False, values)

@@ -8,8 +8,6 @@ from decorator import decorator
 from inspect import formatargspec, getargspec
 import logging
 
-from . import pycompat
-
 unsafe_eval = eval
 
 _logger = logging.getLogger(__name__)
@@ -47,6 +45,10 @@ class ormcache(object):
         @ormcache(skiparg=1)
         def _compute_domain(self, model_name, mode="read"):
             ...
+
+    Methods implementing this decorator should never return a Recordset,
+    because the underlying cursor will eventually be closed and raise a
+    `psycopg2.OperationalError`.
     """
     def __init__(self, *args, **kwargs):
         self.args = args
@@ -135,7 +137,7 @@ class ormcache_multi(ormcache):
     def determine_key(self):
         """ Determine the function that computes a cache key from arguments. """
         assert self.skiparg is None, "ormcache_multi() no longer supports skiparg"
-        assert isinstance(self.multi, pycompat.string_types), "ormcache_multi() parameter multi must be an argument name"
+        assert isinstance(self.multi, str), "ormcache_multi() parameter multi must be an argument name"
 
         super(ormcache_multi, self).determine_key()
 
@@ -201,16 +203,22 @@ def log_ormcache_stats(sig=None, frame=None):
 
     me = threading.currentThread()
     me_dbname = getattr(me, 'dbname', 'n/a')
-    entries = defaultdict(int)
-    for dbname, reg in Registry.registries.items():
-        for key in reg.cache:
-            entries[(dbname,) + key[:2]] += 1
-    for key, count in sorted(entries.items()):
-        dbname, model_name, method = key
+
+    for dbname, reg in sorted(Registry.registries.items()):
+        # set logger prefix to dbname
         me.dbname = dbname
-        stat = STAT[key]
-        _logger.info("%6d entries, %6d hit, %6d miss, %6d err, %4.1f%% ratio, for %s.%s",
-                     count, stat.hit, stat.miss, stat.err, stat.ratio, model_name, method.__name__)
+        entries = defaultdict(int)
+        # beware: we use .keys() on purpose here (reg.cache is not a real dict)
+        for key in reg.cache.keys():
+            entries[key[:2]] += 1
+        # show entries sorted by model name, method name
+        for key in sorted(entries, key=lambda key: (key[0], key[1].__name__)):
+            model, method = key
+            stat = STAT[(dbname, model, method)]
+            _logger.info(
+                "%6d entries, %6d hit, %6d miss, %6d err, %4.1f%% ratio, for %s.%s",
+                entries[key], stat.hit, stat.miss, stat.err, stat.ratio, model, method.__name__,
+            )
 
     me.dbname = me_dbname
 

@@ -9,6 +9,12 @@
             <xpath expr="//field[@name='vat']" position="attributes">
                 <attribute name="string">GSTIN</attribute>
             </xpath>
+            <xpath expr="//field[@name='state_id']" position="before">
+                <field name="l10n_in_country_code" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='state_id']" position="attributes">
+                <attribute name="attrs">{'required': ['|', ('l10n_in_country_code','=', 'IN'), ('l10n_in_country_code','=', False)]}</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>

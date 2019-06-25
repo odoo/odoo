@@ -102,7 +102,7 @@ class WebsiteAccount(CustomerPortal):
             'week': {'label': _('This Week Activities'),
                      'domain': [('activity_date_deadline', '>=', today), ('activity_date_deadline', '<=', this_week_end_date)]},
             'overdue': {'label': _('Overdue Activities'), 'domain': [('activity_date_deadline', '<', today)]},
-            'won': {'label': _('Won'), 'domain': [('stage_id.probability', '=', 100), ('stage_id.on_change', '=', True)]},
+            'won': {'label': _('Won'), 'domain': [('stage_id.is_won', '=', True)]},
             'lost': {'label': _('Lost'), 'domain': [('active', '=', False), ('probability', '=', 0)]},
         }
         searchbar_sortings = {
@@ -170,7 +170,7 @@ class WebsiteAccount(CustomerPortal):
             "website_crm_partner_assign.portal_my_opportunity", {
                 'opportunity': opp,
                 'user_activity': opp.sudo().activity_ids.filtered(lambda activity: activity.user_id == request.env.user)[:1],
-                'stages': request.env['crm.stage'].search([('probability', '!=', '100')], order='sequence desc'),
+                'stages': request.env['crm.stage'].search([('is_won', '!=', True)], order='sequence desc, name desc, id desc'),
                 'activity_types': request.env['mail.activity.type'].sudo().search([]),
                 'states': request.env['res.country.state'].sudo().search([]),
                 'countries': request.env['res.country'].sudo().search([]),
@@ -235,7 +235,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
             grade_domain += [('country_id', '=', country.id)]
         grades = partner_obj.sudo().read_group(
             grade_domain, ["id", "grade_id"],
-            groupby="grade_id", orderby="grade_id DESC")
+            groupby="grade_id")
         grades_partners = partner_obj.sudo().search_count(grade_domain)
         # flag active grade
         for grade_dict in grades:
@@ -296,7 +296,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         partners = partner_ids.sudo()
 
         google_map_partner_ids = ','.join(str(p.id) for p in partners)
-        google_maps_api_key = request.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
+        google_maps_api_key = request.website.google_maps_api_key
 
         values = {
             'countries': countries,

@@ -7,10 +7,9 @@
         </record>
         <record id="menu_news" model="website.menu">
             <field name="name">Blog</field>
-            <field name="url" eval="'/blog/'+str(ref('website_blog.blog_blog_1'))"/>
+            <field name="url">/blog</field>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">40</field>
-            <field name="website_id" ref="website.default_website"/>
         </record>
 
         <!-- Pre loaded covers -->
@@ -18,7 +17,6 @@
         <record id="blog_post_cover_01" model="ir.attachment">
             <field name="public" eval="True"/>
             <field name="name">Blog Post Cover 1</field>
-            <field name="datas_fname">Blog Post Cover 1</field>
             <field name="res_model">ir.ui.view</field>
             <field name="type">url</field>
             <field name="url">/website_blog/static/src/img/demo/blog_post_cover_1.jpg</field>
@@ -27,10 +25,17 @@
         <record id="blog_post_cover_02" model="ir.attachment">
             <field name="public" eval="True"/>
             <field name="name">Blog Post Cover 2</field>
-            <field name="datas_fname">Blog Post Cover 2</field>
             <field name="res_model">ir.ui.view</field>
             <field name="type">url</field>
             <field name="url">/website_blog/static/src/img/demo/blog_post_cover_2.jpg</field>
+        </record>
+
+        <!-- Blog-related subtypes for messaging / Chatter -->
+        <record id="mt_blog_blog_published" model="mail.message.subtype">
+            <field name="name">Published Post</field>
+            <field name="res_model">blog.blog</field>
+            <field name="default" eval="True"/>
+            <field name="description">Published Post</field>
         </record>
     </data>
 
@@ -45,14 +50,6 @@
         <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_open_website"/>
             <field name="state">open</field>
-        </record>
-
-        <!-- Blog-related subtypes for messaging / Chatter -->
-        <record id="mt_blog_blog_published" model="mail.message.subtype">
-            <field name="name">Published Post</field>
-            <field name="res_model">blog.blog</field>
-            <field name="default" eval="True"/>
-            <field name="description">Published Post</field>
         </record>
 
     </data>

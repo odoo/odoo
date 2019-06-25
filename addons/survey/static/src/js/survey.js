@@ -5,8 +5,6 @@ require('web.dom_ready');
 var core = require('web.core');
 var time = require('web.time');
 var ajax = require('web.ajax');
-var base = require('web_editor.base');
-var context = require('web_editor.context');
 var field_utils = require('web.field_utils');
 
 var _t = core._t;
@@ -17,10 +15,8 @@ var _t = core._t;
 var the_form = $('.js_surveyform');
 
 if(!the_form.length) {
-    return $.Deferred().reject("DOM doesn't contain '.js_surveyform'");
+    return Promise.reject("DOM doesn't contain '.js_surveyform'");
 }
-
-    console.debug("[survey] Custom JS for survey is loading...");
 
     var prefill_controller = the_form.attr("data-prefill");
     var submit_controller = the_form.attr("data-submit");
@@ -30,7 +26,7 @@ if(!the_form.length) {
 
     // Printing mode: will disable all the controls in the form
     if (_.isUndefined(submit_controller)) {
-        $(".js_surveyform .input-group-addon span.fa-calendar").css("pointer-events", "none");
+        $(".js_surveyform .input-group-text span.fa-calendar").css("pointer-events", "none");
         $('.js_surveyform :input').prop('disabled', true);
         print_mode = true;
     }
@@ -56,11 +52,11 @@ if(!the_form.length) {
     $('.js_drop select').change(function(){
         var other_val = $(this).find('.js_other_option').val();
         if($(this).val() === other_val){
-            $(this).parent().removeClass('col-md-12').addClass('col-md-6');
+            $(this).parent().removeClass('col-lg-12').addClass('col-lg-6');
             $(this).closest('.js_drop').find('input[data-oe-survey-othert="1"]').show().focus();
         }
         else{
-            $(this).parent().removeClass('col-md-6').addClass('col-md-12');
+            $(this).parent().removeClass('col-lg-6').addClass('col-lg-12');
             $(this).closest('.js_drop').find('input[data-oe-survey-othert="1"]').val("").hide();
         }
     });
@@ -83,10 +79,15 @@ if(!the_form.length) {
 
                         // prefill of text/number/date boxes
                         var input = the_form.find(".form-control[name=" + key + "]");
-                        if (input.attr('date')) {
+                        if (input.hasClass('datetimepicker-input')) {
                             // display dates in user timezone
                             var moment_date = field_utils.parse.date(value[0]);
-                            value = field_utils.format.date(moment_date, null, {timezone: true});
+                            if ($(input).closest('.input-group.date').data('questiontype') === 'datetime') {
+                                value = field_utils.format.datetime(moment_date, null, {timezone: true});
+                            }
+                            else {
+                                value = field_utils.format.date(moment_date, null, {timezone: true});
+                            }
                         }
                         input.val(value);
 
@@ -97,7 +98,10 @@ if(!the_form.length) {
                         }
 
                         // checkboxes and radios
-                        the_form.find("input[name^=" + key + "][type!='text']").each(function(){
+                        the_form.find("input[name^='" + key + "_'][type='checkbox']").each(function(){
+                            $(this).val(value);
+                        });
+                        the_form.find("input[name=" + key + "][type!='text']").each(function(){
                             $(this).val(value);
                         });
                     });
@@ -134,14 +138,11 @@ if(!the_form.length) {
             var date_fields = $form.find('div.date > input.form-control');
             for (var i=0; i < date_fields.length; i++) {
                 var el = date_fields[i];
-                var moment_date = $(el).data('DateTimePicker').date();
-                if (moment_date) {
-                    moment_date.toJSON = function () {
-                        return this.clone().locale('en').format('YYYY-MM-DD');
-                    };
-                }
+                var questiontype = $(el).closest('.input-group.date').data('questiontype');
+                var moment_date = questiontype === 'datetime' ? field_utils.parse.datetime(el.value, null, {timezone: true}) : field_utils.parse.date(el.value);
+
                 var field_obj = _.findWhere(formData, {'name': el.name});
-                field_obj.value = JSON.parse(JSON.stringify(moment_date));
+                field_obj.value = moment_date ? moment_date.toJSON() : '';
             }
             $('.js_errzone').html("").hide();
         },
@@ -149,6 +150,11 @@ if(!the_form.length) {
             if(_.has(response, 'errors')){  // some questions have errors
                 _.each(_.keys(response.errors), function(key){
                     $("#" + key + '>.js_errzone').append('<p>' + response.errors[key] + '</p>').show();
+                    if (_.keys(response.errors)[_.keys(response.errors).length - 1] === key) {
+                         $('html, body').animate({
+                            scrollTop: $('.js_errzone:visible:first').closest('.js_question-wrapper').offset().top - $('.o_main_navbar').height()
+                        }, 500);
+                    }
                 });
                 return false;
             }
@@ -167,47 +173,61 @@ if(!the_form.length) {
         }
     });
 
-    // // Handles the event when a question is focused out
-    // $('.js_question-wrapper').focusout(
-    //     function(){
-    //         console.debug("[survey] Focus lost on question " + $(this).attr("id"));
-    // });
-
     function load_locale(){
-        var url = "/web/webclient/locale/" + context.get().lang || 'en_US';
+        var url = "/web/webclient/locale/" + (document.documentElement.getAttribute('lang') || 'en_US').replace('-', '_');
         return ajax.loadJS(url);
     }
 
-    var ready_with_locale = $.when(base.ready(), load_locale());
     // datetimepicker use moment locale to display date format according to language
     // frontend does not load moment locale at all.
     // so wait until DOM ready with locale then init datetimepicker
-    ready_with_locale.then(function(){
-        $('.form-control.date').datetimepicker({
-            format : time.getLangDateFormat(),
-            minDate: moment({ y: 1900 }),
-            maxDate: moment().add(200, "y"),
-            calendarWeeks: true,
-            icons: {
-                time: 'fa fa-clock-o',
-                date: 'fa fa-calendar',
-                next: 'fa fa-chevron-right',
-                previous: 'fa fa-chevron-left',
-                up: 'fa fa-chevron-up',
-                down: 'fa fa-chevron-down',
-            },
-            locale : moment.locale(),
-            allowInputToggle: true,
-            keyBinds: null,
+    load_locale().then(function(){
+        _.each($('.input-group.date'), function(date_field){
+            var disabledDates = []
+            if ($(date_field).data('mindate')) {
+                var minDate = field_utils.format.datetime(moment($(date_field).data('mindate')), null, {timezone: true});
+            }
+            if ($(date_field).data('maxdate')) {
+                var maxDate = field_utils.format.datetime(moment($(date_field).data('maxdate')), null, {timezone: true});
+            }
+            else {
+                var minDate = $(date_field).data('mindate') || moment({ y: 1900 });
+                var maxDate = $(date_field).data('maxdate') || moment().add(200, "y");
+            }
+            var datetimepickerFormat = time.getLangDateFormat()
+            if ($(date_field).data('questiontype') === 'datetime') {
+                datetimepickerFormat = time.getLangDatetimeFormat()
+            }
+            else{
+                maxDate = moment(maxDate).add(1, "d");
+                disabledDates = [maxDate]
+            }
+            $('#' + date_field.id).datetimepicker({
+                format : datetimepickerFormat,
+                minDate: minDate,
+                maxDate: maxDate,
+                disabledDates: disabledDates,
+                useCurrent: false,
+                viewDate: moment(new Date()).hours(0).minutes(0).seconds(0).milliseconds(0),
+                calendarWeeks: true,
+                icons: {
+                    time: 'fa fa-clock-o',
+                    date: 'fa fa-calendar',
+                    next: 'fa fa-chevron-right',
+                    previous: 'fa fa-chevron-left',
+                    up: 'fa fa-chevron-up',
+                    down: 'fa fa-chevron-down',
+                },
+                locale : moment.locale(),
+                allowInputToggle: true,
+                keyBinds: null,
+            });
         });
+        // Launch prefilling
+        prefill();
+        if(quiz_correction_mode === true){
+            display_scores();
+        }
     });
-
-    // Launch prefilling
-    prefill();
-    if(quiz_correction_mode === true){
-        display_scores();
-    }
-
-    console.debug("[survey] Custom JS for survey loaded!");
 
 });

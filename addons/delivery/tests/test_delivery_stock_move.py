@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.tests import tagged, Form
 
 
+@tagged('post_install', '-at_install')
 class StockMoveInvoice(AccountingTestCase):
 
     def setUp(self):
@@ -14,13 +16,12 @@ class StockMoveInvoice(AccountingTestCase):
         self.partner_18 = self.env.ref('base.res_partner_18')
         self.pricelist_id = self.env.ref('product.list0')
         self.product_11 = self.env.ref('product.product_product_11')
-        self.product_icecream = self.env.ref('stock.product_icecream')
-        self.product_uom_kgm = self.env.ref('product.product_uom_kgm')
+        self.product_cable_management_box = self.env.ref('stock.product_cable_management_box')
+        self.product_uom_kgm = self.env.ref('uom.product_uom_kgm')
         self.normal_delivery = self.env.ref('delivery.normal_delivery_carrier')
 
     def test_01_delivery_stock_move(self):
         # Test if the stored fields of stock moves are computed with invoice before delivery flow
-        # Set a weight on ipod 16GB
         self.product_11.write({
             'weight': 0.25,
         })
@@ -32,21 +33,24 @@ class StockMoveInvoice(AccountingTestCase):
             'pricelist_id': self.pricelist_id.id,
             'order_line': [(0, 0, {
                 'name': 'Ice Cream',
-                'product_id': self.product_icecream.id,
+                'product_id': self.product_cable_management_box.id,
                 'product_uom_qty': 2,
                 'product_uom': self.product_uom_kgm.id,
                 'price_unit': 750.00,
             })],
-            'carrier_id': self.normal_delivery.id
         })
 
         # I add delivery cost in Sales order
-        self.sale_prepaid.get_delivery_price()
-        self.sale_prepaid.set_delivery_line()
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': self.sale_prepaid.id,
+            'default_carrier_id': self.normal_delivery.id,
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
 
         # I confirm the SO.
         self.sale_prepaid.action_confirm()
-        self.sale_prepaid.action_invoice_create()
+        self.sale_prepaid._create_invoices()
 
         # I check that the invoice was created
         self.assertEqual(len(self.sale_prepaid.invoice_ids), 1, "Invoice not created.")

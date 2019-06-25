@@ -11,6 +11,7 @@ from odoo.tests import common
 from odoo.addons.web_editor.models.ir_qweb import html_to_text
 
 
+@common.tagged('standard', 'at_install')
 class TestHTMLToText(unittest.TestCase):
     def test_rawstring(self):
         self.assertEqual(
@@ -156,9 +157,6 @@ class TestConvertBack(common.TransactionCase):
     def test_char(self):
         self.field_roundtrip('char', "foo bar")
         self.field_roundtrip('char', "ⒸⓄⓇⒼⒺ")
-
-    def test_selection(self):
-        self.field_roundtrip('selection', 3)
 
     def test_selection_str(self):
         self.field_roundtrip('selection_str', 'B')

@@ -6,6 +6,7 @@ import werkzeug
 from odoo import http, _
 from odoo.addons.auth_signup.models.res_users import SignupError
 from odoo.addons.web.controllers.main import ensure_db, Home
+from odoo.addons.web_settings_dashboard.controllers.main import WebSettingsDashboard as Dashboard
 from odoo.exceptions import UserError
 from odoo.http import request
 
@@ -43,7 +44,7 @@ class AuthSignupHome(Home):
                             lang=user_sudo.lang,
                             auth_login=werkzeug.url_encode({'auth_login': user_sudo.email}),
                         ).send_mail(user_sudo.id, force_send=True)
-                return super(AuthSignupHome, self).web_login(*args, **kw)
+                return self.web_login(*args, **kw)
             except UserError as e:
                 qcontext['error'] = e.name or e.value
             except (SignupError, AssertionError) as e:
@@ -68,7 +69,7 @@ class AuthSignupHome(Home):
             try:
                 if qcontext.get('token'):
                     self.do_signup(qcontext)
-                    return super(AuthSignupHome, self).web_login(*args, **kw)
+                    return self.web_login(*args, **kw)
                 else:
                     login = qcontext.get('login')
                     assert login, _("No login provided.")
@@ -94,7 +95,7 @@ class AuthSignupHome(Home):
 
         get_param = request.env['ir.config_parameter'].sudo().get_param
         return {
-            'signup_enabled': get_param('auth_signup.allow_uninvited') == 'True',
+            'signup_enabled': request.env['res.users']._get_signup_invitation_scope() == 'b2c',
             'reset_password_enabled': get_param('auth_signup.reset_password') == 'True',
         }
 
@@ -134,3 +135,10 @@ class AuthSignupHome(Home):
         uid = request.session.authenticate(db, login, password)
         if not uid:
             raise SignupError(_('Authentication Failed.'))
+
+class WebSettingsDashboard(Dashboard):
+    @http.route('/web_settings_dashboard/data', type='json', auth='user')
+    def web_settings_dashboard_data(self, **kw):
+        res = super(WebSettingsDashboard, self).web_settings_dashboard_data(**kw)
+        res['users_info'].update({'resend_invitation': True})
+        return res

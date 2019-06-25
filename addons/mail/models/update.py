@@ -20,6 +20,7 @@ _logger = logging.getLogger(__name__)
 
 class PublisherWarrantyContract(AbstractModel):
     _name = "publisher_warranty.contract"
+    _description = 'Publisher Warranty Contract'
 
     @api.model
     def _get_message(self):

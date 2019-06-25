@@ -6,13 +6,13 @@ from odoo import fields, models, tools
 
 class ReportProjectTaskUser(models.Model):
     _name = "report.project.task.user"
-    _description = "Tasks by user and project"
+    _description = "Tasks Analysis"
     _order = 'name desc, project_id'
     _auto = False
 
     name = fields.Char(string='Task Title', readonly=True)
     user_id = fields.Many2one('res.users', string='Assigned To', readonly=True)
-    date_start = fields.Datetime(string='Assignation Date', readonly=True)
+    date_assign = fields.Datetime(string='Assignation Date', readonly=True)
     date_end = fields.Datetime(string='Ending Date', readonly=True)
     date_deadline = fields.Date(string='Deadline', readonly=True)
     date_last_stage_update = fields.Datetime(string='Last Stage Update', readonly=True)
@@ -36,7 +36,7 @@ class ReportProjectTaskUser(models.Model):
             ('done', 'Ready for next stage')
         ], string='Kanban State', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
-    partner_id = fields.Many2one('res.partner', string='Contact', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     stage_id = fields.Many2one('project.task.type', string='Stage', readonly=True)
 
     def _select(self):
@@ -44,7 +44,7 @@ class ReportProjectTaskUser(models.Model):
              SELECT
                     (select 1 ) AS nbr,
                     t.id as id,
-                    t.date_start as date_start,
+                    t.date_assign as date_assign,
                     t.date_end as date_end,
                     t.date_last_stage_update as date_last_stage_update,
                     t.date_deadline as date_deadline,
@@ -68,7 +68,7 @@ class ReportProjectTaskUser(models.Model):
                     t.id,
                     create_date,
                     write_date,
-                    date_start,
+                    date_assign,
                     date_end,
                     date_deadline,
                     date_last_stage_update,

@@ -6,6 +6,7 @@ from datetime import datetime
 import hashlib
 import hmac
 import logging
+import string
 import time
 
 from odoo import _, api, fields, models
@@ -13,6 +14,7 @@ from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_authorize.controllers.main import AuthorizeController
 from odoo.tools.float_utils import float_compare, float_repr
 from odoo.tools.safe_eval import safe_eval
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -53,8 +55,16 @@ class PaymentAcquirerAuthorize(models.Model):
             values['x_fp_sequence'],
             values['x_fp_timestamp'],
             values['x_amount'],
-            values['x_currency_code']])
-        return hmac.new(values['x_trans_key'].encode('utf-8'), data.encode('utf-8'), hashlib.md5).hexdigest()
+            values['x_currency_code']]).encode('utf-8')
+
+        # [BACKWARD COMPATIBILITY] Check that the merchant did update his transaction
+        # key to signature key (end of MD5 support from Authorize.net)
+        # The signature key is now '128-character hexadecimal format', while the
+        # transaction key was only 16-character.
+        if len(values['x_trans_key']) == 128:
+            return hmac.new(values['x_trans_key'].decode("hex").encode('utf-8'), data, hashlib.sha512).hexdigest().upper()
+        else:
+            return hmac.new(values['x_trans_key'].encode('utf-8'), data, hashlib.md5).hexdigest()
 
     @api.multi
     def authorize_form_generate_values(self, values):
@@ -105,6 +115,7 @@ class PaymentAcquirerAuthorize(models.Model):
         }
         temp_authorize_tx_values['returndata'] = authorize_tx_values.pop('return_url', '')
         temp_authorize_tx_values['x_fp_hash'] = self._authorize_generate_hashing(temp_authorize_tx_values)
+        temp_authorize_tx_values.pop('x_trans_key') # We remove this value since it is secret and isn't needed on the form
         authorize_tx_values.update(temp_authorize_tx_values)
         return authorize_tx_values
 
@@ -167,21 +178,10 @@ class TxAuthorize(models.Model):
     # --------------------------------------------------
 
     @api.model
-    def create(self, vals):
-        # The reference is used in the Authorize form to fill a field (invoiceNumber) which is
-        # limited to 20 characters. We truncate the reference now, since it will be reused at
-        # payment validation to find back the transaction.
-        if 'reference' in vals and 'acquirer_id' in vals:
-            acquier = self.env['payment.acquirer'].browse(vals['acquirer_id'])
-            if acquier.provider == 'authorize':
-                vals['reference'] = vals.get('reference', '')[:20]
-        return super(TxAuthorize, self).create(vals)
-
-    @api.model
     def _authorize_form_get_tx_from_data(self, data):
         """ Given a data dict coming from authorize, verify it and find the related
         transaction record. """
-        reference, trans_id, fingerprint = data.get('x_invoice_num'), data.get('x_trans_id'), data.get('x_MD5_Hash')
+        reference, trans_id, fingerprint = data.get('x_invoice_num'), data.get('x_trans_id'), data.get('x_SHA2_Hash') or data.get('x_MD5_Hash')
         if not reference or not trans_id or not fingerprint:
             error_msg = _('Authorize: received data with missing reference (%s) or trans_id (%s) or fingerprint (%s)') % (reference, trans_id, fingerprint)
             _logger.info(error_msg)
@@ -210,65 +210,67 @@ class TxAuthorize(models.Model):
 
     @api.multi
     def _authorize_form_validate(self, data):
-        if self.state in ['done', 'refunded']:
+        if self.state == 'done':
             _logger.warning('Authorize: trying to validate an already validated tx (ref %s)' % self.reference)
             return True
         status_code = int(data.get('x_response_code', '0'))
         if status_code == self._authorize_valid_tx_status:
             if data.get('x_type').lower() in ['auth_capture', 'prior_auth_capture']:
                 self.write({
-                    'state': 'done',
                     'acquirer_reference': data.get('x_trans_id'),
-                    'date_validate': fields.Datetime.now(),
+                    'date': fields.Datetime.now(),
                 })
+                self._set_transaction_done()
             elif data.get('x_type').lower() in ['auth_only']:
-                self.write({
-                    'state': 'authorized',
-                    'acquirer_reference': data.get('x_trans_id'),
-                })
+                self.write({'acquirer_reference': data.get('x_trans_id')})
+                self._set_transaction_authorized()
             if self.partner_id and not self.payment_token_id and \
                (self.type == 'form_save' or self.acquirer_id.save_token == 'always'):
                 transaction = AuthorizeAPI(self.acquirer_id)
                 res = transaction.create_customer_profile_from_tx(self.partner_id, self.acquirer_reference)
-                token_id = self.env['payment.token'].create({
-                    'authorize_profile': res.get('profile_id'),
-                    'name': res.get('name'),
-                    'acquirer_ref': res.get('payment_profile_id'),
-                    'acquirer_id': self.acquirer_id.id,
-                    'partner_id': self.partner_id.id,
-                })
-                self.payment_token_id = token_id
+                if res:
+                    token_id = self.env['payment.token'].create({
+                        'authorize_profile': res.get('profile_id'),
+                        'name': res.get('name'),
+                        'acquirer_ref': res.get('payment_profile_id'),
+                        'acquirer_id': self.acquirer_id.id,
+                        'partner_id': self.partner_id.id,
+                    })
+                    self.payment_token_id = token_id
 
-            if self.payment_token_id:
-                self.payment_token_id.verified = True
+                    if self.payment_token_id:
+                        self.payment_token_id.verified = True
             return True
         elif status_code == self._authorize_pending_tx_status:
-            self.write({
-                'state': 'pending',
-                'acquirer_reference': data.get('x_trans_id'),
-            })
+            self.write({'acquirer_reference': data.get('x_trans_id')})
+            self._set_transaction_pending()
             return True
         elif status_code == self._authorize_cancel_tx_status:
             self.write({
-                'state': 'cancel',
                 'acquirer_reference': data.get('x_trans_id'),
                 'state_message': data.get('x_response_reason_text'),
             })
+            self._set_transaction_cancel()
             return True
         else:
             error = data.get('x_response_reason_text')
             _logger.info(error)
             self.write({
-                'state': 'error',
                 'state_message': error,
                 'acquirer_reference': data.get('x_trans_id'),
             })
+            self._set_transaction_cancel()
             return False
 
     @api.multi
     def authorize_s2s_do_transaction(self, **data):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
+
+        if not self.payment_token_id.authorize_profile:
+            raise UserError(_('Invalid token found: the Authorize profile is missing.'
+                              'Please make sure the token has a valid acquirer reference.'))
+
         if not self.acquirer_id.capture_manually:
             res = transaction.auth_and_capture(self.payment_token_id, self.amount, self.reference)
         else:
@@ -279,11 +281,7 @@ class TxAuthorize(models.Model):
     def authorize_s2s_do_refund(self):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
-        self.state = 'refunding'
-        if self.type == 'validation':
-            res = transaction.void(self.acquirer_reference)
-        else:
-            res = transaction.credit(self.payment_token_id, self.amount, self.acquirer_reference)
+        res = transaction.credit(self.payment_token_id, self.amount, self.acquirer_reference)
         return self._authorize_s2s_validate_tree(res)
 
     @api.multi
@@ -306,7 +304,7 @@ class TxAuthorize(models.Model):
 
     @api.multi
     def _authorize_s2s_validate(self, tree):
-        if self.state in ['done', 'refunded']:
+        if self.state == 'done':
             _logger.warning('Authorize: trying to validate an already validated tx (ref %s)' % self.reference)
             return True
         status_code = int(tree.get('x_response_code', '0'))
@@ -314,9 +312,8 @@ class TxAuthorize(models.Model):
             if tree.get('x_type').lower() in ['auth_capture', 'prior_auth_capture']:
                 init_state = self.state
                 self.write({
-                    'state': 'done',
                     'acquirer_reference': tree.get('x_trans_id'),
-                    'date_validate': fields.Datetime.now(),
+                    'date': fields.Datetime.now(),
                 })
                 if init_state != 'authorized':
                     self.execute_callback()
@@ -324,43 +321,30 @@ class TxAuthorize(models.Model):
                 if self.payment_token_id:
                     self.payment_token_id.verified = True
 
+                self._set_transaction_done()
             if tree.get('x_type').lower() == 'auth_only':
-                self.write({
-                    'state': 'authorized',
-                    'acquirer_reference': tree.get('x_trans_id'),
-                })
+                self.write({'acquirer_reference': tree.get('x_trans_id')})
+                self._set_transaction_authorized()
                 self.execute_callback()
             if tree.get('x_type').lower() == 'void':
-                if self.type == 'validation' and self.state == 'refunding':
-                    self.write({
-                        'state': 'refunded',
-                    })
-                else:
-                    self.write({
-                        'state': 'cancel',
-                    })
+                self._set_transaction_cancel()
             return True
         elif status_code == self._authorize_pending_tx_status:
-            new_state = 'refunding' if self.state == 'refunding' else 'pending'
-            self.write({
-                'state': new_state,
-                'acquirer_reference': tree.get('x_trans_id'),
-            })
+            self.write({'acquirer_reference': tree.get('x_trans_id')})
+            self._set_transaction_pending()
             return True
         elif status_code == self._authorize_cancel_tx_status:
-            self.write({
-                'state': 'cancel',
-                'acquirer_reference': tree.get('x_trans_id'),
-            })
+            self.write({'acquirer_reference': tree.get('x_trans_id')})
+            self._set_transaction_cancel()
             return True
         else:
             error = tree.get('x_response_reason_text')
             _logger.info(error)
             self.write({
-                'state': 'error',
                 'state_message': error,
                 'acquirer_reference': tree.get('x_trans_id'),
             })
+            self._set_transaction_cancel()
             return False
 
 
@@ -369,8 +353,8 @@ class PaymentToken(models.Model):
 
     authorize_profile = fields.Char(string='Authorize.net Profile ID', help='This contains the unique reference '
                                     'for this partner/payment token combination in the Authorize.net backend')
-    provider = fields.Selection(string='Provider', related='acquirer_id.provider')
-    save_token = fields.Selection(string='Save Cards', related='acquirer_id.save_token')
+    provider = fields.Selection(string='Provider', related='acquirer_id.provider', readonly=False)
+    save_token = fields.Selection(string='Save Cards', related='acquirer_id.save_token', readonly=False)
 
     @api.model
     def authorize_create(self, values):

@@ -1,10 +1,10 @@
 Index: addons/openacademy/wizard.py
 ===================================================================
---- addons.orig/openacademy/wizard.py	2014-08-28 14:34:07.879004780 +0200
-+++ addons/openacademy/wizard.py	2014-08-28 14:34:07.871004780 +0200
-@@ -5,6 +5,9 @@
- class Wizard(models.TransientModel):
+--- addons.orig/openacademy/wizard.py
++++ addons/openacademy/wizard.py
+@@ -6,6 +6,9 @@ class Wizard(models.TransientModel):
      _name = 'openacademy.wizard'
+     _description = "Wizard: Quick Registration of Attendees to Sessions"
  
 +    def _default_session(self):
 +        return self.env['openacademy.session'].browse(self._context.get('active_id'))
@@ -15,9 +15,9 @@ Index: addons/openacademy/wizard.py
      attendee_ids = fields.Many2many('res.partner', string="Attendees")
 Index: addons/openacademy/views/openacademy.xml
 ===================================================================
---- addons.orig/openacademy/views/openacademy.xml	2014-08-28 14:34:07.879004780 +0200
-+++ addons/openacademy/views/openacademy.xml	2014-08-28 14:34:07.871004780 +0200
-@@ -223,4 +223,25 @@
+--- addons.orig/openacademy/views/openacademy.xml
++++ addons/openacademy/views/openacademy.xml
+@@ -223,4 +223,24 @@
                    parent="openacademy_menu"
                    action="session_list_action"/>
  
@@ -36,10 +36,9 @@ Index: addons/openacademy/views/openacademy.xml
 +
 +        <act_window id="launch_session_wizard"
 +                    name="Add Attendees"
-+                    src_model="openacademy.session"
++                    binding_model="openacademy.session"
 +                    res_model="openacademy.wizard"
 +                    view_mode="form"
-+                    target="new"
-+                    key2="client_action_multi"/>
++                    target="new"/>
 +
  </odoo>

@@ -4,20 +4,20 @@ odoo.define('website_form.animation', function (require) {
     var core = require('web.core');
     var time = require('web.time');
     var ajax = require('web.ajax');
-    var sAnimation = require('website.content.snippets.animation');
+    var publicWidget = require('web.public.widget');
 
     var _t = core._t;
     var qweb = core.qweb;
 
-    sAnimation.registry.form_builder_send = sAnimation.Class.extend({
+    publicWidget.registry.form_builder_send = publicWidget.Widget.extend({
         selector: '.s_website_form',
 
         willStart: function () {
-            var def;
+            var prom;
             if (!$.fn.datetimepicker) {
-                def = ajax.loadJS("/web/static/lib/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js");
+                prom = ajax.loadJS("/web/static/lib/tempusdominus/tempusdominus.js");
             }
-            return $.when(this._super.apply(this, arguments), def);
+            return Promise.all([this._super.apply(this, arguments), prom]);
         },
 
         start: function (editable_mode) {
@@ -51,6 +51,23 @@ odoo.define('website_form.animation', function (require) {
             // Adapt options to date-only pickers
             datepickers_options.format = time.getLangDateFormat();
             this.$target.find('.o_website_form_date').datetimepicker(datepickers_options);
+
+            // Display form values from tag having data-for attribute
+            // It's necessary to handle field values generated on server-side
+            // Because, using t-att- inside form make it non-editable
+            var $values = $('[data-for=' + this.$target.attr('id') + ']');
+            if ($values.length) {
+                var values = JSON.parse($values.data('values').replace(/'/g, '"'));
+                var fields = _.pluck(this.$target.serializeArray(), 'name');
+                _.each(fields, function (field) {
+                    if (_.has(values, field)) {
+                        var $field = self.$target.find('input[name="' + field + '"], textarea[name="' + field + '"]');
+                        if (!$field.val()) {
+                            $field.val(values[field]);
+                        }
+                    }
+                });
+            }
 
             return this._super.apply(this, arguments);
         },
@@ -105,19 +122,10 @@ odoo.define('website_form.animation', function (require) {
                 }
             });
 
-            // Overwrite form_values array with values from the form tag
-            // Necessary to handle field values generated server-side, since
-            // using t-att- inside a snippet makes it non-editable !
-            for (var key in this.$target.data()) {
-                if (_.str.startsWith(key, 'form_field_')){
-                    form_values[key.replace('form_field_', '')] = this.$target.data(key);
-                }
-            }
-
             // Post form and handle result
             ajax.post(this.$target.attr('action') + (this.$target.data('force_action')||this.$target.data('model_name')), form_values)
             .then(function (result_data) {
-                result_data = $.parseJSON(result_data);
+                result_data = JSON.parse(result_data);
                 if (!result_data.id) {
                     // Failure, the server didn't return the created record ID
                     self.update_status('error');
@@ -139,7 +147,7 @@ odoo.define('website_form.animation', function (require) {
                     self.$target[0].reset();
                 }
             })
-            .fail(function (result_data){
+            .guardedCatch(function (){
                 self.update_status('error');
             });
         },
@@ -150,7 +158,7 @@ odoo.define('website_form.animation', function (require) {
             // Loop on all fields
             this.$target.find('.form-field').each(function (k, field){
                 var $field = $(field);
-                var field_name = $field.find('.control-label').attr('for');
+                var field_name = $field.find('.col-form-label').attr('for');
 
                 // Validate inputs for this field
                 var inputs = $field.find('.o_website_form_input:not(#editable_select)');
@@ -183,9 +191,9 @@ odoo.define('website_form.animation', function (require) {
                 });
 
                 // Update field color if invalid or erroneous
-                $field.removeClass('has-error');
+                $field.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
                 if (invalid_inputs.length || error_fields[field_name]){
-                    $field.addClass('has-error');
+                    $field.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid')
                     if (_.isString(error_fields[field_name])){
                         $field.popover({content: error_fields[field_name], trigger: 'hover', container: 'body', placement: 'top'});
                         // update error message and show it.
@@ -238,7 +246,7 @@ odoo.define('website_form.animation', function (require) {
                 this.$target.find('.o_website_form_send').on('click',function (e) {self.send(e);}).removeClass('disabled');
             }
             var $result = this.$('#o_website_form_result');
-            this.templates_loaded.done(function () {
+            this.templates_loaded.then(function () {
                 $result.replaceWith(qweb.render("website_form.status_" + status));
             });
         },

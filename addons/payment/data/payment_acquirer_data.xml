@@ -22,8 +22,8 @@
                 A payment gateway to accept online payments via credit cards.
             </p>
             <ul class="list-inline">
-                <li><i class="fa fa-check"/>Online Payment</li>
-                <li><i class="fa fa-check"/>Payment Status Tracking</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
             </ul>
         </field>
         <!-- https://www.buckaroo-payments.com/products/payment-methods/ -->
@@ -45,10 +45,10 @@
                 Ingenico Payment Services (formerly Ogone) supports credit cards, debit cards and bank transfers.
             </p>
             <ul class="list-inline">
-                <li><i class="fa fa-check"/>Online Payment</li>
-                <li><i class="fa fa-check"/>Payment Status Tracking</li>
-                <li><i class="fa fa-check"/>Subscriptions</li>
-                <li><i class="fa fa-check"/>Save Cards</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Subscriptions</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Save Cards</li>
             </ul>
         </field>
         <!-- https://payment-services.ingenico.com/~/media/files/130806_product_sheet_ingenico_collect_en.ashx?la=en -->
@@ -68,8 +68,8 @@
                 A payment gateway to accept online payments via credit cards, debit cards and bank transfers.
             </p>
             <ul class="list-inline">
-                <li><i class="fa fa-check"/>Online Payment</li>
-                <li><i class="fa fa-check"/>Payment Status Tracking</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
             </ul>
         </field>
         <!-- https://www.adyen.com/payment-methods -->
@@ -94,11 +94,11 @@
                 A payment gateway to accept online payments via credit cards and e-checks.
             </p>
             <ul class="list-inline">
-                <li><i class="fa fa-check"/>Online Payment</li>
-                <li><i class="fa fa-check"/>Payment Status Tracking</li>
-                <li><i class="fa fa-check"/>Subscriptions</li>
-                <li><i class="fa fa-check"/>Save Cards</li>
-                <li><i class="fa fa-check"/>Manual Capture</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Subscriptions</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Save Cards</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Manual Capture</li>
             </ul>
         </field>
         <!-- https://www.authorize.net/solutions/merchantsolutions/onlinemerchantaccount/ -->
@@ -134,8 +134,8 @@
                 A payment gateway from Atos Worldline to accept online payments via credit cards.
             </p>
             <ul class="list-inline">
-                <li><i class="fa fa-check"/>Online Payment</li>
-                <li><i class="fa fa-check"/>Payment Status Tracking</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
             </ul>
         </field>
         <!-- http://sips.worldline.com/en-us/home/features/payment-types-and-acquirers.html -->
@@ -161,8 +161,8 @@
                 PayPal is the easiest way to accept payments via Paypal or credit cards.
             </p>
             <ul class="list-inline">
-                <li><i class="fa fa-check"/>Online Payment</li>
-                <li><i class="fa fa-check"/>Payment Status Tracking</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
             </ul>
         </field>
         <!-- https://www.paypal.com/us/selfhelp/article/Which-credit-cards-can-I-accept-with-PayPal-Merchant-Services-FAQ1525#business -->
@@ -186,8 +186,10 @@
                 A payment gateway to accept online payments via credit cards.
             </p>
             <ul class="list-inline">
-                <li><i class="fa fa-check"/>Online Payment</li>
-                <li><i class="fa fa-check"/>Payment Status Tracking</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Subscriptions</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Save Cards</li>
             </ul>
         </field>
         <!--
@@ -213,7 +215,7 @@
                 A generic payment acquirer to send payment instructions to any payment acquirer.
             </p>
             <ul class="list-inline">
-                <li><i class="fa fa-check"/>Online Payment</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
             </ul>
         </field>
     </record>
@@ -228,8 +230,8 @@
                 PayU India is an online payments solutions company serving the Indian market.
             </p>
             <ul class="list-inline">
-                <li><i class="fa fa-check"/>Online Payment</li>
-                <li><i class="fa fa-check"/>Payment Status Tracking</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
             </ul>
         </field>
         <!-- https://www.payumoney.com/selfcare.html?userType=seller
@@ -241,4 +243,43 @@
                                                         ref("payment.payment_icon_cc_visa")])]'/>
     </record>
 
+    <record id="payment_acquirer_payulatam" model="payment.acquirer">
+        <field name="name">PayU Latam</field>
+        <field name="image" type="base64" file="payment_payulatam/static/src/img/payulatam_icon.png"/>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="module_id" ref="base.module_payment_payulatam"/>
+        <field name="description" type="html">
+            <p>
+                PayU is a leading financial services provider in Colombia, Argentina, Brazil, Chile, Mexico, Panama, and Peru. It allows merchant to accept local payments with just one account and integration.
+            </p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
+            </ul>
+        </field>
+        <!-- https://www.payulatam.com/medios-de-pago/ -->
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_diners_club_intl"),
+                                                        ref("payment.payment_icon_cc_mastercard"),
+                                                        ref("payment.payment_icon_cc_american_express"),
+                                                        ref("payment.payment_icon_cc_visa"),
+                                                        ref("payment.payment_icon_cc_codensa_easy_credit")])]'/>
+    </record>
+
+    <record id="payment_acquirer_alipay" model="payment.acquirer">
+        <field name="name">Alipay</field>
+        <field name="image" type="base64" file="payment_alipay/static/description/icon.png"/>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="module_id" ref="base.module_payment_alipay"/>
+        <field name="description" type="html">
+            <p>
+                Alipay is the most popular online payment platform in China. Chinese consumers can buy online using their Alipay eWallet.
+            </p>
+            <ul class="list-inline">
+                <li><i class="fa fa-check"/>Online Payment</li>
+                <li><i class="fa fa-check"/>Payment Status Tracking</li>
+            </ul>
+        </field>
+        <!-- https://intl.alipay.com/ihome/home/about/buy.htm?topic=paymentMethods -->
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_jcb"),ref("payment.payment_icon_cc_mastercard"),ref("payment.payment_icon_cc_western_union"),ref("payment.payment_icon_cc_webmoney"),ref("payment.payment_icon_cc_visa")])]'/>
+    </record>
 </odoo>

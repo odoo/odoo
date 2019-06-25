@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.sale.tests.test_sale_common import TestSale
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestSaleExpense(TestSale):
     def test_sale_expense(self):
         """ Test the behaviour of sales orders when managing expenses """
@@ -68,7 +70,7 @@ class TestSaleExpense(TestSale):
             'name': 'Car Travel',
             'product_id': prod_exp_2.id,
             'analytic_account_id': so.analytic_account_id.id,
-            'product_uom_id': self.env.ref('product.product_uom_km').id,
+            'product_uom_id': self.env.ref('uom.product_uom_km').id,
             'unit_amount': 0.15,
             'quantity': 100,
             'employee_id': employee.id,
@@ -86,6 +88,6 @@ class TestSaleExpense(TestSale):
         # self.assertTrue(so.invoice_status, 'no', 'Sale Expense: expenses should not impact the invoice_status of the so')
 
         # both expenses should be invoiced
-        inv_id = so.action_invoice_create()
+        inv_id = so._create_invoices()
         inv = self.env['account.invoice'].browse(inv_id)
         self.assertEqual(inv.amount_untaxed, 621.54 + (prod_exp_2.list_price * 100.0), 'Sale Expense: invoicing of expense is wrong')

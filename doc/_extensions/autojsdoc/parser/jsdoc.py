@@ -62,6 +62,11 @@ class CommentDoc(pyjsdoc.CommentDoc):
         d['name'] = self.name
         return d
 
+    # don't resolve already resolved docs (e.g. a literal dict being
+    # include-ed in two different classes because I don't even care anymore
+    def become(self, modules):
+        return self
+
 class PropertyDoc(CommentDoc):
     @classmethod
     def from_param(cls, s, sourcemodule=None):
@@ -233,6 +238,12 @@ class ModuleDoc(NSDoc):
         vars['exports'] = self.exports
         return vars
 
+    def __str__(self):
+        s = super().__str__()
+        if self['sourcefile']:
+            s += " in file " + self['sourcefile']
+        return s
+
 class ClassDoc(NSDoc):
     namekey = 'class'
     @property
@@ -252,7 +263,8 @@ class ClassDoc(NSDoc):
         # FIXME: should ideally be a proxy namespace
         if method_name == 'prototype':
             return self
-        return super(ClassDoc, self).get_property(method_name)
+        return super(ClassDoc, self).get_property(method_name)\
+            or (self.superclass and self.superclass.get_property(method_name))
 
     @property
     def mixins(self):
@@ -263,10 +275,25 @@ class ClassDoc(NSDoc):
         d['mixins'] = self.mixins
         return d
 
+DEFAULT = object()
 class UnknownNS(NSDoc):
+    params = () # TODO: log warning when (somehow) trying to access / document an unknown object as ctor?
     def get_property(self, name):
         return super(UnknownNS, self).get_property(name) or \
            UnknownNS({'name': '{}.{}'.format(self.name, name)})
+
+    def __getitem__(self, item):
+        if self._probably_not_property(item):
+            return super().__getitem__(item)
+        return self.get_property(item)
+
+    def _probably_not_property(self, item):
+        return (
+            not isinstance(item, str)
+            or item in (self.namekey, 'name', 'params')
+            or item.startswith(('_', 'guessed_'))
+            or item in self.parsed
+        )
 
 class Unknown(CommentDoc):
     @classmethod
@@ -313,7 +340,7 @@ def parse_comments(comments, doctype=None):
     # in case a specific doctype is given, allow overriding it anyway
     return guess(parsed, default=doctype)
 
-def guess(parsed, default=NSDoc):
+def guess(parsed, default=UnknownNS):
     if 'class' in parsed:
         return ClassDoc(parsed)
     if 'function' in parsed:

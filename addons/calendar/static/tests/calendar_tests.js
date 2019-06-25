@@ -33,10 +33,10 @@ QUnit.module('calendar', {
         };
     },
 }, function () {
-    QUnit.test("many2manyattendee widget: basic rendering", function (assert) {
+    QUnit.test("many2manyattendee widget: basic rendering", async function (assert) {
         assert.expect(9);
 
-        var form = createView({
+        var form = await createView({
             View: FormView,
             model: 'event',
             data: this.data,
@@ -53,7 +53,7 @@ QUnit.module('calendar', {
                         "the partner ids should be passed as argument");
                     assert.strictEqual(args.args[1], 14,
                         "the event id should be passed as argument");
-                    return $.when([
+                    return Promise.resolve([
                         [1, "Jesus", "accepted", 0],
                         [2, "Mahomet", "needsAction", 0],
                     ]);
@@ -62,16 +62,16 @@ QUnit.module('calendar', {
             },
         });
 
-        assert.ok(form.$('.o_field_widget[name="partner_ids"]').hasClass('o_field_many2manytags'));
-        assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] > span').length, 2,
+        assert.hasClass(form.$('.o_field_widget[name="partner_ids"]'), 'o_field_many2manytags');
+        assert.containsN(form, '.o_field_widget[name="partner_ids"] .badge', 2,
             "there should be 2 tags");
-        assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] > span:first').text().trim(), "Jesus",
+        assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] .badge:first').text().trim(), "Jesus",
             "the tag should be correctly named");
-        assert.ok(form.$('.o_field_widget[name="partner_ids"] > span:first .o_calendar_invitation').hasClass('accepted'),
+        assert.hasClass(form.$('.o_field_widget[name="partner_ids"] .badge:first .o_calendar_invitation'),'accepted',
             "Jesus should attend the meeting");
-        assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] > span[data-id="2"]').text().trim(), "Mahomet",
+        assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] .badge[data-id="2"]').text().trim(), "Mahomet",
             "the tag should be correctly named");
-        assert.ok(form.$('.o_field_widget[name="partner_ids"] > span[data-id="2"] .o_calendar_invitation').hasClass('needsAction'),
+        assert.hasClass(form.$('.o_field_widget[name="partner_ids"] .badge[data-id="2"] .o_calendar_invitation'),'needsAction',
             "Mohamet should still confirm his attendance to the meeting");
 
         form.destroy();

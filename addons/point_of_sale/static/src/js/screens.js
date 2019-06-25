@@ -68,32 +68,6 @@ var ScreenWidget = PosBaseWidget.extend({
             this.barcode_error_action(code);
         }
     },
-
-    // what happens when a cashier id barcode is scanned.
-    // the default behavior is the following : 
-    // - if there's a user with a matching barcode, put it as the active 'cashier', go to cashier mode, and return true
-    // - else : do nothing and return false. You probably want to extend this to show and appropriate error popup... 
-    barcode_cashier_action: function(code){
-        var self = this;
-        var users = this.pos.users;
-        for(var i = 0, len = users.length; i < len; i++){
-            if(users[i].barcode === code.code){
-                if (users[i].id !== this.pos.get_cashier().id && users[i].pos_security_pin) {
-                    return this.gui.ask_password(users[i].pos_security_pin).then(function(){
-                        self.pos.set_cashier(users[i]);
-                        self.chrome.widget.username.renderElement();
-                        return true;
-                    });
-                } else {
-                    this.pos.set_cashier(users[i]);
-                    this.chrome.widget.username.renderElement();
-                    return true;
-                }
-            }
-        }
-        this.barcode_error_action(code);
-        return false;
-    },
     
     // what happens when a client id barcode is scanned.
     // the default behavior is the following : 
@@ -139,7 +113,6 @@ var ScreenWidget = PosBaseWidget.extend({
         }
 
         this.pos.barcode_reader.set_action_callback({
-            'cashier': _.bind(self.barcode_cashier_action, self),
             'product': _.bind(self.barcode_product_action, self),
             'weight': _.bind(self.barcode_product_action, self),
             'price': _.bind(self.barcode_product_action, self),
@@ -176,6 +149,61 @@ var ScreenWidget = PosBaseWidget.extend({
             if(this.$el){
                 this.$el.addClass('oe_hidden');
             }
+        }
+    },
+    /**
+     * Handles the error response from the server when we push
+     * an invoiceable order
+     * Displays appropriates warnings and errors and
+     * proposes subsequent actions
+     *
+     * @private
+     * @param {PosModel} order: the order to consider, defaults to current order
+     * @param {Boolean} refresh_screens: whether or not displayed screens should refresh
+     * @param {Object} error: the error provided by Ajax
+     */
+    _handleFailedPushForInvoice: function (order, refresh_screen, error) {
+        var self = this;
+        order = order || this.pos.get_order();
+        this.invoicing = false;
+        order.finalized = false;
+        if (error.message === 'Missing Customer') {
+            this.gui.show_popup('confirm',{
+                'title': _t('Please select the Customer'),
+                'body': _t('You need to select the customer before you can invoice an order.'),
+                confirm: function(){
+                    self.gui.show_screen('clientlist', null, refresh_screen);
+                },
+            });
+        } else if (error.message === 'Backend Invoice') {
+            this.gui.show_popup('confirm',{
+                'title': _t('Please print the invoice from the backend'),
+                'body': _t('The order has been synchronized earlier. Please make the invoice from the backend for the order: ') + error.data.order.name,
+                confirm: function () {
+                    this.gui.show_screen('receipt', null, refresh_screen);
+                },
+                cancel: function () {
+                    this.gui.show_screen('receipt', null, refresh_screen);
+                },
+            });
+        } else if (error.code < 0) {        // XmlHttpRequest Errors
+            this.gui.show_popup('error',{
+                'title': _t('The order could not be sent'),
+                'body': _t('Check your internet connection and try again.'),
+                cancel: function () {
+                    this.gui.show_screen('receipt', {button_print_invoice: true}, refresh_screen); // refresh if necessary
+                },
+            });
+        } else if (error.code === 200) {    // OpenERP Server Errors
+            this.gui.show_popup('error-traceback',{
+                'title': error.data.message || _t("Server Error"),
+                'body': error.data.debug || _t('The server encountered an error while receiving your order.'),
+            });
+        } else {                            // ???
+            this.gui.show_popup('error',{
+                'title': _t("Unknown Error"),
+                'body':  _t("The order could not be sent to the server due to an unknown error"),
+            });
         }
     },
 });
@@ -841,6 +869,16 @@ var ProductListWidget = PosBaseWidget.extend({
             options.click_product_action(product);
         };
 
+        this.keypress_product_handler = function(ev){
+            // React only to SPACE to avoid interfering with warcode scanner which sends ENTER
+            if (ev.which != 32) {
+                return;
+            }
+            ev.preventDefault();
+            var product = self.pos.db.get_product_by_id(this.dataset.productId);
+            options.click_product_action(product);
+        };
+
         this.product_list = options.product_list || [];
         this.product_cache = new DomCache();
 
@@ -913,6 +951,7 @@ var ProductListWidget = PosBaseWidget.extend({
         for(var i = 0, len = this.product_list.length; i < len; i++){
             var product_node = this.render_product(this.product_list[i]);
             product_node.addEventListener('click',this.click_product_handler);
+            product_node.addEventListener('keypress',this.keypress_product_handler);
             list_container.appendChild(product_node);
         }
     },
@@ -1013,6 +1052,7 @@ var ProductScreenWidget = ScreenWidget.extend({
         if (_.size(this.action_buttons)) {
             this.$('.control-buttons').removeClass('oe_hidden');
         }
+        this._onKeypadKeyDown = this._onKeypadKeyDown.bind(this);
     },
 
     click_product: function(product) {
@@ -1032,12 +1072,41 @@ var ProductScreenWidget = ScreenWidget.extend({
         if (this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard) {
             this.chrome.widget.keyboard.connect($(this.el.querySelector('.searchbox input')));
         }
+        $(document).on('keydown.productscreen', this._onKeypadKeyDown);
     },
-
     close: function(){
         this._super();
         if(this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard){
             this.chrome.widget.keyboard.hide();
+        }
+        $(document).off('keydown.productscreen', this._onKeypadKeyDown);
+    },
+
+    _onKeypadKeyDown: function (ev) {
+        //prevent input and textarea keydown event
+        if(!_.contains(["INPUT", "TEXTAREA"], $(ev.target).prop('tagName'))) {
+            if ((ev.key >= "0" && ev.key <= "9") || ev.key === "."){
+                this.numpad.state.appendNewChar(ev.key)
+            }
+            else {
+                switch (ev.key){
+                    case "Backspace":
+                        this.numpad.state.deleteLastChar();
+                        break;
+                    case "Delete":
+                        this.numpad.state.resetValue();
+                        break;
+                    case ",":
+                        this.numpad.state.appendNewChar(".");
+                        break;
+                    case "+":
+                        this.numpad.state.positiveSign();
+                        break;
+                    case "-":
+                        this.numpad.state.negativeSign();
+                        break;
+                }
+            }
         }
     },
 });
@@ -1081,6 +1150,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
         this.$('.new-customer').click(function(){
             self.display_client_details('edit',{
                 'country_id': self.pos.company.country_id,
+                'state_id': self.pos.company.state_id,
             });
         });
 
@@ -1093,7 +1163,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
             this.display_client_details('show',this.old_client,0);
         }
 
-        this.$('.client-list-contents').delegate('.client-line','click',function(event){
+        this.$('.client-list-contents').on('click', '.client-line', function(event){
             self.line_select(event,$(this),parseInt($(this).data('id')));
         });
 
@@ -1303,11 +1373,16 @@ var ClientListScreenWidget = ScreenWidget.extend({
                 contents.on('click','.button.save',function(){ self.save_client_details(partner); });
             });
     },
-    
+
     // what happens when we've just pushed modifications for a partner of id partner_id
-    saved_client_details: function(partner_id){
+    saved_client_details: function (partner_id) {
         var self = this;
-        this.reload_partners().then(function(){
+        var always = function () {
+            $(".client-details-contents").on('click', '.button.save', function () {
+                self.save_client_details(partner);
+            });
+        };
+        return this.reload_partners().then( function() {
             var partner = self.pos.db.get_partner_by_id(partner_id);
             if (partner) {
                 self.new_client = partner;
@@ -1315,12 +1390,10 @@ var ClientListScreenWidget = ScreenWidget.extend({
                 self.display_client_details('show',partner);
             } else {
                 // should never happen, because create_from_ui must return the id of the partner it
-                // has created, and reload_partner() must have loaded the newly created partner. 
+                // has created, and reload_partner() must have loaded the newly created partner.
                 self.display_client_details('hide');
             }
-        }).always(function(){
-            $(".client-details-contents").on('click','.button.save',function(){ self.save_client_details(partner); });
-        });
+        }).then(always, always);
     },
 
     // resizes an image, keeping the aspect ratio intact,
@@ -1361,21 +1434,16 @@ var ClientListScreenWidget = ScreenWidget.extend({
             });
             return;
         }
-        
-        var reader = new FileReader();
-        reader.onload = function(event){
-            var dataurl = event.target.result;
+        utils.getDataURLFromFile(file).then(function (dataurl) {
             var img     = new Image();
             img.src = dataurl;
             self.resize_image_to_dataurl(img,800,600,callback);
-        };
-        reader.onerror = function(){
+        }).guardedCatch(function () {
             self.gui.show_popup('error',{
                 title :_t('Could Not Read Image'),
                 body  :_t('The provided file could not be read due to an unknown error'),
             });
-        };
-        reader.readAsDataURL(file);
+        });
     },
 
     // This fetches partner changes on the server, and in case of changes, 
@@ -1468,6 +1536,24 @@ var ClientListScreenWidget = ScreenWidget.extend({
                 }, 0);
             });
 
+            contents.find('.client-address-country').on('change', function (ev) {
+                var $stateSelection = contents.find('.client-address-states');
+                var value = this.value;
+                $stateSelection.empty()
+                $stateSelection.append($("<option/>", {
+                    value: '',
+                    text: 'None',
+                }));
+                self.pos.states.forEach(function (state) {
+                    if (state.country_id[0] == value) {
+                        $stateSelection.append($("<option/>", {
+                            value: state.id,
+                            text: state.name
+                        }));
+                    }
+                });
+            });
+
             contents.find('.image-uploader').on('change',function(event){
                 self.load_image_file(event.target.files[0],function(res){
                     if (res) {
@@ -1536,7 +1622,9 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         return this.pos.config.iface_print_auto && !this.pos.get_order()._printed;
     },
     should_close_immediately: function() {
-        return this.pos.config.iface_print_via_proxy && this.pos.config.iface_print_skip_screen;
+        var order = this.pos.get_order();
+        var invoiced_finalized = order.is_to_invoice() ? order.finalized : true;
+        return this.pos.config.iface_print_via_proxy && this.pos.config.iface_print_skip_screen && invoiced_finalized;
     },
     lock_screen: function(locked) {
         this._locked = locked;
@@ -1558,11 +1646,21 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         };
     },
     print_web: function() {
-        if($.browser.safari){
+        if ($.browser.safari) {
             document.execCommand('print', false, null);
-        }
-        else{
-            window.print();
+        } else {
+            try {
+                window.print();
+            } catch(err) {
+                if (navigator.userAgent.toLowerCase().indexOf("android") > -1) {
+                    this.gui.show_popup('error',{
+                        'title':_t('Printing is not supported on some android browsers'),
+                        'body': _t('Printing is not supported on some android browsers due to no default printing protocol is available. It is possible to print your tickets by making use of an IoT Box.'),
+                    });
+                } else {
+                    throw err;
+                }
+            }
         }
         this.pos.get_order()._printed = true;
     },
@@ -1630,9 +1728,32 @@ var ReceiptScreenWidget = ScreenWidget.extend({
                 self.print();
             }
         });
+        var button_print_invoice = this.$('.button.print_invoice');
+        button_print_invoice.click(function () {
+            var order = self.pos.get_order();
+            var invoiced = self.pos.push_and_invoice_order(order);
+            self.invoicing = true;
+
+            invoiced.fail(self._handleFailedPushForInvoice.bind(self, order, true)); // refresh
+
+            invoiced.then(function(){
+                self.invoicing = false;
+                self.gui.show_screen('receipt', {button_print_invoice: false}, true); // refresh
+            });
+        });
+
     },
     render_change: function() {
+        var self = this;
         this.$('.change-value').html(this.format_currency(this.pos.get_order().get_change()));
+        var order = this.pos.get_order();
+        var order_screen_params = order.get_screen_data('params');
+        var button_print_invoice = this.$('.button.print_invoice');
+        if (order_screen_params && order_screen_params.button_print_invoice) {
+            button_print_invoice.show();
+        } else {
+            button_print_invoice.hide();
+        }
     },
     render_receipt: function() {
         this.$('.pos-receipt-container').html(QWeb.render('PosTicket', this.get_receipt_render_env()));
@@ -1949,16 +2070,11 @@ var PaymentScreenWidget = ScreenWidget.extend({
         $('body').keypress(this.keyboard_handler);
         // that one comes from the pos, but we prefer to cover all the basis
         $('body').keydown(this.keyboard_keydown_handler);
-        // legacy vanilla JS listeners
-        window.document.body.addEventListener('keypress',this.keyboard_handler);
-        window.document.body.addEventListener('keydown',this.keyboard_keydown_handler);
         this._super();
     },
     hide: function(){
         $('body').off('keypress', this.keyboard_handler);
         $('body').off('keydown', this.keyboard_keydown_handler);
-        window.document.body.removeEventListener('keypress',this.keyboard_handler);
-        window.document.body.removeEventListener('keydown',this.keyboard_keydown_handler);
         this._super();
     },
     // sets up listeners to watch for order changes
@@ -2062,36 +2178,9 @@ var PaymentScreenWidget = ScreenWidget.extend({
             var invoiced = this.pos.push_and_invoice_order(order);
             this.invoicing = true;
 
-            invoiced.fail(function(error){
-                self.invoicing = false;
-                order.finalized = false;
-                if (error.message === 'Missing Customer') {
-                    self.gui.show_popup('confirm',{
-                        'title': _t('Please select the Customer'),
-                        'body': _t('You need to select the customer before you can invoice an order.'),
-                        confirm: function(){
-                            self.gui.show_screen('clientlist');
-                        },
-                    });
-                } else if (error.code < 0) {        // XmlHttpRequest Errors
-                    self.gui.show_popup('error',{
-                        'title': _t('The order could not be sent'),
-                        'body': _t('Check your internet connection and try again.'),
-                    });
-                } else if (error.code === 200) {    // OpenERP Server Errors
-                    self.gui.show_popup('error-traceback',{
-                        'title': error.data.message || _t("Server Error"),
-                        'body': error.data.debug || _t('The server encountered an error while receiving your order.'),
-                    });
-                } else {                            // ???
-                    self.gui.show_popup('error',{
-                        'title': _t("Unknown Error"),
-                        'body':  _t("The order could not be sent to the server due to an unknown error"),
-                    });
-                }
-            });
+            invoiced.catch(this._handleFailedPushForInvoice.bind(this, order, false));
 
-            invoiced.done(function(){
+            invoiced.then(function () {
                 self.invoicing = false;
                 self.gui.show_screen('receipt');
             });
@@ -2140,7 +2229,7 @@ var set_fiscal_position_button = ActionButtonWidget.extend({
 
         var selection_list = no_fiscal_position.concat(fiscal_positions);
         self.gui.show_popup('selection',{
-            title: _t('Select tax'),
+            title: _t('Select Fiscal Position'),
             list: selection_list,
             confirm: function (fiscal_position) {
                 var order = self.pos.get_order();
@@ -2235,7 +2324,7 @@ define_action_button({
     'name': 'set_pricelist',
     'widget': set_pricelist_button,
     'condition': function(){
-        return this.pos.pricelists.length > 1;
+        return this.pos.config.use_pricelist && this.pos.pricelists.length > 1;
     },
 });
 

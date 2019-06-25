@@ -176,3 +176,17 @@ class Node(object):
         for c in self.children:
             s += '%s`-> %s' % ('   ' * depth, c._pprint(depth+1))
         return s
+
+    def should_have_demo(self):
+        return (hasattr(self, 'demo') or (self.dbdemo and self.state != 'installed')) and all(p.dbdemo for p in self.parents)
+
+    @property
+    def parents(self):
+        if self.depth == 0:
+            return []
+
+        return (
+            node for node in self.graph.values()
+            if node.depth < self.depth
+            if self in node.children
+        )

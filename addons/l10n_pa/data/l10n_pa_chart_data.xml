@@ -4,25 +4,14 @@
         <field name="name">Cuentas No Clasificadas</field>
     </record>
 
-    <record id="transfer_account_id" model="account.account.template">
-       <field name="name">Cuentas de Transferencia</field>
-       <field name="code">112.</field>
-       <field name="reconcile" eval="True"/>
-       <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-   </record>
-
     <!-- Account Chart Templates -->
     <record id="l10npa_chart_template" model="account.chart.template">
         <field name="name">Panamá - Plan de Cuentas</field>
         <field name="bank_account_code_prefix">111.</field>
         <field name="cash_account_code_prefix">113.</field>
+        <field name="transfer_account_code_prefix">112.</field>
         <field name="code_digits">7</field>
         <field name="currency_id" ref="base.PAB"/>
-        <field name="transfer_account_id" ref="transfer_account_id"/>
-    </record>
-
-    <record id="transfer_account_id" model="account.account.template">
-        <field name="chart_template_id" ref="l10npa_chart_template"/>
     </record>
     <!-- Account Templates -->
 

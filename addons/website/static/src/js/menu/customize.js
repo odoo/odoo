@@ -3,32 +3,37 @@ odoo.define('website.customizeMenu', function (require) {
 
 var core = require('web.core');
 var Widget = require('web.Widget');
-var weContext = require('web_editor.context');
 var websiteNavbarData = require('website.navbar');
 var WebsiteAceEditor = require('website.ace');
 
 var qweb = core.qweb;
 
 var CustomizeMenu = Widget.extend({
-    xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
+    xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
     events: {
-        'click > ul a[data-view-id]': '_onCustomizeOptionClick',
+        'show.bs.dropdown': '_onDropdownShow',
+        'click .dropdown-item[data-view-key]': '_onCustomizeOptionClick',
     },
 
     /**
      * @override
      */
+    willStart: function () {
+        this.viewName = $(document.documentElement).data('view-xmlid');
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
     start: function () {
-        var viewName = $(document.documentElement).data('view-xmlid');
-        if (!viewName) {
+        if (!this.viewName) {
             _.defer(this.destroy.bind(this));
         }
 
-        if (this.$el.is('.open')) {
-            this._loadCustomizeOptions(viewName);
-        } else {
-            this.$el.one('mousedown', '> a.dropdown-toggle', this._loadCustomizeOptions.bind(this, viewName));
+        if (this.$el.is('.show')) {
+            this._loadCustomizeOptions();
         }
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -39,21 +44,21 @@ var CustomizeMenu = Widget.extend({
      * Enables/Disables a view customization whose id is given.
      *
      * @private
-     * @param {integer} viewID
-     * @returns {Deferred}
+     * @param {string} viewKey
+     * @returns {Promise}
      *          Unresolved if the customization succeeded as the page will be
      *          reloaded.
      *          Rejected otherwise.
      */
-    _doCustomize: function (viewID) {
+    _doCustomize: function (viewKey) {
         return this._rpc({
-            model: 'ir.ui.view',
-            method: 'toggle',
-            args: [[viewID]],
-            context: weContext.get(),
+            route: '/website/toggle_switchable_view',
+            params: {
+                'view_key': viewKey,
+            },
         }).then(function () {
             window.location.reload();
-            return $.Deferred();
+            return new Promise(function () {});
         });
     },
     /**
@@ -61,28 +66,37 @@ var CustomizeMenu = Widget.extend({
      * the current page and shows them as switchable elements in the menu.
      *
      * @private
-     * @param {string} viewName - xml id
-     * @return {Deferred}
+     * @return {Promise}
      */
-    _loadCustomizeOptions: function (viewName) {
-        var $menu = this.$el.children('ul');
+    _loadCustomizeOptions: function () {
+        if (this.__customizeOptionsLoaded) {
+            return Promise.resolve();
+        }
+        this.__customizeOptionsLoaded = true;
+
+        var $menu = this.$el.children('.dropdown-menu');
         return this._rpc({
             route: '/website/get_switchable_related_views',
             params: {
-                key: viewName,
+                key: this.viewName,
             },
         }).then(function (result) {
             var currentGroup = '';
+            if (result.length) {
+                $menu.append($('<div/>', {
+                    class: 'dropdown-divider',
+                    role: 'separator',
+                }));
+            }
             _.each(result, function (item) {
                 if (currentGroup !== item.inherit_id[1]) {
                     currentGroup = item.inherit_id[1];
                     $menu.append('<li class="dropdown-header">' + currentGroup + '</li>');
                 }
-                var $li = $('<li/>', {role: 'presentation'})
-                            .append($('<a/>', {href: '#', 'data-view-id': item.id, role: 'menuitem'})
-                                .append(qweb.render('web_editor.components.switch', {id: 'switch-' + item.id, label: item.name})));
-                $li.find('input').prop('checked', !!item.active);
-                $menu.append($li);
+                var $a = $('<a/>', {href: '#', class: 'dropdown-item', 'data-view-key': item.key, role: 'menuitem'})
+                            .append(qweb.render('website.components.switch', {id: 'switch-' + item.id, label: item.name}));
+                $a.find('input').prop('checked', !!item.active);
+                $menu.append($a);
             });
         });
     },
@@ -100,13 +114,20 @@ var CustomizeMenu = Widget.extend({
      */
     _onCustomizeOptionClick: function (ev) {
         ev.preventDefault();
-        var viewID = parseInt($(ev.currentTarget).data('view-id'), 10);
-        this._doCustomize(viewID);
+        var viewKey = $(ev.currentTarget).data('viewKey');
+        this._doCustomize(viewKey);
+    },
+    /**
+     * @private
+     */
+    _onDropdownShow: function () {
+        this._loadCustomizeOptions();
     },
 });
 
 var AceEditorMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     actions: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.actions || {}, {
+        close_all_widgets: '_hideEditor',
         edit: '_enterEditMode',
         ace: '_launchAce',
     }),
@@ -118,11 +139,10 @@ var AceEditorMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @override
      */
     start: function () {
-        var def;
         if (window.location.hash.substr(0, WebsiteAceEditor.prototype.hash.length) === WebsiteAceEditor.prototype.hash) {
-            def = this._launchAce();
+            this._launchAce();
         }
-        return $.when(this._super.apply(this, arguments), def);
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -135,42 +155,60 @@ var AceEditorMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @private
      */
     _enterEditMode: function () {
+        this._hideEditor();
+    },
+    /**
+     * @private
+     */
+    _hideEditor: function () {
         if (this.globalEditor) {
             this.globalEditor.do_hide();
         }
     },
     /**
-     * Launches the ace editor to be able to edit the templates and less files
+     * Launches the ace editor to be able to edit the templates and scss files
      * which are used by the current page.
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _launchAce: function () {
-        if (this.globalEditor) {
-            this.globalEditor.do_show();
-            return $.when();
-        } else {
-            var currentHash = window.location.hash;
-            var indexOfView = currentHash.indexOf("?res=");
-            var initialResID = undefined;
-            if (indexOfView >= 0) {
-                initialResID = currentHash.substr(indexOfView + ("?res=".length));
-                var parsedResID = parseInt(initialResID, 10);
-                if (parsedResID) {
-                    initialResID = parsedResID;
-                }
-            }
-
-            this.globalEditor = new WebsiteAceEditor(this, $(document.documentElement).data('view-xmlid'), {
-                initialResID: initialResID,
-                defaultBundlesRestriction: [
-                    "web.assets_frontend",
-                    "website.assets_frontend",
-                ],
+        var self = this;
+        var prom = new Promise(function (resolve, reject) {
+            self.trigger_up('action_demand', {
+                actionName: 'close_all_widgets',
+                onSuccess: resolve,
             });
-            return this.globalEditor.appendTo(document.body);
-        }
+        });
+        prom.then(function () {
+            if (self.globalEditor) {
+                self.globalEditor.do_show();
+                return Promise.resolve();
+            } else {
+                var currentHash = window.location.hash;
+                var indexOfView = currentHash.indexOf("?res=");
+                var initialResID = undefined;
+                if (indexOfView >= 0) {
+                    initialResID = currentHash.substr(indexOfView + ("?res=".length));
+                    var parsedResID = parseInt(initialResID, 10);
+                    if (parsedResID) {
+                        initialResID = parsedResID;
+                    }
+                }
+
+                self.globalEditor = new WebsiteAceEditor(self, $(document.documentElement).data('view-xmlid'), {
+                    initialResID: initialResID,
+                    defaultBundlesRestriction: [
+                        'web.assets_frontend',
+                        'web.assets_frontend_minimal',
+                        'web.assets_frontend_lazy',
+                    ],
+                });
+                return self.globalEditor.appendTo(document.body);
+            }
+        });
+
+        return prom;
     },
 });
 

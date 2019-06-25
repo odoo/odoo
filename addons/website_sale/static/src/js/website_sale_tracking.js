@@ -1,73 +1,113 @@
-odoo.define('website_sale.tracking', function(require) {
+odoo.define('website_sale.tracking', function (require) {
 
-var ajax = require('web.ajax');
+var publicWidget = require('web.public.widget');
 
-$(document).ready(function () {
+publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
+    selector: '.oe_website_sale',
+    events: {
+        'click form[action="/shop/cart/update"] a.a-submit': '_onAddProductIntoCart',
+        'click a[href="/shop/checkout"]': '_onCheckoutStart',
+        'click div.oe_cart a[href^="/web?redirect"][href$="/shop/checkout"]': '_onCustomerSignin',
+        'click form[action="/shop/confirm_order"] a.a-submit': '_onOrder',
+        'click form[target="_self"] button[type=submit]': '_onOrderPayment',
+    },
 
-    // Watching a product
-    if ($("#product_detail.oe_website_sale").length) {
-        var prod_id = $("input[name='product_id']").attr('value');
-        vpv("/stats/ecom/product_view/" + prod_id);
-    }
+    /**
+     * @override
+     */
+    start: function () {
+        var self = this;
 
-    // Add a product into the cart
-    $(".oe_website_sale form[action='/shop/cart/update'] a.a-submit").on('click', function(o) {
-        var prod_id = $("input[name='product_id']").attr('value');
-        vpv("/stats/ecom/product_add_to_cart/" + prod_id);
-    });
-
-    // Start checkout
-    $(".oe_website_sale a[href='/shop/checkout']").on('click', function(o) {
-        vpv("/stats/ecom/customer_checkout");
-    });
-
-    $(".oe_website_sale div.oe_cart a[href^='/web?redirect'][href$='/shop/checkout']").on('click', function(o) {
-        vpv("/stats/ecom/customer_signin");
-    });
-
-    $(".oe_website_sale form[action='/shop/confirm_order'] a.a-submit").on('click', function(o) {
-        if ($("#top_menu > li > a[href='/web/login']").length){
-            vpv("/stats/ecom/customer_signup");
+        // Watching a product
+        if (this.$el.is('#product_detail')) {
+            var productID = this.$('input[name="product_id"]').attr('value');
+            this._vpv('/stats/ecom/product_view/' + productID);
         }
-        vpv("/stats/ecom/order_checkout");
-    });
 
-    $(".oe_website_sale form[target='_self'] button[type=submit]").on('click', function(o) {
-        var method = $("#payment_method input[name=acquirer]:checked").nextAll("span:first").text();
-        vpv("/stats/ecom/order_payment/" + method);
-    });
+        // ...
+        if (this.$('div.oe_website_sale_tx_status').length) {
+            this._trackGA('require', 'ecommerce');
 
-    if ($(".oe_website_sale div.oe_website_sale_tx_status").length) {
-        track_ga('require', 'ecommerce');
+            var orderID = this.$('div.oe_website_sale_tx_status').data('order-id');
+            this._vpv('/stats/ecom/order_confirmed/' + orderID);
 
-        var order_id = $(".oe_website_sale div.oe_website_sale_tx_status").data("order-id");
-        vpv("/stats/ecom/order_confirmed/" + order_id);
+            this._rpc({
+                route: '/shop/tracking_last_order/',
+            }).then(function (o) {
+                self._trackGA('ecommerce:clear');
 
-        ajax.jsonRpc("/shop/tracking_last_order/").then(function(o) {
-            track_ga('ecommerce:clear');
+                if (o.transaction && o.lines) {
+                    self._trackGA('ecommerce:addTransaction', o.transaction);
+                    _.forEach(o.lines, function (line) {
+                        self._trackGA('ecommerce:addItem', line);
+                    });
+                }
+                self._trackGA('ecommerce:send');
+            });
+        }
 
-            if (o.transaction && o.lines) {
-                track_ga('ecommerce:addTransaction', o.transaction);
-                _.forEach(o.lines, function(line) {
-                    track_ga('ecommerce:addItem', line);
-                });
-            }
-            track_ga('ecommerce:send');
-        });
-    }
+        return this._super.apply(this, arguments);
+    },
 
-    function vpv(page){ //virtual page view
-        track_ga('send', 'pageview', {
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _trackGA: function () {
+        var websiteGA = window.ga || function () {};
+        websiteGA.apply(this, arguments);
+    },
+    /**
+     * @private
+     */
+    _vpv: function (page) { //virtual page view
+        this._trackGA('send', 'pageview', {
           'page': page,
           'title': document.title,
         });
-    }
+    },
 
-    function track_ga() {
-        website_ga = this.ga || function(){};
-        website_ga.apply(this, arguments);
-    }
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _onAddProductIntoCart: function () {
+        var productID = this.$('input[name="product_id"]').attr('value');
+        this._vpv('/stats/ecom/product_add_to_cart/' + productID);
+    },
+    /**
+     * @private
+     */
+    _onCheckoutStart: function () {
+        this._vpv('/stats/ecom/customer_checkout');
+    },
+    /**
+     * @private
+     */
+    _onCustomerSignin: function () {
+        this._vpv('/stats/ecom/customer_signin');
+    },
+    /**
+     * @private
+     */
+    _onOrder: function () {
+        if ($('#top_menu [href="/web/login"]').length) {
+            this._vpv('/stats/ecom/customer_signup');
+        }
+        this._vpv('/stats/ecom/order_checkout');
+    },
+    /**
+     * @private
+     */
+    _onOrderPayment: function () {
+        var method = $('#payment_method input[name=acquirer]:checked').nextAll('span:first').text();
+        this._vpv('/stats/ecom/order_payment/' + method);
+    },
 });
-
 });

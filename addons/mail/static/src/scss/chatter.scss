@@ -1,0 +1,35 @@
+.o_chatter {
+    .o_spinner {
+        text-align: center;
+        font-size: large;
+    }
+
+    .o_chatter_topbar {
+        display: flex;
+        border-bottom: $nav-tabs-border-width solid transparent;
+
+        .btn {
+            @extend .text-nowrap;
+            margin-bottom: -$nav-tabs-border-width;
+            padding: $grid-gutter-width*0.25 - $nav-tabs-border-width $grid-gutter-width*0.5 $grid-gutter-width*0.25;
+            border-radius: $border-radius-sm $border-radius-sm 0 0;
+        }
+
+        > .o_topbar_right_area {
+            display: flex;
+            margin-left: auto;
+            justify-content: flex-end;
+        }
+    }
+
+    &.o_chatter_composer_active .o_chatter_topbar {
+        border-bottom-color: gray('300');
+
+        .btn.o_active {
+            color: $o-brand-odoo;
+            background-color: theme-color('light');
+            border: $nav-tabs-border-width solid gray('300');
+            border-bottom-color: transparent;
+        }
+    }
+}

@@ -4,8 +4,7 @@
 # 
 # Translators:
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
 # Arminas Grigonis <arminas@versada.lt>, 2017
 msgid ""
@@ -20,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: hr_recruitment_survey
 #: model:survey.label,value:hr_recruitment_survey.recruitment_1_3_1
@@ -63,7 +62,7 @@ msgid "71+"
 msgstr "71+"
 
 #. module: hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
 msgid ""
 "<span class=\"o_stat_text\">Print</span>\n"
 "                        <span class=\"o_stat_text\">Interview</span>"
@@ -72,7 +71,7 @@ msgstr ""
 "                        <span class=\"o_stat_text\">Darbo pokalbis</span>"
 
 #. module: hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
 msgid ""
 "<span class=\"o_stat_text\">Start</span>\n"
 "                        <span class=\"o_stat_text\">Interview</span>"
@@ -86,7 +85,7 @@ msgid "Activities"
 msgstr "Veiklos"
 
 #. module: hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
 msgid "Answer related job question"
 msgstr "Atsakyti į su darbu susijusį klausimą"
 
@@ -107,9 +106,6 @@ msgid ""
 "Choose an interview form for this job position and you will be able to "
 "print/answer this interview from all applicants who apply for this job"
 msgstr ""
-"Pasirinkite interviu formą šiai darbo pozicijai ir galėsite "
-"atspausdinti/atsakyti šį interviu visiems kandidatams, kurie kandidatuoja į "
-"šią poziciją"
 
 #. module: hr_recruitment_survey
 #: model:survey.label,value:hr_recruitment_survey.rrow_2_1_4
@@ -117,10 +113,10 @@ msgid "Desk space"
 msgstr "Darbo vieta"
 
 #. module: hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.hr_job_survey_inherit
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_job_survey_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Display Interview Form"
-msgstr "Rodyti interviu formą"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.label,value:hr_recruitment_survey.rrow_2_1_11
@@ -150,22 +146,22 @@ msgstr "Moteris"
 #. module: hr_recruitment_survey
 #: model:survey.label,value:hr_recruitment_survey.rrow_2_1_8
 msgid "Freebies such as tea, coffee and stationery"
-msgstr "Nemokamos smulkmenos, tokios kaip arbata, kava ir biuro prekės"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.question,question:hr_recruitment_survey.recruitment_1_1
 msgid "From which university will you graduate?"
-msgstr "Kokį universitetą baigsite?"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.label,value:hr_recruitment_survey.rrow_2_1_2
 msgid "Getting on with colleagues"
-msgstr "Geri santykiai su kolegomis"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.label,value:hr_recruitment_survey.rrow_2_1_7
 msgid "Good management"
-msgstr "Geras vadovavimas"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.label,value:hr_recruitment_survey.rrow_2_1_1
@@ -201,14 +197,14 @@ msgstr "Svarbu"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job_survey_id
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Interview Form"
 msgstr "Interviu forma"
 
 #. module: hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
 msgid "Interview Forms"
-msgstr "Interviu formos"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
@@ -218,7 +214,7 @@ msgstr "Pareigos"
 #. module: hr_recruitment_survey
 #: model:survey.question,question:hr_recruitment_survey.recruitment_2_1
 msgid "Knowledge"
-msgstr "Žinio"
+msgstr "Žinojimas"
 
 #. module: hr_recruitment_survey
 #: model:survey.label,value:hr_recruitment_survey.recruitment_1_2_1
@@ -231,14 +227,14 @@ msgid "Most important"
 msgstr "Svarbiausia"
 
 #. module: hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "No Interview Form"
-msgstr "Nėra interviu formos"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.label,value:hr_recruitment_survey.rrow_2_1_10
 msgid "No out of hours working"
-msgstr "Nėra viršvalandžių"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.label,value:hr_recruitment_survey.rcol_3_1_1
@@ -258,10 +254,10 @@ msgstr "Biuro vieta"
 #. module: hr_recruitment_survey
 #: model:survey.label,value:hr_recruitment_survey.rrow_2_1_9
 msgid "Perks such as free parking, gym passes"
-msgstr "Privalumai, tokie kaip nemokama automobilio aikštelė, sporto klubas"
+msgstr ""
 
 #. module: hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
 msgid "Print interview report"
 msgstr "Spausdinti darbo pokalbio ataskaitą"
 
@@ -278,7 +274,7 @@ msgstr "Įdarbinimo forma"
 #. module: hr_recruitment_survey
 #: model:survey.label,value:hr_recruitment_survey.rrow_2_1_12
 msgid "Regular meetings"
-msgstr "Reguliarūs susitikimai"
+msgstr "Įprastiniai susitikimai"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant_response_id
@@ -288,12 +284,12 @@ msgstr "Atsakymas"
 #. module: hr_recruitment_survey
 #: model:survey.label,value:hr_recruitment_survey.rcol_3_1_2
 msgid "Somewhat important"
-msgstr "Kažkiek svarbu"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.label,value:hr_recruitment_survey.rrow_2_1_5
 msgid "State of the art technology"
-msgstr "Revoliucinės technologijos"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant_survey_id
@@ -316,7 +312,7 @@ msgstr "Atsakymas, kurį įvedėte, yra netinkamo formato."
 #: model:survey.survey,description:hr_recruitment_survey.recruitment_form
 msgid ""
 "This form is intended to help the responsible of a recruitment interview."
-msgstr "Šios formos tikslas - padėti už darbo pokalbį atsakingam asmeniui."
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.question,constr_error_msg:hr_recruitment_survey.recruitment_1_1

@@ -24,6 +24,7 @@ except ImportError:
 
 class SendSMS(models.TransientModel):
     _name = 'sms.send_sms'
+    _description = 'Send SMS'
 
     recipients = fields.Char('Recipients', required=True)
     message = fields.Text('Message', required=True)
@@ -31,7 +32,7 @@ class SendSMS(models.TransientModel):
     def _phone_get_country(self, partner):
         if 'country_id' in partner:
             return partner.country_id
-        return self.env.user.company_id.country_id
+        return self.env.company.country_id
 
     def _sms_sanitization(self, partner, field_name):
         number = partner[field_name]
@@ -44,8 +45,8 @@ class SendSMS(models.TransientModel):
                 return number
             if not phonenumbers.is_possible_number(phone_nbr) or not phonenumbers.is_valid_number(phone_nbr):
                 return number
-            phone_fmt = phonenumbers.PhoneNumberFormat.INTERNATIONAL
-            return phonenumbers.format_number(phone_nbr, phone_fmt).replace(' ', '')
+            phone_fmt = phonenumbers.PhoneNumberFormat.E164
+            return phonenumbers.format_number(phone_nbr, phone_fmt)
         else:
             return number
 
@@ -61,12 +62,11 @@ class SendSMS(models.TransientModel):
     @api.model
     def default_get(self, fields):
         result = super(SendSMS, self).default_get(fields)
-
         active_model = self.env.context.get('active_model')
-        model = self.env[active_model]
 
-        records = self._get_records(model)
-        if getattr(records, '_get_default_sms_recipients'):
+        if not self.env.context.get('default_recipients') and active_model and hasattr(self.env[active_model], '_get_default_sms_recipients'):
+            model = self.env[active_model]
+            records = self._get_records(model)
             partners = records._get_default_sms_recipients()
             phone_numbers = []
             no_phone_partners = []
@@ -83,12 +83,12 @@ class SendSMS(models.TransientModel):
         return result
 
     def action_send_sms(self):
-        numbers = self.recipients.split(',')
+        numbers = [number.strip() for number in self.recipients.split(',') if number.strip()]
 
         active_model = self.env.context.get('active_model')
-        model = self.env[active_model]
-        records = self._get_records(model)
-        if getattr(records, 'message_post_send_sms'):
+        if active_model and hasattr(self.env[active_model], 'message_post_send_sms'):
+            model = self.env[active_model]
+            records = self._get_records(model)
             records.message_post_send_sms(self.message, numbers=numbers)
         else:
             self.env['sms.api']._send_sms(numbers, self.message)

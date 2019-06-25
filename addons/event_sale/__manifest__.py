@@ -20,6 +20,7 @@ this event.
 """,
     'depends': ['event', 'sale_management'],
     'data': [
+        'views/assets.xml',
         'views/event_views.xml',
         'views/product_views.xml',
         'views/sale_order_views.xml',
@@ -28,6 +29,7 @@ this event.
         'security/ir.model.access.csv',
         'security/event_security.xml',
         'wizard/event_edit_registration.xml',
+        'wizard/event_configurator_views.xml',
     ],
     'demo': ['data/event_demo.xml'],
     'installable': True,

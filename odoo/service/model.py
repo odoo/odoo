@@ -21,7 +21,7 @@ PG_CONCURRENCY_ERRORS_TO_RETRY = (errorcodes.LOCK_NOT_AVAILABLE, errorcodes.SERI
 MAX_TRIES_ON_CONCURRENCY_FAILURE = 5
 
 def dispatch(method, params):
-    (db, uid, passwd ) = params[0:3]
+    (db, uid, passwd ) = params[0], int(params[1]), params[2]
 
     # set uid tracker - cleaned up at the WSGI
     # dispatching phase in odoo.service.wsgi_server.application
@@ -138,7 +138,7 @@ def check(f):
                         pass
                     raise ValidationError(msg)
                 else:
-                    raise ValidationError(inst[0])
+                    raise ValidationError(inst.args[0])
 
     return wrapper
 

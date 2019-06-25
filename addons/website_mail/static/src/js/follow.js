@@ -1,30 +1,34 @@
 odoo.define('website_mail.follow', function (require) {
 'use strict';
 
-var sAnimation = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimation.registry.follow = sAnimation.Class.extend({
+publicWidget.registry.follow = publicWidget.Widget.extend({
     selector: '.js_follow',
+    disabledInEditableMode: false,
 
     start: function () {
         var self = this;
         this.is_user = false;
+
+        var always = function (data) {
+            self.is_user = data.is_user;
+            self.email = data.email;
+            self.toggle_subscription(data.is_follower, data.email);
+            self.$target.removeClass('d-none');
+        };
+
         this._rpc({
             route: '/website_mail/is_follower',
             params: {
                 model: this.$target.data('object'),
                 res_id: this.$target.data('id'),
             },
-        }).always(function (data) {
-            self.is_user = data.is_user;
-            self.email = data.email;
-            self.toggle_subscription(data.is_follower, data.email);
-            self.$target.removeClass("hidden");
-        });
+        }).then(always).guardedCatch(always);
 
         // not if editable mode to allow designer to edit
         if (!this.editableMode) {
-            $('.js_follow > .input-group-btn.hidden').removeClass("hidden");
+            $('.js_follow > .input-group-append.d-none').removeClass('d-none');
             this.$target.find('.js_follow_btn, .js_unfollow_btn').on('click', function (event) {
                 event.preventDefault();
                 self._onClick();
@@ -37,10 +41,10 @@ sAnimation.registry.follow = sAnimation.Class.extend({
         var $email = this.$target.find(".js_follow_email");
 
         if ($email.length && !$email.val().match(/.+@.+/)) {
-            this.$target.addClass('has-error');
+            this.$target.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
             return false;
         }
-        this.$target.removeClass('has-error');
+        this.$target.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
 
         var email = $email.length ? $email.val() : false;
         if (email || this.is_user) {
@@ -60,12 +64,12 @@ sAnimation.registry.follow = sAnimation.Class.extend({
     toggle_subscription: function (follow, email) {
         follow = follow || (!email && this.$target.attr('data-unsubscribe'));
         if (follow) {
-            this.$target.find(".js_follow_btn").addClass("hidden");
-            this.$target.find(".js_unfollow_btn").removeClass("hidden");
+            this.$target.find(".js_follow_btn").addClass('d-none');
+            this.$target.find(".js_unfollow_btn").removeClass('d-none');
         }
         else {
-            this.$target.find(".js_follow_btn").removeClass("hidden");
-            this.$target.find(".js_unfollow_btn").addClass("hidden");
+            this.$target.find(".js_follow_btn").removeClass('d-none');
+            this.$target.find(".js_unfollow_btn").addClass('d-none');
         }
         this.$target.find('input.js_follow_email')
             .val(email || "")

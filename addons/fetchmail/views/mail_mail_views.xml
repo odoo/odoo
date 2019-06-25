@@ -16,7 +16,8 @@
         id="act_server_history"
         name="Messages"
         res_model="mail.mail"
-        src_model="fetchmail.server"
+        binding_model="fetchmail.server"
+        binding_views="form"
         domain="[('email_from', '!=', False), ('fetchmail_server_id', '=', active_id)]"
         context="{'search_default_server_id': active_id, 'default_fetchmail_server_id': active_id}"/>
 

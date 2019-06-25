@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 
 class StockPickingBatch(models.Model):
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _name = "stock.picking.batch"
     _description = "Batch Picking"
     _order = "name desc"
@@ -16,7 +16,7 @@ class StockPickingBatch(models.Model):
         copy=False, required=True,
         help='Name of the batch picking')
     user_id = fields.Many2one(
-        'res.users', string='Responsible', track_visibility='onchange',
+        'res.users', string='Responsible', tracking=True,
         help='Person responsible for this batch picking')
     picking_ids = fields.One2many(
         'stock.picking', 'batch_id', string='Pickings',
@@ -26,7 +26,7 @@ class StockPickingBatch(models.Model):
         ('in_progress', 'Running'),
         ('done', 'Done'),
         ('cancel', 'Cancelled')], default='draft',
-        copy=False, track_visibility='onchange', required=True)
+        copy=False, tracking=True, required=True)
 
     @api.model
     def create(self, vals):
@@ -50,7 +50,7 @@ class StockPickingBatch(models.Model):
         pickings = self.mapped('picking_ids')
         if not pickings:
             raise UserError(_('Nothing to print.'))
-        return self.env.ref('stock.action_report_picking').with_context(active_ids=pickings.ids, active_model='stock.picking').report_action([])
+        return self.env.ref('stock_picking_batch.action_report_picking_batch').report_action(self)
 
     @api.multi
     def done(self):
@@ -74,7 +74,7 @@ class StockPickingBatch(models.Model):
                 if (picking_type.use_create_lots or picking_type.use_existing_lots):
                     for ml in picking.move_line_ids:
                         if ml.product_id.tracking != 'none':
-                            raise UserError(_('Some products require lots/serial numbers, so you need to specify those first!'))
+                            raise UserError(_('Some products require lots/serial numbers.'))
                 # Check if we need to set some qty done.
                 picking_without_qty_done |= picking
             elif picking._check_backorder():
@@ -91,7 +91,6 @@ class StockPickingBatch(models.Model):
             return {
                 'name': _('Immediate Transfer?'),
                 'type': 'ir.actions.act_window',
-                'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'stock.immediate.transfer',
                 'views': [(view.id, 'form')],
@@ -106,7 +105,7 @@ class StockPickingBatch(models.Model):
 
     def _track_subtype(self, init_values):
         if 'state' in init_values:
-            return 'stock_picking_batch.mt_batch_state'
+            return self.env.ref('stock_picking_batch.mt_batch_state')
         return super(StockPickingBatch, self)._track_subtype(init_values)
 
 

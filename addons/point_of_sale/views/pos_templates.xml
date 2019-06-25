@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<template id="pos_assets_backend" name="POS UI Backend Assets" inherit_id="web.assets_backend" primary="True">
+    <xpath expr="//script[contains(@src, '/mail/static/src/js/services/mail_service.js')]" position="replace"></xpath>
+</template>
+
 <template id="index" name="POS Index">&lt;!DOCTYPE html&gt;
 <html>
     <head>
@@ -24,17 +28,17 @@
         <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
 
         <script type="text/javascript">
-            var odoo = {
-                csrf_token: "<t t-esc="request.csrf_token(None)"/>",
-                session_info: <t t-raw="session_info"/>,
-            };
+            var odoo = <t t-raw="json.dumps({
+                'csrf_token': request.csrf_token(None),
+                'session_info': session_info,
+                'debug': debug,
+            })"/>;
         </script>
 
         <t t-call-assets="web.assets_common" t-css="false"/>
-        <t t-call-assets="web.assets_backend" t-css="false"/>
-        <t t-call-assets="web_editor.summernote" t-css="false"/>
-        <t t-call-assets="web_editor.assets_editor" t-css="false"/>
+        <t t-call-assets="point_of_sale.pos_assets_backend" t-css="false"/>
         <t t-call-assets="point_of_sale.assets"/>
+        <t t-call="web.conditional_assets_tests"/>
 
         <script type="text/javascript" id="loading-script" t-raw="init">
             odoo.define('web.web_client', function (require) {
@@ -55,7 +59,6 @@
         </script>
     </head>
     <body>
-        <div class="o_main_content"/>
     </body>
 </html>
 </template>
@@ -72,13 +75,7 @@
     </script>
 </template>
 
-<template id="pos_editor_fieldtexthtml_assets" inherit_id="web.assets_backend">
-    <xpath expr="." position="inside">
-        <script type="text/javascript" src="/point_of_sale/static/src/js/field_text_html.js"/>
-    </xpath>
-</template>
-
-<template id="pos_editor_assets" inherit_id="web_editor.assets_editor">
+<template id="pos_editor_assets" inherit_id="web_editor.wysiwyg_snippets">
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/point_of_sale/static/src/js/pos.web_editor.js"/>
     </xpath>
@@ -88,9 +85,9 @@
 <template id="customer_facing_display_snippets">
     <!-- web_editor needs a ul (normally contains the header, body, extra buttons)-->
     <ul/>
-    <div id="o_scroll" class="hidden"/>
+    <div id="o_scroll" class="d-none"/>
 
-    <div id="snippet_options" class="hidden">
+    <div id="snippet_options" class="d-none">
         <t t-call="web_editor.snippet_options"/>
 
         <div data-js='pos_no_remove' data-selector=".pos-company_logo, .pos-adv, .pos-customer_facing_display"/>
@@ -98,26 +95,26 @@
         <div data-js='pos_company_logo' data-selector=".pos-company_logo"/>
 
         <div data-js='pos_palette' data-selector=".pos-customer_facing_display">
-            <li data-select-class="pos-palette_01"><a href="#" class="pos-palette_01"/></li>
-            <li data-select-class="pos-palette_02"><a href="#" class="pos-palette_02"/></li>
-            <li data-select-class="pos-palette_03"><a href="#" class="pos-palette_03"/></li>
-            <li data-select-class="pos-palette_04"><a href="#" class="pos-palette_04"/></li>
-            <li data-select-class="pos-palette_05"><a href="#" class="pos-palette_05"/></li>
-            <li data-select-class="pos-palette_06"><a href="#" class="pos-palette_06"/></li>
-            <li data-select-class="pos-palette_07"><a href="#" class="pos-palette_07"/></li>
-            <li data-select-class="pos-palette_08"><a href="#" class="pos-palette_08"/></li>
-            <li data-select-class="pos-palette_09"><a href="#" class="pos-palette_09"/></li>
-            <li data-select-class="pos-palette_10"><a href="#" class="pos-palette_10"/></li>
-            <li data-select-class="pos-palette_11"><a href="#" class="pos-palette_11"/></li>
-            <li data-select-class="pos-palette_12"><a href="#" class="pos-palette_12"/></li>
-            <li data-select-class="pos-palette_13"><a href="#" class="pos-palette_13"/></li>
+            <a href="#" class="pos-palette_01 dropdown-item" data-select-class="pos-palette_01"></a>
+            <a href="#" class="pos-palette_02 dropdown-item" data-select-class="pos-palette_02"></a>
+            <a href="#" class="pos-palette_03 dropdown-item" data-select-class="pos-palette_03"></a>
+            <a href="#" class="pos-palette_04 dropdown-item" data-select-class="pos-palette_04"></a>
+            <a href="#" class="pos-palette_05 dropdown-item" data-select-class="pos-palette_05"></a>
+            <a href="#" class="pos-palette_06 dropdown-item" data-select-class="pos-palette_06"></a>
+            <a href="#" class="pos-palette_07 dropdown-item" data-select-class="pos-palette_07"></a>
+            <a href="#" class="pos-palette_08 dropdown-item" data-select-class="pos-palette_08"></a>
+            <a href="#" class="pos-palette_09 dropdown-item" data-select-class="pos-palette_09"></a>
+            <a href="#" class="pos-palette_10 dropdown-item" data-select-class="pos-palette_10"></a>
+            <a href="#" class="pos-palette_11 dropdown-item" data-select-class="pos-palette_11"></a>
+            <a href="#" class="pos-palette_12 dropdown-item" data-select-class="pos-palette_12"></a>
+            <a href="#" class="pos-palette_13 dropdown-item" data-select-class="pos-palette_13"></a>
         </div>
 
         <div data-js='pos_background' data-selector=".pos-company_logo, .pos-adv">
-            <li data-choose-image="true" data-no-preview="true"><a href="#"><b>Set Custom Image...</b></a></li>
-            <li class="hidden pos-use_default_logo" data-background=""><a href="#">Default company logo</a></li>
-            <li class="divider"/>
-            <li data-toggle-class="pos-hidden"><a href="#"><i class="fa fa-eye-slash"/>Hide</a></li>
+            <a href="#" class="dropdown-item" data-choose-image="true" data-no-preview="true"><b>Set Custom Image...</b></a>
+            <a href="#" class="dropdown-item d-none pos-use_default_logo" data-background="">Default company logo</a>
+            <div class="dropdown-divider"/>
+            <a href="#" class="dropdown-item" data-toggle-class="pos-hidden"><i class="fa fa-eye-slash"/>Hide</a>
         </div>
     </div>
 </template>

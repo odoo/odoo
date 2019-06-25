@@ -12,14 +12,12 @@ class test_ir_http_mimetype(common.TransactionCase):
         """ Test mimetype for attachment """
         attachment = self.env['ir.attachment'].create({
             'datas': GIF,
-            'name': 'Test mimetype gif',
-            'datas_fname': 'file.gif'})
+            'name': 'file.gif'})
 
         status, headers, content = self.env['ir.http'].binary_content(
             id=attachment.id,
             mimetype=None,
             default_mimetype='application/octet-stream',
-            env=self.env
         )
         mimetype = dict(headers).get('Content-Type')
         self.assertEqual(mimetype, 'image/gif')
@@ -28,14 +26,12 @@ class test_ir_http_mimetype(common.TransactionCase):
         """ Test mimetype for attachment with bad name"""
         attachment = self.env['ir.attachment'].create({
             'datas': GIF,
-            'name': 'Test mimetype gif with png name',
-            'datas_fname': 'file.png'})
+            'name': 'file.png'})
 
         status, headers, content = self.env['ir.http'].binary_content(
             id=attachment.id,
             mimetype=None,
             default_mimetype='application/octet-stream',
-            env=self.env
         )
         mimetype = dict(headers).get('Content-Type')
         # TODO: fix and change it in master, should be image/gif
@@ -53,7 +49,6 @@ class test_ir_http_mimetype(common.TransactionCase):
             id=partner.id,
             field='image',
             default_mimetype='application/octet-stream',
-            env=self.env
         )
         mimetype = dict(headers).get('Content-Type')
         self.assertEqual(mimetype, 'image/gif')
@@ -67,7 +62,7 @@ class test_ir_http_mimetype(common.TransactionCase):
             'type': 'binary',
         })
 
-        resized = odoo.tools.image_get_resized_images(prop.value_binary, return_big=True, avoid_resize_medium=True)['image_small']
+        resized = odoo.tools.image_process(prop.value_binary, size=odoo.tools.IMAGE_SMALL_SIZE)
         # Simul computed field which resize and that is not attachement=True (E.G. on product)
         prop.write({'value_binary': resized})
         status, headers, content = self.env['ir.http'].binary_content(
@@ -75,7 +70,6 @@ class test_ir_http_mimetype(common.TransactionCase):
             id=prop.id,
             field='value_binary',
             default_mimetype='application/octet-stream',
-            env=self.env
         )
         mimetype = dict(headers).get('Content-Type')
         self.assertEqual(mimetype, 'image/gif')
@@ -85,18 +79,16 @@ class test_ir_http_mimetype(common.TransactionCase):
         public_user = self.env.ref('base.public_user')
         attachment = self.env['ir.attachment'].create({
             'datas': GIF,
-            'name': 'Test valid access token with image',
-            'datas_fname': 'image.gif'
+            'name': 'image.gif'
         })
 
         defaults = {
             'id': attachment.id,
             'default_mimetype': 'image/gif',
-            'env': public_user.sudo(public_user.id).env,
         }
 
         def test_access(**kwargs):
-            status, _, _ = self.env['ir.http'].binary_content(
+            status, _, _ = self.env['ir.http'].sudo(public_user.id).binary_content(
                 **dict(defaults, **kwargs)
             )
             return status

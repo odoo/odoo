@@ -1,0 +1,236 @@
+// MIXINS
+@mixin o-base-settings-horizontal-padding($padding-base: $input-btn-padding-y-sm) {
+    padding: $padding-base $o-horizontal-padding;
+
+    @include media-breakpoint-up(xl) {
+        padding-left: $o-horizontal-padding*2;;
+    }
+}
+
+// Use a very specif selector to overwrite generic form-view rules
+.o_form_view.o_form_nosheet.o_base_settings {
+    display: flex;
+    flex-flow: column nowrap;
+    padding: 0px;
+}
+
+// BASE SETTINGS LAYOUT
+.o_base_settings {
+    height: 100%;
+
+    @include media-breakpoint-down(sm) {
+        flex-flow: column nowrap;
+    }
+
+    .o_control_panel {
+        flex: 0 0 auto;
+
+        .o_panel {
+            display: flex;
+            flex-flow: row wrap;
+            margin-bottom: $o-sheet-vpadding*0.5;
+            width: 100%;
+
+            .title, .o_setting_search {
+                flex: 1 0 auto;
+                width: map-get($o-extra-grid-breakpoints, vsm) / 2;
+            }
+
+            .o_setting_search {
+                position: relative;
+
+                .searchInput {
+                    height: 28px;
+                    padding: 0px;
+                    border: 0px;
+                    border-bottom: 1px solid gray('400');
+                    border-color: gray('700');
+                    box-shadow: none;
+                    font-weight: 500;
+                }
+
+                .searchIcon {
+                    @include o-position-absolute(4px, 0);
+                    color: gray('700');
+                }
+            }
+        }
+
+        .o_form_statusbar {
+            padding: 0;
+            margin: 0;
+            border: 0;
+
+            .btn-primary, .btn-link  {
+                padding: $btn-padding-y-sm $btn-padding-x-sm;
+            }
+
+            .btn-link {
+                @include o-hover-text-color($link-color, $link-hover-color);
+            }
+        }
+    }
+
+    .o_setting_container {
+        display: flex;
+        flex: 1 1 auto;
+
+        overflow: auto;
+
+        @include media-breakpoint-down(sm) {
+            flex-flow: column nowrap;
+        }
+
+        .settings_tab {
+            display: flex;
+            flex: 0 0 auto;
+            flex-flow: column nowrap;
+            background: gray('900');
+            overflow: auto;
+            padding-top: $o-horizontal-padding*0.5;
+
+            @include media-breakpoint-down(sm) {
+                flex: 0 0 $o-base-settings-mobile-tabs-height;
+                display: inline-flex;
+                position: relative;
+                overflow: hidden;
+                padding: 0;
+            }
+
+            .selected {
+                background-color: gray('900');
+                box-shadow: inset 3px 0 0 $o-brand-primary;
+
+                .app_name {
+                    color: white;
+                }
+            }
+
+            .tab {
+                display: flex;
+                padding: 0 $o-horizontal-padding*2 0 $o-horizontal-padding;
+                height: 40px;
+                color: gray('400');
+                font-size: 13px;
+                line-height: 40px;
+                cursor: pointer;
+                white-space: nowrap;
+
+                .icon {
+                    width: 23px;
+                    min-width: 23px;
+                    margin-right: 10px;
+                }
+
+                // Mobile Tabs
+                @include media-breakpoint-down(sm) {
+                    display: block;
+                    @include o-position-absolute($left:100%);
+                    @include size(auto, $o-base-settings-mobile-tabs-height);
+                    padding: $o-base-settings-mobile-tabs-height*0.25 $o-base-settings-mobile-tabs-height*0.4;
+                    text-align: center;
+                    font-size: 14px;
+                    font-weight: 500;
+                    line-height: inherit;
+                    transition: 0.2s all ease 0s;
+                    transform: translate3d(0,0,0);
+
+                    .app_name {
+                        display: block;
+                        white-space: nowrap;
+                    }
+
+                    &:after {
+                        content: '';
+                        background: $o-brand-primary;
+                        opacity: 0;
+                        @include o-position-absolute(auto, 0, 0, 0);
+                        @include size(100%, 3px);
+                        transition: 0.2s all ease 0s;
+                    }
+
+                    &.previous, &.before {
+                        left: 0% - $o-base-settings-mobile-tabs-overflow-gap;
+                    }
+
+                    &.current {
+                        left: 50%;
+                        color: white;
+
+                        // Reset default style for 'selected' tabs
+                        box-shadow: none;
+                        background: none;
+
+                        &:after {
+                            opacity: 1;
+                        }
+                    }
+
+                    &.next, &.after {
+                        left: 100% + $o-base-settings-mobile-tabs-overflow-gap;
+                    }
+                }
+            }
+        }
+
+        .settings {
+            position: relative;
+            flex: 1 1 100%;
+            background-color: $o-view-background-color;
+            overflow: auto;
+
+            > .app_settings_block {
+                h2 {
+                    margin-bottom: 0;
+                    @include o-base-settings-horizontal-padding;
+                    background-color: gray('200');
+                    font-size: 15px;
+                    font-weight: bold;
+
+                    &:first-of-type {
+                        // Necessary to overwrite mt32 class
+                        margin-top: 10px!important;
+                    }
+                }
+
+                .o_settings_container {
+                    max-width: map-get($grid-breakpoints, lg); // Provide a maximum container size to ensure readability
+                    @include o-base-settings-horizontal-padding(0);
+                }
+            }
+
+            .settingSearchHeader {
+                display: flex;
+                margin: 30px 0 10px;
+                @include o-base-settings-horizontal-padding;
+                background-color: gray('200');
+
+                .icon {
+                    width: 25px;
+                    height: 25px;
+                    margin-right: 10px;
+                }
+
+                .appName {
+                    color: $headings-color;
+                    font-size: 17px;
+                }
+            }
+
+            .notFound {
+                color : $text-muted;
+                text-align: center;
+                font-size: 25px;
+                padding-top: 50px;
+            }
+
+            .highlighter {
+                background: yellow;
+            }
+        }
+
+        .d-block {
+            display: block!important;
+        }
+    }
+}

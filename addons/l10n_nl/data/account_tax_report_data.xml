@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="tax_report_rub_1" model="account.tax.report.line">
+        <field name="name">Rubriek 1: Prestaties binnenland</field>
+        <field name="sequence" eval="1"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_1a" model="account.tax.report.line">
+        <field name="name">1a. Leveringen/diensten belast met hoog tarief (omzet)</field>
+        <field name="tag_name">1a (omzet)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_rub_1"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_1b" model="account.tax.report.line">
+        <field name="name">1b. Leveringen/diensten belast met laag tarief (omzet)</field>
+        <field name="tag_name">1b (omzet)</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_rub_1"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_1c" model="account.tax.report.line">
+        <field name="name">1c. Leveringen/diensten belast met overige tarieven behalve 0% (omzet)</field>
+        <field name="tag_name">1c (omzet)</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="tax_report_rub_1"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_1d" model="account.tax.report.line">
+        <field name="name">1d. Privégebruik (omzet)</field>
+        <field name="tag_name">1d (omzet)</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="tax_report_rub_1"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_1e" model="account.tax.report.line">
+        <field name="name">1e. Leveringen/diensten belast met 0% of niet bij u belast (omzet)</field>
+        <field name="tag_name">1e (omzet)</field>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="tax_report_rub_1"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_2" model="account.tax.report.line">
+        <field name="name">Rubriek 2: Verleggingsregelingen binnenland (omzet)</field>
+        <field name="sequence" eval="2"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_2a" model="account.tax.report.line">
+        <field name="name">2a. Leveringen/diensten waarbij de heffing van omzetbelasting naar u is verlegd (omzet)</field>
+        <field name="tag_name">2a (omzet)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_rub_2"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_3" model="account.tax.report.line">
+        <field name="name">Rubriek 3: Prestaties naar of in het buitenland (omzet)</field>
+        <field name="sequence" eval="3"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_3a" model="account.tax.report.line">
+        <field name="name">3a. Leveringen naar landen buiten de EU (uitvoer) (omzet)</field>
+        <field name="tag_name">3a (omzet)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_rub_3"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_3b" model="account.tax.report.line">
+        <field name="name">3b. Leveringen naar/diensten in landen binnen de EU (omzet)</field>
+        <field name="tag_name">3b (omzet)</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_rub_3"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_3c" model="account.tax.report.line">
+        <field name="name">3c. Installatie/afstandsverkopen binnen de EU (omzet)</field>
+        <field name="tag_name">3c (omzet)</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="tax_report_rub_3"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_4" model="account.tax.report.line">
+        <field name="name">Rubriek 4: Prestaties vanuit het buitenland aan u verricht (omzet)</field>
+        <field name="sequence" eval="4"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_4a" model="account.tax.report.line">
+        <field name="name">4a. Leveringen/diensten uit landen buiten de EU (invoer) (omzet)</field>
+        <field name="tag_name">4a (omzet)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_rub_4"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_4b" model="account.tax.report.line">
+        <field name="name">4b. Leveringen/diensten uit landen binnen de EU (omzet)</field>
+        <field name="tag_name">4b (omzet)</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_rub_4"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_btw_1" model="account.tax.report.line">
+        <field name="code">NLTAX_B1</field>
+        <field name="name">Rubriek 1: Prestaties binnenland (BTW)</field>
+        <field name="sequence" eval="5"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_btw_1a" model="account.tax.report.line">
+        <field name="name">1a. Leveringen/diensten belast met 21% (BTW)</field>
+        <field name="tag_name">1a (BTW)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_rub_btw_1"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_btw_1b" model="account.tax.report.line">
+        <field name="name">1b. Leveringen/diensten belast met laag tarief (BTW)</field>
+        <field name="tag_name">1b (BTW)</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_rub_btw_1"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_btw_1c" model="account.tax.report.line">
+        <field name="name">1c. Leveringen/diensten belast met overige tarieven behalve 0% (BTW)</field>
+        <field name="tag_name">1c (BTW)</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="tax_report_rub_btw_1"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_btw_1d" model="account.tax.report.line">
+        <field name="name">1d. Privégebruik (BTW)</field>
+        <field name="tag_name">1d (BTW)</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="tax_report_rub_btw_1"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_btw_1e" model="account.tax.report.line">
+        <field name="name">1e. Leveringen/diensten belast met 0% of niet bij u belast (BTW)</field>
+        <field name="tag_name">1e (BTW)</field>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="tax_report_rub_btw_1"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_btw_2" model="account.tax.report.line">
+        <field name="name">Rubriek 2: Verleggingsregelingen binnenland (BTW)</field>
+        <field name="sequence" eval="6"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_btw_2a" model="account.tax.report.line">
+        <field name="name">2a. Leveringen/diensten waarbij de heffing van Heffing van omzetbelasting naar u is verlegd (BTW)</field>
+        <field name="code">NLTAX_B2</field>
+        <field name="tag_name">2a (BTW)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_rub_btw_2"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_btw_4" model="account.tax.report.line">
+        <field name="name">Rubriek 4: Prestaties vanuit het buitenland aan u verricht (BTW)</field>
+        <field name="sequence" eval="7"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_btw_4a" model="account.tax.report.line">
+        <field name="name">4a. Leveringen/diensten uit landen buiten de EU (BTW)</field>
+        <field name="tag_name">4a (BTW)</field>
+        <field name="code">NLTAX_B4a</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_rub_btw_4"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_btw_4b" model="account.tax.report.line">
+        <field name="name">4b. Leveringen/diensten uit landen binnen de EU (BTW)</field>
+        <field name="tag_name">4b (BTW)</field>
+        <field name="code">NLTAX_B4b</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_rub_btw_4"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_btw_5" model="account.tax.report.line">
+        <field name="name">Rubriek 5: Voorbelasting, kleineondernemersregeling en totaal (BTW)</field>
+        <field name="sequence" eval="8"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_btw_5a" model="account.tax.report.line">
+        <field name="name">5a. Verschuldigde omzetbelasting (rubrieken 1a t/m 4b) (BTW)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_rub_btw_5"/>
+        <field name="formula">NLTAX_B1 + NLTAX_B2 + abs(NLTAX_B4a) + abs(NLTAX_B4b)</field>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_btw_5b" model="account.tax.report.line">
+        <field name="code">NLTAX_B5b</field>
+        <field name="name">5b. Voorbelasting (BTW)</field>
+        <field name="tag_name">5b (BTW)</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_rub_btw_5"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_btw_5c" model="account.tax.report.line">
+        <field name="code"></field>
+        <field name="name">5c. Subtotaal (rubriek 5a min 5b) (BTW)</field>
+        <field name="sequence" eval="3"/>
+        <field name="formula">NLTAX_B1 + NLTAX_B2 + NLTAX_B4a + NLTAX_B4b - NLTAX_B5b</field>
+        <field name="parent_id" ref="tax_report_rub_btw_5"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_btw_5d" model="account.tax.report.line">
+        <field name="code">NLTAX_B5d</field>
+        <field name="name">5d. Vermindering volgens de kleineondernemersregeling (BTW)</field>
+        <field name="tag_name">5d. (BTW)</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="tax_report_rub_btw_5"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_btw_5e" model="account.tax.report.line">
+        <field name="code">NLTAX_B5e</field>
+        <field name="name">5e. Schatting vorige aangifte(n) (BTW)</field>
+        <field name="tag_name">5e. (BTW)</field>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="tax_report_rub_btw_5"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_btw_5f" model="account.tax.report.line">
+        <field name="code">NLTAX_B5f</field>
+        <field name="name">5f. Schatting deze aangifte (BTW)</field>
+        <field name="tag_name">5f. (BTW)</field>
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref="tax_report_rub_btw_5"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="tax_report_rub_btw_5g" model="account.tax.report.line">
+        <field name="code">NLTAX_B5g</field>
+        <field name="name">5g. Totaal te betalen/terug te vragen (BTW)</field>
+        <field name="sequence" eval="7"/>
+        <field name="formula">NLTAX_B1 + NLTAX_B2 + NLTAX_B4a + NLTAX_B4b - NLTAX_B5b - NLTAX_B5d - NLTAX_B5e - NLTAX_B5f</field>
+        <field name="parent_id" ref="tax_report_rub_btw_5"/>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+</odoo>

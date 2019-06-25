@@ -16,11 +16,6 @@
             <field name="sequence">30</field>
         </record>
 
-        <!-- Create mailing lists -->
-        <record id="mass_mail_list_1" model="mail.mass_mailing.list">
-            <field name="name">Newsletter</field>
-        </record>
-
         <!-- Cron that process the mass mailing queue -->
         <record id="ir_cron_mass_mailing_queue" model="ir.cron">
             <field name="name">Mass Mailing: Process queue</field>

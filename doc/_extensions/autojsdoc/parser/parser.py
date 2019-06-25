@@ -36,7 +36,7 @@ class ModuleMatcher(Visitor):
                 'property': {'name': 'define'},
             },
         }}):
-            [module, func] = node['expression']['arguments']
+            [module, *_, func] = node['expression']['arguments']
             mod = jsdoc.parse_comments(node.get('comments'), jsdoc.ModuleDoc)
             # set module name
             mod.set_name(module['value'])
@@ -60,7 +60,7 @@ ref = collections.namedtuple('Ref', 'object property')
 def _name(r):
     bits = []
     while isinstance(r, ref):
-        bits.append(r.property)
+        bits.append(str(r.property))
         r = r.object
     return '.'.join(reversed(bits))
 def deref(item, prop=None):
@@ -348,7 +348,8 @@ class ModuleExtractor(Visitor):
             def resolve_extension(modules):
                 t = target.become(modules)
                 if not isinstance(t, jsdoc.ClassDoc):
-                    raise ValueError("include() subjects should be classes, %s is %s" % (target_name, type(t)))
+                    return # FIXME: log warning
+                    # raise ValueError("include() subjects should be classes, %s is %s" % (target_name, type(t)))
                 # TODO: note which module added these
                 for it in items:
                     if isinstance(it, dict):

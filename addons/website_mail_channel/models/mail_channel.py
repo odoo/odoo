@@ -14,23 +14,13 @@ class MailGroup(models.Model):
     _inherit = 'mail.channel'
 
     @api.multi
-    def message_get_email_values(self, notif_mail=None):
-        self.ensure_one()
-        res = super(MailGroup, self).message_get_email_values(notif_mail=notif_mail)
+    def _notify_email_header_dict(self):
+        headers = super(MailGroup, self)._notify_email_header_dict()
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        headers = {}
-        if res.get('headers'):
-            try:
-                headers = safe_eval(res['headers'])
-            except Exception:
-                pass
-        headers.update({
-            'List-Archive': '<%s/groups/%s>' % (base_url, slug(self)),
-            'List-Subscribe': '<%s/groups>' % (base_url),
-            'List-Unsubscribe': '<%s/groups?unsubscribe>' % (base_url,),
-        })
-        res['headers'] = repr(headers)
-        return res
+        headers['List-Archive'] = '<%s/groups/%s>' % (base_url, slug(self)),
+        headers['List-Subscribe'] = '<%s/groups>' % (base_url),
+        headers['List-Unsubscribe'] = '<%s/groups?unsubscribe>' % (base_url,),
+        return headers
 
     @api.multi
     def _send_confirmation_email(self, partner_ids, unsubscribe=False):

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="sale_order_portal_content_inherit_sale_stock" name="Orders Shipping Followup" inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//div[@id='so_date']" position="after">
+            <div class="row" t-if="sale_order.incoterm">
+                <div class="mb-3 col-6 ml-auto">
+                    <strong>Incoterm: </strong> <span t-field="sale_order.incoterm"/>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='informations']" position="inside">
+            <t t-if="sale_order.picking_ids">
+                <div>
+                    <strong>Delivery Orders</strong>
+                </div>
+                <div>
+                    <t t-foreach="sale_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code != 'internal')" t-as="i">
+                        <t t-set="delivery_report_url" t-value="'/my/picking/pdf/%s?%s' % (i.id, keep_query())"/>
+                        <div class="d-flex flex-wrap align-items-center justify-content-between o_sale_stock_picking">
+                            <div>
+                                <a t-att-href="delivery_report_url">
+                                    <span t-esc="i.name"/>
+                                </a>
+                                <div class="small d-lg-inline-block ml-3">Date: <span class="text-muted" t-field="i.date" t-options="{'date_only': True}"/></div>
+                            </div>
+                            <span t-if="i.state == 'done'" class="small badge badge-success orders_label_text_align"><i class="fa fa-fw fa-truck"/> <b>Shipped</b></span>
+                            <span t-if="i.state == 'cancel'" class="small badge badge-danger orders_label_text_align"><i class="fa fa-fw fa-times"/> <b>Cancelled</b></span>
+                            <span t-if="i.state in ['draft', 'waiting', 'confirmed', 'assigned']" class="small badge badge-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> <b>Preparation</b></span>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </xpath>
+  </template>
+
+</odoo>

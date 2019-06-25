@@ -3,14 +3,14 @@
 # * calendar_sms
 # 
 # Translators:
-# Michael Yeung, 2017
+# Martin Trigaux, 2018
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18+e\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 11:33+0000\n"
-"PO-Revision-Date: 2017-09-20 11:33+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -20,20 +20,40 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: calendar_sms
+#: selection:calendar.alarm,type:0
+msgid "Email"
+msgstr "電子郵箱"
+
+#. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_event
 msgid "Event"
 msgstr "活動"
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm
-msgid "Event alarm"
-msgstr "活動警示"
+msgid "Event Alarm"
+msgstr "活動提醒"
+
+#. module: calendar_sms
+#: model:ir.model,name:calendar_sms.model_calendar_alarm_manager
+msgid "Event Alarm Manager"
+msgstr "活動提醒管理"
 
 #. module: calendar_sms
 #: code:addons/calendar_sms/models/calendar.py:23
 #, python-format
 msgid "Event reminder: %s on %s."
 msgstr "活動提醒：於 %s 進行 %s。"
+
+#. module: calendar_sms
+#: selection:calendar.alarm,type:0
+msgid "Notification"
+msgstr "通知"
+
+#. module: calendar_sms
+#: selection:calendar.alarm,type:0
+msgid "SMS Text Message"
+msgstr "短信"
 
 #. module: calendar_sms
 #: code:addons/calendar_sms/models/calendar.py:24
@@ -47,6 +67,6 @@ msgid "Send SMS to attendees"
 msgstr "向參與者發送 SMS"
 
 #. module: calendar_sms
-#: model:ir.model,name:calendar_sms.model_calendar_alarm_manager
-msgid "calendar.alarm_manager"
-msgstr "calendar.alarm_manager"
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__type
+msgid "Type"
+msgstr "類型"

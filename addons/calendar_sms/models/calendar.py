@@ -28,7 +28,7 @@ class CalendarEvent(models.Model):
 class CalendarAlarm(models.Model):
     _inherit = 'calendar.alarm'
 
-    type = fields.Selection(selection_add=[('sms', 'SMS Text Message')])
+    alarm_type = fields.Selection(selection_add=[('sms', 'SMS Text Message')])
 
 
 class AlarmManager(models.AbstractModel):
@@ -39,7 +39,7 @@ class AlarmManager(models.AbstractModel):
         """ Cron method, overriden here to send SMS reminders as well
         """
         result = super(AlarmManager, self).get_next_mail()
-        now = fields.Datetime.now()
+        now = fields.Datetime.to_string(fields.Datetime.now())
         last_sms_cron = self.env['ir.config_parameter'].get_param('calendar_sms.last_sms_cron', default=now)
         cron = self.env['ir.model.data'].get_object('calendar', 'ir_cron_scheduler_alarm')
 
@@ -52,7 +52,7 @@ class AlarmManager(models.AbstractModel):
         }
 
         cron_interval = cron.interval_number * interval_to_second[cron.interval_type]
-        events_data = self.get_next_potential_limit_alarm('sms', seconds=cron_interval)
+        events_data = self._get_next_potential_limit_alarm('sms', seconds=cron_interval)
 
         for event in self.env['calendar.event'].browse(events_data):
             max_delta = events_data[event.id]['max_duration']

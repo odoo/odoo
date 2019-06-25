@@ -24,6 +24,7 @@ class BaseGengoTranslations(models.TransientModel):
     GROUPS = ['base.group_system']
 
     _name = 'base.gengo.translations'
+    _description = 'Base Gengo Translations'
 
     @api.model
     def default_get(self, fields):
@@ -60,7 +61,6 @@ class BaseGengoTranslations(models.TransientModel):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'res.config.settings',
             'target': 'inline',
