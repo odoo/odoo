@@ -3,15 +3,18 @@
 
 <!-- Slide template for the fullscreen mode -->
 <template id="slide_fullscreen" name="Fullscreen">
+    <t t-set="head">
+        <link rel="canonical" t-att-href="slide.website_url" />
+    </t>
     <t t-call="website.layout">
         <div class="o_wslides_fs_main d-flex flex-column font-weight-light">
 
             <div class="o_wslides_slide_fs_header d-flex flex-shrink-0 text-white">
                 <div class="d-flex">
-                    <a class="o_wslides_fs_toggle_sidebar d-flex align-items-center px-3 active" href="#" title="Lessons">
+                    <a class="o_wslides_fs_toggle_sidebar d-flex align-items-center px-3" href="#" title="Lessons">
                         <i class="fa fa-bars"/><span class="d-none d-md-inline-block ml-1">Lessons</span>
                     </a>
-                    <a class="o_wslides_fs_review d-flex align-items-center px-3" t-att-href="slide.channel_id.website_url" title="Reviews" t-if="slide.channel_id.allow_comment">
+                    <a class="o_wslides_fs_review d-flex align-items-center px-3" t-att-href="slide.channel_id.website_url + '?active_tab=review'" title="Reviews" t-if="slide.channel_id.allow_comment">
                         <i class="fa fa-pencil"/><span class="d-none d-md-inline-block ml-1">Write a review</span>
                     </a>
                 </div>
@@ -20,7 +23,7 @@
                         <i class="fa fa-sign-out d-md-none"/><span class="d-none d-md-inline-block ml-1">Exit Fullscreen</span>
                     </a>
                     <a class="d-flex align-items-center px-3" t-attf-href="/slides/#{slug(slide.channel_id)}">
-                        <i class="fa fa-sign-out d-md-none"/><span class="d-none d-md-inline-block ml-1">Back to course</span>
+                        <i class="fa fa-home d-md-none"/><span class="d-none d-md-inline-block ml-1">Back to course</span>
                     </a>
                 </div>
             </div>
@@ -28,7 +31,7 @@
             <div class="o_wslides_fs_container d-flex position-relative overflow-hidden flex-grow-1">
                 <div class="o_wslides_fs_content align-items-stretch justify-content-center d-flex flex-grow-1 order-2"></div>
 
-                <div class="o_wslides_fs_sidebar text-white flex-shrink-0 order-1">
+                <div class="o_wslides_fs_sidebar o_wslides_fs_sidebar_hidden text-white flex-shrink-0 order-1">
                     <div class="o_wslides_fs_sidebar_content d-flex flex-column px-3 pt-3 h-100">
                         <div class="o_wslides_fs_sidebar_header mb-3">
                             <a class="h5 d-block mb-1" t-attf-href="/slides/#{slug(slide.channel_id)}">

@@ -1275,6 +1275,7 @@ class IrModelAccess(models.Model):
                 msg_params['groups_list'] = groups
             else:
                 msg_tail = _("No group currently allows this operation.")
+            msg_tail += ' - ({} {}, {} {})'.format(_('Operation:'), mode, _('User:'), self._uid)
             _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s', mode, self._uid, model)
             msg = '%s %s' % (msg_heads[mode], msg_tail)
             raise AccessError(msg % msg_params)
