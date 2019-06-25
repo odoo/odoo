@@ -34,12 +34,17 @@ var core = require('web.core');
 var rpc = require('web.rpc');
 var utils = require('web.utils');
 var field_utils = require('web.field_utils');
+var translation = require('web.translation');
 var BarcodeEvents = require('barcodes.BarcodeEvents').BarcodeEvents;
+var session = require('web.session');
+var webQWeb = require('web.QWeb');
+var ajax = require('web.ajax');
 
 var QWeb = core.qweb;
 var _t = core._t;
 
 var round_pr = utils.round_precision;
+var _t_qweb = {};
 
 /*--------------------------------------*\
  |          THE SCREEN WIDGET           |
@@ -1151,6 +1156,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
             self.display_client_details('edit',{
                 'country_id': self.pos.company.country_id,
                 'state_id': self.pos.company.state_id,
+                'lang': self.pos.user.lang,
             });
         });
 
@@ -1600,13 +1606,21 @@ gui.define_screen({name:'clientlist', widget: ClientListScreenWidget});
 
 var ReceiptScreenWidget = ScreenWidget.extend({
     template: 'ReceiptScreenWidget',
+    init: function () {
+        _t_qweb[_t.database.parameters.code] = QWeb;
+        this._super.apply(this, arguments);
+        this.qweb = false;
+    },
     show: function(){
         this._super();
         var self = this;
 
         this.render_change();
-        this.render_receipt();
-        this.handle_auto_print();
+        this.load_qweb().then(function (qweb) {
+            self.qweb = qweb;
+            self.render_receipt();
+            self.handle_auto_print();
+        });
     },
     handle_auto_print: function() {
         if (this.should_auto_print()) {
@@ -1665,8 +1679,7 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         this.pos.get_order()._printed = true;
     },
     print_xml: function() {
-        var receipt = QWeb.render('XmlReceipt', this.get_receipt_render_env());
-
+        var receipt = this.qweb.render('XmlReceipt', this.get_receipt_render_env());
         this.pos.proxy.print_receipt(receipt);
         this.pos.get_order()._printed = true;
     },
@@ -1756,8 +1769,34 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         }
     },
     render_receipt: function() {
-        this.$('.pos-receipt-container').html(QWeb.render('PosTicket', this.get_receipt_render_env()));
+        this.$('.pos-receipt-container').html(this.qweb.render('PosTicket', this.get_receipt_render_env()));
     },
+    // load qweb receipt in user lang
+    load_qweb: function () {
+        return this.get_translation_qweb('/point_of_sale/static/src/xml/receipt.xml');
+    },
+    get_translation_qweb: function (xmlPath) {
+        xmlPath = _.str.sprintf('%s?unique=%s', xmlPath, _.uniqueId());  // Qweb is not loading same path again
+        // changed qweb lang environment by client lang for print receipt
+        var client = this.pos.get_client();
+        var client_lang = client && client.lang;
+        if (!client_lang) {
+            return Promise.resolve(QWeb);
+        } else if (_t_qweb[client_lang]) {
+            return Promise.resolve(_t_qweb[client_lang]);
+        } else {
+            var new_t = new translation.TranslationDataBase().build_translation_function();
+            return new_t.database.load_translations(session, ['point_of_sale'], client_lang, undefined).then(function () {
+                var newQweb = new webQWeb(false, {
+                    _t: new_t
+                });
+                return ajax.loadXML(xmlPath, newQweb).then(function () {
+                    _t_qweb[client_lang] = newQweb;
+                    return newQweb;
+                });
+            });
+        }
+    }
 });
 gui.define_screen({name:'receipt', widget: ReceiptScreenWidget});
 

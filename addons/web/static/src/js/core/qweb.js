@@ -18,7 +18,7 @@ function QWeb(debug, default_dict, enableTranslation) {
         enableTranslation = true;
     }
     var qweb = new QWeb2.Engine();
-    qweb.default_dict = _.extend({}, default_dict || {}, {
+    qweb.default_dict = _.defaults({}, default_dict || {}, {
         '_' : _,
         'JSON': JSON,
         '_t' : translation._t,
@@ -33,6 +33,7 @@ function QWeb(debug, default_dict, enableTranslation) {
 
 function preprocess_node() {
     // Note that 'this' is the Qweb Node
+    var _t = this.engine.default_dict._t;
     switch (this.node.nodeType) {
         case Node.TEXT_NODE:
         case Node.CDATA_SECTION_NODE:
