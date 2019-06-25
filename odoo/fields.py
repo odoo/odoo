@@ -1004,13 +1004,17 @@ class Field(MetaField('DummyField', (object,), {})):
                 except AccessError:
                     record._fetch_field(self)
             elif self.compute:
-                recs = (self.recursive or not record.id) and record or record._in_cache_without(self)
-                try:
-                    # DLE P35: `test_11_computed_access`
-                    # Prefetch compute fields for which we don't have the access. Same case than just above here
-                    self.compute_value(recs)
-                except AccessError:
-                    self.compute_value(record)
+                # DLE P78: Infinite recursion when installing sale
+                if record not in env.protected(self):
+                    recs = (self.recursive or not record.id) and record or record._in_cache_without(self)
+                    try:
+                        # DLE P35: `test_11_computed_access`
+                        # Prefetch compute fields for which we don't have the access. Same case than just above here
+                        self.compute_value(recs)
+                    except AccessError:
+                        self.compute_value(record)
+                else:
+                    env.cache.set(record, self, self.convert_to_cache(False, record, validate=False))
 
             elif (not record.id) and record._origin:
                 # FP Note: the _origin concept should be removed otherwise, onchange behave differently
