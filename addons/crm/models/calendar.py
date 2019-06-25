@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class CalendarEvent(models.Model):
@@ -40,3 +41,9 @@ class CalendarEvent(models.Model):
         if event.opportunity_id and not event.activity_ids:
             event.opportunity_id.log_meeting(event.name, event.start, event.duration)
         return event
+
+    @api.multi
+    def write(self,vals):
+        if vals.get('show_as') == 'free' and self.env.user != self.user_id:
+            raise UserError(_('You cannot make a meeting private if you are not the organizer.'))
+        return super(CalendarEvent, self).write(vals)
