@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import requests
-from PIL import Image
 
 import base64
 import datetime
 import io
 import re
-import uuid
+import requests
 
+from PIL import Image
 from werkzeug import urls
 
 from odoo import api, fields, models, _
@@ -612,10 +611,10 @@ class Slide(models.Model):
     # --------------------------------------------------
 
     @api.model
-    def _fetch_data(self, base_url, data, content_type=False, extra_params=False):
+    def _fetch_data(self, base_url, params, content_type=False):
         result = {'values': dict()}
         try:
-            response = requests.get(base_url, params=data)
+            response = requests.get(base_url, params=params)
             response.raise_for_status()
             if content_type == 'json':
                 result['values'] = response.json()
@@ -733,12 +732,12 @@ class Slide(models.Model):
         elif google_values['mimeType'].startswith('application/vnd.google-apps'):
             values['slide_type'] = get_slide_type(values)
             if 'exportLinks' in google_values:
-                values['datas'] = self._fetch_data(google_values['exportLinks']['application/pdf'], params, 'pdf', extra_params=True)['values']
+                values['datas'] = self._fetch_data(google_values['exportLinks']['application/pdf'], params, 'pdf')['values']
                 # Content indexing
                 if google_values['exportLinks'].get('text/plain'):
-                    values['index_content'] = self._fetch_data(google_values['exportLinks']['text/plain'], params, extra_params=True)['values']
+                    values['index_content'] = self._fetch_data(google_values['exportLinks']['text/plain'], params)['values']
                 elif google_values['exportLinks'].get('text/csv'):
-                    values['index_content'] = self._fetch_data(google_values['exportLinks']['text/csv'], params, extra_params=True)['values']
+                    values['index_content'] = self._fetch_data(google_values['exportLinks']['text/csv'], params)['values']
         elif google_values['mimeType'] == 'application/pdf':
             # TODO: Google Drive PDF document doesn't provide plain text transcript
             values['datas'] = self._fetch_data(google_values['webContentLink'], {}, 'pdf')['values']
