@@ -5458,10 +5458,19 @@ Fields:
             :param ids: the list of modified record ids, or ``None`` for all
         """
         if fnames is None:
+            # DLE P81: `test_get_first_possible_combination`
+            # `write` on `product.attribute.value` `sequence` field triggers and invalidate of the cache,
+            # it appears the goal is to re-order the cached value for one2many field on `product.attribute.value`
+            # Not sure if we change this specificaly in places calling `invalidate_cache()`
+            # or if we do it generically here. For the given test `test_get_first_possible_combination`,
+            # there were several places where `invalidate_cache` is called manually.
+            self.flush(fnames)
             if ids is None:
                 return self.env.cache.invalidate()
             fields = list(self._fields.values())
         else:
+            # DLE P81
+            self.flush()
             fields = [self._fields[n] for n in fnames]
 
         # invalidate fields and inverse fields, too
