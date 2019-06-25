@@ -3700,18 +3700,19 @@ class AccountMoveLine(models.Model):
         """ Create analytic items upon validation of an account.move.line having an analytic account or an analytic distribution.
         """
         lines_to_create_analytic_entries = self.env['account.move.line']
+        analytic_line_vals = []
         for obj_line in self:
             for tag in obj_line.analytic_tag_ids.filtered('active_analytic_distribution'):
                 for distribution in tag.analytic_distribution_ids:
-                    vals_line = obj_line._prepare_analytic_distribution_line(distribution)
-                    self.env['account.analytic.line'].create(vals_line)
+                    analytic_line_vals.append(obj_line._prepare_analytic_distribution_line(distribution))
             if obj_line.analytic_account_id:
                 lines_to_create_analytic_entries |= obj_line
 
         # create analytic entries in batch
         if lines_to_create_analytic_entries:
-            values_list = lines_to_create_analytic_entries._prepare_analytic_line()
-            self.env['account.analytic.line'].create(values_list)
+            analytic_line_vals += lines_to_create_analytic_entries._prepare_analytic_line()
+
+        self.env['account.analytic.line'].create(analytic_line_vals)
 
     def _prepare_analytic_line(self):
         """ Prepare the values used to create() an account.analytic.line upon validation of an account.move.line having
