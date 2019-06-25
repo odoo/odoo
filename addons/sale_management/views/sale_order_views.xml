@@ -11,7 +11,7 @@
                     <field name="sale_order_option_ids" mode="tree,form,kanban">
                         <form string="Optional Products">
                             <group>
-                                <field name="product_id"/>
+                                <field name="product_id" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                 <field name="name"/>
                                 <field name="quantity"/>
                                 <field name="uom_id" groups="uom.group_uom"/>
@@ -67,7 +67,7 @@
                                 <create name="add_product_control" string="Add a product"/>
                             </control>
                             <field name="sequence" widget="handle"/>
-                            <field name="product_id"/>
+                            <field name="product_id" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                             <field name="name" optional="show"/>
                             <field name="quantity"/>
                             <field name="uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
