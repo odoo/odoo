@@ -5523,7 +5523,23 @@ Fields:
                             records = self.exists().mapped(invf.name)
                         break
                 else:
-                    records = model.search([(key.name, 'in', self.ids)])
+                    # DLE P77: you can't do a search to find the inverse of new records, as they are not yet in database :(
+                    # `test_onchange_one2many_with_domain_on_related_field`
+                    # self.assertEqual(
+                    #     result['value']['important_emails'],
+                    #     [(5,), (1, email.id, {
+                    #         'name': u'[Foo Bar] %s' % USER.name,
+                    #         ...
+                    #     })],
+                    # )
+                    new_records = self.filtered(lambda r: not r.id)
+                    existing_records = self - new_records
+                    records = model.browse()
+                    if existing_records:
+                        records |= model.search([(key.name, 'in', existing_records.ids)])
+                    if new_records:
+                        cache_records = self.env.cache.get_records(model, key)
+                        records |= cache_records.filtered(lambda r: set(r[key.name]._ids) & set(self._ids))
                 records._modified_triggers(val)
 
     def _recompute_check(self, field):
