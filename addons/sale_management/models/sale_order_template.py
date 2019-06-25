@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
 
 
 class SaleOrderTemplate(models.Model):
@@ -28,6 +28,22 @@ class SaleOrderTemplate(models.Model):
         domain=[('model', '=', 'sale.order')],
         help="This e-mail template will be sent on confirmation. Leave empty to send nothing.")
     active = fields.Boolean(default=True, help="If unchecked, it will allow you to hide the quotation template without removing it.")
+    company_id = fields.Many2one('res.company', string='Company')
+
+    @api.constrains('company_id', 'sale_order_template_line_ids', 'sale_order_template_option_ids')
+    def _check_company_id(self):
+        for template in self:
+            companies = template.mapped('sale_order_template_line_ids.product_id.company_id') | template.mapped('sale_order_template_option_ids.product_id.company_id')
+            if len(companies) > 1:
+                raise ValidationError(_("Your template cannot contain products from multiple companies."))
+            elif companies and companies != template.company_id:
+                raise ValidationError((_("Your template contains products from company %s whereas your template belongs to company %s. \n Please change the company of your template or remove the products from other companies.") % (companies.mapped('display_name'), template.company_id.display_name)))
+
+    @api.onchange('sale_order_template_line_ids', 'sale_order_template_option_ids')
+    def _onchange_template_line_ids(self):
+        companies = self.mapped('sale_order_template_option_ids.product_id.company_id') | self.mapped('sale_order_template_line_ids.product_id.company_id')
+        if companies and self.company_id not in companies:
+            self.company_id = companies[0]
 
     def write(self, vals):
         if 'active' in vals and not vals.get('active'):

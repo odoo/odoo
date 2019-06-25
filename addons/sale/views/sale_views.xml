@@ -313,6 +313,7 @@
                                         <group attrs="{'invisible': [('display_type', '!=', False)]}">
                                             <field name="product_updatable" invisible="1"/>
                                             <field name="product_id"
+                                                domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
                                                 attrs="{
                                                     'readonly': [('product_updatable', '=', False)],
@@ -417,6 +418,7 @@
                                             'default_lst_price': price_unit,
                                             'default_description_sale': name
                                         }"
+                                        domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
                                         widget="product_configurator"
                                     />
                                     <field name="product_template_id"
@@ -436,6 +438,7 @@
                                           'default_lst_price': price_unit,
                                           'default_description_sale': name
                                       }"
+                                      domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
                                       widget="product_configurator"/>
                                     <field name="name" widget="section_and_note_text" optional="show"/>
                                     <field
