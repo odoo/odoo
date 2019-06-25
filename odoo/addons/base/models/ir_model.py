@@ -2,9 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
 import dateutil
+import itertools
 import logging
 import time
 from collections import defaultdict, Mapping
+from operator import itemgetter
 
 from odoo import api, fields, models, SUPERUSER_ID, tools,  _
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -1559,11 +1561,11 @@ class IrModelData(models.Model):
         ``ids`` along with their corresponding database backed (including
         dropping tables, columns, FKs, etc, as long as there is no other
         ir.model.data entry holding a reference to them (which indicates that
-        they are still owned by another module). 
+        they are still owned by another module).
         Attempts to perform the deletion in an appropriate order to maximize
         the chance of gracefully deleting all records.
         This step is performed as part of the full uninstallation of a module.
-        """ 
+        """
         if not (self._uid == SUPERUSER_ID or self.env.user.has_group('base.group_system')):
             raise AccessError(_('Administrator access is required to uninstall a module'))
 
@@ -1571,50 +1573,70 @@ class IrModelData(models.Model):
         # we deactivate prefetching to not try to read a column that has been deleted
         self = self.with_context(**{MODULE_UNINSTALL_FLAG: True, 'prefetch_fields': False})
 
-        datas = self.search([('module', 'in', modules_to_remove)])
-        to_unlink = tools.OrderedSet()
-        undeletable = self.browse([])
+        # determine records to unlink
+        records_items = []              # [(model, id)]
+        model_ids = []
+        field_ids = []
+        constraint_ids = []
 
-        for data in datas.sorted(key='id', reverse=True):
-            model = data.model
-            res_id = data.res_id
-            to_unlink.add((model, res_id))
+        module_data = self.search([('module', 'in', modules_to_remove)], order='id DESC')
+        for data in module_data:
+            if data.model == 'ir.model':
+                model_ids.append(data.res_id)
+            elif data.model == 'ir.model.fields':
+                field_ids.append(data.res_id)
+            elif data.model == 'ir.model.constraint':
+                constraint_ids.append(data.res_id)
+            else:
+                records_items.append((data.model, data.res_id))
 
-        def unlink_if_refcount(to_unlink):
-            undeletable = self.browse()
-            for model, res_id in to_unlink:
-                external_ids = self.search([('model', '=', model), ('res_id', '=', res_id)])
-                if external_ids - datas:
-                    # if other modules have defined this record, we must not delete it
-                    continue
-                if model == 'ir.model.fields':
-                    # Don't remove the LOG_ACCESS_COLUMNS unless _log_access
-                    # has been turned off on the model.
-                    field = self.env[model].browse(res_id).with_context(
-                        prefetch_fields=False,
-                    )
-                    if not field.exists():
-                        _logger.info('Deleting orphan external_ids %s', external_ids)
-                        external_ids.unlink()
-                        continue
-                    if field.name in models.LOG_ACCESS_COLUMNS and field.model in self.env and self.env[field.model]._log_access:
-                        continue
-                    if field.name == 'id':
-                        continue
-                _logger.info('Deleting %s@%s', res_id, model)
-                try:
-                    self._cr.execute('SAVEPOINT record_unlink_save')
-                    self.env[model].browse(res_id).unlink()
-                except Exception:
-                    _logger.info('Unable to delete %s@%s', res_id, model, exc_info=True)
-                    undeletable += external_ids
-                    self._cr.execute('ROLLBACK TO SAVEPOINT record_unlink_save')
+        # to collect external ids of records that cannot be deleted
+        undeletable_ids = []
+
+        def delete(records):
+            # do not delete records that have other external ids (and thus do
+            # not belong to the modules being installed)
+            ref_data = self.search([
+                ('model', '=', records._name),
+                ('res_id', 'in', records.ids),
+            ])
+            records -= records.browse((ref_data - module_data).mapped('res_id'))
+            if not records:
+                return
+
+            # special case for ir.model.fields
+            if records._name == 'ir.model.fields':
+                # do not remove LOG_ACCESS_COLUMNS unless _log_access is False
+                # on the model
+                records -= records.filtered(lambda f: f.name == 'id' or (
+                    f.name in models.LOG_ACCESS_COLUMNS and
+                    f.model in self.env and self.env[f.model]._log_access
+                ))
+                # delete orphan external ids right now
+                missing_ids = set(records.ids) - set(records.exists().ids)
+                orphans = ref_data.filtered(lambda r: r.res_id in missing_ids)
+                if orphans:
+                    _logger.info('Deleting orphan ir_model_data %s', orphans)
+                    orphans.unlink()
+
+            # now delete the records
+            _logger.info('Deleting %s', records)
+            try:
+                with self._cr.savepoint():
+                    records.unlink()
+            except Exception:
+                if len(records) <= 1:
+                    _logger.info('Unable to delete %s', records, exc_info=True)
+                    undeletable_ids.extend(ref_data._ids)
                 else:
-                    self._cr.execute('RELEASE SAVEPOINT record_unlink_save')
-            return undeletable
+                    # divide the batch in two, and recursively delete them
+                    half_size = len(records) // 2
+                    delete(records[:half_size])
+                    delete(records[half_size:])
 
-        # Remove non-model records first, then model fields, and finish with models
-        undeletable += unlink_if_refcount(item for item in to_unlink if item[0] not in ('ir.model', 'ir.model.fields', 'ir.model.constraint'))
+        # remove non-model records first, grouped by batches of the same model
+        for model, items in itertools.groupby(records_items, itemgetter(0)):
+            delete(self.env[model].browse(item[1] for item in items))
 
         # Remove copied views. This must happen after removing all records from
         # the modules to remove, otherwise ondelete='restrict' may prevent the
@@ -1624,20 +1646,21 @@ class IrModelData(models.Model):
         modules = self.env['ir.module.module'].search([('name', 'in', modules_to_remove)])
         modules._remove_copied_views()
 
-        undeletable += unlink_if_refcount(item for item in to_unlink if item[0] == 'ir.model.constraint')
-
+        # remove constraints
+        delete(self.env['ir.model.constraint'].browse(constraint_ids))
         constraints = self.env['ir.model.constraint'].search([('module', 'in', modules.ids)])
         constraints._module_data_uninstall()
 
-        undeletable += unlink_if_refcount(item for item in to_unlink if item[0] == 'ir.model.fields')
-
+        # remove fields and relations
+        delete(self.env['ir.model.fields'].browse(field_ids))
         relations = self.env['ir.model.relation'].search([('module', 'in', modules.ids)])
         relations._module_data_uninstall()
 
-        undeletable += unlink_if_refcount(item for item in to_unlink if item[0] == 'ir.model')
+        # remove models
+        delete(self.env['ir.model'].browse(model_ids))
 
-
-        (datas - undeletable).unlink()
+        # remove remaining module data records
+        (module_data - self.browse(undeletable_ids)).unlink()
 
     @api.model
     def _process_end(self, modules):
