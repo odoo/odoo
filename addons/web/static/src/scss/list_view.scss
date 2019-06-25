@@ -30,6 +30,10 @@
         &.o_list_text {
             white-space: pre-wrap;
         }
+        &.o_list_many2one {
+            white-space: pre-wrap;
+
+        }
     }
 
     tfoot {
@@ -173,7 +177,9 @@
         .o_list_record_remove_header, .o_handle_cell {
             width: 32px;
         }
-
+        &>tbody>tr>td.o_list_many2one {
+            white-space: nowrap;
+        }
         // checkboxes in editable lists should be clickable and activate the row
         .o_data_row:not(.o_selected_row) .o_data_cell {
             .custom-checkbox:not(.o_readonly_modifier) {
