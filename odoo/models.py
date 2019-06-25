@@ -3363,23 +3363,24 @@ Fields:
                     # and the `write` in `ir.attachment` was done through the `towrite` and the `flush`, which do not guarantee
                     # the user.
                     # Maybe there is something to do for performance, for instance by batching the field.write to all records
-                    # DLE P76: do not set delegate the write to the field for related fields,
-                    # they are delayed in their inverse (determine_inverse)
-                    # e.g. `test_10_sellers`, write on `product.product.seller_ids`, which actually should write on `product.template.seller_ids`
-                    # `product.product.seller_ids` store attribute is False, while `product.template.seller_ids` store attribute is True
-                    if record.id and not field.column_type and field.store:
-                        field.write(record, value)
-                    elif record.id and field.store:
+                    if record.id and field.store:
                         # FP NOTE: we could simplify and keep the one in cache instead
                         # FP TO CHECK: for one2many / many2many, we might concatenate the values instead of overwrite. (imagine 2 write of [(0,0,{})]
                         # DLE P20: By writring field.convert_to_write(field.convert_to_record(field.convert_to_cache(value, record), record), record)
                         # You missed the 2many commands such as [(4, 1), (4, 2)] which were converted to (1, 2), therefore completely replacing
                         # the existing 2many value instead of just adding new ids to it.
                         # DLE P65: Support translations in flush
-                        if field.translate:
-                            env.all.towrite[record._name][record.id].setdefault(field.name, {})[env.context.get('lang')] = value
+                        if field.column_type:
+                            if field.translate:
+                                env.all.towrite[record._name][record.id].setdefault(field.name, {})[env.context.get('lang')] = value
+                            else:
+                                env.all.towrite[record._name][record.id][field.name] = value
                         else:
-                            env.all.towrite[record._name][record.id][field.name] = value
+                            # DLE P76: do not set delegate the write to the field for related fields,
+                            # they are delayed in their inverse (determine_inverse)
+                            # e.g. `test_10_sellers`, write on `product.product.seller_ids`, which actually should write on `product.template.seller_ids`
+                            # `product.product.seller_ids` store attribute is False, while `product.template.seller_ids` store attribute is True
+                            field.write(record, value)
                         # DLE P11: When writing on `child_ids`, must write on `parent_id` of the one2many related records,
                         # Otherwise, as we set in the case the correct value for the inverse field values thanks to the above `if field.relational`,
                         # the above `if env.cache.contains(record, field) and (env.cache.get(record, field) == value):` matches
@@ -3486,12 +3487,13 @@ Fields:
             if field.deprecated:
                 _logger.warning('Field %s is deprecated: %s', field, field.deprecated)
 
-            if field.column_type:
-                if single_lang or not (has_translation and field.translate is True):
-                    # val is not a translation: update the table
-                    val = field.convert_to_column(val, self, vals)
-                    columns.append((name, field.column_format, val))
-                updated.append(name)
+            # DLE P80
+            assert field.column_type
+            if single_lang or not (has_translation and field.translate is True):
+                # val is not a translation: update the table
+                val = field.convert_to_column(val, self, vals)
+                columns.append((name, field.column_format, val))
+            updated.append(name)
 
         if self._log_access:
             if not vals.get('write_uid'):

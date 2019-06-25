@@ -1051,7 +1051,13 @@ class Field(MetaField('DummyField', (object,), {})):
         # Some write overwrites expects the *2many values to be tuple commands and not browse record
         # See https://github.com/odoo/odoo/blob/659ff0da13951d0b940c24a070a4a7e51b0897bb/odoo/addons/base/models/res_users.py#L934
         # test `test_bindings`, `action2.groups_id += group`
-        write_value = self.convert_to_write(value, records) if isinstance(value, BaseModel) else value
+        # DLE P81: Do what master do with value in __set__,
+        # The convert to cache is important for one2many field for which we assign `False` as value
+        # It converts the `False` to an empty tuple `()`, and then convert_to_write converts it to [(6, 0, [])]
+        # `test_clear_caches`, `variant.attribute_value_ids = False` wasn't doing anything, it let the previous attribute_value_ids
+        value = write_value = self.convert_to_cache(value, records)
+        if self.store or self.inverse or self.inherited:
+            write_value = self.convert_to_write(self.convert_to_record(value, records), records)
         # DLE P29: issue with `write` overwrite of `/mail/models/mail_thread.py`
         # Before calling super, it tried to get the value of computed field, which therefore recalled "write"
         # therefore recalling the write overwrite of `mail`, therefore creating an infinite loop.
@@ -1064,11 +1070,17 @@ class Field(MetaField('DummyField', (object,), {})):
                 for record in protecteds:
                     record.env.cache.set(record, self, self.convert_to_cache(value, record))
                     if record.id and self.store:
-                        # DLE P65: Support translations in flush
-                        if self.translate:
-                            record.env.all.towrite[record._name][record.id].setdefault(self.name, {})[record.env.context.get('lang')] = write_value
+                        if self.column_type:
+                            # DLE P65: Support translations in flush
+                            if self.translate:
+                                record.env.all.towrite[record._name][record.id].setdefault(self.name, {})[record.env.context.get('lang')] = write_value
+                            else:
+                                record.env.all.towrite[record._name][record.id][self.name] = write_value
                         else:
-                            record.env.all.towrite[record._name][record.id][self.name] = write_value
+                            # DLE P80: `test_variant_images`
+                            # Fields without column_type should never be sent to `_write`, which is the purpose of the towrite stack
+                            # Instead they should call field.write directly
+                            self.write(record, write_value)
         else:
             records.write({self.name: write_value})
 
