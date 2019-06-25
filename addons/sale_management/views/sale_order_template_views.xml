@@ -33,6 +33,9 @@
                                <field name="number_of_days" class="oe_inline"/> days
                            </div>
                         </group>
+                        <group>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        </group>
                     </group>
                     <notebook name="main_book">
                         <page string="Lines">

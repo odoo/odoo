@@ -5,10 +5,6 @@
             <field name="model">res.config.settings</field>
             <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@id='company_share_partner']" position="after">
-                    <field name="company_share_product" class="oe_inline"/>
-                    <label string="Common Product Catalog" class="o_light_label" for="company_share_product"/>
-                </xpath>
                 <xpath expr="//div[@id='multi_company']" position="before">
                     <h2>Products</h2>
                     <div class="row mt16 o_settings_container" id="product_general_settings">

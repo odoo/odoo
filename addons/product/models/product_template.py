@@ -107,8 +107,7 @@ class ProductTemplate(models.Model):
         default=_get_default_uom_id, required=True,
         help="Default unit of measure used for purchase orders. It must be in the same category as the default unit of measure.")
     company_id = fields.Many2one(
-        'res.company', 'Company',
-        default=lambda self: self.env.company, index=1)
+        'res.company', 'Company', index=1)
     packaging_ids = fields.One2many(
         'product.packaging', string="Product Packages", compute="_compute_packaging_ids", inverse="_set_packaging_ids",
         help="Gives the different ways to package the same product.")

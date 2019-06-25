@@ -200,6 +200,14 @@ class SaleOrder(models.Model):
         ('confirmation_date_conditional_required', "CHECK( (state IN ('sale', 'done') AND confirmation_date IS NOT NULL) OR state NOT IN ('sale', 'done') )", "A confirmed sales order requires a confirmation date."),
     ]
 
+    @api.constrains('company_id', 'order_line')
+    def _check_order_line_company_id(self):
+        for order in self:
+            companies = order.order_line.product_id.company_id
+            if companies and companies != order.company_id:
+                bad_products = order.order_line.product_id.filtered(lambda p: p.company_id and p.company_id != order.company_id)
+                raise ValidationError((_("Your quotation contains products from company %s whereas your quotation belongs to company %s. \n Please change the company of your quotation or remove the products from other companies (%s).") % (', '.join(companies.mapped('display_name')), order.company_id.display_name, ', '.join(bad_products.mapped('display_name')))))
+
     @api.depends('pricelist_id', 'date_order', 'company_id')
     def _compute_currency_rate(self):
         for order in self:
