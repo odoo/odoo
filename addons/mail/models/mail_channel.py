@@ -187,9 +187,7 @@ class Channel(models.Model):
 
     @api.onchange('public')
     def _onchange_public(self):
-        if self.public == 'public':
-            self.alias_contact = 'everyone'
-        else:
+        if self.public != 'public' and self.alias_contact == 'everyone':
             self.alias_contact = 'followers'
 
     @api.onchange('moderator_ids')

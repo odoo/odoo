@@ -178,7 +178,7 @@
 <template id='courses_all' name="Odoo All Courses">
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
     <t t-call="website.layout">
-        <div class="wrap">
+        <div id="wrap" class="wrap o_wslides_wrap">
             <section class="s_banner bg-900" style="background-image: url(&quot;/website_slides/static/src/img/banner_default_all.svg&quot;); background-size: cover; background-position: 80% 20%">
                 <div class="container py-5">
                     <h1 t-if="search_my" class="display-3 mb-0">My Courses</h1>
