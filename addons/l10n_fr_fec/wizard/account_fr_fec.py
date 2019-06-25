@@ -349,6 +349,12 @@ class AccountFrFec(models.TransientModel):
         for row in self._cr.fetchall():
             rows_to_write.append(list(row))
 
+        temp = []
+        for row in rows_to_write:
+            row = [x.replace('\n', '') for x in row]
+            temp.append(list(row))
+        rows_to_write = temp
+
         fecvalue = self._csv_write_rows(rows_to_write)
         end_date = fields.Date.to_string(self.date_to).replace('-', '')
         suffix = ''
