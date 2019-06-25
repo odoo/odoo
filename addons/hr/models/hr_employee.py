@@ -111,7 +111,7 @@ class HrEmployeePrivate(models.Model):
     coach_id = fields.Many2one('hr.employee', 'Coach')
     category_ids = fields.Many2many(
         'hr.employee.category', 'employee_category_rel',
-        'emp_id', 'category_id',
+        'emp_id', 'category_id', groups="hr.group_hr_user",
         string='Tags')
     # misc
     notes = fields.Text('Notes', groups="hr.group_hr_user")
