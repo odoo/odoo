@@ -224,7 +224,7 @@ class Inventory(models.Model):
     def _get_inventory_lines_values(self):
         # TDE CLEANME: is sql really necessary ? I don't think so
         locations = self.env['stock.location'].search([('id', 'child_of', [self.location_id.id])])
-        domain = ' location_id in %s AND active = TRUE'
+        domain = ' sq.location_id in %s AND pp.active'
         args = (tuple(locations.ids),)
 
         vals = []
@@ -236,39 +236,41 @@ class Inventory(models.Model):
 
         # case 0: Filter on company
         if self.company_id:
-            domain += ' AND company_id = %s'
+            domain += ' AND sq.company_id = %s'
             args += (self.company_id.id,)
-        
+
         #case 1: Filter on One owner only or One product for a specific owner
         if self.partner_id:
-            domain += ' AND owner_id = %s'
+            domain += ' AND sq.owner_id = %s'
             args += (self.partner_id.id,)
         #case 2: Filter on One Lot/Serial Number
         if self.lot_id:
-            domain += ' AND lot_id = %s'
+            domain += ' AND sq.lot_id = %s'
             args += (self.lot_id.id,)
         #case 3: Filter on One product
         if self.product_id:
-            domain += ' AND product_id = %s'
+            domain += ' AND sq.product_id = %s'
             args += (self.product_id.id,)
             products_to_filter |= self.product_id
         #case 4: Filter on A Pack
         if self.package_id:
-            domain += ' AND package_id = %s'
+            domain += ' AND sq.package_id = %s'
             args += (self.package_id.id,)
         #case 5: Filter on One product category + Exahausted Products
         if self.category_id:
             categ_products = Product.search([('categ_id', '=', self.category_id.id)])
-            domain += ' AND product_id = ANY (%s)'
+            domain += ' AND sq.product_id = ANY (%s)'
             args += (categ_products.ids,)
             products_to_filter |= categ_products
 
-        self.env.cr.execute("""SELECT product_id, sum(qty) as product_qty, location_id, lot_id as prod_lot_id, package_id, owner_id as partner_id
-            FROM stock_quant
-            LEFT JOIN product_product
-            ON product_product.id = stock_quant.product_id
+        self.env.cr.execute("""SELECT sq.product_id as product_id, sum(qty) as product_qty,
+            sq.location_id as location_id, sq.lot_id as prod_lot_id, sq.package_id as package_id,
+            sq.owner_id as partner_id
+            FROM stock_quant sq
+            LEFT JOIN product_product pp
+            ON pp.id = sq.product_id
             WHERE %s
-            GROUP BY product_id, location_id, lot_id, package_id, partner_id """ % domain, args)
+            GROUP BY sq.product_id, sq.location_id, sq.lot_id, sq.package_id, sq.owner_id """ % domain, args)
 
         for product_data in self.env.cr.dictfetchall():
             # replace the None the dictionary by False, because falsy values are tested later on
