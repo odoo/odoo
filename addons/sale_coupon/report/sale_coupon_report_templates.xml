@@ -66,10 +66,12 @@
                                 <img alt="Barcode" t-att-src="'/report/barcode/Code128/%s' % o.code"/>
                                 <br/>
                                 <div class="mt64">
-                                    <div class="col-6 text-right">
+                                    <div class="text-center">
                                     <img alt="Logo" t-att-src="'/logo?company=%d' % (o.program_id.company_id)" t-att-alt="'%s' % (o.program_id.company_id.name)" style="border:0px solid transparent; height: 50; width: 200px;" height="50"/>
                                     </div>
-                                    <div class="col-6 text-left">
+                                </div>
+                                <div>
+                                    <div class="text-center d-inline-block">
                                         <span t-field="o.program_id.company_id.partner_id"
                                             t-options='{"widget": "contact", "fields": ["address", "email"], "no_marker": True}'/>
                                     </div>

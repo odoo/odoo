@@ -50,5 +50,5 @@ class SaleCouponApplyCode(models.TransientModel):
                     order.applied_coupon_ids += coupon
                     coupon.write({'state': 'used'})
             else:
-                error_status = {'not_found': _('The code %s is invalid') % (coupon_code)}
+                error_status = {'not_found': _('This coupon is invalid (%s).') % (coupon_code)}
         return error_status
