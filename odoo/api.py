@@ -758,6 +758,11 @@ class Environment(Mapping):
     """
     _local = Local()
 
+    def __setattr__(self, k, v):
+        if k == 'context':
+            raise AttributeError('nope!')
+        object.__setattr__(self, k, v)
+
     @classproperty
     def envs(cls):
         return cls._local.environments
@@ -794,7 +799,9 @@ class Environment(Mapping):
 
         # otherwise create environment, and add it in the set
         self = object.__new__(cls)
-        self.cr, self.uid, self.context = self.args = (cr, uid, frozendict(context))
+        self.args = (cr, uid, frozendict(context))
+        self.cr, self.uid = (cr, uid)
+        object.__setattr__(self, 'context', self.args[2])
         self.registry = Registry(cr.dbname)
         self.cache = envs.cache
         self._cache_key = (cr, uid)
