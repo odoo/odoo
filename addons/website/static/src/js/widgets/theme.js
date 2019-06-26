@@ -325,17 +325,25 @@ var ThemeCustomizeDialog = Dialog.extend({
                         var xmlid = $item.data('xmlid');
 
                         var renderingOptions = _.extend({
-                            string: $item.attr('string') || data.names[xmlid.split(',')[0].trim()],
+                            string: $item.attr('string') || xmlid && data.names[xmlid.split(',')[0].trim()],
                             icon: $item.data('icon'),
                             font: $item.data('font'),
                         }, $item.data());
 
+                        var checked;
+                        if (widgetName === 'auto') {
+                            var propValue = self.style.getPropertyValue('--' + $item.data('variable')).trim();
+                            checked = (propValue === $item.attr('data-value'));
+                        } else {
+                            checked = (xmlid === undefined || xmlid && !_.difference(self._getXMLIDs($item), data.enabled).length);
+                        }
+
                         // Build the options template
                         $element = $(core.qweb.render('website.theme_customize_modal_option', _.extend({
                             alone: alone,
-                            name: xmlid === undefined ? _.uniqueId('option-') : optionsName,
+                            name: xmlid === undefined && widgetName !== 'auto' ? _.uniqueId('option-') : optionsName,
                             id: $item.attr('id') || _.uniqueId('o_theme_customize_input_id_'),
-                            checked: xmlid === undefined || xmlid && (!_.difference(self._getXMLIDs($item), data.enabled).length),
+                            checked: checked,
                             widget: widgetName,
                         }, renderingOptions)));
                         $element.find('input')
@@ -508,6 +516,16 @@ var ThemeCustomizeDialog = Dialog.extend({
             return self._quickEdit($(inputData));
         }));
 
+        // Handle auto changes
+        var $autoWidgetOptions = $options.has('.o_theme_customize_auto');
+        if ($autoWidgetOptions.length > 1) {
+            $autoWidgetOptions = $autoWidgetOptions.has('input:checked');
+        }
+        var $autosData = $autoWidgetOptions.find('.o_theme_customize_auto');
+        defs = defs.concat(_.map($autosData, function (autoData) {
+            return self._setAuto($(autoData));
+        }));
+
         return Promise.all(defs);
     },
     /**
@@ -519,7 +537,7 @@ var ThemeCustomizeDialog = Dialog.extend({
         var value = parseFloat(text) || '';
         var unit = text.match(/([^\s\d]+)$/)[1];
 
-        var def = new Promise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
             var qEdit = new QuickEdit(self, value, unit);
             qEdit.on('QuickEdit:save', self, function (ev) {
                 ev.stopPropagation();
@@ -531,15 +549,28 @@ var ThemeCustomizeDialog = Dialog.extend({
                 }
 
                 var values = {};
-                values[$inputData.data('value')] = value;
+                values[$inputData.data('variable')] = value;
                 self._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values)
                     .then(resolve)
                     .guardedCatch(resolve);
             });
             qEdit.appendTo($inputData.closest('.o_theme_customize_option'));
         });
+    },
+    /**
+     * @private
+     */
+    _setAuto: function ($autoData) {
+        var self = this;
+        var values = {};
+        var isChecked = $autoData.siblings('.o_theme_customize_option_input').prop('checked');
+        values[$autoData.data('variable')] = isChecked ? $autoData.data('value') : 'null';
 
-        return def;
+        return new Promise(function (resolve, reject) {
+            self._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values)
+                .then(resolve)
+                .guardedCatch(resolve);
+        });
     },
     /**
      * @private
@@ -665,7 +696,7 @@ var ThemeCustomizeDialog = Dialog.extend({
         });
         _.each(this.$('.o_theme_customize_input'), function (el) {
             var $el = $(el);
-            var value = self.style.getPropertyValue('--' + $el.data('value')).trim();
+            var value = self.style.getPropertyValue('--' + $el.data('variable')).trim();
 
             // Convert rem values to px values
             if (_.str.endsWith(value, 'rem')) {
