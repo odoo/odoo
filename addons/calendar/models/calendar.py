@@ -1610,6 +1610,28 @@ class Meeting(models.Model):
         records = self.browse(set(get_real_ids(self.ids)))
         return super(Meeting, records).export_data(fields_to_export, raw_data)
 
+    @api.multi
+    def _read(self, fields):
+        select = [(x, calendar_id2real_id(x)) for x in self.ids]
+        result = super(Meeting, self.browse(real_id for calendar_id, real_id in select))._read(fields)
+        for calendar_id, real_id in select:
+            if real_id != calendar_id:
+                calendar = self.browse(calendar_id)
+                real = self.browse(real_id)
+                ls = calendar_id2real_id(calendar_id, with_date=True)
+                for field in fields:
+                    f = self._fields[field]
+                    if field in ('start', 'start_date', 'start_datetime'):
+                        value = ls[1]
+                    elif field in ('stop', 'stop_date', 'stop_datetime'):
+                        value = ls[2]
+                    elif field == 'display_time':
+                        value = self._get_display_time(ls[1], ls[2], real.duration, real.allday)
+                    else:
+                        value = self.env.cache.get(real, f)
+                    self.env.cache.set(calendar, f, value)
+        return result
+
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         if 'date' in groupby:

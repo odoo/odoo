@@ -3615,7 +3615,10 @@ Fields:
                 elif field.inverse:
                     inversed[key] = val
                     inversed_fields.add(field)
-                protected.update(self._field_computed.get(field, [field]))
+                # DLE P83: `test_validation_error`, ignore the protection of compute fields which do not have an inverse
+                # Otherwise their computation are not correctly performed, neither the fields which are computed in the same compute method.
+                if not field.compute or field.inverse:
+                    protected.update(self._field_computed.get(field, [field]))
 
             data_list.append(data)
 
@@ -5542,7 +5545,13 @@ Fields:
                     existing_records = self - new_records
                     records = model.browse()
                     if existing_records:
-                        records |= model.search([(key.name, 'in', existing_records.ids)])
+                        # DLE P82: `test_event_activity`
+                        # `hr.employee` overrides `_search`, and when you don't have the read access to `hr.employee`,
+                        # it calls `_search` on `hr.employee.public`, which do not share all the same fields than `hr.employee`
+                        # In this specific case, it tries to compute `res_name` of `mail.activity`,
+                        # which requires for that a search on `hr.employee.activity_ids`, which doesn't exist on `hr.employee.public`
+                        # No other way than do this as sudo.
+                        records |= model.sudo().search([(key.name, 'in', existing_records.ids)])
                     if new_records:
                         cache_records = self.env.cache.get_records(model, key)
                         records |= cache_records.filtered(lambda r: set(r[key.name]._ids) & set(self._ids))
