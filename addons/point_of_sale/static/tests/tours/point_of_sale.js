@@ -45,10 +45,6 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
     }
 
     var steps = [{ // Leave category displayed by default
-        content: "click category switch",
-        trigger: ".js-category-switch",
-        run: 'click',
-    }, {
         content: 'waiting for loading to finish',
         trigger: 'body:has(.loader:hidden)',
         run: function () {
@@ -95,6 +91,10 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         content: "wait for unit tests to finish",
         trigger: ".pos.done-testing",
         run: function () {}, // it's a check
+    }, {
+        content: "click category switch",
+        trigger: ".js-category-switch",
+        run: 'click',
     }, {
         content: "click pricelist button",
         trigger: ".control-button.o_pricelist_button",

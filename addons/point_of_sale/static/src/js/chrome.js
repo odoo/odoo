@@ -248,7 +248,7 @@ var DebugWidget = PosBaseWidget.extend({
                 'body':  _t('This operation will permanently destroy all paid orders from the local storage. You will lose all the data. This operation cannot be undone.'),
                 confirm: function(){
                     self.pos.db.remove_all_orders();
-                    self.pos.set({synch: { state:'connected', pending: 0 }});
+                    self.pos.set_synch('connected', 0);
                 },
             });
         });
