@@ -537,6 +537,16 @@ class ProductTemplate(models.Model):
             if variants_to_create:
                 Product.create(variants_to_create)
 
+            # Avoid access errors in case the products is shared amongst companies but the underlying
+            # objects are not. If unlink fails because of an AccessError (e.g. while recomputing
+            # fields), the 'write' call will fail as well for the same reason since the field has
+            # been set to recompute.
+            if variants_to_unlink:
+                variants_to_unlink.check_access_rights('unlink')
+                variants_to_unlink.check_access_rule('unlink')
+                variants_to_unlink.check_access_rights('write')
+                variants_to_unlink.check_access_rule('write')
+                variants_to_unlink = variants_to_unlink.sudo()
             # unlink or inactive product
             # try in batch first because it is much faster
             try:
