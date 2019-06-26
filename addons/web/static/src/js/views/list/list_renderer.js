@@ -48,8 +48,9 @@ var ListRenderer = BasicRenderer.extend({
      */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
-        this.hasHandle = false;
-        this.handleField = 'sequence';
+        // This attribute lets us know if there is a handle widget on a field,
+        // and on which field it is set.
+        this.handleField = null;
         this._processColumns(params.columnInvisibleFields || {});
         this.rowDecorations = _.chain(this.arch.attrs)
             .pick(function (value, key) {
@@ -174,7 +175,6 @@ var ListRenderer = BasicRenderer.extend({
      */
     _processColumns: function (columnInvisibleFields) {
         var self = this;
-        self.hasHandle = false;
         self.handleField = null;
         this.columns = _.reject(this.arch.children, function (c) {
             var reject = c.attrs.modifiers.column_invisible;

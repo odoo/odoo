@@ -467,7 +467,7 @@ ListRenderer.include({
     },
     /**
      * The renderer needs to support reordering lines.  This is only active in
-     * edit mode. The hasHandle attribute is used when there is a sequence
+     * edit mode. The handleField attribute is set when there is a sequence
      * widget.
      *
      * @override
@@ -475,7 +475,7 @@ ListRenderer.include({
      */
     _renderBody: function () {
         var $body = this._super();
-        if (this.hasHandle) {
+        if (this.handleField) {
             $body.sortable({
                 axis: 'y',
                 items: '> tr.o_data_row',
