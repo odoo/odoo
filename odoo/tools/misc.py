@@ -1242,3 +1242,14 @@ def wrap_module(module, attr_list):
             raise AttributeError(attrib)
     # module and attr_list are in the closure
     return WrappedModule()
+
+
+class DotDict(dict):
+    """Helper for dot.notation access to dictionary attributes
+        E.g.
+          foo = DotDict({'bar': False})
+          return foo.bar
+    """
+    def __getattr__(self, attrib):
+        val = self.get(attrib)
+        return DotDict(val) if type(val) is dict else val
