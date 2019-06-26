@@ -21,3 +21,4 @@ from . import reconciliation_widget
 from . import account_incoterms
 from . import digest
 from . import res_users
+from . import ir_actions_report

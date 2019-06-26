@@ -230,5 +230,16 @@
                 </t>
             </t>
         </template>
+
+        <!--We need to create the following empty report template for the action report
+            "action_account_original_vendor_bill" to work. The action is merging the
+            original vendor bill(s) that were used to create the vendor bill(s) into one PDF. -->
+        <template id="report_original_vendor_bill">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="article"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')"></div>
+                </t>
+            </t>
+        </template>
     </data>
 </odoo>
