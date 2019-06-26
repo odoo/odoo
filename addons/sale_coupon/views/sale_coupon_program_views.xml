@@ -124,6 +124,7 @@
         <field name="model">sale.coupon.program</field>
         <field name="arch" type="xml">
             <search>
+                <field name="name"/>
                 <filter string="Active" name="active" domain="[('active', '=', True)]" help="Opened Programs"/>
                 <filter string="Closed" name="closed" domain="[('active', '=', False)]" help="Closed Programs"/>
                 <filter string="Expired" name="expired" domain="[('rule_date_to', '&lt;', datetime.datetime.now())]" help="Expired Programs"/>
@@ -163,7 +164,7 @@
     </record>
 
     <record id="sale_coupon_program_action_coupon_program" model="ir.actions.act_window">
-        <field name="name">Coupon Program</field>
+        <field name="name">Coupon Programs</field>
         <field name="res_model">sale.coupon.program</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="search_view_id" ref="sale_coupon_program_view_search"/>
@@ -257,6 +258,7 @@
         <field name="model">sale.coupon.program</field>
         <field name="arch" type="xml">
             <search>
+                <field name="name"/>
                 <filter string="Active" name="active" domain="[('active', '=', True)]" help="Opened Programs"/>
                 <filter string="Closed" name="closed" domain="[('active', '=', False)]" help="Closed Programs"/>
             </search>
@@ -264,7 +266,7 @@
     </record>
 
     <record id="sale_coupon_program_action_promo_program" model="ir.actions.act_window">
-        <field name="name">Promotion Program</field>
+        <field name="name">Promotion Programs</field>
         <field name="res_model">sale.coupon.program</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="view_ids" eval="[
