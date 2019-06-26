@@ -44,19 +44,17 @@ class AccountJournal(models.Model):
         ]
 
     def get_journal_letter(self, counterpart_partner=False):
+        """ Regarding the AFIP responsability of the company and the type of
+        journal (sale/purchase), get the allowed letters.
+        Optionally, receive the counterpart partner (customer/supplier) and
+        get the allowed letters to work with him.
+        This method is used to populate document types on journals and also
+        to filter document types on specific invoices to/from customer/supplier
+        """
         self.ensure_one()
-        return self._get_journal_letter(
-            journal_type=self.type,
-            company=self.company_id,
-            counterpart_partner=counterpart_partner)
-
-    @api.model
-    def _get_letters_data(self):
-        """ Dictionary the the information about the letters, which
-        responsability can used and the kind of operation received/issued """
-        return {
+        letters_data = {
             'issued': {
-                '1': ['A', 'B', 'E'],
+                '1': ['A', 'B', 'E', 'M'],
                 '3': [],
                 '4': ['C'],
                 '5': [],
@@ -78,24 +76,12 @@ class AccountJournal(models.Model):
                 '13': ['B', 'C', 'I'],
             },
         }
-
-    @api.model
-    def _get_journal_letter(
-            self, journal_type, company, counterpart_partner=False):
-        """ Regarding the AFIP responsability of the company and the type of
-        journal (sale/purchase), get the allowed letters.
-        Optionally, receive the counterpart partner (customer/supplier) and
-        get the allowed letters to work with him.
-        This method is used to populate document types on journals and also
-        to filter document types on specific invoices to/from customer/supplier
-        """
-        letters_data = self._get_letters_data()
-        if not company.l10n_ar_afip_responsability_type_id:
+        if not self.company_id.l10n_ar_afip_responsability_type_id:
             raise UserError(_(
                 'Need to configure your company AFIP responsability first!'))
         letters = letters_data[
-            'issued' if journal_type == 'sale' else 'received'][
-            company.l10n_ar_afip_responsability_type_id.code]
+            'issued' if self.type == 'sale' else 'received'][
+            self.company_id.l10n_ar_afip_responsability_type_id.code]
         if not counterpart_partner:
             return letters
 
@@ -103,7 +89,7 @@ class AccountJournal(models.Model):
             letters = []
         else:
             counterpart_letters = letters_data[
-                'issued' if journal_type == 'purchase' else 'received'][
+                'issued' if self.type == 'purchase' else 'received'][
                     counterpart_partner.l10n_ar_afip_responsability_type_id.code]
             letters = list(set(letters) & set(counterpart_letters))
         return letters
