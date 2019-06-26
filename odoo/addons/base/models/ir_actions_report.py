@@ -24,6 +24,9 @@ from distutils.version import LooseVersion
 from reportlab.graphics.barcode import createBarcodeDrawing
 from PyPDF2 import PdfFileWriter, PdfFileReader
 from collections import OrderedDict
+from PIL import Image, ImageFile
+# Allow truncated images
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 
 _logger = logging.getLogger(__name__)
@@ -142,6 +145,17 @@ class IrActionsReport(models.Model):
     #--------------------------------------------------------------------------
     # Main report methods
     #--------------------------------------------------------------------------
+    @api.multi
+    def _retrieve_stream_from_attachment(self, attachment):
+        #This import is needed to make sure a PDF stream can be saved in Image
+        from PIL import PdfImagePlugin
+        if attachment.mimetype.startswith('image'):
+            stream = io.BytesIO(base64.b64decode(attachment.datas))
+            img = Image.open(stream)
+            img.convert("RGB").save(stream, format="pdf")
+            return stream
+        return io.BytesIO(base64.decodestring(attachment.datas))
+
     @api.multi
     def retrieve_attachment(self, record):
         '''Retrieve an attachment for a specific record.
@@ -524,7 +538,7 @@ class IrActionsReport(models.Model):
 
         # Check special case having only one record with existing attachment.
         if len(save_in_attachment) == 1 and not pdf_content:
-            return base64.decodestring(list(save_in_attachment.values())[0].datas)
+            return self._merge_pdfs(list(save_in_attachment.values()))
 
         # Create a list of streams representing all sub-reports part of the final result
         # in order to append the existing attachments and the potentially modified sub-reports
@@ -583,9 +597,8 @@ class IrActionsReport(models.Model):
         # If attachment_use is checked, the records already having an existing attachment
         # are not been rendered by wkhtmltopdf. So, create a new stream for each of them.
         if self.attachment_use:
-            for attachment_id in save_in_attachment.values():
-                content = base64.decodestring(attachment_id.datas)
-                streams.append(io.BytesIO(content))
+            for stream in save_in_attachment.values():
+                streams.append(stream)
 
         # Build the final pdf.
         # If only one stream left, no need to merge them (and then, preserve embedded files).
@@ -655,10 +668,10 @@ class IrActionsReport(models.Model):
             wk_record_ids = Model
             if self.attachment:
                 for record_id in record_ids:
-                    attachment_id = self.retrieve_attachment(record_id)
-                    if attachment_id:
-                        save_in_attachment[record_id.id] = attachment_id
-                    if not self.attachment_use or not attachment_id:
+                    attachment = self.retrieve_attachment(record_id)
+                    if attachment:
+                        save_in_attachment[record_id.id] = self._retrieve_stream_from_attachment(attachment)
+                    if not self.attachment_use or not attachment:
                         wk_record_ids += record_id
             else:
                 wk_record_ids = record_ids
