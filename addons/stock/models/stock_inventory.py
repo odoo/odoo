@@ -75,8 +75,8 @@ class Inventory(models.Model):
 
     def unlink(self):
         for inventory in self:
-            if inventory.state == 'done':
-                raise UserError(_('You cannot delete a validated inventory adjustement.'))
+            if inventory.state not in ('draft', 'cancel'):
+                raise UserError(_('You can only delete a draft inventory adjustment. If the inventory adjustment is not done, you can cancel it.'))
         return super(Inventory, self).unlink()
 
     def action_validate(self):
