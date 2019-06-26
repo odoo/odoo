@@ -43,14 +43,14 @@ class SaleCouponProgram(models.Model):
         help="A promotion code is a code that is associated with a marketing discount. For example, a retailer might tell frequent customers to enter the promotion code 'THX001' to receive a 10%% discount on their whole order.")
     promo_applicability = fields.Selection([
         ('on_current_order', 'Apply On Current Order'),
-        ('on_next_order', 'Apply On Next Order')],
+        ('on_next_order', 'Send a Coupon')],
         default='on_current_order', string="Applicability")
     coupon_ids = fields.One2many('sale.coupon', 'program_id', string="Generated Coupons", copy=False)
     coupon_count = fields.Integer(compute='_compute_coupon_count')
     order_count = fields.Integer(compute='_compute_order_count')
     company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.company)
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
-    validity_duration = fields.Integer(default=1,
+    validity_duration = fields.Integer(default=30,
         help="Validity duration for a coupon after its generation")
 
     @api.constrains('promo_code')
