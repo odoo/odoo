@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import fields, models
+from odoo import fields, models, api
 
 
 class ResPartner(models.Model):
@@ -46,3 +46,7 @@ class ResPartner(models.Model):
             ('10', 'IVA Liberado – Ley Nº 19.640'),
             ('13', 'Monotributista Social'),
         ]
+
+    @api.model
+    def _commercial_fields(self):
+        return super()._commercial_fields() + ['l10n_ar_afip_responsability_type_id']

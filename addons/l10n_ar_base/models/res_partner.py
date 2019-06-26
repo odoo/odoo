@@ -96,7 +96,3 @@ class ResPartner(models.Model):
                 raise ValidationError(_('Only numbers allowed.'))
             except Exception as error:
                 raise ValidationError(repr(error))
-
-    @api.model
-    def _commercial_fields(self):
-        return super()._commercial_fields() + ['l10n_ar_afip_responsability_type_id']

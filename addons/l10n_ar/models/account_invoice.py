@@ -259,7 +259,8 @@ class AccountInvoice(models.Model):
 
         # check partner has responsability so it will be assigned on invoice
         # validate
-        without_responsability = argentinian_invoices.filtered(lambda x: not x.l10n_ar_afip_responsability_type_id)
+        without_responsability = argentinian_invoices.filtered(
+            lambda x: not x.partner_id.l10n_ar_afip_responsability_type_id)
         if without_responsability:
             raise UserError(_(
                 'The following invoices has a partner without AFIP '
