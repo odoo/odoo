@@ -224,7 +224,7 @@ class account_journal(models.Model):
         data as its first element, and the arguments dictionary to use to run
         it as its second.
         """
-        return ("""SELECT state, amount_total, currency_id AS currency, type
+        return ("""SELECT state, residual, currency_id AS currency, type
                   FROM account_invoice
                   WHERE journal_id = %(journal_id)s AND state = 'open';""", {'journal_id':self.id})
 
@@ -234,7 +234,7 @@ class account_journal(models.Model):
         gather the bills in draft state data, and the arguments
         dictionary to use to run it as its second.
         """
-        return ("""SELECT state, amount_total, currency_id AS currency, type
+        return ("""SELECT state, residual, currency_id AS currency, type
                   FROM account_invoice
                   WHERE journal_id = %(journal_id)s AND state = 'draft';""", {'journal_id':self.id})
 
@@ -249,7 +249,7 @@ class account_journal(models.Model):
             rslt_count += 1
 
             type_factor = result.get('type') in ('in_refund', 'out_refund') and -1 or 1
-            rslt_sum += type_factor * cur.compute(result.get('amount_total'), target_currency)
+            rslt_sum += type_factor * cur.compute(result.get('residual'), target_currency)
         return (rslt_count, rslt_sum)
 
     @api.multi
