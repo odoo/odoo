@@ -170,8 +170,7 @@
                                 </div>
                                 <div class="form-group col-12">
                                     <label class="mb-1 text-primary" for="description"><span class="font-weight-bold">Biography</span></label>
-                                    <textarea name="description" id="description" style="min-height: 120px"
-                                        class="form-control load_editor"><t t-esc="user.partner_id.website_description"/></textarea>
+                                    <textarea id="description" name="description" rows="10" class="form-control load_editor"><t t-esc="user.partner_id.website_description"/></textarea>
                                 </div>
                                 <div class="col">
                                     <button type="submit" class="btn btn-primary btn">Update</button>
