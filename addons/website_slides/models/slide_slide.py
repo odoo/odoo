@@ -108,7 +108,7 @@ class Slide(models.Model):
     category_id = fields.Many2one('slide.category', string="Category", domain="[('channel_id', '=', channel_id)]")
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     is_preview = fields.Boolean('Is Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
-    completion_time = fields.Float('# Hours', digits=(10, 4), compute="_compute_duration", store=True)
+    completion_time = fields.Float('Duration', digits=(10, 4), compute="_compute_duration", store=True)
     # subscribers
     partner_ids = fields.Many2many('res.partner', 'slide_slide_partner', 'slide_id', 'partner_id',
                                    string='Subscribers', groups='website.group_website_publisher')

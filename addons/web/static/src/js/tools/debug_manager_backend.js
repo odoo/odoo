@@ -13,6 +13,7 @@ var SystrayMenu = require('web.SystrayMenu');
 var utils = require('web.utils');
 var WebClient = require('web.WebClient');
 var Widget = require('web.Widget');
+var field_utils = require('web.field_utils');
 
 var QWeb = core.qweb;
 var _t = core._t;
