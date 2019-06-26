@@ -694,6 +694,10 @@ class MailThread(models.AbstractModel):
             params['token'] = token
 
         link = '%s?%s' % (base_link, url_encode(params))
+
+        if self and hasattr(self, 'get_base_url'):
+            link = self[0].get_base_url() + link
+
         return link
 
     @api.multi
