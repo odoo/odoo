@@ -1,5 +1,6 @@
 from odoo import models
 
+
 class ThemeDefault(models.AbstractModel):
     _inherit = 'theme.utils'
 

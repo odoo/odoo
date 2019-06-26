@@ -147,6 +147,18 @@ class Theme(models.AbstractModel):
         if not website:  # remove optional website in master
             website = self.env['website'].get_current_website()
 
+        # Reinitialize font customizations
+        self.env['web_editor.assets'].make_scss_customization(
+            '/website/static/src/scss/options/user_values.scss',
+            {
+                'font-number': 'null',
+                'headings-font-number': 'null',
+                'navbar-font-number': 'null',
+                'buttons-font-number': 'null',
+            }
+        )
+
+        # Call specific theme post copy
         theme_post_copy = '_%s_post_copy' % mod.name
         if hasattr(self, theme_post_copy):
             _logger.info('Executing method %s' % theme_post_copy)

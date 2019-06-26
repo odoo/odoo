@@ -4,10 +4,10 @@
 
 $-seen: ();
 $-font-numbers: (
-    $o-theme-font-number,
-    $o-theme-headings-font-number,
-    $o-theme-buttons-font-number,
-    $o-theme-navbar-font-number
+    o-website-value('font-number'),
+    o-website-value('headings-font-number'),
+    o-website-value('navbar-font-number'),
+    o-website-value('buttons-font-number'),
 );
 @each $-number in $-font-numbers {
     @if index($-seen, $-number) == null {
@@ -75,8 +75,8 @@ $-font-numbers: (
 }
 
 .navbar {
-    @if ($o-theme-navbar-font-number != $o-theme-font-number) {
-        font-family: nth($o-theme-fonts, $o-theme-navbar-font-number);
+    @if ($o-theme-navbar-font != $o-theme-font) {
+        font-family: $o-theme-navbar-font;
     }
 
     .nav-item {
@@ -154,8 +154,8 @@ h6 {
     color: color('h6');
 }
 .btn {
-    @if ($o-theme-buttons-font-number != $o-theme-font-number) {
-        font-family: nth($o-theme-fonts, $o-theme-buttons-font-number);
+    @if ($o-theme-buttons-font != $o-theme-font) {
+        font-family: $o-theme-buttons-font;
     }
 }
 
