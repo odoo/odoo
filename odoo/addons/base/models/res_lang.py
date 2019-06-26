@@ -212,6 +212,20 @@ class Lang(models.Model):
         langs = self.with_context(active_test=True).search([])
         return sorted([(lang.code, lang.name) for lang in langs], key=itemgetter(1))
 
+    def toggle_active(self):
+        super().toggle_active()
+        # Automatically load translation
+        if len(self) == 1 and self.active:
+            return {
+                'name': "Load a Translation",
+                'type': 'ir.actions.act_window',
+                'res_model': 'base.language.install',
+                'context': {'default_lang': self.code},
+                'view_mode': 'form',
+                'target': 'new',
+                'views': [[False, 'form']],
+            }
+
     @api.model_create_multi
     def create(self, vals_list):
         self.clear_caches()
