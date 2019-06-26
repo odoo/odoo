@@ -40,6 +40,7 @@ class AccountJournal(models.Model):
             ('BFERCEL', 'Bonos Fiscales Electrónicos - Factura en Linea'),
             ('FEERCELP', 'Comprobantes de Exportacion - Facturador Plus'),
             ('FEERCEL', 'Comprobantes de Exportacion - Factura en Linea'),
+            ('CPERCEL', 'Codificación de Producto - Comprobantes en Línea'),
         ]
 
     def get_journal_letter(self, counterpart_partner=False):
@@ -109,21 +110,26 @@ class AccountJournal(models.Model):
 
     def get_journal_codes(self):
         self.ensure_one()
-        usual_codes = [
-            '1', '2', '3', '6', '7', '8', '11', '12', '13', '201', '202',
-            '203', '206', '207', '208', '211', '212', '213']
-        # facturam_codes = ['51', '52', '53']
-        # recibo_m_code = '54'
+        usual_codes = ['1', '2', '3', '6', '7', '8', '11', '12', '13']
+        mipyme_codes = ['201', '202', '203', '206', '207', '208', '211', '212', '213']
+        factura_m_codes = ['51', '52', '53']
+        receipt_m_code = ['54']
         receipt_codes = ['4', '9', '15']
         expo_codes = ['19', '20', '21']
         if self.type != 'sale':
             return []
         elif self.l10n_ar_afip_pos_system == 'II_IM':
-            return usual_codes + receipt_codes + expo_codes
+            # factura pre impresa
+            return usual_codes + receipt_codes + expo_codes + factura_m_codes + receipt_m_code
         elif self.l10n_ar_afip_pos_system in ['RAW_MAW', 'RLI_RLM']:
-            return usual_codes + receipt_codes
+            # factura electronica/online
+            return usual_codes + receipt_codes + factura_m_codes + receipt_m_code + mipyme_codes
+        elif self.l10n_ar_afip_pos_system in ['CPERCEL', 'CPEWS']:
+            # factura con detalle
+            return usual_codes + factura_m_codes
         elif self.l10n_ar_afip_pos_system in ['BFERCEL', 'BFEWS']:
-            return usual_codes
+            # factura bono
+            return usual_codes + mipyme_codes
         elif self.l10n_ar_afip_pos_system in ['FEERCEL', 'FEEWS', 'FEERCELP']:
             return expo_codes
 
