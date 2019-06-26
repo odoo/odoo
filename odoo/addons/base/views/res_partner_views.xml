@@ -262,7 +262,18 @@
                             <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
                             <field name="title" options='{"no_open": True}'
                                 attrs="{'invisible': [('is_company', '=', True)]}"/>
-                            <field name="lang"/>
+                            <label for="lang"/>
+                            <div class="o_row">
+                                <field name="lang" placeholder="System (English)"/>
+                                <button
+                                    type="action"
+                                    name="%(base.res_lang_act_window)d"
+                                    class="btn-sm btn-link mb4 fa fa-globe"
+                                    aria-label="More languages"
+                                    groups="base.group_system"
+                                    title="More languages"
+                                />
+                            </div>
                             <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags..."/>
                         </group>
                     </group>
