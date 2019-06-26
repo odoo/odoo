@@ -205,10 +205,9 @@ class AccountInvoice(models.Model):
             if rec.company_id.currency_id == rec.currency_id:
                 l10n_ar_currency_rate = 1.0
             else:
-                currency = rec.currency_id.with_context(
-                    date=rec.date_invoice or fields.Date.context_today(rec))
-                l10n_ar_currency_rate = currency.compute(
-                    1.0, rec.company_id.currency_id, round=False)
+                l10n_ar_currency_rate = rec.currency_id._convert(
+                    1.0, rec.company_id.currency_id, rec.company_id,
+                    rec.date_invoice or fields.Date.today(), round=False)
             rec.l10n_ar_currency_rate = l10n_ar_currency_rate
         return super(AccountInvoice, self).action_invoice_open()
 
