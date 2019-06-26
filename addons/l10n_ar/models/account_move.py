@@ -29,7 +29,7 @@ class AccountMove(models.Model):
             point_of_sale = '0'
             invoice_number = '0'
         else:
-            invoice_number, point_of_sale  = str_number.split('-')
+            invoice_number, point_of_sale = document_number.split('-')
         return {
             'invoice_number': int(invoice_number),
             'point_of_sale': int(point_of_sale),
