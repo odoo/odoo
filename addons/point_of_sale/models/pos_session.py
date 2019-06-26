@@ -153,16 +153,6 @@ class PosSession(models.Model):
                     session.cash_register_id = statement.id
                     break  # stop iteration after finding the cash journal
 
-    @api.constrains('user_id', 'state')
-    def _check_unicity(self):
-        # open if there is no session in 'opening_control', 'opened', 'closing_control' for one user
-        if self.search_count([
-                ('state', 'not in', ('closed', 'closing_control')),
-                ('user_id', '=', self.user_id.id),
-                ('rescue', '=', False)
-            ]) > 1:
-            raise ValidationError(_("You cannot create two active sessions with the same responsible."))
-
     @api.constrains('config_id')
     def _check_pos_config(self):
         if self.search_count([
@@ -754,15 +744,19 @@ class PosSession(models.Model):
         }
 
     def open_frontend_cb(self):
+        """Open the pos interface with config_id as an extra argument.
+            
+        In vanilla PoS each user can only have one active session, therefore it was not needed to pass the config_id
+        on opening a session. It is also possible to login to sessions created by other users.
+            
+        :returns: dict
+        """
         if not self.ids:
             return {}
-        for session in self.filtered(lambda s: s.user_id.id != self.env.uid):
-            raise UserError(_("You cannot use the session of another user. This session is owned by %s. "
-                              "Please first close this one to use this point of sale.") % session.user_id.name)
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url':   '/pos/web/',
+            'url':   '/pos/web?config_id=%d' % self.config_id.id,
         }
 
     def open_cashbox_pos(self):

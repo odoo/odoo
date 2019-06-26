@@ -488,6 +488,54 @@ var PosDB = core.Class.extend({
         }
         return orders;
     },
+    /**
+     * Return the orders with requested ids if they are unpaid.
+     * @param {array<number>} ids order_ids.
+     * @return {array<object>} list of orders.
+     */
+    get_unpaid_orders_to_sync: function(ids){
+        var saved = this.load('unpaid_orders',[]);
+        var orders = [];
+        saved.forEach(function(o) {
+            if (ids.includes(o.id) && (o.data.server_id || o.data.lines.length)){
+                orders.push(o);
+            }
+        });
+        return orders;
+    },
+    /**
+     * Add a given order to the orders to be removed from the server.
+     *
+     * If an order is removed from a table it also has to be removed from the server to prevent it from reapearing 
+     * after syncing. This function will add the server_id of the order to a list of orders still to be removed.
+     * @param {object} order object.
+     */
+    set_order_to_remove_from_server: function(order){
+        if (order.server_id !== undefined) {
+            var to_remove = this.load('unpaid_orders_to_remove',[]);
+            to_remove.push(order.server_id);
+            this.save('unpaid_orders_to_remove', to_remove);
+        }
+    },
+    /**
+     * Get a list of server_ids of orders to be removed.
+     * @return {array<number>} list of server_ids.
+     */
+    get_ids_to_remove_from_server: function(){
+        return this.load('unpaid_orders_to_remove',[]);
+    },
+    /**
+     * Remove server_ids from the list of orders to be removed.
+     * @param {array<number>} ids
+     */
+    set_ids_removed_from_server: function(ids){
+        var to_remove = this.load('unpaid_orders_to_remove',[]);
+        
+        to_remove = _.filter(to_remove, function(id){
+            return !ids.includes(id);
+        });
+        this.save('unpaid_orders_to_remove', to_remove);
+    },
     set_cashier: function(cashier) {
         // Always update if the user is the same as before
         this.save('cashier', cashier || null);
