@@ -551,6 +551,42 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('basic grouped list rendering 5 cols with last 2 aggregates', async function (assert) {
+        assert.expect(4);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="bar"/>' +
+                    '<field name="int_field" sum="Sum1"/>' +
+                    '<field name="qux" sum="Sum2"/>' +
+                '</tree>',
+            groupBy: ['bar'],
+        });
+
+        assert.strictEqual(list.$('.o_list_view_grouped thead tr').children().length, 5,
+            "there should be 5 cells 1 for record selector and 4 for fields in the list view");
+        assert.strictEqual(list.$('.o_group_header:first').children().length, 3,
+            "group header should have 3 cells (last 2 aggregates)");
+        assert.strictEqual(list.$('.o_group_header:first th').attr('colspan'), "3",
+            "first th should have colspan 3, 1 record selector + 2 fields, last two fields are aggregate fields");
+
+        var colCount = 0;
+        list.$('.o_group_header:first').children().each(function () {
+            if ($(this).attr('colspan')) {
+                colCount += parseInt($(this).attr('colspan'));
+            } else {
+                colCount++;
+            }
+        });
+        assert.strictEqual(list.$el.find('.o_list_view_grouped thead tr').children().length, colCount,
+            "length of table head and group th colspan + td should be the same");
+        list.destroy();
+    });
+
     QUnit.test('ordered list, sort attribute in context', async function (assert) {
         assert.expect(1);
         // Equivalent to saving a custom filter

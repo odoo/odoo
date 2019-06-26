@@ -563,7 +563,11 @@ var ListRenderer = BasicRenderer.extend({
                 return column.tag === 'field' && _.contains(aggregateKeys, column.attrs.name);
             });
             cells = cells.concat(aggregateCells.slice(firstAggregateIndex, lastAggregateIndex + 1));
-            cells.push($('<th>').attr('colspan', this.columns.length - 1 - lastAggregateIndex));
+            // add $th only if last aggregate is not last field
+            var lastAggregateColspan = this.columns.length - 1 - lastAggregateIndex;
+            if (lastAggregateColspan) {
+                cells.push($('<th>').attr('colspan', lastAggregateColspan));
+            }
         } else {
             colspanBeforeAggregate = this.columns.length;
         }
