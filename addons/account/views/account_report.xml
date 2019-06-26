@@ -15,6 +15,17 @@
         />
 
         <report
+            id="action_account_original_vendor_bill"
+            model="account.move"
+            string="Original vendor bills"
+            report_type="qweb-pdf"
+            name="account.report_original_vendor_bill"
+            file="account.report_original_vendor_bill"
+            attachment="'original_vendor_bill.pdf'"
+            attachment_use="True"
+        />
+
+        <report
             id="account_invoices_without_payment"
             model="account.move"
             string="Invoices without Payment"
