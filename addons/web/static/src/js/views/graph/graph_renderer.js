@@ -18,15 +18,16 @@ var qweb = core.qweb;
 
 var CHART_TYPES = ['pie', 'bar', 'line'];
 
-var COLORS = ["#1f77b4","#ff7f0e","#aec7e8","#ffbb78","#2ca02c","#98df8a","#d62728",
-                    "#ff9896","#9467bd","#c5b0d5","#8c564b","#c49c94","#e377c2","#f7b6d2",
-                    "#7f7f7f","#c7c7c7","#bcbd22","#dbdb8d","#17becf","#9edae5"];
+var COLORS = ["#1f77b4", "#ff7f0e", "#aec7e8", "#ffbb78", "#2ca02c", "#98df8a", "#d62728",
+    "#ff9896", "#9467bd", "#c5b0d5", "#8c564b", "#c49c94", "#e377c2", "#f7b6d2",
+    "#7f7f7f", "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"];
 var COLOR_NB = COLORS.length;
-function hexToRGBA (hex, opacity) {
+
+function hexToRGBA(hex, opacity) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     var rgb = result.slice(1, 4).map(function (n) {
-            return parseInt(n, 16);
-        }).join(',');
+        return parseInt(n, 16);
+    }).join(',');
     return 'rgba(' + rgb + ',' + opacity + ')';
 }
 
@@ -78,11 +79,11 @@ return AbstractRenderer.extend({
     /**
      * @override
      */
-    updateState: function  () {
+    updateState: function () {
         return this._super.apply(this, arguments);
     },
     /**
-     * Chart.js does not need the canevas to be in dom in order
+     * Chart.js does not need the canvas to be in dom in order
      * to be able to work well. We could avoid the calls to on_attach_callback
      * and on_detach_callback.
      *
@@ -107,7 +108,7 @@ return AbstractRenderer.extend({
 
     /**
      * This function aims to remove a suitable number of lines from the tooltip in order to make it reasonably visible.
-     * A message indicating the number of lines is added if necessary. 
+     * A message indicating the number of lines is added if necessary.
      *
      * @private
      * @param {Number} maxTooltipHeight this the max height in pixels of the tooltip
@@ -299,13 +300,13 @@ return AbstractRenderer.extend({
      * @param {Object} dataPt
      * @returns {string}
      */
-    _getDatasetLabel:function (dataPt) {
+    _getDatasetLabel: function (dataPt) {
         if (_.contains(['bar', 'line'], this.state.mode)) {
             // ([origin] + second to last groupBys) or measure
             var datasetLabel = dataPt.labels.slice(1).join("/");
             if (this.state.origins.length > 1) {
                 datasetLabel = this.state.origins[dataPt.originIndex] +
-                                (datasetLabel ? ('/' + datasetLabel) : '');
+                    (datasetLabel ? ('/' + datasetLabel) : '');
             }
             datasetLabel = datasetLabel || this.fields[this.state.measure].string;
             return datasetLabel;
@@ -380,9 +381,9 @@ return AbstractRenderer.extend({
                 referenceColor = 'borderColor';
             }
             legendOptions.labels = {
-                generateLabels: function(chart) {
+                generateLabels: function (chart) {
                     var data = chart.data;
-                    return data.datasets.map(function(dataset, i) {
+                    return data.datasets.map(function (dataset, i) {
                         return {
                             text: self._shortenLabel(dataset.label),
                             fullText: dataset.label,
@@ -402,12 +403,12 @@ return AbstractRenderer.extend({
             };
         } else {
             legendOptions.labels = {
-                generateLabels: function(chart) {
+                generateLabels: function (chart) {
                     var data = chart.data;
                     var metaData = data.datasets.map(function (dataset, index) {
                         return chart.getDatasetMeta(index).data;
                     });
-                    return data.labels.map(function(label, i) {
+                    return data.labels.map(function (label, i) {
                         var hidden = metaData.reduce(
                             function (hidden, data) {
                                 if (data[i]) {
@@ -447,7 +448,7 @@ return AbstractRenderer.extend({
                     scaleLabel: {
                         display: this.state.groupBy.length && !this.isEmbedded,
                         labelString: this.state.groupBy.length ?
-                                        this.fields[this.state.groupBy[0].split(':')[0]].string : '',
+                            this.fields[this.state.groupBy[0].split(':')[0]].string : '',
                     },
                     ticks: {
                         // don't use bind:  callback is called with 'index' as second parameter
@@ -590,7 +591,7 @@ return AbstractRenderer.extend({
         return index;
     },
     /**
-     * Separate dataPoints comming from the read_group(s) into different datasets.
+     * Separate dataPoints coming from the read_group(s) into different datasets.
      * This function returns the parameters data and labels used to produce the charts.
      *
      * @private
@@ -600,7 +601,7 @@ return AbstractRenderer.extend({
      * @param {function} [getDatasetDataLength], determines the initial section of the labels array
      *                    over which the datasets have to be completed. These sections only depend
      *                    on the datasets origins. Default is the constant function _ => labels.length.
-     * @returns {Object} the paramater data used to instatiate the chart.
+     * @returns {Object} the parameter data used to instantiate the chart.
      */
     _prepareData: function (dataPoints) {
         var self = this;
@@ -670,7 +671,7 @@ return AbstractRenderer.extend({
     /**
      * Determine how to relabel a label according to a given origin.
      * The idea is that the getLabel function is in general not invertible but
-     * it is when restricted to the set of dataPoints comming from a same origin.
+     * it is when restricted to the set of dataPoints coming from a same origin.
 
      * @private
      * @param {Array} label
@@ -839,17 +840,17 @@ return AbstractRenderer.extend({
                 dataset.borderColor = self._getColor(index);
             }
             if (data.labels.length === 1) {
-                // decalage of the real value to right. This is done to center the points in the chart
+                // shift of the real value to right. This is done to center the points in the chart
                 // See data.labels below in Chart parameters
                 dataset.data.unshift(undefined);
             }
             dataset.pointBackgroundColor = dataset.borderColor;
             dataset.pointBorderColor = 'rgba(0,0,0,0.2)';
         });
-        // center the points in the chart (whithout that code they are put on the left and the graph seems empty)
+        // center the points in the chart (without that code they are put on the left and the graph seems empty)
         data.labels = data.labels.length > 1 ?
-                        data.labels :
-                        Array.prototype.concat.apply([], [[['']], data.labels, [['']]]);
+            data.labels :
+            Array.prototype.concat.apply([], [[['']], data.labels, [['']]]);
 
         // prepare options
         var options = this._prepareOptions(data.datasets.length);
@@ -977,7 +978,7 @@ return AbstractRenderer.extend({
     _shortenLabel: function (label) {
         // string returned could be 'wrong' if a groupby value contain a '/'!
         var groups = label.split("/");
-        var shortLabel = groups.slice(0,3).join("/");
+        var shortLabel = groups.slice(0, 3).join("/");
         if (shortLabel.length > 30) {
             shortLabel = shortLabel.slice(0, 30) + '...';
         } else if (groups.length > 3) {
