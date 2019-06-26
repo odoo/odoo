@@ -262,8 +262,9 @@
                             <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
                             <field name="title" options='{"no_open": True}'
                                 attrs="{'invisible': [('is_company', '=', True)]}"/>
-                            <label for="lang"/>
-                            <div class="o_row">
+                            <field name="active_lang_count" invisible="1"/>
+                            <label for="lang" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}"/>
+                            <div class="o_row" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}">
                                 <field name="lang" placeholder="System (English)"/>
                                 <button
                                     type="action"

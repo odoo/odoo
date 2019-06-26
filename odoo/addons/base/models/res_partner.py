@@ -154,6 +154,7 @@ class Partner(models.Model):
     ref = fields.Char(string='Reference', index=True)
     lang = fields.Selection(_lang_get, string='Language', default=lambda self: self.env.lang,
                             help="All the emails and documents sent to this contact will be translated in this language.")
+    active_lang_count = fields.Integer(compute='_compute_active_lang_count')
     tz = fields.Selection(_tz_get, string='Timezone', default=lambda self: self._context.get('tz'),
                           help="When printing documents and exporting/importing data, time values are computed according to this timezone.\n"
                                "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
@@ -252,6 +253,11 @@ class Partner(models.Model):
         names = dict(self.with_context(**diff).name_get())
         for partner in self:
             partner.display_name = names.get(partner.id)
+
+    def _compute_active_lang_count(self):
+        lang_count = len(self.env['res.lang'].get_installed())
+        for partner in self:
+            partner.active_lang_count = lang_count
 
     @api.depends('tz')
     def _compute_tz_offset(self):
