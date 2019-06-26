@@ -636,7 +636,11 @@ class Field(MetaField('DummyField', (object,), {})):
         record_value = {record: record[self.name] for record in records}
         for record in records:
             other, field = self.traverse_related(record)
-            if other:
+            # DLE P84: `test_base_objects.py`, `test_basic`
+            # Do not write on the related when the "origin" record is a new (onchange)
+            # e.g. write on account.bank.statement.journal_type : False,
+            # should not write False in the type of the related account.journal
+            if other and bool(other.id) == bool(record.id):
                 other[field.name] = record_value[record]
 
     def _search_related(self, records, operator, value):
