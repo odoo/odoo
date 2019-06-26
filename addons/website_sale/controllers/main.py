@@ -605,7 +605,9 @@ class WebsiteSale(ProductConfiguratorController):
         new_values['customer'] = True
         new_values['team_id'] = request.website.salesteam_id and request.website.salesteam_id.id
         new_values['user_id'] = request.website.salesperson_id and request.website.salesperson_id.id
-        new_values['website_id'] = request.website.id
+
+        if request.website.specific_user_account:
+            new_values['website_id'] = request.website.id
 
         if order.partner_id.id == request.website.user_id.sudo().partner_id.id:
             # If the partner is public, we assign the company of the website
