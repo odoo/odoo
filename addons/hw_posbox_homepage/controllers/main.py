@@ -90,13 +90,15 @@ class IoTboxHomepage(web.Home):
 
         pos_device = self.get_pos_device_status()
         iot_device = []
-        for status in pos_device:
-            if pos_device[status]['status'] == 'connected':
-                iot_device.append({
-                    'name': status,
-                    'type': 'device',
-                    'message': ' '.join(pos_device[status]['messages'])
-                })
+
+        if not iot_devices:
+            for status in pos_device:
+                if pos_device[status]['status'] == 'connected':
+                    iot_device.append({
+                        'name': status,
+                        'type': 'device',
+                        'message': ' '.join(pos_device[status]['messages'])
+                    })
 
         for device in iot_devices:
             iot_device.append({
