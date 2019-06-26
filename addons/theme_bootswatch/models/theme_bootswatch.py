@@ -1,5 +1,6 @@
 from odoo import models
 
+
 class ThemeBootswatch(models.AbstractModel):
     _inherit = 'theme.utils'
 
