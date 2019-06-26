@@ -316,7 +316,7 @@ class AccountMove(models.Model):
                 # to the move's date if it wasn't already set (we don't want
                 # to have to reconcile all the older payments -made before
                 # installing Accounting- with bank statements)
-                move.company_id.account_bank_reconciliation_start = move.date
+                move.sudo().company_id.account_bank_reconciliation_start = move.date
 
         return self.write({'state': 'posted'})
 
