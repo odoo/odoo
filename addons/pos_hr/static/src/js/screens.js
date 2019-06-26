@@ -92,7 +92,7 @@ var LoginScreenWidget = ScreenWidget.extend({
     },
 
     unlock_screen: function() {
-        var screen = (this.gui.pos.get_order() ? this.gui.pos.get_order().get_screen_data('previous-screen') : this.gui.default_screen) || this.gui.default_screen;
+        var screen = (this.gui.pos.get_order() ? this.gui.pos.get_order().get_screen_data('previous-screen') : this.gui.startup_screen) || this.gui.startup_screen;
         this.gui.show_screen(screen);
     }
 });

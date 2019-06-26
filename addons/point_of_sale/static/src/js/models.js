@@ -67,6 +67,10 @@ exports.PosModel = Backbone.Model.extend({
         this.order_sequence = 1;
         window.posmodel = this;
 
+        // Extract the config id from the url.
+        var given_config = new RegExp('[\?&]config_id=([^&#]*)').exec(window.location.href);
+        this.config_id = given_config && given_config[1] && parseInt(given_config[1]) || false;
+
         // these dynamic attributes can be watched for change by other models or widgets
         this.set({
             'synch':            { state:'connected', pending:0 },
@@ -251,15 +255,23 @@ exports.PosModel = Backbone.Model.extend({
     },{
         model:  'pos.session',
         fields: ['id', 'name', 'user_id', 'config_id', 'start_at', 'stop_at', 'sequence_number', 'login_number', 'payment_method_ids'],
-        domain: function(self){ return [['state','=','opened'],['user_id','=',session.uid]]; },
-        loaded: function(self,pos_sessions,tmp){
+        domain: function(self){
+            var domain = [
+                ['state','=','opened'],
+                ['rescue', '=', false],
+            ];
+            if (self.config_id) domain.push(['config_id', '=', self.config_id]);
+            return domain;
+        },
+        loaded: function(self, pos_sessions, tmp){
             self.pos_session = pos_sessions[0];
+            self.config_id = self.config_id || self.pos_session && self.pos_session.config_id[0];
             tmp.payment_method_ids = pos_sessions[0].payment_method_ids;
         },
     },{
         model: 'pos.config',
         fields: [],
-        domain: function(self){ return [['id','=', self.pos_session.config_id[0]]]; },
+        domain: function(self){ return [['id','=', self.config_id]]; },
         loaded: function(self,configs){
             self.config = configs[0];
             self.config.use_proxy = self.config.iface_payment_terminal ||
@@ -860,6 +872,7 @@ exports.PosModel = Backbone.Model.extend({
                         transfer.then(function(order_server_id){
                             // generate the pdf and download it
                             if (order_server_id.length) {
+                                order_server_id[0] = order_server_id[0]["id"];
                                 self.chrome.do_action('point_of_sale.pos_invoice_report',{additional_context:{
                                     active_ids:order_server_id,
                                 }}).then(function () {
@@ -889,25 +902,22 @@ exports.PosModel = Backbone.Model.extend({
     // wrapper around the _save_to_server that updates the synch status widget
     _flush_orders: function(orders, options) {
         var self = this;
-        this.set('synch',{ state: 'connecting', pending: orders.length});
+        this.set_synch('connecting', orders.length);
 
-        return self._save_to_server(orders, options).then(function (server_ids) {
-            var pending = self.db.get_orders().length;
-
-            self.set('synch', {
-                state: pending ? 'connecting' : 'connected',
-                pending: pending
-            });
-
-            return server_ids;
+        return this._save_to_server(orders, options).then(function (server_ids) {
+            self.set_synch('connected');
+            return _.pluck(server_ids, 'id');
         }).catch(function(){
-            var pending = self.db.get_orders().length;
-            if (self.get('failed')) {
-                self.set('synch', { state: 'error', pending: pending });
-            } else {
-                self.set('synch', { state: 'disconnected', pending: pending });
-            }
+            self.set_synch(self.get('failed') ? 'error' : 'disconnected');
         });
+    },
+
+    set_synch: function(state, pending) {
+        if (['connected', 'connecting', 'error', 'disconnected'].indexOf(state) === -1) {
+            console.error(state, ' is not a known connection state.');
+        }
+        pending = pending || this.db.get_orders().length + this.db.get_ids_to_remove_from_server().length;
+        this.set('synch', { state: state, pending: pending });
     },
 
     // send an array of orders to the server
@@ -936,6 +946,7 @@ exports.PosModel = Backbone.Model.extend({
                 order.to_invoice = options.to_invoice || false;
                 return order;
             })];
+        args.push(options.draft || false);
         return rpc.query({
                 model: 'pos.order',
                 method: 'create_from_ui',
@@ -969,6 +980,49 @@ exports.PosModel = Backbone.Model.extend({
                     self.set('failed',error);
                 }
                 console.error('Failed to send orders:', orders);
+                self.gui.show_sync_error_popup();
+                throw reason;
+            });
+    },
+
+    /**
+     * Remove orders with given ids from the database.
+     * @param {array<number>} server_ids ids of the orders to be removed.
+     * @param {dict} options.
+     * @param {number} options.timeout optional timeout parameter for the rpc call.
+     * @return {Promise<array<number>>} returns a promise of the ids successfully removed.
+     */
+    _remove_from_server: function (server_ids, options) {
+        options = options || {};
+        if (!server_ids || !server_ids.length) {
+            return Promise.resolve([]);
+        }
+
+        var self = this;
+        var timeout = typeof options.timeout === 'number' ? options.timeout : 7500 * server_ids.length;
+
+        return rpc.query({
+                model: 'pos.order',
+                method: 'remove_from_ui',
+                args: [server_ids],
+                kwargs: {context: session.user_context},
+            }, {
+                timeout: timeout,
+                shadow: true,
+            })
+            .then(function (ids) {
+                self.db.set_ids_removed_from_server(server_ids);
+                return server_ids;
+            }).catch(function (reason){
+                var error = reason.message;
+                if(error.code === 200 ){    // Business Logic Error, not a connection problem
+                    //if warning do not need to display traceback!!
+                    if (error.data.exception_type == 'warning') {
+                        delete error.data.debug;
+                    }
+                }
+                self.gui.show_sync_error_popup();
+                console.error('Failed to remove orders:', server_ids);
             });
     },
 
@@ -1334,7 +1388,7 @@ exports.Orderline = Backbone.Model.extend({
         this.price = json.price_unit;
         this.set_discount(json.discount);
         this.set_quantity(json.qty, 'do not recompute unit price');
-        this.id    = json.id;
+        this.id = json.id ? json.id : orderline_id++;
         orderline_id = Math.max(this.id+1,orderline_id);
         var pack_lot_lines = json.pack_lot_ids;
         for (var i = 0; i < pack_lot_lines.length; i++) {
@@ -2152,6 +2206,8 @@ exports.Order = Backbone.Model.extend({
         this.uid = json.uid;
         this.name = _t("Order ") + this.uid;
         this.validation_date = json.creation_date;
+        this.server_id = json.server_id ? json.server_id : false;
+        this.user_id = json.user_id;
 
         if (json.fiscal_position_id) {
             var fiscal_position = _.find(this.pos.fiscal_positions, function (fp) {
@@ -2213,7 +2269,7 @@ exports.Order = Backbone.Model.extend({
         this.paymentlines.each(_.bind( function(item) {
             return paymentLines.push([0, 0, item.export_as_JSON()]);
         }, this));
-        return {
+        var json = {
             name: this.get_name(),
             amount_paid: this.get_total_paid() - this.get_change(),
             amount_total: this.get_total_with_tax(),
@@ -2229,8 +2285,13 @@ exports.Order = Backbone.Model.extend({
             uid: this.uid,
             sequence_number: this.sequence_number,
             creation_date: this.validation_date || this.creation_date, // todo: rename creation_date in master
-            fiscal_position_id: this.fiscal_position ? this.fiscal_position.id : false
+            fiscal_position_id: this.fiscal_position ? this.fiscal_position.id : false,
+            server_id: this.server_id ? this.server_id : false,
         };
+        if (!this.is_paid && this.user_id) {
+            json.user_id = this.user_id;
+        }
+        return json;
     },
     export_for_printing: function(){
         var orderlines = [];

@@ -1052,6 +1052,23 @@
         </div>
     </t>
 
+    <t t-name="SyncErrorPopupWidget">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-error">
+                <header class="title"><t t-esc=" widget.options.title || 'Error' " /></header>
+                <main class="body traceback"><t t-esc=" widget.options.body || '' "/></main>
+                <footer class="footer">
+                    <div class="button cancel">
+                        Ok
+                    </div>
+                    <div class="button stop_showing_sync_errors">
+                        Don't show again
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </t>
+
     <t t-name="ErrorTracebackPopupWidget">
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-error">
@@ -1469,15 +1486,14 @@
                     <t t-if='order === widget.pos.get_order()'>
                         <span class="order-button select-order selected" t-att-data-uid="order.uid">
                             <span class='order-sequence'>
-                                <t t-esc='order.sequence_number' />
+                                <t t-esc="order.uid.substring(order.uid.indexOf('-') +1)"/>
                             </span>
-                            <t t-esc="moment(order.creation_date).format('hh:mm')"/>
                         </span>
                     </t>
                     <t t-if='order !== widget.pos.get_order()'>
                         <span class="order-button select-order" t-att-data-uid="order.uid">
                             <span class='order-sequence'>
-                                <t t-esc='order.sequence_number' />
+                                <t t-esc="order.uid.substring(order.uid.indexOf('-') +1)"/>
                             </span>
                         </span>
                     </t>

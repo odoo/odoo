@@ -323,9 +323,9 @@ class TestUi(odoo.tests.HttpCase):
         # this you end up with js, css but no qweb.
         env['ir.module.module'].search([('name', '=', 'point_of_sale')], limit=1).state = 'installed'
 
-        self.start_tour("/pos/web", 'pos_pricelist', login="admin")
+        self.start_tour("/pos/web?config_id=%d" % main_pos_config.id, 'pos_pricelist', login="admin")
 
-        self.start_tour("/pos/web", 'pos_basic_order', login="admin")
+        self.start_tour("/pos/web?config_id=%d" % main_pos_config.id, 'pos_basic_order', login="admin")
 
         for order in env['pos.order'].search([]):
             self.assertEqual(order.state, 'paid', "Validated order has payment of " + str(order.amount_paid) + " and total of " + str(order.amount_total))

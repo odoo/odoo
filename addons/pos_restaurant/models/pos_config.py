@@ -42,3 +42,11 @@ class PosConfig(models.Model):
     def _onchange_is_order_printer(self):
         if not self.is_order_printer:
             self.printer_ids = [(5, 0, 0)]
+
+    def get_tables_order_count(self):
+        """         """
+        self.ensure_one()
+        result = []
+        for table in self.floor_ids.table_ids.filtered(lambda t: t.active ==  True):
+            result.append({'id': table.id, 'orders': self.env['pos.order'].search_count([('state', '=', 'draft'), ('table_id', '=', table.id)])})
+        return result
