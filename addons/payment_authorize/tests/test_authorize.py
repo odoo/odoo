@@ -192,7 +192,7 @@ class AuthorizeForm(AuthorizeCommon):
             'authorize_transaction_key': '',
             'authorize_login': '',
         })
-        self.assertTrue(authorize.authorize_test_credentials, 'Authorize.net: s2s authentication failed')
+        self.assertTrue(authorize._authorize_test_credentials, 'Authorize.net: s2s authentication failed')
 
         # create payment meethod
         payment_token = self.env['payment.token'].create({
@@ -216,7 +216,7 @@ class AuthorizeForm(AuthorizeCommon):
             'partner_id': self.buyer_id,
 
         })
-        transaction.authorize_s2s_do_transaction()
+        transaction._authorize_s2s_do_transaction()
         self.assertEqual(transaction.state, 'done',)
 
         # switch to 'authorize only'
@@ -232,7 +232,7 @@ class AuthorizeForm(AuthorizeCommon):
             'partner_id': self.buyer_id,
 
         })
-        transaction.authorize_s2s_do_transaction()
+        transaction._authorize_s2s_do_transaction()
         self.assertEqual(transaction.state, 'authorized')
         transaction.action_capture()
         self.assertEqual(transaction.state, 'done')
@@ -249,7 +249,7 @@ class AuthorizeForm(AuthorizeCommon):
             'partner_id': self.buyer_id,
 
         })
-        transaction.authorize_s2s_do_transaction()
+        transaction._authorize_s2s_do_transaction()
         self.assertEqual(transaction.state, 'authorized')
         transaction.action_void()
         self.assertEqual(transaction.state, 'cancel')
@@ -268,5 +268,5 @@ class AuthorizeForm(AuthorizeCommon):
             'partner_id': self.buyer_id,
 
         })
-        transaction.authorize_s2s_do_transaction()
+        transaction._authorize_s2s_do_transaction()
         self.assertEqual(transaction.state, 'cancel')

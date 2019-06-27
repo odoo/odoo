@@ -67,7 +67,7 @@ class PaymentAcquirerAuthorize(models.Model):
             return hmac.new(values['x_trans_key'].encode('utf-8'), data, hashlib.md5).hexdigest()
 
     @api.multi
-    def authorize_form_generate_values(self, values):
+    def _authorize_form_generate_values(self, values):
         self.ensure_one()
         # State code is only supported in US, use state name by default
         # See https://developer.authorize.net/api/reference/
@@ -125,7 +125,7 @@ class PaymentAcquirerAuthorize(models.Model):
         return self._get_authorize_urls(self.environment)['authorize_form_url']
 
     @api.model
-    def authorize_s2s_form_process(self, data):
+    def _authorize_s2s_form_process(self, data):
         values = {
             'cc_number': data.get('cc_number'),
             'cc_holder_name': data.get('cc_holder_name'),
@@ -139,7 +139,7 @@ class PaymentAcquirerAuthorize(models.Model):
         return PaymentMethod
 
     @api.multi
-    def authorize_s2s_form_validate(self, data):
+    def _authorize_s2s_form_validate(self, data):
         error = dict()
         mandatory_fields = ["cc_number", "cc_cvc", "cc_holder_name", "cc_expiry", "cc_brand"]
         # Validation
@@ -161,7 +161,7 @@ class PaymentAcquirerAuthorize(models.Model):
         return False if error else True
 
     @api.multi
-    def authorize_test_credentials(self):
+    def _authorize_test_credentials(self):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
         return transaction.test_authenticate()
@@ -263,7 +263,7 @@ class TxAuthorize(models.Model):
             return False
 
     @api.multi
-    def authorize_s2s_do_transaction(self, **data):
+    def _authorize_s2s_do_transaction(self, **data):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
 
@@ -278,21 +278,21 @@ class TxAuthorize(models.Model):
         return self._authorize_s2s_validate_tree(res)
 
     @api.multi
-    def authorize_s2s_do_refund(self):
+    def _authorize_s2s_do_refund(self):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
         res = transaction.credit(self.payment_token_id, self.amount, self.acquirer_reference)
         return self._authorize_s2s_validate_tree(res)
 
     @api.multi
-    def authorize_s2s_capture_transaction(self):
+    def _authorize_s2s_capture_transaction(self):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
         tree = transaction.capture(self.acquirer_reference or '', self.amount)
         return self._authorize_s2s_validate_tree(tree)
 
     @api.multi
-    def authorize_s2s_void_transaction(self):
+    def _authorize_s2s_void_transaction(self):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
         tree = transaction.void(self.acquirer_reference or '')
@@ -358,7 +358,7 @@ class PaymentToken(models.Model):
     save_token = fields.Selection(string='Save Cards', related='acquirer_id.save_token', readonly=False)
 
     @api.model
-    def authorize_create(self, values):
+    def _authorize_create(self, values):
         if values.get('cc_number'):
             values['cc_number'] = values['cc_number'].replace(' ', '')
             acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])

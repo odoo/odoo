@@ -42,7 +42,7 @@ class PaymentAcquirerPayulatam(models.Model):
         return md5(data_string.encode('utf-8')).hexdigest()
 
     @api.multi
-    def payulatam_form_generate_values(self, values):
+    def _payulatam_form_generate_values(self, values):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         tx = self.env['payment.transaction'].search([('reference', '=', values.get('reference'))])
         # payulatam will not allow any payment twise even if payment was failed last time.

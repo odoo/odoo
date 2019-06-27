@@ -68,7 +68,7 @@ class AcquirerPaypal(models.Model):
             }
 
     @api.multi
-    def paypal_compute_fees(self, amount, currency_id, country_id):
+    def _paypal_compute_fees(self, amount, currency_id, country_id):
         """ Compute paypal fees.
 
             :param float amount: the amount to pay
@@ -90,7 +90,7 @@ class AcquirerPaypal(models.Model):
         return fees
 
     @api.multi
-    def paypal_form_generate_values(self, values):
+    def _paypal_form_generate_values(self, values):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
         paypal_tx_values = dict(values)

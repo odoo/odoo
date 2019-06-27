@@ -149,7 +149,7 @@ class AcquirerAdyen(models.Model):
         return base64.b64encode(hmac.new(key, sign, hashlib.sha1).digest())
 
     @api.multi
-    def adyen_form_generate_values(self, values):
+    def _adyen_form_generate_values(self, values):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         # tmp
         import datetime

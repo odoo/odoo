@@ -37,7 +37,7 @@ class PaymentAcquirerStripe(models.Model):
              "https://stripe.com/docs/checkout")
 
     @api.multi
-    def stripe_form_generate_values(self, tx_values):
+    def _stripe_form_generate_values(self, tx_values):
         self.ensure_one()
         stripe_tx_values = dict(tx_values)
         temp_stripe_tx_values = {
@@ -62,7 +62,7 @@ class PaymentAcquirerStripe(models.Model):
         return 'api.stripe.com/v1'
 
     @api.model
-    def stripe_s2s_form_process(self, data):
+    def _stripe_s2s_form_process(self, data):
         payment_token = self.env['payment.token'].sudo().create({
             'cc_number': data['cc_number'],
             'cc_holder_name': data['cc_holder_name'],
@@ -75,7 +75,7 @@ class PaymentAcquirerStripe(models.Model):
         return payment_token
 
     @api.multi
-    def stripe_s2s_form_validate(self, data):
+    def _stripe_s2s_form_validate(self, data):
         self.ensure_one()
 
         # mandatory fields
@@ -128,7 +128,7 @@ class PaymentTransactionStripe(models.Model):
         return res
 
     @api.multi
-    def stripe_s2s_do_transaction(self, **kwargs):
+    def _stripe_s2s_do_transaction(self, **kwargs):
         self.ensure_one()
         result = self._create_stripe_charge(acquirer_ref=self.payment_token_id.acquirer_ref, email=self.partner_email)
         return self._stripe_s2s_validate_tree(result)
@@ -153,7 +153,7 @@ class PaymentTransactionStripe(models.Model):
         return res
 
     @api.multi
-    def stripe_s2s_do_refund(self, **kwargs):
+    def _stripe_s2s_do_refund(self, **kwargs):
         self.ensure_one()
         result = self._create_stripe_refund()
         return self._stripe_s2s_validate_tree(result)
@@ -232,7 +232,7 @@ class PaymentTokenStripe(models.Model):
     _inherit = 'payment.token'
 
     @api.model
-    def stripe_create(self, values):
+    def _stripe_create(self, values):
         token = values.get('stripe_token')
         description = None
         payment_acquirer = self.env['payment.acquirer'].browse(values.get('acquirer_id'))

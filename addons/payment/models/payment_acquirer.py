@@ -312,7 +312,7 @@ class PaymentAcquirer(models.Model):
         }
         acquirers = self.filtered(lambda x: x.fees_active)
         for acq in acquirers:
-            custom_method_name = '%s_compute_fees' % acq.provider
+            custom_method_name = '_%s_compute_fees' % acq.provider
             if hasattr(acq, custom_method_name):
                 fees = getattr(acq, custom_method_name)(amount, currency_id, country_id)
                 extra_fees[acq.id] = fees
@@ -526,13 +526,13 @@ class PaymentAcquirer(models.Model):
             values['billing_country'] = self.env['res.country'].browse(values.get('billing_partner_country_id'))
 
         # compute fees
-        fees_method_name = '%s_compute_fees' % self.provider
+        fees_method_name = '_%s_compute_fees' % self.provider
         if hasattr(self, fees_method_name):
             fees = getattr(self, fees_method_name)(values['amount'], values['currency_id'], values.get('partner_country_id'))
             values['fees'] = float_round(fees, 2)
 
         # call <name>_form_generate_values to update the tx dict with acqurier specific values
-        cust_method_name = '%s_form_generate_values' % (self.provider)
+        cust_method_name = '_%s_form_generate_values' % (self.provider)
         if hasattr(acquirer_sudo, cust_method_name):
             method = getattr(self, cust_method_name)
             values = method(values)
@@ -560,7 +560,7 @@ class PaymentAcquirer(models.Model):
 
     @api.multi
     def _s2s_process(self, data):
-        cust_method_name = '%s_s2s_form_process' % (self.provider)
+        cust_method_name = '_%s_s2s_form_process' % (self.provider)
         if not self._s2s_validate(data):
             return False
         if hasattr(self, cust_method_name):
@@ -574,7 +574,7 @@ class PaymentAcquirer(models.Model):
 
     @api.multi
     def _s2s_validate(self, data):
-        cust_method_name = '%s_s2s_form_validate' % (self.provider)
+        cust_method_name = '_%s_s2s_form_validate' % (self.provider)
         if hasattr(self, cust_method_name):
             method = getattr(self, cust_method_name)
             return method(data)
@@ -631,13 +631,13 @@ class PaymentTransaction(models.Model):
 
     Methods that can be added in an acquirer-specific implementation:
 
-     - ``<name>_create``: method receiving values used when creating a new
+     - ``_<name>_create``: method receiving values used when creating a new
        transaction and that returns a dictionary that will update those values.
        This method can be used to tweak some transaction values.
 
     Methods defined for convention, depending on your controllers:
 
-     - ``<name>_form_feedback(self, data)``: method that handles the data coming
+     - ``_<name>_form_feedback(self, data)``: method that handles the data coming
        from the acquirer after the transaction. It will generally receives data
        posted by the acquirer after the transaction.
     """
@@ -1071,7 +1071,7 @@ class PaymentTransaction(models.Model):
 
     @api.multi
     def _s2s_do_transaction(self, **kwargs):
-        custom_method_name = '%s_s2s_do_transaction' % self.acquirer_id.provider
+        custom_method_name = '_%s_s2s_do_transaction' % self.acquirer_id.provider
         for trans in self:
             trans._log_payment_transaction_sent()
             if hasattr(trans, custom_method_name):
@@ -1079,19 +1079,19 @@ class PaymentTransaction(models.Model):
 
     @api.multi
     def _s2s_do_refund(self, **kwargs):
-        custom_method_name = '%s_s2s_do_refund' % self.acquirer_id.provider
+        custom_method_name = '_%s_s2s_do_refund' % self.acquirer_id.provider
         if hasattr(self, custom_method_name):
             return getattr(self, custom_method_name)(**kwargs)
 
     @api.multi
     def _s2s_capture_transaction(self, **kwargs):
-        custom_method_name = '%s_s2s_capture_transaction' % self.acquirer_id.provider
+        custom_method_name = '_%s_s2s_capture_transaction' % self.acquirer_id.provider
         if hasattr(self, custom_method_name):
             return getattr(self, custom_method_name)(**kwargs)
 
     @api.multi
     def _s2s_void_transaction(self, **kwargs):
-        custom_method_name = '%s_s2s_void_transaction' % self.acquirer_id.provider
+        custom_method_name = '_%s_s2s_void_transaction' % self.acquirer_id.provider
         if hasattr(self, custom_method_name):
             return getattr(self, custom_method_name)(**kwargs)
 
@@ -1155,7 +1155,7 @@ class PaymentToken(models.Model):
             acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
 
             # custom create
-            custom_method_name = '%s_create' % acquirer.provider
+            custom_method_name = '_%s_create' % acquirer.provider
             if hasattr(self, custom_method_name):
                 values.update(getattr(self, custom_method_name)(values))
                 # remove all non-model fields used by (provider)_create method to avoid warning

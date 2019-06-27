@@ -82,7 +82,7 @@ class AcquirerBuckaroo(models.Model):
         return shasign
 
     @api.multi
-    def buckaroo_form_generate_values(self, values):
+    def _buckaroo_form_generate_values(self, values):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         buckaroo_tx_values = dict(values)
         buckaroo_tx_values.update({

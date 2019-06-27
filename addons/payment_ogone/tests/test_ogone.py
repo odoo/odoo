@@ -48,7 +48,7 @@ class OgonePayment(PaymentAcquirerCommon):
         }
 
         # render the button
-        res = self.ogone.render(
+        res = self.ogone._render(
             'test_ref0', 0.01, self.currency_euro.id,
             partner_id=None,
             partner_values=self.buyer_values)
@@ -77,7 +77,7 @@ class OgonePayment(PaymentAcquirerCommon):
             'reference': 'test_ref0',
             'partner_id': self.buyer_id})
         # render the button
-        res = self.ogone.render(
+        res = self.ogone._render(
             'should_be_erased', 0.01, self.currency_euro,
             tx_id=tx.id,
             partner_id=None,
@@ -174,11 +174,11 @@ class OgonePayment(PaymentAcquirerCommon):
         })
 
         # create an alias
-        res = tx.ogone_s2s_create_alias({
+        res = tx._ogone_s2s_create_alias({
             'expiry_date_mm': '01',
             'expiry_date_yy': '2015',
             'holder_name': 'Norbert Poilu',
             'number': '4000000000000002',
             'brand': 'VISA'})
 
-        res = tx.ogone_s2s_execute({})
+        res = tx._ogone_s2s_execute({})

@@ -148,7 +148,7 @@ class PaymentAcquirerOgone(models.Model):
         shasign = sha1(sign).hexdigest()
         return shasign
 
-    def ogone_form_generate_values(self, values):
+    def _ogone_form_generate_values(self, values):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         ogone_tx_values = dict(values)
         param_plus = {
@@ -186,7 +186,7 @@ class PaymentAcquirerOgone(models.Model):
     def _ogone_get_form_action_url(self):
         return self._get_ogone_urls(self.environment)['ogone_standard_order_url']
 
-    def ogone_s2s_form_validate(self, data):
+    def _ogone_s2s_form_validate(self, data):
         error = dict()
 
         mandatory_fields = ["cc_number", "cc_cvc", "cc_holder_name", "cc_expiry", "cc_brand"]
@@ -197,7 +197,7 @@ class PaymentAcquirerOgone(models.Model):
 
         return False if error else True
 
-    def ogone_s2s_form_process(self, data):
+    def _ogone_s2s_form_process(self, data):
         values = {
             'cc_number': data.get('cc_number'),
             'cc_cvc': int(data.get('cc_cvc')),
@@ -337,7 +337,7 @@ class PaymentTxOgone(models.Model):
     # --------------------------------------------------
     # S2S RELATED METHODS
     # --------------------------------------------------
-    def ogone_s2s_do_transaction(self, **kwargs):
+    def _ogone_s2s_do_transaction(self, **kwargs):
         # TODO: create tx with s2s type
         account = self.acquirer_id
         reference = self.reference or "ODOO-%s-%s" % (datetime.datetime.now().strftime('%y%m%d_%H%M%S'), self.partner_id.id)
@@ -398,7 +398,7 @@ class PaymentTxOgone(models.Model):
 
         return self._ogone_s2s_validate_tree(tree)
 
-    def ogone_s2s_do_refund(self, **kwargs):
+    def _ogone_s2s_do_refund(self, **kwargs):
         account = self.acquirer_id
         reference = self.reference or "ODOO-%s-%s" % (datetime.datetime.now().strftime('%y%m%d_%H%M%S'), self.partner_id.id)
 
@@ -529,7 +529,7 @@ class PaymentTxOgone(models.Model):
 class PaymentToken(models.Model):
     _inherit = 'payment.token'
 
-    def ogone_create(self, values):
+    def _ogone_create(self, values):
         if values.get('cc_number'):
             # create a alias via batch
             values['cc_number'] = values['cc_number'].replace(' ', '')

@@ -53,7 +53,7 @@ class PaymentAcquirerPayumoney(models.Model):
         return shasign
 
     @api.multi
-    def payumoney_form_generate_values(self, values):
+    def _payumoney_form_generate_values(self, values):
         self.ensure_one()
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         payumoney_values = dict(values,

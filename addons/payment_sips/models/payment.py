@@ -67,7 +67,7 @@ class AcquirerSips(models.Model):
         return shasign.hexdigest()
 
     @api.multi
-    def sips_form_generate_values(self, values):
+    def _sips_form_generate_values(self, values):
         self.ensure_one()
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         currency = self.env['res.currency'].sudo().browse(values['currency_id'])

@@ -44,7 +44,7 @@ class PaymentAcquirer(models.Model):
         return 'https://openapi.alipaydev.com/gateway.do'
 
     @api.multi
-    def alipay_compute_fees(self, amount, currency_id, country_id):
+    def _alipay_compute_fees(self, amount, currency_id, country_id):
         """ Compute alipay fees.
 
             :param float amount: the amount to pay
@@ -109,7 +109,7 @@ class PaymentAcquirer(models.Model):
         return alipay_tx_values
 
     @api.multi
-    def alipay_form_generate_values(self, values):
+    def _alipay_form_generate_values(self, values):
         values.update(self._get_alipay_tx_values(values))
         return values
 

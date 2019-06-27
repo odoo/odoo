@@ -45,7 +45,7 @@ class StripeTest(StripeCommon):
             'type': 'server2server',
             'amount': 115.0
         })
-        tx.stripe_s2s_do_transaction()
+        tx._stripe_s2s_do_transaction()
 
         # Check state
         self.assertEqual(tx.state, 'done', 'Stripe: Transcation has been discarded.')
