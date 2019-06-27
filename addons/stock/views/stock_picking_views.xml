@@ -562,22 +562,25 @@ action = action_values
                     <field name="count_picking_backorders"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-if="['incoming', 'outgoing', 'internal'].indexOf(record.code.raw_value) > -1" t-attf-class="#{kanban_color(record.color.raw_value)}" name="stock_picking">
+                            <div t-if="['incoming', 'outgoing', 'internal'].indexOf(record.code.raw_value) > -1" t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}" name="stock_picking">
                                 <div>
                                     <div t-attf-class="o_kanban_card_header">
                                         <div class="o_kanban_card_header_title">
-                                            <div class="o_primary">
+                                            <div class="o_primary" t-if="!selection_mode">
                                                 <a type="object" name="get_stock_picking_action_picking_type">
                                                     <field name="name"/>
                                                 </a>
                                             </div>
+                                            <div class="o_primary" t-if="selection_mode">
+                                                <field name="name"/>
+                                            </div>
                                             <div class="o_secondary"><field class="o_secondary"  name="warehouse_id"/></div>
                                         </div>
-                                        <div class="o_kanban_manage_button_section">
+                                        <div class="o_kanban_manage_button_section" t-if="!selection_mode">
                                             <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                         </div>
                                     </div>
-                                    <div class="container o_kanban_card_content">
+                                    <div class="container o_kanban_card_content" t-if="!selection_mode">
                                         <div class="row">
                                             <div class="col-6 o_kanban_primary_left">
                                                 <button class="btn btn-primary" name="get_action_picking_tree_ready" type="object">
