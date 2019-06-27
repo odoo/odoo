@@ -122,6 +122,9 @@ class Warehouse(models.Model):
         return warehouse
 
     def write(self, vals):
+        if not self.ids: # TBE FIX ME test file => /home/odoo/Desktop/Odoo/dev/odoo/master/addons/stock/tests/test_warehouse.py
+            return super(Warehouse, self).write(vals)
+
         Route = self.env['stock.location.route']
         warehouses = self.with_context(active_test=False)
 
