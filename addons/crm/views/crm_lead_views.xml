@@ -128,8 +128,8 @@
                             </div>
                             <field name="email_cc" groups="base.group_no_one"/>
                             <field name="function"/>
-                            <field name="phone" widget="phone"/>
-                            <field name="mobile"/>
+                            <field name="phone" widget="phone" options="{'enable_sms': True}"/>
+                            <field name="mobile" widget="phone" options="{'enable_sms': True}"/>
                         </group>
                         <group>
                             <field name="user_id" domain="[('share', '=', False)]"
@@ -603,10 +603,12 @@
                                        attrs="{'invisible': [('partner_address_phone', '==', False)]}"
                                        readonly="1"
                                        widget="phone"
-                                       string="Phone"/>
+                                       string="Phone"
+                                       options="{'enable_sms': True}"/>
                                 <field name="phone"
                                        attrs="{'invisible': [('partner_address_phone', '!=', False)]}"
-                                       widget="phone"/>
+                                       widget="phone"
+                                       options="{'enable_sms': True}"/>
                             </group>
 
                             <group>
@@ -652,7 +654,7 @@
                                         <field name="title" placeholder="Title" domain="[]" options='{"no_open": True}'/>
                                     </div>
                                     <field name="function"/>
-                                    <field name="mobile"/>
+                                    <field name="mobile" widget="phone" options="{'enable_sms': True}"/>
                                 </group>
                                 <group string="Marketing">
                                     <field name="campaign_id" />
