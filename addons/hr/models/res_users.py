@@ -130,11 +130,9 @@ class User(models.Model):
         # We make the front-end aware of those fields by sending all field definitions.
         # Note: limit the `sudo` to the only action of "editing own profile" action in order to
         # avoid breaking `groups` mecanism on res.users form view.
-        context_params = self._context.get('params', {})
-        if view_type == 'form' and context_params.get('id') == self.env.user.id and not self.env.user.share:
-            action_id = self.env['ir.model.data'].xmlid_to_res_id('hr.res_users_action_my', raise_if_not_found=False)
-            if action_id and context_params.get('action') == action_id:
-                self = self.sudo()
+        profile_view = self.env.ref("hr.res_users_view_form_profile")
+        if profile_view and view_id == profile_view.id:
+            self = self.sudo()
         return super(User, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
     @api.multi
