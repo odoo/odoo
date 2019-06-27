@@ -134,10 +134,6 @@ MailManager.include({
             }).always(function () {
                 thread.isCreatingWindow = false;
             });
-        } else if (!options.passively) {
-            if (threadWindow.isHidden()) {
-                this._makeThreadWindowVisible(threadWindow);
-            }
         }
         def.then(function () {
             threadWindow.updateVisualFoldState();
