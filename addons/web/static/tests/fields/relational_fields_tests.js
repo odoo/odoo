@@ -147,9 +147,100 @@ QUnit.module('relational_fields', {
                     name: "Christine",
                 }]
             },
+            accounting: {
+                fields: {
+                    name: {string: "Name", type: "char"},
+                    accounting_lines_1_ids: {string: "one2many field 1", type: "one2many", relation: 'accounting_line', relation_field: 'accounting_id'},
+                    accounting_lines_2_ids: {string: "one2many field 1", type: "one2many", relation: 'accounting_line', relation_field: 'accounting_id'},
+                },
+                onchanges: {
+                    accounting_lines_1_ids: function(obj) {
+                        // When we add a line to accounting_lines_1_ids, add same line to accounting_lines_2_ids
+                        if (obj.accounting_lines_1_ids.length) {
+                            obj.accounting_lines_1_ids = [[5]].concat(obj.accounting_lines_1_ids);
+                            obj.accounting_lines_2_ids = obj.accounting_lines_1_ids;
+                        }
+                    },
+                    accounting_lines_2_ids: function(obj) {
+                        // change name in order to distinguish between record, we set virtual_id as name
+                        // Hence first record created should have a virtual_id less than second record
+                        for (let rec of obj.accounting_lines_2_ids) {
+                            if (rec[2].name === false) {
+                                rec[2].name = rec[1] //Set name as virtual_id
+                            }
+                        }
+                        if (obj.accounting_lines_2_ids.length) {
+                            obj.accounting_lines_2_ids = [[5]].concat(obj.accounting_lines_2_ids);
+                        }
+                    }
+                }
+            },
+            accounting_line: {
+                fields: {
+                    accounting_id: {},
+                    name: {string: "Name", type: "char"},
+                }
+            }
         };
     },
 }, function () {
+
+    QUnit.test('double one2many onchange problem', async function(assert) {
+        assert.expect(5);
+        var prom = testUtils.makeTestPromise();
+        var form = await createView({
+            View: FormView,
+            model: 'accounting',
+            data: this.data,
+            arch:
+                '<form string="Accounting">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="accounting_lines_1_ids">' +
+                                '<tree editable="bottom" limit="5">' +
+                                    '<field name="name"/>' +
+                                '</tree>' +
+                            '</field>' +
+                        '</group>' +
+                        '<group>' +
+                            '<field name="accounting_lines_2_ids">' +
+                                '<tree editable="bottom" limit="5">' +
+                                    '<field name="name"/>' +
+                                '</tree>' +
+                            '</field>' +
+                        '</group>' +
+                    '</sheet>' +
+                 '</form>',
+        });
+        // Trigger first onchange by adding a line (clicking on add a line)
+        await testUtils.dom.click(form.$el.find('.o_field_x2many_list_row_add a:first()'));
+        // Verify that a line has been created in second one2many
+        assert.strictEqual(form.$el.find('div[name="accounting_lines_1_ids"] .o_data_row').length, 1, 'line of first o2m should have been created');
+        assert.strictEqual(form.$el.find('div[name="accounting_lines_2_ids"] .o_data_row').length, 1, 'line of second o2m should have been created');
+
+        // Add a line in second o2m (that new line needs to trigger an onchange for the bug to appear)
+        await testUtils.dom.click(form.$el.find('.o_field_x2many_list_row_add a:last()'));
+        // Check that we have still one line in first o2m and now 2 lines in second o2m
+        assert.strictEqual(form.$el.find('div[name="accounting_lines_1_ids"] .o_data_row').length, 1, 'we should still have 1 line in first o2m');
+        assert.strictEqual(form.$el.find('div[name="accounting_lines_2_ids"] .o_data_row').length, 2, 'we should have 2 lines in second o2m');
+
+        // find the greatest virtual_id (meaning that it is the newly created record). To do that
+        // we iterate on each record and we keep the one that has the greatest virtual_id
+        // A virtual_id is in the form "virtual_#" with # being a number, so we compare on that number
+        var latest_virtual_id = 0;
+        _.each(form.$el.find('div[name="accounting_lines_2_ids"] .o_data_cell'), function(record) {
+            var id = $(record).attr('title').split('_')[1];
+            if (parseInt(id) > latest_virtual_id) {
+                latest_virtual_id = parseInt(id);
+            }
+        });
+        // Check that the line being edited is the correct one (should be the latest virtual_id)
+        var edited_line = form.$el.find('div[name="accounting_lines_2_ids"] tr.o_selected_row .o_data_cell').attr('title')
+        var edited_line_id = parseInt(edited_line.split('_')[1])
+        assert.strictEqual(edited_line_id, latest_virtual_id, 'The line being edited should be the newly created line.');
+
+        form.destroy();
+    })
 
     QUnit.test('search more pager is reset when doing a new search', async function (assert) {
         assert.expect(6);
