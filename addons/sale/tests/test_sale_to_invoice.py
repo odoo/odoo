@@ -99,7 +99,8 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
 
         self.assertEquals(len(self.sale_order.invoice_ids), 2, 'Invoice should be created for the SO')
 
-        invoice = self.sale_order.invoice_ids[0]
+        # DLE P90: We no longer ensures the 2many order until we invalidate/refetch :/
+        invoice = self.sale_order.invoice_ids.filtered(lambda i: i.amount_total == self.sale_order.amount_total - 100)
         self.assertEquals(len(invoice.invoice_line_ids), len(self.sale_order.order_line), 'All lines should be invoiced')
         self.assertEquals(invoice.amount_total, self.sale_order.amount_total - downpayment_line.price_unit, 'Downpayment should be applied')
 

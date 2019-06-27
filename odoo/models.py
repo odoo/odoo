@@ -3138,10 +3138,6 @@ Fields:
         # been deleted (like updating a sum of lines after deleting one line)
         self.modified(self._fields)
 
-        # RCO: this is nonsense: it recomputes right now all fields that depend
-        # on 'self', but with 'self' still existing!
-        self.flush()
-
         # Check if the records are used as default properties.
         refs = ['%s,%s' % (self._name, i) for i in self.ids]
         if self.env['ir.property'].search([('res_id', '=', False), ('value_reference', 'in', refs)]):
@@ -3191,6 +3187,9 @@ Fields:
             self.invalidate_cache()
 
         # auditing: deletions are infrequent and leave no trace in the database
+        # DLE P93: flush after the delete, as some recompute relies on the fact the records have been deleted
+        # e.g. account.move.line.reconciled, `test_reconciliation_to_check`
+        self.flush()
         _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, self._name, self.ids)
 
         return True

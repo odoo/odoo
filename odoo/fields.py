@@ -1305,7 +1305,12 @@ class Monetary(Field):
         if validate and record[self.currency_field]:
             # FIXME @rco-odoo: currency may not be already initialized if it is
             # a function or related field!
-            value = record[self.currency_field].round(value)
+            currency = record[self.currency_field]
+            # DLE P91: `test_tax_repartition`
+            # 37.800000000000004 != 37.8
+            # We had not the problem before because the value went through the database,
+            # through the `convert_to_column` just above, which do the float_repr before sending the value to db
+            value = float(float_repr(currency.round(value), currency.decimal_places))
         return value
 
     def convert_to_read(self, value, record, use_name_get=True):

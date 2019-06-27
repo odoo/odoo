@@ -216,6 +216,8 @@ class TestReconciliationExec(TestReconciliation):
 
     def test_statement_usd_invoice_usd_transaction_eur(self):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, 50, self.bank_journal_usd, 50, 40, self.currency_euro_id)
+        # DLE P93
+        customer_move_lines.invalidate_cache()
         self.assertRecordValues(customer_move_lines, [
             {'debit': 0.0,      'credit': 40.0,     'amount_currency': -50, 'currency_id': self.currency_usd_id},
             {'debit': 40.0,     'credit': 0.0,      'amount_currency': 50,  'currency_id': self.currency_usd_id},
@@ -238,6 +240,8 @@ class TestReconciliationExec(TestReconciliation):
 
     def test_statement_usd_invoice_chf_transaction_chf(self):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_swiss_id, 50, self.bank_journal_usd, 42, 50, self.currency_swiss_id)
+        # DLE P93
+        customer_move_lines.invalidate_cache()
         self.assertRecordValues(customer_move_lines, [
             {'debit': 0.0,      'credit': 27.47,    'amount_currency': -50, 'currency_id': self.currency_swiss_id},
             {'debit': 27.47,    'credit': 0.0,      'amount_currency': 42,  'currency_id': self.currency_usd_id},
@@ -260,6 +264,8 @@ class TestReconciliationExec(TestReconciliation):
 
     def test_statement_eur_invoice_usd_transaction_usd(self):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, 50, self.bank_journal_euro, 40, 50, self.currency_usd_id)
+        # DLE P93
+        customer_move_lines.invalidate_cache()
         self.assertRecordValues(customer_move_lines, [
             {'debit': 0.0,      'credit': 40.0,     'amount_currency': -50, 'currency_id': self.currency_usd_id},
             {'debit': 40.0,     'credit': 0.0,      'amount_currency': 50,  'currency_id': self.currency_usd_id},
@@ -1040,6 +1046,8 @@ class TestReconciliationExec(TestReconciliation):
         self.env.cr.execute('UPDATE account_partial_reconcile SET create_date = %(date)s WHERE id = %(partial_id)s',
             {'date': invoice.invoice_date,
              'partial_id': statement_partial_id.id})
+        # DLE P94, a cr.execute update in a test, :D
+        statement.flush()
 
         # Case 1: report date is invoice date
         # There should be an entry for the partner

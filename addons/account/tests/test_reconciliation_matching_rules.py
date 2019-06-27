@@ -294,6 +294,8 @@ class TestReconciliationMatchingRules(AccountingTestCase):
         })
 
         # Check first line has been well reconciled.
+        # DLE P93
+        self.bank_line_1.invalidate_cache(['journal_entry_ids'])
         self.assertRecordValues(self.bank_line_1.journal_entry_ids, [
             {'partner_id': self.partner_1.id, 'debit': 0.0, 'credit': 5.0},
             {'partner_id': self.partner_1.id, 'debit': 0.0, 'credit': 100.0},

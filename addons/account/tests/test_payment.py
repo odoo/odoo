@@ -302,6 +302,8 @@ class TestPayment(AccountingTestCase):
             'invoice_ids': [(4, invoice.id, None)]
             })
         payment.post()
+        # DLE P93: The order without read is no longer ensured :/
+        payment.invalidate_cache(['move_line_ids'])
         self.assertRecordValues(payment.move_line_ids, [
             {'debit': 6051.82,  'credit': 0.0,      'amount_currency': 5325.6,      'currency_id': self.currency_usd_id},
             {'debit': 0.0,      'credit': 6051.14,  'amount_currency': -5325.0,     'currency_id': self.currency_usd_id},

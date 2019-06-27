@@ -158,7 +158,8 @@ class account_payment(models.Model):
 
     @api.depends('invoice_ids', 'amount', 'payment_date', 'currency_id', 'payment_type')
     def _compute_payment_difference(self):
-        for pay in self.filtered(lambda p: p.invoice_ids and p.state == 'draft'):
+        draft_payments = self.filtered(lambda p: p.invoice_ids and p.state == 'draft')
+        for pay in draft_payments:
             payment_amount = -pay.amount if pay.payment_type == 'outbound' else pay.amount
             pay.payment_difference = pay._compute_payment_amount(pay.invoice_ids, pay.currency_id, pay.journal_id, pay.payment_date) - payment_amount
 
