@@ -244,7 +244,7 @@ class AccountInvoice(models.Model):
 
     origin = fields.Char(string='Source Document',
         help="Reference of the document that produced this invoice.",
-        readonly=True, states={'draft': [('readonly', False)]})
+        readonly=True, states={'draft': [('readonly', False)]}, copy=False)
     type = fields.Selection([
             ('out_invoice','Customer Invoice'),
             ('in_invoice','Vendor Bill'),

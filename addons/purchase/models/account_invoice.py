@@ -268,6 +268,6 @@ class AccountInvoiceLine(models.Model):
     """ Override AccountInvoice_line to add the link to the purchase order line it is related to"""
     _inherit = 'account.invoice.line'
 
-    purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', index=True, readonly=True)
+    purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', index=True, readonly=True, copy=False)
     purchase_id = fields.Many2one('purchase.order', related='purchase_line_id.order_id', string='Purchase Order', store=False, readonly=True, related_sudo=False,
-        help='Associated Purchase Order. Filled in automatically when a PO is chosen on the vendor bill.')
+        help='Associated Purchase Order. Filled in automatically when a PO is chosen on the vendor bill.', copy=False)
