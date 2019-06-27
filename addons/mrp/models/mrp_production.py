@@ -7,7 +7,7 @@ from itertools import groupby
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import AccessError, UserError
-from odoo.tools import date_utils, float_round
+from odoo.tools import date_utils, float_round, float_is_zero
 
 
 class MrpProduction(models.Model):
@@ -511,6 +511,9 @@ class MrpProduction(models.Model):
             factor = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id) / production.bom_id.product_qty
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
             for bom_line, line_data in lines:
+                if bom_line.child_bom_id and bom_line.child_bom_id.type == 'phantom' or\
+                        bom_line.product_id.type not in ['product', 'consu']:
+                    continue
                 moves.append(production._get_move_raw_values(bom_line, line_data))
         return moves
 
@@ -518,10 +521,6 @@ class MrpProduction(models.Model):
         quantity = line_data['qty']
         # alt_op needed for the case when you explode phantom bom and all the lines will be consumed in the operation given by the parent bom line
         alt_op = line_data['parent_line'] and line_data['parent_line'].operation_id.id or False
-        if bom_line.child_bom_id and bom_line.child_bom_id.type == 'phantom':
-            return self.env['stock.move']
-        if bom_line.product_id.type not in ['product', 'consu']:
-            return self.env['stock.move']
         source_location = self.location_src_id
         data = {
             'sequence': bom_line.sequence,
@@ -777,7 +776,7 @@ class MrpProduction(models.Model):
                 )
                 move_lines = self.move_raw_ids.mapped('move_line_ids').filtered(lambda ml: lots_short & ml.lot_produced_ids)
                 for ml in move_lines:
-                    error_msg += ml.product_id.display_name + ' (' + (lots_short & ml.lot_produced_ids).mapped('name') + ')\n'
+                    error_msg += ml.product_id.display_name + ' (' + ', '.join((lots_short & ml.lot_produced_ids).mapped('name')) + ')\n'
                 raise UserError(error_msg)
 
     @api.multi
@@ -830,6 +829,8 @@ class MrpProduction(models.Model):
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             for move in moves_to_do.filtered(lambda m: m.product_qty == 0.0 and m.quantity_done > 0):
                 move.product_uom_qty = move.quantity_done
+            for move in moves_to_do.filtered(lambda m: float_is_zero(m.quantity_done, precision_rounding=m.product_uom.rounding)):
+                move._action_cancel()
             # MRP do not merge move, catch the result of _action_done in order
             # to get extra moves.
             moves_to_do = moves_to_do._action_done()

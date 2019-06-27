@@ -133,7 +133,7 @@ class IrRule(models.Model):
     @tools.conditional(
         'xml' not in config['dev_mode'],
         tools.ormcache('self._uid', 'model_name', 'mode',
-                       'tuple(self._context.get(k) for k in self._compute_domain_keys())'),
+                       'tuple(self._compute_domain_context_values())'),
     )
     def _compute_domain(self, model_name, mode="read"):
         rules = self._get_rules(model_name, mode=mode)
@@ -158,6 +158,16 @@ class IrRule(models.Model):
         if not group_domains:
             return expression.AND(global_domains)
         return expression.AND(global_domains + [expression.OR(group_domains)])
+
+    def _compute_domain_context_values(self):
+        for k in self._compute_domain_keys():
+            v = self._context.get(k)
+            if isinstance(v, list):
+                # currently this could be a frozenset (to avoid depending on
+                # the order of allowed_company_ids) but it seems safer if
+                # possibly slightly more miss-y to use a tuple
+                v = tuple(v)
+            yield v
 
     @api.model
     def clear_cache(self):

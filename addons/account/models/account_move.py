@@ -489,8 +489,8 @@ class AccountMove(models.Model):
     def action_duplicate(self):
         self.ensure_one()
         action = self.env.ref('account.action_move_journal_line').read()[0]
-        action['target'] = 'inline'
         action['context'] = dict(self.env.context)
+        action['context']['form_view_initial_mode'] = 'edit'
         action['context']['view_no_maturity'] = False
         action['views'] = [(self.env.ref('account.view_move_form').id, 'form')]
         action['res_id'] = self.copy().id
@@ -1668,7 +1668,8 @@ class AccountPartialReconcile(models.Model):
         move_date = self.debit_move_id.date
         newly_created_move = self.env['account.move']
         with self.env.norecompute():
-            for move in (self.debit_move_id.move_id, self.credit_move_id.move_id):
+            # We use a set here in case the reconciled lines belong to the same move (it happens with POS)
+            for move in {self.debit_move_id.move_id, self.credit_move_id.move_id}:
                 #move_date is the max of the 2 reconciled items
                 if move_date < move.date:
                     move_date = move.date

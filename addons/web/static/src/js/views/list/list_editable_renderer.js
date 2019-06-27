@@ -795,6 +795,11 @@ ListRenderer.include({
                 helper: 'clone',
                 handle: '.o_row_handle',
                 stop: function (event, ui) {
+                    // update currentID taking moved line into account
+                    if (self.currentRow !== null) {
+                        var currentID = self.state.data[self.currentRow].id;
+                        self.currentRow = self._getRow(currentID).index();
+                    }
                     self.unselectRow().then(function () {
                         self._moveRecord(ui.item.data('id'), ui.item.index());
                     });

@@ -958,9 +958,9 @@ class TestFields(common.TransactionCase):
         # no value gives the default value
         new_disc = discussion.new({'name': "Foo"})
         self.assertEqual(new_disc.categories._origin, cat1)
-        # value is combined with default value
+        # value overrides default value
         new_disc = discussion.new({'name': "Foo", 'categories': [(4, cat2.id)]})
-        self.assertEqual(new_disc.categories._origin, cat1 + cat2)
+        self.assertEqual(new_disc.categories._origin, cat2)
 
     def test_40_new_fields(self):
         """ Test new records with relational fields. """
@@ -1051,6 +1051,9 @@ class TestFields(common.TransactionCase):
         self.assertFalse(new_email.message.id)
         self.assertEqual(new_email.message._origin, msg0)
         self.assertEqual(new_email.body, "XXX")
+
+        # check that this does not generate an infinite recursion
+        new_disc._convert_to_write(new_disc._cache)
 
     def test_40_new_ref_origin(self):
         """ Test the behavior of new records with ref/origin. """

@@ -486,7 +486,7 @@ class ChromeBrowser():
                 self.chrome_process.wait()
         if self.user_data_dir and os.path.isdir(self.user_data_dir) and self.user_data_dir != '/':
             self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
-            shutil.rmtree(self.user_data_dir)
+            shutil.rmtree(self.user_data_dir, ignore_errors=True)
         # Restore previous signal handler
         if self.sigxcpu_handler and os.name == 'posix':
             signal.signal(signal.SIGXCPU, self.sigxcpu_handler)
@@ -828,12 +828,12 @@ class HttpCase(TransactionCase):
         self.opener = requests.Session()
         self.opener.cookies['session_id'] = self.session_id
 
-    def url_open(self, url, data=None, timeout=10):
+    def url_open(self, url, data=None, timeout=10, headers=None):
         if url.startswith('/'):
             url = "http://%s:%s%s" % (HOST, PORT, url)
         if data:
-            return self.opener.post(url, data=data, timeout=timeout)
-        return self.opener.get(url, timeout=timeout)
+            return self.opener.post(url, data=data, timeout=timeout, headers=headers)
+        return self.opener.get(url, timeout=timeout, headers=headers)
 
     def _wait_remaining_requests(self):
         t0 = int(time.time())

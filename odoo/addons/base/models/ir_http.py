@@ -360,11 +360,16 @@ class IrHttp(models.AbstractModel):
         if not filename:
             if filename_field in record:
                 filename = record[filename_field]
-            else:
+            if not filename:
                 filename = "%s-%s-%s" % (record._name, record.id, field)
 
         if not mimetype:
             mimetype = guess_mimetype(base64.b64decode(content), default=default_mimetype)
+
+        # extension
+        extension = mimetypes.guess_extension(mimetype)
+        if extension and not filename.endswith(extension):
+            filename = "%s%s" % (filename, extension)
 
         if not filehash:
             filehash = '"%s"' % hashlib.md5(pycompat.to_text(content).encode('utf-8')).hexdigest()
@@ -376,9 +381,11 @@ class IrHttp(models.AbstractModel):
         headers = [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff')]
         # cache
         etag = bool(request) and request.httprequest.headers.get('If-None-Match')
-        status = status or (304 if filehash and etag == filehash else 200)
+        status = status or 200
         if filehash:
             headers.append(('ETag', filehash))
+            if etag == filehash and status == 200:
+                status = 304
         headers.append(('Cache-Control', 'max-age=%s' % (STATIC_CACHE if unique else 0)))
         # content-disposition default name
         if download:
@@ -421,11 +428,11 @@ class IrHttp(models.AbstractModel):
             status, content, filename, mimetype, filehash = self._binary_ir_attachment_redirect_content(record, default_mimetype=default_mimetype)
         if not content:
             status, content, filename, mimetype, filehash = self._binary_record_content(
-                record, field=field, filename=None, filename_field=filename_field,
+                record, field=field, filename=filename, filename_field=filename_field,
                 default_mimetype='application/octet-stream')
 
         status, headers, content = self._binary_set_headers(
-            status, content, filename, mimetype, unique, filehash=False, download=download)
+            status, content, filename, mimetype, unique, filehash=filehash, download=download)
 
         return status, headers, content
 

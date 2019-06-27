@@ -80,7 +80,6 @@ var FieldTimesheetToggle = basicFields.FieldFloatToggle.extend({
  * implementation (float_time, float_toggle, ...). The default
  * value will be 'float_factor'.
 **/
-var FieldTimesheetUom = FieldTimesheetFactor;
 var widgetName = 'timesheet_uom' in session ?
          session.timesheet_uom.timesheet_widget : 'float_factor';
 var FieldTimesheetUom = widgetName === 'float_toggle' ?
@@ -96,7 +95,7 @@ var _tweak_options = function(options) {
         options.factor = session.timesheet_uom_factor;
     }
     return options;
-}
+};
 
 fieldUtils.format.timesheet_uom = function(value, field, options) {
     options = _tweak_options(options || {});
@@ -112,4 +111,3 @@ fieldUtils.parse.timesheet_uom = function(value, field, options) {
 
 return FieldTimesheetUom;
 });
-

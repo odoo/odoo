@@ -5,21 +5,16 @@ var tour = require("web_tour.tour");
 
 tour.register('check_free_delivery', {
         test: true,
-        url: '/shop?search=conference chair',
+        url: '/shop?search=office chair black',
 },
     [
         {
-            content: "select conference chair",
-            trigger: '.oe_product_cart:first a:contains("Conference Chair")',
+            content: "select office chair black",
+            trigger: '.oe_product_cart:first a:contains("Office Chair Black")',
         },
         {
             content: "click on add to cart",
-            extra_trigger: 'label:contains(Steel) input:propChecked',
-            trigger: '#product_detail form[action^="/shop/cart/update"] .btn-primary',
-        },
-        {
-            content: "click in modal on 'Proceed to checkout' button",
-            trigger: 'button:contains("Proceed to Checkout")',
+            trigger: '#product_details #add_to_cart',
         },
         {
             content: "go to checkout",
@@ -28,6 +23,7 @@ tour.register('check_free_delivery', {
         },
         {
             content: "Check Free Delivery value to be zero",
+            extra_trigger: '#delivery_carrier label:containsExact("Delivery Now Free Over 10")',
             trigger: "#delivery_carrier span:contains('0.0')"
         },
     ]);

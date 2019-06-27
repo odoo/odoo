@@ -137,8 +137,8 @@ class MrpWorkorder(models.Model):
             workorder.date_planned_finished = workorder.leave_id.date_to
 
     def _set_dates_planned(self):
-        date_from = self.date_planned_start[0]
-        date_to = self.date_planned_finished[0]
+        date_from = self[0].date_planned_start
+        date_to = self[0].date_planned_finished
         self.mapped('leave_id').write({
             'date_from': date_from,
             'date_to': date_to,

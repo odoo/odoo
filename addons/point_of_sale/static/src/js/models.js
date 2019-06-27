@@ -1563,6 +1563,7 @@ exports.Orderline = Backbone.Model.extend({
             price_display :     this.get_display_price(),
             price_with_tax :    this.get_price_with_tax(),
             price_without_tax:  this.get_price_without_tax(),
+            price_with_tax_before_discount:  this.get_price_with_tax_before_discount(),
             tax:                this.get_tax(),
             product_description:      this.get_product().description,
             product_description_sale: this.get_product().description_sale,
@@ -1626,9 +1627,9 @@ exports.Orderline = Backbone.Model.extend({
     },
     get_display_price_one: function(){
         var rounding = this.pos.currency.rounding;
-        var price_unit = this.get_unit_price() * (1.0 - (this.get_discount() / 100.0));
+        var price_unit = this.get_unit_price();
         if (this.pos.config.iface_tax_included !== 'total') {
-            return round_pr(price_unit, rounding);
+            return round_pr(price_unit * (1.0 - (this.get_discount() / 100.0)), rounding);
         } else {
             var product =  this.get_product();
             var taxes_ids = product.taxes_id;
@@ -1658,6 +1659,9 @@ exports.Orderline = Backbone.Model.extend({
     },
     get_price_with_tax: function(){
         return this.get_all_prices().priceWithTax;
+    },
+    get_price_with_tax_before_discount: function () {
+        return this.get_all_prices().priceWithTaxBeforeDiscount;
     },
     get_tax: function(){
         return this.get_all_prices().tax;
@@ -1904,6 +1908,7 @@ exports.Orderline = Backbone.Model.extend({
         });
 
         var all_taxes = this.compute_all(product_taxes, price_unit, this.get_quantity(), this.pos.currency.rounding);
+        var all_taxes_before_discount = this.compute_all(product_taxes, this.get_unit_price(), this.get_quantity(), this.pos.currency.rounding);
         _(all_taxes.taxes).each(function(tax) {
             taxtotal += tax.amount;
             taxdetail[tax.id] = tax.amount;
@@ -1913,6 +1918,7 @@ exports.Orderline = Backbone.Model.extend({
             "priceWithTax": all_taxes.total_included,
             "priceWithoutTax": all_taxes.total_excluded,
             "priceSumTaxVoid": all_taxes.total_void,
+            "priceWithTaxBeforeDiscount": all_taxes_before_discount.total_included,
             "tax": taxtotal,
             "taxDetails": taxdetail,
         };

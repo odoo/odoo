@@ -5,6 +5,7 @@ odoo.define('website_slides.fullscreen', function (require) {
 
     var publicWidget = require('web.public.widget');
     var core = require('web.core');
+    var config = require('web.config');
     var QWeb = core.qweb;
 
     var session = require('web.session');
@@ -298,14 +299,15 @@ odoo.define('website_slides.fullscreen', function (require) {
         * @param {Object} slides Contains the list of all slides of the course
         * @param {integer} defaultSlideId Contains the ID of the slide requested by the user
         */
-        init: function (el, slides, defaultSlideId){
+        init: function (parent, slides, defaultSlideId, channelData){
             var result = this._super.apply(this,arguments);
             this.initialSlideID = defaultSlideId;
             this.slides = this._preprocessSlideData(slides);
-
+            this.channel = channelData;
             var slide;
+            var urlParams = $.deparam.querystring();
             if (defaultSlideId) {
-                slide = findSlide(this.slides, {id: defaultSlideId});
+                slide = findSlide(this.slides, {id: defaultSlideId, isQuiz: urlParams.quiz === "1" });
             } else {
                 slide = this.slides[0];
             }
@@ -321,6 +323,9 @@ odoo.define('website_slides.fullscreen', function (require) {
         start: function (){
             var self = this;
             this.on('change:slide', this, this._onChangeSlide);
+            if  (config.device.size_class > config.device.SIZES.MD) {
+                this._toggleSidebar();
+            }
             return this._super.apply(this, arguments).then(function () {
                 self._onChangeSlide(); // trigger manually once DOM ready, since slide content is not rendered server side
             });
@@ -413,7 +418,11 @@ odoo.define('website_slides.fullscreen', function (require) {
             urlParts[urlParts.length-1] = this.get('slide').slug;
             var url =  urlParts.join('/');
             this.$('.o_wslides_fs_exit_fullscreen').attr('href', url);
-            var fullscreenUrl = _.str.sprintf('%s?fullscreen=1', url);
+            var params = {'fullscreen': 1 };
+            if (this.get('slide').isQuiz){
+                params.quiz = 1;
+            }
+            var fullscreenUrl = _.str.sprintf('%s?%s', url, $.param(params));
             history.pushState(null, '', fullscreenUrl);
         },
         /**
@@ -433,7 +442,7 @@ odoo.define('website_slides.fullscreen', function (require) {
             // display quiz slide, or quiz attached to a slide
             if (slide.type === 'quiz' || slide.isQuiz) {
                 $content.addClass('bg-white');
-                var QuizWidget = new Quiz(this, slide);
+                var QuizWidget = new Quiz(this, slide, this.channel);
                 return QuizWidget.appendTo($content);
             }
 
@@ -486,13 +495,13 @@ odoo.define('website_slides.fullscreen', function (require) {
         _onChangeSlide: function () {
             var self = this;
             var slide = this.get('slide');
+            self._pushUrlState();
             return this._fetchSlideContent().then(function() { // render content
                 return self._renderSlide();
             }).then(function() {
                 if (slide._autoSetDone && !session.is_website_user) {  // no useless RPC call
                     self._setCompleted(slide.id);
                 }
-                self._pushUrlState();
             });
         },
         /**
@@ -540,12 +549,20 @@ odoo.define('website_slides.fullscreen', function (require) {
             this.sidebar.goNext();
         },
         /**
-         * Show or Hide the sidebar
+         * Called when the sidebar toggle is clicked -> toggles the sidebar visibility.
          *
          * @private
          */
         _onClickToggleSidebar: function (ev){
             ev.preventDefault();
+            this._toggleSidebar();
+        },
+        /**
+         * Toggles sidebar visibility.
+         *
+         * @private
+         */
+        _toggleSidebar: function () {
             this.$('.o_wslides_fs_sidebar').toggleClass('o_wslides_fs_sidebar_hidden');
             this.$('.o_wslides_fs_toggle_sidebar').toggleClass('active');
         },
@@ -556,9 +573,12 @@ odoo.define('website_slides.fullscreen', function (require) {
         xmlDependencies: ['/website_slides/static/src/xml/website_slides_fullscreen.xml'],
         start: function (){
             var proms = [this._super.apply(this, arguments)];
-            var fullscreen = new Fullscreen(this, this._getSlides(), this._getCurrentSlideID());
+            var fullscreen = new Fullscreen(this, this._getSlides(), this._getCurrentSlideID(), this._extractChannelData());
             proms.push(fullscreen.attachTo(".o_wslides_fs_main"));
             return Promise.all(proms);
+        },
+        _extractChannelData: function (){
+            return this.$el.data();
         },
         _getCurrentSlideID: function (){
             return parseInt(this.$('.o_wslides_fs_sidebar_list_item.active').data('id'));
