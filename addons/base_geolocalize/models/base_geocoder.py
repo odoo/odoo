@@ -112,6 +112,8 @@ class GeoCoder(models.AbstractModel):
             self._raise_query_error(e)
 
         try:
+            if result['status'] == 'ZERO_RESULTS':
+                return None
             if result['status'] != 'OK':
                 _logger.debug('Invalid Gmaps call: %s - %s',
                               result['status'], result.get('error_message', ''))

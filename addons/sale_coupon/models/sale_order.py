@@ -79,7 +79,7 @@ class SaleOrder(models.Model):
         return applied_programs.filtered(lambda program: program._is_global_discount_program())
 
     def _get_reward_values_product(self, program):
-        price_unit = self.order_line.filtered(lambda line: program.reward_product_id == line.product_id)[0].price_unit
+        price_unit = self.order_line.filtered(lambda line: program.reward_product_id == line.product_id)[0].price_reduce
 
         order_lines = (self.order_line - self._get_reward_lines()).filtered(lambda x: program._is_valid_product(x.product_id))
         max_product_qty = sum(order_lines.mapped('product_uom_qty')) or 1
@@ -120,10 +120,10 @@ class SaleOrder(models.Model):
 
     def _get_cheapest_line(self):
         # Unit prices tax included
-        return min(self.order_line.filtered(lambda x: not x.is_reward_line and x.price_unit > 0), key=lambda x: x['price_unit'])
+        return min(self.order_line.filtered(lambda x: not x.is_reward_line and x.price_reduce > 0), key=lambda x: x['price_reduce'])
 
     def _get_reward_values_discount_percentage_per_line(self, program, line):
-        discount_amount = line.product_uom_qty * line.price_unit * (program.discount_percentage / 100)
+        discount_amount = line.product_uom_qty * line.price_reduce * (program.discount_percentage / 100)
         return discount_amount
 
     def _get_reward_values_discount(self, program):
@@ -142,7 +142,7 @@ class SaleOrder(models.Model):
         if program.discount_apply_on == 'cheapest_product':
             line = self._get_cheapest_line()
             if line:
-                discount_line_amount = line.price_unit * (program.discount_percentage / 100)
+                discount_line_amount = line.price_reduce * (program.discount_percentage / 100)
                 if discount_line_amount:
                     taxes = line.tax_id
                     if self.fiscal_position_id:

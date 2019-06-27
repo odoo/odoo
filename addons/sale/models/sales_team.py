@@ -57,7 +57,7 @@ class CrmTeam(models.Model):
     def _compute_sales_to_invoice(self):
         sale_order_data = self.env['sale.order'].read_group([
             ('team_id', 'in', self.ids),
-            ('order_line.qty_to_invoice', '>', 0),
+            ('invoice_status','=','to invoice'),
         ], ['team_id'], ['team_id'])
         data_map = {datum['team_id'][0]: datum['team_id_count'] for datum in sale_order_data }
         for team in self:
