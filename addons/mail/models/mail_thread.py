@@ -2100,7 +2100,7 @@ class MailThread(models.AbstractModel):
     # Notification API
     # ------------------------------------------------------
 
-    def _notify_thread(self, message, msg_vals=False, **kwargs):
+    def _notify_thread(self, message, msg_vals=False, notify_by_email=True, **kwargs):
         """ Main notification method. This method basically does two things
 
          * call ``_notify_compute_recipients`` that computes recipients to
@@ -2131,7 +2131,8 @@ class MailThread(models.AbstractModel):
             message_values['channel_ids'] = [(6, 0, [r['id'] for r in rdata['channels']])]
 
         self._notify_record_by_inbox(message, rdata, msg_vals=msg_vals, **kwargs)
-        self._notify_record_by_email(message, rdata, msg_vals=msg_vals, **kwargs)
+        if notify_by_email:
+            self._notify_record_by_email(message, rdata, msg_vals=msg_vals, **kwargs)
 
         return rdata
 
