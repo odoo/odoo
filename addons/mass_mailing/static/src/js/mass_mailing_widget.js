@@ -63,7 +63,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
 
             self.trigger_up('field_changed', {
                 dataPointID: self.dataPointID,
-                changes: _.object([fieldName], [self._unWrap($editable.html())])
+                changes: _.object([fieldName], [self._unWrap($editable[0].localName == "textarea" ? $editable.val() : $editable.html())])
             });
 
             if (self._isDirty && self.mode === 'edit') {
@@ -160,7 +160,6 @@ var MassMailingFieldHtml = FieldHtml.extend({
      * @override
      */
     _renderEdit: function () {
-        this._isFromInline = !this.value;
         if (!this.value) {
             this.value = this.recordData[this.nodeOptions['inline-field']];
         }
@@ -318,15 +317,6 @@ var MassMailingFieldHtml = FieldHtml.extend({
     // Handler
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     */
-    _onLoadWysiwyg: function () {
-        if (this._isFromInline) {
-            this._fromInline();
-        }
-        this._super();
-    },
     /**
      * @private
      * @param {OdooEvent} ev

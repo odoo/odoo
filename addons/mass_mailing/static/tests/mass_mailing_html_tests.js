@@ -32,6 +32,37 @@ QUnit.module('field html', {
                     display_name: "first record",
                     body_html: "<div class='field_body' style='background-color: red;'><p>code to edit</p></div>",
                     body_arch: "<div class='field_body'><p>code to edit</p></div>",
+                }, {
+                    id: 2,
+                    display_name: "second record",
+                    body_arch: '<div style="color: #999999;">'+
+                        '<p>code to edit</p> \n' +
+                        ' ${object.company_id.phone} \n'+
+                        '% if object.company_id.email \n'+
+                            ' | <a href="${\'mailto:%s\' % object.company_id.email}" style="text-decoration:none; color: #999999;"> '+
+                                ' ${object.company_id.email} \n'+
+                                '</a>'+
+                            ' % endif '+
+                        ' % if object.company_id.website \n'+
+                            ' | <a href="\'%s\' % object.company_id.website" style="text-decoration:none; color: #999999;">' +
+                                ' ${object.company_id.website} \n'+
+                            '</a>\n' +
+                        ' % endif '+
+                    '</div>',
+                    body_html: '<div style="color: #999999;">'+
+                        '<p>code to edit</p> \n' +
+                        ' ${object.company_id.phone} \n'+
+                        '% if object.company_id.email \n'+
+                            ' | <a href="${\'mailto:%s\' % object.company_id.email}" style="text-decoration:none; color: #999999;"> '+
+                                ' ${object.company_id.email} \n'+
+                                '</a>'+
+                            ' % endif '+
+                        ' % if object.company_id.website \n'+
+                            ' | <a href="\'%s\' % object.company_id.website" style="text-decoration:none; color: #999999;">' +
+                                ' ${object.company_id.website} \n'+
+                            '</a>\n' +
+                        ' % endif '+
+                    '</div>',
                 }],
             },
         });
@@ -127,6 +158,47 @@ QUnit.test('save arch and html', function (assert) {
 
             form.$buttons.find('.o_form_button_save').click();
 
+            form.destroy();
+            done();
+        });
+    });
+});
+
+QUnit.test('jinja code view test on record save', function (assert) {
+    assert.expect(1);
+    var done = assert.async();
+
+    testUtils.createAsyncView({
+        View: FormView,
+        model: 'mail.mass_mailing',
+        data: this.data,
+        arch: '<form>' +
+            '   <field name="body_html" class="oe_read_only" widget="html"'+
+            '       options="{'+
+            '                \'cssReadonly\': \'template.assets\','+
+            '       }"'+
+            '   />'+
+            '   <field name="body_arch" class="oe_edit_only" widget="mass_mailing_html"'+
+            '       options="{'+
+            '                \'snippets\': \'template.assets\','+
+            '                \'cssEdit\': \'template.assets\','+
+            '                \'inline-field\': \'body_html\''+
+            '       }"'+
+            '   />'+
+            '</form>',
+        res_id: 2,
+        debug:1,
+
+    }).then(function (form) {
+        testUtils.form.clickEdit(form);
+        var $fieldEdit = form.$('.oe_form_field[name="body_arch"]');
+        var $iframe = $fieldEdit.find('iframe');
+        $iframe.data('load-def').then(function () {
+            testUtils.form.clickSave(form);
+            var $fieldReadonly = form.$('.oe_form_field[name="body_html"]');
+            var iframe = $fieldReadonly.find('iframe').contents()[0];
+            var $content = $('#iframe_target', iframe);
+            assert.equal($content.find('p').text(), 'code to edit', 'should save jinja template');
             form.destroy();
             done();
         });
