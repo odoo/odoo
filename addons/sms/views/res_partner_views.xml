@@ -11,29 +11,13 @@
             <xpath expr="//field[@name='phone']" position="replace">
                 <label for="phone"/>
                 <div class="o_row">
-                    <field name="phone" widget="phone"/>
-                    <button
-                        type="action"
-                        name="%(sms.sms_composer_action_form)d"
-                        class="btn-sm btn-link mb4 fa fa-comment"
-                        aria-label="Send SMS Text Message"
-                        title="Send SMS Text Message"
-                        attrs="{'invisible':[('phone', '=', False)]}"
-                        context="{'default_partner_field_name': 'phone'}" />
+                    <field name="phone" widget="phone" options="{'enable_sms': True}"/>
                 </div>
             </xpath>
             <xpath expr="//field[@name='mobile']" position="replace">
                 <label for="mobile"/>
                 <div class="o_row">
-                    <field name="mobile" widget="phone"/>
-                    <button
-                        type="action"
-                        name="%(sms.sms_composer_action_form)d"
-                        class="btn-sm btn-link mb4 fa fa-envelope-o"
-                        aria-label="Send SMS Text Message"
-                        title="Send SMS Text Message"
-                        attrs="{'invisible':[('mobile', '=', False)]}"
-                        context="{'default_partner_field_name': 'mobile'}" />
+                    <field name="mobile" widget="phone" options="{'enable_sms': True}"/>
                 </div>
             </xpath>
         </field>
