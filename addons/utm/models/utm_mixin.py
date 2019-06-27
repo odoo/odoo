@@ -17,6 +17,12 @@ class UtmMixin(models.AbstractModel):
     medium_id = fields.Many2one('utm.medium', 'Medium',
                                 help="This is the method of delivery, e.g. Postcard, Email, or Banner Ad", oldname='channel_id')
 
+    @api.model_create_multi
+    def create(self, values_list):
+        for values in values_list:
+            values.update(self._get_missing_utm_values(values, force_create=True))
+        return super(UtmMixin, self).create(values_list)
+
     @api.model
     def default_get(self, fields):
         values = super(UtmMixin, self).default_get(fields)
@@ -25,9 +31,16 @@ class UtmMixin(models.AbstractModel):
         if not self.env.is_superuser() and self.env.user.has_group('sales_team.group_sale_salesman'):
             return values
 
+        values.update(self._get_missing_utm_values(values))
+        return values
+
+    def _get_missing_utm_values(self, values, force_create=False):
+        # Create from cookies if needed
+        utm_values = {}
+
         for url_param, field_name, cookie_name in self.env['utm.mixin'].tracking_fields():
-            if field_name in fields:
-                field = self._fields[field_name]
+            field = self._fields.get(field_name)
+            if field and 'default_%s' % field_name not in self._context and not values.get(field_name):
                 value = False
                 if request:
                     # ir_http dispatch saves the url params in a cookie
@@ -35,13 +48,12 @@ class UtmMixin(models.AbstractModel):
                 # if we receive a string for a many2one, we search/create the id
                 if field.type == 'many2one' and isinstance(value, str) and value:
                     Model = self.env[field.comodel_name]
-                    records = Model.search([('name', '=', value)], limit=1)
-                    if not records:
-                        records = Model.create({'name': value})
-                    value = records.id
-                if value:
-                    values[field_name] = value
-        return values
+                    record = Model.search([('name', '=', value)], limit=1)
+                    if record:
+                        utm_values[field_name] = record.id
+                    elif force_create:
+                        utm_values[field_name] = Model.create({'name': value}).id
+        return utm_values
 
     def tracking_fields(self):
         # This function cannot be overridden in a model which inherit utm.mixin

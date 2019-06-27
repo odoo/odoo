@@ -111,6 +111,12 @@ class LinkTracker(models.Model):
             tracker.favicon = icon_base64
 
     @api.model
+    def default_get(self, fields):
+        utm_fields = [fname for url_param, fname, cookie_name in self.env['utm.mixin'].tracking_fields()]
+        utm_force_default_ctx = dict((fname, self._context.get('default_%s' % fname)) for fname in utm_fields)
+        return super(LinkTracker, self.with_context(**utm_force_default_ctx)).default_get(fields)
+
+    @api.model
     def create(self, vals):
         create_vals = vals.copy()
 
