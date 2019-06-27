@@ -2090,8 +2090,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         order = orderby or ','.join([g for g in groupby_list])
         groupby_dict = {gb['groupby']: gb for gb in annotated_groupbys}
 
-        self._flush_search(domain, fields=fields + groupby_fields)
-
         self._apply_ir_rules(query, 'read')
         for gb in groupby_fields:
             assert gb in self._fields, "Unknown field %r in 'groupby'" % gb
@@ -2100,6 +2098,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         aggregated_fields = []
         select_terms = []
+        fnames = [] # list of fields to flush
 
         for fspec in fields:
             if fspec == 'sequence':
@@ -2126,6 +2125,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     continue
                 func, fname = field.group_operator, name
 
+            fnames.append(fname)
+
             if fname in groupby_fields:
                 continue
             if name in aggregated_fields:
@@ -2141,6 +2142,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         for gb in annotated_groupbys:
             select_terms.append('%s as "%s" ' % (gb['qualified_field'], gb['groupby']))
+
+        self._flush_search(domain, fields=fnames + groupby_fields)
 
         groupby_terms, orderby_terms = self._read_group_prepare(order, aggregated_fields, annotated_groupbys, query)
         from_clause, where_clause, where_clause_params = query.get_sql()
