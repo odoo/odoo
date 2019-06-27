@@ -8,7 +8,7 @@ from odoo.http import Controller, Response, request, route
 
 class website_gengo(Controller):
 
-    @route('/website/gengo_callback', type='http', auth='none', csrf=False)
+    @route('/website/gengo_callback', type='http', auth='public', csrf=False)
     def gengo_callback(self, **post):
         IrTranslationSudo = request.env['ir.translation'].sudo()
         if post and post.get('job') and post.get('pgk'):
