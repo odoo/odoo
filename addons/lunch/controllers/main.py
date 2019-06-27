@@ -100,6 +100,7 @@ class LunchController(http.Controller):
         alert_domain = expression.AND([
             [('available_today', '=', True)],
             [('location_ids', 'in', user_location.id)],
+            [('mode', '=', 'alert')],
         ])
 
         res.update({

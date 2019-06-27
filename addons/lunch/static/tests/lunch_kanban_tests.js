@@ -591,6 +591,7 @@ QUnit.module('LunchKanbanView', {
                 intercepts: {
                     do_action: function (ev) {
                         assert.deepEqual(ev.data.action, {
+                            name: "Configure Your Order",
                             res_model: 'lunch.order.temp',
                             type: 'ir.actions.act_window',
                             views: [[false, 'form']],

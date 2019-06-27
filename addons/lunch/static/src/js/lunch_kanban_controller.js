@@ -169,6 +169,7 @@ var LunchKanbanController = KanbanController.extend({
 
         this.do_action({
             res_model: 'lunch.order.temp',
+            name: 'Configure Your Order',
             type: 'ir.actions.act_window',
             views: [[false, 'form']],
             target: 'new',

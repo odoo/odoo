@@ -17,7 +17,7 @@
                 <field name="user_id"/>
                 <group expand="0" string="Group By">
                     <filter name="group_by_supplier" string="By Vendor" context="{'group_by':'supplier_id'}"/>
-                    <filter name="group_by_date" string="Order Date" context="{'group_by':'date'}" help="Vendor Orders by Date"/>
+                    <filter name="group_by_date" string="Order Date" context="{'group_by':'date:day'}" help="Vendor Orders by Date"/>
                 </group>
             </search>
         </field>
@@ -27,7 +27,7 @@
         <field name="name">lunch.order.tree</field>
         <field name="model">lunch.order</field>
         <field name="arch" type="xml">
-            <tree string="Order lines Tree" create="false" edit="false" decoration-muted="state == 'cancelled'">
+            <tree string="Order lines Tree" create="false" edit="false" decoration-muted="state == 'cancelled'" class="o_lunch_list">
                 <field name='date'/>
                 <field name='supplier_id' invisible='1'/>
                 <field name='product_id'/>
@@ -36,10 +36,10 @@
                 <field name='user_id'/>
                 <field name="currency_id" invisible="1"/>
                 <field name='price' sum="Total" string="Price" widget="monetary"/>
-                <button name="action_confirm" string="Confirm" type="object" icon="fa-phone text-success" attrs="{'invisible': [('state', '!=', 'ordered')]}" groups="lunch.group_lunch_manager"/>
-                <button name="action_cancel" string="Cancel" type="object" icon="fa-times-circle text-danger" attrs="{'invisible': [('state', 'in', ['cancelled', 'confirmed'])]}" groups="lunch.group_lunch_manager"/>
                 <field name='state'/>
                 <field name="company_id" groups="base.group_multi_company"/>
+                <button name="action_confirm" string="Confirm" type="object" icon="fa-phone text-success" attrs="{'invisible': [('state', '!=', 'ordered')]}" groups="lunch.group_lunch_manager"/>
+                <button name="action_cancel" string="Cancel" type="object" icon="fa-times-circle text-danger" attrs="{'invisible': [('state', 'in', ['cancelled', 'confirmed'])]}" groups="lunch.group_lunch_manager"/>
             </tree>
         </field>
     </record>
@@ -120,11 +120,11 @@
     </record>
 
     <record id="lunch_order_action" model="ir.actions.act_window">
-        <field name="name">Your Orders</field>
+        <field name="name">My Orders</field>
         <field name="res_model">lunch.order</field>
         <field name="view_mode">tree,kanban,pivot</field>
         <field name="search_view_id" ref="lunch_order_view_search"/>
-        <field name="context">{"search_default_is_mine":1}</field>
+        <field name="context">{"search_default_is_mine":1, "search_default_group_by_date": 1}</field>
         <field name="help" type="html">
         <p class="o_view_nocontent_empty_folder">
             No previous order found
@@ -135,7 +135,7 @@
     </record>
 
     <record id="lunch_order_action_by_supplier" model="ir.actions.act_window">
-        <field name="name">Orders by Vendor</field>
+        <field name="name">Today's Orders</field>
         <field name="res_model">lunch.order</field>
         <field name="view_mode">tree,kanban</field>
         <field name="search_view_id" ref="lunch_order_view_search"/>
