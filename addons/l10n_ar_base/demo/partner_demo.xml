@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- New Partners -->
-
-    <!-- ADHOC -->
     <record id="res_partner_adhoc" model="res.partner">
         <field name="name">ADHOC SA</field>
         <field eval="[(6, 0, [ref('base.res_partner_category_8'), ref('base.res_partner_category_11')])]" name="category_id"/>

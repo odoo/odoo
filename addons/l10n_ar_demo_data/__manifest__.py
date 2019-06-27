@@ -11,10 +11,8 @@
     'depends': [
         'account_accountant',
         'l10n_ar',
-        # 'l10n_ar_afipws_fe',
-        # 'l10n_ar_chart',
-        # 'l10n_ar_account_tax_settlement',
-        # 'l10n_ar_account_withholding',
+        # TODDO review this two
+        # 'l10n_ar_account_tax_settlement', 'l10n_ar_account_withholding',
     ],
     # 'data': [
     # ],
