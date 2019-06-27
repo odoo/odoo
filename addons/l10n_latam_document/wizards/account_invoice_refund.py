@@ -16,27 +16,12 @@ class AccountInvoiceRefund(models.TransientModel):
         if active_id:
             return self.env['account.invoice'].browse(active_id)
 
-    l10n_latam_invoice_id = fields.Many2one(
-        'account.invoice',
-        'Invoice',
-        default=_get_l10n_latam_invoice_id,
-    )
+    l10n_latam_invoice_id = fields.Many2one('account.invoice', 'Invoice', default=_get_l10n_latam_invoice_id)
     l10n_latam_use_documents = fields.Boolean(
-        related='l10n_latam_invoice_id.journal_id.l10n_latam_use_documents',
-        readonly=True,
-    )
-    l10n_latam_document_type_id = fields.Many2one(
-        'l10n_latam.document.type',
-        'Document Type',
-        ondelete='cascade',
-    )
-    l10n_latam_sequence_id = fields.Many2one(
-        'ir.sequence',
-        compute='_compute_l10n_latam_sequence',
-    )
-    l10n_latam_document_number = fields.Char(
-        string='Document Number',
-    )
+        related='l10n_latam_invoice_id.journal_id.l10n_latam_use_documents', readonly=True)
+    l10n_latam_document_type_id = fields.Many2one('l10n_latam.document.type', 'Document Type', ondelete='cascade')
+    l10n_latam_sequence_id = fields.Many2one('ir.sequence', compute='_compute_l10n_latam_sequence')
+    l10n_latam_document_number = fields.Char(string='Document Number')
 
     @api.onchange('l10n_latam_invoice_id')
     def _onchange_l10n_latam_invoice(self):
@@ -49,7 +34,8 @@ class AccountInvoiceRefund(models.TransientModel):
                 'company_id': self.l10n_latam_invoice_id.company_id.id,
             })
             self.l10n_latam_document_type_id = refund.l10n_latam_default_document_type_id
-            return {'domain': {'l10n_latam_document_type_id': [('id', 'in', refund.l10n_latam_available_document_type_ids.ids)]}}
+            return {'domain': {'l10n_latam_document_type_id': [
+                ('id', 'in', refund.l10n_latam_available_document_type_ids.ids)]}}
 
     @api.multi
     def compute_refund(self, mode='refund'):
@@ -73,8 +59,7 @@ class AccountInvoiceRefund(models.TransientModel):
     @api.onchange('l10n_latam_document_number', 'l10n_latam_document_type_id')
     def _onchange_l10n_latam_document_number(self):
         if self.l10n_latam_document_type_id:
-            l10n_latam_document_number = \
-                self.l10n_latam_document_type_id._format_document_number(
-                    self.l10n_latam_document_number)
+            l10n_latam_document_number = self.l10n_latam_document_type_id._format_document_number(
+                self.l10n_latam_document_number)
             if self.l10n_latam_document_number != l10n_latam_document_number:
                 self.l10n_latam_document_number = l10n_latam_document_number

@@ -7,13 +7,9 @@ class AccountChartTemplate(models.Model):
     _inherit = 'account.chart.template'
 
     @api.model
-    def _prepare_all_journals(
-            self, acc_template_ref, company, journals_dict=None):
-        """ We add use_documents or not depending on the context
-        """
-        journal_data = super(
-            AccountChartTemplate, self)._prepare_all_journals(
-            acc_template_ref, company, journals_dict)
+    def _prepare_all_journals(self, acc_template_ref, company, journals_dict=None):
+        """ We add use_documents or not depending on the context"""
+        journal_data = super()._prepare_all_journals(acc_template_ref, company, journals_dict)
 
         # if chart has localization, then we use documents by default
         if company._localization_use_documents():
