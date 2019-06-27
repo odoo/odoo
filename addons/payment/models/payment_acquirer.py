@@ -38,6 +38,10 @@ class PaymentAcquirer(models.Model):
     Using the required_if_provider='<name>' attribute on fields it is possible
     to have required fields that depend on a specific acquirer.
 
+    Fields containing sensitive data (e.g. private secrets used for checksum
+    computation, identifier of the main account to the acquirer, etc.) should be
+    restricted to 'administrator-like' users only (base.group_system).
+
     Each acquirer has a link to an ir.ui.view record that is a template of
     a button used to display the payment form. See examples in ``payment_ogone``
     and ``payment_paypal`` modules.
@@ -55,7 +59,7 @@ class PaymentAcquirer(models.Model):
        model (see fields definition).
 
     Each acquirer should also define controllers to handle communication between
-    OpenERP and the acquirer. It generally consists in return urls given to the
+    Odoo and the acquirer. It generally consists in return urls given to the
     button form and that the acquirer uses to send the customer back after the
     transaction, with transaction details given as a POST request.
     """
