@@ -4,21 +4,17 @@ odoo.define('sms.sms_widget', function (require) {
 var basicFields = require('web.basic_fields');
 var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
-var dom = require('web.dom');
-var framework = require('web.framework');
-
 
 var FieldText = basicFields.FieldText;
-var InputField = basicFields.InputField;
-var QWeb = core.qweb;
 
-var _t = core._t
+var _t = core._t;
 /**
  * SmsWidget is a widget to display a textarea (the body) and a text representing
  * the number of SMS and the number of characters. This text is computed every
  * time the user changes the body.
  */
-var SmsWidget = InputField.extend({
+var SmsWidget = FieldText.extend({
+    className: 'o_field_text',
     /**
      * @constructor
      */
@@ -26,12 +22,31 @@ var SmsWidget = InputField.extend({
         this._super.apply(this, arguments);
         this.nbrChar = 0;
         this.nbrSMS = 0;
-        this.encoding = "GSM7";
-        this.tagName = 'div';
+        this.encoding = 'GSM7';
     },
 
     //--------------------------------------------------------------------------
-    // Private
+    // Private: override widget
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @override
+     */
+    _renderEdit: function () {
+        var def = this._super.apply(this, arguments);
+
+        this._compute();
+        var $sms_container = $('<div class="o_sms_container"/>');
+        $sms_container.append(this._renderSMSInfo());
+        $sms_container.append(this._renderIAPButton());
+        this.$el = this.$el.add($sms_container);
+
+        return def;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private: SMS
     //--------------------------------------------------------------------------
 
     /**
@@ -44,8 +59,8 @@ var SmsWidget = InputField.extend({
         this.nbrChar = content.length;
         this.nbrChar += (content.match(/\n/g) || []).length;
         this.nbrSMS = this._countSMS(this.nbrChar, this.encoding);
-        this._renderSMS();
     },
+
     /**
      * Count the number of SMS of the content
      * @private
@@ -66,16 +81,7 @@ var SmsWidget = InputField.extend({
         }
         return Math.ceil(this.nbrChar / 153);
     },
-    /**
-     * @private
-     * @override
-     */
-    _renderEdit: function () {
-        this.$el.empty();
-        this._prepareInput($('<textarea/>')).appendTo(this.$el);
-        this.$el.append($(QWeb.render("sms.sms_count", {})));
-        this._compute();
-    },
+
     /**
      * Extract the encoding depending on the characters in the content
      * @private
@@ -88,17 +94,47 @@ var SmsWidget = InputField.extend({
         }
         return 'UNICODE';
     },
+
+    /**
+     * Render the IAP button to redirect to IAP pricing
+     * @private
+     */
+    _renderIAPButton: function () {
+        return $('<a>', {
+            'href': 'https://iap-services.odoo.com/iap/sms/pricing',
+            'target': '_blank',
+            'title': _t('SMS Pricing'),
+            'aria-label': _t('SMS Pricing'),
+            'class': 'fa fa-lg fa-info-circle',
+        });
+    },
+
     /**
      * Render the number of characters, sms and the encoding.
      * @private
      */
-    _renderSMS: function () {
-        this.$('.o_sms_count').text(_.str.sprintf(_t('%s chars, fits in %s SMS (%s) '), this.nbrChar, this.nbrSMS, this.encoding));
+    _renderSMSInfo: function () {
+        var string = _.str.sprintf(_t('%s chars, fits in %s SMS (%s) '), this.nbrChar, this.nbrSMS, this.encoding);
+        var $span = $('<span>', {
+            'class': 'text-muted o_sms_count',
+        });
+        $span.text(string);
+        return $span;
+    },
+
+    /**
+     * Update widget SMS information with re-computed info about length, ...
+     * @private
+     */
+    _updateSMSInfo: function ()  {
+        this._compute();
+        var string = _.str.sprintf(_t('%s chars, fits in %s SMS (%s) '), this.nbrChar, this.nbrSMS, this.encoding);
+        this.$('.o_sms_count').text(string);
     },
 
     //--------------------------------------------------------------------------
     // Handlers
-    //--------------------------------------------------------------------------   
+    //--------------------------------------------------------------------------
 
     /**
      * @override
@@ -106,15 +142,16 @@ var SmsWidget = InputField.extend({
      */
     _onChange: function () {
         this._super.apply(this, arguments);
-        this._compute();
+        this._updateSMSInfo();
     },
+
     /**
      * @override
      * @private
      */
     _onInput: function () {
         this._super.apply(this, arguments);
-        this._compute();
+        this._updateSMSInfo();
     },
 });
 
