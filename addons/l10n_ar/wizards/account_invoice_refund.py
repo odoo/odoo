@@ -10,15 +10,13 @@ class AccountInvoiceRefund(models.TransientModel):
     @api.multi
     def compute_refund(self, mode='refund'):
         # TODO when moving to master check if we could fix modify option
-        res = super(AccountInvoiceRefund, self).compute_refund(mode=mode)
+        res = super().compute_refund(mode=mode)
         if isinstance(res, dict) and self.refund_only != 'modify':
             domain = res.get('domain', [])
             refund_invoices = self.env['account.invoice'].search(domain)
             invoice = self.l10n_latam_invoice_id
-            refund_invoices.write({
-                # TODO we should set same currency_rate as original invoice
-                'origin': invoice.number,
-                'l10n_ar_afip_service_start': invoice.l10n_ar_afip_service_start,
-                'l10n_ar_afip_service_end': invoice.l10n_ar_afip_service_end,
-            })
+            # TODO we should set same currency_rate as original invoice
+            refund_invoices.write({'origin': invoice.number,
+                                   'l10n_ar_afip_service_start': invoice.l10n_ar_afip_service_start,
+                                   'l10n_ar_afip_service_end': invoice.l10n_ar_afip_service_end})
         return res
