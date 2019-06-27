@@ -114,7 +114,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
 
         _.each($('textarea.load_editor'), function (textarea) {
             var $textarea = $(textarea);
-            var editorKarma = $textarea.data('karma') || 30; // default value for backward compatibility
+            var editorKarma = $textarea.data('karma') || 0; // default value for backward compatibility
             if (!$textarea.val().match(/\S/)) {
                 $textarea.val('<p><br/></p>');
             }
