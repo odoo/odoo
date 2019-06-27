@@ -304,7 +304,7 @@ class AccountVoucher(models.Model):
                 'payment_id': self._context.get('payment_id'),
             }
             # Create one line per tax and fix debit-credit for the move line if there are tax included
-            if (line.tax_ids):
+            if (line.tax_ids and tax_calculation_rounding_method == 'round_per_line'):
                 tax_group = line.tax_ids.compute_all(self._convert(line.price_unit), self.company_id.currency_id, line.quantity, line.product_id, self.partner_id)
                 if move_line['debit']: move_line['debit'] = tax_group['total_excluded']
                 if move_line['credit']: move_line['credit'] = tax_group['total_excluded']
