@@ -23,7 +23,7 @@ class OgoneController(http.Controller):
         '/payment/ogone/decline', '/payment/ogone/test/decline',
         '/payment/ogone/exception', '/payment/ogone/test/exception',
         '/payment/ogone/cancel', '/payment/ogone/test/cancel',
-    ], type='http', auth='none')
+    ], type='http', auth='public')
     def ogone_form_feedback(self, **post):
         """ Ogone contacts using GET, at least for accept """
         _logger.info('Ogone: entering form_feedback with post data %s', pprint.pformat(post))  # debug
@@ -110,13 +110,13 @@ class OgoneController(http.Controller):
         '/payment/ogone/validate/accept',
         '/payment/ogone/validate/decline',
         '/payment/ogone/validate/exception',
-    ], type='http', auth='none')
+    ], type='http', auth='public')
     def ogone_validation_form_feedback(self, **post):
         """ Feedback from 3d secure for a bank card validation """
         request.env['payment.transaction'].sudo().form_feedback(post, 'ogone')
         return werkzeug.utils.redirect("/payment/process")
 
-    @http.route(['/payment/ogone/s2s/feedback'], auth='none', csrf=False)
+    @http.route(['/payment/ogone/s2s/feedback'], auth='public', csrf=False)
     def feedback(self, **kwargs):
         try:
             tx = request.env['payment.transaction'].sudo()._ogone_form_get_tx_from_data(kwargs)

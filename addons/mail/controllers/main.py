@@ -189,7 +189,7 @@ class MailController(http.Controller):
         subtypes_list = sorted(subtypes_list, key=lambda it: (it['parent_model'] or '', it['res_model'] or '', it['internal'], it['sequence']))
         return subtypes_list
 
-    @http.route('/mail/view', type='http', auth='none')
+    @http.route('/mail/view', type='http', auth='public')
     def mail_action_view(self, model=None, res_id=None, access_token=None, **kwargs):
         """ Generic access point from notification emails. The heuristic to
             choose where to redirect the user is the following :
