@@ -70,11 +70,11 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
-                                <div class="text-center">
+                                <div t-attf-class="#{!m2o_mode ? 'text-center' : ''}">
                                     <i class="fa fa-building" role="img" aria-label="Enterprise" title="Enterprise"></i> <strong><field name="name"/></strong>
                                 </div>
                                 <hr class="mt4 mb4"/>
-                                <div class="row">
+                                <div class="row" t-if="!m2o_mode">
                                     <div t-if="record.email.value" class="col-6 text-center">
                                         <strong>Email:</strong>
                                     </div>
@@ -85,6 +85,16 @@
                                         <field name="email"/>
                                     </div>
                                     <div t-if="record.phone.value" class="col-6 text-center">
+                                        <field name="phone"/>
+                                    </div>
+                                </div>
+                                <div t-else="">
+                                    <div t-if="record.email.value">
+                                        <strong>Email:</strong>
+                                        <field name="email"/>
+                                    </div>
+                                    <div t-if="record.phone.value">
+                                        <strong>Phone:</strong>
                                         <field name="phone"/>
                                     </div>
                                 </div>
