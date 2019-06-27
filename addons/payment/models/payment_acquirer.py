@@ -77,16 +77,14 @@ class PaymentAcquirer(models.Model):
         default=lambda self: self.env.company.id, required=True)
     view_template_id = fields.Many2one(
         'ir.ui.view', 'Form Button Template',
-        default=_get_default_view_template_id,
-        groups="base.group_system")
+        default=_get_default_view_template_id)
     registration_view_template_id = fields.Many2one(
         'ir.ui.view', 'S2S Form Template', domain=[('type', '=', 'qweb')],
-        help="Template for method registration",
-        groups="base.group_system")
+        help="Template for method registration")
     environment = fields.Selection([
         ('test', 'Test'),
         ('prod', 'Production')], string='Environment',
-        default='test', oldname='env', required=True)
+        default='test', required=True)
     website_published = fields.Boolean(
         'Visible in Portal / Website', copy=False,
         help="Make this payment acquirer available (Customer invoices, etc.)")
@@ -101,8 +99,7 @@ class PaymentAcquirer(models.Model):
                 the amount in a temporary transfer account of your books (created automatically when you create
                 the payment journal). Then when you get paid on your bank account by the payment acquirer, you
                 reconcile the bank statement line with this temporary transfer account. Use reconciliation
-                templates to do it in one-click.""",
-        groups="base.group_system,account.group_account_manager")
+                templates to do it in one-click.""")
     specific_countries = fields.Boolean(string="Specific Countries",
         help="If you leave it empty, the payment acquirer will be available for all the countries.")
     check_validity = fields.Boolean(string="Verify Card Validity",
@@ -143,8 +140,7 @@ class PaymentAcquirer(models.Model):
         string='Save Cards', default='none',
         help="This option allows customers to save their credit card as a payment token and to reuse it for a later purchase. "
              "If you manage subscriptions (recurring invoicing), you need it to automatically charge the customer when you "
-             "issue an invoice.",
-        groups="base.group_system")
+             "issue an invoice.")
     token_implemented = fields.Boolean('Saving Card Data supported', compute='_compute_feature_support', search='_search_is_tokenized')
     authorize_implemented = fields.Boolean('Authorize Mechanism Supported', compute='_compute_feature_support')
     fees_implemented = fields.Boolean('Fees Computation Supported', compute='_compute_feature_support')
@@ -176,8 +172,7 @@ class PaymentAcquirer(models.Model):
     payment_flow = fields.Selection(selection=[('form', 'Redirection to the acquirer website'),
         ('s2s','Payment from Odoo')],
         default='form', required=True, string='Payment Flow',
-        help="""Note: Subscriptions does not take this field in account, it uses server to server by default.""",
-        groups="base.group_system")
+        help="""Note: Subscriptions does not take this field in account, it uses server to server by default.""")
     inbound_payment_method_ids = fields.Many2many('account.payment.method', related='journal_id.inbound_payment_method_ids', readonly=False)
 
     @api.onchange('payment_flow')
