@@ -17,11 +17,16 @@ This module consists:
     'website': 'http://www.odoo.com/accounting',
     'depends': ['base', 'account'],
     'data': [
+        'security/ir.model.access.csv',
         'data/account_chart_template_data.xml',
         'data/account.account.template.csv',
         'data/account_data.xml',
         'data/account_tax_template_data.xml',
         'data/account_chart_template_post_data.xml',
         'data/account_chart_template_configure_data.xml',
+        'data/withholding_tax_data.xml',
+        'views/res_partner_view.xml',
+        'views/res_company_view.xml',
+        'views/l10n_il_withh_tax_report_data_view.xml'
     ],
 }
