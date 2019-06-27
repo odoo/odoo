@@ -17,7 +17,9 @@
                     </div>
                     <notebook>
                         <page string="Content">
-                            <field name="body" widget="sms_widget"/>
+                            <group>
+                                <field name="body" widget="sms_widget" nolabel="1"/>
+                            </group>
                         </page>
                         <page string="Dynamic Placeholder Generator" groups="base.group_no_one">
                             <group>
