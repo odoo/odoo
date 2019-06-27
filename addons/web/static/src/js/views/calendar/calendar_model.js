@@ -271,7 +271,6 @@ return AbstractModel.extend({
         this.data.highlight_date = this.data.target_date = start.clone();
         // set dates in UTC with timezone applied manually
         this.data.start_date = this.data.end_date = start;
-        this.data.start_date.utc().add(this.getSession().getTZOffset(this.data.start_date), 'minutes');
 
         switch (this.data.scale) {
             case 'month':
@@ -286,6 +285,9 @@ return AbstractModel.extend({
                 this.data.start_date = this.data.start_date.clone().startOf('day');
                 this.data.end_date = this.data.end_date.clone().endOf('day');
         }
+
+        this.data.start_date.utc();
+        this.data.end_date.utc();
     },
     /**
      * @param {string} scale the scale to set

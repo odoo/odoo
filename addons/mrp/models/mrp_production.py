@@ -9,7 +9,7 @@ import math
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import AccessError, UserError
-from odoo.tools import float_compare, float_round, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import float_compare, float_round, float_is_zero, DEFAULT_SERVER_DATETIME_FORMAT
 
 class MrpProduction(models.Model):
     """ Manufacturing Orders """
@@ -820,6 +820,8 @@ class MrpProduction(models.Model):
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             for move in moves_to_do.filtered(lambda m: m.product_qty == 0.0 and m.quantity_done > 0):
                 move.product_uom_qty = move.quantity_done
+            for move in moves_to_do.filtered(lambda m: float_is_zero(m.quantity_done, precision_rounding=m.product_uom.rounding)):
+                move._action_cancel()
             moves_to_do._action_done()
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state == 'done') - moves_not_to_do
             order._cal_price(moves_to_do)

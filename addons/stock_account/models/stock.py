@@ -89,7 +89,10 @@ class StockMoveLine(models.Model):
         if 'qty_done' in vals:
             moves_to_update = {}
             for move_line in self.filtered(lambda ml: ml.state == 'done' and (ml.move_id._is_in() or ml.move_id._is_out())):
-                moves_to_update[move_line.move_id] = vals['qty_done'] - move_line.qty_done
+                rounding = move_line.product_uom_id.rounding
+                qty_difference = float_round(vals['qty_done'] - move_line.qty_done, precision_rounding=rounding)
+                if not float_is_zero(qty_difference, precision_rounding=rounding):
+                    moves_to_update[move_line.move_id] = qty_difference
 
             for move_id, qty_difference in moves_to_update.items():
                 move_vals = {}
