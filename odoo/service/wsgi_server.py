@@ -123,6 +123,7 @@ def application_unproxied(environ, start_response):
 
 def application(environ, start_response):
     if config['proxy_mode'] and 'HTTP_X_FORWARDED_HOST' in environ:
-        return werkzeug.contrib.fixers.ProxyFix(application_unproxied)(environ, start_response)
+        x_proto = 1 if 'HTTP_X_FORWARDED_PROTO' in environ else None
+        return werkzeug.contrib.fixers.ProxyFix(application_unproxied, x_proto)(environ, start_response)
     else:
         return application_unproxied(environ, start_response)
