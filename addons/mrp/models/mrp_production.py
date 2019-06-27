@@ -7,7 +7,7 @@ from itertools import groupby
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import AccessError, UserError
-from odoo.tools import date_utils, float_round
+from odoo.tools import date_utils, float_round, float_is_zero
 
 
 class MrpProduction(models.Model):
@@ -776,7 +776,7 @@ class MrpProduction(models.Model):
                 )
                 move_lines = self.move_raw_ids.mapped('move_line_ids').filtered(lambda ml: lots_short & ml.lot_produced_ids)
                 for ml in move_lines:
-                    error_msg += ml.product_id.display_name + ' (' + (lots_short & ml.lot_produced_ids).mapped('name') + ')\n'
+                    error_msg += ml.product_id.display_name + ' (' + ', '.join((lots_short & ml.lot_produced_ids).mapped('name')) + ')\n'
                 raise UserError(error_msg)
 
     @api.multi
@@ -829,6 +829,8 @@ class MrpProduction(models.Model):
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             for move in moves_to_do.filtered(lambda m: m.product_qty == 0.0 and m.quantity_done > 0):
                 move.product_uom_qty = move.quantity_done
+            for move in moves_to_do.filtered(lambda m: float_is_zero(m.quantity_done, precision_rounding=m.product_uom.rounding)):
+                move._action_cancel()
             # MRP do not merge move, catch the result of _action_done in order
             # to get extra moves.
             moves_to_do = moves_to_do._action_done()

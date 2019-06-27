@@ -537,6 +537,12 @@ class WebsiteSlides(WebsiteProfile):
             'search_uncategorized': kwargs.get('search_uncategorized')
         })
 
+        values['channel'] = slide.channel_id
+        values = self._prepare_additional_channel_values(values, **kwargs)
+        values.pop('channel', None)
+
+        values['signup_allowed'] = request.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'
+
         if kwargs.get('fullscreen') == '1':
             return request.render("website_slides.slide_fullscreen", values)
         return request.render("website_slides.slide_main", values)

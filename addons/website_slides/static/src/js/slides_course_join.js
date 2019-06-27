@@ -8,8 +8,15 @@ require('website_slides.slides');
 var _t = core._t;
 
 var CourseJoinWidget = publicWidget.Widget.extend({
+    template: 'slide.course.join',
+    xmlDependencies: ['/website_slides/static/src/xml/channel_management.xml'],
     events: {
         'click .o_wslides_js_course_join_link': '_onClickJoin',
+    },
+
+    init: function (parent, channelId){
+        this.channelId = channelId;
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -41,7 +48,7 @@ var CourseJoinWidget = publicWidget.Widget.extend({
      * @private
      */
     _onClickJoin: function (event) {
-        var channelId = $(event.currentTarget).data('channel-id');
+        var channelId = this.channelId || $(event.currentTarget).data('channel-id');
         var self = this;
         this._rpc({
             route: '/slides/channel/join',

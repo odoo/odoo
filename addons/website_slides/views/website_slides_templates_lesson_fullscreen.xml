@@ -7,7 +7,10 @@
         <link rel="canonical" t-att-href="slide.website_url" />
     </t>
     <t t-call="website.layout">
-        <div class="o_wslides_fs_main d-flex flex-column font-weight-light">
+        <div class="o_wslides_fs_main d-flex flex-column font-weight-light"
+            t-att-data-channel-id="slide.channel_id.id"
+            t-att-data-channel-enroll="slide.channel_id.enroll"
+            t-att-data-signup-allowed="signup_allowed">
 
             <div class="o_wslides_slide_fs_header d-flex flex-shrink-0 text-white">
                 <div class="d-flex">
