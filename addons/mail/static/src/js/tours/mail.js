@@ -15,7 +15,7 @@ tour.register('mail_tour', {
 }, {
     trigger: '.o_mail_discuss .o_mail_discuss_sidebar .o_mail_add_thread[data-type="multi_user_channel"]',
     content: _t("<p>Create a channel here.</p>"),
-    position: 'right',
+    position: 'bottom',
     auto: true,
     run: function (actions) {
         var t = new Date().getTime();
@@ -24,7 +24,7 @@ tour.register('mail_tour', {
 }, {
     trigger: ".ui-autocomplete .ui-menu-item > a:contains(Private)",
     content: _t("<p> Create a private channel.</p>"),
-    position: 'right',
+    position: 'bottom',
 }, {
     trigger: '.o_mail_discuss .o_composer_text_field',
     content: _t("<p><b>Write a message</b> to the members of the channel here.</p> <p>You can notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. Start your message with <i>'/'</i> to get the list of possible commands.</p>"),
@@ -41,7 +41,7 @@ tour.register('mail_tour', {
 }, {
     trigger: '.o_mail_discuss .o_mail_thread .o_thread_message_star',
     content: _t("Messages can be <b>starred</b> to remind you to check back later."),
-    position: "right",
+    position: "bottom",
 }, {
     trigger: '.o_mail_discuss .o_mail_discuss_item[data-thread-id="mailbox_starred"]',
     content: _t("Once a message has been starred, you can come back and review it at any time here."),
