@@ -110,7 +110,12 @@
         <button t-if="scheduleActivityButton" class="btn btn-link o_chatter_button_schedule_activity" title="Log or schedule an activity" disabled="disabled">
             <i class="fa fa-clock-o" role="img" aria-label="Dates" title="Dates"/> <t t-if="isMobile">Activity</t><t t-else="">Schedule activity</t>
         </button>
-
+        <t t-if="!disableAttachmentBox">
+            <t t-call="mail.chatter.Attachment.Button">
+                <t t-set="displayCounter" t-value="displayCounter"/>
+                <t t-set="count" t-value="count"/>
+            </t>
+        </t>
     </t>
 
     <!--
