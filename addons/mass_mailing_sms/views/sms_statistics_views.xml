@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  SMS STATISTICS !-->
+    <record id="sms_statistics_view_search" model="ir.ui.view">
+        <field name="name">sms.statistics.view.search</field>
+        <field name="model">sms.statistics</field>
+        <field name="arch" type="xml">
+           <search string="Mail Statistics">
+                <field name="sms_sms_id_int"/>
+                <field name="sms_sms_id"/>
+                <filter string="Sent" name="filter_sent" domain="[('sent', '!=', False)]"/>
+                <filter string="Received" name="filter_received" domain="[('sent', '!=', False), ('exception', '=', False)]"/>
+                <!-- <filter string="Scheduled" name="filter_scheduled" domain="[('scheduled', '!=', False), ('sent', '=', False), ('exception', '=', False)]"/> -->
+                <filter string="Failed" name="filter_failed" domain="[('sent', '=', False), ('exception', '!=', False)]"/>
+                <filter string="Ignored" name="filter_ignored" domain="[('sent', '=', False), ('exception', '=', False), ('ignored', '!=', False)]"/>
+                <separator/>
+                <filter string="Clicked" name="filter_clicked" domain="[('clicked', '!=', False)]"/>
+                <filter string="Exception" name="filter_bounced" domain="[('exception', '!=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Open/Click Date" name="group_open_date" context="{'group_by': 'clicked:day'}"/>
+                    <filter string="Mass Mailing"  name="mass_mailing" domain="[]" context="{'group_by':'mass_mailing_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="sms_statistics_view_tree" model="ir.ui.view">
+        <field name="name">sms.statistics.view.tree</field>
+        <field name="model">sms.statistics</field>
+        <field name="arch" type="xml">
+            <tree string="Mail Statistics" create="0">
+                <field name="sms_number"/>
+                <field name="state"/>
+                <field name="sent"/>
+                <field name="clicked"/>
+                <field name="exception"/>
+                <field name="ignored"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="sms_statistics_view_form" model="ir.ui.view">
+        <field name="name">sms.statistics.view.form</field>
+        <field name="model">sms.statistics</field>
+        <field name="arch" type="xml">
+            <form string="Mail Statistics" create="0">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_form_box_info bg-info oe_text_center alert-info" attrs="{'invisible': [('exception', '=', False)]}" role="alert">
+                        <p><strong>This SMS could not be sent.</strong></p>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="sms_number" string="Number"/>
+                            <field name="sms_sms_id"/>
+                            <field name="mass_mailing_id"/>
+                            <field name="utm_campaign_id"/>
+                            <field name="sms_sms_id_int" groups="base.group_no_one"/>
+                            <field name="res_model" groups="base.group_no_one"/>
+                            <field name="res_id" groups="base.group_no_one"/>
+                        </group>
+                        <group>
+                            <field name="exception"/>
+                            <field name="sent"/>
+                            <field name="clicked"/>
+                            <field name="ignored"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sms_statistics_view_graph" model="ir.ui.view">
+        <field name="name">sms.statistics.view.graph</field>
+        <field name="model">sms.statistics</field>
+        <field name="arch" type="xml">
+            <graph string="Mail Statistics" type="bar" stacked="True" interval="day">
+                <!-- <field name="state_update" type="row" interval="day"/> -->
+                <field name="state" type="row"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="sms_statistics_action" model="ir.actions.act_window">
+        <field name="name">SMS Statistics</field>
+        <field name="res_model">sms.statistics</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="sms_statistics_action_mailing" model="ir.actions.act_window">
+        <field name="name">SMS Statistics</field>
+        <field name="res_model">sms.statistics</field>
+        <field name="view_mode">graph,tree,form,pivot</field>
+        <field name="domain">[]</field>
+        <field name="context">{'search_default_mass_mailing_id': active_id}</field>
+    </record>
+
+    <!-- Add in Technical/Email -->
+<!--     <menuitem name="SMS Statistics" id="menu_email_statistics"
+        parent="base.menu_email" sequence="50"
+        action="action_view_mail_mail_statistics"/> -->
+</odoo>
