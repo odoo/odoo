@@ -15,7 +15,7 @@
                             <div class="text-muted">
                                 Sales are reported to the following sales team
                             </div>
-                            <field name="crm_team_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
+                            <field name="crm_team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
                         </div>
                     </div>
                 </div>

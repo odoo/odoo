@@ -58,6 +58,23 @@
         </field>
     </record>
 
+    <record id='fleet_vehicle_model_view_kanban' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.model.kanban</field>
+        <field name="model">fleet.vehicle.model</field>
+        <field name="arch" type="xml">
+            <kanban string="Models">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_details">
+                            <div><strong><field name="name"/></strong></div>
+                            <div><field name="brand_id"/></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id='fleet_vehicle_model_view_search' model='ir.ui.view'>
         <field name="name">fleet.vehicle.model.search</field>
         <field name="model">fleet.vehicle.model</field>
