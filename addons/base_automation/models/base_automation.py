@@ -156,7 +156,7 @@ class BaseAutomation(models.Model):
         """ Filter the records that satisfy the precondition of action ``self``. """
         if self.filter_pre_domain and records:
             domain = [('id', 'in', records.ids)] + safe_eval(self.filter_pre_domain, self._get_eval_context())
-            return records.search(domain)
+            return records.with_context(active_test=False).search(domain)
         else:
             return records
 
