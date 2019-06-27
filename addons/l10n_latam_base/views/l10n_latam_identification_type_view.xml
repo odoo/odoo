@@ -7,8 +7,8 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree decoration-muted="(not active)" create="0" edit="0">
-                <field name="short_name"/>
                 <field name="name"/>
+                <field name="description"/>
                 <field name="country_id"/>
                 <field name="active" widget="boolean_toggle"/>
             </tree>
@@ -22,7 +22,7 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
-                <field name="short_name"/>
+                <field name="description"/>
                 <field name="country_id"/>
                 <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active identification types"/>
                 <filter name="inactive" string="Archived" domain="[('active','=',False)]" help="Show archived identification types"/>

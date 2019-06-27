@@ -8,30 +8,14 @@ class L10nLatamIdentificationType(models.Model):
     _name = 'l10n_latam.identification.type'
     _description = "Partner Identification Type for LATAM countries"
     _order = 'sequence'
-    _rec_name = 'short_name'
 
-    sequence = fields.Integer()
+    sequence = fields.Integer(default=10)
     name = fields.Char(translate=True, required=True,)
-    short_name = fields.Char(translate=True, required=True,)
+    description = fields.Char(translate=True,)
     active = fields.Boolean(default=True)
     country_id = fields.Many2one('res.country')
 
-    # def name_get(self):
-    #     # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
-    #     self.read(['name', 'short_name'])
-    #     return [(idtype.id, '%s%s' % (idtype.short_name and '%s - ' % idtype.short_name or '', idtype.name))
-    #             for idtype in self]
-
-    @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
-        args = args or []
-        domain = []
-        if name:
-            domain = [
-                '|',
-                ('short_name', '=ilike', name + '%'),
-                ('name', operator, name)]
-            if operator in expression.NEGATIVE_TERM_OPERATORS:
-                domain = ['&', '!'] + domain[1:]
-        recs = self.search(domain + args, limit=limit)
-        return recs.name_get()
+    def name_get(self):
+        multi_localization = len(self.search([]).mapped('country_id')) > 1
+        return [(rec.id, '%s%s' % (
+            rec.name, multi_localization and rec.country_id and ' (%s)' % rec.country_id.code or '')) for rec in self]

@@ -8,10 +8,10 @@ class ResPartner(models.Model):
 
     l10n_latam_identification_type_id = fields.Many2one('l10n_latam.identification.type',
         string="Identification Type", index=True, auto_join=True,
-        domain="['|', ('country_id', '=', False), ('country_id', '=', country_id)]",
-        default=lambda self: self.env.ref('l10n_latam_base.it_vat', raise_if_not_found=False),
+        domain=lambda self: "['|', ('country_id', '=', False), ('country_id', '=', country_id or %s)]" % (
+            self.env.user.company_id.country_id.id),
         help="The type of identifications defined for LATAM countries")
-    vat = fields.Char(string='Identification Number')
+    vat = fields.Char(string='VAT/Identification Number')
 
     @api.model
     def _commercial_fields(self):

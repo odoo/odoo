@@ -7,10 +7,14 @@
         <field name="model">res.partner</field>
         <field type="xml" name="arch">
             <field name="vat" position="attributes">
-                <attribute name="string">Identification Number</attribute>
+                <attribute name="nolabel">1</attribute>
             </field>
             <field name="vat" position="before">
                 <field name="l10n_latam_identification_type_id" options="{'no_open': True, 'no_create': True}" placeholder="Type" attrs="{'readonly': [('parent_id','!=',False)]}"/>
+                <div>
+                    <label for="vat" string="VAT" attrs="{'invisible': [('l10n_latam_identification_type_id', '!=', False)]}"/>
+                    <label for="vat" string="Identification Number" attrs="{'invisible': [('l10n_latam_identification_type_id', '=', False)]}"/>
+                </div>
             </field>
         </field>
     </record>
