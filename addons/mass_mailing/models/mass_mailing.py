@@ -228,8 +228,7 @@ class MassMailing(models.Model):
                                   help="This name helps you tracking your different campaign efforts, e.g. Fall_Drive, Christmas_Special")
     source_id = fields.Many2one('utm.source', string='Source', required=True, ondelete='cascade',
                                 help="This is the link source, e.g. Search Engine, another domain, or name of email list")
-    medium_id = fields.Many2one('utm.medium', string='Medium',
-                                help="This is the delivery method, e.g. Postcard, Email, or Banner Ad", default=lambda self: self.env.ref('utm.utm_medium_email'))
+    medium_id = fields.Many2one('utm.medium', string='Medium', help="Delivery method: Email")
     clicks_ratio = fields.Integer(compute="_compute_clicks_ratio", string="Number of Clicks")
     state = fields.Selection([('draft', 'Draft'), ('in_queue', 'In Queue'), ('sending', 'Sending'), ('done', 'Sent')],
         string='Status', required=True, copy=False, default='draft', group_expand='_group_expand_states')
@@ -381,6 +380,8 @@ class MassMailing(models.Model):
             values['subject'] = values['name']
         if values.get('body_html'):
             values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
+        if 'medium_id' not in values:
+            values['medium_id'] = self.values.ref('utm.utm_medium_email').id
         return super(MassMailing, self).create(values)
 
     def write(self, values):
