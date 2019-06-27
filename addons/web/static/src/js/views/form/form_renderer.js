@@ -802,7 +802,7 @@ var FormRenderer = BasicRenderer.extend({
         var fieldName = node.tag === 'label' ? node.attrs.for : node.attrs.name;
         if ('string' in node.attrs) { // allow empty string
             text = node.attrs.string;
-        } else if (fieldName) {
+        } else if (fieldName && this.state.fields[fieldName]) {
             text = this.state.fields[fieldName].string;
         } else  {
             return this._renderGenericTag(node);

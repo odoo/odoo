@@ -882,6 +882,27 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('label should rendered even if field is not in the state', async function (assert) {
+        assert.expect(1);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<label for="test"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        assert.containsOnce(form, '.o_td_label', "label should be available in form");
+        form.destroy();
+    });
+
     QUnit.test('readonly attrs on fields are re-evaluated on field change', async function (assert) {
         assert.expect(4);
 
