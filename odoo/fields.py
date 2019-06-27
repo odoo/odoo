@@ -2801,7 +2801,15 @@ class Many2many(_RelationalMulti):
             # `odoo/addons/test_new_api/tests/test_new_fields.py`
             # `test_11_stored`
             for record_id, co_record_ids in new_relation.items():
-                self._update(model.browse(record_id), comodel.browse(co_record_ids))
+                record = model.browse(record_id)
+                co_records = comodel.browse(co_record_ids)
+                self._update(record, co_records)
+                # DLE P86: `test_sale_order`
+                # self.assertTrue(self.sale_order.invoice_status == 'no', 'Sale: SO status after invoicing should be "nothing to invoice"')
+                # When adding new lines to account.invoice.line.sale_line_ids, add the opposite lines to sale.order.line.invoice_lines
+                # Otherwise sale.order.line.invoice_lines is not correct, and the compute field depending on it won't be either (qty_invoiced)
+                for invf in model._field_inverses[self]:
+                    invf._update(co_records, record)
 
         # process pairs to remove
         pairs = [(x, y) for x, ys in old_relation.items() for y in ys - new_relation[x]]
