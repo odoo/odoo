@@ -431,6 +431,10 @@ class SingleTransactionCase(BaseCase):
         cls.cr = cls.registry.cursor()
         cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
 
+    def setUp(self):
+        super(SingleTransactionCase, self).setUp()
+        self.env.user.flush()
+
     @classmethod
     def tearDownClass(cls):
         # rollback and close the cursor, and reset the environments
