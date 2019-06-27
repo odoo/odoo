@@ -14,24 +14,24 @@ class LunchProductCategory(models.Model):
     name = fields.Char('Product Category', required=True)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
-    topping_label_1 = fields.Char('Topping 1 Label', required=True, default='Supplements')
-    topping_label_2 = fields.Char('Topping 2 Label', required=True, default='Beverages')
-    topping_label_3 = fields.Char('Topping 3 Label', required=True, default='Topping Label 3')
+    topping_label_1 = fields.Char('Extra 1 Label', required=True, default='Extras')
+    topping_label_2 = fields.Char('Extra 2 Label', required=True, default='Beverages')
+    topping_label_3 = fields.Char('Extra 3 Label', required=True, default='Extra Label 3')
     topping_ids_1 = fields.One2many('lunch.topping', 'category_id', domain=[('topping_category', '=', 1)], ondelete='cascade')
     topping_ids_2 = fields.One2many('lunch.topping', 'category_id', domain=[('topping_category', '=', 2)], ondelete='cascade')
     topping_ids_3 = fields.One2many('lunch.topping', 'category_id', domain=[('topping_category', '=', 3)], ondelete='cascade')
     topping_quantity_1 = fields.Selection([
         ('0_more', 'None or More'),
         ('1_more', 'One or More'),
-        ('1', 'Only One')], 'Topping 1 Quantity', default='0_more', required=True)
+        ('1', 'Only One')], 'Extra 1 Quantity', default='0_more', required=True)
     topping_quantity_2 = fields.Selection([
         ('0_more', 'None or More'),
         ('1_more', 'One or More'),
-        ('1', 'Only One')], 'Topping 2 Quantity', default='0_more', required=True)
+        ('1', 'Only One')], 'Extra 2 Quantity', default='0_more', required=True)
     topping_quantity_3 = fields.Selection([
         ('0_more', 'None or More'),
         ('1_more', 'One or More'),
-        ('1', 'Only One')], 'Topping 3 Quantity', default='0_more', required=True)
+        ('1', 'Only One')], 'Extra 3 Quantity', default='0_more', required=True)
     product_count = fields.Integer(compute='_compute_product_count', help="The number of products related to this category")
 
     def _compute_product_count(self):
@@ -63,7 +63,7 @@ class LunchProductCategory(models.Model):
 class LunchTopping(models.Model):
     """"""
     _name = 'lunch.topping'
-    _description = 'Lunch Toppings'
+    _description = 'Lunch Extras'
 
     name = fields.Char('Name', required=True)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
