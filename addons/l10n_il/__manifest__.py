@@ -15,7 +15,7 @@ This module consists:
  """,
     'author': 'Odoo SA',
     'website': 'http://www.odoo.com/accounting',
-    'depends': ['account'],
+    'depends': ['base', 'account'],
     'data': [
         'data/account_chart_template_data.xml',
         'data/account.account.template.csv',
@@ -23,5 +23,7 @@ This module consists:
         'data/account_tax_template_data.xml',
         'data/account_chart_template_post_data.xml',
         'data/account_chart_template_configure_data.xml',
+        'views/res_partner_view.xml',
+        'views/res_company_view.xml'
     ],
 }
