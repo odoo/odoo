@@ -8,6 +8,7 @@
         <field name="allocation_type">fixed_allocation</field>
         <field name="color_name">blue</field>
         <field name="request_unit">hour</field>
+        <field name="validity_start" eval="False"/>
     </record>
 
     <record id="hr_holiday_status_dv" model="hr.leave.type">
@@ -15,6 +16,7 @@
         <field name="allocation_type">fixed</field>
         <field name="color_name">brown</field>
         <field name="validation_type">both</field>
+        <field name="validity_start" eval="False"/>
     </record>
 
     <record id="holiday_status_cla" model="hr.leave.type">

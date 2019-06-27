@@ -1100,7 +1100,7 @@ class Field(MetaField('DummyField', (object,), {})):
                         for source, target in zip(recs, recs.with_env(env)):
                             try:
                                 values = {f.name: source[f.name] for f in computed}
-                                target._cache.update(target._convert_to_cache(values, validate=False))
+                                target._update_cache(values, validate=False)
                             except MissingError as exc:
                                 target._cache.set_failed(target._fields, exc)
                     # the result is saved to database by BaseModel.recompute()
@@ -2321,7 +2321,7 @@ class _RelationalMulti(_Relational):
             else:
                 browse = comodel.browse
             # determine the value ids
-            ids = OrderedSet(record[self.name]._ids)
+            ids = OrderedSet(record[self.name]._ids if validate else ())
             # modify ids with the commands
             for command in value:
                 if isinstance(command, (tuple, list)):
@@ -2329,7 +2329,10 @@ class _RelationalMulti(_Relational):
                         ids.add(comodel.new(command[2], ref=command[1]).id)
                     elif command[0] == 1:
                         line = browse(command[1])
-                        line.update(command[2])
+                        if validate:
+                            line.update(command[2])
+                        else:
+                            line._update_cache(command[2], validate=False)
                         ids.add(line.id)
                     elif command[0] in (2, 3):
                         ids.discard(browse(command[1]).id)
@@ -2360,6 +2363,7 @@ class _RelationalMulti(_Relational):
         return value.ids
 
     def convert_to_write(self, value, record):
+        inv_names = {field.name for field in record._field_inverses[self]}
         # make result with new and existing records
         result = [(6, 0, [])]
         for record in value:
@@ -2368,6 +2372,7 @@ class _RelationalMulti(_Relational):
                 values = record._convert_to_write({
                     name: record[name]
                     for name in record._cache
+                    if name not in inv_names
                 })
                 result.append((0, 0, values))
             else:
@@ -2376,7 +2381,7 @@ class _RelationalMulti(_Relational):
                     values = record._convert_to_write({
                         name: record[name]
                         for name in record._cache
-                        if record[name] != origin[name]
+                        if name not in inv_names and record[name] != origin[name]
                     })
                     if values:
                         result.append((1, origin.id, values))

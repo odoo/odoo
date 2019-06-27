@@ -390,7 +390,11 @@ var FileWidget = SearchableMediaWidget.extend({
             });
             optimizeDialog.on('closed', self, function () {
                 self.noSave = true;
-                resolve(attachment);
+                if (isExisting) {
+                    reject();
+                } else {
+                    resolve(attachment);
+                }
             });
         });
         var always = function () {
@@ -418,7 +422,7 @@ var FileWidget = SearchableMediaWidget.extend({
         var attachments = this.attachments.slice(0, this.numberOfAttachmentsToDisplay);
 
         // Render menu & content
-        this.$('.existing-attachments').replaceWith(
+        this.$('.o_we_existing_attachments').replaceWith(
             this._renderExisting(attachments)
         );
 

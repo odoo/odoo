@@ -2902,7 +2902,7 @@ Fields:
         if not self.env.cache.contains_value(self, field):
             for values in result:
                 record = self.browse(values.pop('id'))
-                record._cache.update(record._convert_to_cache(values, validate=False))
+                record._update_cache(values, validate=False)
             if not self.env.cache.contains(self, field):
                 exc = AccessError("No value found for %s.%s" % (self, field.name))
                 self.env.cache.set_failed(self, [field], exc)
@@ -3423,9 +3423,7 @@ Fields:
                     inv_vals = {f.name: inverse_vals[f.name] for f in fields}
                     for records in batches:
                         for record in records:
-                            record._cache.update(
-                                record._convert_to_cache(inv_vals, update=True)
-                            )
+                            record._update_cache(inv_vals)
                         fields[0].determine_inverse(records)
 
                 self.modified(set(inverse_vals) - set(store_vals))
@@ -3673,7 +3671,7 @@ Fields:
 
                 for batch in batches:
                     for record, vals in batch:
-                        record._cache.update(record._convert_to_cache(vals))
+                        record._update_cache(vals)
                     batch_recs = self.concat(*(record for record, vals in batch))
                     fields[0].determine_inverse(batch_recs)
 
@@ -4880,20 +4878,30 @@ Fields:
             prefetch_ids = self._ids
         return self._browse(self.env, self._ids, prefetch_ids)
 
-    def _convert_to_cache(self, values, update=False, validate=True):
-        """ Convert the ``values`` dictionary into cached values.
+    def _update_cache(self, values, validate=True):
+        """ Update the cache of ``self`` with ``values``.
 
-            :param update: whether the conversion is made for updating ``self``;
-                this is necessary for interpreting the commands of *2many fields
+            :param values: dict of field values, in any format.
             :param validate: whether values must be checked
         """
+        def is_monetary(pair):
+            return pair[0].type == 'monetary'
+
+        self.ensure_one()
+        cache = self.env.cache
         fields = self._fields
-        target = self if update else self.browse()
-        return {
-            name: fields[name].convert_to_cache(value, target, validate=validate)
-            for name, value in values.items()
-            if name in fields
-        }
+        field_values = [(fields[name], value) for name, value in values.items()]
+
+        # convert monetary fields last in order to ensure proper rounding
+        for field, value in sorted(field_values, key=is_monetary):
+            cache.set(self, field, field.convert_to_cache(value, self, validate))
+
+            # set inverse fields on new records in the comodel
+            if field.relational:
+                inv_recs = self[field.name].filtered(lambda r: not r.id)
+                if inv_recs:
+                    for invf in self._field_inverses[field]:
+                        invf._update(inv_recs, self)
 
     def _convert_to_record(self, values):
         """ Convert the ``values`` dictionary from the cache format to the
@@ -5024,17 +5032,7 @@ Fields:
         if origin is not None:
             origin = origin.id
         record = self.browse([NewId(origin, ref)])
-        record._cache.update(record._convert_to_cache(values, update=True))
-
-        # set inverse fields on new records in the comodel
-        for name in values:
-            field = self._fields.get(name)
-            if field and field.relational:
-                inv_recs = record[name].filtered(lambda r: not r.id)
-                if inv_recs:
-                    for invf in self._field_inverses[field]:
-                        invf._update(inv_recs, record)
-
+        record._update_cache(values, validate=False)
         return record
 
     @property
@@ -5497,13 +5495,18 @@ Fields:
             def __init__(self, record, tree):
                 # put record in dict to include it when comparing snapshots
                 super(Snapshot, self).__init__({'<record>': record, '<tree>': tree})
-                for name, subnames in tree.items():
-                    field = record._fields[name]
+                for name in tree:
+                    self.fetch(name)
+
+            def fetch(self, name):
+                """ Set the value of field ``name`` from the record's value. """
+                record = self['<record>']
+                tree = self['<tree>']
+                if record._fields[name].type in ('one2many', 'many2many'):
                     # x2many fields are serialized as a list of line snapshots
-                    self[name] = (
-                        [Snapshot(line, subnames) for line in record[name]]
-                        if field.type in ('one2many', 'many2many') else record[name]
-                    )
+                    self[name] = [Snapshot(line, tree[name]) for line in record[name]]
+                else:
+                    self[name] = record[name]
 
             def has_changed(self, name):
                 """ Return whether a field on record has changed. """
@@ -5576,11 +5579,39 @@ Fields:
                 for subname in subnames:
                     new_lines.mapped(subname)
 
+        # Isolate changed x2many values, to handle inconsistent data sent from
+        # the client side: when a form view contains two one2many fields that
+        # overlap, the lines that appear in both fields may be sent with
+        # different data. Consider, for instance:
+        #
+        #   foo_ids: [line with value=1, ...]
+        #   bar_ids: [line with value=1, ...]
+        #
+        # If value=2 is set on 'line' in 'bar_ids', the client sends
+        #
+        #   foo_ids: [line with value=1, ...]
+        #   bar_ids: [line with value=2, ...]
+        #
+        # The idea is to put 'foo_ids' in cache first, so that the snapshot
+        # contains value=1 for line in 'foo_ids'. The snapshot is then updated
+        # with the value of `bar_ids`, which will contain value=2 on line.
+        values = dict(values)
+        changed_x2many = {
+            name: values.pop(name, [])
+            for name in names
+            if self._fields[name].type in ('one2many', 'many2many')
+        }
+
         # create a new record with values, and attach ``self`` to it
         record = self.new(values, origin=self)
 
         # make a snapshot based on the initial values of record
-        snapshot0 = snapshot1 = Snapshot(record, nametree)
+        snapshot0 = Snapshot(record, nametree)
+
+        # store changed values in cache, and update snapshot0
+        for name, value in changed_x2many.items():
+            record._update_cache({name: value}, validate=False)
+            snapshot0.fetch(name)
 
         # determine which field(s) should be triggered an onchange
         todo = list(names or nametree)
