@@ -16,7 +16,7 @@ class AdyenController(http.Controller):
 
     @http.route([
         '/payment/adyen/return',
-    ], type='http', auth='none', csrf=False)
+    ], type='http', auth='public', csrf=False)
     def adyen_return(self, **post):
         _logger.info('Beginning Adyen form_feedback with post data %s', pprint.pformat(post))  # debug
         if post.get('authResult') not in ['CANCELLED']:
@@ -25,7 +25,7 @@ class AdyenController(http.Controller):
 
     @http.route([
         '/payment/adyen/notification',
-    ], type='http', auth='none', methods=['POST'], csrf=False)
+    ], type='http', auth='public', methods=['POST'], csrf=False)
     def adyen_notification(self, **post):
         tx = post.get('merchantReference') and request.env['payment.transaction'].sudo().search([('reference', 'in', [post.get('merchantReference')])], limit=1)
         if post.get('eventCode') in ['AUTHORISATION'] and tx:
