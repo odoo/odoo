@@ -59,6 +59,33 @@ class TestACL(TransactionCase):
         self.assertNotEquals(view_arch.xpath("//field[@name='decimal_places']"), [],
                              "Field 'decimal_places' must be found in view definition again")
 
+    def test_field_label_visiblity_restriction(self):
+        """ Check that model-level ``groups`` parameter effectively restricts access to that
+           field as well as label for that field defined in view for users who do not belong
+           to one of the explicitly allowed groups"""
+        company = self.env['res.company'].sudo(self.demo_user)
+        self._set_field_groups(company, 'name', GROUP_SYSTEM)
+        view = self.env['ir.ui.view'].create({
+            'name': 'yet another view',
+            'model': 'res.company',
+            'arch': '<form string="X"><label for="name"/></form>',
+        })
+
+        form_view = company.fields_view_get(view.id, 'form')
+        view_arch = etree.fromstring(form_view.get('arch'))
+        self.assertFalse(view_arch.xpath("//label[@for='name']"),
+            "label must not be found in view definition")
+
+        # Make demo user a member of the restricted group and check that the label is there
+        self.erp_system_group.users += self.demo_user
+        has_group_system = self.demo_user.has_group(GROUP_SYSTEM)
+        self.assertTrue(has_group_system, "`demo` user should now belong to the restricted group")
+        form_view = company.fields_view_get(view.id, 'form')
+        view_arch = etree.fromstring(form_view.get('arch'))
+        self.assertTrue(view_arch.xpath("//label[@for='name']"),
+            "label must be found in view definition again")
+
+
     @mute_logger('odoo.models')
     def test_field_crud_restriction(self):
         "Read/Write RPC access to restricted field should be forbidden"
@@ -140,7 +167,6 @@ class TestACL(TransactionCase):
         self.assertTrue(len(field_node), "currency_id field should be in company from view")
         for method in methods:
             self.assertEqual(field_node[0].get('can_' + method), 'true')
-
 
 class TestIrRule(TransactionCase):
 
