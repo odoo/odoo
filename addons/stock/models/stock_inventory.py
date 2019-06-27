@@ -200,46 +200,40 @@ class Inventory(models.Model):
 
     def _get_inventory_lines_values(self):
         # TDE CLEANME: is sql really necessary ? I don't think so
-        locations = self.env['stock.location']
-        if self.location_ids:
-            locations = self.env['stock.location'].search([('id', 'child_of', self.location_ids.ids)])
-        else:
-            locations = self.env['stock.location'].search(self._domain_location_ids())
-        domain = ' location_id in %s AND quantity != 0 AND active = TRUE'
-        args = (tuple(locations.ids),)
-
         vals = []
-        Product = self.env['product.product']
-        # Empty recordset of products available in stock_quants
-        quant_products = self.env['product.product']
+        domain = [('quantity', '!=', 0.0), ('product_id.active', '=', True)]
+        if self.location_ids:
+            locations_ids = self.env['stock.location'].search_read([('id', 'child_of', self.location_ids.ids)], ['id'])
+        else:
+            locations_ids = self.env['stock.location'].search_read(self._domain_location_ids(), ['id'])
+        locations_ids = [l['id'] for l in locations_ids]
+        domain = expression.AND([domain, [('location_id', 'in', locations_ids)]])
 
-        # If inventory by company
         if self.company_id:
-            domain += ' AND company_id = %s'
-            args += (self.company_id.id,)
+            domain = expression.AND([domain, [('company_id', '=', self.company_id.id)]])
         if self.product_ids:
-            domain += ' AND product_id in %s'
-            args += (tuple(self.product_ids.ids),)
+            domain = expression.AND([domain, [('product_id', 'in', self.product_ids.ids)]])
 
-        self.env.cr.execute("""SELECT product_id, sum(quantity) as product_qty, location_id, lot_id as prod_lot_id, package_id, owner_id as partner_id
-            FROM stock_quant
-            LEFT JOIN product_product
-            ON product_product.id = stock_quant.product_id
-            WHERE %s
-            GROUP BY product_id, location_id, lot_id, package_id, partner_id """ % domain, args)
+        fields = ['product_id', 'quantity:sum', 'location_id', 'lot_id', 'package_id', 'owner_id']
+        group_by = ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id']
 
-        for product_data in self.env.cr.dictfetchall():
-            product_data['inventory_id'] = self.id
-            # replace the None the dictionary by False, because falsy values are tested later on
-            for void_field in [item[0] for item in product_data.items() if item[1] is None]:
-                product_data[void_field] = False
-            product_data['theoretical_qty'] = product_data['product_qty']
+        quants_groups = self.env['stock.quant'].read_group(domain, fields, group_by, lazy=False)
+        for quants_group in quants_groups:
+            line_values = {
+                'inventory_id': self.id,
+                'product_qty': quants_group['quantity'],
+                'theoretical_qty': quants_group['quantity'],
+                'prod_lot_id': quants_group['lot_id'] and quants_group['lot_id'][0] or False,
+                'partner_id': quants_group['owner_id'] and quants_group['owner_id'][0] or False,
+                'product_id': quants_group['product_id'] and quants_group['product_id'][0] or False,
+                'location_id': quants_group['location_id'] and quants_group['location_id'][0] or False,
+                'package_id': quants_group['package_id'] and quants_group['package_id'][0] or False,
+            }
             if not self.prefill_counted_quantity:
-                product_data['product_qty'] = 0
-            if product_data['product_id']:
-                product_data['product_uom_id'] = Product.browse(product_data['product_id']).uom_id.id
-                quant_products |= Product.browse(product_data['product_id'])
-            vals.append(product_data)
+                line_values['product_qty'] = 0
+            if quants_group['product_id']:
+                line_values['product_uom_id'] = self.env['product.product'].browse(quants_group['product_id'][0]).uom_id.id
+            vals.append(line_values)
         return vals
 
 
