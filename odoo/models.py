@@ -2090,6 +2090,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         order = orderby or ','.join([g for g in groupby_list])
         groupby_dict = {gb['groupby']: gb for gb in annotated_groupbys}
 
+        self._flush_search(domain, fields=fields + groupby_fields)
+
         self._apply_ir_rules(query, 'read')
         for gb in groupby_fields:
             assert gb in self._fields, "Unknown field %r in 'groupby'" % gb
@@ -2918,7 +2920,7 @@ Fields:
                     values = [convert(value, empty, validate=False) for value in values]
                 else:
                     # FP Note: optimisation to test for large dataset: replace this by using a psycopg None extension for those fields
-                    values = [value or False for value in values]
+                    values = [False if value is None else value for value in values]
                 # else:
                 #     print('no convert')
                 self.env.cache.update(fetched, field, values)
@@ -4172,31 +4174,7 @@ Fields:
         return order_by_clause and (' ORDER BY %s ' % order_by_clause) or ''
 
     @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
-        """
-        Private implementation of search() method, allowing specifying the uid to use for the access right check.
-        This is useful for example when filling in the selection list for a drop-down and avoiding access rights errors,
-        by specifying ``access_rights_uid=1`` to bypass access rights check, but not ir.rules!
-        This is ok at the security level because this method is private and not callable through XML-RPC.
-
-        :param access_rights_uid: optional user ID to use when checking access rights
-                                  (not for ir.rules, this is only for ir.model.access)
-        :return: a list of record ids or an integer (if count is True)
-        """
-        model = self.with_user(access_rights_uid) if access_rights_uid else self
-        model.check_access_rights('read')
-
-        if expression.is_false(self, args):
-            # optimization: no need to query, as no record satisfies the domain
-            return 0 if count else []
-
-        query = self._where_calc(args)
-        self._apply_ir_rules(query, 'read')
-        order_by = self._generate_order_by(order, query)
-        from_clause, where_clause, where_clause_params = query.get_sql()
-
-        where_str = where_clause and (" WHERE %s" % where_clause) or ''
-
+    def _flush_search(self, domain, fields=None, order=None):
         # DLE P13: This is just for test `test_invalid`, which expects a ValueError (raise by _where_calc) rather than
         # a keyerror (raise by obj._fields[fname])
         # Now if we decide a KeyError should be raise in this case instead of ValueError, the test needs to be changed.
@@ -4204,7 +4182,9 @@ Fields:
         # it worths the API change.
         # recompute fields that are used in the domain
         to_flush = defaultdict(set)             # {model_name: field_names}
-        for arg in args:
+        if fields:
+            to_flush[self._name].update(fields)
+        for arg in domain:
             if isinstance(arg, str):
                 continue
             if not isinstance(arg[0], str):
@@ -4235,6 +4215,34 @@ Fields:
 
         for model_name, field_names in to_flush.items():
             self.env[model_name].flush(field_names)
+
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+        """
+        Private implementation of search() method, allowing specifying the uid to use for the access right check.
+        This is useful for example when filling in the selection list for a drop-down and avoiding access rights errors,
+        by specifying ``access_rights_uid=1`` to bypass access rights check, but not ir.rules!
+        This is ok at the security level because this method is private and not callable through XML-RPC.
+
+        :param access_rights_uid: optional user ID to use when checking access rights
+                                  (not for ir.rules, this is only for ir.model.access)
+        :return: a list of record ids or an integer (if count is True)
+        """
+        model = self.with_user(access_rights_uid) if access_rights_uid else self
+        model.check_access_rights('read')
+
+        if expression.is_false(self, args):
+            # optimization: no need to query, as no record satisfies the domain
+            return 0 if count else []
+
+        query = self._where_calc(args)
+        self._apply_ir_rules(query, 'read')
+        order_by = self._generate_order_by(order, query)
+        from_clause, where_clause, where_clause_params = query.get_sql()
+
+        where_str = where_clause and (" WHERE %s" % where_clause) or ''
+
+        self._flush_search(args, order=order)
 
         if count:
             # Ignore order, limit and offset when just counting, they don't make sense and could
