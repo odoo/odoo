@@ -3,3 +3,4 @@
 
 from . import test_challenge
 from . import test_recompute_rank
+from . import test_karma_tracking

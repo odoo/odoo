@@ -8,7 +8,10 @@ import werkzeug.urls
 import werkzeug.wrappers
 import math
 
-from odoo import http, modules, tools
+from dateutil.relativedelta import relativedelta
+from operator import itemgetter
+
+from odoo import fields, http, modules, tools
 from odoo.http import request
 from odoo.osv import expression
 
@@ -205,12 +208,13 @@ class WebsiteProfile(http.Controller):
 
     @http.route(['/profile/users',
                  '/profile/users/page/<int:page>'], type='http', auth="public", website=True, sitemap=True)
-    def view_all_users_page(self, page=1, **searches):
+    def view_all_users_page(self, page=1, **kwargs):
         User = request.env['res.users']
         dom = [('karma', '>', 1), ('website_published', '=', True)]
 
         # Searches
-        search_term = searches.get('search')
+        search_term = kwargs.get('search')
+        group_by = kwargs.get('group_by', False)
         if search_term:
             dom = expression.AND([['|', ('name', 'ilike', search_term), ('company_id.name', 'ilike', search_term)], dom])
 
@@ -225,12 +229,24 @@ class WebsiteProfile(http.Controller):
             user_values = self._prepare_all_users_values(users)
 
             # Get karma position for users (only website_published)
-            position_domain = [('karma', '>', 1), ('website_published', '=', True)]
-            position_map = self._get_users_karma_position(position_domain, users.ids)
-            for user in user_values:
-                user['position'] = position_map.get(user['id'], 0)
+            if group_by:
+                position_domain = [('karma', '>', 1), ('website_published', '=', True)]
+                position_map = self._get_user_tracking_karma_gain_position(position_domain, users.ids, group_by)
+                max_position = max([user_data['karma_position'] for user_data in position_map.values()], default=1)
+                for user in user_values:
+                    user_data = position_map.get(user['id'], dict())
+                    user['position'] = user_data.get('karma_position', max_position + 1)
+                    user['karma_gain'] = user_data.get('karma_gain_total', 0)
+                user_values.sort(key=itemgetter('position'))
+            else:
+                position_domain = [('karma', '>', 1), ('website_published', '=', True)]
+                position_map = self._get_users_karma_position(position_domain, users.ids)
+                for user in user_values:
+                    user['position'] = position_map.get(user['id'], 0)
+                    user['karma_gain'] = False
 
             values = {
+                'group_by': group_by or 'all',
                 'top3_users': user_values[:3] if not search_term and page == 1 else None,
                 'users': user_values[3:] if not search_term and page == 1 else user_values,
                 'pager': pager
@@ -244,8 +260,7 @@ class WebsiteProfile(http.Controller):
         if not user_ids:
             return {}
 
-        Users = request.env['res.users']
-        where_query = Users._where_calc(domain)
+        where_query = request.env['res.users']._where_calc(domain)
         from_clause, where_clause, where_clause_params = where_query.get_sql()
 
         # we search on every user in the DB to get the real positioning (not the one inside the subset)
@@ -263,6 +278,19 @@ class WebsiteProfile(http.Controller):
         request.env.cr.execute(query, where_clause_params + [tuple(user_ids)])
 
         return {item['id']: item['karma_position'] for item in request.env.cr.dictfetchall()}
+
+    def _get_user_tracking_karma_gain_position(self, domain, user_ids, group_by):
+        """ Helper method computing boundaries to give to _get_tracking_karma_gain_position.
+        See that method for more details. """
+        to_date = fields.Date.today()
+        if group_by == 'week':
+            from_date = to_date - relativedelta(weeks=1)
+        elif group_by == 'month':
+            from_date = to_date - relativedelta(months=1)
+        else:
+            from_date = None
+        results = request.env['res.users'].browse(user_ids)._get_tracking_karma_gain_position(domain, from_date=from_date, to_date=to_date)
+        return dict((item['user_id'], dict(item)) for item in results)
 
     # User and validation
     # --------------------------------------------------
