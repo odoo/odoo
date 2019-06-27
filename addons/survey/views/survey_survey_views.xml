@@ -156,8 +156,8 @@
                 <field name="activity_ids" />
                 <field name="activity_state" />
                 <templates>
-                    <div t-name="kanban-box" t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click o_kanban_card_survey">
-                        <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
+                    <div t-name="kanban-box" t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click o_kanban_card_survey">
+                        <div class="o_dropdown_kanban dropdown" t-if="widget.editable and !selection_mode">
 
                             <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                 <span class="fa fa-ellipsis-v"/>
@@ -176,7 +176,7 @@
                             </div>
                             <div class="col-2"><i t-if="record.certificate.raw_value === true" title="Certification" class="certification_icon fa fa-trophy"></i></div>
                         </div>
-                        <div class="o_kanban_record_bottom">
+                        <div class="o_kanban_record_bottom" t-if="!selection_mode">
                             <ul class="list-unstyled">
                                 <li>
                                     <a type="object" name="action_test_survey">Test</a>
@@ -190,7 +190,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="o_kanban_record_bottom">
+                        <div class="o_kanban_record_bottom" t-if="!selection_mode">
                             <div class="oe_kanban_bottom_left"/>
                             <div class="oe_kanban_bottom_right">
                                 <field name="activity_ids" widget="kanban_activity" />
