@@ -36,3 +36,7 @@ class WebsiteTest(Home):
     @http.route('/ignore_args/converter/<string:a>/nokw', type='http', auth="public", website=True)
     def test_ignore_args_converter_nokw(self, a, b='youhou'):
         return request.make_response(json.dumps(dict(a=a, b=b)))
+
+    @http.route('/multi_company_website', type='http', auth="public", website=True)
+    def test_company_context(self):
+        return request.make_response(json.dumps(request.context.get('allowed_company_ids')))
