@@ -9,6 +9,7 @@ import mimetypes
 import os
 import re
 import sys
+import traceback
 
 import werkzeug
 import werkzeug.exceptions
@@ -20,7 +21,7 @@ import odoo
 from odoo import api, http, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError
 from odoo.http import request, STATIC_CACHE, content_disposition
-from odoo.tools import pycompat, consteq
+from odoo.tools import consteq, pycompat, ustr
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.modules.module import get_resource_path, get_module_path
 
@@ -177,6 +178,33 @@ class IrHttp(models.AbstractModel):
         if attach:
             return attach
         return False
+
+    @classmethod
+    def serialize_exception(self, e):
+        tmp = {
+            "name": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ else type(e).__name__,
+            "debug": traceback.format_exc(),
+            "message": ustr(e),
+            "arguments": e.args,
+            "exception_type": "internal_error"
+        }
+        if isinstance(e, odoo.exceptions.UserError):
+            tmp["exception_type"] = "user_error"
+        elif isinstance(e, odoo.exceptions.Warning):
+            tmp["exception_type"] = "warning"
+        elif isinstance(e, odoo.exceptions.RedirectWarning):
+            tmp["exception_type"] = "warning"
+        elif isinstance(e, odoo.exceptions.AccessError):
+            tmp["exception_type"] = "access_error"
+        elif isinstance(e, odoo.exceptions.MissingError):
+            tmp["exception_type"] = "missing_error"
+        elif isinstance(e, odoo.exceptions.AccessDenied):
+            tmp["exception_type"] = "access_denied"
+        elif isinstance(e, odoo.exceptions.ValidationError):
+            tmp["exception_type"] = "validation_error"
+        elif isinstance(e, odoo.exceptions.except_orm):
+            tmp["exception_type"] = "except_orm"
+        return tmp
 
     @classmethod
     def _handle_exception(cls, exception):

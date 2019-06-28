@@ -25,6 +25,7 @@ var Notification = Widget.extend({
      * @param {Widget} parent
      * @param {Object} params
      * @param {string} params.title
+     * @param {string} params.subtitle
      * @param {string} [params.message]
      * @param {string} [params.type='warning'] 'info', 'success', 'warning', 'danger' or ''
      * @param {boolean} [params.sticky=false] if true, the notification will
@@ -41,6 +42,7 @@ var Notification = Widget.extend({
     init: function (parent, params) {
         this._super.apply(this, arguments);
         this.title = params.title;
+        this.subtitle = params.subtitle;
         this.message = params.message;
         this.buttons = params.buttons || [];
         this.sticky = !!this.buttons.length || !!params.sticky;
