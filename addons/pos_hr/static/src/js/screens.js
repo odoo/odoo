@@ -16,10 +16,11 @@ ScreenWidget.include({
     barcode_cashier_action: function(code){
         var self = this;
         var employees = this.pos.employees;
+        var prom;
         for(var i = 0, len = employees.length; i < len; i++){
             if(employees[i].barcode === code.code){
                 if (employees[i].id !== this.pos.get_cashier().id && employees[i].pin) {
-                    return this.gui.ask_password(employees[i].pin).then(function(){
+                    prom =  this.gui.ask_password(employees[i].pin).then(function(){
                         self.pos.set_cashier(employees[i]);
                         self.chrome.widget.username.renderElement();
                         return true;
@@ -27,12 +28,18 @@ ScreenWidget.include({
                 } else {
                     this.pos.set_cashier(employees[i]);
                     this.chrome.widget.username.renderElement();
-                    return true;
+                    prom = Promise.resolve(true);
                 }
+                break;
             }
         }
-        this.barcode_error_action(code);
-        return false;
+        if (!prom){
+            this.barcode_error_action(code);
+            return Promise.resolve(false);
+        }
+        else {
+            return prom
+        }
     },
     show: function() {
         this._super();
@@ -73,8 +80,10 @@ var LoginScreenWidget = ScreenWidget.extend({
      * @override
      */
     barcode_cashier_action: function(code) {
-        this._super(code);
-        this.unlock_screen();
+        var self = this;
+        return this._super(code).then(function () {
+            self.unlock_screen();
+        });
     },
 
     unlock_screen: function() {
