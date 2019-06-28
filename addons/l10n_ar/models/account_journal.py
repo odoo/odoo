@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError, RedirectWarning
 
 
 class AccountJournal(models.Model):
@@ -63,7 +63,11 @@ class AccountJournal(models.Model):
             },
         }
         if not self.company_id.l10n_ar_afip_responsability_type_id:
-            raise UserError(_('Need to configure your company AFIP responsability first!'))
+            action = self.env.ref('base.action_res_company_form')
+            msg = _(
+                'Can not create chart of account until you configure your company AFIP Responsability and VAT.')
+            raise RedirectWarning(msg, action.id, _('Go to Companies'))
+
         letters = letters_data['issued' if self.type == 'sale' else 'received'][
             self.company_id.l10n_ar_afip_responsability_type_id.code]
         if not counterpart_partner:
@@ -102,9 +106,21 @@ class AccountJournal(models.Model):
         elif self.l10n_ar_afip_pos_system in ['FEERCEL', 'FEEWS', 'FEERCELP']:
             return expo_codes
 
-    # TODO make it with crate/write or with https://github.com/odoo/odoo/pull/31059
-    @api.constrains('type', 'l10n_ar_afip_pos_system', 'l10n_ar_afip_pos_number', 'l10n_ar_share_sequences',
-                    'l10n_latam_use_documents')
+    @api.model
+    def create(self, values):
+        self.new(values).check_afip_configurations()
+        return super().create(values)
+
+    @api.multi
+    def write(self, values):
+        to_check = set(['type', 'l10n_ar_afip_pos_system', 'l10n_ar_afip_pos_number', 'l10n_ar_share_sequences',
+                        'l10n_latam_use_documents'])
+        if to_check.intersection(set(values.keys())):
+            for rec in self:
+                rec.check_afip_configurations()
+        return super().write(values)
+
+    # TODO make it with https://github.com/odoo/odoo/pull/31059
     def check_afip_configurations(self):
         """ IF AFIP Configuration change try to review if this can be done and then create / update the document
         sequences """
