@@ -27,16 +27,18 @@ class SaleCoupon(models.Model):
     code = fields.Char(default=_generate_code, required=True, readonly=True)
     expiration_date = fields.Date('Expiration Date', compute='_compute_expiration_date')
     state = fields.Selection([
-        ('reserved', 'Reserved'),
+        ('reserved', 'Pending'),
         ('new', 'Valid'),
-        ('used', 'Consumed'),
-        ('expired', 'Expired')
-        ], required=True, default='new')
+        ('sent', 'Sent'),
+        ('used', 'Used'),
+        ('expired', 'Expired'),
+        ('cancel', 'Cancelled')
+    ], required=True, default='new')
     partner_id = fields.Many2one('res.partner', "For Customer")
     program_id = fields.Many2one('sale.coupon.program', "Program")
     order_id = fields.Many2one('sale.order', 'Order Reference', readonly=True,
         help="The sales order from which coupon is generated")
-    sales_order_id = fields.Many2one('sale.order', 'Applied on order', readonly=True,
+    sales_order_id = fields.Many2one('sale.order', 'Used in', readonly=True,
         help="The sales order on which the coupon is applied")
     discount_line_product_id = fields.Many2one('product.product', related='program_id.discount_line_product_id', readonly=False,
         help='Product used in the sales order to apply the discount.')
@@ -98,6 +100,8 @@ class SaleCoupon(models.Model):
             default_template_id=template.id,
             default_composition_mode='comment',
             custom_layout='mail.mail_notification_light',
+            mark_coupon_as_sent=True,
+            force_email=True,
         )
         return {
             'name': _('Compose Email'),
@@ -109,3 +113,18 @@ class SaleCoupon(models.Model):
             'target': 'new',
             'context': ctx,
         }
+
+    def action_coupon_cancel(self):
+        for coupon in self:
+            coupon.state = 'cancel'
+
+    def cron_expire_coupon(self):
+        self._cr.execute("""
+            SELECT C.id FROM SALE_COUPON as C
+            INNER JOIN SALE_COUPON_PROGRAM as P ON C.program_id = P.id
+            WHERE C.STATE in ('reserved', 'new', 'sent')
+                AND P.validity_duration > 0
+                AND C.create_date + interval '1 day' * P.validity_duration < now()""")
+
+        expired_ids = [res[0] for res in self._cr.fetchall()]
+        self.browse(expired_ids).write({'state': 'expired'})
