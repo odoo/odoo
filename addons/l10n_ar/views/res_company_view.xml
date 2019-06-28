@@ -28,7 +28,9 @@
             <field name="zip" position="attributes">
                 <attribute name="attrs">{'required': [('l10n_ar_country_code', '=', 'AR')]}</attribute>
             </field>
-
+            <field name="vat" position="before">
+                <field name="l10n_ar_identification_type_id" required="{'required': [('l10n_ar_country_code', '=', 'AR')]}"/>
+            </field>
             <field name="vat" position="after">
                 <field name="l10n_ar_afip_responsability_type_id" options="{'no_open': True, 'no_create': True}" attrs="{'required': [('l10n_ar_country_code', '=', 'AR')], 'invisible': [('l10n_ar_country_code', '!=', 'AR')]}"/>
                 <label for="l10n_ar_gross_income_number" string="Gross Income" attrs="{'invisible': [('l10n_ar_country_code', '!=', 'AR')]}"/>
