@@ -19,8 +19,8 @@
 
             <field name="payment_term_id" position="after">
                 <field name='l10n_ar_afip_concept' attrs="{'invisible': ['|', ('l10n_latam_country_code', '!=', 'AR'), ('l10n_latam_use_documents', '=', False)]}"/>
-                <label for="l10n_ar_afip_service_start" attrs="{'invisible':[('l10n_ar_afip_concept','not in',['2', '3', '4'])]}" string="Service Date"/>
-                <div attrs="{'invisible':[('l10n_ar_afip_concept','not in',['2', '3', '4'])]}" >
+                <label for="l10n_ar_afip_service_start" attrs="{'invisible':['|', '|', ('l10n_latam_country_code', '!=', 'AR'), ('l10n_latam_use_documents', '=', False), ('l10n_ar_afip_concept','not in',['2', '3', '4'])]}" string="Service Date"/>
+                <div attrs="{'invisible':['|', '|', ('l10n_latam_country_code', '!=', 'AR'), ('l10n_latam_use_documents', '=', False), ('l10n_ar_afip_concept','not in',['2', '3', '4'])]}">
                     <field name="l10n_ar_afip_service_start" class="oe_inline"/> to <field name="l10n_ar_afip_service_end" class="oe_inline"/>
                 </div>
             </field>
