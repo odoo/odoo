@@ -2024,14 +2024,13 @@ var PaymentScreenWidget = ScreenWidget.extend({
             }
         });
     },
-    toggle_email_button: function() {
-        var client = this.pos.get_client();
-        this.$('.js_email').removeClass('oe_hidden', client);
-    },
     customer_changed: function() {
         var client = this.pos.get_client();
-        this.$('.js_customer_name').text( client ? client.name : _t('Customer') );
-        this.toggle_email_button();
+        this.$('.js_customer_name').text(client ? client.name : _t('Customer'));
+        this.$('.js_email').toggleClass('oe_hidden', !client);
+        if (!client && this.pos.get_order().is_to_email()) {
+            this.click_email();
+        }
     },
     click_set_customer: function(){
         this.gui.show_screen('clientlist');
@@ -2156,6 +2155,18 @@ var PaymentScreenWidget = ScreenWidget.extend({
             }
         }
 
+        // If customer don't have image and cashier want to send recipt via email.
+        if (order.is_to_email() && !order.get_client().email) {
+            this.gui.show_popup('confirm', {
+                'title': _t('Please fill the Customer Email'),
+                'body': _t('This customer does not have an email address, define one or do not send an email'),
+                confirm: function () {
+                    this.gui.show_screen('clientlist');
+                },
+            });
+            return false;
+        }
+
         // if the change is too large, it's probably an input error, make the user confirm.
         if (!force_validation && order.get_total_with_tax() > 0 && (order.get_total_with_tax() * 1000 < order.get_total_paid())) {
             this.gui.show_popup('confirm',{
@@ -2201,23 +2212,9 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 self.invoicing = false;
                 self.gui.show_screen('receipt');
             });
-        }
-        else if (order.is_to_email() && !order.get_client().email) {
-            order.finalized = false;
-            this.gui.show_popup('confirm',{
-                'title': _t('Please fill the Customer Email'),
-                'body': _t('This customer does not have an email address, define one or do not send an email'),
-                confirm: function(){
-                    this.gui.show_screen('clientlist');
-                },
-            });
-        }
-        else {
-            var ordered = this.pos.push_order(order, {'to_email': order.to_email});
-
-            ordered.then(function(){
-                self.gui.show_screen('receipt');
-            });
+        } else {
+            this.pos.push_order(order);
+            this.gui.show_screen('receipt');
         }
     },
 
