@@ -42,5 +42,5 @@ class SaleCouponGenerate(models.TransientModel):
     @api.depends('partners_domain')
     def _compute_has_partner_email(self):
         for record in self:
-            domain = expression.AND([safe_eval(record.partners_domain), [('email', '=', False)]])
+            domain = expression.AND([ast.literal_eval(record.partners_domain), [('email', '=', False)]])
             record.has_partner_email = self.env['res.partner'].search_count(domain) == 0
