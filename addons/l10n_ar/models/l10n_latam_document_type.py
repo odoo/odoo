@@ -1,6 +1,7 @@
 from odoo import models, api, fields, _
 from odoo.exceptions import UserError
 
+
 class L10nLatamDocumentType(models.Model):
 
     _inherit = 'l10n_latam.document.type'
@@ -37,7 +38,7 @@ class L10nLatamDocumentType(models.Model):
             ('T', 'T'),
             ('R', 'R'),
             ('X', 'X'),
-            ('I', 'I'), # used for mapping of imports
+            ('I', 'I'),  # used for mapping of imports
         ]
 
     @api.multi

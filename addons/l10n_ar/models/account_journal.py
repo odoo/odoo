@@ -162,7 +162,7 @@ class AccountJournal(models.Model):
         documents = self.env['l10n_latam.document.type'].search(domain)
         for document in documents:
             if self.l10n_ar_share_sequences and self.l10n_ar_sequence_ids.filtered(
-                   lambda x: x.l10n_ar_letter == document.l10n_ar_letter):
+                lambda x: x.l10n_ar_letter == document.l10n_ar_letter):
                 continue
 
             sequences |= self.env['ir.sequence'].create(document.get_document_sequence_vals(self))

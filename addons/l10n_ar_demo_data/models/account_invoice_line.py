@@ -1,14 +1,14 @@
 from odoo import models, api
 from collections import OrderedDict
 
+
 class AccountInvoiceLine(models.Model):
 
     _inherit = 'account.invoice.line'
 
     def _get_onchange_create(self):
-        return OrderedDict([
-            ('_onchange_product_id', ['account_id', 'name', 'price_unit', 'uom_id', 'invoice_line_tax_ids']),
-        ])
+        return OrderedDict(
+            [('_onchange_product_id', ['account_id', 'name', 'price_unit', 'uom_id', 'invoice_line_tax_ids'])])
 
     @api.model_create_multi
     def create(self, vals_list):

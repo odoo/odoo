@@ -11,7 +11,7 @@ def update_tax_calculation_rounding_method(cr, registry):
     env['res.company'].search(
         [('partner_id.country_id', '=', country_ar)]).write({
             'tax_calculation_rounding_method': 'round_globally',
-    })
+        })
 
 
 def post_init_hook(cr, registry):

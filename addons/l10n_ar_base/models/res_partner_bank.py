@@ -2,6 +2,7 @@
 from odoo import models, api, _
 import stdnum.ar.cbu
 
+
 def validate_cbu(cbu):
     return stdnum.ar.cbu.validate(cbu)
 

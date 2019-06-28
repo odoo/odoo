@@ -34,7 +34,7 @@ Follow the next configuration steps
         'l10n_latam_document',
         'l10n_ar_base',
     ],
-    'data':[
+    'data': [
         'security/ir.model.access.csv',
         'data/l10n_ar_afip_responsability_type_data.xml',
         'data/account_account_tag_data.xml',
