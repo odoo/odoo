@@ -106,38 +106,46 @@ class AccountJournal(models.Model):
         elif self.l10n_ar_afip_pos_system in ['FEERCEL', 'FEEWS', 'FEERCELP']:
             return expo_codes
 
+    # TODO make it with https://github.com/odoo/odoo/pull/31059
     @api.model
     def create(self, values):
-        self.new(values).check_afip_configurations()
-        return super().create(values)
+        """ Create Document sequences after create the journal """
+        res = super().create(values)
+        res.create_document_sequences()
+        return res
 
+    # TODO make it with https://github.com/odoo/odoo/pull/31059
     @api.multi
     def write(self, values):
+        """ Update Document sequences after update journal """
         to_check = set(['type', 'l10n_ar_afip_pos_system', 'l10n_ar_afip_pos_number', 'l10n_ar_share_sequences',
                         'l10n_latam_use_documents'])
         if to_check.intersection(set(values.keys())):
             for rec in self:
-                rec.check_afip_configurations()
+                rec.create_document_sequences()
         return super().write(values)
 
-    # TODO make it with https://github.com/odoo/odoo/pull/31059
+    @api.constrains('type', 'l10n_ar_afip_pos_system', 'l10n_ar_afip_pos_number', 'l10n_ar_share_sequences',
+                    'l10n_latam_use_documents')
     def check_afip_configurations(self):
+        """ Do not let to update journal if already have confirmed invoices """
+        self.ensure_one()
+        if self.company_id.country_id != self.env.ref('base.ar'):
+            return True
+        invoices = self.env['account.invoice'].search(
+            [('journal_id', '=', self.id), ('state', 'in', ['open', 'in_payment', 'paid'])])
+        if invoices:
+            raise ValidationError(_(
+                'You can not change the journal configuration for a journal that already have validate invoices:'
+                '\n\n - %s' % ('\n - '.join(invoices.mapped('display_name')))))
+
+    def create_document_sequences(self):
         """ IF AFIP Configuration change try to review if this can be done and then create / update the document
         sequences """
         self.ensure_one()
         if self.company_id.country_id != self.env.ref('base.ar'):
             return True
-
-        invoices = self.env['account.invoice'].search(
-            [('journal_id', '=', self.id), ('state', 'in', ['open', 'in_payment', 'paid'])])
-        if invoices:
-            raise ValidationError(_(
-                'You can not change the journal configuration for a journal that already have validate invoices: %s' % (
-                    ', '.join(invoices.mapped('display_name')))))
-
-        if not self.type == 'sale':
-            return False
-        if not self.l10n_latam_use_documents:
+        if not self.type == 'sale' or not self.l10n_latam_use_documents:
             return False
 
         sequences = self.l10n_ar_sequence_ids
