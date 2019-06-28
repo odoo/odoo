@@ -21,7 +21,7 @@
         <field name="email">info@example.com.ar</field>
         <field name="phone">(+54) (341) 111 2222</field>
         <field name="website">http://www.grittiagrimensura.com</field>
-        <field name='l10n_latam_identification_type_id' ref="l10n_latam_base.it_vat"/>
+        <field name='l10n_latam_identification_type_id' ref="l10n_ar_base.it_cuit"/>
         <field name='vat'>27320732811</field>
         <field name="image" type="base64" file="l10n_ar_partner/demo/gritti_logo.png"/>
         <field name='l10n_ar_afip_responsability_type_id' ref="l10n_ar.res_RM"/>
@@ -40,7 +40,7 @@
         <field name="email">info@example.com.ar</field>
         <field name="phone">(+54) (341) 222 3333</field>
         <field name="website">http://www.concejorosario.gov.ar/</field>
-        <field name='l10n_latam_identification_type_id' ref="l10n_latam_base.it_vat"/>
+        <field name='l10n_latam_identification_type_id' ref="l10n_ar_base.it_cuit"/>
         <field name='vat'>30684679372</field>
         <field name="image" type="base64" file="l10n_ar_partner/demo/cmr_logo.jpg"/>
         <field name='l10n_ar_afip_responsability_type_id' ref="l10n_ar.res_IVAE"/>
@@ -58,7 +58,7 @@
         <field name="email">info@odoo.com</field>
         <field name="phone">(+00) (11) 222 3333</field>
         <field name="website">https://www.odoo.com/</field>
-        <field name='l10n_latam_identification_type_id' ref="l10n_ar_base.it_CIe"/>
+        <field name='l10n_latam_identification_type_id' ref="l10n_latam_base.it_fid"/>
         <field name='vat'>111222333444</field>
         <field name="image" type="base64" file="l10n_ar_partner/demo/odoo_logo.jpg"/>
         <field name='l10n_ar_afip_responsability_type_id' ref="l10n_ar.res_EXT"/>
@@ -70,7 +70,7 @@
         <field eval="1" name="supplier"/>
         <field name="is_company">1</field>
         <!-- la idea es sincronizarlo con afip padron -->
-        <field name='l10n_latam_identification_type_id' ref="l10n_latam_base.it_vat"/>
+        <field name='l10n_latam_identification_type_id' ref="l10n_ar_base.it_cuit"/>
         <field name='vat'>30639453738</field>
         <!-- TODO agregar -->
         <!-- <field name="image" type="base64" file="l10n_ar_partner/demo/odoo_logo.jpg"/> -->
@@ -89,7 +89,7 @@
         <field name="email">info@expresso.com</field>
         <field name="phone">(+00) (11) 222 3333</field>
         <field name="website">http://www.expresso.com/</field>
-        <field name='l10n_latam_identification_type_id' ref="l10n_ar_base.it_CIe"/>
+        <field name='l10n_latam_identification_type_id' ref="l10n_latam_base.it_fid"/>
         <field name='vat'>2222333344445555</field>
         <field name="image" type="base64" file="l10n_ar_partner/demo/expresso_logo.png"/>
         <field name='l10n_ar_afip_responsability_type_id' ref="l10n_ar.res_CLI_EXT"/>
@@ -107,7 +107,7 @@
         <field name="email">info@cerrocastor.com</field>
         <field name="phone">(+00) (11) 4444 5556</field>
         <field name="website">http://www.cerrocastor.com/</field>
-        <field name='l10n_latam_identification_type_id' ref="l10n_latam_base.it_vat"/>
+        <field name='l10n_latam_identification_type_id' ref="l10n_ar_base.it_cuit"/>
         <field name='vat'>27333333339</field>
         <field name="image" type="base64" file="l10n_ar_partner/demo/cerrocastor_logo.png"/>
         <field name='l10n_ar_afip_responsability_type_id' ref="l10n_ar.res_IVA_LIB"/>
@@ -117,34 +117,34 @@
 
         <!-- Main Partner -->
     <record id="base.main_partner" model="res.partner">
-        <field name='l10n_latam_identification_type_id' ref="l10n_latam_base.it_vat"/>
+        <field name='l10n_latam_identification_type_id' ref="l10n_ar_base.it_cuit"/>
         <field name='vat'>30111111118</field>
     </record>
 
         <!-- ASUSTeK - Supplier -->
     <record id="base.res_partner_1" model="res.partner">
-        <field name='l10n_latam_identification_type_id' ref="l10n_latam_base.it_vat"/>
+        <field name='l10n_latam_identification_type_id' ref="l10n_ar_base.it_cuit"/>
         <field name='vat'>30222222229</field>
         <field name='l10n_ar_afip_responsability_type_id' ref="l10n_ar.res_IVARI"/>
     </record>
 
         <!-- Agrolait - Customer -->
     <record id="base.res_partner_2" model="res.partner">
-        <field name='l10n_latam_identification_type_id' ref="l10n_latam_base.it_vat"/>
+        <field name='l10n_latam_identification_type_id' ref="l10n_ar_base.it_cuit"/>
         <field name='vat'>30111111126</field>
         <field name='l10n_ar_afip_responsability_type_id' ref="l10n_ar.res_IVARI"/>
     </record>
 
         <!-- Camptocamp - Supplier/Customer -->
     <record id="base.res_partner_12" model="res.partner">
-        <field name='l10n_latam_identification_type_id' ref="l10n_latam_base.it_vat"/>
+        <field name='l10n_latam_identification_type_id' ref="l10n_ar_base.it_cuit"/>
         <field name='vat'>30888888884</field>
         <field name='l10n_ar_afip_responsability_type_id' ref="l10n_ar.res_IVARI"/>
     </record>
 
         <!-- Global Solutions  - cliente exterior -->
     <record id="base.res_partner_4" model="res.partner">
-        <field name='l10n_latam_identification_type_id' ref="l10n_ar_base.it_CIe"/>
+        <field name='l10n_latam_identification_type_id' ref="l10n_latam_base.it_fid"/>
         <field name='vat'>12345678</field>
         <field name='l10n_ar_afip_responsability_type_id' ref="l10n_ar.res_CLI_EXT"/>
     </record>

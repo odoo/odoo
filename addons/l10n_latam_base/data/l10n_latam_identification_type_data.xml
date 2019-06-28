@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <record model='l10n_latam.identification.type' id='it_vat'>
-        <field name='name'>VAT identification number</field>
-        <field name='short_name'>VAT</field>
-        <field name='sequence'>10</field>
-    </record>
-    <record model='l10n_latam.identification.type' id='it_id'>
-        <field name='name'>National Identification Number</field>
-        <field name='short_name'>ID</field>
-        <field name='sequence'>20</field>
-    </record>
     <record model='l10n_latam.identification.type' id='it_pass'>
         <field name='name'>Passport</field>
-        <field name='short_name'>PASS</field>
-        <field name='sequence'>30</field>
+        <field name='sequence'>90</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_fid'>
+        <field name='name'>Foreign ID</field>
+        <field name='sequence'>100</field>
     </record>
 </odoo>
