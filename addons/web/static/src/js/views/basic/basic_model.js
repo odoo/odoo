@@ -1616,6 +1616,20 @@ var BasicModel = AbstractModel.extend({
                                 viewType: list.viewType,
                                 ref: command[1],
                             };
+                            if (command[0] === 0) {
+                                // Maybe the record has been originally created from another field ?
+                                var syncedFields = Object.keys(values).filter(function (fieldName) {
+                                    var fieldValue = values[fieldName];
+                                    if (Array.isArray(fieldValue)) {
+                                        return fieldValue.some(function (O2MCommand) {
+                                            return O2MCommand[0] === 0 && O2MCommand[1] === command[1];
+                                        });
+                                    }
+                                });
+                                if (syncedFields.length > 1) {
+                                    params.res_id = command[1];
+                                }
+                            }
                             if (command[0] === 1) {
                                 params.res_id = command[1];
                             }
