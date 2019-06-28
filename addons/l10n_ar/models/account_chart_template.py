@@ -38,7 +38,7 @@ class AccountChartTemplate(models.Model):
         return match.get(chart_template_id)
 
     def _load(self, sale_tax_rate, purchase_tax_rate, company):
-        """ Set companies AFIP Responsibility and Country if AR CoA is installed, also set tax calculation rounding
+        """ Set companies AFIP Responsibility if AR CoA is installed, also set tax calculation rounding
         method required in order to properly validate match AFIP invoices.
 
         Also, raise a warning if the user is trying to install a CoA that does not match with the defined AFIP
@@ -54,7 +54,6 @@ class AccountChartTemplate(models.Model):
                     ' configured as %s type' % (coa_responsibility.name, company_responsibility.name)))
             company.write({
                 'l10n_ar_afip_responsibility_type_id': coa_responsibility.id,
-                'country_id': self.env.ref('base.ar').id,
                 'tax_calculation_rounding_method': 'round_globally',
             })
             # set CUIT identification type (which is the argentinian vat) in the created company partner instead of
