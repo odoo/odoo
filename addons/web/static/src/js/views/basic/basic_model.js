@@ -1616,23 +1616,6 @@ var BasicModel = AbstractModel.extend({
                                 viewType: list.viewType,
                                 ref: command[1],
                             };
-                            if (command[0] === 0) {
-                                // Maybe the record has been originally created from another field ?
-                                var recordOriginator = Object.keys(values).filter(function (fieldName) {
-                                    if (record.fields[fieldName].type === 'one2many') {
-                                        var localId = record._changes[fieldName];
-                                        return _.find(self.localData[localId]._changes, function (change) {
-                                            if (change.operation === 'ADD' && change.id) {
-                                                var dataPoint = self.localData[change.id];
-                                                return dataPoint && dataPoint.res_id === command[1];
-                                            }
-                                        });
-                                    }
-                                });
-                                if (recordOriginator.length) {
-                                    params.res_id = command[1];
-                                }
-                            }
                             if (command[0] === 1) {
                                 params.res_id = command[1];
                             }
