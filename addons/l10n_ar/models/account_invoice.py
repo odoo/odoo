@@ -20,11 +20,11 @@ class AccountInvoice(models.Model):
     l10n_ar_afip_responsability_type_id = fields.Many2one(related='move_id.l10n_ar_afip_responsability_type_id')
     l10n_ar_afip_concept = fields.Selection(
         compute='_compute_l10n_ar_afip_concept', inverse='_inverse_l10n_ar_afip_concept',
-        selection='get_afip_invoice_concepts', string="Computed AFIP Concept", help="A concept is suggested regarding"
+        selection='get_afip_invoice_concepts', string="AFIP Concept", help="A concept is suggested regarding"
         " the type of the products on the invoice but it is allowed to force a different type if required.",
         readonly=True, states={'draft': [('readonly', False)]})
     l10n_ar_force_afip_concept = fields.Selection(
-        selection='get_afip_invoice_concepts', string="AFIP Concept", readonly=True, help='AFIP requires to report'
+        selection='get_afip_invoice_concepts', string="Forced AFIP Concept", readonly=True, help='AFIP requires to report'
         ' the kind of products related to the invoices. The possible AFIP concepts are:\n * 1 - Producto / Exportación'
         ' definitiva de bienes\n * 2 - Servicios\n * 3 - Productos y Servicios\n * 4 - Otros (exportación)\n')
     l10n_ar_afip_service_start = fields.Date(
