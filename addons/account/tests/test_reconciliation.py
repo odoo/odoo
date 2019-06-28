@@ -1257,6 +1257,8 @@ class TestReconciliationExec(TestReconciliation):
         })
         payment_move.post()
 
+        # DLE P96
+        (purchase_move + payment_move).invalidate_cache(['line_ids'])
         to_reconcile = (purchase_move + payment_move).mapped('line_ids').filtered(lambda l: l.account_id.internal_type == 'payable')
         to_reconcile.reconcile()
 
@@ -1370,6 +1372,10 @@ class TestReconciliationExec(TestReconciliation):
         })
         payment_move1.post()
 
+        # DLE P96: The cash basis entries amounts depends on the order in which are reconciled the lines
+        # The order is not really important, as its the sum of the cash basis entries that matter,
+        # but the below test check the amount of each intermediate entries, which are different, despite the total is not.
+        (purchase_move + payment_move0 + payment_move1).invalidate_cache(['line_ids'])
         (purchase_move + payment_move0).mapped('line_ids').filtered(lambda l: l.account_id.internal_type == 'payable').reconcile()
         (purchase_move + payment_move1).mapped('line_ids').filtered(lambda l: l.account_id.internal_type == 'payable').reconcile()
 

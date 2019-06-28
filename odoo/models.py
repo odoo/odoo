@@ -3136,6 +3136,11 @@ Fields:
 
         # mark fields that depend on 'self' to recompute them after 'self' has
         # been deleted (like updating a sum of lines after deleting one line)
+        # DLE P93: flush before the modified of the unlink,
+        # as some recompute relies on the fact the records have been deleted
+        # e.g. account.move.line.reconciled, `test_reconciliation_to_check`
+        # `test_revert_payment_and_reconcile_exchange``
+        self.flush()
         self.modified(self._fields)
 
         # Check if the records are used as default properties.
@@ -3185,11 +3190,9 @@ Fields:
             # invalidate the *whole* cache, since the orm does not handle all
             # changes made in the database, like cascading delete!
             self.invalidate_cache()
-
+            # DLE P93: flush after the unlink, for recompute fields depending on the modified of the unlink
+            self.flush()
         # auditing: deletions are infrequent and leave no trace in the database
-        # DLE P93: flush after the delete, as some recompute relies on the fact the records have been deleted
-        # e.g. account.move.line.reconciled, `test_reconciliation_to_check`
-        self.flush()
         _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, self._name, self.ids)
 
         return True
