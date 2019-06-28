@@ -367,9 +367,11 @@
                     <div class="card">
                         <div class="card-body p-2 pr-3">
                             <div class="media align-items-center">
-                                <img height="38" t-att-src="website.image_url(badge.badge_id, 'image_64')" class="mr-0"/>
-                                <div class="media-body col-md-10 p-0">
-                                    <h6 class="my-0 text-truncate" t-field="badge.badge_id.name"/>
+                                <img height="38" t-attf-src="/web/image/gamification.badge/#{badge.badge_id.id}/image_small" class="mr-2"/>
+                                <div class="media-body text-nowrap">
+                                    <h6 class="my-0" t-field="badge.badge_id.name"/>
+                                    <!-- Date the badge was granted : please check "badge.create_date" is correct -->
+                                    <p class="my-1 small text-muted" t-field="badge.create_date" t-options='{"format": "d MMM Y"}' />
                                 </div>
                             </div>
                         </div>
