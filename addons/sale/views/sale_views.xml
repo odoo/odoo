@@ -350,6 +350,24 @@
                                                 force_save="1"
                                                 widget="many2one_barcode"
                                                />
+                                             <field name="product_template_id"
+                                               string="Product"
+                                               invisible="1"
+                                               attrs="{
+                                                   'readonly': [('product_updatable', '=', False)],
+                                                   'required': [('display_type', '=', False)],
+                                               }"
+                                               options="{'no_open': True}"
+                                               context="{
+                                                   'partner_id': parent.partner_id,
+                                                   'quantity': product_uom_qty,
+                                                   'pricelist': parent.pricelist_id,
+                                                   'uom':product_uom,
+                                                   'company_id': parent.company_id,
+                                                   'default_lst_price': price_unit,
+                                                   'default_description_sale': name
+                                               }"
+                                               widget="product_configurator"/>
                                             <field name="invoice_status" invisible="1"/>
                                             <field name="qty_to_invoice" invisible="1"/>
                                             <field name="qty_delivered_manual" invisible="1"/>
@@ -544,6 +562,7 @@
                                 <kanban class="o_kanban_mobile">
                                     <field name="name"/>
                                     <field name="product_id"/>
+                                    <field name="product_template_id"/>
                                     <field name="product_uom_qty"/>
                                     <field name="product_uom" groups="uom.group_uom"/>
                                     <field name="price_subtotal"/>

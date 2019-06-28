@@ -120,11 +120,18 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
         if (ev.data.changes && !ev.data.preventProductIdCheck && ev.data.changes.product_template_id) {
             self._onTemplateChange(ev.data.changes.product_template_id.id, ev.data.dataPointID);
         } else if (ev.data.changes && ev.data.changes.product_id) {
-            self._onProductChange(ev.data.changes.product_id.id, ev.data.dataPointID).then(function (wizardOpened) {
-                if (!wizardOpened) {
-                    self._onLineConfigured();
-                }
-            });
+            if (self.getParent().arch.tag === 'tree') {
+                self._onProductChange(ev.data.changes.product_id.id, ev.data.dataPointID).then(function (wizardOpened) {
+                    if (!wizardOpened) {
+                        self._onLineConfigured();
+                    }
+                });
+            } else { // mobile/responsive
+                // Apply options and leave form view if no further information is expected/required
+                // DO NOT open line configurators, their fields are expected to be
+                // editable on the form view.
+                self._onLineConfigured();
+            }
         }
     },
 

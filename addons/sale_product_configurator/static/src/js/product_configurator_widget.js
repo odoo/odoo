@@ -88,23 +88,52 @@ ProductConfiguratorWidget.include({
      *  @private
      */
     _onLineConfigured: function () {
+        /* VFE FIXME MOBILE/RESPONSIVE saveAndClose events in form view
+        should only be triggered if no further information
+        is expected AKA if !self._isConfigurableLine()
+
+        But _isConfigurableLine doesn't totally work as expected now because
+        related values are not updated directly on field_changed events.
+        Thus, the check on _isConfigurableLine doesn't work if product
+        is loaded for first time on the view.
+
+        Example :
+
+        We have an event product with an optional product.
+        If we add this event product, the product_configurator opens to propose the optional product.
+        If we take this optional product and close the product_configurator,
+            _isConfigurableLine() should return True because an event requires event_id and event_ticket_id fields
+            BUT it returns True because the event_ok related field on the product isn't correctly loaded.
+        */
         var self = this;
         this._super.apply(this, arguments);
         var parentList = self.getParent();
         if (self.optionalProducts && self.optionalProducts.length !== 0) {
+            // Add optional products to SO
             self.trigger_up('add_record', {
                 context: self._productsToRecords(self.optionalProducts),
                 forceEditable: 'bottom',
                 allowWarning: true,
                 onSuccess: function () {
-                    // Leave edit mode of one2many list.
-                    parentList.unselectRow();
+                    if (parentList.arch.tag === 'tree') {
+                        // Leave edit mode of one2many list if tree view.
+                        parentList.unselectRow();
+                    } else if (parentList.arch.tag === 'form' && !self._isConfigurableLine()) {
+                        // Close and Save Form view of SOLine
+                        self.trigger_up('saveAndClose', {});
+                        // saveAndClose won't close the form modal if required fields are
+                        // still not filled.
+                    }
                 }
             });
         } else if (!self._isConfigurableLine() && self._isConfigurableProduct()) {
             // Leave edit mode of current line if line was configured
             // only through the product configurator.
-            parentList.unselectRow();
+            if (parentList.arch.tag === 'tree') {
+                parentList.unselectRow();
+            } else if (parentList.arch.tag === 'form') {
+                self.trigger_up('saveAndClose', {});
+            }
         }
     },
 
