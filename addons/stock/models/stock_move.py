@@ -1222,6 +1222,7 @@ class StockMove(models.Model):
             moves_todo |= move._create_extra_move()
 
         # Split moves where necessary and move quants
+        moves_todo.invalidate_cache(['move_line_ids'])
         for move in moves_todo:
             # To know whether we need to create a backorder or not, round to the general product's
             # decimal precision and not the product's UOM.
