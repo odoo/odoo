@@ -45,7 +45,7 @@ class TestProductCommon(common.SavepointCase):
             'uom_id': cls.uom_unit.id,
             'uom_po_id': cls.uom_unit.id})
         cls.product_3 = Product.create({
-            'name': 'Stone',
+            'name': 'Stone 2',
             'uom_id': cls.uom_dozen.id,
             'uom_po_id': cls.uom_dozen.id})
 
@@ -54,7 +54,7 @@ class TestProductCommon(common.SavepointCase):
             'uom_id': cls.uom_dozen.id,
             'uom_po_id': cls.uom_dozen.id})
         cls.product_5 = Product.create({
-            'name': 'Stone Tools',
+            'name': 'Burnt Cement',
             'uom_id': cls.uom_unit.id,
             'uom_po_id': cls.uom_unit.id})
 
@@ -98,6 +98,6 @@ class TestProductCommon(common.SavepointCase):
             'uom_po_id': cls.uom_unit.id})
 
         cls.product_10 = Product.create({
-            'name': 'Stone',
+            'name': 'Rock',
             'uom_id': cls.uom_unit.id,
             'uom_po_id': cls.uom_unit.id})
