@@ -1996,15 +1996,15 @@ class MailThread(models.AbstractModel):
         if rdata['channels']:
             message_values['channel_ids'] = [(6, 0, [r['id'] for r in rdata['channels']])]
         if rdata['partners']:
-            message_values['needaction_partner_ids'] = [(6, 0, [r['id'] for r in rdata['partners'] if rdata['partners'] != 'channel_email'])] 
-            # change of behaviour to check: since email_cids partner are added in _notify_compute_recipients,
-            # they will be added to needaction_partner_ids to. 
+            message_values['needaction_partner_ids'] = [(6, 0, [r['id'] for r in rdata['partners'] if r['type'] != 'channel_email'])] 
+            # change of behavior to check: since email_cids partner are added in _notify_compute_recipients,
+            # they will be added to needaction_partner_ids to.
             # we may want to filter them (example with channel_email, a cleaner solution may be great)
-            # -> instead of using _notify_customize_recipients, we could add a flag on rdata 
+            # -> instead of using _notify_customize_recipients, we could add a flag on rdata
             # (would work for needactions,  not if we want to erase partner_ids, ids)
-            # (could also be interresting for, we could add partners with r['notif'] = 'ocn_client' and r['needaction']=False)
-            # then overide a notify_recipients (as it was before) to effectively send ocn notifications.
-            # enveloppe will contain more needaction, those for the member of a email channel. 
+            # (could also be interesting for, we could add partners with r['notif'] = 'ocn_client' and r['needaction']=False)
+            # then override a notify_recipients (as it was before) to effectively send ocn notifications.
+            # envelope will contain more needaction, those for the member of a email channel.
         if message_values and self:
             message_values.update(self._notify_customize_recipients(message, msg_vals))
         if message_values:
@@ -2252,9 +2252,10 @@ class MailThread(models.AbstractModel):
         email_cids = [r['id'] for r in recipient_data['channels'] if r['notif'] == 'email']
         if email_cids:
             # we are doing a similar search in ocn_client
-            # Could be interresting to make everything in a single query.
+            # Could be interesting to make everything in a single query.
             # ocn_client: (searching all partners linked to channels of type chat).
             # here      : (searching all partners linked to channels with notif email if email is not the author one)
+            # TDE FIXME: use email_sanitized
             email_from = msg_vals.get('email_from') or message.email_from
             exept_partner = [r['id'] for r in recipient_data['partners']]
             if author_id:
