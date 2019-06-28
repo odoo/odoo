@@ -6,7 +6,8 @@ class ResCompany(models.Model):
 
     _inherit = "res.company"
 
-    l10n_ar_identification_type_id = fields.Many2one(related='partner_id.l10n_latam_identification_type_id')
+    l10n_ar_identification_type_id = fields.Many2one(
+        related='partner_id.l10n_latam_identification_type_id', readonly=False)
     l10n_ar_country_code = fields.Char(related='country_id.code', string='Country Code')
     l10n_ar_gross_income_number = fields.Char(
         related='partner_id.l10n_ar_gross_income_number', string='Gross Income Number', readonly=False)
