@@ -258,12 +258,11 @@
                             <button class="btn btn-sm d-md-none bg-white border" type="button" data-toggle="collapse" data-target="#o_wprofile_sidebar_collapse" aria-expanded="false" aria-controls="o_wprofile_sidebar_collapse">More info</button>
                         </div>
                         <div class="collapse d-md-block" id="o_wprofile_sidebar_collapse">
-                            <div t-if="user.rank_id" class="mb-3">
-                                <small t-if="user.next_rank_id" class="font-weight-bold mt-1">Next rank:</small>
-                                <t t-call="website_profile.profile_next_rank_card">
-                                    <t t-set="img_max_width">40%</t>
-                                </t>
-                            </div>
+                            <t t-set="next_rank_id" t-value="user._get_next_rank()"/>
+                            <small t-if="next_rank_id" class="font-weight-bold mt-1">Next rank:</small>
+                            <t t-if="next_rank_id or user.rank_id" t-call="website_profile.profile_next_rank_card">
+                                <t t-set="img_max_width">40%</t>
+                            </t>
 
                             <table class="table table-sm w-100" id="o_wprofile_sidebar_table">
                                 <tbody>
@@ -315,16 +314,20 @@
     <template id="profile_next_rank_card" name="Profile Next Rank Card">
         <div class="o_wprofile_progress_circle">
             <svg viewBox="0 0 36 36" class="o_pc_circular_chart">
-                <t t-if="user.next_rank_id">
-                    <t t-if="(user.next_rank_id.karma_min - user.rank_id.karma_min) > 0">
-                        <t t-set="user_points" t-value="int(100*(user.karma - user.rank_id.karma_min)/(user.next_rank_id.karma_min - user.rank_id.karma_min))"/>
+                <t t-set="next_rank_id" t-value="next_rank_id or user._get_next_rank()"/>
+                <t t-if="next_rank_id and user.rank_id">
+                    <t t-if="(next_rank_id.karma_min - user.rank_id.karma_min) > 0">
+                        <t t-set="user_points" t-value="int(100*(user.karma - user.rank_id.karma_min)/(next_rank_id.karma_min - user.rank_id.karma_min))"/>
                     </t>
                     <t t-else="">
                         <t t-set="user_points" t-value="0"/>
                     </t>
                 </t>
-                <t t-else="">
+                <t t-elif="user.rank_id">
                     <t t-set="user_points" t-value="100"/>
+                </t>
+                <t t-else="">
+                    <t t-set="user_points" t-value="0"/>
                 </t>
                 <path class="o_pc_circle_bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                 <path class="o_pc_circle" t-attf-stroke-dasharray="#{user_points}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke="url(#gradient)" mask="url(#mask)"/>
@@ -338,18 +341,18 @@
             </svg>
             <div class="o_pc_overlay d-flex flex-column align-items-center justify-content-center">
                 <img class="img-fluid"
-                    t-attf-src="/web/image/gamification.karma.rank/#{user.next_rank_id.id if user.next_rank_id else user.rank_id.id}/image_medium"
-                    t-att-alt="(user.next_rank_id.name if user.next_rank_id else user.rank_id.name) + ' badge'"
+                    t-attf-src="/web/image/gamification.karma.rank/#{next_rank_id.id if next_rank_id else user.rank_id.id}/image_medium"
+                    t-att-alt="(next_rank_id.name if next_rank_id else user.rank_id.name) + ' badge'"
                     t-att-style="'max-width: ' + (img_max_width if img_max_width else '50%;')"/>
                 <h4 class=" mb-0">
                     "
-                    <span t-if="user.next_rank_id" t-field="user.next_rank_id.name"/>
+                    <span t-if="next_rank_id" t-field="next_rank_id.name"/>
                     <span t-else="" t-field="user.rank_id.name"/>
                     "
                 </h4>
                 <small>
                     <span class="font-weight-bold text-primary" t-field="user.karma"/>/
-                    <span t-if="user.next_rank_id" class="font-weight-bold" t-field="user.next_rank_id.karma_min"/>
+                    <span t-if="next_rank_id" class="font-weight-bold" t-field="next_rank_id.karma_min"/>
                     <span t-else="" class="font-weight-bold" t-field="user.rank_id.karma_min"/>
                      xp
                 </small>
@@ -510,7 +513,7 @@
             <div class="card-body">
                 <div class="d-inline-block position-relative">
                     <img class="rounded-circle img-fluid" t-att-src="'/profile/avatar/%s?field=image_medium%s' % (user['id'], '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"/>
-                    <img class="position-absolute" t-attf-src="/website_profile/static/src/img/rank_#{user['position']}.svg" alt="User rank" style="bottom: 0; right: -10px"/>
+                    <img class="position-absolute" t-attf-src="/website_profile/static/src/img/rank_#{user_index + 1}.svg" alt="User rank" style="bottom: 0; right: -10px"/>
                 </div>
                 <h3 class="mt-2 mb-0" t-esc="user['name']"></h3>
                 <span class="badge badge-danger font-weight-normal px-2" t-if="not user['website_published']">Unpublished</span>
