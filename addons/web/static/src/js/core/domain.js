@@ -241,6 +241,7 @@ var Domain = collections.Tree.extend({
         var leftBoundaryParams, rightBoundaryParams;
         var offsetPeriodParams;
         var t = forTooltip || false;
+        var weekday = (moment().startOf('week').diff(moment().startOf('isoweek'), 'days') + 7) % 7;
         function makeInterval () {
             switch (comparisonPeriod) {
                 case 'previous_period':
@@ -291,8 +292,8 @@ var Domain = collections.Tree.extend({
                 offsetPeriodParams = {days: -1};
                 return makeInterval();
             case 'this_week':
-                leftBoundaryParams = {weeks: -1, days: 1, weekday: 0};
-                rightBoundaryParams = t ? {weekday: 6} : {days: 1, weekday: 0};
+                leftBoundaryParams = {weeks: -1, days: 1, weekday: weekday};
+                rightBoundaryParams = t ? {weekday: (weekday + 6) % 7} : {days: 1, weekday: weekday};
                 offsetPeriodParams = {weeks: -1};
                 return makeInterval();
             case 'this_month':
@@ -319,8 +320,8 @@ var Domain = collections.Tree.extend({
                 offsetPeriodParams = {days: -1};
                 return makeInterval();
             case 'last_week':
-                leftBoundaryParams = {weeks: -2, days: 1, weekday: 0};
-                rightBoundaryParams = t ? {weeks: -1, weekday: 6} : {weeks: -1, days: 1, weekday: 0};
+                leftBoundaryParams = {weeks: -2, days: 1, weekday: weekday};
+                rightBoundaryParams = t ? {weeks: -1, weekday: (weekday + 6) % 7} : {weeks: -1, days: 1, weekday: weekday};
                 offsetPeriodParams = {weeks: -1};
                 return makeInterval();
             case 'last_month':

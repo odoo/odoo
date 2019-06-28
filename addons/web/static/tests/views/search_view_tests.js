@@ -595,19 +595,19 @@ QUnit.module('Search View', {
 
         var self = this;
 
+        var unpatchDate = patchDate(2017,2,22,0,0,0);
+
+        if (moment.localeData(moment.locale())._week.dow == 0) { // Sunday
+            this.periodDomains[4] = ['&', ["date_field", ">=", "2017-03-19"],["date_field", "<", "2017-03-26"]]
+            this.periodDomains[9] = ['&', ["date_field", ">=", "2017-03-12"],["date_field", "<", "2017-03-19"]]
+        } else {
+            this.periodDomains[4] = ['&', ["date_field", ">=", "2017-03-20"],["date_field", "<", "2017-03-27"]]
+            this.periodDomains[9] = ['&', ["date_field", ">=", "2017-03-13"],["date_field", "<", "2017-03-20"]]
+        }
+
         this.archs['partner,4,search'] = '<search>'+
             '<filter string="AAA" name="some_filter" date="date_field" default_period="this_week"></filter>' +
         '</search>';
-
-        var RealDate = window.Date;
-
-        window.Date = function TestDate() {
-            // month are indexed from 0!
-            return new RealDate(2017,2,22);
-        };
-        window.Date.now = function Test() {
-            return new Date(2017,2,22);
-        };
 
         var actionManager = createActionManager({
             actions: this.actions,
@@ -648,8 +648,61 @@ QUnit.module('Search View', {
         $('.o_menu_item .o_item_option[data-option_id="last_quarter"]').click();
         $('.o_menu_item .o_item_option[data-option_id="last_year"]').click();
 
+        unpatchDate();
         actionManager.destroy();
-        window.Date = RealDate;
+    });
+
+    QUnit.test('filter this week is locale aware', function (assert) {
+        assert.expect(2);
+
+        var self = this;
+        var originalLocale = moment.locale();
+
+        var unpatchDate = patchDate(2017,2,22,0,0,0);  // The 2017-02-22 is a Wednesday
+        moment.defineLocale('en-us-test', {week: {dow: 0}});  // First day is Sunday
+        moment.defineLocale('fr-be-test', {week: {dow: 1}});  // First day is Monday
+
+
+        this.archs['partner,4,search'] = '<search>'+
+            '<filter string="AAA" name="some_filter" date="date_field" default_period="this_week"></filter>' +
+        '</search>';
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read' && args.domain.length) {
+                    if (moment.locale() == 'en-us-test') {
+                        assert.deepEqual(args.domain,
+                            ['&', ["date_field", ">=", "2017-03-19"],["date_field", "<", "2017-03-26"]]);
+                    } else if (moment.locale() == 'fr-be-test') {
+                        assert.deepEqual(args.domain,
+                            ['&', ["date_field", ">=", "2017-03-13"],["date_field", "<", "2017-03-20"]]);
+                    }
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        actionManager.doAction(5);
+
+        // open menu 'Filter'
+        $('.o_search_options .fa-filter').click();
+        // open menu options
+        $('.o_menu_item').click();
+
+        moment.locale('en-us-test');
+        $('.o_menu_item .o_item_option[data-option_id="this_week"]').click();
+
+        moment.locale('fr-be-test');
+        $('.o_menu_item .o_item_option[data-option_id="last_week"]').click();
+
+        unpatchDate();
+        moment.locale(originalLocale);
+        moment.updateLocale("en-us-test", null);
+        moment.updateLocale("fr-be-test", null);
+        actionManager.destroy();
     });
 
     QUnit.test('Filter with JSON-parsable domain works', function (assert) {
