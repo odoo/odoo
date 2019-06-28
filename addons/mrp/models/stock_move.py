@@ -89,7 +89,7 @@ class StockMove(models.Model):
         .filtered(lambda ml: ml.qty_done == 0.0)\
         .write({'move_id': new_move, 'product_uom_qty': 0})
 
-    @api.depends('raw_material_production_id.move_finished_ids.move_line_ids.lot_id')
+    @api.depends('raw_material_production_id.move_finished_ids')
     def _compute_order_finished_lot_ids(self):
         for move in self:
             if move.raw_material_production_id.move_finished_ids:
