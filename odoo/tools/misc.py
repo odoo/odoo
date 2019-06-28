@@ -1162,6 +1162,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
             res = '%s %s' % (currency_obj.symbol, res)
     return res
 
+
 def format_date(env, value, lang_code=False, date_format=False):
     '''
         Formats the date in a given format.
@@ -1232,6 +1233,27 @@ def format_datetime(env, value, tz=False, dt_format='medium', lang_code=False):
     #     short:   1/5/16, 10:20 PM         |   5/01/16 22:20
     # Formatting available here : http://babel.pocoo.org/en/latest/dates.html#date-fields
     return babel.dates.format_datetime(localized_datetime, dt_format, locale=locale)
+
+
+def format_time(env, value, tz=False, time_format='medium', lang_code=False):
+    """ Format the given time (hour, minute and second) with the current user preference (language, format, ...)
+
+        :param value: the time to format
+        :type value: `datetime.time` instance. Could be timezoned to display tzinfo according to format (e.i.: 'full' format)
+        :param format: one of “full”, “long”, “medium”, or “short”, or a custom date/time pattern
+        :param lang_code: ISO
+
+        :rtype str
+    """
+    if not value:
+        return ''
+
+    lang = env['res.lang']._lang_get(lang_code or env.context.get('lang') or 'en_US')
+    locale = babel.Locale.parse(lang.code)
+    if not time_format:
+        time_format = posix_to_ldml(lang.time_format, locale=locale)
+
+    return babel.dates.format_time(value, format=time_format, locale=locale)
 
 
 def format_amount(env, amount, currency, lang_code=False):
