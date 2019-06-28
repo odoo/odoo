@@ -255,3 +255,58 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         self.assertEqual(len(purchase_order2.order_line), 1, "The 2nd PO has only one line")
         self.assertEqual(purchase_line2.sale_line_id, self.sol1_service_purchase_1, "The 2nd PO line came from the SO line sol1_service_purchase_1")
         self.assertEqual(purchase_line2.product_qty, delta, "The quantity of the new PO line is the quantity added on the Sale Line, after first PO confirmation")
+
+    def test_choose_supplier(self):
+        """ Choose supplier based on the ordered quantity and minimum price"""
+        product_to_buy = self.env['product.product'].create({
+            'name': "Furniture Service",
+            'type': 'service',
+            'service_to_purchase': True,
+        })
+        supplierinfo1 = self.env['product.supplierinfo'].create({
+            'name': self.partner_vendor_service.id,
+            'price': 100,
+            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'min_qty': 2
+        })
+        supplierinfo2 = self.env['product.supplierinfo'].create({
+            'name': self.partner_vendor_service.id,
+            'price': 60,
+            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'min_qty': 10
+        })
+        supplierinfo3 = self.env['product.supplierinfo'].create({
+            'name': self.partner_vendor_service.id,
+            'price': 80,
+            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'min_qty': 5
+        })
+        # create sale order having ordered quantity 3.
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_customer_usd.id,
+            'pricelist_id': self.pricelist_usd.id,
+            'order_line': [(0, 0, {'name': product_to_buy.name,
+                                   'product_id': product_to_buy.id,
+                                   'product_uom_qty': 3})]
+        })
+        # confirm sale order
+        sale_order.action_confirm()
+
+        # case1 for quantity 10.
+        pol_from_so = self.env['purchase.order.line'].search([('sale_line_id', 'in', sale_order.order_line.ids), ('state', '!=', 'purchase')])
+        pol_from_so.order_id.button_confirm()  # confirm PO, so that new PO will be generated.
+        # unit price of purchase order line must be 100.
+        self.assertEqual(pol_from_so.price_unit, supplierinfo1.price, "For 10qty unit price must be 100.")
+
+        # case2. for quantity 6.
+        sale_order.order_line.product_uom_qty = 8  # update sale order line having ordered quantity from 2 to 6.
+        pol_from_so = self.env['purchase.order.line'].search([('sale_line_id', 'in', sale_order.order_line.ids), ('state', '!=', 'purchase')])
+        pol_from_so.order_id.button_confirm()  # confirm PO, so that new PO will be generated.
+        # unit price of purchase order line must be 80.
+        self.assertEqual(pol_from_so.price_unit, supplierinfo3.price, "For 10qty unit price must be 80.")
+
+        # case3. for quantity 20.
+        sale_order.order_line.product_uom_qty = 20  # update sale order line having ordered quantity from 6 to 20.
+        pol_from_so = self.env['purchase.order.line'].search([('sale_line_id', 'in', sale_order.order_line.ids), ('state', '!=', 'purchase')])
+        # unit price of purchase order line must be 60.
+        self.assertEqual(pol_from_so.price_unit, supplierinfo2.price, "For 10qty unit price must be 60.")
