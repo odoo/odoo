@@ -1592,9 +1592,13 @@ QUnit.module('Views', {
     QUnit.test('"all" filter', function (assert) {
         assert.expect(6);
 
+        var dateTimeLocalToUTC = function (dateTime){
+            return moment(dateTime).utc().format('YYYY-MM-DD HH:mm:ss');
+        };
+
         var interval = [
-            ["start", "<=", "2016-12-17 23:59:59"],
-            ["stop", ">=", "2016-12-11 00:00:00"],
+            ["start", "<=", dateTimeLocalToUTC("2016-12-17 23:59:59")],
+            ["stop", ">=", dateTimeLocalToUTC("2016-12-11 00:00:00")],
         ];
 
         var domains = [
