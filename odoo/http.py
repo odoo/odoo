@@ -98,16 +98,16 @@ def replace_request_password(args):
         args[2] = '*'
     return tuple(args)
 
+
 # don't trigger debugger for those exceptions, they carry user-facing warnings
 # and indications, they're not necessarily indicative of anything being
 # *broken*
-NO_POSTMORTEM = (odoo.osv.orm.except_orm,
-                 odoo.exceptions.AccessError,
-                 odoo.exceptions.ValidationError,
-                 odoo.exceptions.MissingError,
+NO_POSTMORTEM = (odoo.exceptions.except_orm,
                  odoo.exceptions.AccessDenied,
                  odoo.exceptions.Warning,
                  odoo.exceptions.RedirectWarning)
+
+
 def dispatch_rpc(service_name, method, params):
     """ Handle a RPC call.
 
@@ -316,7 +316,7 @@ class WebRequest(object):
         """Called within an except block to allow converting exceptions
            to abitrary responses. Anything returned (except None) will
            be used as response."""
-        self._failed = exception # prevent tx commit
+        self._failed = exception  # prevent tx commit
         if not isinstance(exception, NO_POSTMORTEM) \
                 and not isinstance(exception, werkzeug.exceptions.HTTPException):
             odoo.tools.debugger.post_mortem(
@@ -630,13 +630,18 @@ class JsonRequest(WebRequest):
         try:
             return super(JsonRequest, self)._handle_exception(exception)
         except Exception:
-            if not isinstance(exception, (odoo.exceptions.Warning, SessionExpiredException,
-                                          odoo.exceptions.except_orm, werkzeug.exceptions.NotFound)):
-                _logger.exception("Exception during JSON request handling.")
+            if not isinstance(exception, SessionExpiredException):
+                if exception.args and exception.args[0] == "bus.Bus not available in test mode":
+                    _logger.info(exception)
+                elif isinstance(exception, (odoo.exceptions.Warning, odoo.exceptions.except_orm,
+                                          werkzeug.exceptions.NotFound)):
+                    _logger.warning(exception)
+                else:
+                    _logger.exception("Exception during JSON request handling.")
             error = {
-                    'code': 200,
-                    'message': "Odoo Server Error",
-                    'data': serialize_exception(exception)
+                'code': 200,
+                'message': "Odoo Server Error",
+                'data': request.registry['ir.http'].serialize_exception(exception),
             }
             if isinstance(exception, werkzeug.exceptions.NotFound):
                 error['http_status'] = 404
@@ -686,31 +691,6 @@ class JsonRequest(WebRequest):
         except Exception as e:
             return self._handle_exception(e)
 
-def serialize_exception(e):
-    tmp = {
-        "name": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ else type(e).__name__,
-        "debug": traceback.format_exc(),
-        "message": ustr(e),
-        "arguments": e.args,
-        "exception_type": "internal_error"
-    }
-    if isinstance(e, odoo.exceptions.UserError):
-        tmp["exception_type"] = "user_error"
-    elif isinstance(e, odoo.exceptions.Warning):
-        tmp["exception_type"] = "warning"
-    elif isinstance(e, odoo.exceptions.RedirectWarning):
-        tmp["exception_type"] = "warning"
-    elif isinstance(e, odoo.exceptions.AccessError):
-        tmp["exception_type"] = "access_error"
-    elif isinstance(e, odoo.exceptions.MissingError):
-        tmp["exception_type"] = "missing_error"
-    elif isinstance(e, odoo.exceptions.AccessDenied):
-        tmp["exception_type"] = "access_denied"
-    elif isinstance(e, odoo.exceptions.ValidationError):
-        tmp["exception_type"] = "validation_error"
-    elif isinstance(e, odoo.exceptions.except_orm):
-        tmp["exception_type"] = "except_orm"
-    return tmp
 
 class HttpRequest(WebRequest):
     """ Handler for the ``http`` request type.
@@ -1414,7 +1394,7 @@ class Root(object):
             httprequest = werkzeug.wrappers.Request(environ)
             httprequest.app = self
             httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
-            
+
             current_thread = threading.current_thread()
             current_thread.url = httprequest.url
             current_thread.query_count = 0

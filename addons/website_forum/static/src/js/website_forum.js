@@ -2,12 +2,12 @@ odoo.define('website_forum.website_forum', function (require) {
 'use strict';
 
 var core = require('web.core');
+var crash_manager = require('web.crash_manager');
 var Wysiwyg = require('web_editor.wysiwyg.root');
 var publicWidget = require('web.public.widget');
 var session = require('web.session');
 var utils = require('web.utils');
 var qweb = core.qweb;
-var WebsiteProfile = require('website_profile.website_profile');
 
 var _t = core._t;
 
@@ -30,7 +30,6 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         'click .accept_answer:not(.karma_required)': '_onAcceptAnswerClick',
         'click .favourite_question': '_onFavoriteQuestionClick',
         'click .comment_delete': '_onDeleteCommentClick',
-        'click .notification_close': '_onCloseNotificationClick',
         'click .js_close_intro': '_onCloseIntroClick',
     },
 
@@ -186,20 +185,20 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         }
         ev.preventDefault();
         var msg = karma + ' ' + _t("karma is required to perform this action. ");
+        var title = _t("Karma Error");
         if (forum_id) {
             msg += '<a class="alert-link" href="/forum/' + forum_id + '/faq">' + _t("Read the guidelines to know how to gain karma.") + '</a>';
         }
         if (session.is_website_user) {
             msg = _t("Sorry you must be logged in to perform this action");
+            title = _t("Access Denied");
         }
-        var $warning = $('<div class="alert alert-danger alert-dismissible oe_forum_alert" id="karma_alert">' +
-            '<button type="button" class="close notification_close" data-dismiss="alert">&times;</button>' +
-            msg + '</div>');
-        var $voteAlert = $('#karma_alert');
-        if ($voteAlert.length) {
-            $voteAlert.remove();
-        }
-        $karma.after($warning);
+        crash_manager.show_warning({
+            message: msg,
+            title: title,
+        }, {
+            sticky: false,
+        });
     },
     /**
      * @private
@@ -282,35 +281,20 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             route: $link.data('href') || ($link.attr('href') !== '#' && $link.attr('href')) || $link.closest('form').attr('action'),
         }).then(function (data) {
             if (data.error) {
-                var $warning;
+                var message;
                 if (data.error === 'anonymous_user') {
-                    $warning = $(
-                        '<div class="alert alert-danger alert-dismissable oe_forum_alert" id="flag_alert">' +
-                            '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                            _t("Sorry you must be logged to flag a post") +
-                        '</div>'
-                    );
+                    message = _t("Sorry you must be logged to flag a post");
                 } else if (data.error === 'post_already_flagged') {
-                    $warning = $(
-                        '<div class="alert alert-danger alert-dismissable oe_forum_alert" id="flag_alert">' +
-                            '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                            _t("This post is already flagged") +
-                            '<button type="button" class="close notification_close" t-att-id="notification.id" data-dismiss="alert" aria-label="Close">&times;</button>' +
-                        '</div>'
-                    );
+                    message = _t("This post is already flagged");
                 } else if (data.error === 'post_non_flaggable') {
-                    $warning = $(
-                        '<div class="alert alert-danger alert-dismissable oe_forum_alert" id="flag_alert">' +
-                            '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                            _t("This post can not be flagged") +
-                            '<button type="button" class="close notification_close" t-att-id="notification.id" data-dismiss="alert" aria-label="Close">&times;</button>' +
-                        '</div>'
-                    );
+                    message = _t("This post can not be flagged");
                 }
-                var $flagAlert = $link.parent().find('#flag_alert');
-                if ($flagAlert.length === 0) {
-                    $link.parent().append($warning);
-                }
+                crash_manager.show_warning({
+                    message: message,
+                    title: _t("Access Denied"),
+                }, {
+                    sticky: false,
+                });
             } else if (data.success) {
                 var elem = $link;
                 if (data.success === 'post_flagged_moderator') {
@@ -338,22 +322,18 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             route: $link.data('href'),
         }).then(function (data) {
             if (data.error) {
-                var $warning;
+                var message;
                 if (data.error === 'own_post') {
-                    $warning = $('<div class="alert alert-danger alert-dismissable oe_forum_alert" id="vote_alert">' +
-                        '<button type="button" class="close notification_close" data-dismiss="alert">&times;</button>' +
-                        _t('Sorry, you cannot vote for your own posts') +
-                        '</div>');
+                    message = _t('Sorry, you cannot vote for your own posts');
                 } else if (data.error === 'anonymous_user') {
-                    $warning = $('<div class="alert alert-danger alert-dismissable oe_forum_alert" id="vote_alert">' +
-                        '<button type="button" class="close notification_close" data-dismiss="alert">&times;</button>' +
-                        _t('Sorry you must be logged to vote') +
-                        '</div>');
+                    message = _t('Sorry you must be logged to vote');
                 }
-                var $voteAlert = $link.parent().find('#vote_alert');
-                if ($voteAlert.length === 0) {
-                    $link.parent().append($warning);
-                }
+                crash_manager.show_warning({
+                    message: message,
+                    title: _t("Access Denied"),
+                }, {
+                    sticky: false,
+                });
             } else {
                 $link.parent().find('.vote_count').html(data.vote_count);
                 if (data.user_vote === 0) {
@@ -399,17 +379,14 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         }).then(function (data) {
             if (data.error) {
                 if (data.error === 'anonymous_user') {
-                    var $warning = $(
-                        '<div class="alert alert-danger alert-dismissable" id="correct_answer_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">' +
-                            '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                            _t("Sorry, anonymous users cannot choose correct answer.") +
-                        '</div>'
-                    );
+                    var message = _t("Sorry, anonymous users cannot choose correct answer.");
                 }
-                var $correctAnswerAlert = $link.parent().find('#correct_answer_alert');
-                if ($correctAnswerAlert.length === 0) {
-                    $link.parent().append($warning);
-                }
+                crash_manager.show_warning({
+                    message: message,
+                    title: _t("Access Denied"),
+                }, {
+                    sticky: false,
+                });
             } else {
                 $link.toggleClass('oe_answer_true', !!data)
                      .toggleClass('oe_answer_false', !data);
@@ -450,22 +427,6 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         }).then(function () {
             $link.parents('.comment').first().remove();
         });
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onCloseNotificationClick: function (ev) {
-        if (!session.is_website_user) {
-            ev.preventDefault();
-            var $link = $(ev.currentTarget);
-            this._rpc({
-                route: '/forum/notification_read',
-                params: {
-                    notification_id: $link.attr('id'),
-                },
-            });
-        }
     },
     /**
      * @private

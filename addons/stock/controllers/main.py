@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import http
 from odoo.http import request
-from odoo.addons.web.controllers.main import _serialize_exception
 from odoo.tools import html_escape
 
 import json
@@ -37,7 +36,7 @@ class StockReportController(http.Controller):
                 response.set_cookie('fileToken', token)
                 return response
         except Exception as e:
-            se = _serialize_exception(e)
+            se = request.env['ir.http'].serialize_exception(e)
             error = {
                 'code': 200,
                 'message': 'Odoo Server Error',

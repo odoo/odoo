@@ -5,7 +5,7 @@ var BasicModel = require('web.BasicModel');
 var field_utils = require('web.field_utils');
 var utils = require('web.utils');
 var session = require('web.session');
-var CrashManager = require('web.CrashManager');
+var WarningDialog = require('web.CrashManager').WarningDialog;
 var core = require('web.core');
 var _t = core._t;
 
@@ -636,7 +636,7 @@ var StatementModel = BasicModel.extend({
                         });
                         break;
                 }
-            } 
+            }
             else if (fieldName === 'tax_ids') {
                 switch(value.operation) {
                     case "ADD_M2M":
