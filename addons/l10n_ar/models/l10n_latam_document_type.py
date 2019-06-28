@@ -21,13 +21,10 @@ class L10nLatamDocumentType(models.Model):
         '* I\n',
     )
     purchase_cuit_required = fields.Boolean(
-        help='Verdadero si la declaración del CITI compras requiere informar '
-        'CUIT'
-    )
+        help='Verdadero si la declaración del CITI compras requiere informar CUIT')
     purchase_alicuots = fields.Selection(
-        [('not_zero', 'No Cero'), ('zero', 'Cero')],
-        help='Cero o No cero según lo requiere la declaración del CITI compras'
-    )
+        [('not_zero', 'No Cero'), ('zero', 'Cero')], help='Cero o No cero según lo requiere la declaración del CITI'
+        ' compras')
 
     def _get_l10n_ar_letters(self):
         """ Return the list of values of the selection field. """
@@ -45,30 +42,18 @@ class L10nLatamDocumentType(models.Model):
 
     @api.multi
     def get_document_sequence_vals(self, journal):
-        """ Values to create the sequences
-        """
-        values = super(
-            L10nLatamDocumentType, self).get_document_sequence_vals(journal)
+        """ Values to create the sequences """
+        values = super().get_document_sequence_vals(journal)
         if self.country_id != self.env.ref('base.ar'):
             return values
 
-        values.update({
-            'padding': 8,
-            'implementation': 'no_gap',
-            'prefix': "%04i-" % (journal.l10n_ar_afip_pos_number),
-            'l10n_latam_journal_id': journal.id,
-        })
+        values.update({'padding': 8, 'implementation': 'no_gap', 'prefix': "%04i-" % (journal.l10n_ar_afip_pos_number),
+                       'l10n_latam_journal_id': journal.id})
         if journal.l10n_ar_share_sequences:
-            values.update({
-                'name': '%s - Letter %s Documents' % (
-                    journal.name, self.l10n_ar_letter),
-                'l10n_ar_letter': self.l10n_ar_letter,
-            })
+            values.update({'name': '%s - Letter %s Documents' % (journal.name, self.l10n_ar_letter),
+                           'l10n_ar_letter': self.l10n_ar_letter})
         else:
-            values.update({
-                'name': '%s - %s' % (journal.name, self.name),
-                'l10n_latam_document_type_id': self.id,
-            })
+            values.update({'name': '%s - %s' % (journal.name, self.name), 'l10n_latam_document_type_id': self.id})
         return values
 
     @api.multi
@@ -76,19 +61,16 @@ class L10nLatamDocumentType(models.Model):
         """ In argentina we include taxes depending on document letter
         """
         self.ensure_one()
-        if self.country_id == self.env.ref('base.ar') and \
-           self.l10n_ar_letter in ['B', 'C', 'X', 'R']:
+        if self.country_id == self.env.ref('base.ar') and self.l10n_ar_letter in ['B', 'C', 'X', 'R']:
             return taxes.filtered(
                 lambda x: x.tax_group_id.l10n_ar_tax == 'vat' and x.tax_group_id.l10n_ar_type == 'tax')
         return super()._filter_taxes_included(taxes)
 
     @api.multi
     def _format_document_number(self, document_number):
-        """ Method to be inherited by different localizations.
-        The purpose of this method is to allow:
+        """ Method to be inherited by different localizations. The purpose of this method is to allow:
 
-          * making validations on the document_number. If it is wrong it
-            should raise an exception
+          * making validations on the document_number. If it is wrong it should raise an exception
           * format the document_number against a pattern and return it
         """
         self.ensure_one()
@@ -104,8 +86,7 @@ class L10nLatamDocumentType(models.Model):
         if self.code in ['66', '67']:
             if len(document_number) != 16:
                 raise UserError(msg % (document_number, self.name, (
-                    'El número de despacho de importación debe tener'
-                    ' 16 caractéres')))
+                    'El número de despacho de importación debe tener 16 caractéres')))
             return document_number
 
         # Invoice Number Validator (For Eg: 123-123)
@@ -122,11 +103,7 @@ class L10nLatamDocumentType(models.Model):
             document_number = '{:>04s}-{:>08s}'.format(pos, number)
         if failed:
             raise UserError(msg % (document_number, self.name, (
-                'El número de documento debe ingresarse con un guión (-) y'
-                ' máximo 5 caracteres para la primer parte y 8 para la'
-                ' segunda. Los siguientes son ejemplos de números válidos:'
-                '\n* 1-1'
-                '\n* 0001-00000001'
-                '\n* 00001-00000001'
-            )))
+                'El número de documento debe ingresarse con un guión (-) y máximo 5 caracteres para la primer parte'
+                ' y 8 para la segunda. Los siguientes son ejemplos de números válidos:\n* 1-1\n* 0001-00000001'
+                '\n* 00001-00000001')))
         return document_number

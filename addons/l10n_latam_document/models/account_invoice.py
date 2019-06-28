@@ -10,55 +10,28 @@ class AccountInvoice(models.Model):
 
     _inherit = "account.invoice"
 
-    l10n_latam_amount_tax = fields.Monetary(
-        compute='_compute_l10n_latam_amount_and_taxes'
+    l10n_latam_amount_tax = fields.Monetary(compute='_compute_l10n_latam_amount_and_taxes'
     )
-    l10n_latam_amount_untaxed = fields.Monetary(
-        compute='_compute_l10n_latam_amount_and_taxes'
+    l10n_latam_amount_untaxed = fields.Monetary(compute='_compute_l10n_latam_amount_and_taxes'
     )
     l10n_latam_tax_line_ids = fields.One2many(
-        compute="_compute_l10n_latam_amount_and_taxes",
-        comodel_name='account.invoice.tax',
-    )
+        compute="_compute_l10n_latam_amount_and_taxes", comodel_name='account.invoice.tax')
     l10n_latam_default_document_type_id = fields.Many2one(
-        'l10n_latam.document.type',
-        compute='_compute_l10n_latam_documents',
-    )
+        'l10n_latam.document.type', compute='_compute_l10n_latam_documents')
     l10n_latam_available_document_type_ids = fields.Many2many(
-        'l10n_latam.document.type',
-        compute='_compute_l10n_latam_documents',
-    )
+        'l10n_latam.document.type', compute='_compute_l10n_latam_documents')
     l10n_latam_document_type_id = fields.Many2one(
-        'l10n_latam.document.type',
-        string='Document Type',
-        copy=False,
-        readonly=True,
-        auto_join=True,
-        index=True,
-    )
-    l10n_latam_sequence_id = fields.Many2one(
-        'ir.sequence',
-        compute='_compute_l10n_latam_sequence',
-    )
+        'l10n_latam.document.type', string='Document Type', copy=False, readonly=True, auto_join=True, index=True)
+    l10n_latam_sequence_id = fields.Many2one('ir.sequence', compute='_compute_l10n_latam_sequence')
     l10n_latam_document_number = fields.Char(
-        compute='_compute_l10n_latam_document_number',
-        inverse='_inverse_l10n_latam_document_number',
-        string='Document Number',
-        readonly=True,
-        states={'draft': [('readonly', False)]},
-    )
-    l10n_latam_use_documents = fields.Boolean(
-        related='journal_id.l10n_latam_use_documents',
-    )
+        compute='_compute_l10n_latam_document_number', inverse='_inverse_l10n_latam_document_number',
+        string='Document Number', readonly=True, states={'draft': [('readonly', False)]})
+    l10n_latam_use_documents = fields.Boolean(related='journal_id.l10n_latam_use_documents')
     l10n_latam_country_code = fields.Char(
-        related='company_id.country_id.code',
-        help='Technical field used to hide/show fields regarding the '
-        'localization'
-    )
+        related='company_id.country_id.code', help='Technical field used to hide/show fields regarding the localization')
     def _get_sequence_prefix(self):
         """ If we use documents we update sequences only from journal """
-        return super(AccountInvoice, self.filtered(
-            lambda x: not x.l10n_latam_use_documents))._get_sequence_prefix()
+        return super(AccountInvoice, self.filtered(lambda x: not x.l10n_latam_use_documents))._get_sequence_prefix()
 
     @api.depends('move_name')
     def _compute_l10n_latam_document_number(self):
@@ -72,40 +45,33 @@ class AccountInvoice(models.Model):
     @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number')
     def _inverse_l10n_latam_document_number(self):
         for rec in self.filtered('l10n_latam_document_type_id'):
-            l10n_latam_document_number = \
-                rec.l10n_latam_document_type_id._format_document_number(
-                    rec.l10n_latam_document_number)
+            l10n_latam_document_number = rec.l10n_latam_document_type_id._format_document_number(
+                rec.l10n_latam_document_number)
             if rec.l10n_latam_document_number != l10n_latam_document_number:
                 rec.l10n_latam_document_number = l10n_latam_document_number
             rec.move_name = l10n_latam_document_number and "%s %s" % (
-                rec.l10n_latam_document_type_id.doc_code_prefix,
-                l10n_latam_document_number)
+                rec.l10n_latam_document_type_id.doc_code_prefix, l10n_latam_document_number)
 
     @api.depends('l10n_latam_document_type_id', 'journal_id')
     def _compute_l10n_latam_sequence(self):
         for rec in self.filtered('journal_id'):
             rec.l10n_latam_sequence_id = rec.get_document_type_sequence()
 
-    @api.depends(
-        'amount_untaxed', 'amount_tax', 'tax_line_ids',
-        'l10n_latam_document_type_id')
+    @api.depends('amount_untaxed', 'amount_tax', 'tax_line_ids', 'l10n_latam_document_type_id')
     def _compute_l10n_latam_amount_and_taxes(self):
         for invoice in self:
-            included_taxes = invoice.l10n_latam_document_type_id and \
-                invoice.l10n_latam_document_type_id._filter_taxes_included(invoice.tax_line_ids.mapped('tax_id'))
+            included_taxes = \
+                invoice.l10n_latam_document_type_id and invoice.l10n_latam_document_type_id._filter_taxes_included(
+                    invoice.tax_line_ids.mapped('tax_id'))
             if not included_taxes:
                 l10n_latam_amount_tax = invoice.amount_tax
                 l10n_latam_amount_untaxed = invoice.amount_untaxed
                 not_included_invoice_taxes = invoice.tax_line_ids
             else:
-                included_invoice_taxes = invoice.tax_line_ids.filtered(
-                    lambda x: x.tax_id in included_taxes)
-                not_included_invoice_taxes = (
-                    invoice.tax_line_ids - included_invoice_taxes)
-                l10n_latam_amount_tax = sum(
-                    not_included_invoice_taxes.mapped('amount'))
-                l10n_latam_amount_untaxed = invoice.amount_untaxed + sum(
-                    included_invoice_taxes.mapped('amount'))
+                included_invoice_taxes = invoice.tax_line_ids.filtered(lambda x: x.tax_id in included_taxes)
+                not_included_invoice_taxes = invoice.tax_line_ids - included_invoice_taxes
+                l10n_latam_amount_tax = sum(not_included_invoice_taxes.mapped('amount'))
+                l10n_latam_amount_untaxed = invoice.amount_untaxed + sum(included_invoice_taxes.mapped('amount'))
             invoice.l10n_latam_amount_tax = l10n_latam_amount_tax
             invoice.l10n_latam_amount_untaxed = l10n_latam_amount_untaxed
             invoice.l10n_latam_tax_line_ids = not_included_invoice_taxes
@@ -119,7 +85,7 @@ class AccountInvoice(models.Model):
     def action_move_create(self):
         for rec in self.filtered(lambda x: x.l10n_latam_use_documents and not x.l10n_latam_document_number):
             rec.l10n_latam_document_number = rec.l10n_latam_sequence_id.next_by_id()
-        res = super(AccountInvoice, self).action_move_create()
+        res = super().action_move_create()
         for rec in self.filtered('l10n_latam_use_documents'):
             rec.move_id.l10n_latam_document_type_id = rec.l10n_latam_document_type_id.id
         return res
@@ -143,17 +109,10 @@ class AccountInvoice(models.Model):
         for rec in self.filtered('l10n_latam_document_type_id.internal_type'):
             internal_type = rec.l10n_latam_document_type_id.internal_type
             invoice_type = rec.type
-            if internal_type in [
-                    'debit_note', 'invoice'] and invoice_type in [
-                    'out_refund', 'in_refund']:
-                raise ValidationError(_(
-                    'You can not use a %s document type with a refund '
-                    'invoice') % internal_type)
-            elif internal_type == 'credit_note' and invoice_type in [
-                    'out_invoice', 'in_invoice']:
-                raise ValidationError(_(
-                    'You can not use a %s document type with a invoice') % (
-                    internal_type))
+            if internal_type in ['debit_note', 'invoice'] and invoice_type in ['out_refund', 'in_refund']:
+                raise ValidationError(_('You can not use a %s document type with a refund invoice') % internal_type)
+            elif internal_type == 'credit_note' and invoice_type in ['out_invoice', 'in_invoice']:
+                raise ValidationError(_('You can not use a %s document type with a invoice') % (internal_type))
 
     @api.onchange('l10n_latam_default_document_type_id')
     def onchange_journal_partner_company(self):
@@ -165,10 +124,7 @@ class AccountInvoice(models.Model):
             internal_types = ['credit_note']
         else:
             internal_types = ['invoice', 'debit_note']
-        return [
-            ('internal_type', 'in', internal_types),
-            ('country_id', '=', self.company_id.country_id.id),
-        ]
+        return [('internal_type', 'in', internal_types), ('country_id', '=', self.company_id.country_id.id)]
 
     @api.depends('journal_id', 'partner_id', 'company_id')
     def _compute_l10n_latam_documents(self):
@@ -177,36 +133,30 @@ class AccountInvoice(models.Model):
             document_types = self.env['l10n_latam.document.type'].search(rec._get_l10n_latam_documents_domain())
 
             # If internal_type is in context we try to search for an specific document. for eg used on debit notes
-            document_type = internal_type and document_types.filtered(lambda x: x.internal_type == internal_type) or document_types
+            document_type = internal_type and document_types.filtered(
+                lambda x: x.internal_type == internal_type) or document_types
 
             rec.l10n_latam_available_document_type_ids = document_types
             rec.l10n_latam_default_document_type_id = document_type and document_type[0]
 
     @api.multi
     def write(self, vals):
-        """ If someone change the type (for eg from
-        sale_order.action_invoice_create), we update the document type"""
+        """ If someone change the type (for eg from sale_order.action_invoice_create), we update the document type"""
         if 'type' not in vals:
-            return super(AccountInvoice, self).write(vals)
-        res = super(AccountInvoice, self).write(vals)
+            return super().write(vals)
+        res = super().write(vals)
         for rec in self.filtered('l10n_latam_use_documents'):
             rec.l10n_latam_document_type_id = rec.l10n_latam_default_document_type_id
         return res
 
     @api.model
-    def _prepare_refund(
-            self, invoice, date_invoice=None,
-            date=None, description=None, journal_id=None):
-        values = super(AccountInvoice, self)._prepare_refund(
-            invoice, date_invoice=date_invoice,
-            date=date, description=description, journal_id=journal_id)
-        refund_document_type_id = self._context.get(
-            'refund_document_type_id', False)
-        refund_document_number = self._context.get(
-            'refund_document_number', False)
+    def _prepare_refund(self, invoice, date_invoice=None, date=None, description=None, journal_id=None):
+        values = super()._prepare_refund(
+            invoice, date_invoice=date_invoice, date=date, description=description, journal_id=journal_id)
+        refund_document_type_id = self._context.get('refund_document_type_id', False)
+        refund_document_number = self._context.get('refund_document_number', False)
         if refund_document_type_id:
-            values['l10n_latam_document_type_id'] = \
-                refund_document_type_id
+            values['l10n_latam_document_type_id'] = refund_document_type_id
         if refund_document_number:
             values['l10n_latam_document_number'] = refund_document_number
         return values
@@ -233,21 +183,15 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def unlink(self):
-        """ When using documents, on vendor bills the document_number is
-        setted manually by the number given from the vendor, the odoo sequence
-        is not used. In this case We allow to delete vendor bills with
-        document_number/move_name
-        """
-        self.filtered(lambda x:
-            x.type in ['in_refund', 'in_invoice'] and
-            x.state in ('draft', 'cancel') and
-            x.l10n_latam_use_documents and
-            x.move_name
-        ).write({'move_name': False})
-        return super(AccountInvoice, self).unlink()
+        """ When using documents, on vendor bills the document_number is  setted manually by the number given from
+        the vendor, the odoo sequence is not used. In this case We allow to delete vendor bills with
+        document_number/move_name """
+        self.filtered(
+            lambda x: x.type in ['in_refund', 'in_invoice'] and x.state in ('draft', 'cancel') and
+            x.l10n_latam_use_documents and x.move_name).write({'move_name': False})
+        return super().unlink()
 
     def get_document_type_sequence(self):
-        """ Method to be inherited by different localizations.
-        """
+        """ Method to be inherited by different localizations. """
         self.ensure_one()
         return self.env['ir.sequence']

@@ -4,19 +4,13 @@ from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError
 
 class AccountJournal(models.Model):
+
     _inherit = "account.journal"
 
-    l10n_latam_use_documents = fields.Boolean(
-        'Use Documents?',
-    )
-    l10n_latam_company_use_documents = fields.Boolean(
-        compute='_compute_l10n_latam_company_use_documents',
-    )
+    l10n_latam_use_documents = fields.Boolean('Use Documents?')
+    l10n_latam_company_use_documents = fields.Boolean(compute='_compute_l10n_latam_company_use_documents')
     l10n_latam_country_code = fields.Char(
-        related='company_id.country_id.code',
-        help='Technical field used to hide/show fields regarding the '
-        'localization'
-    )
+        related='company_id.country_id.code', help='Technical field used to hide/show fields regarding the localization')
 
     @api.depends('company_id')
     def _compute_l10n_latam_company_use_documents(self):
@@ -31,8 +25,6 @@ class AccountJournal(models.Model):
     @api.constrains('l10n_latam_use_documents')
     def check_use_document(self):
         for rec in self:
-            if rec.env['account.invoice'].search(
-                    [('journal_id', '=', rec.id)]):
+            if rec.env['account.invoice'].search([('journal_id', '=', rec.id)]):
                 raise ValidationError(_(
-                    'You can not modify the field "Use Documents?"'
-                    ' if invoices already exist in the journal!'))
+                    'You can not modify the field "Use Documents?" if invoices already exist in the journal!'))

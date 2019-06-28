@@ -1,3 +1,4 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Argentinian Localization Base',
     'version': '12.0.1.0.0',
@@ -11,8 +12,7 @@ Base Module for Argentinian Localization
 
 * Activate ARS currency.
 * Add Identification Type to represent AFIP valid identifications types.
-* Add Countries code defined by AFIP to identify legal entities and natural persons of foreign countries.
-    """,
+* Add Countries code defined by AFIP to identify legal entities and natural persons of foreign countries.""",
     'depends': [
         'l10n_latam_base',
         'base_vat',
