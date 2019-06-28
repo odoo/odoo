@@ -101,5 +101,17 @@
             <field name="auto_delete" eval="True"/>
             <field name="user_signature" eval="False"/>
       </record>
+
+        <record id="expire_coupon_cron" model="ir.cron">
+            <field name="name">Coupon: expire coupon based on date</field>
+            <field name="model_id" ref="sale_coupon.model_sale_coupon"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_expire_coupon()</field>
+            <field name="active" eval="True"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
    </data>
 </odoo>
