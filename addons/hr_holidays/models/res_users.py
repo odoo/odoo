@@ -11,7 +11,7 @@ class User(models.Model):
     show_leaves = fields.Boolean(related='employee_id.show_leaves')
     allocation_used_count = fields.Float(related='employee_id.allocation_used_count')
     allocation_count = fields.Float(related='employee_id.allocation_count')
-    leave_date_to = fields.Date(related='employee_id.leave_date_to')
+    leave_consolidated_date_to = fields.Date(related='employee_id.leave_consolidated_date_to')
     is_absent = fields.Boolean(related='employee_id.is_absent')
     allocation_used_display = fields.Char(related='employee_id.allocation_used_display')
     allocation_display = fields.Char(related='employee_id.allocation_display')
@@ -27,7 +27,7 @@ class User(models.Model):
             'show_leaves',
             'allocation_used_count',
             'allocation_count',
-            'leave_date_to',
+            'leave_consolidated_date_to',
             'is_absent',
             'allocation_used_display',
             'allocation_display',

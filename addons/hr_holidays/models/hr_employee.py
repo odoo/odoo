@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
+from collections import defaultdict
+from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.tools.float_utils import float_round
@@ -30,6 +32,7 @@ class HrEmployeeBase(models.AbstractModel):
     current_leave_id = fields.Many2one('hr.leave.type', compute='_compute_leave_status', string="Current Time Off Type")
     leave_date_from = fields.Date('From Date', compute='_compute_leave_status')
     leave_date_to = fields.Date('To Date', compute='_compute_leave_status')
+    leave_consolidated_date_to = fields.Date('Leave Consolidated To Date', compute='_compute_leave_consolidated_date_to')
     leaves_count = fields.Float('Number of Time Off', compute='_compute_remaining_leaves')
     allocation_count = fields.Float('Total number of days allocated.', compute='_compute_allocation_count')
     allocation_used_count = fields.Float('Total number of days off used', compute='_compute_total_allocation_used')
@@ -96,6 +99,34 @@ class HrEmployeeBase(models.AbstractModel):
         super()._compute_presence_state()
         employees = self.filtered(lambda employee: employee.hr_presence_state != 'present' and employee.is_absent)
         employees.update({'hr_presence_state': 'absent'})
+
+    def _compute_leave_consolidated_date_to(self):
+        holidays = self.env['hr.leave'].sudo().search([
+            ('employee_id', 'in', self.ids),
+            ('date_to', '>=', fields.Datetime.now()),
+            ('state', 'not in', ('cancel', 'refuse'))
+        ], order="date_from")
+
+        leave_data = defaultdict(list)
+        for holiday in holidays:
+            leave_data[holiday.employee_id].append({'date_to': holiday.date_to.date(), 'date_from': holiday.date_from.date()})
+
+        for employee, leave_data in leave_data.items():
+            first_leave = leave_data[0]
+            date_to = first_leave['date_to']
+            working_days = employee.mapped('resource_calendar_id.attendance_ids.dayofweek')
+            days = 1
+            for next_leave in leave_data:
+                while str((first_leave['date_to'] + timedelta(days=days)).weekday()) not in working_days:
+                    days += 1
+                if next_leave['date_from'] == first_leave['date_to'] + timedelta(days=days):
+                    days = 1
+                    date_to = next_leave['date_to']
+                    first_leave = next_leave
+            employee.leave_consolidated_date_to = date_to
+
+        for employee in self - holidays.employee_id:
+            employee.leave_consolidated_date_to = False
 
     def _compute_leave_status(self):
         # Used SUPERUSER_ID to forcefully get status of other user's leave, to bypass record rule
