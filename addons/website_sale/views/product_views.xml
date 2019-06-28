@@ -216,13 +216,11 @@
         <field name="model">product.image</field>
         <field name="arch" type="xml">
             <form string="Product Images">
+                <field name="sequence" invisible="1"/>
                 <div class="row o_website_sale_image_modal">
                     <div class="col-md-6 col-xl-5">
                         <label for="name" string="Image Name"/>
                         <h2><field name="name" placeholder="Image Name"/></h2>
-                        <!-- Unfortunately for now we can't drag and drop kanban o2m, so we have to let the user input the sequence manually.  -->
-                        <label for="sequence" string="Sequence"/><br/>
-                        <field name="sequence"/><br/><br/>
                         <label for="video_url" string="Video URL"/><br/>
                         <field name="video_url"/><br/>
                     </div>
@@ -254,7 +252,7 @@
                 <field name="id"/>
                 <field name="name"/>
                 <field name="image_original"/>
-                <field name="sequence"/>
+                <field name="sequence" widget="handle"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="card oe_kanban_global_click p-0">
