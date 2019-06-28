@@ -12,13 +12,12 @@
         <field name="email">info@yourcompany.example.com</field>
         <field name="website">www.example.com</field>
         <field name="supplier" eval="True"/>
-        <field name='gross_income_type'>no_liquida</field>
-        <field name="start_date" eval="time.strftime('%Y-%m')+'-1'"/>
     </record>
 
     <record id="base.main_company" model="res.company">
         <field name='currency_id' ref='base.ARS'/>
         <field name='l10n_ar_gross_income_type'>no_liquida</field>
+        <field name="l10n_ar_afip_start_date" eval="time.strftime('%Y-%m')+'-1'"/>
     </record>
 
     <function model="account.chart.template" name="try_loading_for_current_company">

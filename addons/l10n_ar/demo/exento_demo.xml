@@ -15,7 +15,6 @@
         <field name="email">info@exento.example.com</field>
         <field name="website">www.exento.com</field>
         <field name="supplier" eval="True"/>
-        <field name="start_date" eval="time.strftime('%Y-%m')+'-1'"/>
     </record>
 
     <record id="company_exento" model="res.company">
@@ -24,6 +23,7 @@
         <field name='partner_id' ref='partner_exento'/>
         <field name='name'>(AR) Exento</field>
         <field name='l10n_ar_gross_income_type'>no_liquida</field>
+        <field name="l10n_ar_afip_start_date" eval="time.strftime('%Y-%m')+'-1'"/>
     </record>
 
     <record id="base.user_root" model="res.users">

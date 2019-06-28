@@ -15,7 +15,6 @@
         <field name="email">info@yourcompany.example.com</field>
         <field name="website">www.example.com</field>
         <field name="supplier" eval="True"/>
-        <field name="start_date" eval="time.strftime('%Y-%m')+'-1'"/>
     </record>
 
     <record id="company_mono" model="res.company">
@@ -24,6 +23,7 @@
         <field name='partner_id' ref='partner_mono'/>
         <field name='name'>(AR) Monotributista</field>
         <field name='l10n_ar_gross_income_type'>no_liquida</field>
+        <field name="l10n_ar_afip_start_date" eval="time.strftime('%Y-%m')+'-1'"/>
     </record>
 
     <record id="base.user_root" model="res.users">
