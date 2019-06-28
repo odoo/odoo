@@ -15,6 +15,7 @@
         <field name="email">info@yourcompany.example.com</field>
         <field name="website">www.example.com</field>
         <field name="supplier" eval="True"/>
+        <field name="start_date" eval="time.strftime('%Y-%m')+'-1'"/>
     </record>
 
     <record id="company_mono" model="res.company">
