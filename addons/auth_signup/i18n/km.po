@@ -27,12 +27,14 @@ msgid ""
 "${object.create_uid.name} from ${object.company_id.name} invites you to "
 "connect to Odoo"
 msgstr ""
+"$ {object.create_uid.name} ពី $ {object.company_id.name} "
+"អញ្ជើញអ្នកឱ្យតភ្ជាប់ទៅ Odoo"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:126
 #, python-format
 msgid "%s connected"
-msgstr ""
+msgstr "%sភ្ជាប់"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -40,13 +42,15 @@ msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
 msgstr ""
+"<strong>ការកំណត់ពាក្យសម្ងាត់ឡើងវិញត្រូវបានស្នើសុំសម្រាប់អ្នកប្រើប្រាស់នេះ។ "
+"អ៊ីមែលដែលមានតំណដូចខាងក្រោមត្រូវបានផ្ញើ:</strong>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
-msgstr ""
+msgstr "<strong>អ៊ីម៉ែលការអញ្ជើញដែលមានតំណការជាវខាងក្រោមត្រូវបានផ្ញើ:</strong>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -136,6 +140,43 @@ msgid ""
 "</td></tr>\n"
 "</table>"
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"\n"
+"<!-- HEADER -->\n"
+"<tr>\n"
+"<td align=\"center\" style=\"min-width: 590px;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"<tr><td valign=\"middle\">\n"
+"<span style=\"font-size: 10px;\"></span><br/>\n"
+"<span style=\"font-size: 20px; font-weight: bold;\">\n"
+"</span></td><td valign=\"middle\" align=\"right\">\n"
+"<img src=\"/logo.png?company=${object.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${object.company_id.name}\"/>\n"
+"</td></tr>\n"
+"<tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"<hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"</td></tr>\n"
+"</table>\n"
+"</td>\n"
+"</tr><tr>\n"
+"<td align=\"center\" style=\"min-width: 590px;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"<tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"<div>\n"
+"ជូនចំពោះ $ {object.name},                         អ្នកត្រូវបានអញ្ជើញដោយ $ {object.create_uid.name} នៃ $ {object.company_id.name} ដើម្បីតភ្ជាប់នៅលើ Odoo ។<br/><br/>\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"% set website_url = object.env ['ir.config_parameter'] ។ sudo () ។ get_param ('web.base.url')\n"
+"\n"
+"\n"
+"<b><a href=\"${website_url}\"></a></b><br/>\n"
+"<b>\n"
+"<a href=\"/web/login?login=${object.email}\" target=\"_blank\">\n"
+"</a></b><br/><br/>\n"
+"មិនដែលឮពី Odoo ទេ? វាជាកម្មវិធីអាជីវកម្មទាំងអស់នៅក្នុងមួយដែលពេញចិត្តដោយអ្នកប្រើប្រាស់ 3+ លាននាក់។ វានឹងធ្វើអោយប្រសើរឡើងនូវបទពិសោធន៍របស់អ្នកនៅកន្លែងធ្វើការនិងបង្កើនផលិតភាពរបស់អ្នក។<a href=\"${object.signup_url}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\"></a><div style=\"margin: 16px 0px 16px 0px;\"><br/><br/><a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\"></a><br/><br/><br/><br/></div></tr><tr><td style=\"text-align:center;\"><hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/></td></tr></table></tr><tr><td align=\"center\" style=\"min-width: 590px;\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\"><tr><td valign=\"middle\" align=\"left\"></td></tr><tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\"><a href=\"'mailto:%s' % ${object.company_id.email}\" style=\"text-decoration:none; color: #454748;\"></a>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.reset_password_email
@@ -309,36 +350,37 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Already have an account?"
-msgstr ""
+msgstr "គណនីមានរួចរាលហើយ"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:80
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr ""
+msgstr "អ៊ីម៉ែលត្រូវបានផ្ងើទៅកាន់កូនបំណុលក្នុងការលុបបោលលេខសំងាត់របស់អ្នក"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:52
 #, python-format
 msgid "Another user is already registered using this email address."
 msgstr ""
+"អ្នកប្រើប្រាស់ដទទៃទៀតត្រូវបានចុះឈ្មោះប្រើប្រាស់ដោយអាស័យដ្ឋានអ៊ីម៉ែលនេះ"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:137
 #, python-format
 msgid "Authentication Failed."
-msgstr ""
+msgstr "ការផ្ទៀងផ្ទាត់បានបរាជ័យ។"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Back to Login"
-msgstr ""
+msgstr "ត្រឡប់ទៅចូល"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:199
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
+msgstr "មិនអាចផ្ញើអ៊ីមែល: %sអ្នកប្រើមិនមានអាសយដ្ឋានអ៊ីមែល។"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -358,7 +400,7 @@ msgstr "បញ្ជាក់"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
-msgstr ""
+msgstr "បញ្ជាក់លេខសំងាត់"
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -374,18 +416,18 @@ msgstr "ទំនាក់ទំនង"
 #: code:addons/auth_signup/controllers/main.py:55
 #, python-format
 msgid "Could not create a new account."
-msgstr ""
+msgstr "អ្នកមិនអាចបង្កើតគណនីថ្មី"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:84
 #, python-format
 msgid "Could not reset your password"
-msgstr ""
+msgstr "អ្នកមិនអាចលុបចោលលេខសំងាត់របស់អ្នកបានឡើយ"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_uninvited
 msgid "Customer Account"
-msgstr ""
+msgstr "គណនីអតិថិជន"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
