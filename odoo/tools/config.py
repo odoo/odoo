@@ -121,6 +121,7 @@ class configmanager(object):
 
         group.add_option("-D", "--data-dir", dest="data_dir", my_default=_get_default_datadir(),
                          help="Directory where to store Odoo data")
+        group.add_option("-f", "--connection-file", dest="connection_file")
         parser.add_option_group(group)
 
         # HTTP
@@ -476,6 +477,7 @@ class configmanager(object):
         self.options['demo'] = (dict(self.options['init'])
                                 if not self.options['without_demo'] else {})
         self.options['update'] = opt.update and dict.fromkeys(opt.update.split(','), 1) or {}
+        self.options['connection_file'] = opt.connection_file or ''
         self.options['translate_modules'] = opt.translate_modules and [m.strip() for m in opt.translate_modules.split(',')] or ['all']
         self.options['translate_modules'].sort()
 
