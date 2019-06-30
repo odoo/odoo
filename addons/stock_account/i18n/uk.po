@@ -230,8 +230,8 @@ msgid ""
 "If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
 "If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
 msgstr ""
-"Якщо собівартість буде збільшена, обліковий запис варіації акцій буде дебетовано, а вихідний рахунок складу акцій буде зараховуватися з величиною = (різниця суми * доступна кількість).\n"
-"Якщо собівартість знизиться, буде створений рахунок варіації запасів, а вхідний рахунок складу буде дебетовано."
+"Якщо собівартість буде збільшена, варіації рахунку обліку запасів буде дебетовано, а вихідний рахунок обліку запасів буде зараховуватися з величиною = (різниця суми * доступна кількість).\n"
+"Якщо собівартість знизиться, буде створена варіацію рахунка обліку запасів, а вхідний рахунок буде дебетовано."
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.product_valuation_action
@@ -428,7 +428,7 @@ msgstr "Переміщення в реальному часі по Fifo"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_input_categ_id
 msgid "Stock Input Account"
-msgstr "Рахунок надходження продукції"
+msgstr "Обліковий запис надходження продукції"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_journal
@@ -484,6 +484,8 @@ msgid ""
 "The Stock Input and/or Output accounts cannot be the same than the Stock "
 "Valuation account."
 msgstr ""
+"Облікові записи вхідної та/або вихідної продукції не можуть бути такими ж, "
+"як і обліковий запис оцінки складу."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:538
@@ -539,7 +541,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_tree_valuation_at_date
 msgid "Unit of Measure"
-msgstr "Одиниця виміру"
+msgstr "Одиниця вимірювання"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
@@ -551,7 +553,7 @@ msgstr "Оновлена вартість"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
 msgid "Update quantities on SO/PO"
-msgstr ""
+msgstr "Оновіть кількості на SO/PO"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
@@ -565,7 +567,7 @@ msgstr ""
 "Використовується для оцінки інвентаризації в реальному часі. Якщо встановити"
 " на віртуальному розташуванні (не внутрішній тип), цей облік буде "
 "використовуватися для того, щоб зберегти вартість товарів, які переміщуються"
-" з внутрішнього місця розташування в це місце, замість загальної обліку "
+" з внутрішнього місця розташування в це місце, замість загального обліку "
 "випуску, встановленого на товарі. Це не впливає на внутрішні розташування."
 
 #. module: stock_account

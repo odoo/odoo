@@ -7,8 +7,8 @@
 # Taras Kovaliuk <tratatuta123@gmail.com>, 2018
 # Olga Lugova <trolka.olug@gmail.com>, 2019
 # ТАрас <tratatuta@i.ua>, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # Martin Trigaux, 2019
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-20 13:50+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,27 +38,27 @@ msgstr "&amp;times;"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_header
 msgid "00:00"
-msgstr ""
+msgstr "00:00"
 
 #. module: survey
 #: model:survey.label,value:survey.vendor_certification_page_2_question_1_choice_4
 msgid "100$"
-msgstr ""
+msgstr "100$"
 
 #. module: survey
 #: model:survey.label,value:survey.vendor_certification_page_2_question_1_choice_1
 msgid "20$"
-msgstr ""
+msgstr "20$"
 
 #. module: survey
 #: model:survey.label,value:survey.vendor_certification_page_2_question_1_choice_5
 msgid "200$"
-msgstr ""
+msgstr "200$"
 
 #. module: survey
 #: model:survey.label,value:survey.vendor_certification_page_2_question_1_choice_6
 msgid "300$"
-msgstr ""
+msgstr "300$"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.403
@@ -68,12 +68,12 @@ msgstr "403: Заборонено"
 #. module: survey
 #: model:survey.label,value:survey.vendor_certification_page_2_question_1_choice_2
 msgid "50$"
-msgstr ""
+msgstr "50$"
 
 #. module: survey
 #: model:survey.label,value:survey.vendor_certification_page_2_question_1_choice_3
 msgid "80$"
-msgstr ""
+msgstr "80$"
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_certification
@@ -105,6 +105,32 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"                    <table style=\"width:600px;margin:5px auto;\">\n"
+"                        <tbody>\n"
+"                            <tr><td>\n"
+"                                <!-- Ми використовуємо логотип компанії, яке створює опитування (для обробки досвіду кількох компаній) -->\n"
+"                                <a href=\"/\"><img src=\"/logo.png?company=${object.survey_id.create_uid.company_id.id}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                                    Сертифікація: ${object.survey_id.display_name}\n"
+"                            </td></tr>\n"
+"                        </tbody>\n"
+"                    </table>\n"
+"                    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"                        <tbody>\n"
+"                            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                                <p>Шановний(а) <span>${object.partner_id.name or 'participant'}</span></p>\n"
+"                                <p>\n"
+"                                    У прикріпленому документі є сертифікат для\n"
+"                                        <strong>${object.survey_id.display_name}</strong>\n"
+"                                </p>\n"
+"                                <p>Вітаємо з успішно пройденим тестом!</p>\n"
+"                            </td></tr>\n"
+"                        </tbody>\n"
+"                    </table>\n"
+"                </div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
@@ -139,6 +165,30 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Шановний(а) ${object.partner_id.name or 'participant'}<br/><br/>\n"
+"        % if object.survey_id.certificate:\n"
+"            Вас запросили отримати новий сертифікат.\n"
+"        % else:\n"
+"            Ми проводимо опитування і ваша відповідь буде оцінена.\n"
+"        % endif\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"${('%s?answer_token=%s' % (object.survey_id.public_url, object.token)) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                % if object.survey_id.certificate:\n"
+"                    Розпочати сертифікацію\n"
+"                % else:\n"
+"                    Розпочати опитування\n"
+"                % endif\n"
+"            </a>\n"
+"        </div>\n"
+"        % if object.deadline:\n"
+"            Дайте відповідь на опитування для ${format_date(object.deadline)}.<br/><br/>\n"
+"        % endif\n"
+"        Дякуємо за вашу участь.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -212,6 +262,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download certification\" title=\"Download certification\"/>\n"
 "                                        Download certification"
 msgstr ""
+"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download certification\" title=\"Download certification\"/>\n"
+"                                        Завантажити сертифікат"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_number
@@ -270,6 +322,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('is_time_limited', '=', False)]}\"> "
 "minutes</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('is_time_limited', '=', False)]}\"> "
+"хвилин</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
@@ -330,27 +384,27 @@ msgstr "<span class=\"fa fa-filter\"/>  Фільтри"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
 msgid "<span>Correct answer</span>:"
-msgstr ""
+msgstr "<span>Правильна відповідь</span>:"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
 msgid "<span>Correct answers</span>:"
-msgstr ""
+msgstr "<span>Правильні відповіді</span>:"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.sfinished
 msgid "<span>Number of attemps left</span>:"
-msgstr ""
+msgstr "<span>Кількість залишених спроб</span>:"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_init
 msgid "<span>Time limit for this survey: </span>"
-msgstr ""
+msgstr "<span>Ліміт часу на це опитування: </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view
 msgid "<strong>Date of Certification:</strong>"
-msgstr ""
+msgstr "<strong>Дата сертифікації:</strong>"
 
 #. module: survey
 #: code:addons/survey/models/survey_question.py:389
@@ -366,17 +420,17 @@ msgstr "Довжина повинна бути позитивною!"
 #. module: survey
 #: model:survey.label,value:survey.vendor_certification_page_2_question_3_choice_4
 msgid "A little bit overpriced"
-msgstr ""
+msgstr "Трохи завищена ціна"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__description
 msgid "A long description of the purpose of the survey"
-msgstr "Довгий опис мети дослідження"
+msgstr "Довгий опис мети опитування"
 
 #. module: survey
 #: model:survey.label,value:survey.vendor_certification_page_2_question_3_choice_5
 msgid "A lot overpriced"
-msgstr ""
+msgstr "На багато завищена ціна"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_label__answer_score
@@ -401,13 +455,13 @@ msgstr "Токен повинен бути унікальним!"
 #: model:survey.question,question:survey.survey_feedback_p2
 #: model:survey.question,title:survey.survey_feedback_p2
 msgid "About our ecommerce"
-msgstr ""
+msgstr "Про нашу електронну комерцію"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_access_mode
 #: model:ir.model.fields,field_description:survey.field_survey_survey__access_mode
 msgid "Access Mode"
-msgstr ""
+msgstr "Режим доступу"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__access_token
@@ -417,12 +471,12 @@ msgstr "Токен доступу"
 #. module: survey
 #: sql_constraint:survey.survey:0
 msgid "Access token should be unique"
-msgstr ""
+msgstr "Токен доступу повинен бути унікальним"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_needaction
 msgid "Action Needed"
-msgstr "Дія необхідна"
+msgstr "Необхідна дія"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__active
@@ -445,8 +499,8 @@ msgid ""
 "Add a list of email of recipients (will not be converted into contacts). "
 "Separated by commas, semicolons or newline..."
 msgstr ""
-"Додайте список емейлів отримувачів (не конвертовані в контакти).Розділювач "
-"кома, "
+"Додайте список емейлів отримувачів (не конвертовані в контакти). Розділено "
+"комою, крапка з комою або новий рядок..."
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
@@ -456,7 +510,7 @@ msgstr "Додати нове опитування"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Add a question"
-msgstr ""
+msgstr "Додати запитання"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -471,7 +525,7 @@ msgstr "Додайте існуючі контакти..."
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__emails
 msgid "Additional emails"
-msgstr ""
+msgstr "Додаткові електронні пошти"
 
 #. module: survey
 #: model:survey.label,value:survey.survey_feedback_p2_q2_col3
@@ -481,7 +535,7 @@ msgstr "Погодитися"
 #. module: survey
 #: selection:survey.survey,questions_selection:0
 msgid "All questions"
-msgstr ""
+msgstr "Усі запитання"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -501,7 +555,7 @@ msgstr "Вибір відповідей"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_choice
 msgid "Answer Score"
-msgstr ""
+msgstr "Оцінка за відповідь"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__input_type
@@ -512,7 +566,7 @@ msgstr "Тип відповіді"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__deadline
 msgid "Answer deadline"
-msgstr ""
+msgstr "Дедлайн відповіді"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
@@ -533,7 +587,7 @@ msgstr "Відповіді"
 #. module: survey
 #: selection:survey.survey,access_mode:0
 msgid "Anyone with the link"
-msgstr ""
+msgstr "Будь-хто з посиланням"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -548,7 +602,7 @@ msgstr "Підрахунок прикріплення"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__attachment_ids
 msgid "Attachments"
-msgstr "Долучення"
+msgstr "Прикріплення"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__author_id
@@ -558,7 +612,7 @@ msgstr "Автор"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_invite__author_id
 msgid "Author of the message."
-msgstr ""
+msgstr "Автор повідомлення."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__certification_mail_template_id
@@ -566,6 +620,8 @@ msgid ""
 "Automated email sent to the user when he succeeds the certification, "
 "containing his certification document."
 msgstr ""
+"Автоматизована електронна пошта, надіслана користувачеві після успішного "
+"завершення сертифікації, що містить його сертифікаційний документ."
 
 #. module: survey
 #: model:ir.model,name:survey.model_ir_autovacuum
@@ -585,7 +641,7 @@ msgstr "Скасувати"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Candidates"
-msgstr ""
+msgstr "Кандидати"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__category
@@ -613,38 +669,38 @@ msgstr "Сертифікат"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_kanban
 msgid "Certification"
-msgstr ""
+msgstr "Сертифікація"
 
 #. module: survey
 #: model:mail.template,report_name:survey.mail_template_certification
 msgid "Certification Document"
-msgstr ""
+msgstr "Документ сертифікації"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_mail_template_id
 msgid "Certification Email Template"
-msgstr ""
+msgstr "Шаблон електронного листа сертифікації"
 
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_certification
 msgid "Certification: ${object.survey_id.display_name}"
-msgstr ""
+msgstr "Сертифікація: ${object.survey_id.display_name}"
 
 #. module: survey
 #: model:ir.actions.report,name:survey.certification_report
 msgid "Certifications"
-msgstr ""
+msgstr "Сертифікації"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certified_count
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Certified"
-msgstr ""
+msgstr "Сертифіковано"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view
 msgid "Certifies that"
-msgstr ""
+msgstr "Це підтверджує"
 
 #. module: survey
 #: model:survey.label,value:survey.vendor_certification_page_1_question_2_choice_1
@@ -654,12 +710,13 @@ msgstr "Захист підлоги від стільця"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
 msgid "Chart"
-msgstr ""
+msgstr "Діаграма"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__is_attempts_limited
 msgid "Check this option if you want to limit the number of attempts per user"
 msgstr ""
+"Позначте цю опцію, якщо потрібно обмежити кількість спроб на користувача"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -729,7 +786,7 @@ msgstr "Створити електронний лист"
 #. module: survey
 #: model:survey.label,value:survey.vendor_certification_page_1_question_2_choice_3
 msgid "Conference chair"
-msgstr ""
+msgstr "Конференційне крісло"
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_surveys_configuration
@@ -739,7 +796,7 @@ msgstr "Налаштування"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.sfinished
 msgid "Congratulations, you have passed the test!"
-msgstr ""
+msgstr "Вітаємо, ви пройшли тест!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -764,7 +821,7 @@ msgstr "Кутовий стіл з правим сидінням"
 #. module: survey
 #: model:survey.label,value:survey.vendor_certification_page_2_question_3_choice_3
 msgid "Correctly priced"
-msgstr ""
+msgstr "Правильно розраховані ціни"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.layout
@@ -797,7 +854,7 @@ msgstr "Створено"
 #: code:addons/survey/models/survey_survey.py:243
 #, python-format
 msgid "Creating test token is not allowed for you."
-msgstr ""
+msgstr "Створення токену тесту вам не дозволено."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:257
@@ -806,18 +863,20 @@ msgid ""
 "Creating token for anybody else than employees is not allowed for internal "
 "surveys."
 msgstr ""
+"Створення токену для будь-кого іншого, окрім співробітників, не допускається"
+" для внутрішніх опитувань."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:246
 #, python-format
 msgid "Creating token for archived surveys is not allowed."
-msgstr ""
+msgstr "Створення токену для архівних опитувань не дозволяється."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:248
 #, python-format
 msgid "Creating token for closed surveys is not allowed."
-msgstr ""
+msgstr "Створення токену для закритих опитувань не дозволяється."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:252
@@ -827,6 +886,8 @@ msgid ""
 "Creating token for external people is not allowed for surveys requesting "
 "authentication."
 msgstr ""
+"Створення токену для зовнішніх користувачів не допускається для опитувань, "
+"які вимагають аутентифікації."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -834,16 +895,17 @@ msgid ""
 "Customers will receive a new token and be able to completely retake the "
 "survey."
 msgstr ""
+"Клієнти отримають новий токен та зможуть повністю повернути опитування."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Customers will receive the same token."
-msgstr ""
+msgstr "Клієнти отримають той самий токен."
 
 #. module: survey
 #: model:survey.label,value:survey.vendor_certification_page_1_question_2_choice_5
 msgid "Customizable Lamp"
-msgstr ""
+msgstr "Налаштовувана лампа"
 
 #. module: survey
 #: selection:survey.question,question_type:0
@@ -860,17 +922,18 @@ msgstr "Дата відповіді"
 #: selection:survey.question,question_type:0
 #: selection:survey.user_input_line,answer_type:0
 msgid "Datetime"
-msgstr ""
+msgstr "Дата час"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_datetime
 msgid "Datetime answer"
-msgstr ""
+msgstr "Відповідь дати часу"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_user_input__deadline
 msgid "Datetime until customer can open the survey and submit answers"
 msgstr ""
+"Дата час доки клієнт не зможе відкрити опитування та надіслати відповіді"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__deadline
@@ -895,6 +958,8 @@ msgid ""
 "Design easily your survey, send invitations to answer by email and analyze "
 "answers."
 msgstr ""
+"Легко створюйте своє опитування, надсилайте запрошення, щоби відповісти "
+"електронною поштою та проаналізуйте відповіді."
 
 #. module: survey
 #: model:survey.label,value:survey.vendor_certification_page_2_question_2_choice_2
@@ -930,13 +995,13 @@ msgstr "Режим відображення"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__display_mode
 msgid "Display mode of simple choice questions."
-msgstr ""
+msgstr "Відображайте режим питань з простим вибором."
 
 #. module: survey
 #: model:survey.question,question:survey.vendor_certification_page_1_question_1
 #: model:survey.question,title:survey.vendor_certification_page_1_question_1
 msgid "Do we sell Acoustic Bloc Screens?"
-msgstr ""
+msgstr "Чи продаємо ми екрани акустичного блоку?"
 
 #. module: survey
 #: model:survey.question,question:survey.survey_feedback_p2_q3
@@ -1158,12 +1223,12 @@ msgstr "Токен ідентифікації"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_unread
 msgid "If checked new messages require your attention."
-msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
+msgstr "Якщо позначено, то повідомленя потребує вашої уваги."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
+msgstr "Якщо позначено, то нові повідомлення будуть потребувати вашої уваги."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_error
@@ -1583,7 +1648,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Наступий дедлайн дії"
+msgstr "Дедлайн наступної дії"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_summary
@@ -1593,7 +1658,7 @@ msgstr "Підсумок наступної дії"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_type_id
 msgid "Next Activity Type"
-msgstr "Наступний тип дії"
+msgstr "Тип наступної дії"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.page
@@ -1782,7 +1847,7 @@ msgstr "Вихідний поштовий сервер"
 #. module: survey
 #: selection:survey.survey,activity_state:0
 msgid "Overdue"
-msgstr "Прострочено"
+msgstr "Протерміновано"
 
 #. module: survey
 #: model:survey.label,value:survey.survey_feedback_p2_q1_sug5
@@ -1899,12 +1964,12 @@ msgstr "Запитання"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label__question_id_2
 msgid "Question 2"
-msgstr "Питання 2"
+msgstr "Запитання 2"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Question name"
-msgstr "Назва питання"
+msgstr "Назва запитання"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_question_form
@@ -2069,7 +2134,7 @@ msgstr "Шукати опитування"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_response_line_search
 msgid "Search User input lines"
-msgstr "Шукати строки вводу Користувача"
+msgstr "Шукати рядки вводу Користувача"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -2108,7 +2173,7 @@ msgstr "Вибір"
 #. module: survey
 #: selection:survey.question,display_mode:0
 msgid "Selection Box"
-msgstr "Коробка відбору"
+msgstr "Позначка вибору"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -2124,7 +2189,7 @@ msgstr "Послідовність"
 #. module: survey
 #: sql_constraint:survey.stage:0
 msgid "Sequence number MUST be a natural"
-msgstr "Номер послідовності ПОВИННЕ бути природним"
+msgstr "Номер послідовності ПОВИНЕН бути природним"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_kanban
@@ -2219,7 +2284,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Етап заснований на діях\n"
-"Прострочений: термін виконання вже минув\n"
+"Протерміновано: термін виконання вже минув\n"
 "Сьогодні: дата дії сьогодні\n"
 "Заплановано: майбутні дії."
 
@@ -2471,7 +2536,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.403
 msgid "The page you were looking for could not be authorized."
-msgstr "Не вдалося авторизувати сторінку, яку Ви шукали."
+msgstr "Не вдалося авторизувати сторінку, яку ви шукали."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__is_time_limited
@@ -2535,8 +2600,8 @@ msgid ""
 "Emails must be separated by commas, semicolons or newline."
 msgstr ""
 "Цей список електронних листів одержувачів не буде перетворений в контакти. "
-"Електронні листи повинні бути розділені комами, комами-крапками або новою "
-"лінією."
+"Електронні листи повинні бути розділені комами, комами-крапками або новим "
+"рядком."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__thank_you_message
@@ -2709,7 +2774,7 @@ msgstr "Кількість непрочитаних повідомлень"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Upcoming Activities"
-msgstr "Майбутні види діяльності"
+msgstr "Майбутні дії"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__template_id
@@ -2784,7 +2849,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_required
 msgid "Validate entry"
-msgstr "Підтвердьте запис"
+msgstr "Підтвердіть запис"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_error_msg
@@ -2809,7 +2874,7 @@ msgstr "Голос"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__website_message_ids
 msgid "Website Messages"
-msgstr "Повідомлення з вебсайту"
+msgstr "Повідомлення з веб-сайту"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__website_message_ids
@@ -2892,7 +2957,7 @@ msgstr ""
 #: code:addons/survey/models/survey_survey.py:455
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
-msgstr "Ви не можете надіслати запрошення на опитування, що не має питань."
+msgstr "Ви не можете надіслати запрошення на опитування, що не має запитань."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:458
