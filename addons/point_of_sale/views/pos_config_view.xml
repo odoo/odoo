@@ -37,6 +37,7 @@
                             <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                         </button>
                     </div>
+                    <field name="company_has_template" invisible="1"/>
                     <div class="oe_title" id="title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
@@ -46,6 +47,9 @@
                             <div class="o_setting_right_pane">
                                 <label for="company_id"/>
                                 <div><field name="company_id"/></div>
+                                <div class="o_notification_alert alert alert-warning" attrs="{'invisible':[('company_has_template','=',True)]}" role="alert">
+                                  There is no Chart of Accounts configured on the company. Please go to the invoicing settings to install a Chart of Accounts.
+                                </div>
                             </div>
                         </div>
                     </div>
