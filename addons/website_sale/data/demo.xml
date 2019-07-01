@@ -287,7 +287,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="confirmation_date" eval="(datetime.now()-relativedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sale</field>
         </record>
 
@@ -309,7 +308,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=6)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="confirmation_date" eval="(datetime.now()-relativedelta(days=6)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sale</field>
         </record>
 
@@ -331,7 +329,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="confirmation_date" eval="(datetime.now()-relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sale</field>
         </record>
 
@@ -353,7 +350,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="confirmation_date" eval="(datetime.now()-relativedelta(days=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sale</field>
         </record>
 
@@ -375,7 +371,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="confirmation_date" eval="(datetime.now()-relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sale</field>
         </record>
 
@@ -397,7 +392,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="confirmation_date" eval="(datetime.now()-relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sale</field>
         </record>
 
@@ -419,7 +413,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="confirmation_date" eval="(datetime.now()-relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sale</field>
         </record>
 
@@ -440,7 +433,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()"/>
-            <field name="confirmation_date" eval="datetime.now()"/>
             <field name="state">sale</field>
         </record>
 
@@ -571,7 +563,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()-relativedelta(months=1)"/>
-            <field name="confirmation_date" eval="datetime.now()-relativedelta(months=1)"/>
             <field name="state">sale</field>
         </record>
 
@@ -593,7 +584,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()-relativedelta(months=1, days=2)"/>
-            <field name="confirmation_date" eval="datetime.now()-relativedelta(months=1, days=2)"/>
         </record>
 
         <record id="website_sale_order_line_17" model="sale.order.line">
@@ -615,7 +605,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()-relativedelta(months=2)"/>
-            <field name="confirmation_date" eval="datetime.now()-relativedelta(months=2)"/>
         </record>
 
         <record id="website_sale_order_line_18" model="sale.order.line">

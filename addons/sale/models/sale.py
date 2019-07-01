@@ -1,4 +1,4 @@
-7# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
@@ -130,7 +130,7 @@ class SaleOrder(models.Model):
         ('done', 'Locked'),
         ('cancel', 'Cancelled'),
         ], string='Status', readonly=True, copy=False, index=True, tracking=3, default='draft')
-    date_order = fields.Datetime(string='Order Date', required=True, readonly=True, index=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False, default=fields.Datetime.now)
+    date_order = fields.Datetime(string='Order Date', required=True, readonly=True, index=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False, default=fields.Datetime.now, help="Creation date of draft/sent orders,\nConfirmation date of confirmed orders.")
     validity_date = fields.Date(string='Expiration', readonly=True, copy=False, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         help="Beyond this date, the customer is no longer able to accept the quotation from the portal.", default=_default_validity_date)
     is_expired = fields.Boolean(compute='_compute_is_expired', string="Is expired")
@@ -142,7 +142,6 @@ class SaleOrder(models.Model):
         help='Request an online payment to the customer in order to confirm orders automatically.')
     remaining_validity_days = fields.Integer(compute='_compute_remaining_validity_days', string="Remaining Days Before Expiration")
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
-    confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sales order is confirmed.", copy=False)
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, tracking=2, default=lambda self: self.env.user)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, index=True, tracking=1, help="You can find a customer from their name, email, tax ID or reference.")
     partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]}, help="Invoice address for current sales order.")
@@ -197,7 +196,7 @@ class SaleOrder(models.Model):
                                                   string='Authorized Transactions', copy=False, readonly=True)
 
     _sql_constraints = [
-        ('confirmation_date_conditional_required', "CHECK( (state IN ('sale', 'done') AND confirmation_date IS NOT NULL) OR state NOT IN ('sale', 'done') )", "A confirmed sales order requires a confirmation date."),
+        ('date_order_conditional_required', "CHECK( (state IN ('sale', 'done') AND date_order IS NOT NULL) OR state NOT IN ('sale', 'done') )", "A confirmed sales order requires a confirmation date."),
     ]
 
     @api.constrains('company_id', 'order_line')
@@ -229,14 +228,14 @@ class SaleOrder(models.Model):
         for order in self:
             order.is_expired = order.state == 'sent' and order.validity_date and order.validity_date < today
 
-    @api.depends('order_line.customer_lead', 'confirmation_date', 'order_line.state')
+    @api.depends('order_line.customer_lead', 'date_order', 'order_line.state')
     def _compute_expected_date(self):
         """ For service and consumable, we only take the min dates. This method is extended in sale_stock to
             take the picking_policy of SO into account.
         """
         for order in self:
             dates_list = []
-            confirm_date = fields.Datetime.from_string(order.confirmation_date if order.state in ['sale', 'done'] else fields.Datetime.now())
+            confirm_date = fields.Datetime.from_string(order.date_order if order.state in ['sale', 'done'] else fields.Datetime.now())
             for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery()):
                 dt = confirm_date + timedelta(days=line.customer_lead or 0.0)
                 dates_list.append(dt)
@@ -685,7 +684,7 @@ class SaleOrder(models.Model):
             order.message_subscribe([order.partner_id.id])
         self.write({
             'state': 'sale',
-            'confirmation_date': fields.Datetime.now()
+            'date_order': fields.Datetime.now()
         })
         self._action_confirm()
         if self.env.user.has_group('sale.group_auto_done_setting'):

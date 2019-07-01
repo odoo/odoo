@@ -37,7 +37,6 @@ class SaleReport(models.Model):
             count(*) AS nbr,
             pos.name AS name,
             pos.date_order AS date,
-            pos.date_order AS confirmation_date,
             CASE WHEN pos.state = 'draft' THEN 'pos_draft' WHEN pos.state = 'done' THEN 'pos_done' else pos.state END AS state,
             pos.partner_id AS partner_id,
             pos.user_id AS user_id,

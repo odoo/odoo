@@ -17,8 +17,9 @@ class Digest(models.Model):
         for record in self:
             start, end, company = record._get_kpi_compute_parameters()
             all_channels_sales = self.env['sale.report'].read_group([
-                ('confirmation_date', '>=', start),
-                ('confirmation_date', '<', end),
+                ('date_order', '>=', start),
+                ('date_order', '<', end),
+                ('state', 'not in', ['draft', 'cancel', 'sent']),
                 ('company_id', '=', company.id)], ['price_total'], ['price_total'])
             record.kpi_all_sale_total_value = sum([channel_sale['price_total'] for channel_sale in all_channels_sales])
 

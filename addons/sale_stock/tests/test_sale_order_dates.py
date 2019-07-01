@@ -63,7 +63,7 @@ class TestSaleExpectedDate(common.TransactionCase):
         # Setting confirmation date of SO to 5 days from today so that the expected/effective date could be checked
         # against real confirmation date
         confirm_date = fields.Datetime.now() + timedelta(days=5)
-        sale_order.write({'confirmation_date': confirm_date})
+        sale_order.write({'date_order': confirm_date})
 
         # if Shipping Policy is set to `one`(when SO is confirmed) then expected date should be
         # SO confirmation date + longest lead time from all of it's order lines
