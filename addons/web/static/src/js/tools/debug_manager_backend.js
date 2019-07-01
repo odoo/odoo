@@ -8,6 +8,7 @@ var startClickEverywhere = require('web.clickEverywhere');
 var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+var field_utils = require('web.field_utils');
 var SystrayMenu = require('web.SystrayMenu');
 var utils = require('web.utils');
 var WebClient = require('web.WebClient');

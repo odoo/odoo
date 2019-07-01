@@ -118,13 +118,13 @@ class HolidaysAllocation(models.Model):
     number_per_interval = fields.Float("Number of unit per interval", readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=1)
     interval_number = fields.Integer("Number of unit between two intervals", readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=1)
     unit_per_interval = fields.Selection([
-        ('hours', 'Hour(s)'),
-        ('days', 'Day(s)')
+        ('hours', 'Hours'),
+        ('days', 'Days')
         ], string="Unit of time added at each interval", default='hours', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     interval_unit = fields.Selection([
-        ('weeks', 'Week(s)'),
-        ('months', 'Month(s)'),
-        ('years', 'Year(s)')
+        ('weeks', 'Weeks'),
+        ('months', 'Months'),
+        ('years', 'Years')
         ], string="Unit of time between two intervals", default='weeks', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     nextcall = fields.Date("Date of the next accrual allocation", default=False, readonly=True)
     max_leaves = fields.Float(compute='_compute_leaves')

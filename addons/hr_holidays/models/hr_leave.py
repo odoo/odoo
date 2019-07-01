@@ -431,7 +431,7 @@ class HolidaysRequest(models.Model):
                 (float_round(leave.number_of_hours_display, precision_digits=2)
                 if leave.leave_type_request_unit == 'hour'
                 else float_round(leave.number_of_days_display, precision_digits=2)),
-                _('hour(s)') if leave.leave_type_request_unit == 'hour' else _('day(s)'))
+                _('hours') if leave.leave_type_request_unit == 'hour' else _('days'))
 
     @api.multi
     @api.depends('state', 'employee_id', 'department_id')
@@ -507,9 +507,9 @@ class HolidaysRequest(models.Model):
         for leave in self:
             if self.env.context.get('short_name'):
                 if leave.leave_type_request_unit == 'hour':
-                    res.append((leave.id, _("%s : %.2f hour(s)") % (leave.name or leave.holiday_status_id.name, leave.number_of_hours_display)))
+                    res.append((leave.id, _("%s : %.2f hours") % (leave.name or leave.holiday_status_id.name, leave.number_of_hours_display)))
                 else:
-                    res.append((leave.id, _("%s : %.2f day(s)") % (leave.name or leave.holiday_status_id.name, leave.number_of_days)))
+                    res.append((leave.id, _("%s : %.2f days") % (leave.name or leave.holiday_status_id.name, leave.number_of_days)))
             else:
                 if leave.holiday_type == 'company':
                     target = leave.mode_company_id.name
@@ -522,13 +522,13 @@ class HolidaysRequest(models.Model):
                 if leave.leave_type_request_unit == 'hour':
                     res.append(
                         (leave.id,
-                        _("%s on %s : %.2f hour(s)") %
+                        _("%s on %s : %.2f hours") %
                         (target, leave.holiday_status_id.name, leave.number_of_hours_display))
                     )
                 else:
                     res.append(
                         (leave.id,
-                        _("%s on %s: %.2f day(s)") %
+                        _("%s on %s: %.2f days") %
                         (target, leave.holiday_status_id.name, leave.number_of_days))
                     )
         return res

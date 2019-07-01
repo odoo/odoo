@@ -492,7 +492,7 @@ class Alarm(models.Model):
             else:
                 alarm.duration_minutes = 0
 
-    _interval_selection = {'minutes': 'Minute(s)', 'hours': 'Hour(s)', 'days': 'Day(s)'}
+    _interval_selection = {'minutes': 'Minutes', 'hours': 'Hours', 'days': 'Days'}
 
     name = fields.Char('Name', translate=True, required=True)
     alarm_type = fields.Selection([('notification', 'Notification'), ('email', 'Email')], string='Type', required=True, default='email', oldname='type')
@@ -807,10 +807,10 @@ class Meeting(models.Model):
     # RECURRENCE FIELD
     rrule = fields.Char('Recurrent Rule', compute='_compute_rrule', inverse='_inverse_rrule', store=True)
     rrule_type = fields.Selection([
-        ('daily', 'Day(s)'),
-        ('weekly', 'Week(s)'),
-        ('monthly', 'Month(s)'),
-        ('yearly', 'Year(s)')
+        ('daily', 'Days'),
+        ('weekly', 'Weeks'),
+        ('monthly', 'Months'),
+        ('yearly', 'Years')
     ], string='Recurrence', states={'done': [('readonly', True)]}, help="Let the event automatically repeat at that interval")
     recurrency = fields.Boolean('Recurrent', help="Recurrent Meeting")
     recurrent_id = fields.Integer('Recurrent ID')
