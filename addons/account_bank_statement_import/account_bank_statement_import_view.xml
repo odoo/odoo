@@ -13,7 +13,7 @@
 
                     </ul>
                     <p>You can install more file formats by <a style="cursor: pointer" type="action" name="account_bank_statement_import.install_more_import_formats_action">installing the related modules</a></p>
-                    <field name="data_file" filename="filename" placeholder="Choose a file to import..."/>
+                    <field name="attachment_ids"  widget="many2many_binary" colspan="2" string="Upload Files" nolabel="1"/>
                     <field name="filename" invisible="1"/>
                     <footer>
                         <button name="import_file" string="_Import" type="object" class="btn-primary" />
