@@ -1089,6 +1089,7 @@ class Picking(models.Model):
         action = self.env.ref('stock.action_stock_scrap').read()[0]
         scraps = self.env['stock.scrap'].search([('picking_id', '=', self.id)])
         action['domain'] = [('id', 'in', scraps.ids)]
+        action['context'] = dict(self._context, create=False)
         return action
 
     def action_see_packages(self):

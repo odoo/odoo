@@ -79,29 +79,26 @@
                 <div class="oe_button_box" name="button_box">
                     <button name="action_applications_email"
                             class="oe_stat_button"
-                            icon="fa-file-o"
+                            icon="fa-pencil"
                             type="object"
                             attrs="{'invisible': [('application_count', '=', 0)]}">
                         <field name="application_count" widget="statinfo" string="Other Applications"/>
                     </button>
                     <button name="action_makeMeeting" class="oe_stat_button" icon="fa-calendar" type="object"
                          help="Schedule interview with this applicant">
-                        <div class="o_field_widget o_stat_info">
-                            <span class="o_stat_text">Meetings</span>
-                         </div>
+                        <field name="meeting_count" widget="statinfo" string="Meetings"/>
                     </button>
                     <button name="action_get_attachment_tree_view"
                         class="oe_stat_button"
-                        icon="fa-book"
+                        icon="fa-file-text-o"
                         type="object">
                         <field name="attachment_number" widget="statinfo" string="Documents"/>
                     </button>
-                    <button name="action_get_created_employee"
-                        class="oe_stat_button"
-                        icon="fa-user"
-                        type="object"
-                        attrs="{'invisible': [('emp_id', '=', False)]}">
-                        <field name="employee_name" widget="statinfo" string="Employee"/>
+                    <button name="toggle_active" type="object"
+                            class="oe_stat_button" icon="fa-archive"
+                            attrs="{'invisible': [('active', '=', True)]}">
+                        <field name="active" widget="boolean_button"
+                            options='{"terminology": "archive"}'/>
                     </button>
                 </div>
                 <field name="kanban_state" widget="kanban_state_selection"/>
@@ -423,23 +420,6 @@
         </field>
     </record>
 
-    <!-- Action for the stat button of the no_employee -->
-    <record model="ir.actions.act_window" id="action_hr_job_no_employee">
-        <field name="name">Employees</field>
-        <field name="res_model">hr.employee</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="context">{'search_default_job_id': active_id}</field>
-        <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Add a new employee
-              </p><p>
-                With just a quick glance on the Odoo employee screen, you
-                can easily find all the information you need for each person;
-                contact data, job position, availability, etc.
-              </p>
-            </field>
-    </record>
-
     <record id="hr_job_simple_form" model="ir.ui.view">
         <field name="name">hr.job.simple.form</field>
         <field name="model">hr.job</field>
@@ -493,26 +473,20 @@
             </xpath>
             <div name="button_box" position="inside">
                 <button class="oe_stat_button"
-                    icon="fa-file-o"
+                    icon="fa-pencil"
                     name="%(action_hr_job_applications)d"
                     context="{'default_user_id': user_id}"
                     type="action">
                     <field name="application_count" widget="statinfo" string="Applications"/>
                 </button>
                 <button class="oe_stat_button"
-                    icon="fa-users"
-                    name="%(action_hr_job_no_employee)d"
-                    type="action">
-                    <field name="no_of_employee" widget="statinfo" string="Employees"/>
-                </button>
-                <button class="oe_stat_button"
-                    icon="fa-paperclip"
+                    icon="fa-file-text-o"
                     name="action_get_attachment_tree_view"
                     type="object">
                     <field name="documents_count" widget="statinfo" string="Documents"/>
                 </button>
                 <button class="oe_stat_button" type="action"
-                    name="%(action_hr_job_sources)d" icon="fa-share"
+                    name="%(action_hr_job_sources)d" icon="fa-bar-chart-o"
                     context="{'default_job_id': active_id}">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_text">Trackers</span>

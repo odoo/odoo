@@ -167,6 +167,7 @@ class LinkTracker(models.Model):
     def action_view_statistics(self):
         action = self.env['ir.actions.act_window'].for_xml_id('link_tracker', 'link_tracker_click_action_statistics')
         action['domain'] = [('link_id', '=', self.id)]
+        action['context'] = dict(self._context, create=False)
         return action
 
     def action_visit_page(self):

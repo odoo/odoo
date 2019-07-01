@@ -27,6 +27,7 @@
         <field name="res_model">hr.expense</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('sale_order_id', '=', active_id), ('state', '=', 'done')]</field>
+        <field name="context">{'default_sale_order_id': active_id}</field>
     </record>
 
 </odoo>

@@ -318,11 +318,6 @@ class ResPartner(models.Model):
         for partner in self:
             partner.journal_item_count = AccountMoveLine.search_count([('partner_id', '=', partner.id)])
 
-    def _compute_contracts_count(self):
-        AccountAnalyticAccount = self.env['account.analytic.account']
-        for partner in self:
-            partner.contracts_count = AccountAnalyticAccount.search_count([('partner_id', '=', partner.id)])
-
     def get_followup_lines_domain(self, date, overdue_only=False, only_unblocked=False):
         domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable'), '|', ('debit', '!=', 0), ('credit', '!=', 0), ('company_id', '=', self.env.company.id)]
         if only_unblocked:
@@ -394,7 +389,6 @@ class ResPartner(models.Model):
         groups='account.group_account_invoice')
     currency_id = fields.Many2one('res.currency', compute='_get_company_currency', readonly=True,
         string="Currency", help='Utility field to express amount currency')
-    contracts_count = fields.Integer(compute='_compute_contracts_count', string="Contracts Count", type='integer')
     journal_item_count = fields.Integer(compute='_compute_journal_item_count', string="Journal Items", type="integer")
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Payable", oldname="property_account_payable",
