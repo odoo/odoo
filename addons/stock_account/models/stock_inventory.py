@@ -31,6 +31,7 @@ class StockInventory(models.Model):
             return False
         action_data = action_ref.read()[0]
         action_data['domain'] = [('stock_move_id.id', 'in', self.move_ids.ids)]
+        action_data['context'] = dict(self._context, create=False)
         return action_data
 
     def post_inventory(self):

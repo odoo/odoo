@@ -246,6 +246,7 @@ class MrpProduction(models.Model):
         elif pickings:
             action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
             action['res_id'] = pickings.id
+        action['context'] = dict(self._context, default_origin=self.name, create=False)
         return action
 
     @api.depends('product_uom_id', 'product_qty', 'product_id.uom_id')
@@ -916,6 +917,7 @@ class MrpProduction(models.Model):
         self.ensure_one()
         action = self.env.ref('stock.action_stock_scrap').read()[0]
         action['domain'] = [('production_id', '=', self.id)]
+        action['context'] = dict(self._context, default_origin=self.name)
         return action
 
     @api.model

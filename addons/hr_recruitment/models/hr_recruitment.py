@@ -162,7 +162,7 @@ class Applicant(models.Model):
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid', readonly=False)
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing', readonly=False)
     application_count = fields.Integer(compute='_compute_application_count', help='Applications with the same email')
-
+    meeting_count = fields.Integer(compute='_compute_meeting_count', help='Meeting Count')
 
     @api.depends('date_open', 'date_closed')
     def _compute_day(self):
@@ -184,6 +184,10 @@ class Applicant(models.Model):
         application_data_mapped = dict((data['email_from'], data['email_from_count']) for data in application_data)
         for applicant in self.filtered(lambda applicant: applicant.email_from):
             applicant.application_count = application_data_mapped.get(applicant.email_from, 1) - 1
+
+    def _compute_meeting_count(self):
+        for applicant in self:
+            applicant.meeting_count = self.env['calendar.event'].search_count([('applicant_id', '=', applicant.id)])
 
     def _get_attachment_number(self):
         read_group_res = self.env['ir.attachment'].read_group(
@@ -309,12 +313,6 @@ class Applicant(models.Model):
                                                   empty_list_help_id=self.env.context.get('default_job_id'),
                                                   empty_list_help_document_name=_("job applicant"))).get_empty_list_help(help)
 
-    def action_get_created_employee(self):
-        self.ensure_one()
-        action = self.env['ir.actions.act_window'].for_xml_id('hr', 'open_view_employee_list')
-        action['res_id'] = self.mapped('emp_id').ids[0]
-        return action
-
     def action_makeMeeting(self):
         """ This opens Meeting's calendar view to schedule meeting on current applicant
             @return: Dictionary value for created Meeting view
@@ -366,9 +364,7 @@ class Applicant(models.Model):
 
     def _track_subtype(self, init_values):
         record = self[0]
-        if 'emp_id' in init_values and record.emp_id and record.emp_id.active:
-            return self.env.ref('hr_recruitment.mt_applicant_hired')
-        elif 'stage_id' in init_values and record.stage_id:
+        if 'stage_id' in init_values and record.stage_id:
             return self.env.ref('hr_recruitment.mt_applicant_stage_changed')
         return super(Applicant, self)._track_subtype(init_values)
 

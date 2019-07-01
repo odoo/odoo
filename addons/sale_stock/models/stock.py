@@ -132,4 +132,5 @@ class ProductionLot(models.Model):
         self.ensure_one()
         action = self.env.ref('sale.action_orders').read()[0]
         action['domain'] = [('id', 'in', self.mapped('sale_order_ids.id'))]
+        action['context'] = dict(self._context, create=False)
         return action

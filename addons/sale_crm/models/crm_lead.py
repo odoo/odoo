@@ -83,3 +83,32 @@ class CrmLead(models.Model):
             'default_source_id': self.source_id.id
         }
         return action
+
+    def action_view_sale_quotation(self):
+        action = self.env.ref('sale.action_quotations_with_onboarding').read()[0]
+        action['context'] = {
+            'search_default_draft': 1,
+            'search_default_partner_id': self.partner_id.id,
+            'default_partner_id': self.partner_id.id,
+            'default_opportunity_id': self.id
+        }
+        action['domain'] = [('opportunity_id', '=', self.id), ('state', 'in', ['draft', 'sent'])]
+        quotations = self.mapped('order_ids').filtered(lambda l: l.state in ('draft', 'sent'))
+        if len(quotations) == 1:
+            action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
+            action['res_id'] = quotations.id
+        return action
+
+    def action_view_sale_order(self):
+        action = self.env.ref('sale.action_orders').read()[0]
+        action['context'] = {
+            'search_default_partner_id': self.partner_id.id,
+            'default_partner_id': self.partner_id.id,
+            'default_opportunity_id': self.id,
+        }
+        action['domain'] = [('opportunity_id', '=', self.id), ('state', 'not in', ('draft', 'sent', 'cancel'))]
+        orders = self.mapped('order_ids').filtered(lambda l: l.state not in ('draft', 'sent', 'cancel'))
+        if len(orders) == 1:
+            action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
+            action['res_id'] = orders.id
+        return action
