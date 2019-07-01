@@ -513,6 +513,20 @@ business flow.  It explains a sequence of steps that should be followed.  The
 test runner will then create a phantom_js browser, point it to the proper url
 and simulate the click and inputs, according to the scenario.
 
+Screenshots and screencasts during browser_js tests
+---------------------------------------------------
+
+When running tests that use HttpCase.browser_js from the command line, the Chrome
+browser is used in headless mode. By default, if a test fails, a PNG screenshot is
+taken at the moment of the failure and written in
+
+.. code-block:: console
+
+  '/tmp/odoo_tests/{db_name}/screenshots/'
+
+Two new command line arguments were added since Odoo 13.0 to control this behavior:
+:option:`--screenshots <odoo-bin --screenshots>` and :option:`--screencasts <odoo-bin --screencasts>`
+
 
 .. _qunit: http://qunitjs.com/
 .. _qunit_config.js: https://github.com/odoo/odoo/blob/51ee0c3cb59810449a60dae0b086b49b1ed6f946/addons/web/static/tests/helpers/qunit_config.js#L49
