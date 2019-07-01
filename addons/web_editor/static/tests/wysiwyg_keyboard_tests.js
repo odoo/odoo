@@ -4309,7 +4309,7 @@ var keyboardTestsDeleteDOM = [
     '                <strong>Virtual Interior Design</strong><br>On Site ',
     '            </td>',
     '            <td width="100px" align="right">',
-    '                10 Hour(s)',
+    '                10 Hours',
     '            </td>',
     '        </tr>',
     '    </tbody></table>',
