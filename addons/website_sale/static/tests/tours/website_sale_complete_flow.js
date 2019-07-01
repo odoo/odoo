@@ -143,7 +143,6 @@ odoo.define('website_sale_tour.tour', function (require) {
         run: function () {
             $('.oe_signup_form input[name="password"]').val("1admin@admin");
             $('.oe_signup_form input[name="confirm_password"]').val("1admin@admin");
-            $('.oe_signup_form input[name="redirect"]').val("/my");
             $('.oe_signup_form').submit();
         },
     },
