@@ -2,17 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-import unittest
 
 from odoo import SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests.common import TransactionCase, BaseCase
 from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval, const_eval
 
 
-@tagged('standard', 'at_install')
-class TestSafeEval(unittest.TestCase):
+class TestSafeEval(BaseCase):
     def test_const(self):
         # NB: True and False are names in Python 2 not consts
         expected = (1, {"a": {2.5}}, [None, u"foo"])

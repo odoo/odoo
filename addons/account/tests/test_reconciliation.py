@@ -3,7 +3,6 @@ from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 import time
-import unittest
 
 
 # TODO in master

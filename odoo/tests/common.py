@@ -189,8 +189,9 @@ class MetaCase(type):
         super(MetaCase, cls).__init__(name, bases, attrs)
         # assign default test tags
         if cls.__module__.startswith('odoo.addons.'):
-            module = cls.__module__.split('.')[2]
-            cls.test_tags = {'standard', 'at_install', module}
+            cls.test_tags = {'standard', 'at_install'}
+            cls.test_module = cls.__module__.split('.')[2]
+            cls.test_class = cls.__name__
 
 
 class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
@@ -1813,7 +1814,7 @@ def _get_node(view, f, *arg):
 
 def tagged(*tags):
     """
-    A decorator to tag TestCase objects
+    A decorator to tag BaseCase objects
     Tags are stored in a set that can be accessed from a 'test_tags' attribute
     A tag prefixed by '-' will remove the tag e.g. to remove the 'standard' tag
     By default, all Test classes from odoo.tests.common have a test_tags
@@ -1823,7 +1824,7 @@ def tagged(*tags):
     def tags_decorator(obj):
         include = {t for t in tags if not t.startswith('-')}
         exclude = {t[1:] for t in tags if t.startswith('-')}
-        obj.test_tags = (getattr(obj, 'test_tags', set()) | include) - exclude
+        obj.test_tags = (obj.test_tags | include) - exclude
         return obj
     return tags_decorator
 
@@ -1833,23 +1834,68 @@ class TagsSelector(object):
 
     def __init__(self, spec):
         """ Parse the spec to determine tags to include and exclude. """
-        clean_tags = {t.strip() for t in spec.split(',') if t.strip() != ''}
-        self.exclude = {t[1:] for t in clean_tags if t.startswith('-')}
-        self.include = {t.replace('+', '') for t in clean_tags if not t.startswith('-')}
+        filter_specs = {t.strip().strip('+') for t in spec.split(',') if t.strip()}
+        self.exclude = set()
+        self.include = set()
 
-    def check(self, arg):
+        for filter_spec in filter_specs:
+            reg = re.compile(r'^(-?)(\*|\w*)(?:/(\w*))?(?::(\w*))?(?:\.(\w*))?$') # [-][tag][/module][:test_class][.test_func]
+            match = reg.match(filter_spec)
+            if not match:
+                _logger.error('Invalid tag %s', filter_spec)
+                continue
+
+            minus, tag, module, klass, method = match.groups()
+            is_include = not minus
+
+            if not tag and is_include:
+                # including /module:class.method implicitly requires 'standard'
+                tag = 'standard'
+            elif not tag or tag == '*':
+                # '*' indicates all tests (instead of 'standard' tests only)
+                tag = None
+            test_filter = (tag, module, klass, method)
+
+            if is_include:
+                self.include.add(test_filter)
+            else:
+                self.exclude.add(test_filter)
+
+        if self.exclude and not self.include:
+            self.include.add(('standard', None, None, None))
+
+    def check(self, test):
         """ Return whether ``arg`` matches the specification: it must have at
-            least one tag in ``self.include`` and none in ``self.exclude``.
+            least one tag in ``self.include`` and none in ``self.exclude`` for each tag category.
         """
-        # handle the case where the Test does not inherit from TransactionCase
-        tags = getattr(arg, 'test_tags', set())
-        inter_no_test = self.exclude.intersection(tags)
-        if inter_no_test:
-            _logger.debug("Test '%s' not selected because it is tagged with : %s (exclusions: %s)", arg, inter_no_test, self.exclude)
+        if not hasattr(test, 'test_tags'):# handle the case where the Test does not inherit from TransactionCase
+            if isinstance(test, unittest.TestCase) and test.__module__.startswith('odoo.addons.'):
+                _logger.warning("Skipping test '%s' for a lack of test_tags. Please use MetaCase instead of TestCase", test)
+            else:
+                _logger.debug("Skipping test '%s' for a lack of test_tags.", test)
             return False
-        inter_to_test = self.include.intersection(tags)
-        if not inter_to_test:
-            _logger.debug("Test '%s' not selected because it was not tagged with %s", arg, self.include)
+        else:
+            test_module = test.test_module
+            test_class = test.test_class
+            test_tags = test.test_tags | {test_module}  # module as test_tags deprecated, keep for retrocompatibility, 
+            test_method = getattr(test, '_testMethodName', None)
+
+            def _is_matching(test_filter):
+                (tag, module, klass, method) = test_filter
+                if tag and tag not in test_tags:
+                    return False
+                elif module and module != test_module:
+                    return False
+                elif klass and klass != test_class:
+                    return False
+                elif method and test_method and method != test_method:
+                    return False
+                return True
+
+            if any(_is_matching(test_filter) for test_filter in self.exclude):
+                return False
+
+            if any(_is_matching(test_filter) for test_filter in self.include):
+                return True
+
             return False
-        _logger.debug("Test '%s' selected: tagged with %s, exclusions: %s, inclusions: %s", arg, tags, self.exclude, self.include)
-        return True
