@@ -29,8 +29,10 @@
         <value eval="[ref('demo_sup_invoice_7')]"/>
     </function>
 
-    <function model="account.invoice" name="action_invoice_open">
+    <!-- TODO: This case of use Raise an exception
+    "Debe haber un y solo un impuesto de IVA por línea. Verificar líneas con producto "Despacho de importación" No trae ningun impuesto... -->
+    <!-- <function model="account.invoice" name="action_invoice_open">
         <value eval="[ref('demo_despacho_1')]"/>
-    </function>
+    </function> -->
 
 </odoo>
