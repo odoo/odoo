@@ -26,12 +26,6 @@ class AcquirerPaypal(models.Model):
         help='The Merchant ID is used to ensure communications coming from Paypal are valid and secured.')
     paypal_use_ipn = fields.Boolean('Use IPN', default=True, help='Paypal Instant Payment Notification', groups='base.group_user')
     paypal_pdt_token = fields.Char(string='PDT Identity Token', help='Payment Data Transfer allows you to receive notification of successful payments as they are made.', groups='base.group_user')
-    # Server 2 server
-    paypal_api_enabled = fields.Boolean('Use Rest API', default=False)
-    paypal_api_username = fields.Char('Rest API Username', groups='base.group_user')
-    paypal_api_password = fields.Char('Rest API Password', groups='base.group_user')
-    paypal_api_access_token = fields.Char('Access Token', groups='base.group_user')
-    paypal_api_access_token_validity = fields.Datetime('Access Token Validity', groups='base.group_user')
     # Default paypal fees
     fees_dom_fixed = fields.Float(default=0.35)
     fees_dom_var = fields.Float(default=3.4)
