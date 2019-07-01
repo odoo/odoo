@@ -36,7 +36,7 @@ class AuthorizeForm(AuthorizeCommon):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         form_values = {
             'x_login': self.authorize.authorize_login,
-            'x_trans_key': self.authorize.authorize_signature_key,
+            'x_signature_key': self.authorize.authorize_signature_key,
             'x_amount': '56.16',
             'x_show_form': 'PAYMENT_FORM',
             'x_type': 'AUTH_CAPTURE',
