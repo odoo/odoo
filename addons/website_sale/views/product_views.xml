@@ -98,12 +98,12 @@
             <xpath expr="//group[@name='description']" position="attributes">
                 <attribute name="invisible">0</attribute>
             </xpath>
-            <xpath expr="//button[@name='toggle_active']" position="before">
+            <div name="button_box" position="inside">
                 <button class="oe_stat_button" name="website_publish_button"
                     type="object" icon="fa-globe" attrs="{'invisible': [('sale_ok','=',False)]}">
                     <field name="is_published" widget="website_button"/>
                 </button>
-            </xpath>
+            </div>
             <xpath expr="//page[@name='sales']" position="after">
                 <page name="shop" string="eCommerce" attrs="{'invisible': [('sale_ok','=',False)]}">
                     <group name="shop">

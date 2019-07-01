@@ -315,13 +315,10 @@
                                     <span class="o_stat_text">Performance</span>
                                 </div>
                             </button>
-                            <button class="oe_stat_button" name="toggle_active" type="object" icon="fa-archive">
-                                <field name="active" widget="boolean_button"
-                                    options='{"terminology": "archive"}'/>
-                            </button>
                         </div>
                         <group>
                             <group>
+                                <field name="active" invisible="1"/>
                                 <field name="name" string="Work Center Name" required="True"/>
                                 <field
                                     name="alternative_workcenter_ids"
