@@ -25,15 +25,16 @@
 # e2f <projects@e2f.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # John Lin <linyinhuan@139.com>, 2018
-# Martin Trigaux, 2019
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # niulin lnc. <admin@niulin.net>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
-# 菜小蛇 <lttlsnk@gmail.com>, 2019
+# lttlsnk <lttlsnk@gmail.com>, 2019
 # keecome <7017511@qq.com>, 2019
 # 卫安琪 <weianqi1991@gmail.com>, 2019
 # KWOKYUK CHEUNG <cheungkwokyuk@gmail.com>, 2019
 # Maie <m@maie.name>, 2019
+# Martin Trigaux, 2019
+# Summer Xia <sxi@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -41,7 +42,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-23 16:30+0000\n"
 "PO-Revision-Date: 2016-09-07 09:14+0000\n"
-"Last-Translator: Maie <m@maie.name>, 2019\n"
+"Last-Translator: Summer Xia <sxi@odoo.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7109,6 +7110,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: code:addons/model.py:153
+#, python-format
+msgid ""
+" another model requires the record being deleted. If possible, archive it "
+"instead."
+msgstr ""
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%A - Full weekday name."
 msgstr "%A - 星期几全称。"
@@ -7260,6 +7269,14 @@ msgid ""
 msgstr ""
 "动作：动作附加到模型的一个接口\n"
 "默认值：模型字段的一个默认值"
+
+#. module: base
+#: code:addons/model.py:141
+#, python-format
+msgid ""
+"- Create/update: a mandatory field is not set.\n"
+"- Delete: another model requires the record being deleted. If possible, archive it instead."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -9959,6 +9976,12 @@ msgid "Constraint Type"
 msgstr "约束类型"
 
 #. module: base
+#: code:addons/model.py:158
+#, python-format
+msgid "Constraint:"
+msgstr ""
+
+#. module: base
 #: sql_constraint:ir.model.constraint:0
 msgid "Constraints with the same name are unique per module."
 msgstr "具有相同名称的约束是每个模块唯一."
@@ -10857,6 +10880,11 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_hidden_dependency
 msgid "Dependency"
 msgstr "依赖"
+
+#. module: base
+#: model:ir.module.module,description:base.module_test_pylint
+msgid "Deprecated empty module in favor of test-lint."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_description
@@ -11853,6 +11881,12 @@ msgstr "字段名称只能包含字符、数字和下划线（最多63字符）"
 #, python-format
 msgid "Field names must be unique per model."
 msgstr "每个模型的字段名必须唯一"
+
+#. module: base
+#: code:addons/model.py:148
+#, python-format
+msgid "Field:"
+msgstr "字段："
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
@@ -15018,6 +15052,12 @@ msgid ""
 "Model to which this entry applies - helper field for setting a model, will "
 "automatically set the correct model name"
 msgstr "该入口响应的模型该分录将-设置模型帮助区，将自动设置正确的模型名称"
+
+#. module: base
+#: code:addons/model.py:147 code:addons/model.py:157
+#, python-format
+msgid "Model:"
+msgstr "模型："
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_model
@@ -19064,6 +19104,14 @@ msgid "The selected modules have been updated / installed !"
 msgstr "选择的模块将被更新/安装！"
 
 #. module: base
+#: code:addons/base/module/module.py:489
+#, python-format
+msgid ""
+"The server is busy right now, module operations are not possible at this "
+"time, please try again later."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_country_state_code
 msgid "The state code."
 msgstr "州/省代码。"
@@ -19757,7 +19805,9 @@ msgid "United States Postal Service (USPS) Shipping"
 msgstr "美国邮政(USPS)货运"
 
 #. module: base
+#: code:addons/model.py:148 code:addons/model.py:157 code:addons/model.py:158
 #: selection:ir.module.module.dependency,state:0
+#, python-format
 msgid "Unknown"
 msgstr "未知"
 
@@ -21608,6 +21658,11 @@ msgstr "测试继承"
 #: model:ir.module.module,shortdesc:base.module_test_limits
 msgid "test-limits"
 msgstr "test-limits"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_test_lint
+msgid "test-lint"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_uninstall
