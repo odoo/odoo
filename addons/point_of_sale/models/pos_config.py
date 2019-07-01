@@ -175,6 +175,15 @@ class PosConfig(models.Model):
     is_posbox = fields.Boolean("PosBox")
     is_header_or_footer = fields.Boolean("Header & Footer")
     module_pos_hr = fields.Boolean(help="Show employee login screen")
+    company_has_template = fields.Boolean(string="Company has chart of accounts", compute="_compute_company_has_template")
+
+    @api.depends('company_id')
+    def _compute_company_has_template(self):
+        for config in self:
+            if config.company_id.chart_template_id:
+                config.company_has_template = True
+            else:
+                config.company_has_template = False
 
     def _compute_is_installed_account_accountant(self):
         account_accountant = self.env['ir.module.module'].sudo().search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])
