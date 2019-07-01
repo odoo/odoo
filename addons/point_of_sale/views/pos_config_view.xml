@@ -33,6 +33,7 @@
                     <field name="active" invisible="1"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="is_installed_account_accountant" invisible="1"/>
+                    <field name="company_has_template" invisible="1"/>
                     <div class="oe_title" id="title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
@@ -42,6 +43,9 @@
                             <div class="o_setting_right_pane">
                                 <label for="company_id"/>
                                 <div><field name="company_id" readonly="1"/></div>
+                                <div class="o_notification_alert alert alert-warning" attrs="{'invisible':[('company_has_template','=',True)]}" role="alert">
+                                  There is no Chart of Accounts configured on the company. Please go to the invoicing settings to install a Chart of Accounts.
+                                </div>
                             </div>
                         </div>
                     </div>
