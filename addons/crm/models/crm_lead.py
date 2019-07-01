@@ -132,7 +132,7 @@ class Lead(models.Model):
     zip = fields.Char('Zip', change_default=True)
     city = fields.Char('City')
     state_id = fields.Many2one("res.country.state", string='State')
-    country_id = fields.Many2one('res.country', string='Country', compute="_get_country_id", store=True, readonly=False)
+    country_id = fields.Many2one('res.country', string='Country')
     phone = fields.Char('Phone', tracking=50)
     mobile = fields.Char('Mobile')
     function = fields.Char('Job Position')
@@ -343,15 +343,8 @@ class Lead(models.Model):
     @api.onchange('state_id')
     def _onchange_state(self):
         self._onchange_compute_probability(optional_field_name='state_id')
-
-    @api.depends('state_id')
-    def _get_country_id(self):
-        # DLE P30: _on_change methods might have been coded to handle only one record (`api.ensure_one`),
-        # because practicaly it was always the case. Nevertheless, when converting them to compute fields,
-        # you must handle the possibility of `api.multi`.
-        for record in self:
-            if record.state_id:
-                record.country_id = record.state_id.country_id.id
+        if self.state_id:
+            self.country_id = self.state_id.country_id.id
 
     @api.onchange('country_id')
     def _onchange_country_id(self):
@@ -1544,6 +1537,8 @@ class Lead(models.Model):
         args = [sql.Identifier(field) for field in fields] * 2
 
         #   Build sql query in safe mode
+        # DLE P99: `test_predictive_lead_scoring`
+        self.flush(['probability'])
         query = """select probability, active, %s, count(probability) as count
                     from crm_lead l
                     where (probability = 0 or probability >= 100)
@@ -1579,6 +1574,8 @@ class Lead(models.Model):
 
     def _pls_update_frequency_table_tag(self, frequencies, team_id, pls_start_date):
         # get all tag_ids won / lost count
+        # DLE P99: `test_predictive_lead_scoring`
+        self.flush(['probability'])
         query = """select l.probability, l.active, t.id, count(l.probability) as count
                     from crm_lead_tag_rel rel
                     inner join crm_lead_tag t on rel.tag_id = t.id
@@ -1633,6 +1630,8 @@ class Lead(models.Model):
             str_fields = ", ".join(["{}"] * len(fields))
             args = [sql.Identifier(field) for field in fields]
             #   Build sql query in safe mode
+            # DLE P99: `test_predictive_lead_scoring`
+            self.flush(['probability'])
             query = """SELECT id, %s
                         FROM crm_lead l
                         WHERE probability > 0 AND probability < 100 AND active = True AND id in %%s order by team_id asc"""
