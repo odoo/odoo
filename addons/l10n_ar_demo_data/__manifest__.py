@@ -9,7 +9,7 @@
     'images': [
     ],
     'depends': [
-        'account_accountant',
+        'account',
         'l10n_ar',
         # TODDO review this two
         # 'l10n_ar_account_tax_settlement', 'l10n_ar_account_withholding',
