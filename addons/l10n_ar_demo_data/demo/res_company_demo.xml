@@ -3,6 +3,7 @@
 
     <record id="l10n_ar.company_ri" model="res.company">
         <field name="l10n_ar_afip_start_date" eval="time.strftime('%Y-%m')+'-1'"/>
+    </record>
 
     <record id="base.user_root" model="res.users">
         <field name="company_ids" eval="[(4,ref('l10n_ar.company_ri'))]"/>

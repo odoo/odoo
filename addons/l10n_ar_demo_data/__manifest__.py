@@ -16,7 +16,7 @@
     ],
     # 'data': [
     # ],
-    'data': [
+    'demo': [
         'demo/account_tax_template_demo.xml',
         'demo/res_company_demo.xml',
         'demo/product_product_demo.xml',
