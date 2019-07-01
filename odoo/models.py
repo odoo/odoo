@@ -2879,7 +2879,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     _('Missing document(s)') + ':' + _('One of the documents you are trying to access has been deleted, please try again after refreshing.')
                     + '\n\n({} {}, {} {}, {} {}, {} {})'.format(
                         _('Document type:'), self._description, _('Operation:'), operation,
-                        _('Records:'), missing_ids[:6], _('User:'), self._uid,
+                        _('Records:'), list(missing_ids)[:6], _('User:'), self._uid,
                     )
                 )
 
