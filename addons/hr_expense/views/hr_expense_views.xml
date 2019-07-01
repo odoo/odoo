@@ -309,13 +309,6 @@
                     <sheet>
                         <field name='product_variant_count' invisible='1'/>
                         <field name="id" invisible="True"/>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object"
-                                    class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button"
-                                    options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
                         <field name="image_medium" widget="image" class="oe_avatar"/>
                         <div class="oe_title">
                             <label class="oe_edit_only" for="name" string="Product Name"/>
@@ -329,6 +322,7 @@
                         </div>
                         <group name="product_details">
                             <group string="General Information">
+                                <field name="active" invisible="1"/>
                                 <field name="type"/>
                                 <field name="list_price"/>
                                 <field name="standard_price"/>

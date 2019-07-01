@@ -102,14 +102,9 @@
                         attrs="{'invisible': [('emp_id', '=', False)]}">
                         <field name="employee_name" widget="statinfo" string="Employee"/>
                     </button>
-                    <button name="toggle_active" type="object"
-                            class="oe_stat_button" icon="fa-archive"
-                            attrs="{'invisible': [('active', '=', True)]}">
-                        <field name="active" widget="boolean_button"
-                            options='{"terminology": "archive"}'/>
-                    </button>
                 </div>
                 <field name="kanban_state" widget="kanban_state_selection"/>
+                <field name="active" invisible="1"/>
                 <field name="legend_normal" invisible="1"/>
                 <field name="legend_blocked" invisible="1"/>
                 <field name="legend_done" invisible="1"/>

@@ -75,7 +75,7 @@
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
             <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
             <field name="arch" type="xml">
-                <button name="toggle_active" position="before">
+                <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="%(template_open_bom)d" type="action"
                         attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
@@ -94,7 +94,7 @@
                             <span class="o_stat_text">Manufactured</span>
                         </div>
                     </button>
-                </button>
+                </div>
             </field>
         </record>
 
@@ -104,7 +104,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
             <field name="arch" type="xml">
-                <button name="toggle_active" position="before">
+                <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="action_view_bom" type="object"
                         attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
@@ -123,7 +123,7 @@
                             <span class="o_stat_text">Manufactured</span>
                         </div>
                     </button>
-                </button>
+                </div>
             </field>
         </record>
     </data>

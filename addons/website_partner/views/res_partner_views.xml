@@ -7,12 +7,12 @@
         <field eval="17" name="priority"/>
         <field name="arch" type="xml">
             <data>
-                <button name="toggle_active" position="before">
+                <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="website_publish_button"
                         type="object" icon="fa-globe">
                         <field name="is_published" widget="website_button"/>
                     </button>
-                </button>
+                </div>
             </data>
         </field>
     </record>

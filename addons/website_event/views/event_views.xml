@@ -33,7 +33,7 @@
             <field name="organizer_id" position="before">
                 <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
             </field>
-            <button name="toggle_active" position="before">
+            <div name="button_box" position="inside">
                 <field name="website_url" invisible="1"/>
                 <button name="website_publish_button"
                         type="object"
@@ -41,7 +41,7 @@
                         icon="fa-globe">
                     <field name="is_published" widget="website_button"/>
                 </button>
-            </button>
+            </div>
             <label for="is_online" position="after">
                 <field name="website_menu"/>
                 <label for="website_menu" string="Website Menu"/>

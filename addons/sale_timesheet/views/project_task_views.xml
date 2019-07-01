@@ -86,13 +86,13 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='toggle_active']" position="before">
+            <div name="button_box" position="inside">
                 <button type="object" name="action_view_so"
                         class="oe_stat_button" icon="fa-dollar"
                         attrs="{'invisible': [('sale_order_id', '=', False)]}"
                         string="Sales Order"/>
                 <field name="sale_order_id" invisible="1"/>
-            </xpath>
+            </div>
         </field>
         <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
