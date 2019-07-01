@@ -4978,7 +4978,17 @@ Fields:
                 inv_recs = self[field.name].filtered(lambda r: not r.id)
                 if inv_recs:
                     for invf in self._field_inverses[field]:
-                        invf._update(inv_recs, self)
+                        # DLE P98: `test_40_new_fields`
+                        # /home/dle/src/odoo/master-nochange-fp/odoo/addons/test_new_api/tests/test_new_fields.py
+                        # Be careful to not break `test_onchange_taxes_1`, `test_onchange_taxes_2`, `test_onchange_taxes_3`
+                        # If you attempt to find a better solution
+                        # The FP refactoring of field.write might solve this, so I don't spend too much time on it.
+                        for inv_rec in inv_recs:
+                            if not cache.contains(inv_rec, invf):
+                                val = invf.convert_to_cache(self, inv_rec, validate=False)
+                                cache.set(inv_rec, invf, val)
+                            else:
+                                invf._update(inv_rec, self)
 
     def _convert_to_record(self, values):
         """ Convert the ``values`` dictionary from the cache format to the
