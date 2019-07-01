@@ -16,6 +16,7 @@ var FormRenderer = BasicRenderer.extend({
         'click .o_notification_box .oe_field_translate': '_onTranslate',
         'click .o_notification_box .close': '_onTranslateNotificationClose',
         'click .oe_title, .o_inner_group': '_onClick',
+        'shown.bs.tab a[data-toggle="tab"]': '_onNotebookTabChanged',
     }),
     custom_events: _.extend({}, BasicRenderer.prototype.custom_events, {
         'navigation_move':'_onNavigationMove',
@@ -1060,6 +1061,16 @@ var FormRenderer = BasicRenderer.extend({
             index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target);
             this._activatePreviousFieldWidget(this.state, index);
         }
+    },
+    /**
+     * Listen to notebook tab changes and trigger a DOM_updated event such that
+     * widgets in the visible tab can correctly compute their dimensions (e.g.
+     * autoresize on field text)
+     *
+     * @private
+     */
+    _onNotebookTabChanged: function () {
+        core.bus.trigger('DOM_updated');
     },
     /**
      * open the translation view for the current field

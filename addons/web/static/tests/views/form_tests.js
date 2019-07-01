@@ -7016,6 +7016,54 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('autoresize of text fields is done on notebook page show', async function (assert) {
+        assert.expect(5);
+
+        this.data.partner.fields.text_field = { string: 'Text field', type: 'text' };
+        this.data.partner.fields.text_field.default = "some\n\nmulti\n\nline\n\ntext\n";
+        this.data.partner.records[0].text_field = "a\nb\nc\nd\ne\nf";
+        this.data.partner.fields.text_field_empty = { string: 'Text field', type: 'text' };
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<notebook>' +
+                            '<page string="First Page">' +
+                                '<field name="foo"/>' +
+                            '</page>' +
+                            '<page string="Second Page">' +
+                                '<field name="text_field"/>' +
+                            '</page>' +
+                            '<page string="Third Page">' +
+                                '<field name="text_field_empty"/>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+        assert.hasClass(form.$('.o_notebook .nav .nav-link:first()'), 'active');
+
+        await testUtils.dom.click(form.$('.o_notebook .nav .nav-link:nth(1)'));
+        assert.hasClass(form.$('.o_notebook .nav .nav-link:nth(1)'), 'active');
+
+        var height = form.$('.o_field_widget[name=text_field]').height();
+        assert.ok(height > 80, "textarea should have an height of at least 80px");
+
+        await testUtils.dom.click(form.$('.o_notebook .nav .nav-link:nth(2)'));
+        assert.hasClass(form.$('.o_notebook .nav .nav-link:nth(2)'), 'active');
+
+        var height = form.$('.o_field_widget[name=text_field_empty]').css('height');
+        assert.strictEqual(height, '50px', "empty textarea should have height of 50px");
+
+        form.destroy();
+    });
+
     QUnit.test('check if the view destroys all widgets and instances', async function (assert) {
         assert.expect(1);
 
