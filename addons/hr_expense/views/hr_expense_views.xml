@@ -60,12 +60,11 @@
                   <button name="action_view_sheet" type="object" string="View Report" class="oe_highlight" attrs="{'invisible': [('sheet_id', '=', False)]}"/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box">
+                    <div class="oe_button_box" name="button_box">
                         <button name="action_get_attachment_view"
                             class="oe_stat_button"
-                            icon="fa-book"
-                            type="object"
-                            attrs="{'invisible': [('attachment_number', '=', 0)]}">
+                            icon="fa-file-text-o"
+                            type="object">
                             <field name="attachment_number" widget="statinfo" string="Documents" options="{'reload_on_button': true}"/>
                         </button>
                     </div>
@@ -475,12 +474,11 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,post,done"/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box">
+                    <div class="oe_button_box" name="button_box">
                         <button name="action_get_attachment_view"
                             class="oe_stat_button"
-                            icon="fa-book"
-                            type="object"
-                            attrs="{'invisible': [('attachment_number', '=', 0)]}">
+                            icon="fa-file-text-o"
+                            type="object">
                             <field name="attachment_number" widget="statinfo" string="Documents"/>
                         </button>
                     </div>

@@ -136,7 +136,8 @@ class SaleCouponProgram(models.Model):
             'view_mode': 'tree,form',
             'res_model': 'sale.order',
             'type': 'ir.actions.act_window',
-            'domain': [('id', 'in', orders.ids)]
+            'domain': [('id', 'in', orders.ids), ('state', 'not in', ('draft', 'sent', 'cancel'))],
+            'context': dict(self._context, create=False)
         }
 
     def _is_global_discount_program(self):

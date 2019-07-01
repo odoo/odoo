@@ -92,12 +92,6 @@
             </field>
         </record>
 
-        <record id="action_open_partner_analytic_accounts" model="ir.actions.act_window">
-            <field name="context">{'search_default_partner_id': [active_id], 'default_partner_id': active_id}</field>
-            <field name="name">Analytic Accounts</field>
-            <field name="res_model">account.analytic.account</field>
-        </record>
-
         <record model="ir.ui.view" id="partner_view_short_extra">
             <field name="name">partner.short.view.account</field>
             <field name="model">res.partner</field>
@@ -140,23 +134,6 @@
                                 attrs="{'required':[('invoice_warn', '!=', False), ('invoice_warn','!=','no-message')],'readonly':[('invoice_warn','=','no-message')]}"/>
                     </group>
                 </page>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="partner_view_button_contracts_count">
-            <field name="name">partner.view.button.contracts_count</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form" />
-            <field name="priority" eval="14"/>
-            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
-            <field name="arch" type="xml">
-                <div name="button_box" position="inside">
-                    <button class="oe_stat_button" type="action" name="%(account.action_open_partner_analytic_accounts)d"
-                        groups="account.group_account_invoice"
-                        icon="fa-book" title="Analytic Accounts" attrs="{'invisible': [('contracts_count', '=', 0)]}">
-                        <field string="Analytic Accounts" name="contracts_count" widget="statinfo"/>
-                    </button>
-                </div>
             </field>
         </record>
 

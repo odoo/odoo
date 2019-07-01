@@ -134,6 +134,8 @@ class SaleOrder(models.Model):
         elif pickings:
             action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
             action['res_id'] = pickings.id
+        picking_id = pickings.filtered(lambda l: l.picking_type_id.code == 'outgoing')[0]
+        action['context'] = dict(self._context, default_partner_id=self.partner_id.id, default_picking_id=picking_id.id, default_picking_type_id=picking_id.picking_type_id.id, default_origin=self.name, default_group_id=picking_id.group_id.id)
         return action
 
     def action_cancel(self):

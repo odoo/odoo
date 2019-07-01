@@ -117,7 +117,7 @@ class PurchaseOrder(models.Model):
         action = self.env.ref('stock.action_picking_tree_all')
         result = action.read()[0]
         # override the context to get rid of the default filtering on operation type
-        result['context'] = {}
+        result['context'] = {'default_partner_id': self.partner_id.id, 'default_origin': self.name, 'default_picking_type_id': self.picking_type_id.id}
         pick_ids = self.mapped('picking_ids')
         # choose the view_mode accordingly
         if not pick_ids or len(pick_ids) > 1:

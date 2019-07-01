@@ -23,6 +23,7 @@ class SaleOrder(models.Model):
         readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         help='Select a non billable project on which tasks can be created.')
     project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user", help="Projects used in this sales order.")
+    timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id')
 
     @api.depends('analytic_account_id.line_ids')
     def _compute_timesheet_ids(self):

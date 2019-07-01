@@ -2,7 +2,7 @@
 <odoo>
     <act_window
         context="{'location': active_id, 'search_default_real_stock_available': 1, 'search_default_virtual_stock_available': 1,
-                    'search_default_virtual_stock_negative': 1, 'search_default_real_stock_negative': 1}"
+                    'search_default_virtual_stock_negative': 1, 'search_default_real_stock_negative': 1, 'create': False}"
         id="act_product_location_open"
         name="Products"
         res_model="product.product"
@@ -23,10 +23,10 @@
                                 groups="stock.group_stock_multi_locations"/>
                         <button string="Current Stock"
                                 class="oe_stat_button"
-                                icon="fa-building-o" name="%(location_open_quants)d" type="action"/>
+                                icon="fa-cubes" name="%(location_open_quants)d" type="action"/>
                         <button string="Products"
                                 class="oe_stat_button"
-                                icon="fa-filter" name="%(act_product_location_open)d" type="action"
+                                icon="fa-th-list" name="%(act_product_location_open)d" type="action"
                                 context="{'location_id': active_id}"
                                 />
                     </div>

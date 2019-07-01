@@ -36,7 +36,7 @@ class MassMailing(models.Model):
     def action_redirect_to_quotations(self):
         action = self.env.ref('sale.action_quotations_with_onboarding').read()[0]
         action['domain'] = self._get_sale_utm_domain()
-        action['context'] = {'default_type': 'lead'}
+        action['context'] = {'default_type': 'lead', 'create': False}
         return action
 
     def action_redirect_to_invoiced(self):
@@ -48,6 +48,7 @@ class MassMailing(models.Model):
             ('type', '=', 'posted'),
             ('partner_id', 'child_of', self.id),
         ]
+        action['context'] = {'create': False}
         return action
 
     def _get_sale_utm_domain(self):
