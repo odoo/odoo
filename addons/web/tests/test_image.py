@@ -53,7 +53,12 @@ class TestImage(HttpCase):
             'public': True,
             'mimetype': 'image/gif',
         })
-        response = self.url_open('/web/image/%s' % attachment.id)
+        attachment.flush()
+        # DLE P97: The test tries to access the attachment that has just been created through an URL,
+        # it's therefore another request, another thread,
+        # while the request that created the attachment is not yet finished, neither flushed.
+        # Force a flush to finalize the write of compute fields stored in the towrite dict
+        response = self.url_open('/web/image/%s' % attachment.id, timeout=None)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(base64.b64encode(response.content), attachment.datas)
 

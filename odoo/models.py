@@ -3679,7 +3679,7 @@ Fields:
 
                 for batch in batches:
                     for record, vals in batch:
-                        record._cache.update(record._convert_to_cache(vals))
+                        record._update_cache(vals)
                     batch_recs = self.concat(*(record for record, vals in batch))
                     fields[0].determine_inverse(batch_recs)
 
@@ -5253,16 +5253,6 @@ Fields:
             origin = origin.id
         record = self.browse([NewId(origin, ref)])
         record._update_cache(values, validate=False)
-
-        # set inverse fields on new records in the comodel
-        for name in values:
-            field = self._fields.get(name)
-            if field and field.relational:
-                inv_recs = record[name].filtered(lambda r: not r.id)
-                if inv_recs:
-                    inv_values = {invf.name: record._ids for invf in self._field_inverses[field]}
-                    for inv_rec in inv_recs:
-                        inv_rec._update_cache(inv_values, validate=False)
 
         return record
 
