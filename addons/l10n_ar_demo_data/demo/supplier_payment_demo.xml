@@ -5,7 +5,7 @@
 
 <!-- pago de asustek con banco y con retención ganancias -->
     <record model="account.payment.group" id="demo_supplier_payment_1">
-        <field name="company_id" ref="base.main_company"/>
+        <field name="company_id" ref="basel10n_ar.company_ri"/>
         <field name="partner_id" ref="base.res_partner_1"/>
         <field name="partner_type">supplier</field>
     </record>
@@ -38,7 +38,7 @@
 
 <!-- pago de asustek en efectivo y con retención iibb -->
     <record model="account.payment.group" id="demo_supplier_payment_2">
-        <field name="company_id" ref="base.main_company"/>
+        <field name="company_id" ref="l10n_ar.company_ri"/>
         <field name="partner_id" ref="base.res_partner_1"/>
         <field name="partner_type">supplier</field>
     </record>

@@ -9,7 +9,7 @@
         <field name="type">in_invoice</field>
         <field name="l10n_latam_document_number">0001-00000008</field>
         <field name="date_invoice" eval="time.strftime('%Y-%m')+'-01'"/>
-        <field name="company_id" ref="base.main_company"/>
+        <field name="company_id" ref="l10n_ar.company_ri"/>
     </record>
 
         <record id="demo_sup_invoice_1_line_1" model="account.invoice.line">
@@ -59,7 +59,7 @@
         <field name="type">in_invoice</field>
         <field name="l10n_latam_document_number">0002-00000123</field>
         <field name="date_invoice" eval="time.strftime('%Y-%m')+'-01'"/>
-        <field name="company_id" ref="base.main_company"/>
+        <field name="company_id" ref="l10n_ar.company_ri"/>
     </record>
 
         <record id="demo_sup_invoice_2_line_1" model="account.invoice.line">
@@ -96,7 +96,7 @@
         <field name="type">in_invoice</field>
         <field name="l10n_latam_document_number">0003-00000312</field>
         <field name="date_invoice" eval="time.strftime('%Y-%m')+'-11'"/>
-        <field name="company_id" ref="base.main_company"/>
+        <field name="company_id" ref="l10n_ar.company_ri"/>
     </record>
 
         <record id="demo_sup_invoice_3_line_1" model="account.invoice.line">
@@ -125,7 +125,7 @@
         <field name="type">in_invoice</field>
         <field name="l10n_latam_document_number">0001-00000200</field>
         <field name="date_invoice" eval="time.strftime('%Y-%m')+'-15'"/>
-        <field name="company_id" ref="base.main_company"/>
+        <field name="company_id" ref="l10n_ar.company_ri"/>
     </record>
 
         <record id="demo_sup_invoice_4_line_1" model="account.invoice.line">
@@ -154,7 +154,7 @@
         <field name="type">in_invoice</field>
         <field name="l10n_latam_document_number">0001-00000222</field>
         <field name="date_invoice" eval="time.strftime('%Y-%m')+'-18'"/>
-        <field name="company_id" ref="base.main_company"/>
+        <field name="company_id" ref="l10n_ar.company_ri"/>
     </record>
 
         <record id="demo_sup_invoice_5_line_1" model="account.invoice.line">
@@ -211,7 +211,7 @@
         <field name="type">in_invoice</field>
         <field name="l10n_latam_document_number">0001-00000333</field>
         <field name="date_invoice" eval="time.strftime('%Y-%m')+'-26'"/>
-        <field name="company_id" ref="base.main_company"/>
+        <field name="company_id" ref="l10n_ar.company_ri"/>
     </record>
 
         <record id="demo_sup_invoice_6_line_1" model="account.invoice.line">
@@ -233,7 +233,7 @@
         <field name="type">in_invoice</field>
         <field name="l10n_latam_document_number">0001-00000334</field>
         <field name="date_invoice" eval="time.strftime('%Y-%m')+'-27'"/>
-        <field name="company_id" ref="base.main_company"/>
+        <field name="company_id" ref="l10n_ar.company_ri"/>
     </record>
 
         <record id="demo_sup_invoice_7_line_1" model="account.invoice.line">
@@ -262,7 +262,7 @@
         <field name="type">in_invoice</field>
         <field name="l10n_latam_document_number">16052IC04000605L</field>
         <field name="date_invoice" eval="time.strftime('%Y-%m')+'-13'"/>
-        <field name="company_id" ref="base.main_company"/>
+        <field name="company_id" ref="l10n_ar.company_ri"/>
     </record>
 
         <record id="demo_despacho_1_line_1" model="account.invoice.line">
@@ -308,7 +308,7 @@
             <field name="product_id" ref="product.product_product_2"/>
             <field name="price_unit">-28936.06</field>
             <field name="quantity">1</field>
-            <field name="invoice_line_tax_ids" model="account.tax" eval="[(6, 0, obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'IVA Compras No Gravado'), ('type_tax_use', '=', 'purchase')], limit=1).ids)]"/>
+            <field name="invoice_line_tax_ids" model="account.tax" eval="[(6, 0, obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'IVA Compras No Gravado'), ('type_tax_use', '=', 'purchase')], limit=1).ids)]"/>
         </record>
 
         <record id="demo_despacho_1_line_7" model="account.invoice.line">
@@ -325,7 +325,7 @@
             <field name="product_id" ref="product.product_product_2"/>
             <field name="price_unit">-1350.00</field>
             <field name="quantity">1</field>
-            <field name="invoice_line_tax_ids" model="account.tax" eval="[(6, 0, obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'IVA Compras No Gravado'), ('type_tax_use', '=', 'purchase')], limit=1).ids)]"/>
+            <field name="invoice_line_tax_ids" model="account.tax" eval="[(6, 0, obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'IVA Compras No Gravado'), ('type_tax_use', '=', 'purchase')], limit=1).ids)]"/>
         </record>
 
         <record id="demo_despacho_1_line_9" model="account.invoice.line">
@@ -342,7 +342,7 @@
             <field name="product_id" ref="product.product_product_2"/>
             <field name="price_unit">-130.21</field>
             <field name="quantity">1</field>
-            <field name="invoice_line_tax_ids" model="account.tax" eval="[(6, 0, obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'IVA Compras No Gravado'), ('type_tax_use', '=', 'purchase')], limit=1).ids)]"/>
+            <field name="invoice_line_tax_ids" model="account.tax" eval="[(6, 0, obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'IVA Compras No Gravado'), ('type_tax_use', '=', 'purchase')], limit=1).ids)]"/>
         </record>
 
         <record id="demo_despacho_1_tax_line_1" model="account.invoice.tax">
@@ -350,9 +350,9 @@
             <field name="sequence">99</field>
             <field name="manual" eval="True"/>
             <field name="invoice_id" ref="demo_despacho_1"/>
-            <field name="tax_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'Percepción Ganancias Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).id"/>
-            <field name="name" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'Percepción Ganancias Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).name"/>
-            <field name="account_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'Percepción Ganancias Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).account_id.id"/>
+            <field name="tax_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'Percepción Ganancias Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).id"/>
+            <field name="name" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'Percepción Ganancias Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).name"/>
+            <field name="account_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'Percepción Ganancias Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).account_id.id"/>
         </record>
 
         <record id="demo_despacho_1_tax_line_2" model="account.invoice.tax">
@@ -360,9 +360,9 @@
             <field name="sequence">99</field>
             <field name="manual" eval="True"/>
             <field name="invoice_id" ref="demo_despacho_1"/>
-            <field name="tax_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'Percepción IIBB CABA Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).id"/>
-            <field name="name" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'Percepción IIBB CABA Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).name"/>
-            <field name="account_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'Percepción IIBB CABA Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).account_id.id"/>
+            <field name="tax_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'Percepción IIBB CABA Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).id"/>
+            <field name="name" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'Percepción IIBB CABA Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).name"/>
+            <field name="account_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'Percepción IIBB CABA Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).account_id.id"/>
         </record>
 
         <record id="demo_despacho_1_tax_line_3" model="account.invoice.tax">
@@ -370,9 +370,9 @@
             <field name="sequence">99</field>
             <field name="manual" eval="True"/>
             <field name="invoice_id" ref="demo_despacho_1"/>
-            <field name="tax_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'IVA Adicional 20%'), ('type_tax_use', '=', 'purchase')], limit=1).id"/>
-            <field name="name" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'IVA Adicional 20%'), ('type_tax_use', '=', 'purchase')], limit=1).name"/>
-            <field name="account_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('base.main_company').id), ('name', '=', 'IVA Adicional 20%'), ('type_tax_use', '=', 'purchase')], limit=1).account_id.id"/>
+            <field name="tax_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'IVA Adicional 20%'), ('type_tax_use', '=', 'purchase')], limit=1).id"/>
+            <field name="name" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'IVA Adicional 20%'), ('type_tax_use', '=', 'purchase')], limit=1).name"/>
+            <field name="account_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'IVA Adicional 20%'), ('type_tax_use', '=', 'purchase')], limit=1).account_id.id"/>
         </record>
 
         <function model="account.invoice" name="compute_taxes">

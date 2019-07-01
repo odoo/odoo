@@ -3,7 +3,7 @@
 
 <!-- pago a adhoc con banco y con retención ganancias -->
     <record model="account.payment.group" id="demo_payment_1">
-        <field name="company_id" ref="base.main_company"/>
+        <field name="company_id" ref="l10n_ar.company_ri"/>
         <field name="partner_id" ref="l10n_ar_partner.res_partner_adhoc"/>
         <field name="partner_type">customer</field>
     </record>
@@ -36,7 +36,7 @@
 
 <!-- pago a adhoc con banco y con retención iibb -->
     <record model="account.payment.group" id="demo_payment_2">
-        <field name="company_id" ref="base.main_company"/>
+        <field name="company_id" ref="l10n_ar.company_ri"/>
         <field name="partner_id" ref="l10n_ar_partner.res_partner_adhoc"/>
         <field name="partner_type">customer</field>
     </record>
