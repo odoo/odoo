@@ -983,7 +983,7 @@ class Orderpoint(models.Model):
         'Lead Time', default=1,
         help="Number of days after the orderpoint is triggered to receive the products or to order to the vendor")
     lead_type = fields.Selection(
-        [('net', 'Day(s) to get the products'), ('supplier', 'Day(s) to purchase')], 'Lead Type',
+        [('net', 'Days to get the products'), ('supplier', 'Days to purchase')], 'Lead Type',
         required=True, default='supplier')
     allowed_location_ids = fields.One2many(comodel_name='stock.location', compute='_compute_allowed_location_ids')
 

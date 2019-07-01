@@ -32,8 +32,8 @@ class EventTypeMail(models.Model):
     interval_nbr = fields.Integer('Interval', default=1)
     interval_unit = fields.Selection([
         ('now', 'Immediately'),
-        ('hours', 'Hour(s)'), ('days', 'Day(s)'),
-        ('weeks', 'Week(s)'), ('months', 'Month(s)')],
+        ('hours', 'Hours'), ('days', 'Days'),
+        ('weeks', 'Weeks'), ('months', 'Months')],
         string='Unit', default='hours', required=True)
     interval_type = fields.Selection([
         ('after_sub', 'After each registration'),
@@ -59,8 +59,8 @@ class EventMailScheduler(models.Model):
     interval_nbr = fields.Integer('Interval', default=1)
     interval_unit = fields.Selection([
         ('now', 'Immediately'),
-        ('hours', 'Hour(s)'), ('days', 'Day(s)'),
-        ('weeks', 'Week(s)'), ('months', 'Month(s)')],
+        ('hours', 'Hours'), ('days', 'Days'),
+        ('weeks', 'Weeks'), ('months', 'Months')],
         string='Unit', default='hours', required=True)
     interval_type = fields.Selection([
         ('after_sub', 'After each registration'),

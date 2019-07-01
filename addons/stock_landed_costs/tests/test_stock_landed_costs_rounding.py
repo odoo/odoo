@@ -17,7 +17,7 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         # Define undivisible units
         product_uom_unit_round_1 = self.env.ref('uom.product_uom_unit')
         product_uom_unit_round_1.write({
-            'name': 'Undivisible Unit(s)',
+            'name': 'Undivisible Units',
             'rounding': 1.0,
         })
 
