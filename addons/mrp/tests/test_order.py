@@ -5,6 +5,7 @@ from odoo.tests import Form
 from datetime import datetime, timedelta
 
 from odoo.fields import Datetime as Dt
+from odoo.exceptions import UserError
 from odoo.addons.mrp.tests.common import TestMrpCommon
 
 
@@ -676,6 +677,51 @@ class TestMrpOrder(TestMrpCommon):
 
         self.assertEqual(mo.move_raw_ids.filtered(lambda m: m.product_id == p1).quantity_done, 20, 'Update the produce quantity should not impact already produced quantity.')
         mo.button_mark_done()
+
+    def test_product_produce_6(self):
+        """ Plan 5 finished products, reserve and produce 3. Post the current production.
+        Simulate an unlock and edit and, on the opened moves, set the consumed quantity
+        to 3. Now, try to update the quantity to produce to 3. It should fail since there
+        are consumed quantities. Unlock and edit, remove the consumed quantities and
+        update the quantity to produce to 3."""
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        mo, bom, p_final, p1, p2 = self.generate_mo()
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 20)
+
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
+        mo.action_assign()
+
+        produce_wizard = self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }).create({
+            'product_qty': 3.0,
+        })
+        produce_wizard._onchange_product_qty()
+        produce_wizard.do_produce()
+
+        mo.post_inventory()
+        self.assertEqual(len(mo.move_raw_ids), 4)
+
+        mo.move_raw_ids.filtered(lambda m: m.state != 'done')[0].quantity_done = 3
+
+        update_quantity_wizard = self.env['change.production.qty'].create({
+            'mo_id': mo.id,
+            'product_qty': 3,
+        })
+        with self.assertRaises(UserError):
+            update_quantity_wizard.change_prod_qty()
+
+        mo.move_raw_ids.filtered(lambda m: m.state != 'done')[0].quantity_done = 0
+        update_quantity_wizard.change_prod_qty()
+
+        self.assertEqual(len(mo.move_raw_ids), 2)
+
+        mo.button_mark_done()
+        self.assertTrue(all(s == 'done' for s in mo.move_raw_ids.mapped('state')))
+        self.assertEqual(sum(mo.move_raw_ids.mapped('move_line_ids.product_uom_qty')), 0)
 
     def test_product_produce_uom(self):
         plastic_laminate = self.env.ref('mrp.product_product_plastic_laminate')
