@@ -928,6 +928,13 @@ class Field(MetaField('DummyField', (object,), {})):
             # the column is new or it becomes required; initialize its values
             if model._table_has_rows():
                 model._init_column(self.name)
+                # DLE P100: crm install
+                # bad query: b'ALTER TABLE "crm_team" ALTER COLUMN "alias_id" SET NOT NULL'
+                # ERROR: column "alias_id" contains null values
+                # This is because there is an `alias_id` left in the towrite,
+                # and therefore, in database, there was still one team for which alias_id was null,
+                # it was not flushed yet.
+                model.flush([self.name])
 
         if self.required and not has_notnull:
             sql.set_not_null(model._cr, model._table, self.name)
