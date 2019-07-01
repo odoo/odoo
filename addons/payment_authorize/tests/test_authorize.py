@@ -36,7 +36,7 @@ class AuthorizeForm(AuthorizeCommon):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         form_values = {
             'x_login': self.authorize.authorize_login,
-            'x_trans_key': self.authorize.authorize_transaction_key,
+            'x_trans_key': self.env['ir.config_parameter'].get_param('authorize_signature_key'),
             'x_amount': '56.16',
             'x_show_form': 'PAYMENT_FORM',
             'x_type': 'AUTH_CAPTURE',
@@ -98,8 +98,6 @@ class AuthorizeForm(AuthorizeCommon):
         # typical data posted by authorize after client has successfully paid
         authorize_post_data = {
             'return_url': u'/shop/payment/validate',
-            # x_MD5_Hash will be empty starting the 28th March 2019
-            'x_MD5_Hash': u'7934485E1C105940BE854208D10FAB4F',
             'x_SHA2_Hash': u'7D3AC844BE8CA3F649AB885A90D22CFE35B850338EC91D1A5ADD819A85FF948A3D777334A18CDE36821DC8F2B42A6E1950C1FF96B52B60F23201483A656195FB',
             'x_account_number': u'XXXX0027',
             'x_address': u'Huge Street 2/543',
