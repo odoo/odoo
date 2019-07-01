@@ -9,8 +9,8 @@
 # Matus Krnac <matus.krnac@gmail.com>, 2017
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
 # gebri <gebri@inmail.sk>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # Jan Prokop, 2019
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-23 16:30+0000\n"
 "PO-Revision-Date: 2016-09-07 09:14+0000\n"
-"Last-Translator: Jan Prokop, 2019\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6218,6 +6218,14 @@ msgstr ""
 "Podporované dokumenty sú SO, PO a faktúry / refundácie.\n"
 
 #. module: base
+#: code:addons/model.py:153
+#, python-format
+msgid ""
+" another model requires the record being deleted. If possible, archive it "
+"instead."
+msgstr ""
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%A - Full weekday name."
 msgstr "%A - Celé meno dňa v týždni."
@@ -6372,6 +6380,14 @@ msgid ""
 msgstr ""
 "- Akcia: akcia priradená k jednému bloku modelu\n"
 "- Predvolené: predvolená hodnota pre pole modelu"
+
+#. module: base
+#: code:addons/model.py:141
+#, python-format
+msgid ""
+"- Create/update: a mandatory field is not set.\n"
+"- Delete: another model requires the record being deleted. If possible, archive it instead."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -9036,6 +9052,12 @@ msgid "Constraint Type"
 msgstr "Druh obmedzenia"
 
 #. module: base
+#: code:addons/model.py:158
+#, python-format
+msgid "Constraint:"
+msgstr ""
+
+#. module: base
 #: sql_constraint:ir.model.constraint:0
 msgid "Constraints with the same name are unique per module."
 msgstr "Obmedzenia s rovnakým názvom sú jedinečné pre každý modul."
@@ -9950,6 +9972,11 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_hidden_dependency
 msgid "Dependency"
 msgstr "Závislosť"
+
+#. module: base
+#: model:ir.module.module,description:base.module_test_pylint
+msgid "Deprecated empty module in favor of test-lint."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_description
@@ -10927,6 +10954,12 @@ msgstr ""
 #, python-format
 msgid "Field names must be unique per model."
 msgstr ""
+
+#. module: base
+#: code:addons/model.py:148
+#, python-format
+msgid "Field:"
+msgstr "Pole:"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
@@ -14168,6 +14201,12 @@ msgid ""
 msgstr ""
 "Model na ktorý sa vzťahuje tento vstup - pomocné pole pre nastavenie modelu,"
 " automaticky nastaví správny názvov modulu"
+
+#. module: base
+#: code:addons/model.py:147 code:addons/model.py:157
+#, python-format
+msgid "Model:"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_model
@@ -18280,6 +18319,14 @@ msgid "The selected modules have been updated / installed !"
 msgstr "Vybrané moduly boli aktulizované / nainštalované!"
 
 #. module: base
+#: code:addons/base/module/module.py:489
+#, python-format
+msgid ""
+"The server is busy right now, module operations are not possible at this "
+"time, please try again later."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_country_state_code
 msgid "The state code."
 msgstr "Kód štátu"
@@ -19002,7 +19049,9 @@ msgid "United States Postal Service (USPS) Shipping"
 msgstr "United States Postal Service (USPS) preprava"
 
 #. module: base
+#: code:addons/model.py:148 code:addons/model.py:157 code:addons/model.py:158
 #: selection:ir.module.module.dependency,state:0
+#, python-format
 msgid "Unknown"
 msgstr "Neznáme"
 
@@ -20910,6 +20959,11 @@ msgstr "test-inherits"
 #: model:ir.module.module,shortdesc:base.module_test_limits
 msgid "test-limits"
 msgstr "test-limits"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_test_lint
+msgid "test-lint"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_uninstall

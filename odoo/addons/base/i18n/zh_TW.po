@@ -4,13 +4,13 @@
 # 
 # Translators:
 # Kenny Kang <winterrise@gmail.com>, 2018
-# WitManto_Inc. <witmanto@gmail.com>, 2018
 # Jason Wu <jaronemo@msn.com>, 2018
 # Michael Yeung, 2018
 # amos lin <seeing@edirect168.com>, 2018
+# WitManto_Inc. <witmanto@gmail.com>, 2018
 # sejun huang <sejun.huang@gmail.com>, 2018
-# Martin Trigaux, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-23 16:30+0000\n"
 "PO-Revision-Date: 2016-09-07 09:14+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6714,6 +6714,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: code:addons/model.py:153
+#, python-format
+msgid ""
+" another model requires the record being deleted. If possible, archive it "
+"instead."
+msgstr ""
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%A - Full weekday name."
 msgstr "%A - 完整星期幾名稱。"
@@ -6867,6 +6875,14 @@ msgid ""
 msgstr ""
 "動作：動作附加到模型的一個接口\n"
 "預設值：模型字段的一個預設值"
+
+#. module: base
+#: code:addons/model.py:141
+#, python-format
+msgid ""
+"- Create/update: a mandatory field is not set.\n"
+"- Delete: another model requires the record being deleted. If possible, archive it instead."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -9556,6 +9572,12 @@ msgid "Constraint Type"
 msgstr "約束類型"
 
 #. module: base
+#: code:addons/model.py:158
+#, python-format
+msgid "Constraint:"
+msgstr ""
+
+#. module: base
 #: sql_constraint:ir.model.constraint:0
 msgid "Constraints with the same name are unique per module."
 msgstr "具有相同名稱的約束是每個模組唯一."
@@ -10454,6 +10476,11 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_hidden_dependency
 msgid "Dependency"
 msgstr "依賴"
+
+#. module: base
+#: model:ir.module.module,description:base.module_test_pylint
+msgid "Deprecated empty module in favor of test-lint."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_description
@@ -11410,6 +11437,12 @@ msgstr "字段名稱只能包含字符、數字和下劃線（最多63字符）"
 #, python-format
 msgid "Field names must be unique per model."
 msgstr "每個模型的字段名必須唯一"
+
+#. module: base
+#: code:addons/model.py:148
+#, python-format
+msgid "Field:"
+msgstr "字段："
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
@@ -14573,6 +14606,12 @@ msgid ""
 "Model to which this entry applies - helper field for setting a model, will "
 "automatically set the correct model name"
 msgstr "該入口響應的模型該分錄將-設定模型幫助區，將自動設定正確的模型名稱"
+
+#. module: base
+#: code:addons/model.py:147 code:addons/model.py:157
+#, python-format
+msgid "Model:"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_model
@@ -18619,6 +18658,14 @@ msgid "The selected modules have been updated / installed !"
 msgstr "選擇的模組將被更新/安裝！"
 
 #. module: base
+#: code:addons/base/module/module.py:489
+#, python-format
+msgid ""
+"The server is busy right now, module operations are not possible at this "
+"time, please try again later."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_country_state_code
 msgid "The state code."
 msgstr "州/省代碼。"
@@ -19310,7 +19357,9 @@ msgid "United States Postal Service (USPS) Shipping"
 msgstr "美國郵政(USPS)貨運"
 
 #. module: base
+#: code:addons/model.py:148 code:addons/model.py:157 code:addons/model.py:158
 #: selection:ir.module.module.dependency,state:0
+#, python-format
 msgid "Unknown"
 msgstr "未知"
 
@@ -21161,6 +21210,11 @@ msgstr "測試繼承"
 #: model:ir.module.module,shortdesc:base.module_test_limits
 msgid "test-limits"
 msgstr "test-limits"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_test_lint
+msgid "test-lint"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_uninstall
