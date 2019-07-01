@@ -32,6 +32,7 @@ class TestRules(TransactionCase):
         self.assertEqual(browse1.val, 1)
 
         # but this should
+        browse1.invalidate_cache(['val'])
         with self.assertRaises(AccessError):
             self.assertEqual(browse2.val, -1)
 
@@ -50,6 +51,7 @@ class TestRules(TransactionCase):
         browse1 = env['test_access_right.some_obj'].browse(self.id1)
 
         # everything should blow up
+        (browse1 + browse2).invalidate_cache(['val'])
         with self.assertRaises(AccessError):
             self.assertEqual(browse2.val, -1)
         with self.assertRaises(AccessError):
@@ -65,16 +67,21 @@ class TestRules(TransactionCase):
 
         # check the container as the public user
         container_user = container_admin.with_user(self.browse_ref('base.public_user'))
+        container_user.invalidate_cache(['some_ids'])
         self.assertItemsEqual(container_user.some_ids.ids, [self.id1])
 
         # this should not fail
         container_user.write({'some_ids': [(6, 0, ids)]})
+        container_user.invalidate_cache(['some_ids'])
         self.assertItemsEqual(container_user.some_ids.ids, [self.id1])
+        container_admin.invalidate_cache(['some_ids'])
         self.assertItemsEqual(container_admin.some_ids.ids, ids)
 
         # this removes all records
         container_user.write({'some_ids': [(5,)]})
+        container_user.invalidate_cache(['some_ids'])
         self.assertItemsEqual(container_user.some_ids.ids, [])
+        container_admin.invalidate_cache(['some_ids'])
         self.assertItemsEqual(container_admin.some_ids.ids, [])
 
     def test_access_rule_performance(self):
