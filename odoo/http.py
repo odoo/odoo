@@ -626,8 +626,10 @@ class JsonRequest(WebRequest):
             }
         if error is not None:
             response['error'] = error
-        if result is not None:
+            fallback = ustr
+        else:
             response['result'] = result
+            fallback = None
 
         if self.jsonp:
             # If we use jsonp, that's mean we are called from another host
@@ -635,10 +637,10 @@ class JsonRequest(WebRequest):
             # We need then to manage http sessions manually.
             response['session_id'] = self.session.sid
             mime = 'application/javascript'
-            body = "%s(%s);" % (self.jsonp, json.dumps(response, default=ustr),)
+            body = "%s(%s);" % (self.jsonp, json.dumps(response, default=fallback),)
         else:
             mime = 'application/json'
-            body = json.dumps(response, default=ustr)
+            body = json.dumps(response, default=fallback)
 
         return Response(
             body, status=error and error.pop('http_status', 200) or 200,
