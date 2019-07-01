@@ -201,6 +201,15 @@ class PosConfig(models.Model):
              "closing a session, for non-POS managers. If this maximum is reached, the user will have an error message at "
              "the closing of his session saying that he needs to contact his manager.")
     payment_method_ids = fields.Many2many('pos.payment.method', string='Payment Methods', default=lambda self: self._default_payment_methods())
+    company_has_template = fields.Boolean(string="Company has chart of accounts", compute="_compute_company_has_template")
+
+    @api.depends('company_id')
+    def _compute_company_has_template(self):
+        for config in self:
+            if config.company_id.chart_template_id:
+                config.company_has_template = True
+            else:
+                config.company_has_template = False
 
     def _compute_is_installed_account_accountant(self):
         account_accountant = self.env['ir.module.module'].sudo().search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])
