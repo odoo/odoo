@@ -1192,6 +1192,18 @@ class UsersView(models.Model):
                     user.write({'groups_id': [(4, group_multi_company.id)]})
         return res
 
+    @api.model
+    def new(self, values={}, origin=None, ref=None):
+        values = self._remove_reified_groups(values)
+        user = super().new(values=values, origin=origin, ref=ref)
+        group_multi_company = self.env.ref('base.group_multi_company', False)
+        if group_multi_company and 'company_ids' in values:
+            if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
+                user.update({'groups_id': [(3, group_multi_company.id)]})
+            elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
+                user.update({'groups_id': [(4, group_multi_company.id)]})
+        return user
+
     def _remove_reified_groups(self, values):
         """ return `values` without reified group fields """
         add, rem = [], []
