@@ -192,7 +192,8 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
-        partners_dom = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True), ('grade_id.website_published', '=', True)]
+        partners_dom = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True),
+                        ('grade_id.website_published', '=', True), ('country_id', '!=', False)]
         dom += sitemap_qs2dom(qs=qs, route='/partners/country/')
         countries = env['res.partner'].sudo().read_group(partners_dom, fields=['id', 'country_id'], groupby='country_id')
         for country in countries:
