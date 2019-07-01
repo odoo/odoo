@@ -15,14 +15,14 @@
 # Rachmat Aditiya <raditiya@me.com>, 2016
 # Bonny Useful <bonny.useful@gmail.com>, 2017
 # Martin Trigaux, 2017
-# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2017
+# oon arfiandwi <oon.arfiandwi@gmail.com>, 2017
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
 # Edy Kendengis <edaptec@gmail.com>, 2017
 # Edy Kend <edy@azmall.co.id>, 2017
 # William Surya Permana <zarambie_game@yahoo.com>, 2017
 # Muhammad Herdiansyah <herdiansyah@openmailbox.org>, 2017
 # Gusti Rini <gustirini@gmail.com>, 2017
-# Azhe-kun <azhe403@gmail.com>, 2018
+# Azhe Kun <azhe403@gmail.com>, 2018
 # Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2018
 # Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2018
 # Febrasari Almania <febrasari.almania@gmail.com>, 2019
@@ -4823,6 +4823,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: code:addons/model.py:153
+#, python-format
+msgid ""
+" another model requires the record being deleted. If possible, archive it "
+"instead."
+msgstr ""
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%A - Full weekday name."
 msgstr ""
@@ -4971,6 +4979,14 @@ msgstr ""
 msgid ""
 "- Action: an action attached to one slot of the given model\n"
 "- Default: a default value for a model field"
+msgstr ""
+
+#. module: base
+#: code:addons/model.py:141
+#, python-format
+msgid ""
+"- Create/update: a mandatory field is not set.\n"
+"- Delete: another model requires the record being deleted. If possible, archive it instead."
 msgstr ""
 
 #. module: base
@@ -7562,6 +7578,12 @@ msgid "Constraint Type"
 msgstr ""
 
 #. module: base
+#: code:addons/model.py:158
+#, python-format
+msgid "Constraint:"
+msgstr ""
+
+#. module: base
 #: sql_constraint:ir.model.constraint:0
 msgid "Constraints with the same name are unique per module."
 msgstr ""
@@ -8463,6 +8485,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency_depend_id
 #: model:ir.module.category,name:base.module_category_hidden_dependency
 msgid "Dependency"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_test_pylint
+msgid "Deprecated empty module in favor of test-lint."
 msgstr ""
 
 #. module: base
@@ -9417,6 +9444,12 @@ msgstr ""
 #, python-format
 msgid "Field names must be unique per model."
 msgstr ""
+
+#. module: base
+#: code:addons/model.py:148
+#, python-format
+msgid "Field:"
+msgstr "Kolom:"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
@@ -12571,6 +12604,12 @@ msgstr ""
 msgid ""
 "Model to which this entry applies - helper field for setting a model, will "
 "automatically set the correct model name"
+msgstr ""
+
+#. module: base
+#: code:addons/model.py:147 code:addons/model.py:157
+#, python-format
+msgid "Model:"
 msgstr ""
 
 #. module: base
@@ -16600,6 +16639,14 @@ msgid "The selected modules have been updated / installed !"
 msgstr "Modul yang dipilih telah selesai diperbarui/dipasang!"
 
 #. module: base
+#: code:addons/base/module/module.py:489
+#, python-format
+msgid ""
+"The server is busy right now, module operations are not possible at this "
+"time, please try again later."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_country_state_code
 msgid "The state code."
 msgstr ""
@@ -17285,7 +17332,9 @@ msgid "United States Postal Service (USPS) Shipping"
 msgstr ""
 
 #. module: base
+#: code:addons/model.py:148 code:addons/model.py:157 code:addons/model.py:158
 #: selection:ir.module.module.dependency,state:0
+#, python-format
 msgid "Unknown"
 msgstr "Tidak diketahui"
 
@@ -19148,6 +19197,11 @@ msgstr "test-inherits"
 #: model:ir.module.module,shortdesc:base.module_test_limits
 msgid "test-limits"
 msgstr "test-limits"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_test_lint
+msgid "test-lint"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_uninstall
