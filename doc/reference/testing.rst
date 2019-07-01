@@ -183,7 +183,7 @@ ones:
     $ odoo-bin --test-enable --test-tags 'standard,-slow'
 
 When you write a test that does not inherit from the
-:class:`~odoo.tests.common.BaseCase`, this test will not have the default tags,
+:class:`~odoo.tests.common.MetaCase`, this test will not have the default tags,
 you have to add them explicitely to have the test included in the default test
 suite.  This is a common issue when using a simple ``unittest.TestCase`` as
 they're not going to get run:

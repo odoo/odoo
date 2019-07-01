@@ -24,6 +24,7 @@ import threading
 import time
 import unittest
 import werkzeug.urls
+from collections import defaultdict
 from contextlib import contextmanager
 from datetime import datetime, date
 from unittest.mock import patch
@@ -159,7 +160,6 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
 # Main classes
 # ------------------------------------------------------------
 
-
 class TreeCase(unittest.TestCase):
     def __init__(self, methodName='runTest'):
         super(TreeCase, self).__init__(methodName)
@@ -180,20 +180,24 @@ class TreeCase(unittest.TestCase):
         for c1, c2 in izip_longest(n1, n2):
             self.assertTreesEqual(c1, c2, msg)
 
-
 class MetaCase(type):
     """ Metaclass of test case classes to assign default 'test_tags':
         'standard', 'at_install' and the name of the module.
     """
-    def __init__(cls, name, bases, attrs):
-        super(MetaCase, cls).__init__(name, bases, attrs)
+    def __init__(self, name, bases, attrs):
+        super(MetaCase, self).__init__(name, bases, attrs)
         # assign default test tags
-        if cls.__module__.startswith('odoo.addons.'):
-            module = cls.__module__.split('.')[2]
-            cls.test_tags = {'standard', 'at_install', module}
+        MetaCase.init_tags(self)
 
+    @classmethod
+    def init_tags(cls, obj):
+        if obj.__module__.startswith('odoo.addons.'):
+            module = obj.__module__.split('.')[2]
+            test_class = obj.__name__
+            obj.test_tags = {'tags': {'standard', 'at_install'}, 'module': {module}, 'class': {test_class}}
 
 class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
+
     """
     Subclass of TestCase for common OpenERP-specific code.
 
@@ -1817,11 +1821,11 @@ def tagged(*tags):
     attribute that defaults to 'standard' and also the module technical name
     When using class inheritance, the tags are NOT inherited.
     """
-    def tags_decorator(obj):
+    def tags_decorator(cls):
         include = {t for t in tags if not t.startswith('-')}
         exclude = {t[1:] for t in tags if t.startswith('-')}
-        obj.test_tags = (getattr(obj, 'test_tags', set()) | include) - exclude
-        return obj
+        cls.test_tags['tags'] = (cls.test_tags.get('tags', set()) | include) - exclude # must be called on BaseCase, test_tags should be initiallised
+        return cls
     return tags_decorator
 
 
@@ -1830,23 +1834,55 @@ class TagsSelector(object):
 
     def __init__(self, spec):
         """ Parse the spec to determine tags to include and exclude. """
-        clean_tags = {t.strip() for t in spec.split(',') if t.strip() != ''}
-        self.exclude = {t[1:] for t in clean_tags if t.startswith('-')}
-        self.include = {t.replace('+', '') for t in clean_tags if not t.startswith('-')}
+        tag_groups = {t.strip().replace('+', '') for t in spec.split(',') if t.strip() != ''}
+        self.exclude = set()
+        self.include = set()
+        for tag_group in tag_groups:
+            reg = re.compile(r'(-?)(\w*)(?:/(\w*))?(?::(\w*))?(?:\.(\w*))?') # [-][tag][/module][:test_class][.test_func]
+            match = reg.match(tag_group)
+            if not match:
+                _logger.error('Invalid tag %s', tag_group)
+            else:
+                test_filter = match.groups()
+                if test_filter[0]:
+                    self.exclude.add(test_filter)
+                else:
+                    self.include.add(test_filter)
+        if self.exclude and not self.include:
+            self.include.add((False, 'standard', False, False, False))
 
-    def check(self, arg):
+    def check(self, test):
         """ Return whether ``arg`` matches the specification: it must have at
-            least one tag in ``self.include`` and none in ``self.exclude``.
+            least one tag in ``self.include`` and none in ``self.exclude`` for each tag category.
         """
-        # handle the case where the Test does not inherit from TransactionCase
-        tags = getattr(arg, 'test_tags', set())
-        inter_no_test = self.exclude.intersection(tags)
-        if inter_no_test:
-            _logger.debug("Test '%s' not selected because it is tagged with : %s (exclusions: %s)", arg, inter_no_test, self.exclude)
+        if not hasattr(test, 'test_tags'):# handle the case where the Test does not inherit from TransactionCase
+            if isinstance(test, unittest.TestCase) and test.__module__.startswith('odoo.addons.'):
+                _logger.warning("Skipping test '%s' for a lack of test_tags. Please use MetaCase instead of TestCase", test)
+            else:
+                _logger.debug("Skipping test '%s' for a lack of test_tags.", test)
             return False
-        inter_to_test = self.include.intersection(tags)
-        if not inter_to_test:
-            _logger.debug("Test '%s' not selected because it was not tagged with %s", arg, self.include)
-            return False
-        _logger.debug("Test '%s' selected: tagged with %s, exclusions: %s, inclusions: %s", arg, tags, self.exclude, self.include)
-        return True
+        else:
+            test_tags = test.test_tags
+            tags = test_tags['tags']|test_tags['module']  # module as test_tags deprecated, keep for retrocompatibility, 
+            modules = test_tags['module']
+            test_classes = test_tags['class']
+            test_methods = getattr(test, '_testMethodName', False)
+
+            def _is_matching(test_filter):
+                (exclude, tag, module, test_class, test_method) = test_filter
+                if tag and tag != '*' and tag not in tags:
+                    return False
+                elif not tag and not exclude and 'standard' not in tags:  # by default if we dont give any test tag, we only want standart test in include case, but we want to exclude all of them
+                    return False
+                elif module and module not in modules:
+                    return False
+                elif test_class and test_class not in test_classes:
+                    return False
+                elif test_methods and test_method and test_method != test_methods:
+                    return False
+                return True
+
+            for test_filter in list(self.exclude) + list(self.include):
+                if _is_matching(test_filter):
+                    return not test_filter[0]
+            return False # no filter matched, return False

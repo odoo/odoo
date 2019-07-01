@@ -26,9 +26,10 @@ class TestViewsDuringModuleOperation(TransactionCase):
             'name': 'View to be t-called',
             'type': 'qweb',
             'arch': '<div>I will be t-called</div>',
-            'key': 'test_website.update_module_view_to_be_t_called',
+            'key': 'test_website.
+            ',
         })
-        update_module_child_view = View.create({
+        update_module_child_view =  ({
             'name': 'Child View',
             'mode': 'extension',
             'inherit_id': update_module_base_view.id,

@@ -4,11 +4,10 @@
 import unittest
 
 from odoo.osv.query import Query
-from odoo.tests.common import tagged
+from odoo.tests.common import BaseCase
 
 
-@tagged('standard', 'at_install')
-class QueryTestCase(unittest.TestCase):
+class QueryTestCase(BaseCase):
 
     def test_basic_query(self):
         query = Query()

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase, tagged, TagsSelector
+from odoo.tests.common import TransactionCase, tagged, TagsSelector, BaseCase
 
 
 @tagged('nodatabase')
@@ -17,7 +17,8 @@ class TestSetTags(TransactionCase):
         fc = FakeClass()
 
         self.assertTrue(hasattr(fc, 'test_tags'))
-        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'base'})
+        self.assertEqual(fc.test_tags['tags'], {'at_install', 'standard'})
+        self.assertEqual(fc.test_tags['module'], {'base'})
 
     def test_set_tags_not_decorated(self):
         """Test that a TransactionCase has some test_tags by default"""
@@ -28,7 +29,8 @@ class TestSetTags(TransactionCase):
         fc = FakeClass()
 
         self.assertTrue(hasattr(fc, 'test_tags'))
-        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'base'})
+        self.assertEqual(fc.test_tags['tags'], {'at_install', 'standard'})
+        self.assertEqual(fc.test_tags['module'], {'base'})
 
     def test_set_tags_single_tag(self):
         """Test the set_tags decorator with a single tag"""
@@ -39,7 +41,8 @@ class TestSetTags(TransactionCase):
 
         fc = FakeClass()
 
-        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'base', 'slow'})
+        self.assertEqual(fc.test_tags['tags'], {'at_install', 'standard', 'slow'})
+        self.assertEqual(fc.test_tags['module'], {'base'})
 
     def test_set_tags_multiple_tags(self):
         """Test the set_tags decorator with multiple tags"""
@@ -50,7 +53,8 @@ class TestSetTags(TransactionCase):
 
         fc = FakeClass()
 
-        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'base', 'slow', 'nightly'})
+        self.assertEqual(fc.test_tags['tags'], {'at_install', 'standard', 'slow', 'nightly'})
+        self.assertEqual(fc.test_tags['module'], {'base'})
 
     def test_inheritance(self):
         """Test inheritance when using the 'tagged' decorator"""
@@ -64,13 +68,15 @@ class TestSetTags(TransactionCase):
             pass
 
         fc = FakeClassB()
-        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'base', 'nightly'})
+        self.assertEqual(fc.test_tags['tags'], {'at_install', 'standard', 'nightly'})
+        self.assertEqual(fc.test_tags['module'], {'base'})
 
         class FakeClassC(FakeClassA):
             pass
 
         fc = FakeClassC()
-        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'base'})
+        self.assertEqual(fc.test_tags['tags'], {'at_install', 'standard'})
+        self.assertEqual(fc.test_tags['module'], {'base'})
 
     def test_untagging(self):
         """Test that one can remove the 'standard' tag"""
@@ -80,21 +86,22 @@ class TestSetTags(TransactionCase):
             pass
 
         fc = FakeClassA()
-        self.assertEqual(fc.test_tags, {'at_install', 'base'})
+        self.assertEqual(fc.test_tags['tags'], {'at_install'})
+        self.assertEqual(fc.test_tags['module'], {'base'})
 
         @tagged('-standard', '-base', '-at_install')
         class FakeClassB(TransactionCase):
             pass
 
         fc = FakeClassB()
-        self.assertEqual(fc.test_tags, set())
+        self.assertEqual(fc.test_tags['tags'], set())
 
         @tagged('-standard', '-base', '-at_install', 'fast')
         class FakeClassC(TransactionCase):
             pass
 
         fc = FakeClassC()
-        self.assertEqual(fc.test_tags, {'fast', })
+        self.assertEqual(fc.test_tags['tags'], {'fast', })
 
 
 @tagged('nodatabase')
@@ -104,61 +111,63 @@ class TestSelector(TransactionCase):
         """Test the parser part of the TagsSelector class"""
 
         tags = TagsSelector('+slow')
-        self.assertEqual({'slow', }, tags.include)
+        self.assertEqual({('', 'slow', None, None, None),}, tags.include)
         self.assertEqual(set(), tags.exclude)
 
         tags = TagsSelector('+slow,nightly')
-        self.assertEqual({'slow', 'nightly'}, tags.include)
+        self.assertEqual({('', 'slow', None, None, None), ('', 'nightly', None, None, None)}, tags.include)
         self.assertEqual(set(), tags.exclude)
 
         tags = TagsSelector('+slow,-standard')
-        self.assertEqual({'slow', }, tags.include)
-        self.assertEqual({'standard', }, tags.exclude)
+        self.assertEqual({('', 'slow', None, None, None),}, tags.include)
+        self.assertEqual({('-', 'standard', None, None, None),}, tags.exclude)
 
         # same with space after the comma
         tags = TagsSelector('+slow, -standard')
-        self.assertEqual({'slow', }, tags.include)
-        self.assertEqual({'standard', }, tags.exclude)
+        self.assertEqual({('', 'slow', None, None, None),}, tags.include)
+        self.assertEqual({('-', 'standard', None, None, None),}, tags.exclude)
 
-        # same with space befaore and after the comma
+        # same with space before and after the comma
         tags = TagsSelector('+slow , -standard')
-        self.assertEqual({'slow', }, tags.include)
-        self.assertEqual({'standard', }, tags.exclude)
+        self.assertEqual({('', 'slow', None, None, None), }, tags.include)
+        self.assertEqual({('-', 'standard', None, None, None), }, tags.exclude)
 
         tags = TagsSelector('+slow ,-standard,+js')
-        self.assertEqual({'slow', 'js', }, tags.include)
-        self.assertEqual({'standard', }, tags.exclude)
+        self.assertEqual({('', 'slow', None, None, None),('', 'js', None, None, None)}, tags.include)
+        self.assertEqual({('-', 'standard', None, None, None),}, tags.exclude)
 
+        # without +
         tags = TagsSelector('slow, ')
-        self.assertEqual({'slow', }, tags.include)
+        self.assertEqual({('', 'slow', None, None, None), }, tags.include)
         self.assertEqual(set(), tags.exclude)
 
+        # duplicates
         tags = TagsSelector('+slow,-standard, slow,-standard ')
-        self.assertEqual({'slow', }, tags.include)
-        self.assertEqual({'standard', }, tags.exclude)
+        self.assertEqual({('', 'slow', None, None, None), }, tags.include)
+        self.assertEqual({('-', 'standard', None, None, None), }, tags.exclude)
 
         tags = TagsSelector('')
         self.assertEqual(set(), tags.include)
         self.assertEqual(set(), tags.exclude)
 
+
 @tagged('nodatabase')
 class TestSelectorSelection(TransactionCase):
-
     def test_selector_selection(self):
         """Test check_tags use cases"""
         class Test_A(TransactionCase):
             pass
 
         @tagged('stock')
-        class Test_B():
+        class Test_B(BaseCase):
             pass
 
         @tagged('stock', 'slow')
-        class Test_C():
+        class Test_C(BaseCase):
             pass
 
         @tagged('standard', 'slow')
-        class Test_D():
+        class Test_D(BaseCase):
             pass
 
         @tagged('-at_install', 'post_install')
@@ -175,7 +184,6 @@ class TestSelectorSelection(TransactionCase):
         # considered tagged standard and they are run by default if
         # not explicitly deselected with '-standard' or if 'standard' is not
         # selectected along with another test tag
-
         # same as "--test-tags=''" parameters:
         tags = TagsSelector('')
         self.assertFalse(tags.check(no_tags_obj))
@@ -211,10 +219,10 @@ class TestSelectorSelection(TransactionCase):
         self.assertFalse(tags.check(stock_tag_obj))
 
         tags = TagsSelector('standard')
-        self.assertFalse(tags.check(stock_tag_obj))
+        self.assertTrue(tags.check(stock_tag_obj))
 
         tags = TagsSelector('slow,standard')
-        self.assertFalse(tags.check(stock_tag_obj))
+        self.assertTrue(tags.check(stock_tag_obj))
 
         tags = TagsSelector('slow,-standard')
         self.assertFalse(tags.check(stock_tag_obj))

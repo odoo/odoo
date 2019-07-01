@@ -6,6 +6,7 @@ import unittest
 import odoo
 from odoo.sql_db import TestCursor
 from odoo.tests import common
+from odoo.tests.common import BaseCase
 from odoo.tools.misc import mute_logger
 
 ADMIN_USER_ID = common.ADMIN_USER_ID
@@ -14,8 +15,7 @@ def registry():
     return odoo.registry(common.get_db_name())
 
 
-@common.tagged('standard', 'at_install')
-class TestExecute(unittest.TestCase):
+class TestExecute(BaseCase):
     """ Try cr.execute with wrong parameters """
 
     @mute_logger('odoo.sql_db')
