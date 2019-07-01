@@ -47,7 +47,7 @@
                 <thead>
                     <tr class="active">
                         <th>Quotation #</th>
-                        <th class="text-right">Order Date</th>
+                        <th class="text-right">Quotation Date</th>
                         <th class="text-right">Valid Until</th>
                         <th class="text-center"/>
                         <th class="text-right">Total</th>
@@ -376,7 +376,13 @@
                 </div>
                 <div class="row" id="so_date">
                     <div class="mb-3 col-6">
-                      <strong>Date:</strong> <span t-field="sale_order.date_order" t-options='{"widget": "date"}'/>
+                      <t t-if="sale_order.state == 'draft'">
+                        <strong>Quotation Date:</strong> 
+                      </t>
+                      <t t-if="sale_order.state in ['sale', 'done', 'cancel']">
+                        <strong>Order Date:</strong> 
+                      </t>
+                      <span t-field="sale_order.date_order" t-options='{"widget": "date"}'/>
                     </div>
                     <div class="mb-3 col-6" t-if="sale_order.validity_date">
                         <strong>Expiration Date:</strong> <span t-field="sale_order.validity_date" t-options='{"widget": "date"}'/>
