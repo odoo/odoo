@@ -8,6 +8,7 @@ from . import test_quant
 from . import test_quant_inventory_mode
 from . import test_generate_serial_numbers
 from . import test_inventory
+from . import test_inventory_report
 from . import test_move
 from . import test_move2
 from . import test_robustness

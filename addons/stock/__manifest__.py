@@ -79,6 +79,7 @@
     'qweb': [
         'static/src/xml/inventory_lines.xml',
         'static/src/xml/stock_traceability_report_backend.xml',
+        'static/src/xml/inventory_report.xml',
     ],
     'installable': True,
     'application': True,
