@@ -305,12 +305,14 @@ class Message(models.Model):
     #------------------------------------------------------
 
     @api.model
-    def _message_read_dict_postprocess(self, messages, message_tree):
+    def _message_read_dict_postprocess(self, messages, message_tree, attachments_token=False):
         """ Post-processing on values given by message_read. This method will
             handle partners in batch to avoid doing numerous queries.
 
             :param list messages: list of message, as get_dict result
             :param dict message_tree: {[msg.id]: msg browse record as super user}
+            :param boolean attachments_token: set to True to generate and return
+                access_token for all returned attachments
         """
         # 1. Aggregate partners (author_id and partner_ids), attachments and tracking values
         partners = self.env['res.partner'].sudo()
@@ -332,14 +334,14 @@ class Message(models.Model):
         partner_tree = dict((partner[0], partner) for partner in partners_names)
 
         # 2. Attachments as SUPERUSER, because could receive msg and attachments for doc uid cannot see
-        attachments_data = attachments.sudo().read(['id', 'name', 'mimetype'])
+        attachments = attachments.sudo()
+        attachment_fields = ['id', 'name', 'mimetype']
+        if attachments_token:
+            attachment_fields.append('access_token')
+        # prefetch only the fields that are going to be used
+        attachments.read(attachment_fields)
         safari = request and request.httprequest.user_agent.browser == 'safari'
-        attachments_tree = dict((attachment['id'], {
-            'id': attachment['id'],
-            'filename': attachment['name'],
-            'name': attachment['name'],
-            'mimetype': 'application/octet-stream' if safari and attachment['mimetype'] and 'video' in attachment['mimetype'] else attachment['mimetype'],
-        }) for attachment in attachments_data)
+        attachments_tree = dict((attachment.id, attachment) for attachment in attachments)
 
         # 3. Tracking values
         tracking_values = self.env['mail.tracking.value'].sudo().search([('mail_message_id', 'in', message_ids)])
@@ -387,12 +389,21 @@ class Message(models.Model):
 
             has_access_to_model = message.model and self.env[message.model].check_access_rights('read', raise_exception=False)
             if message.attachment_ids and message.res_id and issubclass(self.pool[message.model], self.pool['mail.thread']) and has_access_to_model:
-                main_attachment =  self.env[message.model].browse(message.res_id).message_main_attachment_id
+                main_attachment = self.env[message.model].browse(message.res_id).message_main_attachment_id
             attachment_ids = []
             for attachment in message.attachment_ids:
                 if attachment.id in attachments_tree:
-                    attachments_tree[attachment.id]['is_main'] = main_attachment == attachment
-                    attachment_ids.append(attachments_tree[attachment.id])
+                    attachment = attachments_tree[attachment.id]
+                    attachment_data = {
+                        'id': attachment.id,
+                        'filename': attachment.name,
+                        'name': attachment.name,
+                        'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
+                    }
+                    attachment_data['is_main'] = main_attachment == attachment
+                    if attachments_token:
+                        attachment_data['access_token'] = attachment.generate_access_token()[0]
+                    attachment_ids.append(attachment_data)
             tracking_value_ids = []
             for tracking_value_id in message_to_tracking.get(message_id, list()):
                 if tracking_value_id in tracking_tree:
