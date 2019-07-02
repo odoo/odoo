@@ -35,7 +35,7 @@ class PortalWizard(models.TransientModel):
         contact_ids = set()
         user_changes = []
         for partner in self.env['res.partner'].sudo().browse(partner_ids):
-            contact_partners = partner.child_ids | partner
+            contact_partners = partner.child_ids.filtered(lambda p: p.type in ('contact', 'other')) | partner
             for contact in contact_partners:
                 # make sure that each contact appears at most once in the list
                 if contact.id not in contact_ids:
