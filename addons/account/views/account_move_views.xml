@@ -673,7 +673,7 @@
                                 <group class="oe_subtotal_footer oe_right"
                                        attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
                                     <field name="amount_untaxed"/>
-                                    <field name="amount_tax"/>
+                                    <field name="amount_by_group" widget="tax-group-custom-field" nolabel="1" colspan="2"/>
                                     <field name="amount_total" class="oe_subtotal_footer_separator"/>
                                     <field name="invoice_payments_widget" colspan="2" nolabel="1" widget="payment"/>
                                     <field name="amount_residual" class="oe_subtotal_footer_separator"
@@ -748,6 +748,7 @@
 
                                         <field name="sequence" invisible="1"/>
                                         <field name="tax_line_id" invisible="1"/>
+                                        <field name="tax_group_id" invisible="1"/>
                                         <field name="tax_repartition_line_id" invisible="1"/>
                                         <field name="tag_ids" invisible="1"/>
                                         <field name="tax_base_amount" invisible="1"/>
