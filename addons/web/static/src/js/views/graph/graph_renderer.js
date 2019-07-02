@@ -847,6 +847,12 @@ return AbstractRenderer.extend({
             dataset.pointBackgroundColor = dataset.borderColor;
             dataset.pointBorderColor = 'rgba(0,0,0,0.2)';
         });
+        if (data.datasets.length === 1) {
+            const dataset = data.datasets[0];
+            dataset.fill = 'origin';
+            dataset.backgroundColor = hexToRGBA(COLORS[0], 0.4);
+        }
+
         // center the points in the chart (without that code they are put on the left and the graph seems empty)
         data.labels = data.labels.length > 1 ?
             data.labels :
