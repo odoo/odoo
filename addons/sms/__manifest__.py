@@ -10,12 +10,12 @@ This module gives a framework for SMS text messaging
 
 The service is provided by the In App Purchase Odoo platform.
 """,
-    'depends': ['base', 'iap', 'mail'],
+    'depends': ['base', 'iap', 'mail', 'phone_validation'],
     'data': [
-        'wizard/send_sms_views.xml',
+        'wizard/sms_composer_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
-        'views/templates.xml',
+        'views/assets.xml',
     ],
     'qweb': [
         'static/src/xml/sms_widget.xml',
