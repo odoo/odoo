@@ -68,6 +68,7 @@ class MrpUnbuild(models.Model):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Done')], string='Status', default='draft', index=True)
+    company_id = fields.Many2one(related='mo_id.company_id')
 
     @api.onchange('mo_id')
     def onchange_mo_id(self):

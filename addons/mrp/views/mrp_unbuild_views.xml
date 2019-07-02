@@ -130,6 +130,7 @@
                                 <field name="mo_id" domain="[('state','=','done')]"/>
                                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" domain="[('usage','=','internal')]"/>
                                 <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" domain="[('usage','=','internal')]"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="has_tracking" invisible="1"/>
                                 <field name="lot_id" attrs="{'invisible': [('has_tracking', '=', 'none')], 'required': [('has_tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
                             </group>
@@ -157,6 +158,7 @@
                     <field name="product_uom_id" groups="uom.group_uom"/>
                     <field name="state"/>
                     <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>

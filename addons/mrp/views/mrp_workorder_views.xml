@@ -90,6 +90,7 @@
                 <field name="qty_production"/>
                 <field name="product_uom_id"/>
                 <field name="state"/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>
@@ -244,6 +245,7 @@
                         <group>
                             <field name="workcenter_id" readonly="1"/>
                             <field name="production_id" readonly="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
                 </page>

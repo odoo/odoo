@@ -125,6 +125,7 @@ class MrpWorkorder(models.Model):
     finished_workorder_line_ids = fields.One2many('mrp.workorder.line',
         'finished_workorder_id', string='By-products')
     allowed_lots_domain = fields.One2many(comodel_name='stock.production.lot', compute="_compute_allowed_lots_domain")
+    company_id = fields.Many2one(related='production_id.company_id')
 
     # Both `date_planned_start` and `date_planned_finished` are related fields on `leave_id`. Let's say
     # we slide a workorder on a gantt view, a single call to write is made with both
