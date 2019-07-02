@@ -90,7 +90,7 @@ class TestActivityRights(TestActivityCommon):
 class TestActivityFlow(TestActivityCommon):
 
     def test_activity_flow_employee(self):
-        with self.sudoAs('ernest'):
+        with self.sudo('ernest'):
             test_record = self.env['mail.test.activity'].browse(self.test_record.id)
             self.assertEqual(test_record.activity_ids, self.env['mail.activity'])
 
@@ -121,7 +121,7 @@ class TestActivityFlow(TestActivityCommon):
     def test_activity_flow_portal(self):
         portal_user = mail_new_test_user(self.env, login='chell', groups='base.group_portal', name='Chell Gladys')
 
-        with self.sudoAs('chell'):
+        with self.sudo('chell'):
             test_record = self.env['mail.test.activity'].browse(self.test_record.id)
             with self.assertRaises(exceptions.AccessError):
                 self.env['mail.activity'].create({
@@ -164,7 +164,8 @@ class TestActivityMixin(TestActivityCommon):
 
     def test_activity_mixin(self):
         self.user_employee.tz = self.user_admin.tz
-        with self.sudoAs('ernest'):
+        with self.sudo('ernest'):
+            self.test_record = self.env['mail.test.activity'].browse(self.test_record.id)
             self.assertEqual(self.test_record.env.user, self.user_employee)
 
             now_utc = datetime.now(pytz.UTC)
