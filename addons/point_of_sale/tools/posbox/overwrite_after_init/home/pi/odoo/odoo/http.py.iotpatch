@@ -1,0 +1,15 @@
+--- http_old.py	2019-07-05 14:48:20.208647592 +0200
++++ http_new.py	2019-07-05 15:17:35.251156828 +0200
+@@ -1534,7 +1534,11 @@
+     """
+     httprequest = httprequest or request.httprequest
+ 
+-    dbs = db_list(True, httprequest)
++    dbs = []
++    try:
++        dbs = db_list(True, httprequest)
++    except:
++        pass
+ 
+     # try the db already in the session
+     db_session = httprequest.session.db

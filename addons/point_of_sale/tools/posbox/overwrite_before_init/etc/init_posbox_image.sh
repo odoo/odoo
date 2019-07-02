@@ -12,7 +12,7 @@ __base="$(basename ${__file} .sh)"
 # leading to mismatch between kernel image and modules.
 mount /dev/sda1 /boot
 
-# Recommends: antiword, graphviz, ghostscript, postgresql, python-gevent, poppler-utils
+# Recommends: antiword, graphviz, ghostscript, python-gevent, poppler-utils
 export DEBIAN_FRONTEND=noninteractive
 echo "nameserver 8.8.8.8" >> /etc/resolv.conf
 
@@ -44,14 +44,14 @@ PKGS_TO_INSTALL="
     lightdm \
     xserver-xorg-video-fbdev \
     xserver-xorg-input-evdev \
-    iceweasel \
+    firefox-esr \
     xdotool \
     unclutter \
     x11-utils \
     openbox \
     rpi-update \
     adduser \
-    postgresql \
+    libpq-dev \
     python-cups \
     python3 \
     python3-pyscard \
@@ -94,11 +94,6 @@ echo "Acquire::Retries "16";" > /etc/apt/apt.conf.d/99acquire-retries
 # KEEP OWN CONFIG FILES DURING PACKAGE CONFIGURATION
 # http://serverfault.com/questions/259226/automatically-keep-current-version-of-config-files-when-apt-get-install
 apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install ${PKGS_TO_INSTALL}
-pg_lsclusters
-systemctl start postgresql@9.6-main
-systemctl status postgresql@9.6-main
-
-sudo -u postgres createuser -s pi
 
 apt-get clean
 localepurge

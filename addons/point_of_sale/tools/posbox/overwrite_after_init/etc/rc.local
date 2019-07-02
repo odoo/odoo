@@ -23,4 +23,7 @@ chown pi:pi /var/run/odoo
 /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/led_status.sh &
 /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/wireless_ap.sh &
 
+systemctl start systemd-timesyncd.service
+systemctl daemon-reload
+
 exit 0

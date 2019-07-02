@@ -28,3 +28,4 @@ fi
 # keyboard into the posbox just to refresh firefox
 until wget -q "${DISPLAY_URL}" -O /dev/null ; do sleep 1 ; done
 /usr/bin/firefox "${URL}" &
+DISPLAY=:0.0 XAUTHORITY="/run/lightdm/pi/xauthority" xdotool search --sync --onlyvisible --class "Firefox" windowactivate key F11
