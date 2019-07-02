@@ -162,6 +162,8 @@ class account_payment(models.Model):
         for pay in draft_payments:
             payment_amount = -pay.amount if pay.payment_type == 'outbound' else pay.amount
             pay.payment_difference = pay._compute_payment_amount(pay.invoice_ids, pay.currency_id, pay.journal_id, pay.payment_date) - payment_amount
+        for pay in self - draft_payments:
+            pay.payment_difference = 0
 
     @api.onchange('journal_id')
     def _onchange_journal(self):

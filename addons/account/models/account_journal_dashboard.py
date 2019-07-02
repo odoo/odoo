@@ -244,7 +244,7 @@ class account_journal(models.Model):
             title = _('Bills to pay') if self.type == 'purchase' else _('Invoices owed to you')
             # DLE P89: `/home/dle/src/odoo/master-nochange-fp/addons/account/tests/test_account_customer_invoice.py`
             # `test_customer_invoice_dashboard`
-            self.env['account.invoice'].flush(['residual_signed', 'amount_total'])
+            self.env['account.move'].flush(['amount_residual', 'amount_total'])
 
             (query, query_args) = self._get_open_bills_to_pay_query()
             self.env.cr.execute(query, query_args)

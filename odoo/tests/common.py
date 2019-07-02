@@ -315,33 +315,35 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
         :param expected_values:       List of dicts expected to be exactly matched in records
         '''
 
-        def _compare_candidate(record, candidate):
+        def _compare_candidate(record, candidates):
             ''' Return True if the candidate matches the given record '''
-            for field_name in candidate.keys():
-                record_value = record[field_name]
-                candidate_value = candidate[field_name]
-                field_type = record._fields[field_name].type
-                if field_type == 'monetary':
-                    # Compare monetary field.
-                    currency_field_name = record._fields[field_name].currency_field
-                    record_currency = record[currency_field_name]
-                    if record_currency.compare_amounts(candidate_value, record_value)\
-                            if record_currency else candidate_value != record_value:
-                        return False
-                elif field_type in ('one2many', 'many2many'):
-                    # Compare x2many relational fields.
-                    # Empty comparison must be an empty list to be True.
-                    if set(record_value.ids) != set(candidate_value):
-                        return False
-                elif field_type == 'many2one':
-                    # Compare many2one relational fields.
-                    # Every falsy value is allowed to compare with an empty record.
-                    if (record_value or candidate_value) and record_value.id != candidate_value:
-                        return False
-                elif (candidate_value or record_value) and record_value != candidate_value:
-                    # Compare others fields if not both interpreted as falsy values.
-                    return False
-            return True
+            for index, candidate in enumerate(candidates):
+                for field_name in candidate.keys():
+                    record_value = record[field_name]
+                    candidate_value = candidate[field_name]
+                    field_type = record._fields[field_name].type
+                    if field_type == 'monetary':
+                        # Compare monetary field.
+                        currency_field_name = record._fields[field_name].currency_field
+                        record_currency = record[currency_field_name]
+                        if record_currency.compare_amounts(candidate_value, record_value)\
+                                if record_currency else candidate_value != record_value:
+                            continue
+                    elif field_type in ('one2many', 'many2many'):
+                        # Compare x2many relational fields.
+                        # Empty comparison must be an empty list to be True.
+                        if set(record_value.ids) != set(candidate_value):
+                            continue
+                    elif field_type == 'many2one':
+                        # Compare many2one relational fields.
+                        # Every falsy value is allowed to compare with an empty record.
+                        if (record_value or candidate_value) and record_value.id != candidate_value:
+                            continue
+                    elif (candidate_value or record_value) and record_value != candidate_value:
+                        # Compare others fields if not both interpreted as falsy values.
+                        continue
+                return index
+            return False
 
         def _repr_field_value(record, field_name):
             record_value = record[field_name]
@@ -369,10 +371,14 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
             msg = 'Wrong number of records to compare: %d != %d.\n\n' % (len(records), len(expected_values))
             self.fail(msg + _format_message(records, expected_values))
 
+        candidates = list(expected_values)
         for index, record in enumerate(records):
-            if not _compare_candidate(record, expected_values[index]):
+            candidate = _compare_candidate(record, candidates)
+            if candidate is False:
                 msg = 'Record doesn\'t match expected values at index %d.\n\n' % index
                 self.fail(msg + _format_message(records, expected_values))
+            else:
+                candidates.pop(candidate)
 
     def shortDescription(self):
         return None

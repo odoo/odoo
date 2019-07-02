@@ -877,6 +877,7 @@ class AccountMove(models.Model):
         'line_ids.payment_id.state')
     def _compute_amount(self):
         invoice_ids = [move.id for move in self if move.id and move.is_invoice(include_receipts=True)]
+        self.env['account.payment'].flush(['state'])
         if invoice_ids:
             self._cr.execute(
                 '''
@@ -1017,7 +1018,7 @@ class AccountMove(models.Model):
                     vendor_display_name = _('From: ') + move.invoice_source_email
                     move.invoice_vendor_icon = '@'
                 else:
-                    vendor_display_name = _('Created by: %s') % move.sudo().create_uid.name
+                    vendor_display_name = ('Created by: ') + (move.sudo().create_uid.name or self.env.user.name)
                     move.invoice_vendor_icon = '#'
             move.invoice_vendor_display_name = vendor_display_name
 
@@ -1033,14 +1034,15 @@ class AccountMove(models.Model):
 
         # Check moves being candidates to set a custom number next.
         moves = self.filtered(lambda move: move.is_invoice() and move.name == '/')
+        treated = self.browse()
         if not moves:
             return
 
         for key, group in groupby(moves, key=lambda move: (move.journal_id, move._get_sequence())):
             journal, sequence = key
             domain = [('journal_id', '=', journal.id), ('state', '=', 'posted')]
-            if not isinstance(self.id, models.NewId):
-                domain.append(('id', '!=', self.id))
+            if self.ids:
+                domain.append(('id', 'not in', self.ids))
             if journal.type == 'sale':
                 domain.append(('type', 'in', ('out_invoice', 'out_refund')))
             elif journal.type == 'purchase':
@@ -1055,6 +1057,10 @@ class AccountMove(models.Model):
                 number_next = sequence._get_current_sequence().number_next_actual
                 move.invoice_sequence_number_next_prefix = prefix
                 move.invoice_sequence_number_next = '%%0%sd' % sequence.padding % number_next
+                treated |= move
+        for move in (self - treated):
+            move.invoice_sequence_number_next_prefix = False
+            move.invoice_sequence_number_next = False
 
     def _inverse_invoice_sequence_number_next(self):
         ''' Set the number_next on the sequence related to the invoice/bill/refund'''
@@ -1076,6 +1082,7 @@ class AccountMove(models.Model):
     def _compute_payments_widget_to_reconcile_info(self):
         for move in self:
             move.invoice_outstanding_credits_debits_widget = json.dumps(False)
+            move.invoice_has_outstanding = False
 
             if move.state != 'posted' or move.invoice_payment_state != 'not_paid' or not move.is_invoice(include_receipts=True):
                 continue
@@ -1160,6 +1167,7 @@ class AccountMove(models.Model):
     @api.depends('type', 'line_ids.amount_residual')
     def _compute_payments_widget_reconciled_info(self):
         for move in self:
+            move.invoice_payments_widget = json.dumps(False)
             if move.state != 'posted' or not move.is_invoice(include_receipts=True):
                 continue
             reconciled_vals = move._get_reconciled_info_JSON_values()
@@ -1170,8 +1178,6 @@ class AccountMove(models.Model):
                     'content': reconciled_vals,
                 }
                 move.invoice_payments_widget = json.dumps(info, default=date_utils.json_default)
-            else:
-                move.invoice_payments_widget = json.dumps(False)
 
     @api.depends('line_ids.price_subtotal', 'line_ids.tax_base_amount', 'line_ids.tax_line_id', 'partner_id', 'currency_id')
     def _compute_invoice_taxes_by_group(self):
@@ -1259,6 +1265,7 @@ class AccountMove(models.Model):
         # /!\ As this method is called in create / write, we can't make the assumption the computed stored fields
         # are already done. Then, this query MUST NOT depend of computed stored fields (e.g. balance).
         # It happens as the ORM makes the create with the 'no_recompute' statement.
+        self.env['account.move.line'].flush(['debit', 'credit'])
         self._cr.execute('''
             SELECT line.move_id
             FROM account_move_line line
@@ -1435,6 +1442,9 @@ class AccountMove(models.Model):
         return moves
 
     def write(self, vals):
+        new_records = self - self.filtered('id')
+        result = super(AccountMove, new_records).write(vals)
+        self = self - new_records
         not_paid_invoices = self.filtered(lambda move: move.is_invoice(include_receipts=True) and move.invoice_payment_state not in ('paid', 'in_payment'))
 
         if self._move_autocomplete_invoice_lines_write(vals):
@@ -1451,7 +1461,7 @@ class AccountMove(models.Model):
         # Trigger 'action_invoice_paid' when the invoice becomes paid after a write.
         not_paid_invoices.filtered(lambda move: move.invoice_payment_state in ('paid', 'in_payment')).action_invoice_paid()
 
-        return res
+        return result and res
 
     def unlink(self):
         for move in self:
@@ -2828,6 +2838,9 @@ class AccountMoveLine(models.Model):
         return lines
 
     def write(self, vals):
+        new_records = self - self.filtered('id')
+        result = super(AccountMoveLine, new_records).write(vals)
+        self = self - new_records
         # OVERRIDE
         ACCOUNTING_FIELDS = ('debit', 'credit', 'amount_currency')
         BUSINESS_FIELDS = ('price_unit', 'quantity', 'discount', 'tax_ids')
@@ -2849,7 +2862,7 @@ class AccountMoveLine(models.Model):
                         lambda r: r.id != record.id and r.account_id.internal_type == 'liquidity')):
                     record.payment_id.state = 'reconciled'
 
-        result = super(AccountMoveLine, self).write(vals)
+        result = result and super(AccountMoveLine, self).write(vals)
 
         for line in self:
             if not line.move_id.is_invoice(include_receipts=True):
