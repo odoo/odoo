@@ -365,9 +365,11 @@ class IrHttp(models.AbstractModel):
                 mimetype = guess_mimetype(base64.b64decode(content), default=default_mimetype)
 
         # extension
-        extension = mimetypes.guess_extension(mimetype)
-        if extension and not filename.endswith(extension):
-            filename = "%s%s" % (filename, extension)
+        _, existing_extension = os.path.splitext(filename)
+        if not existing_extension:
+            extension = mimetypes.guess_extension(mimetype)
+            if extension:
+                filename = "%s%s" % (filename, extension)
 
         headers += [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff')]
 
