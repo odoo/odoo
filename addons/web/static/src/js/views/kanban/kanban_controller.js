@@ -569,12 +569,11 @@ var KanbanController = BasicController.extend({
      */
     _onToggleActiveRecords: function (ev) {
         var self = this;
-        var active = !ev.data.archive;
         var column = ev.target;
         var recordIds = _.pluck(column.records, 'db_id');
         if (recordIds.length) {
             this.model
-                .toggleActive(recordIds, active, column.db_id)
+                .toggleActive(recordIds, column.db_id)
                 .then(function (dbID) {
                     var data = self.model.get(dbID);
                     self.renderer.updateColumn(dbID, data);
