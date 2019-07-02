@@ -31,8 +31,9 @@
             <field name="name">crm.lead.tag.tree</field>
             <field name="model">crm.lead.tag</field>
             <field name="arch" type="xml">
-                <tree string="Lead Tags">
+                <tree string="Lead Tags" editable="bottom">
                     <field name="name"/>
+                    <field name="color" groups="base.group_no_one"/>
                 </tree>
             </field>
         </record>
@@ -852,6 +853,16 @@
                         </div>
                     </sheet>
                 </form>
+            </field>
+        </record>
+
+        <record id="crm_lost_reason_view_tree" model="ir.ui.view">
+            <field name="name">crm.lost.reason.tree</field>
+            <field name="model">crm.lost.reason</field>
+            <field name="arch" type="xml">
+                <tree string="Channel" editable="bottom">
+                    <field name="name"/>
+                </tree>
             </field>
         </record>
 

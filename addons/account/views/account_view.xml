@@ -180,10 +180,10 @@
             <field name="model">account.journal.group</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree editable="bottom">
                     <field name="sequence"  widget="handle"/>
                     <field name="name"/>
-                    <field name="account_journal_ids" widget="many2many_tags"/>
+                    <field name="account_journal_ids" widget="many2many_tags" options="{'noCreate': True}"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -388,6 +388,18 @@ action = model.setting_init_bank_account_action()
                 </form>
             </field>
         </record>
+
+        <record id="account_tag_view_tree" model="ir.ui.view">
+            <field name="name">Tags</field>
+            <field name="model">account.account.tag</field>
+            <field name="arch" type="xml">
+                <tree string="Tags">
+                    <field name="name"/>
+                    <field name="applicability"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="account_tag_action" model="ir.actions.act_window">
             <field name="name">Account Tags</field>
             <field name="res_model">account.account.tag</field>

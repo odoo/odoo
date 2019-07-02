@@ -16,7 +16,7 @@
         <field name="name">utm.campaign.view.tree</field>
         <field name="model">utm.campaign</field>
         <field name="arch" type="xml">
-            <tree string="Campaign">
+            <tree string="Campaign" editable="bottom">
                 <field name="name"/>
             </tree>
         </field>
@@ -57,9 +57,9 @@
         <field name="name">utm.medium.view.tree</field>
         <field name="model">utm.medium</field>
         <field name="arch" type="xml">
-            <tree string="Mediums">
+            <tree string="Mediums" editable="bottom">
                 <field name="name"/>
-                <field name="active"/>
+                <field name="active" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -98,7 +98,7 @@
         <field name="name">utm.source.view.tree</field>
         <field name="model">utm.source</field>
         <field name="arch" type="xml">
-            <tree string="Source">
+            <tree string="Source" editable="bottom">
                 <field name="name"/>
             </tree>
         </field>

@@ -779,9 +779,10 @@
         <field name="name">maintenance.team.tree</field>
         <field name="model">maintenance.team</field>
         <field name="arch" type="xml">
-            <tree string="Maintenance Team">
+            <tree string="Maintenance Team" editable="bottom">
                 <field name="name"/>
-                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="member_ids" widget="many2many_tags" options="{'color_field': 'color', 'noCreate': True}"/>
+                <field name="company_id" groups="base.group_multi_company" options="{'noCreate': True}"/>
             </tree>
         </field>
     </record>

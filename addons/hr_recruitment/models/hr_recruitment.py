@@ -84,7 +84,7 @@ class RecruitmentDegree(models.Model):
         ('name_uniq', 'unique (name)', 'The name of the Degree of Recruitment must be unique!')
     ]
 
-    name = fields.Char("Degree", required=True, translate=True)
+    name = fields.Char("Degree Name", required=True, translate=True)
     sequence = fields.Integer("Sequence", default=1, help="Gives the sequence order when displaying a list of degrees.")
 
 
@@ -484,7 +484,7 @@ class ApplicantCategory(models.Model):
     _name = "hr.applicant.category"
     _description = "Category of applicant"
 
-    name = fields.Char("Name", required=True)
+    name = fields.Char("Tag Name", required=True)
     color = fields.Integer(string='Color Index', default=10)
 
     _sql_constraints = [

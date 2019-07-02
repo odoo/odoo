@@ -11,7 +11,7 @@ class TrackTag(models.Model):
     _description = 'Event Track Tag'
     _order = 'name'
 
-    name = fields.Char('Tag')
+    name = fields.Char('Tag Name', required=True)
     track_ids = fields.Many2many('event.track', string='Tracks')
     color = fields.Integer(string='Color Index')
 
@@ -24,7 +24,7 @@ class TrackLocation(models.Model):
     _name = "event.track.location"
     _description = 'Event Track Location'
 
-    name = fields.Char('Room')
+    name = fields.Char('Location')
 
 
 class TrackStage(models.Model):
