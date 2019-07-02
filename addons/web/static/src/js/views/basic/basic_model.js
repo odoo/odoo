@@ -1176,7 +1176,7 @@ var BasicModel = AbstractModel.extend({
      * @param {string} parentID id of the parent resource to reload
      * @returns {Promise<string>} resolves to the parent id
      */
-    toggleActive: function (recordIDs, value, parentID) {
+    toggleActive: function (recordIDs, parentID) {
         var self = this;
         var parent = this.localData[parentID];
         var resIDs = _.map(recordIDs, function (recordID) {
@@ -1184,8 +1184,56 @@ var BasicModel = AbstractModel.extend({
         });
         return this._rpc({
                 model: parent.model,
-                method: 'write',
-                args: [resIDs, { active: value }],
+                method: 'toggle_active',
+                args: [resIDs],
+            })
+            .then(function () {
+                // optionally clear the DataManager's cache
+                self._invalidateCache(parent);
+                return self.reload(parentID);
+            });
+    },
+    /**
+     * Archive the given records
+     *
+     * @param {Array} recordIDs local ids of the records to (un)archive
+     * @param {string} parentID id of the parent resource to reload
+     * @returns {Promise<string>} resolves to the parent id
+     */
+    actionArchive: function (recordIDs, parentID) {
+        var self = this;
+        var parent = this.localData[parentID];
+        var resIDs = _.map(recordIDs, function (recordID) {
+            return self.localData[recordID].res_id;
+        });
+        return this._rpc({
+                model: parent.model,
+                method: 'action_archive',
+                args: [resIDs],
+            })
+            .then(function () {
+                // optionally clear the DataManager's cache
+                self._invalidateCache(parent);
+                return self.reload(parentID);
+            });
+    },
+    /**
+     * Unarchive the given records
+     *
+     * @param {Array} recordIDs local ids of the records to (un)archive
+     * @param {string} parentID id of the parent resource to reload
+     * @returns {Promise<string>} resolves to the parent id
+     */
+    actionUnarchive: function (recordIDs, parentID) {
+        var self = this;
+        var parent = this.localData[parentID];
+        var resIDs = _.map(recordIDs, function (recordID) {
+            return self.localData[recordID].res_id;
+        });
+        return this._rpc({
+                model: parent.model,
+                method: 'action_unarchive',
+                args: [resIDs],
             })
             .then(function () {
                 // optionally clear the DataManager's cache
