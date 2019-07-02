@@ -10,7 +10,7 @@ class UtmMedium(models.Model):
     _description = 'UTM Medium'
     _order = 'name'
 
-    name = fields.Char(string='Channel Name', required=True)
+    name = fields.Char(string='Medium Name', required=True)
     active = fields.Boolean(default=True)
 
 

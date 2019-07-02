@@ -904,6 +904,16 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="project_tags_tree_view">
+            <field name="name">Tags</field>
+            <field name="model">project.tags</field>
+            <field name="arch" type="xml">
+                <tree string="Tags" editable="bottom">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="project_tags_action" model="ir.actions.act_window">
             <field name="name">Tags</field>
             <field name="res_model">project.tags</field>

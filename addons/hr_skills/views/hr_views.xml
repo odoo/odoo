@@ -170,6 +170,17 @@
         </field>
     </record>
 
+    <record id="hr_resume_line_type_tree_view" model="ir.ui.view">
+        <field name="name">hr.resume.line.type.tree.view</field>
+        <field name="model">hr.resume.line.type</field>
+        <field name="arch" type="xml">
+            <tree name="Resumé Line Types" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
     <record id="hr_resume_type_action" model="ir.actions.act_window">
         <field name="name">Resumé Line Types</field>
         <field name="res_model">hr.resume.line.type</field>
@@ -287,7 +298,11 @@
                         </h1>
                     </div>
                     <group string="Skills">
-                        <field name="skill_ids" nolabel="1" context="{'default_skill_type_id': id}"/>
+                        <field name="skill_ids" nolabel="1" context="{'default_skill_type_id': id}">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                            </tree>
+                        </field>
                     </group>
                     <group string="Levels">
                         <field name="skill_level_ids" nolabel="1" context="{'default_skill_type_id': id}"/>
