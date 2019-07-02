@@ -368,7 +368,8 @@ return AbstractRenderer.extend({
     _getLegendOptions: function (datasetsCount) {
         var legendOptions = {
             display: datasetsCount <= MAX_LEGEND_LENGTH,
-            position: config.device.size_class > config.device.SIZES.VSM ? 'right' : 'top',
+            // position: this.state.mode === 'pie' ? 'right' : 'top',
+            position: 'top',
             onHover: this._onlegendTooltipHover.bind(this),
             onLeave: this._onLegendTootipLeave.bind(this),
         };
@@ -969,7 +970,7 @@ return AbstractRenderer.extend({
      */
     _renderTitle: function () {
         if (this.title) {
-            this.$('.o_graph_canvas_container').last().prepend($('<label/>', {
+            this.$el.prepend($('<label/>', {
                 text: this.title,
             }));
         }
