@@ -1020,6 +1020,8 @@ class AccountMove(models.Model):
                 else:
                     vendor_display_name = ('Created by: ') + (move.sudo().create_uid.name or self.env.user.name)
                     move.invoice_vendor_icon = '#'
+            else:
+                move.invoice_vendor_icon = ''
             move.invoice_vendor_display_name = vendor_display_name
 
     @api.depends('state', 'journal_id', 'invoice_date')
@@ -1035,6 +1037,9 @@ class AccountMove(models.Model):
         # Check moves being candidates to set a custom number next.
         moves = self.filtered(lambda move: move.is_invoice() and move.name == '/')
         treated = self.browse()
+        for move in self:
+            move.invoice_sequence_number_next_prefix = False
+            move.invoice_sequence_number_next = False
         if not moves:
             return
 
@@ -1058,9 +1063,6 @@ class AccountMove(models.Model):
                 move.invoice_sequence_number_next_prefix = prefix
                 move.invoice_sequence_number_next = '%%0%sd' % sequence.padding % number_next
                 treated |= move
-        for move in (self - treated):
-            move.invoice_sequence_number_next_prefix = False
-            move.invoice_sequence_number_next = False
 
     def _inverse_invoice_sequence_number_next(self):
         ''' Set the number_next on the sequence related to the invoice/bill/refund'''
@@ -2650,7 +2652,14 @@ class AccountMoveLine(models.Model):
                     reconciled = True
             line.reconciled = reconciled
 
-            line.amount_residual = line.move_id.company_id.currency_id.round(amount * sign)
+            # DLE P101: this doesn't work for `new` move line for which move_id is not yet assigned
+            # It's actually triggered when computing the amount residual of another line, which is not new,
+            # via `env.field_todo(self)` in fields.py __get__
+            # Maybe there is something to do there.
+            if line.move_id.company_id.currency_id:
+                line.amount_residual = line.move_id.company_id.currency_id.round(amount * sign)
+            else:
+                line.amount_residual = amount * sign
             line.amount_residual_currency = line.currency_id and line.currency_id.round(amount_residual_currency * sign) or 0.0
 
     @api.depends('tax_repartition_line_id.invoice_tax_id', 'tax_repartition_line_id.refund_tax_id')

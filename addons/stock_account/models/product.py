@@ -97,6 +97,7 @@ class ProductProduct(models.Model):
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'product_id')
 
     @api.depends('stock_valuation_layer_ids')
+    @api.depends_context('to_date')
     def _compute_value_svl(self):
         """Compute `value_svl` and `quantity_svl`."""
         domain = [

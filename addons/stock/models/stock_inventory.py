@@ -132,9 +132,11 @@ class Inventory(models.Model):
         self.write({'state': 'draft'})
 
     def action_start(self):
-        self.ensure_one()
-        self._action_start()
-        return self.action_open_inventory_lines()
+        # DLE P102: Allow to -i sale_stock multiple times
+        if self:
+            self.ensure_one()
+            self._action_start()
+            return self.action_open_inventory_lines()
 
     def _action_start(self):
         """ Confirms the Inventory Adjustment and generates its inventory lines
