@@ -140,7 +140,7 @@ class AccountMove(models.Model):
         compute='_compute_amount')
     amount_by_group = fields.Binary(string="Tax amount by group",
         compute='_compute_invoice_taxes_by_group',
-        help="Technical field used by web_studio to allow an easy edition of the invoice report by drag/drop of the field. Return type: [(name, amount, base, formated amount, formated base)]")
+        help="technical field used in report and in invoice form view with a widget to display the detail of taxes (grouped by tax group) under the subtotal")
 
     # ==== Cash basis feature fields ====
     tax_cash_basis_rec_id = fields.Many2one(
@@ -1190,7 +1190,9 @@ class AccountMove(models.Model):
                 formatLang(lang_env, amounts['amount'], currency_obj=move.currency_id),
                 formatLang(lang_env, amounts['base'], currency_obj=move.currency_id),
                 len(res),
+                group.id
             ) for group, amounts in res]
+
 
     # -------------------------------------------------------------------------
     # CONSTRAINS METHODS
@@ -2128,6 +2130,9 @@ class AccountMoveLine(models.Model):
     tax_ids = fields.Many2many('account.tax', string='Taxes')
     tax_line_id = fields.Many2one('account.tax', string='Originator tax', ondelete='restrict', store=True,
         compute='_compute_tax_line_id')
+    tax_group_id = fields.Many2one(related='tax_line_id.tax_group_id', string='Originator tax group',
+        readonly=True, store=True,
+        help='technical field for widget tax-group-custom-field')
     tax_base_amount = fields.Monetary(string="Base Amount", store=True,
         currency_field='company_currency_id')
     tax_exigible = fields.Boolean(string='Appears in VAT report', default=True,

@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<templates>
+    <t t-name="AccountTaxGroupTemplate">
+        <table style="width: 100%;">
+            <tbody>
+                <t t-foreach="lines" t-as="line">
+                    <tr>
+                        <td class="oe_tax_group_name">
+                            <t t-esc="line[0]"/>:
+                        </td>
+                        <td class="oe_tax_group_editable" t-att-data-tax-group-id="line[6]">
+                            <t t-if="displayEditWidget">
+                                <span class="tax_group_edit">
+                                    <i class="fa fa-pencil"></i>
+                                    <span class="oe_tax_group_amount_value">
+                                        <t t-esc="line[3]"/>
+                                    </span>
+                                </span>
+                                <span class="tax_group_edit_input d-none">
+                                    <input type="text" class="o_field_float o_field_number o_input" t-att-data-original-value="line[1]"/>
+                                </span>
+                            </t>
+                            <t t-if="!displayEditWidget">
+                                <span class="oe_tax_group_amount_value">
+                                    <t t-esc="line[3]"/>
+                                </span>
+                            </t>
+                        </td>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+    </t>
+</templates>
