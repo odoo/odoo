@@ -284,6 +284,7 @@ class ProductProduct(models.Model):
             product.price_extra = sum(product.mapped('product_template_attribute_value_ids.price_extra'))
 
     @api.depends('list_price', 'price_extra')
+    @api.depends_context('uom')
     def _compute_product_lst_price(self):
         to_uom = None
         if 'uom' in self._context:

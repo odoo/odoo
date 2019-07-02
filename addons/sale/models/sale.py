@@ -239,6 +239,8 @@ class SaleOrder(models.Model):
                 dates_list.append(dt)
             if dates_list:
                 order.expected_date = fields.Datetime.to_string(min(dates_list))
+            else:
+                order.expected_date = False
 
     def _compute_remaining_validity_days(self):
         for record in self:
