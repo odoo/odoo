@@ -253,12 +253,10 @@ class AccountMove(models.Model):
     @api.onchange('invoice_date')
     def _onchange_invoice_date(self):
         if self.invoice_date:
-            self.invoice_date_due = self.date = self.invoice_date
+            if not self.invoice_date_due and not self.invoice_payment_term_id:
+                self.invoice_date_due = self.invoice_date
+            self.date = self.invoice_date
             self._onchange_currency()
-
-    @api.onchange('invoice_date_due')
-    def _onchange_invoice_date_due(self):
-        self._recompute_dynamic_lines()
 
     @api.onchange('journal_id')
     def _onchange_journal(self):
@@ -1857,6 +1855,8 @@ class AccountMove(models.Model):
     @api.multi
     def post(self):
         for move in self:
+            if not move.line_ids.filtered(lambda line: not line.display_type):
+                raise UserError(_('You need to add a line before posting.'))
             if move.auto_post and move.date > fields.Date.today():
                 date_msg = move.date.strftime(self.env['res.lang']._lang_get(self.env.user.lang).date_format)
                 raise UserError(_("This move is configured to be auto-posted on %s" % date_msg))

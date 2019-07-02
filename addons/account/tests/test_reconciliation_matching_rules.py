@@ -47,7 +47,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
         current_assets_account = self.env['account.account'].search(
             [('user_type_id', '=', self.env.ref('account.data_account_type_current_assets').id)], limit=1)
 
-        self.rule_0 = self.env.ref('account.reconciliation_model_default_rule')
+        self.rule_0 = self.env['account.reconcile.model'].search([('company_id', '=', self.env.company.id)])
         self.rule_1 = self.rule_0.copy()
         self.rule_1.account_id = current_assets_account
         self.rule_1.match_partner = True

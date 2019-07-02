@@ -18,7 +18,7 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     @api.multi
-    def _get_reference_be_partner(self):
+    def _get_invoice_reference_be_partner(self):
         """ This computes the reference based on the belgian national standard
             “OGM-VCS”.
             For instance, if an invoice is issued for the partner with internal
@@ -36,7 +36,7 @@ class AccountMove(models.Model):
         return reference
 
     @api.multi
-    def _get_reference_be_invoice(self):
+    def _get_invoice_reference_be_invoice(self):
         """ This computes the reference based on the belgian national standard
             “OGM-VCS”.
             The data of the reference is the database id number of the invoice.
