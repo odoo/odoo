@@ -401,7 +401,7 @@ class MaintenanceTeam(models.Model):
     _name = 'maintenance.team'
     _description = 'Maintenance Teams'
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char('Team Name', required=True, translate=True)
     active = fields.Boolean(default=True)
     company_id = fields.Many2one('res.company', string='Company',
         default=lambda self: self.env.company)

@@ -489,6 +489,16 @@
         </field>
     </record>
 
+    <record id="fleet_vehicle_tag_view_view_tree" model="ir.ui.view">
+        <field name="name">fleet.vehicle.tag.tree</field>
+        <field name="model">fleet.vehicle.tag</field>
+        <field name="arch" type="xml">
+            <tree string="Vehicle Tags" editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
     <record id="fleet_vehicle_tag_action" model="ir.actions.act_window">
         <field name="name">Vehicle Tags</field>
         <field name="res_model">fleet.vehicle.tag</field>

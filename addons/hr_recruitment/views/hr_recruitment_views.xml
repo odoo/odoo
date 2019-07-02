@@ -770,6 +770,17 @@ action = act
         </field>
     </record>
 
+    <record id="hr_applicant_category_view_tree" model="ir.ui.view">
+        <field name="name">hr.applicant.category.tree</field>
+        <field name="model">hr.applicant.category</field>
+        <field name="arch" type="xml">
+            <tree string="Tags" editable="bottom">
+                <field name="name"/>
+                <field name="color" groups="base.group_no_one"/>
+            </tree>
+        </field>
+    </record>
+
     <!-- Tag Action -->
     <record id="hr_applicant_category_action" model="ir.actions.act_window">
         <field name="name">Tags</field>
@@ -792,8 +803,8 @@ action = act
         <field name="name">hr.recruitment.degree.tree</field>
         <field name="model">hr.recruitment.degree</field>
         <field name="arch" type="xml">
-            <tree string="Degree">
-                <field name="sequence" invisible="1"/>
+            <tree string="Degree" editable="bottom">
+                <field name="sequence" widget="handle"/>
                 <field name="name"/>
             </tree>
         </field>

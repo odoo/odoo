@@ -41,7 +41,7 @@ class AccountAccountTag(models.Model):
     _name = 'account.account.tag'
     _description = 'Account Tag'
 
-    name = fields.Char(required=True)
+    name = fields.Char('Tag Name', required=True)
     applicability = fields.Selection([('accounts', 'Accounts'), ('taxes', 'Taxes')], required=True, default='accounts')
     color = fields.Integer('Color Index')
     active = fields.Boolean(default=True, help="Set active to false to hide the Account Tag without removing it.")
@@ -506,7 +506,7 @@ class AccountJournalGroup(models.Model):
     _name = 'account.journal.group'
     _description = "Account Journal Group"
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char("Group Name", required=True, translate=True)
     company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company)
     account_journal_ids = fields.Many2many('account.journal', string="Journals")
     sequence = fields.Integer(default=10)

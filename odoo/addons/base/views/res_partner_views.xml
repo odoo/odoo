@@ -7,7 +7,7 @@
             <field name="name">res.partner.title.tree</field>
             <field name="model">res.partner.title</field>
             <field name="arch" type="xml">
-                <tree string="Partner Titles">
+                <tree string="Partner Titles" editable="bottom">
                     <field name="name"/>
                     <field name="shortcut"/>
                 </tree>
@@ -722,10 +722,10 @@
             <field name="model">res.partner.industry</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Industry">
+                <tree string="Industry" editable="bottom">
                     <field name="name"/>
                     <field name="full_name"/>
-                    <field name="active"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>

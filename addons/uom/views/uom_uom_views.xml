@@ -76,6 +76,18 @@
             </form>
         </field>
     </record>
+
+    <record id="product_uom_categ_tree_view" model="ir.ui.view">
+        <field name="name">uom.category.tree</field>
+        <field name="model">uom.category</field>
+        <field name="arch" type="xml">
+            <tree string="Units of Measure categories" editable="bottom">
+                <field name="name"/>
+                <field name="measure_type"/>
+            </tree>
+        </field>
+    </record>
+
     <record id="product_uom_categ_form_action" model="ir.actions.act_window">
         <field name="name">Unit of Measure Categories</field>
         <field name="type">ir.actions.act_window</field>

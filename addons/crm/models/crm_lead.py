@@ -1611,7 +1611,7 @@ class Lead(models.Model):
                     from crm_lead_tag_rel rel
                     inner join crm_lead_tag t on rel.tag_id = t.id
                     inner join crm_lead l on l.id = rel.lead_id
-                    where (l.probability = 0 or l.probability >= 100) 
+                    where (l.probability = 0 or l.probability >= 100)
                     and l.create_date > %%s
                     %s
                     group by l.probability, l.active, t.id"""
@@ -1726,7 +1726,7 @@ class Tag(models.Model):
     _name = "crm.lead.tag"
     _description = "Lead Tag"
 
-    name = fields.Char('Name', required=True, translate=True)
+    name = fields.Char('Tag Name', required=True, translate=True)
     color = fields.Integer('Color Index')
 
     _sql_constraints = [
@@ -1738,5 +1738,5 @@ class LostReason(models.Model):
     _name = "crm.lost.reason"
     _description = 'Opp. Lost Reason'
 
-    name = fields.Char('Name', required=True, translate=True)
+    name = fields.Char('Description', required=True, translate=True)
     active = fields.Boolean('Active', default=True)
