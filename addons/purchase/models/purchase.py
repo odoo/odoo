@@ -884,9 +884,8 @@ class PurchaseOrderLine(models.Model):
         '''
         if not self.product_id:
             return
-
         seller_min_qty = self.product_id.seller_ids\
-            .filtered(lambda r: r.name == self.order_id.partner_id)\
+            .filtered(lambda r: r.name == self.order_id.partner_id and (not r.product_id or r.product_id == self.product_id))\
             .sorted(key=lambda r: r.min_qty)
         if seller_min_qty:
             self.product_qty = seller_min_qty[0].min_qty or 1.0
