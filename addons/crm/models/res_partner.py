@@ -5,8 +5,8 @@ from odoo import api, fields, models
 
 
 class Partner(models.Model):
-
-    _inherit = 'res.partner'
+    _name = 'res.partner'
+    _inherit = ['res.partner', 'phone.validation.mixin']
 
     team_id = fields.Many2one('crm.team', string='Sales Team', oldname='section_id')
     opportunity_ids = fields.One2many('crm.lead', 'partner_id', string='Opportunities', domain=[('type', '=', 'opportunity')])
