@@ -16,7 +16,7 @@ class ProductChangeQuantity(models.TransientModel):
         related='product_tmpl_id.product_variant_count', readonly=False)
     new_quantity = fields.Float(
         'New Quantity on Hand', default=1,
-        digits=dp.get_precision('Product Unit of Measure'), required=True,
+        digits='Product Unit of Measure', required=True,
         help='This quantity is expressed in the Default Unit of Measure of the product.')
 
     @api.onchange('product_id')

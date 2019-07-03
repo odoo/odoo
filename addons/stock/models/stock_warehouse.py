@@ -6,7 +6,6 @@ from datetime import datetime
 from dateutil import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.osv import expression
@@ -961,15 +960,15 @@ class Orderpoint(models.Model):
         readonly=True, required=True,
         default=lambda self: self._context.get('product_uom', False))
     product_min_qty = fields.Float(
-        'Minimum Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True,
+        'Minimum Quantity', digits='Product Unit of Measure', required=True,
         help="When the virtual stock equals to or goes below the Min Quantity specified for this field, Odoo generates "
              "a procurement to bring the forecasted quantity to the Max Quantity.")
     product_max_qty = fields.Float(
-        'Maximum Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True,
+        'Maximum Quantity', digits='Product Unit of Measure', required=True,
         help="When the virtual stock goes below the Min Quantity, Odoo generates "
              "a procurement to bring the forecasted quantity to the Quantity specified as Max Quantity.")
     qty_multiple = fields.Float(
-        'Qty Multiple', digits=dp.get_precision('Product Unit of Measure'),
+        'Qty Multiple', digits='Product Unit of Measure',
         default=1, required=True,
         help="The procurement quantity will be rounded up to this multiple.  If it is 0, the exact quantity will be used.")
     group_id = fields.Many2one(

@@ -4,7 +4,6 @@ from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare, safe_eval, date_utils
 from odoo.tools.misc import formatLang, format_date
-from odoo.addons import decimal_precision as dp
 
 from collections import OrderedDict
 from datetime import date
@@ -2111,11 +2110,11 @@ class AccountMoveLine(models.Model):
     sequence = fields.Integer(default=10)
     name = fields.Char(string='Label')
     quantity = fields.Float(string='Quantity',
-        default=1.0, digits=dp.get_precision('Product Unit of Measure'),
+        default=1.0, digits='Product Unit of Measure',
         help="The optional quantity expressed by this line, eg: number of product sold."
              "The quantity is not a legal requirement but is very useful for some reports.")
-    price_unit = fields.Float(string='Unit Price', digits=dp.get_precision('Product Price'))
-    discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'), default=0.0)
+    price_unit = fields.Float(string='Unit Price', digits='Product Price')
+    discount = fields.Float(string='Discount (%)', digits='Discount', default=0.0)
     debit = fields.Monetary(string='Debit', default=0.0, currency_field='company_currency_id')
     credit = fields.Monetary(string='Credit', default=0.0, currency_field='company_currency_id')
     balance = fields.Monetary(string='Balance', store=True,

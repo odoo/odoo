@@ -2,6 +2,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools
+import odoo.addons
+
+import logging
+import sys
+_logger = logging.getLogger(__name__)
+
+
+def get_precision(application):
+    _logger.warning("Deprecated call to decimal_precision.get_precision(<application>), use digits=<application> instead")
+    return application
+
 
 class DecimalPrecision(models.Model):
     _name = 'decimal.precision'
@@ -58,12 +69,10 @@ class DecimalPrecisionFloat(models.AbstractModel):
         if dp:
             return self.env['decimal.precision'].precision_get(dp)
 
-        return super(DecimalPrecisionFloat, self).precision(field, options=options)
+        return super().precision(field, options=options)
 
-class DecimalPrecisionTestModel(models.Model):
-    _name = 'decimal.precision.test'
-    _description = 'Decimal Precision Test'
-
-    float = fields.Float()
-    float_2 = fields.Float(digits=(16, 2))
-    float_4 = fields.Float(digits=(16, 4))
+# compatibility for decimal_precision.get_precision(): expose the module in addons namespace
+dp = sys.modules['odoo.addons.base.models.decimal_precision']
+odoo.addons.decimal_precision = dp
+sys.modules['odoo.addons.decimal_precision'] = dp
+sys.modules['openerp.addons.decimal_precision'] = dp

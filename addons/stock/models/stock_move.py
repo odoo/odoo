@@ -8,7 +8,6 @@ from operator import itemgetter
 from re import search as regex_search, split as regex_split
 
 from odoo import api, fields, models, _
-from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare, float_round, float_is_zero
@@ -53,7 +52,7 @@ class StockMove(models.Model):
         help='Quantity in the default UoM of the product')
     product_uom_qty = fields.Float(
         'Initial Demand',
-        digits=dp.get_precision('Product Unit of Measure'),
+        digits='Product Unit of Measure',
         default=0.0, required=True, states={'done': [('readonly', True)]},
         help="This is the quantity of products from an inventory "
              "point of view. For moves in the state 'done', this is the "
@@ -139,7 +138,7 @@ class StockMove(models.Model):
     returned_move_ids = fields.One2many('stock.move', 'origin_returned_move_id', 'All returned moves', help='Optional: all returned moves created from this move')
     reserved_availability = fields.Float(
         'Quantity Reserved', compute='_compute_reserved_availability',
-        digits=dp.get_precision('Product Unit of Measure'),
+        digits='Product Unit of Measure',
         readonly=True, help='Quantity that has already been reserved for this move')
     availability = fields.Float(
         'Forecasted Quantity', compute='_compute_product_availability',
@@ -151,7 +150,7 @@ class StockMove(models.Model):
     route_ids = fields.Many2many('stock.location.route', 'stock_location_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="Technical field depicting the warehouse to consider for the route selection on the next procurement (if any).")
     has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking')
-    quantity_done = fields.Float('Quantity Done', compute='_quantity_done_compute', digits=dp.get_precision('Product Unit of Measure'), inverse='_quantity_done_set')
+    quantity_done = fields.Float('Quantity Done', compute='_quantity_done_compute', digits='Product Unit of Measure', inverse='_quantity_done_set')
     show_operations = fields.Boolean(related='picking_id.picking_type_id.show_operations', readonly=False)
     show_details_visible = fields.Boolean('Details Visible', compute='_compute_show_details_visible')
     show_reserved_availability = fields.Boolean('From Supplier', compute='_compute_show_reserved_availability')

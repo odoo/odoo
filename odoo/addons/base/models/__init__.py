@@ -29,6 +29,7 @@ from . import ir_property
 from . import ir_module
 from . import ir_demo
 from . import ir_demo_failure
+
 from . import report_paperformat
 
 from . import image_mixin
@@ -41,3 +42,5 @@ from . import res_config
 from . import res_currency
 from . import res_company
 from . import res_users
+
+from . import decimal_precision
