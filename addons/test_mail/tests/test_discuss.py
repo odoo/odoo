@@ -76,12 +76,14 @@ class TestChatterTweaks(BaseFunctionalTest, TestRecipients):
 class TestNotifications(BaseFunctionalTest, MockEmails):
 
     def setUp(self):
-        super(TestNotifications, self).setUp()
         self.partner_1 = self.env['res.partner'].with_context(BaseFunctionalTest._test_context).create({
             'name': 'Valid Lelitre',
             'email': 'valid.lelitre@agrolait.com'})
 
         (self.user_employee | self.user_admin).write({'notification_type': 'inbox'})
+        # DLE P108: Needs to call setup after, as the flush is done in the setup, and the above requirements were not flushed
+        # `test_inactive_follower`
+        super(TestNotifications, self).setUp()
 
     def test_needaction(self):
         with self.assertNotifications(partner_employee=(1, 'inbox', 'unread'), partner_admin=(0, '', '')):
@@ -131,16 +133,36 @@ class TestNotifications(BaseFunctionalTest, MockEmails):
         msg_emp = self.env['mail.message'].with_user(self.user_employee).browse(msg.id)
 
         # Admin set as starred
+        # DLE P109: This is a tricky one.
+        # `starred` depends on `starred_partner_ids`,
+        # `starred_partner_ids` is written as sudo in `toggle_message_starred`
+        # therefore, the modified is called as sudo, and the `add_todo` as well.
+        # It therefore adds in the todo list the field `starred` for the msg - as sudo -
+        # When reading msg.starred, the field is in the todo list, and it therefore use it,
+        # with the records from the todo list, as sudo, to compute the `starred` field.
+        # The `starred` field is therefore computed as sudo (uid 1) while we asked it for user_admin (uid 2)
+        # Besides, the cache no longer depends on the uid.
+        # Not sure if we add a api.depends_uid for this case or not.
+        # This is straightforward to do but this increase the complexity for developers.
+        msg.invalidate_cache()
         msg.toggle_message_starred()
+        msg.flush()
+        msg.invalidate_cache()
         self.assertTrue(msg.starred)
 
         # Employee set as starred
+        msg_emp.invalidate_cache()
         msg_emp.toggle_message_starred()
+        msg_emp.flush()
+        msg_emp.invalidate_cache()
         self.assertTrue(msg_emp.starred)
 
         # Do: Admin unstars msg
+        msg.invalidate_cache()
         msg.toggle_message_starred()
+        msg.invalidate_cache()
         self.assertFalse(msg.starred)
+        msg_emp.invalidate_cache()
         self.assertTrue(msg_emp.starred)
 
 
