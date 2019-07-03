@@ -876,7 +876,7 @@ action = model.setting_init_bank_account_action()
                                 <field name="show_force_tax_included" invisible="1"/>
                                 <field name="force_tax_included"
                                        attrs="{'invisible': [('show_force_tax_included', '=', False)]}" force_save="1"/>
-                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting"/>
                                 <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
@@ -909,7 +909,7 @@ action = model.setting_init_bank_account_action()
                                 <field name="show_second_force_tax_included" invisible="1"/>
                                 <field name="force_second_tax_included"
                                        attrs="{'invisible': [('show_second_force_tax_included', '=', False)]}" force_save="1"/>
-                                <field name="second_analytic_account_id" string="Analytic Account" groups="analytic.group_analytic_accounting"/>
+                                <field name="second_analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" string="Analytic Account" groups="analytic.group_analytic_accounting"/>
                                 <field name="second_analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                             </group>
                             <group>
