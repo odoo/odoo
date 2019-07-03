@@ -13,19 +13,19 @@ class AccountTaxGroup(models.Model):
         ('perception', 'Perception'),
         ('withholding', 'Withholding'),
         ('other', 'Other'),
-    ], string='Type', index=True, readonly=True)
+    ], string='Argentinian Type', index=True, readonly=True)
     l10n_ar_tax = fields.Selection([
         ('vat', 'VAT'),
         ('profits', 'Profits'),
         ('gross_income', 'Gross Income'),
         ('other', 'Other')],
-        index=True, string='Tax', readonly=True)
+        index=True, string='Argentinian Tax', readonly=True)
     l10n_ar_application = fields.Selection([
         ('national_taxes', 'National Taxes'),
         ('provincial_taxes', 'Provincial Taxes'),
         ('municipal_taxes', 'Municipal Taxes'),
         ('internal_taxes', 'Internal Taxes'),
-        ('others', 'Others')], string="Application", help='Other Taxes According AFIP', index=True, readonly=True)
+        ('others', 'Others')], string="Argentinian Application", help='Other Taxes According AFIP', index=True, readonly=True)
     l10n_ar_application_code = fields.Char('Application Code', compute='_compute_l10n_ar_application_code')
 
     @api.depends('l10n_ar_application')
