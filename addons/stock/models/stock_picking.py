@@ -136,6 +136,11 @@ class PickingType(models.Model):
         elif self.code == 'outgoing':
             self.default_location_src_id = self.env.ref('stock.stock_location_stock').id
             self.default_location_dest_id = self.env.ref('stock.stock_location_customers').id
+        self.show_operations = self.code != 'incoming' and self.user_has_groups(
+            'stock.group_production_lot,'
+            'stock.group_stock_multi_locations,'
+            'stock.group_tracking_lot'
+        )
 
     def _get_action(self, action_xmlid):
         # TDE TODO check to have one view + custo in methods
