@@ -4,7 +4,6 @@
 from collections import defaultdict
 
 from odoo import api, fields, models, tools, _
-from odoo.addons import decimal_precision as dp
 from odoo.addons.stock_landed_costs.models import product
 from odoo.exceptions import UserError
 
@@ -171,7 +170,7 @@ class LandedCost(models.Model):
         AdjustementLines = self.env['stock.valuation.adjustment.lines']
         AdjustementLines.search([('cost_id', 'in', self.ids)]).unlink()
 
-        digits = dp.get_precision('Product Price')(self._cr)
+        digits = self.env['decimal.precision'].precision_get('Product Price')
         towrite_dict = {}
         for cost in self.filtered(lambda cost: cost.picking_ids):
             total_qty = 0.0
@@ -190,7 +189,7 @@ class LandedCost(models.Model):
 
                 former_cost = val_line_values.get('former_cost', 0.0)
                 # round this because former_cost on the valuation lines is also rounded
-                total_cost += tools.float_round(former_cost, precision_digits=digits[1]) if digits else former_cost
+                total_cost += tools.float_round(former_cost, precision_digits=digits) if digits else former_cost
 
                 total_line += 1
 
@@ -217,7 +216,7 @@ class LandedCost(models.Model):
                             value = (line.price_unit / total_line)
 
                         if digits:
-                            value = tools.float_round(value, precision_digits=digits[1], rounding_method='UP')
+                            value = tools.float_round(value, precision_digits=digits, rounding_method='UP')
                             fnc = min if line.price_unit > 0 else max
                             value = fnc(value, line.price_unit - value_split)
                             value_split += value
@@ -246,7 +245,7 @@ class LandedCostLine(models.Model):
         'stock.landed.cost', 'Landed Cost',
         required=True, ondelete='cascade')
     product_id = fields.Many2one('product.product', 'Product', required=True)
-    price_unit = fields.Float('Cost', digits=dp.get_precision('Product Price'), required=True)
+    price_unit = fields.Float('Cost', digits='Product Price', required=True)
     split_method = fields.Selection(product.SPLIT_METHOD, string='Split Method', required=True)
     account_id = fields.Many2one('account.account', 'Account', domain=[('deprecated', '=', False)])
 
@@ -278,17 +277,17 @@ class AdjustmentLines(models.Model):
         digits=0, required=True)
     weight = fields.Float(
         'Weight', default=1.0,
-        digits=dp.get_precision('Stock Weight'))
+        digits='Stock Weight')
     volume = fields.Float(
         'Volume', default=1.0)
     former_cost = fields.Float(
-        'Former Cost', digits=dp.get_precision('Product Price'))
+        'Former Cost', digits='Product Price')
     former_cost_per_unit = fields.Float(
         'Former Cost(Per Unit)', compute='_compute_former_cost_per_unit',
         digits=0, store=True)
     additional_landed_cost = fields.Float(
         'Additional Landed Cost',
-        digits=dp.get_precision('Product Price'))
+        digits='Product Price')
     final_cost = fields.Float(
         'Final Cost', compute='_compute_final_cost',
         digits=0, store=True)

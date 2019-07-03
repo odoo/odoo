@@ -3,13 +3,12 @@
 
 from odoo import api, fields, models
 
-from odoo.addons import decimal_precision as dp
 
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    weight = fields.Float(compute='_cal_move_weight', digits=dp.get_precision('Stock Weight'), store=True)
+    weight = fields.Float(compute='_cal_move_weight', digits='Stock Weight', store=True)
 
     @api.depends('product_id', 'product_uom_qty', 'product_uom')
     def _cal_move_weight(self):

@@ -284,6 +284,7 @@ class MixedModel(models.Model):
     _description = 'Test New API Mixed'
 
     number = fields.Float(digits=(10, 2), default=3.14)
+    number2 = fields.Float(digits='New API Precision')
     date = fields.Date()
     now = fields.Datetime(compute='_compute_now')
     lang = fields.Selection(string='Language', selection='_get_lang')
@@ -560,3 +561,11 @@ class AttachmentHost(models.Model):
         'test_new_api.attachment', 'res_id', auto_join=True,
         domain=lambda self: [('res_model', '=', self._name)],
     )
+
+class DecimalPrecisionTestModel(models.Model):
+    _name = 'decimal.precision.test'
+    _description = 'Decimal Precision Test'
+
+    float = fields.Float()
+    float_2 = fields.Float(digits=(16, 2))
+    float_4 = fields.Float(digits=(16, 4))

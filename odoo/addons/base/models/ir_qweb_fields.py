@@ -165,7 +165,7 @@ class FloatConverter(models.AbstractModel):
     @api.model
     def value_to_html(self, value, options):
         if 'decimal_precision' in options:
-            precision = self.env['decimal.precision'].search([('name', '=', options['decimal_precision'])]).digits
+            precision = self.env['decimal.precision'].precision_get(options['decimal_precision'])
         else:
             precision = options['precision']
 
@@ -189,7 +189,7 @@ class FloatConverter(models.AbstractModel):
     @api.model
     def record_to_html(self, record, field_name, options):
         if 'precision' not in options and 'decimal_precision' not in options:
-            _, precision = record._fields[field_name].digits or (None, None)
+            _, precision = record._fields[field_name].get_digits(record.env) or (None, None)
             options = dict(options, precision=precision)
         return super(FloatConverter, self).record_to_html(record, field_name, options)
 

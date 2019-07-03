@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.addons import decimal_precision as dp
 
 STATE = [
     ('none', 'Non Member'),
@@ -29,7 +28,7 @@ class MembershipLine(models.Model):
     date = fields.Date(string='Join Date',
         help="Date on which member has joined the membership")
     member_price = fields.Float(string='Membership Fee',
-        digits=dp.get_precision('Product Price'), required=True,
+        digits='Product Price', required=True,
         help='Amount for the membership')
     account_invoice_line = fields.Many2one('account.move.line', string='Account Invoice line', readonly=True, ondelete='cascade')
     account_invoice_id = fields.Many2one('account.move', related='account_invoice_line.move_id', string='Invoice', readonly=True)
