@@ -218,7 +218,7 @@ class AccountMove(models.Model):
                 taxes_vals = tax.compute_all(balance,
                     quantity=quantity, currency=line.currency_id, product=line.product_id, partner=line.partner_id)
 
-                if tax_line:
+                if tax_line and not tax_line.reconciled:
                     # Update the existing tax_line.
                     if balance:
                         # Update the debit/credit amount according to the new balance.
