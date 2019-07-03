@@ -275,6 +275,13 @@ class TestTranslation(TransactionCase):
         category_fr = category.with_context({'lang': 'fr_FR'})
         self.assertEqual(category_fr.name, 'Clients', "Did not found translation for initial value")
 
+        translation_fr = self.env['ir.translation'].search([
+            ('name', '=', 'res.partner.category,name'),
+            ('res_id', '=', category.id),
+            ('lang', '=', 'fr_FR'),
+        ])
+        self.assertEqual(translation_fr.src, 'Customers', "Did not set English version as source")
+
     def test_103_duplicate_record_fr(self):
         category = self.customers.with_context({'lang': 'fr_FR'}).copy({'name': 'Clients (copie)'})
 
@@ -283,6 +290,13 @@ class TestTranslation(TransactionCase):
 
         category_fr = category.with_context({'lang': 'fr_FR'})
         self.assertEqual(category_fr.name, 'Clients (copie)', "Did not used default value for translated value")
+
+        translation_fr = self.env['ir.translation'].search([
+            ('name', '=', 'res.partner.category,name'),
+            ('res_id', '=', category.id),
+            ('lang', '=', 'fr_FR'),
+        ])
+        self.assertEqual(translation_fr.src, 'Clients (copie)', "Did not set new name as source")
 
     def test_104_orderby_translated_field(self):
         """ Test search ordered by a translated field. """
@@ -327,6 +341,57 @@ class TestTranslation(TransactionCase):
         ])
         self.assertEqual(len(translations), 1, "Translations were not duplicated after `translate_fields` call")
         self.assertEqual(translations.value, "Apprenti", "The first translation must stay")
+
+    def test_106_en_us_translation(self):
+        """ Test synchronizing translations with duplicated source """
+        # create a category with a French translation
+        cheese = self.env['res.partner.category'].create({'name': 'Cheese'})
+
+        self.env['ir.translation'].translate_fields('res.partner.category', cheese.id, 'name')
+
+        translations = self.env['ir.translation'].search([('name', '=', 'res.partner.category,name'), ('res_id', '=', cheese.id)], order='lang')
+        self.assertEqual(len(translations), 2)
+        self.assertRecordValues(translations,
+            [{'lang': 'en_US', 'src': 'Cheese', 'value': 'Cheese'},
+             {'lang': 'fr_FR', 'src': 'Cheese', 'value': 'Cheese'}])
+
+        # Translate in both language
+        translations[0].value = 'The Cheese'
+        translations[1].value = 'Fromage'
+
+        # lang=None bypass translation system
+        self.assertEqual(cheese.with_context(lang=None).name, 'Cheese')
+        self.assertEqual(cheese.with_context(lang='fr_FR').name, 'Fromage')
+        self.assertEqual(cheese.with_context(lang='en_US').name, 'The Cheese')
+
+        # set a new master value
+        cheese.with_context(lang='en_US').write({'name': 'Delicious Cheese'})
+
+        # every src must be updated
+        self.assertEqual(cheese.with_context(lang=None).name, 'Delicious Cheese')
+        self.assertRecordValues(translations,
+            [{'lang': 'en_US', 'src': 'Delicious Cheese', 'value': 'Delicious Cheese'},
+             {'lang': 'fr_FR', 'src': 'Delicious Cheese', 'value': 'Fromage'}])
+
+        self.assertEqual(cheese.with_context(lang=None).name, 'Delicious Cheese')
+        self.assertEqual(cheese.with_context(lang='fr_FR').name, 'Fromage')
+        self.assertEqual(cheese.with_context(lang='en_US').name, 'Delicious Cheese')
+
+    def test_107_duplicate_record_en(self):
+        category = self.customers.with_context({'lang': 'en_US'}).copy()
+
+        category_no = category.with_context({})
+        self.assertEqual(category_no.name, 'Customers', "Duplication did not set untranslated value")
+
+        category_fr = category.with_context({'lang': 'fr_FR'})
+        self.assertEqual(category_fr.name, 'Clients', "Did not found translation for initial value")
+
+        translation_fr = self.env['ir.translation'].search([
+            ('name', '=', 'res.partner.category,name'),
+            ('res_id', '=', category.id),
+            ('lang', '=', 'fr_FR'),
+        ])
+        self.assertEqual(translation_fr.src, 'Customers', "Did not set English version as source")
 
 
 class TestXMLTranslation(TransactionCase):
