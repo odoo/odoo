@@ -581,6 +581,8 @@ action = model.setting_init_bank_account_action()
                                     <field name="partner_id" domain="['|',('parent_id','=',False),('is_company','=',True)]"
                                         attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="ref" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }" groups="base.group_no_one"/>
+                                    <field name="transaction_type" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }" optional="hidden"/>
+                                    <field name="note" optional="hidden"/>
                                     <field name="amount" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="journal_currency_id" invisible="1"/>
                                     <field name="amount_currency" invisible="1"/>
@@ -649,6 +651,8 @@ action = model.setting_init_bank_account_action()
                     <field name="partner_id"/>
                     <field name="date"/>
                     <field name="journal_id" domain="[('type', 'in', ('bank', 'cash'))]" />
+                    <field name="note"/>
+                    <field name="transaction_type"/>
                 </search>
             </field>
         </record>
@@ -669,6 +673,7 @@ action = model.setting_init_bank_account_action()
                     <field name="journal_currency_id" invisible="1"/>
                     <field name="sequence"/>
                     <field name="note"/>
+                    <field name="transaction_type"/>
                 </group>
             </form>
             </field>
@@ -687,6 +692,8 @@ action = model.setting_init_bank_account_action()
                     <field name="ref"/>
                     <field name="partner_id"/>
                     <field name="amount"/>
+                    <field name="transaction_type" optional="hidden"/>
+                    <field name="note" optional="hidden"/>
                     <field name="journal_currency_id" invisible="1"/>
                 </tree>
             </field>
@@ -774,6 +781,20 @@ action = model.setting_init_bank_account_action()
                                     <span class="o_form_label" style="width: 2% !important">   </span> <!-- Make a little space. -->
                                     <field name="match_label_param" style="width: 68% !important;" class="oe_inline"
                                            attrs="{'invisible': [('match_label', '=', False)], 'required': [('match_label', '!=', False)]}"/>
+                                </div>
+                                <label for="match_note"/>
+                                <div>
+                                    <field name="match_note" style="width: 30% !important" class="oe_inline"/>
+                                    <span class="o_form_label" style="width: 2% !important">   </span> <!-- Make a little space. -->
+                                    <field name="match_note_param" style="width: 68% !important;" class="oe_inline"
+                                           attrs="{'invisible': [('match_note', '=', False)], 'required': [('match_note', '!=', False)]}"/>
+                                </div>
+                                <label for="match_transaction_type"/>
+                                <div>
+                                    <field name="match_transaction_type" style="width: 30% !important" class="oe_inline"/>
+                                    <span class="o_form_label" style="width: 2% !important">   </span> <!-- Make a little space. -->
+                                    <field name="match_transaction_type_param" style="width: 68% !important;" class="oe_inline"
+                                           attrs="{'invisible': [('match_transaction_type', '=', False)], 'required': [('match_transaction_type', '!=', False)]}"/>
                                 </div>
                                 <field name="match_same_currency" attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}"/>
                                 <label for="match_total_amount"
