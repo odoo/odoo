@@ -378,8 +378,11 @@
                             <div class="clearfix" />
                             <div t-attf-class="form-group #{error.get('company_name') and 'o_has_error' or ''} col-xl-6">
                                 <label class="col-form-label label-optional" for="company_name">Company Name</label>
-                                <p t-if="partner.commercial_partner_id.is_company" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-esc="partner.commercial_company_name"/>
-                                <input t-else="" type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="company_name or partner.company_name" t-att-readonly="None if partner.can_edit_vat() else '1'" t-att-title="None if partner.can_edit_vat() else 'Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.'"/>
+                                <!-- The <input> is replace by a <p> to avoid sending an unauthorized value on form submit.
+                                     The user might not have rights to change company_name but should still be able to see it.
+                                -->
+                                <p t-if="not partner.can_edit_vat()" t-attf-class="form-control" readonly="1" t-esc="partner.commercial_company_name" title="Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."/>
+                                <input t-else="" type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="company_name or partner.commercial_company_name"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('vat') and 'o_has_error' or ''} col-xl-6">
                                 <label class="col-form-label label-optional" for="vat">VAT Number</label>
