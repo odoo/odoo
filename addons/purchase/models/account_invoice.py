@@ -94,11 +94,6 @@ class AccountInvoice(models.Model):
         if not self.partner_id:
             self.partner_id = self.purchase_id.partner_id.id
 
-        vendor_ref = self.purchase_id.partner_ref
-        if vendor_ref and (not self.reference or (
-                vendor_ref + ", " not in self.reference and not self.reference.endswith(vendor_ref))):
-            self.reference = ", ".join([self.reference, vendor_ref]) if self.reference else vendor_ref
-
         if not self.invoice_line_ids:
             #as there's no invoice line yet, we keep the currency of the PO
             self.currency_id = self.purchase_id.currency_id
