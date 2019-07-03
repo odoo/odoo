@@ -142,6 +142,7 @@
                                 <field name="view_id" context="{'display_website': True}"/>
                                 <field name="is_published" groups="base.group_no_one"/>
                                 <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                                <field name="track"/>
                             </group>
                             <group>
                                 <field name="website_indexed"/>
@@ -169,7 +170,22 @@
                     <field name="create_uid" invisible="1"/>
                     <field name="write_uid"/>
                     <field name="write_date"/>
+                    <field name="track"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="website_pages_view_search" model="ir.ui.view">
+            <field name="name">website.page.view.search</field>
+            <field name="model">website.page</field>
+            <field name="arch" type="xml">
+                <search string="Website Pages" >
+                    <filter string="Published" name="published" domain="[('website_published', '=', True)]"/>
+                    <filter string="Not published" name="not_published" domain="[('website_published', '=', False)]"/>
+                    <separator/>
+                    <filter string="Tracked" name="tracked" domain="[('track', '=', True)]"/>
+                    <filter string="Not tracked" name="not_tracked" domain="[('track', '=', False)]"/>
+                </search>
             </field>
         </record>
 

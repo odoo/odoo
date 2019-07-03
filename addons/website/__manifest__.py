@@ -25,6 +25,7 @@
         'views/website_navbar_templates.xml',
         'views/snippets.xml',
         'views/website_views.xml',
+        'views/website_visitor_views.xml',
         'views/res_config_settings_views.xml',
         'views/ir_actions_views.xml',
         'views/ir_attachment_views.xml',

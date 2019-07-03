@@ -28,6 +28,8 @@ class Page(models.Model):
     # don't use mixin website_id but use website_id on ir.ui.view instead
     website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False)
 
+    track = fields.Boolean(string='Track', default=False, help="Allow to specify for one page of the website to be trackable or not")
+    
     def _compute_homepage(self):
         for page in self:
             page.is_homepage = page == self.env['website'].get_current_website().homepage_id

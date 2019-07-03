@@ -12,7 +12,7 @@ import werkzeug.routing
 import werkzeug.utils
 
 import odoo
-from odoo import api, models, registry
+from odoo import api, models, registry, fields
 from odoo import SUPERUSER_ID
 from odoo.http import request
 from odoo.tools import config
@@ -85,6 +85,23 @@ class Http(models.AbstractModel):
                 request.uid = website.user_id.id
         if not request.uid:
             super(Http, cls)._auth_method_public()
+
+    @classmethod
+    def _is_webpage_response(cls, response):
+        return response \
+               and getattr(response, 'status_code', 0) == 200 \
+               and hasattr(response, 'qcontext') \
+               and 'main_object' in response.qcontext \
+               and hasattr(response.qcontext['main_object'], '_name') \
+               and response.qcontext['main_object']._name == 'website.page'
+
+    @classmethod
+    def _dispatch(cls):
+        response = super(Http, cls)._dispatch()
+        if cls._is_webpage_response(response):
+            response = request.env['website.visitor']._handle_visitor_response(response)
+
+        return response
 
     @classmethod
     def _add_dispatch_parameters(cls, func):
