@@ -87,6 +87,20 @@ class Http(models.AbstractModel):
             super(Http, cls)._auth_method_public()
 
     @classmethod
+    def _extract_website_page(cls, response):
+        if getattr(response, 'status_code', 0) != 200:
+            return False
+
+        main_object = getattr(response, 'qcontext', {}).get('main_object')
+        return main_object if getattr(main_object, '_name', False) == 'website.page' else False
+
+    @classmethod
+    def _dispatch(cls):
+        response = super(Http, cls)._dispatch()
+        request.env['website.visitor']._handle_webpage_dispatch(response, cls._extract_website_page(response))
+        return response
+
+    @classmethod
     def _add_dispatch_parameters(cls, func):
 
         # Force website with query string paramater, typically set from website selector in frontend navbar
