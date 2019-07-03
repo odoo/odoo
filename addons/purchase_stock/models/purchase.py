@@ -52,6 +52,9 @@ class PurchaseOrder(models.Model):
         for order in self:
             if order.picking_ids and all([x.state in ['done', 'cancel'] for x in order.picking_ids]):
                 order.is_shipped = True
+            else:
+                # DLE P105: test_anglosaxon_valuation
+                order.is_shipped = False
 
     @api.onchange('picking_type_id')
     def _onchange_picking_type_id(self):
