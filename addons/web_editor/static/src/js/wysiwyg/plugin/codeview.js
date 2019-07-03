@@ -24,6 +24,9 @@ var CodeviewPlugin = Plugins.codeview.extend({
      * @override
      */
     deactivate: function () {
+        if(this.isBeingDestroyed) {
+            return;
+        }
         if (
             this.context.invoke('HelperPlugin.hasJinja', this.context.invoke('code')) &&
             !this.isBeingDestroyed
