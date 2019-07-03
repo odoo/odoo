@@ -1579,7 +1579,7 @@
             <tr t-if="not hide_coupon">
                 <td colspan="3" class="text-center text-xl-right border-0">
                 <span class=''>
-                    <t t-set='force_coupon' t-value="website_sale_order.pricelist_id.code or request.params.get('code_not_available')"/>
+                    <t t-set='force_coupon' t-value="website_sale_order.pricelist_id.code or request.params.get('code_not_available') or website_sale_order.applied_coupon_ids"/>
                     <t t-if="not force_coupon">
                         <a href="#" class="show_coupon">I have a promo code</a>
                     </t>
