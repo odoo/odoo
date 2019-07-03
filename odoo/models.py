@@ -3388,15 +3388,6 @@ Fields:
                             # e.g. `test_10_sellers`, write on `product.product.seller_ids`, which actually should write on `product.template.seller_ids`
                             # `product.product.seller_ids` store attribute is False, while `product.template.seller_ids` store attribute is True
                             field.write(record, value)
-                        # DLE P11: When writing on `child_ids`, must write on `parent_id` of the one2many related records,
-                        # Otherwise, as we set in the case the correct value for the inverse field values thanks to the above `if field.relational`,
-                        # the above `if env.cache.contains(record, field) and (env.cache.get(record, field) == value):` matches
-                        # and we therefore actually never write the `parent_id` values in database.
-                        # See test test_duplicate_children_03
-                        if field.type.endswith('one2many'):
-                            # DLE P60
-                            for rec in self.env[field.comodel_name].browse(env.cache.get_value(record, field, [])):
-                                env.all.towrite[rec._name][rec.id][field.inverse_name] = rec._fields[field.inverse_name].convert_to_write(record, rec)
 
                     # FP NOTE: possible huge optimization here: if field was already in todo, don't recall modified
                     record.modified([fname])
@@ -3409,7 +3400,13 @@ Fields:
                             records = self.env[field.comodel_name].browse(env.cache.get_value(record, field, []))
                         else:
                             records = record[field.name]
-                        toflush = not invf._update(records, record) or toflush
+                        update_res = invf._update(records, record)
+                        toflush = not update_res or toflush
+                        # DLE P103: `test_00_product_company_level_delays`
+                        # on `moves.write({'picking_id': picking.id})`, `picking.move_lines` gets updated here,
+                        # which must trigger the modification of `picking.group_id`, defined as `related='move_lines.group_id', store=True`
+                        if update_res:
+                            records.modified([invf.name])
 
                 # flush if parent field
                 if self._parent_store and fname == self._parent_name:
