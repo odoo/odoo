@@ -3738,11 +3738,12 @@ Fields:
         records = self.browse(ids)
         for data, record in zip(data_list, records):
             data['record'] = record
-            # FP TODO: what about data['inherited'] here?
             for field in self._fields.values():
                 if field.type in ('one2many', 'many2many'):
                     self.env.cache.set(record, field, ())
-            for fname,value in data['stored'].items():
+            # DLE P104: test_inherit.py, test_50_search_one2many
+            vals = dict({k: v for d in data['inherited'].values() for k, v in d.items()}, **data['stored'])
+            for fname, value in vals.items():
                 field = self._fields[fname]
                 if field.type in ('one2many', 'many2many'):
                     cachetoclear.append((record, field))
