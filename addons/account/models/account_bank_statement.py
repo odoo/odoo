@@ -353,6 +353,7 @@ class AccountBankStatementLine(models.Model):
              " when the partner doesn't exist yet in the database (or cannot be found).")
     ref = fields.Char(string='Reference')
     note = fields.Text(string='Notes')
+    transaction_type = fields.Char(string='Transaction Type')
     sequence = fields.Integer(index=True, help="Gives the sequence order when displaying a list of bank statement lines.", default=1)
     company_id = fields.Many2one('res.company', related='statement_id.company_id', string='Company', store=True, readonly=True)
     journal_entry_ids = fields.One2many('account.move.line', 'statement_line_id', 'Journal Items', copy=False, readonly=True)
