@@ -282,7 +282,7 @@ class TestAccess(common.SurveyCase):
 
         # Unlink: own survey only
         answer_own.unlink()
-        answer_line_own.unlink()
+        # DLE P107: Already dropped in cascade with the above unlink
         with self.assertRaises(AccessError):
             self.answer_0.with_user(self.env.user).unlink()
         with self.assertRaises(AccessError):

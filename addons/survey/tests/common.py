@@ -210,12 +210,18 @@ class SurveyCase(common.SavepointCase):
         return self.env['survey.user_input_line'].create(base_alvals)
 
     def _access_start(self, survey):
+        # DLE P106: Ensure we flush all todo/towrite before doing a request which do the request in another thread/env
+        survey.flush()
         return self.url_open('/survey/start/%s' % survey.access_token)
 
     def _access_page(self, survey, token):
+        # DLE P106
+        survey.flush()
         return self.url_open('/survey/fill/%s/%s' % (survey.access_token, token))
 
     def _access_submit(self, survey, token, post_data):
+        # DLE P106
+        survey.flush()
         return self.url_open('/survey/submit/%s/%s' % (survey.access_token, token), data=post_data)
 
     def _find_csrf_token(self, text):
