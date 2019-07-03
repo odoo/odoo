@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.tests import common
+from odoo.tools.misc import mute_logger
 
 
 class TestError(common.HttpCase):
@@ -15,7 +16,8 @@ class TestError(common.HttpCase):
         """ Create: mandatory field not provided """
         self.o.execute(self.db_name, 1, "admin", "test_rpc.model_b", "create", {"name": "B1"})
         try:
-            self.o.execute(self.db_name, 1, "admin", "test_rpc.model_b", "create", {})
+            with mute_logger("odoo.sql_db"):
+                self.o.execute(self.db_name, 1, "admin", "test_rpc.model_b", "create", {})
             raise
         except Exception as e:
             self.assertIn("The operation cannot be completed:", e.faultString)
@@ -38,7 +40,8 @@ class TestError(common.HttpCase):
         # FORWARD-PORT: in master, `required=True` implies `ondelete="restrict"`
         #               => the message should be the same than 'Unlink b2' case.
         try:
-            self.o.execute(self.db_name, 1, "admin", "test_rpc.model_b", "unlink", b1)
+            with mute_logger("odoo.sql_db"):
+                self.o.execute(self.db_name, 1, "admin", "test_rpc.model_b", "unlink", b1)
             raise
         except Exception as e:
             self.assertIn("The operation cannot be completed:", e.faultString)
@@ -47,11 +50,12 @@ class TestError(common.HttpCase):
                 "Delete: another model requires the record being deleted. If possible, archive it instead.",
                 e.faultString,
             )
-            self.assertIn("Model: Model A (test_rpc.model_a), Field: Field b1 (field_b1)", e.faultString)
+            self.assertIn("Model: Model A (test_rpc.model_a), Field: required field (field_b1)", e.faultString)
 
         # Unlink b2 => ON DELETE RESTRICT constraint raises
         try:
-            self.o.execute(self.db_name, 1, "admin", "test_rpc.model_b", "unlink", b2)
+            with mute_logger("odoo.sql_db"):
+                self.o.execute(self.db_name, 1, "admin", "test_rpc.model_b", "unlink", b2)
             raise
         except Exception as e:
             self.assertIn("The operation cannot be completed:", e.faultString)
