@@ -2,18 +2,15 @@
 from werkzeug import urls
 
 from .authorize_request import AuthorizeAPI
-from datetime import datetime
 import hashlib
 import hmac
 import logging
-import string
 import time
 
 from odoo import _, api, fields, models
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_authorize.controllers.main import AuthorizeController
 from odoo.tools.float_utils import float_compare, float_repr
-from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -25,7 +22,8 @@ class PaymentAcquirerAuthorize(models.Model):
     provider = fields.Selection(selection_add=[('authorize', 'Authorize.Net')])
     authorize_login = fields.Char(string='API Login Id', required_if_provider='authorize', groups='base.group_user')
     authorize_transaction_key = fields.Char(string='API Transaction Key', required_if_provider='authorize', groups='base.group_user')
-    authorize_signature_key = fields.Char(string='API Signature Key', groups='base.group_user', compute="_compute_auth_signature_key", inverse="_inverse_auth_signature_key")
+    authorize_signature_key = fields.Char(string='API Signature Key', required_if_provider='authorize', groups='base.group_user')
+    authorize_client_key = fields.Char(string='API Client Key', groups='base.group_user')
 
     @api.onchange('provider', 'check_validity')
     def onchange_check_validity(self):
@@ -34,6 +32,13 @@ class PaymentAcquirerAuthorize(models.Model):
             return {'warning': {
                 'title': _("Warning"),
                 'message': ('This option is not supported for Authorize.net')}}
+
+    def action_client_secret(self):
+        api = AuthorizeAPI(self)
+        if not api.test_authenticate():
+            raise UserError(_('Unable to fetch Client Key, make sure the API Login and Transaction Key are correct.'))
+        self.authorize_client_key = api.get_client_secret()
+        return True
 
     def _get_feature_support(self):
         """Get advanced feature support by provider.
@@ -51,16 +56,6 @@ class PaymentAcquirerAuthorize(models.Model):
         res['tokenize'].append('authorize')
         return res
 
-    def _compute_auth_signature_key(self):
-        ICP = self.env['ir.config_parameter'].sudo()
-        for acquirer in self.filtered(lambda a: a.provider == 'authorize'):
-            acquirer.authorize_signature_key = ICP.get_param('payment_authorize.signature_key_%s' % acquirer.id)
-
-    def _inverse_auth_signature_key(self):
-        ICP = self.env['ir.config_parameter'].sudo()
-        for acquirer in self.filtered(lambda a: a.provider == 'authorize'):
-            ICP.set_param('payment_authorize.signature_key_%s' % acquirer.id, acquirer.authorize_signature_key)
-
     def _get_authorize_urls(self, environment):
         """ Authorize URLs """
         if environment == 'prod':
@@ -76,24 +71,7 @@ class PaymentAcquirerAuthorize(models.Model):
             values['x_amount'],
             values['x_currency_code']]).encode('utf-8')
 
-        # [BACKWARD COMPATIBILITY, 2nd edition]
-        # The signature key is now '128-character hexadecimal format', while the
-        # transaction key was only 16-character.
-        # One of 2 things should have happened:
-        # 1/ the Transaction Key has been replaced with the Signature Key value (patch from March 2019)
-        #       => Use that to sign, but server-to-server won't work since it uses transaction key
-        #          as its credentials
-        # 2/ the Signature key is a new field (patch from July 2019)
-        #       => Use that field for the signature
-
-        # FORWARD-PORT NOTE: forward part to saas-12.4 but no further
-        if len(values['x_trans_key']) == 128 and not self.authorize_signature_key:
-            self.authorize_signature_key = values['x_trans_key'] # store in the correct field
-            return hmac.new(bytes.fromhex(values['x_trans_key']), data, hashlib.sha512).hexdigest().upper()
-        elif self.authorize_signature_key:
-            return hmac.new(bytes.fromhex(self.authorize_signature_key), data, hashlib.sha512).hexdigest().upper()
-        else:
-            return hmac.new(values['x_trans_key'].encode('utf-8'), data, hashlib.md5).hexdigest()
+        return hmac.new(bytes.fromhex(self.authorize_signature_key), data, hashlib.sha512).hexdigest().upper()
 
     def authorize_form_generate_values(self, values):
         self.ensure_one()
@@ -110,7 +88,6 @@ class PaymentAcquirerAuthorize(models.Model):
         authorize_tx_values = dict(values)
         temp_authorize_tx_values = {
             'x_login': self.authorize_login,
-            'x_trans_key': self.authorize_transaction_key,
             'x_amount': float_repr(values['amount'], values['currency'].decimal_places if values['currency'] else 2),
             'x_show_form': 'PAYMENT_FORM',
             'x_type': 'AUTH_CAPTURE' if not self.capture_manually else 'AUTH_ONLY',
@@ -143,7 +120,6 @@ class PaymentAcquirerAuthorize(models.Model):
         }
         temp_authorize_tx_values['returndata'] = authorize_tx_values.pop('return_url', '')
         temp_authorize_tx_values['x_fp_hash'] = self._authorize_generate_hashing(temp_authorize_tx_values)
-        temp_authorize_tx_values.pop('x_trans_key') # We remove this value since it is secret and isn't needed on the form
         authorize_tx_values.update(temp_authorize_tx_values)
         return authorize_tx_values
 
@@ -154,11 +130,8 @@ class PaymentAcquirerAuthorize(models.Model):
     @api.model
     def authorize_s2s_form_process(self, data):
         values = {
-            'cc_number': data.get('cc_number'),
-            'cc_holder_name': data.get('cc_holder_name'),
-            'cc_expiry': data.get('cc_expiry'),
-            'cc_cvc': data.get('cc_cvc'),
-            'cc_brand': data.get('cc_brand'),
+            'opaqueData': data.get('opaqueData'),
+            'encryptedCardData': data.get('encryptedCardData'),
             'acquirer_id': int(data.get('acquirer_id')),
             'partner_id': int(data.get('partner_id'))
         }
@@ -167,23 +140,11 @@ class PaymentAcquirerAuthorize(models.Model):
 
     def authorize_s2s_form_validate(self, data):
         error = dict()
-        mandatory_fields = ["cc_number", "cc_cvc", "cc_holder_name", "cc_expiry", "cc_brand"]
+        mandatory_fields = ["opaqueData", "encryptedCardData"]
         # Validation
         for field_name in mandatory_fields:
             if not data.get(field_name):
                 error[field_name] = 'missing'
-        if data['cc_expiry']:
-            # FIX we split the date into their components and check if there is two components containing only digits
-            # this fixes multiples crashes, if there was no space between the '/' and the components the code was crashing
-            # the code was also crashing if the customer was proving non digits to the date.
-            cc_expiry = [i.strip() for i in data['cc_expiry'].split('/')]
-            if len(cc_expiry) != 2 or any(not i.isdigit() for i in cc_expiry):
-                return False
-            try:
-                if datetime.now().strftime('%y%m') > datetime.strptime('/'.join(cc_expiry), '%m/%y').strftime('%y%m'):
-                    return False
-            except ValueError:
-                return False
         return False if error else True
 
     def authorize_test_credentials(self):
@@ -364,17 +325,15 @@ class PaymentToken(models.Model):
 
     @api.model
     def authorize_create(self, values):
-        if values.get('cc_number'):
-            values['cc_number'] = values['cc_number'].replace(' ', '')
+        if values.get('opaqueData') and values.get('encryptedCardData'):
             acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
-            expiry = str(values['cc_expiry'][:2]) + str(values['cc_expiry'][-2:])
             partner = self.env['res.partner'].browse(values['partner_id'])
             transaction = AuthorizeAPI(acquirer)
-            res = transaction.create_customer_profile(partner, values['cc_number'], expiry, values['cc_cvc'])
+            res = transaction.create_customer_profile(partner, values['opaqueData'])
             if res.get('profile_id') and res.get('payment_profile_id'):
                 return {
                     'authorize_profile': res.get('profile_id'),
-                    'name': 'XXXXXXXXXXXX%s - %s' % (values['cc_number'][-4:], values['cc_holder_name']),
+                    'name': values['encryptedCardData'].get('cardNumber'),
                     'acquirer_ref': res.get('payment_profile_id'),
                     'verified': True
                 }

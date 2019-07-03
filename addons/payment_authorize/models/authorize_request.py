@@ -34,6 +34,8 @@ class AuthorizeAPI():
             self.url = 'https://apitest.authorize.net/xml/v1/request.api'
         else:
             self.url = 'https://api.authorize.net/xml/v1/request.api'
+
+        self.environment = acquirer.environment
         self.name = acquirer.authorize_login
         self.transaction_key = acquirer.authorize_transaction_key
 
@@ -52,7 +54,7 @@ class AuthorizeAPI():
         return resp
 
     # Customer profiles
-    def create_customer_profile(self, partner, cardnumber, expiration_date, card_code):
+    def create_customer_profile(self, partner, opaqueData):
         """Create a payment and customer profile in the Authorize.net backend.
 
         Creates a customer profile for the partner/credit card combination and links
@@ -90,15 +92,14 @@ class AuthorizeAPI():
                             'country': partner.country_id.name or None
                         },
                         'payment': {
-                            'creditCard': {
-                                'cardNumber': cardnumber,
-                                'expirationDate': expiration_date,
-                                'cardCode': card_code
+                            'opaqueData': {
+                                'dataDescriptor': opaqueData.get('dataDescriptor'),
+                                'dataValue': opaqueData.get('dataValue')
                             }
                         }
                     }
                 },
-                'validationMode': 'liveMode'
+                'validationMode': 'liveMode' if self.environment == 'prod' else 'testMode'
             }
         }
 
@@ -375,3 +376,18 @@ class AuthorizeAPI():
         if response and response.get('err_code'):
             return False
         return True
+
+    # Client Key
+    def get_client_secret(self):
+        """ Create a client secret that will be needed for the AcceptJS integration. """
+        values = {
+            "getMerchantDetailsRequest": {
+                "merchantAuthentication": {
+                    "name": self.name,
+                    "transactionKey": self.transaction_key,
+                }
+            }
+        }
+        response = self._authorize_request(values)
+        client_secret = response.get('publicClientKey')
+        return client_secret
