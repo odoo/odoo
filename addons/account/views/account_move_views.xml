@@ -69,6 +69,7 @@
                                     </group>
                                     <group string="Analytic" groups="analytic.group_analytic_accounting,analytic.group_analytic_tags">
                                         <field name="analytic_account_id" groups="analytic.group_analytic_accounting"
+                                            domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" 
                                             attrs="{'readonly':[('parent_state','=','posted')]}"/>
                                         <field name="analytic_tag_ids" groups="analytic.group_analytic_tags"
                                             widget="many2many_tags"/>
@@ -145,7 +146,7 @@
                     <field name="statement_id" invisible="1"/>
                     <field name="ref" optional="show"/>
                     <field name="name" optional="show"/>
-                    <field name="analytic_account_id" groups="account.group_account_user" optional="show"/>
+                    <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="account.group_account_user" optional="show" />
                     <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" optional="hide"/>
                     <field name="tax_ids" widget="many2many_tags" width="0.5" optional="show" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                     <field name="debit" sum="Total Debit"/>
@@ -776,6 +777,7 @@
                                         <field name="name" widget="section_and_note_text" optional="show"/>
                                         <field name="analytic_account_id"
                                                optional="hide"
+                                               domain="['|', ('company_id', '=', parent.company_id), ('company_id', '=', False)]"
                                                groups="analytic.group_analytic_accounting"
                                                attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
                                         <field name="analytic_tag_ids"

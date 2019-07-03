@@ -131,7 +131,7 @@
                                     <field name="partner_id" string="Customer"/>
                                 </group>
                                 <group>
-                                    <field name="analytic_account_id" context="{'default_partner_id': partner_id}" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" context="{'default_partner_id': partner_id}" groups="analytic.group_analytic_accounting"/>
                                     <field name="privacy_visibility" widget="radio"/>
 
                                     <field name="subtask_project_id" groups="project.group_subtask_project"/>
