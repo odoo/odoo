@@ -467,6 +467,7 @@ class TestAccessRightsRead(TestLeavesRights):
             'date_to': datetime.now() + relativedelta(days=1),
             'number_of_days': 1,
         })
+        other_leave.invalidate_cache(['name'])
         self.assertEqual(
             other_leave.with_user(self.user_employee_id).name, '*****',
             'Private information should have been stripped, received %s instead' % other_leave.with_user(self.user_employee_id).name

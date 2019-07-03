@@ -104,6 +104,7 @@ class TestOutOfOfficePerformance(TestHrHolidaysBase):
         self.hr_user = self.employee_hruser.user_id
         self.hr_partner = self.employee_hruser.user_id.partner_id
         self.employer_partner = self.user_employee.partner_id
+        self.hr_user.flush()
 
     @users('__system__', 'demo')
     @warmup

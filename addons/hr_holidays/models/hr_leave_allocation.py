@@ -372,6 +372,8 @@ class HolidaysAllocation(models.Model):
         return holiday
 
     def write(self, values):
+        if not self.ids:
+            return
         employee_id = values.get('employee_id', False)
         if values.get('state'):
             self._check_approval_update(values['state'])
