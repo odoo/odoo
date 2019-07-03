@@ -564,6 +564,86 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('float field using formula in form view', async function (assert) {
+        assert.expect(4);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="qux" widget="float" digits="[5,3]"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        // Test computation with priority of operation
+        await testUtils.form.clickEdit(form);
+        await testUtils.fields.editInput(form.$('input[name=qux]'), '=20+3*2');
+        await testUtils.form.clickSave(form);
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '26.000',
+            'The new value should be calculated properly.');
+
+        // Test computation with ** operand
+        await testUtils.form.clickEdit(form);
+        await testUtils.fields.editInput(form.$('input[name=qux]'), '=2**3');
+        await testUtils.form.clickSave(form);
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '8.000',
+            'The new value should be calculated properly.');
+
+        // Test computation with ^ operant which should do the same as **
+        await testUtils.form.clickEdit(form);
+        await testUtils.fields.editInput(form.$('input[name=qux]'), '=2^3');
+        await testUtils.form.clickSave(form);
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '8.000',
+            'The new value should be calculated properly.');
+
+        // Test computation and rounding
+        await testUtils.form.clickEdit(form);
+        await testUtils.fields.editInput(form.$('input[name=qux]'), '=100/3');
+        await testUtils.form.clickSave(form);
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '33.333',
+            'The new value should be calculated properly.');
+
+        form.destroy();
+    });
+
+    QUnit.test('float field using incorrect formula in form view', async function (assert) {
+        assert.expect(4);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="qux" widget="float" digits="[5,3]"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        // Test that incorrect value is not computed
+        await testUtils.form.clickEdit(form);
+        await testUtils.fields.editInput(form.$('input[name=qux]'), '=abc');
+        await testUtils.form.clickSave(form);
+        assert.hasClass(form.$('.o_form_view'),'o_form_editable',
+            "form view should still be editable");
+        assert.hasClass(form.$('input[name=qux]'),'o_field_invalid',
+            "fload field should be displayed as invalid");
+
+        await testUtils.fields.editInput(form.$('input[name=qux]'), '=3:2?+4');
+        await testUtils.form.clickSave(form);
+        assert.hasClass(form.$('.o_form_view'),'o_form_editable',
+            "form view should still be editable");
+        assert.hasClass(form.$('input[name=qux]'),'o_field_invalid',
+            "float field should be displayed as invalid");
+
+        form.destroy();
+    });
+
     QUnit.test('float field in editable list view', async function (assert) {
         assert.expect(4);
 
@@ -3390,6 +3470,35 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('monetary field rounding using formula in form view', async function (assert) {
+        assert.expect(1);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="qux" widget="monetary"/>' +
+                        '<field name="currency_id" invisible="1"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 5,
+            session: {
+                currencies: _.indexBy(this.data.currency.records, 'id'),
+            },
+        });
+
+        // Test computation and rounding
+        await testUtils.form.clickEdit(form);
+        await testUtils.fields.editInput(form.$('.o_field_monetary input'), '=100/3');
+        await testUtils.form.clickSave(form);
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '$\u00a033.33',
+            'The new value should be calculated and rounded properly.');
+
+        form.destroy();
+    });
+
     QUnit.test('monetary field with currency symbol after', async function (assert) {
         assert.expect(5);
 
@@ -3796,6 +3905,27 @@ QUnit.module('basic_fields', {
         await testUtils.form.clickSave(form);
         assert.strictEqual(form.$('.o_field_widget').text(), '-18',
             'The new value should be saved and displayed properly.');
+
+        form.destroy();
+    });
+
+    QUnit.test('integer field rounding using formula in form view', async function (assert) {
+        assert.expect(1);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="int_field"/></form>',
+            res_id: 2,
+        });
+
+        // Test computation and rounding
+        await testUtils.form.clickEdit(form);
+        await testUtils.fields.editInput(form.$('input[name=int_field]'), '=100/3');
+        await testUtils.form.clickSave(form);
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '33',
+            'The new value should be calculated properly.');
 
         form.destroy();
     });
