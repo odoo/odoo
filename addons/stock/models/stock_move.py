@@ -402,7 +402,8 @@ class StockMove(models.Model):
         return res
 
     def write(self, vals):
-        # FIXME: pim fix your crap
+        # Handle the write on the initial demand by updating the reserved quantity and logging
+        # messages according to the state of the stock.move records.
         receipt_moves_to_reassign = self.env['stock.move']
         if 'product_uom_qty' in vals:
             for move in self.filtered(lambda m: m.state not in ('done', 'draft') and m.picking_id):
@@ -418,20 +419,13 @@ class StockMove(models.Model):
                 receipt_moves_to_reassign |= move_to_unreserve.filtered(lambda m: m.location_id.usage == 'supplier')
                 receipt_moves_to_reassign |= (self - move_to_unreserve).filtered(lambda m: m.location_id.usage == 'supplier' and m.state in ('partially_available', 'assigned'))
 
-        # TDE CLEANME: it is a gros bordel + tracking
-        Picking = self.env['stock.picking']
-
-        #propagation of expected date:
+        # Handle the propagation of `date_expected` and `date` fields.
         propagated_date_field = False
         if vals.get('date_expected'):
-            #propagate any manual change of the expected date
             propagated_date_field = 'date_expected'
-        elif (vals.get('state', '') == 'done' and vals.get('date')):
-            #propagate also any delta observed when setting the move as done
+        elif vals.get('state', '') == 'done' and vals.get('date'):
             propagated_date_field = 'date'
-
         if propagated_date_field:
-            #any propagation is (maybe) needed
             new_date = vals.get(propagated_date_field)
             for move in self:
                 move_dest_ids = move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
@@ -445,17 +439,21 @@ class StockMove(models.Model):
                     move_dest.date_expected += relativedelta.relativedelta(days=delta_days)
                 move_dest_ids._delay_alert_log_activity('auto', move)
 
-        track_pickings = not self._context.get('mail_notrack') and any(field in vals for field in ['state', 'picking_id', 'partially_available'])
+        # Manual tracking of the `state` field for the stock.picking records.
+        track_pickings = not self._context.get('mail_notrack') and any(field in vals for field in ['state', 'picking_id'])
         if track_pickings:
-            to_track_picking_ids = set([move.picking_id.id for move in self if move.picking_id])
+            to_track_picking_ids = {move.picking_id.id for move in self if move.picking_id}
             if vals.get('picking_id'):
                 to_track_picking_ids.add(vals['picking_id'])
             to_track_picking_ids = list(to_track_picking_ids)
-            pickings = Picking.browse(to_track_picking_ids)
+            pickings = self.env['stock.picking'].browse(to_track_picking_ids)
             initial_values = dict((picking.id, {'state': picking.state}) for picking in pickings)
+
         res = super(StockMove, self).write(vals)
+
         if track_pickings:
             pickings.message_track(pickings.fields_get(['state']), initial_values)
+
         if receipt_moves_to_reassign:
             receipt_moves_to_reassign._action_assign()
         return res
