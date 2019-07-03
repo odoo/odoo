@@ -54,6 +54,24 @@ class AccountReconcileModel(models.Model):
         * Not Contains: Negation of "Contains".
         * Match Regex: Define your own regular expression.''')
     match_label_param = fields.Char(string='Label Parameter')
+    match_note = fields.Selection(selection=[
+        ('contains', 'Contains'),
+        ('not_contains', 'Not Contains'),
+        ('match_regex', 'Match Regex'),
+    ], string='Note', help='''The reconciliation model will only be applied when the note:
+        * Contains: The proposition note must contains this string (case insensitive).
+        * Not Contains: Negation of "Contains".
+        * Match Regex: Define your own regular expression.''')
+    match_note_param = fields.Char(string='Note Parameter')
+    match_transaction_type = fields.Selection(selection=[
+        ('contains', 'Contains'),
+        ('not_contains', 'Not Contains'),
+        ('match_regex', 'Match Regex'),
+    ], string='Transaction Type', help='''The reconciliation model will only be applied when the transaction type:
+        * Contains: The proposition transaction type must contains this string (case insensitive).
+        * Not Contains: Negation of "Contains".
+        * Match Regex: Define your own regular expression.''')
+    match_transaction_type_param = fields.Char(string='Transaction Type Parameter')
     match_same_currency = fields.Boolean(string='Same Currency Matching', default=True,
         help='Restrict to propositions having the same currency as the statement line.')
     match_total_amount = fields.Boolean(string='Amount Matching', default=True,
@@ -348,16 +366,17 @@ class AccountReconcileModel(models.Model):
                 query += 'BETWEEN %s AND %s'
                 params += [rule.match_amount_min, rule.match_amount_max]
 
-        # Filter on label.
-        if rule.match_label == 'contains':
-            query += ' AND st_line.name ILIKE %s'
-            params += ['%%%s%%' % rule.match_label_param]
-        elif rule.match_label == 'not_contains':
-            query += ' AND st_line.name NOT ILIKE %s'
-            params += ['%%%s%%' % rule.match_label_param]
-        elif rule.match_label == 'match_regex':
-            query += ' AND st_line.name ~ %s'
-            params += [rule.match_label_param]
+        # Filter on label, note and transaction_type
+        for field in ['label', 'note', 'transaction_type']:
+            if rule['match_' + field] == 'contains':
+                query += ' AND st_line.name ILIKE %s'
+                params += ['%%%s%%' % rule['match_' + field + '_param']]
+            elif rule['match_' + field] == 'not_contains':
+                query += ' AND st_line.name NOT ILIKE %s'
+                params += ['%%%s%%' % rule['match_' + field + '_param']]
+            elif rule['match_' + field] == 'match_regex':
+                query += ' AND st_line.name ~ %s'
+                params += [rule['match_' + field + '_param']]
 
         # Filter on partners.
         if rule.match_partner:

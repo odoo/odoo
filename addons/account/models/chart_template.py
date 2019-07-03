@@ -712,6 +712,10 @@ class AccountChartTemplate(models.Model):
                 'match_amount_max': account_reconcile_model.match_amount_max,
                 'match_label': account_reconcile_model.match_label,
                 'match_label_param': account_reconcile_model.match_label_param,
+                'match_note': account_reconcile_model.match_note,
+                'match_note_param': account_reconcile_model.match_note_param,
+                'match_transaction_type': account_reconcile_model.match_transaction_type,
+                'match_transaction_type_param': account_reconcile_model.match_transaction_type_param,
                 'match_same_currency': account_reconcile_model.match_same_currency,
                 'match_total_amount': account_reconcile_model.match_total_amount,
                 'match_total_amount_param': account_reconcile_model.match_total_amount_param,
@@ -1111,6 +1115,24 @@ class AccountReconcileModelTemplate(models.Model):
         * Not Contains: Negation of "Contains".
         * Match Regex: Define your own regular expression.''')
     match_label_param = fields.Char(string='Label Parameter')
+    match_note = fields.Selection(selection=[
+        ('contains', 'Contains'),
+        ('not_contains', 'Not Contains'),
+        ('match_regex', 'Match Regex'),
+    ], string='Note', help='''The reconciliation model will only be applied when the note:
+        * Contains: The proposition note must contains this string (case insensitive).
+        * Not Contains: Negation of "Contains".
+        * Match Regex: Define your own regular expression.''')
+    match_note_param = fields.Char(string='Note Parameter')
+    match_transaction_type = fields.Selection(selection=[
+        ('contains', 'Contains'),
+        ('not_contains', 'Not Contains'),
+        ('match_regex', 'Match Regex'),
+    ], string='Transaction Type', help='''The reconciliation model will only be applied when the transaction type:
+        * Contains: The proposition transaction type must contains this string (case insensitive).
+        * Not Contains: Negation of "Contains".
+        * Match Regex: Define your own regular expression.''')
+    match_transaction_type_param = fields.Char(string='Transaction Type Parameter')
     match_same_currency = fields.Boolean(string='Same Currency Matching', default=True,
         help='Restrict to propositions having the same currency as the statement line.')
     match_total_amount = fields.Boolean(string='Amount Matching', default=True,
