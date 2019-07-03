@@ -1033,6 +1033,11 @@ registry.facebookPage = Animation.extend({
     start: function () {
         var def = this._super.apply(this, arguments);
 
+        if (this.$('iframe').length) {
+            this.$iframe = this.$('iframe');
+            return def;
+        }
+
         var params = _.pick(this.$el.data(), 'href', 'height', 'tabs', 'small_header', 'hide_cover', 'show_facepile');
         if (!params.href) {
             return def;
