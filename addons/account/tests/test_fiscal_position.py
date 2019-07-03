@@ -119,7 +119,7 @@ class TestFiscalPosition(common.TransactionCase):
         self.fr_b2b_state = self.fr_b2b.copy(dict(state_ids=[(4, self.state_fr.id)], sequence=70))
         george.state_id = self.state_fr
         assert_fp(george, self.fr_b2b_zip100, "FR-B2B with zip should have precedence over states")
-        george.zip = 0
+        george.zip = False
         assert_fp(george, self.fr_b2b_state, "FR-B2B with states should have precedence")
 
         # Dedicated position has max precedence
