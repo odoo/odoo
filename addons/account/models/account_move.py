@@ -2085,6 +2085,18 @@ class AccountMove(models.Model):
         ])
         records.post()
 
+    # offer the possibility to duplicate thanks to a button instead of a hidden menu, which is more visible
+    @api.multi
+    def action_duplicate(self):
+        self.ensure_one()
+        action = self.env.ref('account.action_move_journal_line').read()[0]
+        action['context'] = dict(self.env.context)
+        action['context']['form_view_initial_mode'] = 'edit'
+        action['context']['view_no_maturity'] = False
+        action['views'] = [(self.env.ref('account.view_move_form').id, 'form')]
+        action['res_id'] = self.copy().id
+        return action
+
 
 class AccountMoveLine(models.Model):
     _name = "account.move.line"
@@ -3530,19 +3542,6 @@ class AccountMoveLine(models.Model):
 
             tables, where_clause, where_clause_params = query.get_sql()
         return tables, where_clause, where_clause_params
-
-    # FIXME: Clarify me and change me in master
-    @api.multi
-    def action_duplicate(self):
-        self.ensure_one()
-        action = self.env.ref('account.action_move_journal_line').read()[0]
-        action['target'] = 'inline'
-        action['context'] = dict(self.env.context)
-        action['context']['form_view_initial_mode'] = 'edit'
-        action['context']['view_no_maturity'] = False
-        action['views'] = [(self.env.ref('account.view_move_form').id, 'form')]
-        action['res_id'] = self.copy().id
-        return action
 
     @api.multi
     def open_reconcile_view(self):
