@@ -31,12 +31,14 @@ QUnit.module('core', function () {
     });
 
     QUnit.test('simple arithmetic', function(assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         var result = pyUtils.py_eval("1 + 2");
         assert.strictEqual(result, 3, "should properly evaluate sum");
         result = pyUtils.py_eval("42 % 5");
         assert.strictEqual(result, 2, "should properly evaluate modulo operator");
+        result = pyUtils.py_eval("2 ** 3");
+        assert.strictEqual(result, 8, "should properly evaluate power operator");
     });
 
 

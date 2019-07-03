@@ -17,6 +17,7 @@ var Domain = require('web.Domain');
 var DomainSelector = require('web.DomainSelector');
 var DomainSelectorDialog = require('web.DomainSelectorDialog');
 var framework = require('web.framework');
+var py_utils = require('web.py_utils');
 var session = require('web.session');
 var utils = require('web.utils');
 var view_dialogs = require('web.view_dialogs');
@@ -371,6 +372,41 @@ var NumericField = InputField.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /** 
+     * Evaluate a string representing a simple formula,
+     * a formula is composed of numbers and arithmetic operations
+     * (ex: 4+3*2)
+     * 
+     * Supported arithmetic operations: + - * / ^ ( )
+     * Since each number in the formula can be expressed in user locale,
+     * we parse each float value inside the formula using the user context
+     * This function uses py_eval to safe eval the formula.
+     * We assume that this function is used as a calculator so operand ^ (xor)
+     * is replaced by operand ** (power) so that users that are used to
+     * excel or libreoffice are not confused
+     * 
+     * @private
+     * @param expr
+     * @return a float representing the result of the evaluated formula
+     * @throws error if formula can't be evaluated
+     */
+    _evalFormula: function (expr, context) {
+        // remove extra space
+        var val = expr.replace(new RegExp(/( )/g), '');
+        var safeEvalString = '';
+        for (let v of val.split(new RegExp(/([-+*/()^])/g))) {
+            if (!['+','-','*','/','(',')','^'].includes(v) && v.length) {
+                // check if this is a float and take into account user delimiter preference
+                v = field_utils.parse.float(v);
+            }
+            if (v === '^') {
+                v = '**';
+            }
+            safeEvalString += v;
+        };
+        return py_utils.py_eval(safeEvalString, context);
+    },
+
     /**
      * Format numerical value (integer or float)
      *
@@ -406,7 +442,36 @@ var NumericField = InputField.extend({
             this.$input.attr({step: this.nodeOptions.step});
         }
         return result;
-    }
+    },
+
+    /**
+     * Evaluate value set by user if starts with =
+     *
+     * @override
+     * @private
+     * @param {any} value
+     * @param {Object} [options]
+     */
+    _setValue: function (value, options) {
+        var originalValue = value;
+        value = value.trim();
+        if (value.startsWith('=')) {
+            try {
+                // Evaluate the formula
+                value = this._evalFormula(value.substr(1));
+                // Format back the value in user locale
+                value = this._formatValue(value);
+                // Set the computed value in the input
+                this.$input.val(value);
+            } catch (err) {
+                // in case of exception, set value as the original value
+                // that way the Webclient will show an error as
+                // it is expecting a numeric value.
+                value = originalValue;
+            }
+        }
+        return this._super(value, options);
+    },
 });
 
 var FieldChar = InputField.extend(TranslatableFieldMixin, {
@@ -665,7 +730,7 @@ var FieldDateTime = FieldDate.extend({
     },
 });
 
-var FieldMonetary = InputField.extend({
+var FieldMonetary = NumericField.extend({
     description: _lt("Monetary"),
     className: 'o_field_monetary o_field_number',
     tagName: 'span',
