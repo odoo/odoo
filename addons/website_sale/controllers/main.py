@@ -609,8 +609,7 @@ class WebsiteSale(ProductConfiguratorController):
         if request.website.specific_user_account:
             new_values['website_id'] = request.website.id
 
-        if order.partner_id.id == request.website.user_id.sudo().partner_id.id:
-            # If the partner is public, we assign the company of the website
+        if mode[0] == 'new':
             new_values['company_id'] = request.website.company_id.id
 
         lang = request.lang if request.lang in request.website.mapped('language_ids.code') else None
