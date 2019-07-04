@@ -3040,8 +3040,7 @@ Fields:
 
         # SQL Alternative if computing in-memory is too slow for large dataset
         # invalid = self - self._filter_access_rules(operation)
-        dom = self.env['ir.rule']._compute_domain(self._name, operation)
-        invalid = self - self.filtered_domain(dom or [])
+        invalid = self - self._filter_access_rules_python(operation)
         if not invalid:
             return
 
@@ -3107,16 +3106,9 @@ Fields:
             if not (it or it.origin) or (it or it.origin) in valid_ids
         ])
 
-    @api.model
-    def _sort_values(self, vals):
-        # DLE P39
-        fields = [self._fields[f] for f in vals.keys() if f in self._fields]
-        depend_fields = set()
-        for field in fields:
-            if field.type == 'monetary' and field.currency_field in vals:
-                depend_fields.add(field.currency_field)
-        res = sorted(vals.items(), key=lambda kv: 0 if kv[0] in depend_fields else 1)
-        return res
+    def _filter_access_rules_python(self, operation):
+        dom = self.env['ir.rule']._compute_domain(self._name, operation)
+        return self.filtered_domain(dom or [])
 
     def unlink(self):
         """ unlink()

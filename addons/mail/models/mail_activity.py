@@ -224,6 +224,28 @@ class MailActivity(models.Model):
             self.activity_type_id = self.recommended_activity_type_id
 
     def _filter_access_rules(self, operation):
+        # write / unlink: valid for creator / assigned
+        if operation in ('write', 'unlink'):
+            valid = super(MailActivity, self)._filter_access_rules(operation)
+            if valid and valid == self:
+                return self
+        else:
+            valid = self.env[self._name]
+        return self._filter_access_rules_remaining(valid, operation, '_filter_access_rules')
+
+    @api.multi
+    def _filter_access_rules_python(self, operation):
+        # write / unlink: valid for creator / assigned
+        if operation in ('write', 'unlink'):
+            valid = super(MailActivity, self)._filter_access_rules_python(operation)
+            if valid and valid == self:
+                return self
+        else:
+            valid = self.env[self._name]
+        return self._filter_access_rules_remaining(valid, operation, '_filter_access_rules_python')
+
+    @api.multi
+    def _filter_access_rules_remaining(self, valid, operation, filter_access_rules_method):
         """ Return the subset of ``self`` for which ``operation`` is allowed.
         A custom implementation is done on activities as this document has some
         access rules and is based on related document for activities that are
@@ -238,19 +260,6 @@ class MailActivity(models.Model):
           * unlink: access rule OR
                     (``mail_post_access`` or write) rights on related documents);
         """
-        if self.env.is_superuser():
-            return self
-        if not self.check_access_rights(operation, raise_exception=False):
-            return self.env[self._name]
-
-        # write / unlink: valid for creator / assigned
-        if operation in ('write', 'unlink'):
-            valid = super(MailActivity, self)._filter_access_rules(operation)
-            if valid and valid == self:
-                return self
-        else:  # create / read: linked to document only, no access rules defined
-            valid = self.env[self._name]
-
         # compute remaining for hand-tailored rules
         remaining = self - valid
         remaining_sudo = remaining.sudo()
@@ -273,7 +282,7 @@ class MailActivity(models.Model):
                 doc_operation = 'write'
             right = self.env[doc_model].check_access_rights(doc_operation, raise_exception=False)
             if right:
-                valid_doc_ids = self.env[doc_model].browse(doc_ids)._filter_access_rules(doc_operation)
+                valid_doc_ids = getattr(self.env[doc_model].browse(doc_ids), filter_access_rules_method)(doc_operation)
                 valid += remaining.filtered(lambda activity: activity.res_model == doc_model and activity.res_id in valid_doc_ids.ids)
 
         return valid
