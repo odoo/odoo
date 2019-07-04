@@ -334,9 +334,23 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                     return False
             return True
 
+        def _repr_field_value(record, field_name):
+            record_value = record[field_name]
+            field_type = record._fields[field_name].type
+            if field_type == 'monetary':
+                currency_field_name = record._fields[field_name].currency_field
+                record_currency = record[currency_field_name]
+                return record_currency and record_currency.round(record_value) or record_value
+            elif field_type in ('one2many', 'many2many'):
+                return set(record_value.ids)
+            elif field_type == 'many2one':
+                return record_value.id
+            else:
+                return record_value
+
         def _format_message(records, expected_values):
             ''' Return a formatted representation of records/expected_values. '''
-            all_records_values = records.read(list(expected_values[0].keys()), load=False)
+            all_records_values = [{key: _repr_field_value(record, key) for key in expected_values[0]} for record in records]
             msg1 = '\n'.join(pprint.pformat(dic) for dic in all_records_values)
             msg2 = '\n'.join(pprint.pformat(dic) for dic in expected_values)
             return 'Current values:\n\n%s\n\nExpected values:\n\n%s' % (msg1, msg2)
