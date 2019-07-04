@@ -233,10 +233,7 @@ class TestStockValuation(TransactionCase):
         picking1 = po1.picking_ids[0]
         move1 = picking1.move_lines[0]
         move1.quantity_done = 15
-        res_dict = picking1.button_validate()
-        self.assertEqual(res_dict['res_model'], 'stock.overprocessed.transfer')
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
-        wizard.action_confirm()
+        picking1.button_validate()
 
         # there should be only one move
         self.assertEqual(len(picking1.move_lines), 1)
