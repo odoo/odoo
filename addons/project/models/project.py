@@ -408,7 +408,7 @@ class Project(models.Model):
     def _create_analytic_account_from_values(self, values):
         analytic_account = self.env['account.analytic.account'].create({
             'name': values.get('name', _('Unknown Analytic Account')),
-            'company_id': values.get('company_id', self.env.user.company_id.id),
+            'company_id': values.get('company_id') or self.env.company.id,
             'partner_id': values.get('partner_id'),
             'active': True,
         })
@@ -519,9 +519,7 @@ class Task(models.Model):
         string='Customer',
         default=lambda self: self._get_default_partner())
     manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True, related_sudo=False)
-    company_id = fields.Many2one('res.company',
-        string='Company',
-        default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     color = fields.Integer(string='Color Index')
     user_email = fields.Char(related='user_id.email', string='User Email', readonly=True, related_sudo=False)
     attachment_ids = fields.One2many('ir.attachment', compute='_compute_attachment_ids', string="Main Attachments",

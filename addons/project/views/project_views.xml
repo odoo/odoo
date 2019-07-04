@@ -151,15 +151,12 @@
                                     <field name="rating_status_period"  class="oe_inline" attrs="{'required': [('rating_status','=','periodic')], 'invisible': [('rating_status','!=','periodic')]}" groups="project.group_project_rating"/>
                                     <field name="portal_show_rating" attrs="{'invisible': [('rating_status','==','no')]}" groups="project.group_project_rating"/>
                                     <field name="subtask_project_id" groups="project.group_subtask_project"/>
+                                    <field name="company_id" groups="base.group_multi_company"/>
                                 </group>
                                 <group name="extra_settings">
                                 </group>
                             </group>
                             <group name="misc">
-                                <group string="Configuration" groups="base.group_no_one" name="configuration">
-                                    <field name="sequence" groups="base.group_no_one"/>
-                                    <field name="company_id" groups="base.group_multi_company"/>
-                                </group>
                                 <group string="Time Scheduling">
                                     <field name="resource_calendar_id"/>
                                 </group>
