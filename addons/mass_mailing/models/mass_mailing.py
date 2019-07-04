@@ -161,7 +161,7 @@ class MassMailingCampaign(models.Model):
         for campaign in self:
             campaign.total_mailings = mapped_data.get(campaign.id, 0)
 
-    def get_recipients(self, model=None):
+    def _get_recipients(self, model=None):
         """Return the recipients of a mailing campaign. This is based on the statistics
         build for each mailing. """
         res = dict.fromkeys(self.ids, {})
@@ -184,7 +184,6 @@ class MassMailingCampaign(models.Model):
 class MassMailing(models.Model):
     """ MassMailing models a wave of emails for a mass mailign campaign.
     A mass mailing is an occurence of sending emails. """
-
     _name = 'mail.mass_mailing'
     _description = 'Mass Mailing'
     # number of periods for tracking mail_mail statistics
@@ -275,7 +274,7 @@ class MassMailing(models.Model):
 
     def _compute_total(self):
         for mass_mailing in self:
-            mass_mailing.total = len(mass_mailing.sudo().get_recipients())
+            mass_mailing.total = len(mass_mailing.sudo()._get_recipients())
 
     def _compute_clicks_ratio(self):
         self.env.cr.execute("""
@@ -331,24 +330,6 @@ class MassMailing(models.Model):
             row['bounced_ratio'] = 100.0 * row['bounced'] / total
             self.browse(row.pop('mailing_id')).update(row)
 
-    def _unsubscribe_token(self, res_id, email):
-        """Generate a secure hash for this mailing list and parameters.
-
-        This is appended to the unsubscription URL and then checked at
-        unsubscription time to ensure no malicious unsubscriptions are
-        performed.
-
-        :param int res_id:
-            ID of the resource that will be unsubscribed.
-
-        :param str email:
-            Email of the resource that will be unsubscribed.
-        """
-        secret = self.env["ir.config_parameter"].sudo().get_param(
-            "database.secret")
-        token = (self.env.cr.dbname, self.id, int(res_id), tools.ustr(email))
-        return hmac.new(secret.encode('utf-8'), repr(token).encode('utf-8'), hashlib.sha512).hexdigest()
-
     def _compute_next_departure(self):
         cron_next_call = self.env.ref('mass_mailing.ir_cron_mass_mailing_queue').sudo().nextcall
         str2dt = fields.Datetime.from_string
@@ -390,21 +371,22 @@ class MassMailing(models.Model):
         if self.subject and not self.name:
             self.name = self.subject
 
-    #------------------------------------------------------
-    # Technical stuff
-    #------------------------------------------------------
+    # ------------------------------------------------------
+    # ORM
+    # ------------------------------------------------------
 
     @api.model
-    def name_create(self, name):
-        """ _rec_name is source_id, creates a utm.source instead """
-        mass_mailing = self.create({'name': name, 'subject': name})
-        return mass_mailing.name_get()[0]
+    def create(self, values):
+        if values.get('name') and not values.get('subject'):
+            values['subject'] = values['name']
+        if values.get('body_html'):
+            values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
+        return super(MassMailing, self).create(values)
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name') and not vals.get('subject'):
-            vals['subject'] = vals['name']
-        return super(MassMailing, self).create(vals)
+    def write(self, values):
+        if values.get('body_html'):
+            values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
+        return super(MassMailing, self).write(values)
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
@@ -416,74 +398,9 @@ class MassMailing(models.Model):
     def _group_expand_states(self, states, domain, order):
         return [key for key, val in type(self).state.selection]
 
-    def update_opt_out(self, email, list_ids, value):
-        if len(list_ids) > 0:
-            model = self.env['mail.mass_mailing.contact'].with_context(active_test=False)
-            records = model.search([('email_normalized', '=', tools.email_normalize(email))])
-            opt_out_records = self.env['mail.mass_mailing.list_contact_rel'].search([
-                ('contact_id', 'in', records.ids),
-                ('list_id', 'in', list_ids),
-                ('opt_out', '!=', value)
-            ])
-
-            opt_out_records.write({'opt_out': value})
-            message = _('The recipient <strong>unsubscribed from %s</strong> mailing list(s)') \
-                if value else _('The recipient <strong>subscribed to %s</strong> mailing list(s)')
-            for record in records:
-                # filter the list_id by record
-                record_lists = opt_out_records.filtered(lambda rec: rec.contact_id.id == record.id)
-                if len(record_lists) > 0:
-                    record.sudo().message_post(body=_(message % ', '.join(str(list.name) for list in record_lists.mapped('list_id'))))
-
-    @api.model
-    def create(self, values):
-        if values.get('body_html'):
-            values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
-        return super(MassMailing, self).create(values)
-
-    def write(self, values):
-        if values.get('body_html'):
-            values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
-        return super(MassMailing, self).write(values)
-
-    def _convert_inline_images_to_urls(self, body_html):
-        """
-        Find inline base64 encoded images, make an attachement out of
-        them and replace the inline image with an url to the attachement.
-        """
-
-        def _image_to_url(b64image: bytes):
-            """Store an image in an attachement and returns an url"""
-            attachment = self.env['ir.attachment'].create({
-                'datas': b64image,
-                'name': "cropped_image_mailing_{}".format(self.id),
-                'type': 'binary',})
-
-            attachment.generate_access_token()
-
-            return '/web/image/%s?access_token=%s' % (
-                attachment.id, attachment.access_token)
-
-
-        modified = False
-        root = lxml.html.fromstring(body_html)
-        for node in root.iter('img'):
-            match = image_re.match(node.attrib.get('src', ''))
-            if match:
-                mime = match.group(1)  # unsed
-                image = match.group(2).encode()  # base64 image as bytes
-
-                node.attrib['src'] = _image_to_url(image)
-                modified = True
-
-        if modified:
-            return lxml.html.tostring(root)
-
-        return body_html
-
-    #------------------------------------------------------
-    # Views & Actions
-    #------------------------------------------------------
+    # ------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------
 
     def action_duplicate(self):
         self.ensure_one()
@@ -528,7 +445,7 @@ class MassMailing(models.Model):
         failed_mails = self.env['mail.mail'].search([('mailing_id', 'in', self.ids), ('state', '=', 'exception')])
         failed_mails.mapped('statistics_ids').unlink()
         failed_mails.sudo().unlink()
-        res_ids = self.get_recipients()
+        res_ids = self._get_recipients()
         except_mailed = self.env['mail.mail.statistics'].search([
             ('model', '=', self.mailing_model_real),
             ('res_id', 'in', res_ids),
@@ -571,9 +488,28 @@ class MassMailing(models.Model):
             'domain': [('id', 'in', res_ids)],
         }
 
-    #------------------------------------------------------
+    def update_opt_out(self, email, list_ids, value):
+        if len(list_ids) > 0:
+            model = self.env['mail.mass_mailing.contact'].with_context(active_test=False)
+            records = model.search([('email_normalized', '=', tools.email_normalize(email))])
+            opt_out_records = self.env['mail.mass_mailing.list_contact_rel'].search([
+                ('contact_id', 'in', records.ids),
+                ('list_id', 'in', list_ids),
+                ('opt_out', '!=', value)
+            ])
+
+            opt_out_records.write({'opt_out': value})
+            message = _('The recipient <strong>unsubscribed from %s</strong> mailing list(s)') \
+                if value else _('The recipient <strong>subscribed to %s</strong> mailing list(s)')
+            for record in records:
+                # filter the list_id by record
+                record_lists = opt_out_records.filtered(lambda rec: rec.contact_id.id == record.id)
+                if len(record_lists) > 0:
+                    record.sudo().message_post(body=_(message % ', '.join(str(list.name) for list in record_lists.mapped('list_id'))))
+
+    # ------------------------------------------------------
     # Email Sending
-    #------------------------------------------------------
+    # ------------------------------------------------------
 
     def _get_opt_out_list(self):
         """Returns a set of emails opted-out in target model"""
@@ -672,7 +608,7 @@ class MassMailing(models.Model):
             'post_convert_links': self._get_convert_links(),
         }
 
-    def get_recipients(self):
+    def _get_recipients(self):
         if self.mailing_domain:
             domain = safe_eval(self.mailing_domain)
             res_ids = self.env[self.mailing_model_real].search(domain).ids
@@ -685,7 +621,7 @@ class MassMailing(models.Model):
             contact_nbr = self.env[self.mailing_model_real].search_count(domain)
             topick = int(contact_nbr / 100.0 * self.contact_ab_pc)
             if self.mass_mailing_campaign_id and self.mass_mailing_campaign_id.unique_ab_testing:
-                already_mailed = self.mass_mailing_campaign_id.get_recipients()[self.mass_mailing_campaign_id.id]
+                already_mailed = self.mass_mailing_campaign_id._get_recipients()[self.mass_mailing_campaign_id.id]
             else:
                 already_mailed = set([])
             remaining = set(res_ids).difference(already_mailed)
@@ -694,20 +630,21 @@ class MassMailing(models.Model):
             res_ids = random.sample(remaining, topick)
         return res_ids
 
-    def get_remaining_recipients(self):
-        res_ids = self.get_recipients()
-        already_mailed = self.env['mail.mail.statistics'].search_read([('model', '=', self.mailing_model_real),
-                                                                     ('res_id', 'in', res_ids),
-                                                                     ('mass_mailing_id', '=', self.id)], ['res_id'])
-        already_mailed_res_ids = [record['res_id'] for record in already_mailed]
-        return list(set(res_ids) - set(already_mailed_res_ids))
+    def _get_remaining_recipients(self):
+        res_ids = self._get_recipients()
+        already_mailed = self.env['mail.mail.statistics'].search_read([
+            ('model', '=', self.mailing_model_real),
+            ('res_id', 'in', res_ids),
+            ('mass_mailing_id', '=', self.id)], ['res_id'])
+        done_res_ids = [record['res_id'] for record in already_mailed]
+        return [rid for rid in res_ids if rid not in done_res_ids]
 
-    def send_mail(self, res_ids=None):
+    def action_send_mail(self, res_ids=None):
         author_id = self.env.user.partner_id.id
 
         for mailing in self:
             if not res_ids:
-                res_ids = mailing.get_remaining_recipients()
+                res_ids = mailing._get_remaining_recipients()
             if not res_ids:
                 raise UserError(_('There is no recipients selected.'))
 
@@ -765,8 +702,63 @@ class MassMailing(models.Model):
         for mass_mailing in mass_mailings:
             user = mass_mailing.write_uid or self.env.user
             mass_mailing = mass_mailing.with_context(**user.with_user(user).context_get())
-            if len(mass_mailing.get_remaining_recipients()) > 0:
+            if len(mass_mailing._get_remaining_recipients()) > 0:
                 mass_mailing.state = 'sending'
-                mass_mailing.send_mail()
+                mass_mailing.action_send_mail()
             else:
                 mass_mailing.write({'state': 'done', 'sent_date': fields.Datetime.now()})
+
+    # ------------------------------------------------------
+    # TOOLS
+    # ------------------------------------------------------
+
+    def _unsubscribe_token(self, res_id, email):
+        """Generate a secure hash for this mailing list and parameters.
+
+        This is appended to the unsubscription URL and then checked at
+        unsubscription time to ensure no malicious unsubscriptions are
+        performed.
+
+        :param int res_id:
+            ID of the resource that will be unsubscribed.
+
+        :param str email:
+            Email of the resource that will be unsubscribed.
+        """
+        secret = self.env["ir.config_parameter"].sudo().get_param("database.secret")
+        token = (self.env.cr.dbname, self.id, int(res_id), tools.ustr(email))
+        return hmac.new(secret.encode('utf-8'), repr(token).encode('utf-8'), hashlib.sha512).hexdigest()
+
+    def _convert_inline_images_to_urls(self, body_html):
+        """
+        Find inline base64 encoded images, make an attachement out of
+        them and replace the inline image with an url to the attachement.
+        """
+
+        def _image_to_url(b64image: bytes):
+            """Store an image in an attachement and returns an url"""
+            attachment = self.env['ir.attachment'].create({
+                'datas': b64image,
+                'name': "cropped_image_mailing_{}".format(self.id),
+                'type': 'binary',})
+
+            attachment.generate_access_token()
+
+            return '/web/image/%s?access_token=%s' % (
+                attachment.id, attachment.access_token)
+
+        modified = False
+        root = lxml.html.fromstring(body_html)
+        for node in root.iter('img'):
+            match = image_re.match(node.attrib.get('src', ''))
+            if match:
+                mime = match.group(1)  # unsed
+                image = match.group(2).encode()  # base64 image as bytes
+
+                node.attrib['src'] = _image_to_url(image)
+                modified = True
+
+        if modified:
+            return lxml.html.tostring(root)
+
+        return body_html
