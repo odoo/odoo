@@ -14,6 +14,10 @@
                     <filter name="group_by_supplier" string="Vendor" context="{'group_by': 'supplier_id'}"/>
                     <filter name="group_by_category" string="Product Category" context="{'group_by': 'category_id'}"/>
                 </group>
+                <searchpanel>
+                    <field name="category_id" select="multi" string="Categories" icon="fa-cutlery" color="#875A7B"/>
+                    <field name="supplier_id" select="multi" string="Vendors" icon="fa-truck"/>
+                </searchpanel>
             </search>
         </field>
     </record>
@@ -113,10 +117,6 @@
                         </div>
                     </t>
                 </templates>
-                <searchpanel>
-                    <field name="category_id" select="multi" string="Categories" icon="fa-cutlery" color="#875A7B"/>
-                    <field name="supplier_id" select="multi" string="Vendors" icon="fa-truck"/>
-                </searchpanel>
             </kanban>
         </field>
     </record>
