@@ -817,7 +817,7 @@ class TestStockValuationWithCOA(AccountingTestCase):
             .write({'quantity_done': 1.0}))
 
         picking.button_validate()
-        # 5 Units received at rate 0.7 = 42.86
+        # 1 Unit received at rate 0.7 = 42.86
         self.assertAlmostEqual(product_avg.standard_price, 42.86)
 
         today = date_invoice
