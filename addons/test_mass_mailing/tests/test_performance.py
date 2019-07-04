@@ -51,7 +51,7 @@ class TestMassMailPerformance(TestMassMailPerformanceBase):
         })
 
         with self.assertQueryCount(__system__=2477, marketing=3128):
-            mailing.send_mail()
+            mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)
         self.assertEqual(mailing.delivered, 50)
@@ -89,7 +89,7 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
         })
 
         with self.assertQueryCount(__system__=2864, marketing=3611):
-            mailing.send_mail()
+            mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)
         self.assertEqual(mailing.delivered, 50)
