@@ -90,15 +90,9 @@ class PickingType(models.Model):
 
     def name_get(self):
         """ Display 'Warehouse_name: PickingType_name' """
-        # TDE TODO remove context key support + update purchase
         res = []
         for picking_type in self:
-            if self.env.context.get('special_shortened_wh_name'):
-                if picking_type.warehouse_id:
-                    name = picking_type.warehouse_id.name
-                else:
-                    name = _('Customer') + ' (' + picking_type.name + ')'
-            elif picking_type.warehouse_id:
+            if picking_type.warehouse_id:
                 name = picking_type.warehouse_id.name + ': ' + picking_type.name
             else:
                 name = picking_type.name
