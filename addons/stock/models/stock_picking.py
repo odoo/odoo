@@ -851,20 +851,6 @@ class Picking(models.Model):
                 'context': self.env.context,
             }
 
-        if self._get_overprocessed_stock_moves() and not self._context.get('skip_overprocessed_check'):
-            view = self.env.ref('stock.view_overprocessed_transfer')
-            wiz = self.env['stock.overprocessed.transfer'].create({'picking_id': self.id})
-            return {
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'res_model': 'stock.overprocessed.transfer',
-                'views': [(view.id, 'form')],
-                'view_id': view.id,
-                'target': 'new',
-                'res_id': wiz.id,
-                'context': self.env.context,
-            }
-
         # Check backorder should check for other barcodes
         if self._check_backorder():
             return self.action_generate_backorder_wizard()
@@ -919,13 +905,6 @@ class Picking(models.Model):
     def _autoconfirm_picking(self):
         for picking in self.filtered(lambda picking: picking.immediate_transfer and picking.state not in ('done', 'cancel') and (picking.move_lines or picking.package_level_ids)):
             picking.action_confirm()
-
-    def _get_overprocessed_stock_moves(self):
-        self.ensure_one()
-        return self.move_lines.filtered(
-            lambda move: move.product_uom_qty != 0 and float_compare(move.quantity_done, move.product_uom_qty,
-                                                                     precision_rounding=move.product_uom.rounding) == 1
-        )
 
     def _create_backorder(self):
 

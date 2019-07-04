@@ -47,7 +47,6 @@
         'wizard/stock_scheduler_compute_views.xml',
         'wizard/stock_immediate_transfer_views.xml',
         'wizard/stock_backorder_confirmation_views.xml',
-        'wizard/stock_overprocessed_transfer_views.xml',
         'wizard/stock_quantity_history.xml',
         'wizard/stock_rules_report_views.xml',
         'wizard/stock_warn_insufficient_qty_views.xml',
