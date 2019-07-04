@@ -22,8 +22,8 @@ var Dialog = Widget.extend({
     custom_events: _.extend({}, Widget.prototype.custom_events, {
         focus_control_button: '_onFocusControlButton',
     }),
-    events: _.extend({} , Widget.prototype.events, {
-        'keydown .modal-footer button':'_onFooterButtonKeyDown',
+    events: _.extend({}, Widget.prototype.events, {
+        'keydown .modal-footer button': '_onFooterButtonKeyDown',
     }),
     /**
      * @param {Widget} parent
@@ -92,6 +92,8 @@ var Dialog = Widget.extend({
         this.backdrop = options.backdrop;
         this.renderHeader = options.renderHeader;
         this.renderFooter = options.renderFooter;
+
+        core.bus.on('close_dialogs', this, this.destroy.bind(this));
     },
     /**
      * Wait for XML dependencies and instantiate the modal structure (except
