@@ -87,7 +87,7 @@ class TestPacking(SavepointCase):
         packing_picking.action_assign()
         self.assertEqual(len(packing_picking.package_level_ids), 2, 'Two package levels must be created after assigning picking')
         packing_picking.package_level_ids.write({'is_done': True})
-        packing_picking.action_done()
+        packing_picking._action_done()
 
     def test_pick_a_pack_confirm(self):
         pack = self.env['stock.quant.package'].create({'name': 'The pack to pick'})
@@ -254,7 +254,7 @@ class TestPacking(SavepointCase):
         wizard = self.env[(wizard_values.get('res_model'))].browse(wizard_values.get('res_id'))
         wizard.location_dest_id = shelf2_location.id
         wizard.action_done()
-        picking.action_done()
+        picking._action_done()
         pack2 = self.env['stock.quant.package'].search([])[-1]
         self.assertEqual(pack2.location_id.id, shelf2_location.id, 'The package must be stored  in shelf2')
         self.assertEqual(pack1.location_id.id, shelf1_location.id, 'The package must be stored  in shelf1')

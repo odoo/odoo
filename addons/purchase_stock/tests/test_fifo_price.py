@@ -243,7 +243,7 @@ class TestFifoPrice(TestPurchase):
         # Process the delivery of the first outgoing shipment
         outgoing_shipment_neg.action_confirm()
         outgoing_shipment_neg.move_lines[0].quantity_done = 100.0
-        outgoing_shipment_neg.action_done()
+        outgoing_shipment_neg._action_done()
 
         # Check qty available = -100
         self.assertEqual(product_fifo_negative.qty_available, -100, 'Stock qty should be -100')
@@ -269,7 +269,7 @@ class TestFifoPrice(TestPurchase):
         # Process the delivery of the outgoing shipments
         outgoing_shipment_neg2.action_confirm()
         outgoing_shipment_neg2.move_lines[0].quantity_done = 400.0
-        outgoing_shipment_neg2.action_done()
+        outgoing_shipment_neg2._action_done()
 
         # Check qty available = -500
         self.assertEqual(product_fifo_negative.qty_available, -500, 'Stock qty should be -500')

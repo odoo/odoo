@@ -53,7 +53,7 @@ class TestStockProductionLot(TestStockCommon):
         move_a.move_line_ids.lot_id = self.lot1_productAAA.id
 
         # Transfer Incoming Shipment.
-        picking_in.action_done()
+        picking_in._action_done()
 
         # run scheduled tasks
         self.env['stock.production.lot']._alert_date_exceeded()
@@ -147,7 +147,7 @@ class TestStockProductionLot(TestStockCommon):
         move_b.move_line_ids.lot_id = self.lot1_productBBB.id
 
         # Transfer Incoming Shipment.
-        picking_in.action_done()
+        picking_in._action_done()
 
         # run scheduled tasks
         self.env['stock.production.lot']._alert_date_exceeded()
@@ -195,7 +195,7 @@ class TestStockProductionLot(TestStockCommon):
         move_c.move_line_ids.lot_id = self.lot1_productCCC.id
 
         # Transfer Incoming Shipment.
-        picking_in.action_done()
+        picking_in._action_done()
 
         # run scheduled tasks
         self.env['stock.production.lot']._alert_date_exceeded()

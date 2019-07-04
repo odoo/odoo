@@ -565,7 +565,7 @@ class Picking(models.Model):
         self.write({'is_locked': True})
         return True
 
-    def action_done(self):
+    def _action_done(self):
         """ Link undone move_lines without move to an existing one
         with the same product if there's one, else create a new one.
         Then set the pickings states as done by processing theirs Stock Moves.
@@ -735,7 +735,7 @@ class Picking(models.Model):
         # Check backorder should check for other barcodes
         if self._check_backorder():
             return self.action_generate_backorder_wizard()
-        self.action_done()
+        self._action_done()
         return
 
     def action_generate_backorder_wizard(self):

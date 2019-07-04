@@ -85,7 +85,7 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         picking_landed_cost_3.move_lines.price_unit = 1.0
         picking_landed_cost_3.action_confirm()
         picking_landed_cost_3.action_assign()
-        picking_landed_cost_3.action_done()
+        picking_landed_cost_3._action_done()
 
         # I create a landed cost for picking 3
         default_vals = self.env['stock.landed.cost'].default_get(list(self.env['stock.landed.cost'].fields_get()))
@@ -122,7 +122,7 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         picking_landed_cost_4.move_lines.price_unit = 17.0/12.0
         picking_landed_cost_4.action_confirm()
         picking_landed_cost_4.action_assign()
-        picking_landed_cost_4.action_done()
+        picking_landed_cost_4._action_done()
 
         # I create a landed cost for picking 4
         default_vals = self.env['stock.landed.cost'].default_get(list(self.env['stock.landed.cost'].fields_get()))

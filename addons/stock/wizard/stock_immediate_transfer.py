@@ -31,7 +31,7 @@ class StockImmediateTransfer(models.TransientModel):
             pick_to_do |= picking
         # Process every picking that do not require a backorder, then return a single backorder wizard for every other ones.
         if pick_to_do:
-            pick_to_do.action_done()
+            pick_to_do._action_done()
         if pick_to_backorder:
             return pick_to_backorder.action_generate_backorder_wizard()
         return False

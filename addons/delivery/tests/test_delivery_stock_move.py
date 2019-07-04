@@ -81,4 +81,4 @@ class StockMoveInvoice(AccountingTestCase):
         self.assertEqual(moves[0].weight, 2.0, 'wrong move weight')
 
         # Ship
-        self.picking = self.sale_prepaid.picking_ids.action_done()
+        self.picking = self.sale_prepaid.picking_ids._action_done()
