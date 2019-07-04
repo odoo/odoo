@@ -13,6 +13,26 @@ class LivechatController(http.Controller):
     # Note: the `cors` attribute on many routes is meant to allow the livechat
     # to be embedded in an external website.
 
+    def get_livechat_rule(self, channel_id):
+        # find the country from the request
+        country_id = False
+        country_code = request.session.geoip and request.session.geoip.get('country_code') or False
+        if country_code:
+            country_ids = request.env['res.country'].sudo().search([('code', '=', country_code)])
+            if country_ids:
+                country_id = country_ids[0].id
+        # extract url
+        url = request.httprequest.headers.get('Referer')
+        # find the first matching rule for the given country and url
+        matching_rule = request.env['im_livechat.channel.rule'].sudo().match_rule(channel_id, url, country_id)
+        if matching_rule:
+            return {
+                'action': matching_rule.action,
+                'auto_popup_timer': matching_rule.auto_popup_timer,
+                'regex_url': matching_rule.regex_url,
+            }
+        return {}
+
     @http.route('/im_livechat/external_lib.<any(css,js):ext>', type='http', auth='public')
     def livechat_lib(self, ext, **kwargs):
         # _get_asset return the bundle html code (script and link list) but we want to use the attachment content
@@ -57,23 +77,7 @@ class LivechatController(http.Controller):
         available = len(request.env['im_livechat.channel'].sudo().browse(channel_id)._get_available_users())
         rule = {}
         if available:
-            # find the country from the request
-            country_id = False
-            country_code = request.session.geoip and request.session.geoip.get('country_code') or False
-            if country_code:
-                country_ids = request.env['res.country'].sudo().search([('code', '=', country_code)])
-                if country_ids:
-                    country_id = country_ids[0].id
-            # extract url
-            url = request.httprequest.headers.get('Referer')
-            # find the first matching rule for the given country and url
-            matching_rule = request.env['im_livechat.channel.rule'].sudo().match_rule(channel_id, url, country_id)
-            if matching_rule:
-                rule = {
-                    'action': matching_rule.action,
-                    'auto_popup_timer': matching_rule.auto_popup_timer,
-                    'regex_url': matching_rule.regex_url,
-                }
+            rule = self.get_livechat_rule(channel_id)
         return {
             'available_for_me': available and (not rule or rule['action'] != 'hide_button'),
             'rule': rule,

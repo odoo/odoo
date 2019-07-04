@@ -76,6 +76,8 @@ class ResConfigSettings(models.TransientModel):
         """ Reset alias / leads configuration if leads are not used """
         if not self.group_use_lead:
             self.generate_lead_from_alias = False
+            if hasattr(self, 'module_crm_livechat') and self.module_crm_livechat:
+                self.module_crm_livechat = False
 
     @api.onchange('generate_lead_from_alias')
     def _onchange_generate_lead_from_alias(self):
