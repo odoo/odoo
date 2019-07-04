@@ -23,13 +23,14 @@ QUnit.module('ActionManager', {
                 fields: {
                     foo: {string: "Foo", type: "char"},
                     bar: {string: "Bar", type: "many2one", relation: 'partner'},
+                    o2m: {string: "One2Many", type: "one2many", relation: 'partner', relation_field: 'bar'},
                 },
                 records: [
-                    {id: 1, display_name: "First record", foo: "yop", bar: 2},
-                    {id: 2, display_name: "Second record", foo: "blip", bar: 1},
-                    {id: 3, display_name: "Third record", foo: "gnap", bar: 1},
-                    {id: 4, display_name: "Fourth record", foo: "plop", bar: 2},
-                    {id: 5, display_name: "Fifth record", foo: "zoup", bar: 2},
+                    {id: 1, display_name: "First record", foo: "yop", bar: 2, o2m: [2, 3]},
+                    {id: 2, display_name: "Second record", foo: "blip", bar: 1, o2m: [1, 4, 5]},
+                    {id: 3, display_name: "Third record", foo: "gnap", bar: 1, o2m: []},
+                    {id: 4, display_name: "Fourth record", foo: "plop", bar: 2, o2m: []},
+                    {id: 5, display_name: "Fifth record", foo: "zoup", bar: 2, o2m: []},
                 ],
             },
             pony: {
@@ -508,6 +509,68 @@ QUnit.module('ActionManager', {
             'getScrollPosition', // of action 4, before leaving it
             'scrollTo left 50, top 100', // restore scroll position of action 3
         ]);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('executing an action with target != "new" closes all dialogs', async function (assert) {
+        assert.expect(4);
+
+        this.archs['partner,false,form'] = '<form>' +
+                '<field name="o2m">' +
+                    '<tree><field name="foo"/></tree>' +
+                    '<form><field name="foo"/></form>' +
+                '</field>' +
+            '</form>';
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        await actionManager.doAction(3);
+        assert.containsOnce(actionManager, '.o_list_view');
+
+        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
+        assert.containsOnce(actionManager, '.o_form_view');
+
+        await testUtils.dom.click(actionManager.$('.o_form_view .o_data_row:first'));
+        assert.containsOnce(document.body, '.modal .o_form_view');
+
+        await actionManager.doAction(1); // target != 'new'
+        assert.containsNone(document.body, '.modal');
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('executing an action with target "new" does not close dialogs', async function (assert) {
+        assert.expect(4);
+
+        this.archs['partner,false,form'] = '<form>' +
+                '<field name="o2m">' +
+                    '<tree><field name="foo"/></tree>' +
+                    '<form><field name="foo"/></form>' +
+                '</field>' +
+            '</form>';
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        await actionManager.doAction(3);
+        assert.containsOnce(actionManager, '.o_list_view');
+
+        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
+        assert.containsOnce(actionManager, '.o_form_view');
+
+        await testUtils.dom.click(actionManager.$('.o_form_view .o_data_row:first'));
+        assert.containsOnce(document.body, '.modal .o_form_view');
+
+        await actionManager.doAction(5); // target 'new'
+        assert.containsN(document.body, '.modal .o_form_view', 2);
 
         actionManager.destroy();
     });
@@ -3848,7 +3911,6 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
         delete core.action_registry.map.slowAction;
     });
-
 
     QUnit.test('abstract action does not crash on navigation_moves', async function (assert) {
         assert.expect(1);

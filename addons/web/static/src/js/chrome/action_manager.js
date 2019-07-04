@@ -12,7 +12,6 @@ odoo.define('web.ActionManager', function (require) {
 var AbstractAction = require('web.AbstractAction');
 var concurrency = require('web.concurrency');
 var Context = require('web.Context');
-var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
@@ -716,6 +715,9 @@ var ActionManager = Widget.extend({
             action: this.getCurrentAction(),
             controller: controller,
         });
+
+        // close all dialogs when the current controller changes
+        core.bus.trigger('close_dialogs');
 
         // toggle the fullscreen mode for actions in target='fullscreen'
         this._toggleFullscreen();
