@@ -21,6 +21,32 @@ from odoo.addons.hw_proxy.controllers.main import drivers as old_drivers
 
 _logger = logging.getLogger(__name__)
 
+def print_star_error(deviceId):
+    """We communicate with receipt printers using the ESCPOS protocol.
+    By default, Star printers use the Star mode. This can be changed by
+    modifying the position of the DIP-Switches at the bottom of the printer.
+    """
+    error_page = (
+        "\x1B\x1D\x61\x01"                                      # Centering start
+        "\x1B\x69\x01\x01Bad configuration\x1B\x69\x00\x00"     # Title, double size
+        "\n\n--------------------\n\n"
+        "\x1B\x1D\x61\x00"                                      # Centering Stop
+        "Your printer is in Star line mode, but should\n"
+        "use ESC/POS mode. You will not be able to print\n"
+        "receipts without changing your configuration.\n\n"
+        "For more details and instructions on how to\n"
+        "configure your printer, please refer to:\n\n"
+        "\x1B\x1D\x61\x01"                                      # Centering start
+        "\x1B\x2D\x01"                                          # Underline start
+        "http://www.odoo.com"  # TODO: Replace URL
+        "\x0A\x0A"
+        "\x1B\x2D\x00"                                          # Underline stop
+        "\x1B\x1D\x61\x00"                                      # Centering stop
+        "\x1B\x64\x02"                                          # Full Cut
+    )
+    process = subprocess.Popen(["lp", "-d", deviceId], stdin=subprocess.PIPE)
+    process.communicate(error_page.encode("utf-8"))
+
 def cups_notification_handler(message, uri, device_id, state, reason, accepting_jobs):
     if device_id in iot_devices:
         reason = reason if reason != 'none' else None
@@ -89,7 +115,11 @@ class PrinterDriver(Driver):
                     conn.addPrinterOptionDefault(device['identifier'], "usb-unidir", "true")
                 else:
                     device['device-make-and-model'] = printers[device['identifier']]['printer-info']
-            return True
+            if 'STR_T' in device['device-id']:
+                # Star printers have either STR_T or ESP in their name depending on the protocol used.
+                print_star_error(device['identifier'])
+            else:
+                return True
         return False
 
     @classmethod
