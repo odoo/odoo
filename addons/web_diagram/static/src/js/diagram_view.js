@@ -22,11 +22,11 @@ var DiagramView = BasicView.extend({
         '/web_diagram/static/lib/js/jquery.mousewheel.js',
         '/web_diagram/static/lib/js/raphael.js',
     ]],
-    config: {
+    config: _.extend({}, BasicView.prototype.config, {
         Model: DiagramModel,
         Renderer: DiagramRenderer,
         Controller: DiagramController,
-    },
+    }),
     viewType: 'diagram',
 
     /**
