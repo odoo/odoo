@@ -235,6 +235,7 @@ class MassMailing(models.Model):
     color = fields.Integer(string='Color Index')
     user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user)
     # mailing options
+    mailing_type = fields.Selection([('mail', 'Email')], string="Mailing Type", default="mail", required=True)
     reply_to_mode = fields.Selection(
         [('thread', 'Recipient Followers'), ('email', 'Specified Email Address')], string='Reply-To Mode', required=True)
     reply_to = fields.Char(string='Reply To', help='Preferred Reply-To Address',
@@ -365,6 +366,11 @@ class MassMailing(models.Model):
             mailing_domain.append((0, '=', 1))
         self.mailing_domain = repr(mailing_domain)
 
+    @api.onchange('mailing_type')
+    def _onchange_mailing_type(self):
+        if self.mailing_type == 'mail' and not self.medium_id:
+            self.medium_id = self.env.ref('utm.utm_medium_email').id
+
     @api.onchange('subject')
     def _onchange_subject(self):
         if self.subject and not self.name:
@@ -380,8 +386,8 @@ class MassMailing(models.Model):
             values['subject'] = values['name']
         if values.get('body_html'):
             values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
-        if 'medium_id' not in values:
-            values['medium_id'] = self.values.ref('utm.utm_medium_email').id
+        if 'medium_id' not in values and values.get('mailing_type', 'mail') == 'mail':
+            values['medium_id'] = self.env.ref('utm.utm_medium_email').id
         return super(MassMailing, self).create(values)
 
     def write(self, values):
