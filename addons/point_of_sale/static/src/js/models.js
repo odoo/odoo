@@ -1709,8 +1709,11 @@ exports.Orderline = Backbone.Model.extend({
     },
     _compute_all: function(tax, base_amount, quantity) {
         if (tax.amount_type === 'fixed') {
-            var sign_base_amount = base_amount >= 0 ? 1 : -1;
-            return (Math.abs(tax.amount) * sign_base_amount) * quantity;
+            var sign_base_amount = Math.sign(base_amount) || 1;
+            // Since base amount has been computed with quantity
+            // we take the abs of quantity
+            // Same logic as bb72dea98de4dae8f59e397f232a0636411d37ce
+            return tax.amount * sign_base_amount * Math.abs(quantity);
         }
         if ((tax.amount_type === 'percent' && !tax.price_include) || (tax.amount_type === 'division' && tax.price_include)){
             return base_amount * tax.amount / 100;

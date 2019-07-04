@@ -47,6 +47,9 @@ class MockRequest(object):
             },
             'redirect': werkzeug.utils.redirect,
             'session': {
+                'geoip': {
+                    'country_code': kw.get('country_code'),
+                },
                 'sale_order_id': kw.get('sale_order_id'),
             },
             'website': kw.get('website'),
