@@ -88,6 +88,12 @@ class MailController(http.Controller):
                     #   - Merge the suggested company with the companies on the cookie
                     # - Make a new access test if it succeeds, redirect to the record. Otherwise, 
                     #   redirect to the messaging.
+                    # DLE P117: `test_redirect_to_records`
+                    # The previous attempt to access the field failed but stored the access error in the cache.
+                    # In order to be able to refetch it, we must remove it from the cache.
+                    # Unfortunately, I see no easy to know which field exactly has been stored as an access error,
+                    # and I have no other choice than to invalidate the entire cache.
+                    record_sudo.invalidate_cache()
                     suggested_company = record_sudo._get_mail_redirect_suggested_company()
                     if not suggested_company:
                         raise AccessError()

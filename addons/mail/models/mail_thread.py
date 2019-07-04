@@ -1948,7 +1948,11 @@ class MailThread(models.AbstractModel):
             create_values.pop(x, None)
         create_values['partner_ids'] = [(4, pid) for pid in create_values.get('partner_ids', [])]
         create_values['channel_ids'] = [(4, cid) for cid in create_values.get('channel_ids', [])]
-        return self.env['mail.message'].create(create_values)
+        message = self.env['mail.message'].create(create_values)
+        # DLE P115: Force correct order of attachments before sending them
+        # `test_composer_w_template`
+        message.read(['attachment_ids'])
+        return message
 
     # ------------------------------------------------------
     # Notification API

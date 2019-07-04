@@ -4179,16 +4179,26 @@ Fields:
         to_flush = defaultdict(set)             # {model_name: field_names}
         if fields:
             to_flush[self._name].update(fields)
-        for arg in domain:
-            if isinstance(arg, str):
+        # DLE P113: Need to take into account the fields in the record rule to flush
+        # `test_mail_message_access_search`
+        for domain in [domain, self.env['ir.rule']._compute_domain(self._name, 'read')]:
+            if not domain:
                 continue
-            if not isinstance(arg[0], str):
-                continue
-            model_name = self._name
-            for fname in arg[0].split('.'):
-                to_flush[model_name].add(fname)
-                field = self.env[model_name]._fields[fname]
-                model_name = field.comodel_name
+            for arg in domain:
+                if isinstance(arg, str):
+                    continue
+                if not isinstance(arg[0], str):
+                    continue
+                model_name = self._name
+                for fname in arg[0].split('.'):
+                    to_flush[model_name].add(fname)
+                    field = self.env[model_name]._fields[fname]
+                    # DLE P111: `test_message_process_email_partner_find`
+                    # Search on res.users with email_normalized in domain
+                    # must trigger the recompute and flush of res.partner.email_normalized
+                    if field.inherited and field.related_field:
+                        to_flush[field.related_field.model_name].add(field.related_field.name)
+                    model_name = field.comodel_name
 
         # DLE P56: needs to flush write the order fields
         # test_15_equivalent_one2many_1

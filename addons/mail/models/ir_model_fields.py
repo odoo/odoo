@@ -47,4 +47,8 @@ class IrModelField(models.Model):
                 );
             """
             self.env.cr.execute(query, (tuple(self.ids),))
+            # DLE P116: test_unlinked_field
+            for values in self.env.all.towrite[self.model].values():
+                if self.name in values:
+                    del values[self.name]
         return super(IrModelField, self).unlink()

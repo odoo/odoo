@@ -285,6 +285,10 @@ class MailComposer(models.TransientModel):
                             ActiveModel.browse(res_id).message_post(**post_params)
 
                 if wizard.composition_mode == 'mass_mail':
+                    # DLE P115: Force correct order of attachments before sending them
+                    # `test_composer_w_template_mass_mailing`
+                    batch_mails.mail_message_id.read(['attachment_ids'])
+                    batch_mails.invalidate_cache(['attachment_ids'])
                     batch_mails.send(auto_commit=auto_commit)
 
     def get_mail_values(self, res_ids):

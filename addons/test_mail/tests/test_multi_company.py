@@ -53,6 +53,7 @@ class TestMultiCompany(HttpCase):
         # _redirect_to_record should redirect to messaging as the user
         # doesn't have any access for this company
         self.multi_company_record.company_id = self.company_B
+        self.multi_company_record.flush()
 
         response = self.url_open('/mail/view?model=%s&res_id=%s' % (
             self.multi_company_record._name,

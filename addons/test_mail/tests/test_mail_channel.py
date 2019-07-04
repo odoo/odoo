@@ -86,6 +86,9 @@ class TestChannelAccessRights(common.BaseFunctionalTest, common.MockEmails):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_access_rights_followers_ko(self):
+        # DLE P110: self.group_private.name has been put in the cache during the setup as sudo
+        # It must therefore be removed from the cache in other to validate the fact user_portal can't read it.
+        self.group_private.invalidate_cache(['name'])
         with self.assertRaises(AccessError):
             self.group_private.with_user(self.user_portal).name
 

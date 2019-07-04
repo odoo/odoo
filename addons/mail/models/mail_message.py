@@ -85,7 +85,8 @@ class Message(models.Model):
     partner_ids = fields.Many2many('res.partner', string='Recipients', context={'active_test': False})
     needaction_partner_ids = fields.Many2many(
         'res.partner', 'mail_message_res_partner_needaction_rel', string='Partners with Need Action',
-        context={'active_test': False})
+        # DLE P114
+        context={'active_test': False}, depends=['notification_ids'])
     needaction = fields.Boolean(
         'Need Action', compute='_get_needaction', search='_search_needaction',
         help='Need Action')
@@ -97,7 +98,21 @@ class Message(models.Model):
     # notifications
     notification_ids = fields.One2many(
         'mail.notification', 'mail_message_id', 'Notifications',
-        auto_join=True, copy=False)
+        # DLE P114: test_mail_resend_workflow
+        # When adding records to the many2many field, it should update `notification_ids` as well,
+        # because the model `mail.notification` use the same table than the many2many field `needaction_partner_ids`,
+        # `mail_message_res_partner_needaction_rel`
+        # Actually this case was already not working before:
+        # Read `notification_ids` (put in cache),
+        # Write on `needaction_partner_ids`,
+        # Re-Read `notification_ids` and expect it to have changed because we wrote on `needaction_partner_ids`
+        # The test was working because the cache of the one2many field was not initiliazed to "empty" during the creation
+        # in current master, but in the current branch it is, in create:
+        # for field in self._fields.values():
+        #     if field.type in ('one2many', 'many2many'):
+        #         self.env.cache.set(record, field, ())
+        # Adding the depends manually trigger the cache invalidation of the field `notification_ids` when modifying `needaction_partner_ids`
+        auto_join=True, copy=False, depends=['needaction_partner_ids'])
     # user interface
     starred_partner_ids = fields.Many2many(
         'res.partner', 'mail_message_res_partner_starred_rel', string='Favorited By')
@@ -663,6 +678,10 @@ class Message(models.Model):
         # check read access rights before checking the actual rules on the given ids
         super(Message, self.with_user(access_rights_uid or self._uid)).check_access_rights('read')
 
+        self.flush(['model', 'res_id', 'author_id', 'message_type', 'partner_ids', 'needaction_partner_ids', 'channel_ids'])
+        self.env['mail.notification'].flush(['mail_message_id', 'res_partner_id'])
+        self.env['mail.channel'].flush(['channel_message_ids'])
+        self.env['mail.channel.partner'].flush(['channel_id', 'partner_id'])
         self._cr.execute("""
             SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.message_type,
                             COALESCE(partner_rel.res_partner_id, needaction_rel.res_partner_id),
@@ -758,6 +777,13 @@ class Message(models.Model):
 
         # Read mail_message.ids to have their values
         message_values = dict((message_id, {}) for message_id in self.ids)
+
+        # DLE P112: test_mail_message_access_read_author
+        self.flush(['model', 'res_id', 'author_id', 'parent_id', 'moderation_status', 'message_type', 'partner_ids', 'needaction_partner_ids', 'channel_ids'])
+        self.env['mail.notification'].flush(['mail_message_id', 'res_partner_id'])
+        self.env['mail.channel'].flush(['channel_message_ids', 'moderator_ids'])
+        self.env['mail.channel.partner'].flush(['channel_id', 'partner_id'])
+        self.env['res.users'].flush(['moderation_channel_ids'])
 
         if operation == 'read':
             self._cr.execute("""

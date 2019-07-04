@@ -180,6 +180,8 @@ class Channel(models.Model):
         for record in self:
             if record.channel_type == 'chat':
                 record.is_chat = True
+            else:
+                record.is_chat = False
 
     @api.onchange('public')
     def _onchange_public(self):
