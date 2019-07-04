@@ -22,11 +22,11 @@ var GROUPABLE_TYPES = controlPanelViewParameters.GROUPABLE_TYPES;
 var PivotView = AbstractView.extend({
     display_name: _lt('Pivot'),
     icon: 'fa-table',
-    config: {
+    config: _.extend({}, AbstractView.prototype.config,{
         Model: PivotModel,
         Controller: PivotController,
         Renderer: PivotRenderer,
-    },
+    }),
     viewType: 'pivot',
     searchMenuTypes: ['filter', 'groupBy', 'timeRange', 'favorite'],
 

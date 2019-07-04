@@ -2,10 +2,12 @@ odoo.define('web.search_panel_tests', function (require) {
 "use strict";
 
 var AbstractStorageService = require('web.AbstractStorageService');
+var FormView = require('web.FormView');
 var KanbanView = require('web.KanbanView');
 var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
 
+var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
 
 QUnit.module('Views', {
@@ -15,15 +17,16 @@ QUnit.module('Views', {
                 fields: {
                     foo: {string: "Foo", type: 'char'},
                     bar: {string: "Bar", type: 'boolean'},
+                    int_field: {string: "Int Field", type: 'integer'},
                     company_id: {string: "company", type: 'many2one', relation: 'company'},
                     category_id: { string: "category", type: 'many2one', relation: 'category' },
                     state: { string: "State", type: 'selection', selection: [['abc', "ABC"], ['def', "DEF"], ['ghi', "GHI"]]},
                 },
                 records: [
-                    {id: 1, bar: true, foo: "yop", company_id: 3, state: 'abc', category_id: 6},
-                    {id: 2, bar: true, foo: "blip", company_id: 5, state: 'def', category_id: 7},
-                    {id: 3, bar: true, foo: "gnap", company_id: 3, state: 'ghi', category_id: 7},
-                    {id: 4, bar: false, foo: "blip", company_id: 5, state: 'ghi', category_id: 7},
+                    {id: 1, bar: true, foo: "yop", int_field: 1, company_id: 3, state: 'abc', category_id: 6},
+                    {id: 2, bar: true, foo: "blip", int_field: 2, company_id: 5, state: 'def', category_id: 7},
+                    {id: 3, bar: true, foo: "gnap", int_field: 4, company_id: 3, state: 'ghi', category_id: 7},
+                    {id: 4, bar: false, foo: "blip", int_field: 8, company_id: 5, state: 'ghi', category_id: 7},
                 ]
             },
             company: {
@@ -48,6 +51,40 @@ QUnit.module('Views', {
             },
         };
 
+        this.actions = [{
+            id: 1,
+            name: 'Partners',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'kanban'], [false, 'list'], [false, 'pivot'], [false, 'form']],
+        }, {
+            id: 2,
+            name: 'Partners',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'form']],
+        }];
+
+        this.archs = {
+            'partner,false,list': '<tree><field name="foo"/></tree>',
+            'partner,false,kanban': '<kanban>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            'partner,false,form': '<form>' +
+                        '<button name="1" type="action" string="multi view"/>' +
+                        '<field name="foo"/>' +
+                    '</form>',
+            'partner,false,pivot': '<pivot><field name="int_field" type="measure"/></pivot>',
+            'partner,false,search': '<search>' +
+                    '<searchpanel>' +
+                        '<field name="company_id"/>' +
+                        '<field select="multi" name="category_id"/>' +
+                    '</searchpanel>' +
+                '</search>',
+        };
+
         var RamStorageService = AbstractStorageService.extend({
             storage: new RamStorage(),
         });
@@ -57,7 +94,7 @@ QUnit.module('Views', {
     },
 }, function () {
 
-    QUnit.module('SearchPanel in Kanban views');
+    QUnit.module('SearchPanel');
 
     QUnit.test('basic rendering', async function (assert) {
         assert.expect(17);
@@ -77,15 +114,19 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field name="company_id"/>' +
-                        '<field select="multi" name="category_id"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field name="company_id"/>' +
+                            '<field select="multi" name="category_id"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
         });
 
-        assert.containsOnce(kanban, '.o_content.o_kanban_with_searchpanel > .o_search_panel');
-        assert.containsOnce(kanban, '.o_content.o_kanban_with_searchpanel > .o_kanban_view');
+        assert.containsOnce(kanban, '.o_content.o_controller_with_searchpanel > .o_search_panel');
+        assert.containsOnce(kanban, '.o_content.o_controller_with_searchpanel > .o_kanban_view');
 
         assert.containsN(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)', 4);
 
@@ -129,11 +170,15 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field name="company_id" icon="fa-car" color="blue"/>' +
-                        '<field select="multi" name="state" icon="fa-star" color="#000"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field name="company_id" icon="fa-car" color="blue"/>' +
+                            '<field select="multi" name="state" icon="fa-star" color="#000"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
         });
 
         assert.hasClass(kanban.$('.o_search_panel_section_header:first i'), 'fa-car');
@@ -160,11 +205,15 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field name="company_id"/>' +
-                        '<field select="multi" invisible="1" name="state"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field name="company_id"/>' +
+                            '<field select="multi" invisible="1" name="state"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
@@ -195,12 +244,16 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field name="company_id"/>' +
-                        '<field select="multi" name="category_id"/>' +
-                        '<field name="state"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field name="company_id"/>' +
+                            '<field select="multi" name="category_id"/>' +
+                            '<field name="state"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            }
         });
 
         assert.containsN(kanban, '.o_search_panel_section', 3);
@@ -228,11 +281,15 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field name="company_id"/>' +
-                        '<field name="state"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field name="company_id"/>' +
+                            '<field name="state"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
                     assert.deepEqual(args.domain, [["state", "=", "ghi"]]);
@@ -268,10 +325,14 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field name="company_id"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field name="company_id"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
             domain: [['bar', '=', true]],
         });
 
@@ -326,10 +387,14 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field name="state"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field name="state"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
         });
 
         // select 'abc'
@@ -393,10 +458,14 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field name="company_id"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field name="company_id"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
                     assert.deepEqual(args.domain, [['company_id', 'child_of', expectedActiveId]]);
@@ -448,10 +517,14 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field name="company_id"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field name="company_id"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
                     assert.deepEqual(args.domain, []);
@@ -490,11 +563,15 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field name="company_id"/>' +
-                        '<field name="state"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field name="company_id"/>' +
+                            '<field name="state"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
             domain: [['bar', '=', true]],
         });
 
@@ -557,10 +634,14 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field name="company_id"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field name="company_id"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
         });
 
         // 'All' is selected by default
@@ -635,10 +716,14 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field name="company_id"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field name="company_id"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
         });
 
         assert.strictEqual(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold').length, 1,
@@ -680,10 +765,14 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field name="company_id"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field name="company_id"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
         });
 
         // unfold agrolait
@@ -724,10 +813,14 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field name="company_id"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field name="company_id"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
             domain: [['bar', '=', true]],
         });
 
@@ -801,11 +894,15 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field name="state"/>' +
-                        '<field select="multi" name="company_id"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field name="state"/>' +
+                            '<field select="multi" name="company_id"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
         });
 
         // 'All' should be selected by default
@@ -872,10 +969,14 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field select="multi" name="company_id"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field select="multi" name="company_id"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
         });
 
         assert.containsN(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)', 4);
@@ -928,10 +1029,14 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field select="multi" name="company_id"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field select="multi" name="company_id"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
             domain: [['bar', '=', true]],
         });
 
@@ -1027,10 +1132,14 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field select="multi" name="state"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field select="multi" name="state"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
             domain: [['bar', '=', true]],
         });
 
@@ -1111,11 +1220,15 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field name="state"/>' +
-                        '<field select="multi" name="company_id"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field name="state"/>' +
+                            '<field select="multi" name="company_id"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
             viewOptions: {
                 limit: 2,
             },
@@ -1187,10 +1300,14 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field select="multi" name="company_id" groupby="category_id"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field select="multi" name="company_id" groupby="category_id"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
             domain: [['bar', '=', true]],
         });
 
@@ -1305,10 +1422,14 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field select="multi" name="company_id" domain="[(\'parent_id\',\'=\',False)]"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field select="multi" name="company_id" domain="[(\'parent_id\',\'=\',False)]"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
         });
 
         assert.containsN(kanban, '.o_search_panel_filter_value', 2);
@@ -1334,10 +1455,14 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field select="multi" name="company_id" groupby="category_id"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field select="multi" name="company_id" groupby="category_id"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
         });
 
         // groups are opened by default
@@ -1405,11 +1530,15 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field name="category_id"/>' +
-                        '<field select="multi" name="company_id" domain="[[\'category_id\', \'=\', category_id]]"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field name="category_id"/>' +
+                            '<field select="multi" name="company_id" domain="[[\'category_id\', \'=\', category_id]]"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
         });
 
         // select 'gold' category
@@ -1467,11 +1596,15 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field select="multi" name="company_id"/>' +
-                        '<field select="multi" name="state"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field select="multi" name="company_id"/>' +
+                            '<field select="multi" name="state"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
                     assert.deepEqual(args.domain, expectedDomain);
@@ -1509,10 +1642,14 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field select="multi" name="company_id"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field select="multi" name="company_id"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
                     assert.deepEqual(args.domain, [["company_id", "in", [3]]]);
@@ -1543,10 +1680,14 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field select="multi" name="company_id" groupby="category_id"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field select="multi" name="company_id" groupby="category_id"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
                     assert.deepEqual(args.domain, [['company_id', 'in', [5]]]);
@@ -1581,11 +1722,15 @@ QUnit.module('Views', {
                             '<field name="foo"/>' +
                         '</div>' +
                     '</t></templates>' +
-                    '<searchpanel>' +
-                        '<field name="company_id"/>' +
-                        '<field select="multi" name="category_id"/>' +
-                    '</searchpanel>' +
                 '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field name="company_id"/>' +
+                            '<field select="multi" name="category_id"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
         });
 
         var $firstSection = kanban.$('.o_search_panel_section:first');
@@ -1593,6 +1738,296 @@ QUnit.module('Views', {
             'AllasustekagrolaithighIDlowID');
         kanban.destroy();
     });
-});
 
+    QUnit.test('search panel is available on list and kanban by default', async function (assert) {
+        assert.expect(8);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        await actionManager.doAction(1);
+        assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_kanban_view');
+        assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_search_panel');
+
+        await testUtils.dom.click(actionManager.$('.o_cp_switch_pivot'));
+        assert.containsOnce(actionManager, '.o_content .o_pivot');
+        assert.containsNone(actionManager, '.o_content .o_search_panel');
+
+        await testUtils.dom.click(actionManager.$('.o_cp_switch_list'));
+        assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_list_view');
+        assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_search_panel');
+
+        await testUtils.dom.click(actionManager.$('.o_data_row .o_data_cell:first'));
+        assert.containsOnce(actionManager, '.o_content .o_form_view');
+        assert.containsNone(actionManager, '.o_content .o_search_panel');
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('search panel with view_types attribute', async function (assert) {
+        assert.expect(6);
+
+        this.archs['partner,false,search'] = '<search>' +
+                '<searchpanel view_types="kanban,pivot">' +
+                    '<field name="company_id"/>' +
+                    '<field select="multi" name="category_id"/>' +
+                '</searchpanel>' +
+            '</search>';
+
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        await actionManager.doAction(1);
+        assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_kanban_view');
+        assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_search_panel');
+
+        await testUtils.dom.click(actionManager.$('.o_cp_switch_list'));
+        assert.containsOnce(actionManager, '.o_content .o_list_view');
+        assert.containsNone(actionManager, '.o_content .o_search_panel');
+
+        await testUtils.dom.click(actionManager.$('.o_cp_switch_pivot'));
+        assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_pivot');
+        assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_search_panel');
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('search panel state is shared between views', async function (assert) {
+        assert.expect(16);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            services: this.services,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.step(JSON.stringify(args.domain));
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        await actionManager.doAction(1);
+        assert.hasClass(actionManager.$('.o_search_panel_category_value:first header'), 'active');
+        assert.containsN(actionManager, '.o_kanban_record:not(.o_kanban_ghost)', 4);
+
+        // select 'asustek' company
+        await testUtils.dom.click(actionManager.$('.o_search_panel_category_value:nth(1) header'));
+        assert.hasClass(actionManager.$('.o_search_panel_category_value:nth(1) header'), 'active');
+        assert.containsN(actionManager, '.o_kanban_record:not(.o_kanban_ghost)', 2);
+
+        await testUtils.dom.click(actionManager.$('.o_cp_switch_list'));
+        assert.hasClass(actionManager.$('.o_search_panel_category_value:nth(1) header'), 'active');
+        assert.containsN(actionManager, '.o_data_row', 2);
+
+        // select 'agrolait' company
+        await testUtils.dom.click(actionManager.$('.o_search_panel_category_value:nth(2) header'));
+        assert.hasClass(actionManager.$('.o_search_panel_category_value:nth(2) header'), 'active');
+        assert.containsN(actionManager, '.o_data_row', 2);
+
+        await testUtils.dom.click(actionManager.$('.o_cp_switch_kanban'));
+        assert.hasClass(actionManager.$('.o_search_panel_category_value:nth(2) header'), 'active');
+        assert.containsN(actionManager, '.o_kanban_record:not(.o_kanban_ghost)', 2);
+
+        assert.verifySteps([
+            '[]', // initial search_read
+            '[["company_id","child_of",3]]', // kanban, after selecting the first company
+            '[["company_id","child_of",3]]', // list
+            '[["company_id","child_of",5]]', // list, after selecting the other company
+            '[["company_id","child_of",5]]', // kanban
+        ]);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('search panel filters are kept between switch views', async function (assert) {
+        assert.expect(16);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            services: this.services,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.step(JSON.stringify(args.domain));
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        await actionManager.doAction(1);
+        assert.containsNone(actionManager, '.o_search_panel_filter_value input:checked');
+        assert.containsN(actionManager, '.o_kanban_record:not(.o_kanban_ghost)', 4);
+
+        // select gold filter
+        await testUtils.dom.click(actionManager.$('.o_search_panel_filter input[type="checkbox"]:nth(0)'));
+        assert.containsOnce(actionManager, '.o_search_panel_filter_value input:checked');
+        assert.containsN(actionManager, '.o_kanban_record:not(.o_kanban_ghost)', 1);
+
+        await testUtils.dom.click(actionManager.$('.o_cp_switch_list'));
+        assert.containsOnce(actionManager, '.o_search_panel_filter_value input:checked');
+        assert.containsN(actionManager, '.o_data_row', 1);
+
+        // select silver filter
+        await testUtils.dom.click(actionManager.$('.o_search_panel_filter input[type="checkbox"]:nth(1)'));
+        assert.containsN(actionManager, '.o_search_panel_filter_value input:checked', 2);
+        assert.containsN(actionManager, '.o_data_row', 4);
+
+        await testUtils.dom.click(actionManager.$('.o_cp_switch_kanban'));
+        assert.containsN(actionManager, '.o_search_panel_filter_value input:checked', 2);
+        assert.containsN(actionManager, '.o_kanban_record:not(.o_kanban_ghost)', 4);
+
+        assert.verifySteps([
+            '[]', // initial search_read
+            '[["category_id","in",[6]]]', // kanban, after selecting the gold filter
+            '[["category_id","in",[6]]]', // list
+            '[["category_id","in",[6,7]]]', // list, after selecting the silver filter
+            '[["category_id","in",[6,7]]]', // kanban
+        ]);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('search panel filters are kept when switching to a view with no search panel', async function (assert) {
+        assert.expect(13);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        await actionManager.doAction(1);
+        assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_kanban_view');
+        assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_search_panel');
+        assert.containsNone(actionManager, '.o_search_panel_filter_value input:checked');
+        assert.containsN(actionManager, '.o_kanban_record:not(.o_kanban_ghost)', 4);
+
+        // select gold filter
+        await testUtils.dom.click(actionManager.$('.o_search_panel_filter input[type="checkbox"]:nth(0)'));
+        assert.containsOnce(actionManager, '.o_search_panel_filter_value input:checked');
+        assert.containsN(actionManager, '.o_kanban_record:not(.o_kanban_ghost)', 1);
+
+        // switch to pivot
+        await testUtils.dom.click(actionManager.$('.o_cp_switch_pivot'));
+        assert.containsOnce(actionManager, '.o_content .o_pivot');
+        assert.containsNone(actionManager, '.o_content .o_search_panel');
+        assert.strictEqual(actionManager.$('.o_pivot_cell_value').text(), '15');
+
+        // switch to list
+        await testUtils.dom.click(actionManager.$('.o_cp_switch_list'));
+        assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_list_view');
+        assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_search_panel');
+        assert.containsOnce(actionManager, '.o_search_panel_filter_value input:checked');
+        assert.containsN(actionManager, '.o_data_row', 1);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('disable search panel onExecuteAction', async function (assert) {
+        assert.expect(6);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            services: this.services,
+        });
+
+        await actionManager.doAction(2);
+
+        await testUtils.dom.click(actionManager.$('.o_form_view button:contains("multi view")'));
+        assert.containsOnce(actionManager, '.o_kanban_view');
+        assert.containsNone(actionManager, '.o_search_panel');
+
+        await testUtils.dom.click(actionManager.$('.o_cp_switch_list'));
+        assert.containsOnce(actionManager, '.o_list_view');
+        assert.containsNone(actionManager, '.o_search_panel');
+
+        await testUtils.dom.click(actionManager.$('.o_cp_switch_kanban'));
+        assert.containsOnce(actionManager, '.o_kanban_view');
+        assert.containsNone(actionManager, '.o_search_panel');
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('categories and filters are not reloaded when switching between views', async function (assert) {
+        assert.expect(8);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            services: this.services,
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        await actionManager.doAction(1);
+        await testUtils.dom.click(actionManager.$('.o_cp_switch_list'));
+        await testUtils.dom.click(actionManager.$('.o_cp_switch_kanban'));
+
+        assert.verifySteps([
+            '/web/action/load',
+            'load_views',
+            'search_panel_select_range', // kanban: categories
+            'search_panel_select_multi_range', // kanban: filters
+            '/web/dataset/search_read', // kanban: records
+            '/web/dataset/search_read', // list: records
+            '/web/dataset/search_read', // kanban: records
+        ]);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('search panel is not instanciated in dialogs', async function (assert) {
+        assert.expect(2);
+
+        this.data.company.records = [
+            {id: 1, name: 'Company1'},
+            {id: 2, name: 'Company2'},
+            {id: 3, name: 'Company3'},
+            {id: 4, name: 'Company4'},
+            {id: 5, name: 'Company5'},
+            {id: 6, name: 'Company6'},
+            {id: 7, name: 'Company7'},
+            {id: 8, name: 'Company8'},
+        ];
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="company_id"/></form>',
+            archs: {
+                'company,false,list': '<tree><field name="name"/></tree>',
+                'company,false,search': '<search>' +
+                                                '<field name="name"/>' +
+                                                '<searchpanel>' +
+                                                    '<field name="category_id"/>' +
+                                                '</searchpanel>' +
+                                            '</search>',
+            },
+        });
+
+        await testUtils.fields.many2one.clickOpenDropdown('company_id');
+        await testUtils.fields.many2one.clickItem('company_id', 'Search More');
+
+        assert.containsOnce(document.body, '.modal .o_list_view');
+        assert.containsNone(document.body, '.modal .o_search_panel');
+
+        form.destroy();
+    });
+});
 });
