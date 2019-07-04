@@ -552,33 +552,46 @@ class ProductProduct(models.Model):
             return price or 0.0
         return self.uom_id._compute_price(price, uom)
 
-    def _compute_average_price(self, qty_done, quantity, moves):
-        average_price_unit = 0
-        qty_delivered = 0
-        invoiced_qty = 0
-        for move in moves:
-            if move.state != 'done':
-                continue
-            invoiced_qty += move.product_qty
-            if invoiced_qty <= qty_done:
-                continue
-            qty_to_consider = move.product_qty
-            if invoiced_qty - move.product_qty < qty_done:
-                qty_to_consider = invoiced_qty - qty_done
-            qty_to_consider = min(qty_to_consider, quantity - qty_delivered)
-            qty_delivered += qty_to_consider
-            if qty_delivered:
-                layers = move.stock_valuation_layer_ids
-                # Dropshipped moves are always linked to two layers cancelling each others.
-                if move._is_dropshipped() or move._is_dropshipped_returned():
-                    layers = layers.filtered(lambda svl: svl.value > 0)
-                layers_qty = sum(layers.mapped('quantity'))
-                layers_value = sum(layers.mapped('value'))
-                move_price_unit = layers_value / layers_qty
-                average_price_unit = (average_price_unit * (qty_delivered - qty_to_consider) + move_price_unit * qty_to_consider) / qty_delivered
-            if qty_delivered == quantity:
+    def _compute_average_price(self, qty_invoiced, qty_to_invoice, stock_moves):
+        """Go over the valuation layers of `stock_moves` to value `qty_to_invoice` while taking
+        care of ignoring `qty_invoiced`. If `qty_to_invoice` is greater than what's possible to
+        value with the valuation layers, use the product's standard price.
+
+        :param qty_invoiced: quantity already invoiced
+        :param qty_to_invoice: quantity to invoice
+        :param stock_moves: recordset of `stock.move`
+        :returns: the anglo saxon price unit
+        :rtype: float
+        """
+        self.ensure_one()
+
+        candidates = stock_moves\
+            .mapped('stock_valuation_layer_ids')\
+            .sorted()
+        qty_to_take_on_candidates = qty_to_invoice
+        tmp_value = 0  # to accumulate the value taken on the candidates
+        for candidate in candidates:
+            candidate_quantity = abs(candidate.quantity)
+            if not float_is_zero(qty_invoiced, precision_rounding=candidate.uom_id.rounding):
+                qty_ignored = min(qty_invoiced, candidate_quantity)
+                qty_invoiced -= qty_ignored
+                candidate_quantity -= qty_ignored
+                if float_is_zero(candidate_quantity, precision_rounding=candidate.uom_id.rounding):
+                    continue
+            qty_taken_on_candidate = min(qty_to_take_on_candidates, candidate_quantity)
+
+            qty_to_take_on_candidates -= qty_taken_on_candidate
+            tmp_value += qty_taken_on_candidate * candidate.unit_cost
+            if float_is_zero(qty_to_take_on_candidates, precision_rounding=candidate.uom_id.rounding):
                 break
-        return average_price_unit
+
+        # If there's still quantity to invoice but we're out of candidates, we chose the standard
+        # price to estimate the anglo saxon price unit.
+        if not float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
+            negative_stock_value = self.standard_price * qty_to_take_on_candidates
+            tmp_value += negative_stock_value
+
+        return tmp_value / qty_to_invoice
 
 
 class ProductCategory(models.Model):

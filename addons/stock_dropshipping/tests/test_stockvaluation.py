@@ -235,11 +235,11 @@ class TestStockValuation(AccountingTestCase):
 
         expected_aml = {
             self.acc_payable:    (0.0, 8.0),
-            self.acc_expense:    (10.0, 0.0),
+            self.acc_expense:    (8.0, 0.0),
             self.acc_receivable: (12.0, 0.0),
             self.acc_sale:       (0.0, 12.0),
             self.acc_stock_in:   (8.0, 8.0),
-            self.acc_stock_out:  (8.0, 10.0),
+            self.acc_stock_out:  (8.0, 8.0),
         }
 
         self._check_results(expected_aml, 10, all_amls)
