@@ -167,7 +167,7 @@ class account_abstract_payment(models.AbstractModel):
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
-        if not self.multi and self.invoice_ids and self.invoice_ids[0].partner_bank_id:
+        if not self.multi and self.invoice_ids and self.invoice_ids[0].type in ('in_invoice', 'in_refund') and self.invoice_ids[0].partner_bank_id:
             self.partner_bank_account_id = self.invoice_ids[0].partner_bank_id
         elif self.partner_id != self.partner_bank_account_id.partner_id:
             # This condition ensures we use the default value provided into
