@@ -55,7 +55,13 @@
             </li>
         </t>
         <t t-foreach="previews" t-as="preview">
-            <t t-call="mail.Preview"/>
+            <div t-if="isMobile()" class="o_mail_preview_mobile">
+                <button class="swipe-action left bg-success" data-key="read"><i class="fa fa-check-circle fa-2x text-white"/></button>
+                <t t-call="mail.Preview"/>
+            </div>
+            <t t-if="!isMobile()">
+                <t t-call="mail.Preview"/>
+            </t>
         </t>
     </t>
 

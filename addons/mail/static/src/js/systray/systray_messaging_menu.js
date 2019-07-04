@@ -30,6 +30,16 @@ var MessagingMenu = Widget.extend({
     /**
      * @override
      */
+    init: function () {
+        this._super.apply(this, arguments);
+        if (this.isMobile()) {
+            this.jsLibs = this.jsLibs || [];
+            this.jsLibs.push("/mail/static/src/lib/jquery.listswipe/jquery.listswipe.js");
+        }
+    },
+    /**
+     * @override
+     */
     willStart: function () {
         return Promise.all([this._super.apply(this, arguments), this.call('mail_service', 'isReady')]);
     },
@@ -178,7 +188,25 @@ var MessagingMenu = Widget.extend({
     _renderPreviews: function (previews) {
         this._$previews.html(QWeb.render('mail.systray.MessagingMenu.Previews', {
             previews: previews,
+            isMobile: this.isMobile
         }));
+        if (this.isMobile()) {
+            // allowing list item swipe for mark read and star message
+            var self = this;
+            this._$previews.listSwipe({
+                itemSelector: '.o_mail_preview_mobile',
+                rightAction: false,
+                onRightSwipe: function (ev) {
+                    var icon = $(ev.currentTarget).find("i.fa");
+                    icon.addClass("waggle");
+                    setTimeout(function() {
+                        icon.removeClass("waggle");
+                        $(ev.currentTarget).animate({ left: '0px' }, 200);
+                        self._processPreviewMarkAsRead($(ev.currentTarget).find(".o_mail_preview"));
+                    }, 1000);
+                }
+            });
+        }
     },
     /**
      * Get and render list of previews, based on the selected filter
@@ -315,8 +343,17 @@ var MessagingMenu = Widget.extend({
      */
     _onClickPreviewMarkAsRead: function (ev) {
         ev.stopPropagation();
-        var thread;
         var $preview = $(ev.currentTarget).closest('.o_mail_preview');
+        this._processPreviewMarkAsRead($preview);
+    },
+    /**
+     * Process Preview Mark As Read
+     *
+     * @private
+     * @param {Element} $preview
+     */
+    _processPreviewMarkAsRead: function ($preview) {
+        var thread;
         var previewID = $preview.data('preview-id');
         if (previewID === 'mailbox_inbox') {
             var messageIDs = [].concat($preview.data('message-ids'));
@@ -337,7 +374,7 @@ var MessagingMenu = Widget.extend({
                 thread.markAsRead();
             }
         }
-    },
+    }
 });
 
 // Systray menu items display order matches order in the list

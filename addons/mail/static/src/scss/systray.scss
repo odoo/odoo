@@ -68,6 +68,31 @@
             min-height: 50px;
             overflow-y: auto;
 
+            @include media-breakpoint-down(sm) {
+                .o_mail_preview_mobile {
+                    position: relative;
+                    button.swipe-action {
+                        position: absolute;
+                        width: 80px;
+                        height: 100%;
+                        top: 0;
+                        border: none;
+                        outline: none;
+
+                        &.left {
+                            left: -80px;
+                        }
+                        &.right {
+                            right: -80px;
+                        }
+
+                        .waggle {
+                            animation: waggle 1s 0s forwards ease-out;
+                        }
+                    }
+                }
+            }
+
             @include media-breakpoint-up(md) {
                 .o_mail_preview {
                     min-height: 50px;
@@ -131,6 +156,7 @@
             .o_mail_systray_dropdown_items {
                 max-height: none;
                 padding-bottom: 52px; // leave space for tabs
+                overflow-x: hidden;
             }
             .o_mail_mobile_tabs {
                 position: fixed;
@@ -141,5 +167,32 @@
                 color: $o-main-text-color;
             }
         }
+    }
+}
+
+@keyframes waggle {
+    0% {
+        transform: none;
+    }
+    50% {
+        transform: rotateZ(-20deg) scale(1.7);
+    }
+    60% {
+        transform: rotateZ(25deg) scale(1.7);
+    }
+    67.5% {
+        transform: rotateZ(-15deg) scale(1.7);
+    }
+    75% {
+        transform: rotateZ(15deg) scale(1.7);
+    }
+    82.5% {
+        transform: rotateZ(-12deg) scale(1.7);
+    }
+    85% {
+        transform: rotateZ(0) scale(1.7);
+    }
+    100% {
+        transform: rotateZ(0) scale(1);
     }
 }
