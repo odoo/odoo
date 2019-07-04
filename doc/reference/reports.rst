@@ -292,7 +292,7 @@ the function ``render_html`` and pass objects in the ``docargs`` dictionary:
         _name = 'report.module.report_name'
         @api.model
         def render_html(self, docids, data=None):
-            report_obj = self.env['report']
+            report_obj = self.env['ir.actions.report']
             report = report_obj._get_report_from_name('module.report_name')
             docargs = {
                 'doc_ids': docids,
