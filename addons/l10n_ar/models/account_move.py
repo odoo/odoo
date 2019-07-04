@@ -24,5 +24,5 @@ class AccountMove(models.Model):
         if document_type_code in ['66', '67']:
             point_of_sale = invoice_number = '0'
         else:
-            invoice_number, point_of_sale = document_number.split('-')
+            point_of_sale, invoice_number = document_number.split('-')
         return {'invoice_number': int(invoice_number), 'point_of_sale': int(point_of_sale)}

@@ -245,3 +245,23 @@ class AccountInvoice(models.Model):
                 lambda x: x.l10n_latam_document_type_id == self.l10n_latam_document_type_id)
             return res
         return super().get_document_type_sequence()
+
+    # TODO make it with crate/write or with https://github.com/odoo/odoo/pull/31059
+    # para cuando se crea, por ej, desde ventas o contratos
+    @api.constrains('partner_id')
+    @api.onchange('partner_id')
+    def _onchange_partner_journal(self):
+        expo_journals = ['FEERCEL', 'FEEWS', 'FEERCELP']
+        for rec in self.filtered(lambda x: x.company_id.country_id == self.env.ref('base.ar') and x.journal_id.type == 'sale'
+                                 and x.l10n_latam_use_documents and x.partner_id.l10n_ar_afip_responsability_type_id):
+            res_code = rec.partner_id.l10n_ar_afip_responsability_type_id.code
+            domain = [('company_id', '=', rec.company_id.id), ('l10n_latam_use_documents', '=', True), ('type', '=', 'sale')]
+            journal = self.env['account.journal']
+            if res_code in ['8', '9', '10'] and rec.journal_id.l10n_ar_afip_pos_system not in expo_journals:
+                # if partner is foregin and journal is not of expo, we try to change to expo journal
+                journal = journal.search(domain + [('l10n_ar_afip_pos_system', 'in', expo_journals)], limit=1)
+            elif res_code not in ['8', '9', '10'] and rec.journal_id.l10n_ar_afip_pos_system in expo_journals:
+                # if partner is NOT foregin and journal is for expo, we try to change to local journal
+                journal = journal.search(domain + [('l10n_ar_afip_pos_system', 'not in', expo_journals)], limit=1)
+            if journal:
+                rec.journal_id = journal.id
