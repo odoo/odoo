@@ -11,15 +11,16 @@ const {createView} = require('web.test_utils');
  * @param {object} params
  */
 async function createLunchKanbanView(params) {
-    const archPieces = params.arch.split('</templates>');
-    params.arch = `
-        ${archPieces[0]}</templates>
+    params.archs = params.archs || {};
+    var searchArch = params.archs[`${params.model},false,search`] || '<search></search>';
+    var searchPanelArch = `
         <searchpanel>
             <field name="category_id" select="multi" string="Categories"/>
             <field name="supplier_id" select="multi" string="Vendors"/>
         </searchpanel>
-        ${archPieces[1]}
     `;
+    searchArch = searchArch.split('</search>')[0] + searchPanelArch + '</search>';
+    params.archs[`${params.model},false,search`] = searchArch;
     if (!params.services || !params.services.local_storage) {
         // the searchPanel uses the localStorage to store/retrieve default
         // active category value
