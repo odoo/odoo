@@ -54,7 +54,7 @@ class TestAutoBlacklist(common.TransactionCase):
                                 [self.mailing_contact_1.id])],
             'body_html': 'This is a bounced mail for auto blacklist demo'})
         self.mass_mailing.put_in_queue()
-        res_ids = self.mass_mailing.get_remaining_recipients()
+        res_ids = self.mass_mailing._get_remaining_recipients()
         composer_values = {
             'body': self.mass_mailing.convert_links()[self.mass_mailing.id],
             'subject': self.mass_mailing.name,

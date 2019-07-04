@@ -15,6 +15,7 @@ class MailMailStats(models.Model):
     _rec_name = 'message_id'
     _order = 'message_id'
 
+    # mail data
     mail_mail_id = fields.Many2one('mail.mail', string='Mail', index=True)
     mail_mail_id_int = fields.Integer(
         string='Mail ID (tech)',
@@ -23,7 +24,9 @@ class MailMailStats(models.Model):
              'However the ID is needed for several action and controllers.',
         index=True,
     )
+    email = fields.Char(string="Recipient email address")
     message_id = fields.Char(string='Message-ID')
+    # document
     model = fields.Char(string='Document model')
     res_id = fields.Integer(string='Document ID')
     # campaign / wave data
@@ -54,9 +57,8 @@ class MailMailStats(models.Model):
                                         ('bounced', 'Bounced'),
                                         ('ignored', 'Ignored')], store=True)
     state_update = fields.Datetime(compute="_compute_state", string='State Update',
-                                    help='Last state update of the mail',
-                                    store=True)
-    email = fields.Char(string="Recipient email address")
+                                   help='Last state update of the mail',
+                                   store=True)
 
     @api.depends('sent', 'opened', 'clicked', 'replied', 'bounced', 'exception', 'ignored')
     def _compute_state(self):

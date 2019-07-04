@@ -42,7 +42,7 @@ class TestMassMail(MassMailingCase):
             'mailing_domain': [('id', 'in', self.mm_recs.ids)],
         })
 
-        mailing.send_mail()
+        mailing.action_send_mail()
 
         # basic test emails are sent
         self.assertEqual(mailing.sent, 5)
@@ -92,7 +92,7 @@ class TestAccessRights(TransactionCase):
                                  self.mailing_contact_4.id, self.mailing_contact_5.id])],
             'body_html': 'This is mass mail marketing demo'})
         self.mass_mailing.put_in_queue()
-        res_ids = self.mass_mailing.get_remaining_recipients()
+        res_ids = self.mass_mailing._get_remaining_recipients()
         composer_values = {
             'body': self.mass_mailing.convert_links()[self.mass_mailing.id],
             'subject': self.mass_mailing.name,
@@ -296,7 +296,7 @@ class TestOnResPartner(TransactionCase):
             'body_html': 'This is mass mail marketing demo'})
         self.mass_mailing.mailing_model_real = 'res.partner'
         self.mass_mailing.put_in_queue()
-        res_ids = self.mass_mailing.get_remaining_recipients()
+        res_ids = self.mass_mailing._get_remaining_recipients()
         composer_values = {
             'body': self.mass_mailing.convert_links()[self.mass_mailing.id],
             'subject': self.mass_mailing.name,
