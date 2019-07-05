@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import UserError
 from odoo.tests import Form
@@ -1896,8 +1898,8 @@ class TestRoutes(TestStockCommon):
 
         # create and get back the pick ship route
         self.wh.write({'delivery_steps': 'pick_ship'})
-        
         self.pick_ship_route = self.wh.route_ids.filtered(lambda r: '(pick + ship)' in r.name)
+
     def test_pick_ship_1(self):
         """ Enable the pick ship route, force a procurement group on the
         pick. When a second move is added, make sure the `partner_id` and
@@ -2225,3 +2227,146 @@ class TestRoutes(TestStockCommon):
             # All the moves should be should have the same quantity as it is on each procurements
             self.assertEquals(len(picking.move_lines), 1)
             self.assertEquals(picking.move_lines.product_uom_qty, 2)
+
+    def test_delay_alert_1(self):
+        """ On a pick pack ship scenario, enable the delay alert flag on the pack rule. Edit the
+        schedule date on the pick, a delay alert should be created for the ship.
+        by default:
+            - delay alert set is only ship rule
+            - propagate date is True on all the pick-pack-ship rules
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.delivery_steps = 'pick_pack_ship'
+        partner_demo_customer = self.env.ref('base.res_partner_1')
+        final_location = partner_demo_customer.property_stock_customer
+        product_a = self.env['product.product'].create({
+            'name': 'ProductA',
+            'type': 'product',
+        })
+        product_b = self.env['product.product'].create({
+            'name': 'ProductA',
+            'type': 'product',
+        })
+
+        pg = self.env['procurement.group'].create({'name': 'Test-delay_alert'})
+
+        self.env['procurement.group'].run([
+            pg.Procurement(
+                product_a,
+                4.0,
+                product_a.uom_id,
+                final_location,
+                'delay',
+                'delay',
+                warehouse.company_id,
+                {
+                    'warehouse_id': warehouse,
+                    'group_id': pg
+                }
+            ),
+            pg.Procurement(
+                product_b,
+                4.0,
+                product_a.uom_id,
+                final_location,
+                'delay',
+                'delay',
+                warehouse.company_id,
+                {
+                    'warehouse_id': warehouse,
+                    'group_id': pg
+                }
+            )
+        ])
+        first_move = self.env['stock.move'].search([
+            ('product_id', '=', product_a.id),
+            ('state', '=', 'confirmed')
+        ])
+
+        # Change the schedule date on the pick.
+        first_move.picking_id.scheduled_date += timedelta(days=2)
+
+        # No activity should be created on the pack.
+        activity = first_move.move_dest_ids.picking_id.activity_ids  # PACK
+        self.assertFalse(activity)
+
+        # An activity is created on the ship.
+        activity = first_move.move_dest_ids.move_dest_ids.picking_id.activity_ids  # SHIP
+        self.assertTrue(activity, '')
+        self.assertTrue('has been automatically' in activity.note)
+
+        # Change second time the schedule date on the pick.
+        first_move.picking_id.scheduled_date += timedelta(days=2)
+        activity = first_move.move_dest_ids.move_dest_ids.picking_id.activity_ids  # SHIP
+        self.assertEqual(len(activity), 1)
+
+    def test_delay_alert_2(self):
+        """ On a pick ship scenario, two pick linked to a ship. The delay alert is set on the ship rule?
+        When editing the schedule date on the two pick, two delay alerts activty should be created
+        on the pack.
+        """
+        self._enable_pick_ship()
+
+        # create a procurement group and set in on the pick stock rule
+        procurement_group0 = self.env['procurement.group'].create({})
+        procurement_group1 = self.env['procurement.group'].create({})
+        pick_rule = self.pick_ship_route.rule_ids.filtered(lambda rule: 'Stock → Output' in rule.name)
+        ship_rule = self.pick_ship_route.rule_ids - pick_rule
+        ship_rule.write({
+            'group_propagation_option': 'fixed',
+            'group_id': procurement_group0.id,
+        })
+
+        ship_location = pick_rule.location_id
+        customer_location = ship_rule.location_id
+        product1 = self.env['product.product'].create({'name': 'product1'})
+        product2 = self.env['product.product'].create({'name': 'product2'})
+
+        picking_ship = self.env['stock.picking'].create({
+            'location_id': ship_location.id,
+            'location_dest_id': self.customer_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_out,
+        })
+
+        move1 = self.env['stock.move'].create({
+            'name': 'first out move',
+            'procure_method': 'make_to_order',
+            'location_id': ship_location.id,
+            'location_dest_id': customer_location.id,
+            'product_id': product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'warehouse_id': self.wh.id,
+            'group_id': procurement_group0.id,
+            'origin': 'origin1',
+            'picking_id': picking_ship.id,
+            'delay_alert': True,
+        })
+
+        move2 = self.env['stock.move'].create({
+            'name': 'second out move',
+            'procure_method': 'make_to_order',
+            'location_id': ship_location.id,
+            'location_dest_id': customer_location.id,
+            'product_id': product2.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'warehouse_id': self.wh.id,
+            'group_id': procurement_group1.id,
+            'origin': 'origin2',
+            'picking_id': picking_ship.id,
+            'delay_alert': True,
+        })
+
+        # confirm the picking to create the orig moves
+        picking_ship.action_confirm()
+        picking_pick_1 = move1.move_orig_ids.picking_id
+        picking_pick_2 = move2.move_orig_ids.picking_id
+
+        picking_pick_1.scheduled_date += timedelta(days=2)
+        picking_pick_2.scheduled_date += timedelta(days=2)
+        activity = picking_ship.activity_ids
+        self.assertEqual(len(activity), 2, 'not enough activity created')
+        self.assertTrue(picking_pick_1.name in activity[0].note, 'Wrong activity message')
+        self.assertTrue(picking_pick_2.name in activity[1].note, 'Wrong activity message')
