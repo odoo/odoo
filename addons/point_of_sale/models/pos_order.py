@@ -937,49 +937,41 @@ class PosOrder(models.Model):
         self.amount_paid = sum(payment.amount for payment in self.statement_ids)
         return args.get('statement_id', False)
 
-    def _prepare_refund_order_data(self, current_session=None):
-        """
-        Prepare data for the creation of refund order based on the current order's data. Inheritance may inject its own data here
-
-        @param current_session: the single pos.session record that presents the current session for refunding order.
-            If not passed, the last closed session of the same original order's sales person will be used
-        @type current_session: pos.session
-
-        @return: dictionary of default data for the creation of refund order
-        @rtype: dict
-        """
-        current_session = current_session or self.env['pos.session'].search([('state', '!=', 'closed'), ('user_id', '=', self.env.uid)], limit=1)
-        return {
-            # ot used, name forced by create
-            'name': self.name + _(' REFUND'),
-            'session_id': current_session.id,
-            'date_order': fields.Datetime.now(),
-            'pos_reference': self.pos_reference,
-            'lines': False,
-            'amount_tax': -self.amount_tax,
-            'amount_total': -self.amount_total,
-            'amount_paid': 0,
-            }
-
     @api.multi
     def refund(self):
         """Create a copy of order  for refund order"""
-        PosOrder = self.env['pos.order']
-        current_session = self.env['pos.session'].search([('state', '!=', 'closed'), ('user_id', '=', self.env.uid)], limit=1)
-        if not current_session:
-            raise UserError(_('To return product(s), you need to open a session that will be used to register the refund.'))
+        refund_orders = self.env['pos.order']
         for order in self:
-            data_for_copy = order._prepare_refund_order_data(current_session)
-            clone = order.copy(data_for_copy)
+            # When a refund is performed, we are creating it in a session having the same config as the original
+            # order. It can be the same session, or if it has been closed the new one that has been opened.
+            current_session = order.session_id.config_id.current_session_id
+            if not current_session:
+                raise UserError(_('To return product(s), you need to open a session in the POS %s') % order.session_id.config_id.display_name)
+            refund_order = order.copy({
+                'name': order.name + _(' REFUND'),
+                'session_id': current_session.id,
+                'date_order': fields.Datetime.now(),
+                'pos_reference': order.pos_reference,
+                'lines': False,
+                'amount_tax': -order.amount_tax,
+                'amount_total': -order.amount_total,
+                'amount_paid': 0,
+            })
             for line in order.lines:
-                line.copy(line._prepare_refund_data(clone))
-            PosOrder += clone
+                line.copy({
+                    'name': line.name + _(' REFUND'),
+                    'qty': -line.qty,
+                    'order_id': refund_order.id,
+                    'price_subtotal': -line.price_subtotal,
+                    'price_subtotal_incl': -line.price_subtotal_incl,
+                    })
+            refund_orders |= refund_order
 
         return {
             'name': _('Return Products'),
             'view_mode': 'form',
             'res_model': 'pos.order',
-            'res_id': PosOrder.ids[0],
+            'res_id': refund_orders.ids[0],
             'view_id': False,
             'context': self.env.context,
             'type': 'ir.actions.act_window',
