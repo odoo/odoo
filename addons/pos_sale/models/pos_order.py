@@ -7,11 +7,14 @@ from odoo import api, fields, models
 class PosOrder(models.Model):
     _inherit = 'pos.order'
 
-    def _default_crm_team(self):
-        return self._default_session().config_id.crm_team_id
-
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', store=True, digits=(12, 6), readonly=True, help='The rate of the currency to the currency of rate applicable at the date of the order')
-    crm_team_id = fields.Many2one('crm.team', string="Sales Team", default=_default_crm_team)
+    crm_team_id = fields.Many2one('crm.team', string="Sales Team")
+
+    @api.model
+    def _complete_values_from_session(self, session, values):
+        values = super(PosOrder, self)._complete_values_from_session(session, values)
+        values.setdefault('crm_team_id', session.config_id.crm_team_id.id)
+        return values
 
     @api.depends('pricelist_id.currency_id', 'date_order', 'company_id')
     def _compute_currency_rate(self):
