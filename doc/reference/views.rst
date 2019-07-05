@@ -2069,7 +2069,7 @@ The view's root element is ``<map>`` multiple attributes are allowed
 ``routing``
     if ``true`` the routes between the records will be shown. The view still needs a valid MapBox token and at least two located records. (i.e the records has a res.partner many2one and the partner has a address or valid coordinates)
 
-The only element allowed within the ``<map>`` element is the ``<marker-popup>``. This element is able to contain multiple ``<field>`` elements. Each of these elements will be interpreted as a line in the marker's popup. The field's attributes are the following:
+The ``<map>`` element can contain multiple ``<field>`` elements. Each ``<field>`` element will be interpreted as a line in the marker's popup. The field's attributes are the following:
 
 ``name``
     The field to display.
@@ -2082,9 +2082,7 @@ For example here is a map:
     .. code-block:: xml
 
         <map res_partner="partner_id" default_order="date_begin" routing="true">
-            <marker-popup>
-                <field name="name" string="Task: "/>
-            </marker-popup>
+            <field name="name" string="Task: "/>
         </map>
 
 .. _reference/views/qweb:
