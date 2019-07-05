@@ -102,6 +102,12 @@ class Followers(models.Model):
           notification status of partner or channel (email or inbox),
           user groups of partner (void as irrelevant if channel ID),
         """
+        self.env['mail.followers'].flush(['partner_id', 'channel_id', 'subtype_ids'])
+        self.env['mail.message.subtype'].flush(['internal'])
+        self.env['res.users'].flush(['notification_type', 'active', 'partner_id', 'groups_id'])
+        self.env['res.partner'].flush(['active', 'partner_share'])
+        self.env['res.groups'].flush(['users'])
+        self.env['mail.channel'].flush(['email_send', 'channel_type'])
         if records and subtype_id:
             query = """
 WITH sub_followers AS (

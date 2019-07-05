@@ -3182,6 +3182,10 @@ Fields:
             # invalidate the *whole* cache, since the orm does not handle all
             # changes made in the database, like cascading delete!
             self.invalidate_cache()
+            # DLE P118: performance `test_adv_activity_full`
+            # As we just deleted `self`, we can remove the todo directly on it.
+            for field in self._fields.values():
+                self.env.remove_todo(field, self)
             # DLE P93: flush after the unlink, for recompute fields depending on the modified of the unlink
             self.flush()
         # auditing: deletions are infrequent and leave no trace in the database
@@ -5545,29 +5549,49 @@ Fields:
                             records = self.exists().mapped(invf.name)
                         break
                 else:
-                    # DLE P77: you can't do a search to find the inverse of new records, as they are not yet in database :(
-                    # `test_onchange_one2many_with_domain_on_related_field`
-                    # self.assertEqual(
-                    #     result['value']['important_emails'],
-                    #     [(5,), (1, email.id, {
-                    #         'name': u'[Foo Bar] %s' % USER.name,
-                    #         ...
-                    #     })],
-                    # )
-                    new_records = self.filtered(lambda r: not r.id)
-                    existing_records = self - new_records
-                    records = model.browse()
-                    if existing_records:
-                        # DLE P82: `test_event_activity`
-                        # `hr.employee` overrides `_search`, and when you don't have the read access to `hr.employee`,
-                        # it calls `_search` on `hr.employee.public`, which do not share all the same fields than `hr.employee`
-                        # In this specific case, it tries to compute `res_name` of `mail.activity`,
-                        # which requires for that a search on `hr.employee.activity_ids`, which doesn't exist on `hr.employee.public`
-                        # No other way than do this as sudo.
-                        records |= model.sudo().search([(key.name, 'in', existing_records.ids)])
-                    if new_records:
-                        cache_records = self.env.cache.get_records(model, key)
-                        records |= cache_records.filtered(lambda r: set(r[key.name]._ids) & set(self._ids))
+                    # DLE P121: `test_adv_activity_full`, `test_adv_activity_mixin`
+                    # When creating a mail activity, to find the inverse field that must be updated
+                    # (res.partner.activity_ids, mail.test.activity.activity_ids)
+                    # it did a search on res.partner, with activity_ids in the domain
+                    # e.g. env['res.partner'].search([('activity_ids', in, self.ids)])
+                    # While it had all the information required in self.res_id and self.res_model
+                    # TODO: A better way than hardcoded 'res_id' and 'res_model', possibility attributes for such cases
+                    # in fields.One2many.
+                    # Currently, activity_ids is defined in a mixin as
+                    # activity_ids = fields.One2many('mail.activity', 'res_id', 'Activities', auto_join=True, groups="base.group_user", domain=lambda self: [('res_model', '=', self._name)])
+                    # For instance, these field on ir.model.data are 'res_id' and 'model' (not 'res_model')
+                    # And it does have an opposite:
+                    # model_ids = fields.One2many('ir.model.data', 'res_id', string="Models", domain=[('model', '=', 'ir.ui.view')], auto_join=True)
+                    # That could benefit of the same performance optimization if we find a way to define these res_id/res_model fields on these kind of one2many fields.
+                    if key.type in ('one2many',) and key.inverse_name == 'res_id' and 'res_model' in self._fields:
+                        if self.res_model != key.model_name:
+                            records = model.browse()
+                        else:
+                            records = model.browse(self.res_id)
+                    else:
+                        # DLE P77: you can't do a search to find the inverse of new records, as they are not yet in database :(
+                        # `test_onchange_one2many_with_domain_on_related_field`
+                        # self.assertEqual(
+                        #     result['value']['important_emails'],
+                        #     [(5,), (1, email.id, {
+                        #         'name': u'[Foo Bar] %s' % USER.name,
+                        #         ...
+                        #     })],
+                        # )
+                        new_records = self.filtered(lambda r: not r.id)
+                        existing_records = self - new_records
+                        records = model.browse()
+                        if existing_records:
+                            # DLE P82: `test_event_activity`
+                            # `hr.employee` overrides `_search`, and when you don't have the read access to `hr.employee`,
+                            # it calls `_search` on `hr.employee.public`, which do not share all the same fields than `hr.employee`
+                            # In this specific case, it tries to compute `res_name` of `mail.activity`,
+                            # which requires for that a search on `hr.employee.activity_ids`, which doesn't exist on `hr.employee.public`
+                            # No other way than do this as sudo.
+                            records |= model.sudo().search([(key.name, 'in', existing_records.ids)])
+                        if new_records:
+                            cache_records = self.env.cache.get_records(model, key)
+                            records |= cache_records.filtered(lambda r: set(r[key.name]._ids) & set(self._ids))
                 records._modified_triggers(val)
 
     def _recompute_check(self, field):

@@ -1042,6 +1042,11 @@ def users(*logins):
                     # switch user and execute func
                     self.uid = user_id[login]
                     func(*args, **kwargs)
+                # DLE P122: `test_read_mail`, `test_write_mail`
+                # Invalidate the cache between each users performance tests,
+                # Otherwise the cache may be filled with value of the other user.
+                # It wasn't the case before as the cache was not shared between users.
+                self.env.cache.invalidate()
         finally:
             self.uid = old_uid
 
@@ -1060,6 +1065,7 @@ def warmup(func, *args, **kwargs):
     self.warm = False
     self.cr.execute('SAVEPOINT test_warmup')
     func(*args, **kwargs)
+    self.env['res.users'].flush()
     self.cr.execute('ROLLBACK TO SAVEPOINT test_warmup')
     self.env.cache.invalidate()
     # run once for real

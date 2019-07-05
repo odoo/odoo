@@ -341,6 +341,8 @@ class TestHeavyMailPerformance(BaseMailPerformance):
             self.env.ref('mail.mt_comment').id,
             self.env.ref('test_mail.st_mail_test_child_full').id]
         )
+        # DLE P119: test_complex_mail_mail_send
+        self.umbrella.flush()
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'emp')

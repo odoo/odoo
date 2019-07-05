@@ -143,6 +143,20 @@ class Message(models.Model):
     #keep notification layout informations to be able to generate mail again
     email_layout_xmlid = fields.Char('Layout', copy=False, oldname='layout')  # xml id of layout
     add_sign = fields.Boolean(default=True)
+    # DLE P120: `test_adv_activity`, `test_adv_activity_full`, `test_message_assignation_inbox`,...
+    # In modified_triggers, avoid the `records |= model.sudo().search([(key.name, 'in', existing_records.ids)])`
+    # by setting an inverse for mail.mail_message_id.
+    # 'mail.mail' inherits from `mail.message`: `_inherits = {'mail.message': 'mail_message_id'}`
+    # Therefore, when changing a field on `mail.message`, this triggers the modification of the same field on `mail.mail`
+    # By setting up the inverse one2many, we avoid to have to do a search to find the mails linked to the `mail.message`
+    # as the cache value for this inverse one2many will be up-to-date.
+    # Besides for a bunch of messages, there was not even a mail, and it did this search for nothing.
+    # In standard master, for this case, the ORM just didn't try to find the opposite and invalidated the fields for all
+    # records, not just the one impacted by the modified message. Thanks to this, there was no select done, indeed, but
+    # it could have invalidated more than it should have.
+    # We might consider to create automatically at the loading of the registry a 'virtual' inverse one2many for all `inherits`
+    # to serve this purpose.
+    mail_ids = fields.One2many('mail.mail', 'mail_message_id', string='Mails')
 
     def _get_needaction(self):
         """ Need action on a mail.message = notified on my channel """

@@ -1951,7 +1951,7 @@ class MailThread(models.AbstractModel):
         message = self.env['mail.message'].create(create_values)
         # DLE P115: Force correct order of attachments before sending them
         # `test_composer_w_template`
-        message.read(['attachment_ids'])
+        message.invalidate_cache(['attachment_ids'])
         return message
 
     # ------------------------------------------------------
