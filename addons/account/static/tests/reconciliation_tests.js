@@ -29,6 +29,7 @@ var db = {
             customer: {string: "customer", type: 'boolean'},
             supplier: {string: "supplier", type: 'boolean'},
             parent_id: {string: "Parent", type: 'boolean'},
+            is_company: {string: "Is company", type: 'boolean'},
             property_account_receivable_id: {string: 'Account receivable', type: 'many2one', relation: 'account.account'},
             property_account_payable_id: {string: 'Account payable', type: 'many2one', relation: 'account.account'},
         },
@@ -53,6 +54,7 @@ var db = {
             code: {string: "code", type: 'integer'},
             name: {string: "Displayed name", type: 'char'},
             company_id: {string: "Company", type: 'many2one', relation: 'res.company'},
+            deprecated: {string: "Deprecated", type: 'boolean'},
         },
         records: [
             {id: 282, code: 100000, name: "100000 Fixed Asset Account", company_id: 1},
@@ -583,6 +585,7 @@ odoo.define('account.reconciliation_tests', function (require) {
 "use strict";
 
 var ReconciliationClientAction = require('account.ReconciliationClientAction');
+var ReconciliationRenderer = require('account.ReconciliationRenderer');
 var demoData = require('account.reconciliation_tests.data');
 
 var testUtils = require('web.test_utils');
@@ -590,7 +593,13 @@ var testUtils = require('web.test_utils');
 QUnit.module('account', {
     beforeEach: function () {
         this.params = demoData.getParams();
-    }
+        testUtils.patch(ReconciliationRenderer.LineRenderer, {
+            MV_LINE_DEBOUNCE: 0,
+        });
+    },
+    afterEach: function () {
+        testUtils.unpatch(ReconciliationRenderer.LineRenderer);
+    },
 }, function () {
     QUnit.module('Reconciliation');
 
@@ -650,8 +659,8 @@ QUnit.module('account', {
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Agrolait", "the partner many2one should display agrolait");
         assert.strictEqual(clientAction.widgets[2].$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
         widget.$('.accounting_view tfoot td:first').trigger('click');
-        assert.strictEqual(widget.$('.create input.o_input').length, 7,
-            "create panel should contain 7 fields (account_id, tax_id, journal_id, analytic_account_id, analytic_tag_ids, label, amount)");
+        assert.strictEqual(widget.$('.create input.o_input').length, 8,
+            "create panel should contain 7 fields (account_id, tax_id, journal_id, analytic_account_id, analytic_tag_ids, label, amount, date)");
         assert.strictEqual(widget.$('.create .create_account_id .o_required_modifier, .create .create_label .o_required_modifier, .create .create_amount .o_required_modifier').length, 3,
             "account_id, label and amount should be required fields");
         assert.strictEqual(widget.$('.create .create_label input').val(), 'SAJ/2014/002 and SAJ/2014/003',

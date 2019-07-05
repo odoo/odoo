@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
 "Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
@@ -42,20 +42,20 @@ msgstr "Šis kanalas yra privatus. Norintys prisijungti turi būti pakviesti."
 #: code:addons/mail/wizard/invite.py:29
 #, python-format
 msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
-msgstr ""
+msgstr "%(user_name)s pakvietė jus sekti %(document)s dokumentą: %(title)s"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:31
 #, python-format
 msgid "%(user_name)s invited you to follow a new document."
-msgstr ""
+msgstr "%(user_name)s pakvietė jus sekti naują dokumentą."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/services/mail_manager.js:945
 #, python-format
 msgid "%d Messages"
-msgstr "%d Pranešimai"
+msgstr "%d Žinutės"
 
 #. module: mail
 #. openerp-web
@@ -75,7 +75,7 @@ msgstr "%s (kopija)"
 #: code:addons/mail/static/src/js/models/threads/thread_typing_mixin/thread_typing_mixin.js:133
 #, python-format
 msgid "%s and %s are typing..."
-msgstr ""
+msgstr "%s ir %s rašo..."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:278
@@ -88,20 +88,20 @@ msgstr "%s sukurta"
 #: code:addons/mail/static/src/js/models/threads/thread_typing_mixin/thread_typing_mixin.js:131
 #, python-format
 msgid "%s is typing..."
-msgstr ""
+msgstr "%s rašo..."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/models/threads/thread_typing_mixin/thread_typing_mixin.js:137
 #, python-format
 msgid "%s, %s and more are typing..."
-msgstr ""
+msgstr "%s, %s ir kiti rašo..."
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:341
 #, python-format
 msgid "%s: %s assigned to you"
-msgstr ""
+msgstr "%s: %s priskirta jums"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_paynow
@@ -134,7 +134,7 @@ msgstr ", baigimo terminas"
 #: code:addons/mail/static/src/xml/thread.xml:547
 #, python-format
 msgid "-------- Show older messages --------"
-msgstr "-------- Rodyti senesnius pranešimus --------"
+msgstr "-------- Rodyti senesnes žinutes --------"
 
 #. module: mail
 #. openerp-web
@@ -167,6 +167,11 @@ msgid ""
 "            Type <b>/command</b> to execute a command.<br>\n"
 "            Type <b>:shortcut</b> to insert canned responses in your message.<br>"
 msgstr ""
+"<br><br>\n"
+"            Įveskite<b>@vardas</b> , kad paminėtumėte ką nors ir atkreiptumėte dėmesį.<br>\n"
+"            Įveskite<b>#kanalas</b>, kad paminėtumėte kanalą.<br>\n"
+"            Įveskite<b>/komanda</b>, kad įvykdytumėte komandą.<br>\n"
+"            Įveskite<b>:nuoroda</b>, kad įterptumėte išankstinį atsakymą į savo žinutę.<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:722
@@ -176,6 +181,9 @@ msgid ""
 "href=\"#\" class=\"o_channel_redirect\" data-oe-"
 "id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">%(author)s pakvietė %(new_partner)s į <a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:829
@@ -205,8 +213,22 @@ msgid ""
 "<div class=\"o_mail_notification\">left <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
-"<div class=\"o_mail_notification\">kairė <a href=\"#\" "
+"<div class=\"o_mail_notification\">paliko<a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
+#: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_short
+msgid ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
+msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
 
 #. module: mail
 #. openerp-web
@@ -253,14 +275,14 @@ msgstr ""
 #: code:addons/mail/static/src/js/tour.js:27
 #, python-format
 msgid "<p>Create a channel here.</p>"
-msgstr ""
+msgstr "<p>Sukurkite kanalą čia.</p>"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/models/threads/create_mode_document_thread.js:65
 #, python-format
 msgid "<p>Creating a new record...</p>"
-msgstr ""
+msgstr "<p>Kuriamas naujas įrašas...</p>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -272,6 +294,12 @@ msgid ""
 "                            </span>\n"
 "                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
+"                                <strong>Masinis laiškų siuntimas</strong>\n"
+"                                <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">pasirinktuose įrašuose</span>\n"
+"                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">su esamu paieškos filtru</span>.\n"
+"                            </span>\n"
+"                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Dokumento sekėjai ir</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -296,11 +324,13 @@ msgid ""
 "<span class=\"fa fa-info-circle\"/> Caution: It won't be possible to send "
 "this mail again to the recipients you did not select."
 msgstr ""
+"<span class=\"fa fa-info-circle\"/>Dėmesio: Nebus įmanoma siųsti šio laiško "
+"pakartotinai tiems gavėjams, kurių nepasirinkote."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Activities</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Veiklos</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -348,6 +378,8 @@ msgid ""
 "<strong>Internal communication</strong>: Replying will post an internal "
 "note. Followers won't receive any email notification."
 msgstr ""
+"<strong>Vidinė komunikacija:</strong>: atsakymas paskelbs vidinę pastabą. "
+"Sekėjai negaus jokio pranešimo el. paštu."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -379,6 +411,8 @@ msgstr ""
 #, python-format
 msgid "A next activity can only be planned on models that use the chatter"
 msgstr ""
+"Kitas veiksmas gali būti suplanuotas tik modeliams, kurie naudoja "
+"susirašinėjimą"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_shortcode_action
@@ -402,14 +436,14 @@ msgstr "Priimti"
 #: code:addons/mail/static/src/xml/discuss.xml:185
 #, python-format
 msgid "Accept selected messages"
-msgstr ""
+msgstr "Priimti pasirinktus pranešimus"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:412
 #, python-format
 msgid "Accept |"
-msgstr ""
+msgstr "Priimti |"
 
 #. module: mail
 #: selection:mail.compose.message,moderation_status:0
@@ -427,6 +461,7 @@ msgstr "Prieigos grupės"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_needaction
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_needaction
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_needaction
+#: model:ir.model.fields,field_description:mail.field_res_users__message_needaction
 msgid "Action Needed"
 msgstr "Reikia atlikti veiksmą"
 
@@ -438,7 +473,7 @@ msgstr "Atliktinas veiksmas"
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr ""
+msgstr "Veiksmo lango peržiūra"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__default
@@ -462,6 +497,7 @@ msgstr "Aktyvus domenas"
 #: code:addons/mail/static/src/xml/systray.xml:108
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_ids
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
@@ -491,11 +527,12 @@ msgstr "Veikla"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_mixin
 msgid "Activity Mixin"
-msgstr ""
+msgstr "Veiklos Mixin"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_state
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_state
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_state
 msgid "Activity State"
 msgstr "Veiklos būsena"
 
@@ -515,7 +552,7 @@ msgstr "Veiklos tipai"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_type
 msgid "Activity User Type"
-msgstr ""
+msgstr "Veiklos vartotojo tipas"
 
 #. module: mail
 #. openerp-web
@@ -533,6 +570,13 @@ msgstr "Pridėti"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/xml/chatter.xml:30
+#, python-format
+msgid "Add Attachments"
+msgstr ""
+
+#. module: mail
+#. openerp-web
 #: code:addons/mail/static/src/xml/followers.xml:63
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__channel_ids
 #, python-format
@@ -542,7 +586,7 @@ msgstr "Pridėti kanalus"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 msgid "Add Email Blacklist"
-msgstr ""
+msgstr "Pridėti paštą į juodąjį sąrašą"
 
 #. module: mail
 #. openerp-web
@@ -558,14 +602,15 @@ msgstr "Pridėti sekėjų"
 #: code:addons/mail/models/ir_actions.py:63
 #, python-format
 msgid "Add Followers can only be done on a mail thread model"
-msgstr "Sekėjų pridėjimas gali būti pridėtas tik el. pašo gijų modeliui"
+msgstr ""
+"Sekėjų pridėjimas gali būti atliktas tik el. pašto susirašinėjimo modeliui"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__add_sign
 #: model:ir.model.fields,field_description:mail.field_mail_mail__add_sign
 #: model:ir.model.fields,field_description:mail.field_mail_message__add_sign
 msgid "Add Sign"
-msgstr ""
+msgstr "Pridėti ženklą"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__user_signature
@@ -585,7 +630,7 @@ msgstr "Pridėti kanalą"
 #: code:addons/mail/models/mail_thread.py:383
 #, python-format
 msgid "Add a new %(document)s or send an email to %(email_link)s"
-msgstr ""
+msgstr "Pridėti naują %(document)s arba siųsti laišką %(email_link)s"
 
 #. module: mail
 #. openerp-web
@@ -597,14 +642,14 @@ msgstr "Pridėti asmeninį kanalą"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
 msgid "Add an email address in the blacklist"
-msgstr ""
+msgstr "Pridėkite el. pašto adresą į juodąjį sąrašą"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/composer.xml:15
 #, python-format
 msgid "Add attachment"
-msgstr ""
+msgstr "Pridėti prisegtuką"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
@@ -622,7 +667,7 @@ msgstr "Pridėkite kontaktus, kuriuos norite informuoti..."
 #: code:addons/mail/static/src/xml/thread.xml:418
 #, python-format
 msgid "Add this email address to white list of people"
-msgstr ""
+msgstr "Pridėti šį el. paštą į baltąjį sąrašą"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_ids
@@ -632,12 +677,12 @@ msgstr "Papildomi kontaktai"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Advanced"
-msgstr "Papildoma"
+msgstr "Išplėstinis"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Advanced Settings"
-msgstr "Papildomi nustatymai"
+msgstr "Išplėstiniai nustatymai"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_count
@@ -649,7 +694,7 @@ msgstr "Po"
 #: code:addons/mail/static/src/xml/followers.xml:26
 #, python-format
 msgid "Alarm menu"
-msgstr ""
+msgstr "Perspėjimo meniu"
 
 #. module: mail
 #: selection:mail.activity.type,decoration_type:0
@@ -718,12 +763,12 @@ msgstr "Visi"
 #: code:addons/mail/static/src/xml/thread.xml:46
 #, python-format
 msgid "All pages:&nbsp;"
-msgstr ""
+msgstr "Visi puslapiai:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
 msgid "Allowed Emails"
-msgstr ""
+msgstr "Leidžiami el. paštai"
 
 #. module: mail
 #: selection:ir.model.fields,track_visibility:0
@@ -733,21 +778,21 @@ msgstr "Visada"
 #. module: mail
 #: selection:mail.moderation,status:0
 msgid "Always Allow"
-msgstr ""
+msgstr "Visada leisti"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:418
 #, python-format
 msgid "Always Allow |"
-msgstr ""
+msgstr "Visada leisti |"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/models/mail_failure.js:80
 #, python-format
 msgid "An error occured when sending an email"
-msgstr ""
+msgstr "Siunčiant laišką įvyko klaida"
 
 #. module: mail
 #. openerp-web
@@ -772,7 +817,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__model_id
 #: model:ir.model.fields,field_description:mail.field_mail_template__model_id
 msgid "Applies to"
-msgstr "Galioja"
+msgstr "Taikomas"
 
 #. module: mail
 #. openerp-web
@@ -794,6 +839,8 @@ msgid ""
 "Are you sure you want to discard %s mail delivery failures. You won't be "
 "able to re-send these mails later!"
 msgstr ""
+"Ar tikrai norite atmesti %s pašto pristatymo funkcijas? Vėliau nebegalėsite "
+"siųsti šių laiškų iš naujo!"
 
 #. module: mail
 #. openerp-web
@@ -811,6 +858,8 @@ msgid ""
 "Assigned user %s has no access to the document and is not able to handle "
 "this activity."
 msgstr ""
+"Priskirtas vartotojas %s neturi prieigos prie dokumento ir negali tvarkyti "
+"šios veiklos."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -827,6 +876,7 @@ msgstr "Prisegtukas"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_attachment_count
+#: model:ir.model.fields,field_description:mail.field_res_users__message_attachment_count
 msgid "Attachment Count"
 msgstr "Prisegtukų skaičius"
 
@@ -911,17 +961,17 @@ msgstr "Automatinis trynimas"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__force_next
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__force_next
 msgid "Auto Schedule Next Activity"
-msgstr ""
+msgstr "Automatiškai planuoti kitą veiksmą"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Auto Subscribe Groups"
-msgstr ""
+msgstr "Automatiškai prenumeruoti grupes"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__group_ids
 msgid "Auto Subscription"
-msgstr "Automatiškai užprenumeruoti"
+msgstr "Automatinė prenumerata"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
@@ -931,17 +981,17 @@ msgstr "Automatinė prenumerata"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__automated
 msgid "Automated activity"
-msgstr ""
+msgstr "Automatizuota veikla"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_autovacuum
 msgid "Automatic Vacuum"
-msgstr ""
+msgstr "Automatinis siurblys"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_notify
 msgid "Automatic notification"
-msgstr ""
+msgstr "Automatinis pranešimas"
 
 #. module: mail
 #. openerp-web
@@ -956,31 +1006,31 @@ msgstr "Portretas"
 #: code:addons/mail/static/src/xml/thread.xml:420
 #, python-format
 msgid "Ban"
-msgstr ""
+msgstr "Uždrausti"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Ban List"
-msgstr ""
+msgstr "Blokavimų sąrašas"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:420
 #, python-format
 msgid "Ban this email address"
-msgstr ""
+msgstr "Blokuoti šį el. paštą"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
 msgid "Banned Emails"
-msgstr ""
+msgstr "Užblokuoti el. paštai"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/followers.xml:90
 #, python-format
 msgid "Be careful with channels following internal notifications"
-msgstr "Būkite atsargūs su šių vidinių pranešimų kanalais"
+msgstr "Būkite atsargūs su kanalais, sekančiais vidinius pranešimus"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_paynow
@@ -992,13 +1042,14 @@ msgstr "Pagarbiai"
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_mixin__is_blacklisted
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__is_blacklisted
 #: model:ir.model.fields,field_description:mail.field_res_partner__is_blacklisted
+#: model:ir.model.fields,field_description:mail.field_res_users__is_blacklisted
 msgid "Blacklist"
 msgstr "Juodasis sąrašas"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
 msgid "Blacklist Date"
-msgstr ""
+msgstr "Juodojo sąrašo data"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__body_html
@@ -1010,12 +1061,13 @@ msgstr "Turinys"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_bounce
+#: model:ir.model.fields,field_description:mail.field_res_users__message_bounce
 msgid "Bounce"
 msgstr "Atmetimas"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:398
+#: code:addons/mail/static/src/xml/thread.xml:391
 #: selection:mail.notification,email_status:0
 #, python-format
 msgid "Bounced"
@@ -1053,7 +1105,7 @@ msgstr "Atšaukti el. laišką"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
 msgid "Cancel notification in failure"
-msgstr ""
+msgstr "Atšaukti nesėkmės pranešimą"
 
 #. module: mail
 #. openerp-web
@@ -1119,14 +1171,14 @@ msgstr "Keisti"
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_decoration
 #: model:ir.model.fields,help:mail.field_mail_activity_type__decoration_type
 msgid "Change the background color of the related activities of this type."
-msgstr ""
+msgstr "Pakeiskite su šiuo tipu susijusių veiklų fono spalvą."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:443
 #, python-format
 msgid "Changed"
-msgstr ""
+msgstr "Pakeista"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field
@@ -1153,7 +1205,7 @@ msgstr "Kanalo žinutė"
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_moderation_menu
 msgid "Channel Moderation"
-msgstr ""
+msgstr "Kanalo moderavimas"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__channel_type
@@ -1163,14 +1215,14 @@ msgstr "Kanalo tipas"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_moderation
 msgid "Channel black/white list"
-msgstr ""
+msgstr "Kanalo baltasis/juodasis sąrašas"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:144
 #, python-format
 msgid "Channel settings"
-msgstr ""
+msgstr "Kanalo nustatymai"
 
 #. module: mail
 #. openerp-web
@@ -1183,6 +1235,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message__channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__channel_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__channel_ids
 #: model:ir.ui.menu,name:mail.mail_channel_menu_settings
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_partner_view_tree
 #, python-format
@@ -1207,7 +1260,7 @@ msgstr "Pokalbis"
 #. module: mail
 #: selection:mail.channel,channel_type:0
 msgid "Chat Discussion"
-msgstr "Pokalbis diskusija"
+msgstr "Susirašinėjimo diskusija"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
@@ -1219,7 +1272,7 @@ msgstr "Pokalbio trumpas kodas"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__child_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__child_ids
 msgid "Child Messages"
-msgstr "Vaikiniai pranešimai"
+msgstr "Dukterinės žinutės"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_preview_form
@@ -1238,7 +1291,7 @@ msgstr "Uždaryti"
 #: code:addons/mail/static/src/xml/abstract_thread_window.xml:67
 #, python-format
 msgid "Close chat window"
-msgstr ""
+msgstr "Uždaryti susirašinėjimo langą"
 
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
@@ -1253,7 +1306,7 @@ msgstr "Kableliu atskirti žinutės kopijos gavėjų adresai"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated ids of recipient partners"
-msgstr "Kableliu atskirti gavėjų partnerių ID."
+msgstr "Kableliu atskirti gavėjų partnerių ID"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview__partner_to
@@ -1329,7 +1382,7 @@ msgstr "Sveikiname, jūsų laiškų dėžutė - tuščia! "
 #. module: mail
 #: selection:mail.notification,failure_type:0
 msgid "Connection failed (outgoing mail server problem)"
-msgstr ""
+msgstr "Ryšio klaida (išeinančio pašto serverio problema)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
@@ -1368,12 +1421,13 @@ msgstr "Pokalbiai"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner__message_bounce
+#: model:ir.model.fields,help:mail.field_res_users__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
 msgstr "Šiam kontaktui nepristatytų laiškų kiekio skaičiavimas"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:565
+#: code:addons/mail/static/src/js/discuss.js:566
 #, python-format
 msgid "Create %s"
 msgstr "Sukurti %s"
@@ -1381,19 +1435,19 @@ msgstr "Sukurti %s"
 #. module: mail
 #: selection:ir.actions.server,state:0
 msgid "Create Next Activity"
-msgstr ""
+msgstr "Sukurti kitą veiksmą"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:400
 #, python-format
 msgid "Create a new %(document)s"
-msgstr ""
+msgstr "Sukurkite naują %(document)s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:392
 #, python-format
 msgid "Create a new %(document)s by sending an email to %(email_link)s"
-msgstr ""
+msgstr "Sukurkite naują %(document)s siunčiant laišką %(email_link)s"
 
 #. module: mail
 #: selection:ir.actions.server,state:0
@@ -1478,7 +1532,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__is_moderator
 msgid "Current user is a moderator of the channel"
-msgstr ""
+msgstr "Esamas vartotojas yra kanalo moderatorius"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__date
@@ -1511,13 +1565,13 @@ msgstr "Galutinis terminas"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "Dear"
-msgstr "Miela (-s)"
+msgstr "Gerb."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_decoration
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__decoration_type
 msgid "Decoration Type"
-msgstr ""
+msgstr "Dekoravimo tipas"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__default
@@ -1527,7 +1581,7 @@ msgstr "Numatytasis"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_next_type_id
 msgid "Default Next Activity"
-msgstr ""
+msgstr "Numatytasis kitas veiksmas"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__null_value
@@ -1557,23 +1611,23 @@ msgid ""
 "- email (using email_from or email field)"
 msgstr ""
 "Numatytieji įrašo gavėjai:\n"
-"- partneris (naudojant iD partner ar partner_id lauką) ARBA\n"
+"- partneris (naudojant iD partneriui arba partner_id lauką) ARBA\n"
 "- el. paštas (naudojant email_from aba email lauką)"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_shortcode_action
 msgid "Define a new chat shortcode"
-msgstr ""
+msgstr "Nustatyti naują susirašinėjimo trumpąjį kodą"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_from
 msgid "Delay Type"
-msgstr ""
+msgstr "Delsimo tipas"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_unit
 msgid "Delay units"
-msgstr ""
+msgstr "Delsimo vienetai"
 
 #. module: mail
 #. openerp-web
@@ -1630,7 +1684,7 @@ msgstr "Diagrama"
 #: code:addons/mail/static/src/xml/discuss.xml:57
 #, python-format
 msgid "Direct Messages"
-msgstr "Tiesioginiai pranešimai"
+msgstr "Tiesioginės žinutės"
 
 #. module: mail
 #. openerp-web
@@ -1646,26 +1700,26 @@ msgstr "Atmesti"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
 msgid "Discard delivery failures"
-msgstr ""
+msgstr "Atmesti pristatymo klaidas"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_cancel_action
 msgid "Discard mail delivery failures"
-msgstr ""
+msgstr "Atmesti pašto pristatymo klaidas"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:187
 #, python-format
 msgid "Discard selected messages"
-msgstr ""
+msgstr "Atmesti pasirinktas žinutes"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:416
 #, python-format
 msgid "Discard |"
-msgstr ""
+msgstr "Atmesti |"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_discuss
@@ -1676,8 +1730,8 @@ msgstr "Diskusija"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel
-msgid "Discussion channel"
-msgstr "Diskusijų kanalas"
+msgid "Discussion Channel"
+msgstr ""
 
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_comment
@@ -1687,7 +1741,7 @@ msgstr "Diskusijos"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_cancel
 msgid "Dismiss notification for resend by model"
-msgstr ""
+msgstr "Pašalinti pranešimą apie modelio pakartotinio siuntimą"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__display_name
@@ -1743,6 +1797,13 @@ msgstr ""
 "laiškų siuntime)"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/chatter.js:498
+#, python-format
+msgid "Do you really want to delete %s?"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Document"
 msgstr "Dokumentas"
@@ -1775,7 +1836,7 @@ msgstr "Atlikta"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Done & Launch Next"
-msgstr ""
+msgstr "Atlikti ir paleisti kitą"
 
 #. module: mail
 #. openerp-web
@@ -1783,7 +1844,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Done & Schedule Next"
-msgstr "Baigti ir suplankuoti kitą"
+msgstr "Baigti ir suplanuoti kitą"
 
 #. module: mail
 #. openerp-web
@@ -1798,7 +1859,7 @@ msgstr "Atsisiųsti"
 #: code:addons/mail/static/src/xml/followers.xml:11
 #, python-format
 msgid "Dropdown menu - Followers"
-msgstr ""
+msgstr "Išsiskleidžiantis meniu - Sekėjai"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_deadline
@@ -1808,7 +1869,7 @@ msgstr "Pabaigos terminas"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range
 msgid "Due Date In"
-msgstr ""
+msgstr "Termino data po"
 
 #. module: mail
 #. openerp-web
@@ -1820,7 +1881,7 @@ msgstr "Terminas - %d dienų"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range_type
 msgid "Due type"
-msgstr ""
+msgstr "Termino tipas"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -1837,7 +1898,7 @@ msgstr "Redaguoti"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Edit Partners"
-msgstr ""
+msgstr "Redaguoti partnerius"
 
 #. module: mail
 #. openerp-web
@@ -1883,12 +1944,12 @@ msgstr "El. pašto pseudonimai"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin
 msgid "Email Aliases Mixin"
-msgstr ""
+msgstr "El. pašto pseudonimų Mixin"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
 msgid "Email Blacklist"
-msgstr ""
+msgstr "El. pašto juodasis sąrašas"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -1933,7 +1994,7 @@ msgstr "El. pašto diskusija"
 #. module: mail
 #: sql_constraint:mail.blacklist:0
 msgid "Email address already exists!"
-msgstr ""
+msgstr "El. paštas jau yra!"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users__alias_id
@@ -1953,12 +2014,12 @@ msgid ""
 "found and replaces the author_id field in the chatter."
 msgstr ""
 "Siuntėjo el. pašto adresas. Šis laukas yra nustatomas, kai nerandamas "
-"sutampantis partneris, ir jis pakeičia autoriaus ID susirašinėjime."
+"sutampantis partneris, ir jis pakeičia autoriaus ID lauką susirašinėjime."
 
 #. module: mail
 #: selection:mail.notification,failure_type:0
 msgid "Email address rejected by destination"
-msgstr ""
+msgstr "El. paštas atmestas adresato"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -1971,6 +2032,8 @@ msgid ""
 "Email addresses that are blacklisted means that the recipient won't receive "
 "any mass mailing anymore."
 msgstr ""
+"Į juodąjį sąrašą įtraukti el. pašto adresai reiškia, kad gavėjas nebegaus "
+"masinių laiškų."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
@@ -1986,7 +2049,7 @@ msgstr "Laiško žinutė"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_message
 msgid "Email resend wizard"
-msgstr ""
+msgstr "El. pašto pakartotinio siuntimo vedlys"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_mail
@@ -2000,12 +2063,12 @@ msgstr "El. laiškai"
 #: code:addons/mail/static/src/xml/composer.xml:14
 #, python-format
 msgid "Emojis"
-msgstr ""
+msgstr "Šypsenėlės"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
 msgid "Envelope Example"
-msgstr ""
+msgstr "Voko pavyzdys"
 
 #. module: mail
 #. openerp-web
@@ -2028,6 +2091,8 @@ msgid ""
 "Error without exception. Probably due do concurrent access update of "
 "notification records. Please see with an administrator."
 msgstr ""
+"Klaida be išimties. Tikriausiai dėl pasikartojančio prieigos atnaujinimo "
+"pranešimų įrašuose. Kreipkitės į administratorių."
 
 #. module: mail
 #: code:addons/mail/models/mail_mail.py:329
@@ -2085,7 +2150,7 @@ msgstr "Išplėstiniai filtrai..."
 #: code:addons/mail/static/src/xml/thread.xml:45
 #, python-format
 msgid "Extract pages:&nbsp;"
-msgstr ""
+msgstr "Išskleisti puslapius:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__fail_counter
@@ -2112,7 +2177,7 @@ msgstr "Nesėkmės priežastis"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__failure_reason
 msgid "Failure reason"
-msgstr ""
+msgstr "Klaidos priežastis"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__failure_reason
@@ -2126,7 +2191,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__failure_type
 msgid "Failure type"
-msgstr ""
+msgstr "Klaidos tipas"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__starred_partner_ids
@@ -2199,7 +2264,7 @@ msgstr "Sutrauktas"
 #: code:addons/mail/static/src/xml/followers.xml:20
 #, python-format
 msgid "Follow"
-msgstr "Prenumeruoti"
+msgstr "Sekti"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_followers
@@ -2207,6 +2272,7 @@ msgstr "Prenumeruoti"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__message_follower_ids
 #: model:ir.ui.menu,name:mail.menu_email_followers
 #: model_terms:ir.ui.view,arch_db:mail.view_followers_tree
 msgid "Followers"
@@ -2217,6 +2283,7 @@ msgstr "Sekėjai"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__message_channel_ids
 msgid "Followers (Channels)"
 msgstr "Sekėjai (kanalai)"
 
@@ -2225,6 +2292,7 @@ msgstr "Sekėjai (kanalai)"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Sekėjai (partneriai)"
 
@@ -2250,13 +2318,13 @@ msgstr "Tik prenumeratoriams"
 #: code:addons/mail/static/src/xml/followers.xml:24
 #, python-format
 msgid "Following"
-msgstr "Užprenumeruota"
+msgstr "Seka"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon
 #: model:ir.model.fields,help:mail.field_mail_activity_type__icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Font awesome piktograma, pvz., fa-tasks"
 
 #. module: mail
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -2278,7 +2346,7 @@ msgstr "Nuo"
 #: code:addons/mail/static/src/xml/chatter.xml:73
 #, python-format
 msgid "Full composer"
-msgstr ""
+msgstr "Pilnas kūrimas"
 
 #. module: mail
 #. openerp-web
@@ -2297,7 +2365,7 @@ msgstr "Būsimos veiklos"
 #: selection:ir.actions.act_window.view,view_mode:0
 #: selection:ir.ui.view,type:0
 msgid "Gantt"
-msgstr "Ganto diagrama"
+msgstr "Gantt"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_message_form
@@ -2307,7 +2375,7 @@ msgstr "Sietuvas"
 #. module: mail
 #: selection:ir.actions.server,activity_user_type:0
 msgid "Generic User From Record"
-msgstr ""
+msgstr "Standartinis vartotojas iš įrašo"
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:88
@@ -2347,7 +2415,7 @@ msgstr "Gairės"
 #: code:addons/mail/models/mail_channel.py:448
 #, python-format
 msgid "Guidelines of channel %s"
-msgstr ""
+msgstr "Kanalo %s gairės"
 
 #. module: mail
 #: selection:res.users,notification_type:0
@@ -2357,12 +2425,12 @@ msgstr "Tvarkyti pagal el. paštą"
 #. module: mail
 #: selection:res.users,notification_type:0
 msgid "Handle in Odoo"
-msgstr "Tvarkyti Odoo"
+msgstr "Tvarkyti \"Odoo\""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__has_cancel
 msgid "Has Cancel"
-msgstr ""
+msgstr "Turi atšaukimą"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
@@ -2372,7 +2440,7 @@ msgstr "Yra paminėtas"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Has attachments"
-msgstr "Turi priedų"
+msgstr "Turi prisegtukų"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__has_error
@@ -2382,7 +2450,7 @@ msgstr "Turi priedų"
 #: model:ir.model.fields,help:mail.field_mail_mail__has_error
 #: model:ir.model.fields,help:mail.field_mail_message__has_error
 msgid "Has error"
-msgstr ""
+msgstr "Turi klaidą"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__headers
@@ -2395,19 +2463,19 @@ msgstr "Antraštės"
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_send_guidelines
 msgid "Hello"
-msgstr ""
+msgstr "Sveiki"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:35
 #, python-format
 msgid "Hello,"
-msgstr ""
+msgstr "Sveiki,"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_cancel__help_message
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__message
 msgid "Help message"
-msgstr ""
+msgstr "Pagalbos žinutė"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__hidden
@@ -2470,7 +2538,7 @@ msgstr "Piktograma"
 #: model:ir.model.fields,help:mail.field_mail_followers__res_id
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__res_id
 msgid "Id of the followed resource"
-msgstr "Prenumeruojamo išteklio ID"
+msgstr "Sekamo ištekliaus ID"
 
 #. module: mail
 #. openerp-web
@@ -2485,6 +2553,7 @@ msgstr "Pasyvus"
 #: model:ir.model.fields,help:mail.field_mail_channel__message_unread
 #: model:ir.model.fields,help:mail.field_mail_thread__message_unread
 #: model:ir.model.fields,help:mail.field_res_partner__message_unread
+#: model:ir.model.fields,help:mail.field_res_users__message_unread
 msgid "If checked new messages require your attention."
 msgstr "Jeigu pažymėta, naujiems pranešimams reikės jūsų dėmesio."
 
@@ -2493,6 +2562,7 @@ msgstr "Jeigu pažymėta, naujiems pranešimams reikės jūsų dėmesio."
 #: model:ir.model.fields,help:mail.field_mail_channel__message_needaction
 #: model:ir.model.fields,help:mail.field_mail_thread__message_needaction
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction
+#: model:ir.model.fields,help:mail.field_res_users__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Jeigu pažymėta, naujiems pranešimams reikės jūsų dėmesio."
 
@@ -2501,6 +2571,7 @@ msgstr "Jeigu pažymėta, naujiems pranešimams reikės jūsų dėmesio."
 #: model:ir.model.fields,help:mail.field_mail_channel__message_has_error
 #: model:ir.model.fields,help:mail.field_mail_thread__message_has_error
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error
+#: model:ir.model.fields,help:mail.field_res_users__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Jei pažymėta, yra žinučių, turinčių pristatymo klaidų."
 
@@ -2546,6 +2617,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_blacklist_mixin__is_blacklisted
 #: model:ir.model.fields,help:mail.field_mail_channel_partner__is_blacklisted
 #: model:ir.model.fields,help:mail.field_res_partner__is_blacklisted
+#: model:ir.model.fields,help:mail.field_res_users__is_blacklisted
 msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
@@ -2569,11 +2641,14 @@ msgid ""
 "notification and review them one by one by clicking on the red envelope next"
 " to each message."
 msgstr ""
+"Jei norite siųsti pakartotinai, paspauskite \"Atšaukti dabar\", tada "
+"paspauskite pranešimą ir peržiūrėkite juos po vieną ir paspauskite raudoną "
+"voką prie kiekvienos žinutės."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Ignore all failures"
-msgstr ""
+msgstr "Ignoruoti visas klaidas"
 
 #. module: mail
 #. openerp-web
@@ -2602,7 +2677,7 @@ msgstr "Gauti"
 #: model:ir.model.fields,help:mail.field_mail_activity__automated
 msgid ""
 "Indicates this activity has been created automatically and not by any user."
-msgstr ""
+msgstr "Parodo, kad ši veikla buvo sukurta automatiškai, o ne vartotojo."
 
 #. module: mail
 #. openerp-web
@@ -2614,7 +2689,7 @@ msgstr "Informacija"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__initial_res_model_id
 msgid "Initial model"
-msgstr ""
+msgstr "Pradinis modelis"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__parent_id
@@ -2637,13 +2712,13 @@ msgstr "Tik vidinis"
 #. module: mail
 #: selection:mail.notification,failure_type:0
 msgid "Invalid email address"
-msgstr ""
+msgstr "Negalimas el. pašto adresas"
 
 #. module: mail
 #: code:addons/mail/models/mail_blacklist.py:35
 #, python-format
 msgid "Invalid email address %r"
-msgstr ""
+msgstr "Negalimas el. pašto adresas %r"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:88
@@ -2660,7 +2735,7 @@ msgstr ""
 #: code:addons/mail/models/mail_blacklist.py:129
 #, python-format
 msgid "Invalid primary email field on model %s"
-msgstr ""
+msgstr "Negalimas pirminis el. pašto laukas modelyje %s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1968
@@ -2705,7 +2780,7 @@ msgstr "Kviesti"
 #: code:addons/mail/static/src/js/followers.js:171
 #, python-format
 msgid "Invite Follower"
-msgstr "Kviesti prenumeratorius"
+msgstr "Kviesti sekėją"
 
 #. module: mail
 #. openerp-web
@@ -2725,7 +2800,7 @@ msgstr "Kviesti žmones #%s"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
 msgid "Invite wizard"
-msgstr "Pakviesti vedlį"
+msgstr "Kvietimo vedlys"
 
 #. module: mail
 #: selection:mail.channel,public:0
@@ -2735,18 +2810,19 @@ msgstr "Tik pakviestiems žmonėms"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
 msgid "Is Allowed"
-msgstr ""
+msgstr "Yra leidžiamas"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
 msgid "Is Banned"
-msgstr ""
+msgstr "Yra užblokuotas"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_is_follower
+#: model:ir.model.fields,field_description:mail.field_res_users__message_is_follower
 msgid "Is Follower"
 msgstr "Yra sekėjas"
 
@@ -2766,6 +2842,11 @@ msgid "Is Subscribed"
 msgstr "Yra užprenumeruota"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_channel__is_chat
+msgid "Is a chat"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_member
 msgid "Is a member"
 msgstr "Yra narys"
@@ -2773,7 +2854,7 @@ msgstr "Yra narys"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__is_moderator
 msgid "Is moderator"
-msgstr ""
+msgstr "Yra moderatorius"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__is_pinned
@@ -2891,7 +2972,7 @@ msgstr "Paskutinį kartą atnaujinta"
 #: code:addons/mail/static/src/xml/systray.xml:94
 #, python-format
 msgid "Late"
-msgstr "Pavėluota"
+msgstr "Vėluoja"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -2971,14 +3052,14 @@ msgstr "Kraunama"
 #: code:addons/mail/static/src/xml/thread.xml:544
 #, python-format
 msgid "Loading older messages..."
-msgstr ""
+msgstr "Kraunamos senesnės žinutės..."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:15
 #, python-format
 msgid "Loading..."
-msgstr "Įkeliama..."
+msgstr "Kraunama..."
 
 #. module: mail
 #. openerp-web
@@ -2987,7 +3068,7 @@ msgstr "Įkeliama..."
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Log"
-msgstr "Žurnalas"
+msgstr "Registruoti"
 
 #. module: mail
 #. openerp-web
@@ -3045,12 +3126,12 @@ msgstr "El. pašto veiklos tipas"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist
 msgid "Mail Blacklist"
-msgstr ""
+msgstr "Pašto juodasis sąrašas"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist_mixin
 msgid "Mail Blacklist mixin"
-msgstr ""
+msgstr "Pašto juodojo sąrašo Mixin"
 
 #. module: mail
 #. openerp-web
@@ -3074,7 +3155,7 @@ msgstr "Laiško pristatymas nepavyko"
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_thread
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Thread"
-msgstr "El. pašto gijos"
+msgstr "El. pašto susirašinėjimas"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_tracking_value
@@ -3099,7 +3180,7 @@ msgstr "Paštas: El. pašto eilių valdiklis"
 #: model:ir.cron,cron_name:mail.ir_cron_mail_notify_channel_moderators
 #: model:ir.cron,name:mail.ir_cron_mail_notify_channel_moderators
 msgid "Mail: Notify channel moderators"
-msgstr ""
+msgstr "Paštas: pranešti kanalo moderatoriams"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:939
@@ -3111,13 +3192,14 @@ msgstr "Pašto dėžutė nepasiekiama - %s"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__mail_template_ids
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__mail_template_ids
 msgid "Mails templates"
-msgstr ""
+msgstr "Laiškų šablonai"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_main_attachment_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_main_attachment_id
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_main_attachment_id
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_main_attachment_id
+#: model:ir.model.fields,field_description:mail.field_res_users__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Pagrindinis prisegtukas"
 
@@ -3127,7 +3209,7 @@ msgstr "Pagrindinis prisegtukas"
 #: code:addons/mail/static/src/xml/thread.xml:9
 #, python-format
 msgid "Manage Messages"
-msgstr ""
+msgstr "Valdyti pranešimus"
 
 #. module: mail
 #. openerp-web
@@ -3181,7 +3263,7 @@ msgstr "Pažymėti kaip atliktą"
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_blacklist_menu
 msgid "Mass Mail Blacklist"
-msgstr ""
+msgstr "Masinio pašto juodasis sąrašas"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__image_medium
@@ -3216,13 +3298,13 @@ msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
 msgstr ""
-"Šių grupių nariai automatiškai taps prenumeratoriais. Tačiau jie galės "
-"valdyti savo prenumeratą savarankišai."
+"Šių grupių nariai automatiškai taps prenumeratoriais. Turėkite omenyje, kad "
+"jie galės valdyti savo prenumeratą savarankišai."
 
 #. module: mail
 #: model:ir.model,name:mail.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr ""
+msgstr "Partnerių sujungimo vedlys"
 
 #. module: mail
 #: code:addons/mail/wizard/base_partner_merge.py:13
@@ -3238,20 +3320,21 @@ msgstr "Sujungta su šiais partneriais:"
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__message
 #: model_terms:ir.ui.view,arch_db:mail.view_message_form
 msgid "Message"
-msgstr "Pranešimas"
+msgstr "Žinutė"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_has_error
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_has_error
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_has_error
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error
+#: model:ir.model.fields,field_description:mail.field_res_users__message_has_error
 msgid "Message Delivery error"
 msgstr "Žinutės pristatymo klaida"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__mail_message_id
 msgid "Message ID"
-msgstr "Pranešimo ID"
+msgstr "Žinutės ID"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_notification
@@ -3274,7 +3357,7 @@ msgstr "Žinutės tipas"
 #: code:addons/mail/models/mail_message.py:1277
 #, python-format
 msgid "Message are pending moderation"
-msgstr ""
+msgstr "Pranešimas laukia moderavimo"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_to
@@ -3330,7 +3413,7 @@ msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
 msgstr ""
-"Žinutės tipas: el. paštas el. pašto žinutei, pranešimas sistemos žinutei, "
+"Žinutės tipas: el. paštas pašto žinutei, pranešimas sistemos žinutei, "
 "komentaras kitoms žinutėms, tokioms, kaip vartotojų atsakymai"
 
 #. module: mail
@@ -3353,10 +3436,11 @@ msgstr "Pranešimo ID"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__message_ids
 #: model:ir.ui.menu,name:mail.menu_mail_message
 #: model_terms:ir.ui.view,arch_db:mail.view_message_tree
 msgid "Messages"
-msgstr "Pranešimai"
+msgstr "Žinutės"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
@@ -3386,7 +3470,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/models/threads/mailbox.js:202
 #, python-format
 msgid "Missing domain for mailbox with ID '%s'"
-msgstr ""
+msgstr "Pašto dėžutei trūksta domeno su ID \"%s\""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__res_model_id
@@ -3400,7 +3484,7 @@ msgstr "Modelis"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__res_model_change
 msgid "Model has change"
-msgstr ""
+msgstr "Modelis turi pakeitimą"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__res_model
@@ -3426,74 +3510,74 @@ msgstr "Modeliai"
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
 #, python-format
 msgid "Moderate Messages"
-msgstr ""
+msgstr "Moderuoti žinutes"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation
 msgid "Moderate this channel"
-msgstr ""
+msgstr "Moderuoti šį kanalą"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__moderator_id
 #: model:ir.model.fields,field_description:mail.field_mail_mail__moderator_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__moderator_id
 msgid "Moderated By"
-msgstr ""
+msgstr "Moderuoja"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_ids
 msgid "Moderated Emails"
-msgstr ""
+msgstr "Moderuojami el. laiškai"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__moderation_channel_ids
 msgid "Moderated channels"
-msgstr ""
+msgstr "Moderuojami kanalai"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_count
 msgid "Moderated emails count"
-msgstr ""
+msgstr "Moderuojamų kanalų skaičius"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_moderation_action
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Moderation"
-msgstr ""
+msgstr "Moderavimas"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_tree
 msgid "Moderation Lists"
-msgstr ""
+msgstr "Moderavimo sąrašai"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:39
 #, python-format
 msgid "Moderation Queue"
-msgstr ""
+msgstr "Moderavimo eilė"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__moderation_status
 #: model:ir.model.fields,field_description:mail.field_mail_mail__moderation_status
 #: model:ir.model.fields,field_description:mail.field_mail_message__moderation_status
 msgid "Moderation Status"
-msgstr ""
+msgstr "Moderavimo būsena"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__moderation_counter
 msgid "Moderation count"
-msgstr ""
+msgstr "Moderavimo skaičius"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_moderator
 msgid "Moderator"
-msgstr ""
+msgstr "Moderatorius"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderator_ids
 msgid "Moderators"
-msgstr ""
+msgstr "Moderatoriai"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -3501,11 +3585,13 @@ msgid ""
 "Modifying the model can have an impact on existing activities using this "
 "activity type, be careful."
 msgstr ""
+"Modelio keitimas gali turėti įtakos esamoms šio tipo veikloms, būkite "
+"atsargūs."
 
 #. module: mail
 #: model:ir.model,name:mail.model_base_module_uninstall
 msgid "Module Uninstall"
-msgstr ""
+msgstr "Modulio ištrynimas"
 
 #. module: mail
 #: selection:ir.actions.server,activity_date_deadline_range_type:0
@@ -3561,7 +3647,7 @@ msgstr "Reikia veiksmo"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__need_moderation
 #: model:ir.model.fields,field_description:mail.field_mail_message__need_moderation
 msgid "Need moderation"
-msgstr ""
+msgstr "Reikia moderavimo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__res_partner_id
@@ -3620,7 +3706,7 @@ msgstr "Naujos reikšmės tekstas"
 #: code:addons/mail/static/src/xml/systray.xml:24
 #, python-format
 msgid "New message"
-msgstr "Naujas pranešimas"
+msgstr "Nauja žinutė"
 
 #. module: mail
 #. openerp-web
@@ -3634,7 +3720,7 @@ msgstr "Naujos žinutės"
 #: code:addons/mail/static/src/xml/thread.xml:131
 #, python-format
 msgid "New messages appear here."
-msgstr "Nauji pranešimai atsiranda čia"
+msgstr "Naujos žinutės atsiranda čia"
 
 #. module: mail
 #. openerp-web
@@ -3648,7 +3734,7 @@ msgstr "Nauji žmonės"
 msgid ""
 "Newcomers on this moderated channel will automatically receive the "
 "guidelines."
-msgstr ""
+msgstr "Naujai atėję į šį moderuojamą kanalą automatiškai gaus gaires."
 
 #. module: mail
 #. openerp-web
@@ -3660,23 +3746,26 @@ msgstr "Kitas"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Next Activities"
-msgstr "Būsimos veiklos"
+msgstr "Kitos veiklos"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_date_deadline
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_date_deadline
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Kitos veiklos terminas"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_summary
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_summary
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_summary
 msgid "Next Activity Summary"
 msgstr "Kitos veiklos santrauka"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_type_id
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_type_id
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_type_id
 msgid "Next Activity Type"
 msgstr "Kitos veiklos tipas"
 
@@ -3689,7 +3778,7 @@ msgstr "Kitos galimos veiklos"
 #: code:addons/mail/models/mail_notification.py:50
 #, python-format
 msgid "No Error"
-msgstr ""
+msgstr "Nėra klaidos"
 
 #. module: mail
 #. openerp-web
@@ -3704,7 +3793,7 @@ msgstr "Nėra suplanuotų veiklų."
 #: code:addons/mail/static/src/xml/systray.xml:54
 #, python-format
 msgid "No conversation yet..."
-msgstr ""
+msgstr "Dar nėra pokalbio..."
 
 #. module: mail
 #. openerp-web
@@ -3732,7 +3821,7 @@ msgstr "Atitikmenų nerasta"
 #: code:addons/mail/static/src/js/tools/debug_manager.js:17
 #, python-format
 msgid "No message available"
-msgstr ""
+msgstr "Nėra galimų žinučių"
 
 #. module: mail
 #. openerp-web
@@ -3755,7 +3844,7 @@ msgstr "Pažymėtų pranešimų nėra"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__no_auto_thread
 #: model:ir.model.fields,field_description:mail.field_mail_message__no_auto_thread
 msgid "No threading for answers"
-msgstr "Nėra atsakymo gijų"
+msgstr "Atsakymams nėra diskusijos"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_note
@@ -3784,7 +3873,7 @@ msgstr "Pranešimų valdymas"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_notify_msg
 msgid "Notification message"
-msgstr ""
+msgstr "Pranešimo žinutė"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__notification_ids
@@ -3809,6 +3898,7 @@ msgstr "Informuoti prenumeratorius apie dokumentą (tik masiniams įrašams)"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_res_users__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Veiksmų skaičius"
 
@@ -3818,12 +3908,15 @@ msgid ""
 "Number of days/week/month before executing the action. It allows to plan the"
 " action deadline."
 msgstr ""
+"Dienų/savaičių/mėnesių skaičius prieš įvykdant veiksmą. Tai leidžia planuoti"
+" veiksmo terminą."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error_counter
+#: model:ir.model.fields,field_description:mail.field_res_users__message_has_error_counter
 msgid "Number of error"
 msgstr "Klaidų skaičius"
 
@@ -3832,6 +3925,7 @@ msgstr "Klaidų skaičius"
 #: model:ir.model.fields,help:mail.field_mail_channel__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_mail_thread__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction_counter
+#: model:ir.model.fields,help:mail.field_res_users__message_needaction_counter
 msgid "Number of messages which requires an action"
 msgstr "Žinučių, kurioms reikia jūsų veiksmo, skaičius"
 
@@ -3840,6 +3934,7 @@ msgstr "Žinučių, kurioms reikia jūsų veiksmo, skaičius"
 #: model:ir.model.fields,help:mail.field_mail_channel__message_has_error_counter
 #: model:ir.model.fields,help:mail.field_mail_thread__message_has_error_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error_counter
+#: model:ir.model.fields,help:mail.field_res_users__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Žinučių su pristatymo klaida skaičius"
 
@@ -3848,6 +3943,7 @@ msgstr "Žinučių su pristatymo klaida skaičius"
 #: model:ir.model.fields,help:mail.field_mail_channel__message_unread_counter
 #: model:ir.model.fields,help:mail.field_mail_thread__message_unread_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_unread_counter
+#: model:ir.model.fields,help:mail.field_res_users__message_unread_counter
 msgid "Number of unread messages"
 msgstr "Neperskaitytų žinučių skaičius"
 
@@ -3909,14 +4005,15 @@ msgid ""
 "Once a message has been starred, you can come back and review it at any time"
 " here."
 msgstr ""
-"Kai žinutė yra pažymėta, galite bet kada sugrįžti ir ją čia peržiūrėti. "
+"Kai žinutė pažymima žvaigždute, galite bet kada sugrįžti ir ją čia "
+"peržiūrėti. "
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/followers.js:188
 #, python-format
 msgid "One follower"
-msgstr "Vienas prenumeratorius"
+msgstr "Vienas sekėjas"
 
 #. module: mail
 #. openerp-web
@@ -3930,7 +4027,7 @@ msgstr "Prisijungęs"
 #: code:addons/mail/models/ir_model.py:28
 #, python-format
 msgid "Only custom models can be modified."
-msgstr "Tik tam tikri modeliai gali būti redaguojami."
+msgstr "Tik nestandartiniai modeliai gali būti redaguojami."
 
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
@@ -3942,7 +4039,7 @@ msgstr "Atidaryti"
 #: code:addons/mail/static/src/xml/thread.xml:409
 #, python-format
 msgid "Open Channel in Discuss to moderate"
-msgstr ""
+msgstr "Atidaryti kanalą diskusijoje moderavimui"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
@@ -3966,7 +4063,7 @@ msgstr "Atidaryti pokalbį"
 #: code:addons/mail/static/src/js/thread_windows/thread_window.js:190
 #, python-format
 msgid "Open document"
-msgstr ""
+msgstr "Atidaryti dokumentą"
 
 #. module: mail
 #. openerp-web
@@ -4022,7 +4119,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_email_template_preview__null_value
 #: model:ir.model.fields,help:mail.field_mail_template__null_value
 msgid "Optional value to use if the target field is empty"
-msgstr "Papildoma reikšmė nustatymui, jei numatytasis laukas yra tuščias"
+msgstr "Papildoma reikšmė nustatymui, jei nurodytas laukas yra tuščias"
 
 #. module: mail
 #: selection:mail.activity.type,category:0
@@ -4054,11 +4151,14 @@ msgid "Outgoing mail server"
 msgstr "Išsiunčiamų laiškų serveris"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:110
 #: selection:mail.activity,state:0
 #: selection:mail.activity.mixin,activity_state:0
 #: selection:res.partner,activity_state:0
+#, python-format
 msgid "Overdue"
-msgstr "Pavėluotas"
+msgstr "Vėluoja"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -4077,7 +4177,7 @@ msgstr "Savininkas"
 #: code:addons/mail/static/src/xml/thread.xml:40
 #, python-format
 msgid "PDF file"
-msgstr ""
+msgstr "PDF failas"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__parent_id
@@ -4143,12 +4243,12 @@ msgstr "Partnerio profilis"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__partner_readonly
 msgid "Partner Readonly"
-msgstr ""
+msgstr "Partneris tik skaitymui"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_partner
 msgid "Partner with additionnal information for mail resend"
-msgstr ""
+msgstr "Partneris su papildomas informacija pakartotiniam pašto siuntimui"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__needaction_partner_ids
@@ -4161,21 +4261,21 @@ msgstr "Partneriai, reikalaujantys veiksmo"
 #: selection:mail.compose.message,moderation_status:0
 #: selection:mail.message,moderation_status:0
 msgid "Pending Moderation"
-msgstr ""
+msgstr "Laukia moderavimo"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:424
 #, python-format
 msgid "Pending moderation"
-msgstr ""
+msgstr "Laukia moderavimo"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:139
 #, python-format
 msgid "Pending moderation messages appear here."
-msgstr ""
+msgstr "Moderavimo laukiančios žinutės pasirodo čia."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__moderation_notify
@@ -4183,11 +4283,12 @@ msgid ""
 "People receive an automatic notification about their message being waiting "
 "for moderation."
 msgstr ""
+"Žmonės gauna automatinį pranešimą apie savo žinutę, laukiančią moderavimo."
 
 #. module: mail
 #: selection:mail.moderation,status:0
 msgid "Permanent Ban"
-msgstr ""
+msgstr "Užblokuota visam"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview__auto_delete
@@ -4212,12 +4313,15 @@ msgstr "Suvestinis"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__copyvalue
 #: model:ir.model.fields,field_description:mail.field_mail_template__copyvalue
 msgid "Placeholder Expression"
-msgstr "Vietos žymos išraiška"
+msgstr "Vietaženklio išraiška"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:112
 #: selection:mail.activity,state:0
 #: selection:mail.activity.mixin,activity_state:0
 #: selection:res.partner,activity_state:0
+#, python-format
 msgid "Planned"
 msgstr "Suplanuota"
 
@@ -4231,7 +4335,7 @@ msgstr "Suplanuotos veiklos"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
 msgid "Planned in"
-msgstr ""
+msgstr "Suplanuota"
 
 #. module: mail
 #. openerp-web
@@ -4243,19 +4347,19 @@ msgstr "Prašome užpildyti kliento duomenis"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "Please contact us instead using"
-msgstr ""
+msgstr "Susisiekite su mumis, užuot naudoję"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_send_guidelines
 msgid "Please find below the guidelines of the"
-msgstr ""
+msgstr "Apačioje rasite gaires"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:544
 #, python-format
 msgid "Please wait"
-msgstr ""
+msgstr "Palaukite"
 
 #. module: mail
 #. openerp-web
@@ -4271,6 +4375,9 @@ msgid ""
 "- Handle by Emails: notifications are sent to your email address\n"
 "- Handle in Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
+"Politika susirašinėjimo pranešimų valdymui:\n"
+"- Tvarkyti pagal el. paštus: pranešimai siunčiami į jūsų paštą\n"
+"- Tvarkyti per \"Odoo\": pranešimai pasirodo jūsų \"Odoo\" dėžutėje"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_contact
@@ -4283,7 +4390,7 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
-"Žinutės paskelbimo prie dokumento naudojant pašto serverį politika.\n"
+"Žinutės paskelbimo prie dokumento politika naudojant pašto serverį.\n"
 "- visi: visi gali paskelbti\n"
 "- partneriai: tik patvirtinti partneriai\n"
 "- sekėjai: tik susijusio dokumento sekėjai arba sekančių kanalų nariai\n"
@@ -4293,7 +4400,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/tour.js:48
 #, python-format
 msgid "Post your message on the thread"
-msgstr ""
+msgstr "Paskelbkite savo žinutę susirašinėjime"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_borders
@@ -4317,7 +4424,7 @@ msgstr "Pageidautinas atsakymo adresas"
 #: model:ir.model.fields,help:mail.field_mail_template__reply_to
 msgid "Preferred response address (placeholders may be used here)"
 msgstr ""
-"Pageidautinas atsakymo adresas (vietos žymos gali būti panaudotos čia)"
+"Pageidautinas atsakymo adresas (vietaženkliai gali būti panaudoti čia)"
 
 #. module: mail
 #. openerp-web
@@ -4377,7 +4484,7 @@ msgstr "Vieši kanalai"
 #. module: mail
 #: model:ir.model,name:mail.model_publisher_warranty_contract
 msgid "Publisher Warranty Contract"
-msgstr ""
+msgstr "Leidėjo garantijos kontraktas"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_module_update_notification_ir_actions_server
@@ -4457,7 +4564,7 @@ msgstr "Nuorodos"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "Regards,"
-msgstr ""
+msgstr "Linkėjimai,"
 
 #. module: mail
 #. openerp-web
@@ -4471,14 +4578,14 @@ msgstr "Atmesti"
 #: code:addons/mail/static/src/xml/discuss.xml:186
 #, python-format
 msgid "Reject selected messages"
-msgstr ""
+msgstr "Atmesti pasirinktas žinutes"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:414
 #, python-format
 msgid "Reject |"
-msgstr ""
+msgstr "Atmesti |"
 
 #. module: mail
 #: selection:mail.compose.message,moderation_status:0
@@ -4537,14 +4644,14 @@ msgstr "Priminimas"
 #: code:addons/mail/static/src/xml/thread.xml:414
 #, python-format
 msgid "Remove message with explanation"
-msgstr ""
+msgstr "Pašalinti žinutę su paaiškinimu"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:416
 #, python-format
 msgid "Remove message without explanation"
-msgstr ""
+msgstr "Pašalinti žinutę be paaiškinimo"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -4597,24 +4704,24 @@ msgstr "Ataskaitos failo pavadinimas"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_message_action
 msgid "Resend mail"
-msgstr ""
+msgstr "Persiųsti paštą"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Resend to selected"
-msgstr ""
+msgstr "Persiųsti pasirinktiems"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend_wizard_id
 msgid "Resend wizard"
-msgstr ""
+msgstr "Persiuntimo vedlys"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:69
 #, python-format
 msgid "Reset Zoom"
-msgstr ""
+msgstr "Atstatyti priartinimą"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_id
@@ -4624,8 +4731,9 @@ msgstr "Atsakingas"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_user_id
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_user_id
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_user_id
 msgid "Responsible User"
-msgstr "Atsakingas naudotojas"
+msgstr "Atsakingas vartotojas"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -4648,7 +4756,7 @@ msgstr "Raiškus tekstas/HTML žinutė"
 #: code:addons/mail/static/src/xml/thread.xml:73
 #, python-format
 msgid "Rotate"
-msgstr ""
+msgstr "Pasukti"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
@@ -4693,7 +4801,7 @@ msgstr "Suplanuoti veiklą"
 #: code:addons/mail/models/mail_activity.py:395
 #, python-format
 msgid "Schedule an Activity"
-msgstr ""
+msgstr "Planuoti veiklą"
 
 #. module: mail
 #. openerp-web
@@ -4732,21 +4840,21 @@ msgstr "Ieškoti grupėse"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
 msgid "Search Moderation List"
-msgstr ""
+msgstr "Moderavimo sąrašo paieška"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:183
 #, python-format
 msgid "Select All"
-msgstr ""
+msgstr "Pasirinkti viską"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:183
 #, python-format
 msgid "Select all messages to moderate"
-msgstr ""
+msgstr "Pasirinkti visas žinutes moderavimui"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview__model_object_field
@@ -4764,6 +4872,8 @@ msgid ""
 "Select the action to do on each mail and correct the email address if "
 "needed. The modified address will be saved on the corresponding contact."
 msgstr ""
+"Pasirinkite atliekamą veiksmą kiekvienam laiškui ir, jei reikia, teisingą "
+"pašto adresą. Pakeistas adresas bus išsaugotas susijusiame kontakte."
 
 #. module: mail
 #: selection:mail.channel,public:0
@@ -4783,7 +4893,7 @@ msgstr "Siųsti"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend
 msgid "Send Again"
-msgstr ""
+msgstr "Siųsti dar kartą"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
@@ -4820,17 +4930,17 @@ msgstr "Rašyti žinutę"
 #: code:addons/mail/static/src/js/discuss.js:145
 #, python-format
 msgid "Send explanation to author"
-msgstr ""
+msgstr "Siųsti paaiškinimą autoriui"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Send guidelines"
-msgstr ""
+msgstr "Siųsti gaires"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_guidelines
 msgid "Send guidelines to new subscribers"
-msgstr ""
+msgstr "Siųsti gaires naujiems prenumeratoriams"
 
 #. module: mail
 #. openerp-web
@@ -4967,7 +5077,7 @@ msgstr ""
 #. module: mail
 #: selection:ir.actions.server,activity_user_type:0
 msgid "Specific User"
-msgstr ""
+msgstr "Konkretus vartotojas"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__res_model_id
@@ -5000,7 +5110,7 @@ msgstr "Pažymėtas žvaigždute"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state
 msgid "State"
-msgstr "Regionas"
+msgstr "Būsena"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__state
@@ -5013,6 +5123,7 @@ msgstr "Būsena"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_state
 #: model:ir.model.fields,help:mail.field_res_partner__activity_state
+#: model:ir.model.fields,help:mail.field_res_users__activity_state
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
@@ -5109,19 +5220,19 @@ msgstr "Techninins laukas UX reikmėms"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__res_model_change
 msgid "Technical field for UX related behaviour"
-msgstr ""
+msgstr "Techninins laukas UX elgesiui"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__initial_res_model_id
 msgid ""
 "Technical field to keep trace of the model at the beginning of the edition "
 "for UX related behaviour"
-msgstr ""
+msgstr "Techninis laukas, sekantis redagavimo pradžią, skirtas UX elgesiui"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_user_field_name
 msgid "Technical name of the user on the record"
-msgstr ""
+msgstr "Techninis vartotojo vardas įraše"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.wizard_email_template_preview
@@ -5151,17 +5262,17 @@ msgstr " "
 #: code:addons/mail/models/ir_actions.py:51
 #, python-format
 msgid "The 'Due Date In' value can't be negative."
-msgstr ""
+msgstr "Termino datos reikšmė negali būti neigiama."
 
 #. module: mail
 #: sql_constraint:mail.moderation:0
 msgid "The email address must be unique per channel !"
-msgstr ""
+msgstr "El. paštas kanale turi būti unikalus!"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The email sent to"
-msgstr ""
+msgstr "Laiškas išsiųstas"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__substitution
@@ -5177,7 +5288,7 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"Modelis (Odoo dokumento rūšis), su kuriuo susijęs šis pseudonimas. Visi "
+"Modelis (\"Odoo\" dokumento rūšis), su kuriuo susijęs šis pseudonimas. Visi "
 "gaunami laiškai, kurie neatsako į egzistuojantį įrašą, sukurs naują šio "
 "modelio įrašą (pvz. projekto užduotį)"
 
@@ -5242,7 +5353,7 @@ msgstr "Šis"
 #: code:addons/mail/static/src/xml/activity_view.xml:10
 #, python-format
 msgid "This action will send an email."
-msgstr ""
+msgstr "Šis veiksmas išsiųs laišką."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__image
@@ -5256,7 +5367,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__email
 msgid "This field is case insensitive."
-msgstr ""
+msgstr "Didžiosios raidės nesvarbu."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__public
@@ -5270,12 +5381,12 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Thread"
-msgstr "Gija"
+msgstr "Diskusija"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_to
 msgid "To"
-msgstr " "
+msgstr " Kam"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__email_to
@@ -5305,8 +5416,9 @@ msgstr "Kam:"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/activity.js:83
+#: code:addons/mail/static/src/js/activity.js:87
 #: code:addons/mail/static/src/js/models/messages/abstract_message.js:107
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:111
 #: code:addons/mail/static/src/xml/systray.xml:96
 #: selection:mail.activity,state:0
 #: selection:mail.activity.mixin,activity_state:0
@@ -5365,7 +5477,7 @@ msgstr "Sekimo reikšmės"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__track_sequence
 msgid "Tracking field sequence"
-msgstr ""
+msgstr "Sekamo lauko seka"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__tracking_value_ids
@@ -5388,6 +5500,8 @@ msgid ""
 "Try to add some activity on records, or make sure that\n"
 "                there is no active filter in the search bar."
 msgstr ""
+"Pabandykite įrašams pridėti veiksmų arba įsitikinkite,\n"
+"kad paieškos lauke nėra aktyvių filtrų."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__message_type
@@ -5400,7 +5514,7 @@ msgstr "Tipas"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_from
 msgid "Type of delay"
-msgstr ""
+msgstr "Vėlavimo tipas"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__state
@@ -5436,19 +5550,19 @@ msgstr "Nepavyksta prisijungti prie SMTP serverio"
 #: code:addons/mail/models/mail_thread.py:2207
 #, python-format
 msgid "Unable to log message, please configure the sender's email address."
-msgstr ""
+msgstr "Nepavyko registruoti žinutės, nustatykite siuntėjo el. pašto adresą."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:2172
 #, python-format
 msgid "Unable to notify message, please configure the sender's email address."
-msgstr ""
+msgstr "Nepavyko pranešti apie žinutę, nustatykite siuntėjo el. pašto adresą."
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:34
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
-msgstr ""
+msgstr "Nepavyko paskelbti žinutės, nustatykite siuntėjo pašto adresą."
 
 #. module: mail
 #. openerp-web
@@ -5478,7 +5592,7 @@ msgstr "Vienetas"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_unit
 msgid "Unit of delay"
-msgstr ""
+msgstr "Vėlavimo vienetas"
 
 #. module: mail
 #: code:addons/mail/models/mail_notification.py:52
@@ -5492,14 +5606,16 @@ msgstr "Nežinoma klaida"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_unread
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_unread
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_unread
+#: model:ir.model.fields,field_description:mail.field_res_users__message_unread
 msgid "Unread Messages"
-msgstr "Neskaityti pranešimai"
+msgstr "Neperskaitytos žinutės"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_res_users__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Neperskaitytų žinučių skaičiuoklis"
 
@@ -5516,14 +5632,14 @@ msgstr "Neperskaitytos žinutės"
 #: code:addons/mail/static/src/xml/discuss.xml:184
 #, python-format
 msgid "Unselect All"
-msgstr ""
+msgstr "Atžymėti viską"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:184
 #, python-format
 msgid "Unselect all messages to moderate"
-msgstr ""
+msgstr "Atžymėti visas žinutes moderavimui"
 
 #. module: mail
 #. openerp-web
@@ -5556,7 +5672,7 @@ msgstr "Rastas nepalaikomas ataskaitos tipas %s."
 #: code:addons/mail/models/mail_message.py:188
 #, python-format
 msgid "Unsupported search filter on moderation status"
-msgstr ""
+msgstr "Nepalaikomas paieškos filtras moderavimo būsenai"
 
 #. module: mail
 #: selection:ir.actions.server,state:0
@@ -5568,7 +5684,7 @@ msgstr "Atnaujinti įrašą"
 #: code:addons/mail/static/src/xml/thread.xml:531
 #, python-format
 msgid "Uploaded"
-msgstr ""
+msgstr "Įkelta"
 
 #. module: mail
 #. openerp-web
@@ -5591,6 +5707,9 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
+"Naudokite \"konkretus vartotojas\", kad priskirtumėte tą patį vartotoją "
+"kitam veiksmui. Naudokite \"standartinis vartotojas iš įrašo\", kad "
+"nurodytumėte vartotojo lauko pavadinimą pasirinkimui įraše."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__use_active_domain
@@ -5610,7 +5729,7 @@ msgstr "Naudoti savo el. pašto serverį"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__sequence
 msgid "Used to order subtypes."
-msgstr "Naudojama užsakant potipius."
+msgstr "Naudojama potipių rikiavimui."
 
 #. module: mail
 #. openerp-web
@@ -5625,7 +5744,7 @@ msgstr "Vartotojas"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_field_name
 msgid "User field name"
-msgstr ""
+msgstr "Vartotojo lauko pavadinimas"
 
 #. module: mail
 #. openerp-web
@@ -5633,7 +5752,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread_window.xml:11
 #, python-format
 msgid "User name"
-msgstr "Naudotojo vardas"
+msgstr "Vartotojo vardas"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_users
@@ -5644,7 +5763,7 @@ msgstr "Vartotojai"
 #: code:addons/mail/models/mail_channel.py:959
 #, python-format
 msgid "Users in this channel: %s %s and you."
-msgstr "Vartotojai šiame kanale: %s %s ir Jūs."
+msgstr "Vartotojai šiame kanale: %s %s ir jūs."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -5672,7 +5791,7 @@ msgstr "Video"
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
 #, python-format
 msgid "View"
-msgstr "Žiūrėti"
+msgstr "Rodinys"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:745
@@ -5684,21 +5803,21 @@ msgstr "Rodinys %s"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_act_window_view__view_mode
 #: model:ir.model.fields,field_description:mail.field_ir_ui_view__type
 msgid "View Type"
-msgstr "Žiūrėti tipą"
+msgstr "Rodinio tipas"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:99
 #, python-format
 msgid "View all the attachments of the current record"
-msgstr ""
+msgstr "Žiūrėti esamo įrašo prisegtukus"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:58
 #, python-format
 msgid "Viewer"
-msgstr ""
+msgstr "Žiūrėtojas"
 
 #. module: mail
 #. openerp-web
@@ -5709,6 +5828,8 @@ msgid ""
 "Want to <b>get in touch</b> with your contacts? <i>Discuss with them "
 "here.</i>"
 msgstr ""
+"Norite <b>susisiekti</b> su savo kontaktais? <i>Diskutuokite su jais "
+"čia.</i>"
 
 #. module: mail
 #. openerp-web
@@ -5819,28 +5940,28 @@ msgstr "Šiame kanale esate vieni."
 #: code:addons/mail/static/src/js/discuss.js:367
 #, python-format
 msgid "You are going to ban: %s. Do you confirm the action?"
-msgstr ""
+msgstr "Ketinate užblokuoti: %s. Ar patvirtinate veiksmą?"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/discuss.js:390
 #, python-format
 msgid "You are going to discard %s messages. Do you confirm the action?"
-msgstr ""
+msgstr "Norite atmesti %s žinutes. Ar norite patvirtinti veiksmą?"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/discuss.js:394
 #, python-format
 msgid "You are going to discard 1 message. Do you confirm the action?"
-msgstr ""
+msgstr "Norite atmesti 1 žinutę. Ar norite patvirtinti veiksmą?"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid ""
 "You are going to send the guidelines to all the subscribers. Do you confirm "
 "the action?"
-msgstr ""
+msgstr "Išsiųsite gaires visiems prenumeratoriams. Ar patvirtinate veiksmą?"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:925
@@ -5862,6 +5983,7 @@ msgid ""
 "You are the administrator of this channel. Are you sure you want to "
 "unsubscribe?"
 msgstr ""
+"Jūs esate šio kanalo administratorius. Ar tikrai norite nebeprenumeruoti?"
 
 #. module: mail
 #. openerp-web
@@ -5870,6 +5992,7 @@ msgstr ""
 msgid ""
 "You can mark any message as 'starred', and it shows up in this mailbox."
 msgstr ""
+"Galite pažymėti bet kurią žinutę žvaigždute ir ji pasirodys šioje dėžutėje."
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:87
@@ -5895,12 +6018,12 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:2358
 #, python-format
 msgid "You have been assigned to %s"
-msgstr ""
+msgstr "Jūs buvote priskirtas prie %s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "You have been assigned to the"
-msgstr "Jums buvo priskirta"
+msgstr "Jūs buvote priskirtas"
 
 #. module: mail
 #. openerp-web
@@ -5912,14 +6035,14 @@ msgstr "Jūs buvote pakviestas į:"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
 msgid "You have messages to moderate, please go for the proceedings."
-msgstr ""
+msgstr "Turite moderuojamų žinučių, eikite į peržiūrėti jų."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:138
 #, python-format
 msgid "You have no message to moderate"
-msgstr ""
+msgstr "Neturite moderuojamų žinučių"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview__attachment_ids
@@ -5956,7 +6079,7 @@ msgstr "Jūs:"
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_paynow
 msgid "Your"
-msgstr ""
+msgstr "Jūsų"
 
 #. module: mail
 #. openerp-web
@@ -5970,14 +6093,14 @@ msgstr "Jūsų žinutė nebuvo išsiųsta."
 #: code:addons/mail/static/src/xml/thread.xml:424
 #, python-format
 msgid "Your message is pending moderation"
-msgstr ""
+msgstr "Jūsų žinutė laukia moderavimo"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:198
 #, python-format
 msgid "Your message was rejected by moderator."
-msgstr ""
+msgstr "Jūsų žinutė buvo atmesta moderatoriaus."
 
 #. module: mail
 #: code:addons/mail/models/ir_actions.py:57
@@ -5990,24 +6113,24 @@ msgstr "Jūsų šablone turėtų būti email_from"
 #: code:addons/mail/static/src/xml/thread.xml:68
 #, python-format
 msgid "Zoom In"
-msgstr ""
+msgstr "Priartinti"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:70
 #, python-format
 msgid "Zoom Out"
-msgstr ""
+msgstr "Atitolinti"
 
 #. module: mail
 #: selection:mail.activity.type,delay_from:0
 msgid "after previous activity deadline"
-msgstr ""
+msgstr "po ankstesnės veiklos termino"
 
 #. module: mail
 #: selection:mail.activity.type,delay_from:0
 msgid "after validation date"
-msgstr ""
+msgstr "po patvirtinimo datos"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1074
@@ -6018,7 +6141,7 @@ msgstr "pseudonimas %s: %s"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "assigned you an activity"
-msgstr ""
+msgstr "priskyrė jums veiklą"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_2
@@ -6040,16 +6163,18 @@ msgid ""
 "cannot be processed. This address\n"
 "    is used to collect replies and should not be used to directly contact"
 msgstr ""
+"negalėjo būti apdorotas. Šis adresas\n"
+"yra naudojamas atsakymų surinkimui ir neturėtų būti naudojamas tiesioginiam kontaktui"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_send_guidelines
 msgid "channel."
-msgstr ""
+msgstr "kanalas."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "created"
-msgstr "Sukurta"
+msgstr "sukūrė"
 
 #. module: mail
 #: selection:mail.activity.type,delay_unit:0
@@ -6060,7 +6185,7 @@ msgstr "dienos"
 #: code:addons/mail/models/mail_thread.py:357
 #, python-format
 msgid "document"
-msgstr "Dokumentas"
+msgstr "dokumentas"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
@@ -6068,7 +6193,7 @@ msgid ""
 "done\n"
 "        by"
 msgstr ""
-"atlikta\n"
+"atliko\n"
 "        "
 
 #. module: mail
@@ -6076,7 +6201,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:45
 #, python-format
 msgid "e.g. 1-5, 7, 8-9"
-msgstr ""
+msgstr "pvz. 1-5, 7, 8-9"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -6254,7 +6379,7 @@ msgstr "tik kanalo nariams"
 #: code:addons/mail/models/mail_alias.py:277
 #, python-format
 msgid "restricted to followers"
-msgstr "tik prenumeratoriams"
+msgstr "tik sekėjams"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:281
@@ -6280,19 +6405,19 @@ msgstr "praleidimas"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "team."
-msgstr ""
+msgstr "komanda."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:45
 #, python-format
 msgid "this document"
-msgstr "šio dokumento"
+msgstr "šis dokumentas"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "to close for"
-msgstr ""
+msgstr "uždaryti"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1074
@@ -6309,9 +6434,9 @@ msgstr "nežinomos paskirties modelis %s"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
 msgid "using"
-msgstr ""
+msgstr "naudoja"
 
 #. module: mail
 #: selection:mail.activity.type,delay_unit:0
 msgid "weeks"
-msgstr ""
+msgstr "savaitės"

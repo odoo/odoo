@@ -73,11 +73,6 @@ tour.register('project_tour', {
 }, {
     trigger: ".o_kanban_record .oe_kanban_content",
     extra_trigger: '.o_kanban_project_tasks',
-    content: _t("Click on a card to get the details of the task."),
-    position: "bottom",
-}, {
-    trigger: ".o_kanban_record .oe_kanban_content",
-    extra_trigger: '.o_kanban_project_tasks',
     content: _t("Click on the card to write more information about it and collaborate with your coworkers."),
     position: "bottom",
 }, {

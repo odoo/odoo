@@ -85,7 +85,7 @@ class StockRule(models.Model):
     def _get_purchase_order_date(self, product_id, product_qty, product_uom, values, partner, schedule_date):
         """Return the datetime value to use as Order Date (``date_order``) for the
            Purchase Order created to satisfy the given procurement. """
-        seller = product_id._select_seller(
+        seller = product_id.with_context(force_company=values['company_id'].id)._select_seller(
             partner_id=partner,
             quantity=product_qty,
             date=schedule_date and schedule_date.date(),
@@ -95,7 +95,7 @@ class StockRule(models.Model):
 
     def _update_purchase_order_line(self, product_id, product_qty, product_uom, values, line, partner):
         procurement_uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id)
-        seller = product_id._select_seller(
+        seller = product_id.with_context(force_company=values['company_id'].id)._select_seller(
             partner_id=partner,
             quantity=line.product_qty + procurement_uom_po_qty,
             date=line.order_id.date_order and line.order_id.date_order.date(),
@@ -106,16 +106,20 @@ class StockRule(models.Model):
             price_unit = seller.currency_id._convert(
                 price_unit, line.order_id.currency_id, line.order_id.company_id, fields.Date.today())
 
-        return {
+        res = {
             'product_qty': line.product_qty + procurement_uom_po_qty,
             'price_unit': price_unit,
             'move_dest_ids': [(4, x.id) for x in values.get('move_dest_ids', [])]
         }
+        orderpoint_id = values.get('orderpoint_id')
+        if orderpoint_id:
+            res['orderpoint_id'] = orderpoint_id.id
+        return res
 
     @api.multi
     def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, values, po, partner):
         procurement_uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id)
-        seller = product_id._select_seller(
+        seller = product_id.with_context(force_company=values['company_id'].id)._select_seller(
             partner_id=partner,
             quantity=procurement_uom_po_qty,
             date=po.date_order and po.date_order.date(),

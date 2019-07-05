@@ -467,6 +467,7 @@ var BasicModel = AbstractModel.extend({
         var isNew = this.isNew(id);
         var rollback = 'rollback' in options ? options.rollback : isNew;
         var initialOffset = element.offset;
+        element._domains = {};
         this._visitChildren(element, function (elem) {
             if (rollback && elem._savePoint) {
                 if (elem._savePoint instanceof Array) {
@@ -2399,7 +2400,7 @@ var BasicModel = AbstractModel.extend({
             if (field.type === 'many2one' && !record.fieldsInfo[record.viewType][name].__no_fetch) {
                 var localId = (record._changes && record._changes[name]) || record.data[name];
                 var relatedRecord = self.localData[localId];
-                if (!relatedRecord) {
+                if (!relatedRecord || relatedRecord.data.display_name) {
                     return;
                 }
                 toBeFetched.push({
@@ -3491,6 +3492,7 @@ var BasicModel = AbstractModel.extend({
         var res_id, value;
         var res_ids = params.res_ids || [];
         var data = params.data || (type === 'record' ? {} : []);
+        var context = params.context;
         if (type === 'record') {
             res_id = params.res_id || (params.data && params.data.id);
             if (res_id) {
@@ -3498,6 +3500,9 @@ var BasicModel = AbstractModel.extend({
             } else {
                 res_id = _.uniqueId('virtual_');
             }
+            // it doesn't make sense for a record datapoint to have those keys
+            // besides, it will mess up x2m and actions down the line
+            context = _.omit(context, ['orderedBy', 'group_by']);
         } else {
             var isValueArray = params.value instanceof Array;
             res_id = isValueArray ? params.value[0] : undefined;
@@ -3515,7 +3520,7 @@ var BasicModel = AbstractModel.extend({
             _domains: {},
             _rawChanges: {},
             aggregateValues: params.aggregateValues || {},
-            context: params.context,
+            context: context,
             count: params.count || res_ids.length,
             data: data,
             domain: params.domain || [],

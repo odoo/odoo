@@ -4,6 +4,7 @@
 import logging
 import re
 
+from binascii import Error as binascii_error
 from operator import itemgetter
 from email.utils import formataddr
 from openerp.http import request
@@ -154,8 +155,8 @@ class Message(models.Model):
     @api.multi
     def _search_has_error(self, operator, operand):
         if operator == '=' and operand:
-            return ['&', ('notification_ids.email_status', 'in', ('bounce', 'exception')), ('author_id', '=', self.env.user.partner_id.id)]
-        return ['!', '&', ('notification_ids.email_status', 'in', ('bounce', 'exception')), ('author_id', '=', self.env.user.partner_id.id)]  # this wont work and will be equivalent to "not in" beacause of orm restrictions. Dont use "has_error = False"
+            return [('notification_ids.email_status', 'in', ('bounce', 'exception'))]
+        return ['!', ('notification_ids.email_status', 'in', ('bounce', 'exception'))]  # this wont work and will be equivalent to "not in" beacause of orm restrictions. Dont use "has_error = False"
 
     @api.depends('starred_partner_ids')
     def _get_starred(self):
@@ -534,6 +535,16 @@ class Message(models.Model):
         failures_infos = []
         # for each channel, build the information header and include the logged partner information
         for message in self:
+            # Check if user has access to the record before displaying a notification about it.
+            # In case the user switches from one company to another, it might happen that he doesn't
+            # have access to the record related to the notification. In this case, we skip it.
+            if message.model and message.res_id:
+                record = self.env[message.model].browse(message.res_id)
+                try:
+                    record.check_access_rights('read')
+                    record.check_access_rule('read')
+                except AccessError:
+                    continue
             info = {
                 'message_id': message.id,
                 'record_name': message.record_name,
@@ -543,7 +554,7 @@ class Message(models.Model):
                 'model': message.model,
                 'last_message_date': message.date,
                 'module_icon': '/mail/static/src/img/smiley/mailfailure.jpg',
-                'notifications': dict((notif.res_partner_id.id, (notif.email_status, notif.res_partner_id.name)) for notif in message.notification_ids)
+                'notifications': dict((notif.res_partner_id.id, (notif.email_status, notif.res_partner_id.name)) for notif in message.notification_ids.sudo())
             }
             failures_infos.append(info)
         return failures_infos
@@ -713,8 +724,9 @@ class Message(models.Model):
                                 WHERE message.message_type = %%s AND (message.subtype_id IS NULL OR subtype.internal IS TRUE) AND message.id = ANY (%%s)''' % (self._table), ('comment', self.ids,))
             if self._cr.fetchall():
                 raise AccessError(
-                    _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
-                    (self._description, operation))
+                    _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation)
+                    + ' - ({} {}, {} {})'.format(_('Records:'), self.ids[:6], _('User:'), self._uid)
+                )
 
         # Read mail_message.ids to have their values
         message_values = dict((res_id, {}) for res_id in self.ids)
@@ -883,8 +895,9 @@ class Message(models.Model):
         if not (other_ids and self.browse(other_ids).exists()):
             return
         raise AccessError(
-            _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
-            (self._description, operation))
+            _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation)
+            + ' - ({} {}, {} {})'.format(_('Records:'), list(other_ids)[:6], _('User:'), self._uid)
+        )
 
     @api.model
     def _get_record_name(self, values):
@@ -917,7 +930,7 @@ class Message(models.Model):
     def _invalidate_documents(self):
         """ Invalidate the cache of the documents followed by ``self``. """
         for record in self:
-            if record.model and record.res_id and 'message_ids' in self.env[record.model]:
+            if record.model and record.res_id and issubclass(self.pool[record.model], self.pool['mail.thread']):
                 self.env[record.model].invalidate_cache(fnames=[
                     'message_ids',
                     'message_unread',
@@ -952,16 +965,21 @@ class Message(models.Model):
                 key = match.group(2)
                 if not data_to_url.get(key):
                     name = match.group(4) if match.group(4) else 'image%s' % len(data_to_url)
-                    attachment = Attachments.create({
-                        'name': name,
-                        'datas': match.group(2),
-                        'datas_fname': name,
-                        'res_model': values.get('model'),
-                        'res_id': values.get('res_id'),
-                    })
-                    attachment.generate_access_token()
-                    values['attachment_ids'].append((4, attachment.id))
-                    data_to_url[key] = ['/web/image/%s?access_token=%s' % (attachment.id, attachment.access_token), name]
+                    try:
+                        attachment = Attachments.create({
+                            'name': name,
+                            'datas': match.group(2),
+                            'datas_fname': name,
+                            'res_model': values.get('model'),
+                            'res_id': values.get('res_id'),
+                        })
+                    except binascii_error:
+                        _logger.warning("Impossible to create an attachment out of badly formated base64 embedded image. Image has been removed.")
+                        return match.group(3)  # group(3) is the url ending single/double quote matched by the regexp
+                    else:
+                        attachment.generate_access_token()
+                        values['attachment_ids'].append((4, attachment.id))
+                        data_to_url[key] = ['/web/image/%s?access_token=%s' % (attachment.id, attachment.access_token), name]
                 return '%s%s alt="%s"' % (data_to_url[key][0], match.group(3), data_to_url[key][1])
             values['body'] = _image_dataurl.sub(base64_to_boundary, tools.ustr(values['body']))
 
@@ -1069,6 +1087,9 @@ class Message(models.Model):
             if pid and pid == author_id and not self.env.context.get('mail_notify_author'):  # do not notify the author of its own messages
                 continue
             if pid:
+                if active is False:
+                    # avoid to notify inactive partner by email (odoobot)
+                    continue
                 pdata = {'id': pid, 'active': active, 'share': pshare, 'groups': groups}
                 if notif == 'inbox':
                     recipient_data['partners'].append(dict(pdata, notif=notif, type='user'))

@@ -183,6 +183,13 @@
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
+                    <separator/>
+                    <filter string="Late Activities" name="activities_overdue"
+                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter name="group_manager" string="Manager" domain="[]" context="{'group_by':'parent_id'}"/>
                         <filter name="group_coach" string="Coach" domain="[]" context="{'group_by':'coach_id'}"/>
@@ -621,6 +628,17 @@
                 related to employees by departments: expenses, timesheets,
                 leaves, recruitments, etc.
               </p>
+            </field>
+        </record>
+
+        <record id="view_users_form_simple_modif_resource" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.resource</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif" />
+            <field name="arch" type="xml">
+                <field name="tz" position="attributes">
+                    <attribute name="required">1</attribute>
+                </field>
             </field>
         </record>
 

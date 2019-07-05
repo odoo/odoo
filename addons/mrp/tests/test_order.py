@@ -561,6 +561,9 @@ class TestMrpOrder(TestMrpCommon):
             'active_ids': [mo.id],
         }))
         produce_form.product_qty = 1.0
+        for i in range(len(produce_form.produce_line_ids)):
+            with produce_form.produce_line_ids.edit(i) as line:
+                line.qty_done += 1
         product_produce = produce_form.save()
         product_produce.lot_id = final_product_lot.id
         # product 1 lot 1 shelf1
@@ -568,8 +571,6 @@ class TestMrpOrder(TestMrpCommon):
         # product 1 lot 2
         self.assertEqual(len(product_produce.produce_line_ids), 4, 'You should have 4 produce lines. lot 1 shelf_1, lot 1 shelf_2, lot2 and for product which have tracking None')
 
-        for produce_line in product_produce.produce_line_ids:
-            produce_line.qty_done = produce_line.qty_to_consume + 1
         product_produce.do_produce()
 
         move_1 = mo.move_raw_ids.filtered(lambda m: m.product_id == p1)
@@ -628,6 +629,53 @@ class TestMrpOrder(TestMrpCommon):
 
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done', "Production order should be in done state.")
+
+    def test_product_produce_5(self):
+        """ Build 5 final products with different consumed lots,
+        then edit the finished quantity and update the Manufacturing
+        order quantity. Then check if the produced quantity do not
+        change and it is possible to close the MO.
+        """
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        mo, bom, p_final, p1, p2 = self.generate_mo(tracking_base_1='lot')
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+
+        lot_1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': p1.id,
+        })
+        lot_2 = self.env['stock.production.lot'].create({
+            'name': 'lot2',
+            'product_id': p1.id,
+        })
+
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 10, lot_id=lot_1)
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 10, lot_id=lot_2)
+
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
+        mo.action_assign()
+
+        produce_wizard = self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }).create({
+            'product_qty': 5.0,
+        })
+        produce_wizard._onchange_product_qty()
+
+        for produce_line in produce_wizard.produce_line_ids:
+            produce_line.qty_done = produce_line.qty_to_consume
+        produce_wizard.do_produce()
+
+        mo.move_finished_ids.move_line_ids.qty_done -= 1
+        update_quantity_wizard = self.env['change.production.qty'].create({
+            'mo_id': mo.id,
+            'product_qty': 4,
+        })
+        update_quantity_wizard.change_prod_qty()
+
+        self.assertEqual(mo.move_raw_ids.filtered(lambda m: m.product_id == p1).quantity_done, 20, 'Update the produce quantity should not impact already produced quantity.')
+        mo.button_mark_done()
 
     def test_product_produce_uom(self):
         plastic_laminate = self.env.ref('mrp.product_product_plastic_laminate')

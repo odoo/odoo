@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models, tools, _
 from odoo.addons import decimal_precision as dp
+from odoo.addons.website.models import ir_http
 from odoo.tools.translate import html_translate
 
 
@@ -17,14 +18,17 @@ class ProductPricelist(models.Model):
     _inherit = "product.pricelist"
 
     def _default_website(self):
-        return self.env['website'].search([], limit=1)
+        """ Find the first company's website, if there is one. """
+        company_id = self.env.user.company_id.id
+        domain = [('company_id', '=', company_id)]
+        return self.env['website'].search(domain, limit=1)
 
-    website_id = fields.Many2one('website', string="website", default=_default_website)
+    website_id = fields.Many2one('website', string="Website", default=_default_website)
     code = fields.Char(string='E-commerce Promotional Code', groups="base.group_user")
     selectable = fields.Boolean(help="Allow the end user to choose this price list")
 
     def clear_cache(self):
-        # website._get_pl() is cached to avoid to recompute at each request the
+        # website._get_pl_partner_order() is cached to avoid to recompute at each request the
         # list of available pricelists. So, we need to invalidate the cache when
         # we change the config of website price list to force to recompute.
         website = self.env['website']
@@ -47,6 +51,56 @@ class ProductPricelist(models.Model):
         res = super(ProductPricelist, self).unlink()
         self.clear_cache()
         return res
+
+    def _get_partner_pricelist_multi_search_domain_hook(self):
+        domain = super(ProductPricelist, self)._get_partner_pricelist_multi_search_domain_hook()
+        website = ir_http.get_request_website()
+        if website:
+            domain += self._get_website_pricelists_domain(website.id)
+        return domain
+
+    def _get_partner_pricelist_multi_filter_hook(self):
+        res = super(ProductPricelist, self)._get_partner_pricelist_multi_filter_hook()
+        website = ir_http.get_request_website()
+        if website:
+            res = res.filtered(lambda pl: pl._is_available_on_website(website.id))
+        return res
+
+    @api.multi
+    def _is_available_on_website(self, website_id):
+        """ To be able to be used on a website, a pricelist should either:
+        - Have its `website_id` set to current website (specific pricelist).
+        - Have no `website_id` set and should be `selectable` (generic pricelist)
+          or should have a `code` (generic promotion).
+
+        Note: A pricelist without a website_id, not selectable and without a
+              code is a backend pricelist.
+
+        Change in this method should be reflected in `_get_website_pricelists_domain`.
+        """
+        self.ensure_one()
+        return self.website_id.id == website_id or (not self.website_id and (self.selectable or self.sudo().code))
+
+    def _get_website_pricelists_domain(self, website_id):
+        ''' Check above `_is_available_on_website` for explanation.
+        Change in this method should be reflected in `_is_available_on_website`.
+        '''
+        return [
+            '|', ('website_id', '=', website_id),
+            '&', ('website_id', '=', False),
+            '|', ('selectable', '=', True), ('code', '!=', False),
+        ]
+
+    def _get_partner_pricelist_multi(self, partner_ids, company_id=None):
+        ''' If `property_product_pricelist` is read from website, we should use
+            the website's company and not the user's one.
+            Passing a `company_id` to super will avoid using the current user's
+            company.
+        '''
+        website = ir_http.get_request_website()
+        if not company_id and website:
+            company_id = website.company_id.id
+        return super(ProductPricelist, self)._get_partner_pricelist_multi(partner_ids, company_id)
 
 
 class ProductPublicCategory(models.Model):
@@ -134,7 +188,7 @@ class ProductTemplate(models.Model):
     def _website_price(self):
         current_website = self.env['website'].get_current_website()
         for template in self.with_context(website_id=current_website.id):
-            res = template._get_combination_info(template._get_first_possible_combination())
+            res = template._get_combination_info()
             template.website_price = res.get('price')
             template.website_public_price = res.get('list_price')
             template.website_price_difference = res.get('has_discounted_price')
@@ -164,9 +218,12 @@ class ProductTemplate(models.Model):
     @api.multi
     def _is_quick_add_to_cart_possible(self, parent_combination=None):
         """
-        It's possible to quickly add to cart if there's no optional product
-        and there's only one possible combination, and no attribute is set
-        to dynamic or no_variant, and no value is set to is_custom.
+        It's possible to quickly add to cart if there's no optional product,
+        there's only one possible combination and no value is set to is_custom.
+
+        Attributes set to dynamic or no_variant don't have to be tested
+        specifically because they will be taken into account when checking for
+        the possible combinations.
 
         :param parent_combination: combination from which `self` is an
             optional or accessory product
@@ -179,15 +236,14 @@ class ProductTemplate(models.Model):
 
         if not self._is_add_to_cart_possible(parent_combination):
             return False
-        if len(self._get_possible_variants(parent_combination)) != 1:
-            return False
-        if self._has_no_variant_attributes():
-            return False
-        if self.has_dynamic_attributes():
+        gen = self._get_possible_combinations(parent_combination)
+        first_possible_combination = next(gen)
+        if next(gen, False) is not False:
+            # there are at least 2 possible combinations.
             return False
         if self._has_is_custom_values():
             return False
-        if self.optional_product_ids.filtered(lambda p: p._is_add_to_cart_possible(self._get_first_possible_combination())):
+        if self.optional_product_ids.filtered(lambda p: p._is_add_to_cart_possible(first_possible_combination)):
             return False
         return True
 
@@ -198,7 +254,8 @@ class ProductTemplate(models.Model):
         The order is based on the order of the attributes and their values.
 
         See `_get_possible_variants` for the limitations of this method with
-        dynamic or no_variant attributes.
+        dynamic or no_variant attributes, and also for a warning about
+        performances.
 
         :param parent_combination: combination from which `self` is an
             optional or accessory product
@@ -229,7 +286,7 @@ class ProductTemplate(models.Model):
         return self._get_possible_variants(parent_combination).sorted(_sort_key_variant)
 
     @api.multi
-    def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False):
+    def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False, only_template=False):
         """Override for website, where we want to:
             - take the website pricelist if no pricelist is set
             - apply the b2b/b2c setting to the result
@@ -246,7 +303,9 @@ class ProductTemplate(models.Model):
             if not pricelist:
                 pricelist = current_website.get_current_pricelist()
 
-        combination_info = super(ProductTemplate, self)._get_combination_info(combination, product_id, add_qty, pricelist, parent_combination)
+        combination_info = super(ProductTemplate, self)._get_combination_info(
+            combination=combination, product_id=product_id, add_qty=add_qty, pricelist=pricelist,
+            parent_combination=parent_combination, only_template=only_template)
 
         if self.env.context.get('website_id'):
             partner = self.env.user.partner_id

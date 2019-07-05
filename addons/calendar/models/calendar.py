@@ -323,6 +323,12 @@ class AlarmManager(models.AbstractModel):
                 'rrule': rule
             }
 
+        # determine accessible events
+        events = self.env['calendar.event'].browse(result)
+        result = {
+            key: result[key]
+            for key in set(events._filter_access_rules('read').ids)
+        }
         return result
 
     def do_check_alarm_for_one_date(self, one_date, event, event_maxdelta, in_the_next_X_seconds, alarm_type, after=False, missing=False):
@@ -1129,6 +1135,9 @@ class Meeting(models.Model):
             select_fields = ["id"]
             where_params_list = []
             for pos, arg in enumerate(domain):
+                # hack: if we received recurrent ids, we need to clean them
+                if arg[0] == 'id' and arg[1] in ('in', 'not in'):
+                    arg = (arg[0], arg[1], [calendar_id2real_id(id) for id in arg[2]])
                 if not arg[0] in ('start', 'stop', 'final_date', '&', '|'):
                     e = expression.expression([arg], self)
                     where_clause, where_params = e.to_sql()  # CAUTION, wont work if field is autojoin, not supported

@@ -5,13 +5,15 @@
 # Translators:
 # Sengtha Chay <sengtha@gmail.com>, 2018
 # Chan Nath <channath@gmail.com>, 2018
+# Lux Sok <sok.lux@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Chan Nath <channath@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:15+0000\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2019\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,33 +27,35 @@ msgid ""
 "<br/>\n"
 "                        <strong>Description:</strong>"
 msgstr ""
+"<br/>\n"
+"<strong>ការពិពណ៌នា</strong>"
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "<strong>Name:</strong>"
-msgstr ""
+msgstr "<strong>ឈ្មោះ</strong>"
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_report_account_test_report_accounttest
 msgid "Account Test Report"
-msgstr ""
+msgstr "របាយការណ៍សវនកម្មគណនី"
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_accounting_assert_test
 msgid "Accounting Assert Test"
-msgstr ""
+msgstr "ការធ្វើសវនកម្មគណនេយ្យ"
 
 #. module: account_test
 #: model:ir.actions.act_window,name:account_test.action_accounting_assert
 #: model:ir.actions.report,name:account_test.account_assert_test_report
 #: model:ir.ui.menu,name:account_test.menu_action_license
 msgid "Accounting Tests"
-msgstr ""
+msgstr "សវនកម្មគណនេយ្យ"
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "Accouting tests on"
-msgstr ""
+msgstr "ការធ្វើសវនកម្មទៅលើរបាយការណ៌គណនេយ្យ"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__active
@@ -62,6 +66,8 @@ msgstr "សកម្ម"
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
 msgstr ""
+"ពិនិត្យមើលប្រសិនបើមានការផ្លាស់ប្តូរទៅលើខ្សែសមតុល្យ និងកាលបរិច្ឆេទ "
+"និង​ពេលវេលា"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
@@ -69,11 +75,15 @@ msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of"
 " statement lines"
 msgstr ""
+"ពិនិត្យទៅលើរបាយការណ៌ធានាគារដែលបិទ\n"
+"= សមតុល្យចាប់ផ្តើម+​បូកនៃរបាយការណ៌បន្ទាត់"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
 msgstr ""
+"ពិនិត្យមើលថាវិក័យប័ត្រដែលបានទូទាត់ / មើលលើចរន្តរ ដែលមិនស្ថិតនៅក្នុងស្ថានភាព "
+"'បើក' ទេ"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
@@ -81,6 +91,8 @@ msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
 msgstr ""
+"ពិនិត្យមើលការផ្លាស់ប្តូរគណនីដែលបានផ្សះផ្សាគ្នា, "
+"ដែលកំណត់គណនីបង់និងគណនីដែលទទួលបាន, ជាកម្មសិទ្ធិរបស់វិក័យប័ត្រផ្សារភ្ជាប់គ្នា"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
@@ -88,16 +100,20 @@ msgid ""
 "Check that reconciled invoice for Sales/Purchases has reconciled entries for"
 " Payable and Receivable Accounts"
 msgstr ""
+"ពិនិត្យលើគណនីដែលមានការផ្សាភ្ជាប់វិក័យប័ត្រសំរាប់ការលក់ និង "
+"ការទិញដោយបានបង់ប្រាក់ និង ការទទួលបានពីការអតិថិជនជំពាក់"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
 msgstr ""
+"ពិនិត្យលើសមតុល្យ\n"
+"បូកសរុបឥនពុន្ឋ ស្មើរ និង បូកសរុបឥនទាន"
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Code Help"
-msgstr ""
+msgstr "លេខកូដជំនួយ"
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
@@ -123,11 +139,31 @@ msgid ""
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
+"កូដគួរតែកំណត់អថេរដែលមានឈ្មោះ `លទ្ធផល 'ជាមួយលទ្ធផលនៃការធ្វើតេស្តរបស់អ្នកដែលអាចជាបញ្ជីឬ\n"
+"វចនានុក្រម។ ប្រសិនបើ `លទ្ធផល` គឺជាបញ្ជីទទេមានន័យថាការធ្វើតេស្តបានជោគជ័យ។ បើមិនដូច្នោះទេវានឹង\n"
+"ព្យាយាមបកប្រែនិងបោះពុម្ពអ្វីនៅខាងក្នុង `លទ្ធផល` ។\n"
+"\n"
+"ប្រសិនបើលទ្ធផលនៃការធ្វើតេស្តរបស់អ្នកគឺជាវចនានុក្រមអ្នកអាចកំណត់អថេរដែលមានឈ្មោះ `ជួរឈរជួរឈរ 'ដើម្បីជ្រើសរើស\n"
+"អ្វីដែលអ្នកចង់បោះពុម្ពមាតិការបស់ `លទ្ធផល '។\n"
+"\n"
+"ប្រសិនបើអ្នកត្រូវការវាអ្នកក៏អាចប្រើអថេរដូចខាងក្រោមទៅក្នុងកូដរបស់អ្នកបានដែរ:\n"
+"    * cr: ទស្សន៍ទ្រនិចទៅមូលដ្ឋានទិន្នន័យ\n"
+"    * uid: លេខសម្គាល់របស់អ្នកប្រើបច្ចុប្បន្ន\n"
+"\n"
+"ក្នុងវិធីណាមួយកូដត្រូវតែជាសេចក្តីថ្លែងការណ៍របស់ក្រមច្បាប់ដែលមានការចូលបន្ទាត់ត្រឹមត្រូវ (បើចាំបាច់) ។\n"
+"\n"
+"ឧទាហរណ៍:\n"
+"    sql = '' 'លេខសម្គាល់ឈ្មោះ, ឈ្មោះ, ref, កាលបរិច្ឆេទ\n"
+"             FROM account_move_line\n"
+"             WHERE account_id IN (ជ្រើសរើសលេខសម្គាល់ FROM account_account ប្រភេទ WHERE = 'ទិដ្ឋភាព')\n"
+"          '' '\n"
+"    cr.execute (sql)\n"
+"    លទ្ធផល = cr.dictfetchall ()"
 
 #. module: account_test
 #: model_terms:ir.actions.act_window,help:account_test.action_accounting_assert
 msgid "Create a new accounting test"
-msgstr ""
+msgstr "ការបង្កើត សវនកម្មគណនីថ្មី"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__create_uid
@@ -153,7 +189,7 @@ msgstr "ឈ្មោះសំរាប់បង្ហាញ"
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Expression"
-msgstr ""
+msgstr "ការបញ្ជាក់"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__id
@@ -180,12 +216,12 @@ msgstr "ផ្លាស់ប្តូរចុងក្រោយ"
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Python Code"
-msgstr ""
+msgstr "កូដភូតុន"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__code_exec
 msgid "Python code"
-msgstr ""
+msgstr "ភីតុនកូដ"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__sequence
@@ -195,52 +231,54 @@ msgstr "លំដាប់"
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_01
 msgid "Test 1: General balance"
-msgstr ""
+msgstr "សវកម្មទី1: សមតុល្យទូទៅ"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_03
 msgid "Test 3: Movement lines"
-msgstr ""
+msgstr "តេស្តទី 3: បន្ទាត់ចលនា"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
 msgid ""
 "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
 msgstr ""
+"សាកល្បង 5.1: ការបង់ប្រាក់ទៅម្ជាស់បំណុល និង ការទទួលបាន "
+"នៃវិក្កយបត្រផ្សារភ្ជាប់"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
 msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
-msgstr ""
+msgstr "សាកល្បង 5.2: វិក័យប័ត្រដែលភ្ជាប់និងគណនីទូទាត់ / គណនីដែលអាចទទួលបាន"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06
 msgid "Test 6 : Invoices status"
-msgstr ""
+msgstr "សាកល្បងទី 6: វិក្កយបត្រជាក់ស្តែងតាមស្ថានភាពអនុវត្ត"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
 msgid "Test 7 : Closing balance on bank statements"
-msgstr ""
+msgstr "ការធ្វើតេស្ត 7: តុល្យភាពនៅលើរបាយការណ៍ធនាគារ"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__desc
 msgid "Test Description"
-msgstr ""
+msgstr "ការរៀបរាប់ពីការធ្វើតេស្តសាកល្បង"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__name
 msgid "Test Name"
-msgstr ""
+msgstr "ឈ្មោះសាកល្ប"
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_tree
 msgid "Tests"
-msgstr ""
+msgstr "តេស្តសាល្បង"
 
 #. module: account_test
 #: code:addons/account_test/report/report_account_test.py:53
 #, python-format
 msgid "The test was passed successfully"
-msgstr ""
+msgstr "ការតេស្តសាល្បងត្រូវបានជាប់ដោយជោគជ័យ"

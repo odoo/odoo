@@ -8,13 +8,15 @@
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
 # gebri <gebri@inmail.sk>, 2018
+# Jan Prokop, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:33+0000\n"
+"Last-Translator: Jan Prokop, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,12 +32,12 @@ msgstr "Aktívne"
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid "Add a new unit of measure"
-msgstr ""
+msgstr "Pridaj novú mernú jednotku."
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
 msgid "Add a new unit of measure category"
-msgstr ""
+msgstr "Pridaj novú kategóriu mernej jednotky."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
@@ -100,6 +102,8 @@ msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
+"Koľko ráz je táto merná jednotka väčšia ako referenčná merná jednotka v tejto kategórii:\n"
+"1 * (táto jednotka) = pomer * (referenčná jednotka)"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor
@@ -107,6 +111,8 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"O koľko väčšia alebo menšia je táto jednotka v porovnaní s referenčnou mernou jednotkou pre túto kategóriu:\n"
+"1 * (referenčná jednotka) = pomer * (táto jednotka)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
@@ -160,7 +166,7 @@ msgstr "Merná jednotka produktu"
 #. module: uom
 #: model:ir.model,name:uom.model_uom_category
 msgid "Product UoM Categories"
-msgstr ""
+msgstr "Kategórie merných jednotiek produktu"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
@@ -199,12 +205,12 @@ msgstr "Pomer konverzie pre mernú jednotku nemôže byť 0!"
 #. module: uom
 #: sql_constraint:uom.uom:0
 msgid "The reference unit must have a conversion factor equal to 1."
-msgstr ""
+msgstr "Referenčná jednotka musí mať prepočítavací faktor rovný 1."
 
 #. module: uom
 #: sql_constraint:uom.uom:0
 msgid "The rounding precision must be strictly positive."
-msgstr ""
+msgstr "Presnosť zaokrúhľovania musí byť pozitívna."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:152
@@ -215,6 +221,10 @@ msgid ""
 "the unit of measure defined on the order line or on the product, they should"
 " belong to the same category."
 msgstr ""
+"Merná jednotka %s definovaná na riadku objednávky nezodpovedá rovnakej "
+"kategórii ako merná jednotka %s definovaná pre produkt. Opravte mernú "
+"jednotku na riadku objednávky alebo v produkte, aby prislúchali rovnakej "
+"kategórii."
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -229,18 +239,20 @@ msgstr "Typ"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__measure_type
 msgid "Type of Measure"
-msgstr ""
+msgstr "Typ merania"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__measure_type
 msgid "Type of measurement category"
-msgstr ""
+msgstr "Typ kategórie merania"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
+"Po odškrtnutí aktívneho políčka, môžete skryť mernú jednotku bez jej "
+"odstránenia."
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
@@ -270,7 +282,7 @@ msgstr "ks"
 #. module: uom
 #: selection:uom.category,measure_type:0
 msgid "Units"
-msgstr ""
+msgstr "ks"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
@@ -292,6 +304,9 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
+"Merné jednotky rovnakej kategórie môžu byť prepočítavané medzi sebou. Napríklad v kategórii\n"
+"            <i>'Čas'</i>, môžete mať nasledovné merné jednotky:\n"
+"            hodiny, dni."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:93
@@ -300,12 +315,15 @@ msgid ""
 "UoM category %s should have a reference unit of measure. If you just created"
 " a new category, please record the 'reference' unit first."
 msgstr ""
+"Kategória mernej jednotky môže mať len jednu referenčnú mernú jednotku, "
+"zaznamenaj ju najprv prosím. "
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:95
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
 msgstr ""
+"Kategória mernej jednotky %s môže mať len jednu referenčnú mernú jednotku."
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -327,13 +345,13 @@ msgstr "Pracovný čas"
 #. module: uom
 #: sql_constraint:uom.category:0
 msgid "You can have only one category per measurement type."
-msgstr ""
+msgstr "Možno mať len jednu kategóriu pre typ merania."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:28
 #, python-format
 msgid "You cannot delete this UoM Category as it is used by the system."
-msgstr ""
+msgstr "Nemožno vymazať túto mernú jednotky, je používaná systémom."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:115
@@ -342,6 +360,8 @@ msgid ""
 "You cannot delete this UoM as it is used by the system. You should rather "
 "archive it."
 msgstr ""
+"Nemožno vymazať túto mernú jednotky, je používaná systémom. Radšej ju "
+"zaarchivujte."
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
@@ -349,6 +369,8 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
+"Musíte definovať prepočítavací pomer medzi viacerými mernými\n"
+"jednotkami v tej istej kategórii."
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cm
@@ -413,4 +435,4 @@ msgstr "oz(s)"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt
 msgid "qt"
-msgstr "množ"
+msgstr "štvrtinka (quart)"

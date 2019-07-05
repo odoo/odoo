@@ -4,6 +4,7 @@
 import re
 import logging
 from odoo import api, fields, models
+from odoo.osv import expression
 from psycopg2 import IntegrityError
 from odoo.tools.translate import _
 _logger = logging.getLogger(__name__)
@@ -119,12 +120,24 @@ class CountryState(models.Model):
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        if args is None:
-            args = []
+        args = args or []
         if self.env.context.get('country_id'):
-            args = args + [('country_id', '=', self.env.context.get('country_id'))]
-        first_state_ids = self._search([('code', '=ilike', name)] + args, limit=limit, access_rights_uid=name_get_uid)
-        search_domain = [('name', operator, name)]
-        search_domain.append(('id', 'not in', first_state_ids))
-        state_ids = first_state_ids + self._search(search_domain + args, limit=limit, access_rights_uid=name_get_uid)
-        return [(state.id, state.display_name) for state in self.browse(state_ids)]
+            args = expression.AND([args, [('country_id', '=', self.env.context.get('country_id'))]])
+
+        if operator == 'ilike' and not (name or '').strip():
+            first_domain = []
+            domain = []
+        else:
+            first_domain = [('code', '=ilike', name)]
+            domain = [('name', operator, name)]
+
+        first_state_ids = self._search(expression.AND([first_domain, args]), limit=limit, access_rights_uid=name_get_uid) if first_domain else []
+        state_ids = first_state_ids + [state_id for state_id in self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid) if not state_id in first_state_ids]
+        return self.browse(state_ids).name_get()
+
+    @api.multi
+    def name_get(self):
+        result = []
+        for record in self:
+            result.append((record.id, "{} ({})".format(record.name, record.country_id.code)))
+        return result

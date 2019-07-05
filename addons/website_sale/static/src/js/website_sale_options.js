@@ -23,10 +23,9 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
 
         this.isWebsite = true;
 
+        delete this.events['change .css_attribute_color input'];
+        delete this.events['change .main_product:not(.in_cart) input.js_quantity'];
         delete this.events['change [data-attribute_exclusions]'];
-        delete this.events['click input.js_product_change'];
-        delete this.events['change input.js_quantity'];
-        delete this.events['click button.js_add_cart_json'];
     },
 
     //--------------------------------------------------------------------------
@@ -130,11 +129,20 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
      * @param {integer} quantity
      */
     _onOptionsUpdateQuantity: function (quantity) {
-        this.$form
-            .find('input[name="add_qty"]')
-            .first()
-            .val(quantity)
-            .trigger('change');
+        var $qtyInput = this.$form
+            .find('.js_main_product input[name="add_qty"]')
+            .first();
+
+        if ($qtyInput.length) {
+            $qtyInput.val(quantity).trigger('change');
+        } else {
+            // This handles the case when the "Select Quantity" customize show
+            // is disabled, and therefore the above selector does not find an
+            // element.
+            // To avoid duplicating all RPC, only trigger the variant change if
+            // it is not already done from the above trigger.
+            this.optionalProductsModal.triggerVariantChange(this.optionalProductsModal.$el);
+        }
     },
 
     /**

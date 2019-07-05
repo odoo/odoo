@@ -701,6 +701,7 @@
             <field name="code">hr</field>
             <field file="base/static/img/country_flags/hr.png" name="image" type="base64" />
             <field name="currency_id" ref="HRK" />
+            <field eval="'%(street)s \n%(street2)s \n%(zip)s %(city)s \n%(country_name)s'" name="address_format" />
             <field eval="385" name="phone_code" />
             <field name="vat_label">VAT</field>
         </record>
@@ -1105,6 +1106,7 @@
             <field name="code">mu</field>
             <field file="base/static/img/country_flags/mu.png" name="image" type="base64" />
             <field name="currency_id" ref="MUR" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field eval="230" name="phone_code" />
         </record>
         <record id="mv" model="res.country">

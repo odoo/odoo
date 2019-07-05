@@ -297,7 +297,61 @@ QUnit.test('parse percentage', function(assert) {
 
     core._t.database.parameters = originalParameters;
 
-})
+});
+
+QUnit.test('parse datetime', function (assert) {
+    assert.expect(5);
+
+    var originalParameters = _.clone(core._t.database.parameters);
+    var originalLocale = moment.locale();
+    var dateStr, date1, date2;
+
+    moment.defineLocale('englishForTest', {
+        dayOfMonthOrdinalParse: /\d{1,2}(st|nd|rd|th)/,
+        ordinal: function (number) {
+            var b = number % 10,
+                output = (~~(number % 100 / 10) === 1) ? 'th' :
+                (b === 1) ? 'st' :
+                (b === 2) ? 'nd' :
+                (b === 3) ? 'rd' : 'th';
+            return number + output;
+        },
+    });
+
+    moment.defineLocale('norvegianForTest', {
+        monthsShort: 'jan._feb._mars_april_mai_juni_juli_aug._sep._okt._nov._des.'.split('_'),
+        monthsParseExact: true,
+        dayOfMonthOrdinalParse: /\d{1,2}\./,
+        ordinal: '%d.',
+    });
+
+    moment.locale('englishForTest');
+    _.extend(core._t.database.parameters, {date_format: '%m/%d/%Y', time_format: '%H:%M:%S'});
+    assert.throws(function () {fieldUtils.parse.datetime("13/01/2019 12:00:00", {}, {})}, /is not a correct/, "Wrongly formated dates should be invalids");
+    assert.throws(function () {fieldUtils.parse.datetime("1899-01-01 12:00:00", {}, {})}, /is not a correct/, "Dates before 1900 should be invalids");
+
+    dateStr = '01/13/2019 10:05:45';
+    date1 = fieldUtils.parse.datetime(dateStr);
+    date2 = moment.utc(dateStr, ['MM/DD/YYYY HH:mm:ss'], true);
+    assert.equal(date1.format(), date2.format(), "Date with leading 0");
+
+    dateStr = '1/14/2019 10:5:45';
+    date1 = fieldUtils.parse.datetime(dateStr);
+    date2 = moment.utc(dateStr, ['M/D/YYYY H:m:s'], true);
+    assert.equal(date1.format(), date2.format(), "Date without leading 0");
+
+    moment.locale('norvegianForTest');
+    _.extend(core._t.database.parameters, {date_format: '%d. %b %Y', time_format: '%H:%M:%S'});
+    dateStr = '16. jan. 2019 10:05:45';
+    date1 = fieldUtils.parse.datetime(dateStr);
+    date2 = moment.utc(dateStr, ['DD. MMM YYYY HH:mm:ss'], true);
+    assert.equal(date1.format(), date2.format(), "Day/month inverted + month i18n");
+
+    moment.locale(originalLocale);
+    moment.updateLocale("englishForTest", null);
+    moment.updateLocale("norvegianForTest", null);
+    core._t.database.parameters = originalParameters;
+});
 
 });
 });

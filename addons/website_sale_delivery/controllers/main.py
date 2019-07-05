@@ -69,7 +69,7 @@ class WebsiteSaleDelivery(WebsiteSale):
             return {'status': order.delivery_rating_success,
                     'error_message': order.delivery_message,
                     'carrier_id': carrier_id,
-                    'new_amount_delivery': self._format_amount(order.delivery_price, currency),
+                    'new_amount_delivery': self._format_amount(order.amount_delivery, currency),
                     'new_amount_untaxed': self._format_amount(order.amount_untaxed, currency),
                     'new_amount_tax': self._format_amount(order.amount_tax, currency),
                     'new_amount_total': self._format_amount(order.amount_total, currency),

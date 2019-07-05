@@ -8,6 +8,7 @@ import logging
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.osv import expression
 from odoo.tools.translate import _
 from odoo.tools.float_utils import float_round
 
@@ -161,20 +162,32 @@ class HolidaysType(models.Model):
 
         for request in requests:
             status_dict = result[request.holiday_status_id.id]
-            status_dict['virtual_remaining_leaves'] -= request.number_of_days
+            status_dict['virtual_remaining_leaves'] -= (request.number_of_hours_display
+                                                    if request.leave_type_request_unit == 'hour'
+                                                    else request.number_of_days)
             if request.state == 'validate':
-                status_dict['leaves_taken'] += request.number_of_days
-                status_dict['remaining_leaves'] -= request.number_of_days
+                status_dict['leaves_taken'] += (request.number_of_hours_display
+                                            if request.leave_type_request_unit == 'hour'
+                                            else request.number_of_days)
+                status_dict['remaining_leaves'] -= (request.number_of_hours_display
+                                                if request.leave_type_request_unit == 'hour'
+                                                else request.number_of_days)
 
-        for allocation in allocations:
+        for allocation in allocations.sudo():
             status_dict = result[allocation.holiday_status_id.id]
             if allocation.state == 'validate':
                 # note: add only validated allocation even for the virtual
                 # count; otherwise pending then refused allocation allow
                 # the employee to create more leaves than possible
-                status_dict['virtual_remaining_leaves'] += allocation.number_of_days
-                status_dict['max_leaves'] += allocation.number_of_days
-                status_dict['remaining_leaves'] += allocation.number_of_days
+                status_dict['virtual_remaining_leaves'] += (allocation.number_of_hours_display
+                                                          if allocation.type_request_unit == 'hour'
+                                                          else allocation.number_of_days)
+                status_dict['max_leaves'] += (allocation.number_of_hours_display
+                                            if allocation.type_request_unit == 'hour'
+                                            else allocation.number_of_days)
+                status_dict['remaining_leaves'] += (allocation.number_of_hours_display
+                                                  if allocation.type_request_unit == 'hour'
+                                                  else allocation.number_of_days)
 
         return result
 
@@ -204,9 +217,18 @@ class HolidaysType(models.Model):
 
     @api.multi
     def _compute_group_days_allocation(self):
+        domain = [
+            ('holiday_status_id', 'in', self.ids),
+            ('holiday_type', '!=', 'employee'),
+            ('state', '=', 'validate'),
+        ]
+        domain2 = [
+            '|',
+            ('date_from', '>=', fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0))),
+            ('date_from', '=', False),
+        ]
         grouped_res = self.env['hr.leave.allocation'].read_group(
-            [('holiday_status_id', 'in', self.ids), ('holiday_type', '!=', 'employee'), ('state', '=', 'validate'),
-             ('date_from', '>=', fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)))],
+            expression.AND([domain, domain2]),
             ['holiday_status_id', 'number_of_days'],
             ['holiday_status_id'],
         )
@@ -237,7 +259,10 @@ class HolidaysType(models.Model):
             if record.allocation_type != 'no':
                 name = "%(name)s (%(count)s)" % {
                     'name': name,
-                    'count': _('%g remaining out of %g') % (float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0, float_round(record.max_leaves, precision_digits=2) or 0.0)
+                    'count': _('%g remaining out of %g') % (
+                        float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0,
+                        float_round(record.max_leaves, precision_digits=2) or 0.0,
+                    ) + (_(' hours') if record.request_unit == 'hour' else _(' days'))
                 }
             res.append((record.id, name))
         return res
@@ -267,11 +292,16 @@ class HolidaysType(models.Model):
     def action_see_days_allocated(self):
         self.ensure_one()
         action = self.env.ref('hr_holidays.hr_leave_allocation_action_all').read()[0]
-        action['domain'] = [
+        domain = [
+            ('holiday_status_id', 'in', self.ids),
             ('holiday_type', '!=', 'employee'),
-            ('holiday_status_id', '=', self.ids[0]),
-            ('date_from', '>=', fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)))
         ]
+        domain2 = [
+            '|',
+            ('date_from', '>=', fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0))),
+            ('date_from', '=', False),
+        ]
+        action['domain'] = expression.AND([domain, domain2])
         action['context'] = {
             'default_holiday_type': 'department',
             'default_holiday_status_id': self.ids[0],

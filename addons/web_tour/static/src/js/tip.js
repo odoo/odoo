@@ -8,6 +8,7 @@ var _t = core._t;
 
 var Tip = Widget.extend({
     template: "Tip",
+    xmlDependencies: ['/web_tour/static/src/xml/tip.xml'],
     events: {
         click: '_onTipClicked',
         mouseenter: "_to_info_mode",
@@ -145,6 +146,7 @@ var Tip = Widget.extend({
     },
     _reposition: function () {
         if (this.tip_opened) return;
+        if (!this.$el) return;
         this.$el.removeClass("o_animated");
 
         // Reverse left/right position if direction is right to left

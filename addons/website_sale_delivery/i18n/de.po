@@ -4,19 +4,20 @@
 # 
 # Translators:
 # e2f <projects@e2f.com>, 2018
-# Martin Trigaux, 2018
 # Felix Schubert <felix.schubert@go-erp.com>, 2018
 # Wolfgang Taferner, 2018
 # Mathias Neef <mn@copado.de>, 2018
-# Ermin Trevisan <trevi@twanda.com>, 2018
+# Martin Trigaux, 2018
 # Johannes Croe <jcr@odoo.com>, 2018
+# Chris Egal <sodaswed@web.de>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Johannes Croe <jcr@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-03-29 10:10+0000\n"
+"PO-Revision-Date: 2018-08-24 09:35+0000\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,11 +72,12 @@ msgstr "Auslieferungsmethoden"
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
 msgid "Delivery will be updated after choosing a new delivery method"
 msgstr ""
+"Die Lieferung wird nach Auswahl einer neuen Liefermethode aktualisiert"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
 msgid "Delivery:"
-msgstr ""
+msgstr "Lieferung:"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
@@ -95,7 +97,7 @@ msgstr "Beschreibung für Online-Angebote"
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "Easypost Delivery Methods"
-msgstr ""
+msgstr "Easypost Liefermethoden"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
@@ -103,7 +105,10 @@ msgid "FedEx Delivery Methods"
 msgstr "FedEx Liefermethoden"
 
 #. module: website_sale_delivery
+#. openerp-web
+#: code:addons/website_sale_delivery/static/src/js/website_sale_delivery.js:29
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
+#, python-format
 msgid "Free"
 msgstr "Verfügbar"
 
@@ -118,11 +123,6 @@ msgid "Has delivery"
 msgstr "Lieferung vorhanden"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__is_published
-msgid "Is published"
-msgstr ""
-
-#. module: website_sale_delivery
 #: code:addons/website_sale_delivery/controllers/main.py:44
 #, python-format
 msgid ""
@@ -134,28 +134,9 @@ msgstr ""
 "für weitere Informationen."
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__website_order_line
-msgid "Order Lines displayed on Website"
-msgstr "Auf der Website anzuzeigende Angebotsposten"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_sale_order__website_order_line
-msgid ""
-"Order Lines to be displayed on the website. They should not be used for "
-"computation purpose."
-msgstr ""
-"Angebotspositionen zur Anzeige auf der Website. Sie sollten nicht für "
-"Berechnung eingesetzt werden."
-
-#. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
 msgid "Published"
 msgstr "Veröffentlicht"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_id
-msgid "Restrict publishing to this website."
-msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
@@ -165,7 +146,7 @@ msgstr "Verkaufsauftrag"
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
 msgid "Select to compute delivery rate"
-msgstr ""
+msgstr "Wählen Sie diese Option, um die Zustellrate zu berechnen"
 
 #. module: website_sale_delivery
 #: code:addons/website_sale_delivery/controllers/main.py:43
@@ -179,12 +160,6 @@ msgid "The amount without tax."
 msgstr "Nettobetrag"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_url
-msgid "The full URL to access the document through the website."
-msgstr ""
-"Die vollständige URL mit der das Dokument überall aufgerufen werden kann."
-
-#. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale_delivery
 msgid "Tracking:"
 msgstr "Tracking:"
@@ -193,21 +168,6 @@ msgstr "Tracking:"
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "USPS Delivery Methods"
 msgstr "USPS Liefermethoden"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_published
-msgid "Visible on current website"
-msgstr ""
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_id
-msgid "Website"
-msgstr "Website"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_url
-msgid "Website URL"
-msgstr "Website URL"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form

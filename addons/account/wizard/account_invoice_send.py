@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo import api, fields, models, _
+from odoo.addons.mail.wizard.mail_compose_message import _reopen
 
 
 class AccountInvoiceSend(models.TransientModel):
@@ -11,6 +11,7 @@ class AccountInvoiceSend(models.TransientModel):
     _description = 'Account Invoice Send'
 
     is_email = fields.Boolean('Email', default=lambda self: self.env.user.company_id.invoice_is_email)
+    invoice_without_email = fields.Text(compute='_compute_invoice_without_email', string='invoice(s) that will not be sent')
     is_print = fields.Boolean('Print', default=lambda self: self.env.user.company_id.invoice_is_print)
     printed = fields.Boolean('Is Printed', default=False)
     invoice_ids = fields.Many2many('account.invoice', 'account_invoice_account_invoice_send_rel', string='Invoices')
@@ -45,6 +46,22 @@ class AccountInvoiceSend(models.TransientModel):
             self.composer_id.template_id = self.template_id.id
             self.composer_id.onchange_template_id_wrapper()
 
+    @api.onchange('is_email')
+    def _compute_invoice_without_email(self):
+        for wizard in self:
+            if wizard.is_email and len(wizard.invoice_ids) > 1:
+                invoices = self.env['account.invoice'].search([
+                    ('id', 'in', self.env.context.get('active_ids')),
+                    ('partner_id.email', '=', False)
+                ])
+                if invoices:
+                    wizard.invoice_without_email = "%s\n%s" % (
+                        _("The following invoice(s) will not be sent by email, because the customers don't have email address."),
+                        "\n".join([i.reference for i in invoices])
+                        )
+                else:
+                    wizard.invoice_without_email = False
+
     @api.multi
     def _send_email(self):
         if self.is_email:
@@ -67,3 +84,11 @@ class AccountInvoiceSend(models.TransientModel):
         if self.is_print:
             return self._print_document()
         return {'type': 'ir.actions.act_window_close'}
+
+    @api.multi
+    def save_as_template(self):
+        self.ensure_one()
+        self.composer_id.save_as_template()
+        action = _reopen(self, self.id, self.model, context=self._context)
+        action.update({'name': _('Send Invoice')})
+        return action

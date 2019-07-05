@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tax_input_vat" model="account.tax.template">
+        <field name="chart_template_id" ref="chart"/>
+        <field name="name">Input VAT</field>
+        <field name="amount_type">percent</field>
+        <field name="amount" eval="7"/>
+        <field name="account_id" ref="a_input_vat"/>
+        <field name="refund_account_id" ref="a_input_vat"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_th_22'), ref('tag_th_11')])]"/>
+        <field name="tax_group_id" ref="tax_group_vat_7"/>
+    </record>
+    <record id="tax_output_vat" model="account.tax.template">
+        <field name="chart_template_id" ref="chart"/>
+        <field name="name">Output VAT</field>
+        <field name="amount_type">percent</field>
+        <field name="amount" eval="7"/>
+        <field name="account_id" ref="a_output_vat"/>
+        <field name="refund_account_id" ref="a_output_vat"/>
+        <field name="type_tax_use">sale</field>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_th_21'), ref('tag_th_10')])]"/>
+        <field name="tax_group_id" ref="tax_group_vat_7"/>
+    </record>
+    <record id="tax_wht_co_1" model="account.tax.template">
+        <field name="chart_template_id" ref="chart"/>
+        <field name="name">Company Withholding Tax 1% (Transportation)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount" eval="-1"/>
+        <field name="account_id" ref="a_wht"/>
+        <field name="refund_account_id" ref="a_wht"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_th_19'),ref('tag_th_08')])]"/>
+        <field name="tax_group_id" ref="tax_group_1"/>
+    </record>
+    <record id="tax_wht_co_2" model="account.tax.template">
+        <field name="chart_template_id" ref="chart"/>
+        <field name="name">Company Withholding Tax 2% (Advertising)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount" eval="-2"/>
+        <field name="account_id" ref="a_wht"/>
+        <field name="refund_account_id" ref="a_wht"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_th_19'),ref('tag_th_08')])]"/>
+        <field name="tax_group_id" ref="tax_group_2"/>
+    </record>
+    <record id="tax_wht_co_3" model="account.tax.template">
+        <field name="chart_template_id" ref="chart"/>
+        <field name="name">Company Withholding Tax 3% (Service)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount" eval="-3"/>
+        <field name="account_id" ref="a_wht"/>
+        <field name="refund_account_id" ref="a_wht"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_th_18'),ref('tag_th_07')])]"/>
+        <field name="tax_group_id" ref="tax_group_3"/>
+    </record>
+    <record id="tax_wht_co_5" model="account.tax.template">
+        <field name="chart_template_id" ref="chart"/>
+        <field name="name">Company Withholding Tax 5% (Rental)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount" eval="-5"/>
+        <field name="account_id" ref="a_wht"/>
+        <field name="refund_account_id" ref="a_wht"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_th_19'),ref('tag_th_08')])]"/>
+        <field name="tax_group_id" ref="tax_group_5"/>
+    </record>
+    <record id="tax_wht_pers_1" model="account.tax.template">
+        <field name="chart_template_id" ref="chart"/>
+        <field name="name">Personal Withholding Tax 1% (Transportation)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount" eval="-1"/>
+        <field name="account_id" ref="a_wht"/>
+        <field name="refund_account_id" ref="a_wht"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_th_05'),ref('tag_th_19')])]"/>
+        <field name="tax_group_id" ref="tax_group_1"/>
+    </record>
+    <record id="tax_wht_pers_2" model="account.tax.template">
+        <field name="chart_template_id" ref="chart"/>
+        <field name="name">Personal Withholding Tax 2% (Advertising)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount" eval="-2"/>
+        <field name="account_id" ref="a_wht"/>
+        <field name="refund_account_id" ref="a_wht"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_th_05'),ref('tag_th_19')])]"/>
+        <field name="tax_group_id" ref="tax_group_2"/>
+    </record>
+    <record id="tax_wht_pers_3" model="account.tax.template">
+        <field name="chart_template_id" ref="chart"/>
+        <field name="name">Personal Withholding Tax 3% (Service)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount" eval="-3"/>
+        <field name="account_id" ref="a_wht"/>
+        <field name="refund_account_id" ref="a_wht"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_th_15'),ref('tag_th_04')])]"/>
+        <field name="tax_group_id" ref="tax_group_3"/>
+    </record>
+    <record id="tax_wht_pers_5" model="account.tax.template">
+        <field name="chart_template_id" ref="chart"/>
+        <field name="name">Personal Withholding Tax 5% (Rental)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount" eval="-5"/>
+        <field name="account_id" ref="a_wht"/>
+        <field name="refund_account_id" ref="a_wht"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_th_05'),ref('tag_th_19')])]"/>
+        <field name="tax_group_id" ref="tax_group_5"/>
+    </record>
+    <record id="tax_wht_income_1" model="account.tax.template">
+        <field name="chart_template_id" ref="chart"/>
+        <field name="name">Withholding Income Tax 1% (Transportation)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount" eval="-1"/>
+        <field name="account_id" ref="a_wht_income"/>
+        <field name="refund_account_id" ref="a_wht_income"/>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_1"/>
+    </record>
+    <record id="tax_wht_income_2" model="account.tax.template">
+        <field name="chart_template_id" ref="chart"/>
+        <field name="name">Withholding Income Tax 2% (Advertising)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount" eval="-2"/>
+        <field name="account_id" ref="a_wht_income"/>
+        <field name="refund_account_id" ref="a_wht_income"/>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_2"/>
+    </record>
+    <record id="tax_wht_income_3" model="account.tax.template">
+        <field name="chart_template_id" ref="chart"/>
+        <field name="name">Withholding Income Tax 3% (Service)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount" eval="-3"/>
+        <field name="account_id" ref="a_wht_income"/>
+        <field name="refund_account_id" ref="a_wht_income"/>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_3"/>
+    </record>
+    <record id="tax_wht_income_5" model="account.tax.template">
+        <field name="chart_template_id" ref="chart"/>
+        <field name="name">Withholding Income Tax 5% (Rental)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount" eval="-5"/>
+        <field name="account_id" ref="a_wht_income"/>
+        <field name="refund_account_id" ref="a_wht_income"/>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_5"/>
+    </record>
+</odoo>

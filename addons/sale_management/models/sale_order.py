@@ -31,7 +31,8 @@ class SaleOrder(models.Model):
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         super(SaleOrder, self).onchange_partner_id()
-        self.note = self.sale_order_template_id.note or self.note
+        template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
+        self.note = template.note or self.note
 
     def _compute_line_data_for_template_change(self, line):
         return {
@@ -114,6 +115,21 @@ class SaleOrder(models.Model):
                 self.sale_order_template_id.mail_template_id.send_mail(order.id)
         return res
 
+    @api.multi
+    def get_access_action(self, access_uid=None):
+        """ Instead of the classic form view, redirect to the online quote if it exists. """
+        self.ensure_one()
+        user = access_uid and self.env['res.users'].sudo().browse(access_uid) or self.env.user
+
+        if not self.sale_order_template_id or (not user.share and not self.env.context.get('force_website')):
+            return super(SaleOrder, self).get_access_action(access_uid)
+        return {
+            'type': 'ir.actions.act_url',
+            'url': self.get_portal_url(),
+            'target': 'self',
+            'res_id': self.id,
+        }
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
@@ -194,4 +210,5 @@ class SaleOrderOption(models.Model):
             'product_uom_qty': self.quantity,
             'product_uom': self.uom_id.id,
             'discount': self.discount,
+            'company_id': self.order_id.company_id.id,
         }

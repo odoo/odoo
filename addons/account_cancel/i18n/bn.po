@@ -1,20 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_cancel
-#
+# 
 # Translators:
+# Abu Zafar <azmikbal@gmail.com>, 2019
+# Majedul islam <majed.rifat@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-09-07 15:52+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Bengali (http://www.transifex.com/odoo/odoo-9/language/bn/)\n"
-"Language: bn\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:15+0000\n"
+"Last-Translator: Majedul islam <majed.rifat@gmail.com>, 2019\n"
+"Language-Team: Bengali (https://www.transifex.com/odoo/teams/41243/bn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: bn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_cancel
@@ -23,29 +26,23 @@ msgid "Bank Statement"
 msgstr ""
 
 #. module: account_cancel
-#: model:ir.model,name:account_cancel.model_account_bank_statement_line
-msgid "Bank Statement Line"
-msgstr ""
-
-#. module: account_cancel
-#: model_terms:ir.ui.view,arch_db:account_cancel.bank_statement_cancel_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_cancel.invoice_form_cancel_inherit
+#: model_terms:ir.ui.view,arch_db:account_cancel.invoice_supplier_cancel_form_inherit
 #: model_terms:ir.ui.view,arch_db:account_cancel.payment_cancel_form_inherit
 msgid "Cancel"
 msgstr "বাতিল"
 
 #. module: account_cancel
-#: model_terms:ir.ui.view,arch_db:account_cancel.invoice_form_cancel_inherit
-#: model_terms:ir.ui.view,arch_db:account_cancel.invoice_supplier_cancel_form_inherit
-msgid "Cancel Invoice"
-msgstr "চালান বাতিল"
-
-#. module: account_cancel
-#: code:addons/account_cancel/models/account_bank_statement.py:28
-#, python-format
-msgid "Please set the bank statement to New before canceling."
+#: model_terms:ir.ui.view,arch_db:account_cancel.view_move_form_inherit_account_cancel
+msgid "Cancel Entry"
 msgstr ""
 
 #. module: account_cancel
 #: model_terms:ir.ui.view,arch_db:account_cancel.bank_statement_draft_form_inherit
 msgid "Reset to New"
+msgstr "নতুন ভাবে শুরু করুন "
+
+#. module: account_cancel
+#: model_terms:ir.ui.view,arch_db:account_cancel.bank_statement_cancel_form_inherit
+msgid "Revert reconciliation"
 msgstr ""

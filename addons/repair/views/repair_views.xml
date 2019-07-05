@@ -79,6 +79,7 @@
                                     <page string="Repair Line">
                                         <group>
                                             <group>
+                                                <field name="type"/>
                                                 <field name="product_id"/>
                                                 <field name="name"/>
                                                 <label for="product_uom_qty"/>
@@ -86,7 +87,6 @@
                                                     <field name="product_uom_qty"/>
                                                     <field name="product_uom" groups="uom.group_uom"/>
                                                 </div>
-                                                <field name="type" invisible="1"/>
                                                 <field name="price_unit"/>
                                                 <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
                                                 <field name="invoiced" invisible="1"/>
@@ -137,7 +137,7 @@
                         <field name="fees_lines">
                             <form string="Fees">
                                 <group>
-                                    <field name="product_id"/>
+                                    <field name="product_id" domain="[('type','=','service')]" required="True"/>
                                     <field name="name"/>
                                     <label for="product_uom_qty"/>
                                     <div class="o_row">
@@ -206,7 +206,7 @@
                                     <strong><span><t t-esc="record.name.value"/></span></strong>
                                 </div>
                                 <div class="col-6 text-right">
-                                    <span class="badge badge-secondary"><field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'info', 'cancel': 'danger', 'done': 'success', 'under_repair': 'dafault'}}"/></span>
+                                    <span class="badge badge-secondary"><field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'cancel': 'danger', 'done': 'success', 'under_repair': 'dafault'}}"/></span>
                                 </div>
                             </div>
                             <div class="row">

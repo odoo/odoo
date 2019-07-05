@@ -210,15 +210,17 @@ var KanbanController = BasicController.extend({
      */
     _onAddColumn: function (event) {
         var self = this;
-        this.model.createGroup(event.data.value, this.handle).then(function () {
-            var state = self.model.get(self.handle, {raw: true});
-            var ids = _.pluck(state.data, 'res_id').filter(_.isNumber);
-            return self._resequenceColumns(ids);
-        }).then(function () {
-            return self.update({}, {reload: false});
-        }).then(function () {
-            self._updateButtons();
-            self.renderer.quickCreateToggleFold();
+        this.mutex.exec(function () {
+            return self.model.createGroup(event.data.value, self.handle).then(function () {
+                var state = self.model.get(self.handle, {raw: true});
+                var ids = _.pluck(state.data, 'res_id').filter(_.isNumber);
+                return self._resequenceColumns(ids);
+            }).then(function () {
+                return self.update({}, {reload: false});
+            }).then(function () {
+                self._updateButtons();
+                self.renderer.quickCreateToggleFold();
+            });
         });
     },
     /**
@@ -271,11 +273,16 @@ var KanbanController = BasicController.extend({
      * @private
      */
     _onButtonNew: function () {
+        var self = this;
         var state = this.model.get(this.handle, {raw: true});
         var quickCreateEnabled = this.quickCreateEnabled && viewUtils.isQuickCreateEnabled(state);
         if (this.on_create === 'quick_create' && quickCreateEnabled && state.data.length) {
-            // Activate the quick create in the first column
-            this.renderer.addQuickCreate();
+            // activate the quick create in the first column when the mutex is
+            // unlocked, to ensure that there is no pending re-rendering that
+            // would remove it (e.g. if we are currently adding a new column)
+            this.mutex.getUnlockedDef().then(function () {
+                self.renderer.addQuickCreate();
+            });
         } else if (this.on_create && this.on_create !== 'quick_create') {
             // Execute the given action
             this.do_action(this.on_create, {

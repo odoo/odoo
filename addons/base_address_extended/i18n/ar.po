@@ -4,14 +4,15 @@
 # 
 # Translators:
 # amrnegm <amrnegm.01@gmail.com>, 2018
-# Osoul <baruni@osoul.ly>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Osoul <baruni@osoul.ly>, 2018\n"
+"POT-Creation-Date: 2018-09-18 09:48+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,11 +26,12 @@ msgid ""
 "Change how the system computes the full street field based on the different "
 "street subfields"
 msgstr ""
+"تغيير كيفية استيعاب النظام لحقل العنوان الكامل حسب حقوله الفرعية المختلفة"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_company
 msgid "Companies"
-msgstr "المؤسسات"
+msgstr "الشركات"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_partner
@@ -45,14 +47,14 @@ msgstr "دولة"
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number2
 msgid "Door"
-msgstr ""
+msgstr "الباب"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number2
 #: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number2
 #: model:ir.model.fields,help:base_address_extended.field_res_users__street_number2
 msgid "Door Number"
-msgstr ""
+msgstr "رقم الباب"
 
 #. module: base_address_extended
 #: model:ir.model.fields,help:base_address_extended.field_res_country__street_format
@@ -64,47 +66,53 @@ msgid ""
 "%(street_number)s: the house number\n"
 "%(street_number2)s: the door number"
 msgstr ""
+"التنسيق المستخدم للعناوين بهذه الدول.\n"
+"يمكنك استخدام نمط كتابة لغة بايثون لتسجيل جميع تفاصيل العنوان (مثلًا: استخدم '%(street_name)s, %(street_number)s' إذا أردت عرض اسم الشارع متبوعًا بفاصلة ورقم المنزل)\n"
+"\n"
+"%(street_name)s: اسم الشارع\n"
+"%(street_number)s: رقم المنزل\n"
+"%(street_number2)s: رقم الباب"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number
 msgid "House"
-msgstr ""
+msgstr "المنزل"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number
 #: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number
 #: model:ir.model.fields,help:base_address_extended.field_res_users__street_number
 msgid "House Number"
-msgstr ""
+msgstr "رقم المنزل"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_country__street_format
 msgid "Street Format"
-msgstr ""
+msgstr "تنسيق العنوان"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_name
 msgid "Street Name"
-msgstr ""
+msgstr "اسم الشارع"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_partner_address_structured_form
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_partner_structured_form
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_company_extended_form
 msgid "Street Name..."
-msgstr ""
+msgstr "اسم الشارع..."
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
 msgid "Street format..."
-msgstr ""
+msgstr "تنسيق العنوان..."
 
 #. module: base_address_extended
-#: code:addons/base_address_extended/models/base_address_extended.py:60
-#: code:addons/base_address_extended/models/base_address_extended.py:121
+#: code:addons/base_address_extended/models/base_address_extended.py:65
+#: code:addons/base_address_extended/models/base_address_extended.py:113
 #, python-format
 msgid "Unrecognized field %s in street format."
-msgstr ""
+msgstr "حقل مجهول %s في تنسيق العنوان."

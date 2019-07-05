@@ -3,15 +3,17 @@
 # * google_account
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +35,18 @@ msgstr "Aangemaakt op"
 #: model:ir.model.fields,field_description:google_account.field_google_service__display_name
 msgid "Display Name"
 msgstr "Schermnaam"
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:203
+#, python-format
+msgid "Error while requesting Google Services"
+msgstr ""
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:199
+#, python-format
+msgid "Error while requesting Google Services: %s"
+msgstr "Fout bij het aanvragen van een Google dienst: %s"
 
 #. module: google_account
 #: model:ir.model,name:google_account.model_google_service
@@ -97,10 +111,16 @@ msgstr ""
 "authenticatie code foutief of al vervallen [%s]"
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:193
+#: code:addons/google_account/models/google_service.py:204
 #, python-format
 msgid "Something went wrong with your request to google"
 msgstr "Er ging iets fout tijdens het verbinden met Google"
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:200
+#, python-format
+msgid "Something went wrong with your request to google: %s"
+msgstr "Er ging iets fout tijdens het verbinden met Google: %s"
 
 #. module: google_account
 #: code:addons/google_account/models/google_service.py:131

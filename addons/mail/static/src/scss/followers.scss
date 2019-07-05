@@ -31,7 +31,6 @@
         }
 
         .o_followers_follow_button {
-            width: 85px;
             padding-right: 0;
             color: $body-color;
             font-weight: bold;
@@ -84,6 +83,8 @@
 
         .o_followers_list {
             font-size: small;
+            max-height: 50vh; // ancestor has size 33px
+            overflow: auto;
 
             .o_partner {
                 position: relative; // required for old design compatibility

@@ -13,7 +13,7 @@
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2018
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2018
 # Edgaras Kriukonis <edgaras@focusate.eu>, 2018
-# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-19 08:21+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -145,12 +145,12 @@ msgstr "Ilgalaikis užsakymas"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
 msgid "Blanket order"
-msgstr ""
+msgstr "Ilgalaikis užsakymas"
 
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_multi
 msgid "Call for Tender"
-msgstr ""
+msgstr "Kvietimas pateikti pasiūlymą"
 
 #. module: purchase_requisition
 #: model:ir.actions.report,name:purchase_requisition.action_report_purchase_requisitions
@@ -217,6 +217,10 @@ msgid ""
 " 'purchase_requisition' module is installed and this option is selected, the"
 " system will create a draft call for tender."
 msgstr ""
+"Sukurti juodraštinį pirkimo užsakymą: remdamasi jūsų produktų konfigūracija "
+"sistema suskurs juodraštinį pirkimo užsakymą. Siūlyti pasiūlymų kvietimą: "
+"jei modulis 'purchase_requisition' yra įdiegtas ir pasirinktas šis "
+"nustatymas, sistema sukurs juodraštinį pasiūlymų kvietimą."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__create_uid
@@ -240,7 +244,7 @@ msgstr "Valiuta"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Data for new quotations"
-msgstr "Duomenys naujiems komerciniams pasiūlymams"
+msgstr "Duomenys naujoms užklausoms"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__schedule_date
@@ -423,7 +427,7 @@ msgstr "Kelios užklausos"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "My Agreements"
-msgstr ""
+msgstr "Mano susitarimai"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -527,7 +531,7 @@ msgstr "Produktai pirkimui"
 #. module: purchase_requisition
 #: selection:product.template,purchase_requisition:0
 msgid "Propose a call for tenders"
-msgstr "Pasiūlyti skambutį siūlytojams"
+msgstr "Pasiūlyti kvietimą siūlytojams"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__requisition_id
@@ -576,7 +580,7 @@ msgstr "Pirkimo užsakymai su užklausa"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__user_id
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Purchase Representative"
-msgstr ""
+msgstr "Pirkimų atstovas"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
@@ -587,12 +591,12 @@ msgstr "Pirkimo užklausa"
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_line_id
 msgid "Purchase Requisition Line"
-msgstr "Pirkimo užklausa eilutė "
+msgstr "Pirkimo užklausos eilutė "
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
 msgid "Purchase Requisition Type"
-msgstr ""
+msgstr "Pirkimo užklausos tipas"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
@@ -624,17 +628,17 @@ msgstr "Pakartotinis užsakymas"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
 msgid "Request for Quotation"
-msgstr "Komercinio pasiūlymo užklausa"
+msgstr "Užklausos prašymas"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_list
 msgid "Request for Quotations"
-msgstr "Komercinių pasiūlymų užklausos"
+msgstr "Užklausų prašymas"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Requests for Quotation Details"
-msgstr "Komercinių pasiūlymų detalių užklausos"
+msgstr "Komercinių pasiūlymų informacijos užklausos"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
@@ -644,12 +648,12 @@ msgstr "Užklausa"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_stock_move__requisition_line_ids
 msgid "Requisition Line"
-msgstr ""
+msgstr "Užklausos eilutė"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_stock_move__requistion_line_ids
 msgid "Requistion Line"
-msgstr ""
+msgstr "Užklausos eilutė"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -683,7 +687,7 @@ msgid ""
 "\n"
 "                    Select multiple RFQ: allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
-"Pasirinkti tik vieną prikimo užklausą: kaip pirkimo užsakymas yra patvirtinamas, atšaukia likusį pirkimo užsakymą.\n"
+"Pasirinkti tik vieną prikimo užklausą: kai pirkimo užsakymas yra patvirtinamas, atšaukia likusį pirkimo užsakymą.\n"
 "\n"
 "Pasirinkti kelias pirkimo užklausas: leidžia kelis pirkimo užsakymus. Patvirtinus pirkimo užsakymą, tai neatšaukia likusių užsakymų."
 
@@ -710,12 +714,12 @@ msgstr "Šaltinio dokumentas"
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "Start a new purchase agreement"
-msgstr ""
+msgstr "Pradėti naują pirkimo susitarimą"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state_blanket_order
 msgid "State Blanket Order"
-msgstr ""
+msgstr "Ilgalaikio užsakymo būsena"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state
@@ -731,12 +735,12 @@ msgstr "Atsargų perkėlimas"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "Atsargų taisyklė"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__supplier_info_ids
 msgid "Supplier Info"
-msgstr ""
+msgstr "Tiekėjo informacija"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_supplierinfo
@@ -761,6 +765,8 @@ msgid ""
 "There is already an open blanket order for this supplier. We suggest you to "
 "use to complete this open blanket order instead of creating a new one."
 msgstr ""
+"Šiam tiekėjui jau yra atidarytas ilgalaikis užsakymas. Siūlome užbaigti šį "
+"atvirą užsakymą, o ne kurti naują."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -780,7 +786,7 @@ msgstr "Vieneto kaina"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_unread
 msgid "Unread Messages"
-msgstr "Neskaityti pranešimai"
+msgstr "Neperskaitytos žinutės"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_unread_counter
@@ -832,13 +838,13 @@ msgstr "Interneto svetainės komunikacijos istorija"
 #: code:addons/purchase_requisition/models/purchase_requisition.py:178
 #, python-format
 msgid "You can only delete draft requisitions."
-msgstr ""
+msgstr "Ištrinti galite tik juodraštines užklausas."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:123
 #, python-format
 msgid "You cannot confirm agreement '%s' because there is no product line."
-msgstr ""
+msgstr "Negalite patvirtinti susitarimo \"%s\", nes nėra produkto eilutės."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:127
@@ -846,13 +852,13 @@ msgstr ""
 #: code:addons/purchase_requisition/models/purchase_requisition.py:228
 #, python-format
 msgid "You cannot confirm the blanket order without price."
-msgstr ""
+msgstr "Negalite patvirtinti ilgalaikio užsakymo be kainos."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:129
 #, python-format
 msgid "You cannot confirm the blanket order without quantity."
-msgstr ""
+msgstr "Negalite patvirtinti ilgalaikio užsakymo be kiekio."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:156

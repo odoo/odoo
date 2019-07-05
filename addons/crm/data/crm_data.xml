@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="sales_team.team_sales_department" model="crm.team">
+        <record id="sales_team.team_sales_department" model="crm.team" forcecreate="False">
             <field name="use_opportunities">True</field>
-            <field name="use_leads">True</field>
             <field name="alias_name">sales</field>
             <field name="dashboard_graph_model">crm.lead</field>
             <field name="company_id" eval="False"/>

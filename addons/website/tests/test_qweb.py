@@ -4,6 +4,7 @@
 import re
 
 from odoo import tools
+from odoo.addons.website.tools import MockRequest
 from odoo.modules.module import get_module_resource
 from odoo.tests.common import TransactionCase
 
@@ -63,3 +64,87 @@ class TestQweb(TransactionCase):
             "css": attachments[1].url,
             "user_id": demo.id,
         }).encode('utf8'))
+
+
+class TestQwebProcessAtt(TransactionCase):
+    def setUp(self):
+        super(TestQwebProcessAtt, self).setUp()
+        self.website = self.env['website'].browse(1)
+        self.website.language_ids = self.env.ref('base.lang_en') + self.env.ref('base.lang_fr')
+        self.website.default_lang_id = self.env.ref('base.lang_en')
+        self.website.cdn_activated = True
+        self.website.cdn_url = "http://test.cdn"
+        self.website.cdn_filters = "\n".join(["^(/[a-z]{2}_[A-Z]{2})?/a$", "^/b$"])
+
+    def _test_att(self, url, expect, tag='a', attribute='href'):
+        self.assertEqual(
+            self.env['ir.qweb']._post_processing_att(tag, {attribute: url}, {}),
+            expect
+        )
+
+    def test_process_att_no_request(self):
+        # no request so no URL rewriting
+        self._test_att('/', {'href': '/'})
+        self._test_att('/en_US/', {'href': '/en_US/'})
+        self._test_att('/fr_FR/', {'href': '/fr_FR/'})
+        # no URL rewritting for CDN
+        self._test_att('/a', {'href': '/a'})
+
+    def test_process_att_no_website(self):
+        with MockRequest(self.env):
+            # no website so URL rewriting
+            self._test_att('/', {'href': '/'})
+            self._test_att('/en_US/', {'href': '/en_US/'})
+            self._test_att('/fr_FR/', {'href': '/fr_FR/'})
+            # no URL rewritting for CDN
+            self._test_att('/a', {'href': '/a'})
+
+    def test_process_att_monolang_route(self):
+        with MockRequest(self.env, website=self.website, multilang=False):
+            # lang not changed in URL but CDN enabled
+            self._test_att('/a', {'href': 'http://test.cdn/a'})
+            self._test_att('/en_US/a', {'href': 'http://test.cdn/en_US/a'})
+            self._test_att('/b', {'href': 'http://test.cdn/b'})
+            self._test_att('/en_US/b', {'href': '/en_US/b'})
+
+    def test_process_att_no_request_lang(self):
+        with MockRequest(self.env, website=self.website):
+            self._test_att('/', {'href': '/'})
+            self._test_att('/en_US/', {'href': '/'})
+            self._test_att('/fr_FR/', {'href': '/fr_FR/'})
+
+    def test_process_att_with_request_lang(self):
+        with MockRequest(self.env, website=self.website, context={'lang': 'fr_FR'}):
+            self._test_att('/', {'href': '/fr_FR/'})
+            self._test_att('/en_US/', {'href': '/'})
+            self._test_att('/fr_FR/', {'href': '/fr_FR/'})
+
+    def test_process_att_matching_cdn_and_lang(self):
+        with MockRequest(self.env, website=self.website):
+            # lang prefix is added before CDN
+            self._test_att('/a', {'href': 'http://test.cdn/a'})
+            self._test_att('/en_US/a', {'href': 'http://test.cdn/a'})
+            self._test_att('/fr_FR/a', {'href': 'http://test.cdn/fr_FR/a'})
+            self._test_att('/b', {'href': 'http://test.cdn/b'})
+            self._test_att('/en_US/b', {'href': 'http://test.cdn/b'})
+            self._test_att('/fr_FR/b', {'href': '/fr_FR/b'})
+
+    def test_process_att_no_route(self):
+        with MockRequest(self.env, website=self.website, context={'lang': 'fr_FR'}, routing=False):
+            # default on multilang=True if route is not /{module}/static/
+            self._test_att('/web/static/hi', {'href': '/web/static/hi'})
+            self._test_att('/my-page', {'href': '/fr_FR/my-page'})
+
+    def test_process_att_url_crap(self):
+        with MockRequest(self.env, website=self.website) as request:
+            # #{fragment} is stripped from URL when testing route
+            self._test_att('/x#y?z', {'href': '/x#y?z'})
+            self.assertEqual(
+                request.httprequest.app._log_call[-1],
+                (('/x',), {'method': 'POST', 'query_args': None})
+            )
+            self._test_att('/x?y#z', {'href': '/x?y#z'})
+            self.assertEqual(
+                request.httprequest.app._log_call[-1],
+                (('/x',), {'method': 'POST', 'query_args': 'y'})
+            )

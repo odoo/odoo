@@ -4,11 +4,11 @@
 # 
 # Translators:
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2018
+# Silvija Butko <silvija.butko@gmail.com>, 2018
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2018
 # Rolandas <info@paninfo.lt>, 2018
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2018
 # Martin Trigaux, 2018
-# Silvija Butko <silvija.butko@gmail.com>, 2018
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2018
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2018
 # Linas Versada <linaskrisiukenas@gmail.com>, 2019
@@ -203,7 +203,7 @@ msgstr ""
 "        </td>\n"
 "        <td width=\"20px;\"/>\n"
 "        <td style=\"padding-top: 5px;\">\n"
-"            <p><strong>Įvykio duomenys</strong></p>\n"
+"            <p><strong>Renginio duomenys</strong></p>\n"
 "            <ul>\n"
 "                % if object.event_id.location:\n"
 "                    <li>Vieta: ${object.event_id.location}\n"
@@ -344,7 +344,7 @@ msgstr ""
 "        </td>\n"
 "        <td width=\"20px;\"/>\n"
 "        <td style=\"padding-top: 5px;\">\n"
-"            <p><strong>Įvykio informacija</strong></p>\n"
+"            <p><strong>Renginio informacija</strong></p>\n"
 "            <ul>\n"
 "                % if object.event_id.location:\n"
 "                    <li>Vieta: ${object.event_id.location}\n"
@@ -485,7 +485,7 @@ msgstr ""
 "        </td>\n"
 "        <td width=\"20px;\"/>\n"
 "        <td style=\"padding-top: 5px;\">\n"
-"            <p><strong>Įvykio informacija</strong></p>\n"
+"            <p><strong>Renginio informacija</strong></p>\n"
 "            <ul>\n"
 "                % if object.event_id.location:\n"
 "                    <li>Vieta: ${object.event_id.location}\n"
@@ -670,7 +670,7 @@ msgstr "Kalendoriaus susitikimas"
 #: model:ir.cron,cron_name:calendar.ir_cron_scheduler_alarm
 #: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
 msgid "Calendar: Event Reminder"
-msgstr "Kalendorius: įvykių priminimas"
+msgstr "Kalendorius: renginių priminimas"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_mail_activity_type__category
@@ -858,33 +858,33 @@ msgstr "Baigiasi"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
 msgid "Event"
-msgstr "Įvykis"
+msgstr "Renginys"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm
 msgid "Event Alarm"
-msgstr "Įvykio signalas"
+msgstr "Renginio signalas"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm_manager
 msgid "Event Alarm Manager"
-msgstr "Įvykio signalo valdytojas"
+msgstr "Renginio signalo valdytojas"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Event Meeting Type"
-msgstr "Įvykio susitikimo tipas"
+msgstr "Renginio susitikimo tipas"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
 msgid "Event Time"
-msgstr "Įvykio laikas"
+msgstr "Renginio laikas"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:1234
 #, python-format
 msgid "Event recurrence interval cannot be negative."
-msgstr "Įvykio pasikartojimo intervalas negali būti neigiamas."
+msgstr "Renginio pasikartojimo intervalas negali būti neigiamas."
 
 #. module: calendar
 #: selection:calendar.event,privacy:0
@@ -1007,7 +1007,7 @@ msgid ""
 "alarm information without removing it."
 msgstr ""
 "Jei aktyvus laukas bus pažymėtas kaip neigiamas, tai leis jums paslėpti "
-"įvykio signalo informaciją jos nepašalinant."
+"renginio signalo informaciją jos nepašalinant."
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
@@ -1052,7 +1052,7 @@ msgstr "Yra sekėjas"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
 msgid "Is the Event Highlighted"
-msgstr "Ar įvykis yra paryškintas"
+msgstr "Ar renginys yra paryškintas"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1097,7 +1097,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__rrule_type
 msgid "Let the event automatically repeat at that interval"
-msgstr "Leisti įvykiui automatiškai pasikartoti tuo intervalu"
+msgstr "Leisti renginiui automatiškai pasikartoti tuo intervalu"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__location
@@ -1108,7 +1108,7 @@ msgstr "Vieta"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__location
 msgid "Location of Event"
-msgstr "Įvykio vieta"
+msgstr "Renginio vieta"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1484,7 +1484,7 @@ msgstr "Pradžios data"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__start
 msgid "Start date of an event, without time for full days events"
-msgstr "Įvykio pradžios data be laiko, visos dienos įvykiams"
+msgstr "Renginio pradžios data be laiko, visos dienos renginiams"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1511,7 +1511,7 @@ msgstr "Stabdyti"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__stop
 msgid "Stop date of an event, without time for full days events"
-msgstr "Įvykio pabaigos data be laiko, visos dienos įvykiams"
+msgstr "Renginio pabaigos data be laiko, visos dienos renginiams"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -1586,7 +1586,7 @@ msgstr "Trečias"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "This event is linked to a recurrence...<br/>"
-msgstr "Šis įvykis yra susietas su pasikartojimu...<br/>"
+msgstr "Šis renginys yra susietas su pasikartojimu...<br/>"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__th

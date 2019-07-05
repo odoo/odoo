@@ -54,6 +54,8 @@ odoo.define('payment.processing', function (require) {
                 }
                 else {
                     switch(data.error) {
+                    case "tx_process_retry":
+                        break;
                     case "no_tx_found":
                         self.displayContent("payment.no_tx_found", {});
                         break;
@@ -63,11 +65,7 @@ odoo.define('payment.processing', function (require) {
                     }
                 }
                 self.startPolling();
-            }).always(function(){
-                if ($.blockUI) {
-                    $.unblockUI();
-                }
-            }).fail(function(e) {
+             }).fail(function(e) {
                 self.displayContent("payment.rpc_error", {});
                 self.startPolling();
             });
@@ -81,14 +79,16 @@ odoo.define('payment.processing', function (require) {
                 'tx_cancel': [],
                 'tx_error': [],
             };
+
+            if (transactions.length > 0 && transactions[0].acquirer_provider == 'transfer') {
+                window.location = transactions[0].return_url;
+                return;
+            }
+
             // group the transaction according to their state
             transactions.forEach(function (tx) {
                 var key = 'tx_' + tx.state;
                 if(key in render_values) {
-                    if (tx.acquirer_provider === 'transfer') {
-                        window.location = tx.return_url;
-                        return;
-                    }
                     render_values[key].push(tx);
                 }
             });
@@ -115,6 +115,7 @@ odoo.define('payment.processing', function (require) {
         },
         displayContent: function (xmlid, render_values) {
             var html = Qweb.render(xmlid, render_values);
+            $.unblockUI();
             this.$el.find('.o_payment_processing_content').html(html);
         },
         displayLoading: function () {

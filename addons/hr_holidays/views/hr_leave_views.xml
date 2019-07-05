@@ -171,7 +171,7 @@
                         <div>
                             <field name="date_from" invisible="1"/>
                             <field name="date_to" invisible="1"/>
-                            <div class="o_row o_row_readonly">
+                            <div class="o_row o_row_readonly o_hr_holidays_dates">
                                 <field name="request_date_from" class="oe_inline"
                                     attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}"/>
                                 <span class="oe_inline"
@@ -294,7 +294,7 @@
                 <field name="name"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
-                <field name="number_of_days" string="Number of Days" sum="Total leaves"/>
+                <field name="duration_display"/>
                 <field name="state"/>
                 <field name="payslip_status" widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr_holidays.group_hr_holidays_manager"/>
                 <field name="category_id" invisible="1"/>

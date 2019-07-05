@@ -2161,6 +2161,67 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create record while adding a new column', function (assert) {
+        assert.expect(10);
+
+        var def = $.Deferred();
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create">' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'name_create' && args.model === 'product') {
+                    return def.then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        assert.containsN(kanban, '.o_kanban_group', 2);
+        assert.containsN(kanban, '.o_kanban_group:first .o_kanban_record', 2);
+
+        // add a new column
+        assert.containsOnce(kanban, '.o_column_quick_create');
+        assert.isNotVisible(kanban.$('.o_column_quick_create input'));
+
+        testUtils.dom.click(kanban.$('.o_quick_create_folded'));
+
+        assert.isVisible(kanban.$('.o_column_quick_create input'));
+
+        testUtils.fields.editInput(kanban.$('.o_column_quick_create input'), 'new column');
+        testUtils.dom.click(kanban.$('.o_column_quick_create button.o_kanban_add'));
+
+        assert.containsN(kanban, '.o_kanban_group', 2);
+
+        // click to add a new record
+        testUtils.dom.click(kanban.$buttons.find('.o-kanban-button-new'));
+
+        // should wait for the column to be created (and view to be re-rendered
+        // before opening the quick create
+        assert.containsNone(kanban, '.o_kanban_quick_create');
+
+        // unlock column creation
+        def.resolve();
+
+        assert.containsN(kanban, '.o_kanban_group', 3);
+        assert.containsOnce(kanban, '.o_kanban_quick_create');
+
+        // quick create record in first column
+        testUtils.fields.editInput(kanban.$('.o_kanban_quick_create input'), 'new record');
+        testUtils.dom.click(kanban.$('.o_kanban_quick_create .o_kanban_add'));
+
+        assert.containsN(kanban, '.o_kanban_group:first .o_kanban_record', 3);
+
+        kanban.destroy();
+    });
+
     QUnit.test('many2many_tags in kanban views', function (assert) {
         assert.expect(12);
 
@@ -5072,6 +5133,116 @@ QUnit.module('Views', {
         delete fieldRegistry.map.asyncWidget;
     });
 
+    QUnit.test('asynchronous rendering of a field widget with display attr', function (assert) {
+        assert.expect(3);
+
+        var fooFieldDef = $.Deferred();
+        var FieldChar = fieldRegistry.get('char');
+        fieldRegistry.add('asyncwidget', FieldChar.extend({
+            willStart: function () {
+                return fooFieldDef;
+            },
+            start: function () {
+                this.$el.html('LOADED');
+            },
+        }));
+
+        var kanbanController;
+        testUtils.createAsyncView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
+                        '<div><field name="foo" display="right" widget="asyncwidget"/></div>' +
+                '</t></templates></kanban>',
+        }).then(function (kanban) {
+            kanbanController = kanban;
+        });
+
+        assert.containsNone(document.body, '.o_kanban_record');
+
+        fooFieldDef.resolve();
+        assert.strictEqual(kanbanController.$('.o_kanban_record').text(),
+            "LOADEDLOADEDLOADEDLOADED");
+        assert.hasClass(kanbanController.$('.o_kanban_record:first .o_field_char'), 'float-right');
+
+        kanbanController.destroy();
+        delete fieldRegistry.map.asyncWidget;
+    });
+
+    QUnit.test('asynchronous rendering of a widget', function (assert) {
+        assert.expect(2);
+
+        var widgetDef = $.Deferred();
+        widgetRegistry.add('asyncwidget', Widget.extend({
+            willStart: function () {
+                return widgetDef;
+            },
+            start: function () {
+                this.$el.html('LOADED');
+            },
+        }));
+
+        var kanbanController;
+        testUtils.createAsyncView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
+                        '<div><widget name="asyncwidget"/></div>' +
+                '</t></templates></kanban>',
+        }).then(function (kanban) {
+            kanbanController = kanban;
+        });
+
+        assert.containsNone(document.body, '.o_kanban_record');
+
+        widgetDef.resolve();
+        assert.strictEqual(kanbanController.$('.o_kanban_record .o_widget').text(),
+            "LOADEDLOADEDLOADEDLOADED");
+
+        kanbanController.destroy();
+        delete widgetRegistry.map.asyncWidget;
+    });
+
+    QUnit.test('update kanban with asynchronous field widget', function (assert) {
+        assert.expect(3);
+
+        var fooFieldDef = $.Deferred();
+        var FieldChar = fieldRegistry.get('char');
+        fieldRegistry.add('asyncwidget', FieldChar.extend({
+            willStart: function () {
+                return fooFieldDef;
+            },
+            start: function () {
+                this.$el.html('LOADED');
+            },
+        }));
+
+        var kanban = testUtils.createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
+                        '<div><field name="foo" widget="asyncwidget"/></div>' +
+                '</t></templates></kanban>',
+            domain: [['id', '=', '0']], // no record matches this domain
+        });
+
+        assert.containsNone(kanban, '.o_kanban_record:not(.o_kanban_ghost)');
+
+        kanban.update({domain: []}); // this rendering will be async
+
+        assert.containsNone(kanban, '.o_kanban_record:not(.o_kanban_ghost)');
+
+        fooFieldDef.resolve();
+
+        assert.strictEqual(kanban.$('.o_kanban_record').text(),
+            "LOADEDLOADEDLOADEDLOADED");
+
+        kanban.destroy();
+        delete widgetRegistry.map.asyncWidget;
+    });
 });
 
 });

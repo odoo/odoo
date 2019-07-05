@@ -81,7 +81,7 @@
                                 You can not log timesheets on this project since is linked to an inactive analytic account. Please change it, or reactivate the current one to timesheet on the project.
                             </div>
                         </group>
-                    <field name="timesheet_ids" attrs="{'invisible': [('analytic_account_active', '=', False)]}" context="{'default_project_id': project_id, 'default_name':''}">
+                    <field name="timesheet_ids" mode="tree,kanban" attrs="{'invisible': [('analytic_account_active', '=', False)]}" context="{'default_project_id': project_id, 'default_name':''}">
                         <tree editable="bottom" string="Timesheet Activities" default_order="date">
                             <field name="date"/>
                             <field name="user_id" invisible="1"/>
@@ -90,6 +90,50 @@
                             <field name="unit_amount" widget="timesheet_uom"/>
                             <field name="project_id" invisible="1"/>
                         </tree>
+                        <kanban class="o_kanban_mobile">
+                            <field name="date"/>
+                            <field name="user_id"/>
+                            <field name="employee_id"/>
+                            <field name="name"/>
+                            <field name="unit_amount"/>
+                            <field name="project_id"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <strong><span><t t-esc="record.employee_id.value"/></span></strong>
+                                            </div>
+                                            <div class="col-6 pull-right text-right">
+                                                <strong><t t-esc="record.date.value"/></strong>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6 text-muted">
+                                                <span><t t-esc="record.name.value"/></span>
+                                            </div>
+                                            <div class="col-6">
+                                                <span class="pull-right text-right">
+                                                    <field name="unit_amount" widget="float_time"/>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                        <form  string="Timesheet Activities">
+                            <sheet>
+                                 <group>
+                                    <field name="date"/>
+                                    <field name="user_id" invisible="1"/>
+                                    <field name="employee_id" required="1"/>
+                                    <field name="name"/>
+                                    <field name="unit_amount" string="Duration" widget="float_time"/>
+                                    <field name="project_id" invisible="1"/>
+                                </group>
+                            </sheet>
+                        </form>
                     </field>
                     <group attrs="{'invisible': [('analytic_account_active', '=', False)]}">
                         <group class="oe_subtotal_footer oe_right" name="project_hours">

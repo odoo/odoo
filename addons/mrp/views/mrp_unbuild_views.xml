@@ -83,7 +83,7 @@
                                     </div>
                                     <div class="col-4">
                                         <span class="float-right text-right">
-                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'done': 'success'}}"/>
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'done': 'success'}}"/>
                                         </span>
                                     </div>
                                 </div>
@@ -128,8 +128,8 @@
                             </group>
                             <group>
                                 <field name="mo_id" domain="[('state','=','done')]"/>
-                                <field name="location_id" groups="stock.group_stock_multi_locations"/>
-                                <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
+                                <field name="location_id" groups="stock.group_stock_multi_locations" domain="[('usage','=','internal')]"/>
+                                <field name="location_dest_id" groups="stock.group_stock_multi_locations" domain="[('usage','=','internal')]"/>
                                 <field name="has_tracking" invisible="1"/>
                                 <field name="lot_id" attrs="{'invisible': [('has_tracking', '=', 'none')], 'required': [('has_tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
                             </group>

@@ -174,7 +174,7 @@
     </template>
 
     <template id="portal_record_sidebar" name="My Portal Record Sidebar">
-        <div t-attf-class="col-12 col-lg flex-lg-grow-0 #{classes}">
+        <div t-attf-class="#{classes}">
             <div class="card bg-white mb-4" id="sidebar_content">
                 <div t-if="title" class="card-body text-center pb-2 pt-3">
                     <t t-raw="title"/>
@@ -439,7 +439,7 @@
         <t t-if='prev_record or next_record'>
             <div class="record_pager btn-group" role="group">
                 <a role="button" t-att-class="'btn btn-link %s' % ('disabled' if not prev_record else '')" t-att-href="prev_record or '#'" ><i class="fa fa-chevron-left" role="img" aria-label="Previous" title="Previous"></i></a>
-                <a role="button" t-att-class="'btn btn-link %s' % ('disabled' if not next_record else '')" t-att-href="next_record or '#'" ><i class="fa fa-chevron-right" role="img" aria-label="Next" title="Previous"></i></a>
+                <a role="button" t-att-class="'btn btn-link %s' % ('disabled' if not next_record else '')" t-att-href="next_record or '#'" ><i class="fa fa-chevron-right" role="img" aria-label="Next" title="Next"></i></a>
             </div>
         </t>
     </template>

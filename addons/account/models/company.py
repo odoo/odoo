@@ -381,8 +381,13 @@ Best Regards,'''))
                                                       ('user_type_id', '=', unaffected_earnings_type.id)])
         if account:
             return account[0]
+        # Do not assume '999999' doesn't exist since the user might have created such an account
+        # manually.
+        code = 999999
+        while self.env['account.account'].search([('code', '=', str(code)), ('company_id', '=', self.id)]):
+            code -= 1
         return self.env['account.account'].create({
-                'code': '999999',
+                'code': str(code),
                 'name': _('Undistributed Profits/Losses'),
                 'user_type_id': unaffected_earnings_type.id,
                 'company_id': self.id,

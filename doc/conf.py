@@ -6,11 +6,11 @@ import sphinx
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 DIR = os.path.dirname(__file__)
-sys.path.append(
+sys.path.insert(0,
     os.path.abspath(
         os.path.join(DIR, '_extensions')))
 # autodoc
-sys.path.append(os.path.abspath(os.path.join(DIR, '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(DIR, '..')))
 
 # -- General configuration -----------------------------------------------------
 
@@ -180,8 +180,6 @@ todo_include_todos = False
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
     'werkzeug': ('http://werkzeug.pocoo.org/docs/', None),
-    'sqlalchemy': ('http://docs.sqlalchemy.org/en/rel_0_9/', None),
-    'django': ('https://django.readthedocs.org/en/latest/', None),
 }
 
 github_user = 'odoo'

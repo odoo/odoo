@@ -6,13 +6,11 @@
 # Leo Schmitt <inactive+lschmitt@transifex.com>, 2018
 # missjuliette333 <missjuliette333@hotmail.fr>, 2018
 # Fabri Yohann <psn@fabri.pw>, 2018
-# FR R4 <e2ffr1111@hotmail.com>, 2018
 # Henri Cornuau <hcornuau@gmail.com>, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
+# e34d4dcb8e697b071167e94624cfbccb, 2018
 # Clo <clo@odoo.com>, 2018
 # Micky Jault <micky037@hotmail.fr>, 2018
 # Jean-Marc Dupont <jmd@6it.fr>, 2018
-# nle_odoo, 2018
 # Stéphanie Marcu <stephanie.marcu.smile@gmail.com>, 2018
 # Alexandra Jubert <aju@odoo.com>, 2018
 # Saad Thaifa <saad.thaifa@gmail.com>, 2018
@@ -22,10 +20,9 @@
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2018
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2018
 # Denis Ledoux <dle@odoo.com>, 2018
-# Benoît Fontaine <benoitfontaine.ba@gmail.com>, 2018
 # Benjamin Delagoutte <ben@ampletus.fr>, 2018
 # e2f <projects@e2f.com>, 2018
-# fr rev <e2ffr02@hotmail.com>, 2018
+# bb76cd9ac0cb7e20167a14728edb858b, 2018
 # Olivier Dony <odo@odoo.com>, 2018
 # Frédéric LIETART <stuff@tifred.fr>, 2018
 # Lionel Sausin <ls@numerigraphe.com>, 2018
@@ -33,6 +30,7 @@
 # Christophe Dubuit <cdubuit@yahoo.com>, 2018
 # Florian Hatat, 2018
 # lucasdeliege <deliegelucas@gmail.com>, 2018
+# Xavier Symons <xsy@openerp.com>, 2018
 # Lucas Deliege <lud@odoo.com>, 2018
 # Melanie Bernard <mbe@odoo.com>, 2018
 # Alexis de Lattre <alexis@via.ecp.fr>, 2018
@@ -46,22 +44,27 @@
 # William Henrotin <whe@odoo.com>, 2018
 # Marie Willemyns <mwi@odoo.com>, 2018
 # Nathan Grognet <ngr@odoo.com>, 2018
-# fr trans <e2ffr01@hotmail.com>, 2018
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2018
 # Alain van de Werve <avw@openerp.com>, 2018
-# Satish kumar <Satishafd@gmail.com>, 2018
+# nle_odoo, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2018
 # Fabien Bourgeois <fabien@yaltik.com>, 2018
-# Martin Trigaux, 2018
-# Xavier Symons <xsy@openerp.com>, 2018
-# Eloïse Stilmant <est@odoo.com>, 2018
+# 44fd1b7fd1ad5b321e37d151521961ad, 2019
+# Eloïse Stilmant <est@odoo.com>, 2019
+# William Olhasque <william.olhasque@scopea.fr>, 2019
+# Satish kumar <Satishafd@gmail.com>, 2019
+# Doryan R, 2019
+# Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Moka Tourisme <hello@mokatourisme.fr>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:47+0000\n"
+"POT-Creation-Date: 2019-05-22 11:56+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2018\n"
+"Last-Translator: Moka Tourisme <hello@mokatourisme.fr>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1089,6 +1092,12 @@ msgid ""
 "    * The new lock date for advisors must be set after the previous lock date.\n"
 "    "
 msgstr ""
+"\n"
+"Rendre la date de blocage irréversible :\n"
+"\n"
+" * Vous ne pouvez pas définir des conditions plus strictes pour les conseillers que pour les utilisateurs. Dans ce cas, la date de blocage du conseiller doit être fixée avant la date de blocage pour les utilisateurs.\n"
+"* Vous ne pouvez pas bloquer une période qui n'est pas encore terminée. Dans ce cas, la date de blocage pour les conseillers doit être fixée avant le dernier jour du mois précédent.\n"
+"* La nouvelle date de blocage pour les conseillers doit être fixée après la date de blocage précédente."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -7158,6 +7167,40 @@ msgid ""
 msgstr "<code/><code/><code/><code/>"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
+msgid ""
+"<i class=\"fa fa-building\" role=\"img\" aria-label=\"Enterprise\" "
+"title=\"Enterprise\"/>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
+msgid "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Invalid\" title=\"Invalid\"/>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
+msgid "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ok\" title=\"Ok\"/>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
+msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Login\"/>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_rule_form
+msgid ""
+"<i class=\"fa fa-info fa-3x text-info float-left\" role=\"img\" aria-"
+"label=\"Info\" title=\"Info\"/>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.onboarding_container
+msgid "<i class=\"fa fa-times\" title=\"Close the onboarding panel\"/>"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "<span aria-label=\"Close\">&amp;times;</span>"
 msgstr ""
@@ -7205,6 +7248,15 @@ msgid ""
 msgstr ""
 "<span class=\"o_form_label\">We suggest to reload the menu tab to see the "
 "new menus (Ctrl+T then Ctrl+R).\"</span>"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
+msgid ""
+"<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
+"label=\"Search\" title=\"Search\"/></span>"
+msgstr ""
+"<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
+"label=\"Recherche\" title=\"Recherche\"/></span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -7281,7 +7333,7 @@ msgstr "<span>Web</span>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_kanban
 msgid "<strong><span>Current Rate: </span></strong>"
-msgstr "<strong><span/></strong>"
+msgstr "<strong><span>Taux Actuel: </span></strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -7291,7 +7343,7 @@ msgstr "<strong>Applications</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Attribute</strong>"
-msgstr "<strong>Attribut</strong>"
+msgstr "<strong>Caractéristique</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -8164,21 +8216,10 @@ msgid "Active"
 msgstr "Actif"
 
 #. module: base
-#: selection:ir.actions.act_window.view,view_mode:0
-#: selection:ir.ui.view,type:0
-msgid "Activity"
-msgstr "Activité"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_next_actual
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__number_next_actual
 msgid "Actual Next Number"
 msgstr ""
-
-#. module: base
-#: selection:ir.actions.server,state:0
-msgid "Add Followers"
-msgstr "Ajouter des abonnés"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_bot
@@ -8603,6 +8644,15 @@ msgstr ""
 " sont pas des comptables."
 
 #. module: base
+#: model_terms:ir.actions.act_window,help:base.action_attachment
+msgid ""
+"Also you will find here all the related documents and download it by "
+"clicking on any individual document."
+msgstr ""
+"Vous trouverez également ici tous les documents associés et pourrez les "
+"télécharger en cliquant sur chacun d'eux."
+
+#. module: base
 #: code:addons/base/models/ir_fields.py:394
 #, python-format
 msgid ""
@@ -8698,14 +8748,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_module_module__application
 #: model:ir.model.fields,field_description:base.field_res_groups__category_id
 msgid "Application"
-msgstr "Candidature"
+msgstr "Application"
 
 #. module: base
-#: code:addons/base/models/res_users.py:968
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "Application Accesses"
-msgstr "Accès à l'application"
+msgstr "Accès des applications"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_app
@@ -8878,11 +8926,6 @@ msgid "At least one language must be active."
 msgstr "Au moins une traduction doit être active."
 
 #. module: base
-#: model_terms:ir.actions.act_window,help:base.action_attachment
-msgid "Attach a new document"
-msgstr ""
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Attached Document Name"
 msgstr "Nom du document joint"
@@ -8893,6 +8936,7 @@ msgid "Attached To"
 msgstr "Attaché à"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_attachment
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Attachment"
 msgstr "Pièce jointe"
@@ -8978,11 +9022,6 @@ msgstr "Intermédiaire de paiement Authorize.Net"
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__auto_search
 msgid "Auto Search"
 msgstr "Recherche automatique"
-
-#. module: base
-#: selection:ir.actions.server,usage:0
-msgid "Automated Action"
-msgstr "Action Automatisée"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
@@ -9766,6 +9805,12 @@ msgstr "Annuler la mise à Jour"
 #: code:addons/models.py:2118
 #, python-format
 msgid "Cannot aggregate field %r."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_translation.py:256
+#, python-format
+msgid "Cannot be translated; record not accessible."
 msgstr ""
 
 #. module: base
@@ -10765,11 +10810,6 @@ msgid "Create Menu Wizard"
 msgstr ""
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Create Next Activity"
-msgstr "Créer une activité "
-
-#. module: base
 #: model:ir.module.module,summary:base.module_crm_project
 msgid "Create Tasks from Leads"
 msgstr "Créer des tâches à partir de leads"
@@ -10819,6 +10859,11 @@ msgstr "Créer une nouvelle étiquette de contact"
 #: model_terms:ir.actions.act_window,help:base.action_partner_form
 msgid "Create a new customer in your address book"
 msgstr "Créer un nouveau client dans votre carnet d'adresse"
+
+#. module: base
+#: model_terms:ir.actions.act_window,help:base.action_attachment
+msgid "Create a new document"
+msgstr "Créer un nouveau document"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.res_partner_industry_action
@@ -11414,28 +11459,6 @@ msgid "Days"
 msgstr "Jours"
 
 #. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Dear Sir/Madam,\n"
-"\n"
-"Our records indicate that some payments on your account are still due. Please find details below.\n"
-"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
-"If you have any queries regarding your account, Please contact us.\n"
-"\n"
-"Thank you in advance for your cooperation.\n"
-"Best Regards,"
-msgstr ""
-"Madame, Monsieur,\n"
-"\n"
-"D'après nos relevés, nous sommes encore en attente à ce jour de paiements de votre part, dont les détails sont indiqués ci-dessous.\n"
-"Si ces sommes ont déjà été réglées, vous pouvez ignorer ce rappel. Dans le cas contraire, nous vous remercions de bien vouloir nous faire parvenir votre règlement.\n"
-"Si vous avez d'autres questions concernant votre compte, vous pouvez nous contacter directement.\n"
-"\n"
-"En vous remerciant par avance.\n"
-"\n"
-"Cordialement,"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_debug
 msgid "Debugging"
 msgstr "Débogage"
@@ -11967,7 +11990,6 @@ msgid "Doctor"
 msgstr "Docteur"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_attachment
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Document"
 msgstr "Document"
@@ -12314,11 +12336,6 @@ msgstr "Contrats des Employés"
 #: model:res.partner.category,name:base.res_partner_category_3
 msgid "Employees"
 msgstr "Employés"
-
-#. module: base
-#: selection:ir.attachment,type:0
-msgid "Empty"
-msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_model.py:466
@@ -13421,7 +13438,7 @@ msgstr "France - FEC"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
 msgid "France - VAT Anti-Fraud Certification (CGI 286 I-3 bis)"
-msgstr ""
+msgstr "France - Certification anti-fraude à la TVA (CGI 286 I-3 bis)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_sale_closing
@@ -14016,7 +14033,7 @@ msgstr "HTML"
 #. module: base
 #: model:ir.model,name:base.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "Routage HTTP"
 
 #. module: base
 #: model:res.country,name:base.ht
@@ -14497,11 +14514,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: base
-#: model:ir.model.fields,help:base.field_ir_actions_server__xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr "Identifiant de l'action si elle est définie dans un fichier XML"
-
-#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data__res_id
 msgid "ID of the target record in the database"
 msgstr "ID de l'enregistrement cible dans la base de données"
@@ -14818,7 +14830,7 @@ msgstr "Import d'un relevé bancaire QIF"
 #: code:addons/base/models/res_partner.py:855
 #, python-format
 msgid "Import Template for Customers"
-msgstr ""
+msgstr "Téléchargez le modèle de fichier clients"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_import_language
@@ -16062,7 +16074,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_link_tracker
 #: model:ir.module.module,shortdesc:base.module_website_links
 msgid "Link Tracker"
-msgstr "Surveillance de liens"
+msgstr "Suivi de liens"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_sale
@@ -16400,7 +16412,7 @@ msgid ""
 "Documents like resumes and motivation letters are indexed automatically,\n"
 "allowing you to easily find for specific skills and build up a database of\n"
 "profiles.\n"
-msgstr "<a href=\"https://www.odoo.com/page/recruitment\"/>"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_forum
@@ -19888,8 +19900,7 @@ msgid "Original currency"
 msgstr "Devise originale"
 
 #. module: base
-#: code:addons/base/models/res_users.py:995
-#: code:addons/base/models/res_users.py:1178
+#: code:addons/base/models/res_users.py:1222
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
@@ -20166,6 +20177,11 @@ msgid "Partner Titles"
 msgstr "Titres du Partenaire"
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_res_users__active_partner
+msgid "Partner is Active"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_partner
 msgid "Partner module for website"
 msgstr "Module Partenaire pour le site web"
@@ -20403,7 +20419,7 @@ msgstr "Indiquez le modèle à créer avant de choisir des valeurs"
 #: code:addons/base/models/ir_model.py:505
 #, python-format
 msgid "Please specify a valid model for the object relation"
-msgstr ""
+msgstr "Veuillez spécifier un modèle valide pour la relation d'objet"
 
 #. module: base
 #: code:addons/base/models/res_users.py:333
@@ -21191,6 +21207,7 @@ msgid "Record ID"
 msgstr "ID de l'enregistrement"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_rule
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Record Rule"
 msgstr "Règle d'enregistrement"
@@ -21288,7 +21305,7 @@ msgstr "Action-serveur associée"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__related_field_id
 msgid "Related field"
-msgstr "Champ related"
+msgstr "Champ relatif"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:440
@@ -21557,11 +21574,6 @@ msgstr "Précision d'arrondi"
 #, python-format
 msgid "Rounding unit"
 msgstr "Unité d'arrondi"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_rule
-msgid "Rule"
-msgstr "Règle"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -22074,11 +22086,6 @@ msgid "Sell your products online"
 msgstr "Vendez vos produits en ligne"
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Send Email"
-msgstr "Envoyer un courriel"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_sign
 msgid "Send documents to sign online and handle filled copies"
 msgstr ""
@@ -22190,7 +22197,6 @@ msgstr "Serveur"
 
 #. module: base
 #: selection:ir.actions.server,usage:0
-#: model:ir.model,name:base.model_ir_actions_server
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 msgid "Server Action"
@@ -22203,6 +22209,7 @@ msgstr "Action-serveur, valeur correspondante"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_server_action
+#: model:ir.model,name:base.model_ir_actions_server
 #: model:ir.ui.menu,name:base.menu_server_action
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_tree
@@ -22361,7 +22368,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_signup
 msgid "Signup"
-msgstr "S'inscrire"
+msgstr "Inscription"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_discount
@@ -23587,7 +23594,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__vat
 #: model:ir.model.fields,field_description:base.field_res_users__vat
 msgid "Tax ID"
-msgstr "Numéro de TVA"
+msgstr "N° TVA"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
@@ -24201,6 +24208,13 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/res_users.py:117
+#: code:addons/base/models/res_users.py:404
+#, python-format
+msgid "The user cannot have more than one user types."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__user_id
 msgid ""
 "The user this filter is private to. When left empty the filter is public and"
@@ -24506,7 +24520,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "To return an action, assign: <code>action = {...}</code>"
-msgstr "<code/>"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
@@ -25325,9 +25339,7 @@ msgid "User Login"
 msgstr "Identifiant"
 
 #. module: base
-#: code:addons/base/models/res_users.py:967
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "User Type"
 msgstr "Type d'utilisateur"
 
@@ -26417,7 +26429,7 @@ msgstr "Livraison eCommerce"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_link_tracker
 msgid "eCommerce Link Tracker"
-msgstr "Surveillance des liens du magasin en ligne"
+msgstr "Suivi des liens de l'e-commerce"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form

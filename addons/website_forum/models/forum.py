@@ -54,14 +54,20 @@ class Forum(models.Model):
     welcome_message = fields.Html(
         'Welcome Message',
         translate=True,
-        default = """<section class="bg-info" style="height: 168px;"><div class="container">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <h1 class="text-center" style="text-align: left;">Welcome!</h1>
-                                <p class="text-muted text-center" style="text-align: left;">This community is for professionals and enthusiasts of our products and services. Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together.</p>
-                            </div>
-                            <div class="col-lg-12">
-                                <a href="#" class="js_close_intro">Hide Intro</a>    <a class="btn btn-primary forum_register_url" href="/web/login">Register</a> </div>
+        default="""<section class="bg-info shadow">
+                        <div class="container py-5">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <h1 class="text-center">Welcome!</h1>
+                                    <p class="text-400 text-center">
+                                        This community is for professionals and enthusiasts of our products and services.
+                                        <br/>Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together.
+                                    </p>
+                                </div>
+                                <div class="col text-center mt-3">
+                                    <a href="#" class="js_close_intro btn btn-outline-light">Hide Intro</a>
+                                    <a class="btn btn-light forum_register_url" href="/web/login">Register</a>
+                                </div>
                             </div>
                         </div>
                     </section>""")
@@ -282,10 +288,11 @@ class Post(models.Model):
             operator = operator == "=" and '!=' or '='
             value = True
 
-        if self._uid == SUPERUSER_ID:
+        user = self.env.user
+        # Won't impact sitemap, search() in converter is forced as public user
+        if user._is_admin():
             return [(1, '=', 1)]
 
-        user = self.env['res.users'].browse(self._uid)
         req = """
             SELECT p.id
             FROM forum_post p
@@ -373,7 +380,7 @@ class Post(models.Model):
     @api.multi
     def _get_post_karma_rights(self):
         user = self.env.user
-        is_admin = user.id == SUPERUSER_ID
+        is_admin = user._is_admin()
         # sudoed recordset instead of individual posts so values can be
         # prefetched in bulk
         for post, post_sudo in pycompat.izip(self, self.sudo()):
@@ -865,6 +872,7 @@ class PostReason(models.Model):
 class Vote(models.Model):
     _name = 'forum.post.vote'
     _description = 'Post Vote'
+    _order = 'create_date desc, id desc'
 
     post_id = fields.Many2one('forum.post', string='Post', ondelete='cascade', required=True)
     user_id = fields.Many2one('res.users', string='User', required=True, default=lambda self: self._uid)

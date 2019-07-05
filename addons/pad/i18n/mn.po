@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2019-01-22 11:12+0000\n"
+"PO-Revision-Date: 2018-08-24 09:21+0000\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +33,7 @@ msgstr "Компаниуд"
 #. module: pad
 #: model:ir.model,name:pad.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Тохируулга"
 
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_pad_common__display_name
@@ -78,6 +80,11 @@ msgid "Pad Api Key *"
 msgstr "Хавтангийн Api Түлхүүр *"
 
 #. module: pad
+#: model:ir.model,name:pad.model_pad_common
+msgid "Pad Common"
+msgstr ""
+
+#. module: pad
 #: model:ir.model.fields,field_description:pad.field_res_company__pad_server
 msgid "Pad Server"
 msgstr "Хавтангийн сервер"
@@ -88,7 +95,7 @@ msgid "Pad Server *"
 msgstr "Хавтангийн Сервер *"
 
 #. module: pad
-#: code:addons/pad/models/pad.py:57
+#: code:addons/pad/models/pad.py:58
 #, python-format
 msgid ""
 "Pad creation failed, either there is a problem with your pad server URL or "
@@ -135,8 +142,3 @@ msgstr "Хавтанг ачаалах боломжгүй байна"
 #: model_terms:ir.ui.view,arch_db:pad.res_config_settings_view_form
 msgid "e.g. beta.primarypad.com"
 msgstr "Ж: beta.primarypad.com"
-
-#. module: pad
-#: model:ir.model,name:pad.model_pad_common
-msgid "pad.common"
-msgstr "pad.common"

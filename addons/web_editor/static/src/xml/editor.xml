@@ -204,7 +204,11 @@
                     <small class="text-muted">Options</small>
                     <ul class="list-group">
                         <li class="list-group-item o_yt_option o_vim_option o_dm_option">
-                            <label class="o_switch mb0"><input id="o_video_autoplay" type="checkbox"/><span/>Autoplay</label>
+                            <label class="o_switch mb0">
+                                <input id="o_video_autoplay" type="checkbox"/><span/>
+                                <span style="margin-right: 8px;">Autoplay</span>
+                                <span class="small text-muted" style="margin-left: auto;">Videos are muted when autoplay is enabled</span>
+                            </label>
                         </li>
                         <li class="list-group-item o_yt_option o_vim_option">
                             <label class="o_switch mb0"><input id="o_video_loop" type="checkbox"/><span/>Loop</label>
@@ -401,7 +405,7 @@
                     <label class="col-md-3 col-form-label" for="o_bg_img_opt_custom_size_x">Background width</label>
                     <div class="col-md-5">
                         <div class="input-group">
-                            <input type="number" min="0" max="100" class="form-control form-control-sm" id="o_bg_img_opt_custom_size_x" placeholder="auto"/>
+                            <input type="number" min="0" max="100" class="form-control" id="o_bg_img_opt_custom_size_x" placeholder="auto"/>
                             <div class="input-group-append">
                                 <div class="input-group-text">%</div>
                             </div>
@@ -412,7 +416,7 @@
                     <label class="col-md-3 col-form-label" for="o_bg_img_opt_custom_size_y">Background height</label>
                     <div class="col-md-5">
                         <div class="input-group">
-                            <input type="number" min="0" max="100" class="form-control form-control-sm" id="o_bg_img_opt_custom_size_y" placeholder="auto"/>
+                            <input type="number" min="0" max="100" class="form-control" id="o_bg_img_opt_custom_size_y" placeholder="auto"/>
                             <div class="input-group-append">
                                 <div class="input-group-text">%</div>
                             </div>
@@ -427,7 +431,7 @@
                     <label class="col-md-3 col-form-label" for="o_bg_img_opt_custom_pos_x">Horizontal</label>
                     <div class="col-md-5">
                         <div class="input-group">
-                            <input type="number" min="0" max="100" class="form-control form-control-sm" id="o_bg_img_opt_custom_pos_x" placeholder="auto"/>
+                            <input type="number" min="0" max="100" class="form-control " id="o_bg_img_opt_custom_pos_x" placeholder="auto"/>
                             <div class="input-group-append">
                                 <div class="input-group-text">%</div>
                             </div>
@@ -438,7 +442,7 @@
                     <label class="col-md-3 col-form-label" for="o_bg_img_opt_custom_pos_y">Vertical</label>
                     <div class="col-md-5">
                         <div class="input-group">
-                            <input type="number" min="0" max="100" class="form-control form-control-sm" id="o_bg_img_opt_custom_pos_y" placeholder="auto"/>
+                            <input type="number" min="0" max="100" class="form-control" id="o_bg_img_opt_custom_pos_y" placeholder="auto"/>
                             <div class="input-group-append">
                                 <div class="input-group-text">%</div>
                             </div>

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from werkzeug.urls import url_encode
+
 from odoo import http, _
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.payment.controllers.portal import PaymentProcessing
@@ -17,8 +19,6 @@ class PaymentPortal(http.Controller):
 
         :return html: form containing all values related to the acquirer to
                       redirect customers to the acquirer website """
-        success_url = kwargs.get('success_url', '/my')
-
         invoice_sudo = request.env['account.invoice'].sudo().browse(invoice_id)
         if not invoice_sudo:
             return False
@@ -30,6 +30,10 @@ class PaymentPortal(http.Controller):
 
         if request.env.user._is_public():
             save_token = False # we avoid to create a token for the public user
+
+        success_url = kwargs.get(
+            'success_url', "%s?%s" % (invoice_sudo.access_url, url_encode({'access_token': access_token}) if access_token else '')
+        )
         vals = {
             'acquirer_id': acquirer_id,
             'return_url': success_url,
@@ -54,7 +58,6 @@ class PaymentPortal(http.Controller):
     def invoice_pay_token(self, invoice_id, pm_id=None, **kwargs):
         """ Use a token to perform a s2s transaction """
         error_url = kwargs.get('error_url', '/my')
-        success_url = kwargs.get('success_url', '/my')
         access_token = kwargs.get('access_token')
         params = {}
         if access_token:
@@ -65,6 +68,9 @@ class PaymentPortal(http.Controller):
             params['error'] = 'pay_invoice_invalid_doc'
             return request.redirect(_build_url_w_params(error_url, params))
 
+        success_url = kwargs.get(
+            'success_url', "%s?%s" % (invoice_sudo.access_url, url_encode({'access_token': access_token}) if access_token else '')
+        )
         try:
             token = request.env['payment.token'].sudo().browse(int(pm_id))
         except (ValueError, TypeError):
@@ -77,11 +83,11 @@ class PaymentPortal(http.Controller):
         vals = {
             'payment_token_id': token.id,
             'type': 'server2server',
-            'return_url': success_url,
+            'return_url': _build_url_w_params(success_url, params),
         }
 
         tx = invoice_sudo._create_payment_transaction(vals)
         PaymentProcessing.add_payment_transaction(tx)
 
         params['success'] = 'pay_invoice'
-        return request.redirect(_build_url_w_params(success_url, params))
+        return request.redirect('/payment/process')

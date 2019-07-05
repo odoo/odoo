@@ -87,6 +87,16 @@ class account_abstract_payment(models.AbstractModel):
         # Check all invoices have the same currency
         if any(inv.currency_id != invoices[0].currency_id for inv in invoices):
             raise UserError(_("In order to pay multiple invoices at once, they must use the same currency."))
+        # Check if, in batch payments, there are not negative invoices and positive invoices
+        dtype = invoices[0].type
+        for inv in invoices[1:]:
+            if inv.type != dtype:
+                if ((dtype == 'in_refund' and inv.type == 'in_invoice') or
+                        (dtype == 'in_invoice' and inv.type == 'in_refund')):
+                    raise UserError(_("You cannot register payments for vendor bills and supplier refunds at the same time."))
+                if ((dtype == 'out_refund' and inv.type == 'out_invoice') or
+                        (dtype == 'out_invoice' and inv.type == 'out_refund')):
+                    raise UserError(_("You cannot register payments for customer invoices and credit notes at the same time."))
 
         # Look if we are mixin multiple commercial_partner or customer invoices with vendor bills
         multi = any(inv.commercial_partner_id != invoices[0].commercial_partner_id
@@ -105,7 +115,7 @@ class account_abstract_payment(models.AbstractModel):
             'payment_type': total_amount > 0 and 'inbound' or 'outbound',
             'partner_id': False if multi else invoices[0].commercial_partner_id.id,
             'partner_type': False if multi else MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
-            'communication': ' '.join([ref for ref in invoices.mapped('reference') if ref]),
+            'communication': ' '.join([ref for ref in invoices.mapped('reference') if ref])[:2000],
             'invoice_ids': [(6, 0, invoices.ids)],
             'multi': multi,
         })
@@ -211,6 +221,8 @@ class account_abstract_payment(models.AbstractModel):
         self.amount = abs(self._compute_payment_amount())
 
         # Set by default the first liquidity journal having this currency if exists.
+        if self.journal_id:
+            return
         journal = self.env['account.journal'].search(
             [('type', 'in', ('bank', 'cash')), ('currency_id', '=', self.currency_id.id)], limit=1)
         if journal:
@@ -234,10 +246,14 @@ class account_abstract_payment(models.AbstractModel):
             currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id or invoices and invoices[0].currency_id
 
         # Avoid currency rounding issues by summing the amounts according to the company_currency_id before
+        invoice_datas = invoices.read_group(
+            [('id', 'in', invoices.ids)],
+            ['currency_id', 'type', 'residual_signed'],
+            ['currency_id', 'type'], lazy=False)
         total = 0.0
-        groups = groupby(invoices, lambda i: i.currency_id)
-        for payment_currency, payment_invoices in groups:
-            amount_total = sum([MAP_INVOICE_TYPE_PAYMENT_SIGN[i.type] * i.residual_signed for i in payment_invoices])
+        for invoice_data in invoice_datas:
+            amount_total = MAP_INVOICE_TYPE_PAYMENT_SIGN[invoice_data['type']] * invoice_data['residual_signed']
+            payment_currency = self.env['res.currency'].browse(invoice_data['currency_id'][0])
             if payment_currency == currency:
                 total += amount_total
             else:
@@ -324,7 +340,7 @@ class account_register_payments(models.TransientModel):
         pmt_communication = self.show_communication_field and self.communication \
                             or self.group_invoices and ' '.join([inv.reference or inv.number for inv in invoices]) \
                             or invoices[0].reference # in this case, invoices contains only one element, since group_invoices is False
-        return {
+        values = {
             'journal_id': self.journal_id.id,
             'payment_method_id': self.payment_method_id.id,
             'payment_date': self.payment_date,
@@ -337,7 +353,12 @@ class account_register_payments(models.TransientModel):
             'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
             'partner_bank_account_id': bank_account.id,
             'multi': False,
+            'payment_difference_handling': self.payment_difference_handling,
+            'writeoff_account_id': self.writeoff_account_id.id,
+            'writeoff_label': self.writeoff_label,
         }
+
+        return values
 
     @api.multi
     def get_payments_vals(self):
@@ -429,6 +450,8 @@ class account_payment(models.Model):
             if move_line.account_id.reconcile:
                 move_line_id = move_line.id
                 break;
+        if not self.partner_id:
+            raise UserError(_("Payments without a customer can't be matched"))
         action_context = {'company_ids': [self.company_id.id], 'partner_ids': [self.partner_id.commercial_partner_id.id]}
         if self.partner_type == 'customer':
             action_context.update({'mode': 'customers'})
@@ -808,3 +831,17 @@ class account_payment(models.Model):
             })
 
         return vals
+
+    def _get_invoice_payment_amount(self, inv):
+        """
+        Computes the amount covered by the current payment in the given invoice.
+
+        :param inv: an invoice object
+        :returns: the amount covered by the payment in the invoice
+        """
+        self.ensure_one()
+        return sum([
+            data['amount']
+            for data in inv._get_payments_vals()
+            if data['account_payment_id'] == self.id
+        ])

@@ -32,11 +32,10 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueSe
 
         # ensure pricelist is set to with_discount
         pricelist.discount_policy = 'with_discount'
-        self.computer.invalidate_cache()
 
         # CASE: B2B setting
-        self.env.ref('account.group_show_line_subtotals_tax_excluded').users |= self.env.user
         self.env.ref('account.group_show_line_subtotals_tax_included').users -= self.env.user
+        self.env.ref('account.group_show_line_subtotals_tax_excluded').users |= self.env.user
 
         combination_info = self.computer._get_combination_info()
         self.assertEqual(combination_info['price'], 2222 * discount_rate * currency_ratio)
@@ -44,8 +43,8 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueSe
         self.assertEqual(combination_info['has_discounted_price'], False)
 
         # CASE: B2C setting
-        self.env.ref('account.group_show_line_subtotals_tax_included').users |= self.env.user
         self.env.ref('account.group_show_line_subtotals_tax_excluded').users -= self.env.user
+        self.env.ref('account.group_show_line_subtotals_tax_included').users |= self.env.user
 
         combination_info = self.computer._get_combination_info()
         self.assertEqual(combination_info['price'], 2222 * discount_rate * currency_ratio * tax_ratio)
@@ -54,7 +53,6 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueSe
 
         # CASE: pricelist 'without_discount'
         pricelist.discount_policy = 'without_discount'
-        self.computer.invalidate_cache()
 
         # ideally we would need to use compare_amounts everywhere, but this is
         # the only rounding where it fails without it

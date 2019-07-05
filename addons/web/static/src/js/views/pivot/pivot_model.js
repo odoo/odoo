@@ -237,7 +237,7 @@ var PivotModel = AbstractModel.extend({
                             [
                                 this.data.timeRangeDescription.toString(),
                                 this.data.comparisonTimeRangeDescription.toString(),
-                                'Variation'
+                                _t('Variation')
                             ],
                             makeMeasure
                         )
@@ -315,13 +315,13 @@ var PivotModel = AbstractModel.extend({
         if (!this.data.has_data) {
             return {
                 has_data: false,
-                colGroupBys: this.data.main_col.groupbys,
-                rowGroupBys:  this.data.main_row.groupbys,
+                colGroupBys: this.data.main_col.root.groupbys,
+                rowGroupBys:  this.data.main_row.root.groupbys,
                 measures: this.data.measures,
             };
         }
         return {
-            colGroupBys: this.data.main_col.groupbys,
+            colGroupBys: this.data.main_col.root.groupbys,
             context: this.data.context,
             domain: this.data.domain,
             compare: this.data.compare,
@@ -331,7 +331,7 @@ var PivotModel = AbstractModel.extend({
             mainColWidth: this.data.main_col.width,
             measures: this.data.measures,
             rows: !isRaw && this._computeRows(),
-            rowGroupBys: this.data.main_row.groupbys,
+            rowGroupBys: this.data.main_row.root.groupbys,
             sortedColumn: this.data.sorted_column,
         };
     },
@@ -432,22 +432,19 @@ var PivotModel = AbstractModel.extend({
             return this._loadData();
         }
 
-        var old_row_root = this.data.main_row.root;
-        var old_col_root = this.data.main_col.root;
+        var old_row = this.data.main_row;
+        var old_col = this.data.main_col;
         return this._loadData().then(function () {
-            var new_groupby_length;
             if (!('groupBy' in params) && !('pivot_row_groupby' in (params.context || {}))) {
                 // we only update the row groupbys according to the old groupbys
                 // if we don't have the key 'groupBy' in params.  In that case,
                 // we want to have the full open state for the groupbys.
-                self._updateTree(old_row_root, self.data.main_row.root);
-                new_groupby_length = self._getHeaderDepth(self.data.main_row.root) - 1;
-                self.data.main_row.groupbys = old_row_root.groupbys.slice(0, new_groupby_length);
+                self._updateTree(old_row.root, self.data.main_row.root);
             }
 
-            self._updateTree(old_col_root, self.data.main_col.root);
-            new_groupby_length = self._getHeaderDepth(self.data.main_col.root) - 1;
-            self.data.main_row.groupbys = old_row_root.groupbys.slice(0, new_groupby_length);
+            if (!('pivot_column_groupby' in (params.context || {}))) {
+                self._updateTree(old_col.root, self.data.main_col.root);
+            }
         });
     },
     /**
@@ -953,8 +950,8 @@ var PivotModel = AbstractModel.extend({
                             }
                             if (measureComparisonValue instanceof Array) {
                                 dataPoints[groupIdentifier][measureName + 'Aggregate'].comparisonData = 1;
-                                dataPoints[groupIdentifier][measureName].variation = computeVariation(
-                                    dataPoints[groupIdentifier][measureName].data,
+                                dataPoints[groupIdentifier][measureName + 'Aggregate'].variation = computeVariation(
+                                    dataPoints[groupIdentifier][measureName + 'Aggregate'].data,
                                     1
                                 );
 
@@ -987,13 +984,13 @@ var PivotModel = AbstractModel.extend({
         });
 
         var index = 0;
-        var rowGroupBys = !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys;
+        var rowGroupBys = !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys.slice();
+        this.data.groupedBy = rowGroupBys;
         var colGroupBys = this.data.colGroupBys;
         var dataPoint, row, col, attrs, cell_value;
         var main_row_header, main_col_header;
         var groupBys;
         var m;
-
 
         for (var i = 0; i < rowGroupBys.length + 1; i++) {
             for (var j = 0; j < colGroupBys.length + 1; j++) {
@@ -1051,9 +1048,6 @@ var PivotModel = AbstractModel.extend({
                 index++;
             }
         }
-
-        this.data.main_row.groupbys = rowGroupBys;
-        this.data.main_col.groupbys = colGroupBys;
 
         main_row_header.other_root = main_col_header;
         main_col_header.other_root = main_row_header;

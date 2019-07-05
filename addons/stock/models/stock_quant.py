@@ -360,7 +360,7 @@ class QuantPackage(models.Model):
         'res.partner', 'Owner', compute='_compute_package_info', search='_search_owner',
         index=True, readonly=True)
 
-    @api.depends('quant_ids.package_id', 'quant_ids.location_id', 'quant_ids.company_id', 'quant_ids.owner_id')
+    @api.depends('quant_ids.package_id', 'quant_ids.location_id', 'quant_ids.company_id', 'quant_ids.owner_id', 'quant_ids.quantity', 'quant_ids.reserved_quantity')
     def _compute_package_info(self):
         for package in self:
             values = {'location_id': False, 'company_id': self.env.user.company_id.id, 'owner_id': False}
@@ -428,5 +428,5 @@ class QuantPackage(models.Model):
         for quant in self._get_contained_quants():
             if quant.product_id not in res:
                 res[quant.product_id] = 0
-            res[quant.product_id] += quant.qty
+            res[quant.product_id] += quant.quantity
         return res

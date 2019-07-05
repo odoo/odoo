@@ -4,7 +4,6 @@
 # 
 # Translators:
 # e2f <projects@e2f.com>, 2018
-# Martin Trigaux, 2018
 # Wolfgang Taferner, 2018
 # JackTheHunter <Maximilian.N98@gmail.com>, 2018
 # Rudolf Schnapka <rs@techno-flex.de>, 2018
@@ -12,19 +11,27 @@
 # Katharina Moritz <kmo@e2f.com>, 2018
 # Nico Dor <nicolas.dorweiler@gmail.com>, 2018
 # Johannes Croe <jcr@odoo.com>, 2018
+# Martin Trigaux, 2018
+# Chris Egal <sodaswed@web.de>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Johannes Croe <jcr@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
@@ -156,7 +163,7 @@ msgstr "Tag"
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid "Define a new Sales Team"
-msgstr ""
+msgstr "Definieren Sie ein neues Verkaufsteam"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
@@ -262,6 +269,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
 msgstr ""
+"Wenn das aktive Feld auf unwahr gesetzt ist, können Sie das Sales Team "
+"ausblenden, ohne es zu entfernen."
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_model:0
@@ -408,6 +417,8 @@ msgid ""
 "Sales Team the user is member of. Used to compute the members of a Sales "
 "Team through the inverse one2many"
 msgstr ""
+"Verkaufsteam, in dem der Benutzer Mitglied ist. Wird verwendet, um die "
+"Mitglieder eines Verkaufsteams über das inverse one2many zu berechnen"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.sales_team_config_action
@@ -463,7 +474,7 @@ msgstr "Team Pipelines"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__team_type
 msgid "Team Type"
-msgstr ""
+msgstr "Teamtyp"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__color
@@ -476,6 +487,8 @@ msgid ""
 "The email address put in the 'Reply-To' of all emails sent by Odoo about "
 "cases in this Sales Team"
 msgstr ""
+"Die E-Mail-Adresse, die in der Antwort aller von Odoo gesendeten E-Mails zu "
+"Fällen in diesem Verkaufsteam angegeben ist"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_model
@@ -510,7 +523,7 @@ msgstr "Typ"
 #: code:addons/sales_team/models/crm_team.py:178
 #, python-format
 msgid "Undefined graph model for Sales Team: %s"
-msgstr ""
+msgstr "Undefiniertes Diagrammmodell für Sales Team: %s"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread
@@ -529,11 +542,13 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                    Each channel will work with a separate pipeline."
 msgstr ""
+"Verwenden Sie Verkaufsteams, um Ihre Verkaufsabteilungen zu organisieren.\n"
+" Jeder Kanal arbeitet mit einer separaten Pipeline."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
 msgid "User's Sales Team"
-msgstr ""
+msgstr "Verkaufsteam des Benutzers"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads

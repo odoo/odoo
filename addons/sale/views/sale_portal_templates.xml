@@ -124,10 +124,10 @@
             <div class="row mt16 o_portal_sale_sidebar">
                 <!-- Sidebar -->
                 <t t-call="portal.portal_record_sidebar">
-                    <t t-set="classes" t-value="'col-12 col-lg flex-lg-grow-0 d-print-none'"/>
+                    <t t-set="classes" t-value="'col-lg-auto d-print-none'"/>
 
                     <t t-set="title">
-                        <h2 class="mb-0"><b t-field="sale_order.amount_total"/> </h2>
+                        <h2 class="mb-0"><b t-field="sale_order.amount_total" data-id="total_amount"/> </h2>
                     </t>
                     <t t-set="entries">
                         <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
@@ -161,20 +161,21 @@
                                         <t t-if="sale_order.remaining_validity_days &gt; 1">days</t><t t-else="">day</t>
                                     </div>
                                 </li>
-                                <li t-if="sale_order.amount_undiscounted &gt; sale_order.amount_untaxed" class="list-group-item flex-grow-1">
+                                <li t-if="sale_order.amount_undiscounted - sale_order.amount_untaxed &gt; 0.01" class="list-group-item flex-grow-1">
                                     <small><b class="text-muted">Your advantage</b></small>
                                     <small>
                                         <b t-field="sale_order.amount_undiscounted"
                                             t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'
                                             style="text-decoration: line-through"
-                                            class="d-block mt-1"/>
+                                            class="d-block mt-1"
+                                            data-id="amount_undiscounted" />
                                     </small>
                                     <t t-if="sale_order.amount_untaxed == sale_order.amount_total">
-                                        <h4 t-field="sale_order.amount_total" class="text-success"/>
+                                        <h4 t-field="sale_order.amount_total" class="text-success" data-id="total_amount"/>
                                     </t>
                                     <t t-else="">
-                                        <h4 t-field="sale_order.amount_untaxed" class="text-success mb-0"/>
-                                        <small>(<span t-field="sale_order.amount_total"/> Incl. tax)</small>
+                                        <h4 t-field="sale_order.amount_untaxed" class="text-success mb-0" data-id="total_untaxed"/>
+                                        <small>(<span t-field="sale_order.amount_total" data-id="total_amount"/> Incl. tax)</small>
                                     </t>
                                 </li>
                             </t>
@@ -379,7 +380,7 @@
                     </t>
                 </div>
                 <div class="mb-3">
-                    <strong>Date:</strong> <span t-field="sale_order.create_date" t-options='{"widget": "date"}'/>
+                    <strong>Date:</strong> <span t-field="sale_order.date_order" t-options='{"widget": "date"}'/>
                 </div>
                 <div class="mb-3" t-if="sale_order.validity_date">
                     <strong>Expiration Date:</strong> <span t-field="sale_order.validity_date" t-options='{"widget": "date"}'/>
@@ -428,12 +429,14 @@
                 <table class="table table-sm" id="sales_order_table">
                     <thead class="bg-100">
                         <tr>
+                            <!-- TODO: remove in master -->
                             <t t-set="colspan" t-value="6"/>
                             <th class="text-left">Products</th>
                             <th class="text-right">Quantity</th>
                             <th t-attf-class="text-right {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">Unit Price</th>
                             <th t-if="display_discount" t-attf-class="text-right {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
                                 <span>Discount</span>
+                                <!-- TODO: remove in master -->
                                 <t t-set="colspan" t-value="colspan+1"/>
                             </th>
                             <th t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">Taxes</th>
@@ -482,19 +485,19 @@
                                         <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.tax_id))"/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
-                                        <span t-field="line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
+                                        <span class="oe_order_line_price_subtotal" t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+                                        <span class="oe_order_line_price_total" t-field="line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
                                     </td>
                                 </t>
                                 <t t-if="line.display_type == 'line_section'">
-                                    <td t-att-colspan="colspan">
+                                    <td colspan="99">
                                         <span t-field="line.name"/>
                                     </td>
                                     <t t-set="current_section" t-value="line"/>
                                     <t t-set="current_subtotal" t-value="0"/>
                                 </t>
                                 <t t-if="line.display_type == 'line_note'">
-                                    <td t-att-colspan="colspan">
+                                    <td colspan="99">
                                         <span t-field="line.name"/>
                                     </td>
                                 </t>
@@ -502,7 +505,7 @@
 
                             <t t-if="current_section and (line_last or sale_order.order_line[line_index+1].display_type == 'line_section')">
                                 <tr class="is-subtotal text-right">
-                                    <td t-att-colspan="colspan">
+                                    <td colspan="99">
                                         <strong class="mr16">Subtotal</strong>
                                         <span
                                             t-esc="current_subtotal"
@@ -517,12 +520,13 @@
 
                 <div id="total" class="row" name="total" style="page-break-inside: avoid;">
                     <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
+                        <!-- Should be replaced in master by t-call="sale.sale_order_portal_content_totals_table" -->
                         <table class="table table-sm">
                             <tr class="border-black" style="border-bottom:1px solid #dddddd;">
                                 <td><strong>Subtotal</strong></td>
                                 <td class="text-right">
                                     <span
-                                        data-id="total_amount"
+                                        data-id="total_untaxed"
                                         t-field="sale_order.amount_untaxed"
                                         t-options='{"widget": "monetary","display_currency": sale_order.pricelist_id.currency_id}'
                                     />
@@ -580,4 +584,47 @@
         </div>
     </template>
 
+    <template id="sale_order_portal_content_totals_table">
+        <table class="table table-sm">
+            <tr class="border-black">
+                <td><strong>Subtotal</strong></td>
+                <td class="text-right">
+                    <span
+                        data-id="total_untaxed"
+                        t-field="sale_order.amount_untaxed"
+                        t-options='{"widget": "monetary","display_currency": sale_order.pricelist_id.currency_id}'
+                    />
+                </td>
+            </tr>
+            <t t-foreach="sale_order.amount_by_group" t-as="amount_by_group">
+                <tr>
+                    <t t-if="amount_by_group[3] == 1 and sale_order.amount_untaxed == amount_by_group[2]">
+                        <td>
+                            <span t-esc="amount_by_group[0]"/>
+                            <span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group[2]" t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/></span>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="amount_by_group[1]"
+                                t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
+                        </td>
+                    </t>
+                    <t t-else ="">
+                        <td>
+                            <span t-esc="amount_by_group[0]"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="amount_by_group[1]"
+                                t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
+                        </td>
+                    </t>
+                </tr>
+            </t>
+            <tr class="border-black">
+                <td><strong>Total</strong></td>
+                <td class="text-right">
+                    <span data-id="total_amount" t-field="sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
+                </td>
+            </tr>
+        </table>
+    </template>
 </odoo>

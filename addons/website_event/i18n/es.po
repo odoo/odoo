@@ -3,9 +3,8 @@
 # * website_event
 # 
 # Translators:
-# Martin Trigaux, 2018
 # e2f <projects@e2f.com>, 2018
-# ES R2 <e2fds74f5ds412@outlook.com>, 2018
+# 384b9483dceff15cca881ce1cccf70f5, 2018
 # Alejandro Santana <alejandrosantana@anubia.es>, 2018
 # oihane <oihanecruce@gmail.com>, 2018
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
@@ -17,13 +16,17 @@
 # Gustavo Orozco H. <gustavo.orozco.h@app-247.com>, 2018
 # David Vidal <david.vidal@trespinos.es>, 2018
 # Nicolás Broggi <rnbroggi@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:07+0000\n"
-"PO-Revision-Date: 2018-10-02 10:07+0000\n"
-"Last-Translator: Nicolás Broggi <rnbroggi@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,6 +45,8 @@ msgid ""
 ".\n"
 "            Try the"
 msgstr ""
+".\n"
+"Prueba el"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -83,6 +88,19 @@ msgid ""
 "<em><i class=\"fa fa-plus-circle\" role=\"img\" aria-label=\"Create\" title=\"Create\"/>\n"
 "                    Configure and Launch Event Registration</em>"
 msgstr ""
+"<em><i class=\"fa fa-plus-circle\" role=\"img\" aria-label=\"Crear\" title=\"Crear\"/>\n"
+"Configurar y lanzar registro de eventos</em>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_details
+#: model_terms:ir.ui.view,arch_db:website_event.index
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Start date\" "
+"title=\"Start date\"/>"
+msgstr ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Fecha inicial\" "
+"title=\"Fecha inicial\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -90,11 +108,38 @@ msgid "<i class=\"fa fa-clock-o\"/> From"
 msgstr "<i class=\"fa fa-clock-o\"/> De"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.country_events_list
+msgid ""
+"<i class=\"fa fa-cloud\" title=\"It is an online event\" role=\"img\" aria-"
+"label=\"It is an online event\"/>"
+msgstr ""
+"<i class=\"fa fa-cloud\" title=\"Es un evento virtual\" role=\"img\" aria-"
+"label=\"Es un evento virtual\"/>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Correo electrónico\" "
+"title=\"Correo electrónico\"/>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.country_events
+msgid ""
+"<i class=\"fa fa-flag fa-5x text-muted\" title=\"Local Events\" role=\"img\""
+" aria-label=\"Local Events\"/>"
+msgstr ""
+"<i class=\"fa fa-flag fa-5x text-muted\" title=\"Eventos locales\" "
+"role=\"img\" aria-label=\"Eventos locales\"/>"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_right_country_event
 msgid ""
 "<i class=\"fa fa-flag fa-5x\"/>\n"
 "                            Events from Your Country"
 msgstr ""
+"<i class=\"fa fa-flag fa-5x\"/>\n"
+"Eventos para su país"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -107,6 +152,32 @@ msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Add to iCal/Outlook"
 msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Añadir a iCal/Outlook"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.country_events_list
+msgid ""
+"<i class=\"fa fa-map-marker\" title=\"It is a physical event\" role=\"img\" "
+"aria-label=\"It is a physical event\"/>"
+msgstr ""
+"<i class=\"fa fa-map-marker\" title=\"Es un evento físico\" role=\"img\" "
+"aria-label=\"Es un evento físico\"/>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
+msgstr "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Teléfono\" title=\"Teléfono\"/>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.index
+msgid "<i class=\"fa fa-tag\" role=\"img\" aria-label=\"Event type\" title=\"Event type\"/>"
+msgstr ""
+"<i class=\"fa fa-tag\" role=\"img\" aria-label=\"Tipo de evento\" "
+"title=\"Tipo de evento\"/>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "<i class=\"fa fa-user\" role=\"img\" aria-label=\"Name\" title=\"Name\"/>"
+msgstr "<i class=\"fa fa-user\" role=\"img\" aria-label=\"Nombre\" title=\"Nombre\"/>"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i>to</i>"
@@ -116,6 +187,15 @@ msgstr "<i>a</i>"
 #: model_terms:ir.ui.view,arch_db:website_event.event_right_quotes
 msgid "<small>Author</small>"
 msgstr "<small>Autor</small>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.country_events_list
+msgid ""
+"<span class=\"badge badge-danger\" role=\"img\" aria-label=\"Attention: not "
+"published\" title=\"Not published\"><i class=\"fa fa-ban\"/></span>"
+msgstr ""
+"<span class=\"badge badge-danger\" role=\"img\" aria-label=\"Atención: no "
+"publicado\" title=\"No publicado\"><i class=\"fa fa-ban\"/></span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events
@@ -427,7 +507,7 @@ msgstr "Está participando"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_published
 msgid "Is published"
-msgstr ""
+msgstr "Es Publicado"
 
 #. module: website_event
 #: code:addons/website_event/models/event.py:71
@@ -476,6 +556,8 @@ msgstr "Próximo mes"
 #, python-format
 msgid "No date has been specified for the event, no file will be generated."
 msgstr ""
+"No se ha especificado una fecha para el evento, no se generará ningún "
+"archivo."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index
@@ -529,7 +611,7 @@ msgstr "Participando"
 #: code:addons/website_event/controllers/main.py:60
 #, python-format
 msgid "Past Events"
-msgstr ""
+msgstr "Eventos pasados"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -546,7 +628,7 @@ msgstr "Fotos de eventos pasados"
 #: code:addons/website_event/static/src/js/website_event.js:55
 #, python-format
 msgid "Please select at least one ticket."
-msgstr ""
+msgstr "Por favor seleccione al menos un boleto."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.brand_promotion

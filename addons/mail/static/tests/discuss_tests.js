@@ -424,7 +424,7 @@ QUnit.test('@ mention in channel', function (assert) {
 });
 
 QUnit.test('@ mention with special chars', function (assert) {
-    assert.expect(10);
+    assert.expect(11);
     var done = assert.async();
     var fetchListenersDef = $.Deferred();
     var receiveMessageDef = $.Deferred();
@@ -452,6 +452,9 @@ QUnit.test('@ mention with special chars', function (assert) {
                 ]);
             }
             if (args.method === 'message_post') {
+                assert.deepEqual(args.kwargs.partner_ids, [1],
+                    "mentioned partners are sent to server"
+                )
                 var data = {
                     author_id: ["42", "Me"],
                     body: args.kwargs.body,
@@ -512,6 +515,85 @@ QUnit.test('@ mention with special chars', function (assert) {
                         assert.strictEqual($mention.find('.o_mention_name').text(),
                             '\u0405pëciãlUser<&>"`\' \u30C4',
                             "first partner mention should still display the correct partner name");
+                        discuss.destroy();
+                        done();
+                });
+        });
+    });
+});
+
+QUnit.test('@ mention with removed space', function (assert) {
+    assert.expect(4);
+    var done = assert.async();
+    var fetchListenersDef = $.Deferred();
+    var receiveMessageDef = $.Deferred();
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "general",
+            }],
+        },
+    };
+    var objectDiscuss;
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        mockRPC: function (route, args) {
+            if (args.method === 'channel_fetch_listeners') {
+                fetchListenersDef.resolve();
+                return $.when([
+                    {id: 1, name: 'Admin'},
+                ]);
+            }
+            if (args.method === 'message_post') {
+                assert.deepEqual(args.kwargs.partner_ids, [],
+                    "mentioned partners are sent to server"
+                )
+                var data = {
+                    author_id: ["42", "Me"],
+                    body: args.kwargs.body,
+                    channel_ids: [1],
+                };
+                var notification = [[false, 'mail.channel', 1], data];
+                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
+                receiveMessageDef.resolve();
+                return $.when(42);
+            }
+            return this._super.apply(this, arguments);
+        },
+    })
+    .then(function (discuss) {
+        objectDiscuss = discuss;
+        var $general = discuss.$('.o_mail_discuss_sidebar')
+                        .find('.o_mail_discuss_item[data-thread-id=1]');
+        // click on general
+        $general.click();
+        var $input = discuss.$('textarea.o_composer_text_field').first();
+        assert.ok($input.length, "should display a composer input");
+        // Note: focus is needed in order to trigger rpc 'channel_fetch_listeners'
+        $input.focus();
+        $input.val("@");
+        $input.trigger('keyup');
+        fetchListenersDef
+            .then(concurrency.delay.bind(concurrency, 0))
+            .then(function () {
+                // equivalent to $mentionPropositions.find('active').click();
+                $input.trigger($.Event('keyup', {which: $.ui.keyCode.ENTER}));
+                $input.val('@Admin: hi');
+                // send message
+                $input.trigger($.Event('keydown', {which: $.ui.keyCode.ENTER}));
+                receiveMessageDef
+                    .then(concurrency.delay.bind(concurrency, 0))
+                    .then(function () {
+                        assert.containsNone(discuss, '.o_thread_message_content a',
+                            "should not contain a link in the message content");
+                        assert.strictEqual(discuss.$('.o_thread_message_content').html().trim(),
+                            "@Admin: hi", "should not have linked mention without space");
                         discuss.destroy();
                         done();
                 });

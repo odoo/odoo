@@ -35,6 +35,16 @@ class PortalMixin(models.AbstractModel):
             self.sudo().write({'access_token': str(uuid.uuid4())})
         return self.access_token
 
+    @api.multi
+    def get_base_url(self):
+        """Get the base URL for the current model.
+
+        Defined here to be overriden by website specific models.
+        The method has to be public because it is called from mail templates.
+        """
+        self.ensure_one()
+        return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+
     def _get_share_url(self, redirect=False, signup_partner=False, pid=None):
         """
         Build the url of the record  that will be sent by mail and adds additional parameters such as

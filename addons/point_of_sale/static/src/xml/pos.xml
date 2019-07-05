@@ -712,6 +712,9 @@
                     </span>
                 </div>
                 <div class="centered-content touch-scrollable">
+                    <div class="button print_invoice">
+                        <i class='fa fa-print'></i> Print Invoice
+                    </div>
                     <div class="button print">
                         <i class='fa fa-print'></i> Print Receipt
                     </div>
@@ -955,7 +958,7 @@
             <line t-foreach='taxes' t-as='taxe'>
                 <left><t t-esc='taxe.name' /></left>
                 <right>
-                    <t t-esc='widget.format_currency_no_symbol(taxe.total)'/>
+                    <t t-esc='widget.format_currency_no_symbol(taxe.tax_amount)'/>
                 </right>
             </line>
 

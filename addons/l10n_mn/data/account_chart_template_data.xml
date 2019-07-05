@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="account_reports_mn_statements_menu" name="Mongolia" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
+
+    <record id="mn_chart_1" model="account.chart.template">
+        <field name="name">Mongolia</field>
+        <field name="bank_account_code_prefix">11</field>
+        <field name="cash_account_code_prefix">10</field>
+        <field name="transfer_account_code_prefix">1109</field>
+        <field name="code_digits">8</field>
+        <field name="currency_id" ref="base.MNT"/>
+        <field name="use_anglo_saxon" eval="True"/>
+    </record>
+
+</odoo>

@@ -23,10 +23,10 @@ class RatingProject(http.Controller):
                 rating,
                 COUNT(rating) as rating_count,
                 CASE
-                    WHEN now()::date - create_date::date BETWEEN 0 AND 6 Then 'days_06'
-                    WHEN now()::date - create_date::date BETWEEN 0 AND 15 Then 'days_15'
-                    WHEN now()::date - create_date::date BETWEEN 0 AND 30  Then 'days_30'
-                    WHEN now()::date - create_date::date BETWEEN 0 AND 90  Then 'days_90'
+                    WHEN now()::date - write_date::date BETWEEN 0 AND 6 Then 'days_06'
+                    WHEN now()::date - write_date::date BETWEEN 0 AND 15 Then 'days_15'
+                    WHEN now()::date - write_date::date BETWEEN 0 AND 30  Then 'days_30'
+                    WHEN now()::date - write_date::date BETWEEN 0 AND 90  Then 'days_90'
                 END AS period
             FROM
                 rating_rating
@@ -35,7 +35,7 @@ class RatingProject(http.Controller):
                     AND parent_res_id = %s
                     AND res_model = 'project.task'
                     AND rated_partner_id IS NOT NULL
-                    AND create_date >= current_date - interval '90' day
+                    AND write_date >= current_date - interval '90' day
                     AND rating IN (1,5,10)
             GROUP BY
                 rated_partner_id, rating, period

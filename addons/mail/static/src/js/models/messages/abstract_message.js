@@ -336,6 +336,14 @@ var AbstractMessage =  Class.extend({
         return false;
     },
     /**
+     * @params {integer[]} attachmentIDs
+     */
+    removeAttachments: function (attachmentIDs) {
+        this._attachmentIDs = _.reject(this._attachmentIDs, function (attachment) {
+            return _.contains(attachmentIDs, attachment.id);
+        });
+    },
+    /**
      * State whether this message should redirect to the author
      * when clicking on the author of this message.
      *

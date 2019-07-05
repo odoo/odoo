@@ -4,6 +4,7 @@
 import odoo
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import MissingError, UserError, ValidationError, AccessError
+from odoo.osv import expression
 from odoo.tools.safe_eval import safe_eval, test_python_expr
 from odoo.tools import pycompat, wrap_module
 from odoo.http import request
@@ -247,7 +248,10 @@ class IrActionsActWindow(models.Model):
         existing = self.filtered(lambda rec: rec.id in ids)
         if len(existing) < len(self):
             # mark missing records in cache with a failed value
-            exc = MissingError(_("Record does not exist or has been deleted."))
+            exc = MissingError(
+                _("Record does not exist or has been deleted.")
+                + '\n\n({} {}, {} {})'.format(_('Records:'), (self - existing).ids[:6], _('User:'), self._uid)
+            )
             for record in (self - existing):
                 record._cache.set_failed(self._fields, exc)
         return existing
@@ -394,7 +398,7 @@ class IrActionsServer(models.Model):
     # Create
     crud_model_id = fields.Many2one('ir.model', string='Create/Write Target Model',
                                     oldname='srcmodel_id', help="Model for record creation / update. Set this field only to specify a different model than the base model.")
-    crud_model_name = fields.Char(related='crud_model_id.name', readonly=True)
+    crud_model_name = fields.Char(related='crud_model_id.model', string='Target Model', readonly=True)
     link_field_id = fields.Many2one('ir.model.fields', string='Link using field',
                                     help="Provide the field used to link the newly created record "
                                          "on the record on used by the server action.")
@@ -707,10 +711,9 @@ class IrActionsTodo(models.Model):
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        if args is None:
-            args = []
+        args = args or []
         if name:
-            action_ids = self._search([('action_id', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
+            action_ids = self._search(expression.AND([[('action_id', operator, name)], args]), limit=limit, access_rights_uid=name_get_uid)
             return self.browse(action_ids).name_get()
         return super(IrActionsTodo, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
@@ -781,3 +784,11 @@ class IrActionsActClient(models.Model):
         for record in self:
             params = record.params
             record.params_store = repr(params) if isinstance(params, dict) else params
+
+    def _get_default_form_view(self):
+        doc = super(IrActionsActClient, self)._get_default_form_view()
+        params = doc.find(".//field[@name='params']")
+        params.getparent().remove(params)
+        params_store = doc.find(".//field[@name='params_store']")
+        params_store.getparent().remove(params_store)
+        return doc

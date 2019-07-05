@@ -10,22 +10,41 @@
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2018
 # Rolandas <info@paninfo.lt>, 2018
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2018
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2018
-# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: base_automation
+#: model:mail.template,body_html:base_automation.test_mail_template_automation
+msgid "<div>Email automation</div>"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__website_published
+msgid ""
+"A code server action can be executed from the website, using a dedicated "
+"controller. The address is <base>/website/action/<website_path>. Set this "
+"field as True to allow users to run this action. If it is set to False the "
+"action cannot be run through the website."
+msgstr ""
+"Serverio kodo veiksmas gali būti įvykdytas iš svetainės, naudojant "
+"priskirtąjį valdiklį. Adresas - <base>/website/action/<website_path>. Jei "
+"norite leisti vartotojams paleisti šį veiksmą, nustatykite šį lauką kaip "
+"teigiamą. Jei jis nustatytas kaip neigiamas, veiksmas negalės būti "
+"paleidžiamas per svetainę."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -61,7 +80,7 @@ msgstr "Veikla"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_type
 msgid "Activity User Type"
-msgstr ""
+msgstr "Veiklos vartotojo tipas"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__channel_ids
@@ -98,17 +117,22 @@ msgstr "Automatiniai veiksmai"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_line_test
 msgid "Automated Rule Line Test"
-msgstr ""
+msgstr "Automatizuotos taisyklės eilutės testas"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_lead_test
 msgid "Automated Rule Test"
-msgstr ""
+msgstr "Automatizuotos taisyklės testas"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation"
 msgstr "Automatizacija"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
+msgid "Available on the Website"
+msgstr "Pasiekiama svetainėje"
 
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
@@ -155,6 +179,12 @@ msgstr ""
 "Bazinė automatizacija: testuoti taisyklę ją parašius, tikrinti kontekstą"
 
 #. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write_recompute_send_email
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_recompute_send_email_ir_actions_server
+msgid "Base Automation: test send an email"
+msgstr ""
+
+#. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "Based on Form Modification"
 msgstr "Pagal formos keitimą"
@@ -190,6 +220,8 @@ msgid ""
 "Check this box if this contact is a customer. It can be selected in sales "
 "orders."
 msgstr ""
+"Pažymėkite, jei šis kontaktas yra klientas. Jie gali būti pasirinkti "
+"pardavimo užsakymuose."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__child_ids
@@ -203,7 +235,7 @@ msgid ""
 "returned action value will be used as global return value."
 msgstr ""
 "Dukteriniai serverio veiksmai, kurie bus atlikti. Atkreipkite dėmesį, kad "
-"paskutinio grąžinimo grąžinta reikšmė bus naudojama kai bendroji grąžinimo "
+"paskutinio grąžinimo grąžinta reikšmė bus naudojama kaip bendroji grąžinimo "
 "reikšmė."
 
 #. module: base_automation
@@ -215,13 +247,13 @@ msgstr "Uždaryta"
 #: model:ir.model.fields,help:base_automation.field_base_automation__on_change_fields
 msgid "Comma-separated list of field names that triggers the onchange."
 msgstr ""
-"Kableliu atskirtas sąrašas laukų pavadinimų, kurie iššaukia pakeitimų "
+"Kableliu atskirtas laukų pavadinimų sąrašas, kurie iššaukia pakeitimų "
 "vykdymą."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_id
 msgid "Create/Write Target Model"
-msgstr "Kurti / Parašyti tikslinį modelį"
+msgstr "Kurti / Rašyti tikslinį modelį"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
@@ -256,7 +288,7 @@ msgid ""
 msgstr ""
 "Atidėti po iššaukimo datos.\n"
 "Galite įrašyti neigiamą skaičių, jei reikia atidėjimo\n"
-"po iššaukimo datos, pvz., 15 min. prieš susitikimą \n"
+"prieš iššaukimo datą, pvz., 15 min. prieš susitikimą \n"
 "siunčiamas priminimas."
 
 #. module: base_automation
@@ -270,6 +302,11 @@ msgid "Delay type"
 msgstr "Uždelsimo tipas"
 
 #. module: base_automation
+#: model:ir.model,name:base_automation.model_ir_demo
+msgid "Demo"
+msgstr "Demo"
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__display_name
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__display_name
@@ -279,12 +316,12 @@ msgstr "Rodomas pavadinimas"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range
 msgid "Due Date In"
-msgstr ""
+msgstr "Termino data po"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range_type
 msgid "Due type"
-msgstr ""
+msgstr "Termino tipas"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
@@ -307,6 +344,11 @@ msgstr "Valandos"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__id
 msgid "ID"
 msgstr "ID"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__xml_id
+msgid "ID of the action if defined in a XML file"
+msgstr "Veiksmo ID yra apibrėžtas XML faile"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
@@ -377,7 +419,7 @@ msgstr "Eilutė"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__link_field_id
 msgid "Link using field"
-msgstr "Nuorodas naudojantis laukas"
+msgstr "Nuoroda, naudojanti lauką"
 
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
@@ -388,11 +430,6 @@ msgstr "Minutės"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_id
 msgid "Model"
 msgstr "Modelis"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
-msgid "Model Description"
-msgstr "Modelio aprašymas"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_name
@@ -436,7 +473,7 @@ msgstr "Pastaba"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_fields
 msgid "On Change Fields Trigger"
-msgstr "Pakeitimų laukuose iššaukimas"
+msgstr "Iššaukus laukų pakeitimą"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -497,16 +534,6 @@ msgid "Python Code"
 msgstr "Python kodas"
 
 #. module: base_automation
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Remove Action"
-msgstr "Pašalinti veiksmą"
-
-#. module: base_automation
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Remove the contextual action related to this server action"
-msgstr "Pašalinti konteksto veiksmą, susijusį su šio serverio veiksmu"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__user_id
 msgid "Responsible"
@@ -545,7 +572,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Setup a new automated automation"
-msgstr ""
+msgstr "Nustatyti naują automatinė automatizaciją"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__state
@@ -563,9 +590,14 @@ msgid "Summary"
 msgstr "Santrauka"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
+msgid "Target Model"
+msgstr "Rodyti įrašą"
+
+#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
 msgid "Technical name of the user on the record"
-msgstr ""
+msgstr "Techninis vartotojo vardas įraše"
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:87
@@ -574,6 +606,13 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
+"\"%(trigger_value)s\" %(trigger_label)s gali būti naudojama tik su "
+"\"%(state_value)s\" veiksmo tipu"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__website_url
+msgid "The full URL to access the server action through the website."
+msgstr "Pilnas URL serverio veiksmo pasiekimui per svetainę."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -617,6 +656,9 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
+"Naudokite \"konkretus vartotojas\", kad priskirtumėte tą patį vartotoją "
+"kitam veiksmui. Naudokite \"standartinis vartotojas iš įrašo\", kad "
+"nurodytumėte vartotojo lauko pavadinimą pasirinkimui įraše."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
@@ -632,6 +674,12 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"Naudokite automatizuotus veiksmus automatiniam veiksmų\n"
+"suaktyvinimui įvairiuose ekranuose. Pavyzdžiui: konkretaus\n"
+"vartotojo sukurtas šaltasis kontaktas gali būti automatiškai\n"
+"nustatytas konkrečiai pardavimų komandai arba galimybė,\n"
+"kuri yra laukiančioje būsenoje, gali automatiškai suaktyvinti\n"
+"priminimo laišką praėjus 14 dienų."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__user_id
@@ -641,7 +689,7 @@ msgstr "Vartotojas"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
 msgid "User field name"
-msgstr ""
+msgstr "Vartotojo lauko pavadinimas"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__fields_lines
@@ -653,6 +701,16 @@ msgstr "Reikšmių susiejimas"
 #, python-format
 msgid "Warning"
 msgstr "Įspėjimas"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
+msgid "Website Path"
+msgstr "Svetainės kelias"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
+msgid "Website Url"
+msgstr "Svetainės URL"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
@@ -678,7 +736,7 @@ msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
-"Kai sąlyga turėtų būti iššaukiama.\n"
+"Kada sąlyga turėtų būti iššaukiama.\n"
 "Jei yra, ji bus patikrinama planuoklio. Jei nėra, ji bus patikrinama sukūrimo ir atnaujinimo metu."
 
 #. module: base_automation
@@ -692,3 +750,5 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
 msgstr ""
+"Parašykite Python kodą, kurį vykdys veiksmas. Galima naudoti kintamuosius; "
+"pagalbą apie naudojamas Python išraiškas gali rasti pagalbos skiltyje."

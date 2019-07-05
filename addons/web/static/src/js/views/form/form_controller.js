@@ -228,17 +228,16 @@ var FormController = BasicController.extend({
                 // are displayed with an alert
                 var fields = self.renderer.state.fields;
                 var data = self.renderer.state.data;
-                var alertFields = [];
+                var alertFields = {};
                 for (var k = 0; k < changedFields.length; k++) {
                     var field = fields[changedFields[k]];
                     var fieldData = data[changedFields[k]];
                     if (field.translate && fieldData) {
-                        alertFields.push(field);
+                        alertFields[changedFields[k]] = field;
                     }
                 }
-                if (alertFields.length) {
-                    self.renderer.alertFields = alertFields;
-                    self.renderer.displayTranslationAlert();
+                if (!_.isEmpty(alertFields)) {
+                    self.renderer.updateAlertFields(alertFields);
                 }
             }
             return changedFields;
@@ -367,6 +366,19 @@ var FormController = BasicController.extend({
         var env = this.model.get(this.handle, {env: true});
         state.id = env.currentId;
         this._super(state);
+    },
+    /**
+     * Overrides to reload the form when saving failed in readonly (e.g. after
+     * a change on a widget like priority or statusbar).
+     *
+     * @override
+     * @private
+     */
+    _rejectSave: function () {
+        if (this.mode === 'readonly') {
+            return this.reload();
+        }
+        return this._super.apply(this, arguments);
     },
     /**
      * Calls unfreezeOrder when changing the mode.

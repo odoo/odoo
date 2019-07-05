@@ -7,18 +7,18 @@
 # Volluta <volluta@tutanota.com>, 2018
 # Eric Geens <ericgeens@yahoo.com>, 2018
 # wilcobergacker <wilcobergacker@gmail.com>, 2018
-# Martin Trigaux, 2018
 # Cas Vissers <casvissers@brahoo.nl>, 2018
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Martin Trigaux, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-13 17:53+0000\n"
+"POT-Creation-Date: 2019-02-13 07:03+0000\n"
 "PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -183,13 +183,6 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/menu.xml:101
-#, python-format
-msgid "(Enterprise Edition)"
-msgstr "(Enterprise Editie)"
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/xml/base.xml:298
 #, python-format
 msgid "(change)"
@@ -225,8 +218,28 @@ msgid "1 record"
 msgstr "1 record"
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.external_layout_background
+msgid "<i class=\"fa fa-at\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
+msgstr "<i class=\"fa fa-at\" role=\"img\" aria-label=\"E-mail\" title=\"E-mail\"/>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.external_layout_background
+msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Fiscal number\"/>"
+msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"BTW nummer\"/>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.external_layout_background
+msgid "<i class=\"fa fa-globe\" role=\"img\" aria-label=\"Website\" title=\"Website\"/>"
+msgstr "<i class=\"fa fa-globe\" role=\"img\" aria-label=\"Website\" title=\"Website\"/>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.external_layout_background
+msgid "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
+msgstr "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Telefoon\" title=\"Telefoon\"/>"
+
+#. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome/action_manager.js:577
+#: code:addons/web/static/src/js/chrome/action_manager.js:574
 #, python-format
 msgid ""
 "A popup window has been blocked. You may need to change your browser "
@@ -525,7 +538,7 @@ msgstr "En meer"
 #: code:addons/web/static/src/xml/base.xml:628
 #, python-format
 msgid "Any"
-msgstr "Elke"
+msgstr "één"
 
 #. module: web
 #. openerp-web
@@ -961,7 +974,7 @@ msgstr "Aanmaken"
 #: code:addons/web/static/src/js/views/form/form_controller.js:616
 #, python-format
 msgid "Create "
-msgstr "Maken"
+msgstr "Aanmaken"
 
 #. module: web
 #. openerp-web
@@ -1082,13 +1095,6 @@ msgstr "Database"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/menu.xml:107
-#, python-format
-msgid "Database expiration:"
-msgstr "Vervaldatum database:"
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/js/views/search/groupby_menu.js:52
 #: code:addons/web/static/src/xml/base.xml:558
 #: code:addons/web/static/src/xml/web_calendar.xml:80
@@ -1181,14 +1187,14 @@ msgstr "Negeer een record wijziging"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_report_layout__display_name
 msgid "Display Name"
-msgstr "Weergave naam"
+msgstr "Weergavenaam"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/data_export.js:362
 #, python-format
 msgid "Do you really want to delete this export template?"
-msgstr "Wilt u echt dit exporteer sjabloon verwijderen?"
+msgstr "Wilt u echt dit exportsjabloon verwijderen?"
 
 #. module: web
 #. openerp-web
@@ -1643,6 +1649,13 @@ msgid "Group by: %s"
 msgstr "Groepeer op: %s"
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/graph/graph_renderer.js:214
+#, python-format
+msgid "Grouped"
+msgstr "Gegroepeerd"
+
+#. module: web
 #: model:ir.model,name:web.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP routing"
@@ -1736,7 +1749,7 @@ msgstr "Inactief"
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:273
 #, python-format
 msgid "Invalid data"
-msgstr "Invalide data"
+msgstr "Ongeldige gegevens"
 
 #. module: web
 #: code:addons/web/controllers/main.py:717
@@ -2287,7 +2300,6 @@ msgstr "Object:"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/core/dialog.js:59
-#: code:addons/web/static/src/xml/menu.xml:100
 #, python-format
 msgid "Odoo"
 msgstr "Odoo"
@@ -2622,6 +2634,7 @@ msgstr "Voorbeeld pdf bron"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:741
+#: code:addons/web/static/src/xml/base.xml:1505
 #: code:addons/web/static/src/xml/web_calendar.xml:75
 #, python-format
 msgid "Previous"
@@ -3068,6 +3081,13 @@ msgstr "Speciaal:"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/graph/graph_renderer.js:215
+#, python-format
+msgid "Stacked"
+msgstr "Gestapeld"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/core/misc.js:14
 #, python-format
 msgid "Still loading..."
@@ -3149,7 +3169,7 @@ msgstr "Tel:"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:583
 #, python-format
 msgid "The domain you entered is not properly formed"
-msgstr "Het ingegegevn domein is niet correct opgebouwd"
+msgstr "Het ingegeven domein is niet correct geformatteerd"
 
 #. module: web
 #. openerp-web
@@ -3386,7 +3406,7 @@ msgid ""
 "                that there is at least one measure and no active filter in the search bar."
 msgstr ""
 "Probeer een aantal records toe te voegen of zorg ervoor\n"
-"dat er minimaal één maat en geen actief filter in de zoekbalk staat."
+"dat er minimaal één meetwaarde is en geen actief filter in de zoekbalk staat."
 
 #. module: web
 #. openerp-web
@@ -3573,6 +3593,14 @@ msgstr "Gebruikers"
 #, python-format
 msgid "Validation Error"
 msgstr "Bevestiging fout"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/pivot/pivot_model.js:240
+#: code:addons/web/static/src/js/views/pivot/pivot_renderer.js:174
+#, python-format
+msgid "Variation"
+msgstr "Verschil"
 
 #. module: web
 #. openerp-web
@@ -3919,10 +3947,24 @@ msgstr "Is na"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/search/search_filters.js:190
+#, python-format
+msgid "is after or equal to"
+msgstr "is na of gelijk aan"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/search/search_filters.js:189
 #, python-format
 msgid "is before"
 msgstr "Is voor"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search/search_filters.js:191
+#, python-format
+msgid "is before or equal to"
+msgstr "is voor of gelijk aan"
 
 #. module: web
 #. openerp-web
@@ -4074,7 +4116,7 @@ msgstr "niet ingesteld (onwaar)"
 #: code:addons/web/static/src/xml/base.xml:648
 #, python-format
 msgid "of the following rules:"
-msgstr "in de volgende regels:"
+msgstr "van de volgende regels:"
 
 #. module: web
 #. openerp-web

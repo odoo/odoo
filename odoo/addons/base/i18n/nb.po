@@ -3,22 +3,22 @@
 # * base
 # 
 # Translators:
-# nle_odoo, 2018
 # Torvald Baade Bringsvor <bringsvor@bringsvor.com>, 2018
 # Jan Pedro Tumusok <jpt@eyenetworks.no>, 2018
+# Aleksander, 2018
 # Andy Schønhaug <odoo@cypodgroup.com>, 2018
 # Jorunn D. Newth, 2018
-# Marius Stedjan <marius@stedjan.com>, 2018
+# nle_odoo, 2018
 # Martin Trigaux, 2018
-# Aleksander, 2018
+# Marius Stedjan <marius@stedjan.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:47+0000\n"
+"POT-Creation-Date: 2019-05-22 11:56+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Aleksander, 2018\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5315,6 +5315,40 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
+msgid ""
+"<i class=\"fa fa-building\" role=\"img\" aria-label=\"Enterprise\" "
+"title=\"Enterprise\"/>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
+msgid "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Invalid\" title=\"Invalid\"/>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
+msgid "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ok\" title=\"Ok\"/>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
+msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Login\"/>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_rule_form
+msgid ""
+"<i class=\"fa fa-info fa-3x text-info float-left\" role=\"img\" aria-"
+"label=\"Info\" title=\"Info\"/>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.onboarding_container
+msgid "<i class=\"fa fa-times\" title=\"Close the onboarding panel\"/>"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "<span aria-label=\"Close\">&amp;times;</span>"
 msgstr ""
@@ -5353,6 +5387,13 @@ msgstr ""
 msgid ""
 "<span class=\"o_form_label\">We suggest to reload the menu tab to see the "
 "new menus (Ctrl+T then Ctrl+R).\"</span>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
+msgid ""
+"<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
+"label=\"Search\" title=\"Search\"/></span>"
 msgstr ""
 
 #. module: base
@@ -6278,21 +6319,10 @@ msgid "Active"
 msgstr "Aktiv"
 
 #. module: base
-#: selection:ir.actions.act_window.view,view_mode:0
-#: selection:ir.ui.view,type:0
-msgid "Activity"
-msgstr "Aktivitet"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_next_actual
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__number_next_actual
 msgid "Actual Next Number"
 msgstr ""
-
-#. module: base
-#: selection:ir.actions.server,state:0
-msgid "Add Followers"
-msgstr "Legg til følgere"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_bot
@@ -6654,6 +6684,13 @@ msgstr ""
 "finansmodulen for brukere som ikke er regnskapsførere."
 
 #. module: base
+#: model_terms:ir.actions.act_window,help:base.action_attachment
+msgid ""
+"Also you will find here all the related documents and download it by "
+"clicking on any individual document."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_fields.py:394
 #, python-format
 msgid ""
@@ -6749,9 +6786,7 @@ msgid "Application"
 msgstr "Applikasjon"
 
 #. module: base
-#: code:addons/base/models/res_users.py:968
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "Application Accesses"
 msgstr "Applikasjonstilganger"
 
@@ -6928,11 +6963,6 @@ msgid "At least one language must be active."
 msgstr "Minst ett språk må være aktivt."
 
 #. module: base
-#: model_terms:ir.actions.act_window,help:base.action_attachment
-msgid "Attach a new document"
-msgstr ""
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Attached Document Name"
 msgstr "Navn på vedlagt dokument"
@@ -6943,6 +6973,7 @@ msgid "Attached To"
 msgstr "Lagt ved"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_attachment
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Attachment"
 msgstr "Vedlegg"
@@ -7028,11 +7059,6 @@ msgstr "Authorize.Net betalingstilbyder"
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__auto_search
 msgid "Auto Search"
 msgstr "Auto-søk"
-
-#. module: base
-#: selection:ir.actions.server,usage:0
-msgid "Automated Action"
-msgstr "Automatisert handling"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
@@ -7777,7 +7803,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 #: model_terms:ir.ui.view,arch_db:base.wizard_update_translations
 msgid "Cancel"
-msgstr "Kanseller"
+msgstr "Avbryt"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -7788,7 +7814,7 @@ msgstr "Avbryt installasjon"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_cancel
 msgid "Cancel Journal Entries"
-msgstr "Kanseller journallinjer"
+msgstr "Avbryt journallinjer"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -7805,6 +7831,12 @@ msgstr "Avbryt oppgradering"
 #: code:addons/models.py:2118
 #, python-format
 msgid "Cannot aggregate field %r."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_translation.py:256
+#, python-format
+msgid "Cannot be translated; record not accessible."
 msgstr ""
 
 #. module: base
@@ -8776,11 +8808,6 @@ msgid "Create Menu Wizard"
 msgstr ""
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Create Next Activity"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,summary:base.module_crm_project
 msgid "Create Tasks from Leads"
 msgstr "Opprett oppgaver fra leads"
@@ -8829,6 +8856,11 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:base.action_partner_customer_form
 #: model_terms:ir.actions.act_window,help:base.action_partner_form
 msgid "Create a new customer in your address book"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.actions.act_window,help:base.action_attachment
+msgid "Create a new document"
 msgstr ""
 
 #. module: base
@@ -9413,27 +9445,6 @@ msgid "Days"
 msgstr "Dager"
 
 #. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Dear Sir/Madam,\n"
-"\n"
-"Our records indicate that some payments on your account are still due. Please find details below.\n"
-"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
-"If you have any queries regarding your account, Please contact us.\n"
-"\n"
-"Thank you in advance for your cooperation.\n"
-"Best Regards,"
-msgstr ""
-"Til den det måtte angå,\n"
-"\n"
-"Vi tillater oss å minne om vårt tilgodehavende. Se detaljer nedenfor.\n"
-"Hvis beløpet allerede er betalt, kan du se bort fra dette varselet. Hvis ikke, ber vi om at det totale beløpet betales som angitt nedenfor.\n"
-"Har du noen spørsmål angående ditt kundeforhold, vennligst kontakt oss.\n"
-"\n"
-"På forhånd takk!\n"
-"Med vennlig hilsen,"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_debug
 msgid "Debugging"
 msgstr "Debugging"
@@ -9944,7 +9955,6 @@ msgid "Doctor"
 msgstr "Doktor"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_attachment
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Document"
 msgstr "Dokument"
@@ -10284,11 +10294,6 @@ msgstr "Ansattkontrakter"
 #: model:res.partner.category,name:base.res_partner_category_3
 msgid "Employees"
 msgstr "Ansatte"
-
-#. module: base
-#: selection:ir.attachment,type:0
-msgid "Empty"
-msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_model.py:466
@@ -12373,11 +12378,6 @@ msgid "ID"
 msgstr "IDID"
 
 #. module: base
-#: model:ir.model.fields,help:base.field_ir_actions_server__xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr "Handlings-ID er definert i en XML-fil"
-
-#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data__res_id
 msgid "ID of the target record in the database"
 msgstr ""
@@ -12596,7 +12596,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "If you wish to cancel the process, press the cancel button below"
-msgstr "For å kansellere prosessen, klikk Avbryt-knappen nedenfor"
+msgstr "For å avbryte prosessen, klikk Avbryt-knappen nedenfor"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__image
@@ -16936,8 +16936,7 @@ msgid "Original currency"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_users.py:995
-#: code:addons/base/models/res_users.py:1178
+#: code:addons/base/models/res_users.py:1222
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
@@ -17208,6 +17207,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_title_tree
 msgid "Partner Titles"
 msgstr "Partnertitler"
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_res_users__active_partner
+msgid "Partner is Active"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_partner
@@ -18152,6 +18156,7 @@ msgid "Record ID"
 msgstr "Oppførings-ID"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_rule
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Record Rule"
 msgstr "Post Regel"
@@ -18513,11 +18518,6 @@ msgstr ""
 #, python-format
 msgid "Rounding unit"
 msgstr ""
-
-#. module: base
-#: model:ir.model,name:base.model_ir_rule
-msgid "Rule"
-msgstr "Regel"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -19014,11 +19014,6 @@ msgid "Sell your products online"
 msgstr ""
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Send Email"
-msgstr "Send epost"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_sign
 msgid "Send documents to sign online and handle filled copies"
 msgstr ""
@@ -19129,7 +19124,6 @@ msgstr "Server"
 
 #. module: base
 #: selection:ir.actions.server,usage:0
-#: model:ir.model,name:base.model_ir_actions_server
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 msgid "Server Action"
@@ -19142,6 +19136,7 @@ msgstr "Verdikobling for handling på server"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_server_action
+#: model:ir.model,name:base.model_ir_actions_server
 #: model:ir.ui.menu,name:base.menu_server_action
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_tree
@@ -21076,6 +21071,13 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/res_users.py:117
+#: code:addons/base/models/res_users.py:404
+#, python-format
+msgid "The user cannot have more than one user types."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__user_id
 msgid ""
 "The user this filter is private to. When left empty the filter is public and"
@@ -22157,9 +22159,7 @@ msgid "User Login"
 msgstr "Brukerinnlogging"
 
 #. module: base
-#: code:addons/base/models/res_users.py:967
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "User Type"
 msgstr ""
 

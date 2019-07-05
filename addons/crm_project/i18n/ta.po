@@ -1,94 +1,121 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * crm_project_issue
-#
+# * crm_project
+# 
 # Translators:
+# Bagavathikumar Ramakrishnan <bagavathikumar@gmail.com>, 2019
+# Abul Hassan M I <miabulhassan@gmail.com>, 2019
+# Alagappan Karthikeyan <me@karthik.sg>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-02-05 09:53+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Tamil (http://www.transifex.com/odoo/odoo-9/language/ta/)\n"
-"Language: ta\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
+"Last-Translator: Alagappan Karthikeyan <me@karthik.sg>, 2019\n"
+"Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ta\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#. module: crm_project_issue
-#: model_terms:ir.ui.view,arch_db:crm_project_issue.crm_case_form_view_leads_project_issue
+#. module: crm_project
+#: model_terms:ir.ui.view,arch_db:crm_project.crm_lead_view_form
 msgid ""
 "<span class=\"o_stat_text\">Convert To</span>\n"
-"                            <span class=\"o_stat_text\">Issue</span>"
+"                            <span class=\"o_stat_text\">Task</span>"
 msgstr ""
 
-#. module: crm_project_issue
-#: model_terms:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
+#. module: crm_project
+#: model_terms:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
 msgid "Cancel"
 msgstr "ரத்து"
 
-#. module: crm_project_issue
-#: model:ir.actions.act_window,name:crm_project_issue.convert_lead2projectissue_wizard_action
-#: model_terms:ir.ui.view,arch_db:crm_project_issue.crm_case_form_view_leads_project_issue
-#: model_terms:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
-msgid "Convert to Issue"
+#. module: crm_project
+#: model:ir.actions.act_window,name:crm_project.crm_lead_convert2task_action
+#: model_terms:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
+#: model_terms:ir.ui.view,arch_db:crm_project.crm_lead_view_form
+msgid "Convert to Task"
 msgstr ""
 
-#. module: crm_project_issue
-#: model_terms:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
-msgid "Create Issue"
+#. module: crm_project
+#: model_terms:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
+msgid "Create Task"
 msgstr ""
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_create_uid
+#. module: crm_project
+#: selection:crm.lead.convert2task,action:0
+msgid "Create a new customer"
+msgstr "புதிய வாடிக்கையாளரை உருவாக்கவும்"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__create_uid
 msgid "Created by"
 msgstr "உருவாக்கியவர்"
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_create_date
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__create_date
 msgid "Created on"
-msgstr ""
-"உருவாக்கப்பட்ட \n"
-"தேதி"
+msgstr "உருவாக்கப்பட்ட தேதி"
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_display_name
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__partner_id
+msgid "Customer"
+msgstr "வாடிக்கையாளர்"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__display_name
 msgid "Display Name"
 msgstr "காட்சி பெயர்"
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_id
+#. module: crm_project
+#: selection:crm.lead.convert2task,action:0
+msgid "Do not link to a customer"
+msgstr "வாடிக்கையாளருடன் இணைக்க வேண்டாம்"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__id
 msgid "ID"
 msgstr "ID"
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard___last_update
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task____last_update
 msgid "Last Modified on"
 msgstr "கடைசியாக திருத்திய"
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_write_uid
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__write_uid
 msgid "Last Updated by"
-msgstr "கடைசியாக புதுப்பிக்கப்பட்டது"
+msgstr "கடைசியாக புதுப்பிக்கப்பட்டவர்"
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_write_date
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__write_date
 msgid "Last Updated on"
 msgstr "கடைசியாக புதுப்பிக்கப்பட்டது"
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_lead_id
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__lead_id
 msgid "Lead"
+msgstr "முன்னணி"
+
+#. module: crm_project
+#: model:ir.model,name:crm_project.model_crm_lead_convert2task
+msgid "Lead convert to Task"
 msgstr ""
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_project_id
+#. module: crm_project
+#: selection:crm.lead.convert2task,action:0
+msgid "Link to an existing customer"
+msgstr "ஏற்கனவே உள்ள வாடிக்கையாளருடன் இணைப்பு"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__project_id
 msgid "Project"
 msgstr ""
 
-#. module: crm_project_issue
-#: model:ir.model,name:crm_project_issue.model_crm_lead2projectissue_wizard
-msgid "crm.lead2projectissue.wizard"
-msgstr ""
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__action
+msgid "Related Customer"
+msgstr "தொடர்புடைய வாடிக்கையாளர்"

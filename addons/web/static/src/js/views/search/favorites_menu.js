@@ -196,6 +196,10 @@ return Widget.extend({
             icon: 'fa-star',
             field: {
                 get_context: function () {
+                    var filterContext = filter.context;
+                    if (typeof filter.context === 'string') {
+                        filterContext = pyUtils.eval('context', filter.context);
+                    }
                     var sortParsed = JSON.parse(filter.sort || "[]");
                     var orderedBy = [];
                     _.each(sortParsed, function (sort) {
@@ -205,7 +209,7 @@ return Widget.extend({
                         });
                     });
 
-                return _.defaults({}, filter.context, {orderedBy : orderedBy});
+                return _.defaults({}, filterContext, {orderedBy : orderedBy});
                 },
                 get_groupby: function () { return [filter.context]; },
                 // facet is not used

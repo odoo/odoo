@@ -257,7 +257,7 @@ def translate_xml_node(node, callback, parse, serialize):
             result.tail = node.tail
             has_text = (
                 todo_has_text or nonspace(result.text) or nonspace(result.tail)
-                or any(name in TRANSLATED_ATTRS for name in result.attrib)
+                or any((key in TRANSLATED_ATTRS and val) for key, val in result.attrib.items())
             )
             return (has_text, result)
 
@@ -509,7 +509,7 @@ class PoFile(object):
         return self.lines_count - len(self.lines)
 
     def next(self):
-        trans_type = name = res_id = source = trad = None
+        trans_type = name = res_id = source = trad = module = None
         if self.extra_lines:
             trans_type, name, res_id, source, trad, comments = self.extra_lines.pop(0)
             if not res_id:
@@ -530,6 +530,8 @@ class PoFile(object):
                     line = line[2:].strip()
                     if not line.startswith('module:'):
                         comments.append(line)
+                    else:
+                        module = line[7:].strip()
                 elif line.startswith('#:'):
                     # Process the `reference` comments. Each line can specify
                     # multiple targets (e.g. model, view, code, selection,
@@ -603,7 +605,7 @@ class PoFile(object):
                 _logger.warning('Missing "#:" formatted comment at line %d for the following source:\n\t%s',
                                 self.cur_line(), source[:30])
             return next(self)
-        return trans_type, name, res_id, source, trad, '\n'.join(comments)
+        return trans_type, name, res_id, source, trad, '\n'.join(comments), module
     __next__ = next
 
     def write_infos(self, modules):
@@ -962,8 +964,11 @@ def trans_generate(lang, modules, cr):
         extra_comments = extra_comments or []
         if not module: return
         src_file = open(fabsolutepath, 'rb')
+        options = {}
+        if extract_method == 'python':
+            options['encoding'] = 'UTF-8'
         try:
-            for extracted in extract.extract(extract_method, src_file, keywords=extract_keywords):
+            for extracted in extract.extract(extract_method, src_file, keywords=extract_keywords, options=options):
                 # Babel 0.9.6 yields lineno, message, comments
                 # Babel 1.3 yields lineno, message, comments, context
                 lineno, message, comments = extracted[:3]
@@ -1045,7 +1050,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
 
         elif fileformat == 'po':
             reader = PoFile(fileobj)
-            fields = ['type', 'name', 'res_id', 'src', 'value', 'comments']
+            fields = ['type', 'name', 'res_id', 'src', 'value', 'comments', 'module']
 
             # Make a reader for the POT file and be somewhat defensive for the
             # stable branch.
@@ -1079,7 +1084,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                 self.comments = None
 
         pot_targets = defaultdict(Target)
-        for type, name, res_id, src, _ignored, comments in pot_reader:
+        for type, name, res_id, src, _ignored, comments, module in pot_reader:
             if type is not None:
                 target = pot_targets[src]
                 target.targets.add((type, name, type != 'code' and res_id or 0))
