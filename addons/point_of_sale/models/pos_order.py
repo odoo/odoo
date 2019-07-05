@@ -482,15 +482,6 @@ class PosOrder(models.Model):
             return self.filtered(lambda order: order.state in filter_states and order.partner_id)
         return self.filtered(lambda order: order.state in filter_states)
 
-    def _default_session(self):
-        return self.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', self.env.uid)], limit=1)
-
-    def _default_pricelist(self):
-        return self._default_session().config_id.pricelist_id
-
-    def _default_company_id(self):
-        return self._default_session().config_id.company_id
-
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
     date_order = fields.Datetime(string='Order Date', readonly=True, index=True, default=fields.Datetime.now)
     user_id = fields.Many2one(
@@ -506,17 +497,16 @@ class PosOrder(models.Model):
     amount_return = fields.Float(string='Returned', digits=0, required=True, readonly=True)
     lines = fields.One2many('pos.order.line', 'order_id', string='Order Lines', states={'draft': [('readonly', False)]}, readonly=True, copy=True)
     statement_ids = fields.One2many('account.bank.statement.line', 'pos_statement_id', string='Payments', states={'draft': [('readonly', False)]}, readonly=True)
-    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True,
-                                    default=lambda self: self._default_company_id())
+    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, states={
-                                   'draft': [('readonly', False)]}, readonly=True, default=_default_pricelist)
+                                   'draft': [('readonly', False)]}, readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index=True, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]})
     sequence_number = fields.Integer(string='Sequence Number', help='A session-unique sequence number for the order', default=1)
 
     session_id = fields.Many2one(
         'pos.session', string='Session', required=True, index=True,
         domain="[('state', '=', 'opened')]", states={'draft': [('readonly', False)]},
-        readonly=True, default=_default_session)
+        readonly=True)
     config_id = fields.Many2one('pos.config', related='session_id.config_id', string="Point of Sale", readonly=False)
     currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency")
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, readonly=True, help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
@@ -541,7 +531,6 @@ class PosOrder(models.Model):
     sale_journal = fields.Many2one('account.journal', related='session_id.config_id.journal_id', string='Sales Journal', store=True, readonly=True)
     fiscal_position_id = fields.Many2one(
         comodel_name='account.fiscal.position', string='Fiscal Position',
-        default=lambda self: self._default_session().config_id.default_fiscal_position_id,
         readonly=True,
         states={'draft': [('readonly', False)]},
     )
@@ -615,15 +604,17 @@ class PosOrder(models.Model):
 
     @api.model
     def create(self, values):
-        if values.get('session_id'):
-            # set name based on the sequence specified on the config
-            session = self.env['pos.session'].browse(values['session_id'])
-            values['name'] = session.config_id.sequence_id._next()
-            values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
-        else:
-            # fallback on any pos.order sequence
-            values['name'] = self.env['ir.sequence'].next_by_code('pos.order')
+        session = self.env['pos.session'].browse(values['session_id'])
+        values = self._complete_values_from_session(session, values)
         return super(PosOrder, self).create(values)
+
+    @api.model
+    def _complete_values_from_session(self, session, values):
+        values['name'] = session.config_id.sequence_id._next()
+        values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
+        values.setdefault('fiscal_position_id', session.config_id.default_fiscal_position_id.id)
+        values.setdefault('company_id', session.config_id.company_id.id)
+        return values
 
     @api.multi
     def action_view_invoice(self):
