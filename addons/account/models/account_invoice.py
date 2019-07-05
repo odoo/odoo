@@ -568,6 +568,9 @@ class AccountInvoice(models.Model):
                 for field in changed_fields:
                     if field not in vals and invoice[field]:
                         vals[field] = invoice._fields[field].convert_to_write(invoice[field], invoice)
+        bank_account = self._get_default_bank_id(vals.get('type'), vals.get('company_id'))
+        if bank_account and not vals.get('partner_bank_id'):
+            vals['partner_bank_id'] = bank_account.id
 
         invoice = super(AccountInvoice, self.with_context(mail_create_nolog=True)).create(vals)
 
@@ -603,13 +606,19 @@ class AccountInvoice(models.Model):
         """
         res = super(AccountInvoice, self).default_get(default_fields)
 
-        if res.get('type', False) not in ('out_invoice', 'in_refund') or not 'company_id' in res:
-            return res
-
-        partner_bank_result = self._get_partner_bank_id(res['company_id'])
+        partner_bank_result = self._get_default_bank_id(res.get('type'), res.get('company_id'))
         if partner_bank_result:
             res['partner_bank_id'] = partner_bank_result.id
         return res
+
+    def _get_default_bank_id(self, type, company_id):
+        """When setting the default bank account, we have two cases:
+         in the case of 'out_invoice', 'in_refund', we want the bank account of the company.
+         otherwise, we want the bank account of the partner.
+        """
+        if type not in ('out_invoice', 'in_refund') or not company_id:
+            return False
+        return self._get_partner_bank_id(company_id)
 
     def _get_partner_bank_id(self, company_id):
         company = self.env['res.company'].browse(company_id)

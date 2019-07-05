@@ -242,13 +242,13 @@ class Slide(models.Model):
                 self[key] = value
 
     @api.multi
-    @api.depends('name')
+    @api.depends('name', 'channel_id.website_id.domain')
     def _compute_website_url(self):
         # TDE FIXME: clena this link.tracker strange stuff
         super(Slide, self)._compute_website_url()
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for slide in self:
             if slide.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
+                base_url = slide.channel_id.get_base_url()
                 # link_tracker is not in dependencies, so use it to shorten url only if installed.
                 if self.env.registry.get('link.tracker'):
                     url = self.env['link.tracker'].sudo().create({
