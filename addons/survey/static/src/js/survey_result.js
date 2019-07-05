@@ -205,23 +205,27 @@ if(!$('.js_surveyresult').length) {
         var cell = $(this);
         var row_id = cell.attr('data-row_id') | 0;
         var answer_id = cell.attr('data-answer_id');
-        if(document.URL.indexOf("?") == -1){
-            window.location.href = document.URL + '?' + encodeURI(row_id + ',' + answer_id);
-        }
-        else {
-            window.location.href = document.URL + '&' + encodeURI(row_id + ',' + answer_id);
-        }
+
+        var params = new URLSearchParams(window.location.search);
+        var filters = params.get('filters') ? params.get('filters') + "&" + row_id + ',' + answer_id : row_id + ',' + answer_id;
+        params.set('filters', filters);
+
+        window.location.href = window.location.pathname + '?' + params.toString();
     });
 
     // for clear all filters
     $('.clear_survey_filter').click(function(){
-        window.location.href = document.URL.substring(0,document.URL.indexOf("?"));
+        var params = new URLSearchParams(window.location.search);
+        params.delete('filters');
+        params.delete('finished');
+
+        window.location.href = window.location.pathname + '?' + params.toString();
     });
     $('span.filter-all').click(function(){
         event.preventDefault();
-        if(document.URL.indexOf("finished") != -1){
-            window.location.href = document.URL.replace('?finished&','?').replace('&finished&','&').replace('?finished','').replace('&finished','');
-        }
+        var params = new URLSearchParams(window.location.search);
+        params.delete('finished');
+        window.location.href = window.location.pathname + '?' + params.toString();
     }).hover(function(){
         if(document.URL.indexOf("finished") == -1){
             $(this)[0].style.cursor = 'default';
@@ -230,12 +234,10 @@ if(!$('.js_surveyresult').length) {
     // toggle finished/all surveys filter
     $('span.filter-finished').click(function(){
         event.preventDefault();
-        if(document.URL.indexOf("?") == -1){
-            window.location.href = document.URL + '?' + encodeURI('finished');
-        }
-        else if(document.URL.indexOf("finished") == -1){
-            window.location.href = document.URL + '&' + encodeURI('finished');
-        }
+
+        var params = new URLSearchParams(window.location.search);
+        params.set('finished', true);
+        window.location.href = window.location.pathname + '?' + params.toString();
     }).hover(function(){
         if(document.URL.indexOf("finished") != -1){
             $(this)[0].style.cursor = 'default';
