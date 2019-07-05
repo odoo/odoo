@@ -96,6 +96,7 @@
                                 <group name="acquirer_config">
                                     <field name="journal_id" context="{'default_type': 'bank'}"/>
                                     <field name="capture_manually" attrs="{'invisible': [('authorize_implemented', '=', False)]}"/>
+                                    <field name="payment_flow" widget="radio" attrs="{'invisible': [('token_implemented', '=', False)]}"/>
                                     <field name="save_token" widget="radio" attrs="{'invisible': ['|', ('token_implemented', '=', False), ('payment_flow', '=', 's2s')]}"/>
                                     <field name="fees_active" attrs="{'invisible': [('fees_implemented', '=', False)]}"/>
                                     <field name="fees_dom_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
@@ -127,7 +128,6 @@
                                     </div>
                                     <field name="registration_view_template_id" groups="base.group_no_one" attrs="{'invisible': [('payment_flow', '!=', 's2s')]}"/>
                                     <field name="payment_icon_ids" widget="many2many_tags"/>
-                                    <field name="payment_flow" widget="radio" attrs="{'invisible': [('token_implemented', '=', False)]}"/>
                                     <field name="check_validity" attrs="{'invisible': [('payment_flow', '!=', 's2s')]}" groups="base.group_no_one"/>
                                 </group>
                             </page>
@@ -255,7 +255,6 @@
                                     <field name="currency_id" options="{'no_open': True, 'no_create': True}"/>
                                 </div>
                                 <field name="fees" readonly="1"/>
-                                <label for="partner_id"/>
                                 <div>
                                     <field name="partner_id" context="{'show_address': 1}" options="{'always_reload': True}"/>
                                     <div name="partner_details" class="o_address_format" attrs="{'invisible': [('partner_id', '!=', False)]}">
@@ -404,15 +403,20 @@
                             <button class="oe_stat_button" name="%(action_payment_tx_ids)d"
                                 type="action" icon="fa-money" string="Payments">
                             </button>
+                            <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
                         </div>
                         <group>
-                            <field name="name"/>
-                            <field name='partner_id' />
-                        </group>
-                        <group>
-                            <field name="active"/>
-                            <field name='acquirer_id'/>
-                            <field name='acquirer_ref'/>
+                            <group>
+                                <field name="name"/>
+                                <field name='partner_id' />
+                            </group>
+                            <group>
+                                <!-- <field name="active"/> -->
+                                <field name='acquirer_id'/>
+                                <field name='acquirer_ref'/>
+                            </group>
                         </group>
                     </sheet>
                 </form>
@@ -420,12 +424,12 @@
         </record>
 
         <record model='ir.actions.act_window' id='payment_token_action'>
-            <field name='name'>Saved Payment Data</field>
+            <field name='name'>Credit Card Tokens</field>
             <field name='res_model'>payment.token</field>
             <field name='view_mode'>tree,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Create a saved payment data
+                    Create a credit card tokens
                 </p>
             </field>
         </record>

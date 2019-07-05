@@ -1041,10 +1041,10 @@ class PaymentToken(models.Model):
     _order = 'partner_id, id desc'
     _description = 'Payment Token'
 
-    name = fields.Char('Name', help='Name of the payment token')
+    name = fields.Char('Token', help='Name of the payment token')
     short_name = fields.Char('Short name', compute='_compute_short_name')
-    partner_id = fields.Many2one('res.partner', 'Partner', required=True)
-    acquirer_id = fields.Many2one('payment.acquirer', 'Acquirer Account', required=True)
+    partner_id = fields.Many2one('res.partner', 'Customer', required=True)
+    acquirer_id = fields.Many2one('payment.acquirer', 'Acquirer', required=True)
     acquirer_ref = fields.Char('Acquirer Ref.', required=True)
     active = fields.Boolean('Active', default=True)
     payment_ids = fields.One2many('payment.transaction', 'payment_token_id', 'Payment Transactions')
