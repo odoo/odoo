@@ -355,7 +355,7 @@
         <div class="row o_wslides_home_aside_title">
             <div class="col">
                 <a href="/profile/users" class="float-right">View all</a>
-                <h5 class="m-0">Leaderboard of the week</h5>
+                <h5 class="m-0">Leaderboard</h5>
                 <hr class="mt-2 pt-2"/>
             </div>
         </div>
@@ -396,14 +396,14 @@
             <img t-attf-src="/web/image/gamification.karma.rank/#{user.rank_id.id}/image_small" height="16" alt="" class="mr-1"/>
             <a href="/profile/ranks_badges" t-field="user.rank_id"/>
         </div>
-        <t t-if="user.rank_id">
-            <div t-if="user.next_rank_id" class="font-weight-bold text-muted mt-1">Next rank:</div>
-            <t t-call="website_profile.profile_next_rank_card">
-                <t t-set="bg_class">bg-200</t>
-                <t t-set="img_max_width">50%</t>
-            </t>
-            <div t-field="user.rank_id.description_motivational"/>
+        <t t-set="next_rank_id" t-value="user._get_next_rank()"/>
+        <div t-if="next_rank_id" class="font-weight-bold text-muted mt-1">Next rank:</div>
+        <t t-if="next_rank_id or user.rank_id" t-call="website_profile.profile_next_rank_card">
+            <t t-set="bg_class">bg-200</t>
+            <t t-set="img_max_width">50%</t>
         </t>
+        <div t-if="next_rank_id" t-field="next_rank_id.description_motivational"/>
+        <div t-else="">Congratulations, you have reached the last rank!</div>
     </div>
 </template>
 
