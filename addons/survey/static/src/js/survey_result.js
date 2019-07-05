@@ -201,27 +201,27 @@ if(!$('.js_surveyresult').length) {
     }, function(){
         $(this).find('i.fa-filter').addClass('invisible');
     });
-    $('td.survey_answer i.fa-filter').click(function(){
+    $('td.survey_answer i.fa-filter').click(function(event){
         var cell = $(this);
         var row_id = cell.attr('data-row_id') | 0;
         var answer_id = cell.attr('data-answer_id');
 
         var params = new URLSearchParams(window.location.search);
-        var filters = params.get('filters') ? params.get('filters') + "&" + row_id + ',' + answer_id : row_id + ',' + answer_id;
+        var filters = params.get('filters') ? params.get('filters') + "|" + row_id + ',' + answer_id : row_id + ',' + answer_id;
         params.set('filters', filters);
 
         window.location.href = window.location.pathname + '?' + params.toString();
     });
 
     // for clear all filters
-    $('.clear_survey_filter').click(function(){
+    $('.clear_survey_filter').click(function(event){
         var params = new URLSearchParams(window.location.search);
         params.delete('filters');
         params.delete('finished');
 
         window.location.href = window.location.pathname + '?' + params.toString();
     });
-    $('span.filter-all').click(function(){
+    $('span.filter-all').click(function(event){
         event.preventDefault();
         var params = new URLSearchParams(window.location.search);
         params.delete('finished');
@@ -232,7 +232,7 @@ if(!$('.js_surveyresult').length) {
         }
     });
     // toggle finished/all surveys filter
-    $('span.filter-finished').click(function(){
+    $('span.filter-finished').click(function(event){
         event.preventDefault();
 
         var params = new URLSearchParams(window.location.search);

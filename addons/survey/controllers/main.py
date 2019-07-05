@@ -567,7 +567,8 @@ class Survey(http.Controller):
     def _get_filter_data(self, post):
         """Returns data used for filtering the result"""
         filters = []
-        for ids in post:
+
+        for ids in post.get('filters', '').split('|'):
             #if user add some random data in query URI, ignore it
             try:
                 row_id, answer_id = ids.split(',')
