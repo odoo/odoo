@@ -2149,7 +2149,7 @@ QUnit.test('form activity widget: mark as done and remove', async function (asse
 });
 
 QUnit.test('followers widget: follow/unfollow, edit subtypes', async function (assert) {
-    assert.expect(24);
+    assert.expect(15);
 
     var resID = 2;
     var partnerID = 2;
@@ -2240,18 +2240,6 @@ QUnit.test('followers widget: follow/unfollow, edit subtypes', async function (a
         'should display the "Following/Unfollow" button');
     assert.containsOnce(form, '.o_followers_list .o_partner',
         "there should be one follower in the follower dropdown");
-
-    // edit the subtypes
-    assert.containsN(form, '.o_subtypes_list .o_subtype', 3,
-        'subtype list should contain 3 subtypes');
-    assert.containsN(form, '.o_subtypes_list .o_subtype_checkbox:checked', 2,
-        'two subtypes should be checked by default');
-    await testUtils.dom.click(form.$('.o_subtypes_list .dropdown-toggle'));
-    assert.ok(form.$('.o_subtypes_list.show').length, 'dropdown should be opened');
-    await testUtils.dom.click(form.$('.o_subtypes_list .o_subtype input[data-id=2]'));
-    assert.ok(form.$('.o_subtypes_list.show').length, 'dropdown should remain opened');
-    assert.ok(!form.$('.o_subtypes_list .o_subtype_checkbox[data-id=2]:checked').length,
-        'second subtype should now be unchecked');
 
     // click to unfollow
     await testUtils.dom.click(form.$('.o_followers_follow_button'));
