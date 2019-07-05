@@ -205,6 +205,16 @@ class StockMoveLine(models.Model):
             next_moves._action_assign()
         return ml
 
+    def copy(self, default=None):
+        """Using copy naively might mess up the reserved quantity.
+        We bypass this by relying on the complex logic of the write method.
+        """
+        product_uom_qty = default.pop('product_uom_qty') if default and 'product_uom_qty' in default else False
+        res = super(StockMoveLine, self).copy(default)
+        if product_uom_qty:
+            res.write({'product_uom_qty': product_uom_qty})
+        return res
+
     def write(self, vals):
         """ Through the interface, we allow users to change the charateristics of a move line. If a
         quantity has been reserved for this move line, we impact the reservation directly to free
