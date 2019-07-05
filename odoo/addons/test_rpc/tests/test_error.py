@@ -37,22 +37,19 @@ class TestError(common.HttpCase):
         b2 = self.rpc("test_rpc.model_b", "create", {"name": "B2"})
         self.rpc("test_rpc.model_a", "create", {"name": "A1", "field_b1": b1, "field_b2": b2})
 
-        # Unlink b1 => NOT NULL constraint raises
-        # FORWARD-PORT: in master, `required=True` implies `ondelete="restrict"`
-        #               => the message should be the same than 'Unlink b2' case.
         try:
             with mute_logger("odoo.sql_db"):
                 self.rpc("test_rpc.model_b", "unlink", b1)
             raise
         except Exception as e:
             self.assertIn("The operation cannot be completed:", e.faultString)
-            self.assertIn("Create/update: a mandatory field is not set.", e.faultString)
             self.assertIn(
-                "Delete: another model requires the record being deleted. If possible, archive it instead.",
+                "another model requires the record being deleted. If possible, archive it instead.",
                 e.faultString,
             )
             self.assertIn(
-                "Model: Model A (test_rpc.model_a), Field: required field (field_b1)", e.faultString
+                "Model: Model A (test_rpc.model_a), Constraint: test_rpc_model_a_field_b1_fkey",
+                e.faultString,
             )
 
         # Unlink b2 => ON DELETE RESTRICT constraint raises
