@@ -52,7 +52,7 @@ class Contract(models.Model):
 
     name = fields.Char('Contract Reference', required=True)
     active = fields.Boolean(default=True)
-    employee_id = fields.Many2one('hr.employee', string='Employee')
+    employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True)
     department_id = fields.Many2one('hr.department', string="Department")
     job_id = fields.Many2one('hr.job', string='Job Position')
     date_start = fields.Date('Start Date', required=True, default=fields.Date.today,

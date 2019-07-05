@@ -116,7 +116,8 @@ class User(models.Model):
         # However, in this case, we want the user to be able to read/write its own data,
         # even if they are protected by groups.
         # We make the front-end aware of those fields by sending all field definitions.
-        if not self.env.user.share:
+        profile_view = self.env.ref("hr.res_users_view_form_profile")
+        if profile_view and view_id == profile_view.id:
             self = self.sudo()
         return super(User, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 

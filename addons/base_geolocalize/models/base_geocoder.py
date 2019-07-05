@@ -55,7 +55,7 @@ class GeoCoder(models.AbstractModel):
             return self._geo_query_address_default(street=street, zip=zip, city=city, state=state, country=country)
 
     @api.model
-    def geo_find(self, addr):
+    def geo_find(self, addr, **kw):
         """Use a location provider API to convert an address string into a latitude, longitude tuple.
         Here we use Openstreetmap Nominatim by default.
         :param addr: Address string passed to API
@@ -64,7 +64,7 @@ class GeoCoder(models.AbstractModel):
         provider = self._get_provider().tech_name
         try:
             service = getattr(self, '_call_' + provider)
-            result = service(addr)
+            result = service(addr, **kw)
         except AttributeError:
             raise UserError(_(
                 'Provider %s is not implemented for geolocation service.'
@@ -77,7 +77,7 @@ class GeoCoder(models.AbstractModel):
         return result
 
     @api.model
-    def _call_openstreetmap(self, addr):
+    def _call_openstreetmap(self, addr, **kw):
         """
         Use Openstreemap Nominatim service to retrieve location
         :return: (latitude, longitude) or None if not found
@@ -95,7 +95,7 @@ class GeoCoder(models.AbstractModel):
         return float(geo['lat']), float(geo['lon'])
 
     @api.model
-    def _call_googlemap(self, addr):
+    def _call_googlemap(self, addr, **kw):
         """ Use google maps API. It won't work without a valid API key.
         :return: (latitude, longitude) or None if not found
         """
@@ -106,8 +106,11 @@ class GeoCoder(models.AbstractModel):
                 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
             ))
         url = "https://maps.googleapis.com/maps/api/geocode/json"
+        params = {'sensor': 'false', 'address': addr, 'key': apikey}
+        if kw.get('force_country'):
+            params['components'] = 'country:%s' % kw['force_country']
         try:
-            result = requests.get(url, params={'sensor': 'false', 'address': addr, 'key': apikey}).json()
+            result = requests.get(url, params).json()
         except Exception as e:
             self._raise_query_error(e)
 
@@ -151,4 +154,3 @@ class GeoCoder(models.AbstractModel):
 
     def _raise_query_error(self, error):
         raise UserError(_('Error with geolocation server:') + ' %s' % error)
-

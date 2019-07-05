@@ -29,14 +29,14 @@
         <record id="slide_template_shared" model="mail.template">
             <field name="name">Slide Shared</field>
             <field name="model_id" ref="model_slide_slide"/>
-            <field name="subject">${user.name} shared a ${object.slide_type} with you!</field>
-            <field name="email_from">${(user.email or '')|safe}</field>
+            <field name="subject">${ctx['user'].name} shared a ${object.slide_type} with you!</field>
+            <field name="email_from">${(ctx['user'].email or '')|safe}</field>
             <field name="email_to">${ctx['email']}</field>
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 13px;">
                         Hello<br/><br/>
-                        ${user.name} shared the ${object.slide_type} <strong>${object.name}</strong> with you!
+                        ${ctx['user'].name} shared the ${object.slide_type} <strong>${object.name}</strong> with you!
                         <div style="margin: 16px 8px 16px 8px; text-align: center;">
                             <a href="${object.website_url}">
                                 <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image" style="height:auto; width:150px; margin: 16px;"/>

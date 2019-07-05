@@ -266,12 +266,18 @@ class Channel(models.Model):
         return _("Publishing is restricted to the responsible of training courses or members of the publisher group for documentation courses")
 
     @api.multi
-    @api.depends('name')
+    def get_base_url(self):
+        self.ensure_one()
+        icp = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        return self.website_id and self.website_id._get_http_domain() or icp
+
+    @api.multi
+    @api.depends('name', 'website_id.domain')
     def _compute_website_url(self):
         super(Channel, self)._compute_website_url()
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for channel in self:
             if channel.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
+                base_url = channel.get_base_url()
                 channel.website_url = '%s/slides/%s' % (base_url, slug(channel))
 
     @api.multi
