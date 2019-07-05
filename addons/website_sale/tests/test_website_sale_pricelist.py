@@ -5,6 +5,7 @@ try:
 except ImportError:
     from mock import patch
 from odoo.tests.common import HttpCase, TransactionCase
+from odoo.tools import DotDict
 
 ''' /!\/!\
 Calling `get_pricelist_available` after setting `property_product_pricelist` on
@@ -152,13 +153,6 @@ def simulate_frontend_context(self, website_id=1):
     patcher = patch('odoo.addons.website.models.ir_http.get_request_website', wraps=get_request_website)
     patcher.start()
     self.addCleanup(patcher.stop)
-
-
-class DotDict(dict):
-    """dot.notation access to dictionary attributes"""
-    def __getattr__(*args):
-        val = dict.get(*args)
-        return DotDict(val) if type(val) is dict else val
 
 
 class TestWebsitePriceListAvailable(TransactionCase):
