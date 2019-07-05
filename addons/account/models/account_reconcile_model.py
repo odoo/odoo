@@ -154,6 +154,7 @@ class AccountReconcileModel(models.Model):
                 'analytic_account_id': tax.analytic and base_line_dict['analytic_account_id'],
                 'analytic_tag_ids': tax.analytic and base_line_dict['analytic_tag_ids'],
                 'tax_exigible': tax.tax_exigibility == 'on_payment',
+                'tax_line_id': tax.id,
             })
 
             # Handle price included taxes.
