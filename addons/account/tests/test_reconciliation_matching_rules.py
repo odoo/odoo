@@ -98,6 +98,12 @@ class TestReconciliationMatchingRules(AccountingTestCase):
             'sequence': 1,
         })
 
+        self.tax21 = self.env['account.tax'].create({
+            'name': '21%',
+            'type_tax_use': 'purchase',
+            'amount': 21,
+        })
+
     def test_matching_fields(self):
         ''' Test all fields used to restrict the rules's applicability.'''
 
@@ -302,6 +308,34 @@ class TestReconciliationMatchingRules(AccountingTestCase):
         self.assertRecordValues(self.cash_line_1.journal_entry_ids, [
             {'partner_id': self.partner_2.id, 'debit': 0.0, 'credit': 1000.0},
             {'partner_id': self.partner_2.id, 'debit': 1000.0, 'credit': 0.0},
+        ])
+
+    def test_auto_reconcile_with_tax(self):
+        ''' Test auto reconciliation with a tax amount included in the bank statement line'''
+
+        self.rule_1.write({
+            'auto_reconcile': True,
+            'force_tax_included': True,
+            'tax_id': self.tax21.id,
+            'rule_type': 'writeoff_suggestion',
+        })
+
+        self.bank_line_2.unlink()
+        self.bank_line_1.amount = -121
+
+        self._check_statement_matching(
+            self.rule_1,
+            {
+                self.bank_line_1.id: {'aml_ids': [], 'model': self.rule_1, 'status': 'reconciled'},
+            },
+            self.bank_st
+        )
+
+        # Check first line has been well reconciled.
+        self.assertRecordValues(self.bank_line_1.journal_entry_ids, [
+            {'partner_id': self.partner_1.id, 'debit': 0.0, 'credit': 121.0},
+            {'partner_id': self.partner_1.id, 'debit': 21.0, 'credit': 0.0, 'tax_line_id': self.tax21.id},
+            {'partner_id': self.partner_1.id, 'debit': 100.0, 'credit': 0.0, 'tax_ids': [self.tax21.id]}
         ])
 
     def test_reverted_move_matching(self):
