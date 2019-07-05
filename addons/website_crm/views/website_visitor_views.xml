@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <!-- website visitor views -->
+    <record id="website_crm_website_visitor_view_form" model="ir.ui.view">
+        <field name="name">website.crm.website.visitor.form</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website.website_visitor_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_ids']" position="after">
+                <field name="lead_ids" widget="many2many"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="website_crm_website_visitor_view_tree" model="ir.ui.view">
+        <field name="name">website.crm.website.visitor.tree</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website.website_visitor_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_count']" position="before">
+                <field name="lead_count"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="website_crm_website_visitor_view_search" model="ir.ui.view">
+        <field name="name">website.crm.website.visitor.search</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website.website_visitor_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='type_customer']" position="before">
+                <filter string="Leads" name="type_lead" domain="[('type', '=', 'lead')]"/>
+            </xpath>
+        </field>
+    </record>
+</data></odoo>

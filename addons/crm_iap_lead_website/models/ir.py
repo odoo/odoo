@@ -14,10 +14,12 @@ class IrHttp(models.AbstractModel):
     def _serve_page(cls):
         response = super(IrHttp, cls)._serve_page()
         if response and getattr(response, 'status_code', 0) == 200 and request.env.user._is_public():
-            lead_id = request.httprequest.cookies.get('lead_id')
+            Visitor = request.env['website.visitor']
+            visitor_id = Visitor._decode()
+            visitor_sudo = Visitor.browse(visitor_id).sudo()
             # We are avoiding to create a reveal_view if a lead is already
             # created from another module, e.g. website_form
-            if not lead_id:
+            if not (visitor_sudo.exists() and visitor_sudo.lead_ids):
                 country_code = 'geoip' in request.session and request.session['geoip'].get('country_code')
                 state_code = 'geoip' in request.session and request.session['geoip'].get('region')
                 if country_code:

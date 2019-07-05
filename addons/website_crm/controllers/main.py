@@ -49,7 +49,16 @@ class WebsiteForm(WebsiteForm):
         return super(WebsiteForm, self).website_form(model_name, **kwargs)
 
     def insert_record(self, request, model, values, custom, meta=None):
+        Visitor = request.env['website.visitor']
         if model.model == 'crm.lead':
             if 'company_id' not in values:
                 values['company_id'] = request.website.company_id.id
-        return super(WebsiteForm, self).insert_record(request, model, values, custom, meta=meta)
+        result = super(WebsiteForm, self).insert_record(request, model, values, custom, meta=meta)
+        visitor_id = Visitor._decode()
+        if visitor_id and result:
+            visitor_sudo = Visitor.browse(visitor_id).sudo()
+            vals = {'lead_ids': [(4, result)]}
+            if not visitor_sudo.lead_ids and not visitor_sudo.partner_ids:
+                vals['name'] = request.env['crm.lead'].browse(result).sudo().contact_name
+            visitor_sudo.write(vals)
+        return result
