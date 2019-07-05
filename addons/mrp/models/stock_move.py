@@ -228,6 +228,11 @@ class StockMove(models.Model):
             else:
                 return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
 
+    def _delay_alert_get_documents(self):
+        res = super(StockMove, self)._delay_alert_get_documents()
+        productions = self.mapped('raw_material_production_id')
+        return res + list(productions)
+
     def _should_be_assigned(self):
         res = super(StockMove, self)._should_be_assigned()
         return bool(res and not (self.production_id or self.raw_material_production_id))

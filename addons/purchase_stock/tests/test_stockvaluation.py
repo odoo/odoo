@@ -824,10 +824,10 @@ class TestStockValuationWithCOA(AccountingTestCase):
 
         # To allow testing validation of PO
         def _today(*args, **kwargs):
-            return date_po
+            return datetime.strptime(date_po, "%Y-%m-%d").date()
         # To allow testing validation of Delivery
         def _now(*args, **kwargs):
-            return date_delivery + ' 01:00:00'
+            return datetime.strptime(date_delivery + ' 01:00:00', "%Y-%m-%d %H:%M:%S")
 
         patchers = [
             patch('odoo.fields.Date.context_today', _today),
@@ -993,11 +993,11 @@ class TestStockValuationWithCOA(AccountingTestCase):
 
         # To allow testing validation of PO
         def _today(*args, **kwargs):
-            return date_po
+            return datetime.strptime(date_po, "%Y-%m-%d").date()
         # To allow testing validation of Delivery
         delivery_now = date_delivery
         def _now(*args, **kwargs):
-            return delivery_now + ' 01:00:00'
+            return datetime.strptime(delivery_now + ' 01:00:00', "%Y-%m-%d %H:%M:%S")
 
         patchers = [
             patch('odoo.fields.Date.context_today', _today),
