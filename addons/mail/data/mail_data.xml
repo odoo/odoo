@@ -327,7 +327,7 @@
             <br t-if="not feedback_line_last"/>
         </t>
     </div>
-    <t t-if="activity.note != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'"><!-- <p></br></p> -->
+    <t t-if="activity.note and activity.note != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'"><!-- <p></br></p> -->
         <div class="o_mail_note_title"><strong>Original note:</strong></div>
         <div t-field="activity.note"/>
     </t>
