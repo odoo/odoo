@@ -15,10 +15,10 @@ class PaymentLinkWizard(models.TransientModel):
         res_id = self._context.get('active_id')
         res_model = self._context.get('active_model')
         res.update({'res_id': res_id, 'res_model': res_model})
-        if res_id and res_model == 'account.invoice':
+        if res_id and res_model == 'account.move':
             record = self.env[res_model].browse(res_id)
             res.update({
-                'description': record.reference,
+                'description': record.invoice_payment_ref,
                 'amount': record.amount_total,
                 'currency_id': record.currency_id.id,
                 'partner_id': record.partner_id.id,
