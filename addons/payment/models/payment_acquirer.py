@@ -197,18 +197,17 @@ class PaymentAcquirer(models.Model):
     def _check_required_if_provider(self):
         """ If the field has 'required_if_provider="<provider>"' attribute, then it
         required if record.provider is <provider>. """
-        empty_field = []
-        for acquirer in self:
-            for k, f in acquirer._fields.items():
-                if getattr(f, 'required_if_provider', None) == acquirer.provider and not acquirer[k]:
-                    empty_field.append(self.env['ir.model.fields'].search([('name', '=', k), ('model', '=', acquirer._name)]).field_description)
-        if empty_field:
-            raise ValidationError((', ').join(empty_field))
-        return True
-
-    _constraints = [
-        (_check_required_if_provider, 'Required fields not filled', []),
-    ]
+        field_names = []
+        for k, f in self._fields.items():
+            provider = getattr(f, 'required_if_provider', None)
+            if provider and any(
+                acquirer.provider == provider and not acquirer[k]
+                for acquirer in self
+            ):
+                ir_field = self.env['ir.model.fields']._get(self._name, k)
+                field_names.append(ir_field.field_description)
+        if field_names:
+            raise ValidationError(_("Required fields not filled: %s") % ", ".join(field_names))
 
     def _get_feature_support(self):
         """Get advanced feature support by provider.
@@ -277,11 +276,15 @@ class PaymentAcquirer(models.Model):
     @api.model
     def create(self, vals):
         image_resize_images(vals)
-        return super(PaymentAcquirer, self).create(vals)
+        record = super(PaymentAcquirer, self).create(vals)
+        record._check_required_if_provider()
+        return record
 
     def write(self, vals):
         image_resize_images(vals)
-        return super(PaymentAcquirer, self).write(vals)
+        result = super(PaymentAcquirer, self).write(vals)
+        self._check_required_if_provider()
+        return result
 
     def toggle_website_published(self):
         ''' When clicking on the website publish toggle button, the website_published is reversed and

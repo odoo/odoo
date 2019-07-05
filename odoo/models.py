@@ -265,7 +265,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     _inherit = None             # Python-inherited models ('model' or ['model'])
     _inherits = {}              # inherited models {'parent_model': 'm2o_field'}
-    _constraints = []           # Python constraints (old API)
 
     _table = None               # SQL table name used by model
     _sequence = None            # SQL sequence to use for ID field
@@ -442,9 +441,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         #   class A2(Model):
         #       _inherit = 'a'
 
+        if getattr(cls, '_constraints', None):
+            _logger.warning("Model attribute '_constraints' is no longer supported, "
+                            "please use @api.constrains on methods instead.")
+
         # Keep links to non-inherited constraints in cls; this is useful for
         # instance when exporting translations
-        cls._local_constraints = cls.__dict__.get('_constraints', [])
         cls._local_sql_constraints = cls.__dict__.get('_sql_constraints', [])
 
         # determine inherited models
@@ -544,7 +546,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls._log_access = cls._auto
         cls._inherits = {}
         cls._depends = {}
-        cls._constraints = {}
         cls._sql_constraints = {}
 
         for base in reversed(cls.__bases__):
@@ -562,15 +563,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             for mname, fnames in base._depends.items():
                 cls._depends[mname] = cls._depends.get(mname, []) + fnames
 
-            for cons in base._constraints:
-                # cons may override a constraint with the same function name
-                cls._constraints[getattr(cons[0], '__name__', id(cons[0]))] = cons
-
             for cons in base._sql_constraints:
                 cls._sql_constraints[cons[0]] = cons
 
         cls._sequence = cls._sequence or (cls._table + '_id_seq')
-        cls._constraints = list(cls._constraints.values())
         cls._sql_constraints = list(cls._sql_constraints.values())
 
         # update _inherits_children of parent models
@@ -1097,37 +1093,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     def _validate_fields(self, field_names):
         field_names = set(field_names)
-
-        # old-style constraint methods
-        trans = self.env['ir.translation']
-        errors = []
-        for func, msg, names in self._constraints:
-            try:
-                # validation must be context-independent; call ``func`` without context
-                valid = names and not (set(names) & field_names)
-                valid = valid or func(self)
-                extra_error = None
-            except Exception as e:
-                _logger.debug('Exception while validating constraint', exc_info=True)
-                valid = False
-                extra_error = tools.ustr(e)
-            if not valid:
-                if callable(msg):
-                    res_msg = msg(self)
-                    if isinstance(res_msg, tuple):
-                        template, params = res_msg
-                        res_msg = template % params
-                else:
-                    res_msg = trans._get_source(self._name, 'constraint', self.env.lang, msg)
-                if extra_error:
-                    res_msg += "\n\n%s\n%s" % (_('Error details:'), extra_error)
-                errors.append(res_msg)
-        if errors:
-            raise ValidationError('\n'.join(errors))
-
-        # new-style constraint methods
         for check in self._constraint_methods:
-            if set(check._constrains) & field_names:
+            if not field_names.isdisjoint(check._constrains):
                 try:
                     check(self)
                 except ValidationError as e:

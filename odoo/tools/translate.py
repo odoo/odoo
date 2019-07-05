@@ -608,21 +608,8 @@ class PoFileReader:
 
                 match = re.match(r'(sql_constraint|constraint):([\w.]+)', occurrence)
                 if match:
-                    type, model = match.groups()
-                    if type == "sql_constraint":
-                        _logger.info("Skipped deprecated occurrence %s", occurrence)
-                        continue
-                    yield {
-                        'type': type,
-                        'name': model,
-                        'src': source,
-                        'value': translation,
-                        'comments': comments,
-                        'res_id': int(line_number),
-                        'module': module,
-                    }
+                    _logger.info("Skipped deprecated occurrence %s", occurrence)
                     continue
-
                 _logger.error("malformed po file: unknown occurrence: %s", occurrence)
 
 def TranslationFileWriter(target, fileformat='po', lang=None, modules=None):
@@ -867,25 +854,18 @@ def trans_generate(lang, modules, cr):
         to_translate.add(tnx)
 
     query = 'SELECT min(name), model, res_id, module FROM ir_model_data'
-    query_models = """SELECT m.id, m.model, imd.module
-                      FROM ir_model AS m, ir_model_data AS imd
-                      WHERE m.id = imd.res_id AND imd.model = 'ir.model'"""
 
     if 'all_installed' in modules:
         query += ' WHERE module IN ( SELECT name FROM ir_module_module WHERE state = \'installed\') '
-        query_models += " AND imd.module in ( SELECT name FROM ir_module_module WHERE state = 'installed') "
 
     if 'all' not in modules:
         query += ' WHERE module IN %s'
-        query_models += ' AND imd.module IN %s'
         query_param = (tuple(modules),)
     else:
         query += ' WHERE module != %s'
-        query_models += ' AND imd.module != %s'
         query_param = ('__export__',)
 
     query += ' GROUP BY model, res_id, module ORDER BY module, model, min(name)'
-    query_models += ' ORDER BY module, model'
 
     cr.execute(query, query_param)
 
@@ -934,29 +914,6 @@ def trans_generate(lang, modules, cr):
                     push_translation(module, trans_type, name, xml_name, term)
 
         # End of data for ir.model.data query results
-
-    def push_constraint_msg(module, term_type, model, msg):
-        if not callable(msg):
-            push_translation(encode(module), term_type, encode(model), 0, msg)
-
-    def push_local_constraints(module, model):
-        """ Climb up the class hierarchy and ignore inherited constraints from other modules. """
-        for cls in model.__class__.__mro__:
-            if getattr(cls, '_module', None) != module:
-                continue
-            constraints = getattr(cls, '_local_constraints', [])
-            for constraint in constraints:
-                push_constraint_msg(module, 'constraint', model._name, constraint[1])
-
-    cr.execute(query_models, query_param)
-
-    for (_, model, module) in cr.fetchall():
-        if model not in env:
-            _logger.error("Unable to find object %r", model)
-            continue
-        Model = env[model]
-        if Model._constraints:
-            push_local_constraints(module, Model)
 
     installed_modules = [
         m['name']
