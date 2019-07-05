@@ -1513,12 +1513,14 @@
 
             <div class="pos-center-align"><t t-esc="order.formatted_validation_date"/> <t t-esc="order.name"/></div>
             <br />
-            <t t-esc="widget.pos.company.name"/><br />
-            <div class="receipt-phone">
-                Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
-            </div>
-            <div class="receipt-user">
-                User: <t t-esc="widget.pos.get_cashier().name"/><br />
+            <div class="receipt-company">
+                <t t-esc="widget.pos.company.name"/>
+                <div class="receipt-phone">
+                    Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
+                </div>
+                <div class="receipt-user">
+                    User: <t t-esc="widget.pos.get_cashier().name"/><br />
+                </div>
             </div>
             <br />
             <t t-if="receipt.header">
@@ -1563,7 +1565,7 @@
             <table class='receipt-total'>
                 <tr>
                     <td>Subtotal:</td>
-                    <td class="pos-right-align">
+                    <td class="pos-right-align receipt-subtotal">
                         <t t-esc="widget.format_currency(order.get_total_without_tax())"/>
                     </td>
                 </tr>
@@ -1585,7 +1587,7 @@
                 </tr>
                 <tr class="emph">
                     <td>Total:</td>
-                    <td class="pos-right-align">
+                    <td class="pos-right-align pos-total">
                         <t t-esc="widget.format_currency(order.get_total_with_tax())"/>
                     </td>
                 </tr>

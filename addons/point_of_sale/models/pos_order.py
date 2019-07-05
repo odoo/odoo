@@ -47,6 +47,7 @@ class PosOrder(models.Model):
             'amount_total':  ui_order['amount_total'],
             'amount_tax':  ui_order['amount_tax'],
             'amount_return':  ui_order['amount_return'],
+            'pos_ticket_html':ui_order['receipt_html'],
         }
 
     def _payment_fields(self, ui_paymentline):
@@ -534,6 +535,7 @@ class PosOrder(models.Model):
         readonly=True,
         states={'draft': [('readonly', False)]},
     )
+    pos_ticket_html = fields.Html(string='Pos ticket content', translate=True)
 
     @api.depends('date_order', 'company_id', 'currency_id', 'company_id.currency_id')
     def _compute_currency_rate(self):

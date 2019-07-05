@@ -90,7 +90,7 @@ class PosOrderTicket(models.TransientModel):
             "vat": rec.company_id.vat,
             "email": rec.company_id.email,
             "website": rec.company_id.website,
-            "logo": 'data:%s;base64,' % mimetype + rec.company_id.logo_web.decode('utf-8')
+            "logo": 'data:%s;base64,' % mimetype + rec.company_id.logo.decode('utf-8')
         }
         price_total = 0.0
         total_disc = 0.0

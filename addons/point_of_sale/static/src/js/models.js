@@ -956,11 +956,15 @@ exports.PosModel = Backbone.Model.extend({
         // new orders may have been added to it.
         var order_ids_to_sync = _.pluck(orders, 'id');
 
+        if ($('.pos-sale-ticket').length) {
+            var receipt_ticket = $('.pos-receipt-container')[0].innerHTML;
+        }
         // we try to send the order. shadow prevents a spinner if it takes too long. (unless we are sending an invoice,
         // then we want to notify the user that we are waiting on something )
         var args = [_.map(orders, function (order) {
                 order.to_invoice = options.to_invoice || false;
                 order.to_email = options.to_email || false;
+                order.data.receipt_html = receipt_ticket;
                 return order;
             })];
         return rpc.query({

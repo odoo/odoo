@@ -1613,7 +1613,7 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         this.handle_auto_print();
     },
     handle_auto_print: function() {
-        if (this.should_auto_print()) {
+        if (this.should_auto_print() && !this.pos.get_order().is_to_email()) {
             this.print();
             if (this.should_close_immediately()){
                 this.click_next();

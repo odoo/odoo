@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="paperformat_report_pos_ticket" model="report.paperformat">
+        <field name="name">European A6 low margin</field>
+        <field name="default" eval="True"/>
+        <field name="format">A6</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">7</field>
+        <field name="margin_bottom">2</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">35</field>
+        <field name="dpi">90</field>
+    </record>
+
     <report
         id="report_user_label"
         model="res.users"
@@ -8,15 +24,13 @@
         name="point_of_sale.report_userlabel"
         file="point_of_sale.report_userlabel"
     />
-
-    <report 
-        id="action_report_pos_ticket"
-        string="POS Ticket"
-        model="pos.order" 
-        report_type="qweb-pdf"
-        file="point_of_sale.report_pos_ticket" 
-        name="point_of_sale.report_pos_ticket"
-    />
+    <record id="report_pos_ticket" model="ir.actions.report">
+        <field name="name">POS Ticket</field>
+        <field name="model">pos.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">point_of_sale.report_pos_ticket</field>
+        <field name="paperformat_id" ref="point_of_sale.paperformat_report_pos_ticket"/>
+    </record>
     <!-- used from POS UI, no need to be in print menu -->
     <record id="pos_invoice_report" model="ir.actions.report">
         <field name="name">Invoice</field>
