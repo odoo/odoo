@@ -122,6 +122,9 @@
                             <div class="content">
                                 {% for device in iot_devices.list %}
                                     <div class="device-status">
+                                        {% if device['device_paired'] %}
+                                            <span class="fa fa-link fa-1x float-right" title="Paired with Odoo"></span>
+                                        {% endif %}
                                         <span class="device">{{ device['name'] }}</span>
                                         <div class="message">{{ device['message'] }}</div>
                                     </div>
