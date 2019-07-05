@@ -274,15 +274,35 @@ class PaymentAcquirer(models.Model):
         return journals
 
     @api.model
+    def _update_journal(self, vals):
+        '''
+        Update the payment method of the journal depending on the field 'payment_flow' and 'save_token'.
+        If these fields signify that the payment is electronic, add the electronic payment
+        method to the journal. Otherwise, remove the electronic payment method.
+        '''
+        method = self.env.ref('payment.account_payment_method_electronic_in')
+        if not method: return
+        for record in self:
+            if not record.journal_id: continue
+            if (vals.get('payment_flow', record.payment_flow) == 's2s' or
+                vals.get('save_token', record.save_token) in ('ask', 'always')):
+
+                record.journal_id.inbound_payment_method_ids |= method
+            else:
+                record.journal_id.inbound_payment_method_ids -= method
+
+    @api.model
     def create(self, vals):
         image_resize_images(vals)
         record = super(PaymentAcquirer, self).create(vals)
+        record._update_journal(vals)
         record._check_required_if_provider()
         return record
 
     def write(self, vals):
         image_resize_images(vals)
         result = super(PaymentAcquirer, self).write(vals)
+        self._update_journal(vals)
         self._check_required_if_provider()
         return result
 
