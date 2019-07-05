@@ -207,6 +207,22 @@ class ReportBomStructure(models.AbstractModel):
                 price += self.env.user.company_id.currency_id.round(not_rounded_price)
         return price
 
+    @api.model
+    def _get_line_vals(self, bom_line):
+        """Get bom.line values.
+            :param bom_line: mrp.bom.line dictionary
+        """
+        return {
+            'name': bom_line['prod_name'],
+            'type': 'bom',
+            'quantity': bom_line['prod_qty'],
+            'uom': bom_line['prod_uom'],
+            'prod_cost': bom_line['prod_cost'],
+            'bom_cost': bom_line['total'],
+            'level': bom_line['level'],
+            'code': bom_line['code']
+        }
+
     def _get_pdf_line(self, bom_id, product_id=False, qty=1, child_bom_ids=[], unfolded=False):
 
         data = self._get_bom(bom_id=bom_id, product_id=product_id.id, line_qty=qty)
@@ -216,16 +232,8 @@ class ReportBomStructure(models.AbstractModel):
             bom_lines = data['components']
             lines = []
             for bom_line in bom_lines:
-                lines.append({
-                    'name': bom_line['prod_name'],
-                    'type': 'bom',
-                    'quantity': bom_line['prod_qty'],
-                    'uom': bom_line['prod_uom'],
-                    'prod_cost': bom_line['prod_cost'],
-                    'bom_cost': bom_line['total'],
-                    'level': bom_line['level'],
-                    'code': bom_line['code']
-                })
+                line_vals = self._get_line_vals(bom_line)
+                lines.append(line_vals)
                 if bom_line['child_bom'] and (unfolded or bom_line['child_bom'] in child_bom_ids):
                     line = self.env['mrp.bom.line'].browse(bom_line['line_id'])
                     lines += (get_sub_lines(line.child_bom_id, line.product_id, bom_line['prod_qty'], line, level + 1))
