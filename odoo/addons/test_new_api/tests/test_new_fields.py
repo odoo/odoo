@@ -99,7 +99,7 @@ class TestFields(common.TransactionCase):
 
         # create a message, assign body, and check size in several environments
         message1 = self.env['test_new_api.message'].create({})
-        message2 = message1.sudo(self.env.ref('base.user_demo'))
+        message2 = message1.with_user(self.env.ref('base.user_demo'))
         self.assertEqual(message1.size, 0)
         self.assertEqual(message2.size, 0)
 
@@ -918,7 +918,6 @@ class TestFields(common.TransactionCase):
         company_record.foo = 'DEF'
         self.assertEqual(attribute_record.company.foo, 'DEF')
         self.assertEqual(attribute_record.bar, 'DEFDEF')
->>>>>>> m
 
     def test_30_read(self):
         """ test computed fields as returned by read(). """
@@ -1243,7 +1242,7 @@ class TestFields(common.TransactionCase):
     def test_70_relational_inverse(self):
         """ Check the consistency of relational fields with inverse(s). """
         discussion = self.env.ref('test_new_api.discussion_0')
-        demo_discussion = discussion.sudo(self.env.ref('base.user_demo'))
+        demo_discussion = discussion.with_user(self.env.ref('base.user_demo'))
 
         # check that the demo user sees the same messages
         self.assertEqual(demo_discussion.messages, discussion.messages)
