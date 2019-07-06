@@ -21,8 +21,8 @@
 # Paolo Valier, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2018
 # efraimbiffi <eab@odoo.com>, 2018
-# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
+# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
 # 
 msgid ""
@@ -305,9 +305,9 @@ msgid ""
 "                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
 msgstr ""
 "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
-"                                <strong>Invio email di massa</strong> per\n"
+"                                <strong>Invio massivo di e-mail</strong> per\n"
 "                                <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">i record selezionati</span>\n"
-"                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">il filtro di ricerca usato attualmente</span>.\n"
+"                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">l'attuale filtro di ricerca</span>.\n"
 "                            </span>\n"
 "                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Follower del documento e</span>"
 
@@ -934,7 +934,7 @@ msgstr "Autore"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Author Signature (mass mail only)"
-msgstr "Firma autore (solo per e-mail massiva)"
+msgstr "Firma autore (solo per e-mail di massa)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__author_id
@@ -970,7 +970,7 @@ msgstr "Eliminazione Automatica"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__force_next
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__force_next
 msgid "Auto Schedule Next Activity"
-msgstr "Pianifica automaticamente la prossima attività"
+msgstr "Pianificazione automatica attività successiva"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -1066,13 +1066,13 @@ msgstr "Data in lista nera"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #: model_terms:ir.ui.view,arch_db:mail.view_message_form
 msgid "Body"
-msgstr "Testo"
+msgstr "Corpo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_bounce
 #: model:ir.model.fields,field_description:mail.field_res_users__message_bounce
 msgid "Bounce"
-msgstr "Non recapitate"
+msgstr "Respinte"
 
 #. module: mail
 #. openerp-web
@@ -1091,7 +1091,7 @@ msgstr "Calendario"
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_call
 msgid "Call"
-msgstr "Chiamate"
+msgstr "Chiamata"
 
 #. module: mail
 #. openerp-web
@@ -1169,7 +1169,7 @@ msgstr "Categoria"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_cc
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_cc
 msgid "Cc"
-msgstr "Cc"
+msgstr "CC"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -1587,7 +1587,7 @@ msgstr "Predefinito"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_next_type_id
 msgid "Default Next Activity"
-msgstr "Prossima attività predefinita"
+msgstr "Attività successiva predefinita"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__null_value
@@ -1800,7 +1800,7 @@ msgid ""
 "mailing only)"
 msgstr ""
 "Non conserva una copia dell'e-mail nella cronologia comunicazioni del "
-"documento (solo e-mail massive)"
+"documento (solo invio massivo e-mail)"
 
 #. module: mail
 #. openerp-web
@@ -2039,8 +2039,8 @@ msgid ""
 "Email addresses that are blacklisted means that the recipient won't receive "
 "any mass mailing anymore."
 msgstr ""
-"I destinatari con indirizzo e-mail nella lista nera non riceveranno più "
-"alcuna e-mail massiva."
+"La presenza di indirizzi e-mail nella lista nera indica che i relativi "
+"destinatari non saranno più soggetti ad alcun invio massivo di e-mail."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
@@ -2632,8 +2632,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Se l'indirizzo email è nella lista nera, il contatto non riceverà più email "
-"massive da nessuna lista."
+"Se l'indirizzo e-mail è nella lista nera il contatto non sarà più soggetto "
+"all'invio massivo di e-mail, da nessuna lista."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain
@@ -3297,7 +3297,7 @@ msgstr ""
 #: selection:mail.activity.type,category:0
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
 msgid "Meeting"
-msgstr "Riunione"
+msgstr "Appuntamento"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -3760,7 +3760,7 @@ msgstr "Successivo"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Next Activities"
-msgstr "Prossima attività"
+msgstr "Attività successive"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_date_deadline
@@ -3781,7 +3781,7 @@ msgstr "Riepilogo prossima attività"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_type_id
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_type_id
 msgid "Next Activity Type"
-msgstr "Tipo Prossima Attività"
+msgstr "Tipo di attività successiva"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__has_recommended_activities
@@ -3800,7 +3800,7 @@ msgstr "Nessun errore"
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:20
 #, python-format
 msgid "No activities planned."
-msgstr "Nessuna attività prevista"
+msgstr "Nessuna attività pianificata."
 
 #. module: mail
 #. openerp-web
@@ -3904,7 +3904,7 @@ msgstr "Notifica followers"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__notify
 msgid "Notify followers of the document (mass post only)"
-msgstr "Notifica i followers del documento (solo posta di massa)"
+msgstr "Notifica i follower del documento (solo posta di massa)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_needaction_counter
@@ -4362,7 +4362,7 @@ msgstr "Completare con le informazioni del cliente"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "Please contact us instead using"
-msgstr "Contattarci invece di usare"
+msgstr "Per favore contattateci utilizzando invece"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_send_guidelines
@@ -4427,7 +4427,7 @@ msgstr "Powered by"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__previous_type_ids
 msgid "Preceding Activities"
-msgstr "Attività Precedenti"
+msgstr "Attività precedenti"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -4465,7 +4465,7 @@ msgstr "Precedente"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__previous_activity_type_id
 msgid "Previous Activity Type"
-msgstr "Tipo di Attività Precedente"
+msgstr "Tipo di attività precedente"
 
 #. module: mail
 #. openerp-web
@@ -4556,12 +4556,12 @@ msgstr "Destinatari"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__recommended_activity_type_id
 msgid "Recommended Activity Type"
-msgstr "Tipo di Attività Raccomandate"
+msgstr "Tipo di attività consigliate"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__next_type_ids
 msgid "Recommended Next Activities"
-msgstr "Attività Successive Raccomandate"
+msgstr "Attività successive consigliate"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_force_thread_id
@@ -5570,7 +5570,7 @@ msgstr "Impossibile connettersi al server SMTP"
 #, python-format
 msgid "Unable to log message, please configure the sender's email address."
 msgstr ""
-"Impossibile registrare il messaggio, configurare l'indirizzo email del "
+"Impossibile registrare il messaggio, configurare l'indirizzo e-mail del "
 "mittente."
 
 #. module: mail
@@ -5578,7 +5578,7 @@ msgstr ""
 #, python-format
 msgid "Unable to notify message, please configure the sender's email address."
 msgstr ""
-"Impossibile notificare il messaggio, configurare l'indirizzo email del "
+"Impossibile notificare il messaggio, configurare l'indirizzo e-mail del "
 "mittente."
 
 #. module: mail
@@ -5586,8 +5586,7 @@ msgstr ""
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
 msgstr ""
-"Impossibile pubblicare il messaggio, configurare l'indirizzo email del "
-"mittente."
+"Impossibile inviare messaggi, configurare l'indirizzo e-mail del mittente."
 
 #. module: mail
 #. openerp-web

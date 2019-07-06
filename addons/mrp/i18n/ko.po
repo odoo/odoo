@@ -29,12 +29,12 @@ msgstr ""
 #: code:addons/mrp/models/stock_rule.py:19
 #, python-format
 msgid " <br/><br/> The components will be taken from <b>%s</b>."
-msgstr ""
+msgstr " <br/><br/>부품은 <b>%s</b>에서 가져옵니다."
 
 #. module: mrp
 #: selection:mrp.bom,ready_to_produce:0
 msgid " When all components are available"
-msgstr ""
+msgstr "모든 부품을 사용할 수 있는 경우"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__bom_count
@@ -45,29 +45,29 @@ msgstr "# 재료 명세서"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__used_in_bom_count
 msgid "# BoM Where Used"
-msgstr ""
+msgstr "# 재료 명세서 사용처"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__workorder_done_count
 msgid "# Done Work Orders"
-msgstr ""
+msgstr "# 작업 지시서 완료"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_ready_count
 msgid "# Read Work Orders"
-msgstr ""
+msgstr "# 작업 지시서 읽기"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__workorder_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__workorder_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_count
 msgid "# Work Orders"
-msgstr ""
+msgstr "# 작업 지시서"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_template__used_in_bom_count
 msgid "# of BoM Where is Used"
-msgstr ""
+msgstr "# 재료 명세서 사용처"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -75,12 +75,14 @@ msgid ""
 ".\n"
 "            Manual actions may be needed."
 msgstr ""
+".\n"
+"            수동 작업이 필요할 수 있습니다."
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_leg
 #: model:product.template,description:mrp.product_product_computer_desk_leg_product_template
 msgid "18″ x 2½″ Square Leg"
-msgstr ""
+msgstr "18″ x 2½″ 각형 다리"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -113,6 +115,11 @@ msgid ""
 "                        Use this feature to store any files, like drawings or specifications.\n"
 "                    </p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                        제품에 파일을 업로드합니다\n"
+"                    </p><p>\n"
+"                        이 기능을 사용하여 도면이나 제품 사양과 같은 파일을 저장할 수 있습니다.\n"
+"                    </p>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -121,6 +128,9 @@ msgid ""
 "['|',('availability', 'in', ('assigned', 'none')), ('state', 'not in', "
 "('confirmed','progress'))]}\">Raw materials not available!</span>"
 msgstr ""
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
+"['|',('availability', 'in', ('assigned', 'none')), ('state', 'not in', "
+"('confirmed','progress'))]}\">원료를 사용할 수 없습니다!</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
@@ -128,6 +138,8 @@ msgid ""
 "<span class=\"fa fa-dropbox\" title=\"This is a BoM of type Kit!\" "
 "role=\"img\" aria-label=\"This is a BoM of type Kit!\"/>"
 msgstr ""
+"<span class=\"fa fa-dropbox\" title=\"This is a BoM of type Kit!\" "
+"role=\"img\" aria-label=\"This is a BoM of type Kit!\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -143,34 +155,34 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Lost</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">손실</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model_terms:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 msgid "<span class=\"o_stat_text\">Manufactured</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">제조 완료</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">OEE</span>"
-msgstr "<span class=\"o_stat_text\">설비종합효율</span>"
+msgstr "<span class=\"o_stat_text\">설비 종합 효율</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Performance</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">성능</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<span class=\"o_stat_text\">Scraps</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">가공 잔여물</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 msgid "<span class=\"o_stat_text\">Time<br/> Analysis</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">시간<br/> 분석</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -180,23 +192,23 @@ msgstr "<span class=\"o_stat_text\">작업장 부하</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Work Orders</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">작업 지시서</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "<span><strong>Unit Cost</strong></span>"
-msgstr ""
+msgstr "<span><strong>단가</strong></span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>Actions</span>"
-msgstr ""
+msgstr "<span>작업</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_operation_line
 msgid "<span>Minutes</span>"
-msgstr ""
+msgstr "<span>분</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -206,7 +218,7 @@ msgstr "<span>신규</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>PLAN ORDERS</span>"
-msgstr ""
+msgstr "<span>계획 지시서</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -221,7 +233,7 @@ msgstr "<span>보기</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>WORK ORDERS</span>"
-msgstr ""
+msgstr "<span>작업 지시서</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -229,11 +241,13 @@ msgid ""
 "<strong attrs=\"{'invisible': [('date_planned_finished', '=', False)]}\" class=\"mr8\">to</strong>\n"
 "                                    <strong class=\"oe_edit_only mr8\" attrs=\"{'invisible': [('date_planned_finished', '!=', False)]}\">to</strong>"
 msgstr ""
+"<strong attrs=\"{'invisible': [('date_planned_finished', '=', False)]}\" class=\"mr8\">까지</strong>\n"
+"                                    <strong class=\"oe_edit_only mr8\" attrs=\"{'invisible': [('date_planned_finished', '!=', False)]}\">까지</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<strong class=\"mr8\">to</strong>"
-msgstr ""
+msgstr "<strong class=\"mr8\">까지</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
@@ -309,7 +323,7 @@ msgstr "액세스 토큰"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__action
 msgid "Action"
-msgstr "작업"
+msgstr "추가 작업"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction
@@ -330,7 +344,7 @@ msgstr "활성"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__active_move_line_ids
 msgid "Active Move Line"
-msgstr ""
+msgstr "내역 이동 활성"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_ids
@@ -361,23 +375,25 @@ msgid ""
 "finished products as well. Without this option you only do: A + B = C. With "
 "the option: A + B = C + D."
 msgstr ""
+"부산물을 재료 명세서에 첨가하세요. 이것은 또한 여러 개의 완제품을 얻는 데에도 사용될 수 있습니다. 이 옵션이 없으면 A + B = "
+"C만 수행합니다. 이 옵션을 사용하면 A + B = C + D입니다."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Add quality checks to your work orders"
-msgstr ""
+msgstr "작업 지시서에 품질 점검 추가"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "All"
-msgstr "모두"
+msgstr "전체"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid ""
 "All components could not be reserved. Click on the \"Check Availability "
 "button\" to try to reserve components."
-msgstr ""
+msgstr "모든 구성 요소를 예약할 수 없습니다. 구성요소를 예약하려면 \"사용 가능 확인\" 버튼을 클릭하십시오."
 
 #. module: mrp
 #: sql_constraint:mrp.bom.line:0
@@ -386,28 +402,31 @@ msgid ""
 "Lines with 0 quantities can be used as optional lines. \n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
 msgstr ""
+"모든 제품 수량은 0보다 크거나 같아야 합니다.\n"
+"수량이 0인 생산라인을 선택적으로 사용할 수 있습니다. \n"
+"재료 명세서에서 추가 제품을 관리하려면 mrp_byproduct 모듈을 설치해야 합니다!"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__post_visible
 msgid "Allowed to Post Inventory"
-msgstr ""
+msgstr "재고로 보관 허용"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unreserve_visible
 msgid "Allowed to Unreserve Inventory"
-msgstr ""
+msgstr "재고로 보관 해제 허용"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid ""
 "An unbuild order is used to break down a finished product into its "
 "components."
-msgstr ""
+msgstr "완성된 제품을 구성 요소로 분해하기 위해 분해 지시서가 사용됩니다."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__attribute_value_ids
 msgid "Apply on Variants"
-msgstr ""
+msgstr "제품 파생 적용"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
@@ -419,7 +438,7 @@ msgstr "승인"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
-msgstr "아카이브됨"
+msgstr "보관"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_attachment_count
@@ -447,12 +466,12 @@ msgstr "첨부 파일"
 #. module: mrp
 #: selection:mrp.workcenter.productivity.loss.type,loss_type:0
 msgid "Availability"
-msgstr "가용성"
+msgstr "사용 가능성"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Availability Losses"
-msgstr ""
+msgstr "손실 사용 가능"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -471,22 +490,22 @@ msgstr "아바타"
 msgid ""
 "Average lead time in days to manufacture this product. In the case of multi-"
 "level BOM, the manufacturing lead times of the components will be added."
-msgstr ""
+msgstr "이 제품을 제조하기 위한 평균 기회 시간. 다단계 BOM의 경우 부품의 제조 기회 시간이 추가 됩니다."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__variant_bom_ids
 msgid "BOM Product Variants"
-msgstr ""
+msgstr "파생 상품 BOM"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__attribute_value_ids
 msgid "BOM Product Variants needed form apply this line."
-msgstr "변형 제품 재료 명세서는 명세서에 적용할 양식이 필요합니다."
+msgstr "파생 상품 재료 명세서에 필요한 양식으로 이 명세서를 적용합니다."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
 msgid "BOM Structure Report"
-msgstr ""
+msgstr "BOM 구조 보고서"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_line_ids
@@ -515,12 +534,12 @@ msgstr "재료 명세서"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_line
 msgid "Bill of Material Line"
-msgstr ""
+msgstr "재료 명세서 내역"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "Bill of Material line"
-msgstr ""
+msgstr "재료 명세서 내역"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_open_bom
@@ -553,19 +572,22 @@ msgid ""
 "                materials used to make a finished product; through a manufacturing\n"
 "                order or a pack of products."
 msgstr ""
+"재료 명세서를 통해 완성된 제품을 만드는데 필요한 \n"
+"                      원자재 목록을 정의할 수 있습니다. \n"
+"                       ; 제품팩 또는 제조 주문을 통해."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block"
-msgstr "블록"
+msgstr "차단"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_block_workcenter
 #: model:ir.actions.act_window,name:mrp.act_mrp_block_workcenter_wo
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block Workcenter"
-msgstr "작업장 중지"
+msgstr "작업장 차단"
 
 #. module: mrp
 #: selection:mrp.workcenter,working_state:0
@@ -575,22 +597,22 @@ msgstr "차단됨"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__blocked_time
 msgid "Blocked Time"
-msgstr ""
+msgstr "차단된 시간"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__blocked_time
 msgid "Blocked hour(s) over the last month"
-msgstr ""
+msgstr "지난 달 동안 차단된 시간"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_tree_view
 msgid "Blocking Reasons"
-msgstr ""
+msgstr "차단 사유"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "BoM"
-msgstr "재료 명세서"
+msgstr "BoM"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__bom_line_ids
@@ -598,7 +620,7 @@ msgstr "재료 명세서"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_product_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_template_search_view
 msgid "BoM Components"
-msgstr ""
+msgstr "BoM 구성 요소"
 
 #. module: mrp
 #. openerp-web
@@ -606,17 +628,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "BoM Cost"
-msgstr ""
+msgstr "BoM 가격"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__bom_line_id
 msgid "BoM Line"
-msgstr ""
+msgstr "BoM 명세"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__bom_line_ids
 msgid "BoM Lines"
-msgstr "재료 명세"
+msgstr "BoM 명세"
 
 #. module: mrp
 #. openerp-web
@@ -624,7 +646,7 @@ msgstr "재료 명세"
 #: model:ir.actions.report,name:mrp.action_report_bom_structure
 #, python-format
 msgid "BoM Structure"
-msgstr ""
+msgstr "BoM 구조"
 
 #. module: mrp
 #. openerp-web
@@ -632,34 +654,34 @@ msgstr ""
 #: model:ir.actions.client,name:mrp.action_report_mrp_bom
 #, python-format
 msgid "BoM Structure & Cost"
-msgstr ""
+msgstr "BoM 구조 및 가격"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "BoM Structure &amp; Cost"
-msgstr ""
+msgstr "BoM 구조 &amp; 가격"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__type
 msgid "BoM Type"
-msgstr "재료 명세서 유형"
+msgstr "BoM 유형"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "BoM details"
-msgstr ""
+msgstr "BoM 세부 사항"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:86
 #, python-format
 msgid "BoM line product %s should not be same as BoM product."
-msgstr ""
+msgstr "BoM 명세에 있는 %s 상품인 BoM 제품과 같을 수 없습니다."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_bolt
 #: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
 msgid "Bolt"
-msgstr ""
+msgstr "볼트"
 
 #. module: mrp
 #: selection:stock.rule,action:0
@@ -669,13 +691,13 @@ msgstr "구매"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_byproduct
 msgid "By-Products"
-msgstr ""
+msgstr "부산물"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:66
 #, python-format
 msgid "Can't find any production location."
-msgstr ""
+msgstr "생산 장소를 찾을 수 없습니다."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -688,51 +710,51 @@ msgstr "취소"
 #. module: mrp
 #: selection:mrp.production,state:0 selection:mrp.workorder,state:0
 msgid "Cancelled"
-msgstr "취소 됨"
+msgstr "취소됨"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:371
 #, python-format
 msgid "Cannot delete a manufacturing order not in cancel state"
-msgstr ""
+msgstr "취소 상태가 아닌 제조 지시를 삭제할 수 없습니다."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__capacity
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__capacity
 msgid "Capacity"
-msgstr ""
+msgstr "생산 능력"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__loss_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_type__loss_type
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_tree_view
 msgid "Category"
-msgstr "분류"
+msgstr "범주"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
 msgid "Change Product Qty"
-msgstr "상품 수량 변경"
+msgstr "제품 수량 변경"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_change_production_qty
 msgid "Change Production Qty"
-msgstr ""
+msgstr "생산 수량 변경"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_change_production_qty
 msgid "Change Quantity To Produce"
-msgstr ""
+msgstr "생산량 변경"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__check_to_done
 msgid "Check Produced Qty"
-msgstr ""
+msgstr "생산 수량 확인"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Check availability"
-msgstr ""
+msgstr "가용성 확인"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__checksum
