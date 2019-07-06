@@ -30,10 +30,10 @@
 # Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2018
 # Yihya Hugirat <hugirat@gmail.com>, 2018
 # Firas Asad <firas101@gmail.com>, 2018
-# Ali Alrehawi <alrehawi@hotmail.com>, 2018
 # Mustafa Rawi <mustafa@cubexco.com>, 2019
 # Martin Trigaux, 2019
 # Osoul <baruni@osoul.ly>, 2019
+# Ali Alrehawi <alrehawi@hotmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -41,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-06-21 11:06+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Osoul <baruni@osoul.ly>, 2019\n"
+"Last-Translator: Ali Alrehawi <alrehawi@hotmail.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -884,6 +884,11 @@ msgid ""
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
+"المستخدم لايمكن أن يتحمل ضرائب B2B ,و ضرائب B2C \n"
+"المستخدم (ين) عليهم إشكالية:%s\n"
+" اذهب الى الإعدادات العامة، واختر لعرض  أسعار المنتج \n"
+"إما  وضع ’شامل الضرائب’ أو ’غير شامل الضرائب’ \n"
+"(أو حول الوضع مرتين إذا كنت في الوضع المطلوب )."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -6843,7 +6848,7 @@ msgstr "اسم سجل الرسالة"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__description
 msgid "Message description: either the subject, or the beginning of the body"
-msgstr ""
+msgstr "وصف الرسالة : إما الموضوع ، أو بداية محتوى الرسالة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn_msg
@@ -7971,7 +7976,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:444
 #, python-format
 msgid "Payments without a customer can't be matched"
-msgstr ""
+msgstr "المدفوعات بدون العميل لايمكن أن تتطابق"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree_pending_invoice
@@ -10388,6 +10393,8 @@ msgid ""
 "The following invoice(s) will not be sent by email, because the customers "
 "don't have email address."
 msgstr ""
+"الفواتير التالية لن ترسل عبر البريد الالكتروني ،بسبب أن العميل لا يملك عنوان"
+" بريد الكتروني."
 
 #. module: account
 #: code:addons/account/models/account.py:564
@@ -11803,7 +11810,7 @@ msgstr "القيمة المشطوبة"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:217
 #, python-format
 msgid "Writeoff Date"
-msgstr ""
+msgstr "تاريخ غير صالح"
 
 #. module: account
 #: sql_constraint:account.move.line:0
@@ -12064,6 +12071,7 @@ msgid ""
 "You cannot register payments for customer invoices and credit notes at the "
 "same time."
 msgstr ""
+"لا تستطيع أن تسجل المدفوعات لفواتير العميل وملاحظات الائتمان في نفس الوقت"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:96
@@ -12072,6 +12080,8 @@ msgid ""
 "You cannot register payments for vendor bills and supplier refunds at the "
 "same time."
 msgstr ""
+"لا تستطيع تسجيل المدفوعات فيما يخص فواتير التاجر ومردودات المورد في نفس "
+"الوقت"
 
 #. module: account
 #: code:addons/account/models/account.py:644
@@ -12306,7 +12316,7 @@ msgstr "تمت تسويتها تلقائيًا."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
 msgid "number of invoice(s) that will not be sent"
-msgstr ""
+msgstr "رقم الفواتير(الفاتورة) التي لايمكن أن ترسل."
 
 #. module: account
 #. openerp-web

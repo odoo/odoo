@@ -8,7 +8,7 @@
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
 # Martin Trigaux, 2018
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# Jiří Podhorecký <j.podhorecky@volny.cz>, 2019
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"Last-Translator: Jiří Podhorecký <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,13 +35,13 @@ msgstr ""
 #: code:addons/mail/wizard/invite.py:29
 #, python-format
 msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
-msgstr ""
+msgstr "%(user_name)s vás zve ke sledování %(document)s dokumentů: %(title)s"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:31
 #, python-format
 msgid "%(user_name)s invited you to follow a new document."
-msgstr ""
+msgstr "%(user_name)s vás zve k sledování nového dokumentu."
 
 #. module: mail
 #. openerp-web
@@ -68,7 +68,7 @@ msgstr "%s (kopie)"
 #: code:addons/mail/static/src/js/models/threads/thread_typing_mixin/thread_typing_mixin.js:133
 #, python-format
 msgid "%s and %s are typing..."
-msgstr ""
+msgstr "%s a %s právě píše..."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:278
@@ -169,6 +169,9 @@ msgid ""
 "href=\"#\" class=\"o_channel_redirect\" data-oe-"
 "id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">%(author)s pozval %(new_partner)s na<a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:829
@@ -177,6 +180,8 @@ msgid ""
 "<div class=\"o_mail_notification\">created <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">vytvořeno<a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:729
@@ -186,6 +191,8 @@ msgid ""
 "<div class=\"o_mail_notification\">joined <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">připojeno <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:295
@@ -194,6 +201,8 @@ msgid ""
 "<div class=\"o_mail_notification\">left <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">zbývá<a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
@@ -204,6 +213,10 @@ msgid ""
 "attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
 "groups=\"base.group_user\"/>"
 msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"tento "
+"e-mail byl vyřazen z hromadné pošty\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
 
 #. module: mail
 #. openerp-web
@@ -240,7 +253,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/tour.js:27
 #, python-format
 msgid "<p>Create a channel here.</p>"
-msgstr ""
+msgstr "<p>Zde vytvořit nový kanál.</p>"
 
 #. module: mail
 #. openerp-web
@@ -289,6 +302,8 @@ msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
 "                                    <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Přidat</span>\n"
+"                                    <span class=\"o_stat_text\">související akci</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -296,6 +311,8 @@ msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
 "                                    <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Odstranit</span>\n"
+"                                    <span class=\"o_stat_text\">související akci</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
