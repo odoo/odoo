@@ -242,6 +242,57 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertEqual(po_line[0].product_qty, 10, 'the purchase order line has a wrong quantity')
         self.assertEqual(po_line[1].product_qty, 5, 'the purchase order line has a wrong quantity')
 
+    def test_merge_po_line_3(self):
+        """Chage merging po line if same procurement is done depending on
+        propagate_date, propagate_date_minimum_delta and custom values.
+        """
+        # Create procurement order of product_1
+        ProcurementGroup = self.env['procurement.group']
+        procurement_values = {
+            'warehouse_id': self.warehouse_1,
+            'rule_id': self.warehouse_1.buy_pull_id,
+            'date_planned': fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10)),
+            'group_id': False,
+            'route_ids': [],
+        }
+
+        procurement_values['product_description_variants'] = '[{"color": "Red"}]'
+        procurement_values['description'] = "T-shirt (Red)"
+        order_1_values = procurement_values
+        ProcurementGroup.run([self.env['procurement.group'].Procurement(
+            self.t_shirt, 5, self.uom_unit, self.warehouse_1.lot_stock_id,
+            self.t_shirt.name, '/', self.env.company, order_1_values)
+        ])
+        purchase_order = self.env['purchase.order.line'].search([('product_id', '=', self.t_shirt.id)], limit=1).order_id
+        self.assertEqual(len(purchase_order.order_line), 1, 'wrong number of order line is created')
+
+        procurement_values['product_description_variants'] = '[{"color": "Red"}]'
+        order_2_values = procurement_values
+        ProcurementGroup.run([self.env['procurement.group'].Procurement(
+            self.t_shirt, 10, self.uom_unit, self.warehouse_1.lot_stock_id,
+            self.t_shirt.name, '/', self.env.company, order_2_values)
+        ])
+        self.env['procurement.group'].run_scheduler()
+        self.assertEqual(len(purchase_order.order_line), 1, 'line with same custom value should be merged')
+        self.assertEqual(purchase_order.order_line[0].product_qty, 15, 'line with same custom value should be merged and qty should be update')
+
+        procurement_values['product_description_variants'] = '[{"color": "Green"}]'
+        procurement_values['description'] = "T-shirt (Green)"
+
+        order_3_values = procurement_values
+        ProcurementGroup.run([self.env['procurement.group'].Procurement(
+            self.t_shirt, 10, self.uom_unit, self.warehouse_1.lot_stock_id,
+            self.t_shirt.name, '/', self.env.company, order_3_values)
+        ])
+        self.assertEqual(len(purchase_order.order_line), 2, 'line with different custom value should not be merged')
+        self.assertEqual(purchase_order.order_line.filtered(lambda x: x.product_qty == 15).name, "T-shirt (Red)", 'wrong description in po lines')
+        self.assertEqual(purchase_order.order_line.filtered(lambda x: x.product_qty == 10).name, "T-shirt (Green)", 'wrong description in po lines')
+
+        purchase_order.button_confirm()
+
+        self.assertEqual(purchase_order.picking_ids[0].move_ids_without_package.filtered(lambda x: x.product_uom_qty == 15).description_picking, "T-shirt (Red)", 'wrong description in picking')
+        self.assertEqual(purchase_order.picking_ids[0].move_ids_without_package.filtered(lambda x: x.product_uom_qty == 10).description_picking, "T-shirt (Green)", 'wrong description in picking')
+
     def test_reordering_days_to_purchase(self):
         self.patcher = patch('odoo.addons.stock.models.stock_orderpoint.fields.Date', wraps=fields.Date)
         self.mock_date = self.patcher.start()
