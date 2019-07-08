@@ -50,7 +50,7 @@ class BaseGengoTranslations(models.TransientModel):
         if not icp.get_param(self.GENGO_KEY):
             icp.set_param(self.GENGO_KEY, str(uuid.uuid4()))
 
-    def get_gengo_key(self):
+    def _get_gengo_key(self):
         icp = self.env['ir.config_parameter'].sudo()
         return icp.get_param(self.GENGO_KEY, default="Undefined")
 
@@ -224,7 +224,7 @@ class BaseGengoTranslations(models.TransientModel):
                     'lc_tgt': IrTranslation._get_gengo_corresponding_language(term.lang),
                     'auto_approve': auto_approve,
                     'comment': comment,
-                    'callback_url': "%s/website/gengo_callback?pgk=%s&db=%s" % (base_url, self.get_gengo_key(), self.env.cr.dbname)
+                    'callback_url': "%s/website/gengo_callback?pgk=%s&db=%s" % (base_url, self._get_gengo_key(), self.env.cr.dbname)
                 }
         return {'jobs': jobs, 'as_group': 0}
 
