@@ -28,7 +28,6 @@
                 color="color"
                 event_limit="5">
                 <field name="state" invisible="1"/>
-                <field name="display_warning" invisible="1"/>
                 <!-- Sidebar favorites filters -->
                 <field name="employee_id" write_model="hr.user.work.entry.employee" write_field="employee_id" avatar_field="image_small"/>
                 <templates>
@@ -37,7 +36,7 @@
                         <div t-att-style="typeof color === 'string' ? ('background-color:'+color)+';' : ''" t-attf-class="#{record.is_highlighted &amp;&amp; record.is_highlighted.value ? 'o_event_hightlight' : ''} #{typeof color === 'number' ? 'o_calendar_color_'+color : ''}">
                             <div class="fc-time"/>
                             <div class="o_fields">
-                                <t t-if="record.display_warning">
+                                <t t-if="record.state == 'conflict'">
                                     <span class="fa fa-exclamation-triangle mr-2" aria-label="Conflict" title="error"/>
                                 </t>
                                 <t t-if="record.state == 'validated'">
@@ -60,7 +59,6 @@
         <field name="arch" type="xml">
             <form string="Work Entry" >
                 <header>
-                    <field name="display_warning" invisible="1"/>
                     <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
@@ -98,7 +96,6 @@
                 <field name="duration"/>
                 <field name="state"/>
                 <field name="date_start" string="Beginning"/>
-                <field name="display_warning"/>
             </tree>
         </field>
     </record>
@@ -111,7 +108,7 @@
                 <field name="employee_id"/>
                 <field name="name"/>
                 <filter string="My Work Entries" domain="[('employee_id.user_id','=',uid)]" name="my_work_entries"/>
-                <filter string="With error" domain="[('display_warning','=', True)]" name="work_entries_error"/>
+                <filter string="With error" domain="[('state','=', 'conflict')]" name="work_entries_error"/>
                 <filter name="date_filter" string="Date" date="date_start"/>
                 <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
                 <filter name="group_work_entry_type" string="Type" context="{'group_by':'work_entry_type_id'}"/>
