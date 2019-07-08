@@ -1029,8 +1029,6 @@ class Field(MetaField('DummyField', (object,), {})):
                     if inv_recs:
                         for invf in record._field_inverses[self]:
                             invf._update(inv_recs, record)
-                # mark field as dirty
-                env.dirty[record].add(self.name)
 
             # determine more dependent fields, and invalidate them
             if self.relational:
