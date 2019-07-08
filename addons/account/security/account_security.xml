@@ -92,19 +92,19 @@
     <record id="account_move_comp_rule" model="ir.rule">
         <field name="name">Account Entry</field>
         <field name="model_id" ref="model_account_move"/>
-        <field name="global" eval="True"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
 
     <record id="account_move_line_comp_rule" model="ir.rule">
         <field name="name">Entry lines</field>
         <field name="model_id" ref="model_account_move_line"/>
-        <field name="global" eval="True"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
 
-    <record id="journal_comp_rule" model="ir.rule">
-        <field name="name">Journal multi-company</field>
+    <record id="journal_group_comp_rule" model="ir.rule">
+        <field name="name">Journal group multi-company</field>
         <field name="model_id" ref="model_account_journal_group"/>
         <field name="global" eval="True"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
