@@ -315,13 +315,14 @@ class TxAuthorize(models.Model):
                     'acquirer_reference': tree.get('x_trans_id'),
                     'date': fields.Datetime.now(),
                 })
-                if init_state != 'authorized':
-                    self.execute_callback()
 
                 if self.payment_token_id:
                     self.payment_token_id.verified = True
 
                 self._set_transaction_done()
+
+                if init_state != 'authorized':
+                    self.execute_callback()
             if tree.get('x_type').lower() == 'auth_only':
                 self.write({'acquirer_reference': tree.get('x_trans_id')})
                 self._set_transaction_authorized()
