@@ -31,7 +31,7 @@ class StockMoveLine(models.Model):
     package_id = fields.Many2one('stock.quant.package', 'Source Package', ondelete='restrict')
     package_level_id = fields.Many2one('stock.package_level', 'Package Level')
     lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
-    lot_name = fields.Char('Lot/Serial Number Name')
+    lot_name = fields.Text('Lot/Serial Number Name')
     result_package_id = fields.Many2one(
         'stock.quant.package', 'Destination Package',
         ondelete='restrict', required=False,

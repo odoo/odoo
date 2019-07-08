@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import Form, SavepointCase
 
 
 class StockGenerate(SavepointCase):
@@ -153,3 +153,103 @@ class StockGenerate(SavepointCase):
         })
         with self.assertRaises(UserError):
             wiz.generate_serial_numbers()
+
+    def test_set_multiple_lot_name_01(self):
+        """ Sets five SN in one time in stock move view form, then checks five
+        first move lines have the right `lot_name`.
+        """
+        move = self.get_new_move(10)
+        # We must begin with a move with 10 move lines.
+        self.assertEqual(len(move.move_line_ids), 10)
+
+        value_list = [
+            'abc-235',
+            'abc-237',
+            'abc-238',
+            'abc-282',
+            'abc-301',
+        ]
+        values = '\n'.join(value_list)
+
+        move_form = Form(move, view='stock.view_stock_move_operations')
+        with move_form.move_line_ids.edit(0) as line:
+            line.lot_name = values
+        move = move_form.save()
+
+        # After we set multiple SN, we must still have 10 move lines.
+        self.assertEqual(len(move.move_line_ids), 10)
+        # Then we look each SN name is correct.
+        for i in range(10):
+            value = False
+            if i < len(value_list):
+                value = value_list[i]
+            self.assertEqual(
+                move.move_line_ids[i].lot_name,
+                value
+            )
+
+    def test_set_multiple_lot_name_02(self):
+        """ Sets five SN in one time in a stock move with only one move line,
+        then checks additionnal move lines have been create and have each the
+        correct SN.
+        """
+        move = self.get_new_move(1)
+        # We must begin with a move with only one move line
+        self.assertEqual(len(move.move_line_ids), 1)
+
+        value_list = [
+            'abc-235',
+            'abc-237',
+            'abc-238',
+            'abc-282',
+            'abc-301',
+        ]
+        values = '\n'.join(value_list)
+
+        move_form = Form(move, view='stock.view_stock_move_operations')
+        with move_form.move_line_ids.edit(0) as line:
+            line.lot_name = values
+        move = move_form.save()
+
+        # After we set multiple SN, we must have a line for each value.
+        self.assertEqual(len(move.move_line_ids), len(value_list))
+        # Then we look each SN name is correct.
+        for (move_line, line) in zip(move.move_line_ids, value_list):
+            self.assertEqual(move_line.lot_name, line)
+
+    def test_set_multiple_lot_name_03_empty_values(self):
+        """ Sets multiple values with some empty lines in one time, then checks
+        we haven't create useless move line and all move line's `lot_name` have
+        been correctly set.
+        """
+        move = self.get_new_move(5)
+        # We must begin with a move with five move lines.
+        self.assertEqual(len(move.move_line_ids), 5)
+
+        value_list = [
+            '',
+            'abc-235',
+            '',
+            'abc-237',
+            '',
+            '',
+            'abc-238',
+            'abc-282',
+            'abc-301',
+            '',
+        ]
+        values = '\n'.join(value_list)
+
+        # Checks we have more values than move lines.
+        self.assertTrue(len(move.move_line_ids) < len(value_list))
+        move_form = Form(move, view='stock.view_stock_move_operations')
+        with move_form.move_line_ids.edit(0) as line:
+            line.lot_name = values
+        move = move_form.save()
+
+        filtered_value_list = list(filter(lambda line: len(line), value_list))
+        # After we set multiple SN, we must have a line for each value.
+        self.assertEqual(len(move.move_line_ids), len(filtered_value_list))
+        # Then we look each SN name is correct.
+        for (move_line, line) in zip(move.move_line_ids, filtered_value_list):
+            self.assertEqual(move_line.lot_name, line)
