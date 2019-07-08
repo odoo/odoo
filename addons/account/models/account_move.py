@@ -1237,24 +1237,9 @@ class AccountMove(models.Model):
     @api.constrains('ref')
     def _check_duplicate_supplier_reference(self):
         moves = self.filtered(lambda move: move.is_purchase_document() and move.ref)
-        if not moves:
-            return
-
-        self._cr.execute('''
-            SELECT move.id
-            FROM account_move move
-            INNER JOIN account_move move2 ON
-                move2.ref = move.ref
-                AND move2.company_id = move.company_id
-                AND move2.commercial_partner_id = move.commercial_partner_id
-                AND move2.type = move.type
-                AND move2.id != move.id
-            WHERE move.id IN %s
-            AND move.type in ('in_invoice', 'in_refund')
-            AND move.ref IS NOT NULL
-        ''', [tuple(self.ids)])
-        if self._cr.fetchone():
-            raise ValidationError(_('Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note.'))
+        for move in moves:
+            if self.search([('type', '=', move.type), ('ref', '=', move.ref), ('company_id', '=', move.company_id.id), ('commercial_partner_id', '=', move.commercial_partner_id.id), ('id', '!=', move.id), ('invoice_date', '=', move.invoice_date)], limit=1):
+                raise ValidationError(_('Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note.'))
 
     @api.multi
     def _check_balanced(self):
