@@ -255,6 +255,8 @@ class StockMove(models.Model):
         for svl in stock_valuation_layers:
             if not svl.product_id.valuation == 'real_time':
                 continue
+            if svl.currency_id.is_zero(svl.value):
+                continue
             svl.stock_move_id._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
 
         # For every in move, run the vacuum for the linked product.
@@ -353,10 +355,6 @@ class StockMove(models.Model):
         # the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
         # the company currency... so we need to use round() before creating the accounting entries.
         debit_value = self.company_id.currency_id.round(cost)
-
-        # check that all data is correct
-        if self.company_id.currency_id.is_zero(debit_value) and not self.env['ir.config_parameter'].sudo().get_param('stock_account.allow_zero_cost'):
-            raise UserError(_("The cost of %s is currently equal to 0. Change the cost or the configuration of your product to avoid an incorrect valuation.") % (self.product_id.display_name,))
         credit_value = debit_value
 
         valuation_partner_id = self._get_partner_id_for_valuation_lines()
