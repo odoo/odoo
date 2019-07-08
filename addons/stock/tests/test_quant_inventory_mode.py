@@ -201,7 +201,6 @@ class TestEditableQuant(SavepointCase):
             'name': 'Pauline Poivraisselle',
             'login': 'pauline',
             'email': 'p.p@example.com',
-            'notification_type': 'inbox',
             'groups_id': [(6, 0, [self.env.ref('base.group_user').id])]
         })
         user_admin = self.env.ref('base.user_admin')
