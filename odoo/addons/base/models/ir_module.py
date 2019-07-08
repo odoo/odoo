@@ -887,7 +887,7 @@ class Module(models.Model):
             for mod in update_mods
         }
         mod_names = topological_sort(mod_dict)
-        self.env['ir.translation'].load_module_terms(mod_names, filter_lang)
+        self.env['ir.translation']._load_module_terms(mod_names, filter_lang)
 
     @api.multi
     def _check(self):

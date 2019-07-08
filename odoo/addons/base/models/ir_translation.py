@@ -758,7 +758,7 @@ class IrTranslation(models.Model):
         """ Return a cursor-like object for fast inserting translations """
         return IrTranslationImport(self)
 
-    def load_module_terms(self, modules, langs):
+    def _load_module_terms(self, modules, langs):
         """ Load PO files of the given modules for the given languages. """
         # make sure the given languages are active
         res_lang = self.env['res.lang'].sudo()

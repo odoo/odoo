@@ -251,7 +251,7 @@ class TestTranslation(TransactionCase):
 
     def setUp(self):
         super(TestTranslation, self).setUp()
-        self.env['ir.translation'].load_module_terms(['base'], ['fr_FR'])
+        self.env['ir.translation']._load_module_terms(['base'], ['fr_FR'])
         self.customers = self.env['res.partner.category'].create({'name': 'Customers'})
         self.env['ir.translation'].create({
             'type': 'model',
@@ -336,7 +336,7 @@ class TestTranslation(TransactionCase):
 class TestXMLTranslation(TransactionCase):
     def setUp(self):
         super(TestXMLTranslation, self).setUp()
-        self.env['ir.translation'].load_module_terms(['base'], ['fr_FR', 'nl_NL'])
+        self.env['ir.translation']._load_module_terms(['base'], ['fr_FR', 'nl_NL'])
 
     def create_view(self, archf, terms, **kwargs):
         view = self.env['ir.ui.view'].create({
