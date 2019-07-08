@@ -488,7 +488,7 @@
                                     class="oe_stat_button"
                                     icon="fa-bars"
                                     type="object"
-                                    attrs="{'invisible': ['|', ('type', '!=', 'entry'), ('id', '=', False)]}"
+                                    attrs="{'invisible': ['|', '|', ('type', '!=', 'entry'), ('id', '=', False), ('has_reconciled_entries', '=', False)]}"
                                     string="Reconciled entries">
                             </button>
                         </div>
@@ -515,6 +515,7 @@
                         <field name="invoice_sequence_number_next_prefix" invisible="1"/>
                         <field name="invoice_sequence_number_next" invisible="1"/>
                         <field name="invoice_has_matching_supsense_amount" invisible="1"/>
+                        <field name="has_reconciled_entries" invisible="1"/>
 
                         <div>
                             <!-- Invoice draft header -->
