@@ -197,13 +197,14 @@ class StockMove(models.Model):
         multi_locations_enabled = self.user_has_groups('stock.group_stock_multi_locations')
         consignment_enabled = self.user_has_groups('stock.group_tracking_owner')
 
-        show_details_visible = multi_locations_enabled or consignment_enabled or has_package
+        show_details_visible = multi_locations_enabled or has_package
 
         for move in self:
             if not move.product_id:
                 move.show_details_visible = False
             else:
-                move.show_details_visible = ((show_details_visible or move.has_tracking != 'none') and
+                move.show_details_visible = (((consignment_enabled and move.picking_id.picking_type_id.code != 'incoming') or
+                                             show_details_visible or move.has_tracking != 'none') and
                                              (move.state != 'draft' or (move.picking_id.immediate_transfer and move.state == 'draft')) and
                                              move.picking_id.picking_type_id.show_operations is False)
 
@@ -517,6 +518,7 @@ class StockMove(models.Model):
             'res_id': self.id,
             'context': dict(
                 self.env.context,
+                show_owner=self.picking_type_id.code != 'incoming',
                 show_lots_m2o=self.has_tracking != 'none' and (picking_type_id.use_existing_lots or self.state == 'done' or self.origin_returned_move_id.id),  # able to create lots, whatever the value of ` use_create_lots`.
                 show_lots_text=self.has_tracking != 'none' and picking_type_id.use_create_lots and not picking_type_id.use_existing_lots and self.state != 'done' and not self.origin_returned_move_id.id,
                 show_source_location=self.picking_type_id.code != 'incoming',
