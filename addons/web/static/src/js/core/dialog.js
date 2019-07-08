@@ -30,7 +30,8 @@ var Dialog = Widget.extend({
      * @param {Object} [options]
      * @param {string} [options.title=Odoo]
      * @param {string} [options.subtitle]
-     * @param {string} [options.size=large] - 'large', 'medium' or 'small'
+     * @param {string} [options.size=large] - 'extra-large', 'large', 'medium'
+     *        or 'small'
      * @param {boolean} [options.fullscreen=false] - whether or not the dialog
      *        should be open in fullscreen mode (the main usecase is mobile)
      * @param {string} [options.dialogClass] - class to add to the modal-body
@@ -114,6 +115,9 @@ var Dialog = Widget.extend({
                 renderFooter: self.renderFooter,
             }));
             switch (self.size) {
+                case 'extra-large':
+                    self.$modal.find('.modal-dialog').addClass('modal-xl');
+                    break;
                 case 'large':
                     self.$modal.find('.modal-dialog').addClass('modal-lg');
                     break;
