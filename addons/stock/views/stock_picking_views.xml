@@ -268,11 +268,8 @@
                             <field name="scheduled_date" attrs="{'readonly': ['|', ('id', '=', False), ('state', 'in', ('done', 'cancel'))], 'required': [('id', '!=', False)]}"/>
                             <field name="date_done" string="Effective Date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                             <field name="origin" placeholder="e.g. PO0032"/>
-                            <field name="owner_id" groups="stock.group_tracking_owner"/>
-                            <div groups="stock.group_tracking_owner" colspan="2" col="2">
-                                <button name="action_assign_owner" string="Assign Owner" type="object" attrs="{'invisible': ['|',('move_line_exist', '=', False),('state', 'not in', ('draft','assigned','confirmed'))]}"
-                                    class="oe_link"/>
-                            </div>
+                            <field name="owner_id" groups="stock.group_tracking_owner"
+                                   attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}"/>
                         </group>
                     </group>
                     <notebook>
@@ -287,7 +284,7 @@
                                     <field name="package_id" groups="stock.group_tracking_lot" domain="[('location_id', '=', location_id)]"/>
                                     <field name="result_package_id" groups="stock.group_tracking_lot" domain="['|', '|', ('location_id', '=', False), ('location_id', '=', location_dest_id), ('id', '=', package_id)]"/>
                                     <field name="lots_visible" invisible="1"/>
-                                    <field name="owner_id" groups="stock.group_tracking_owner"/>
+                                    <field name="owner_id" groups="stock.group_tracking_owner" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'incoming')]}"/>
                                     <field name="state" invisible="1"/>
                                     <field name="lot_id" groups="stock.group_production_lot" attrs="{'column_invisible': [('parent.show_lots_text', '=', True)], 'invisible': [('lots_visible', '=', False)]}" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
                                     <field name="lot_name" groups="stock.group_production_lot" attrs="{'column_invisible': [('parent.show_lots_text', '=', False)], 'invisible': [('lots_visible', '=', False)]}" context="{'default_product_id': product_id}"/>
@@ -330,7 +327,8 @@
                                     <field name="reserved_availability" string="Reserved" attrs="{'column_invisible': (['|','|', ('parent.state','=', 'done'), ('parent.picking_type_code', '=', 'incoming'), ('parent.immediate_transfer', '=', True)])}"/>
                                     <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
                                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
-                                    <button name="action_show_details" string="Register lots, packs, location" type="object" icon="fa-list" attrs="{'invisible': [('show_details_visible', '=', False)]}" options='{"warn": true}'/>
+                                    <button name="action_show_details" string="Register lots, packs, location" type="object" icon="fa-list"
+                                            attrs="{'invisible': [('show_details_visible', '=', False)]}" options='{"warn": true}'/>
                                     <button name="action_assign_serial" type="object"
                                             class="btn-sm btn-primary fa fa-plus-square-o"
                                             style="line-height: 1;"
