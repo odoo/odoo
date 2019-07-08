@@ -780,6 +780,32 @@ class StockMove(models.Model):
         if self.date_expected:
             self.date = self.date_expected
 
+    @api.onchange('move_line_nosuggest_ids')
+    def onchange_move_line_nosuggest_ids(self):
+        breaking_char = '\n'
+        move_lines_to_create = []
+        for move_line in self.move_line_nosuggest_ids:
+            # Look if the `lot_name` contains multiple values.
+            if breaking_char in (move_line.lot_name or ''):
+                splitted_lines = move_line.lot_name.split(breaking_char)
+                splitted_lines = list(filter(lambda line: line, splitted_lines))
+                move_line.lot_name = splitted_lines[0]
+                # For each SN line, set move ine data...
+                for line in splitted_lines[1:]:
+                    move_line_data = {
+                        'lot_name': line,
+                        'qty_done': 1,
+                        'product_id': move_line.product_id.id,
+                        'product_uom_id': move_line.product_id.uom_id.id,
+                        'location_id': move_line.location_id.id,
+                        'location_dest_id': move_line.location_dest_id.id,
+                        'owner_id': move_line.owner_id or False,
+                        'package_id': move_line.package_id or False,
+                    }
+                    move_lines_to_create += [(0, 0, move_line_data)]
+                # ... then create these move lines.
+                self.update({'move_line_nosuggest_ids': move_lines_to_create})
+
     @api.onchange('product_uom')
     def onchange_product_uom(self):
         if self.product_uom.factor > self.product_id.uom_id.factor:

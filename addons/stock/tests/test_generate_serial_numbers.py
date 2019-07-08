@@ -270,3 +270,73 @@ class StockGenerate(SavepointCase):
             self.assertEqual(move_line.qty_done, 1)
             # The location dest must be now the one from the putaway.
             self.assertEqual(move_line.location_dest_id.id, shelf_location.id)
+    def test_set_multiple_lot_name_01(self):
+        """ Sets five SN in one time in stock move view form, then checks move
+        has five new move lines with the right `lot_name`.
+        """
+        nbre_of_lines = 10
+        move = self.get_new_move(nbre_of_lines)
+        # We must begin with a move with 10 move lines.
+        self.assertEqual(len(move.move_line_ids), nbre_of_lines)
+
+        value_list = [
+            'abc-235',
+            'abc-237',
+            'abc-238',
+            'abc-282',
+            'abc-301',
+        ]
+        values = '\n'.join(value_list)
+
+        move_form = Form(move, view='stock.view_stock_move_nosuggest_operations')
+        with move_form.move_line_nosuggest_ids.new() as line:
+            line.lot_name = values
+        move = move_form.save()
+
+        # After we set multiple SN, we must have now 15 move lines.
+        self.assertEqual(len(move.move_line_ids), nbre_of_lines + len(value_list))
+        # Then we look each SN name is correct.
+        for move_line in move.move_line_nosuggest_ids:
+            self.assertEqual(move_line.lot_name, value_list.pop(0))
+        for move_line in (move.move_line_ids - move.move_line_nosuggest_ids):
+            self.assertEqual(move_line.lot_name, False)
+
+    def test_set_multiple_lot_name_02_empty_values(self):
+        """ Sets multiple values with some empty lines in one time, then checks
+        we haven't create useless move line and all move line's `lot_name` have
+        been correctly set.
+        """
+        nbre_of_lines = 5
+        move = self.get_new_move(nbre_of_lines)
+        # We must begin with a move with five move lines.
+        self.assertEqual(len(move.move_line_ids), nbre_of_lines)
+
+        value_list = [
+            '',
+            'abc-235',
+            '',
+            'abc-237',
+            '',
+            '',
+            'abc-238',
+            'abc-282',
+            'abc-301',
+            '',
+        ]
+        values = '\n'.join(value_list)
+
+        # Checks we have more values than move lines.
+        self.assertTrue(len(move.move_line_ids) < len(value_list))
+        move_form = Form(move, view='stock.view_stock_move_nosuggest_operations')
+        with move_form.move_line_nosuggest_ids.new() as line:
+            line.lot_name = values
+        move = move_form.save()
+
+        filtered_value_list = list(filter(lambda line: len(line), value_list))
+        # After we set multiple SN, we must have a line for each value.
+        self.assertEqual(len(move.move_line_ids), nbre_of_lines + len(filtered_value_list))
+        # Then we look each SN name is correct.
+        for move_line in move.move_line_nosuggest_ids:
+            self.assertEqual(move_line.lot_name, filtered_value_list.pop(0))
+        for move_line in (move.move_line_ids - move.move_line_nosuggest_ids):
+            self.assertEqual(move_line.lot_name, False)
