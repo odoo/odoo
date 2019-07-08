@@ -1507,7 +1507,7 @@ QUnit.test('rename DM conversation', function (assert) {
                 assert.step(args.method);
                 assert.strictEqual(args.args[0], 1);
                 assert.strictEqual(args.kwargs.name, "Demo");
-                return $.when("Demo");
+                return $.when();
             }
             return this._super.apply(this, arguments);
         },
