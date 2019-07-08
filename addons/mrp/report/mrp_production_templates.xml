@@ -32,6 +32,10 @@
                             <strong>Finished Product:</strong><br/>
                             <span t-field="o.product_id"/>
                         </div>
+                        <div class="col-3" t-if="o.product_description_variants">
+                            <strong>Description:</strong><br/>
+                            <span t-field="o.product_description_variants"/>
+                        </div>
                         <div class="col-3">
                             <strong>Quantity to Produce:</strong><br/>
                             <span t-field="o.product_qty"/>

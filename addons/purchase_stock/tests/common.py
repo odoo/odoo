@@ -35,6 +35,12 @@ class PurchaseTestCommon(TestStockCommon):
             'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
             'seller_ids': [(0, 0, {'name': cls.partner_1.id, 'delay': 5})]})
 
+        cls.t_shirt = cls.env['product.product'].create({
+            'name': 'T-shirt',
+            'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
+            'seller_ids': [(0, 0, {'name': cls.partner_1.id, 'delay': 5})]
+        })
+
         # Update product_2 with type, route and Delivery Lead Time
         cls.product_2.write({
             'type': 'product',
