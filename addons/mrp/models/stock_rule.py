@@ -84,6 +84,7 @@ class StockRule(models.Model):
         return {
             'origin': origin,
             'product_id': product_id.id,
+            'product_description_variants': values.get('product_description_variants'),
             'product_qty': product_qty,
             'product_uom_id': product_uom.id,
             'location_src_id': self.location_src_id.id or self.picking_type_id.default_location_src_id.id or location_id.id,

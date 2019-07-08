@@ -205,6 +205,7 @@ class MrpProduction(models.Model):
     procurement_group_id = fields.Many2one(
         'procurement.group', 'Procurement Group',
         copy=False)
+    product_description_variants = fields.Char('Custom Description')
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Orderpoint')
     propagate_cancel = fields.Boolean(
         'Propagate cancel and split',
