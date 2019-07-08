@@ -78,8 +78,8 @@ class WebsitePayment(http.Controller):
         tx_id = request.session.pop('website_payment_tx_id', False)
         if tx_id:
             tx = request.env['payment.transaction'].browse(tx_id)
-            status = (tx.state == 'done' and 'success') or 'danger'
-            message = (tx.state == 'done' and _('Your payment was successful! It may take some time to be validated on our end.')) or _('Oops! There was a problem with your payment.')
+            status = (tx.state in ['done', 'authorized'] and 'success') or 'danger'
+            message = (tx.state in ['done', 'authorized'] and _('Your payment was successful! It may take some time to be validated on our end.')) or _('Oops! There was a problem with your payment.')
             if tx.acquirer_id and tx.acquirer_id.provider == 'transfer':
                 status = (tx.state in ('done', 'pending') and 'success') or 'danger'
                 if tx.state == 'done':
