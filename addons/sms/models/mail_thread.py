@@ -70,6 +70,8 @@ class MailThread(models.AbstractModel):
 
             number = False
             for fname in tocheck_fields:
+                if fname not in record:
+                    continue
                 number = phone_validation.phone_get_sanitized_record_number(record, number_fname=fname)
                 if number:
                     break
@@ -94,6 +96,8 @@ class MailThread(models.AbstractModel):
                     result[record.id] = {'partner': partner, 'sanitized': partner_number, 'number': partner_number}
                 else:
                     result[record.id] = {'partner': partner, 'sanitized': False, 'number': partner.mobile or partner.phone}
+            else:
+                result[record.id] = {'partner': self.env['res.partner'], 'sanitized': False, 'number': False}
         return result
 
     def _message_sms_using_template(self, partner_ids=False, sms_template_xmlid=False, sms_template_fallback='', put_in_queue=False):

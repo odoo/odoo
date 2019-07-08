@@ -23,3 +23,14 @@ class MailTestSMS(models.Model):
 
     def _sms_get_number_fields(self):
         return ['phone_nbr', 'mobile_nbr']
+
+
+class MailTestSMSSoLike(models.Model):
+    """ A model like sale order having only a customer, not specific phone
+    or mobile fields. """
+    _description = 'Chatter Model for SMS Gateway (Partner only)'
+    _name = 'mail.test.sms.partner'
+    _inherit = ['mail.thread']
+
+    name = fields.Char()
+    partner_id = fields.Many2one('res.partner', 'Customer')

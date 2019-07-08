@@ -85,6 +85,26 @@ class TestSMSPost(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS, 
 
         self.assertSMSNotification([{'partner': self.partner_1, 'number': self.random_numbers_san[0]}, {'partner': self.partner_2}], self._test_body, messages)
 
+    def test_message_sms_model_w_partner_only(self):
+        with self.sudo('employee'):
+            record = self.env['mail.test.sms.partner'].create({'partner_id': self.partner_1.id})
+
+            with self.mockSMSGateway():
+                messages = record._message_sms(self._test_body)
+
+        self.assertSMSNotification([{'partner': self.partner_1}], self._test_body, messages)
+
+    def test_message_sms_model_w_partner_only_void(self):
+        with self.sudo('employee'):
+            record = self.env['mail.test.sms.partner'].create({'partner_id': False})
+
+            with self.mockSMSGateway():
+                messages = record._message_sms(self._test_body)
+
+        # should not crash but no sms / no recipients
+        notifs = self.env['mail.notification'].search([('mail_message_id', 'in', messages.ids)])
+        self.assertFalse(notifs)
+
     def test_message_sms_on_field_w_partner(self):
         with self.sudo('employee'), self.mockSMSGateway():
             test_record = self.env['mail.test.sms'].browse(self.test_record.id)
