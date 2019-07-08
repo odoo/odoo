@@ -244,6 +244,8 @@ class AccountMove(models.Model):
     invoice_has_matching_supsense_amount = fields.Boolean(compute='_compute_has_matching_suspense_amount',
         groups='account.group_account_invoice',
         help="Technical field used to display an alert on invoices if there is at least a matching amount in any supsense account.")
+    # Technical field to hide Reconciled Entries stat button
+    has_reconciled_entries = fields.Boolean(compute="_compute_has_reconciled_entries")
 
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
@@ -2048,6 +2050,11 @@ class AccountMove(models.Model):
         for move in self.filtered(lambda move: move.is_invoice()):
             move.access_url = '/my/invoices/%s' % (move.id)
 
+    @api.depends('line_ids')
+    def _compute_has_reconciled_entries(self):
+        for move in self:
+            move.has_reconciled_entries = len(move.line_ids._reconciled_lines()) > 1
+
     @api.multi
     def action_view_reverse_entry(self):
         self.ensure_one()
@@ -3543,14 +3550,17 @@ class AccountMoveLine(models.Model):
         action['res_id'] = self.copy().id
         return action
 
+    def _reconciled_lines(self):
+        ids = []
+        for aml in self.filtered('account_id.reconcile'):
+            ids.extend([r.debit_move_id.id for r in aml.matched_debit_ids] if aml.credit > 0 else [r.credit_move_id.id for r in aml.matched_credit_ids])
+            ids.append(aml.id)
+        return ids
+
     @api.multi
     def open_reconcile_view(self):
-        [action] = self.env.ref('account.action_account_moves_all').read()
-        ids = []
-        for aml in self:
-            if aml.account_id.reconcile:
-                ids.extend([r.debit_move_id.id for r in aml.matched_debit_ids] if aml.credit > 0 else [r.credit_move_id.id for r in aml.matched_credit_ids])
-                ids.append(aml.id)
+        [action] = self.env.ref('account.action_account_moves_all_a').read()
+        ids = self._reconciled_lines()
         action['domain'] = [('id', 'in', ids)]
         return action
 
