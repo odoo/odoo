@@ -437,6 +437,7 @@ class StockMove(models.Model):
                 'ref': description,
                 'stock_move_id': self.id,
                 'stock_valuation_layer_ids': [(6, None, [svl_id])],
+                'type': 'entry',
             })
             new_account_move.post()
 
