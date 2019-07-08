@@ -34,7 +34,7 @@ class TestSaleStock(TestSale):
         pick = self.so.picking_ids
         pick.move_lines.write({'quantity_done': 1})
         wiz_act = pick.button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
+        wiz = self.env[wiz_act['res_model']].with_context(wiz_act['context']).browse(wiz_act['res_id'])
         wiz.process()
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" after partial delivery')
         del_qties = [sol.qty_delivered for sol in self.so.order_line]
@@ -215,7 +215,7 @@ class TestSaleStock(TestSale):
         pick = self.so.picking_ids
         pick.move_lines.write({'quantity_done': 4})
         res_dict = pick.button_validate()
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard = self.env[(res_dict.get('res_model'))].with_context(res_dict['context']).browse(res_dict.get('res_id'))
         wizard.process_cancel_backorder()
 
         # Check quantity delivered
@@ -258,10 +258,10 @@ class TestSaleStock(TestSale):
         # will ask to create a backorder for the unavailable product.
         self.assertEquals(len(self.so.picking_ids), 1)
         res_dict = self.so.picking_ids[0].button_validate()
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard = self.env[res_dict.get('res_model')].with_context(res_dict['context']).browse(res_dict.get('res_id'))
         self.assertEqual(wizard._name, 'stock.immediate.transfer')
         res_dict = wizard.process()
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard = self.env[res_dict.get('res_model')].with_context(res_dict['context']).browse(res_dict.get('res_id'))
         self.assertEqual(wizard._name, 'stock.backorder.confirmation')
         wizard.process()
 
@@ -314,7 +314,7 @@ class TestSaleStock(TestSale):
         # deliver them
         self.assertEquals(len(self.so.picking_ids), 1)
         res_dict = self.so.picking_ids[0].button_validate()
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard = self.env[res_dict.get('res_model')].with_context(res_dict['context']).browse(res_dict.get('res_id'))
         wizard.process()
         self.assertEquals(self.so.picking_ids[0].state, "done")
 
@@ -525,7 +525,7 @@ class TestSaleStock(TestSale):
 
         picking = so1.picking_ids
         wiz_act = picking.button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
+        wiz = self.env[wiz_act['res_model']].with_context(wiz_act['context']).browse(wiz_act['res_id'])
         wiz.process()
 
         # Return 5 units
@@ -543,7 +543,7 @@ class TestSaleStock(TestSale):
         res = return_wiz.create_returns()
         return_pick = self.env['stock.picking'].browse(res['res_id'])
         wiz_act = return_pick.button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
+        wiz = self.env[wiz_act['res_model']].with_context(wiz_act['context']).browse(wiz_act['res_id'])
         wiz.process()
 
         self.assertEqual(so1.order_line.qty_delivered, 5)

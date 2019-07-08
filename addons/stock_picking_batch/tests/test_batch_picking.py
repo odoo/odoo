@@ -99,7 +99,7 @@ class TestBatchPicking(TransactionCase):
         # There should be a wizard asking to process picking without quantity done
         immediate_transfer_wizard_dict = self.batch.done()
         self.assertTrue(immediate_transfer_wizard_dict)
-        immediate_transfer_wizard = self.env[(immediate_transfer_wizard_dict.get('res_model'))].browse(immediate_transfer_wizard_dict.get('res_id'))
+        immediate_transfer_wizard = self.env[(immediate_transfer_wizard_dict.get('res_model'))].with_context(immediate_transfer_wizard_dict['context']).browse(immediate_transfer_wizard_dict.get('res_id'))
         self.assertEqual(len(immediate_transfer_wizard.pick_ids), 2)
         immediate_transfer_wizard.process()
 
@@ -132,11 +132,11 @@ class TestBatchPicking(TransactionCase):
         # There should be a wizard asking to process picking without quantity done
         back_order_wizard_dict = self.batch.done()
         self.assertTrue(back_order_wizard_dict)
-        back_order_wizard = self.env[(back_order_wizard_dict.get('res_model'))].browse(back_order_wizard_dict.get('res_id'))
+        back_order_wizard = self.env[(back_order_wizard_dict.get('res_model'))].with_context(back_order_wizard_dict['context']).browse(back_order_wizard_dict.get('res_id'))
         self.assertEqual(len(back_order_wizard.pick_ids), 1)
-        self.assertEqual(self.picking_client_2.state, 'done', 'Picking 2 should be done')
         back_order_wizard.process()
 
+        self.assertEqual(self.picking_client_2.state, 'done', 'Picking 2 should be done')
         self.assertEqual(self.picking_client_1.state, 'done', 'Picking 1 should be done')
         self.assertEqual(self.picking_client_1.move_lines.product_uom_qty, 5, 'initial demand should be 5 after picking split')
         self.assertTrue(self.env['stock.picking'].search([('backorder_id', '=', self.picking_client_1.id)]), 'no back order created')
@@ -165,11 +165,11 @@ class TestBatchPicking(TransactionCase):
         # There should be a wizard asking to process picking without quantity done
         immediate_transfer_wizard_dict = self.batch.done()
         self.assertTrue(immediate_transfer_wizard_dict)
-        immediate_transfer_wizard = self.env[(immediate_transfer_wizard_dict.get('res_model'))].browse(immediate_transfer_wizard_dict.get('res_id'))
+        immediate_transfer_wizard = self.env[(immediate_transfer_wizard_dict.get('res_model'))].with_context(immediate_transfer_wizard_dict['context']).browse(immediate_transfer_wizard_dict.get('res_id'))
         self.assertEqual(len(immediate_transfer_wizard.pick_ids), 2)
         back_order_wizard_dict = immediate_transfer_wizard.process()
         self.assertTrue(back_order_wizard_dict)
-        back_order_wizard = self.env[(back_order_wizard_dict.get('res_model'))].browse(back_order_wizard_dict.get('res_id'))
+        back_order_wizard = self.env[(back_order_wizard_dict.get('res_model'))].with_context(back_order_wizard_dict['context']).browse(back_order_wizard_dict.get('res_id'))
         self.assertEqual(len(back_order_wizard.pick_ids), 1)
         back_order_wizard.process()
 
@@ -202,11 +202,11 @@ class TestBatchPicking(TransactionCase):
         # There should be a wizard asking to process picking without quantity done
         immediate_transfer_wizard_dict = self.batch.done()
         self.assertTrue(immediate_transfer_wizard_dict)
-        immediate_transfer_wizard = self.env[(immediate_transfer_wizard_dict.get('res_model'))].browse(immediate_transfer_wizard_dict.get('res_id'))
+        immediate_transfer_wizard = self.env[(immediate_transfer_wizard_dict.get('res_model'))].with_context(immediate_transfer_wizard_dict['context']).browse(immediate_transfer_wizard_dict.get('res_id'))
         self.assertEqual(len(immediate_transfer_wizard.pick_ids), 1)
         back_order_wizard_dict = immediate_transfer_wizard.process()
         self.assertTrue(back_order_wizard_dict)
-        back_order_wizard = self.env[(back_order_wizard_dict.get('res_model'))].browse(back_order_wizard_dict.get('res_id'))
+        back_order_wizard = self.env[(back_order_wizard_dict.get('res_model'))].with_context(back_order_wizard_dict['context']).browse(back_order_wizard_dict.get('res_id'))
         self.assertEqual(len(back_order_wizard.pick_ids), 1)
         back_order_wizard.process()
 

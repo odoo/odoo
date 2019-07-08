@@ -533,7 +533,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         pick = so.picking_ids
         pick.move_lines.write({'quantity_done': 1})
         wiz_act = pick.button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
+        wiz = self.env[wiz_act['res_model']].with_context(wiz_act['context']).browse(wiz_act['res_id'])
         wiz.process()
         self.assertEqual(so.invoice_status, 'no', 'Sale MRP: so invoice_status should be "no" after partial delivery of a kit')
         del_qty = sum(sol.qty_delivered for sol in so.order_line)
@@ -651,7 +651,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         # To check the products on the picking
         self.assertEqual(pick.move_lines.mapped('product_id'), self.component1 | self.component2)
         wiz_act = pick.button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
+        wiz = self.env[wiz_act['res_model']].with_context(wiz_act['context']).browse(wiz_act['res_id'])
         wiz.process()
         # Create the invoice
         self.so._create_invoices()
@@ -730,7 +730,7 @@ class TestSaleMrpFlow(common.SavepointCase):
 
         # Process only x1 of the first component then create a backorder for the missing components
         picking_original.move_lines[0].write({'quantity_done': 1})
-        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, so.picking_ids[0].id)]})
+        backorder_wizard = self.env['stock.backorder.confirmation'].with_context({'to_validate_pick_ids': so.picking_ids[0].id}).create({'pick_ids': [(4, so.picking_ids[0].id)]})
         backorder_wizard.process()
 
         # Check that the backorder was created, no kit should be delivered at this point
@@ -742,7 +742,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         # Process only x6 each componenent in the picking
         # Then create a backorder for the missing components
         backorder_1.move_lines.write({'quantity_done': 6})
-        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, backorder_1.id)]})
+        backorder_wizard = self.env['stock.backorder.confirmation'].with_context({'to_validate_pick_ids': backorder_1.id}).create({'pick_ids': [(4, backorder_1.id)]})
         backorder_wizard.process()
 
         # Check that a backorder is created
@@ -759,7 +759,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         # - A backorder will be created, the SO should have 3 picking_ids linked to it.
         backorder_2.move_lines.write({'quantity_done': 3})
 
-        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, backorder_2.id)]})
+        backorder_wizard = self.env['stock.backorder.confirmation'].with_context({'to_validate_pick_ids': backorder_2.id}).create({'pick_ids': [(4, backorder_2.id)]})
         backorder_wizard.process()
 
         self.assertEquals(len(so.picking_ids), 4)
@@ -852,7 +852,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         move_lines.write({'quantity_done': qty_to_process})
 
         # Create a backorder for the missing componenents
-        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, so.picking_ids[0].id)]})
+        backorder_wizard = self.env['stock.backorder.confirmation'].with_context({'to_validate_pick_ids': so.picking_ids[0].id}).create({'pick_ids': [(4, so.picking_ids[0].id)]})
         backorder_wizard.process()
 
         # Check that a backorded is created
@@ -872,7 +872,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         self._process_quantities(backorder_1.move_lines, qty_to_process)
 
         # Create a backorder for the missing componenents
-        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, backorder_1.id)]})
+        backorder_wizard = self.env['stock.backorder.confirmation'].with_context({'to_validate_pick_ids': backorder_1.id}).create({'pick_ids': [(4, backorder_1.id)]})
         backorder_wizard.process()
 
         # Only 1 kit_parent should be delivered at this point
@@ -911,7 +911,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         self._process_quantities(backorder_2.move_lines, qty_to_process)
 
         # Create a backorder for the missing componenents
-        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, backorder_2.id)]})
+        backorder_wizard = self.env['stock.backorder.confirmation'].with_context({'to_validate_pick_ids': backorder_2.id}).create({'pick_ids': [(4, backorder_2.id)]})
         backorder_wizard.process()
 
         # Check that x3 kit_parents are indeed delivered
@@ -956,7 +956,7 @@ class TestSaleMrpFlow(common.SavepointCase):
 
         # Process all components and validate the picking
         wiz_act = return_pick.button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
+        wiz = self.env[wiz_act['res_model']].with_context(wiz_act['context']).browse(wiz_act['res_id'])
         wiz.process()
 
         # Now quantity delivered should be 3 again
@@ -978,7 +978,7 @@ class TestSaleMrpFlow(common.SavepointCase):
                 'to_refund': True
             })
 
-        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, return_of_return_pick.id)]})
+        backorder_wizard = self.env['stock.backorder.confirmation'].with_context({'to_validate_pick_ids': return_of_return_pick.id}).create({'pick_ids': [(4, return_of_return_pick.id)]})
         backorder_wizard.process()
 
         # As one of each component is missing, only 6 kit_parents should be delivered
@@ -1176,7 +1176,7 @@ class TestSaleMrpFlow(common.SavepointCase):
             component_uom_kg: 0.006
         }
         self._process_quantities(move_lines, qty_to_process)
-        backorder_wizard = self.env['stock.backorder.confirmation'].create(
+        backorder_wizard = self.env['stock.backorder.confirmation'].with_context({'to_validate_pick_ids': so.picking_ids[0].id}).create(
             {'pick_ids': [(4, so.picking_ids[0].id)]})
         backorder_wizard.process()
 

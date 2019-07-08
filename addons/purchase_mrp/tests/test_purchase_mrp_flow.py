@@ -265,7 +265,7 @@ class TestSaleMrpFlow(TransactionCase):
         move_lines.write({'quantity_done': qty_to_process})
 
         # Create a backorder for the missing componenents
-        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, po.picking_ids[0].id)]})
+        backorder_wizard = self.env['stock.backorder.confirmation'].with_context({'to_validate_pick_ids': po.picking_ids[0].id}).create({'pick_ids': [(4, po.picking_ids[0].id)]})
         backorder_wizard.process()
 
         # Check that a backorded is created
@@ -285,7 +285,7 @@ class TestSaleMrpFlow(TransactionCase):
         self._process_quantities(backorder_1.move_lines, qty_to_process)
 
         # Create a backorder for the missing componenents
-        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, backorder_1.id)]})
+        backorder_wizard = self.env['stock.backorder.confirmation'].with_context({'to_validate_pick_ids': backorder_1.id}).create({'pick_ids': [(4, backorder_1.id)]})
         backorder_wizard.process()
 
         # Only 1 kit_parent should be received at this point
@@ -324,7 +324,7 @@ class TestSaleMrpFlow(TransactionCase):
         self._process_quantities(backorder_2.move_lines, qty_to_process)
 
         # Create a backorder for the missing componenents
-        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, backorder_2.id)]})
+        backorder_wizard = self.env['stock.backorder.confirmation'].with_context({'to_validate_pick_ids': backorder_2.id}).create({'pick_ids': [(4, backorder_2.id)]})
         backorder_wizard.process()
 
         # Check that x3 kit_parents are indeed received
@@ -369,7 +369,7 @@ class TestSaleMrpFlow(TransactionCase):
 
         # Process all components and validate the picking
         wiz_act = return_pick.button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
+        wiz = self.env[wiz_act['res_model']].with_context(wiz_act['context']).browse(wiz_act['res_id'])
         wiz.process()
 
         # Now quantity received should be 3 again
@@ -391,7 +391,7 @@ class TestSaleMrpFlow(TransactionCase):
                 'to_refund': True
             })
 
-        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, return_of_return_pick.id)]})
+        backorder_wizard = self.env['stock.backorder.confirmation'].with_context({'to_validate_pick_ids': return_of_return_pick.id}).create({'pick_ids': [(4, return_of_return_pick.id)]})
         backorder_wizard.process()
 
         # As one of each component is missing, only 6 kit_parents should be received

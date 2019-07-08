@@ -677,66 +677,67 @@ class Picking(models.Model):
             picking.package_level_ids.filtered(lambda p: not p.move_ids).unlink()
 
     def button_validate(self):
+        """ Make every sanity check for every picking of the record set
+        then check if any wizard must be generated before calling _action_done().
+        """
 
         self._validation_sanity_check()
+        return self._button_validate()
 
-        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        if all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in self.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel'))):
-            view = self.env.ref('stock.view_immediate_transfer')
-            wiz = self.env['stock.immediate.transfer'].create({'pick_ids': [(4, self.id)]})
-            return {
-                'name': _('Immediate Transfer?'),
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'res_model': 'stock.immediate.transfer',
-                'views': [(view.id, 'form')],
-                'view_id': view.id,
-                'target': 'new',
-                'res_id': wiz.id,
-                'context': self.env.context,
-            }
+    def _button_validate(self):
 
-        # Check backorder should check for other barcodes
-        if self._check_backorder():
-            return self.action_generate_backorder_wizard()
+        # Immediate transfer wizard
+        immediate_pickings = self._get_pickings_to_immediate_transfer()
+        if immediate_pickings:
+            return self._generate_immediate_transfer_wizard(immediate_pickings)
+
+        # Backorder wizard
+        if 'cancel_backorder' not in self.env.context:
+            backorder_pickings = self._get_pickings_to_backorder()
+            if backorder_pickings:
+                return self._generate_backorder_wizard(backorder_pickings)
+
         self._action_done()
         return
 
     def _validation_sanity_check(self):
-        self.ensure_one()
-        if not self.move_lines and not self.move_line_ids:
-            raise UserError(_('Please add some items to move.'))
+        """ Raise an UserError if there's any in the recordset of picking(s) """
+        for picking in self:
+            if not picking.move_lines and not picking.move_line_ids:
+                raise UserError(_('Please add some items to move.'))
 
-        # If no lots when needed, raise error
-        picking_type = self.picking_type_id
-        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        no_quantities_done = all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in
-                                 self.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel')))
-        no_reserved_quantities = all(
-            float_is_zero(move_line.product_qty, precision_rounding=move_line.product_uom_id.rounding) for move_line in
-            self.move_line_ids)
-        if no_reserved_quantities and no_quantities_done:
-            raise UserError(_(
-                'You cannot validate a transfer if no quantites are reserved nor done. To force the transfer, switch in edit more and encode the done quantities.'))
+            # If no lots when needed, raise error
+            picking_type = picking.picking_type_id
+            precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            no_quantities_done = all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in
+                                     picking.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel')))
+            no_reserved_quantities = all(
+                float_is_zero(move_line.product_qty, precision_rounding=move_line.product_uom_id.rounding) for move_line in
+                picking.move_line_ids)
+            if no_reserved_quantities and no_quantities_done:
+                raise UserError(_(
+                    'You cannot validate a transfer if no quantites are reserved nor done. To force the transfer, switch in edit more and encode the done quantities.'))
 
-        if picking_type.use_create_lots or picking_type.use_existing_lots:
-            lines_to_check = self.move_line_ids
-            if not no_quantities_done:
-                lines_to_check = lines_to_check.filtered(
-                    lambda line: float_compare(line.qty_done, 0,
-                                               precision_rounding=line.product_uom_id.rounding)
-                )
+            if picking_type.use_create_lots or picking_type.use_existing_lots:
+                lines_to_check = picking.move_line_ids
+                if not no_quantities_done:
+                    lines_to_check = lines_to_check.filtered(
+                        lambda line: float_compare(line.qty_done, 0,
+                                                   precision_rounding=line.product_uom_id.rounding)
+                    )
 
-            for line in lines_to_check:
-                product = line.product_id
-                if product and product.tracking != 'none':
-                    if not line.lot_name and not line.lot_id:
-                        raise UserError(
-                            _('You need to supply a Lot/Serial number for product %s.') % product.display_name)
+                for line in lines_to_check:
+                    product = line.product_id
+                    if product and product.tracking != 'none':
+                        if not line.lot_name and not line.lot_id:
+                            raise UserError(
+                                _('You need to supply a Lot/Serial number for product %s.') % product.display_name)
 
-    def action_generate_backorder_wizard(self):
+    def _generate_backorder_wizard(self, pickings_backorder):
         view = self.env.ref('stock.view_backorder_confirmation')
-        wiz = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, p.id) for p in self]})
+        wiz = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, p.id) for p in pickings_backorder]})
+        ctx = self.env.context.copy()
+        ctx.update({'to_validate_pick_ids': self.ids})
         return {
             'name': _('Create Backorder?'),
             'type': 'ir.actions.act_window',
@@ -746,7 +747,24 @@ class Picking(models.Model):
             'view_id': view.id,
             'target': 'new',
             'res_id': wiz.id,
-            'context': self.env.context,
+            'context': ctx,
+        }
+
+    def _generate_immediate_transfer_wizard(self, pickings_immediate):
+        view = self.env.ref('stock.view_immediate_transfer')
+        wiz = self.env['stock.immediate.transfer'].create({'pick_ids': [(4, p.id) for p in pickings_immediate]})
+        ctx = self.env.context.copy()
+        ctx.update({'to_validate_pick_ids': self.ids})
+        return {
+            'name': _('Immediate Transfer?'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'stock.immediate.transfer',
+            'views': [(view.id, 'form')],
+            'view_id': view.id,
+            'target': 'new',
+            'res_id': wiz.id,
+            'context': ctx,
         }
 
     def action_toggle_is_locked(self):
@@ -754,12 +772,21 @@ class Picking(models.Model):
         self.is_locked = not self.is_locked
         return True
 
-    def _check_backorder(self):
+    def _get_pickings_to_immediate_transfer(self):
+        picking_no_quantities_done = self.env['stock.picking']
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        for picking in self:
+            if all(float_is_zero(move_line.qty_done, precision_digits=precision_digits)
+                   for move_line in
+                   picking.mapped('move_line_ids').filtered(lambda m: m.state not in ('done', 'cancel'))):
+                picking_no_quantities_done |= picking
+        return picking_no_quantities_done
+
+    def _get_pickings_to_backorder(self):
         """ This method will loop over all the move lines of self and
         check if creating a backorder is necessary. This method is
-        called during button_validate if the user has already processed
-        some quantities and in the immediate transfer wizard that is
-        displayed if the user has not processed any quantities.
+        called during the validation process after the immediate
+        transfer wizard is processed.
 
         :return: The pickings needing a backorder confirmation
         """
