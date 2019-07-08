@@ -60,7 +60,7 @@ class TestFifoReturns(TestPurchase):
 
         # Process the reception of purchase order 1
         picking = purchase_order_1.picking_ids[0]
-        self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
+        self.env['stock.immediate.transfer'].with_context({'to_validate_pick_ids': picking.id}).create({'pick_ids': [(4, picking.id)]}).process()
 
         # Check the standard price of the product (fifo icecream)
         self.assertEqual(product_fiforet_icecream.standard_price, 0.0, 'Standard price should not have changed!')
@@ -68,7 +68,7 @@ class TestFifoReturns(TestPurchase):
         # Confirm the second purchase order
         purchase_order_2.button_confirm()
         picking = purchase_order_2.picking_ids[0]
-        self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
+        self.env['stock.immediate.transfer'].with_context({'to_validate_pick_ids': picking.id}).create({'pick_ids': [(4, picking.id)]}).process()
 
         # Return the goods of purchase order 2
         picking = purchase_order_2.picking_ids[0]

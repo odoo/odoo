@@ -12,17 +12,15 @@ class StockBackorderConfirmation(models.TransientModel):
     pick_ids = fields.Many2many('stock.picking', 'stock_picking_backorder_rel')
 
     def _process(self, cancel_backorder=False):
-        for confirmation in self:
-            if cancel_backorder:
-                for pick_id in confirmation.pick_ids:
-                    moves_to_log = {}
-                    for move in pick_id.move_lines:
-                        if float_compare(move.product_uom_qty,
-                                         move.quantity_done,
-                                         precision_rounding=move.product_uom.rounding) > 0:
-                            moves_to_log[move] = (move.quantity_done, move.product_uom_qty)
-                    pick_id._log_less_quantities_than_expected(moves_to_log)
-            confirmation.pick_ids.with_context(cancel_backorder=cancel_backorder)._action_done()
+        if cancel_backorder:
+            for pick_id in self.pick_ids:
+                moves_to_log = {}
+                for move in pick_id.move_lines:
+                    if float_compare(move.product_uom_qty, move.quantity_done, precision_rounding=move.product_uom.rounding) > 0:
+                        moves_to_log[move] = (move.quantity_done, move.product_uom_qty)
+                pick_id._log_less_quantities_than_expected(moves_to_log)
+        to_validate_pick_ids = self.env['stock.picking'].browse(self.env.context.get('to_validate_pick_ids'))
+        return to_validate_pick_ids.with_context({'cancel_backorder': cancel_backorder})._button_validate()
 
     def process(self):
         self._process()

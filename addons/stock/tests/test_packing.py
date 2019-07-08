@@ -309,6 +309,6 @@ class TestPacking(SavepointCase):
         picking.action_confirm()
         picking.action_assign()
         move.quantity_done = move.reserved_availability
-        picking._action_done()
+        picking.button_validate()
         # if we managed to get there, there was not any exception
         # complaining that 355.4 is not 355.40000000000003. Good job!
