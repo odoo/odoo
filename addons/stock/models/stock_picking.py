@@ -276,9 +276,9 @@ class Picking(models.Model):
     use_create_lots = fields.Boolean(related='picking_type_id.use_create_lots')
 
     owner_id = fields.Many2one(
-        'res.partner', 'Owner',
+        'res.partner', 'Assign owner',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        help="Default Owner")
+        help="When validating the transfer, the products will be assigned to this owner.")
     printed = fields.Boolean('Printed')
     is_locked = fields.Boolean(default=True, help='When the picking is not done this allows changing the '
                                'initial demand. When the picking is done this allows '
@@ -519,10 +519,6 @@ class Picking(models.Model):
     # Actions
     # ----------------------------------------
 
-    def action_assign_owner(self):
-        for picking in self:
-            picking.move_line_ids.write({'owner_id': picking.owner_id.id})
-
     def action_assign_partner(self):
         for picking in self:
             picking.move_lines.write({'partner_id': picking.partner_id.id})
@@ -575,6 +571,10 @@ class Picking(models.Model):
         todo_moves = self.mapped('move_lines').filtered(lambda self: self.state in ['draft', 'waiting', 'partially_available', 'assigned', 'confirmed'])
         # Check if there are ops not linked to moves yet
         for pick in self:
+            if pick.owner_id:
+                pick.move_lines.write({'restrict_partner_id': pick.owner_id.id})
+                pick.move_line_ids.write({'owner_id': pick.owner_id.id})
+
             # # Explode manually added packages
             # for ops in pick.move_line_ids.filtered(lambda x: not x.move_id and not x.product_id):
             #     for quant in ops.package_id.quant_ids: #Or use get_content for multiple levels
@@ -608,6 +608,7 @@ class Picking(models.Model):
                                                     'location_dest_id': pick.location_dest_id.id,
                                                     'picking_id': pick.id,
                                                     'picking_type_id': pick.picking_type_id.id,
+                                                    'restrict_partner_id': pick.owner_id.id
                                                    })
                     ops.move_id = new_move.id
                     new_move._action_confirm()

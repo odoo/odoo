@@ -37,7 +37,8 @@ class StockMoveLine(models.Model):
         ondelete='restrict', required=False,
         help="If set, the operations are packed into this package")
     date = fields.Datetime('Date', default=fields.Datetime.now, required=True)
-    owner_id = fields.Many2one('res.partner', 'Owner', help="Owner of the quants")
+    owner_id = fields.Many2one('res.partner', 'From Owner',
+        help="When validating the transfer, the products will be taken from this owner.")
     location_id = fields.Many2one('stock.location', 'From', required=True)
     location_dest_id = fields.Many2one('stock.location', 'To', required=True)
     lots_visible = fields.Boolean(compute='_compute_lots_visible')
