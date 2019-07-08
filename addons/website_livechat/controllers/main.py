@@ -55,3 +55,34 @@ class WebsiteLivechat(http.Controller):
             'ratings_per_user': ratings_per_partner
         }
         return request.render("website_livechat.channel_page", values)
+
+    @http.route('/im_livechat/visitor_leave_session', type='json', auth="public", cors="*")
+    def visitor_leave_session(self, uuid):
+        """ Called when the livechat visitor leaves the conversation.
+         This will clean the livechat request and warn the operator that the conversation is over.
+         This allows also to re-send a new chat request to the visitor, as while the visitor is
+         in conversation with an operator, it's not possible to send the visitor a chat request."""
+        mail_channel = request.env['mail.channel'].sudo().search([('uuid', '=', uuid)])
+        if mail_channel:
+            # clear operator_id on the visitor
+            if mail_channel.livechat_active:
+                mail_channel.livechat_active = False
+                # delete the chat request if any
+                if mail_channel.livechat_request_ids:
+                    for chat_request in mail_channel.livechat_request_ids:
+                        chat_request.unlink()
+                odoo_bot_pid = request.env.ref('base.user_root').sudo().partner_id.id
+                leave_message = '%s has left the conversation.' % (
+                    mail_channel.livechat_visitor_id.name if mail_channel.livechat_visitor_id
+                    else 'The visitor')
+                mail_channel.message_post(author_id=odoo_bot_pid, body=leave_message,
+                                          message_type='comment', subtype='mt_comment')
+
+    @http.route('/im_livechat/close_empty_livechat', type='json', auth="public", cors="*")
+    def close_empty_livechat(self, uuid):
+        """ Called when an operator send a chat request to a visitor but does not speak to him and closes
+        the chatter. (when the operator does not complete the 'send chat request' flow in other terms)
+        This will clean the chat request and allows operators to send the visitor a new chat request."""
+        mail_channel = request.env['mail.channel'].sudo().search([('uuid', '=', uuid)])
+        if mail_channel:
+            mail_channel.channel_pin(uuid, False)

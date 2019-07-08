@@ -123,7 +123,7 @@ class ImLivechatChannel(models.Model):
         self.ensure_one()
         return self.user_ids.filtered(lambda user: user.im_status == 'online')
 
-    def _get_mail_channel(self, anonymous_name, previous_operator_id=None, user_id=None, country_id=None):
+    def _get_mail_channel(self, anonymous_name, previous_operator_id=None, user_id=None, country_id=None, extra_info={}):
         """ Return a mail.channel given a livechat channel. It creates one with a connected operator, or return false otherwise
             :param anonymous_name : the name of the anonymous person of the channel
             :param previous_operator_id : partner_id.id of the previous operator that this visitor had in the past
@@ -159,7 +159,7 @@ class ImLivechatChannel(models.Model):
             if visitor_user and visitor_user.active:  # valid session user (not public)
                 channel_partner_to_add.append((4, visitor_user.partner_id.id))
         # create the session, and add the link with the given channel
-        mail_channel = self.env["mail.channel"].with_context(mail_create_nosubscribe=False).sudo().create({
+        mail_channel_vals = {
             'channel_partner_ids': channel_partner_to_add,
             'livechat_operator_id': operator_partner_id,
             'livechat_channel_id': self.id,
@@ -169,7 +169,9 @@ class ImLivechatChannel(models.Model):
             'name': ', '.join([visitor_user.name if visitor_user else anonymous_name, operator.livechat_username if operator.livechat_username else operator.name]),
             'public': 'private',
             'email_send': False,
-        })
+        }
+        mail_channel_vals.update(extra_info)
+        mail_channel = self.env["mail.channel"].with_context(mail_create_nosubscribe=False).sudo().create(mail_channel_vals)
         mail_channel._broadcast([operator_partner_id])
         return mail_channel.sudo().channel_info()[0]
 
