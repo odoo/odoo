@@ -5549,9 +5549,9 @@ Fields:
                     # use an inverse of field without domain
                     if not (invf.type in ('one2many', 'many2many') and invf.domain):
                         try:
-                            records = self.mapped(invf.name)
+                            records = model.search([(key.name, 'in', self.ids)])
                         except MissingError:
-                            records = self.exists().mapped(invf.name)
+                            records = model.sudo().search([(key.name, 'in', self.ids)])
                         break
                 else:
                     # DLE P121: `test_adv_activity_full`, `test_adv_activity_mixin`

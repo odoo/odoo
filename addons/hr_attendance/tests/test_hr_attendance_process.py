@@ -97,12 +97,12 @@ class TestHrAttendance(TransactionCase):
         employee = self.env['hr.employee'].create({'name': 'Cunégonde', 'tz': 'Europe/Brussels'})
         self.env['hr.attendance'].create({
             'employee_id': employee.id,
-            'check_in': tz_datetime(2019, 3, 1, 22, 0),  # should count from midnight in the employee's timezone (=the previous day in utc!)
-            'check_out': tz_datetime(2019, 3, 2, 2, 0),
+            'check_in': tz_datetime(2019, 3, 1, 22, 0).replace(tzinfo=None),  # should count from midnight in the employee's timezone (=the previous day in utc!)
+            'check_out': tz_datetime(2019, 3, 2, 2, 0).replace(tzinfo=None),
         })
         self.env['hr.attendance'].create({
             'employee_id': employee.id,
-            'check_in': tz_datetime(2019, 3, 2, 11, 0),
+            'check_in': tz_datetime(2019, 3, 2, 11, 0).replace(tzinfo=None),
         })
 
         # now = 2019/3/2 14:00 in the employee's timezone
