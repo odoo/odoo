@@ -62,7 +62,8 @@ class PaymentAcquirerAuthorize(models.Model):
         # The signature key is now '128-character hexadecimal format', while the
         # transaction key was only 16-character.
         if len(values['x_trans_key']) == 128:
-            return hmac.new(values['x_trans_key'].decode("hex").encode('utf-8'), data, hashlib.sha512).hexdigest().upper()
+            key = bytes.fromhex(values['x_trans_key'])
+            return hmac.new(key, data, hashlib.sha512).hexdigest().upper()
         else:
             return hmac.new(values['x_trans_key'].encode('utf-8'), data, hashlib.md5).hexdigest()
 
