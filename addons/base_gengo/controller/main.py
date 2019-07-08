@@ -12,7 +12,7 @@ class website_gengo(Controller):
     def gengo_callback(self, **post):
         IrTranslationSudo = request.env['ir.translation'].sudo()
         if post and post.get('job') and post.get('pgk'):
-            if post.get('pgk') != request.env['base.gengo.translation'].sudo().get_gengo_key():
+            if post.get('pgk') != request.env['base.gengo.translation'].sudo()._get_gengo_key():
                 return Response("Bad authentication", status=104)
             job = json.loads(post['job'], 'utf-8')
             tid = job.get('custom_data', False)
