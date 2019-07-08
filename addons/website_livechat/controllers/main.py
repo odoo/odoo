@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import http
+from odoo import http, _
 from odoo.http import request
 
 
@@ -55,3 +55,22 @@ class WebsiteLivechat(http.Controller):
             'ratings_per_user': ratings_per_partner
         }
         return request.render("website_livechat.channel_page", values)
+
+    @http.route('/im_livechat/visitor_leave_session', type='json', auth="public")
+    def visitor_leave_session(self, uuid):
+        """ Called when the livechat visitor leaves the conversation.
+         This will clean the chat request and warn the operator that the conversation is over.
+         This allows also to re-send a new chat request to the visitor, as while the visitor is
+         in conversation with an operator, it's not possible to send the visitor a chat request."""
+        mail_channel = request.env['mail.channel'].sudo().search([('uuid', '=', uuid)])
+        if mail_channel:
+            mail_channel.close_livechat_request_session(_('has left the conversation.'))
+
+    @http.route('/im_livechat/close_empty_livechat', type='json', auth="public")
+    def close_empty_livechat(self, uuid):
+        """ Called when an operator send a chat request to a visitor but does not speak to him and closes
+        the chatter. (when the operator does not complete the 'send chat request' flow in other terms)
+        This will clean the chat request and allows operators to send the visitor a new chat request."""
+        mail_channel = request.env['mail.channel'].sudo().search([('uuid', '=', uuid)])
+        if mail_channel:
+            mail_channel.channel_pin(uuid, False)
