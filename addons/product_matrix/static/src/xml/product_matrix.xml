@@ -1,0 +1,51 @@
+<template>
+    <div t-name="product_matrix.matrix">
+        <table class="o_view_grid o_product_variant_grid table table-sm table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th t-foreach="header" t-as="column_header" class="o_grid_title_header text-center">
+                        <span t-esc="column_header.name"/>
+                        <t t-call="product_matrix.extra_price">
+                            <t t-set="price" t-value="column_header.price"/>
+                        </t>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach="rows" t-as="row">
+                    <t t-foreach="row" t-as="cell">
+                        <td t-if="cell.name" class="text-center">
+                            <strong t-esc="cell.name"/>
+                            <t t-call="product_matrix.extra_price">
+                                <t t-set="price" t-value="cell.price"/>
+                            </t>
+                        </td>
+                        <td t-else="">
+                            <div t-if="cell.is_possible_combination" class="input-group o_grid_cell_container">
+                                <input type="number"
+                                  class="o_grid_cell form-control o_grid_input"
+                                  t-att-ptav_ids="cell.ptav_ids"
+                                  t-att-value="cell.qty"/>
+                            </div>
+                            <span t-else="" class="o_grid_cell o_grid_text_muted o_grid_nocontent_container"> Not available </span>
+                        </td>
+                    </t>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <span t-name="product_matrix.extra_price" t-if="price" class="badge badge-pill badge-secondary">
+            <!--
+                price_extra is displayed as catalog price instead of
+                price after pricelist because it is impossible to
+                compute. Indeed, the pricelist rule might depend on the
+                selected variant, so the price_extra will be different
+                depending on the selected combination. The price of an
+                attribute is therefore variable and it's not very
+                accurate to display it.
+                -->
+            <span class="variant_price_extra" style="white-space: nowrap;">
+                <t t-raw="price"/>
+            </span>
+        </span>
+</template>
