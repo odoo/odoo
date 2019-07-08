@@ -221,7 +221,7 @@
             <field name="inherit_id" ref="stock.view_stock_move_operations"/>
             <field name="arch" type="xml">
                 <field name="move_line_ids" position="replace">
-                    <field name="move_line_nosuggest_ids" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}" context="{'tree_view_ref': 'stock.view_stock_move_line_operation_tree','default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}"/>
+                    <field name="move_line_nosuggest_ids" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}" context="{'tree_view_ref': 'stock.view_stock_move_line_operation_tree_lot_name_as_textarea','default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}"/>
                 </field>
             </field>
         </record>
@@ -237,7 +237,7 @@
                     <field name="product_id" invisible="1"/>
                     <field name="package_level_id" invisible="1"/>
                     <field name="location_id" options="{'no_create': True}" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_source_location')" domain="[('id', 'child_of', parent.location_id)]" groups="stock.group_stock_multi_locations"/>
-                    <field name="location_dest_id" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_destination_location')" domain="[('id', 'child_of', parent.location_dest_id)]" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_dest_id" width_factor="0.75" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_destination_location')" domain="[('id', 'child_of', parent.location_dest_id)]" groups="stock.group_stock_multi_locations"/>
                     <field name="lot_id" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_lots_m2o')" domain="[('product_id', '=', parent.product_id)]" groups="stock.group_production_lot" context="{'default_product_id': parent.product_id, 'active_picking_id': picking_id}"/>
                     <field name="lot_name" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_lots_text')" groups="stock.group_production_lot"/>
                     <field name="package_id" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_package')" groups="stock.group_tracking_lot" domain="[('location_id', '=', location_id)]"/>
@@ -277,6 +277,20 @@
                     <field name="is_locked" invisible="1"/>
                     <field name="qty_done" attrs="{'readonly': [('state', 'in', ('done', 'cancel')), ('is_locked', '=', True)]}" force_save="1"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="view_stock_move_line_operation_tree_lot_name_as_textarea" model="ir.ui.view">
+            <field name="name">stock.move.line.operations.tree</field>
+            <field name="model">stock.move.line</field>
+            <field name="priority">1000</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="stock.view_stock_move_line_operation_tree"/>
+            <field name="arch" type="xml">
+                <field name="lot_name" position="attributes">
+                    <attribute name="widget">text</attribute>
+                    <attribute name="placeholder">Write your SN/LN one by one or copy paste a list.</attribute>
+                </field>
             </field>
         </record>
 
