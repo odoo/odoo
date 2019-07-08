@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <template id="assets_backend" inherit_id="website.assets_backend" name="website_livechat assets backend">
+            <xpath expr="." position="inside">
+                <!-- Visitor Chat Request -->
+                <script type="text/javascript" src="/website_livechat/static/src/js/thread_window.js"></script>
+                <script type="text/javascript" src="/website_livechat/static/src/js/channel.js"></script>
+                <link rel="stylesheet" type="text/scss" href="/website_livechat/static/src/scss/mail_thread_visitor_info.scss"/>
+            </xpath>
+        </template>
 
         <!--
             Integrate Livechat in Common Frontend for Website
@@ -32,6 +40,9 @@
                     <script type="text/javascript" src="/mail/static/src/js/models/utils/timer.js"></script>
                     <script type="text/javascript" src="/mail/static/src/js/models/utils/timers.js"></script>
                     <script type="text/javascript" src="/mail/static/src/js/models/utils/cc_throttle_function.js"></script>
+                <!--Chat Request-->
+                <script type="text/javascript" src="/website_livechat/static/src/js/im_livechat.js"></script>
+                <!--Stylesheets-->
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/abstract_thread_window.scss"></link>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/thread.scss"></link>
                 <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat.scss"/>
