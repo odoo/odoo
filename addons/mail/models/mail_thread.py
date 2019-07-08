@@ -2029,7 +2029,7 @@ class MailThread(models.AbstractModel):
             self.env['bus.bus'].sudo().sendmany(notifications)
         return True
 
-    def _notify_record_by_email(self, message, partners_data, msg_vals=False, model_description=False, mail_auto_delete=True, send_after_commit=False):
+    def _notify_record_by_email(self, message, partners_data, msg_vals=False, model_description=False, mail_auto_delete=True, send_after_commit=True):
         """ Method to send email linked to notified messages.
         :param message: mail.message record to notify;
         :param partners_data: partner to notify by email coming from _notify_compute_recipients
