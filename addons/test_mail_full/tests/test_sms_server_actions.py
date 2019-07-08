@@ -38,8 +38,8 @@ class TestSmsTemplate(test_mail_full_common.BaseFunctionalTest, sms_common.MockS
         }
 
         with self.sudo('employee'), self.mockSMSGateway():
-            self.action.sudo(self.env.user).with_context(**context).run()
-        self.assertSMSOutgoing(self.test_record.customer_id, [], 'Dear %s this is an SMS.' % self.test_record.display_name)
+            self.action.with_user(self.env.user).with_context(**context).run()
+        self.assertSMSOutgoing(self.test_record.customer_id, None, 'Dear %s this is an SMS.' % self.test_record.display_name)
 
     def test_action_sms_multi(self):
         test_record_2 = self.env['mail.test.sms'].create({
@@ -53,7 +53,7 @@ class TestSmsTemplate(test_mail_full_common.BaseFunctionalTest, sms_common.MockS
         }
 
         with self.sudo('employee'), self.mockSMSGateway():
-            self.action.sudo(self.env.user).with_context(**context).run()
+            self.action.with_user(self.env.user).with_context(**context).run()
 
-        self.assertSMSOutgoing(self.test_record.customer_id, [], 'Dear %s this is an SMS.' % self.test_record.display_name)
-        self.assertSMSOutgoing(self.env['res.partner'], [test_record_2.phone_nbr], 'Dear %s this is an SMS.' % test_record_2.display_name)
+        self.assertSMSOutgoing(self.test_record.customer_id, None, 'Dear %s this is an SMS.' % self.test_record.display_name)
+        self.assertSMSOutgoing(self.env['res.partner'], test_record_2.phone_nbr, 'Dear %s this is an SMS.' % test_record_2.display_name)
