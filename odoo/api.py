@@ -448,7 +448,6 @@ class Environment(Mapping):
         self.cache = envs.cache
         self._cache_key = (cr, uid, su)
         self._protected = StackMap()                # {field: ids, ...}
-        self.dirty = defaultdict(set)               # {record: set(field_name), ...}
         self.all = envs
         envs.add(self)
         return self
@@ -570,7 +569,6 @@ class Environment(Mapping):
                 yield
             finally:
                 self.all.in_draft = False
-                self.dirty.clear()
 
     @property
     def in_draft(self):

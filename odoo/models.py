@@ -5043,26 +5043,6 @@ Fields:
         return self._browse(self.env, ids, prefetch_ids)
 
     #
-    # Dirty flags, to mark record fields modified (in draft mode)
-    #
-
-    def _is_dirty(self):
-        """ Return whether any record in ``self`` is dirty. """
-        dirty = self.env.dirty
-        return any(record in dirty for record in self)
-
-    def _get_dirty(self):
-        """ Return the list of field names for which ``self`` is dirty. """
-        dirty = self.env.dirty
-        return list(dirty.get(self, ()))
-
-    def _set_dirty(self, field_name):
-        """ Mark the records in ``self`` as dirty for the given ``field_name``. """
-        dirty = self.env.dirty
-        for record in self:
-            dirty[record].add(field_name)
-
-    #
     # "Dunder" methods
     #
 
