@@ -27,6 +27,14 @@ class PaymentAcquirerAuthorize(models.Model):
     authorize_transaction_key = fields.Char(string='API Transaction Key', required_if_provider='authorize', groups='base.group_user')
     authorize_signature_key = fields.Char(string='API Signature Key', groups='base.group_user', compute="_compute_auth_signature_key", inverse="_inverse_auth_signature_key")
 
+    @api.onchange('provider', 'check_validity')
+    def onchange_check_validity(self):
+        if self.provider == 'authorize' and self.check_validity:
+            self.check_validity = False
+            return {'warning': {
+                'title': _("Warning"),
+                'message': ('This option is not supported for Authorize.net')}}
+
     def _get_feature_support(self):
         """Get advanced feature support by provider.
 
@@ -252,9 +260,6 @@ class TxAuthorize(models.Model):
                         'partner_id': self.partner_id.id,
                     })
                     self.payment_token_id = token_id
-
-                    if self.payment_token_id:
-                        self.payment_token_id.verified = True
             return True
         elif status_code == self._authorize_pending_tx_status:
             self.write({'acquirer_reference': data.get('x_trans_id')})
@@ -291,12 +296,6 @@ class TxAuthorize(models.Model):
             res = transaction.authorize(self.payment_token_id, self.amount, self.reference)
         return self._authorize_s2s_validate_tree(res)
 
-    def authorize_s2s_do_refund(self):
-        self.ensure_one()
-        transaction = AuthorizeAPI(self.acquirer_id)
-        res = transaction.credit(self.payment_token_id, self.amount, self.acquirer_reference)
-        return self._authorize_s2s_validate_tree(res)
-
     def authorize_s2s_capture_transaction(self):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
@@ -324,9 +323,6 @@ class TxAuthorize(models.Model):
                     'acquirer_reference': tree.get('x_trans_id'),
                     'date': fields.Datetime.now(),
                 })
-
-                if self.payment_token_id:
-                    self.payment_token_id.verified = True
 
                 self._set_transaction_done()
 
@@ -380,6 +376,7 @@ class PaymentToken(models.Model):
                     'authorize_profile': res.get('profile_id'),
                     'name': 'XXXXXXXXXXXX%s - %s' % (values['cc_number'][-4:], values['cc_holder_name']),
                     'acquirer_ref': res.get('payment_profile_id'),
+                    'verified': True
                 }
             else:
                 raise ValidationError(_('The Customer Profile creation in Authorize.NET failed.'))
