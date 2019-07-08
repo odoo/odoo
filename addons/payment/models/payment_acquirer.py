@@ -40,7 +40,8 @@ class PaymentAcquirer(models.Model):
 
     Fields containing sensitive data (e.g. private secrets used for checksum
     computation, identifier of the main account to the acquirer, etc.) should be
-    restricted to 'administrator-like' users only (base.group_system).
+    restricted to 'administrator-like' users only through group-based security
+    on the field's definition (groups="base.group_system").
 
     Each acquirer has a link to an ir.ui.view record that is a template of
     a button used to display the payment form. See examples in ``payment_ogone``
@@ -62,6 +63,14 @@ class PaymentAcquirer(models.Model):
     Odoo and the acquirer. It generally consists in return urls given to the
     button form and that the acquirer uses to send the customer back after the
     transaction, with transaction details given as a POST request.
+
+    Acquirers use different mechanism to authenticate payloads; some use
+    cryptographic signatures using a secret key (e.g. Ingenico, Adyen),
+    some use webhooks (e.g. Stripe), some use API Endpoints (e.g Paypal), etc.
+    This make generalizing the payment acquirer API around the concept of payload
+    validation challenging - this means that this API does not include or enforce
+    payload validation! However, it is _strongly_ recommended to include this
+    step in your implementation.
     """
     _name = 'payment.acquirer'
     _description = 'Payment Acquirer'
