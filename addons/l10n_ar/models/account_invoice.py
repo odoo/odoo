@@ -23,9 +23,7 @@ class AccountInvoice(models.Model):
         " the type of the products on the invoice but it is allowed to force a different type if required.",
         readonly=True, states={'draft': [('readonly', False)]})
     l10n_ar_force_afip_concept = fields.Selection(
-        selection='get_afip_invoice_concepts', string="Forced AFIP Concept", readonly=True, help='AFIP requires to report'
-        ' the kind of products related to the invoices. The possible AFIP concepts are:\n * 1 - Producto / Exportación'
-        ' definitiva de bienes\n * 2 - Servicios\n * 3 - Productos y Servicios\n * 4 - Otros (exportación)\n')
+        selection='get_afip_invoice_concepts', string="Forced AFIP Concept", readonly=True,)
     l10n_ar_afip_service_start = fields.Date(
         string='AFIP Service Start Date', readonly=True, states={'draft': [('readonly', False)]})
     l10n_ar_afip_service_end = fields.Date(
@@ -37,7 +35,7 @@ class AccountInvoice(models.Model):
                 ('4', '4-Other (export)')]
 
     @api.depends('invoice_line_ids', 'invoice_line_ids.product_id', 'invoice_line_ids.product_id.type',
-                 'l10n_ar_force_afip_concept')
+                 'l10n_ar_force_afip_concept', 'journal_id')
     def _compute_l10n_ar_afip_concept(self):
         for rec in self.filtered(lambda x: x.company_id.country_id == self.env.ref('base.ar')
                                  and x.l10n_latam_use_documents):
@@ -247,3 +245,23 @@ class AccountInvoice(models.Model):
                 lambda x: x.l10n_latam_document_type_id == self.l10n_latam_document_type_id)
             return res
         return super().get_document_type_sequence()
+
+    # TODO make it with crate/write or with https://github.com/odoo/odoo/pull/31059
+    # para cuando se crea, por ej, desde ventas o contratos
+    @api.constrains('partner_id')
+    @api.onchange('partner_id')
+    def _onchange_partner_journal(self):
+        expo_journals = ['FEERCEL', 'FEEWS', 'FEERCELP']
+        for rec in self.filtered(lambda x: x.company_id.country_id == self.env.ref('base.ar') and x.journal_id.type == 'sale'
+                                 and x.l10n_latam_use_documents and x.partner_id.l10n_ar_afip_responsability_type_id):
+            res_code = rec.partner_id.l10n_ar_afip_responsability_type_id.code
+            domain = [('company_id', '=', rec.company_id.id), ('l10n_latam_use_documents', '=', True), ('type', '=', 'sale')]
+            journal = self.env['account.journal']
+            if res_code in ['8', '9', '10'] and rec.journal_id.l10n_ar_afip_pos_system not in expo_journals:
+                # if partner is foregin and journal is not of expo, we try to change to expo journal
+                journal = journal.search(domain + [('l10n_ar_afip_pos_system', 'in', expo_journals)], limit=1)
+            elif res_code not in ['8', '9', '10'] and rec.journal_id.l10n_ar_afip_pos_system in expo_journals:
+                # if partner is NOT foregin and journal is for expo, we try to change to local journal
+                journal = journal.search(domain + [('l10n_ar_afip_pos_system', 'not in', expo_journals)], limit=1)
+            if journal:
+                rec.journal_id = journal.id
