@@ -10,7 +10,7 @@ from odoo import api, fields, models
 class HrWorkEntry(models.Model):
     _name = 'hr.work.entry'
     _description = 'HR Work Entry'
-    _order = 'display_warning desc,state,date_start'
+    _order = 'conflict desc,state,date_start'
 
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
@@ -24,16 +24,22 @@ class HrWorkEntry(models.Model):
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
         ('validated', 'Validated'),
+        ('conflict', 'Conflict'),
         ('cancelled', 'Cancelled')
     ], default='draft')
-    display_warning = fields.Boolean(string="Error")
     company_id = fields.Many2one('res.company', string='Company', readonly=True, required=True,
         default=lambda self: self.env.company)
+    conflict = fields.Boolean('Conflicts', compute='_compute_conflict', store=True)  # Used to show conflicting work entries first
 
     _sql_constraints = [
         ('_work_entry_has_end', 'check (date_stop IS NOT NULL)', 'Work entry must end. Please define an end date or a duration.'),
         ('_work_entry_start_before_end', 'check (date_stop > date_start)', 'Starting time should be before end time.')
     ]
+
+    @api.onchange('state')
+    def _compute_conflict(self):
+        for rec in self:
+            rec.conflict = rec.state == 'conflict'
 
     @api.onchange('duration')
     def _onchange_duration(self):
@@ -59,7 +65,7 @@ class HrWorkEntry(models.Model):
     def action_validate(self):
         """
         Try to validate work entries.
-        If some errors are found, set `display_warning` to True for conflicting work entries
+        If some errors are found, set `state` to conflict for conflicting work entries
         and validation fails.
         :return: True if validation succeded
         """
@@ -74,14 +80,14 @@ class HrWorkEntry(models.Model):
         if not self:
             return False
         undefined_type = self.filtered(lambda b: not b.work_entry_type_id)
-        undefined_type.write({'display_warning': True})
+        undefined_type.write({'state': 'conflict'})
         conflict = self._mark_conflicting_work_entries(min(self.mapped('date_start')), max(self.mapped('date_stop')))
         return undefined_type or conflict
 
     @api.model
     def _mark_conflicting_work_entries(self, start, stop):
         """
-        Set `display_warning` to True for overlapping work entries
+        Set `state` to `conflict` for overlapping work entries
         between two dates.
         Return True if overlapping work entries were detected.
         """
@@ -112,7 +118,7 @@ class HrWorkEntry(models.Model):
         self.env.cr.execute(query, (stop, start, stop, start))
         conflicts = [res.get('id') for res in self.env.cr.dictfetchall()]
         self.browse(conflicts).write({
-            'display_warning': True,
+            'state': 'conflict',
         })
         return bool(conflicts)
 
@@ -129,10 +135,7 @@ class HrWorkEntry(models.Model):
                 vals['active'] = True
             elif vals['state'] == 'cancelled':
                 vals['active'] = False
-                skip_check &= not any(self.mapped('display_warning'))
-            elif vals['state'] == 'validated':
-                # A validated work entry is never conflicting
-                vals['display_warning'] = False
+                skip_check &= all(self.mapped(lambda w: w.state != 'conflict'))
 
         if 'active' in vals:
             vals['state'] = 'confirmed' if vals['active'] else 'cancelled'
@@ -146,7 +149,7 @@ class HrWorkEntry(models.Model):
             return super().unlink()
 
     def _reset_conflicting_state(self):
-        self.write({'display_warning': False})
+        self.filtered(lambda w: w.state == 'conflict').write({'state': 'confirmed'})
 
     @contextmanager
     def _error_checking(self, start=None, stop=None, skip=False):
