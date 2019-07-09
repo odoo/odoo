@@ -596,9 +596,12 @@ var FormController = BasicController.extend({
      * @private
      * @param {OdooEvent} event
      */
-    _onFormDialogDiscarded: function(e) {
-        e.stopPropagation();
-        this.renderer.focusLastActivatedWidget();
+    _onFormDialogDiscarded: function(ev) {
+        ev.stopPropagation();
+        var isFocused = this.renderer.focusLastActivatedWidget();
+        if (ev.data.callback) {
+            ev.data.callback(_.str.toBool(isFocused));
+        }
     },
     /**
      * Opens a one2many record (potentially new) in a dialog. This handler is
