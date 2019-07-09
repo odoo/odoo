@@ -184,9 +184,7 @@ class PosConfig(models.Model):
     @api.depends('session_ids')
     def _compute_current_session(self):
         for pos_config in self:
-            session = pos_config.session_ids.filtered(lambda r: r.user_id.id == self.env.uid and \
-                not r.state == 'closed' and \
-                not r.rescue)
+            session = pos_config.session_ids.filtered(lambda s: s.state != 'closed' and not s.rescue)
             # sessions ordered by id desc
             pos_config.current_session_id = session and session[0].id or False
             pos_config.current_session_state = session and session[0].state or False
