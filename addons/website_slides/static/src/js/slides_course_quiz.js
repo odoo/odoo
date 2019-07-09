@@ -172,6 +172,36 @@ odoo.define('website_slides.quiz', function (require) {
                 this.$el.append(QWeb.render('slide.slide.quiz.finish', {'widget': this}));
                 $modal = this.$('#slides_quiz_modal');
             }
+            var self = this;
+            $modal.on('shown.bs.modal', function () {
+                if (self.quiz.rankProgress.levelUp) {
+                    $modal.find('.progress-bar').animate({
+                        width: '100%'
+                    }, 600, function () {
+                        $modal.find('.o_wslides_rank_motivational').animate({
+                            opacity: 0
+                        }, 600, function () {
+                            $modal.find('.o_wslides_rank_motivational').html(self.quiz.rankProgress.newMotivational);
+                            $modal.find('.o_wslides_rank_motivational').animate({
+                                opacity: 1
+                            }, 600);
+                        });
+                        $modal.find('.progress-bar').animate({
+                            width: '0%'
+                        }, 0, function () {
+                            $modal.find('.o_wslides_rank_lower_bound').html(self.quiz.rankProgress.newLowerBound);
+                            $modal.find('.o_wslides_rank_upper_bound').html(self.quiz.rankProgress.newUpperBound);
+                            $modal.find('.progress-bar').animate({
+                                width: self.quiz.rankProgress.newProgress + '%'
+                            }, 600);
+                        });
+                    });
+                } else {
+                    $modal.find('.progress-bar').animate({
+                        width: self.quiz.rankProgress.newProgress + '%'
+                    }, 600);
+                }
+            });
             $modal.modal({
                 'show': true,
             });
