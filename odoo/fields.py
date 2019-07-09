@@ -1079,7 +1079,8 @@ class Field(MetaField('DummyField', (object,), {})):
             protecteds = (records & records.env.protected(self))
             if protecteds:
                 for record in protecteds:
-                    record.env.cache.set(record, self, self.convert_to_cache(value, record))
+                    # DLE P128: `test_pick_a_pack_confirm`, `test_put_in_pack`
+                    record.env.cache.set(record, self, self.convert_to_cache(write_value, record))
                     if record.id and self.store:
                         if self.column_type:
                             # DLE P65: Support translations in flush
