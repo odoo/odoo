@@ -983,8 +983,8 @@ QUnit.module('Search View', {
 
     QUnit.module('Autocompletion');
 
-    QUnit.test('selection via autocompletion modifies appropriately submenus', function (assert) {
-        assert.expect(4);
+    QUnit.test('selection via autocompletion and deletion modifies appropriately submenus', async function (assert) {
+        assert.expect(6);
 
         var actionManager = createActionManager({
             actions: this.actions,
@@ -1028,6 +1028,19 @@ QUnit.module('Search View', {
         testUtils.dom.click($('.o_group_by_menu .o_menu_item').eq(0));
         assert.strictEqual($('.o_group_by_menu .o_item_option a.selected').text().trim(), "Day",
             "The item 'Day' should be selected in the groupby menu");
+
+        await testUtils.dom.click($('div .o_searchview_facet .o_facet_remove').eq(0));
+        await testUtils.dom.click($('div .o_searchview_facet .o_facet_remove').eq(0));
+
+        await testUtils.dom.click($('button .fa-filter'));
+        await testUtils.dom.click($('.o_filters_menu .o_menu_item').eq(0));
+        assert.containsNone($('.o_filters_menu .o_item_option a.selected'),
+            "The item 'This Month' should have unselected in the filters menu");
+
+        await testUtils.dom.click($('button .fa-bars'));
+        await testUtils.dom.click($('.o_group_by_menu .o_menu_item').eq(0));
+        assert.containsNone($('.o_group_by_menu .o_item_option a.selected'),
+            "The item 'Day' should have been unselected in the groupby menu");
 
         actionManager.destroy();
     });
