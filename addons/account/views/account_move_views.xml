@@ -557,20 +557,6 @@
                                            'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]
                                        }"/>
 
-                                <!-- Invoice payment terms (only invoices) + due date (only invoices / receipts) -->
-                                <label for="invoice_payment_term_id"
-                                       attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
-                                <div attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
-                                    <field name="invoice_payment_term_id"
-                                           class="oe_inline"
-                                           attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
-                                    <span class="o_form_label oe_edit_only"
-                                          attrs="{'invisible': ['|', ('invoice_payment_term_id', '!=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"> or </span>
-                                    <field name="invoice_date_due" force_save="1"
-                                           class="oe_inline"
-                                           attrs="{'invisible': ['|', ('invoice_payment_term_id', '!=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
-                                </div>
-
                                 <field name="ref"
                                        attrs="{'invisible': [('type', '=', 'out_invoice')]}"/>
                                 <field name="invoice_vendor_bill_id"
@@ -586,7 +572,7 @@
                                        options="{'no_create': True}"
                                        domain="[('type', '=?', invoice_filter_type_domain)]"/>
                                 <field name="date" string="Accounting Date"
-                                       attrs="{'invisible': [('type', 'in', ('out_invoice', 'out_refund', 'out_receipt')), ('state', '=', 'draft')]}"/>
+                                       attrs="{'invisible': ['|', ('type', 'in', ('out_invoice', 'out_refund', 'out_receipt')), ('state', '=', 'draft')]}"/>
 
                                 <!-- Invoice date (only invoices / receipts) -->
                                 <div class="o_td_label">
@@ -597,6 +583,22 @@
                                 </div>
                                 <field name="invoice_date" nolabel="1"
                                        attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+
+                                <!-- Invoice payment terms (only invoices) + due date (only invoices / receipts) -->
+                                <label for="invoice_payment_term_id"
+                                       attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                                <div attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
+                                    <field name="invoice_payment_term_id"
+                                           placeholder="Computed"
+                                           class="oe_inline"
+                                           attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                                    <span class="o_form_label oe_edit_only"
+                                          attrs="{'invisible': ['|', ('invoice_payment_term_id', '!=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"> or </span>
+                                    <field name="invoice_date_due" force_save="1"
+                                           placeholder="Pick a Date"
+                                           class="oe_inline"
+                                           attrs="{'invisible': ['|', ('invoice_payment_term_id', '!=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                                </div>
 
                                 <field name="currency_id"
                                        groups="base.group_multi_currency"
@@ -785,13 +787,13 @@
                             <page id="other_tab" string="Other Info" name="other_info"
                                   attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}">
                                 <group id="other_tab_group">
-                                    <group string="Sales Information"
+                                    <group string="Sales"
                                            name="sale_info_group"
                                            attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}">
                                         <field name="company_id" groups="base.group_multi_company"/>
                                         <field name="invoice_user_id"/>
                                     </group>
-                                    <group string="Accounting Information"
+                                    <group string="Accounting"
                                            name="accounting_info_group"
                                            attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}">
                                         <field name="invoice_incoterm_id"/>
@@ -801,7 +803,7 @@
                                                widget="email"
                                                attrs="{'invisible': ['|', ('type', 'not in', ('in_invoice', 'in_refund')), ('invoice_source_email', '=', False)]}"/>
                                     </group>
-                                    <group string="Payments Information"
+                                    <group string="Payments"
                                            name="payments_info_group"
                                            attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}">
                                         <field name="invoice_payment_ref"/>
