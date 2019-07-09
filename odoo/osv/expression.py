@@ -142,7 +142,7 @@ DOMAIN_OPERATORS = (NOT_OPERATOR, OR_OPERATOR, AND_OPERATOR)
 # operators are also used. In this case its right operand has the form (subselect, params).
 TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike',
                   'like', 'not like', 'ilike', 'not ilike', 'in', 'not in',
-                  'child_of', 'parent_of')
+                  'child_of', 'parent_of', 'not =like', 'not =ilike',)
 
 # A subset of the above operators, with a 'negative' semantic. When the
 # expressions 'in NEGATIVE_TERM_OPERATORS' or 'not in NEGATIVE_TERM_OPERATORS' are used in the code
@@ -1117,7 +1117,9 @@ class expression(object):
 
                 elif field.translate is True and right:
                     need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
-                    sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
+                    sql_operator = {'=like': 'like', '=ilike': 'ilike',
+                                    'not =like': 'not like',
+                                    'not =ilike': 'not ilike'}.get(operator, operator)
                     if need_wildcard:
                         right = '%%%s%%' % right
 
@@ -1258,7 +1260,9 @@ class expression(object):
 
         else:
             need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
-            sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
+            sql_operator = {'=like': 'like', '=ilike': 'ilike',
+                            'not =like': 'not like',
+                            'not =ilike': 'not ilike'}.get(operator, operator)
             cast = '::text' if  sql_operator.endswith('like') else ''
 
             if left not in model:
