@@ -1076,6 +1076,8 @@ class AccountInvoice(models.Model):
 
         values['type'] = TYPE2REFUND[invoice['type']]
         values['date_invoice'] = date_invoice or fields.Date.context_today(invoice)
+        if values.get('date_due', False) and values['date_invoice'] > values['date_due']:
+            values['date_due'] = values['date_invoice']
         values['state'] = 'draft'
         values['number'] = False
         values['origin'] = invoice.number
