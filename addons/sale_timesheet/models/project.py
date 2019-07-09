@@ -176,7 +176,7 @@ class ProjectTask(models.Model):
     @api.depends('project_id.sale_line_employee_ids')
     def _compute_is_project_map_empty(self):
         for task in self:
-            task.is_project_map_empty = not bool(task.project_id.sale_line_employee_ids)
+            task.is_project_map_empty = not bool(task.sudo().project_id.sale_line_employee_ids)
 
     @api.onchange('project_id')
     def _onchange_project(self):
