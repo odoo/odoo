@@ -383,8 +383,38 @@ $o-wslides-fs-side-width: 300px;
             }
         }
     }
-}
 
+    .progress {
+        border-radius:0;
+        overflow:visible;
+        height: 8px;
+
+        .progress-bar {
+            transition: width 0.8s ease;
+
+            &.no-transition {
+                transition: none;
+            }
+        }
+    }
+
+    .tooltip > .tooltip-inner {
+        background-color: #875A7B;
+        padding:5px 15px;
+        font-weight:bold;
+        font-size:13px;
+    }
+
+    .tooltip > .arrow {
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid #875A7B;
+    }
+
+    .tooltip > .arrow::before {
+        display: none;
+    }
+}
 
 // Embed PDFViewer
 // **************************************************
