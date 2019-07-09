@@ -8421,6 +8421,75 @@ QUnit.module('fields', {}, function () {
 
             form.destroy();
         });
+
+        QUnit.test('two one2many fields with same relation and onchanges', async function (assert) {
+            // this test simulates the presence of two one2many fields with onchanges, such that
+            // changes to the first o2m are repercuted on the second one
+            assert.expect(6);
+
+            this.data.partner.fields.turtles2 = {
+                string: "Turtles 2",
+                type: "one2many",
+                relation: 'turtle',
+                relation_field: 'turtle_trululu',
+            };
+            this.data.partner.onchanges = {
+                turtles: function (obj) {
+                    // when we add a line to turtles, add same line to turtles2
+                    if (obj.turtles.length) {
+                        obj.turtles = [[5]].concat(obj.turtles);
+                        obj.turtles2 = obj.turtles;
+                    }
+                },
+                turtles2: function (obj) {
+                    // simulate an onchange on turtles2 as well
+                    if (obj.turtles2.length) {
+                        obj.turtles2 = [[5]].concat(obj.turtles2);
+                    }
+                }
+            };
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form>' +
+                        '<field name="turtles">' +
+                            '<tree editable="bottom"><field name="name" required="1"/></tree>' +
+                        '</field>' +
+                        '<field name="turtles2">' +
+                            '<tree editable="bottom"><field name="name" required="1"/></tree>' +
+                        '</field>' +
+                    '</form>',
+            });
+
+            // trigger first onchange by adding a line in turtles field (should add a line in turtles2)
+            await testUtils.dom.click(form.$('.o_field_widget[name="turtles"] .o_field_x2many_list_row_add a'));
+            await testUtils.fields.editInput(form.$('.o_field_widget[name="turtles"] .o_field_widget[name="name"]'), 'ABC');
+
+            assert.containsOnce(form, '.o_field_widget[name="turtles"] .o_data_row',
+                'line of first o2m should have been created');
+            assert.containsOnce(form, '.o_field_widget[name="turtles2"] .o_data_row',
+                'line of second o2m should have been created');
+
+            // add a line in turtles2
+            await testUtils.dom.click(form.$('.o_field_widget[name="turtles2"] .o_field_x2many_list_row_add a'));
+            await testUtils.fields.editInput(form.$('.o_field_widget[name="turtles2"] .o_field_widget[name="name"]'), 'DEF');
+
+            assert.containsOnce(form, '.o_field_widget[name="turtles"] .o_data_row',
+                'we should still have 1 line in turtles');
+            assert.containsN(form, '.o_field_widget[name="turtles2"] .o_data_row', 2,
+                'we should have 2 lines in turtles2');
+            assert.hasClass(form.$('.o_field_widget[name="turtles2"] .o_data_row:nth(1)'), 'o_selected_row',
+                'second row should be in edition');
+
+            await testUtils.form.clickSave(form);
+
+            assert.strictEqual(form.$('.o_field_widget[name="turtles2"] .o_data_row').text(), 'ABCDEF');
+
+            form.destroy();
+        });
+
     });
 });
 });
