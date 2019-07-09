@@ -89,8 +89,8 @@ Tour.register('bank_statement_reconciliation', {
         },
         {
             content: "select the first account",
-            extra_trigger: '.ui-autocomplete:visible li:eq(1):contains(Create "100000")',
-            trigger: '.ui-autocomplete:visible li:contains(100000)',
+            extra_trigger: '.ui-autocomplete:visible li:contains(Create "100000")',
+            trigger: '.ui-autocomplete:visible li:contains(100000):first',
         },
         {
             content: "reconcile the line with the write-off",
