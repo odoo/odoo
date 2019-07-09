@@ -13,7 +13,7 @@ odoo.define('payment_ogone.payment_form', function (require) {
     var Dialog = require('web.Dialog');
     var Widget = require('web.Widget');
     var PaymentForm = require('payment.payment_form');
-    ajax.loadJS("/payment_ogone/static/lib/connectsdknoEncrypt.js");
+    // ajax.loadJS("/payment_ogone/static/lib/connectsdknoEncrypt.js");
        
     var qweb = core.qweb;
     var _t = core._t;
@@ -33,82 +33,76 @@ odoo.define('payment_ogone.payment_form', function (require) {
          * @param {DOMElement} checkedRadio
          * @param {Boolean} addPmEvent
          */
-        _createOgoneToken: function (ev, $checkedRadio, addPmEvent) {
+        _OgoneTransaction: function (ev, $checkedRadio, addPmEvent) {
             var self = this;
             var acquirerID = this.getAcquirerIdFromRadio($checkedRadio);
             var acquirerForm = this.$('#o_payment_add_token_acq_' + acquirerID);
             var inputsForm = $('input', acquirerForm);
+            var ds = $('input[name="data_set"]', acquirerForm)[0];
+
             if (this.options.partnerId === undefined) {
                 console.warn('payment_form: unset partner_id when adding new token; things could go wrong');
             }
             //console.log(acquirerID.val());
             //console.log(inputsForm);
+            // OPERATION:
+                // Possible values:
+    
+                // RES: request for authorization
+                // SAL: request for direct sale
+                // RFD: refund, not linked to a previous payment, so not a maintenance operation on an existing transaction 
+                // (you can not use this operation without specific permission from your acquirer).
+                // PAU: Request for pre-authorization:
             var formData = this.getFormData(inputsForm);
+            debugger;
             console.log(formData);
-            // console.log(connect);
-            var ingenico_session = new connect(sessionDetails);
-            var cardNumber  = formData.cc_number;
-            var amount = 100; // todo get with rpc ?
-            var countryCode = 'BE'; // todo get with rpc ?
-
+            var inputDict = {
+                ACCEPTURL : "https://www.myshop.com/ok.html ",
+                AMOUNT: 10500,
+                CURRENCY: "EUR",
+                EXCEPTIONURL: "www.error.com/notok.html",
+                ORDERID: "SO55",
+                OPERATION: "SAL",
+                PSPID: "pinky",
+                PARAMPLUS: "https:///plop.com/payment/return/",
+                USERID: "OOAPI",
+                PSWD: "R!ci/6Nu8a",
+            };
             var paymentDetails = {
-                totalAmount: amount,
-                countryCode: "BE",
-                locale: "fr_BE",
-                currency: "EUR",
-                isRecurring: false
+                CARDNO: formData.cc_number,
+                CVC: formData.cc_cvc,
+                ED: formData.cc_expiracy,
+                // isRecurring: false,
+                CN: formData.cc_holder_name,
+                // partner_id,
+                // COM, "Ceci est la description de l' order"
+                // EMAIL: "mitchel@example.com",
             };
-
-            var sessionDetails = {
-                assetUrl: "",
-                clientApiUrl: "",
-                clientSessionId: "",
-                customerId: ""
+            var APIUrl = "https://ogone.test.v-psp.com/ncol/test/alias_gateway.asp";
+            var params = Object.assign({}, inputDict, paymentDetails);
+            console.log(params); // { PaymentSha: paymentDetails}    
+            const req = new XMLHttpRequest();
+            var plop = req.open("POST", APIUrl, true);
+            req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            req.onreadystatechange = function() {//Call a function when the state changes.
+                if (req.readyState == 4 && req.status == 200) {
+                    console.log(req.responseText);
+                }
             };
-
-            var createPayload = function (ingenico_session, cardNumber, paymentDetails) {
-                session.getIinDetails(cardNumber, paymentDetails).then(function (iinDetailsResponse) {
-                    if (iinDetailsResponse.status !== "SUPPORTED") {
-                        console.error("Card check error: " + iinDetailsResponse.status);
-                        document.querySelector('.output').innerText = 'Something went wrong, check the console for more information.';
-                        return;
-                    }
-                    session.getPaymentProduct(iinDetailsResponse.paymentProductId, paymentDetails).then(function (paymentProduct) {
-                        var paymentRequest = session.getPaymentRequest();
-                        paymentRequest.setPaymentProduct(paymentProduct);
-                        paymentRequest.setValue("cardNumber", cardNumber);
-                        paymentRequest.setValue("cvv", "123");
-                        paymentRequest.setValue("expiryDate", "04/20");
-            
-                        if (!paymentRequest.isValid()) {
-                            for (var error in paymentRequest.getErrorMessageIds()) {
-                                console.error('error', error);
-                            }
-                        }
-                        session.getEncryptor().encrypt(paymentRequest).then(function (paymentHash) {
-                            document.querySelector('.output').innerText = 'Encrypted to: ' + paymentHash;
-                        }, function (errors) {
-                            console.error('Failed encrypting the payload, check your credentials');
-                            document.querySelector('.output').innerText = 'Something went wrong, check the console for more information.';
-                        });
-            
-                    }, function () {
-                        console.error('Failed getting payment product, check your credentials');
-                        document.querySelector('.output').innerText = 'Something went wrong, check the console for more information.';
-                    });
-            
-                }, function () {
-                    console.error('Failed getting IinDetails, check your credentials');
-                    document.querySelector('.output').innerText = 'Something went wrong, check the console for more information.';
-                });
-            };
-                        
-            // var libUrl = "https://raw.githubusercontent.com/Ingenico-ePayments/connect-sdk-client-js/master/dist/connectsdk.noEncrypt.js" ;
-            // ajax.loadJS (libUrl).then(function () {
-            // var ingenico_session = new connect(sessionDetails);
-            // createPayload(ingenico_session, cardNumber, paymentDetails);
+            req.send(params);
+            debugger;
+            // return this._rpc({
+            //     route: ds.dataset.createRoute,
+            //     params: rpcDict,
+            // }).then(function (data) {
+                
             // });
+
+
+           
+            
         },
+        
         /**
          * @override
          */
@@ -140,7 +134,7 @@ odoo.define('payment_ogone.payment_form', function (require) {
             var $checkedRadio = this.$('input[type="radio"]:checked');
             // first we check that the user has selected a ogone as s2s payment method
             if ($checkedRadio.length === 1 && this.isNewPaymentRadio($checkedRadio) && $checkedRadio.data('provider') === 'ogone') {
-                this._createOgoneToken(ev, $checkedRadio);
+                this._OgoneTransaction(ev, $checkedRadio);
             } else {
                 this._super.apply(this, arguments);
             }
@@ -155,7 +149,7 @@ odoo.define('payment_ogone.payment_form', function (require) {
     
             // first we check that the user has selected a Ogone as add payment method
             if ($checkedRadio.length === 1 && this.isNewPaymentRadio($checkedRadio) && $checkedRadio.data('provider') === 'ogone') {
-                this._createOgoneToken(ev, $checkedRadio, true);
+                this._OgoneTransaction(ev, $checkedRadio, true);
             } else {
                 this._super.apply(this, arguments);
             }

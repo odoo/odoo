@@ -149,6 +149,7 @@ class PaymentAcquirerOgone(models.Model):
         return shasign
 
     def ogone_form_generate_values(self, values):
+        print("OGONE GENERATE VALUES")
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         ogone_tx_values = dict(values)
         param_plus = {
