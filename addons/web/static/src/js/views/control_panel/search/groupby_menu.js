@@ -22,17 +22,7 @@ var GroupByMenu = DropdownMenu.extend({
     /**
      * @override
      * @param {Widget} parent
-     * @param {Object[]} groupBys list of groupBys (type IGroupBy below)
-     *   interface IGroupBy {
-     *      itemId: string; unique id associated with the groupby
-     *      fieldName: string; field name without interval!
-     *      description: string; label printed on screen
-     *      groupId: string;
-     *      isActive: boolean; determines if the groupby is considered active
-     *      hasOptions: boolean; true when the groupBy has fieldType 'date' or 'datetime' (optional)
-     *      options: array of objects with 'optionId' and 'description' keys; (optional)
-     *      defaultOptionId: string refers to an optionId that should be activated by default
-     *      currentOptionId: string refers to an optionId that is activated if item is active (optional)
+     * @param {Object[]} groupBys list of groupBys
      *   }
      * @param {Object} fields 'field_get' of a model: mapping from field name
      *   to an object with its properties
@@ -131,7 +121,7 @@ var GroupByMenu = DropdownMenu.extend({
             groupBy.hasOptions = true;
             groupBy.options = INTERVAL_OPTIONS;
             groupBy.defaultOptionId = DEFAULT_INTERVAL;
-            groupBy.currentOptionId = false;
+            groupBy.currentOptionIds = new Set([]);
         }
         this.trigger_up('new_groupBy', groupBy);
     },
