@@ -82,8 +82,8 @@ class Job(models.Model):
         self.ensure_one()
         return self.env['hr.recruitment.stage'].search([
             '|',
-            ('job_id', '=', False),
-            ('job_id', '=', self.id)], order='sequence asc', limit=1)
+            ('job_ids', '=', False),
+            ('job_ids', '=', self.id)], order='sequence asc', limit=1)
 
     def _compute_new_application_count(self):
         first_stages = {job.id: job._get_first_stage().id for job in self}

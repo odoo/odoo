@@ -69,9 +69,9 @@
           <form string="Jobs - Recruitment Form">
             <header>
                 <button string="Create Employee" name="create_employee_from_applicant" type="object"
-                        class="oe_highlight" attrs="{'invisible': ['|',('emp_id', '!=', False),('active', '=', False)]}"/>
+                        class="oe_highlight" attrs="{'invisible': ['|',('emp_id', '!=', False),('active', '=', False)]}" confirm="Are you sure?"/>
                 <button string="Refuse" name="archive_applicant" type="object" attrs="{'invisible': [('active', '=', False)]}"/>
-                <button string="Reopen Application" name="reset_applicant" type="object" attrs="{'invisible': [('active', '=', True)]}"/>
+                <button string="Restore" name="reset_applicant" type="object" attrs="{'invisible': [('active', '=', True)]}"/>
                 <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('active', '=', False),('emp_id', '=', False)]}"/>
             </header>
             <sheet>
@@ -82,7 +82,7 @@
                             icon="fa-file-o"
                             type="object"
                             attrs="{'invisible': [('application_count', '=', 0)]}">
-                        <field name="application_count" widget="statinfo" string="Applications"/>
+                        <field name="application_count" widget="statinfo" string="Other Applications"/>
                     </button>
                     <button name="action_makeMeeting" class="oe_stat_button" icon="fa-calendar" type="object"
                          help="Schedule interview with this applicant">
@@ -125,7 +125,7 @@
                 </div>
                 <group>
                     <group>
-                        <field name="partner_id"/>
+                        <field name="partner_id" invisible="1" />
                         <field name="email_from" widget="email"/>
                         <field name="email_cc" groups="base.group_no_one"/>
                         <field name="partner_phone"/>
@@ -704,11 +704,11 @@ action = act
                     <group>
                         <field name="name"/>
                         <field name="sequence" groups="base.group_no_one"/>
-                        <field name="job_id"/>
+                        <field name="template_id" domain= "[('model_id.model', '=', 'hr.applicant')]"/>
                     </group>
                     <group name="stage_details">
                         <field name="fold"/>
-                        <field name="template_id" domain= "[('model_id.model', '=', 'hr.applicant')]"/>
+                        <field name="job_ids" widget="many2many_tags"/>
                     </group>
                 </group>
                 <group name="tooltips" string="Tooltips">

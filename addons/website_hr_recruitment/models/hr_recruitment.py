@@ -29,8 +29,6 @@ class Applicant(models.Model):
 
     _inherit = 'hr.applicant'
 
-    residence_country = fields.Char(string="Residence Country")
-
     def website_form_input_filter(self, request, values):
         if 'partner_name' in values:
             values.setdefault('name', '%s\'s Application' % values['partner_name'])

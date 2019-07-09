@@ -4,6 +4,7 @@
 from odoo import api, fields, models, SUPERUSER_ID
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
+from odoo.osv import expression
 
 AVAILABLE_PRIORITIES = [
     ('0', 'Normal'),
@@ -47,19 +48,19 @@ class RecruitmentStage(models.Model):
     _description = "Recruitment Stages"
     _order = 'sequence'
 
-    name = fields.Char("Stage name", required=True, translate=True)
+    name = fields.Char("Stage Name", required=True, translate=True)
     sequence = fields.Integer(
         "Sequence", default=10,
         help="Gives the sequence order when displaying a list of stages.")
-    job_id = fields.Many2one('hr.job', string='Job Specific',
-                             ondelete='cascade',
-                             help='Specific job that uses this stage. Other jobs will not use this stage.')
+    job_ids = fields.Many2many(
+        'hr.job', string='Job Specific',
+        help='Specific jobs that uses this stage. Other jobs will not use this stage.')
     requirements = fields.Text("Requirements")
     template_id = fields.Many2one(
-        'mail.template', "Automated Email",
+        'mail.template', "Email Template",
         help="If set, a message is posted on the applicant using the template when the applicant is set to the stage.")
     fold = fields.Boolean(
-        "Folded in Recruitment Pipe",
+        "Folded in Kanban",
         help="This stage is folded in the kanban view when there are no records in that stage to display.")
     legend_blocked = fields.Char(
         'Red Kanban Label', default=lambda self: _('Blocked'), translate=True, required=True)
@@ -98,8 +99,8 @@ class Applicant(models.Model):
         if self._context.get('default_job_id'):
             return self.env['hr.recruitment.stage'].search([
                 '|',
-                ('job_id', '=', False),
-                ('job_id', '=', self._context['default_job_id']),
+                ('job_ids', '=', False),
+                ('job_ids', '=', self._context['default_job_id']),
                 ('fold', '=', False)
             ], order='sequence asc', limit=1).id
         return False
@@ -113,15 +114,21 @@ class Applicant(models.Model):
             company_id = self.env.company
         return company_id
 
+    def _get_stage_id_domain(self):
+        domain = [('job_ids', '=', False)]
+        if self.job_id:
+            domain = expression.OR([domain, [('job_ids', 'in', self.job_id)]])
+        return domain
+
     name = fields.Char("Subject / Application Name", required=True)
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
     description = fields.Text("Description")
     email_from = fields.Char("Email", size=128, help="Applicant email")
     probability = fields.Float("Probability")
-    partner_id = fields.Many2one('res.partner', "Contact")
+    partner_id = fields.Many2one('res.partner', "Contact", copy=False)
     create_date = fields.Datetime("Creation Date", readonly=True, index=True)
     stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', ondelete='restrict', tracking=True,
-                               domain="['|', ('job_id', '=', False), ('job_id', '=', job_id)]",
+                               domain=_get_stage_id_domain,
                                copy=False, index=True,
                                group_expand='_read_group_stage_ids',
                                default=_default_stage_id)
@@ -185,7 +192,7 @@ class Applicant(models.Model):
             ('email_from', 'in', list(set(self.mapped('email_from'))))], ['email_from'], ['email_from'])
         application_data_mapped = dict((data['email_from'], data['email_from_count']) for data in application_data)
         for applicant in self.filtered(lambda applicant: applicant.email_from):
-            applicant.application_count = application_data_mapped.get(applicant.email_from, 0)
+            applicant.application_count = application_data_mapped.get(applicant.email_from, 1) - 1
 
     @api.multi
     def _get_attachment_number(self):
@@ -200,9 +207,9 @@ class Applicant(models.Model):
     def _read_group_stage_ids(self, stages, domain, order):
         # retrieve job_id from the context and write the domain: ids + contextual columns (job or default)
         job_id = self._context.get('default_job_id')
-        search_domain = [('job_id', '=', False)]
+        search_domain = [('job_ids', '=', False)]
         if job_id:
-            search_domain = ['|', ('job_id', '=', job_id)] + search_domain
+            search_domain = ['|', ('job_ids', '=', job_id)] + search_domain
         if stages:
             search_domain = ['|', ('id', 'in', stages.ids)] + search_domain
 
@@ -227,8 +234,8 @@ class Applicant(models.Model):
             if not stage_id:
                 stage_ids = self.env['hr.recruitment.stage'].search([
                     '|',
-                    ('job_id', '=', False),
-                    ('job_id', '=', job.id),
+                    ('job_ids', '=', False),
+                    ('job_ids', '=', job.id),
                     ('fold', '=', False)
                 ], order='sequence asc', limit=1).ids
                 stage_id = stage_ids[0] if stage_ids else False
@@ -238,6 +245,21 @@ class Applicant(models.Model):
             'user_id': user_id,
             'stage_id': stage_id
         }}
+
+    @api.onchange('email_from')
+    def onchange_email_from(self):
+        if self.partner_id and self.email_from and not self.partner_id.email:
+            self.partner_id.email = self.email_from
+
+    @api.onchange('partner_phone')
+    def onchange_partner_phone(self):
+        if self.partner_id and self.partner_phone and not self.partner_id.phone:
+            self.partner_id.phone = self.partner_phone
+
+    @api.onchange('partner_mobile')
+    def onchange_partner_mobile(self):
+        if self.partner_id and self.partner_mobile and not self.partner_id.mobile:
+            self.partner_id.mobile = self.partner_mobile
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
@@ -385,7 +407,10 @@ class Applicant(models.Model):
             if applicant.partner_id:
                 applicant._message_add_suggested_recipient(recipients, partner=applicant.partner_id, reason=_('Contact'))
             elif applicant.email_from:
-                applicant._message_add_suggested_recipient(recipients, email=applicant.email_from, reason=_('Contact Email'))
+                email_from = applicant.email_from
+                if applicant.partner_name:
+                    email_from = '%s<%s>' % (applicant.partner_name, email_from)
+                applicant._message_add_suggested_recipient(recipients, email=email_from, reason=_('Contact Email'))
         return recipients
 
     @api.model
@@ -434,7 +459,9 @@ class Applicant(models.Model):
             if applicant.partner_id:
                 address_id = applicant.partner_id.address_get(['contact'])['contact']
                 contact_name = applicant.partner_id.display_name
-            else :
+            else:
+                if not applicant.partner_name:
+                    raise UserError(_('You must define a Contact Name for this applicant.'))
                 new_partner_id = self.env['res.partner'].create({
                     'is_company': False,
                     'name': applicant.partner_name,
@@ -443,11 +470,10 @@ class Applicant(models.Model):
                     'mobile': applicant.partner_mobile
                 })
                 address_id = new_partner_id.address_get(['contact'])['contact']
-            if applicant.job_id and (applicant.partner_name or contact_name):
-                applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1})
+            if applicant.partner_name or contact_name:
                 employee = self.env['hr.employee'].create({
                     'name': applicant.partner_name or contact_name,
-                    'job_id': applicant.job_id.id,
+                    'job_id': applicant.job_id.id or False,
                     'address_home_id': address_id,
                     'department_id': applicant.department_id.id or False,
                     'address_id': applicant.company_id and applicant.company_id.partner_id
@@ -457,11 +483,11 @@ class Applicant(models.Model):
                     'work_phone': applicant.department_id and applicant.department_id.company_id
                             and applicant.department_id.company_id.phone or False})
                 applicant.write({'emp_id': employee.id})
-                applicant.job_id.message_post(
-                    body=_('New Employee %s Hired') % applicant.partner_name if applicant.partner_name else applicant.name,
-                    subtype="hr_recruitment.mt_job_applicant_hired")
-            else:
-                raise UserError(_('You must define an Applied Job and a Contact Name for this applicant.'))
+                if applicant.job_id:
+                    applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1})
+                    applicant.job_id.message_post(
+                        body=_('New Employee %s Hired') % applicant.partner_name if applicant.partner_name else applicant.name,
+                        subtype="hr_recruitment.mt_job_applicant_hired")
 
         employee_action = self.env.ref('hr.open_view_employee_list')
         dict_act_window = employee_action.read([])[0]
