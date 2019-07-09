@@ -69,7 +69,7 @@
                                     </div>
                                     <div class="content-group">
                                         <div class="mt16">
-                                            <field name="language_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}"/>
+                                            <field name="language_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" attrs="{'required': [('website_id', '!=', False)]}"/>
                                         </div>
                                         <field name="language_count" invisible="1"/>
                                         <div class="mt8" attrs="{'invisible':[('language_count', '&lt;', 2)]}">
