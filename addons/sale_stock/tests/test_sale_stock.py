@@ -49,7 +49,9 @@ class TestSaleStock(TestSale):
         self.assertEqual(self.so.invoice_status, 'no',
                          'Sale Stock: so invoice_status should be "nothing to invoice" after partial delivery and invoicing')
         self.assertEqual(len(self.so.picking_ids), 2, 'Sale Stock: number of pickings should be 2')
-        pick_2 = self.so.picking_ids[0]
+        # DLE P125: order of one2many are no longer ensured.
+        # This could have been solved by doing self.so.picking_ids[1] by its clearer like this we want the backorder picking
+        pick_2 = self.so.picking_ids.filtered('backorder_id')
         pick_2.move_lines.write({'quantity_done': 1})
         self.assertIsNone(pick_2.button_validate(), 'Sale Stock: second picking should be final without need for a backorder')
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" after complete delivery')

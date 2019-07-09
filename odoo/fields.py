@@ -1093,6 +1093,16 @@ class Field(MetaField('DummyField', (object,), {})):
                             # Fields without column_type should never be sent to `_write`, which is the purpose of the towrite stack
                             # Instead they should call field.write directly
                             self.write(record, write_value)
+                    # DLE P131: `test_06_uom`, `test_00_sale_stock_invoice`, `test_01_sale_stock_order`, `test_02_sale_stock_return`
+                    # `test_aged_report`, `test_aged_report_future_payment`, `test_reconciliation_cash_basis_foreign_currency_low_values`
+                    # When setting a computed(including related) many2one, update the inverse one2many
+                    # e.g.
+                    #  - `account.move.line.statement_id`, defined as `fields.Many2one(related='statement_line_id.statement_id'`
+                    #    which has an inverse on `account.bank.statement` defined as move_line_ids = fields.One2many('account.move.line', 'statement_id')
+                    #  - `stock.picking.sale_id`, defined as `fields.Many2one(related="group_id.sale_id")`,
+                    #    which has an inverse on `sale.order` defined as `fields.One2many('stock.picking', 'sale_id')`
+                    for invf in record._field_inverses[self]:
+                        invf._update(record[self.name], record)
         else:
             records.write({self.name: write_value})
 

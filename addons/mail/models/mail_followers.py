@@ -46,9 +46,11 @@ class Followers(models.Model):
         for record in (vals_list or [{'res_model': rec.res_model, 'res_id': rec.res_id} for rec in self]):
             if record.get('res_id'):
                 to_invalidate[record.get('res_model')].append(record.get('res_id'))
+        # DLE P130: to check if this is still usefull, but it was hidding issues regarding the update of one2many depending on computed many2one.
+        # So in the meantime I comment just so it doesn't hide issues in the ORM.
         # invalidate in batch for performance
-        for res_model, res_ids in to_invalidate.items():
-            self.env[res_model].invalidate_cache(ids=res_ids)
+        # for res_model, res_ids in to_invalidate.items():
+        #     self.env[res_model].invalidate_cache(ids=res_ids)
 
     @api.model_create_multi
     def create(self, vals_list):
