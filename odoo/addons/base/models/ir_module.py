@@ -920,7 +920,6 @@ class ModuleDependency(models.Model):
         for dep in self:
             dep.depend_id = name_mod.get(dep.name)
 
-    @api.depends('depend_id.state')
     def _compute_state(self):
         for dependency in self:
             dependency.state = dependency.depend_id.state or 'unknown'
@@ -951,7 +950,6 @@ class ModuleExclusion(models.Model):
         for excl in self:
             excl.exclusion_id = name_mod.get(excl.name)
 
-    @api.depends('exclusion_id.state')
     def _compute_state(self):
         for exclusion in self:
             exclusion.state = exclusion.exclusion_id.state or 'unknown'
