@@ -157,6 +157,9 @@ var ControlPanelModel = mvc.Model.extend({
             if (filter.autoCompleteValues) {
                 filter.autoCompleteValues = [];
             }
+            if (filter.currentOptionId) {
+                filter.currentOptionId = false;
+            }
         });
         // TODO: use toggleFilter here
         group.activeFilterIds = [];
