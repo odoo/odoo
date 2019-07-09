@@ -33,6 +33,10 @@ class ImLivechatChannel(models.Model):
     default_message = fields.Char('Welcome Message', default='How may I help you?',
         help="This is an automated 'welcome' message that your visitor will see when they initiate a new conversation.")
     input_placeholder = fields.Char('Chat Input Placeholder', help='Text that prompts the user to initiate the chat.')
+    header_background_color = fields.Char(default="#875A7B", help="Default background color of the channel header once open")
+    title_color = fields.Char(default="#FFFFFF", help="Default title color of the channel once open")
+    button_background_color = fields.Char(default="#878787", help="Default background color of the Livechat button")
+    button_text_color = fields.Char(default="#FFFFFF", help="Default text color of the Livechat button")
 
     # computed fields
     web_page = fields.Char('Web Page', compute='_compute_web_page_link', store=False, readonly=True,
@@ -204,6 +208,10 @@ class ImLivechatChannel(models.Model):
         self.ensure_one()
 
         return {
+            'header_background_color': self.header_background_color,
+            'button_background_color': self.button_background_color,
+            'title_color': self.title_color,
+            'button_text_color': self.button_text_color,
             'button_text': self.button_text,
             'input_placeholder': self.input_placeholder,
             'default_message': self.default_message,
