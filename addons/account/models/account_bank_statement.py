@@ -9,6 +9,7 @@ from odoo.exceptions import UserError, ValidationError
 
 import time
 import math
+import base64
 
 class AccountCashboxLine(models.Model):
     """ Cash Box Details """
@@ -293,6 +294,16 @@ class AccountBankStatement(models.Model):
             if moves:
                 moves.filtered(lambda m: m.state != 'posted').post()
             statement.message_post(body=_('Statement %s confirmed, journal items were created.') % (statement.name,))
+            if statement.journal_id.type == 'bank':
+                # Attach report to the Bank statement
+                content, content_type = self.env.ref('account.action_report_account_statement').render_qweb_pdf(statement.id)
+                self.env['ir.attachment'].create({
+                    'name': statement.name and _("Bank Statement %s.pdf") % statement.name or _("Bank Statement.pdf"),
+                    'type': 'binary',
+                    'datas': base64.encodestring(content),
+                    'res_model': statement._name,
+                    'res_id': statement.id
+                })
         statements.write({'state': 'confirm', 'date_done': time.strftime("%Y-%m-%d %H:%M:%S")})
 
     def button_journal_entries(self):
