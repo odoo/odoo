@@ -1,8 +1,8 @@
 $(function () {
-
+    // THIS IS LAUNCHED IF THE USER STAY IN ODOO
     $('input#cc_number').payment('formatCardNumber');
     $('input#cc_cvc').payment('formatCardCVC');
-    $('input#cc_expiry').payment('formatCardExpiry')
+    $('input#cc_expiry').payment('formatCardExpiry');
 
     $('input#cc_number').on('focusout', function (e) {
         var valid_value = $.payment.validateCardNumber(this.value);
@@ -58,6 +58,7 @@ $(function () {
 
     $('select[name="pm_acquirer_id"]').on('change', function() {
         var acquirer_id = $(this).val();
+        console.log(acquirer_id);
         $('.acquirer').addClass('d-none');
         $('.acquirer[data-acquirer-id="'+acquirer_id+'"]').removeClass('d-none');
     });

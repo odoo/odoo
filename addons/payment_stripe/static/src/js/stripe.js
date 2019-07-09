@@ -13,7 +13,7 @@ odoo.define('payment_stripe.stripe', function(require) {
         'BIF', 'XAF', 'XPF', 'CLP', 'KMF', 'DJF', 'GNF', 'JPY', 'MGA', 'PYG',
         'RWF', 'KRW', 'VUV', 'VND', 'XOF'
     ];
-
+    debugger;
     if ($.blockUI) {
         // our message needs to appear above the modal dialog
         $.blockUI.defaults.baseZ = 2147483647; //same z-index as StripeCheckout
@@ -27,6 +27,7 @@ odoo.define('payment_stripe.stripe', function(require) {
         if (stripeHandler) {
             return stripeHandler;
         }
+        console.log("STRIPE HANDLER");
         var handler = stripeHandler = StripeCheckout.configure({
             key: $("input[name='stripe_key']").val(),
             image: $("input[name='stripe_image']").val(),
@@ -41,6 +42,8 @@ odoo.define('payment_stripe.stripe', function(require) {
                                 '</h2>'
                     });
                 }
+                console.log("STRIPE TOKEN");
+                debugger;
                 ajax.jsonRpc("/payment/stripe/create_charge", 'call', {
                     tokenid: token.id,  // TBE TODO: for backward compatibility, remove on master
                     email: token.email, // TBE TODO: for backward compatibility, remove on master
@@ -51,13 +54,17 @@ odoo.define('payment_stripe.stripe', function(require) {
                     invoice_num: $("input[name='invoice_num']").val(),
                     tx_ref: $("input[name='invoice_num']").val(),
                     return_url: $("input[name='return_url']").val()
-                }).then(function(data){
+                }).then(function (data) {
+                    debugger;
+                    console.log("STRIPE THEN");
                     handler.isTokenGenerate = false;
                     window.location.href = data;
                     if ($.blockUI) {
                         $.unblockUI();
                     }
-                }).guardedCatch(function(data){
+                }).guardedCatch(function (data) {
+                    debugger;
+                    console.log("STRIPE GUARDED CATCH");
                     var msg = data && data.data && data.data.message;
                     var wizard = $(qweb.render('stripe.error', {'msg': msg || _t('Payment error')}));
                     wizard.appendTo($('body')).modal({'keyboard': true});
@@ -87,6 +94,7 @@ odoo.define('payment_stripe.stripe', function(require) {
 
 
     function display_stripe_form(provider_form) {
+        console.log("STRIPE FORM");
         // Open Checkout with further options
         var payment_form = $('.o_payment_form');
         if(!payment_form.find('i').length)
@@ -99,7 +107,7 @@ odoo.define('payment_stripe.stripe', function(require) {
         var get_input_value = function(name) {
             return provider_form.find('input[name="' + name + '"]').val();
         }
-
+        console.log("STRIPE FORM2");
         var acquirer_id = parseInt(provider_form.find('#acquirer_stripe').val());
         var amount = parseFloat(get_input_value("amount") || '0.0');
         var currency = get_input_value("currency");
@@ -113,7 +121,8 @@ odoo.define('payment_stripe.stripe', function(require) {
         if (acquirer_form.length) {
             form_save_token = acquirer_form.find('input[name="o_payment_form_save_token"]').prop('checked');
         }
-
+        console.log("STRIPE FORM");
+        console.log(payment_tx_url);
         ajax.jsonRpc(payment_tx_url, 'call', {
             acquirer_id: acquirer_id,
             access_token: access_token,

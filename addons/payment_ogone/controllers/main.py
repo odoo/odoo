@@ -39,12 +39,14 @@ class OgoneController(http.Controller):
 
     @http.route(['/payment/ogone/s2s/create_json_3ds'], type='json', auth='public', csrf=False)
     def ogone_s2s_create_json_3ds(self, verify_validity=False, **kwargs):
+
         if not kwargs.get('partner_id'):
             kwargs = dict(kwargs, partner_id=request.env.user.partner_id.id)
         token = False
         error = None
         
         try:
+            # TODO: token created in js
             token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
         except Exception as e:
             error = str(e)
@@ -83,6 +85,7 @@ class OgoneController(http.Controller):
     @http.route(['/payment/ogone/s2s/create'], type='http', auth='public', methods=["POST"], csrf=False)
     def ogone_s2s_create(self, **post):
         error = ''
+        print("HERE WE CREATE THE ROUTE")
         acq = request.env['payment.acquirer'].browse(int(post.get('acquirer_id')))
         try:
             token = acq.s2s_process(post)
@@ -114,6 +117,7 @@ class OgoneController(http.Controller):
     def ogone_validation_form_feedback(self, **post):
         """ Feedback from 3d secure for a bank card validation """
         request.env['payment.transaction'].sudo().form_feedback(post, 'ogone')
+        print("HERE ogone_validation_form_feedback")
         return werkzeug.utils.redirect("/payment/process")
 
     @http.route(['/payment/ogone/s2s/feedback'], auth='public', csrf=False)

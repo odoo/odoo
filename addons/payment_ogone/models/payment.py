@@ -184,9 +184,14 @@ class PaymentAcquirerOgone(models.Model):
         return ogone_tx_values
 
     def ogone_get_form_action_url(self):
+        print("\n\n\nGET ACTION URL\n\n\n")
+        print("#########################################################")
+        print(self._get_ogone_urls(self.environment)['ogone_standard_order_url'])
         return self._get_ogone_urls(self.environment)['ogone_standard_order_url']
 
     def ogone_s2s_form_validate(self, data):
+        
+        print('ogone_s2s_form_validate')
         error = dict()
 
         mandatory_fields = ["cc_number", "cc_cvc", "cc_holder_name", "cc_expiry", "cc_brand"]
@@ -198,6 +203,7 @@ class PaymentAcquirerOgone(models.Model):
         return False if error else True
 
     def ogone_s2s_form_process(self, data):
+        print('ogone_s2s_form_process')
         values = {
             'cc_number': data.get('cc_number'),
             'cc_cvc': int(data.get('cc_cvc')),
@@ -339,6 +345,7 @@ class PaymentTxOgone(models.Model):
     # --------------------------------------------------
     def ogone_s2s_do_transaction(self, **kwargs):
         # TODO: create tx with s2s type
+        print("ogone_s2s_do_transaction")
         account = self.acquirer_id
         reference = self.reference or "ODOO-%s-%s" % (datetime.datetime.now().strftime('%y%m%d_%H%M%S'), self.partner_id.id)
 
@@ -386,6 +393,8 @@ class PaymentTxOgone(models.Model):
         logged_data.pop('PSWD')
         _logger.info("ogone_s2s_do_transaction: Sending values to URL %s, values:\n%s", direct_order_url, pformat(logged_data))
         result = requests.post(direct_order_url, data=data).content
+        print("DATA: ", data)
+        print("RESULT: ", result)
 
         try:
             tree = objectify.fromstring(result)

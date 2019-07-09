@@ -262,6 +262,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                     }).then(function (result) {
                         if (result) {
                             // if the server sent us the html form, we create a form element
+                            // HERE WE PROCESS THE USER IS REDIRECTED ON THE COMPANY WEBSITE
                             var newForm = document.createElement('form');
                             newForm.setAttribute("method", "post"); // set it to post
                             newForm.setAttribute("provider", checked_radio.dataset.provider);

@@ -1068,9 +1068,12 @@ class PaymentToken(models.Model):
         # call custom create method if defined (i.e. ogone_create for ogone)
         if values.get('acquirer_id'):
             acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
+            print("acquirer", acquirer)
 
             # custom create
             custom_method_name = '%s_create' % acquirer.provider
+            print("custom method name", custom_method_name)
+            print(values)
             if hasattr(self, custom_method_name):
                 values.update(getattr(self, custom_method_name)(values))
                 # remove all non-model fields used by (provider)_create method to avoid warning

@@ -43,6 +43,7 @@ class PaymentProcessing(http.Controller):
 
     @http.route(['/payment/process'], type="http", auth="public", website=True, sitemap=False)
     def payment_status_page(self, **kwargs):
+        print("HERE WE PROCESS THE PAYMENT")
         # When the customer is redirect to this website page,
         # we retrieve the payment transaction list from his session
         tx_ids_list = self.get_payment_transaction_ids()
