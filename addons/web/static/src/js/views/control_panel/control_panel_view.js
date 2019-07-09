@@ -8,11 +8,14 @@ var controlPanelViewParameters = require('web.controlPanelViewParameters');
 var mvc = require('web.mvc');
 var pyUtils = require('web.py_utils');
 var viewUtils = require('web.viewUtils');
+var Domain = require('web.Domain');
 
 var DEFAULT_INTERVAL = controlPanelViewParameters.DEFAULT_INTERVAL;
 var DEFAULT_PERIOD = controlPanelViewParameters.DEFAULT_PERIOD;
 var INTERVAL_OPTIONS = controlPanelViewParameters.INTERVAL_OPTIONS;
 var PERIOD_OPTIONS = controlPanelViewParameters.PERIOD_OPTIONS;
+const OPTION_GENERATORS = controlPanelViewParameters.OPTION_GENERATORS;
+const YEAR_OPTIONS = controlPanelViewParameters.YEAR_OPTIONS;
 
 var Factory = mvc.Factory;
 
@@ -69,6 +72,20 @@ var ControlPanelView = Factory.extend({
         this.arch = viewUtils.parseArch(viewInfo.arch);
         this.fields = viewInfo.fields;
 
+        this.referenceMoment = moment();
+        this.optionGenerators = OPTION_GENERATORS.map(o => {
+            const description = o.description ?
+                                    o.description.toString () :
+                                    this.referenceMoment.clone().set(o.setParam).add(o.addParam).format(o.format);
+            return _.extend({}, o, {description:  description});
+        });
+        PERIOD_OPTIONS = PERIOD_OPTIONS.map(option =>
+            _.extend({}, option, {description: option.description.toString()})
+        );
+        INTERVAL_OPTIONS = INTERVAL_OPTIONS.map(option =>
+            _.extend({}, option, {description: option.description.toString()})
+        );
+
         this.controllerParams.modelName = params.modelName;
 
         this.modelParams.context = context;
@@ -98,13 +115,6 @@ var ControlPanelView = Factory.extend({
                 this._parseSearchArch(this.arch);
             }
         }
-
-        PERIOD_OPTIONS = PERIOD_OPTIONS.map(function (option) {
-            return _.extend(option, {description: option.description.toString()});
-        });
-        INTERVAL_OPTIONS = INTERVAL_OPTIONS.map(function (option) {
-            return _.extend(option, {description: option.description.toString()});
-        });
 
         // add a filter group with the dynamic filters, if any
         if (params.dynamicFilters && params.dynamicFilters.length) {
@@ -165,13 +175,12 @@ var ControlPanelView = Factory.extend({
             if (attrs.date) {
                 filter.fieldName = attrs.date;
                 filter.fieldType = this.fields[attrs.date].type;
-                // we should be able to declare list of options per date filter
-                // (request of POs) (same remark for groupbys)
                 filter.hasOptions = true;
-                filter.options = PERIOD_OPTIONS;
+                filter.options = this.optionGenerators;
                 filter.defaultOptionId = attrs.default_period ||
                                             DEFAULT_PERIOD;
-                filter.currentOptionId = false;
+                filter.currentOptionIds = new Set();
+                filter.basicDomains = this._getDateFilterBasicDomains(filter);
             }
             if (attrs.invisible) {
                 filter.invisible = true;
@@ -188,7 +197,7 @@ var ControlPanelView = Factory.extend({
                 filter.options = INTERVAL_OPTIONS;
                 filter.defaultOptionId = attrs.defaultInterval ||
                                             DEFAULT_INTERVAL;
-                filter.currentOptionId = false;
+                filter.currentOptionIds = new Set();
             }
         } else if (filter.type === 'field') {
             if (filter.isDefault) {
@@ -205,6 +214,55 @@ var ControlPanelView = Factory.extend({
                 attrs.string = field.string;
             }
         }
+    },
+    /**
+     * Constructs an object containing various domains based on this.referenceMoment and
+     * the field associated with the provided date filter.
+     *
+     * @private
+     * @param {Object} filter
+     * @returns {Object}
+     */
+    _getDateFilterBasicDomains: function (filter) {
+        const _constructBasicDomain = (y, o) => {
+            const addParam = _.extend({}, y.addParam, o ? o.addParam : {});
+            const setParam = _.extend({}, y.setParam, o ? o.setParam : {});
+            const granularity = o ? o.granularity : y.granularity;
+            const date = this.referenceMoment.clone().set(setParam).add(addParam);
+            let leftBound = date.clone().startOf(granularity);
+            let rightBound = date.clone().endOf(granularity);
+
+            if (filter.fieldType === 'date') {
+                leftBound = leftBound.format("YYYY-MM-DD");
+                rightBound = rightBound.format("YYYY-MM-DD");
+            } else {
+                leftBound = leftBound.utc().format("YYYY-MM-DD HH:mm:ss");
+                rightBound = rightBound.utc().format("YYYY-MM-DD HH:mm:ss");
+            }
+            const domain = Domain.prototype.arrayToString([
+                '&',
+                [filter.fieldName, ">=", leftBound],
+                [filter.fieldName, "<=", rightBound]
+            ]);
+
+            let description;
+            if (o) {
+                description = o.description + " " + y.description;
+            } else {
+                description = y.description;
+            }
+
+            return { domain, description };
+        };
+
+        const domains = {};
+        this.optionGenerators.filter(y => y.groupId === 2).forEach(y => {
+            domains[y.optionId] = _constructBasicDomain(y);
+            this.optionGenerators.filter(y => y.groupId === 1).forEach(o => {
+                domains[y.optionId + "__" + o.optionId] = _constructBasicDomain(y, o);
+            });
+        });
+        return domains;
     },
     /**
      * Parse the arch of a 'search' view.
@@ -234,7 +292,6 @@ var ControlPanelView = Factory.extend({
         var currentGroup = [];
         var groupOfGroupBys = [];
         var groupNumber = 1;
-
 
         _.each(preFilters, function (preFilter) {
             if (preFilter.tag !== currentTag || _.contains(['separator', 'field'], preFilter.tag)) {

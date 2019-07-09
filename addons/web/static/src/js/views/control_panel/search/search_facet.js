@@ -45,10 +45,33 @@ var SearchFacet = Widget.extend({
         }
         var description = filter.description;
         if (filter.hasOptions) {
-            var optionValue =_.findWhere(filter.options, {
-                optionId: filter.currentOptionId,
-            });
-            description += ': ' + optionValue.description;
+            if (filter.type === 'filter') {
+                const optionDescriptions = [];
+                const sortFunction = (o1, o2) =>
+                    filter.options.findIndex(o => o.optionId === o1) - filter.options.findIndex(o => o.optionId === o2);
+                const p = _.partition([...filter.currentOptionIds], optionId =>
+                    filter.options.find(o => o.optionId === optionId).groupId === 1);
+                const yearIds = p[1].sort(sortFunction);
+                const otherOptionIds = p[0].sort(sortFunction);
+                // the following case corresponds to years selected only
+                if (otherOptionIds.length === 0) {
+                    yearIds.forEach(yearId => {
+                        const d = filter.basicDomains[yearId];
+                        optionDescriptions.push(d.description);
+                    });
+                } else {
+                    otherOptionIds.forEach(optionId => {
+                        yearIds.forEach(yearId => {
+                            const d = filter.basicDomains[yearId + '__' + optionId];
+                            optionDescriptions.push(d.description);
+                        });
+                    });
+                }
+                description += ': ' + optionDescriptions.join('/');
+            } else {
+                description = description += ': ' +
+                                filter.options.find(o => o.optionId === filter.optionId).description;
+            }
         }
         if (filter.type === 'timeRange') {
             var timeRangeValue =_.findWhere(filter.timeRangeOptions, {
