@@ -4200,6 +4200,8 @@ Fields:
                     continue
                 model_name = self._name
                 for fname in arg[0].split('.'):
+                    if fname not in self._fields:
+                        continue
                     to_flush[model_name].add(fname)
                     field = self.env[model_name]._fields[fname]
                     # DLE P111: `test_message_process_email_partner_find`
@@ -5582,10 +5584,10 @@ Fields:
                     # model_ids = fields.One2many('ir.model.data', 'res_id', string="Models", domain=[('model', '=', 'ir.ui.view')], auto_join=True)
                     # That could benefit of the same performance optimization if we find a way to define these res_id/res_model fields on these kind of one2many fields.
                     if key.type in ('one2many',) and key.inverse_name == 'res_id' and 'res_model' in self._fields:
-                        if self.res_model != key.model_name:
-                            records = model.browse()
-                        else:
-                            records = model.browse(self.res_id)
+                        records = model.browse()
+                        for r in self:
+                            if r.res_model == key.model_name:
+                                records |= model.browse(r.res_id)
                     else:
                         # DLE P77: you can't do a search to find the inverse of new records, as they are not yet in database :(
                         # `test_onchange_one2many_with_domain_on_related_field`
