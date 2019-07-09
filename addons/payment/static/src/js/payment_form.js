@@ -300,6 +300,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                 }
             }
             else {  // if the user is using an old payment then we just submit the form
+                console.log("User is using an old payment");
                 this.disableButton(button);
                 form.submit();
                 return new Promise(function () {});

@@ -2,6 +2,7 @@
 <odoo>
     <data>
         <template id="ogone_form">
+        <!-- THIS IS USED FOR REDIRECTION TO THE ACQUIRER WEBSITE -->
             <input type="hidden" name="data_set" t-att-data-action-url="tx_url" data-remove-me=""/>
             <!-- seller -->
             <input type="hidden" name='PSPID' t-att-value='PSPID'/>
@@ -33,9 +34,17 @@
             <input type="hidden" name='DECLINEURL' t-att-value='DECLINEURL'/>
             <input type="hidden" name='EXCEPTIONURL' t-att-value='EXCEPTIONURL'/>
             <input type="hidden" name='CANCELURL' t-att-value='CANCELURL'/>
+            <!-- <script type="text/javascript">
+                odoo.define(function (require) {
+                    var ajax = require('web.ajax');
+                    ajax.loadJS("/payment_ogone/static/src/js/ogone_portal.js");
+                });
+            </script> -->
         </template>
 
         <template id="ogone_s2s_form">
+        <!-- THIS IS USED FOR THE PAYMENTS ON THE ODOO WEBSITE -->
+        <!-- THIS ONE NEEDS TO BE EDITED TO PREVENT CC INFORMATION TO BE SENT TO ODOO SERVER. -->
             <input type="hidden" name="data_set" data-create-route="/payment/ogone/s2s/create_json_3ds"/>
             <input type="hidden" name="acquirer_id" t-att-value="id"/>
             <input t-if="return_url" type="hidden" name="return_url" t-att-value="return_url"/>
@@ -57,6 +66,17 @@
                     <input type="text" name="cc_cvc" id="cc_cvc" class="form-control" maxlength="4" placeholder="CVC" data-is-required="true"/>
                 </div>
             </div>
+            <!-- <script type="text/javascript">
+                odoo.define(function (require) {
+                    var ajax = require('web.ajax');
+                    ajax.loadJS("/payment_ogone/static/src/js/ogone.js");
+                });
+            </script> -->
+        </template>
+        <template id="assets_frontend" inherit_id="web.assets_frontend">
+            <xpath expr="script[last()]" position="after">
+                <script type="text/javascript" src="/payment_ogone/static/src/js/payment_form.js"></script>
+            </xpath>
         </template>
     </data>
 </odoo>
