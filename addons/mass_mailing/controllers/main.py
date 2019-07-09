@@ -11,7 +11,7 @@ from odoo.tools import consteq
 
 class MassMailController(http.Controller):
 
-    @http.route(['/unsubscribe_from_list'], type='http', website=True, multilang=False, auth='public')
+    @http.route(['/unsubscribe_from_list'], type='http', website=True, multilang=False, auth='public', sitemap=False)
     def unsubscribe_placeholder_link(self, **post):
         """Dummy route so placeholder is not prefixed by language, MUST have multilang=False"""
         raise werkzeug.exceptions.NotFound()
