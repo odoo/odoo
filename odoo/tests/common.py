@@ -1532,6 +1532,12 @@ class O2MForm(Form):
         else:
             self._values.update(proxy._records[index])
 
+    def _get_modifier(self, field, modifier, default=False, modmap=None, vals=None):
+        if vals is None:
+            vals = {**self._values, '•parent•': self._proxy._parent._values}
+
+        return super()._get_modifier(field, modifier, default=default, modmap=modmap, vals=vals)
+
     def _onchange_values(self):
         values = super(O2MForm, self)._onchange_values()
         # computed o2m may not have a relation_field(?)
