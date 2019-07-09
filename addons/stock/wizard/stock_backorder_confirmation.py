@@ -17,7 +17,7 @@ class StockBackorderConfirmation(models.TransientModel):
             for pick_id in self.pick_ids:
                 backorder_pick = self.env['stock.picking'].search([('backorder_id', '=', pick_id.id)])
                 backorder_pick.action_cancel()
-                pick_id.message_post(body=_("Back order <em>%s</em> <b>cancelled</b>.") % (backorder_pick.name))
+                pick_id.message_post(body=_("Back order <em>%s</em> <b>cancelled</b>.") % (",".join([b.name or '' for b in backorder_pick])))
 
     def process(self):
         self._process()
