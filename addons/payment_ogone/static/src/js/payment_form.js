@@ -1,3 +1,10 @@
+// odoo.define('payment_ogone.connect', function (require) {
+//     "use strict";
+//     var ajax = require('web.ajax');
+//     var connect = ajax.loadJS ("/payment_ogone/static/lib/connectsdknoEncrypt.js");
+// });
+
+
 odoo.define('payment_ogone.payment_form', function (require) {
     "use strict";
     
@@ -6,17 +13,12 @@ odoo.define('payment_ogone.payment_form', function (require) {
     var Dialog = require('web.Dialog');
     var Widget = require('web.Widget');
     var PaymentForm = require('payment.payment_form');
-    var connect = require('payment_ogone.connectsdk.noEncrypt');
+    ajax.loadJS("/payment_ogone/static/lib/connectsdknoEncrypt.js");
        
     var qweb = core.qweb;
     var _t = core._t;
+    // ajax.loadXML('/payment_ogone/static/src/xml/ogone_templates.xml', qweb);
     
-    ajax.loadXML('/payment_ogone/static/src/xml/ogone_templates.xml', qweb);
-    var DummyWidget = Widget.extend({
-         jsDependencies: ['/payment_ogone/static/lib/connectsdk.noEncrypt.js'],
-
-    });
-
     PaymentForm.include({
     
         //--------------------------------------------------------------------------
@@ -42,10 +44,9 @@ odoo.define('payment_ogone.payment_form', function (require) {
             //console.log(acquirerID.val());
             //console.log(inputsForm);
             var formData = this.getFormData(inputsForm);
-            var dummy = new DummyWidget(this);
             console.log(formData);
-            console.log(connect);
-            var session = this.session;
+            // console.log(connect);
+            var ingenico_session = new connect(sessionDetails);
             var cardNumber  = formData.cc_number;
             var amount = 100; // todo get with rpc ?
             var countryCode = 'BE'; // todo get with rpc ?
@@ -58,7 +59,14 @@ odoo.define('payment_ogone.payment_form', function (require) {
                 isRecurring: false
             };
 
-            var createPayload = function (session, cardNumber, paymentDetails) {
+            var sessionDetails = {
+                assetUrl: "",
+                clientApiUrl: "",
+                clientSessionId: "",
+                customerId: ""
+            };
+
+            var createPayload = function (ingenico_session, cardNumber, paymentDetails) {
                 session.getIinDetails(cardNumber, paymentDetails).then(function (iinDetailsResponse) {
                     if (iinDetailsResponse.status !== "SUPPORTED") {
                         console.error("Card check error: " + iinDetailsResponse.status);
@@ -94,23 +102,27 @@ odoo.define('payment_ogone.payment_form', function (require) {
                     document.querySelector('.output').innerText = 'Something went wrong, check the console for more information.';
                 });
             };
-            createPayload(session, cardNumber, paymentDetails);
-
-
-
+                        
+            // var libUrl = "https://raw.githubusercontent.com/Ingenico-ePayments/connect-sdk-client-js/master/dist/connectsdk.noEncrypt.js" ;
+            // ajax.loadJS (libUrl).then(function () {
+            // var ingenico_session = new connect(sessionDetails);
+            // createPayload(ingenico_session, cardNumber, paymentDetails);
+            // });
         },
         /**
          * @override
          */
         updateNewPaymentDisplayStatus: function () {
             var $checkedRadio = this.$('input[type="radio"]:checked');
+            var acquirerId = this.getAcquirerIdFromRadio($checkedRadio);
             if ($checkedRadio.length !== 1) {
                 return;
             }
     
             //  hide add token form for ogone
             if ($checkedRadio.data('provider') === 'ogone' && this.isNewPaymentRadio($checkedRadio)) {
-                this.$('[id*="o_payment_add_token_acq_"]');
+                //this.$('[id*="o_payment_add_token_acq_"]');
+                this.$('#o_payment_add_token_acq_' + acquirerId).removeClass('d-none');
             } else {
                 this._super.apply(this, arguments);
             }
@@ -126,7 +138,6 @@ odoo.define('payment_ogone.payment_form', function (require) {
         payEvent: function (ev) {
             ev.preventDefault();
             var $checkedRadio = this.$('input[type="radio"]:checked');
-    
             // first we check that the user has selected a ogone as s2s payment method
             if ($checkedRadio.length === 1 && this.isNewPaymentRadio($checkedRadio) && $checkedRadio.data('provider') === 'ogone') {
                 this._createOgoneToken(ev, $checkedRadio);

@@ -75,8 +75,9 @@
         </template>
         <template id="assets_frontend" inherit_id="web.assets_frontend">
             <xpath expr="script[last()]" position="after">
+                
                 <script type="text/javascript" src="/payment_ogone/static/lib/forge.min.js"></script>
-                <script type="text/javascript" src="/payment_ogone/static/lib/connectsdk.noEncrypt.js"></script>
+                <script type="text/javascript" src="/payment_ogone/static/lib/connectsdknoEncrypt.js"></script>
                 <script type="text/javascript" src="/payment_ogone/static/src/js/payment_form.js"></script>
             </xpath>
         </template>
