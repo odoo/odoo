@@ -1597,7 +1597,7 @@ var BasicModel = AbstractModel.extend({
                             // updating an existing (virtual) record
                             var previousChange = _.find(oldChanges, function (operation) {
                                 var child = self.localData[operation.id];
-                                return child && (child.res_id === command[1]);
+                                return child && (child.ref === command[1]);
                             });
                             recID = previousChange && previousChange.id;
                             rec = self.localData[recID];

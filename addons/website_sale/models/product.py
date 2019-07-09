@@ -449,6 +449,13 @@ class Product(models.Model):
         return res
 
     @api.multi
+    def open_website_url(self):
+        self.ensure_one()
+        res = self.product_tmpl_id.open_website_url()
+        res['url'] = self.website_url
+        return res
+
+    @api.multi
     def _get_images(self):
         """Return a list of records implementing `image.mixin` to
         display on the carousel on the website for this variant.
