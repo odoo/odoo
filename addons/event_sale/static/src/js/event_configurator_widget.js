@@ -126,7 +126,10 @@ ProductConfiguratorWidget.include({
                     if (!self.recordData.event_id || !self.recordData.event_ticket_id) {
                         self.trigger_up('field_changed', {
                             dataPointID: dataPointId,
-                            changes: {product_id: false},
+                            changes: {
+                                product_id: false,
+                                name: ''
+                            },
                         });
                     }
                 }
