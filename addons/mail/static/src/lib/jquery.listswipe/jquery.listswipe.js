@@ -1,4 +1,4 @@
-(function() {
+(function () {
     $.fn.listSwipe = function (options) {
         var settings = $.extend({
             itemSelector: '>', // The item in the list that has the side actions
@@ -11,17 +11,18 @@
             maxYDelta: 40, // Number of pixels in the Y-axis before preventing swiping
             initialXDelta: 25, // Number of pixels in the X-axis before allowing swiping
             onRightSwipe: false, // When swipped Left to Right
-            onLeftSwipe: false // When swipped Right to Left
+            onLeftSwipe: false, // When swipped Right to Left
+            onElementMoving: false, // Called when item moving with touch
         }, options);
 
-        function getTouchPosition(event) {
+        function getTouchPosition (event) {
             return {
                 x: event.changedTouches[0].clientX,
                 y: event.changedTouches[0].clientY
             };
         }
 
-        function getTouchDelta(touch, data, settings) {
+        function getTouchDelta (touch, data, settings) {
             var xDelta = touch.x - data.touchStart.x + data.startLeft;
             var yDelta = touch.y - data.touchStart.y;
             if (!settings.rightAction && xDelta < 0) {
@@ -36,71 +37,85 @@
             };
         }
 
+        function calculateTouchDelta (touch, data, settings) {
+            var touchDelta = getTouchDelta(touch, data, settings);
+            var xThreshold = Math.abs(touchDelta.xDelta) / settings.itemActionWidth;
+            if (xThreshold >= settings.snapThreshold) {
+                if (touchDelta.xDelta < 0) {
+                    touchDelta.xDelta = -settings.itemActionWidth;
+                } else {
+                    touchDelta.xDelta = settings.itemActionWidth;
+                }
+            } else {
+                touchDelta.xDelta = 0;
+            }
+            return touchDelta;
+        }
+
         return this.each(function () {
             var $listItem = $(this);
+            $listItem.off('touchstart touchmove touchend', settings.itemSelector);
             $listItem.on('touchstart', settings.itemSelector, function (ev) {
-                    var $item = $(this);
-                    $item.stop();
-                    if (settings.closeOnOpen) {
-                        $listItem.find(settings.itemSelector).not($item).animate({
-                            left: '0px'
-                        }, settings.snapDuration);
-                    }
-                    var touch = getTouchPosition(ev);
-                    var rawStartLeft = $item.css('left');
-                    var data = {
-                        touchStart: touch,
-                        startLeft: rawStartLeft === 'auto' ? 0 : parseInt(rawStartLeft),
-                        initialXDeltaReached: false,
-                        maxYDeltaReached: false
-                    };
-                    $item.data('listSwipe', data);
-                }).on('touchmove', settings.itemSelector, function (ev) {
-                    var $item = $(this);
-                    var data = $item.data('listSwipe');
-                    var touch = getTouchPosition(ev);
+                var $item = $(this);
+                $item.stop();
+                if (settings.closeOnOpen) {
+                    $listItem.find(settings.itemSelector).not($item).animate({
+                        left: '0px'
+                    }, settings.snapDuration);
+                }
+                var touch = getTouchPosition(ev);
+                var rawStartLeft = $item.css('left');
+                var data = {
+                    touchStart: touch,
+                    startLeft: rawStartLeft === 'auto' ? 0 : parseInt(rawStartLeft),
+                    initialXDeltaReached: false,
+                    maxYDeltaReached: false
+                };
+                $item.data('listSwipe', data);
+            }).on('touchmove', settings.itemSelector, function (ev) {
+                var $item = $(this);
+                var data = $item.data('listSwipe');
+                var touch = getTouchPosition(ev);
 
-                    if (data.maxYDeltaReached) {
-                        return;
-                    }
-                    var touchDelta = getTouchDelta(touch, data, settings);
-                    if (!data.maxYDeltaReached && Math.abs(touchDelta.yDelta) > settings.maxYDelta) {
-                        data.maxYDeltaReached = true;
-                        $item.animate({ left: '0px' }, settings.snapDuration);
-                    } else if (!data.initialXDeltaReached && Math.abs(touchDelta.xDelta) > settings.initialXDelta) {
-                        data.initialXDeltaReached = true;
-                        $item.css('left', touchDelta.xDelta + 'px');
-                    } else if (data.initialXDeltaReached) {
-                        $item.css('left', touchDelta.xDelta + 'px');
-                    }
-                    $item.data('listSwipe', data);
-                }).on('touchend', settings.itemSelector, function (ev) {
-                    var $item = $(this);
-                    var data = $item.data('listSwipe');
-                    var touch = getTouchPosition(ev);
+                if (data.maxYDeltaReached) {
+                    return;
+                }
+                var touchDelta = getTouchDelta(touch, data, settings);
+                if (!data.maxYDeltaReached && Math.abs(touchDelta.yDelta) > settings.maxYDelta) {
+                    data.maxYDeltaReached = true;
+                    $item.animate({ left: '0px' }, settings.snapDuration);
+                } else if (!data.initialXDeltaReached && Math.abs(touchDelta.xDelta) > settings.initialXDelta) {
+                    data.initialXDeltaReached = true;
+                    $item.css('left', touchDelta.xDelta + 'px');
+                } else if (data.initialXDeltaReached) {
+                    $item.css('left', touchDelta.xDelta + 'px');
+                }
+                $item.data('listSwipe', data);
 
-                    if (data.maxYDeltaReached) {
-                        return;
-                    }
-                    var touchDelta = getTouchDelta(touch, data, settings);
-                    var xThreshold = Math.abs(touchDelta.xDelta) / settings.itemActionWidth;
-                    if (xThreshold >= settings.snapThreshold) {
-                        if (touchDelta.xDelta < 0) {
-                            touchDelta.xDelta = -settings.itemActionWidth;
-                        } else {
-                            touchDelta.xDelta = settings.itemActionWidth;
-                        }
-                    } else {
-                        touchDelta.xDelta = 0;
-                    }
-                    $item.animate({ left: touchDelta.xDelta + 'px' }, settings.snapDuration);
-                    if (touchDelta.xDelta > 0 && settings.onRightSwipe) {
-                        settings.onRightSwipe(ev);
-                    }
-                    if (touchDelta.xDelta < 0 && settings.onLeftSwipe) {
-                        settings.onLeftSwipe(ev);
-                    }
-                });
+                var touchDelta = calculateTouchDelta(touch, data, settings);
+                if (settings.onElementMoving) {
+                    var action = touchDelta.xDelta > 0 ? 'right' : touchDelta.xDelta < 0 ? 'left' : false;
+                    settings.onElementMoving(ev, action, touchDelta.xDelta);
+                }
+            }).on('touchend', settings.itemSelector, function (ev) {
+                var $item = $(this);
+                var data = $item.data('listSwipe');
+                var touch = getTouchPosition(ev);
+
+                if (data.maxYDeltaReached) {
+                    return;
+                }
+
+                var touchDelta = calculateTouchDelta(touch, data, settings);
+                $item.animate({ left: touchDelta.xDelta + 'px' }, settings.snapDuration);
+
+                if (touchDelta.xDelta > 0 && settings.onRightSwipe) {
+                    settings.onRightSwipe(ev);
+                }
+                if (touchDelta.xDelta < 0 && settings.onLeftSwipe) {
+                    settings.onLeftSwipe(ev);
+                }
+            });
         });
     }
 })();

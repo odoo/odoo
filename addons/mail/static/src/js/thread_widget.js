@@ -4,6 +4,7 @@ odoo.define('mail.widget.Thread', function (require) {
 var DocumentViewer = require('mail.DocumentViewer');
 var mailUtils = require('mail.utils');
 
+var config = require('web.config');
 var core = require('web.core');
 var time = require('web.time');
 var Widget = require('web.Widget');
@@ -27,7 +28,7 @@ var READ_LESS = _lt("read less");
  */
 var ThreadWidget = Widget.extend({
     className: 'o_mail_thread',
-
+    jsLibs: [],
     events: {
         'click a': '_onClickRedirect',
         'click img': '_onClickRedirect',
@@ -69,6 +70,7 @@ var ThreadWidget = Widget.extend({
             displayReplyIcons: false,
             loadMoreOnScroll: false,
         });
+
         // options when the thread is disabled
         this._disabledOptions = {
             displayOrder: this._enabledOptions.displayOrder,
@@ -88,6 +90,11 @@ var ThreadWidget = Widget.extend({
         this._messageSeenPopover = null;
         // used to track popover IDs to destroy on re-rendering of popovers
         this._openedSeenPopoverIDs = [];
+
+        // JS Dependancy for allowing swipe actions for read and star
+        if (config.device.isMobile) {
+            this.jsLibs.push("/mail/static/src/lib/jquery.listswipe/jquery.listswipe.js");
+        }
     },
     /**
      * The message mail popover may still be shown at this moment. If we do not
@@ -139,6 +146,13 @@ var ThreadWidget = Widget.extend({
         this.attachments = _.uniq(_.flatten(_.map(messages, function (message) {
             return message.getAttachments();
         })));
+
+        // In mobile we use swipe to mark read and mark as star
+        if (config.device.isMobile) {
+            options = _.extend(options, {
+                displayMarkAsRead: false,
+            });
+        }
 
         options = _.extend({}, modeOptions, options, {
             selectedMessageID: this._selectedMessageID,
@@ -193,6 +207,7 @@ var ThreadWidget = Widget.extend({
             options: options,
             ORDER: ORDER,
             dateFormat: time.getLangDatetimeFormat(),
+            isMobile: config.device.isMobile
         }));
 
         _.each(messages, function (message) {
@@ -215,6 +230,38 @@ var ThreadWidget = Widget.extend({
         this._renderMessageMailPopover(messages);
         if (thread.hasSeenFeature()) {
             this._renderMessageSeenPopover(thread, messages);
+        }
+
+        if (config.device.isMobile) {
+            this.$el.listSwipe({
+                itemSelector: '.o_thread_message_mobile',
+                onElementMoving: function (ev, action) {
+                    $(ev.currentTarget).find(".swipe-action[data-key='read']").toggleClass("bg-success", action == "right");
+                    $(ev.currentTarget).find(".swipe-action[data-key='star']").toggleClass("bg-warning", action == "left");
+                },
+                onRightSwipe: function (ev) {
+                    var icon = $(ev.currentTarget).find("i.fa");
+                    icon.addClass("waggle");
+                    setTimeout(function() {
+                        $(ev.currentTarget).find(".swipe-action").removeClass("bg-success");
+                        icon.removeClass("waggle");
+                        $(ev.currentTarget).animate({ left: '0px' }, 200);
+                        var messageID = $(ev.currentTarget).find(".o_thread_message").data("message-id");
+                        self.trigger('mark_as_read', messageID);
+                    }, 700);
+                },
+                onLeftSwipe: function (ev) {
+                    var icon = $(ev.currentTarget).find("i.fa");
+                    icon.addClass("waggle");
+                    setTimeout(function() {
+                        $(ev.currentTarget).find(".swipe-action").removeClass("bg-warning");
+                        icon.removeClass("waggle");
+                        $(ev.currentTarget).animate({ left: '0px' }, 200);
+                        var messageID = $(ev.currentTarget).find(".o_thread_message").data("message-id");
+                        self.trigger('toggle_star_status', messageID);
+                    }, 700);
+                }
+            });
         }
     },
 

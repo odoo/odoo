@@ -230,8 +230,14 @@
                 </span>
                 <t t-set="current_day" t-value="message.getDateDay()"/>
             </div>
-
-            <t t-call="mail.widget.Thread.Message"/>
+            <div t-if="isMobile" class="o_thread_message_mobile list_swipe_actions">
+                <button class="swipe-action left" data-key="read"><i class="fa fa-check fa-2x text-white"/></button>
+                <t t-call="mail.widget.Thread.Message"/>
+                <button class="swipe-action right" data-key="star"><i class="fa fa-star fa-2x text-white"/></button>
+            </div>
+            <t t-else="">
+                <t t-call="mail.widget.Thread.Message"/>
+            </t>
         </t>
     </t>
 

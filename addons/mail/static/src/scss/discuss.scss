@@ -289,8 +289,8 @@
         .o_mail_discuss_content {
             flex: 1 1 auto;
             min-height: 0;
-            margin-left: 10px;
-            margin-right: 10px;
+            margin-left: 0px;
+            margin-right: 0px;
             background-color: transparent;
         }
 
@@ -482,6 +482,33 @@
 
             &.active > span {
                 color: $o-brand-primary;
+            }
+        }
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .list_swipe_actions {
+        position: relative;
+        button.swipe-action {
+            position: absolute;
+            width: 80px;
+            height: 100%;
+            top: 0;
+            border: none;
+            outline: none;
+            -webkit-transition: background 1s; /* For Safari 3.0 to 6.0 */
+            transition: background 1s; /* For modern browsers */
+
+            &.left {
+                left: -80px;
+            }
+            &.right {
+                right: -80px;
+            }
+
+            .waggle {
+                animation: waggle 1s 0s forwards ease-out;
             }
         }
     }

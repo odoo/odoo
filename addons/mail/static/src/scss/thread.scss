@@ -316,3 +316,17 @@
         left: 0px;
     }
 }
+
+
+// ------------------------------------------------------------------
+// Mobile
+// ------------------------------------------------------------------
+@include media-breakpoint-down(sm) {
+    .o_mail_thread {
+        overflow-x: hidden !important;
+        .o_thread_message_mobile { 
+            border-bottom: 1px solid #ebebeb;
+            position: relative;
+        }
+    }
+}

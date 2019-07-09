@@ -19,6 +19,7 @@ var QWeb = core.qweb;
 var MessagingMenu = Widget.extend({
     name: 'messaging_menu',
     template:'mail.systray.MessagingMenu',
+    jsLibs: [],
     events: {
         'click .o_mail_preview': '_onClickPreview',
         'click .o_filter_button': '_onClickFilterButton',
@@ -33,7 +34,6 @@ var MessagingMenu = Widget.extend({
     init: function () {
         this._super.apply(this, arguments);
         if (this.isMobile()) {
-            this.jsLibs = this.jsLibs || [];
             this.jsLibs.push("/mail/static/src/lib/jquery.listswipe/jquery.listswipe.js");
         }
     },
@@ -196,14 +196,18 @@ var MessagingMenu = Widget.extend({
             this._$previews.listSwipe({
                 itemSelector: '.o_mail_preview_mobile',
                 rightAction: false,
+                onElementMoving: function (ev, action) {
+                    $(ev.currentTarget).find(".swipe-action").toggleClass("bg-success", action == "right");
+                },
                 onRightSwipe: function (ev) {
                     var icon = $(ev.currentTarget).find("i.fa");
                     icon.addClass("waggle");
                     setTimeout(function() {
+                        $(ev.currentTarget).find(".swipe-action").removeClass("bg-success");
                         icon.removeClass("waggle");
                         $(ev.currentTarget).animate({ left: '0px' }, 200);
                         self._processPreviewMarkAsRead($(ev.currentTarget).find(".o_mail_preview"));
-                    }, 1000);
+                    }, 700);
                 }
             });
         }
