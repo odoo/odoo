@@ -733,17 +733,15 @@ class WebsiteSlides(WebsiteProfile):
 
         rank_progress = {}
         if not user_bad_answers:
+            rank_progress['previous_rank'] = self._get_rank_values(request.env.user)
             slide._action_set_quiz_done()
             slide.action_set_completed()
-            lower_bound = request.env.user.rank_id.karma_min
-            upper_bound = request.env.user.next_rank_id.karma_min
-            rank_progress = {
-                'lowerBound': lower_bound,
-                'upperBound': upper_bound,
-                'currentKarma': request.env.user.karma,
-                'motivational': request.env.user.next_rank_id.description_motivational,
-                'progress': 100 * ((request.env.user.karma - lower_bound) / (upper_bound - lower_bound))
-            }
+            rank_progress['new_rank'] = self._get_rank_values(request.env.user)
+            rank_progress.update({
+                'description': request.env.user.rank_id.description,
+                'last_rank': not request.env.user._get_next_rank(),
+                'level_up': rank_progress['previous_rank']['lower_bound'] != rank_progress['new_rank']['lower_bound']
+            })
         return {
             'goodAnswers': user_good_answers.ids,
             'badAnswers': user_bad_answers.ids,
@@ -753,6 +751,21 @@ class WebsiteSlides(WebsiteProfile):
             'quizKarmaGain': quiz_info['quiz_karma_gain'],
             'quizAttemptsCount': quiz_info['quiz_attempts_count'],
             'rankProgress': rank_progress,
+        }
+
+    def _get_rank_values(self, user):
+        lower_bound = user.rank_id.karma_min or 0
+        next_rank = user._get_next_rank()
+        upper_bound = next_rank.karma_min
+        progress = 100
+        if next_rank and (upper_bound - lower_bound) != 0:
+            progress = 100 * ((user.karma - lower_bound) / (upper_bound - lower_bound))
+        return {
+            'lower_bound': lower_bound,
+            'upper_bound': upper_bound,
+            'karma': user.karma,
+            'motivational': next_rank.description_motivational,
+            'progress': progress
         }
 
     # --------------------------------------------------
