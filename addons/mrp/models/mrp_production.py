@@ -694,15 +694,14 @@ class MrpProduction(models.Model):
                 raise UserError(_('Work order %s is still running') % wo.name)
         self._check_lots()
 
-        # Cancel unfinished move
-        move_to_cancel = self.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel') and float_is_zero(m.quantity_done, precision_rounding=m.product_uom.rounding))
-        move_to_cancel._action_cancel()
-
         self.post_inventory()
         # Moves without quantity done are not posted => set them as done instead of canceling. In
         # case the user edits the MO later on and sets some consumed quantity on those, we do not
         # want the move lines to be canceled.
-        (self.move_raw_ids | self.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel')).write({'state': 'done'})
+        (self.move_raw_ids | self.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel')).write({
+            'state': 'done',
+            'product_uom_qty': 0.0,
+        })
         self.write({'state': 'done', 'date_finished': fields.Datetime.now()})
         return self.write({'state': 'done'})
 
