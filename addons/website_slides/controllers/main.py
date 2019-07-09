@@ -711,7 +711,7 @@ class WebsiteSlides(WebsiteProfile):
                 'lowerBound': lower_bound,
                 'upperBound': upper_bound,
                 'currentKarma': request.env.user.karma,
-                'motivational': request.env.user.next_rank_id.description_motivational,
+                'motivational': request.env.user.rank_id.description_motivational,
                 'progress': 100 * ((request.env.user.karma - lower_bound) / (upper_bound - lower_bound))
             }
         return {
