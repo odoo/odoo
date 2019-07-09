@@ -33,6 +33,7 @@ class RegistrationEditor(models.TransientModel):
                     'name': reg.name,
                     'email': reg.email,
                     'phone': reg.phone,
+                    'mobile': reg.mobile,
                     'sale_order_line_id': so_line.id,
                 })
             for count in range(int(so_line.product_uom_qty) - len(existing_registrations)):
@@ -71,6 +72,7 @@ class RegistrationEditorLine(models.TransientModel):
     event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket')
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone')
+    mobile = fields.Char(string='Mobile')
     name = fields.Char(string='Name', index=True)
 
     def get_registration_data(self):
@@ -81,6 +83,7 @@ class RegistrationEditorLine(models.TransientModel):
             'partner_id': self.editor_id.sale_order_id.partner_id.id,
             'name': self.name or self.editor_id.sale_order_id.partner_id.name,
             'phone': self.phone or self.editor_id.sale_order_id.partner_id.phone,
+            'mobile': self.mobile or self.editor_id.sale_order_id.partner_id.mobile,
             'email': self.email or self.editor_id.sale_order_id.partner_id.email,
             'origin': self.editor_id.sale_order_id.name,
             'sale_order_id': self.editor_id.sale_order_id.id,
