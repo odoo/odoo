@@ -3742,7 +3742,7 @@ Fields:
                 # DLE P123: `test_adv_activity`, `test_message_assignation_inbox`, `test_message_log`, `test_create_mail_simple`, ...
                 # Set `mail.message.parent_id` to False in cache so it doesn't do the useless SELECT when computing the modified of `child_ids`
                 # in other words, if `parent_id` is not set, no other message `child_ids` are impacted.
-                elif field.type == 'many2one' and field.name not in list(vals) + LOG_ACCESS_COLUMNS + [self.CONCURRENCY_CHECK_FIELD]:
+                elif field.type == 'many2one' and not field.compute and field.name not in list(vals) + LOG_ACCESS_COLUMNS + [self.CONCURRENCY_CHECK_FIELD]:
                     self.env.cache.set(record, field, ())
             for fname, value in vals.items():
                 field = self._fields[fname]

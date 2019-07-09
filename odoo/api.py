@@ -893,15 +893,22 @@ class Cache(object):
             for record in records:
                 try:
                     cached = field_dump[record.id]
-                    cached = cached.get() if isinstance(cached, SpecialValue) else cached
                     if field.depends_context:
-                        key = self._get_context_key(env, field)
-                        cached = cached[key]
-                    value = field.convert_to_record(cached, record)
-                    fetched = record[field.name]
-                    if fetched != value:
-                        info = {'cached': value, 'fetched': fetched}
-                        invalids.append((record, field, info))
+                        for context_keys, value in cached.items():
+                            context = dict(zip(field.depends_context, context_keys))
+                            value = field.convert_to_record(value, record)
+                            fetched = record.with_context(context)[field.name]
+                            if fetched != value:
+                                info = {'cached': value, 'fetched': fetched}
+                                invalids.append((record, field, info))
+                    else:
+                        cached = field_dump[record.id]
+                        cached = cached.get() if isinstance(cached, SpecialValue) else cached
+                        fetched = record[field.name]
+                        value = field.convert_to_record(cached, record)
+                        if fetched != value:
+                            info = {'cached': value, 'fetched': fetched}
+                            invalids.append((record, field, info))
                 except (AccessError, MissingError):
                     pass
 
