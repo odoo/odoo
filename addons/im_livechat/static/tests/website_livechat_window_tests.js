@@ -1,12 +1,12 @@
-odoo.define('mail.websiteLivechatWindowTests', function (require) {
+odoo.define('im_livechat.websiteLivechatWindowTest', function (require) {
 "use strict";
 
-var Livechat = require('im_livechat.model.WebsiteLivechat');
-var Message = require('im_livechat.model.WebsiteLivechatMessage');
-var ChatWindow = require('im_livechat.WebsiteLivechatWindow');
+const ChatWindow = require('im_livechat.WebsiteLivechatWindow');
+const Livechat = require('im_livechat.model.WebsiteLivechat');
+const Message = require('im_livechat.model.WebsiteLivechatMessage');
 
-var testUtils = require('web.test_utils');
-var Widget = require('web.Widget');
+const testUtils = require('web.test_utils');
+const Widget = require('web.Widget');
 
 /**
  * Important: the rendering of the website livechat window is not exactly the
@@ -56,6 +56,56 @@ QUnit.test('basic rendering', async function (assert) {
         "should display the correct livechat name and unread message counter");
     assert.containsN(chatWindow, '.o_thread_message', 2,
         "should display two messages");
+
+    parent.destroy();
+});
+
+QUnit.module('LiveChat Tests', {});
+
+QUnit.test('define several livechat colors', async function (assert) {
+    assert.expect(2);
+
+    const parent = new Widget();
+    const livechat = new Livechat({
+        parent,
+        data: {
+            id: 5,
+            message_unread_counter: 2,
+            name: "myLivechat",
+            operator_pid: [1, "YourOperator"],
+        }
+    });
+    livechat.setMessages([
+        new Message(parent, {
+            id: 1,
+            body: "<p>test1</p>"
+        }, {
+            default_username: "defaultUser",
+            serverUrl: "serverUrl",
+        }),
+        new Message(parent, {
+            id: 2,
+            body: "<p>test2</p>"
+        }, {
+            default_username: "defaultUser",
+            serverUrl: "serverUrl",
+        }),
+    ]);
+    const chatWindow = new ChatWindow(parent, livechat, {
+        headerBackgroundColor: 'yellow',
+        titleColor: 'green',
+    });
+    testUtils.mock.addMockEnvironment(parent, {});
+    await chatWindow.appendTo($('#qunit-fixture'));
+    chatWindow.render();
+    assert.strictEqual(
+        chatWindow.$('.o_thread_window_header').css('background-color'),
+        'rgb(255, 255, 0)',
+        "header background color should be yellow");
+    assert.strictEqual(
+        chatWindow.$('.o_thread_window_header').css('color'),
+        'rgb(0, 128, 0)',
+        "header text color should be green");
 
     parent.destroy();
 });

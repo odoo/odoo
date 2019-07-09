@@ -72,90 +72,110 @@
             <field name="name">im_livechat.channel.form</field>
             <field name="model">im_livechat.channel</field>
             <field name="arch" type="xml">
-                <form>
+                <form js_class="im_livechat_channel_form_view_js">
                     <header>
                         <button type="object" name="action_join" class="oe_highlight" string="Join Channel" attrs='{"invisible": [["are_you_inside", "=", True]]}'/>
                         <button type="object" name="action_quit" string="Leave Channel" attrs='{"invisible": [["are_you_inside", "=", False]]}'/>
                         <field name="are_you_inside" invisible="1"/>
                     </header>
-                <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" type="action" attrs="{'invisible':[('nbr_channel','=', 0)]}" name="%(mail_channel_action_from_livechat_channel)d" icon="fa-comments">
-                            <field string="Sessions" name="nbr_channel" widget="statinfo"/>
-                        </button>
-                        <button name="action_view_rating" attrs="{'invisible':[('rating_percentage_satisfaction','=', -1)]}" class="oe_stat_button" type="object" icon="fa-smile-o">
-                            <field string="% Happy" name="rating_percentage_satisfaction" widget="statinfo"/>
-                        </button>
-                    </div>
-                    <field name="image_128" widget="image" class="oe_avatar"/>
-                    <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="name" placeholder="e.g. YourWebsite.com"/>
-                        </h1>
-                    </div>
-                    <notebook>
-                        <page string="Operators">
-                            <group>
-                                <field name="user_ids" nolabel="1" colspan="2">
-                                    <kanban>
-                                        <field name="id"/>
-                                        <field name="name"/>
-                                        <templates>
-                                            <t t-name="kanban-box">
-                                                <div class="oe_kanban_global_click">
-                                                    <div class="o_kanban_image">
-                                                        <img t-att-src="kanban_image('res.users', 'image_1024', record.id.raw_value)" alt="User"/>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="action" attrs="{'invisible':[('nbr_channel','=', 0)]}" name="%(mail_channel_action_from_livechat_channel)d" icon="fa-comments">
+                                <field string="Sessions" name="nbr_channel" widget="statinfo"/>
+                            </button>
+                            <button name="action_view_rating" attrs="{'invisible':[('rating_percentage_satisfaction','=', -1)]}" class="oe_stat_button" type="object" icon="fa-smile-o">
+                                <field string="% Happy" name="rating_percentage_satisfaction" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <field name="image_128" widget="image" class="oe_avatar"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. YourWebsite.com"/>
+                            </h1>
+                        </div>
+                        <notebook>
+                            <page string="Operators">
+                                <group>
+                                    <field name="user_ids" nolabel="1" colspan="2">
+                                        <kanban>
+                                            <field name="id"/>
+                                            <field name="name"/>
+                                            <templates>
+                                                <t t-name="kanban-box">
+                                                    <div class="oe_kanban_global_click">
+                                                        <div class="o_kanban_image">
+                                                            <img t-att-src="kanban_image('res.users', 'image_1024', record.id.raw_value)" alt="User"/>
+                                                        </div>
+                                                        <div class="o_kanban_details">
+                                                            <h4 class="o_kanban_record_title"><field name="name"/></h4>
+                                                        </div>
                                                     </div>
-                                                    <div class="o_kanban_details">
-                                                        <h4 class="o_kanban_record_title"><field name="name"/></h4>
-                                                    </div>
-                                                </div>
-                                            </t>
-                                        </templates>
-                                    </kanban>
-                                </field>
-                                <p class="text-muted" style="padding-left: 8px">
-                                    Operators that do not show any activity In Odoo for more than 30 minutes will be considered as disconnected.
-                                </p>
-                            </group>
-                        </page>
-                        <page string="Options">
-                            <group>
-                                <field name="button_text"/>
-                                <field name="default_message" placeholder="e.g. Hello, how may I help you?"/>
-                                <field name="input_placeholder"/>
-                            </group>
-                        </page>
-                        <page string="Channel Rules">
-                            <span class="text-muted">Define rules for your live support channel. You can apply an action for the given URL, and per country.<br />To identify the country, GeoIP must be installed on your server, otherwise, the countries of the rule will not be taken into account.</span>
-                            <group>
-                                <field name="rule_ids" nolabel="1"/>
-                            </group>
-                        </page>
-                        <page string="Widget">
-                            <group attrs='{"invisible": [["web_page", "!=", False]]}'>
-                                <div class="alert alert-warning mt4 mb16" role="alert">
-                                Save your Channel to get your configuration widget.
-                                </div>
-                            </group>
-                            <group>
-                                <div attrs='{"invisible": [["web_page", "=", False]]}'>
-                                    <separator string="How to use the Website Live Chat widget?"/>
-                                    <p>
-                                        Copy and paste this code into your website, within the &lt;head&gt; tag:
+                                                </t>
+                                            </templates>
+                                        </kanban>
+                                    </field>
+                                    <p class="text-muted" style="padding-left: 8px">
+                                        Operators that do not show any activity In Odoo for more than 30 minutes will be considered as disconnected.
                                     </p>
-                                    <field name="script_external" readonly="1" widget="CopyClipboardText"/>
-                                    <p>
-                                        or copy this url and send it by email to your customers or suppliers:
-                                    </p>
-                                    <field name="web_page" readonly="1" widget="CopyClipboardChar"/>
-                                    <p>For websites built with the Odoo CMS, go to Website > Configuration > Settings and select the Website Live Chat Channel you want to add on your website.</p>
-                                </div>
-                            </group>
-                        </page>
-                    </notebook>
-                </sheet>
+                                </group>
+                            </page>
+                            <page string="Options">
+                                <group>
+                                    <group string="Livechat Button">
+                                        <field name="button_text"/>
+                                        <label for="button_background_color" string="Livechat Button Color" />
+                                        <div class="o_livechat_layout_colors">
+                                            <field name="button_background_color" widget="color" class="mb-4 o_im_livechat_field_widget_color"/>
+                                            <field name="button_text_color" widget="color" class="mb-4 o_im_livechat_field_widget_color"/>
+                                            <button class="btn btn-link oe_edit_only o_im_livechat_channel_form_button_colors_reset_button" aria-label="Reset to default colors" title="Reset to default colors">
+                                                <span class="fa fa-refresh mb-4"/>
+                                            </button>
+                                        </div>
+                                    </group>
+                                    <group string="Livechat Window">
+                                        <field name="default_message" placeholder="e.g. Hello, how may I help you?"/>
+                                        <field name="input_placeholder"/>
+                                        <label for="header_background_color" string="Channel Header Color" />
+                                        <div class="o_livechat_layout_colors">
+                                            <field name="header_background_color" widget="color" class="mb-4 o_im_livechat_field_widget_color"/>
+                                            <field name="title_color" widget="color" class="mb-4 o_im_livechat_field_widget_color"/>
+                                            <button class="btn btn-link oe_edit_only o_im_livechat_channel_form_chat_window_colors_reset_button" aria-label="Reset to default colors" title="Reset to default colors">
+                                                <span class="fa fa-refresh mb-4"/>
+                                            </button>
+                                        </div>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Channel Rules">
+                                <span class="text-muted">Define rules for your live support channel. You can apply an action for the given URL, and per country.<br />To identify the country, GeoIP must be installed on your server, otherwise, the countries of the rule will not be taken into account.</span>
+                                <group>
+                                    <field name="rule_ids" nolabel="1"/>
+                                </group>
+                            </page>
+                            <page string="Widget">
+                                <group attrs='{"invisible": [["web_page", "!=", False]]}'>
+                                    <div class="alert alert-warning mt4 mb16" role="alert">
+                                    Save your Channel to get your configuration widget.
+                                    </div>
+                                </group>
+                                <group>
+                                    <div attrs='{"invisible": [["web_page", "=", False]]}'>
+                                        <separator string="How to use the Website Live Chat widget?"/>
+                                        <p>
+                                            Copy and paste this code into your website, within the &lt;head&gt; tag:
+                                        </p>
+                                        <field name="script_external" readonly="1" widget="CopyClipboardText"/>
+                                        <p>
+                                            or copy this url and send it by email to your customers or suppliers:
+                                        </p>
+                                        <field name="web_page" readonly="1" widget="CopyClipboardChar"/>
+                                        <p>For websites built with the Odoo CMS, go to Website > Configuration > Settings and select the Website Live Chat Channel you want to add on your website.</p>
+                                    </div>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
