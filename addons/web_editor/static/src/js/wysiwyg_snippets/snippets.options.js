@@ -647,6 +647,9 @@ registry.sizing_y = registry.sizing.extend({
  */
 registry.colorpicker = SnippetOption.extend({
     xmlDependencies: ['/web_editor/static/src/xml/snippets.xml'],
+    custom_events: _.extend({}, SnippetOption.prototype.custom_events || {}, {
+        'colorpicker:saved': '_onColorPickerSave',
+    }),
     events: _.extend({}, SnippetOption.prototype.events || {}, {
         'click .colorpicker button': '_onColorButtonClick',
         'mouseenter .colorpicker button': '_onColorButtonEnter',
@@ -673,14 +676,13 @@ registry.colorpicker = SnippetOption.extend({
                     editable: $('<div/>'),
                     editingArea: $('<div/>'),
                 },
-                options: {},
+                options: {
+                    parent: this,
+                },
             });
 
-            var $clpicker = fontPlugin.createPalette('backColor').find('.note-color-palette'); // don't use custom color
+            var $clpicker = fontPlugin.createPalette('backColor');
             $clpicker.find('.note-color-reset').remove();
-            $clpicker.find('h6').each(function () {
-                $(this).replaceWith($('<div class="mt8"/>').text($(this).text()));
-            });
 
             // Retrieve excluded palettes list
             var excluded = [];
@@ -781,6 +783,16 @@ registry.colorpicker = SnippetOption.extend({
             }
         }
         this.$target.trigger('background-color-event', 'reset');
+    },
+    /**
+     * Called when user chooses a custom color from the color picker dialog
+     *
+     * @param {Event} event
+     */
+    _onColorPickerSave: function (event) {
+        // At this point, a button for the chosen color should have been created, so let's just find it, hover it and click it
+        var $button = this.$el.find(_.str.sprintf("button[data-value='%s']", event.data.cssColor));
+        $button.mouseenter().click();
     },
     /**
      * Called when the color reset button is clicked -> remove all background
