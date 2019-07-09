@@ -2980,8 +2980,8 @@ QUnit.module('relational_fields', {
         // Open many2one modal
         form.$buttons.find('.btn.o_form_button_edit').click();
         form.$('.o_external_button').click();
-        var $originalModal = $('.modal-dialog');
-        var $focusedModal = $(document.activeElement).closest('.modal-dialog');
+        var $originalModal = $('.modal');
+        var $focusedModal = $(document.activeElement).closest('.modal');
 
         assert.equal($originalModal.length, 1, 'There should be one modal');
         assert.equal($originalModal[0], $focusedModal[0], 'Modal is focused');
@@ -2989,8 +2989,8 @@ QUnit.module('relational_fields', {
 
         // Open many2one modal of field in many2one modal
         $originalModal.find('.o_external_button').click();
-        var $modals = $('.modal-dialog');
-        $focusedModal = $(document.activeElement).closest('.modal-dialog');
+        var $modals = $('.modal');
+        $focusedModal = $(document.activeElement).closest('.modal');
 
         assert.equal($modals.length, 2, 'There should be two modals');
         assert.equal($modals[1], $focusedModal[0], 'Last modal is focused');
@@ -2998,8 +2998,8 @@ QUnit.module('relational_fields', {
 
         // Close second modal
         $modals.last().find('button[class="close"]').click();
-        var $modal = $('.modal-dialog');
-        $focusedModal = $(document.activeElement).closest('.modal-dialog');
+        var $modal = $('.modal');
+        $focusedModal = $(document.activeElement).closest('.modal');
 
         assert.equal($modal.length, 1, 'There should be one modal');
         assert.equal($modal[0], $originalModal[0], 'First modal is still opened');
