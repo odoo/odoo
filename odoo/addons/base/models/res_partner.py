@@ -442,8 +442,6 @@ class Partner(models.Model):
             field = self._fields[fname]
             if field.type == 'many2one':
                 values[fname] = self[fname].id
-                if fname == 'company_id' and not self[fname].id:
-                    values.pop('company_id')
             elif field.type == 'one2many':
                 raise AssertionError(_('One2Many fields cannot be synchronized as part of `commercial_fields` or `address fields`'))
             elif field.type == 'many2many':
@@ -475,7 +473,7 @@ class Partner(models.Model):
         partners that aren't `commercial entities` themselves, and will be
         delegated to the parent `commercial entity`. The list is meant to be
         extended by inheriting classes. """
-        return ['vat', 'credit_limit', 'company_id']
+        return ['vat', 'credit_limit']
 
     @api.multi
     def _commercial_sync_from_company(self):
@@ -702,7 +700,7 @@ class Partner(models.Model):
             if not name and partner.type in ['invoice', 'delivery', 'other']:
                 name = dict(self.fields_get(['type'])['type']['selection'])[partner.type]
             if not partner.is_company:
-                name = "%s, %s" % (partner.commercial_company_name or partner.parent_id.name, name)
+                name = "%s, %s" % (partner.commercial_company_name or partner.sudo().parent_id.name, name)
         if self._context.get('show_address_only'):
             name = partner._display_address(without_company=True)
         if self._context.get('show_address'):
