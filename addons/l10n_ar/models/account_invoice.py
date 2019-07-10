@@ -101,8 +101,6 @@ class AccountInvoice(models.Model):
                 vat_taxable_ids=vat_taxables,
                 vat_amount=sum(vat_taxes.mapped('amount')),
                 vat_taxable_amount=sum(vat_taxables.mapped('base')),
-                # TODO this one is not used, delete?
-                # vat_base_amount=sum(vat_taxes.mapped('base')),
                 vat_exempt_base_amount=sum(vat_exempt_taxes.mapped('base')),
                 vat_untaxed_base_amount=sum(vat_untaxed_taxes.mapped('base')),
                 not_vat_tax_ids=not_vat_taxes,
