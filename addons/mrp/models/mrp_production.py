@@ -820,8 +820,6 @@ class MrpProduction(models.Model):
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             for move in moves_to_do.filtered(lambda m: m.product_qty == 0.0 and m.quantity_done > 0):
                 move.product_uom_qty = move.quantity_done
-            for move in moves_to_do.filtered(lambda m: float_is_zero(m.quantity_done, precision_rounding=m.product_uom.rounding)):
-                move._action_cancel()
             moves_to_do._action_done()
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state == 'done') - moves_not_to_do
             order._cal_price(moves_to_do)
@@ -848,6 +846,11 @@ class MrpProduction(models.Model):
             if wo.time_ids.filtered(lambda x: (not x.date_end) and (x.loss_type in ('productive', 'performance'))):
                 raise UserError(_('Work order %s is still running') % wo.name)
         self._check_lots()
+
+        # Cancel unfinished move
+        move_to_cancel = self.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel') and float_is_zero(m.quantity_done, precision_rounding=m.product_uom.rounding))
+        move_to_cancel._action_cancel()
+
         self.post_inventory()
         # Moves without quantity done are not posted => set them as done instead of canceling. In
         # case the user edits the MO later on and sets some consumed quantity on those, we do not
