@@ -39,7 +39,6 @@ class Event(models.Model):
                 domain = ['&', '|', ('email', '=', email), ('partner_id', '=', self.env.user.partner_id.id), ('event_id', '=', event.id)]
                 event.is_participating = self.env['event.registration'].search_count(domain)
 
-    @api.multi
     @api.depends('name')
     def _compute_website_url(self):
         super(Event, self)._compute_website_url()
@@ -81,7 +80,6 @@ class Event(models.Model):
         res._toggle_create_website_menus(vals)
         return res
 
-    @api.multi
     def write(self, vals):
         res = super(Event, self).write(vals)
         self._toggle_create_website_menus(vals)
@@ -100,21 +98,18 @@ class Event(models.Model):
         })
         return menu
 
-    @api.multi
     def google_map_img(self, zoom=8, width=298, height=298):
         self.ensure_one()
         if self.address_id:
             return self.sudo().address_id.google_map_img(zoom=zoom, width=width, height=height)
         return None
 
-    @api.multi
     def google_map_link(self, zoom=8):
         self.ensure_one()
         if self.address_id:
             return self.sudo().address_id.google_map_link(zoom=zoom)
         return None
 
-    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'is_published' in init_values and self.is_published:
@@ -123,7 +118,6 @@ class Event(models.Model):
             return self.env.ref('website_event.mt_event_unpublished')
         return super(Event, self)._track_subtype(init_values)
 
-    @api.multi
     def action_open_badge_editor(self):
         """ open the event badge editor : redirect to the report page of event badge report """
         self.ensure_one()

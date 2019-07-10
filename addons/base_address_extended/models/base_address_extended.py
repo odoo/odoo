@@ -42,7 +42,6 @@ class Partner(models.Model):
         Overwrite this function if you want to add your own fields."""
         return STREET_FIELDS
 
-    @api.multi
     def _set_street(self):
         """Updates the street field.
         Writes the `street` field on the partners when one of the sub-fields in STREET_FIELDS
@@ -121,7 +120,6 @@ class Partner(models.Model):
         return vals
 
 
-    @api.multi
     @api.depends('street')
     def _split_street(self):
         """Splits street value into sub-fields.

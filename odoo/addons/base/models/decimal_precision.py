@@ -38,13 +38,11 @@ class DecimalPrecision(models.Model):
         self.clear_caches()
         return res
 
-    @api.multi
     def write(self, data):
         res = super(DecimalPrecision, self).write(data)
         self.clear_caches()
         return res
 
-    @api.multi
     def unlink(self):
         res = super(DecimalPrecision, self).unlink()
         self.clear_caches()

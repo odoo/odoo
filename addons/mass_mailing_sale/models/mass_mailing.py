@@ -33,14 +33,12 @@ class MassMailing(models.Model):
             else:
                 mass_mailing.sale_invoiced_amount = 0
 
-    @api.multi
     def action_redirect_to_quotations(self):
         action = self.env.ref('sale.action_quotations_with_onboarding').read()[0]
         action['domain'] = self._get_sale_utm_domain()
         action['context'] = {'default_type': 'lead'}
         return action
 
-    @api.multi
     def action_redirect_to_invoiced(self):
         action = self.env.ref('account.view_move_form').read()[0]
         invoices = self.env['sale.order'].search(self._get_sale_utm_domain()).mapped('invoice_ids')

@@ -46,7 +46,6 @@ class Invite(models.TransientModel):
     message = fields.Html('Message')
     send_mail = fields.Boolean('Send Email', default=True, help="If checked, the partners will receive an email warning they have been added in the document's followers.")
 
-    @api.multi
     def add_followers(self):
         email_from = self.env['mail.message']._get_default_from()
         for wizard in self:

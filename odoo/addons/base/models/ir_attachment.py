@@ -461,12 +461,10 @@ class IrAttachment(models.Model):
 
         return len(result) if count else list(result)
 
-    @api.multi
     def read(self, fields=None, load='_classic_read'):
         self.check('read')
         return super(IrAttachment, self).read(fields, load=load)
 
-    @api.multi
     def write(self, vals):
         self.check('write', values=vals)
         # remove computed field depending of datas
@@ -476,12 +474,10 @@ class IrAttachment(models.Model):
             vals = self._check_contents(vals)
         return super(IrAttachment, self).write(vals)
 
-    @api.multi
     def copy(self, default=None):
         self.check('write')
         return super(IrAttachment, self).copy(default)
 
-    @api.multi
     def unlink(self):
         if not self:
             return True
@@ -516,7 +512,6 @@ class IrAttachment(models.Model):
             self.check('write', values={'res_model':res_model, 'res_id':res_id})
         return super(IrAttachment, self).create(vals_list)
 
-    @api.multi
     def _post_add_create(self):
         pass
 

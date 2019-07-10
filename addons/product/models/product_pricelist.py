@@ -39,7 +39,6 @@ class Pricelist(models.Model):
         ('without_discount', 'Show public price & discount to the customer')],
         default='with_discount')
 
-    @api.multi
     def name_get(self):
         return [(pricelist.id, '%s (%s)' % (pricelist.name, pricelist.currency_id.name)) for pricelist in self]
 
@@ -124,7 +123,6 @@ class Pricelist(models.Model):
         item_ids = [x[0] for x in self.env.cr.fetchall()]
         return self.env['product.pricelist.item'].browse(item_ids)
 
-    @api.multi
     def _compute_price_rule(self, products_qty_partner, date=False, uom_id=False):
         """ Low-level method - Mono pricelist, multi products
         Returns: dict{product_id: (price, suitable_rule) for the given pricelist}
@@ -289,17 +287,14 @@ class Pricelist(models.Model):
         self.ensure_one()
         return self._compute_price_rule([(product, quantity, partner)], date=date, uom_id=uom_id)[product.id]
 
-    @api.multi
     def price_get(self, prod_id, qty, partner=None):
         """ Multi pricelist, mono product - returns price per pricelist """
         return {key: price[0] for key, price in self.price_rule_get(prod_id, qty, partner=partner).items()}
 
-    @api.multi
     def price_rule_get_multi(self, products_by_qty_by_partner):
         """ Multi pricelist, multi product  - return tuple """
         return self._compute_price_rule_multi(products_by_qty_by_partner)
 
-    @api.multi
     def price_rule_get(self, prod_id, qty, partner=None):
         """ Multi pricelist, mono product - return tuple """
         product = self.env['product.product'].browse([prod_id])
@@ -515,7 +510,6 @@ class PricelistItem(models.Model):
                 'price_max_margin': 0.0,
             })
 
-    @api.multi
     def write(self, values):
         res = super(PricelistItem, self).write(values)
         # When the pricelist changes we need the product.template price

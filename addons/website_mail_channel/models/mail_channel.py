@@ -13,7 +13,6 @@ from odoo.addons.http_routing.models.ir_http import slug
 class MailGroup(models.Model):
     _inherit = 'mail.channel'
 
-    @api.multi
     def _notify_email_header_dict(self):
         headers = super(MailGroup, self)._notify_email_header_dict()
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
@@ -22,7 +21,6 @@ class MailGroup(models.Model):
         headers['List-Unsubscribe'] = '<%s/groups?unsubscribe>' % (base_url,),
         return headers
 
-    @api.multi
     def _send_confirmation_email(self, partner_ids, unsubscribe=False):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         route = "/groups/%(action)s/%(channel)s/%(partner)s/%(token)s"
@@ -50,7 +48,6 @@ class MailGroup(models.Model):
 
         return True
 
-    @api.multi
     def _generate_action_token(self, partner_id, action='unsubscribe'):
         self.ensure_one()
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')

@@ -23,7 +23,6 @@ class PaymentTransaction(models.Model):
                                       string='Sales Orders', copy=False, readonly=True)
     sale_order_ids_nbr = fields.Integer(compute='_compute_sale_order_ids_nbr', string='# of Sales Orders')
 
-    @api.multi
     def _compute_sale_order_reference(self, order):
         self.ensure_one()
         if self.acquirer_id.so_reference_type == 'so_name':
@@ -38,7 +37,6 @@ class PaymentTransaction(models.Model):
         for trans in self:
             trans.sale_order_ids_nbr = len(trans.sale_order_ids)
 
-    @api.multi
     def _log_payment_transaction_sent(self):
         super(PaymentTransaction, self)._log_payment_transaction_sent()
         for trans in self:
@@ -46,7 +44,6 @@ class PaymentTransaction(models.Model):
             for so in trans.sale_order_ids:
                 so.message_post(body=post_message)
 
-    @api.multi
     def _log_payment_transaction_received(self):
         super(PaymentTransaction, self)._log_payment_transaction_received()
         for trans in self.filtered(lambda t: t.provider not in ('manual', 'transfer')):
@@ -54,7 +51,6 @@ class PaymentTransaction(models.Model):
             for so in trans.sale_order_ids:
                 so.message_post(body=post_message)
 
-    @api.multi
     def _set_transaction_pending(self):
         # Override of '_set_transaction_pending' in the 'payment' module
         # to sent the quotations automatically.
@@ -70,7 +66,6 @@ class PaymentTransaction(models.Model):
             # send order confirmation mail
             sales_orders._send_order_confirmation_mail()
 
-    @api.multi
     def _set_transaction_authorized(self):
         # Override of '_set_transaction_authorized' in the 'payment' module
         # to confirm the quotations automatically.
@@ -83,7 +78,6 @@ class PaymentTransaction(models.Model):
         # send order confirmation mail
         sales_orders._send_order_confirmation_mail()
 
-    @api.multi
     def _reconcile_after_transaction_done(self):
         # Override of '_set_transaction_done' in the 'payment' module
         # to confirm the quotations automatically and to generate the invoices if needed.
@@ -109,7 +103,6 @@ class PaymentTransaction(models.Model):
                         invoice.message_post_with_template(int(default_template), email_layout_xmlid="mail.mail_notification_paynow")
         return res
 
-    @api.multi
     def _invoice_sale_orders(self):
         if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'):
             for trans in self.filtered(lambda t: t.sale_order_ids):
@@ -128,7 +121,6 @@ class PaymentTransaction(models.Model):
             return ','.join(dic['name'] for dic in many_list)
         return prefix
 
-    @api.multi
     def action_view_sales_orders(self):
         action = {
             'name': _('Sales Order(s)'),

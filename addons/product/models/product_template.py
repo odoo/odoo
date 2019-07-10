@@ -155,7 +155,6 @@ class ProductTemplate(models.Model):
         for p in self:
             p.product_variant_id = p.product_variant_ids[:1].id
 
-    @api.multi
     def _compute_currency_id(self):
         main_company = self.env['res.company']._get_main_company()
         for template in self:
@@ -165,13 +164,11 @@ class ProductTemplate(models.Model):
         for template in self:
             template.cost_currency_id = self.env.company.currency_id.id
 
-    @api.multi
     def _compute_template_price(self):
         prices = self._compute_template_price_no_inverse()
         for template in self:
             template.price = prices.get(template.id, 0.0)
 
-    @api.multi
     def _compute_template_price_no_inverse(self):
         """The _compute_template_price writes the 'list_price' field with an inverse method
         This method allows computing the price without writing the 'list_price'
@@ -198,7 +195,6 @@ class ProductTemplate(models.Model):
 
         return prices
 
-    @api.multi
     def _set_template_price(self):
         if self._context.get('uom'):
             for template in self:
@@ -370,7 +366,6 @@ class ProductTemplate(models.Model):
 
         return templates
 
-    @api.multi
     def write(self, vals):
         res = super(ProductTemplate, self).write(vals)
         if 'attribute_line_ids' in vals or vals.get('active'):
@@ -379,7 +374,6 @@ class ProductTemplate(models.Model):
             self.with_context(active_test=False).mapped('product_variant_ids').write({'active': vals.get('active')})
         return res
 
-    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         # TDE FIXME: should probably be copy_data
@@ -390,7 +384,6 @@ class ProductTemplate(models.Model):
             default['name'] = _("%s (copy)") % self.name
         return super(ProductTemplate, self).copy(default=default)
 
-    @api.multi
     def name_get(self):
         # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
         self.read(['name', 'default_code'])
@@ -434,7 +427,6 @@ class ProductTemplate(models.Model):
             '', args=[('id', 'in', list(searched_ids))],
             operator='ilike', limit=limit, name_get_uid=name_get_uid)
 
-    @api.multi
     def price_compute(self, price_type, uom=False, currency=False, company=False):
         # TDE FIXME: delegate to template or not ? fields are reencoded here ...
         # compatibility about context keys used a bit everywhere in the code
@@ -475,7 +467,6 @@ class ProductTemplate(models.Model):
 
         return prices
 
-    @api.multi
     def create_variant_ids(self):
         Product = self.env["product.product"]
 
@@ -562,7 +553,6 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return any(a.create_variant == 'dynamic' for a in self.valid_product_attribute_ids)
 
-    @api.multi
     def _compute_valid_attributes(self):
         """A product template attribute line is considered valid if it has at
         least one possible value.
@@ -594,7 +584,6 @@ class ProductTemplate(models.Model):
             record.valid_product_attribute_ids = record.valid_product_template_attribute_line_ids.mapped('attribute_id')
             record.valid_product_attribute_wnva_ids = record.valid_product_template_attribute_line_wnva_ids.mapped('attribute_id')
 
-    @api.multi
     def _get_possible_variants(self, parent_combination=None):
         """Return the existing variants that are possible.
 
@@ -619,7 +608,6 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return self.product_variant_ids.filtered(lambda p: p._is_variant_possible(parent_combination))
 
-    @api.multi
     def _get_attribute_exclusions(self, parent_combination=None, parent_name=None):
         """Return the list of attribute exclusions of a product.
 
@@ -667,7 +655,6 @@ class ProductTemplate(models.Model):
 
         return result
 
-    @api.multi
     def _get_own_attribute_exclusions(self):
         """Get exclusions coming from the current template.
 
@@ -686,7 +673,6 @@ class ProductTemplate(models.Model):
             for ptav in product_template_attribute_values
         }
 
-    @api.multi
     def _get_parent_attribute_exclusions(self, parent_combination):
         """Get exclusions coming from the parent combination.
 
@@ -712,7 +698,6 @@ class ProductTemplate(models.Model):
 
         return result
 
-    @api.multi
     def _get_mapped_attribute_names(self, parent_combination=None):
         """ The name of every attribute values based on their id,
         used to explain in the interface why that combination is not available
@@ -731,7 +716,6 @@ class ProductTemplate(models.Model):
             for attribute_value in all_product_attribute_values
         }
 
-    @api.multi
     def _is_combination_possible(self, combination, parent_combination=None):
         """
         The combination is possible if it is not excluded by any rule
@@ -801,7 +785,6 @@ class ProductTemplate(models.Model):
 
         return True
 
-    @api.multi
     def _get_variant_for_combination(self, combination):
         """Get the variant matching the combination.
 
@@ -820,7 +803,6 @@ class ProductTemplate(models.Model):
         attribute_values = filtered_combination.mapped('product_attribute_value_id')
         return self.env['product.product'].browse(self._get_variant_id_for_combination(attribute_values))
 
-    @api.multi
     @tools.ormcache('self.id', 'attribute_values')
     def _get_variant_id_for_combination(self, attribute_values):
         """See `_get_variant_for_combination`. This method returns an ID
@@ -842,7 +824,6 @@ class ProductTemplate(models.Model):
             lambda v: v.attribute_value_ids == attribute_values
         )[:1].id
 
-    @api.multi
     @tools.ormcache('self.id')
     def _get_first_possible_variant_id(self):
         """See `_create_first_product_variant`. This method returns an ID
@@ -850,7 +831,6 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return self._create_first_product_variant().id
 
-    @api.multi
     def _get_first_possible_combination(self, parent_combination=None, necessary_values=None):
         """See `_get_possible_combinations` (one iteration).
 
@@ -864,7 +844,6 @@ class ProductTemplate(models.Model):
         """
         return next(self._get_possible_combinations(parent_combination, necessary_values), self.env['product.template.attribute.value'])
 
-    @api.multi
     def _get_possible_combinations(self, parent_combination=None, necessary_values=None):
         """Generator returning combinations that are possible, following the
         sequence of attributes and values.
@@ -913,7 +892,6 @@ class ProductTemplate(models.Model):
 
         return _("There are no remaining possible combination.")
 
-    @api.multi
     def _get_closest_possible_combination(self, combination):
         """See `_get_closest_possible_combinations` (one iteration).
 
@@ -927,7 +905,6 @@ class ProductTemplate(models.Model):
         """
         return next(self._get_closest_possible_combinations(combination), self.env['product.template.attribute.value'])
 
-    @api.multi
     def _get_closest_possible_combinations(self, combination):
         """Generator returning the possible combinations that are the closest to
         the given combination.
@@ -961,7 +938,6 @@ class ProductTemplate(models.Model):
                     return _("There are no possible combination.")
                 combination = combination[:-1]
 
-    @api.multi
     def _get_current_company(self, **kwargs):
         """Get the most appropriate company for this product.
 
@@ -976,7 +952,6 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return self.company_id or self._get_current_company_fallback(**kwargs)
 
-    @api.multi
     def _get_current_company_fallback(self, **kwargs):
         """Fallback to get the most appropriate company for this product.
 

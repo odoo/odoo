@@ -32,7 +32,6 @@ class AccountMove(models.Model):
         if fiscal_position:
             self.fiscal_position_id = fiscal_position
 
-    @api.multi
     def unlink(self):
         downpayment_lines = self.mapped('line_ids.sale_line_ids').filtered(lambda line: line.is_downpayment)
         res = super(AccountMove, self).unlink()
@@ -60,7 +59,6 @@ class AccountMove(models.Model):
         if self.invoice_user_id and self.invoice_user_id.sale_team_id:
             self.team_id = self.invoice_user_id.sale_team_id
 
-    @api.multi
     def _reverse_moves(self, default_values_list=None, cancel=False):
         # OVERRIDE
         if not default_values_list:
@@ -73,7 +71,6 @@ class AccountMove(models.Model):
             })
         return super()._reverse_moves(default_values_list=default_values_list, cancel=cancel)
 
-    @api.multi
     def post(self):
         # OVERRIDE
         # Auto-reconcile the invoice with payments coming from transactions.
@@ -87,7 +84,6 @@ class AccountMove(models.Model):
                 invoice.js_assign_outstanding_line(line.id)
         return res
 
-    @api.multi
     def action_invoice_paid(self):
         # OVERRIDE
         res = super(AccountMove, self).action_invoice_paid()
@@ -100,13 +96,11 @@ class AccountMove(models.Model):
             order.message_post(body=_("Invoice %s paid") % name)
         return res
 
-    @api.multi
     def _get_invoice_delivery_partner_id(self):
         # OVERRIDE
         self.ensure_one()
         return self.partner_shipping_id.id or super(AccountMove, self)._get_invoice_delivery_partner_id()
 
-    @api.multi
     def _get_invoice_intrastat_country_id(self):
         # OVERRIDE
         self.ensure_one()

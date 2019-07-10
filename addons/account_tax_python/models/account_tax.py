@@ -35,7 +35,6 @@ class AccountTaxPython(models.Model):
             return localdict['result']
         return super(AccountTaxPython, self)._compute_amount(base_amount, price_unit, quantity, product, partner)
 
-    @api.multi
     def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, is_refund=False, handle_price_include=True):
         taxes = self.filtered(lambda r: r.amount_type != 'code')
         company = self.env.company

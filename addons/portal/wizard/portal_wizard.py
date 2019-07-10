@@ -53,7 +53,6 @@ class PortalWizard(models.TransientModel):
     user_ids = fields.One2many('portal.wizard.user', 'wizard_id', string='Users',default=_default_user_ids)
     welcome_message = fields.Text('Invitation Message', help="This text is included in the email sent to new users of the portal.")
 
-    @api.multi
     def action_apply(self):
         self.ensure_one()
         self.user_ids.action_apply()
@@ -74,7 +73,6 @@ class PortalWizardUser(models.TransientModel):
     in_portal = fields.Boolean('In Portal')
     user_id = fields.Many2one('res.users', string='Login User')
 
-    @api.multi
     def get_error_messages(self):
         emails = []
         partners_error_empty = self.env['res.partner']
@@ -108,7 +106,6 @@ class PortalWizardUser(models.TransientModel):
                 "- Grant access only to contacts with unique emails"))
         return error_msg
 
-    @api.multi
     def action_apply(self):
         self.env['res.partner'].check_access_rights('write')
         """ From selected partners, add corresponding users to chosen portal group. It either granted
@@ -154,7 +151,6 @@ class PortalWizardUser(models.TransientModel):
                     else:
                         user.write({'groups_id': [(3, group_portal.id)]})
 
-    @api.multi
     def _create_user(self):
         """ create a new user for wizard_user.partner_id
             :returns record of res.users
@@ -168,7 +164,6 @@ class PortalWizardUser(models.TransientModel):
             'company_ids': [(6, 0, [company_id])],
         })
 
-    @api.multi
     def _send_email(self):
         """ send notification email to a new portal user """
         if not self.env.user.email:

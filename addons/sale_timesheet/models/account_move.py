@@ -11,7 +11,6 @@ class AccountMove(models.Model):
     timesheet_ids = fields.One2many('account.analytic.line', 'timesheet_invoice_id', string='Timesheets', readonly=True, copy=False)
     timesheet_count = fields.Integer("Number of timesheets", compute='_compute_timesheet_count')
 
-    @api.multi
     @api.depends('timesheet_ids')
     def _compute_timesheet_count(self):
         timesheet_data = self.env['account.analytic.line'].read_group([('timesheet_invoice_id', 'in', self.ids)], ['timesheet_invoice_id'], ['timesheet_invoice_id'])

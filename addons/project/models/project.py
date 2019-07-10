@@ -48,7 +48,6 @@ class ProjectTaskType(models.Model):
             " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
             " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n")
 
-    @api.multi
     def unlink(self):
         stages = self
         default_project_id = self.env.context.get('default_project_id')
@@ -94,7 +93,6 @@ class Project(models.Model):
         for project in self:
             project.task_count = result.get(project.id, 0)
 
-    @api.multi
     def attachment_tree_view(self):
         self.ensure_one()
         domain = [
@@ -255,7 +253,6 @@ class Project(models.Model):
             'name': task.name,
         }
 
-    @api.multi
     def map_tasks(self, new_project_id):
         """ copy and map tasks from old to new project """
         tasks = self.env['project.task']
@@ -274,7 +271,6 @@ class Project(models.Model):
 
         return self.browse(new_project_id).write({'tasks': [(6, 0, tasks.ids)]})
 
-    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if default is None:
@@ -301,7 +297,6 @@ class Project(models.Model):
             project.message_subscribe(project.partner_id.ids)
         return project
 
-    @api.multi
     def write(self, vals):
         # directly compute is_favorite to dodge allow write access right
         if 'is_favorite' in vals:
@@ -316,7 +311,6 @@ class Project(models.Model):
                 project.message_subscribe(project.partner_id.ids)
         return res
 
-    @api.multi
     def unlink(self):
         # Check project is empty
         for project in self:
@@ -331,7 +325,6 @@ class Project(models.Model):
         analytic_accounts_to_delete.unlink()
         return result
 
-    @api.multi
     def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None):
         """ Subscribe to all existing active tasks when subscribing to a project """
         res = super(Project, self).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids)
@@ -342,7 +335,6 @@ class Project(models.Model):
                 partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=task_subtypes)
         return res
 
-    @api.multi
     def message_unsubscribe(self, partner_ids=None, channel_ids=None):
         """ Unsubscribe from all tasks when unsubscribing from a project """
         self.mapped('tasks').message_unsubscribe(partner_ids=partner_ids, channel_ids=channel_ids)
@@ -352,7 +344,6 @@ class Project(models.Model):
     #  Actions
     # ---------------------------------------------------
 
-    @api.multi
     def toggle_favorite(self):
         favorite_projects = not_fav_projects = self.env['project.project'].sudo()
         for project in self:
@@ -365,7 +356,6 @@ class Project(models.Model):
         not_fav_projects.write({'favorite_user_ids': [(4, self.env.uid)]})
         favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
 
-    @api.multi
     def open_tasks(self):
         ctx = dict(self._context)
         ctx.update({'search_default_project_id': self.id})
@@ -379,7 +369,6 @@ class Project(models.Model):
         action['domain'] = [('account_id', '=', self.analytic_account_id.id)]
         return action
 
-    @api.multi
     def action_view_all_rating(self):
         """ return the action to see all the rating of the project, and activate default filters """
         if self.portal_show_rating:
@@ -411,7 +400,6 @@ class Project(models.Model):
         })
         return analytic_account
 
-    @api.multi
     def _create_analytic_account(self):
         for project in self:
             analytic_account = self.env['account.analytic.account'].create({
@@ -547,7 +535,6 @@ class Task(models.Model):
             message_attachment_ids = task.mapped('message_ids.attachment_ids').ids  # from mail_thread
             task.attachment_ids = list(set(attachment_ids) - set(message_attachment_ids))
 
-    @api.multi
     @api.depends('create_date', 'date_end', 'date_assign')
     def _compute_elapsed(self):
         task_linked_to_calendar = self.filtered(
@@ -631,7 +618,6 @@ class Task(models.Model):
             if task.parent_id and task.child_ids:
                 raise ValidationError(_('Task %s cannot have several subtask levels.' % (task.name,)))
 
-    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if default is None:
@@ -711,7 +697,6 @@ class Task(models.Model):
         task = super(Task, self.with_context(context)).create(vals)
         return task
 
-    @api.multi
     def write(self, vals):
         now = fields.Datetime.now()
         # subtask: force some parent values, if needed
@@ -755,7 +740,6 @@ class Task(models.Model):
         """ Return the list of field name to apply on subtask when changing parent_id or when updating parent task. """
         return ['partner_id', 'email_from']
 
-    @api.multi
     def _subtask_write_values(self, values):
         """ Return the values to write on subtask when `values` is written on parent tasks
             :param values: dict of values to write on parent
@@ -778,7 +762,6 @@ class Task(models.Model):
     # Mail gateway
     # ---------------------------------------------------
 
-    @api.multi
     def _track_template(self, changes):
         res = super(Task, self)._track_template(changes)
         test_task = self[0]
@@ -790,11 +773,9 @@ class Task(models.Model):
             })
         return res
 
-    @api.multi
     def _creation_subtype(self):
         return self.env.ref('project.mt_task_new')
 
-    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'kanban_state_label' in init_values and self.kanban_state == 'blocked':
@@ -805,7 +786,6 @@ class Task(models.Model):
             return self.env.ref('project.mt_task_stage')
         return super(Task, self)._track_subtype(init_values)
 
-    @api.multi
     def _notify_get_groups(self):
         """ Handle project users and managers recipients that can assign
         tasks and create new one directly from notification emails. Also give
@@ -835,7 +815,6 @@ class Task(models.Model):
 
         return groups
 
-    @api.multi
     def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
         """ Override to set alias of tasks to their project if any. """
         aliases = self.sudo().mapped('project_id')._notify_get_reply_to(default=default, records=None, company=company, doc_names=None)
@@ -845,7 +824,6 @@ class Task(models.Model):
             res.update(super(Task, leftover)._notify_get_reply_to(default=default, records=None, company=company, doc_names=doc_names))
         return res
 
-    @api.multi
     def email_split(self, msg):
         email_list = tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or ''))
         # check left-part is not already an alias
@@ -880,7 +858,6 @@ class Task(models.Model):
         task.message_subscribe(partner_ids)
         return task
 
-    @api.multi
     def message_update(self, msg, update_vals=None):
         """ Override to update the task according to the email. """
         email_list = self.email_split(msg)
@@ -888,7 +865,6 @@ class Task(models.Model):
         self.message_subscribe(partner_ids)
         return super(Task, self).message_update(msg, update_vals=update_vals)
 
-    @api.multi
     def _message_get_suggested_recipients(self):
         recipients = super(Task, self)._message_get_suggested_recipients()
         for task in self:
@@ -899,7 +875,6 @@ class Task(models.Model):
                 task._message_add_suggested_recipient(recipients, email=task.email_from, reason=_('Customer Email'))
         return recipients
 
-    @api.multi
     def _notify_email_header_dict(self):
         headers = super(Task, self)._notify_email_header_dict()
         if self.project_id:
@@ -965,7 +940,6 @@ class Task(models.Model):
             return self.project_id.partner_id
         return res
 
-    @api.multi
     def rating_apply(self, rate, token=None, feedback=None, subtype=None):
         return super(Task, self).rating_apply(rate, token=token, feedback=feedback, subtype="project.mt_task_rating")
 

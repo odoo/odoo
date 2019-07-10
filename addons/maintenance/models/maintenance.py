@@ -46,14 +46,12 @@ class MaintenanceEquipmentCategory(models.Model):
         "create new maintenance request for this equipment category.")
     fold = fields.Boolean(string='Folded in Maintenance Pipe', compute='_compute_fold', store=True)
 
-    @api.multi
     def _compute_equipment_count(self):
         equipment_data = self.env['maintenance.equipment'].read_group([('category_id', 'in', self.ids)], ['category_id'], ['category_id'])
         mapped_data = dict([(m['category_id'][0], m['category_id_count']) for m in equipment_data])
         for category in self:
             category.equipment_count = mapped_data.get(category.id, 0)
 
-    @api.multi
     def _compute_maintenance_count(self):
         maintenance_data = self.env['maintenance.request'].read_group([('category_id', 'in', self.ids)], ['category_id'], ['category_id'])
         mapped_data = dict([(m['category_id'][0], m['category_id_count']) for m in maintenance_data])
@@ -69,7 +67,6 @@ class MaintenanceEquipmentCategory(models.Model):
         category_id.alias_id.write({'alias_parent_thread_id': category_id.id, 'alias_defaults': {'category_id': category_id.id}})
         return category_id
 
-    @api.multi
     def unlink(self):
         MailAlias = self.env['mail.alias']
         for category in self:
@@ -94,14 +91,12 @@ class MaintenanceEquipment(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Maintenance Equipment'
 
-    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'owner_user_id' in init_values and self.owner_user_id:
             return self.env.ref('maintenance.mt_mat_assign')
         return super(MaintenanceEquipment, self)._track_subtype(init_values)
 
-    @api.multi
     def name_get(self):
         result = []
         for record in self:
@@ -211,7 +206,6 @@ class MaintenanceEquipment(models.Model):
             equipment.message_subscribe(partner_ids=[equipment.owner_user_id.partner_id.id])
         return equipment
 
-    @api.multi
     def write(self, vals):
         if vals.get('owner_user_id'):
             self.message_subscribe(partner_ids=self.env['res.users'].browse(vals['owner_user_id']).partner_id.ids)
@@ -264,11 +258,9 @@ class MaintenanceRequest(models.Model):
     def _default_stage(self):
         return self.env['maintenance.stage'].search([], limit=1)
 
-    @api.multi
     def _creation_subtype(self):
         return self.env.ref('maintenance.mt_req_created')
 
-    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'stage_id' in init_values:
@@ -307,11 +299,9 @@ class MaintenanceRequest(models.Model):
     maintenance_team_id = fields.Many2one('maintenance.team', string='Team', required=True, default=_get_default_team_id)
     duration = fields.Float(help="Duration in hours.")
 
-    @api.multi
     def archive_equipment_request(self):
         self.write({'archive': True})
 
-    @api.multi
     def reset_equipment_request(self):
         """ Reinsert the maintenance request into the maintenance pipe in the first stage"""
         first_stage_obj = self.env['maintenance.stage'].search([], order="sequence asc", limit=1)
@@ -342,7 +332,6 @@ class MaintenanceRequest(models.Model):
         request.activity_update()
         return request
 
-    @api.multi
     def write(self, vals):
         # Overridden to reset the kanban_state to normal whenever
         # the stage (stage_id) of the Maintenance Request changes.

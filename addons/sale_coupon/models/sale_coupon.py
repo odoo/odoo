@@ -80,7 +80,6 @@ class SaleCoupon(models.Model):
                 message = {'error': _('At least one of the required conditions is not met to get the reward!')}
         return message
 
-    @api.multi
     def action_coupon_sent(self):
         """ Open a window to compose an email, with the edi invoice template
             message loaded by default

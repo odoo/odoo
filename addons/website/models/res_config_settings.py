@@ -120,7 +120,6 @@ class ResConfigSettings(models.TransientModel):
     def set_values(self):
         super(ResConfigSettings, self).set_values()
 
-    @api.multi
     def open_template_user(self):
         action = self.env.ref('base.action_res_users').read()[0]
         action['res_id'] = literal_eval(self.env['ir.config_parameter'].sudo().get_param('base.template_portal_user_id', 'False'))

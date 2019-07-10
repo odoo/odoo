@@ -31,7 +31,6 @@ class AccountPaymentTerm(models.Model):
             if len(lines) > 1:
                 raise ValidationError(_('A Payment Term should have only one line of type Balance.'))
 
-    @api.multi
     def compute(self, value, date_ref=False, currency=None):
         self.ensure_one()
         date_ref = date_ref or fields.Date.today()
@@ -68,7 +67,6 @@ class AccountPaymentTerm(models.Model):
             result.append((last_date, dist))
         return result
 
-    @api.multi
     def unlink(self):
         for terms in self:
             if self.env['account.move'].search([('payment_term_id', 'in', terms.ids)]):

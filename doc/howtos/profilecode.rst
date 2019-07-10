@@ -20,7 +20,6 @@ its sub-called methods.
     from odoo.tools.profiler import profile
     [...]
     @profile('/temp/prof.profile')
-    @api.multi
     def mymethod(...)
 
 This produces a file called /temp/prof.profile

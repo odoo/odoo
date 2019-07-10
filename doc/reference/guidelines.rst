@@ -586,13 +586,11 @@ Programming in Odoo
 
 Make your method work in batch
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-When adding a function, make sure it can process multiple records. Typically,
-such methods are decorated with the ``api.multi`` decorator. Then you will have
-to iterate on ``self`` to treat each record.
+When adding a function, make sure it can process multiple records by iterating
+on self to treat each record.
 
 .. code-block:: python
 
-    @api.multi
     def my_method(self)
         for record in self:
             record.do_cool_stuff()
@@ -607,7 +605,6 @@ is recommended to use ``read_group`` method, to compute all value in only one re
 
 .. code-block:: python
 
-    @api.multi
     def _compute_equipment_count(self):
     """ Count the number of equipement per category """
         equipment_data = self.env['hr.equipment'].read_group([('category_id', 'in', self.ids)], ['category_id'], ['category_id'])
@@ -943,8 +940,8 @@ Symbols and Conventions
     - Selection method: the selection method pattern is *_selection_<field_name>*
     - Onchange method : the onchange method pattern is *_onchange_<field_name>*
     - Constraint method : the constraint method pattern is *_check_<constraint_name>*
-    - Action method : an object action method is prefix with *action_*. Its decorator is
-      ``@api.multi``, but since it use only one record, add ``self.ensure_one()``
+    - Action method : an object action method is prefix with *action_*.
+      Since it uses only one record, add ``self.ensure_one()``
       at the beginning of the method.
 
 - In a Model attribute order should be
@@ -979,7 +976,6 @@ Symbols and Conventions
         event_type = fields.Selection(string="Type", selection='_selection_type')
 
         # compute and search fields, in the same order of fields declaration
-        @api.multi
         @api.depends('seats_max', 'registration_ids.state', 'registration_ids.nb_register')
         def _compute_seats(self):
             ...
@@ -1002,7 +998,6 @@ Symbols and Conventions
             ...
 
         # Action methods
-        @api.multi
         def action_validate(self):
             self.ensure_one()
             ...

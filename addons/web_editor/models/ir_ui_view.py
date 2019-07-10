@@ -14,7 +14,6 @@ _logger = logging.getLogger(__name__)
 class IrUiView(models.Model):
     _inherit = 'ir.ui.view'
 
-    @api.multi
     def render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
         if values and values.get('editable'):
             try:
@@ -57,7 +56,6 @@ class IrUiView(models.Model):
             else:
                 Model.browse(int(el.get('data-oe-id'))).write({field: value})
 
-    @api.multi
     def save_oe_structure(self, el):
         self.ensure_one()
 
@@ -118,7 +116,6 @@ class IrUiView(models.Model):
             return False
         return all(self._are_archs_equal(arch1, arch2) for arch1, arch2 in zip(arch1, arch2))
 
-    @api.multi
     def replace_arch_section(self, section_xpath, replacement, replace_tail=False):
         # the root of the arch section shouldn't actually be replaced as it's
         # not really editable itself, only the content truly is editable.
@@ -163,7 +160,6 @@ class IrUiView(models.Model):
     def _set_noupdate(self):
         self.sudo().mapped('model_data_id').write({'noupdate': True})
 
-    @api.multi
     def save(self, value, xpath=None):
         """ Update a view section. The view section may embed fields to write
 

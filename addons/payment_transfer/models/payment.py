@@ -59,7 +59,6 @@ class TransferPaymentAcquirer(models.Model):
             values['post_msg'] = self._format_transfer_data()
         return super(TransferPaymentAcquirer, self).create(values)
 
-    @api.multi
     def write(self, values):
         """ Hook in write to create a default post_msg. See create(). """
         if all(not acquirer.post_msg and acquirer.provider != 'transfer' for acquirer in self) and values.get('provider') == 'transfer':

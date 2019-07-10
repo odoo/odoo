@@ -293,7 +293,6 @@ def multi(method):
     """ Decorate a record-style method where ``self`` is a recordset. The method
         typically defines an operation on records. Such a method::
 
-            @api.multi
             def method(self, args):
                 ...
 

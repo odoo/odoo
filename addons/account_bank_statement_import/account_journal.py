@@ -20,7 +20,6 @@ class AccountJournal(models.Model):
             rslt.append(("file_import", _("Import") + "(" + import_formats_str + ")"))
         return rslt
 
-    @api.multi
     def import_statement(self):
         """return action to import bank/cash statements. This button should be called only on journals with type =='bank'"""
         action_name = 'action_account_bank_statement_import'

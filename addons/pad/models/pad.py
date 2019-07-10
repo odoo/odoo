@@ -100,7 +100,6 @@ class PadCommon(models.AbstractModel):
     # TODO
     # reverse engineer protocol to be setHtml without using the api key
 
-    @api.multi
     def write(self, vals):
         self._set_field_to_pad(vals)
         self._set_pad_to_field(vals)

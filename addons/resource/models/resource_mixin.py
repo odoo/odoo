@@ -49,7 +49,6 @@ class ResourceMixin(models.AbstractModel):
             values['resource_id'] = resource.id
         return super(ResourceMixin, self).create(values)
 
-    @api.multi
     def copy_data(self, default=None):
         if default is None:
             default = {}

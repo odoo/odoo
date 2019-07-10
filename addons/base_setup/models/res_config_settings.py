@@ -53,12 +53,10 @@ class ResConfigSettings(models.TransientModel):
         )
         return res
 
-    @api.multi
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         self.env.ref('base.res_partner_rule').write({'active': not self.company_share_partner})
 
-    @api.multi
     def open_company(self):
         return {
             'type': 'ir.actions.act_window',
@@ -68,7 +66,6 @@ class ResConfigSettings(models.TransientModel):
             'res_id': self.env.company.id,
             'target': 'current',
         }
-    @api.multi
     def open_default_user(self):
         action = self.env.ref('base.action_res_users').read()[0]
         action['res_id'] = self.env.ref('base.default_user').id
@@ -85,13 +82,11 @@ class ResConfigSettings(models.TransientModel):
             'res_id': template_id.id,
         }
 
-    @api.multi
     def edit_external_header(self):
         if not self.external_report_layout_id:
             return False
         return self._prepare_report_view_action(self.external_report_layout_id.key)
 
-    @api.multi
     def change_report_template(self):
         self.ensure_one()
         template = self.env.ref('base.view_company_document_template_form')

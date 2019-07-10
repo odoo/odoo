@@ -43,7 +43,6 @@ class MailThread(models.AbstractModel):
             self.env['mail.mail.statistics'].set_replied(mail_message_ids=message_ids)
         return super(MailThread, self).message_route_process(message, message_dict, routes)
 
-    @api.multi
     def message_post_with_template(self, template_id, **kwargs):
         # avoid having message send through `message_post*` methods being implicitly considered as
         # mass-mailing
@@ -53,7 +52,6 @@ class MailThread(models.AbstractModel):
         )
         return super(MailThread, no_massmail).message_post_with_template(template_id, **kwargs)
 
-    @api.multi
     def _message_receive_bounce(self, email, partner, mail_id=None):
         """In addition, an auto blacklist rule check if the email can be blacklisted
         to avoid sending mails indefinitely to this email address.

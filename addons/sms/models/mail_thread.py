@@ -17,7 +17,6 @@ class MailThread(models.AbstractModel):
         'SMS Delivery error', compute='_compute_message_has_sms_error', search='_search_message_has_sms_error',
         help="If checked, some messages have a delivery error.")
 
-    @api.multi
     def _compute_message_has_sms_error(self):
         res = {}
         if self.ids:
@@ -185,13 +184,11 @@ class MailThread(models.AbstractModel):
             **kwargs
         )
 
-    @api.multi
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         recipients_data = super(MailThread, self)._notify_thread(message, msg_vals=msg_vals, **kwargs)
         self._notify_record_by_sms(message, recipients_data, msg_vals=msg_vals, **kwargs)
         return recipients_data
 
-    @api.multi
     def _notify_record_by_sms(self, message, recipients_data, msg_vals=False,
                               sms_numbers=None, sms_pid_to_number=None,
                               check_existing=False, put_in_queue=False, **kwargs):

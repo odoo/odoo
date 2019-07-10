@@ -43,7 +43,6 @@ class AccountMoveReversal(models.TransientModel):
     currency_id = fields.Many2one(related='move_id.currency_id')
     move_type = fields.Selection(related='move_id.type')
 
-    @api.multi
     def reverse_moves(self):
         moves = self.move_id or self.env['account.move'].browse(self._context['active_ids'])
 

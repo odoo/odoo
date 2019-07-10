@@ -24,7 +24,6 @@ class RecruitmentSource(models.Model):
     job_id = fields.Many2one('hr.job', "Job ID")
     alias_id = fields.Many2one('mail.alias', "Alias ID")
 
-    @api.multi
     def create_alias(self):
         campaign = self.env.ref('hr_recruitment.utm_campaign_job')
         medium = self.env.ref('utm.utm_medium_email')
@@ -194,7 +193,6 @@ class Applicant(models.Model):
         for applicant in self.filtered(lambda applicant: applicant.email_from):
             applicant.application_count = application_data_mapped.get(applicant.email_from, 1) - 1
 
-    @api.multi
     def _get_attachment_number(self):
         read_group_res = self.env['ir.attachment'].read_group(
             [('res_model', '=', 'hr.applicant'), ('res_id', 'in', self.ids)],
@@ -296,7 +294,6 @@ class Applicant(models.Model):
             vals.update(self._onchange_stage_id_internal(vals.get('stage_id'))['value'])
         return super(Applicant, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         # user_id change: update date_open
         if vals.get('user_id'):
@@ -320,14 +317,12 @@ class Applicant(models.Model):
                                                   empty_list_help_id=self.env.context.get('default_job_id'),
                                                   empty_list_help_document_name=_("job applicant"))).get_empty_list_help(help)
 
-    @api.multi
     def action_get_created_employee(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window'].for_xml_id('hr', 'open_view_employee_list')
         action['res_id'] = self.mapped('emp_id').ids[0]
         return action
 
-    @api.multi
     def action_makeMeeting(self):
         """ This opens Meeting's calendar view to schedule meeting on current applicant
             @return: Dictionary value for created Meeting view
@@ -346,7 +341,6 @@ class Applicant(models.Model):
         }
         return res
 
-    @api.multi
     def action_get_attachment_tree_view(self):
         attachment_action = self.env.ref('base.action_attachment')
         action = attachment_action.read()[0]
@@ -355,7 +349,6 @@ class Applicant(models.Model):
         action['search_view_id'] = (self.env.ref('hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment').id, )
         return action
 
-    @api.multi
     def action_applications_email(self):
         return {
             'type': 'ir.actions.act_window',
@@ -365,7 +358,6 @@ class Applicant(models.Model):
             'domain': [('email_from', 'in', self.mapped('email_from'))],
         }
 
-    @api.multi
     def _track_template(self, changes):
         res = super(Applicant, self)._track_template(changes)
         applicant = self[0]
@@ -377,11 +369,9 @@ class Applicant(models.Model):
             })
         return res
 
-    @api.multi
     def _creation_subtype(self):
         return self.env.ref('hr_recruitment.mt_applicant_new')
 
-    @api.multi
     def _track_subtype(self, init_values):
         record = self[0]
         if 'emp_id' in init_values and record.emp_id and record.emp_id.active:
@@ -390,7 +380,6 @@ class Applicant(models.Model):
             return self.env.ref('hr_recruitment.mt_applicant_stage_changed')
         return super(Applicant, self)._track_subtype(init_values)
 
-    @api.multi
     def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
         """ Override to set alias of applicants to their job definition if any. """
         aliases = self.mapped('job_id')._notify_get_reply_to(default=default, records=None, company=company, doc_names=None)
@@ -400,7 +389,6 @@ class Applicant(models.Model):
             res.update(super(Applicant, leftover)._notify_get_reply_to(default=default, records=None, company=company, doc_names=doc_names))
         return res
 
-    @api.multi
     def _message_get_suggested_recipients(self):
         recipients = super(Applicant, self)._message_get_suggested_recipients()
         for applicant in self:
@@ -450,7 +438,6 @@ class Applicant(models.Model):
                     ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
         return super(Applicant, self)._message_post_after_hook(message, msg_vals)
 
-    @api.multi
     def create_employee_from_applicant(self):
         """ Create an hr.employee from the hr.applicants """
         employee = False
@@ -495,11 +482,9 @@ class Applicant(models.Model):
         dict_act_window['res_id'] = employee.id
         return dict_act_window
 
-    @api.multi
     def archive_applicant(self):
         self.write({'active': False})
 
-    @api.multi
     def reset_applicant(self):
         """ Reinsert the applicant into the recruitment pipe in the first stage"""
         default_stage_id = self._default_stage_id()

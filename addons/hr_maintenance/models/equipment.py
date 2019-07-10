@@ -45,7 +45,6 @@ class MaintenanceEquipment(models.Model):
             equipment.message_subscribe(partner_ids=partner_ids)
         return equipment
 
-    @api.multi
     def write(self, vals):
         partner_ids = []
         # subscribe employee or department manager when equipment assign to employee or department.
@@ -61,7 +60,6 @@ class MaintenanceEquipment(models.Model):
             self.message_subscribe(partner_ids=partner_ids)
         return super(MaintenanceEquipment, self).write(vals)
 
-    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if ('employee_id' in init_values and self.employee_id) or ('department_id' in init_values and self.department_id):
@@ -109,7 +107,6 @@ class MaintenanceRequest(models.Model):
             result.message_subscribe(partner_ids=[result.employee_id.user_id.partner_id.id])
         return result
 
-    @api.multi
     def write(self, vals):
         if vals.get('employee_id'):
             employee = self.env['hr.employee'].browse(vals['employee_id'])

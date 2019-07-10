@@ -25,7 +25,6 @@ class AccountCashRounding(models.Model):
         selection=[('UP', 'UP'), ('DOWN', 'DOWN'), ('HALF-UP', 'HALF-UP')],
         default='HALF-UP', help='The tie-breaking rule used for float rounding operations')
 
-    @api.multi
     def round(self, amount):
         """Compute the rounding on the amount passed as parameter.
 
@@ -34,7 +33,6 @@ class AccountCashRounding(models.Model):
         """
         return float_round(amount, precision_rounding=self.rounding, rounding_method=self.rounding_method)
 
-    @api.multi
     def compute_difference(self, currency, amount):
         """Compute the difference between the base_amount and the amount after rounding.
         For example, base_amount=23.91, after rounding=24.00, the result will be 0.09.

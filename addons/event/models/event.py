@@ -182,7 +182,6 @@ class EventEvent(models.Model):
     badge_innerright = fields.Html(string='Badge Inner Right')
     event_logo = fields.Html(string='Event Logo')
 
-    @api.multi
     @api.depends('seats_max', 'registration_ids.state')
     def _compute_seats(self):
         """ Determine reserved, available, reserved but unconfirmed and used seats. """
@@ -281,7 +280,6 @@ class EventEvent(models.Model):
             if event.date_end < event.date_begin:
                 raise ValidationError(_('The closing date cannot be earlier than the beginning date.'))
 
-    @api.multi
     @api.depends('name', 'date_begin', 'date_end')
     def name_get(self):
         result = []
@@ -302,14 +300,12 @@ class EventEvent(models.Model):
             res.button_confirm()
         return res
 
-    @api.multi
     def write(self, vals):
         res = super(EventEvent, self).write(vals)
         if vals.get('organizer_id'):
             self.message_subscribe([vals['organizer_id']])
         return res
 
-    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
@@ -319,7 +315,6 @@ class EventEvent(models.Model):
     def button_draft(self):
         self.write({'state': 'draft'})
 
-    @api.multi
     def button_cancel(self):
         if any('done' in event.mapped('registration_ids.state') for event in self):
             raise UserError(_("There are already attendees who attended this event. Please reset it to draft if you want to cancel this event."))
@@ -337,11 +332,9 @@ class EventEvent(models.Model):
             for attendee in event.registration_ids.filtered(filter_func):
                 self.env['mail.template'].browse(template_id).send_mail(attendee.id, force_send=force_send)
 
-    @api.multi
     def _is_event_registrable(self):
         return self.date_end > fields.Datetime.now()
 
-    @api.multi
     def _get_ics_file(self):
         """ Returns iCalendar file for the event invitation.
             :returns a dict of .ics file content for each event
@@ -401,7 +394,6 @@ class EventRegistration(models.Model):
             if registration.event_id.seats_availability == 'limited' and registration.event_id.seats_max and registration.event_id.seats_available < (1 if registration.state == 'draft' else 0):
                 raise ValidationError(_('No more seats available for this event.'))
 
-    @api.multi
     def _check_auto_confirmation(self):
         if self._context.get('registration_force_draft'):
             return False
@@ -471,7 +463,6 @@ class EventRegistration(models.Model):
                 self.email = contact.email or self.email
                 self.phone = contact.phone or self.phone
 
-    @api.multi
     def _message_get_suggested_recipients(self):
         recipients = super(EventRegistration, self)._message_get_suggested_recipients()
         public_users = self.env['res.users'].sudo()
@@ -489,7 +480,6 @@ class EventRegistration(models.Model):
             pass
         return recipients
 
-    @api.multi
     def _message_get_default_recipients(self):
         # Prioritize registration email over partner_id, which may be shared when a single
         # partner booked multiple seats
@@ -513,7 +503,6 @@ class EventRegistration(models.Model):
                 ]).write({'partner_id': new_partner.id})
         return super(EventRegistration, self)._message_post_after_hook(message, msg_vals)
 
-    @api.multi
     def action_send_badge_email(self):
         """ Open a window to compose an email, with the template - 'event_badge'
             message loaded by default
@@ -540,7 +529,6 @@ class EventRegistration(models.Model):
             'context': ctx,
         }
 
-    @api.multi
     def get_date_range_str(self):
         self.ensure_one()
         today = fields.Datetime.now()
@@ -559,7 +547,6 @@ class EventRegistration(models.Model):
         else:
             return _('on ') + format_datetime(self.env, self.event_begin_date, tz=self.event_id.date_tz, dt_format='medium')
 
-    @api.multi
     def summary(self):
         self.ensure_one()
         return {'information': []}

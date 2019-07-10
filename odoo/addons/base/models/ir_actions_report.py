@@ -143,7 +143,6 @@ class IrActionsReport(models.Model):
         else:
             return FALSE_DOMAIN
 
-    @api.multi
     def associated_view(self):
         """Used in the ir.actions.report form view in order to search naively after the view(s)
         used in the rendering.
@@ -156,7 +155,6 @@ class IrActionsReport(models.Model):
         action_data['domain'] = [('name', 'ilike', self.report_name.split('.')[1]), ('type', '=', 'qweb')]
         return action_data
 
-    @api.multi
     def create_action(self):
         """ Create a contextual action for each report. """
         for report in self:
@@ -164,7 +162,6 @@ class IrActionsReport(models.Model):
             report.write({'binding_model_id': model.id, 'binding_type': 'report'})
         return True
 
-    @api.multi
     def unlink_action(self):
         """ Remove the contextual actions created for the reports. """
         self.check_access_rights('write', raise_exception=True)
@@ -174,7 +171,6 @@ class IrActionsReport(models.Model):
     #--------------------------------------------------------------------------
     # Main report methods
     #--------------------------------------------------------------------------
-    @api.multi
     def _retrieve_stream_from_attachment(self, attachment):
         #This import is needed to make sure a PDF stream can be saved in Image
         from PIL import PdfImagePlugin
@@ -185,7 +181,6 @@ class IrActionsReport(models.Model):
             return stream
         return io.BytesIO(base64.decodestring(attachment.datas))
 
-    @api.multi
     def retrieve_attachment(self, record):
         '''Retrieve an attachment for a specific record.
 
@@ -202,7 +197,6 @@ class IrActionsReport(models.Model):
                 ('res_id', '=', record.id)
         ], limit=1)
 
-    @api.multi
     def postprocess_pdf_report(self, record, buffer):
         '''Hook to handle post processing during the pdf report generation.
         The basic behavior consists to create a new attachment containing the pdf
@@ -325,7 +319,6 @@ class IrActionsReport(models.Model):
 
         return command_args
 
-    @api.multi
     def _prepare_html(self, html):
         '''Divide and recreate the header/footer html by merging all found in html.
         The bodies are extracted and added to a list. Then, extract the specific_paperformat_args.
@@ -515,7 +508,6 @@ class IrActionsReport(models.Model):
             else:
                 return self.barcode('Code128', value, width=width, height=height, humanreadable=humanreadable)
 
-    @api.multi
     def render_template(self, template, values=None):
         """Allow to render a QWeb template python-side. This function returns the 'ir.ui.view'
         render but embellish it with some variables/methods used in reports.
@@ -546,7 +538,6 @@ class IrActionsReport(models.Model):
         )
         return view_obj.render_template(template, values)
 
-    @api.multi
     def _post_pdf(self, save_in_attachment, pdf_content=None, res_ids=None):
         '''Merge the existing attachments by adding one by one the content of the attachments
         and then, we add the pdf_content if exists. Create the attachments for each record individually
@@ -650,7 +641,6 @@ class IrActionsReport(models.Model):
         writer.write(result_stream)
         return result_stream.getvalue()
 
-    @api.multi
     def render_qweb_pdf(self, res_ids=None, data=None):
         if not data:
             data = {}
@@ -786,7 +776,6 @@ class IrActionsReport(models.Model):
             })
         return data
 
-    @api.multi
     def render(self, res_ids, data=None):
         report_type = self.report_type.lower().replace('-', '_')
         render_func = getattr(self, 'render_' + report_type, None)

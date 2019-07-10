@@ -31,7 +31,6 @@ class SmsSms(models.Model):
         ('sms_server', 'Server Error')
     ])
 
-    @api.multi
     def send(self, delete_all=False, auto_commit=False, raise_exception=False):
         """ Main API method to send SMS.
 
@@ -76,7 +75,6 @@ class SmsSms(models.Model):
         for sms_batch in tools.split_every(batch_size, self.ids):
             yield sms_batch
 
-    @api.multi
     def _send(self, delete_all=False, raise_exception=False):
         """ This method tries to send SMS after checking the number (presence and
         formatting). """
@@ -129,7 +127,6 @@ class SmsSms(models.Model):
         if todelete_sms_ids:
             self.browse(todelete_sms_ids).sudo().unlink()
 
-    @api.multi
     def cancel(self):
         self.write({
             'state': 'canceled',

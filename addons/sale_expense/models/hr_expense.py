@@ -14,7 +14,6 @@ class Expense(models.Model):
         if self.sale_order_id:
             self.analytic_account_id = self.sale_order_id.analytic_account_id
 
-    @api.multi
     def action_move_create(self):
         """ When posting expense, if a SO is set, this means you want to reinvoice. To do so, we
             have to set an Analytic Account on the expense. We choose the one from the SO, and

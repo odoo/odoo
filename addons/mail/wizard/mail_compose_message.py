@@ -204,13 +204,11 @@ class MailComposer(models.TransientModel):
     #------------------------------------------------------
     # action buttons call with positionnal arguments only, so we need an intermediary function
     # to ensure the context is passed correctly
-    @api.multi
     def action_send_mail(self):
         self.send_mail()
         return {'type': 'ir.actions.act_window_close', 'infos': 'mail_sent'}
 
 
-    @api.multi
     def send_mail(self, auto_commit=False):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed. """
@@ -289,7 +287,6 @@ class MailComposer(models.TransientModel):
                 if wizard.composition_mode == 'mass_mail':
                     batch_mails.send(auto_commit=auto_commit)
 
-    @api.multi
     def get_mail_values(self, res_ids):
         """Generate the values that will be used by send_mail to create mail_messages
         or mail_mails. """
@@ -380,7 +377,6 @@ class MailComposer(models.TransientModel):
     # Template methods
     #------------------------------------------------------
 
-    @api.multi
     @api.onchange('template_id')
     def onchange_template_id_wrapper(self):
         self.ensure_one()
@@ -388,7 +384,6 @@ class MailComposer(models.TransientModel):
         for fname, value in values.items():
             setattr(self, fname, value)
 
-    @api.multi
     def onchange_template_id(self, template_id, composition_mode, model, res_id):
         """ - mass_mailing: we cannot render, so return the template values
             - normal mode: return rendered values
@@ -434,7 +429,6 @@ class MailComposer(models.TransientModel):
 
         return {'value': values}
 
-    @api.multi
     def save_as_template(self):
         """ hit save as template button: current form value will be a new
             template attached to the current document. """
@@ -459,7 +453,6 @@ class MailComposer(models.TransientModel):
     # Template rendering
     #------------------------------------------------------
 
-    @api.multi
     def render_message(self, res_ids):
         """Generate template-based values of wizard, for the document records given
         by res_ids. This method is meant to be inherited by email_template that

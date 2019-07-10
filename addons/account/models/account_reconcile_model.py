@@ -105,7 +105,6 @@ class AccountReconcileModel(models.Model):
 
     number_entries = fields.Integer(string='Number of entries related to this model', compute='_compute_number_entries')
 
-    @api.multi
     def action_reconcile_stat(self):
         self.ensure_one()
         action = self.env.ref('account.action_move_journal_line').read()[0]
@@ -121,7 +120,6 @@ class AccountReconcileModel(models.Model):
         })
         return action
 
-    @api.multi
     def _compute_number_entries(self):
         data = self.env['account.move.line'].read_group([('reconcile_model_id', 'in', self.ids)], ['reconcile_model_ids'], 'reconcile_model_id')
         mapped_data = dict([(d['reconcile_model_id'][0], d['reconcile_model_id_count']) for d in data])
@@ -193,7 +191,6 @@ class AccountReconcileModel(models.Model):
         base_line_dict['tag_ids'] = [(6, 0, res['base_tags'])]
         return new_aml_dicts
 
-    @api.multi
     def _get_write_off_move_lines_dict(self, st_line, move_lines=None):
         ''' Get move.lines dict (to be passed to the create()) corresponding to the reconciliation model's write-off lines.
         :param st_line:     An account.bank.statement.line record.
@@ -265,7 +262,6 @@ class AccountReconcileModel(models.Model):
 
         return new_aml_dicts
 
-    @api.multi
     def _prepare_reconciliation(self, st_line, move_lines=None, partner=None):
         ''' Reconcile the statement line with some move lines using this reconciliation model.
         :param st_line:     An account.bank.statement.line record.
@@ -324,7 +320,6 @@ class AccountReconcileModel(models.Model):
     # RECONCILIATION CRITERIA
     ####################################################
 
-    @api.multi
     def _apply_conditions(self, query, params):
         self.ensure_one()
         rule = self
@@ -382,7 +377,6 @@ class AccountReconcileModel(models.Model):
 
         return query, params
 
-    @api.multi
     def _get_with_tables(self, st_lines, partner_map=None):
         with_tables = '''
             WITH jnl_precision AS (
@@ -403,7 +397,6 @@ class AccountReconcileModel(models.Model):
         with_tables += ', partners_table AS (' + partners_table + ')'
         return with_tables
 
-    @api.multi
     def _get_invoice_matching_query(self, st_lines, excluded_ids=None, partner_map=None):
         ''' Get the query applying all rules trying to match existing entries with the given statement lines.
         :param st_lines:        Account.bank.statement.lines recordset.
@@ -534,7 +527,6 @@ class AccountReconcileModel(models.Model):
         full_query += ' ORDER BY aml_date_maturity, aml_id'
         return full_query, all_params
 
-    @api.multi
     def _get_writeoff_suggestion_query(self, st_lines, excluded_ids=None, partner_map=None):
         ''' Get the query applying all reconciliation rules.
         :param st_lines:        Account.bank.statement.lines recordset.
@@ -570,7 +562,6 @@ class AccountReconcileModel(models.Model):
         full_query += ' UNION ALL '.join(queries)
         return full_query, all_params
 
-    @api.multi
     def _check_rule_propositions(self, statement_line, candidates):
         ''' Check restrictions that can't be handled for each move.line separately.
         /!\ Only used by models having a type equals to 'invoice_matching'.
@@ -601,7 +592,6 @@ class AccountReconcileModel(models.Model):
             amount_percentage = (line_residual / total_residual) * 100 if total_residual else 0
         return amount_percentage >= self.match_total_amount_param
 
-    @api.multi
     def _apply_rules(self, st_lines, excluded_ids=None, partner_map=None):
         ''' Apply criteria to get candidates for all reconciliation models.
         :param st_lines:        Account.bank.statement.lines recordset.

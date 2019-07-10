@@ -69,7 +69,6 @@ class AcquirerAdyen(models.Model):
             'adyen_form_url': 'https://%s.adyen.com/hpp/pay.shtml' % ('live' if environment == 'prod' else environment),
         }
 
-    @api.multi
     def _adyen_generate_merchant_sig_sha256(self, inout, values):
         """ Generate the shasign for incoming or outgoing communications., when using the SHA-256
         signature.
@@ -119,7 +118,6 @@ class AcquirerAdyen(models.Model):
 
         return signParams(raw_values_ordered)
 
-    @api.multi
     def _adyen_generate_merchant_sig(self, inout, values):
         """ Generate the shasign for incoming or outgoing communications, when using the SHA-1
         signature (deprecated by Adyen).
@@ -148,7 +146,6 @@ class AcquirerAdyen(models.Model):
         key = self.adyen_skin_hmac_key.encode('ascii')
         return base64.b64encode(hmac.new(key, sign, hashlib.sha1).digest())
 
-    @api.multi
     def adyen_form_generate_values(self, values):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         # tmp
@@ -193,7 +190,6 @@ class AcquirerAdyen(models.Model):
 
         return values
 
-    @api.multi
     def adyen_get_form_action_url(self):
         return self._get_adyen_urls(self.environment)['adyen_form_url']
 

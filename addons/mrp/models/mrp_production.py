@@ -248,7 +248,6 @@ class MrpProduction(models.Model):
         for production in self:
             production.finished_move_line_ids = production.move_finished_ids.mapped('move_line_ids')
 
-    @api.multi
     @api.depends('bom_id.routing_id', 'bom_id.routing_id.operation_ids')
     def _compute_routing(self):
         for production in self:
@@ -257,7 +256,6 @@ class MrpProduction(models.Model):
             else:
                 production.routing_id = False
 
-    @api.multi
     @api.depends('workorder_ids')
     def _compute_workorder_count(self):
         data = self.env['mrp.workorder'].read_group([('production_id', 'in', self.ids)], ['production_id'], ['production_id'])
@@ -265,7 +263,6 @@ class MrpProduction(models.Model):
         for production in self:
             production.workorder_count = count_data.get(production.id, 0)
 
-    @api.multi
     @api.depends('workorder_ids.state')
     def _compute_workorder_done_count(self):
         data = self.env['mrp.workorder'].read_group([
@@ -275,7 +272,6 @@ class MrpProduction(models.Model):
         for production in self:
             production.workorder_done_count = count_data.get(production.id, 0)
 
-    @api.multi
     @api.depends('move_raw_ids.state', 'move_finished_ids.state', 'workorder_ids', 'workorder_ids.state', 'qty_produced', 'move_raw_ids.quantity_done', 'product_qty')
     def _compute_state(self):
         """ Compute the production state. It use the same process than stock
@@ -329,7 +325,6 @@ class MrpProduction(models.Model):
             any_quantity_done = any([m.quantity_done > 0 for m in order.move_raw_ids])
             order.unreserve_visible = not any_quantity_done and already_reserved
 
-    @api.multi
     @api.depends('move_raw_ids.quantity_done', 'move_finished_ids.quantity_done', 'is_locked')
     def _compute_post_visible(self):
         for order in self:
@@ -338,7 +333,6 @@ class MrpProduction(models.Model):
             else:
                 order.post_visible = order.is_locked and any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_finished_ids)
 
-    @api.multi
     @api.depends('workorder_ids.state', 'move_finished_ids', 'move_finished_ids.quantity_done', 'is_locked')
     def _get_produced_qty(self):
         for production in self:
@@ -347,14 +341,12 @@ class MrpProduction(models.Model):
             production.qty_produced = qty_produced
         return True
 
-    @api.multi
     def _compute_scrap_move_count(self):
         data = self.env['stock.scrap'].read_group([('production_id', 'in', self.ids)], ['production_id'], ['production_id'])
         count_data = dict((item['production_id'][0], item['production_id_count']) for item in data)
         for production in self:
             production.scrap_count = count_data.get(production.id, 0)
 
-    @api.multi
     @api.depends('workorder_ids.date_planned_start', 'workorder_ids.date_planned_finished')
     def _compute_date_planned(self):
         for order in self:
@@ -427,7 +419,6 @@ class MrpProduction(models.Model):
         self.location_src_id = self.picking_type_id.default_location_src_id.id or location.id
         self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id
 
-    @api.multi
     def write(self, vals):
         res = super(MrpProduction, self).write(vals)
         if 'date_planned_start' in vals:
@@ -454,7 +445,6 @@ class MrpProduction(models.Model):
             values['procurement_group_id'] = self.env["procurement.group"].create({'name': values['name']}).id
         return super(MrpProduction, self).create(values)
 
-    @api.multi
     def unlink(self):
         if any(production.state != 'cancel' for production in self):
             raise UserError(_('Cannot delete a manufacturing order not in cancel state'))
@@ -547,7 +537,6 @@ class MrpProduction(models.Model):
         }
         return data
 
-    @api.multi
     def _update_raw_move(self, bom_line, line_data):
         """ :returns update_move, old_quantity, new_quantity """
         quantity = line_data['qty']
@@ -608,20 +597,17 @@ class MrpProduction(models.Model):
             (production.move_raw_ids | production.move_finished_ids)._action_confirm()
         return True
 
-    @api.multi
     def action_assign(self):
         for production in self:
             production.move_raw_ids._action_assign()
             production.workorder_ids._refresh_wo_lines()
         return True
 
-    @api.multi
     def open_produce_product(self):
         self.ensure_one()
         action = self.env.ref('mrp.act_mrp_product_produce').read()[0]
         return action
 
-    @api.multi
     def button_plan(self):
         """ Create work orders. And probably do stuff, like things. """
         orders_to_plan = self.filtered(lambda order: order.routing_id and order.state == 'confirmed')
@@ -705,7 +691,6 @@ class MrpProduction(models.Model):
             raise UserError(_("Some work orders have already started, you cannot unplan this manufacturing order."))
         self.workorder_ids.unlink()
 
-    @api.multi
     def _generate_workorders(self, exploded_boms):
         workorders = self.env['mrp.workorder']
         original_one = False
@@ -779,7 +764,6 @@ class MrpProduction(models.Model):
                     error_msg += ml.product_id.display_name + ' (' + ', '.join((lots_short & ml.lot_produced_ids).mapped('name')) + ')\n'
                 raise UserError(error_msg)
 
-    @api.multi
     def action_cancel(self):
         """ Cancels production order, unfinished stock moves and set procurement
         orders in exception """
@@ -822,7 +806,6 @@ class MrpProduction(models.Model):
         self.ensure_one()
         return True
 
-    @api.multi
     def post_inventory(self):
         for order in self:
             moves_not_to_do = order.move_raw_ids.filtered(lambda x: x.state == 'done')
@@ -852,7 +835,6 @@ class MrpProduction(models.Model):
                     moveline.write({'consume_line_ids': [(6, 0, [x for x in consume_move_lines.ids])]})
         return True
 
-    @api.multi
     def button_mark_done(self):
         self.ensure_one()
         for wo in self.workorder_ids:
@@ -871,19 +853,16 @@ class MrpProduction(models.Model):
         self.write({'date_finished': fields.Datetime.now()})
         return True
 
-    @api.multi
     def do_unreserve(self):
         for production in self:
             production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))._do_unreserve()
         return True
 
-    @api.multi
     def button_unreserve(self):
         self.ensure_one()
         self.do_unreserve()
         return True
 
-    @api.multi
     def button_scrap(self):
         self.ensure_one()
         return {
@@ -899,7 +878,6 @@ class MrpProduction(models.Model):
             'target': 'new',
         }
 
-    @api.multi
     def action_see_move_scrap(self):
         self.ensure_one()
         action = self.env.ref('stock.action_stock_scrap').read()[0]
