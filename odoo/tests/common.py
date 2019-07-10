@@ -1385,7 +1385,7 @@ class Form(object):
         fields = self._view['fields']
         for f in fields:
             v = self._values[f]
-            if self._get_modifier(f, 'required'):
+            if self._get_modifier(f, 'required') and not fields[f]['type'] == 'boolean':
                 assert v is not False, "{} is a required field".format(f)
 
             # skip unmodified fields
