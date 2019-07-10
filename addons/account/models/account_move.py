@@ -1876,6 +1876,9 @@ class AccountMove(models.Model):
         for move in self:
             if move.auto_post and move.date > fields.Date.today():
                 raise UserError(_("This move is configured to be auto-posted on {}".format(move.date.strftime(self.env['res.lang']._lang_get(self.env.user.lang).date_format))))
+
+            move.message_subscribe([p.id for p in [move.partner_id, move.commercial_partner_id] if p not in move.message_partner_ids])
+
             to_write = {'state': 'posted'}
 
             if move.name == '/':
