@@ -1929,12 +1929,8 @@ class MailThread(models.AbstractModel):
         self.ensure_one()
         if author_id:
             author = self.env['res.partner'].sudo().browse(author_id)
-        elif self.env.user.email:
-            author = self.env.user.partner_id
-            author_id = author.id
         else:
-            # the current user has no email address (like the public user)
-            author = self.env.user.browse(SUPERUSER_ID).partner_id
+            author = self.env.user.partner_id
             author_id = author.id
 
         if not author.email:
