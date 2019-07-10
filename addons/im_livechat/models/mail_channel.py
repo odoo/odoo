@@ -159,3 +159,20 @@ class MailChannel(models.Model):
 
     def _rating_get_parent_field_name(self):
         return 'livechat_channel_id'
+
+    def _email_livechat_transcript(self, email):
+        company = self.env.user.company_id
+        render_context = {
+            "company": company,
+            "channel": self,
+        }
+        template = self.env.ref('im_livechat.livechat_email_template')
+        mail_body = template.render(render_context, engine='ir.qweb', minimal_qcontext=True)
+        mail_body = self.env['mail.thread']._replace_local_links(mail_body)
+        mail = self.env['mail.mail'].create({
+            'subject': _('Conversation with %s') % self.livechat_operator_id.name,
+            'email_from': self.env.company.email,
+            'email_to': email,
+            'body_html': mail_body,
+        })
+        mail.send()
