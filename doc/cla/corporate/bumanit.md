@@ -9,7 +9,9 @@ declaration.
 Signed,
 
 Baskhuu Lodoikhuu baskhuujacara@gmail.com https://github.com/jacara
+Baskhuu Lodoikhuu baskhuu@bumanit.mn https://github.com/bumanit
 
 List of contributors:
 
 Baskhuu Lodoikhuu baskhuujacara@gmail.com https://github.com/jacara
+Baskhuu Lodoikhuu baskhuu@bumanit.mn https://github.com/bumanit
