@@ -143,6 +143,103 @@ QUnit.module('base_settings_tests', {
         actionManager.destroy();
     });
 
+    QUnit.test('clicking on any button in setting should show discard warning if setting form is dirty', async function (assert) {
+        assert.expect(11);
+
+        var actions = [{
+            id: 1,
+            name: 'Settings view',
+            res_model: 'project',
+            type: 'ir.actions.act_window',
+            views: [[1, 'form']],
+        }, {
+            id: 4,
+            name: 'Other action',
+            res_model: 'project',
+            type: 'ir.actions.act_window',
+            views: [[2, 'list']],
+        }];
+        var archs = {
+            'project,1,form': '<form string="Settings" js_class="base_settings">' +
+                    '<header>' +
+                        '<button string="Save" type="object" name="execute" class="oe_highlight" />' +
+                        '<button string="Cancel" type="object" name="cancel" class="oe_link" />' +
+                    '</header>' +
+                    '<div class="app_settings_block" string="CRM" data-key="crm">' +
+                        '<div class="row mt16 o_settings_container">'+
+                            '<div class="col-12 col-lg-6 o_setting_box">'+
+                                '<div class="o_setting_left_pane">' +
+                                    '<field name="foo"/>'+
+                                '</div>'+
+                                '<div class="o_setting_right_pane">'+
+                                    '<span class="o_form_label">Foo</span>'+
+                                        '<div class="text-muted">'+
+                                            'this is foo'+
+                                        '</div>'+
+                                '</div>' +
+                            '</div>'+
+                        '</div>'+
+                        '<button name="4" string="Execute action" type="action"/>' +
+                    '</div>' +
+                '</form>',
+            'project,2,list': '<tree><field name="foo"/></tree>',
+            'project,false,search': '<search></search>',
+        };
+
+        var actionManager = await createActionManager({
+            actions: actions,
+            archs: archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_button') {
+                    if (args.method === "execute") {
+                        assert.ok("execute method called");
+                        return Promise.resolve(true);
+                    }
+                    if (args.method === "cancel") {
+                        assert.ok("cancel method called");
+                        return Promise.resolve(true);
+                    }
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        await actionManager.doAction(1);
+        assert.containsNone(actionManager, '.o_field_boolean input:checked',
+            "checkbox should not be checked");
+
+        await testUtils.dom.click(actionManager.$("input[type='checkbox']"));
+        assert.containsOnce(actionManager, '.o_field_boolean input:checked',
+            "checkbox should be checked");
+
+        await testUtils.dom.click(actionManager.$('button[name="4"]'));
+        assert.containsOnce(document.body, '.modal', "should open a warning dialog");
+
+        await testUtils.dom.click($('.modal button:contains(Ok)'));
+        assert.containsOnce(actionManager, '.o_list_view', "should be open list view");
+
+        await testUtils.dom.click($('.o_control_panel .breadcrumb-item a'));
+        assert.containsNone(actionManager, '.o_field_boolean input:checked',
+            "checkbox should not be checked");
+
+        await testUtils.dom.click(actionManager.$("input[type='checkbox']"));
+        await testUtils.dom.click(actionManager.$('button[name="4"]'));
+        assert.containsOnce(document.body, '.modal', "should open a warning dialog");
+
+        await testUtils.dom.click($('.modal button:contains(Cancel)'));
+        assert.containsOnce(actionManager, '.o_form_view' ,"should be remain on form view");
+
+        await testUtils.dom.click(actionManager.$("button[name='execute']"));
+        assert.containsNone(document.body, '.modal', "should not open a warning dialog");
+
+        await testUtils.dom.click(actionManager.$("input[type='checkbox']"));
+        await testUtils.dom.click(actionManager.$("button[name='cancel']"));
+        assert.containsNone(document.body, '.modal', "should not open a warning dialog");
+
+        actionManager.destroy();
+    });
+
     QUnit.test('settings view does not display other settings after reload', async function (assert) {
         assert.expect(2);
 
