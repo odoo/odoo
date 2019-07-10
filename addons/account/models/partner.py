@@ -260,7 +260,6 @@ class ResPartner(models.Model):
     def _invoice_total(self):
         account_invoice_report = self.env['account.invoice.report']
         if not self.ids:
-            self.total_invoiced = 0.0
             return True
 
         user_currency_id = self.env.user.company_id.currency_id.id
