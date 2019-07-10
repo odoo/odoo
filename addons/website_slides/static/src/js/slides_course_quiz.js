@@ -57,13 +57,11 @@ odoo.define('website_slides.quiz', function (require) {
          * @override
          */
         willStart: function () {
-            var def = new Promise(function () {});
-            if (this.quiz) {
-                def.resolve();
-            } else {
-                def = this._fetchQuiz();
+            var defs = [this._super.apply(this, arguments)];
+            if (!this.quiz) {
+                defs.push(this._fetchQuiz());
             }
-            return Promise.all([this._super.apply(this, arguments), def]);
+            return Promise.all(defs);
         },
 
         /**
