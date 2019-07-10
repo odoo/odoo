@@ -245,7 +245,10 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
     def _assertRaises(self, exception):
         """ Context manager that clears the environment upon failure. """
         with super(BaseCase, self).assertRaises(exception) as cm:
-            with self.env.clear_upon_failure():
+            if hasattr(self, 'env'):
+                with self.env.clear_upon_failure():
+                    yield cm
+            else:
                 yield cm
 
     def assertRaises(self, exception, func=None, *args, **kwargs):
