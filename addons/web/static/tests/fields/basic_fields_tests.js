@@ -320,39 +320,6 @@ QUnit.module('basic_fields', {
         list.destroy();
     });
 
-
-    QUnit.module('FieldBooleanButton');
-
-    QUnit.test('use custom terminology in form view', async function (assert) {
-        assert.expect(2);
-        var terminology = {
-            string_true: "Production Environment",
-            hover_true: "Switch to test environment",
-            string_false: "Test Environment",
-            hover_false: "Switch to production environment"
-        };
-        var form = await createView({
-            View: FormView,
-            model: 'partner',
-            data: this.data,
-            arch: '<form>' +
-                    '<div name="button_box" class="oe_button_box">' +
-                        '<button type="object" class="oe_stat_button" icon="fa-check-square">' +
-                            '<field name="bar" widget="boolean_button" options=\'{"terminology": ' +
-                                JSON.stringify(terminology) + '}\'/>' +
-                        '</button>' +
-                    '</div>' +
-                '</form>',
-            res_id: 2,
-        });
-
-        assert.containsOnce(form, ".o_stat_text.o_not_hover:contains(Production Environment)",
-            "button should contain correct string");
-        assert.containsOnce(form, ".o_stat_text.o_hover:contains(Switch to test environment)",
-            "button should display correct string when hovering");
-        form.destroy();
-    });
-
     QUnit.module('FieldBooleanToggle');
 
     QUnit.test('use boolean toggle widget in form view', async function (assert) {
