@@ -2368,5 +2368,5 @@ class TestRoutes(TestStockCommon):
         picking_pick_2.scheduled_date += timedelta(days=2)
         activity = picking_ship.activity_ids
         self.assertEqual(len(activity), 2, 'not enough activity created')
-        self.assertTrue(picking_pick_1.name in activity[0].note, 'Wrong activity message')
-        self.assertTrue(picking_pick_2.name in activity[1].note, 'Wrong activity message')
+        self.assertTrue(picking_pick_1.name in activity[0].note + activity[1].note, 'Wrong activity message')
+        self.assertTrue(picking_pick_2.name in activity[0].note + activity[1].note, 'Wrong activity message')
