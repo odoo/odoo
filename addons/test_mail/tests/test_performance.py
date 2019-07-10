@@ -479,7 +479,7 @@ class TestHeavyMailPerformance(BaseMailPerformance):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(__system__=145, emp=153):  # com runbot: 145 - 153 // test_mail only: 145 - 153
+        with self.assertQueryCount(__system__=145, emp=149):  # com runbot: 145 - 149 // test_mail only: 145 - 149
             rec = self.env['mail.test.full'].create({
                 'name': 'Test',
                 'umbrella_id': umbrella_id,
