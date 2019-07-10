@@ -122,6 +122,19 @@ class TestSaleOrder(TestCommonSaleNoChart):
 
         # upsell and invoice
         self.sol_serv_order.write({'product_uom_qty': 10})
+        # DLE P136: `test_sale_order`
+        # There is a bug with `new` and `_origin`
+        # If you create a first new from a record, then change a value on the origin record, than create another new,
+        # this other new wont have the updated value of the origin record, but the one from the previous new
+        # Here the problem lies in the use of `new` in `move = self_ctx.new(new_vals)`,
+        # and the fact this method is called multiple times in the same transaction test case.
+        # Here, we update `qty_delivered` on the origin record, but the `new` records which are in cache with this order line
+        # as origin are not updated, nor the fields that depends on it.
+        self.sol_serv_order.flush()
+        for field in self.env['sale.order.line']._fields.values():
+            for res_id in list(self.env.cache._data[field]):
+                if not res_id:
+                    self.env.cache._data[field].pop(res_id)
 
         invoice3 = self.sale_order._create_invoices()
         self.assertEqual(len(invoice3.invoice_line_ids), 1, 'Sale: third invoice is missing lines')

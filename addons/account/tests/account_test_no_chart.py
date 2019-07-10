@@ -90,6 +90,16 @@ class TestAccountNoChartCommon(SavepointCase):
             'type': 'sale',
             'company_id': cls.env.user.company_id.id,
         })
+        # DLE P137: `def test_refund_modify`
+        # Default values were not loaded for `new` before.
+        # This is now the case.
+        # The test failed because this is a `new` invoice which require a `general` journal.
+        cls.journal_general = cls.env['account.journal'].create({
+            'name': 'General Journal - Test',
+            'code': 'AJ-GENERAL',
+            'type': 'general',
+            'company_id': cls.env.user.company_id.id,
+        })
 
     @classmethod
     def setUpUsers(cls):

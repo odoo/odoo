@@ -1406,16 +1406,6 @@ class AccountMove(models.Model):
 
             move = self_ctx.new(new_vals)
             new_vals_list.append(move._move_autocomplete_invoice_lines_values())
-            # DLE P136: `test_sale_order`
-            # There is a bug with `new` and `_origin`
-            # If you create a first new from a record, then change a value on the origin record, than create another new,
-            # this other new wont have the updated value of the origin record, but the one from the previous new
-            # Here the problem lies in the use of `new` in `move = self_ctx.new(new_vals)`,
-            # and the fact this method is called multiple times in the same transaction test case.
-            for field in self.env['sale.order.line']._fields.values():
-                for res_id in list(self.env.cache._data[field]):
-                    if not res_id:
-                        self.env.cache._data[field].pop(res_id)
 
         return new_vals_list
 
