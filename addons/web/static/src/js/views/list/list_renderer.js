@@ -25,6 +25,7 @@ var DECORATIONS = [
 ];
 
 var FIELD_CLASSES = {
+    char: 'o_list_char',
     float: 'o_list_number',
     integer: 'o_list_number',
     monetary: 'o_list_number',
