@@ -18,6 +18,7 @@
                     <field name="fees_implemented" invisible='1'/>
                     <field name="token_implemented" invisible='1'/>
                     <field name="authorize_implemented" invisible="1"/>
+                    <field name="website_published" invisible="1"/>
                     <sheet>
                         <field name="module_id" invisible="1"/>
                         <field name="module_state" invisible="1"/>
@@ -44,10 +45,20 @@
                                 </div>
                             </button>
                             <button name="toggle_website_published"
+                                    attrs="{'invisible': [('website_published', '=', True)]}"
                                     class="oe_stat_button"
                                     type="object" icon="fa-globe">
-                                <field name="website_published" widget="boolean_button"
-                                    options='{"terminology": {"string_true": "Published", "hover_false": "Publish"}}'/>
+                                <div class="o_stat_info o_field_widget">
+                                    <span class="text-danger">Unpublished</span>
+                                </div>
+                            </button>
+                            <button name="toggle_website_published"
+                                    attrs="{'invisible': [('website_published', '=', False)]}"
+                                    class="oe_stat_button"
+                                    type="object" icon="fa-globe">
+                                <div class="o_stat_info o_field_widget">
+                                    <span class="text-success">Published</span>
+                                </div>
                             </button>
                         </div>
                         <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
