@@ -247,10 +247,13 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
             with self.env.clear_upon_failure():
                 yield cm
 
-    def assertRaises(self, exception, func=None, *args, **kwargs):
-        if func:
+    def assertRaises(self, exception, *args, **kwargs):
+        if not hasattr(self, 'env'):
+            return super().assertRaises(exception, *args, **kwargs)
+        if args:
+            # args[0] is a callable
             with self._assertRaises(exception):
-                func(*args, **kwargs)
+                args[0](*args[1:], **kwargs)
         else:
             return self._assertRaises(exception)
 
