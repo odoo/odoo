@@ -31,7 +31,7 @@ class TimesheetAttendance(models.Model):
                     resource_resource.user_id AS user_id,
                     hr_attendance.worked_hours AS attendance,
                     NULL AS timesheet,
-                    date_trunc('day', hr_attendance.check_in) AS date
+                    hr_attendance.check_in::date AS date
                 FROM hr_attendance
                 LEFT JOIN hr_employee ON hr_employee.id = hr_attendance.employee_id
                 LEFT JOIN resource_resource on resource_resource.id = hr_employee.resource_id
@@ -41,7 +41,7 @@ class TimesheetAttendance(models.Model):
                     ts.user_id AS user_id,
                     NULL AS attendance,
                     ts.unit_amount AS timesheet,
-                    date_trunc('day', ts.date) AS date
+                    ts.date AS date
                 FROM account_analytic_line AS ts
                 WHERE ts.project_id IS NOT NULL
             ) AS t
