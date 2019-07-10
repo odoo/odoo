@@ -5,6 +5,9 @@
     'name': 'CRM Livechat',
     'category': 'crm',
     'summary': 'Create lead from livechat conversation',
+    'data': [
+        'data/utm_data.xml',
+    ],
     'depends': [
         'crm',
         'im_livechat'
