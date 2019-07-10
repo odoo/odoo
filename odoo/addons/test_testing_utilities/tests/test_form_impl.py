@@ -53,6 +53,16 @@ class TestBasic(TransactionCase):
             ('1', 0, 0, 0)
         )
 
+    def test_required_bool(self):
+        f = Form(self.env['test_testing_utilities.req_bool'])
+        f.f_bool = False
+        r = f.save()
+        self.assertEqual(r.f_bool, 0)
+
+        f2 = Form(self.env['test_testing_utilities.req_bool'])
+        r2 = f2.save()
+        self.assertEqual(r2.f_bool, 0)
+
     def test_readonly(self):
         """
         Checks that fields with readonly modifiers (marked as readonly or
