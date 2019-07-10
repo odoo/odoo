@@ -62,11 +62,11 @@ class MailComposer(models.TransientModel):
         # author
         if 'author_id' not in result:
             result['author_id'] = self.env.user.partner_id.id
-            if 'email_from' not in result:
-                result['email_from'] = formataddr((self.env.user.name, self.env.user.email))
-        else:
-            if 'email_from' not in result:
-                author = self.env['res.partner'].browse(result['author_id'])
+            if 'email_from' not in result and self.env.user.email:
+                result['email_from'] = self.env.user.email_formatted
+        elif 'email_from' not in result:
+            author = self.env['res.partner'].browse(result['author_id'])
+            if author.email:
                 result['email_from'] = formataddr((author.name, author.email))
 
         # v6.1 compatibility mode
