@@ -2229,7 +2229,14 @@ class _RelationalMulti(_Relational):
             # the inverse of self is a non-relational field; do not update in
             # this case, as we do not know whether the records are the ones that
             # value makes reference to (via a res_model/res_id pair)
-            return
+            # DLE P132:
+            # This is similar to DLE P121: there is a generic solution to found for one2many pointing to res_id/res_model
+            # `test_auto_subscribe_defaults`, `test_field_followers` for `res_model`
+            # `test_activity_flow_employee` for `res_model_id`
+            if self.type in ('one2many',) and self.inverse_name == 'res_id' and (('res_model_id' in value._fields and value.res_model_id.model == self.model_name) or ('res_model' in value._fields and value.res_model == self.model_name)):
+                records = value.env[self.model_name].browse(records)
+            else:
+                return
         cache = records.env.cache
         result = True
         for record in records:
@@ -2242,6 +2249,14 @@ class _RelationalMulti(_Relational):
                     cache.set_failed(record, [self], exc)
             else:
                 result = False
+        if result:
+            # DLE P103: `test_00_product_company_level_delays`
+            # on `moves.write({'picking_id': picking.id})`, `picking.move_lines` gets updated here,
+            # which must trigger the modification of `picking.group_id`, defined as `related='move_lines.group_id', store=True`
+            # DLE P135: `test_field_message_is_follower`
+            # When modifying `message_follower_ids`, it must trigger the modification of fields depending on it
+            # e.g. `message_is_follower`
+            records.modified([self.name])
         return result
 
     def convert_to_cache(self, value, record, validate=True):

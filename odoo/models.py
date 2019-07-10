@@ -3398,11 +3398,6 @@ Fields:
                             records = record[field.name]
                         update_res = invf._update(records, record)
                         toflush = not update_res or toflush
-                        # DLE P103: `test_00_product_company_level_delays`
-                        # on `moves.write({'picking_id': picking.id})`, `picking.move_lines` gets updated here,
-                        # which must trigger the modification of `picking.group_id`, defined as `related='move_lines.group_id', store=True`
-                        if update_res:
-                            records.modified([invf.name])
 
                 # flush if parent field
                 if self._parent_store and fname == self._parent_name:

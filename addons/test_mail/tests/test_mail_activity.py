@@ -188,6 +188,11 @@ class TestActivityMixin(TestActivityCommon):
                 'test_mail.mail_act_test_meeting',
                 today_user + relativedelta(days=-1))
             self.assertEqual(self.test_record.activity_state, 'overdue')
+            # DLE P133: `activity_user_id` is defined as `fields.Many2one('res.users', 'Responsible User', related='activity_ids.user_id')`
+            # it therefore relies on the order of `activity_ids`, according to which activity comes first.
+            # Not sure if this is a case we want to solve or not.
+            # In the mean time I just invalidate the cache so it refetch the one2many in the database order
+            self.test_record.invalidate_cache(['activity_ids'])
             self.assertEqual(self.test_record.activity_user_id, self.user_employee)
 
             act3 = self.test_record.activity_schedule(
