@@ -145,7 +145,6 @@ class account_payment(models.Model):
             payment.show_partner_bank_account = payment.payment_method_code in self._get_method_codes_using_bank_account()
             payment.require_partner_bank_account = payment.payment_method_code in self._get_method_codes_needing_bank_account()
 
-    @api.multi
     @api.depends('payment_type', 'journal_id')
     def _compute_hide_payment_method(self):
         for payment in self:
@@ -324,11 +323,9 @@ class account_payment(models.Model):
                 total += move_currency._convert(res['amount_residual'], currency, company, date)
         return total
 
-    @api.multi
     def name_get(self):
         return [(payment.id, payment.name or _('Draft Payment')) for payment in self]
 
-    @api.multi
     @api.depends('move_line_ids.reconciled')
     def _get_move_reconciled(self):
         for payment in self:
@@ -392,7 +389,6 @@ class account_payment(models.Model):
             record.reconciled_invoice_ids = reconciled_moves.filtered(lambda move: move.is_invoice())
             record.has_invoices = bool(record.reconciled_invoice_ids)
 
-    @api.multi
     def action_register_payment(self):
         active_ids = self.env.context.get('active_ids')
         if not active_ids:
@@ -408,7 +404,6 @@ class account_payment(models.Model):
             'type': 'ir.actions.act_window',
         }
 
-    @api.multi
     def button_journal_entries(self):
         return {
             'name': _('Journal Items'),
@@ -419,7 +414,6 @@ class account_payment(models.Model):
             'domain': [('payment_id', 'in', self.ids)],
         }
 
-    @api.multi
     def button_invoices(self):
         return {
             'name': _('Paid Invoices'),
@@ -431,7 +425,6 @@ class account_payment(models.Model):
             'domain': [('id', 'in', [x.id for x in self.reconciled_invoice_ids])],
         }
 
-    @api.multi
     def unreconcile(self):
         """ Set back the payments in 'posted' or 'sent' state, without deleting the journal entries.
             Called when cancelling a bank statement line linked to a pre-registered payment.
@@ -442,7 +435,6 @@ class account_payment(models.Model):
             else:
                 payment.write({'state': 'posted'})
 
-    @api.multi
     def cancel(self):
         for rec in self:
             for move in rec.move_line_ids.mapped('move_id'):
@@ -452,7 +444,6 @@ class account_payment(models.Model):
                 move.unlink()
             rec.state = 'cancelled'
 
-    @api.multi
     def unlink(self):
         if any(bool(rec.move_line_ids) for rec in self):
             raise UserError(_("You cannot delete a payment that is already posted."))
@@ -460,7 +451,6 @@ class account_payment(models.Model):
             raise UserError(_('It is not allowed to delete a payment that already created a journal entry since it would create a gap in the numbering. You should create the journal entry again and cancel it thanks to a regular revert.'))
         return super(account_payment, self).unlink()
 
-    @api.multi
     def _prepare_payment_moves(self):
         ''' Prepare the creation of journal entries (account.move) by creating a list of python dictionary to be passed
         to the 'create' method.
@@ -640,7 +630,6 @@ class account_payment(models.Model):
                 all_move_vals.append(transfer_move_vals)
         return all_move_vals
 
-    @api.multi
     def post(self):
         """ Create the journal items for the payment and update the payment's state to 'posted'.
             A journal entry is created containing an item in the source liquidity account (selected journal's default_debit or default_credit)
@@ -697,11 +686,9 @@ class account_payment(models.Model):
 
         return True
 
-    @api.multi
     def action_draft(self):
         return self.write({'state': 'draft'})
 
-    @api.multi
     def _get_invoice_payment_amount(self, inv):
         """
         Computes the amount covered by the current payment in the given invoice.
@@ -769,7 +756,6 @@ class payment_register(models.TransientModel):
             return {'domain': {'payment_method_id': domain}}
         return {}
 
-    @api.multi
     def _prepare_payment_vals(self, invoice):
         '''Create the payment values.
 
@@ -792,7 +778,6 @@ class payment_register(models.TransientModel):
         }
         return values
 
-    @api.multi
     def get_payments_vals(self):
         '''Compute the values for payments.
 
@@ -800,7 +785,6 @@ class payment_register(models.TransientModel):
         '''
         return [self._prepare_payment_vals(invoice) for invoice in self.invoice_ids]
 
-    @api.multi
     def create_payments(self):
         '''Create payments according to the invoices.
         Having invoices with different commercial_partner_id or different type

@@ -123,7 +123,6 @@ class Website(models.Model):
         if language_ids and self.default_lang_id not in language_ids:
             self.default_lang_id = language_ids[0]
 
-    @api.multi
     def _compute_menu(self):
         Menu = self.env['website.menu']
         for website in self:
@@ -147,7 +146,6 @@ class Website(models.Model):
 
         return res
 
-    @api.multi
     def write(self, values):
         public_user_to_change_websites = self.env['website']
         self._handle_favicon(values)
@@ -421,7 +419,6 @@ class Website(models.Model):
     # Languages
     # ----------------------------------------------------------
 
-    @api.multi
     def get_languages(self):
         self.ensure_one()
         return self._get_languages()
@@ -430,7 +427,6 @@ class Website(models.Model):
     def _get_languages(self):
         return [(lg.code, lg.name) for lg in self.language_ids]
 
-    @api.multi
     def get_alternate_languages(self, req=None):
         langs = []
         if req is None:
@@ -663,7 +659,6 @@ class Website(models.Model):
         # check that all args have a converter
         return all((arg in rule._converters) for arg in args)
 
-    @api.multi
     def enumerate_pages(self, query_string=None, force=False):
         """ Available pages in the website/CMS. This is mostly used for links
             generation and can be overridden by modules setting up new HTML
@@ -759,13 +754,11 @@ class Website(models.Model):
                 record['__lastmod'] = page['write_date'].date()
             yield record
 
-    @api.multi
     def get_website_pages(self, domain=[], order='name', limit=None):
         domain += self.get_current_website().website_domain()
         pages = self.env['website.page'].search(domain, order='name', limit=limit)
         return pages
 
-    @api.multi
     def search_pages(self, needle=None, limit=None):
         name = slugify(needle, max_length=50, path=True)
         res = []
@@ -808,7 +801,6 @@ class Website(models.Model):
             'target': 'self',
         }
 
-    @api.multi
     def _get_http_domain(self):
         """Get the domain of the current website, prefixed by http if no
         scheme is specified.
@@ -825,7 +817,6 @@ class Website(models.Model):
 class BaseModel(models.AbstractModel):
     _inherit = 'base'
 
-    @api.multi
     def get_base_url(self):
         """
         Returns baseurl about one given record.

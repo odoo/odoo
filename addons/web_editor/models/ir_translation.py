@@ -22,7 +22,6 @@ class IrTranslation(models.Model):
             return edit_translation_mapping
         return super(IrTranslation, self)._get_terms_mapping(field, records)
 
-    @api.multi
     def save_html(self, value):
         """ Convert the HTML fragment ``value`` to XML if necessary, and write
         it as the value of translation ``self``.

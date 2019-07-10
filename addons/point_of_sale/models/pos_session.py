@@ -114,20 +114,17 @@ class PosSession(models.Model):
 
     _sql_constraints = [('uniq_name', 'unique(name)', "The name of this POS Session must be unique !")]
 
-    @api.multi
     def _compute_order_count(self):
         orders_data = self.env['pos.order'].read_group([('session_id', 'in', self.ids)], ['session_id'], ['session_id'])
         sessions_data = {order_data['session_id'][0]: order_data['session_id_count'] for order_data in orders_data}
         for session in self:
             session.order_count = sessions_data.get(session.id, 0)
 
-    @api.multi
     def _compute_picking_count(self):
         for pos in self:
             pickings = pos.order_ids.mapped('picking_id').filtered(lambda x: x.state != 'done')
             pos.picking_count = len(pickings.ids)
 
-    @api.multi
     def action_stock_picking(self):
         pickings = self.order_ids.mapped('picking_id').filtered(lambda x: x.state != 'done')
         action_picking = self.env.ref('stock.action_picking_tree_ready')
@@ -242,20 +239,17 @@ class PosSession(models.Model):
 
         return res
 
-    @api.multi
     def unlink(self):
         for session in self.filtered(lambda s: s.statement_ids):
             session.statement_ids.unlink()
         return super(PosSession, self).unlink()
 
-    @api.multi
     def login(self):
         self.ensure_one()
         self.write({
             'login_number': self.login_number + 1,
         })
 
-    @api.multi
     def action_pos_session_open(self):
         # second browse because we need to refetch the data from the DB for cash_register_id
         # we only open sessions that haven't already been opened
@@ -268,7 +262,6 @@ class PosSession(models.Model):
             session.statement_ids.button_open()
         return True
 
-    @api.multi
     def action_pos_session_closing_control(self):
         self._check_pos_session_balance()
         for session in self:
@@ -276,19 +269,16 @@ class PosSession(models.Model):
             if not session.config_id.cash_control:
                 session.action_pos_session_close()
 
-    @api.multi
     def _check_pos_session_balance(self):
         for session in self:
             for statement in session.statement_ids:
                 if (statement != session.cash_register_id) and (statement.balance_end != statement.balance_end_real):
                     statement.write({'balance_end_real': statement.balance_end})
 
-    @api.multi
     def action_pos_session_validate(self):
         self._check_pos_session_balance()
         self.action_pos_session_close()
 
-    @api.multi
     def action_pos_session_close(self):
         # Close CashBox
         for session in self:
@@ -313,7 +303,6 @@ class PosSession(models.Model):
             'params': {'menu_id': self.env.ref('point_of_sale.menu_point_root').id},
         }
 
-    @api.multi
     def open_frontend_cb(self):
         if not self.ids:
             return {}
@@ -326,7 +315,6 @@ class PosSession(models.Model):
             'url':   '/pos/web/',
         }
 
-    @api.multi
     def open_cashbox(self):
         self.ensure_one()
         context = dict(self._context)

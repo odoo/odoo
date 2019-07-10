@@ -81,13 +81,11 @@ class PurchaseOrder(models.Model):
     # Actions
     # --------------------------------------------------
 
-    @api.multi
     def button_approve(self, force=False):
         result = super(PurchaseOrder, self).button_approve(force=force)
         self._create_picking()
         return result
 
-    @api.multi
     def button_cancel(self):
         for order in self:
             for move in order.order_line.mapped('move_ids'):
@@ -113,7 +111,6 @@ class PurchaseOrder(models.Model):
 
         return super(PurchaseOrder, self).button_cancel()
 
-    @api.multi
     def action_view_picking(self):
         """ This function returns an action that display existing picking orders of given purchase order ids. When only one found, show the picking immediately.
         """
@@ -170,7 +167,6 @@ class PurchaseOrder(models.Model):
             filtered_documents[(parent, responsible)] = rendering_context
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_po, filtered_documents)
 
-    @api.multi
     def _get_destination_location(self):
         self.ensure_one()
         if self.dest_address_id:
@@ -197,7 +193,6 @@ class PurchaseOrder(models.Model):
             'company_id': self.company_id.id,
         }
 
-    @api.multi
     def _create_picking(self):
         StockPicking = self.env['stock.picking']
         for order in self:
@@ -233,14 +228,12 @@ class PurchaseOrderLine(models.Model):
     propagate_date_minimum_delta = fields.Integer(string='Reschedule if Higher Than', help='The change must be higher than this value to be propagated')
     propagate_cancel = fields.Boolean('Propagate cancellation', default=True)
 
-    @api.multi
     def _compute_qty_received_method(self):
         super(PurchaseOrderLine, self)._compute_qty_received_method()
         for line in self:
             if line.product_id.type in ['consu', 'product']:
                 line.qty_received_method = 'stock_moves'
 
-    @api.multi
     @api.depends('move_ids.state', 'move_ids.product_uom_qty', 'move_ids.product_uom')
     def _compute_qty_received(self):
         super(PurchaseOrderLine, self)._compute_qty_received()
@@ -269,7 +262,6 @@ class PurchaseOrderLine(models.Model):
             line._create_or_update_picking()
         return line
 
-    @api.multi
     def write(self, values):
         for line in self:
             if values.get('date_planned') and line.propagate_date:
@@ -291,7 +283,6 @@ class PurchaseOrderLine(models.Model):
     # Business methods
     # --------------------------------------------------
 
-    @api.multi
     def _create_or_update_picking(self):
         for line in self:
             if line.product_id.type in ('product', 'consu'):
@@ -324,7 +315,6 @@ class PurchaseOrderLine(models.Model):
                         ._action_confirm()\
                         ._action_assign()
 
-    @api.multi
     def _get_stock_move_price_unit(self):
         self.ensure_one()
         line = self[0]
@@ -341,7 +331,6 @@ class PurchaseOrderLine(models.Model):
                 price_unit, order.company_id.currency_id, self.company_id, self.date_order or fields.Date.today(), round=False)
         return price_unit
 
-    @api.multi
     def _prepare_stock_moves(self, picking):
         """ Prepare the stock moves data for one order line. This function returns a list of
         dictionary ready to be used in stock.move's create()
@@ -391,7 +380,6 @@ class PurchaseOrderLine(models.Model):
             res.append(template)
         return res
 
-    @api.multi
     def _create_stock_moves(self, picking):
         values = []
         for line in self:

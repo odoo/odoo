@@ -24,7 +24,6 @@ class Department(models.Model):
     note = fields.Text('Note')
     color = fields.Integer('Color Index')
 
-    @api.multi
     def name_get(self):
         if not self.env.context.get('hierarchical_naming', True):
             return [(record.id, record.name) for record in self]
@@ -54,7 +53,6 @@ class Department(models.Model):
             department.message_subscribe(partner_ids=manager.user_id.partner_id.ids)
         return department
 
-    @api.multi
     def write(self, vals):
         """ If updating manager of a department, we need to update all the employees
             of department hierarchy, and subscribe the new manager.

@@ -9,7 +9,6 @@ class CashBox(models.TransientModel):
     # in the context of the action
     amount = fields.Float(string='Amount', digits=0, required=True)
 
-    @api.multi
     def run(self):
         context = dict(self._context or {})
         active_model = context.get('active_model', False)
@@ -19,7 +18,6 @@ class CashBox(models.TransientModel):
 
         return self._run(records)
 
-    @api.multi
     def _run(self, records):
         for box in self:
             for record in records:
@@ -44,7 +42,6 @@ class CashBoxIn(CashBox):
 
     ref = fields.Char('Reference')
 
-    @api.multi
     def _calculate_values_for_statement_line(self, record):
         if not record.journal_id.company_id.transfer_account_id:
             raise UserError(_("You have to define an 'Internal Transfer Account' in your cash register's journal."))
@@ -63,7 +60,6 @@ class CashBoxOut(CashBox):
     _name = 'cash.box.out'
     _description = 'Cash Box Out'
 
-    @api.multi
     def _calculate_values_for_statement_line(self, record):
         if not record.journal_id.company_id.transfer_account_id:
             raise UserError(_("You have to define an 'Internal Transfer Account' in your cash register's journal."))

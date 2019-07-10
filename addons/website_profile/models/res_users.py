@@ -58,7 +58,6 @@ class Users(models.Model):
                     self.id, force_send=True, raise_exception=True)
         return True
 
-    @api.multi
     def _process_profile_validation_token(self, token, email):
         self.ensure_one()
         validation_token = self._generate_profile_token(self.id, email)

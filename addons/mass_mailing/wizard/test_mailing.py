@@ -12,7 +12,6 @@ class TestMassMailing(models.TransientModel):
                            help='Comma-separated list of email addresses.', default=lambda self: self.env['mail.message']._get_default_from())
     mass_mailing_id = fields.Many2one('mail.mass_mailing', string='Mailing', required=True, ondelete='cascade')
 
-    @api.multi
     def send_mail_test(self):
         self.ensure_one()
         mails = self.env['mail.mail']

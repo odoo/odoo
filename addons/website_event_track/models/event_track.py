@@ -90,7 +90,6 @@ class Track(models.Model):
         'Priority', required=True, default='1')
     image = fields.Binary('Image', related='partner_id.image_medium', store=True, readonly=False)
 
-    @api.multi
     @api.depends('name')
     def _compute_website_url(self):
         super(Track, self)._compute_website_url()
@@ -119,7 +118,6 @@ class Track(models.Model):
 
         return track
 
-    @api.multi
     def write(self, vals):
         if 'stage_id' in vals and 'kanban_state' not in vals:
             vals['kanban_state'] = 'normal'
@@ -133,7 +131,6 @@ class Track(models.Model):
         """ Always display all stages """
         return stages.search([], order=order)
 
-    @api.multi
     def _track_template(self, changes):
         res = super(Track, self)._track_template(changes)
         track = self[0]
@@ -146,7 +143,6 @@ class Track(models.Model):
             })
         return res
 
-    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'kanban_state' in init_values and self.kanban_state == 'blocked':
@@ -155,7 +151,6 @@ class Track(models.Model):
             return self.env.ref('website_event_track.mt_track_ready')
         return super(Track, self)._track_subtype(init_values)
 
-    @api.multi
     def _message_get_suggested_recipients(self):
         recipients = super(Track, self)._message_get_suggested_recipients()
         for track in self:
@@ -177,7 +172,6 @@ class Track(models.Model):
                 ]).write({'partner_id': new_partner.id})
         return super(Track, self)._message_post_after_hook(message, msg_vals)
 
-    @api.multi
     def open_track_speakers_list(self):
         return {
             'name': _('Speakers'),

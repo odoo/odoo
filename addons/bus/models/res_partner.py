@@ -10,7 +10,6 @@ class ResPartner(models.Model):
 
     im_status = fields.Char('IM Status', compute='_compute_im_status')
 
-    @api.multi
     def _compute_im_status(self):
         self.env.cr.execute("""
             SELECT

@@ -29,7 +29,6 @@ class SaleOrderTemplate(models.Model):
         help="This e-mail template will be sent on confirmation. Leave empty to send nothing.")
     active = fields.Boolean(default=True, help="If unchecked, it will allow you to hide the quotation template without removing it.")
 
-    @api.multi
     def write(self, vals):
         if 'active' in vals and not vals.get('active'):
             template_id = self.env['ir.default'].get('sale.order', 'sale_order_template_id')
@@ -83,7 +82,6 @@ class SaleOrderTemplateLine(models.Model):
             values.update(product_id=False, price_unit=0, product_uom_qty=0, product_uom_id=False)
         return super(SaleOrderTemplateLine, self).create(values)
 
-    @api.multi
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
             raise UserError("You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type.")

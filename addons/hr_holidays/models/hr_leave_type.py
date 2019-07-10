@@ -92,7 +92,6 @@ class HolidaysType(models.Model):
     leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Time Off Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave', raise_if_not_found=False))
     allocation_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Allocation Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave_allocation', raise_if_not_found=False))
 
-    @api.multi
     @api.constrains('validity_start', 'validity_stop')
     def _check_validity_dates(self):
         for leave_type in self:
@@ -100,7 +99,6 @@ class HolidaysType(models.Model):
                leave_type.validity_start > leave_type.validity_stop:
                 raise ValidationError(_("End of validity period should be greater than start of validity period"))
 
-    @api.multi
     @api.depends('validity_start', 'validity_stop')
     def _compute_valid(self):
         dt = self._context.get('default_date_from') or fields.Date.context_today(self)
@@ -151,7 +149,6 @@ class HolidaysType(models.Model):
 
         return [('id', 'in', valid_leave)]
 
-    @api.multi
     def get_days(self, employee_id):
         # need to use `dict` constructor to create a dict per id
         result = dict((id, dict(max_leaves=0, leaves_taken=0, remaining_leaves=0, virtual_remaining_leaves=0)) for id in self.ids)
@@ -221,7 +218,6 @@ class HolidaysType(models.Model):
             employee_id = self.env['hr.employee'].search([('user_id', '=', self.env.user.id), ('company_id', '=', self.env.company.id)], limit=1).id
         return employee_id
 
-    @api.multi
     def _compute_leaves(self):
         data_days = {}
         employee_id = self._get_contextual_employee_id()
@@ -236,7 +232,6 @@ class HolidaysType(models.Model):
             holiday_status.remaining_leaves = result.get('remaining_leaves', 0)
             holiday_status.virtual_remaining_leaves = result.get('virtual_remaining_leaves', 0)
 
-    @api.multi
     def _compute_group_days_allocation(self):
         domain = [
             ('holiday_status_id', 'in', self.ids),
@@ -257,7 +252,6 @@ class HolidaysType(models.Model):
         for allocation in self:
             allocation.group_days_allocation = grouped_dict.get(allocation.id, 0)
 
-    @api.multi
     def _compute_group_days_leave(self):
         grouped_res = self.env['hr.leave'].read_group(
             [('holiday_status_id', 'in', self.ids), ('holiday_type', '=', 'employee'), ('state', '=', 'validate'),
@@ -269,7 +263,6 @@ class HolidaysType(models.Model):
         for allocation in self:
             allocation.group_days_leave = grouped_dict.get(allocation.id, 0)
 
-    @api.multi
     def name_get(self):
         if not self._context.get('employee_id'):
             # leave counts is based on employee_id, would be inaccurate if not based on correct employee
@@ -309,7 +302,6 @@ class HolidaysType(models.Model):
             return leaves.sorted(key=sort_key, reverse=True).ids
         return leave_ids
 
-    @api.multi
     def action_see_days_allocated(self):
         self.ensure_one()
         action = self.env.ref('hr_holidays.hr_leave_allocation_action_all').read()[0]
@@ -329,7 +321,6 @@ class HolidaysType(models.Model):
         }
         return action
 
-    @api.multi
     def action_see_group_leaves(self):
         self.ensure_one()
         action = self.env.ref('hr_holidays.hr_leave_action_all').read()[0]

@@ -7,13 +7,11 @@ from odoo import api, fields, models
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
-    @api.multi
     def button_cancel(self):
         result = super(PurchaseOrder, self).button_cancel()
         self.sudo()._activity_cancel_on_sale()
         return result
 
-    @api.multi
     def _activity_cancel_on_sale(self):
         """ If some PO are cancelled, we need to put an activity on their origin SO (only the open ones). Since a PO can have
             been modified by several SO, when cancelling one PO, many next activities can be schedulded on different SO.

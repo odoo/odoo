@@ -8,7 +8,6 @@ class TaxAdjustments(models.TransientModel):
     _name = 'tax.adjustments.wizard'
     _description = 'Tax Adjustments Wizard'
 
-    @api.multi
     def _get_default_journal(self):
         return self.env['account.journal'].search([('type', '=', 'general')], limit=1).id
 

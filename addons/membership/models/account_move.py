@@ -9,7 +9,6 @@ from datetime import date
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    @api.multi
     def button_draft(self):
         # OVERRIDE to update the cancel date.
         res = super(AccountMove, self).button_draft()
@@ -19,7 +18,6 @@ class AccountMove(models.Model):
             ]).write({'date_cancel': False})
         return res
 
-    @api.multi
     def button_cancel(self):
         # OVERRIDE to update the cancel date.
         res = super(AccountMove, self).button_cancel()
@@ -29,7 +27,6 @@ class AccountMove(models.Model):
             ]).write({'date_cancel': fields.Date.today()})
         return res
 
-    @api.multi
     def write(self, vals):
         # OVERRIDE to write the partner on the membership lines.
         res = super(AccountMove, self).write(vals)
@@ -43,7 +40,6 @@ class AccountMove(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
-    @api.multi
     def write(self, vals):
         # OVERRIDE
         res = super(AccountMoveLine, self).write(vals)

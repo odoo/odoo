@@ -110,11 +110,9 @@ class MrpBom(models.Model):
         for line in self.bom_line_ids:
             line.operation_id = False
 
-    @api.multi
     def name_get(self):
         return [(bom.id, '%s%s' % (bom.code and '%s: ' % bom.code or '', bom.product_tmpl_id.display_name)) for bom in self]
 
-    @api.multi
     def unlink(self):
         if self.env['mrp.production'].search([('bom_id', 'in', self.ids), ('state', 'not in', ['done', 'cancel'])], limit=1):
             raise UserError(_('You can not delete a Bill of Material with running manufacturing orders.\nPlease close or cancel it first.'))
@@ -336,7 +334,6 @@ class MrpBomLine(models.Model):
                     return True
         return False
 
-    @api.multi
     def action_see_attachments(self):
         domain = [
             '|',

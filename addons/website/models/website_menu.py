@@ -29,7 +29,6 @@ class Menu(models.Model):
     group_ids = fields.Many2many('res.groups', string='Visible Groups',
                                  help="User need to be at least in one of these groups to see the menu")
 
-    @api.multi
     def name_get(self):
         if not self._context.get('display_website') and not self.env.user.has_group('website.group_multi_website'):
             return super(Menu, self).name_get()
@@ -74,7 +73,6 @@ class Menu(models.Model):
                 res = super(Menu, self).create(vals)
         return res  # Only one record is returned but multiple could have been created
 
-    @api.multi
     def unlink(self):
         default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
         menus_to_remove = self

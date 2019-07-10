@@ -22,7 +22,6 @@ class UoMCategory(models.Model):
         ('uom_category_unique_type', 'UNIQUE(measure_type)', 'You can have only one category per measurement type.'),
     ]
 
-    @api.multi
     def unlink(self):
         if self.filtered(lambda categ: categ.measure_type == 'working_time'):
             raise UserError(_("You cannot delete this UoM Category as it is used by the system."))
@@ -101,14 +100,12 @@ class UoM(models.Model):
                 values['factor'] = factor_inv and (1.0 / factor_inv) or 0.0
         return super(UoM, self).create(vals_list)
 
-    @api.multi
     def write(self, values):
         if 'factor_inv' in values:
             factor_inv = values.pop('factor_inv')
             values['factor'] = factor_inv and (1.0 / factor_inv) or 0.0
         return super(UoM, self).write(values)
 
-    @api.multi
     def unlink(self):
         if self.filtered(lambda uom: uom.measure_type == 'working_time'):
             raise UserError(_("You cannot delete this UoM as it is used by the system. You should rather archive it."))
@@ -134,7 +131,6 @@ class UoM(models.Model):
         new_uom = self.create(values)
         return new_uom.name_get()[0]
 
-    @api.multi
     def _compute_quantity(self, qty, to_unit, round=True, rounding_method='UP', raise_if_failure=True):
         """ Convert the given quantity from the current UoM `self` into a given one
             :param qty: the quantity to convert
@@ -158,7 +154,6 @@ class UoM(models.Model):
                 amount = tools.float_round(amount, precision_rounding=to_unit.rounding, rounding_method=rounding_method)
         return amount
 
-    @api.multi
     def _compute_price(self, price, to_unit):
         self.ensure_one()
         if not self or not price or not to_unit or self == to_unit:

@@ -16,7 +16,6 @@ class ResPartner(models.Model):
             result = geo_obj.geo_find(search, force_country=country)
         return result
 
-    @api.multi
     def geo_localize(self):
         # We need country names in English below
         for partner in self.with_context(lang='en_US'):

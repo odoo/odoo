@@ -149,12 +149,10 @@ class IrSequence(models.Model):
             _create_sequence(self._cr, "ir_sequence_%03d" % seq.id, values.get('number_increment', 1), values.get('number_next', 1))
         return seq
 
-    @api.multi
     def unlink(self):
         _drop_sequences(self._cr, ["ir_sequence_%03d" % x.id for x in self])
         return super(IrSequence, self).unlink()
 
-    @api.multi
     def write(self, values):
         new_implementation = values.get('implementation')
         for seq in self:
@@ -253,7 +251,6 @@ class IrSequence(models.Model):
             seq_date = self._create_date_range_seq(dt)
         return seq_date.with_context(ir_sequence_date_range=seq_date.date_from)._next()
 
-    @api.multi
     def next_by_id(self, sequence_date=None):
         """ Draw an interpolated string using the specified sequence."""
         self.check_access_rights('read')
@@ -349,7 +346,6 @@ class IrSequenceDateRange(models.Model):
             number_next = _update_nogap(self, self.sequence_id.number_increment)
         return self.sequence_id.get_next_char(number_next)
 
-    @api.multi
     def _alter_sequence(self, number_increment=None, number_next=None):
         for seq in self:
             _alter_sequence(self._cr, "ir_sequence_%03d_%03d" % (seq.sequence_id.id, seq.id), number_increment=number_increment, number_next=number_next)
@@ -364,12 +360,10 @@ class IrSequenceDateRange(models.Model):
             _create_sequence(self._cr, "ir_sequence_%03d_%03d" % (main_seq.id, seq.id), main_seq.number_increment, values.get('number_next_actual', 1))
         return seq
 
-    @api.multi
     def unlink(self):
         _drop_sequences(self._cr, ["ir_sequence_%03d_%03d" % (x.sequence_id.id, x.id) for x in self])
         return super(IrSequenceDateRange, self).unlink()
 
-    @api.multi
     def write(self, values):
         if values.get('number_next'):
             seq_to_alter = self.filtered(lambda seq: seq.sequence_id.implementation == 'standard')

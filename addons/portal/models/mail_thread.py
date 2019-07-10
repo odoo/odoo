@@ -16,7 +16,6 @@ class MailThread(models.AbstractModel):
         domain=lambda self: [('model', '=', self._name), '|', ('message_type', '=', 'comment'), ('message_type', '=', 'email')], auto_join=True,
         help="Website communication history")
 
-    @api.multi
     def _sign_token(self, pid):
         """Generate a secure hash for this record with the email of the recipient with whom the record have been shared.
 

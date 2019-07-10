@@ -10,7 +10,6 @@ class ProductProduct(models.Model):
 
     sales_count = fields.Float(compute='_compute_sales_count', string='Sold')
 
-    @api.multi
     def _compute_sales_count(self):
         r = {}
         if not self.user_has_groups('sales_team.group_sale_salesman'):
@@ -34,7 +33,6 @@ class ProductProduct(models.Model):
             product.sales_count = float_round(r.get(product.id, 0), precision_rounding=product.uom_id.rounding)
         return r
 
-    @api.multi
     def action_view_sales(self):
         action = self.env.ref('sale.report_all_channels_sales_action').read()[0]
         action['domain'] = [('product_id', 'in', self.ids)]
@@ -50,7 +48,6 @@ class ProductProduct(models.Model):
     def _get_invoice_policy(self):
         return self.invoice_policy
 
-    @api.multi
     def _get_combination_info_variant(self, add_qty=1, pricelist=False, parent_combination=False):
         """Return the variant info based on its combination.
         See `_get_combination_info` for more information.

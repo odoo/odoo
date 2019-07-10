@@ -63,7 +63,6 @@ class Rating(models.Model):
                 name = name and name[0][1] or ('%s/%s') % (rating.parent_res_model, rating.parent_res_id)
             rating.parent_res_name = name
 
-    @api.multi
     @api.depends('rating')
     def _compute_rating_image(self):
         for rating in self:
@@ -91,7 +90,6 @@ class Rating(models.Model):
             values.update(self._find_parent_data(values))
         return super(Rating, self).create(values)
 
-    @api.multi
     def write(self, values):
         if values.get('res_model_id') and values.get('res_id'):
             values.update(self._find_parent_data(values))
@@ -113,7 +111,6 @@ class Rating(models.Model):
                 data['parent_res_id'] = parent_res_model.id
         return data
 
-    @api.multi
     def reset(self):
         for record in self:
             record.write({

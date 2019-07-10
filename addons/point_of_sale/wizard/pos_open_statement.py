@@ -9,7 +9,6 @@ class PosOpenStatement(models.TransientModel):
     _name = 'pos.open.statement'
     _description = 'Point of Sale Open Statement'
 
-    @api.multi
     def open_statement(self):
         self.ensure_one()
         BankStatement = self.env['account.bank.statement']

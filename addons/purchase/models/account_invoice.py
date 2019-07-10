@@ -83,7 +83,6 @@ class AccountMove(models.Model):
             move.message_post(body=message)
         return moves
 
-    @api.multi
     def write(self, vals):
         # OVERRIDE
         old_purchases = [move.mapped('line_ids.purchase_line_id.order_id') for move in self]
@@ -106,7 +105,6 @@ class AccountMoveLine(models.Model):
 
     purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', index=True)
 
-    @api.multi
     def _copy_data_extend_business_fields(self, values):
         # OVERRIDE to copy the 'purchase_line_id' field as well.
         super(AccountMoveLine, self)._copy_data_extend_business_fields(values)

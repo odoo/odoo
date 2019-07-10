@@ -9,7 +9,6 @@ class AccountBankStatementImportJounalCreation(models.TransientModel):
 
     journal_id = fields.Many2one('account.journal', delegate=True, required=True, ondelete='cascade')
 
-    @api.multi
     def create_journal(self):
         """ Create the journal (the record is automatically created in the process of calling this method) and reprocess the statement """
         statement_import_transient = self.env['account.bank.statement.import'].browse(self.env.context['statement_import_transient_id'])

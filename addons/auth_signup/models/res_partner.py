@@ -30,7 +30,6 @@ class ResPartner(models.Model):
     signup_valid = fields.Boolean(compute='_compute_signup_valid', string='Signup Token is Valid')
     signup_url = fields.Char(compute='_compute_signup_url', string='Signup URL')
 
-    @api.multi
     @api.depends('signup_token', 'signup_expiration')
     def _compute_signup_valid(self):
         dt = now()
@@ -38,7 +37,6 @@ class ResPartner(models.Model):
             partner.signup_valid = bool(partner_sudo.signup_token) and \
             (not partner_sudo.signup_expiration or dt <= partner_sudo.signup_expiration)
 
-    @api.multi
     def _compute_signup_url(self):
         """ proxy for function field towards actual implementation """
         result = self.sudo()._get_signup_url_for_action()
@@ -47,7 +45,6 @@ class ResPartner(models.Model):
                 self.env['res.users'].check_access_rights('write')
             partner.signup_url = result.get(partner.id, False)
 
-    @api.multi
     def _get_signup_url_for_action(self, url=None, action=None, view_type=None, menu_id=None, res_id=None, model=None):
         """ generate a signup url for the given partner ids and action, possibly overriding
             the url state components (menu_id, id, view_type) """
@@ -101,7 +98,6 @@ class ResPartner(models.Model):
 
         return res
 
-    @api.multi
     def action_signup_prepare(self):
         return self.signup_prepare()
 
@@ -121,11 +117,9 @@ class ResPartner(models.Model):
                 res[partner.id]['auth_login'] = partner.user_ids[0].login
         return res
 
-    @api.multi
     def signup_cancel(self):
         return self.write({'signup_token': False, 'signup_type': False, 'signup_expiration': False})
 
-    @api.multi
     def signup_prepare(self, signup_type="signup", expiration=False):
         """ generate a new token for the partners with the given validity, if necessary
             :param expiration: the expiration datetime of the token (string, optional)

@@ -9,7 +9,6 @@ from odoo.osv.expression import AND
 class ResourceCalendar(models.Model):
     _inherit = 'resource.calendar'
 
-    @api.multi
     def transfer_leaves_to(self, other_calendar, resources=None, from_date=None):
         """
             Transfer some resource.calendar.leaves from 'self' to another calendar 'other_calendar'.

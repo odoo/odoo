@@ -20,7 +20,6 @@ class Department(models.Model):
     total_employee = fields.Integer(
         compute='_compute_total_employee', string='Total Employee')
 
-    @api.multi
     def _compute_leave_count(self):
         Requests = self.env['hr.leave']
         Allocations = self.env['hr.leave.allocation']
@@ -50,7 +49,6 @@ class Department(models.Model):
             department.allocation_to_approve_count = res_allocation.get(department.id, 0)
             department.absence_of_today = res_absence.get(department.id, 0)
 
-    @api.multi
     def _compute_total_employee(self):
         emp_data = self.env['hr.employee'].read_group([('department_id', 'in', self.ids)], ['department_id'], ['department_id'])
         result = dict((data['department_id'][0], data['department_id_count']) for data in emp_data)

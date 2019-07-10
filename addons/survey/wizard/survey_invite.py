@@ -234,7 +234,6 @@ class SurveyInvite(models.TransientModel):
 
         return self.env['mail.mail'].sudo().create(mail_values)
 
-    @api.multi
     def action_invite(self):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed """

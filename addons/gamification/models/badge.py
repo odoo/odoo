@@ -143,7 +143,6 @@ class GamificationBadge(models.Model):
             tools.image_resize_images(vals)
         return super(GamificationBadge, self).create(values_list)
 
-    @api.multi
     def write(self, vals):
         tools.image_resize_images(vals)
         return super(GamificationBadge, self).write(vals)

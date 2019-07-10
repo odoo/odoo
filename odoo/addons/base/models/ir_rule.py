@@ -186,7 +186,6 @@ class IrRule(models.Model):
             return query.where_clause, query.where_clause_params, query.tables
         return [], [], ['"%s"' % self.env[model_name]._table]
 
-    @api.multi
     def unlink(self):
         res = super(IrRule, self).unlink()
         self.clear_caches()
@@ -198,7 +197,6 @@ class IrRule(models.Model):
         self.clear_caches()
         return res
 
-    @api.multi
     def write(self, vals):
         res = super(IrRule, self).write(vals)
         self.clear_caches()

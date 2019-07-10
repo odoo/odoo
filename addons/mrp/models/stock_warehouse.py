@@ -239,14 +239,12 @@ class StockWarehouse(models.Model):
         })
         return data
 
-    @api.multi
     def write(self, vals):
         if any(field in vals for field in ('manufacture_steps', 'manufacture_to_resupply')):
             for warehouse in self:
                 warehouse._update_location_manufacture(vals.get('manufacture_steps', warehouse.manufacture_steps))
         return super(StockWarehouse, self).write(vals)
 
-    @api.multi
     def _get_all_routes(self):
         routes = super(StockWarehouse, self)._get_all_routes()
         routes |= self.filtered(lambda self: self.manufacture_to_resupply and self.manufacture_pull_id and self.manufacture_pull_id.route_id).mapped('manufacture_pull_id').mapped('route_id')
@@ -256,7 +254,6 @@ class StockWarehouse(models.Model):
         self.mapped('pbm_loc_id').write({'active': new_manufacture_step != 'mrp_one_step'})
         self.mapped('sam_loc_id').write({'active': new_manufacture_step == 'pbm_sam'})
 
-    @api.multi
     def _update_name_and_code(self, name=False, code=False):
         res = super(StockWarehouse, self)._update_name_and_code(name, code)
         # change the manufacture stock rule name

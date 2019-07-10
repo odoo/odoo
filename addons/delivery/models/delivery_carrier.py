@@ -81,7 +81,6 @@ class DeliveryCarrier(models.Model):
         for c in self:
             c.debug_logging = not c.debug_logging
 
-    @api.multi
     def install_more_provider(self):
         return {
             'name': 'New Providers',

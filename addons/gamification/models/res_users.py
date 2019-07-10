@@ -25,7 +25,6 @@ class Users(models.Model):
         for user in self:
             user.karma_position = 0
 
-    @api.multi
     @api.depends('badge_ids')
     def _get_user_badge_level(self):
         """ Return total badge per level of users
@@ -55,14 +54,12 @@ class Users(models.Model):
         res._recompute_rank()
         return res
 
-    @api.multi
     def write(self, vals):
         result = super(Users, self).write(vals)
         if 'karma' in vals:
             self._recompute_rank()
         return result
 
-    @api.multi
     def add_karma(self, karma):
         for user in self:
             user.karma += karma

@@ -10,7 +10,6 @@ class Users(models.Model):
     create_date = fields.Datetime('Create Date', readonly=True, index=True)
     forum_waiting_posts_count = fields.Integer('Waiting post', compute="_get_user_waiting_post")
 
-    @api.multi
     def _get_user_waiting_post(self):
         for user in self:
             Post = self.env['forum.post']
@@ -18,7 +17,6 @@ class Users(models.Model):
             user.forum_waiting_posts_count = Post.search_count(domain)
 
     # Wrapper for call_kw with inherits
-    @api.multi
     def open_website_url(self):
         return self.mapped('partner_id').open_website_url()
 

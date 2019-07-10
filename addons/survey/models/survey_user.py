@@ -66,7 +66,6 @@ class SurveyUserInput(models.Model):
     # Stored for performance reasons while displaying results page
     quizz_passed = fields.Boolean('Quizz Passed', compute='_compute_quizz_passed', store=True, compute_sudo=True)
 
-    @api.multi
     @api.depends('user_input_line_ids.answer_score', 'user_input_line_ids.question_id')
     def _compute_quizz_score(self):
         for user_input in self:
@@ -81,7 +80,6 @@ class SurveyUserInput(models.Model):
                 score = (sum(user_input.user_input_line_ids.mapped('answer_score')) / total_possible_score) * 100
                 user_input.quizz_score = round(score, 2) if score > 0 else 0
 
-    @api.multi
     @api.depends('quizz_score', 'survey_id.passing_score')
     def _compute_quizz_passed(self):
         for user_input in self:
@@ -105,7 +103,6 @@ class SurveyUserInput(models.Model):
     def _generate_invite_token(self):
         return str(uuid.uuid4())
 
-    @api.multi
     def action_resend(self):
         partners = self.env['res.partner']
         emails = []
@@ -121,7 +118,6 @@ class SurveyUserInput(models.Model):
             default_emails=','.join(emails)
         ).action_send_survey()
 
-    @api.multi
     def action_print_answers(self):
         """ Open the website page with the survey form """
         self.ensure_one()
@@ -173,7 +169,6 @@ class SurveyUserInput(models.Model):
 
                 user_input.attempt_number = attempt_number
 
-    @api.multi
     def _mark_done(self):
         """ This method will:
         1. mark the state as 'done'
@@ -197,7 +192,6 @@ class SurveyUserInput(models.Model):
             if challenges:
                 Challenge._cron_update(ids=challenges.ids, commit=False)
 
-    @api.multi
     def _get_survey_url(self):
         self.ensure_one()
         return '/survey/start/%s?answer_token=%s' % (self.survey_id.access_token, self.token)
@@ -261,7 +255,6 @@ class SurveyUserInputLine(models.Model):
                 vals.update({'answer_score': self._get_mark(value_suggested)})
         return super(SurveyUserInputLine, self).create(vals_list)
 
-    @api.multi
     def write(self, vals):
         value_suggested = vals.get('value_suggested')
         if value_suggested:

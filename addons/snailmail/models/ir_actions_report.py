@@ -6,7 +6,6 @@ from odoo import models, fields, api, _
 class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
 
-    @api.multi
     def retrieve_attachment(self, record):
         # Override this method in order to force to re-render the pdf in case of
         # using snailmail

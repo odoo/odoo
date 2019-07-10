@@ -8,7 +8,6 @@ from odoo.tools.float_utils import float_compare
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    @api.multi
     def _stock_account_prepare_anglo_saxon_in_lines_vals(self):
         ''' Prepare values used to create the journal items (account.move.line) corresponding to the price difference
          lines for vendor bills.
@@ -158,14 +157,12 @@ class AccountMove(models.Model):
                         lines_vals_list.append(vals)
         return lines_vals_list
 
-    @api.multi
     def post(self):
         # OVERRIDE
         # Create additional price difference lines for vendor bills.
         self.env['account.move.line'].create(self._stock_account_prepare_anglo_saxon_in_lines_vals())
         return super(AccountMove, self).post()
 
-    @api.multi
     def _stock_account_get_last_step_stock_moves(self):
         """ Overridden from stock_account.
         Returns the stock moves associated to this invoice."""

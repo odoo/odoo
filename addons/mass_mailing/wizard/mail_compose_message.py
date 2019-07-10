@@ -14,7 +14,6 @@ class MailComposeMessage(models.TransientModel):
     mass_mailing_name = fields.Char(string='Mass Mailing Name')
     mailing_list_ids = fields.Many2many('mail.mass_mailing.list', string='Mailing List')
 
-    @api.multi
     def get_mail_values(self, res_ids):
         """ Override method that generated the mail content by creating the
         mail.mail.statistics values in the o2m of mail_mail, when doing pure

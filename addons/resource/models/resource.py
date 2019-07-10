@@ -400,7 +400,6 @@ class ResourceCalendar(models.Model):
     # External API
     # --------------------------------------------------
 
-    @api.multi
     def get_work_hours_count(self, start_dt, end_dt, compute_leaves=True, domain=None):
         """
             `compute_leaves` controls whether or not this method is taking into
@@ -427,7 +426,6 @@ class ResourceCalendar(models.Model):
             for start, stop, meta in intervals
         )
 
-    @api.multi
     def plan_hours(self, hours, day_dt, compute_leaves=False, domain=None, resource=None):
         """
         `compute_leaves` controls whether or not this method is taking into
@@ -468,7 +466,6 @@ class ResourceCalendar(models.Model):
                     hours -= interval_hours
             return False
 
-    @api.multi
     def plan_days(self, days, day_dt, compute_leaves=False, domain=None):
         """
         `compute_leaves` controls whether or not this method is taking into
@@ -599,7 +596,6 @@ class ResourceResource(models.Model):
         ('check_time_efficiency', 'CHECK(time_efficiency>0)', 'Time efficiency must be strictly positive'),
     ]
 
-    @api.multi
     @api.constrains('time_efficiency')
     def _check_time_efficiency(self):
         for record in self:
@@ -618,7 +614,6 @@ class ResourceResource(models.Model):
                 values['tz'] = tz
         return super(ResourceResource, self).create(values)
 
-    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()

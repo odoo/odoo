@@ -114,7 +114,6 @@ class StockScrap(models.Model):
             'picking_id': self.picking_id.id
         }
 
-    @api.multi
     def do_scrap(self):
         for scrap in self:
             move = self.env['stock.move'].create(scrap._prepare_move_values())

@@ -17,7 +17,6 @@ class CashmoveReport(models.Model):
     user_id = fields.Many2one('res.users', string='User')
     description = fields.Text('Description')
 
-    @api.multi
     def name_get(self):
         return [(cashmove.id, '%s %s' % (_('Lunch Cashmove'), '#%d' % cashmove.id)) for cashmove in self]
 

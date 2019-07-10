@@ -7,7 +7,6 @@ from odoo import api, models
 class MailMessage(models.Model):
     _inherit = 'mail.message'
 
-    @api.multi
     def portal_message_format(self):
         return self._portal_message_format([
             'id', 'body', 'date', 'author_id', 'email_from',  # base message fields
@@ -15,7 +14,6 @@ class MailMessage(models.Model):
             'model', 'res_id', 'record_name',  # document related
         ])
 
-    @api.multi
     def _portal_message_format(self, fields_list):
         message_values = self.read(fields_list)
         message_tree = dict((m.id, m) for m in self.sudo())

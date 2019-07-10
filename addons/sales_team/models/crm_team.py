@@ -210,14 +210,12 @@ class CrmTeam(models.Model):
             team._add_members_to_favorites()
         return team
 
-    @api.multi
     def write(self, values):
         res = super(CrmTeam, self).write(values)
         if values.get('member_ids'):
             self._add_members_to_favorites()
         return res
 
-    @api.multi
     def unlink(self):
         default_teams = [
             self.env.ref('sales_team.salesteam_website_sales'),

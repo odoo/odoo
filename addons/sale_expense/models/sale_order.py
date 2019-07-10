@@ -10,7 +10,6 @@ class SaleOrder(models.Model):
     expense_ids = fields.One2many('hr.expense', 'sale_order_id', string='Expenses', domain=[('state', '=', 'done')], readonly=True, copy=False)
     expense_count = fields.Integer("# of Expenses", compute='_compute_expense_count', compute_sudo=True)
 
-    @api.multi
     @api.depends('expense_ids')
     def _compute_expense_count(self):
         expense_data = self.env['hr.expense'].read_group([('sale_order_id', 'in', self.ids), ('state', '=', 'done')], ['sale_order_id'], ['sale_order_id'])

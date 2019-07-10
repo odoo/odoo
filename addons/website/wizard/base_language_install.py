@@ -20,7 +20,6 @@ class BaseLanguageInstall(models.TransientModel):
             defaults['website_ids'].append(website_id)
         return defaults
 
-    @api.multi
     def lang_install(self):
         action = super(BaseLanguageInstall, self).lang_install()
         lang = self.env['res.lang'].search([('code', '=', self.lang)], limit=1)

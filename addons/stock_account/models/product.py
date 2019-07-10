@@ -67,7 +67,6 @@ class ProductTemplate(models.Model):
     def _is_cost_method_standard(self):
         return self.categ_id.property_cost_method == 'standard'
 
-    @api.multi
     def _get_product_accounts(self):
         """ Add the stock accounts related to product to the result of super()
         @return: dictionary which contains information regarding stock accounts and super (income+expense accounts)
@@ -81,7 +80,6 @@ class ProductTemplate(models.Model):
         })
         return accounts
 
-    @api.multi
     def get_product_accounts(self, fiscal_pos=None):
         """ Add the stock journal related to product to the result of super()
         @return: dictionary which contains all needed information regarding stock accounts and journal and super (income+expense accounts)

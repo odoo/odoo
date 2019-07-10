@@ -148,7 +148,6 @@ class MailThread(models.AbstractModel):
         # using read() below is much faster than followers.mapped('res_id')
         return [('id', 'in', [res['res_id'] for res in followers.read(['res_id'])])]
 
-    @api.multi
     @api.depends('message_follower_ids')
     def _compute_is_follower(self):
         followers = self.env['mail.followers'].sudo().search([
@@ -175,7 +174,6 @@ class MailThread(models.AbstractModel):
             # using read() below is much faster than followers.mapped('res_id')
             return [('id', 'not in', [res['res_id'] for res in followers.read(['res_id'])])]
 
-    @api.multi
     def _get_message_unread(self):
         partner_id = self.env.user.partner_id.id
         res = dict.fromkeys(self.ids, 0)
@@ -199,7 +197,6 @@ class MailThread(models.AbstractModel):
             record.message_unread_counter = res.get(record._origin.id, 0)
             record.message_unread = bool(record.message_unread_counter)
 
-    @api.multi
     def _get_message_needaction(self):
         res = dict.fromkeys(self.ids, 0)
         if self.ids:
@@ -220,7 +217,6 @@ class MailThread(models.AbstractModel):
     def _search_message_needaction(self, operator, operand):
         return [('message_ids.needaction', operator, operand)]
 
-    @api.multi
     def _compute_message_has_error(self):
         res = {}
         if self.ids:
@@ -240,7 +236,6 @@ class MailThread(models.AbstractModel):
     def _search_message_has_error(self, operator, operand):
         return ['&', ('message_ids.has_error', operator, operand), ('message_ids.author_id', '=', self.env.user.partner_id.id)]
 
-    @api.multi
     def _compute_message_attachment_count(self):
         read_group_var = self.env['ir.attachment'].read_group([('res_id', 'in', self.ids), ('res_model', '=', self._name)],
                                                               fields=['res_id'],
@@ -308,7 +303,6 @@ class MailThread(models.AbstractModel):
 
         return threads
 
-    @api.multi
     def write(self, values):
         if self._context.get('tracking_disable'):
             return super(MailThread, self).write(values)
@@ -337,7 +331,6 @@ class MailThread(models.AbstractModel):
                 track_self._message_track_post_template(changes)
         return result
 
-    @api.multi
     def unlink(self):
         """ Override unlink to delete messages and followers. This cannot be
         cascaded, because link is done through (res_model, res_id). """
@@ -350,7 +343,6 @@ class MailThread(models.AbstractModel):
         ).unlink()
         return res
 
-    @api.multi
     def copy_data(self, default=None):
         # avoid tracking multiple temporary changes during copy
         return super(MailThread, self.with_context(mail_notrack=True)).copy_data(default=default)
@@ -507,7 +499,6 @@ class MailThread(models.AbstractModel):
             check_operation = operation
         return check_operation
 
-    @api.multi
     def message_change_thread(self, new_thread):
         """
         Transfer the list of the mail thread messages from an model to another
@@ -567,7 +558,6 @@ class MailThread(models.AbstractModel):
         :returns: a subtype browse record or False if no subtype is trigerred
         """
 
-    @api.multi
     def _track_subtype(self, init_values):
         """ Give the subtypes triggered by the changes on the record according
         to values that have been updated.
@@ -579,11 +569,9 @@ class MailThread(models.AbstractModel):
         """
         return False
 
-    @api.multi
     def _track_template(self, changes):
         return dict()
 
-    @api.multi
     def _message_track_post_template(self, changes):
         if not changes:
             return True
@@ -597,7 +585,6 @@ class MailThread(models.AbstractModel):
                 self.message_post_with_template(template.id, **post_kwargs)
         return True
 
-    @api.multi
     def _message_track(self, tracked_fields, initial):
         """ For a given record, fields to check (tuple column name, column info)
         and initial values, return a structure that is a tuple containing :
@@ -625,7 +612,6 @@ class MailThread(models.AbstractModel):
 
         return changes, tracking_value_ids
 
-    @api.multi
     def message_track(self, tracked_fields, initial_values):
         """ Track updated values. Comparing the initial and current values of
         the fields given in tracked_fields, it generates a message containing
@@ -1177,7 +1163,6 @@ class MailThread(models.AbstractModel):
             data[name_field] = msg_dict.get('subject', '')
         return self.create(data)
 
-    @api.multi
     def message_update(self, msg_dict, update_vals=None):
         """Called by ``message_process`` when a new message is received
            for an existing thread. The default behavior is to update the record
@@ -1195,7 +1180,6 @@ class MailThread(models.AbstractModel):
             self.write(update_vals)
         return True
 
-    @api.multi
     def _message_receive_bounce(self, email, partner, mail_id=None):
         """Called by ``message_process`` when a bounce email (such as Undelivered
         Mail Returned to Sender) is received for an existing thread. The default
@@ -1439,7 +1423,6 @@ class MailThread(models.AbstractModel):
             res[record.id] = {'partner_ids': recipient_ids, 'email_to': email_to, 'email_cc': email_cc}
         return res
 
-    @api.multi
     def _message_add_suggested_recipient(self, result, partner=None, email=None, reason=''):
         """ Called by _message_get_suggested_recipients, to add a suggested
             recipient in the result dictionary. The form is :
@@ -1464,7 +1447,6 @@ class MailThread(models.AbstractModel):
             result[self.ids[0]].append((False, email, reason))
         return result
 
-    @api.multi
     def _message_get_suggested_recipients(self):
         """ Returns suggested recipients for ids. Those are a list of
         tuple (partner_id, partner_name, reason), to be managed by Chatter. """
@@ -1547,7 +1529,6 @@ class MailThread(models.AbstractModel):
             partners.append(partner)
         return partners
 
-    @api.multi
     def _message_partner_info_from_emails(self, emails, link_mail=False):
         """ Convert a list of emails into a list partner_ids and a list
             new_partner_ids. The return value is non conventional because
@@ -1672,7 +1653,6 @@ class MailThread(models.AbstractModel):
         return_values['attachment_ids'] = m2m_attachment_ids
         return return_values
 
-    @api.multi
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self,
                      body='', subject=None, message_type='notification',
@@ -1809,7 +1789,6 @@ class MailThread(models.AbstractModel):
         using already-computed values instead of having to rebrowse things. """
         pass
 
-    @api.multi
     def message_post_with_view(self, views_or_xmlid, **kwargs):
         """ Helper method to send a mail / post a message using a view_id to
         render using the ir.qweb engine. This method is stand alone, because
@@ -1834,7 +1813,6 @@ class MailThread(models.AbstractModel):
             kwargs['body'] = rendered_template
             record.message_post_with_template(False, **kwargs)
 
-    @api.multi
     def message_post_with_template(self, template_id, email_layout_xmlid=None, **kwargs):
         """ Helper method to send a mail with a template
             :param template_id : the id of the template to render to create the body of the message
@@ -1976,7 +1954,6 @@ class MailThread(models.AbstractModel):
     # Notification API
     # ------------------------------------------------------
 
-    @api.multi
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         """ Main notification method. This method basically does two things
 
@@ -2252,7 +2229,6 @@ class MailThread(models.AbstractModel):
             'lang': lang,
         }
 
-    @api.multi
     def _notify_compute_recipients(self, message, msg_vals):
         """ Compute recipients to notify based on subtype and followers. This
         method returns data structured as expected for ``_notify_recipients``. """
@@ -2321,7 +2297,6 @@ class MailThread(models.AbstractModel):
         hm = hmac.new(secret.encode('utf-8'), token.encode('utf-8'), hashlib.sha1).hexdigest()
         return hm
 
-    @api.multi
     def _notify_get_action_link(self, link_type, **kwargs):
         local_kwargs = dict(kwargs)  # do not modify in-place, modify copy instead
         base_params = {
@@ -2354,7 +2329,6 @@ class MailThread(models.AbstractModel):
 
         return link
 
-    @api.multi
     def _notify_get_groups(self):
         """ Return groups used to classify recipients of a notification email.
         Groups is a list of tuple containing of form (group_name, group_func,
@@ -2394,7 +2368,6 @@ class MailThread(models.AbstractModel):
             )
         ]
 
-    @api.multi
     def _notify_classify_recipients(self, recipient_data, model_name):
         """ Classify recipients to be notified of a message in groups to have
         specific rendering depending on their group. For example users could
@@ -2459,7 +2432,6 @@ class MailThread(models.AbstractModel):
 
         return result
 
-    @api.multi
     def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
         """ Returns the preferred reply-to email address when replying to a thread
         on documents. Documents are either given by self it this method is called
@@ -2544,7 +2516,6 @@ class MailThread(models.AbstractModel):
             return records._notify_get_reply_to(default=default, company=company, doc_names=doc_names)
         return self._notify_get_reply_to(default=default, records=records, company=company, doc_names=doc_names)
 
-    @api.multi
     def _notify_email_recipient_values(self, recipient_ids):
         """ Format email notification recipient values to store on the notification
         mail.mail. Basic method just set the recipient partners as mail_mail
@@ -2561,7 +2532,6 @@ class MailThread(models.AbstractModel):
     # Followers API
     # ------------------------------------------------------
 
-    @api.multi
     def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None):
         """ Main public API to add followers to a record set. Its main purpose is
         to perform access rights checks before calling ``_message_subscribe``. """
@@ -2618,7 +2588,6 @@ class MailThread(models.AbstractModel):
 
         return True
 
-    @api.multi
     def message_unsubscribe(self, partner_ids=None, channel_ids=None):
         """ Remove partners from the records followers. """
         # not necessary for computation, but saves an access right check
@@ -2673,7 +2642,6 @@ class MailThread(models.AbstractModel):
                 pass
         return []
 
-    @api.multi
     def _message_auto_subscribe_notify(self, partner_ids, template):
         """ Notify new followers, using a template to render the content of the
         notification message. Notifications pushed are done using the standard
@@ -2708,7 +2676,6 @@ class MailThread(models.AbstractModel):
                 model_description=model_description,
             )
 
-    @api.multi
     def _message_auto_subscribe(self, updated_values):
         """ Handle auto subscription. Auto subscription is done based on two
         main mechanisms

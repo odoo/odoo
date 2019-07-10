@@ -85,7 +85,6 @@ class MrpProductProduce(models.TransientModel):
             'target': 'new',
         }
 
-    @api.multi
     def do_produce(self):
         """ Save the current wizard and go back to the MO. """
         self.ensure_one()
@@ -99,7 +98,6 @@ class MrpProductProduce(models.TransientModel):
         todo_quantity = todo_quantity if (todo_quantity > 0) else 0
         return todo_quantity
 
-    @api.multi
     def _record_production(self):
         # Check all the product_produce line have a move id (the user can add product
         # to consume directly in the wizard)

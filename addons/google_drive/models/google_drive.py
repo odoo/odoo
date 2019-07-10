@@ -22,7 +22,6 @@ class GoogleDrive(models.Model):
     _name = 'google.drive.config'
     _description = "Google Drive templates config"
 
-    @api.multi
     def get_google_drive_url(self, res_id, template_id):
         self.ensure_one()
         self = self.sudo()
@@ -191,7 +190,6 @@ class GoogleDrive(models.Model):
             return word.group(2)
         return None
 
-    @api.multi
     def _compute_ressource_id(self):
         result = {}
         for record in self:
@@ -202,7 +200,6 @@ class GoogleDrive(models.Model):
                 raise UserError(_("Please enter a valid Google Document URL."))
         return result
 
-    @api.multi
     def _compute_client_id(self):
         google_drive_client_id = self.env['ir.config_parameter'].sudo().get_param('google_drive_client_id')
         for record in self:

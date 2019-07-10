@@ -134,13 +134,11 @@ class Channel(models.Model):
         for channel in self:
             channel.is_subscribed = self.env.user.partner_id in channel.channel_partner_ids
 
-    @api.multi
     @api.depends('moderator_ids')
     def _compute_is_moderator(self):
         for channel in self:
             channel.is_moderator = self.env.user in channel.moderator_ids
 
-    @api.multi
     @api.depends('moderation_ids')
     def _compute_moderation_count(self):
         read_group_res = self.env['mail.moderation'].read_group([('channel_id', 'in', self.ids)], ['channel_id'], 'channel_id')
@@ -169,7 +167,6 @@ class Channel(models.Model):
         if any(not channel.moderator_ids for channel in self if channel.moderation):
             raise ValidationError('Moderated channels must have moderators.')
 
-    @api.multi
     def _compute_is_member(self):
         memberships = self.env['mail.channel.partner'].sudo().search([
             ('channel_id', 'in', self.ids),
@@ -179,7 +176,6 @@ class Channel(models.Model):
         for record in self:
             record.is_member = record in membership_ids
 
-    @api.multi
     def _compute_is_chat(self):
         for record in self:
             if record.channel_type == 'chat':
@@ -233,7 +229,6 @@ class Channel(models.Model):
 
         return channel
 
-    @api.multi
     def unlink(self):
         aliases = self.mapped('alias_id')
 
@@ -249,7 +244,6 @@ class Channel(models.Model):
         aliases.sudo().unlink()
         return res
 
-    @api.multi
     def write(self, vals):
         # First checks if user tries to modify moderation fields and has not the right to do it.
         if any(key for key in MODERATION_FIELDS if vals.get(key)) and any(self.env.user not in channel.moderator_ids for channel in self if channel.moderation):
@@ -279,7 +273,6 @@ class Channel(models.Model):
         for mail_channel in self:
             mail_channel.write({'channel_partner_ids': [(4, pid) for pid in mail_channel.mapped('group_ids').mapped('users').mapped('partner_id').ids]})
 
-    @api.multi
     def action_follow(self):
         self.ensure_one()
         channel_partner = self.mapped('channel_last_seen_partner_ids').filtered(lambda cp: cp.partner_id == self.env.user.partner_id)
@@ -287,11 +280,9 @@ class Channel(models.Model):
             return self.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': self.env.user.partner_id.id})]})
         return False
 
-    @api.multi
     def action_unfollow(self):
         return self._action_unfollow(self.env.user.partner_id)
 
-    @api.multi
     def _action_unfollow(self, partner):
         channel_info = self.channel_info('unsubscribe')[0]  # must be computed before leaving the channel (access rights)
         result = self.write({'channel_partner_ids': [(3, partner.id)]})
@@ -302,7 +293,6 @@ class Channel(models.Model):
             self.sudo().message_post(body=notification, subtype="mail.mt_comment", author_id=partner.id)
         return result
 
-    @api.multi
     def _notify_get_groups(self):
         """ All recipients of a message on a channel are considered as partners.
         This means they will receive a minimal email, without a link to access
@@ -314,7 +304,6 @@ class Channel(models.Model):
                 groups[index] = (group_name, lambda partner: False, group_data)
         return groups
 
-    @api.multi
     def _notify_email_header_dict(self):
         headers = super(Channel, self)._notify_email_header_dict()
         headers['Precedence'] = 'list'
@@ -330,7 +319,6 @@ class Channel(models.Model):
             headers['X-Forge-To'] = list_to
         return headers
 
-    @api.multi
     def _message_receive_bounce(self, email, partner, mail_id=None):
         """ Override bounce management to unsubscribe bouncing addresses """
         for p in partner:
@@ -338,7 +326,6 @@ class Channel(models.Model):
                 self._action_unfollow(p)
         return super(Channel, self)._message_receive_bounce(email, partner, mail_id=mail_id)
 
-    @api.multi
     def _notify_email_recipient_values(self, recipient_ids):
         # Excluded Blacklisted
         whitelist = self.env['res.partner'].sudo().browse(recipient_ids).filtered(lambda p: not p.is_blacklisted)
@@ -377,7 +364,6 @@ class Channel(models.Model):
                 moderation_status = 'pending_moderation'
         return moderation_status, email
 
-    @api.multi
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, message_type='notification', **kwargs):
         moderation_status, email = self._extract_moderation_values(message_type, **kwargs)
@@ -419,7 +405,6 @@ class Channel(models.Model):
     # Moderation
     # --------------------------------------------------
 
-    @api.multi
     def send_guidelines(self):
         """ Send guidelines to all channel members. """
         if self.env.user in self.moderator_ids or self.env.user.has_group('base.group_system'):
@@ -429,7 +414,6 @@ class Channel(models.Model):
         else:
             raise UserError("Only an administrator or a moderator can send guidelines to channel members!")
 
-    @api.multi
     def _send_guidelines(self, partners):
         """ Send guidelines of a given channel. Returns False if template used for guidelines
         not found. Caller may have to handle this return value. """
@@ -453,7 +437,6 @@ class Channel(models.Model):
             mail.send()
         return True
 
-    @api.multi
     def _update_moderation_email(self, emails, status):
         """ This method adds emails into either white or black of the channel list of emails 
             according to status. If an email in emails is already moderated, the method updates the email status.
@@ -481,7 +464,6 @@ class Channel(models.Model):
     #   - when a message is posted on a channel (to the channel, using _notify() method)
 
     # Anonymous method
-    @api.multi
     def _broadcast(self, partner_ids):
         """ Broadcast the current channel header to the given partner ids
             :param partner_ids : the partner to notify
@@ -489,7 +471,6 @@ class Channel(models.Model):
         notifications = self._channel_channel_notifications(partner_ids)
         self.env['bus.bus'].sendmany(notifications)
 
-    @api.multi
     def _channel_channel_notifications(self, partner_ids):
         """ Generate the bus notifications of current channel for the given partner ids
             :param partner_ids : the partner to send the current channel header
@@ -510,7 +491,6 @@ class Channel(models.Model):
         else:
             message._notify_pending_by_chat()
 
-    @api.multi
     def _channel_message_notifications(self, message, message_format=False):
         """ Generate the bus notifications for the given message
             :param message : the mail.message to sent
@@ -545,7 +525,6 @@ class Channel(models.Model):
             partner_infos[user.partner_id.id]['out_of_office_message'] = user.out_of_office_message
         return partner_infos
 
-    @api.multi
     def channel_info(self, extra_info=False):
         """ Get the informations header for the current channels
             :returns a list of channels values
@@ -629,7 +608,6 @@ class Channel(models.Model):
             channel_infos.append(info)
         return channel_infos
 
-    @api.multi
     def channel_fetch_message(self, last_id=False, limit=20):
         """ Return message values of the current channel.
             :param last_id : last message id to start the research
@@ -737,7 +715,6 @@ class Channel(models.Model):
         if channel_partners:
             channel_partners.write({'is_pinned': pinned})
 
-    @api.multi
     def channel_seen(self):
         self.ensure_one()
         if self.channel_message_ids.ids:
@@ -762,7 +739,6 @@ class Channel(models.Model):
                 self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), data)
             return last_message_id
 
-    @api.multi
     def channel_fetched(self):
         """ Broadcast the channel_fetched notification to channel members
             :param channel_ids : list of channel id that has been fetched by current user
@@ -787,7 +763,6 @@ class Channel(models.Model):
             }
             self.env['bus.bus'].sendmany([[(self._cr.dbname, 'mail.channel', channel.id), data]])
 
-    @api.multi
     def channel_invite(self, partner_ids):
         """ Add the given partner_ids to the current channels and broadcast the channel header to them.
             :param partner_ids : list of partner id to add
@@ -820,7 +795,6 @@ class Channel(models.Model):
             'custom_channel_name': name,
         })
 
-    @api.multi
     def notify_typing(self, is_typing, is_website_user=False):
         """ Broadcast the typing notification to channel members
             :param is_typing: (boolean) tells whether the current user is typing or not
@@ -884,7 +858,6 @@ class Channel(models.Model):
             domain = expression.AND([domain, [('name', 'ilike', '%'+name+'%')]])
         return self.search(domain).read(['name', 'public', 'uuid', 'channel_type'])
 
-    @api.multi
     def channel_join_and_get_info(self):
         self.ensure_one()
         added = self.action_follow()
@@ -949,7 +922,6 @@ class Channel(models.Model):
     def _channel_fetch_listeners_where_clause(self, uuid):
         return ("C.uuid = %s", (uuid,))
 
-    @api.multi
     def channel_fetch_preview(self):
         """ Return the last message of the given channels """
         if not self:
@@ -984,7 +956,6 @@ class Channel(models.Model):
                 commands.append(command)
         return commands
 
-    @api.multi
     def execute_command(self, command='', **kwargs):
         """ Executes a given command """
         self.ensure_one()

@@ -54,7 +54,6 @@ class KarmaRank(models.Model):
         users._recompute_rank()
         return res
 
-    @api.multi
     def write(self, vals):
         tools.image_resize_images(vals)
         res = super(KarmaRank, self).write(vals)

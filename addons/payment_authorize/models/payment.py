@@ -67,7 +67,6 @@ class PaymentAcquirerAuthorize(models.Model):
         else:
             return hmac.new(values['x_trans_key'].encode('utf-8'), data, hashlib.md5).hexdigest()
 
-    @api.multi
     def authorize_form_generate_values(self, values):
         self.ensure_one()
         # State code is only supported in US, use state name by default
@@ -120,7 +119,6 @@ class PaymentAcquirerAuthorize(models.Model):
         authorize_tx_values.update(temp_authorize_tx_values)
         return authorize_tx_values
 
-    @api.multi
     def authorize_get_form_action_url(self):
         self.ensure_one()
         return self._get_authorize_urls(self.environment)['authorize_form_url']
@@ -139,7 +137,6 @@ class PaymentAcquirerAuthorize(models.Model):
         PaymentMethod = self.env['payment.token'].sudo().create(values)
         return PaymentMethod
 
-    @api.multi
     def authorize_s2s_form_validate(self, data):
         error = dict()
         mandatory_fields = ["cc_number", "cc_cvc", "cc_holder_name", "cc_expiry", "cc_brand"]
@@ -161,7 +158,6 @@ class PaymentAcquirerAuthorize(models.Model):
                 return False
         return False if error else True
 
-    @api.multi
     def authorize_test_credentials(self):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
@@ -198,7 +194,6 @@ class TxAuthorize(models.Model):
             raise ValidationError(error_msg)
         return tx[0]
 
-    @api.multi
     def _authorize_form_get_invalid_parameters(self, data):
         invalid_parameters = []
 
@@ -209,7 +204,6 @@ class TxAuthorize(models.Model):
             invalid_parameters.append(('Amount', data.get('x_amount'), '%.2f' % self.amount))
         return invalid_parameters
 
-    @api.multi
     def _authorize_form_validate(self, data):
         if self.state == 'done':
             _logger.warning('Authorize: trying to validate an already validated tx (ref %s)' % self.reference)
@@ -263,7 +257,6 @@ class TxAuthorize(models.Model):
             self._set_transaction_cancel()
             return False
 
-    @api.multi
     def authorize_s2s_do_transaction(self, **data):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
@@ -278,32 +271,27 @@ class TxAuthorize(models.Model):
             res = transaction.authorize(self.payment_token_id, self.amount, self.reference)
         return self._authorize_s2s_validate_tree(res)
 
-    @api.multi
     def authorize_s2s_do_refund(self):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
         res = transaction.credit(self.payment_token_id, self.amount, self.acquirer_reference)
         return self._authorize_s2s_validate_tree(res)
 
-    @api.multi
     def authorize_s2s_capture_transaction(self):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
         tree = transaction.capture(self.acquirer_reference or '', self.amount)
         return self._authorize_s2s_validate_tree(tree)
 
-    @api.multi
     def authorize_s2s_void_transaction(self):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
         tree = transaction.void(self.acquirer_reference or '')
         return self._authorize_s2s_validate_tree(tree)
 
-    @api.multi
     def _authorize_s2s_validate_tree(self, tree):
         return self._authorize_s2s_validate(tree)
 
-    @api.multi
     def _authorize_s2s_validate(self, tree):
         if self.state == 'done':
             _logger.warning('Authorize: trying to validate an already validated tx (ref %s)' % self.reference)

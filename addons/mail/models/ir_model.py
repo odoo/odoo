@@ -53,7 +53,6 @@ class IrModel(models.Model):
 
         return super(IrModel, self).unlink()
 
-    @api.multi
     def write(self, vals):
         if self and ('is_mail_thread' in vals or 'is_mail_activity' in vals or 'is_mail_blacklist' in vals):
             if not all(rec.state == 'manual' for rec in self):

@@ -92,7 +92,6 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
             'communication': self.communication
         }
 
-    @api.multi
     def expense_post_payment(self):
         self.ensure_one()
         context = dict(self._context or {})

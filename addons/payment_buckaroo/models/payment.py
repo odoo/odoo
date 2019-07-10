@@ -81,7 +81,6 @@ class AcquirerBuckaroo(models.Model):
         shasign = sha1(sign.encode('utf-8')).hexdigest()
         return shasign
 
-    @api.multi
     def buckaroo_form_generate_values(self, values):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         buckaroo_tx_values = dict(values)
@@ -101,7 +100,6 @@ class AcquirerBuckaroo(models.Model):
         buckaroo_tx_values['Brq_signature'] = self._buckaroo_generate_digital_sign('in', buckaroo_tx_values)
         return buckaroo_tx_values
 
-    @api.multi
     def buckaroo_get_form_action_url(self):
         return self._get_buckaroo_urls(self.environment)['buckaroo_form_url']
 

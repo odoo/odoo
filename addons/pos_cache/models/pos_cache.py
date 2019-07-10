@@ -74,7 +74,6 @@ class pos_config(models.Model):
         else:
             return None
 
-    @api.multi
     def get_products_from_cache(self, fields, domain):
         cache_for_user = self._get_cache_for_user()
 

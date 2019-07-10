@@ -58,7 +58,6 @@ class Currency(models.Model):
         currency_rates = dict(self._cr.fetchall())
         return currency_rates
 
-    @api.multi
     @api.depends('rate_ids.rate')
     def _compute_current_rate(self):
         date = self._context.get('date') or fields.Date.today()
@@ -68,7 +67,6 @@ class Currency(models.Model):
         for currency in self:
             currency.rate = currency_rates.get(currency.id) or 1.0
 
-    @api.multi
     @api.depends('rounding')
     def _compute_decimal_places(self):
         for currency in self:
@@ -77,7 +75,6 @@ class Currency(models.Model):
             else:
                 currency.decimal_places = 0
 
-    @api.multi
     @api.depends('rate_ids.name')
     def _compute_date(self):
         for currency in self:
@@ -92,11 +89,9 @@ class Currency(models.Model):
                 results = super(Currency, self)._name_search(name_match.group(1), args, operator=operator, limit=limit, name_get_uid=name_get_uid)
         return results
 
-    @api.multi
     def name_get(self):
         return [(currency.id, tools.ustr(currency.name)) for currency in self]
 
-    @api.multi
     def amount_to_text(self, amount):
         self.ensure_one()
         def _num2words(number, lang):
@@ -127,7 +122,6 @@ class Currency(models.Model):
                         )
         return amount_words
 
-    @api.multi
     def round(self, amount):
         """Return ``amount`` rounded  according to ``self``'s rounding rules.
 
@@ -137,7 +131,6 @@ class Currency(models.Model):
         self.ensure_one()
         return tools.float_round(amount, precision_rounding=self.rounding)
 
-    @api.multi
     def compare_amounts(self, amount1, amount2):
         """Compare ``amount1`` and ``amount2`` after rounding them according to the
            given currency's precision..
@@ -161,7 +154,6 @@ class Currency(models.Model):
         self.ensure_one()
         return tools.float_compare(amount1, amount2, precision_rounding=self.rounding)
 
-    @api.multi
     def is_zero(self, amount):
         """Returns true if ``amount`` is small enough to be treated as
            zero according to current currency's rounding rules.
@@ -212,7 +204,6 @@ class Currency(models.Model):
         company = self.env['res.company'].browse(self._context.get('company_id')) or self.env.company
         return from_currency._convert(from_amount, to_currency, company, date)
 
-    @api.multi
     def compute(self, from_amount, to_currency, round=True):
         _logger.warning('The `compute` method is deprecated. Use `_convert` instead')
         date = self._context.get('date') or fields.Date.today()

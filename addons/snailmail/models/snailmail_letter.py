@@ -95,7 +95,6 @@ class SnailmailLetter(models.Model):
         })
         return super(SnailmailLetter, self).create(vals)
 
-    @api.multi
     def _fetch_attachment(self):
         """
         This method will check if we have any existent attachement matching the model
@@ -141,7 +140,6 @@ class SnailmailLetter(models.Model):
             pages = int(match.group(1))
         return pages
 
-    @api.multi
     def _snailmail_create(self, route):
         """
         Create a dictionnary object to send to snailmail server.
@@ -271,7 +269,6 @@ class SnailmailLetter(models.Model):
             return _('An unknown error happened. Please contact the support.')
         return error
 
-    @api.multi
     def _snailmail_print(self, immediate=True):
         valid_address_letters = self.filtered(lambda l: l._is_valid_address(l))
         invalid_address_letters = self - valid_address_letters
@@ -280,7 +277,6 @@ class SnailmailLetter(models.Model):
             valid_address_letters._snailmail_print_valid_address()
         self.env.cr.commit()
 
-    @api.multi
     def _snailmail_print_invalid_address(self):
         for letter in self:
             letter.write({
@@ -290,7 +286,6 @@ class SnailmailLetter(models.Model):
             })
         self.send_snailmail_update()
 
-    @api.multi
     def _snailmail_print_valid_address(self):
         """
         get response
@@ -326,7 +321,6 @@ class SnailmailLetter(models.Model):
             letter.write(letter_data)
         self.send_snailmail_update()
 
-    @api.multi
     def send_snailmail_update(self):
         notifications = []
         for letter in self:
@@ -336,11 +330,9 @@ class SnailmailLetter(models.Model):
             ])
         self.env['bus.bus'].sendmany(notifications)
 
-    @api.multi
     def snailmail_print(self):
         self._snailmail_print()
 
-    @api.multi
     def cancel(self):
         self.write({'state': 'canceled', 'error_code': False})
         self.send_snailmail_update()
@@ -367,7 +359,6 @@ class SnailmailLetter(models.Model):
         required_keys = ['street', 'city', 'zip', 'country_id']
         return all(record[key] for key in required_keys)
 
-    @api.multi
     def _format_snailmail_failures(self):
         """
         A shorter message to notify a failure update

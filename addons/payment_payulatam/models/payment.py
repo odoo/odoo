@@ -41,7 +41,6 @@ class PaymentAcquirerPayulatam(models.Model):
                                       str(float(values.get('TX_VALUE'))), values['currency'], values.get('transactionState')))
         return md5(data_string.encode('utf-8')).hexdigest()
 
-    @api.multi
     def payulatam_form_generate_values(self, values):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         tx = self.env['payment.transaction'].search([('reference', '=', values.get('reference'))])
@@ -65,7 +64,6 @@ class PaymentAcquirerPayulatam(models.Model):
         payulatam_values['signature'] = self._payulatam_generate_sign("in", payulatam_values)
         return payulatam_values
 
-    @api.multi
     def payulatam_get_form_action_url(self):
         self.ensure_one()
         return self._get_payulatam_urls(self.environment)
@@ -97,7 +95,6 @@ class PaymentTransactionPayulatam(models.Model):
             raise ValidationError(('PayU Latam: invalid sign, received %s, computed %s, for data %s') % (sign, sign_check, data))
         return transaction
 
-    @api.multi
     def _payulatam_form_get_invalid_parameters(self, data):
         invalid_parameters = []
 
@@ -109,7 +106,6 @@ class PaymentTransactionPayulatam(models.Model):
             invalid_parameters.append(('Merchant Id', data.get('merchantId'), self.acquirer_id.payulatam_merchant_id))
         return invalid_parameters
 
-    @api.multi
     def _payulatam_form_validate(self, data):
         self.ensure_one()
 

@@ -50,7 +50,6 @@ class AccountPayment(models.Model):
             if len(communication) > 60:
                 raise ValidationError(_("A check memo cannot exceed 60 characters."))
 
-    @api.multi
     def post(self):
         res = super(AccountPayment, self).post()
         payment_method_check = self.env.ref('account_check_printing.account_payment_method_check')
@@ -59,7 +58,6 @@ class AccountPayment(models.Model):
             payment.check_number = sequence.next_by_id()
         return res
 
-    @api.multi
     def print_checks(self):
         """ Check that the recordset is valid, set the payments state to sent and call print_checks() """
         # Since this method can be called via a client_action_multi, we need to make sure the received records are what we expect
@@ -94,11 +92,9 @@ class AccountPayment(models.Model):
             self.filtered(lambda r: r.state == 'draft').post()
             return self.do_print_checks()
 
-    @api.multi
     def unmark_sent(self):
         self.write({'state': 'posted'})
 
-    @api.multi
     def do_print_checks(self):
         """ This method is a hook for l10n_xx_check_printing modules to implement actual check printing capabilities """
         raise UserError(_("You have to choose a check layout. For this, go in Apps, search for 'Checks layout' and install one."))

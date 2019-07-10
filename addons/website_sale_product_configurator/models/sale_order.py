@@ -7,7 +7,6 @@ from odoo import api, models
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    @api.multi
     def _cart_find_product_line(self, product_id=None, line_id=None, **kwargs):
         lines = super(SaleOrder, self)._cart_find_product_line(product_id, line_id, **kwargs)
         if lines:

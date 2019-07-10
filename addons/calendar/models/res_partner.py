@@ -13,7 +13,6 @@ class Partner(models.Model):
 
     calendar_last_notif_ack = fields.Datetime('Last notification marked as read from base Calendar', default=fields.Datetime.now)
 
-    @api.multi
     def get_attendee_detail(self, meeting_id):
         """ Return a list of tuple (id, name, status)
             Used by base_calendar.js : Many2ManyAttendee

@@ -31,7 +31,6 @@ class IrModule(models.Model):
             module.installed_version = module.latest_version
         super(IrModule, self - imported_modules)._get_latest_version()
 
-    @api.multi
     def _import_module(self, module, path, force=False):
         known_mods = self.search([])
         known_mods_names = {m.name: m for m in known_mods}

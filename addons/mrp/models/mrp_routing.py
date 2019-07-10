@@ -69,7 +69,6 @@ class MrpRoutingWorkcenter(models.Model):
     batch_size = fields.Float('Quantity to Process', default=1.0)
     workorder_ids = fields.One2many('mrp.workorder', 'operation_id', string="Work Orders")
 
-    @api.multi
     @api.depends('time_cycle_manual', 'time_mode', 'workorder_ids')
     def _compute_time_cycle(self):
         manual_ops = self.filtered(lambda operation: operation.time_mode == 'manual')
@@ -86,7 +85,6 @@ class MrpRoutingWorkcenter(models.Model):
             else:
                 operation.time_cycle = operation.time_cycle_manual
 
-    @api.multi
     def _compute_workorder_count(self):
         data = self.env['mrp.workorder'].read_group([
             ('operation_id', 'in', self.ids),

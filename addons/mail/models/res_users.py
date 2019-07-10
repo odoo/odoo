@@ -41,7 +41,6 @@ class Users(models.Model):
     out_of_office_message = fields.Char(string='Message')
 
     @api.depends('moderation_channel_ids.moderation', 'moderation_channel_ids.moderator_ids')
-    @api.multi
     def _compute_is_moderator(self):
         moderated = self.env['mail.channel'].search([
             ('id', 'in', self.mapped('moderation_channel_ids').ids),
@@ -52,7 +51,6 @@ class Users(models.Model):
         for user in self:
             user.is_moderator = user in user_ids
 
-    @api.multi
     def _compute_moderation_counter(self):
         self._cr.execute("""
 SELECT channel_moderator.res_users_id, COUNT(msg.id)
@@ -93,7 +91,6 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
         self.env['mail.channel'].search([('group_ids', 'in', user.groups_id.ids)])._subscribe_users()
         return user
 
-    @api.multi
     def write(self, vals):
         write_res = super(Users, self).write(vals)
         sel_groups = [vals[k] for k in vals if is_selection_groups(k) and vals[k]]
@@ -159,7 +156,6 @@ class res_groups_mail_channel(models.Model):
     _inherit = 'res.groups'
     _description = 'Access Groups'
 
-    @api.multi
     def write(self, vals, context=None):
         write_res = super(res_groups_mail_channel, self).write(vals)
         if vals.get('users'):

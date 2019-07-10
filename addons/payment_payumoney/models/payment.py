@@ -52,7 +52,6 @@ class PaymentAcquirerPayumoney(models.Model):
         shasign = hashlib.sha512(sign.encode('utf-8')).hexdigest()
         return shasign
 
-    @api.multi
     def payumoney_form_generate_values(self, values):
         self.ensure_one()
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
@@ -74,7 +73,6 @@ class PaymentAcquirerPayumoney(models.Model):
         payumoney_values['hash'] = self._payumoney_generate_sign('in', payumoney_values)
         return payumoney_values
 
-    @api.multi
     def payumoney_get_form_action_url(self):
         self.ensure_one()
         return self._get_payumoney_urls(self.environment)['payumoney_form_url']
@@ -108,7 +106,6 @@ class PaymentTransactionPayumoney(models.Model):
             raise ValidationError(_('PayUmoney: invalid shasign, received %s, computed %s, for data %s') % (shasign, shasign_check, data))
         return transaction
 
-    @api.multi
     def _payumoney_form_get_invalid_parameters(self, data):
         invalid_parameters = []
 
@@ -122,7 +119,6 @@ class PaymentTransactionPayumoney(models.Model):
 
         return invalid_parameters
 
-    @api.multi
     def _payumoney_form_validate(self, data):
         status = data.get('status')
         result = self.write({

@@ -9,14 +9,12 @@ class ProductTemplate(models.Model):
 
     attachment_count = fields.Integer(compute='_compute_attachment_count', string="File")
 
-    @api.multi
     def _compute_attachment_count(self):
         attachment_data = self.env['ir.attachment'].read_group([('res_model', '=', self._name), ('res_id', 'in', self.ids), ('product_downloadable', '=', True)], ['res_id'], ['res_id'])
         mapped_data = dict([(data['res_id'], data['res_id_count']) for data in attachment_data])
         for product_template in self:
             product_template.attachment_count = mapped_data.get(product_template.id, 0)
 
-    @api.multi
     def action_open_attachments(self):
         self.ensure_one()
         return {
@@ -38,7 +36,6 @@ class Product(models.Model):
 
     attachment_count = fields.Integer(compute='_compute_attachment_count', string="File")
 
-    @api.multi
     def _compute_attachment_count(self):
         for product in self:
             product.attachment_count = self.env['ir.attachment'].search_count([
@@ -46,7 +43,6 @@ class Product(models.Model):
                 ('res_model', '=', 'product.template'), ('res_id', '=', product.product_tmpl_id.id), ('product_downloadable', '=', True),
                 ('res_model', '=', 'product.product'), ('res_id', '=', product.id), ('product_downloadable', '=', True)])
 
-    @api.multi
     def action_open_attachments(self):
         self.ensure_one()
         return {

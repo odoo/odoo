@@ -22,7 +22,6 @@ class ImageMixin(models.AbstractModel):
 
     image = fields.Binary("Image", compute='_compute_image', inverse='_set_image')
 
-    @api.multi
     @api.depends('image_original')
     def _compute_images(self):
         for record in self:
@@ -36,13 +35,11 @@ class ImageMixin(models.AbstractModel):
             record.image_small = image and images['image_small']
             record.can_image_be_zoomed = image and tools.is_image_size_above(image)
 
-    @api.multi
     @api.depends('image_big')
     def _compute_image(self):
         for record in self:
             record.image = record.image_big
 
-    @api.multi
     def _set_image(self):
         for record in self:
             record.image_original = record.image

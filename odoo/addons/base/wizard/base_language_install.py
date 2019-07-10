@@ -29,7 +29,6 @@ class BaseLanguageInstall(models.TransientModel):
     state = fields.Selection([('init', 'init'), ('done', 'done')],
                              string='Status', readonly=True, default='init')
 
-    @api.multi
     def lang_install(self):
         self.ensure_one()
         mods = self.env['ir.module.module'].search([('state', '=', 'installed')])

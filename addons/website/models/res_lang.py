@@ -8,7 +8,6 @@ from odoo.exceptions import UserError
 class Lang(models.Model):
     _inherit = "res.lang"
 
-    @api.multi
     def write(self, vals):
         if 'active' in vals and not vals['active']:
             if self.env['website'].search([('language_ids', 'in', self._ids)]):

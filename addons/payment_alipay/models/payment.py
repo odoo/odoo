@@ -43,7 +43,6 @@ class PaymentAcquirer(models.Model):
             return 'https://mapi.alipay.com/gateway.do'
         return 'https://openapi.alipaydev.com/gateway.do'
 
-    @api.multi
     def alipay_compute_fees(self, amount, currency_id, country_id):
         """ Compute alipay fees.
 
@@ -65,7 +64,6 @@ class PaymentAcquirer(models.Model):
             fees = (percentage / 100.0 * amount + fixed) / (1 - percentage / 100.0)
         return fees
 
-    @api.multi
     def _build_sign(self, val):
         # Rearrange parameters in the data set alphabetically
         data_to_sign = sorted(val.items())
@@ -76,7 +74,6 @@ class PaymentAcquirer(models.Model):
         data_string += self.alipay_md5_signature_key
         return md5(data_string.encode('utf-8')).hexdigest()
 
-    @api.multi
     def _get_alipay_tx_values(self, values):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
@@ -108,12 +105,10 @@ class PaymentAcquirer(models.Model):
         })
         return alipay_tx_values
 
-    @api.multi
     def alipay_form_generate_values(self, values):
         values.update(self._get_alipay_tx_values(values))
         return values
 
-    @api.multi
     def alipay_get_form_action_url(self):
         return self._get_alipay_urls(self.environment)
 
@@ -185,7 +180,6 @@ class PaymentTransaction(models.Model):
 
         return txs
 
-    @api.multi
     def _alipay_form_get_invalid_parameters(self, data):
         invalid_parameters = []
 
@@ -199,7 +193,6 @@ class PaymentTransaction(models.Model):
                 invalid_parameters.append(('seller_email', data.get('seller_email'), self.acquirer_id.alipay_seller_email))
         return invalid_parameters
 
-    @api.multi
     def _alipay_form_validate(self, data):
         if self.state in ['done']:
             _logger.info('Alipay: trying to validate an already validated tx (ref %s)', self.reference)

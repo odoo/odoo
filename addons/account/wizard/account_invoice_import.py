@@ -10,18 +10,15 @@ class ImportInvoiceImportWizard(models.TransientModel):
 
     attachment_ids = fields.Many2many('ir.attachment', string='Files')
 
-    @api.multi
     def _create_invoice_from_file(self, attachment):
         invoice = self.env['account.move'].create({})
         attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
         invoice.message_post(attachment_ids=[attachment.id])
         return invoice
 
-    @api.multi
     def _create_invoice(self, attachment):
         return self._create_invoice_from_file(attachment)
 
-    @api.multi
     def create_invoices(self):
         ''' Create the invoices from files.
          :return: A action redirecting to account.invoice tree/form view.

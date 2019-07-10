@@ -38,7 +38,6 @@ class StockMoveLine(models.Model):
                 return False
         return super(StockMoveLine, self)._reservation_is_updatable(quantity, reserved_quant)
 
-    @api.multi
     def write(self, vals):
         for move_line in self:
             if move_line.move_id.production_id and 'lot_id' in vals:

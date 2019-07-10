@@ -40,7 +40,6 @@ class FinancialYearOpeningWizard(models.TransientModel):
                     (wiz.fiscalyear_last_month, wiz.fiscalyear_last_day)
                 )
 
-    @api.multi
     def write(self, vals):
         # Amazing workaround: non-stored related fields on company are a BAD idea since the 3 fields
         # must follow the constraint '_check_fiscalyear_last_day'. The thing is, in case of related
@@ -57,7 +56,6 @@ class FinancialYearOpeningWizard(models.TransientModel):
         vals.pop('fiscalyear_last_month', None)
         return super().write(vals)
 
-    @api.multi
     def action_save_onboarding_fiscal_year(self):
         self.env.company.set_onboarding_step_done('account_setup_fy_data_state')
 

@@ -9,7 +9,6 @@ class HrEmployee(models.Model):
     newly_hired_employee = fields.Boolean('Newly hired employee', compute='_compute_newly_hired_employee',
                                           search='_search_newly_hired_employee')
 
-    @api.multi
     def _compute_newly_hired_employee(self):
         read_group_result = self.env['hr.applicant'].read_group(
             [('emp_id', 'in', self.ids), ('job_id.state', '=', 'recruit')],

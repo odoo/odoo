@@ -18,7 +18,6 @@ class MembershipInvoice(models.TransientModel):
         price_dict = self.product_id.price_compute('list_price')
         self.member_price = price_dict.get(self.product_id.id) or False
 
-    @api.multi
     def membership_invoice(self):
         invoice_list = self.env['res.partner'].browse(self._context.get('active_ids')).create_membership_invoice(self.product_id, self.member_price)
 

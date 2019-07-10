@@ -194,26 +194,22 @@ class MailTemplate(models.Model):
             self.sub_model_object_field = False
             self.null_value = False
 
-    @api.multi
     def unlink(self):
         self.unlink_action()
         return super(MailTemplate, self).unlink()
 
-    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {},
                        name=_("%s (copy)") % self.name)
         return super(MailTemplate, self).copy(default=default)
 
-    @api.multi
     def unlink_action(self):
         for template in self:
             if template.ref_ir_act_window:
                 template.ref_ir_act_window.unlink()
         return True
 
-    @api.multi
     def create_action(self):
         ActWindow = self.env['ir.actions.act_window']
         view = self.env.ref('mail.email_compose_message_wizard_form')
@@ -302,7 +298,6 @@ class MailTemplate(models.Model):
 
         return multi_mode and results or results[res_ids[0]]
 
-    @api.multi
     def get_email_template(self, res_ids):
         multi_mode = True
         if isinstance(res_ids, int):
@@ -332,7 +327,6 @@ class MailTemplate(models.Model):
 
         return multi_mode and results or results[res_ids[0]]
 
-    @api.multi
     def generate_recipients(self, results, res_ids):
         """Generates the recipients of the template. Default values can ben generated
         instead of the template values if requested by template or context.
@@ -370,7 +364,6 @@ class MailTemplate(models.Model):
             results[res_id]['partner_ids'] = partner_ids
         return results
 
-    @api.multi
     def generate_email(self, res_ids, fields=None):
         """Generates an email from the template for given the given model based on
         records given by res_ids.
@@ -463,7 +456,6 @@ class MailTemplate(models.Model):
     # EMAIL
     # ----------------------------------------
 
-    @api.multi
     def send_mail(self, res_id, force_send=False, raise_exception=False, email_values=None, notif_layout=False):
         """ Generates a new mail.mail. Template is rendered on record given by
         res_id and model coming from template.

@@ -117,7 +117,6 @@ class GoalDefinition(models.Model):
             definition._check_model_validity()
         return definition
 
-    @api.multi
     def write(self, vals):
         res = super(GoalDefinition, self).write(vals)
         if vals.get('computation_mode', 'count') in ('count', 'sum') and (vals.get('domain') or vals.get('model_id')):
@@ -250,7 +249,6 @@ class Goal(models.Model):
 
         return {self: result}
 
-    @api.multi
     def update_goal(self):
         """Update the goals to recomputes values and change of states
 
@@ -362,7 +360,6 @@ class Goal(models.Model):
                 self.env.cr.commit()
         return True
 
-    @api.multi
     def action_start(self):
         """Mark a goal as started.
 
@@ -370,7 +367,6 @@ class Goal(models.Model):
         self.write({'state': 'inprogress'})
         return self.update_goal()
 
-    @api.multi
     def action_reach(self):
         """Mark a goal as reached.
 
@@ -378,14 +374,12 @@ class Goal(models.Model):
         Progress at the next goal update until the end date."""
         return self.write({'state': 'reached'})
 
-    @api.multi
     def action_fail(self):
         """Set the state of the goal to failed.
 
         A failed goal will be ignored in future checks."""
         return self.write({'state': 'failed'})
 
-    @api.multi
     def action_cancel(self):
         """Reset the completion after setting a goal as reached or failed.
 
@@ -398,7 +392,6 @@ class Goal(models.Model):
     def create(self, vals):
         return super(Goal, self.with_context(no_remind_goal=True)).create(vals)
 
-    @api.multi
     def write(self, vals):
         """Overwrite the write method to update the last_update field to today
 
@@ -417,7 +410,6 @@ class Goal(models.Model):
                     goal.challenge_id.sudo().report_progress(users=goal.user_id)
         return result
 
-    @api.multi
     def get_action(self):
         """Get the ir.action related to update the goal
 

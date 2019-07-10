@@ -29,7 +29,6 @@ class MailCCMixin(models.AbstractModel):
         cc_values.update(custom_values)
         return super(MailCCMixin, self).message_new(msg_dict, cc_values)
 
-    @api.multi
     def message_update(self, msg_dict, update_vals=None):
         '''Adds cc email to self.email_cc while trying to keep email as raw as possible but unique'''
         if update_vals is None:
@@ -43,7 +42,6 @@ class MailCCMixin(models.AbstractModel):
         cc_values.update(update_vals)
         return super(MailCCMixin, self).message_update(msg_dict, cc_values)
 
-    @api.multi
     def _message_get_suggested_recipients(self):
         recipients = super(MailCCMixin, self)._message_get_suggested_recipients()
         for record in self:

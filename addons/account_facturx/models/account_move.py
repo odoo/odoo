@@ -22,7 +22,6 @@ DEFAULT_FACTURX_DATE_FORMAT = '%Y%m%d'
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    @api.multi
     def _export_as_facturx_xml(self):
         ''' Create the Factur-x xml file content.
         :return: The XML content as str.
@@ -47,7 +46,6 @@ class AccountMove(models.Model):
         content = self.env.ref('account_facturx.account_invoice_facturx_export').render(template_values)
         return b"<?xml version='1.0' encoding='UTF-8'?>" + content
 
-    @api.multi
     def _import_facturx_invoice(self, tree):
         ''' Extract invoice values from the Factur-x xml tree passed as parameter.
 
@@ -217,7 +215,6 @@ class AccountMove(models.Model):
 
         return invoice_form.save()
 
-    @api.multi
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
         # OVERRIDE
@@ -302,7 +299,6 @@ class AccountMove(models.Model):
         # TO BE OVERWRITTEN
         return []
 
-    @api.multi
     def _create_invoice_from_xml(self, attachment):
         decoders = self._get_xml_decoders()
 
