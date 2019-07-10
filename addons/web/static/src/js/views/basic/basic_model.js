@@ -144,6 +144,8 @@ var BasicModel = AbstractModel.extend({
         'ir.filters',
         'ir.ui.view',
     ],
+    // FORWARDPORT THIS UP TO 12.2, NOT FURTHER
+    disableBatchedRPCs: false, // to be overriden in tests
 
     /**
      * @override
@@ -153,6 +155,11 @@ var BasicModel = AbstractModel.extend({
         // sequentially, for example, an onchange needs to be completed before a
         // save is performed.
         this.mutex = new concurrency.Mutex();
+
+        // FORWARDPORT THIS UP TO 12.2, NOT FURTHER
+        // this array is used to accumulate RPC requests done in the same call
+        // stack, so that they can be batched in the minimum number of RPCs
+        this.batchedRPCsRequests = [];
 
         this.localData = Object.create(null);
         this._super.apply(this, arguments);
@@ -3947,6 +3954,93 @@ var BasicModel = AbstractModel.extend({
 
         return $.when.apply($, defs);
     },
+    // FORWARDPORT THIS UP TO 12.2, NOT FURTHER
+    /**
+     * Empty the pool of accumulated RPC requests: regroup similar requests in
+     * batches and perform an RPC for each batch.
+     *
+     * @private
+     */
+    _performBatchedRPCs: function () {
+        if (!this.batchedRPCsRequests.length) {
+            // pool has already been processed
+            return;
+        }
+
+        // reset pool of RPC requests
+        var batchedRPCsRequests = this.batchedRPCsRequests;
+        this.batchedRPCsRequests = [];
+
+        // batch similar requests
+        var batches = {};
+        var key;
+        for (var i = 0; i < batchedRPCsRequests.length; i++) {
+            var request = batchedRPCsRequests[i];
+            key = request.model + ',' + JSON.stringify(request.context);
+            if (!batches[key]) {
+                batches[key] = _.extend({}, request, {requests: [request]});
+            } else {
+                batches[key].ids = _.uniq(batches[key].ids.concat(request.ids));
+                batches[key].fieldNames = _.uniq(batches[key].fieldNames.concat(request.fieldNames));
+                batches[key].requests.push(request);
+            }
+        }
+
+        // perform batched RPCs
+        function onSuccess(batch, results) {
+            for (var i = 0; i < batch.requests.length; i++) {
+                var request = batch.requests[i];
+                var fieldNames = request.fieldNames.concat(['id']);
+                var filteredResults = results.filter(function (record) {
+                    return request.ids.indexOf(record.id) >= 0;
+                }).map(function (record) {
+                    return _.pick(record, fieldNames);
+                });
+                request.def.resolve(filteredResults);
+            }
+        }
+        function onFailure(batch, error) {
+            for (var i = 0; i < batch.requests.length; i++) {
+                var request = batch.requests[i];
+                request.def.reject(error);
+            }
+        }
+        for (key in batches) {
+            var batch = batches[key];
+            this._rpc({
+                model: batch.model,
+                method: 'read',
+                args: [batch.ids, batch.fieldNames],
+                context: batch.context,
+            }).then(onSuccess.bind(null, batch)).fail(onFailure.bind(null, batch));
+        }
+    },
+    /**
+     * This function accumulates RPC requests done in the same call stack, and
+     * performs them in the next micro task tick so that similar requests can be
+     * batched in a single RPC.
+     *
+     * For now, only 'read' calls are supported.
+     *
+     * @private
+     * @param {Object} params
+     * @returns {Promise}
+     */
+    _performRPC: function (params) {
+        // save the RPC request
+        var def = $.Deferred();
+        var request = _.extend({}, params, {def: def});
+        this.batchedRPCsRequests.push(request);
+
+        if (this.disableBatchedRPCs) {
+            this._performBatchedRPCs();
+        } else {
+            // empty the pool of RPC requests in the next tick
+            setTimeout(this._performBatchedRPCs.bind(this));
+        }
+
+        return def;
+    },
     /**
      * Reads data from server for all missing fields.
      *
@@ -3976,11 +4070,13 @@ var BasicModel = AbstractModel.extend({
 
         var def;
         if (missingIDs.length && fieldNames.length) {
-            def = self._rpc({
-                model: list.model,
-                method: 'read',
-                args: [missingIDs, fieldNames],
+            // FORWARDPORT THIS UP TO 12.2, NOT FURTHER
+            def = self._performRPC({
                 context: list.getContext(),
+                fieldNames: fieldNames,
+                ids: missingIDs,
+                method: 'read',
+                model: list.model,
             });
         } else {
             def = $.when(_.map(missingIDs, function (id) {
