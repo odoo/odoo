@@ -261,3 +261,8 @@ class O2MReadonlySubfieldChild(models.Model):
 
     def _inverse_f(self):
         raise AssertionError("Inverse of f should not be called")
+
+class ReqBool(models.Model):
+    _name = _description = 'test_testing_utilities.req_bool'
+
+    f_bool = fields.Boolean(required=True)
