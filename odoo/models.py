@@ -4439,7 +4439,7 @@ class BaseModel(object):
             # mark missing records in cache with a failed value
             exc = MissingError(
                 _("Record does not exist or has been deleted.")
-                + '\n\n({} {}, {} {})'.format(_('Records:'), (self - existing).ids[:6], _('User:'), self._uid)
+                + u'\n\n({} {}, {} {})'.format(_('Records:'), (self - existing).ids[:6], _('User:'), self._uid)
             )
             (self - existing)._cache.update(FailedValue(exc))
         return existing
