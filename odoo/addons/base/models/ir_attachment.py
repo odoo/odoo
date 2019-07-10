@@ -36,7 +36,6 @@ class IrAttachment(models.Model):
     _description = 'Attachment'
     _order = 'id desc'
 
-    @api.depends('res_model', 'res_id')
     def _compute_res_name(self):
         for attachment in self:
             if attachment.res_model and attachment.res_id:
@@ -276,7 +275,7 @@ class IrAttachment(models.Model):
 
     name = fields.Char('Name', required=True)
     description = fields.Text('Description')
-    res_name = fields.Char('Resource Name', compute='_compute_res_name', store=True)
+    res_name = fields.Char('Resource Name', compute='_compute_res_name')
     res_model = fields.Char('Resource Model', readonly=True, help="The database object this attachment will be attached to.")
     res_field = fields.Char('Resource Field', readonly=True)
     res_id = fields.Integer('Resource ID', readonly=True, help="The record id this is attached to.")
@@ -372,7 +371,7 @@ class IrAttachment(models.Model):
                 raise AccessError(_("Sorry, you are not allowed to access this document."))
 
     def _read_group_allowed_fields(self):
-        return ['type', 'company_id', 'res_id', 'create_date', 'create_uid', 'res_name', 'name', 'mimetype', 'id', 'url', 'res_field', 'res_model']
+        return ['type', 'company_id', 'res_id', 'create_date', 'create_uid', 'name', 'mimetype', 'id', 'url', 'res_field', 'res_model']
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
