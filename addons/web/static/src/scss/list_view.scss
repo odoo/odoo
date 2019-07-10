@@ -27,12 +27,10 @@
         &.o_list_number {
             text-align: right;
         }
-        &.o_list_text {
-            white-space: pre-wrap;
-        }
+        &.o_list_char,
+        &.o_list_text,
         &.o_list_many2one {
             white-space: pre-wrap;
-
         }
     }
 
@@ -177,6 +175,7 @@
         .o_list_record_remove_header, .o_handle_cell {
             width: 32px;
         }
+        &>tbody>tr>td.o_list_char,
         &>tbody>tr>td.o_list_many2one {
             white-space: nowrap;
         }
