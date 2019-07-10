@@ -1043,6 +1043,9 @@ var ListRenderer = BasicRenderer.extend({
         // default, which is why we need to toggle the dropdown manually.
         ev.stopPropagation();
         this.$('.o_optional_columns .dropdown-toggle').dropdown('toggle');
+        // set focus forcefully on first checkbox in dropdown else focus goes to dropdown-toggle
+        // anchor and list view scrolls, to avoid scroll set focus on first checkbox
+        this.$(".o_optional_columns input:first").focus();
     },
     /**
      * Manages the keyboard events on the list. If the list is not editable, when the user navigates to
