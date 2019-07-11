@@ -606,7 +606,7 @@
                             </div>
                         </group>
                         <notebook>
-                            <page string="Mail Body">
+                            <page string="Mail Body" name="mail_body">
                                 <field name="body_html" class="oe_read_only" widget="html" options="{
                                     'cssReadonly': 'mass_mailing.iframe_css_assets_readonly',
                                 }"/>
@@ -622,14 +622,14 @@
                                         <field name="user_id"/>
                                         <field name="email_from"/>
                                         <label for="reply_to"/>
-                                        <div>
+                                        <div name="reply_to_details">
                                             <field name="reply_to_mode" widget="radio"
                                                 attrs="{'invisible': [('mailing_model_name', 'in', ['mail.mass_mailing.contact', 'res.partner', 'mail.mass_mailing.list'])]}"/>
                                             <field name="reply_to"
                                                 attrs="{'required': [('reply_to_mode', '=', 'email')], 'invisible': [('reply_to_mode', '=', 'thread')]}"/>
                                         </div>
                                         <label for="attachment_ids"/>
-                                        <div>
+                                        <div name="attachment_ids_details">
                                             <field name="attachment_ids"  widget="many2many_binary" string="Attach a file" class="oe_inline"/>
                                         </div>
                                         <field name="mail_server_id" groups="base.group_no_one" options="{'no_create': True, 'no_open': True}"/>
@@ -708,7 +708,7 @@
                                     </div>
                                     <div class="o_kanban_record_body" attrs="{'invisible': [('sent_date', '=', False)]}">
                                         <t t-if="record.sent_date">
-                                            <div class="row">
+                                            <div class="row" name="stat_opened">
                                                 <div class="col-8">
                                                     <a name="%(action_view_mail_mail_statistics_mailing)d"
                                                        context="{'search_default_filter_opened': True}"
@@ -718,7 +718,7 @@
                                                     <field name="opened_ratio"/> %
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row" name="stat_replied">
                                                 <div class="col-8">
                                                     <a name="%(action_view_mail_mail_statistics_mailing)d"
                                                        context="{'search_default_filter_replied': True}"
@@ -728,7 +728,7 @@
                                                     <field name="replied_ratio"/> %
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row" name="stat_clicks">
                                                 <div class="col-8">
                                                     <a name="%(link_tracker_action_mass_mailing)d"
                                                        type="action">Clicks</a>
@@ -737,7 +737,7 @@
                                                     <field name="clicks_ratio"/> %
                                                 </div>
                                             </div>
-                                            <div class='o_kanban_primary_bottom'>
+                                            <div class='o_kanban_primary_bottom' name="stat_delivered">
                                                 <field name="delivered" widget="progressbar" title="Delivered" options="{'current_value': 'delivered', 'max_value': 'expected', 'editable': false}"/>
                                             </div>
                                         </t>

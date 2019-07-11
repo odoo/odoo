@@ -376,6 +376,11 @@ class MassMailing(models.Model):
         if self.subject and not self.name:
             self.name = self.subject
 
+    @api.onchange('name')
+    def _onchange_namet(self):
+        if self.name and not self.subject:
+            self.subject = self.name
+
     # ------------------------------------------------------
     # ORM
     # ------------------------------------------------------
