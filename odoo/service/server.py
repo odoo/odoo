@@ -1123,9 +1123,13 @@ def preload_registries(dbnames):
             # run test_file if provided
             if config['test_file']:
                 test_file = config['test_file']
-                _logger.info('loading test file %s', test_file)
-                with odoo.api.Environment.manage():
-                    if test_file.endswith('py'):
+                if not os.path.isfile(test_file):
+                    _logger.warning('test file %s cannot be found', test_file)
+                elif not test_file.endswith('py'):
+                    _logger.warning('test file %s is not a python file', test_file)
+                else:
+                    _logger.info('loading test file %s', test_file)
+                    with odoo.api.Environment.manage():
                         load_test_file_py(registry, test_file)
 
             # run post-install tests
