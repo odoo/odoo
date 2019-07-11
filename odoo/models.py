@@ -3727,6 +3727,8 @@ Fields:
         # cachetoclear is an optimization to avoid modified()'s cost until other_fields are processed
         cachetoclear = []
         records = self.browse(ids)
+        # DLE P138
+        inverses_update = []
         for data, record in zip(data_list, records):
             data['record'] = record
             # DLE P104: test_inherit.py, test_50_search_one2many
@@ -3747,7 +3749,8 @@ Fields:
                     value = field.convert_to_cache(value, record)
                     self.env.cache.set(record, field, value)
                     for invf in record._field_inverses[field]:
-                        invf._update(record[field.name], record)
+                        # DLE P138
+                        inverses_update.append((invf, record[field.name], record))
 
         # update parent_path
         records._parent_store_create()
@@ -3772,6 +3775,10 @@ Fields:
 
                 # mark fields to recompute
                 records.modified([field.name for field in other_fields])
+
+            # DLE P138: `test_activity_flow_employee`, res_model is a related to res_model_id, yet it is used.
+            for invf, inv_records, record in inverses_update:
+                invf._update(inv_records, record)
 
             # if value in cache has not been updated by other_fields, remove it
             for record, field in cachetoclear:
