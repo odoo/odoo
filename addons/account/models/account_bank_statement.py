@@ -340,7 +340,7 @@ class AccountBankStatementLine(models.Model):
 
     @api.model
     def create(self, vals):
-        line = super(AccountBankStatementLine, self).create(vals)
+        lines = super(AccountBankStatementLine, self).create(vals)
         # The most awesome fix you will ever see is below.
         # Explanation: during a 'create', the 'convert_to_cache' method is not called. Moreover, at
         # that point 'journal_currency_id' is not yet known since it is a related field. It means
@@ -349,8 +349,9 @@ class AccountBankStatementLine(models.Model):
         # the field correctly.
         # This is obviously an awful workaround, but at the time of writing, the ORM does not
         # provide a clean mechanism to fix the issue.
-        line.amount = line.amount
-        return line
+        for line in lines:
+            line.amount = line.amount
+        return lines
 
     @api.multi
     def unlink(self):
