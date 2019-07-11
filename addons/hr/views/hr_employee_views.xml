@@ -46,7 +46,9 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                         <!-- Used by other modules-->
+                            <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
                         </div>
                     <field name="image" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"image_medium"}'/>
                         <div class="oe_title">
@@ -306,28 +308,6 @@
                     <field name="coach_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
                 </tree>
-            </field>
-        </record>
-
-        <!-- TODO remove me in master -->
-        <record id="hr_employee_action_subordinate_hierachy" model="ir.actions.act_window">
-            <field name="name">Subordinate Hierarchy</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr.employee</field>
-            <field name="domain">['|', ('id','in',active_ids), ('parent_id', 'in', active_ids)]</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_partner_tree2"/>
-            <field name="binding_model_id" ref="hr.model_hr_employee"/>
-        </record>
-
-        <record model="ir.actions.server" id="hr_employee_action_toggle_active">
-            <field name="name">Archive/Restore</field>
-            <field name="model_id" ref="hr.model_hr_employee"/>
-            <field name="binding_model_id" ref="hr.model_hr_employee"/>
-            <field name="state">code</field>
-            <field name="code">
-                if records:
-                    records.toggle_active()
             </field>
         </record>
 

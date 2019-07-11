@@ -1,15 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
 
-        <!-- open meetings related to given partner -->
-        <record id="calendar_event_partner" model="ir.actions.act_window">
-            <field name="name">Meetings</field>
-            <field name="binding_model_id" ref="base.model_res_partner"/>
-            <field name="res_model">calendar.event</field>
-            <field name="view_mode">calendar,tree,form</field>
-            <field name="context">{'default_partner_ids': [active_id], 'search_default_partner_ids': [active_id]}</field>
-        </record>
-
         <!-- open opportunities related to given partner -->
         <record id="relate_partner_opportunities" model="ir.actions.act_window">
             <field name="name">Opportunities</field>

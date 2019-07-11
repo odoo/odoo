@@ -7,6 +7,10 @@
             <field name="arch" type="xml">
                 <form string="Account">
                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="account.action_move_line_select"
+                                string="Journal Items" type="action" icon="fa-bars"/>
+                        </div>
                        <group>
                            <group>
                              <field name="code" placeholder="code"/>
@@ -366,14 +370,6 @@ action = model.setting_init_bank_account_action()
             </field>
         </record>
         <menuitem action="action_account_journal_group_list" id="menu_action_account_journal_group_list" parent="account_account_menu"/>
-
-        <act_window
-           id="act_account_journal_2_account_bank_statement"
-           name="Bank statements"
-           context="{'search_default_journal_id': active_id, 'default_journal_id': active_id}"
-           res_model="account.bank.statement"
-           binding_model="account.journal"
-           binding_views="form"/>
 
         <!-- Tags -->
         <record id="account_tag_view_form" model="ir.ui.view">

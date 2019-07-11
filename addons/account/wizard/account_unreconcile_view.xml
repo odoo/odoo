@@ -18,12 +18,13 @@
         </record>
 
         <record id="action_account_unreconcile" model="ir.actions.act_window">
-            <field name="name">Unreconcile Entries</field>
+            <field name="name">Unreconcile</field>
             <field name="res_model">account.unreconcile</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="account_unreconcile_view"/>
             <field name="target">new</field>
             <field name="binding_model_id" ref="account.model_account_move_line" />
+            <field name="binding_view_types">list</field>
         </record>
 
     </data>
