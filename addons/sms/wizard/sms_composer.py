@@ -174,12 +174,10 @@ class SendSMS(models.TransientModel):
         return messages
 
     def _action_send_sms_mass(self, records=None):
-        # print('sending sms mass on', records)
         records = records if records is not None else self._get_records()
 
         record_values = self._prepare_mass_sms_values(records)
-        # print('\trendered values %s' % repr(record_values))
-        sms_create_vals = [dict(record_values[record.id], state='outgoing') for record in records]
+        sms_create_vals = [record_values[record.id] for record in records]
         sms = self.env['sms.sms'].sudo().create(sms_create_vals)
         return sms
 
