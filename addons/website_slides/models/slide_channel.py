@@ -22,12 +22,13 @@ class ChannelUsersRelation(models.Model):
     partner_id = fields.Many2one('res.partner', index=True, required=True)
     partner_email = fields.Char(related='partner_id.email', readonly=True)
 
-    @api.depends('channel_id.slide_partner_ids.partner_id', 'channel_id.slide_partner_ids.completed', 'partner_id')
+    @api.depends('channel_id.slide_partner_ids.partner_id', 'channel_id.slide_partner_ids.completed', 'partner_id', 'channel_id.slide_partner_ids.slide_id.is_published')
     def _compute_completion(self):
         read_group_res = self.env['slide.slide.partner'].sudo().read_group(
             ['&', '&', ('channel_id', 'in', self.mapped('channel_id').ids),
              ('partner_id', 'in', self.mapped('partner_id').ids),
-             ('completed', '=', True)],
+             ('completed', '=', True),
+             ('slide_id.is_published', '=', True)],
             ['channel_id', 'partner_id'],
             groupby=['channel_id', 'partner_id'], lazy=False)
         mapped_data = dict()
