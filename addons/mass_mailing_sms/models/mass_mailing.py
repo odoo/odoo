@@ -16,7 +16,7 @@ class MassMailing(models.Model):
     # mailing options
     mailing_type = fields.Selection(selection_add=[('sms', 'SMS')])
     # sms options
-    body_plaintext = fields.Text('Body')
+    body_plaintext = fields.Text('SMS Body')
     sms_template_id = fields.Many2one('sms.template', string='SMS Template', ondelete='set null')
     # opt_out_link
 
@@ -30,7 +30,6 @@ class MassMailing(models.Model):
         if self.mailing_type == 'sms' and self.sms_template_id:
             self.body_plaintext = self.sms_template_id.body
 
-    @api.model
     def create(self, values):
         if values.get('mailing_type') == 'sms':
             if not values.get('medium_id'):
@@ -39,18 +38,18 @@ class MassMailing(models.Model):
                 values['body_plaintext'] = self.env['sms.template'].browse(values['sms_template_id']).body
         return super(MassMailing, self).create(values)
 
-    @api.multi
-    def action_test_mass_sms(self):
-        self.ensure_one()
-        ctx = dict(self.env.context, default_mass_mailing_id=self.id)
-        return {
-            'name': _('Test Mailing'),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'mass.sms.test',
-            'target': 'new',
-            'context': ctx,
-        }
+    def action_test_mailing(self):
+        if self.mailing_type == 'sms':
+            ctx = dict(self.env.context, default_mass_mailing_id=self.id)
+            return {
+                'name': _('Test Mailing'),
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'res_model': 'mass.sms.test',
+                'target': 'new',
+                'context': ctx,
+            }
+        return super(MassMailing, self).action_test_mailing()
 
     def get_remaining_recipients(self):
         if self.mailing_type == 'sms':
@@ -87,57 +86,57 @@ class MassMailing(models.Model):
     #         _logger.info("Mass-mailing %s targets %s, no opt out list available", self, target._name)
     #     return opt_out
 
-    def _get_seen_list(self):
-        """Returns a set of emails already targeted by current mailing/campaign (no duplicates)"""
-        self.ensure_one()
-        target = self.env[self.mailing_model_real]
+    # def _get_seen_list(self):
+    #     """Returns a set of emails already targeted by current mailing/campaign (no duplicates)"""
+    #     self.ensure_one()
+    #     target = self.env[self.mailing_model_real]
 
-        # avoid loading a large number of records in memory
-        # + use a basic heuristic for extracting emails
-        query = """
-            SELECT lower(substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
-              FROM mail_mail_statistics s
-              JOIN %(target)s t ON (s.res_id = t.id)
-             WHERE substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
-        """
+    #     # avoid loading a large number of records in memory
+    #     # + use a basic heuristic for extracting emails
+    #     query = """
+    #         SELECT lower(substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
+    #           FROM mail_mail_statistics s
+    #           JOIN %(target)s t ON (s.res_id = t.id)
+    #          WHERE substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
+    #     """
 
-        # Apply same 'get email field' rule from mail_thread.message_get_default_recipients
-        if 'partner_id' in target._fields:
-            mail_field = 'email'
-            query = """
-                SELECT lower(substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
-                  FROM mail_mail_statistics s
-                  JOIN %(target)s t ON (s.res_id = t.id)
-                  JOIN res_partner p ON (t.partner_id = p.id)
-                 WHERE substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
-            """
-        elif issubclass(type(target), self.pool['mail.address.mixin']):
-            mail_field = 'email_normalized'
-        elif 'email_from' in target._fields:
-            mail_field = 'email_from'
-        elif 'partner_email' in target._fields:
-            mail_field = 'partner_email'
-        elif 'email' in target._fields:
-            mail_field = 'email'
-        else:
-            raise UserError(_("Unsupported mass mailing model %s") % self.mailing_model_id.name)
+    #     # Apply same 'get email field' rule from mail_thread.message_get_default_recipients
+    #     if 'partner_id' in target._fields:
+    #         mail_field = 'email'
+    #         query = """
+    #             SELECT lower(substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
+    #               FROM mail_mail_statistics s
+    #               JOIN %(target)s t ON (s.res_id = t.id)
+    #               JOIN res_partner p ON (t.partner_id = p.id)
+    #              WHERE substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
+    #         """
+    #     elif issubclass(type(target), self.pool['mail.address.mixin']):
+    #         mail_field = 'email_normalized'
+    #     elif 'email_from' in target._fields:
+    #         mail_field = 'email_from'
+    #     elif 'partner_email' in target._fields:
+    #         mail_field = 'partner_email'
+    #     elif 'email' in target._fields:
+    #         mail_field = 'email'
+    #     else:
+    #         raise UserError(_("Unsupported mass mailing model %s") % self.mailing_model_id.name)
 
-        if self.mass_mailing_campaign_id.unique_ab_testing:
-            query +="""
-               AND s.mass_mailing_campaign_id = %%(mailing_campaign_id)s;
-            """
-        else:
-            query +="""
-               AND s.mass_mailing_id = %%(mailing_id)s
-               AND s.model = %%(target_model)s;
-            """
-        query = query % {'target': target._table, 'mail_field': mail_field}
-        params = {'mailing_id': self.id, 'mailing_campaign_id': self.mass_mailing_campaign_id.id, 'target_model': self.mailing_model_real}
-        self._cr.execute(query, params)
-        seen_list = set(m[0] for m in self._cr.fetchall())
-        _logger.info(
-            "Mass-mailing %s has already reached %s %s emails", self, len(seen_list), target._name)
-        return seen_list
+    #     if self.mass_mailing_campaign_id.unique_ab_testing:
+    #         query +="""
+    #            AND s.mass_mailing_campaign_id = %%(mailing_campaign_id)s;
+    #         """
+    #     else:
+    #         query +="""
+    #            AND s.mass_mailing_id = %%(mailing_id)s
+    #            AND s.model = %%(target_model)s;
+    #         """
+    #     query = query % {'target': target._table, 'mail_field': mail_field}
+    #     params = {'mailing_id': self.id, 'mailing_campaign_id': self.mass_mailing_campaign_id.id, 'target_model': self.mailing_model_real}
+    #     self._cr.execute(query, params)
+    #     seen_list = set(m[0] for m in self._cr.fetchall())
+    #     _logger.info(
+    #         "Mass-mailing %s has already reached %s %s emails", self, len(seen_list), target._name)
+    #     return seen_list
 
     # def _get_mass_mailing_context(self):
     #     """Returns extra context items with pre-filled blacklist and seen list for massmailing"""
@@ -159,9 +158,11 @@ class MassMailing(models.Model):
             'mass_mailing_id': self.id,
         }
 
-    # def send_mail(self, res_ids=None):
-    #     for mailing in self:
-    #         from type
+    def send_mail(self, res_ids=None):
+        mass_sms = self.filtered(lambda m: m.mailing_type == 'sms')
+        if mass_sms:
+            mass_sms.action_send_sms(res_ids=res_ids)
+        return super(MassMailing, self - mass_sms).send_mail(res_ids=res_ids)
 
     def action_send_sms(self, res_ids=None):
         for mailing in self:
@@ -179,15 +180,3 @@ class MassMailing(models.Model):
             composer._action_send_sms()
             # mailing.write({'state': 'done', 'sent_date': fields.Datetime.now()})
         return True
-
-    @api.model
-    def _process_mass_mailing_queue(self):
-        mass_mailings = self.search([('state', 'in', ('in_queue', 'sending')), '|', ('schedule_date', '<', fields.Datetime.now()), ('schedule_date', '=', False)])
-        for mass_mailing in mass_mailings:
-            user = mass_mailing.write_uid or self.env.user
-            mass_mailing = mass_mailing.with_context(**user.sudo(user=user).context_get())
-            if len(mass_mailing.get_remaining_recipients()) > 0:
-                mass_mailing.state = 'sending'
-                mass_mailing.send_mail()
-            else:
-                mass_mailing.write({'state': 'done', 'sent_date': fields.Datetime.now()})

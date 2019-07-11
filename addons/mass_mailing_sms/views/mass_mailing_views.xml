@@ -1,4 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo><data>
 
+    <record id="mass_mailing_view_search" model="ir.ui.view">
+        <field name="name">mail.mass_mailing.view.search</field>
+        <field name="model">mail.mass_mailing</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="mailing_type"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mass_mailing_view_tree" model="ir.ui.view">
+        <field name="name">mail.mass_mailing.view.tree</field>
+        <field name="model">mail.mass_mailing</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="mailing_type"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mass_mailing_view_form" model="ir.ui.view">
+        <field name="name">mail.mass_mailing.view.form</field>
+        <field name="model">mail.mass_mailing</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="mailing_type" widget="radio" options="{'horizontal': true}"/>
+            </xpath>
+            <xpath expr="//field[@name='subject']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='mail_body']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='mail_body']" position="after">
+                <page string="SMS Content" name="sms_body" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">
+                    <field name="body_plaintext" widget="sms_widget"/>
+                    <!-- <field name="sms_allow_unsubscribe"/> -->
+                    <group>
+                        <field name="sms_template_id"/>
+                    </group>
+                </page>
+            </xpath>
+            <!-- Option page tweaks -->
+            <xpath expr="//field[@name='email_from']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//label[@for='reply_to']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='reply_to_details']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//label[@for='attachment_ids']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='attachment_ids_details']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='mail_server_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mass_mailing_view_kanban" model="ir.ui.view">
+        <field name="name">mail.mass_mailing.kanban</field>
+        <field name="model">mail.mass_mailing</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_kanban_record_headings')]/h3" position="after">
+                <field name="mailing_type"/>
+            </xpath>
+            <xpath expr="//div[@name='stat_opened']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='stat_replied']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='stat_clicks']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
 </data></odoo>
