@@ -173,8 +173,10 @@ class Groups(models.Model):
                 raise UserError(_('The name of the group can not start with "-"'))
         # invalidate caches before updating groups, since the recomputation of
         # field 'share' depends on method has_group()
-        self.env['ir.model.access'].call_cache_clearing_methods()
-        self.env['res.users'].has_group.clear_cache(self.env['res.users'])
+        # DLE P139
+        if self.ids:
+            self.env['ir.model.access'].call_cache_clearing_methods()
+            self.env['res.users'].has_group.clear_cache(self.env['res.users'])
         return super(Groups, self).write(vals)
 
 
@@ -475,7 +477,9 @@ class Users(models.Model):
             self.env['ir.default'].clear_caches()
 
         # clear caches linked to the users
-        if 'groups_id' in values:
+        if self.ids and 'groups_id' in values:
+            # DLE P139: Calling invalidate_cache on a new, well you lost everything as you wont be able to take it back from the cache
+            # `test_00_equipment_multicompany_user`
             self.env['ir.model.access'].call_cache_clearing_methods()
             self.env['ir.rule'].clear_caches()
             self.has_group.clear_cache(self)

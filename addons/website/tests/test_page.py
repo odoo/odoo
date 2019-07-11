@@ -202,6 +202,7 @@ class Crawler(HttpCase):
 
         specific_page = generic_page.copy({'website_id': self.env['website'].get_current_website().id})
         specific_page.write({'website_published': False, 'arch': generic_page.arch.replace('I am a generic page', 'I am a specific page')})
+        specific_page.flush()
 
         r = self.url_open(specific_page.url)
         self.assertEqual(r.status_code, 404, "Restricted users should see a 404 and not the generic one as we unpublished the specific one")

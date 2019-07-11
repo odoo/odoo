@@ -78,7 +78,7 @@ class RatingMixin(models.AbstractModel):
             for record in self:
                 if record._rec_name in values:  # set the res_name of ratings to be recomputed
                     res_name_field = self.env['rating.rating']._fields['res_name']
-                    record.rating_ids._recompute_todo(res_name_field)
+                    self.env.add_todo(res_name_field, record.rating_ids)
                 if record._rating_get_parent_field_name() in values:
                     record.rating_ids.write({'parent_res_id': record[record._rating_get_parent_field_name()].id})
 

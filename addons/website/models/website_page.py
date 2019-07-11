@@ -27,6 +27,12 @@ class Page(models.Model):
 
     # don't use mixin website_id but use website_id on ir.ui.view instead
     website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False)
+    # DLE P140: `test_cow_page`
+    # `self.page_1.with_context(website_id=1).write({'arch': '<div>website 1 content</div>'})`
+    # `arch` doesnt really depends on the context, because in this case it creates a new view
+    # see override of `write` in /home/dle/src/odoo/master-nochange-fp/addons/website/models/ir_ui_view.py
+    # but as we store in cache was we pass to write, it stored the new value in cache even when no website_id was in the context
+    arch = fields.Text(related='view_id.arch', readonly=False, depends_context=('website_id',))
 
     def _compute_homepage(self):
         for page in self:
