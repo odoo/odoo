@@ -34,7 +34,7 @@
 __all__ = [
     'Environment',
     'Meta',
-    'model', 'multi',
+    'model',
     'constrains', 'depends', 'onchange', 'returns',
     'call_kw',
 ]
@@ -286,24 +286,6 @@ def model(method):
     if method.__name__ == 'create':
         return model_create_single(method)
     method._api = 'model'
-    return method
-
-
-def multi(method):
-    """ Decorate a record-style method where ``self`` is a recordset. The method
-        typically defines an operation on records. Such a method::
-
-            def method(self, args):
-                ...
-
-        may be called in both record and traditional styles, like::
-
-            # recs = model.browse(cr, uid, ids, context)
-            recs.method(args)
-
-            model.method(cr, uid, ids, args, context=context)
-    """
-    method._api = 'multi'
     return method
 
 
