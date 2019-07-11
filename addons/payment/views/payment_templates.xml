@@ -152,7 +152,7 @@
                 <t t-if="show_manage_btn">
                     <a class="btn btn-link mb8 mt8" href="/my/payment_method">Manage your payment methods</a>
                 </t>
-                <button t-if="mode == 'manage' and list(filter(lambda x: x.payment_flow == 's2s', acquirers))" id="o_payment_form_add_pm" class="btn btn-primary btn-lg mb8 mt8">
+                <button t-if="mode == 'manage' and list(filter(lambda x: x.payment_flow == 's2s', acquirers))" type="submit" id="o_payment_form_add_pm" class="btn btn-primary btn-lg mb8 mt8">
                     <i class="fa fa-plus-circle"/> Add new card
                 </button>
             </div>
