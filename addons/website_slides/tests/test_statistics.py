@@ -75,6 +75,15 @@ class TestStatistics(common.SlidesCase):
         self.assertEqual(channel_emp.completion, 100)
         self.assertTrue(channel_emp.completed)
 
+        self.slide_3.is_published = False
+        self.assertEqual(channel_emp.completion, 100)
+        self.assertTrue(channel_emp.completed)
+
+        self.slide_3.is_published = True
+        self.slide_3.active = False
+        self.assertEqual(channel_emp.completion, 100)
+        self.assertTrue(channel_emp.completed)
+
     @mute_logger('odoo.models')
     def test_channel_user_statistics_complete_check_member(self):
         (self.slide | self.slide_2).write({'is_preview': True})
