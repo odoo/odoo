@@ -42,3 +42,9 @@ class StripeController(http.Controller):
             res['verified'] = token.verified
 
         return res
+
+    @http.route('/payment/stripe/s2s/create_setup_intent', type='json', auth='public', csrf=False)
+    def stripe_s2s_create_setup_intent(self, acquirer_id, **kwargs):
+        acquirer = request.env['payment.acquirer'].browse(int(acquirer_id))
+        res = acquirer._create_setup_intent(kwargs)
+        return res.get('client_secret')
