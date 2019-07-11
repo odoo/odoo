@@ -331,7 +331,7 @@ class AccountMove(models.Model):
     def button_cancel(self):
         for move in self:
             if not move.journal_id.update_posted:
-                raise UserError(_('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.'))
+                raise UserError(_('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries. %s' % move.journal_id.name))
             # We remove all the analytics entries for this journal
             move.mapped('line_ids.analytic_line_ids').unlink()
         if self.ids:
@@ -1655,15 +1655,22 @@ class AccountPartialReconcile(models.Model):
                                     'partner_id': line.partner_id.id,
                                 })
         self.recompute()
-        if newly_created_move:
-            if move_date > (self.company_id.period_lock_date or date.min) and newly_created_move.date != move_date:
-                # The move date should be the maximum date between payment and invoice (in case
-                # of payment in advance). However, we should make sure the move date is not
-                # recorded before the period lock date as the tax statement for this period is
-                # probably already sent to the estate.
-                newly_created_move.write({'date': move_date})
-            # post move
-            newly_created_move.post()
+        # import pdb; pdb.set_trace()
+        # if newly_created_move:
+        #     from datetime import date
+        #     lock_date = max(
+        #         self.company_id.period_lock_date or date.min,
+        #         self.company_id.fiscalyear_lock_date or date.min)
+        #     if self.user_has_groups('absa.can_modify_closed_periods'):
+        #         lock_date = self.company_id.fiscalyear_lock_date or date.min
+        #
+        #     if move_date >= lock_date:
+        #         # The move date should be the maximum date between payment and invoice (in case
+        #         # of payment in advance). However, we should make sure the move date is not
+        #         # recorded before the period lock date as the tax statement for this period is
+        #         # probably already sent to the estate.
+        newly_created_move.write({'date': move_date})
+        newly_created_move.post()
 
     def _create_tax_basis_move(self):
         # Check if company_journal for cash basis is set if not, raise exception
