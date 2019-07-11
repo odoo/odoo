@@ -233,7 +233,7 @@
                                     <div t-field="track.description"/>
                                 </div>
                                 <div class="col-lg-12">
-                                    <h3>About The Author</h3>
+                                    <h3>About The Speaker</h3>
                                     <div t-field="track.partner_biography"/>
                                 </div>
                             </div>
@@ -339,29 +339,26 @@
                             <h3 class="o_page_header">Application</h3>
                             <p>
                                 Fill this form to propose your talk.
-
                             </p>
+                            <div class="alert alert-info" role="alert">
+                                <i class="fa fa-info-circle"/>
+                                You can add multiple speakers by separating names, emails and phones with commas.
+                            </div>
                         </section>
                     </div>
                     <section id="forms" t-if="event.website_track_proposal">
                         <form class="mt32 js_website_submit_form" t-attf-action="/event/#{event.id}/track_proposal/post" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <div class="form-group row">
-                                <label class="col-lg-3 col-md-4 col-form-label" for="partner_name">Your Name</label>
+                                <label class="col-lg-3 col-md-4 col-form-label" for="track_name">Talk Title</label>
                                 <div class="col-lg-7 col-md-8">
-                                    <input type="text" class="form-control" name="partner_name" required="True" />
+                                    <input type="text" class="form-control" name="track_name" required="True"/>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-lg-3 col-md-4 col-form-label" for="email_from">Your Email</label>
+                                <label class="col-lg-3 col-md-4 col-form-label" for="description">Talk Introduction</label>
                                 <div class="col-lg-7 col-md-8">
-                                    <input type="email" class="form-control" name="email_from" required="True" />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-lg-3 col-md-4 col-form-label" for="phone">Your Phone</label>
-                                <div class="col-lg-7 col-md-8">
-                                    <input type="text" class="form-control" name="phone" required="True" />
+                                    <textarea  class="form-control" name="description" style="min-height: 120px"/>
                                 </div>
                             </div>
                             <div class="form-group row" t-if="len(event.allowed_track_tag_ids)">
@@ -376,24 +373,30 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-lg-3 col-md-4 col-form-label" for="track_name">Talk Title</label>
+                                <label class="col-lg-3 col-md-4 col-form-label" for="partner_name">Speaker(s) Name</label>
                                 <div class="col-lg-7 col-md-8">
-                                    <input type="text" class="form-control" name="track_name" required="True"/>
+                                    <input type="text" class="form-control" name="partner_name" required="True"/>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-lg-3 col-md-4 col-form-label" for="phone">Speaker Biography</label>
+                                <label class="col-lg-3 col-md-4 col-form-label" for="email_from">Speaker(s) Email</label>
                                 <div class="col-lg-7 col-md-8">
-                                    <textarea  class="form-control" name="biography" style="min-height: 120px"/>
+                                    <input type="email" class="form-control" name="email_from" required="True" multiple="multiple"/>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-lg-3 col-md-4 col-form-label" for="description">Talk Introduction</label>
+                                <label class="col-lg-3 col-md-4 col-form-label" for="phone">Speaker(s) Phone</label>
                                 <div class="col-lg-7 col-md-8">
-                                    <textarea  class="form-control" name="description" style="min-height: 120px"/>
+                                    <input type="text" class="form-control" name="phone" required="True"/>
                                 </div>
                             </div>
                             <div class="form-group row">
+                                <label class="col-lg-3 col-md-4 col-form-label" for="biography">Speaker(s) Biography</label>
+                                <div class="col-lg-7 col-md-8">
+                                    <textarea  class="form-control" name="biography" rows="5"/>
+                                </div>
+                            </div>
+                            <div class="form-group row o_form_buttons">
                                 <div class="offset-lg-3 offset-md-4 col-md-8 col-lg-7">
                                     <button type="submit" class="btn btn-primary">Submit Proposal</button>
                                 </div>

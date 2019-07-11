@@ -58,11 +58,11 @@ class Track(models.Model):
     name = fields.Char('Title', required=True, translate=True)
     active = fields.Boolean(default=True)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.user)
-    partner_id = fields.Many2one('res.partner', 'Speaker')
-    partner_name = fields.Char('Speaker Name')
-    partner_email = fields.Char('Speaker Email')
-    partner_phone = fields.Char('Speaker Phone')
-    partner_biography = fields.Html('Speaker Biography')
+    partner_id = fields.Many2one('res.partner', 'Partner')
+    partner_name = fields.Char('Name')
+    partner_email = fields.Char('Email')
+    partner_phone = fields.Char('Phone')
+    partner_biography = fields.Html('Biography')
     tag_ids = fields.Many2many('event.track.tag', string='Tags')
     stage_id = fields.Many2one(
         'event.track.stage', string='Stage', ondelete='restrict',
@@ -78,7 +78,7 @@ class Track(models.Model):
              " * Grey is the default situation\n"
              " * Red indicates something is preventing the progress of this track\n"
              " * Green indicates the track is ready to be pulled to the next stage")
-    description = fields.Html('Track Description', translate=html_translate, sanitize_attributes=False)
+    description = fields.Html(translate=html_translate, sanitize_attributes=False)
     date = fields.Datetime('Track Date')
     duration = fields.Float('Duration', default=1.5)
     location_id = fields.Many2one('event.track.location', 'Room')
