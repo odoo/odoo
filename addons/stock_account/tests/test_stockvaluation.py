@@ -29,6 +29,13 @@ class TestStockValuation(SavepointCase):
             'type': 'product',
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
+        cls.inventory_user = cls.env['res.users'].create({
+            'name': 'Pauline Poivraisselle',
+            'login': 'pauline',
+            'email': 'p.p@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [cls.env.ref('stock.group_stock_user').id])]
+        })
 
         cls.product1.categ_id.property_valuation = 'real_time'
         cls.product2.categ_id.property_valuation = 'real_time'
@@ -2673,6 +2680,46 @@ class TestStockValuation(SavepointCase):
         self.assertAlmostEqual(self.product1.qty_available, 1.0)
         self.assertAlmostEqual(self.product1.quantity_svl, 0.0)
         self.assertAlmostEqual(self.product1.value_svl, 0.0)
+
+    def test_standard_manual_2(self):
+        """Validate a receipt as a regular stock user."""
+        self.product1.categ_id.property_cost_method = 'standard'
+        self.product1.categ_id.property_valuation = 'manual_periodic'
+
+        self.product1.with_user(self.inventory_user)._change_standard_price(10)
+
+        move1 = self.env['stock.move'].with_user(self.inventory_user).create({
+            'name': 'IN 10 units',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.move_line_ids.qty_done = 10.0
+        move1._action_done()
+
+    def test_standard_perpetual_1(self):
+        """Validate a receipt as a regular stock user."""
+        self.product1.categ_id.property_cost_method = 'standard'
+        self.product1.categ_id.property_valuation = 'real_time'
+
+        self.product1.with_user(self.inventory_user)._change_standard_price(10)
+
+        move1 = self.env['stock.move'].with_user(self.inventory_user).create({
+            'name': 'IN 10 units',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.move_line_ids.qty_done = 10.0
+        move1._action_done()
 
     def test_change_cost_method_1(self):
         """ Change the cost method from FIFO to AVCO.

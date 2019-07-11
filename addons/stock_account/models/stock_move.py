@@ -160,7 +160,7 @@ class StockMove(models.Model):
             if forced_quantity:
                 svl_vals['description'] = 'Correction of %s (modification of past move)' % move.picking_id.name or move.name
             svl_vals_list.append(svl_vals)
-        return self.env['stock.valuation.layer'].create(svl_vals_list)
+        return self.env['stock.valuation.layer'].sudo().create(svl_vals_list)
 
     def _create_out_svl(self, forced_quantity=None):
         """Create a `stock.valuation.layer` from `self`.
@@ -179,7 +179,7 @@ class StockMove(models.Model):
             if forced_quantity:
                 svl_vals['description'] = 'Correction of %s (modification of past move)' % move.picking_id.name or move.name
             svl_vals_list.append(svl_vals)
-        return self.env['stock.valuation.layer'].create(svl_vals_list)
+        return self.env['stock.valuation.layer'].sudo().create(svl_vals_list)
 
     def _create_dropshipped_svl(self, forced_quantity=None):
         """Create a `stock.valuation.layer` from `self`.
@@ -218,7 +218,7 @@ class StockMove(models.Model):
             }
             out_vals.update(common_vals)
             svl_vals_list.append(out_vals)
-        return self.env['stock.valuation.layer'].create(svl_vals_list)
+        return self.env['stock.valuation.layer'].sudo().create(svl_vals_list)
 
     def _create_dropshipped_returned_svl(self, forced_quantity=None):
         """Create a `stock.valuation.layer` from `self`.
@@ -242,7 +242,7 @@ class StockMove(models.Model):
 
         res = super(StockMove, self)._action_done(cancel_backorder=cancel_backorder)
 
-        stock_valuation_layers = self.env['stock.valuation.layer']
+        stock_valuation_layers = self.env['stock.valuation.layer'].sudo()
         # Create the valuation layers in batch by calling `moves._create_valued_type_svl`.
         for valued_type in self._get_valued_types():
             todo_valued_moves = valued_moves[valued_type]
@@ -260,8 +260,9 @@ class StockMove(models.Model):
 
         # For every in move, run the vacuum for the linked product.
         products_to_vacuum = valued_moves['in'].mapped('product_id')
+        company = valued_moves['in'].mapped('company_id') and valued_moves['in'].mapped('company_id')[0] or self.env.company
         for product_to_vacuum in products_to_vacuum:
-            product_to_vacuum._run_fifo_vacuum()
+            product_to_vacuum._run_fifo_vacuum(company)
 
         return res
 
