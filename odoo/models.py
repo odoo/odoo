@@ -4195,27 +4195,28 @@ Fields:
                     continue
                 model_name = self._name
                 for fname in arg[0].split('.'):
-                    if fname not in self._fields:
-                        continue
-                    to_flush[model_name].add(fname)
-                    field = self.env[model_name]._fields[fname]
-                    # DLE P111: `test_message_process_email_partner_find`
-                    # Search on res.users with email_normalized in domain
-                    # must trigger the recompute and flush of res.partner.email_normalized
-                    if field.related_field:
-                        model = self
-                        # DLE P129: `test_transit_multi_companies`
-                        # `self.env['stock.picking'].search([('product_id', '=', product.id)])`
-                        # Should flush `stock.move.picking_ids` as `product_id` on `stock.picking` is defined as:
-                        # `product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id', readonly=False)`
-                        for f in field.related:
-                            rfield = model._fields[f]
-                            to_flush[model._name].add(f)
-                            if rfield.type in ('many2one', 'one2many', 'many2many'):
-                                model = self.env[rfield.comodel_name]
-                                if rfield.type in ('one2many', 'many2many'):
-                                    to_flush[rfield.comodel_name].add(rfield.inverse_name)
-                    model_name = field.comodel_name
+                    # TBE: `test_leave_creation_for_other_user`
+                    field = self.env[model_name]._fields.get(fname)
+                    if field:
+                        to_flush[model_name].add(fname)
+                        # DLE P111: `test_message_process_email_partner_find`
+                        # Search on res.users with email_normalized in domain
+                        # must trigger the recompute and flush of res.partner.email_normalized
+                        if field.related_field:
+                            model = self
+                            # DLE P129: `test_transit_multi_companies`
+                            # `self.env['stock.picking'].search([('product_id', '=', product.id)])`
+                            # Should flush `stock.move.picking_ids` as `product_id` on `stock.picking` is defined as:
+                            # `product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id', readonly=False)`
+                            for f in field.related:
+                                rfield = model._fields.get(f)
+                                if rfield:
+                                    to_flush[model._name].add(f)
+                                    if rfield.type in ('many2one', 'one2many', 'many2many'):
+                                        model = self.env[rfield.comodel_name]
+                                        if rfield.type in ('one2many', 'many2many'):
+                                            to_flush[rfield.comodel_name].add(rfield.inverse_name)
+                        model_name = field.comodel_name
 
         # DLE P56: needs to flush write the order fields
         # test_15_equivalent_one2many_1
