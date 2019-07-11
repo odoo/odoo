@@ -226,7 +226,9 @@ sAnimations.registry.crmPartnerAssign = sAnimations.Class.extend({
     _onEditOppConfirm: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        this._buttonExec($(ev.currentTarget), this._editOpportunity);
+        if ($(".edit_opp_form")[0].checkValidity()) {
+            this._buttonExec($(ev.currentTarget), this._editOpportunity);
+        }
     },
     /**
      * @private
