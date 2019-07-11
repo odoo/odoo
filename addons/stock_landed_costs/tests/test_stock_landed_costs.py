@@ -94,10 +94,10 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
             'picking_ids': [picking_landed_cost_1.id, picking_landed_cost_2.id],
             'account_journal_id': self.ref('stock_landed_costs.expenses_journal'),
             'cost_lines': [
-                (0, 0, {'product_id': self.ref('product.product_product_2')}),
-                (0, 0, {'product_id': self.ref('product.product_product_2')}),
-                (0, 0, {'product_id': self.ref('product.product_product_2')}),
-                (0, 0, {'product_id': self.ref('product.product_product_2')})],
+                (0, 0, {'product_id': self.product_oven}),
+                (0, 0, {'product_id': self.product_oven}),
+                (0, 0, {'product_id': self.product_oven}),
+                (0, 0, {'product_id': self.product_oven})],
             'valuation_adjustment_lines': [],
         })
         cost_lines_values = {

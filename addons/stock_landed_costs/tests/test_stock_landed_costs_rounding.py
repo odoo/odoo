@@ -92,7 +92,7 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         default_vals.update({
             'picking_ids': [picking_landed_cost_3.id],
             'account_journal_id': self.ref('stock_landed_costs.expenses_journal'),
-            'cost_lines': [(0, 0, {'product_id': self.ref('product.product_product_1')})],
+            'cost_lines': [(0, 0, {'product_id': self.product_refrigerator.id})],
             'valuation_adjustment_lines': [],
         })
         stock_landed_cost_2 = self.env['stock.landed.cost'].new(default_vals)
@@ -129,7 +129,7 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         default_vals.update({
             'picking_ids': [picking_landed_cost_4.id],
             'account_journal_id': self.ref('stock_landed_costs.expenses_journal'),
-            'cost_lines': [(0, 0, {'product_id': self.ref('product.product_product_1')})],
+            'cost_lines': [(0, 0, {'product_id': self.product_refrigerator.id})],
             'valuation_adjustment_lines': [],
         })
         stock_landed_cost_3 = self.env['stock.landed.cost'].new(default_vals)
