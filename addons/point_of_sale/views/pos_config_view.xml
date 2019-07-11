@@ -111,6 +111,9 @@
                                 <div class="text-muted">
                                     Use a virtual keyboard for touchscreens
                                 </div>
+                                <div class="content-group mt16" attrs="{'invisible': [('iface_vkeyboard', '=', False)]}">
+                                    <field name="iface_vkeyboard_layout" widget="radio"/>
+                                </div>
                             </div>
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box">
