@@ -354,7 +354,7 @@
             <a t-attf-class="progress-bar o_progress_{{key}}"
                t-attf-style="width: {{amount / total * 100}}%"
                type="action" data-model="account.analytic.line"
-               t-att-data-domain="json.dumps(employee['__domain_' + key])"
+               t-att-data-domain="employee['__domain_' + key]"
             >
                 <span t-att-title="title" style="font-size: 0px; width: 100%; height: 100%;">
                     <t t-esc="label" />
