@@ -442,7 +442,7 @@ var SearchPanel = Widget.extend({
             var category = self.categories[categoryId];
             if (category.activeValueId) {
                 var field = self.fields[category.fieldName];
-                var op = field.type === 'many2one' ? 'child_of' : '=';
+                var op = (field.type === 'many2one' && category.parentField) ? 'child_of' : '=';
                 domain.push([category.fieldName, op, category.activeValueId]);
             }
             return domain;

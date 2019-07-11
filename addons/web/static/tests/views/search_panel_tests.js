@@ -698,6 +698,57 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('category with no parent_field', async function (assert) {
+        assert.expect(10);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.step(JSON.stringify(args.domain));
+                }
+                return this._super.apply(this, arguments);
+            },
+            services: this.services,
+            arch: '<kanban>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="foo"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            archs: {
+                'partner,false,search': '<search>' +
+                        '<searchpanel>' +
+                            '<field name="category_id"/>' +
+                        '</searchpanel>' +
+                    '</search>',
+            },
+        });
+
+        // 'All' is selected by default
+        assert.containsOnce(kanban, '.o_search_panel_category_value .active');
+        assert.containsOnce(kanban, '.o_search_panel_category_value:first .active');
+        assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 4);
+        assert.containsN(kanban, '.o_search_panel_category_value', 3);
+
+        // click on 'gold' category
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(1) header'));
+
+        assert.containsOnce(kanban, '.o_search_panel_category_value .active');
+        assert.containsOnce(kanban, '.o_search_panel_category_value:nth(1) .active');
+        assert.containsOnce(kanban, '.o_kanban_record:not(.o_kanban_ghost)');
+
+        assert.verifySteps([
+            '[]',
+            '[["category_id","=",6]]', // must use '=' operator (instead of 'child_of')
+        ]);
+
+        kanban.destroy();
+    });
+
     QUnit.test('can (un)fold parent category values', async function (assert) {
         assert.expect(7);
 
@@ -1567,9 +1618,9 @@ QUnit.module('Views', {
         assert.verifySteps([
             '[]', // category_domain (All)
             '[["category_id","=",false]]', // comodel_domain (All)
-            '[["category_id","child_of",6]]', // category_domain ('gold')
+            '[["category_id","=",6]]', // category_domain ('gold')
             '[["category_id","=",6]]', // comodel_domain ('gold')
-            '[["category_id","child_of",7]]', // category_domain ('silver')
+            '[["category_id","=",7]]', // category_domain ('silver')
             '[["category_id","=",7]]', // comodel_domain ('silver')
             '[]', // category_domain (All)
             '[["category_id","=",false]]', // comodel_domain (All)
