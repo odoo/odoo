@@ -480,34 +480,41 @@ ListRenderer.include({
      * Returns the relative width according to the widget or the field type.
      * @see _renderHeader
      *
-     * @param {Object} column a `field` arch node
+     * @param {Object} column an arch node
+     * @returns {integer | string} either a weight factor (number) or a css
+     *   width description (string)
      */
     _getColumnWidthFactor: function (column) {
-        if (column.attrs.width) {
-            // the width attribute has precedence on the width factor
-            return 0;
+        if (!this.state.fieldsInfo.list[column.attrs.name]) {
+            // Unnamed columns get default value
+            return 1;
         }
-        var fieldType = this.state.fields[column.attrs.name].type;
+        var field = this.state.fields[column.attrs.name];
+        if (!field) {
+            // this is not a field. Probably a button or something of unknown
+            // width.
+            return 1;
+        }
         var widget = this.state.fieldsInfo.list[column.attrs.name].Widget.prototype;
         if ('widthFactor' in widget) {
             return widget.widthFactor;
         }
-        switch (fieldType) {
+        switch (field.type) {
             case 'binary': return 1;
-            case 'boolean': return 0.4;
+            case 'boolean': return '40px';
             case 'char': return 1;
-            case 'date': return 1;
-            case 'datetime': return 1.5;
-            case 'float': return 1;
+            case 'date': return '100px';
+            case 'datetime': return '150px';
+            case 'float': return '100px';
             case 'html': return 3;
-            case 'integer': return 0.8;
-            case 'many2many': return 2.2;
-            case 'many2one': return 1.5;
+            case 'integer': return '80px';
+            case 'many2many': return 2;
+            case 'many2one': return 2;
             case 'monetary': return 1.2;
-            case 'one2many': return 2.2;
+            case 'one2many': return 2.5;
             case 'reference': return 1.5;
             case 'selection': return 1.5;
-            case 'text': return 3;
+            case 'text': return 2.5;
             default: return 1;
         }
     },
@@ -720,24 +727,26 @@ ListRenderer.include({
         });
     },
     /**
-     * Overridden to set weights on columns for the fixed layout.
+     * Overridden to set weights or explicit width on columns for the fixed layout.
      *
      * @override
      * @private
      */
     _processColumns: function () {
         this._super.apply(this, arguments);
-
         if (this.editable) {
             var self = this;
             this.columns.forEach(function (column) {
-                if (column.attrs.width_factor) {
+                if (column.attrs.width) {
+                    // nothing to do
+                } else if (column.attrs.width_factor) {
                     column.attrs.widthFactor = parseFloat(column.attrs.width_factor, 10);
                 } else {
-                    if (column.tag === 'field') {
-                        column.attrs.widthFactor = self._getColumnWidthFactor(column);
+                    var factor = self._getColumnWidthFactor(column);
+                    if (typeof factor === 'string') {
+                        column.attrs.width = factor;
                     } else {
-                        column.attrs.widthFactor = 1;
+                        column.attrs.widthFactor = factor;
                     }
                 }
             });
@@ -808,15 +817,18 @@ ListRenderer.include({
         var $thead = this._super.apply(this, arguments);
 
         if (this.editable) {
+            // we compute the sum of the weights for each columns, excluding
+            // those with a fixed width.
             var totalWidth = this.columns.reduce(function (acc, column) {
-                return acc + column.attrs.widthFactor;
+                return acc + (column.attrs.widthFactor || 0);
             }, 0);
             this.columns.forEach(function (column) {
-                var $cell = $thead.find('th[data-name=' + column.attrs.name + ']');
-                if (column.attrs.width) {
-                    $cell.css('width', column.attrs.width);
-                } else if (column.attrs.widthFactor) {
-                    $cell.css('width', (column.attrs.widthFactor / totalWidth * 100) + '%');
+                if (column.attrs.width || column.attrs.widthFactor) {
+                    var width = column.attrs.width || ((column.attrs.widthFactor / totalWidth * 100) + '%');
+                    var $th = $thead.find('th[data-name=' + column.attrs.name + ']');
+                    if ($th.data('name')) {
+                        $th.css('width', width);
+                    }
                 }
             });
         }

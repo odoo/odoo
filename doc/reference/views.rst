@@ -331,7 +331,8 @@ Possible children elements of the list view are:
     ``width_factor`` (for ``editable``)
         the column relative width (as the layout is fixed)
     ``width`` (for ``editable``)
-        the column width (as the layout is fixed)
+        the column width (as the layout is fixed). It is a string describing the
+        width css property, such as '100px'.
 
     .. note:: if the list view is ``editable``, any field attribute from the
               :ref:`form view <reference/views/form>` is also valid and will
