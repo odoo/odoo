@@ -36,7 +36,6 @@ class AuthorizeForm(AuthorizeCommon):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         form_values = {
             'x_login': self.authorize.authorize_login,
-            'x_trans_key': self.authorize.authorize_transaction_key,
             'x_amount': '56.16',
             'x_show_form': 'PAYMENT_FORM',
             'x_type': 'AUTH_CAPTURE',
@@ -180,7 +179,7 @@ class AuthorizeForm(AuthorizeCommon):
 
 
 @odoo.tests.tagged('post_install', '-at_install', '-standard')
-class AuthorizeForm(AuthorizeCommon):
+class AuthorizeS2s(AuthorizeCommon):
     def test_30_authorize_s2s(self):
         # be sure not to do stupid thing
         authorize = self.authorize
@@ -198,11 +197,10 @@ class AuthorizeForm(AuthorizeCommon):
         payment_token = self.env['payment.token'].create({
             'acquirer_id': authorize.id,
             'partner_id': self.buyer_id,
-            'cc_number': '4111 1111 1111 1111',
-            'cc_expiry': '02 / 26',
-            'cc_brand': 'visa',
-            'cc_cvc': '111',
-            'cc_holder_name': 'test',
+            'opaqueData': {
+                'dataDescriptor': 'COMMON.ACCEPT.INAPP.PAYMENT',
+                'dataValue': '9487801666614876704604'
+            },
         })
 
         # create normal s2s transaction
