@@ -13,6 +13,12 @@ ajax.loadXML('/payment_stripe/static/src/xml/stripe_templates.xml', qweb);
 
 PaymentForm.include({
 
+    willStart: function () {
+        return this._super.apply(this, arguments).then(function () {
+            return ajax.loadJS("https://js.stripe.com/v3/");
+        })
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -27,6 +33,12 @@ PaymentForm.include({
      */
     _createStripeToken: function (ev, $checkedRadio, addPmEvent) {
         var self = this;
+        if (ev.type === 'submit') {
+            var button = $(ev.target).find('*[type="submit"]')[0]
+        } else {
+            var button = ev.target;
+        }
+        this.disableButton(button);
         var acquirerID = this.getAcquirerIdFromRadio($checkedRadio);
         var acquirerForm = this.$('#o_payment_add_token_acq_' + acquirerID);
         var inputsForm = $('input', acquirerForm);
@@ -34,70 +46,87 @@ PaymentForm.include({
             console.warn('payment_form: unset partner_id when adding new token; things could go wrong');
         }
 
-        ajax.loadJS("https://js.stripe.com/v3/").then(function () {
-            var formData = self.getFormData(inputsForm);
-            var stripe = Stripe(formData.stripe_publishable_key);
-            var element = stripe.elements();
-            var card = element.create('card', {hidePostalCode: true});
-            var dialog = new Dialog(self, {
-                title: _t('Card Details'),
-                size: 'medium',
-                technical: false,
-                buttons: [{text: _t('Submit'), classes: 'btn-primary', click: function (ev) {
-                    stripe.createPaymentMethod('card', card).then(function (result) {
-                        if (result.error) {
-                            // Inform the user if there was an error.
-                            var errorElement = document.getElementById('card-errors');
-                            errorElement.textContent = result.error.message;
-                        } else {
-                            ev.currentTarget.disabled = true;
-                            _.extend(formData, result.paymentMethod);
-                            // Send the token to server.
-                            self._rpc({
-                                route: formData.data_set,
-                                params: formData
-                            }).then (function (data) {
-                                if (addPmEvent) {
-                                    if (formData.return_url) {
-                                        window.location = formData.return_url;
-                                    } else {
-                                        window.location.reload();
-                                    }
-                                } else {
-                                    $checkedRadio.val(data.id);
-                                    self.$el.submit();
-                                }
-                            }).guardedCatch(function (error) {
-                                // if the rpc fails, pretty obvious
-                                self.enableButton(ev.target);
-
-                                self.displayError(
-                                    _t('Server Error'),
-                                    _t("We are not able to add your payment method at the moment.") +
-                                        error.message.data.message
-                                );
-                            });
-                        }
-                    });
-                }}],
-                $content: $(qweb.render('stripe.payment.element')),
-            });
-            dialog.opened().then(function () {
-                self.disableButton(ev.target);
-                card.mount('#card-element');
-                card.addEventListener('change', function (event) {
-                    var displayError = document.getElementById('card-errors');
-                    displayError.textContent = '';
-                    if (event.error) {
-                        displayError.textContent = event.error.message;
-                    }
-                });
-            });
-            dialog.on('closed', self, function () {
-                self.enableButton(ev.target);
-            });
-            dialog.open();
+        var formData = self.getFormData(inputsForm);
+        var stripe = this.stripe;
+        var card = this.stripe_card_element;
+        if (card._invalid) {
+            return;
+        }
+        return this._rpc({
+            route: '/payment/stripe/s2s/create_setup_intent',
+            params: {'acquirer_id': formData.acquirer_id}
+        }).then(function(intent_secret){
+            return stripe.handleCardSetup(intent_secret, card);
+        }).then(function(result) {
+            if (result.error) {
+                return Promise.reject({"message": {"data": { "message": result.error.message}}});
+            } else {
+                _.extend(formData, {"payment_method": result.setupIntent.payment_method});
+                return self._rpc({
+                    route: formData.data_set,
+                    params: formData,
+                })
+            }
+        }).then(function(result) {
+            if (addPmEvent) {
+                if (formData.return_url) {
+                    window.location = formData.return_url;
+                } else {
+                    window.location.reload();
+                }
+            } else {
+                $checkedRadio.val(result.id);
+                self.el.submit();
+            }
+        }).guardedCatch(function (error) {
+            // if the rpc fails, pretty obvious
+            self.enableButton(button);
+            self.displayError(
+                _t('Unable to save card'),
+                _t("We are not able to add your payment method at the moment. ") +
+                    error.message.data.message
+            );
         });
+    },
+    /**
+     * called when clicking a Stripe radio if configured for s2s flow; instanciates the card and bind it to the widget.
+     *
+     * @private
+     * @param {DOMElement} checkedRadio
+     */
+    _bindStripeCard: function ($checkedRadio) {
+        var acquirerID = this.getAcquirerIdFromRadio($checkedRadio);
+        var acquirerForm = this.$('#o_payment_add_token_acq_' + acquirerID);
+        var inputsForm = $('input', acquirerForm);
+        var formData = this.getFormData(inputsForm);
+        var stripe = Stripe(formData.stripe_publishable_key);
+        var element = stripe.elements();
+        var card = element.create('card', {hidePostalCode: true});
+        card.mount('#card-element');
+        card.on('ready', function(ev) {
+            card.focus();
+        });
+        card.addEventListener('change', function (event) {
+            var displayError = document.getElementById('card-errors');
+            displayError.textContent = '';
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            }
+        });
+        this.stripe = stripe;
+        this.stripe_card_element = card;
+    },
+    /**
+     * destroys the card element and any stripe instance linked to the widget.
+     *
+     * @private
+     */
+    _unbindStripeCard: function () {
+        if (this.stripe_card_element) {
+            this.stripe_card_element.destroy();
+        }
+        this.stripe = undefined;
+        this.stripe_card_element = undefined;
     },
     /**
      * @override
@@ -108,13 +137,15 @@ PaymentForm.include({
         if ($checkedRadio.length !== 1) {
             return;
         }
-
-        //  hide add token form for stripe
-        if ($checkedRadio.data('provider') === 'stripe' && this.isNewPaymentRadio($checkedRadio)) {
-            this.$('[id*="o_payment_add_token_acq_"]').addClass('d-none');
-        } else {
-            this._super.apply(this, arguments);
+        var provider = $checkedRadio.data('provider')
+        if (provider === 'stripe') {
+            // always re-init stripe (in case of multiple acquirers for stripe, make sure the stripe instance is using the right key)
+            this._unbindStripeCard();
+            if (this.isNewPaymentRadio($checkedRadio)) {
+                this._bindStripeCard($checkedRadio);
+            }
         }
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -130,9 +161,9 @@ PaymentForm.include({
 
         // first we check that the user has selected a stripe as s2s payment method
         if ($checkedRadio.length === 1 && this.isNewPaymentRadio($checkedRadio) && $checkedRadio.data('provider') === 'stripe') {
-            this._createStripeToken(ev, $checkedRadio);
+            return this._createStripeToken(ev, $checkedRadio);
         } else {
-            this._super.apply(this, arguments);
+            return this._super.apply(this, arguments);
         }
     },
     /**
@@ -145,9 +176,9 @@ PaymentForm.include({
 
         // first we check that the user has selected a stripe as add payment method
         if ($checkedRadio.length === 1 && this.isNewPaymentRadio($checkedRadio) && $checkedRadio.data('provider') === 'stripe') {
-            this._createStripeToken(ev, $checkedRadio, true);
+            return this._createStripeToken(ev, $checkedRadio, true);
         } else {
-            this._super.apply(this, arguments);
+            return this._super.apply(this, arguments);
         }
     },
 });

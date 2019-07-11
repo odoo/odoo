@@ -51,12 +51,19 @@ class PaymentAcquirerStripe(models.Model):
 
         return tx_values
 
-    def _stripe_request(self, url, data=False):
+    def _stripe_request(self, url, data=False, method='POST'):
         self.ensure_one()
         url = urls.url_join(self._get_stripe_api_url(), url)
-        headers = {'AUTHORIZATION': 'Bearer %s' % self.sudo().stripe_secret_key}
-        resp = requests.post(url, data, headers=headers)
-        resp.raise_for_status()
+        headers = {
+            'AUTHORIZATION': 'Bearer %s' % self.sudo().stripe_secret_key,
+            'Stripe-Version': '2019-05-16', # SetupIntent need a specific version
+            }
+        resp = requests.request(method, url, data=data, headers=headers)
+        try:
+            resp.raise_for_status()
+        except:
+            _logger.error(resp.text)
+            raise
         return resp.json()
 
     def _create_stripe_session(self, kwargs):
@@ -67,17 +74,38 @@ class PaymentAcquirerStripe(models.Model):
             tx.stripe_payment_intent = resp['payment_intent']
         return resp['id']
 
+    def _create_setup_intent(self, kwargs):
+        self.ensure_one()
+        params = {
+            'usage': 'off_session',
+        }
+        _logger.info('_stripe_create_setup_intent: Sending values to stripe, values:\n%s', pprint.pformat(params))
+
+        res = self._stripe_request('setup_intents', params)
+
+        _logger.info('_stripe_create_setup_intent: Values received:\n%s', pprint.pformat(res))
+        return res
+
     @api.model
     def _get_stripe_api_url(self):
         return 'https://api.stripe.com/v1/'
 
     @api.model
     def stripe_s2s_form_process(self, data):
+        last4 = data.get('card', {}).get('last4')
+        if not last4:
+            # PM was created with a setup intent, need to get last4 digits through
+            # yet another call -_-
+            acquirer_id = self.env['payment.acquirer'].browse(int(data['acquirer_id']))
+            pm = data.get('payment_method')
+            res = acquirer_id._stripe_request('payment_methods/%s' % pm, data=False, method='GET')
+            last4 = res.get('card', {}).get('last4', '****')
+
         payment_token = self.env['payment.token'].sudo().create({
             'acquirer_id': int(data['acquirer_id']),
             'partner_id': int(data['partner_id']),
-            'stripe_payment_method': data.get('id'),
-            'name': 'XXXXXXXXXXXX%s' % data.get('card', {}).get('last4'),
+            'stripe_payment_method': data.get('payment_method'),
+            'name': 'XXXXXXXXXXXX%s' % last4,
             'acquirer_ref': data.get('customer')
         })
         return payment_token
@@ -113,29 +141,27 @@ class PaymentTransactionStripe(models.Model):
             _logger.info('Stripe: entering form_feedback with post data %s' % pprint.pformat(data))
         return super(PaymentTransactionStripe, self).form_feedback(data, acquirer_name)
 
-    def _create_stripe_charge(self, acquirer_ref=None, email=None):
-
+    def _stripe_create_payment_intent(self, acquirer_ref=None, email=None):
         charge_params = {
             'amount': int(self.amount if self.currency_id.name in INT_CURRENCIES else float_round(self.amount * 100, 2)),
-            'currency': self.currency_id.name,
-            'payment_method_types[]': 'card',
-            'customer': acquirer_ref,
-            'off_session': 'recurring',
+            'currency': self.currency_id.name.lower(),
+            'setup_future_usage': 'off_session',
             'confirm': True,
-            'payment_method': self.payment_token_id.stripe_payment_method
+            'payment_method': self.payment_token_id.stripe_payment_method,
+            'customer': self.payment_token_id.acquirer_ref,
         }
-        _logger.info('_create_stripe_charge: Sending values to stripe, values:\n%s', pprint.pformat(charge_params))
+        _logger.info('_stripe_create_payment_intent: Sending values to stripe, values:\n%s', pprint.pformat(charge_params))
 
         res = self.acquirer_id._stripe_request('payment_intents', charge_params)
         if res.get('charges') and res.get('charges').get('total_count'):
             res = res.get('charges').get('data')[0]
 
-        _logger.info('_create_stripe_charge: Values received:\n%s', pprint.pformat(res))
+        _logger.info('_stripe_create_payment_intent: Values received:\n%s', pprint.pformat(res))
         return res
 
     def stripe_s2s_do_transaction(self, **kwargs):
         self.ensure_one()
-        result = self._create_stripe_charge(acquirer_ref=self.payment_token_id.acquirer_ref, email=self.partner_email)
+        result = self._stripe_create_payment_intent(acquirer_ref=self.payment_token_id.acquirer_ref, email=self.partner_email)
         return self._stripe_s2s_validate_tree(result)
 
     def _create_stripe_refund(self):
@@ -204,7 +230,7 @@ class PaymentTransactionStripe(models.Model):
             if self.type == 'form_save':
                 s2s_data = {
                     'customer': tree.get('customer'),
-                    'id': tree.get('payment_method'),
+                    'payment_method': tree.get('payment_method'),
                     'card': tree.get('payment_method_details').get('card'),
                     'acquirer_id': self.acquirer_id.id,
                     'partner_id': self.partner_id.id
@@ -214,7 +240,7 @@ class PaymentTransactionStripe(models.Model):
             if self.payment_token_id:
                 self.payment_token_id.verified = True
             return True
-        if status == 'processing':
+        if status in ('processing', 'requires_action'):
             self.write(vals)
             self._set_transaction_pending()
             return True

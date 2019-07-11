@@ -29,7 +29,8 @@
                 t-att-data-access-token="access_token or ''"
                 t-att-data-partner-id="partner_id"
                 t-att-data-callback-method="callback_method or ''"
-                t-att-data-order-id="order_id or ''">
+                t-att-data-order-id="order_id or ''"
+                t-att-data-mode="mode">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="hidden" t-if="prepare_tx_url" name="prepare_tx_url" t-att-value="prepare_tx_url"/>
             <input type="hidden" t-if="order_id" name="order_id" t-att-value="order_id"/>
