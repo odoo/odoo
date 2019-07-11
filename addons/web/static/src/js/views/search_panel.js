@@ -95,6 +95,7 @@ var SearchPanel = Widget.extend({
         });
 
         this.initialState = params.state;
+        this.scrollTop = this.initialState && this.initialState.scrollTop || null;
         this.defaultValues = params.defaultValues || {};
         this.fields = params.fields;
         this.model = params.model;
@@ -122,6 +123,14 @@ var SearchPanel = Widget.extend({
     start: function () {
         this._render();
         return this._super.apply(this, arguments);
+    },
+    /**
+     * Called each time the searchPanel is attached into the DOM.
+     */
+    on_attach_callback: function () {
+        if (this.scrollTop !== null) {
+            this.el.scrollTop = this.scrollTop;
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -175,6 +184,7 @@ var SearchPanel = Widget.extend({
         return {
             categories: this.categories,
             filters: this.filters,
+            scrollTop: this.el ? this.el.scrollTop : null,
         };
     },
     /**
@@ -192,8 +202,9 @@ var SearchPanel = Widget.extend({
      * @param {Object} state.categories
      */
     importState: function (state) {
-        this.filters = state.filters || this.filters;
         this.categories = state.categories || this.categories;
+        this.filters = state.filters || this.filters;
+        this.scrollTop = state.scrollTop;
         this._render();
     },
     /**

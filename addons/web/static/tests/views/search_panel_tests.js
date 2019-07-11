@@ -2042,6 +2042,40 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
+    QUnit.test('scroll position is kept when switching between controllers', async function (assert) {
+        assert.expect(6);
+
+        for (var i = 10; i < 20; i++) {
+            this.data.category.records.push({id: i, name: "Cat " + i});
+        }
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            services: this.services,
+        });
+        actionManager.$el.css('max-height', 300);
+
+        await actionManager.doAction(1);
+        assert.containsOnce(actionManager, '.o_content .o_kanban_view');
+        assert.strictEqual(actionManager.$('.o_search_panel').scrollTop(), 0);
+
+        // simulate a scroll in the search panel and switch into list
+        actionManager.$('.o_search_panel').scrollTop(50);
+        await testUtils.dom.click(actionManager.$('.o_cp_switch_list'));
+        assert.containsOnce(actionManager, '.o_content .o_list_view');
+        assert.strictEqual(actionManager.$('.o_search_panel').scrollTop(), 50);
+
+        // simulate another scroll and switch back to kanban
+        actionManager.$('.o_search_panel').scrollTop(30);
+        await testUtils.dom.click(actionManager.$('.o_cp_switch_kanban'));
+        assert.containsOnce(actionManager, '.o_content .o_kanban_view');
+        assert.strictEqual(actionManager.$('.o_search_panel').scrollTop(), 30);
+
+        actionManager.destroy();
+    });
+
     QUnit.test('search panel is not instanciated in dialogs', async function (assert) {
         assert.expect(2);
 
