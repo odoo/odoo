@@ -143,8 +143,10 @@ class PaymentAcquirerOgone(models.Model):
                 return key.upper() in keys
 
         items = sorted((k.upper(), v) for k, v in values.items())
+        print(items)
         sign = ''.join('%s=%s%s' % (k, v, key) for k, v in items if v and filter_key(k))
         sign = sign.encode("utf-8")
+        print(sign)
         shasign = sha1(sign).hexdigest()
         return shasign
 

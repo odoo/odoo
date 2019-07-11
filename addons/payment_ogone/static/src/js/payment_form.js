@@ -82,33 +82,29 @@ odoo.define('payment_ogone.payment_form', function (require) {
 
             });
             
-            // todo: get url from parameters with other fields
             // FLOW:
-            // STEP 0
-            // GET THE NEEDED INFORMATION FROM THE BACKEND;
-            // ACCEPTURL
-            // ALIASPERSISTEDAFTERUSE
-            // EXCEPTIONURL
-            // ORDERID
-            // PSPID
-            // SHASIGN : for 
-            // PARAMPLUS
             // STEP 1
-            // Create the Token which is named Alias in Ingenico denomination. This alias is created when submitting this form.(Pay Now)
-            // The alias creation depends on the following fields:
-            // ACCEPTURL
-            // ALIASPERSISTEDAFTERUSE
-            // CARDNO
-            // CN
-            // CVC
-            // ED=1223
-            // EXCEPTIONURL=
-            // ORDERID=STDREF123
-            // PSPID=OOAPI
-            // SHASIGN= xxx
-            // These fields are availaible in the backend.
-
-
+                // GET THE NEEDED INFORMATION FROM THE BACKEND;
+                // ACCEPTURL
+                // ALIASPERSISTEDAFTERUSE
+                // EXCEPTIONURL
+                // ORDERID
+                // PSPID
+                // SHASIGN : the token
+                // PARAMPLUS if needed in the future
+            // STEP 2
+                // Create the Token which is named Alias in Ingenico denomination. This alias is created when submitting this form.(Pay Now)
+                // The alias creation depends on the following fields:
+                // ACCEPTURL
+                // ALIASPERSISTEDAFTERUSE
+                // CARDNO
+                // CN
+                // CVC
+                // ED
+                // EXCEPTIONURL
+                // ORDERID
+                // PSPID= SEE XML FILE
+                // SHASIGN= xxx
         },
         
         /**
