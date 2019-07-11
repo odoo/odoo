@@ -151,30 +151,23 @@ class PaymentAcquirerOgone(models.Model):
         return shasign
 
     def ogone_form_constantes_values(self, data_in):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        ogone_tx_values = {
-            'PSPID': self.ogone_pspid,
-            'ORDERID': time.time(),
-            # 'AMOUNT' : data_in['amount'],
-            # 'EMAIL' : data_in['email'],
-            'ACCEPTURL': urls.url_join(base_url, OgoneController._accept_url),
-            'DECLINEURL': urls.url_join(base_url, OgoneController._decline_url),
-            'EXCEPTIONURL': urls.url_join(base_url, OgoneController._exception_url),
-            'CANCELURL': urls.url_join(base_url, OgoneController._cancel_url),
-            # 'RETURNURL': urls.url_join(base_url, OgoneController._return_url),
-            'ALIASPERSISTEDAFTERUSE': 'N',
-            # 'PARAMPLUS': ""
-        }
-        if self.save_token in ['ask', 'always']:
-            ogone_tx_values['ALIAS']= 'ODOO-NEW-ALIAS-%s' % time.time()
-            ogone_tx_values['ALIASPERSISTEDAFTERUSE']= 'Y'
+        # base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = "http://arj-odoo.agayon.be" # testing purpose
+        path_url = "payment/ogone/feedback/"
+        ogone_tx_values = {'PSPID': self.ogone_pspid, 'ORDERID': int(time.time()),
+                           'ACCEPTURL': urls.url_join(base_url,path_url),
+                           'DECLINEURL': urls.url_join(base_url,path_url),
+                           'EXCEPTIONURL':  urls.url_join(base_url,path_url), 'CANCELURL': urls.url_join(base_url,path_url),
+                           'ALIASPERSISTEDAFTERUSE': 'N', 'ALIAS': 'ARJ-TEST-ODOO-NEW-ALIAS-%s' % time.time()}
+
+        # self.save_token = 'always'
+        # if self.save_token in ['ask', 'always']:
+        # ogone_tx_values['ALIASPERSISTEDAFTERUSE'] = 'Y'
         # Generate sha sign here.
         # https: // payment - services.ingenico.com / int / en / ogone / support / guides / integration % 20
         #  guides / e - commerce / security - pre - payment - check  # shainsignature
         # TODO: try the upper function
         shasign = self._ogone_generate_shasign('in', ogone_tx_values)
-        ogone_tx_values['PARAMPLUS'] = ""
-
 
         return ogone_tx_values, shasign
 
@@ -632,8 +625,6 @@ class PaymentToken(models.Model):
         """
         Prepare the data needed to the token creation.
         Needed values:
-        :param values:
-        :type values:
         :return:
         :rtype:
         """
