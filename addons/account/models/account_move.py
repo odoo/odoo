@@ -83,7 +83,7 @@ class AccountMove(models.Model):
         states={'draft': [('readonly', False)]})
     narration = fields.Text(string='Internal Note')
     state = fields.Selection(selection=[
-            ('draft', 'Unposted'),
+            ('draft', 'Draft'),
             ('posted', 'Posted'),
             ('cancel', 'Cancelled')
         ], string='Status', required=True, readonly=True, copy=False, tracking=True,
@@ -181,9 +181,9 @@ class AccountMove(models.Model):
     invoice_date_due = fields.Date(string='Due Date', readonly=True, index=True, copy=False,
         states={'draft': [('readonly', False)]},
         help="If you use payment terms, the due date will be computed automatically at the generation "
-             "of accounting entries. The Payment terms may compute several due dates, for example 50% "
+             "of accounting entries.\n The Payment terms may compute several due dates, for example 50% "
              "now and 50% in one month, but if you want to force a due date, make sure that the payment "
-             "term is not set on the invoice. If you keep the Payment terms and the due date empty, it "
+             "term is not set on the invoice.\n If you keep the Payment terms and the due date empty, it "
              "means direct payment.")
     invoice_payment_ref = fields.Char(string='Payment Reference', index=True, copy=False, readonly=True,
         states={'draft': [('readonly', False)]},
@@ -195,8 +195,10 @@ class AccountMove(models.Model):
     invoice_payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms',
         readonly=True, states={'draft': [('readonly', False)]},
         help="If you use payment terms, the due date will be computed automatically at the generation "
-             "of accounting entries. If you keep the payment terms and the due date empty, it means direct payment. "
-             "The payment terms may compute several due dates, for example 50% now, 50% in one month.")
+             "of accounting entries.\n The Payment terms may compute several due dates, for example 50% "
+             "now and 50% in one month, but if you want to force a due date, make sure that the payment "
+             "term is not set on the invoice.\n If you keep the Payment terms and the due date empty, it "
+             "means direct payment.")
     # /!\ invoice_line_ids is just a subset of line_ids.
     invoice_line_ids = fields.One2many('account.move.line', 'move_id', string='Invoice lines',
         copy=False, readonly=True,
@@ -2107,7 +2109,7 @@ class AccountMoveLine(models.Model):
     reconciled = fields.Boolean(compute='_amount_residual', store=True)
     blocked = fields.Boolean(string='No Follow-up', default=False,
         help="You can check this box to mark this journal item as a litigation with the associated partner")
-    date_maturity = fields.Date(string='Due date', index=True,
+    date_maturity = fields.Date(string='Due Date', index=True,
         help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line.")
     currency_id = fields.Many2one('res.currency', string='Currency')
     partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict')
