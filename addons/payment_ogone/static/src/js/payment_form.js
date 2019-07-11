@@ -53,8 +53,8 @@ odoo.define('payment_ogone.payment_form', function (require) {
             }).then(function (result) {
 
                 result['CVC'] = formData.cc_cvc;
-                result['CARDNO'] =  formData.cc_number.replace(/\s/g, '');
-                result['ED'] =formData.cc_expiry.replace(/\s\/\s/g, '') ;
+                result['CARDNO'] = formData.cc_number.replace(/\s/g, '');
+                result['ED'] = formData.cc_expiry.replace(/\s\/\s/g, '');
                 result['CN'] = formData.cc_holder_name;
                 result['PARAMPLUS'] = "test1=0&test2=coucou&test3=5";
                 
@@ -62,21 +62,23 @@ odoo.define('payment_ogone.payment_form', function (require) {
                 // TEST if INPUT FORM IS VALID
                 var APIUrl = "https://ogone.test.v-psp.com/ncol/test/alias_gateway.asp";
                 console.log(result); // { PaymentSha: paymentDetails}    
-            
 
-                var form = document.createElement("form");
-                form.method = "POST";
-                form.action = APIUrl;   
+                var ogoneForm = document.createElement("form");
+                ogoneForm.method = "POST";
+                ogoneForm.action = APIUrl;
+                var el = document.createElement("input");
+                el.setAttribute('type', 'submit');
+                el.setAttribute('name', "Submit");
+                ogoneForm.appendChild(el);
                 _.each(result, function (key, value) {
                     var el = document.createElement("input");
                     el.setAttribute('type', 'hidden');
-                    el.setAttribute('value', value);
-                    el.setAttribute('name', key);
-                    form.appendChild(el);
+                    el.setAttribute('value', key);
+                    el.setAttribute('name', value);
+                    ogoneForm.appendChild(el);
                 });
-                document.body.appendChild(form);
-                debugger;
-                form.submit();
+                document.body.appendChild(ogoneForm);
+                ogoneForm.submit();
 
             });
             
