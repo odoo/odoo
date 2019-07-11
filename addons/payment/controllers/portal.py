@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from unicodedata import normalize
 import psycopg2
 
 from odoo import http, _
@@ -131,6 +132,7 @@ class WebsitePayment(http.Controller):
     def pay(self, reference='', order_id=None, amount=False, currency_id=None, acquirer_id=None, **kw):
         env = request.env
         user = env.user.sudo()
+        reference = normalize('NFKD', reference).encode('ascii','ignore').decode('utf-8')
 
         # Default values
         values = {
@@ -188,7 +190,7 @@ class WebsitePayment(http.Controller):
         })
 
         values['acquirers'] = [acq for acq in acquirers if acq.payment_flow in ['form', 's2s']]
-        values['pms'] = request.env['payment.token'].search([('acquirer_id', 'in', acquirers.filtered(lambda x: x.payment_flow == 's2s').ids)])
+        values['pms'] = request.env['payment.token'].search([('acquirer_id', 'in', acquirers.ids)])
 
         return request.render('payment.pay', values)
 
@@ -246,7 +248,7 @@ class WebsitePayment(http.Controller):
             'currency_id': int(currency_id),
             'partner_id': partner_id,
             'payment_token_id': pm_id,
-            'type': 'form_save' if token.acquirer_id.save_token != 'none' and partner_id else 'form',
+            'type': 'server2server',
             'return_url': return_url,
         }
 
