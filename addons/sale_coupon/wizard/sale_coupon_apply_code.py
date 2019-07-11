@@ -9,7 +9,7 @@ class SaleCouponApplyCode(models.TransientModel):
     _rec_name = 'coupon_code'
     _description = 'Sales Coupon Apply Code'
 
-    coupon_code = fields.Char(string="Coupon", required=True)
+    coupon_code = fields.Char(string="Code", required=True)
 
     def process_coupon(self):
         """

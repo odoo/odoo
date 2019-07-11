@@ -323,9 +323,9 @@
                         <field name="recompute_delivery_price" invisible="1"/>
                     </xpath>
                     <xpath expr="//group[@name='note_group']" position="before">
-                        <div class="oe_left" style="margin-left: 10px">
+                        <div class="oe_right">
                             <button
-                                string="Add a shipping method"
+                                string="Add shipping"
                                 name="action_open_delivery_wizard"
                                 type="object"
                                 attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('order_line', '=', []), ('delivery_set', '=', True)]}"
