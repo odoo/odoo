@@ -113,6 +113,9 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         if (this._controlPanel) {
             this._controlPanel.on_attach_callback();
         }
+        if (this._searchPanel) {
+            this._searchPanel.on_attach_callback();
+        }
         this.renderer.on_attach_callback();
     },
     /**
