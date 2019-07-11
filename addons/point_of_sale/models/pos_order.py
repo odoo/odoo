@@ -118,19 +118,25 @@ class PosOrder(models.Model):
         if pos_session.state == 'closing_control' or pos_session.state == 'closed':
             pos_order['pos_session_id'] = self._get_valid_session(pos_order).id
         order = self.create(self._order_fields(pos_order))
-        prec_acc = order.pricelist_id.currency_id.decimal_places
-        journal_ids = set()
-        for payments in pos_order['statement_ids']:
-            if not float_is_zero(payments[2]['amount'], precision_digits=prec_acc):
-                order.add_payment(self._payment_fields(payments[2]))
-            journal_ids.add(payments[2]['journal_id'])
-
         if pos_session.sequence_number <= pos_order['sequence_number']:
             pos_session.write({'sequence_number': pos_order['sequence_number'] + 1})
             pos_session.refresh()
+        return order
 
-        if not float_is_zero(pos_order['amount_return'], prec_acc):
-            cash_journal_id = pos_session.cash_journal_id.id
+    @api.multi
+    def _get_payments(self,data):
+        self.ensure_one()
+        prec_acc = self.pricelist_id.currency_id.decimal_places
+        journal_ids = set()
+        payments_to_create = []
+        for payments in data['statement_ids']:
+            if not float_is_zero(payments[2]['amount'], precision_digits=prec_acc):
+                payment_data = self._prepare_bank_statement_line_payment_values(self._payment_fields(payments[2]))
+                payments_to_create.append(payment_data)
+            journal_ids.add(payments[2]['journal_id'])
+
+        if not float_is_zero(self['amount_return'], prec_acc):
+            cash_journal_id = self.session_id.cash_journal_id.id
             if not cash_journal_id:
                 # Select for change one of the cash journals used in this
                 # payment
@@ -142,17 +148,18 @@ class PosOrder(models.Model):
                     # If none, select for change one of the cash journals of the POS
                     # This is used for example when a customer pays by credit card
                     # an amount higher than total amount of the order and gets cash back
-                    cash_journal = [statement.journal_id for statement in pos_session.statement_ids if statement.journal_id.type == 'cash']
+                    cash_journal = [statement.journal_id for statement in self.session_id.statement_ids if statement.journal_id.type == 'cash']
                     if not cash_journal:
                         raise UserError(_("No cash statement found for this session. Unable to record returned cash."))
                 cash_journal_id = cash_journal[0].id
-            order.add_payment({
-                'amount': -pos_order['amount_return'],
+            payment_data = self._prepare_bank_statement_line_payment_values({
+                'amount': -data['amount_return'],
                 'payment_date': fields.Date.context_today(self),
                 'payment_name': _('return'),
                 'journal': cash_journal_id,
             })
-        return order
+            payments_to_create.append(payment_data)
+        return payments_to_create
 
     def _prepare_analytic_account(self, line):
         '''This method is designed to be inherited in a custom module'''
@@ -721,7 +728,8 @@ class PosOrder(models.Model):
         existing_orders = pos_order.read(['pos_reference'])
         existing_references = set([o['pos_reference'] for o in existing_orders])
         orders_to_save = [o for o in orders if o['data']['name'] not in existing_references]
-        order_ids = []
+        order_ids = self.env['pos.order']
+        prepared_payments = []
 
         for tmp_order in orders_to_save:
             to_invoice = tmp_order['to_invoice']
@@ -729,8 +737,13 @@ class PosOrder(models.Model):
             if to_invoice:
                 self._match_payment_to_invoice(order)
             pos_order = self._process_order(order)
-            order_ids.append(pos_order.id)
+            order_ids |= pos_order
+            prepared_payments.append(pos_order._get_payments(order))
 
+        self.env['pos.order']._create_payments(prepared_payments)
+
+        for pos_order in order_ids:
+            pos_order.amount_paid = sum(payment.amount for payment in pos_order.statement_ids)
             try:
                 pos_order.action_pos_order_paid()
             except psycopg2.DatabaseError:
@@ -743,7 +756,7 @@ class PosOrder(models.Model):
                 pos_order.action_pos_order_invoice()
                 pos_order.invoice_id.sudo().with_context(force_company=self.env.user.company_id.id).action_invoice_open()
                 pos_order.account_move = pos_order.invoice_id.move_id
-        return order_ids
+        return order_ids.ids
 
     def test_paid(self):
         """A Point of Sale is paid when the sum
@@ -943,13 +956,17 @@ class PosOrder(models.Model):
 
         return args
 
+    @api.model
+    def _create_payments(self, payments):
+        context = dict(self.env.context)
+        context.pop('pos_session_id', False)
+        self.env['account.bank.statement.line'].with_context(context).create(payments)
+
     def add_payment(self, data):
         """Create a new payment for the order"""
         self.ensure_one()
         args = self._prepare_bank_statement_line_payment_values(data)
-        context = dict(self.env.context)
-        context.pop('pos_session_id', False)
-        self.env['account.bank.statement.line'].with_context(context).create(args)
+        self._create_payments([args])
         self.amount_paid = sum(payment.amount for payment in self.statement_ids)
         return args.get('statement_id', False)
 
