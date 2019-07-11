@@ -716,7 +716,7 @@ class TestMultiCompany(TestHrHolidaysBase):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_access_other_company_user(self):
         employee_leave = self.employee_leave.with_user(self.user_employee)
-
+        employee_leave.invalidate_cache(['name'])
         with self.assertRaises(AccessError):
             employee_leave.name
 
@@ -726,7 +726,7 @@ class TestMultiCompany(TestHrHolidaysBase):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_access_other_company_officer(self):
         employee_leave_hruser = self.employee_leave.with_user(self.user_hruser)
-
+        employee_leave_hruser.invalidate_cache(['name'])
         with self.assertRaises(AccessError):
             employee_leave_hruser.name
 
@@ -736,7 +736,7 @@ class TestMultiCompany(TestHrHolidaysBase):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_access_other_company_manager(self):
         employee_leave_hrmanager = self.employee_leave.with_user(self.user_hrmanager)
-
+        employee_leave_hrmanager.invalidate_cache(['name'])
         with self.assertRaises(AccessError):
             employee_leave_hrmanager.name
 
