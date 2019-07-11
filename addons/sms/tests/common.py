@@ -79,7 +79,7 @@ class MockSMS(common.BaseCase):
             ('partner_id', '=', partner.id), ('number', '=', number),
             ('state', '=', 'canceled')
         ])
-        self.assertTrue(sms, 'SMS: not found canceled SMS for %s (number: %s, state)' % (partner, number))
+        self.assertTrue(sms, 'SMS: not found canceled SMS for %s (number: %s)' % (partner, number))
         self.assertEqual(sms.error_code, error_code)
         if content is not None:
             self.assertEqual(sms.body, content)
@@ -93,7 +93,7 @@ class MockSMS(common.BaseCase):
             ('partner_id', '=', partner.id), ('number', '=', number),
             ('state', '=', 'error')
         ])
-        self.assertTrue(sms, 'SMS: not found failed SMS for %s (number: %s, state)' % (partner, number))
+        self.assertTrue(sms, 'SMS: not found failed SMS for %s (number: %s)' % (partner, number))
         self.assertEqual(sms.error_code, error_code)
         if content is not None:
             self.assertEqual(sms.body, content)
