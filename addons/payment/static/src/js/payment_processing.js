@@ -71,7 +71,7 @@ odoo.define('payment.processing', function (require) {
                 'tx_error': [],
             };
 
-            if (transactions.length > 0 && transactions[0].acquirer_provider == 'transfer') {
+            if (transactions.length > 0 && ['transfer', 'sepa_direct_debit'].indexOf(transactions[0].acquirer_provider) >= 0) {
                 window.location = transactions[0].return_url;
                 return;
             }

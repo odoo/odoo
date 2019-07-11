@@ -279,4 +279,17 @@
         <!-- https://intl.alipay.com/ihome/home/about/buy.htm?topic=paymentMethods -->
         <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_jcb"),ref("payment.payment_icon_cc_mastercard"),ref("payment.payment_icon_cc_western_union"),ref("payment.payment_icon_cc_webmoney"),ref("payment.payment_icon_cc_visa")])]'/>
     </record>
+
+    <record id="payment.payment_acquirer_sepa_direct_debit" model="payment.acquirer">
+        <field name="name">SEPA Direct Debit</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image_128" type="base64" file="base/static/img/icons/payment_sepa_direct_debit.png"/>
+        <field name="module_id" ref="base.module_payment_sepa_direct_debit"/>
+        <field name="description" type="html">
+            <p>
+                SEPA Direct Debit is a Europe-wide Direct Debit system that allows merchants to collect Euro-denominated payments from accounts in the 34 SEPA countries and associated territories.
+            </p>
+        </field>
+    </record>
+
 </odoo>

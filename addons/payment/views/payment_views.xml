@@ -20,12 +20,14 @@
                     <sheet>
                         <field name="module_id" invisible="1"/>
                         <field name="module_state" invisible="1"/>
+                        <field name="module_to_buy" invisible="1"/>
                         <field name="inbound_payment_method_ids" invisible="1"/>
                         <field name="image_128" widget="image" class="oe_avatar"/>
                         <div class="oe_title">
                             <h1><field name="name" placeholder="Name"/></h1>
                             <div attrs="{'invisible': ['|', ('module_state', '=', 'installed'), ('module_id', '=', False)]}">
-                                <button type="object" class="btn btn-primary" name="button_immediate_install" string="Install"/>
+                                <a attrs="{'invisible': [('module_to_buy', '=', False)]}" href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" class="btn btn-info" role="button">Upgrade</a>
+                                <button attrs="{'invisible': [('module_to_buy', '=', True)]}" type="object" class="btn btn-primary" name="button_immediate_install" string="Install"/>
                             </div>
                         </div>
                         <div attrs="{'invisible': ['|', ('module_state', '=', 'installed'), ('module_id', '=', False)]}">
@@ -104,10 +106,12 @@
                     <field name="provider"/>
                     <field name="module_id"/>
                     <field name="module_state"/>
+                    <field name="module_to_buy"/>
                     <field name="color"/>
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="installed" t-value="!record.module_id.value || (record.module_id.value &amp;&amp; record.module_state.raw_value === 'installed')"/>
+                            <t t-set="to_buy" t-value="record.module_to_buy.raw_value === true"/>
                             <div t-attf-class="oe_kanban_global_click #{kanban_color(record.color.raw_value)}">
                                 <div class="o_kanban_image">
                                     <img type="open" t-att-src="kanban_image('payment.acquirer', 'image_128', record.id.raw_value)" alt="Acquirer"/>
@@ -120,7 +124,11 @@
                                     <t t-if="installed">
                                         <field name="state" widget="label_selection" options="{'classes': {'enabled': 'success', 'test': 'warning', 'disabled' : 'danger'}}"/>
                                     </t>
-                                    <button t-if="!installed and !selection_mode" type="object" class="btn btn-secondary float-right" name="button_immediate_install">Install</button>
+                                    <button t-if="!installed and !selection_mode and !to_buy" type="object" class="btn btn-secondary float-right" name="button_immediate_install">Install</button>
+                                    <t t-if="!installed and to_buy">
+                                        <button href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" class="btn btn-info btn-sm float_right">Upgrade</button>
+                                        <span class="badge badge-primary oe_inline o_enterprise_label">Enterprise</span>
+                                    </t>
                                     <button t-if="installed and record.state.raw_value == 'disabled' and !selection_mode" type="edit" class="btn btn-primary float-right">Activate</button>
                                     <button t-if="installed and record.state.raw_value in ['enabled', 'test'] and !selection_mode" type="edit" class="btn btn-primary float-right">Configure</button>
                                 </div>
