@@ -1,10 +1,3 @@
-// odoo.define('payment_ogone.connect', function (require) {
-//     "use strict";
-//     var ajax = require('web.ajax');
-//     var connect = ajax.loadJS ("/payment_ogone/static/lib/connectsdknoEncrypt.js");
-// });
-
-
 odoo.define('payment_ogone.payment_form', function (require) {
     "use strict";
     
@@ -13,12 +6,10 @@ odoo.define('payment_ogone.payment_form', function (require) {
     var Dialog = require('web.Dialog');
     var Widget = require('web.Widget');
     var PaymentForm = require('payment.payment_form');
-    // ajax.loadJS("/payment_ogone/static/lib/connectsdknoEncrypt.js");
        
     var qweb = core.qweb;
     var _t = core._t;
-    // ajax.loadXML('/payment_ogone/static/src/xml/ogone_templates.xml', qweb);
-    
+   
     PaymentForm.include({
     
         //--------------------------------------------------------------------------
@@ -58,10 +49,9 @@ odoo.define('payment_ogone.payment_form', function (require) {
                 result['CN'] = formData.cc_holder_name;
                 result['PARAMPLUS'] = "test1=0&test2=coucou&test3=5";
                 
-
                 // TEST if INPUT FORM IS VALID
                 var APIUrl = "https://ogone.test.v-psp.com/ncol/test/alias_gateway.asp";
-                console.log(result); // { PaymentSha: paymentDetails}    
+                console.log(result);  
 
                 var ogoneForm = document.createElement("form");
                 ogoneForm.method = "POST";

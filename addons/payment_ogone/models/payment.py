@@ -642,20 +642,4 @@ class PaymentToken(models.Model):
         # if values.get(values['partner']):
         #     data['partner_id'] =  1 #self.env['res_partner'].browse()
         data['SHASIGN'] = shasign
-        # ogone_tx_values = {
-        #     'PSPID': self.ogone_pspid,
-        #     'ORDERID': "",
-        #     # 'AMOUNT': 0,
-        #     # 'CURRENCY':"",
-        #     'LANGUAGE': "",
-        #     'CN': "",
-        #     # 'EMAIL': "",
-        #     'ACCEPTURL': urls.url_join(base_url, OgoneController._accept_url),
-        #     'DECLINEURL': urls.url_join(base_url, OgoneController._decline_url),
-        #     'EXCEPTIONURL': urls.url_join(base_url, OgoneController._exception_url),
-        #     'CANCELURL': urls.url_join(base_url, OgoneController._cancel_url),
-        #     'RETURNURL': urls.url_join(base_url, OgoneController._return_url),
-        #     'ALIASPERSISTEDAFTERUSE': 'N',
-        #     'PARAMPLUS': ""
-        # }
         return data
