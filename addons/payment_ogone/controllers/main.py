@@ -133,10 +133,13 @@ class OgoneController(http.Controller):
     @http.route(['/payment/ogone/feedback',], type='http', auth='public')
     def ogone_alias_gateway_feedback(self, **post):
         """ Ogone contacts using GET, at least for accept """
-        _logger.info('Ogone: feeback Alias gateway with post data %s', pprint.pformat(post))  # debug
-        # request.env['payment.transaction'].sudo().form_feedback(post, 'ogone')
+        _logger.info('Ogone: feeback Alias gateway with post data %s', pprint.pformat(post))  # debug)
+        # If you have configured an SHA-OUT passphrase for these feedback requests,
+        # you need to take the ALIAS parameter into account for your signature.
         pprint.pformat(post)
         ret = "<h1>FEEDBACK Ingenico Alias gateway</h1>"
         for key, value in post.items():
             ret += "{} : {} </br>".format(key, value)
+
         return ret
+

@@ -148,6 +148,35 @@ class PaymentAcquirerOgone(models.Model):
         shasign = sha1(sign).hexdigest()
         return shasign
 
+    def ogone_form_constantes_values(self, data_in):
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        ogone_tx_values = {
+            'PSPID': self.ogone_pspid,
+            'ORDERID': time.time(),
+            # 'AMOUNT' : data_in['amount'],
+            # 'EMAIL' : data_in['email'],
+            'ACCEPTURL': urls.url_join(base_url, OgoneController._accept_url),
+            'DECLINEURL': urls.url_join(base_url, OgoneController._decline_url),
+            'EXCEPTIONURL': urls.url_join(base_url, OgoneController._exception_url),
+            'CANCELURL': urls.url_join(base_url, OgoneController._cancel_url),
+            # 'RETURNURL': urls.url_join(base_url, OgoneController._return_url),
+            'ALIASPERSISTEDAFTERUSE': 'N',
+            # 'PARAMPLUS': ""
+        }
+        if self.save_token in ['ask', 'always']:
+            ogone_tx_values['ALIAS']= 'ODOO-NEW-ALIAS-%s' % time.time()
+            ogone_tx_values['ALIASPERSISTEDAFTERUSE']= 'Y'
+        # Generate sha sign here.
+        # https: // payment - services.ingenico.com / int / en / ogone / support / guides / integration % 20
+        #  guides / e - commerce / security - pre - payment - check  # shainsignature
+        # TODO: try the upper function
+        shasign = self._ogone_generate_shasign('in', ogone_tx_values)
+        ogone_tx_values['PARAMPLUS'] = ""
+
+
+        return ogone_tx_values, shasign
+
+
     def ogone_form_generate_values(self, values):
         print("OGONE GENERATE VALUES")
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
@@ -595,3 +624,36 @@ class PaymentToken(models.Model):
                 'name': 'XXXXXXXXXXXX%s - %s' % (values['cc_number'][-4:], values['cc_holder_name'])
             }
         return {}
+
+    @api.model
+    def ogone_prepare_token(self):
+        """
+        Prepare the data needed to the token creation.
+        Needed values:
+        :param values:
+        :type values:
+        :return:
+        :rtype:
+        """
+        acquirer = self.env['payment.acquirer'].search([('provider', '=', 'ogone')])
+        data, shasign = acquirer.ogone_form_constantes_values(None)
+        # if values.get(values['partner']):
+        #     data['partner_id'] =  1 #self.env['res_partner'].browse()
+        data['SHASIGN'] = shasign
+        # ogone_tx_values = {
+        #     'PSPID': self.ogone_pspid,
+        #     'ORDERID': "",
+        #     # 'AMOUNT': 0,
+        #     # 'CURRENCY':"",
+        #     'LANGUAGE': "",
+        #     'CN': "",
+        #     # 'EMAIL': "",
+        #     'ACCEPTURL': urls.url_join(base_url, OgoneController._accept_url),
+        #     'DECLINEURL': urls.url_join(base_url, OgoneController._decline_url),
+        #     'EXCEPTIONURL': urls.url_join(base_url, OgoneController._exception_url),
+        #     'CANCELURL': urls.url_join(base_url, OgoneController._cancel_url),
+        #     'RETURNURL': urls.url_join(base_url, OgoneController._return_url),
+        #     'ALIASPERSISTEDAFTERUSE': 'N',
+        #     'PARAMPLUS': ""
+        # }
+        return data

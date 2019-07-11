@@ -43,64 +43,70 @@ odoo.define('payment_ogone.payment_form', function (require) {
             if (this.options.partnerId === undefined) {
                 console.warn('payment_form: unset partner_id when adding new token; things could go wrong');
             }
-            //console.log(acquirerID.val());
-            //console.log(inputsForm);
-            // OPERATION:
-                // Possible values:
-    
-                // RES: request for authorization
-                // SAL: request for direct sale
-                // RFD: refund, not linked to a previous payment, so not a maintenance operation on an existing transaction 
-                // (you can not use this operation without specific permission from your acquirer).
-                // PAU: Request for pre-authorization:
             var formData = this.getFormData(inputsForm);
-            debugger;
             console.log(formData);
-            var inputDict = {
-                ACCEPTURL : "https://www.myshop.com/ok.html ",
-                AMOUNT: 10500,
-                CURRENCY: "EUR",
-                EXCEPTIONURL: "www.error.com/notok.html",
-                ORDERID: "SO55",
-                OPERATION: "SAL",
-                PSPID: "pinky",
-                PARAMPLUS: "https:///plop.com/payment/return/",
-                USERID: "OOAPI",
-                PSWD: "R!ci/6Nu8a",
-            };
-            var paymentDetails = {
-                CARDNO: formData.cc_number,
-                CVC: formData.cc_cvc,
-                ED: formData.cc_expiracy,
-                // isRecurring: false,
-                CN: formData.cc_holder_name,
-                // partner_id,
-                // COM, "Ceci est la description de l' order"
-                // EMAIL: "mitchel@example.com",
-            };
-            var APIUrl = "https://ogone.test.v-psp.com/ncol/test/alias_gateway.asp";
-            var params = Object.assign({}, inputDict, paymentDetails);
-            console.log(params); // { PaymentSha: paymentDetails}    
-            const req = new XMLHttpRequest();
-            var plop = req.open("POST", APIUrl, true);
-            req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            req.onreadystatechange = function() {//Call a function when the state changes.
-                if (req.readyState == 4 && req.status == 200) {
-                    console.log(req.responseText);
-                }
-            };
-            req.send(params);
-            debugger;
-            // return this._rpc({
-            //     route: ds.dataset.createRoute,
-            //     params: rpcDict,
-            // }).then(function (data) {
+
+            self._rpc({
+                model: 'payment.token',
+                method: 'ogone_prepare_token',
+                context: self.context,
+            }).then(function (result) {
+
+                result['CVC'] = formData.cc_cvc;
+                result['CARDNO'] =  formData.cc_number.replace(/\s/g, '');
+                result['ED'] =formData.cc_expiry.replace(/\s\/\s/g, '') ;
+                result['CN'] = formData.cc_holder_name;
+                result['PARAMPLUS'] = "test1=0&test2=coucou&test3=5";
                 
-            // });
 
-
-           
+                // TEST if INPUT FORM IS VALID
+                var APIUrl = "https://ogone.test.v-psp.com/ncol/test/alias_gateway.asp";
+                console.log(result); // { PaymentSha: paymentDetails}    
             
+
+                var form = document.createElement("form");
+                form.method = "POST";
+                form.action = APIUrl;   
+                _.each(result, function (key, value) {
+                    var el = document.createElement("input");
+                    el.setAttribute('type', 'hidden');
+                    el.setAttribute('value', value);
+                    el.setAttribute('name', key);
+                    form.appendChild(el);
+                });
+                document.body.appendChild(form);
+                debugger;
+                form.submit();
+
+            });
+            
+            // todo: get url from parameters with other fields
+            // FLOW:
+            // STEP 0
+            // GET THE NEEDED INFORMATION FROM THE BACKEND;
+            // ACCEPTURL
+            // ALIASPERSISTEDAFTERUSE
+            // EXCEPTIONURL
+            // ORDERID
+            // PSPID
+            // SHASIGN : for 
+            // PARAMPLUS
+            // STEP 1
+            // Create the Token which is named Alias in Ingenico denomination. This alias is created when submitting this form.(Pay Now)
+            // The alias creation depends on the following fields:
+            // ACCEPTURL
+            // ALIASPERSISTEDAFTERUSE
+            // CARDNO
+            // CN
+            // CVC
+            // ED=1223
+            // EXCEPTIONURL=
+            // ORDERID=STDREF123
+            // PSPID=OOAPI
+            // SHASIGN= xxx
+            // These fields are availaible in the backend.
+
+
         },
         
         /**

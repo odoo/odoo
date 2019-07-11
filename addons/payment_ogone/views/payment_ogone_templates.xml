@@ -49,7 +49,11 @@
             <input type="hidden" name="acquirer_id" t-att-value="id"/>
             <input t-if="return_url" type="hidden" name="return_url" t-att-value="return_url"/>
             <input t-if="partner_id" type="hidden" name="partner_id" t-att-value="partner_id"/>
+            <input t-if="ORDERID" type="hidden" name="ORDERID" t-att-value="ORDERID"/>
             <input t-if="ACCEPTURL" type="hidden" name="ACCEPTURL" t-att-value="ACCEPTURL"/>
+            <input t-if="EXCEPTIONURL" type="hidden" name="EXCEPTIONURL" t-att-value="EXCEPTIONURL"/>
+            <input t-if="ALIASPERSISTEDAFTERUSE" type="hidden" name="ALIASPERSISTEDAFTERUSE" t-att-value="ALIASPERSISTEDAFTERUSE"/>
+            <input type="hidden" name="PSPID" t-att-value="acq.ogone_pspid"/>
             <div t-attf-class="row mt8 #{'' if bootstrap_formatting else 'o_card_brand_detail'}">
                 <div t-att-class="'form-group col-lg-12' if bootstrap_formatting else 'form-group'">
                     <input type="tel" name="cc_number" id="cc_number" class="form-control" placeholder="Card number" data-is-required="true"/>
@@ -69,11 +73,11 @@
             </div>
         </template>
         <template id="assets_frontend" inherit_id="web.assets_frontend">
-            <xpath expr="script[last()]" position="after">
+            <xpath expr="script[last()]" position="after"> 
                 <!-- <script type="text/javascript" src="/payment_ogone/static/lib/forge.min.js"></script> -->
                 <!-- <script type="text/javascript" src="/payment_ogone/static/lib/connectsdknoEncrypt.js"></script> -->
-                <script type="text/javascript" src="/payment_ogone/static/src/js/payment_form.js"></script>
-            </xpath>
+                <script type="text/javascript" src="/payment_ogone/static/src/js/payment_form.js"></script> 
+            </xpath> 
         </template>
     </data>
 </odoo>
