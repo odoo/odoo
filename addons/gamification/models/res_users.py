@@ -7,8 +7,10 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+
 class Users(models.Model):
     _inherit = 'res.users'
+
 
     karma = fields.Integer('Karma', default=0)
     karma_position = fields.Integer('Karma position', compute="_compute_karma_position", store=False)
@@ -69,18 +71,32 @@ class Users(models.Model):
         return True
 
     def _rank_changed(self):
-        if self.rank_id.karma_min > 0:
-            template = self.env.ref('gamification.mail_template_data_new_rank_reached', raise_if_not_found=False)
-            if template:
-                template.send_mail(self.id, force_send=True, notif_layout='mail.mail_notification_light')
+        """
+            Method that can be called on a batch of users with the same new rank
+        """
+        template = self.env.ref('gamification.mail_template_data_new_rank_reached', raise_if_not_found=False)
+        if template:
+            for u in self:
+                if u.rank_id.karma_min > 0:
+                    template.send_mail(u.id, force_send=len(self) == 1, notif_layout='mail.mail_notification_light')
 
     def _recompute_rank(self):
         """
         The caller should filter the users on karma > 0 before calling this method
         to avoid looping on every single users
+
+        Compute rank of each user by user.
+        For each user, check the rank of this user
         """
+
         ranks = [{'rank': rank, 'karma_min': rank.karma_min} for rank in
                  self.env['gamification.karma.rank'].search([], order="karma_min DESC")]
+
+        # 3 is the number of search/requests used by rank in _recompute_rank_bulk()
+        if len(self) > len(ranks) * 3:
+            self._recompute_rank_bulk()
+            return
+
         for user in self:
             old_rank = user.rank_id
             if user.karma == 0 and ranks:
@@ -95,6 +111,66 @@ class Users(models.Model):
                         break
             if old_rank != user.rank_id:
                 user._rank_changed()
+
+    def _recompute_rank_bulk(self):
+        """
+            Compute rank of each user by rank.
+            For each rank, check which users need to be ranked
+
+        """
+        ranks = [{'rank': rank, 'karma_min': rank.karma_min} for rank in
+                 self.env['gamification.karma.rank'].search([], order="karma_min DESC")]
+
+        users_todo = self
+
+        next_rank_id = False
+        # wtf, next_rank_id should be a related on rank_id.next_rank_id and life might get easier.
+        # And we only need to recompute next_rank_id on write with min_karma or in the create on rank model.
+        for r in ranks:
+            rank_id = r['rank'].id
+            dom = [
+                ('karma', '>=', r['karma_min']),
+                ('id', 'in', users_todo.ids),
+                '|',  # noqa
+                    '|', ('rank_id', '!=', rank_id), ('rank_id', '=', False),
+                    '|', ('next_rank_id', '!=', next_rank_id), ('next_rank_id', '=', False if next_rank_id else -1),
+            ]
+            users = self.env['res.users'].search(dom)
+            if users:
+                users_to_notify = self.env['res.users'].search([
+                    ('karma', '>=', r['karma_min']),
+                    '|', ('rank_id', '!=', rank_id), ('rank_id', '=', False),
+                    ('id', 'in', users.ids),
+                ])
+                users.write({
+                    'rank_id': rank_id,
+                    'next_rank_id': next_rank_id,
+                })
+                users_to_notify._rank_changed()
+                users_todo -= users
+
+            nothing_to_do_users = self.env['res.users'].search([
+                ('karma', '>=', r['karma_min']),
+                '|', ('rank_id', '=', rank_id), ('next_rank_id', '=', next_rank_id),
+                ('id', 'in', users_todo.ids),
+            ])
+            users_todo -= nothing_to_do_users
+            next_rank_id = r['rank'].id
+
+        if ranks:
+            lower_rank = ranks[-1]['rank']
+            users = self.env['res.users'].search([
+                ('karma', '>=', 0),
+                ('karma', '<', lower_rank.karma_min),
+                '|', ('rank_id', '!=', False), ('next_rank_id', '!=', lower_rank.id),
+                ('id', 'in', users_todo.ids),
+            ])
+            if users:
+                users.write({
+                    'rank_id': False,
+                    'next_rank_id': lower_rank.id,
+                })
+
 
     def _get_next_rank(self):
         """ For fresh users with 0 karma that don't have a rank_id and next_rank_id yet
