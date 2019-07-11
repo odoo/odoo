@@ -124,30 +124,38 @@
                             <h1>
                                 <field name="name" placeholder="e.g. Inspiring Business Talk"/>
                             </h1>
-                            <label for="event_id" class="oe_edit_only"/>
-                            <h3>
-                                <field name="event_id"/>
-                            </h3>
                         </div>
                         <group>
                             <group>
-                                <field name="user_id"/>
+                                <field name="date"/>
+                                <field name="location_id"/>
+                                <label for="duration"/>
+                                <div class="o_row">
+                                    <field name="duration" widget="float_time"/>
+                                    <span>hours</span>
+                                </div>
                                 <field name="active" invisible="1"/>
-                                <field name="partner_id"/>
-                                <field name="partner_name"/>
-                                <field name="partner_email"/>
-                                <field name="partner_phone"/>
                             </group>
                             <group>
-                                <field name="date"/>
-                                <label for="duration"/>
-                                <div>
-                                    <field name="duration" class="oe_inline" widget="float_time"/> hours
-                                </div>
-                                <field name="location_id"/>
+                                <field name="user_id"/>
+                                <field name="event_id"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             </group>
                         </group>
+                        <notebook>
+                            <page string="Speakers">
+                                <group>
+                                    <field name="partner_id"/>
+                                    <field name="partner_name"/>
+                                    <field name="partner_email"/>
+                                    <field name="partner_phone"/>
+                                    <field name="partner_biography"/>
+                                </group>
+                            </page>
+                            <page string="Description">
+                                <field name="description"/>
+                            </page>
+                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
