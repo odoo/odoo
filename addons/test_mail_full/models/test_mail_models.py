@@ -10,6 +10,7 @@ class MailTestSMS(models.Model):
     _description = 'Chatter Model for SMS Gateway'
     _name = 'mail.test.sms'
     _inherit = ['mail.thread']
+    _order = 'name asc, id asc'
 
     name = fields.Char()
     subject = fields.Char()
