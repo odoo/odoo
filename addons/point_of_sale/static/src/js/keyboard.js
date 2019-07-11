@@ -196,7 +196,6 @@ var OnscreenKeyboardWidget = Widget.extend({
             var $this = $(this),
                 character = $this.html(); // If it's a lowercase letter, nothing happens to this variable
 
-	    //Shift option for simple keyboard
             if ($this.hasClass('shift')){
               self.toggleShiftSimple();
               return false;
