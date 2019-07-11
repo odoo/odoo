@@ -1,4 +1,3 @@
-
 .o_list_view {
     position: relative;
 
@@ -88,7 +87,11 @@
             }
         }
 
-        .o_list_record_selector, .o_list_record_remove, .o_handle_cell {
+        .o_list_record_selector {
+            width: 40px;
+            padding-left: $o-horizontal-padding;
+        }
+        .o_list_record_remove, .o_handle_cell {
             width: 1px;  // to prevent the column to expand
         }
 
@@ -176,9 +179,6 @@
         &.o_editable_list {
             table-layout: fixed;
 
-            .o_list_record_selector {
-                width: 40px;
-            }
             .o_list_record_remove_header, .o_handle_cell {
                 width: 32px;
             }
@@ -198,7 +198,6 @@
             .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier) {
                 position: relative; // for o_field_translate
                 background-color: white;
-
                 .o_input {
                     border: none;
                     padding: 0;
@@ -229,6 +228,7 @@
                         padding-right: 15px; // to prevent caret overlapping
                     }
                     > .o_dropdown_button, .o_datepicker_button {
+                        margin-right: 5px;
                         @include o-position-absolute(0, 0);
                     }
                 }

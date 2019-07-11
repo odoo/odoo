@@ -11,10 +11,26 @@
            background-image: linear-gradient(to bottom, #fcfcfc, $o-form-lightsecondary);
         }
     }
-    // Subpixels computation is different accross browsers and platforms as no
-    // rounding rule is specified by HTML5. Difference in this computation
-    // breaks one of the editable list tests on Chrome and Firefox on MacOS.
-    .o_field_many2manytags {
-        min-height: 21px;
+
+    .o_list_table.o_editable_list .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier) {
+        padding: .15rem;
+        .o_input {
+            border: none;
+            padding: .15rem;
+            .o_input {
+                box-shadow: none;
+                padding: 0;
+            }
+        }
+        select.o_input {
+            padding: .25rem 0;
+        }
+        .o_field_boolean {
+            padding-top: .15rem;
+            padding-bottom: .15rem;
+        }
+        &.o_invalid_cell .o_input {
+            box-shadow: 0 0 0 1px theme-color('danger');
+        }
     }
 }
