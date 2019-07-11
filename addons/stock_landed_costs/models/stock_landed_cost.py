@@ -6,6 +6,7 @@ from collections import defaultdict
 from odoo import api, fields, models, tools, _
 from odoo.addons.stock_landed_costs.models import product
 from odoo.exceptions import UserError
+from odoo.tools.float_utils import float_is_zero
 
 
 class LandedCost(models.Model):
@@ -100,18 +101,24 @@ class LandedCost(models.Model):
 
                 # Prorate the value at what's still in stock
                 cost_to_add = (remaining_qty / line.move_id.product_qty) * line.additional_landed_cost
-                valuation_layer = self.env['stock.valuation.layer'].create({
-                    'value': cost_to_add,
-                    'unit_cost': 0,
-                    'quantity': 0,
-                    'remaining_qty': 0,
-                    'stock_valuation_layer_id': linked_layer.id,
-                    'description': cost.name,
-                    'stock_move_id': line.move_id.id,
-                    'product_id': line.move_id.product_id.id,
-                    'stock_landed_cost_id': self.id,
-                    'company_id': self.company_id.id,
-                })
+                if not cost.company_id.currency_id.is_zero(cost_to_add):
+                    valuation_layer = self.env['stock.valuation.layer'].create({
+                        'value': cost_to_add,
+                        'unit_cost': 0,
+                        'quantity': 0,
+                        'remaining_qty': 0,
+                        'stock_valuation_layer_id': linked_layer.id,
+                        'description': cost.name,
+                        'stock_move_id': line.move_id.id,
+                        'product_id': line.move_id.product_id.id,
+                        'stock_landed_cost_id': cost.id,
+                        'company_id': cost.company_id.id,
+                    })
+                    move_vals['stock_valuation_layer_ids'] = [(6, None, [valuation_layer.id])]
+                # Update the AVCO
+                product = line.move_id.product_id
+                if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
+                    product.with_context(force_company=self.company_id.id).sudo().standard_price += cost_to_add / product.quantity_svl
                 # `remaining_qty` is negative if the move is out and delivered proudcts that were not
                 # in stock.
                 qty_out = 0
@@ -121,7 +128,6 @@ class LandedCost(models.Model):
                     qty_out = line.move_id.product_qty
                 move_vals['line_ids'] += line._create_accounting_entries(move, qty_out)
 
-            move_vals['stock_valuation_layer_ids'] = [(6, None, [valuation_layer.id])]
             move = move.create(move_vals)
             cost.write({'state': 'done', 'account_move_id': move.id})
             move.post()
@@ -149,7 +155,7 @@ class LandedCost(models.Model):
 
         for move in self.mapped('picking_ids').mapped('move_lines'):
             # it doesn't make sense to make a landed cost for a product that isn't set as being valuated in real time at real cost
-            if move.product_id.valuation != 'real_time' or move.product_id.cost_method != 'fifo':
+            if move.product_id.valuation != 'real_time' or move.product_id.cost_method not in ('fifo', 'average'):
                 continue
             vals = {
                 'product_id': move.product_id.id,
@@ -162,7 +168,7 @@ class LandedCost(models.Model):
             lines.append(vals)
 
         if not lines and self.mapped('picking_ids'):
-            raise UserError(_("You cannot apply landed costs on the chosen transfer(s). Landed costs can only be applied for products with automated inventory valuation and FIFO costing method."))
+            raise UserError(_("You cannot apply landed costs on the chosen transfer(s). Landed costs can only be applied for products with automated inventory valuation and FIFO or average costing method."))
         return lines
 
     @api.multi
