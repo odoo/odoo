@@ -1712,10 +1712,10 @@ var FieldBooleanButton = AbstractField.extend({
                 if (typeof opt_terms === 'string') {
                     opt_terms = {}; //unsupported terminology
                 }
-                text = this.value ? _t(opt_terms.string_true) || _t("On")
-                                  : _t(opt_terms.string_false) || _t("Off");
-                hover = this.value ? _t(opt_terms.hover_true) || _t("Switch Off")
-                                   : _t(opt_terms.hover_false) || _t("Switch On");
+                text = this.value ? opt_terms.string_true || _t("On")
+                                  : opt_terms.string_false || _t("Off");
+                hover = this.value ? opt_terms.hover_true || _t("Switch Off")
+                                   : opt_terms.hover_false || _t("Switch On");
         }
         var val_color = this.value ? 'text-success' : 'text-danger';
         var hover_color = this.value ? 'text-danger' : 'text-success';
