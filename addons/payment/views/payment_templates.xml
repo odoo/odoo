@@ -19,7 +19,7 @@
                 display a form that is used to pay and send the information to the form action url.
             - 'acquirers' the list of both server2server and form payment acquirers
             - 'verify_validity' if we need to verify if the payment method is valid when adding a new one
-            - 'prepare_tx_url' the url of the route which will handle the creation of a transaction for a form base payment (handles if the transaction is form or form_save)
+            - 'prepare_tx_url' the url of the route which will handle the creation of a transaction for a form base payment (handles if the transaction is form or save_token)
             - 'show_manage_btn' if True, a button is added in the footer to manage payment methods
         -->
         <form t-if="pms or acquirers" method="post" class="o_payment_form mt-3 clearfix"
@@ -94,16 +94,7 @@
                         <div t-raw="acq.pre_msg" class="text-muted ml-3"/>
                     </div>
                     <t t-if="acq.payment_flow == 'form'">
-                        <div t-attf-id="o_payment_form_acq_{{acq.id}}"
-                             t-attf-class="d-none {{'card-footer' if acq.save_token == 'ask' else ''}}">
-                            <label t-if="acq.save_token == 'ask'">
-                                <input type="checkbox" name="o_payment_form_save_token" data-remove-me=""/>
-                                Save my payment data
-                            </label>
-                            <t t-if="acq.save_token == 'always'">
-                                <input type="checkbox" name="o_payment_form_save_token" checked="'checked'" class="o_hidden" data-remove-me=""/>
-                            </t>
-                        </div>
+                        <div t-attf-id="o_payment_form_acq_{{acq.id}}" class="d-none"/>
                     </t>
                     <t t-else="acq.payment_flow == 's2s'">
                         <div t-attf-id="o_payment_add_token_acq_{{acq.id}}"
@@ -116,6 +107,20 @@
                                     <t t-if="not return_url" t-set="return_url" t-value="''"/>
                                 </t>
                             </div>
+                        </div>
+                    </t>
+                    <t t-if="acq.save_token and mode != 'manage'">
+                        <div t-attf-id="o_payment_save_token_acq_{{acq.id}}"
+                             class="d-none card-footer save_token_form">
+                            <label>
+                                <t t-if="not save_token">
+                                    <input type="checkbox" id="o_payment_save_token" name="save_token" data-remove-me=""/>
+                                    Save my payment data
+                                </t>
+                                <div t-att-class="'mt8' if save_token and save_token != 'form' else 'mt8 d-none'">
+                                    <i class="fa fa-info-circle"/> By clicking Pay Now, I authorise <t t-esc="acq.company_id.name"/> to store my payment details in a secure way and to use it to process subscription payments automatically.
+                                </div>
+                            </label>
                         </div>
                     </t>
                 </t>
@@ -131,6 +136,7 @@
                                 <t t-else="">
                                     <i class="fa fa-check text-muted" title="This payment method has not been verified by our system." role="img" aria-label="Not verified"></i>
                                 </t>
+                                <input type="checkbox" name="save_token" checked="checked" class="o_hidden" data-remove-me=""/>
                             </label>
                             <button t-if="mode == 'manage'" name="delete_pm" t-att-value="pm.id" class="btn btn-primary btn-sm float-right">
                                 <i class="fa fa-trash"></i> Delete

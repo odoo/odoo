@@ -67,6 +67,7 @@ PaymentForm.include({
                         window.location.reload();
                     }
                 } else {
+                    self.$el.find('input[name="save_token"]').prop('checked', self.$('#o_payment_save_token_acq_' + acquirerID).find('#o_payment_save_token').prop('checked'));
                     $checkedRadio.val(data.id);
                     self.el.submit();
                 }
@@ -111,9 +112,8 @@ PaymentForm.include({
         //  hide add token form for authorize
         if ($checkedRadio.data('provider') === 'authorize' && this.isNewPaymentRadio($checkedRadio)) {
             this.$('[id*="o_payment_add_token_acq_"]').addClass('d-none');
-        } else {
-            this._super.apply(this, arguments);
         }
+        this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------

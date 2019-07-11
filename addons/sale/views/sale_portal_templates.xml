@@ -245,6 +245,7 @@
                                         <h3 class="mb24">Pay with</h3>
                                         <t t-call="payment.payment_tokens_list">
                                             <t t-set="mode" t-value="'payment'"/>
+                                            <t t-set="save_token" t-value="sale_order._get_payment_type()"/>
                                             <t t-set="submit_txt">Pay &amp; Confirm</t>
                                             <t t-set="icon_class" t-value="'fa-lock'"/>
                                             <t t-set="form_action" t-value="sale_order.get_portal_url(suffix='/transaction/token')"/>

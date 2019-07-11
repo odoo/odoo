@@ -905,7 +905,7 @@ class WebsiteSale(http.Controller):
                 'return_url': '/shop/payment/validate'}
 
         if save_token:
-            vals['type'] = 'form_save'
+            vals['type'] = 'save_token'
         if token:
             vals['payment_token_id'] = int(token)
 
@@ -944,7 +944,11 @@ class WebsiteSale(http.Controller):
             return request.redirect('/shop/?error=token_not_found')
 
         # Create transaction
-        vals = {'payment_token_id': pm_id, 'return_url': '/shop/payment/validate'}
+        vals = {
+            'payment_token_id': pm_id,
+            'return_url': '/shop/payment/validate',
+            'type': 'save_token' if kwargs.get('save_token') else 'server2server'
+        }
 
         tx = order._create_payment_transaction(vals)
         PaymentProcessing.add_payment_transaction(tx)

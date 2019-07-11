@@ -16,6 +16,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         'click button[name="delete_pm"]': 'deletePmEvent',
         'click .o_payment_form_pay_icon_more': 'onClickMorePaymentIcon',
         'click .o_payment_acquirer_select': 'radioClickEvent',
+        'click #o_payment_save_token': 'tokenSaveClickEvent'
     },
 
     /**
@@ -113,6 +114,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         // we hide all the acquirers form
         this.$('[id*="o_payment_add_token_acq_"]').addClass('d-none');
         this.$('[id*="o_payment_form_acq_"]').addClass('d-none');
+        this.$('[id*="o_payment_save_token_acq_"]').addClass('d-none');
         if (checked_radio.length !== 1) {
             return;
         }
@@ -126,6 +128,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         else if (this.isFormPaymentRadio(checked_radio)) {
             this.$('#o_payment_form_acq_' + acquirer_id).removeClass('d-none');
         }
+        this.$('#o_payment_save_token_acq_' + acquirer_id).removeClass('d-none');
     },
 
     disableButton: function (button) {
@@ -264,7 +267,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                 // if there's a prepare tx url set
                 if ($tx_url.length === 1) {
                     // if the user wants to save his credit card info
-                    var form_save_token = acquirer_form.find('input[name="o_payment_form_save_token"]').prop('checked');
+                    var form_save_token = this.$('#o_payment_save_token_acq_' + acquirer_id).find('#o_payment_save_token').prop('checked');
                     // then we call the route to prepare the transaction
                     return this._rpc({
                         route: $tx_url[0].value,
@@ -559,6 +562,19 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         $(ev.currentTarget).find('input[type="radio"]').prop("checked", true);
         this.updateNewPaymentDisplayStatus();
     },
+    /**
+     * Called when clicking on a save token checkbox.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    tokenSaveClickEvent: function (ev) {
+        if (ev.currentTarget.checked) {
+            $(ev.currentTarget.nextElementSibling).removeClass('d-none')
+        } else {
+            $(ev.currentTarget.nextElementSibling).addClass('d-none')
+        }
+    }
 });
 return publicWidget.registry.PaymentForm;
 });

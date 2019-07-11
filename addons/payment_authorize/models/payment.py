@@ -210,7 +210,7 @@ class TxAuthorize(models.Model):
                 self.write({'acquirer_reference': data.get('x_trans_id')})
                 self._set_transaction_authorized()
             if self.partner_id and not self.payment_token_id and \
-               (self.type == 'form_save' or self.acquirer_id.save_token == 'always'):
+               (self.type == 'save_token' and self.acquirer_id.save_token):
                 transaction = AuthorizeAPI(self.acquirer_id)
                 res = transaction.create_customer_profile_from_tx(self.partner_id, self.acquirer_reference)
                 if res:
@@ -322,7 +322,7 @@ class PaymentToken(models.Model):
     authorize_profile = fields.Char(string='Authorize.net Profile ID', help='This contains the unique reference '
                                     'for this partner/payment token combination in the Authorize.net backend')
     provider = fields.Selection(string='Provider', related='acquirer_id.provider', readonly=False)
-    save_token = fields.Selection(string='Save Cards', related='acquirer_id.save_token', readonly=False)
+    save_token = fields.Boolean(string='Save Cards', related='acquirer_id.save_token', readonly=False)
 
     @api.model
     def authorize_create(self, values):
@@ -342,3 +342,7 @@ class PaymentToken(models.Model):
                 raise ValidationError(_('The Customer Profile creation in Authorize.NET failed.'))
         else:
             return values
+
+    def authorize_unlink(self):
+        transaction = AuthorizeAPI(self.acquirer_id)
+        return transaction.delete_customer_profile(self.authorize_profile)
