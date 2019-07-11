@@ -1187,10 +1187,18 @@ var BasicModel = AbstractModel.extend({
                 method: 'toggle_active',
                 args: [resIDs],
             })
-            .then(function () {
+            .then(function (action) {
                 // optionally clear the DataManager's cache
                 self._invalidateCache(parent);
-                return self.reload(parentID);
+                if (!_.isEmpty(action)) {
+                    return self.do_action(action, {
+                        on_close: function () {
+                            return self.reload(parentID);
+                        }
+                    });
+                } else {
+                    return self.reload(parentID);
+                }
             });
     },
     /**
@@ -1211,10 +1219,18 @@ var BasicModel = AbstractModel.extend({
                 method: 'action_archive',
                 args: [resIDs],
             })
-            .then(function () {
+            .then(function (action) {
                 // optionally clear the DataManager's cache
                 self._invalidateCache(parent);
-                return self.reload(parentID);
+                if (!_.isEmpty(action)) {
+                    return self.do_action(action, {
+                        on_close: function () {
+                            return self.reload(parentID);
+                        }
+                    });
+                } else {
+                    return self.reload(parentID);
+                }
             });
     },
     /**
@@ -1235,10 +1251,18 @@ var BasicModel = AbstractModel.extend({
                 method: 'action_unarchive',
                 args: [resIDs],
             })
-            .then(function () {
+            .then(function (action) {
                 // optionally clear the DataManager's cache
                 self._invalidateCache(parent);
-                return self.reload(parentID);
+                if (!_.isEmpty(action)) {
+                    return self.do_action(action, {
+                        on_close: function () {
+                            return self.reload(parentID);
+                        }
+                    });
+                } else {
+                    return self.reload(parentID);
+                }
             });
     },
     /**
