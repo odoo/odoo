@@ -46,7 +46,7 @@
         </record>
 
         <record id="action_view_sale_advance_payment_inv" model="ir.actions.act_window">
-            <field name="name">Invoice Order</field>
+            <field name="name">Create invoices</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.advance.payment.inv</field>
             <field name="view_mode">form</field>
@@ -54,6 +54,7 @@
             <field name="groups_id" eval="[(4,ref('sales_team.group_sale_salesman'))]"/>
             <!-- TODO: check if we need this -->
             <field name="binding_model_id" ref="sale.model_sale_order" />
+            <field name="binding_view_types">list</field>
         </record>
 
 </odoo>

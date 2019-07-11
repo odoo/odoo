@@ -121,16 +121,4 @@
             </field>
         </record>
 
-        <record id="action_assign_salesman_according_assigned_partner" model="ir.actions.server">
-            <field name="name">Assign salesman of assigned partner</field>
-            <field name="model_id" ref="model_crm_lead"/>
-            <field name="binding_model_id" ref="model_crm_lead"/>
-            <field name="state">code</field>
-            <field name="code">
-if env.context.get('active_domain'):
-    records = model.search(env.context['active_domain'])
-records.assign_salesman_of_assigned_partner()
-            </field>
-        </record>
-
 </odoo>

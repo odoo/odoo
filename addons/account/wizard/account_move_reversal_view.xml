@@ -50,12 +50,13 @@
         </record>
 
         <record id="action_view_account_move_reversal" model="ir.actions.act_window">
-            <field name="name">Reverse Moves</field>
+            <field name="name">Reverse</field>
             <field name="res_model">account.move.reversal</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_account_move_reversal"/>
             <field name="target">new</field>
             <field name="binding_model_id" ref="account.model_account_move" />
+            <field name="binding_view_types">list</field>
         </record>
     </data>
 </odoo>
