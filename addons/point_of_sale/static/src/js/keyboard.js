@@ -2,22 +2,23 @@ odoo.define('point_of_sale.keyboard', function (require) {
 "use strict";
 
 var Widget = require('web.Widget');
+var session = require('web.session');
 
 // ---------- OnScreen Keyboard Widget ----------
 // A Widget that displays an onscreen keyboard.
 // There are two options when creating the widget :
-// 
-// * 'keyboard_model' : 'simple' (default) | 'full' 
+//
+// * 'keyboard_model' : 'simple' (default) | 'full'
 //   The 'full' emulates a PC keyboard, while 'simple' emulates an 'android' one.
 //
-// * 'input_selector  : (default: '.searchbox input') 
+// * 'input_selector  : (default: '.searchbox input')
 //   defines the dom element that the keyboard will write to.
-// 
-// The widget is initially hidden. It can be shown with this.show(), and is 
+//
+// The widget is initially hidden. It can be shown with this.show(), and is
 // automatically shown when the input_selector gets focused.
 
 var OnscreenKeyboardWidget = Widget.extend({
-    template: 'OnscreenKeyboardSimple', 
+    template: 'OnscreenKeyboardSimple',
     init: function(parent, options){
         this._super(parent,options);
         options = options || {};
@@ -30,12 +31,20 @@ var OnscreenKeyboardWidget = Widget.extend({
         this.input_selector = options.input_selector || '.searchbox input';
         this.$target = null;
 
+        //Update the keyboard view depending on the lang of the user
+        if(session.user_context['lang'] === 'fr_FR'){
+          this.template = 'OnscreenKeyboardSimpleFR';
+        }
+
         //Keyboard state
         this.capslock = false;
         this.shift    = false;
         this.numlock  = false;
+
+        //Keep the position of the carret
+        this.position = 0;
     },
-    
+
     connect : function(target){
         var self = this;
         this.$target = $(target);
@@ -62,13 +71,27 @@ var OnscreenKeyboardWidget = Widget.extend({
     // Write a character to the input zone
     writeCharacter: function(character){
         var input = this.$target[0];
+
+        //Get the focus on the input for the Chrome browsers
+        input.focus();
+
         input.dispatchEvent(this.generateEvent('keypress',{char: character}));
         if(character !== '\n'){
-            input.value += character;
+          //Keep the position of the carret before the writing
+          this.position = input.selectionStart;
+
+          //Write the character inside the text field at the right position
+          input.value = [input.value.slice(0, this.position), character, input.value.slice(this.position)].join('');
+
+          //Update the carret if it is moved at the end of the text field
+          if(input.selectionStart - this.position != -1){
+            input.selectionStart = this.position + 1;
+            input.selectionEnd = this.position + 1;
+          }
         }
         input.dispatchEvent(this.generateEvent('keyup',{char: character}));
     },
-    
+
     // Removes the last character from the input zone.
     deleteCharacter: function(){
         var input = this.$target[0];
@@ -76,7 +99,7 @@ var OnscreenKeyboardWidget = Widget.extend({
         input.value = input.value.substr(0, input.value.length -1);
         input.dispatchEvent(this.generateEvent('keyup',{code: 8}));
     },
-    
+
     // Clears the content of the input zone.
     deleteAllCharacters: function(){
         var input = this.$target[0];
@@ -91,7 +114,7 @@ var OnscreenKeyboardWidget = Widget.extend({
     show:  function(){
         $('.keyboard_frame').show().css({'height':'235px'});
     },
-    
+
     // Makes the keyboard hide by sliding to the bottom of the screen.
     hide:  function(){
         $('.keyboard_frame')
@@ -99,37 +122,47 @@ var OnscreenKeyboardWidget = Widget.extend({
             .hide();
         this.reset();
     },
-    
+
     //What happens when the shift key is pressed : toggle case, remove capslock
     toggleShift: function(){
         $('.letter').toggleClass('uppercase');
         $('.symbol span').toggle();
-        
+
         this.shift = (this.shift === true) ? false : true;
         this.capslock = false;
     },
-    
+
     //what happens when capslock is pressed : toggle case, set capslock
     toggleCapsLock: function(){
         $('.letter').toggleClass('uppercase');
         this.capslock = true;
     },
-    
-    //What happens when numlock is pressed : toggle symbols and numlock label 
+
+    //What happens when numlock is pressed : toggle symbols and numlock label
     toggleNumLock: function(){
         $('.symbol span').toggle();
         $('.numlock span').toggle();
         this.numlock = (this.numlock === true ) ? false : true;
     },
 
-    //After a key is pressed, shift is disabled. 
+    //What happens when shift is pressed on a simple keyboard : toggle case
+    toggleShiftSimple: function(){
+        $('.symbol').toggleClass('uppercase');
+
+        this.shift = (this.shift === true) ? false : true;
+    },
+
+    //After a key is pressed, shift is disabled.
     removeShift: function(){
-        if (this.shift === true) {
-            $('.symbol span').toggle();
-            if (this.capslock === false) $('.letter').toggleClass('uppercase');
-            
-            this.shift = false;
-        }
+      if (this.shift === true) {
+          if(this.keyboard_model != 'simple') $('.symbol span').toggle();
+          if (this.capslock === false){
+            $('.letter').toggleClass('uppercase');
+            $('.symbol').toggleClass('uppercase');
+          }
+
+          this.shift = false;
+      }
     },
 
     // Resets the keyboard to its original state; capslock: false, shift: false, numlock: false
@@ -152,27 +185,32 @@ var OnscreenKeyboardWidget = Widget.extend({
         //this.show();
 
 
-        $('.close_button').click(function(){ 
+        $('.close_button').click(function(){
             self.deleteAllCharacters();
-            self.hide(); 
+            self.hide();
         });
 
         // Keyboard key click handling
         $('.keyboard li').click(function(){
-            
+
             var $this = $(this),
                 character = $this.html(); // If it's a lowercase letter, nothing happens to this variable
-            
+
+            if ($this.hasClass('shift')){
+              self.toggleShiftSimple();
+              return false;
+            }
+
             if ($this.hasClass('left-shift') || $this.hasClass('right-shift')) {
                 self.toggleShift();
                 return false;
             }
-            
+
             if ($this.hasClass('capslock')) {
                 self.toggleCapsLock();
                 return false;
             }
-            
+
             if ($this.hasClass('delete')) {
                 self.deleteCharacter();
                 return false;
@@ -182,16 +220,16 @@ var OnscreenKeyboardWidget = Widget.extend({
                 self.toggleNumLock();
                 return false;
             }
-            
+
             // Special characters
             if ($this.hasClass('symbol')) character = $('span:visible', $this).html();
             if ($this.hasClass('space')) character = ' ';
             if ($this.hasClass('tab')) character = "\t";
             if ($this.hasClass('return')) character = "\n";
-            
+
             // Uppercase letter
             if ($this.hasClass('uppercase')) character = character.toUpperCase();
-            
+
             // Remove shift once a key is clicked.
             self.removeShift();
 

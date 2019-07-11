@@ -1612,6 +1612,7 @@
         </div>
     </t>
 
+    <!-- US keyboard view -->
     <t t-name="OnscreenKeyboardSimple">
         <div class="keyboard_frame">
             <ul class="keyboard simple_keyboard">
@@ -1636,7 +1637,8 @@
                 <li class="symbol"><span class="off">k</span><span class="on">(</span></li>
                 <li class="symbol lastitem"><span class="off">l</span><span class="on">)</span></li>
 
-                <li class="symbol firstitem row_zxcv"><span class="off">z</span><span class="on">?</span></li>
+                <li class="shift firstitem row_qwerty">Shift</li>
+                <li class="symbol"><span class="off">z</span><span class="on">?</span></li>
                 <li class="symbol"><span class="off">x</span><span class="on">!</span></li>
                 <li class="symbol"><span class="off">c</span><span class="on">"</span></li>
                 <li class="symbol"><span class="off">v</span><span class="on">'</span></li>
@@ -1649,6 +1651,51 @@
                 <li class="space">&amp;nbsp;</li>
                 <li class="symbol"><span class="off">.</span><span class="on">.</span></li>
                 <li class="return lastitem">return</li>
+            </ul>
+            <p class="close_button">close</p>
+        </div>
+    </t>
+
+    <!-- FR keyboard view -->
+    <t t-name="OnscreenKeyboardSimpleFR">
+        <div class="keyboard_frame">
+            <ul class="keyboard simple_keyboard fr">
+                <li class="symbol firstitem row_qwerty"><span class="off">a</span><span class="on">1</span></li>
+                <li class="symbol"><span class="off">z</span><span class="on">2</span></li>
+                <li class="symbol"><span class="off">e</span><span class="on">3</span></li>
+                <li class="symbol"><span class="off">r</span><span class="on">4</span></li>
+                <li class="symbol"><span class="off">t</span><span class="on">5</span></li>
+                <li class="symbol"><span class="off">y</span><span class="on">6</span></li>
+                <li class="symbol"><span class="off">u</span><span class="on">7</span></li>
+                <li class="symbol"><span class="off">i</span><span class="on">8</span></li>
+                <li class="symbol"><span class="off">o</span><span class="on">9</span></li>
+                <li class="symbol lastitem"><span class="off">p</span><span class="on">0</span></li>
+
+                <li class="symbol firstitem row_asdf"><span class="off">q</span><span class="on">@</span></li>
+                <li class="symbol"><span class="off">s</span><span class="on">#</span></li>
+                <li class="symbol"><span class="off">d</span><span class="on">%</span></li>
+                <li class="symbol"><span class="off">f</span><span class="on">*</span></li>
+                <li class="symbol"><span class="off">g</span><span class="on">/</span></li>
+                <li class="symbol"><span class="off">h</span><span class="on">-</span></li>
+                <li class="symbol"><span class="off">j</span><span class="on">+</span></li>
+                <li class="symbol"><span class="off">k</span><span class="on">(</span></li>
+                <li class="symbol"><span class="off">l</span><span class="on">)</span></li>
+                <li class="symbol lastitem"><span class="off">m</span><span class="on">€</span></li>
+
+                <li class="shift firstitem row_qwerty"><span>Shift</span></li>
+                <li class="symbol"><span class="off">w</span><span class="on">?</span></li>
+                <li class="symbol"><span class="off">x</span><span class="on">!</span></li>
+                <li class="symbol"><span class="off">c</span><span class="on">"</span></li>
+                <li class="symbol"><span class="off">v</span><span class="on">'</span></li>
+                <li class="symbol"><span class="off">b</span><span class="on">:</span></li>
+                <li class="symbol"><span class="off">n</span><span class="on">;</span></li>
+                <li class="symbol"><span class="off">@</span><span class="on">,</span></li>
+                <li class="delete lastitem fr_delete">delete</li>
+
+                <li class="numlock firstitem row_space"><span class="off">123</span><span class="on">ABC</span></li>
+                <li class="space">&amp;nbsp;</li>
+                <li class="symbol"><span class="off">.</span><span class="on">.</span></li>
+                <li class="return lastitem fr_return">return</li>
             </ul>
             <p class="close_button">close</p>
         </div>
