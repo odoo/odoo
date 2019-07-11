@@ -1892,6 +1892,7 @@ class TestRoutes(TestStockCommon):
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         self.uom_unit = self.env.ref('uom.product_uom_unit')
+        self.partner = self.env['res.partner'].create({'name': 'Partner'})
 
     def _enable_pick_ship(self):
         self.wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
@@ -2040,7 +2041,7 @@ class TestRoutes(TestStockCommon):
         """
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
         warehouse.delivery_steps = 'pick_pack_ship'
-        partner_demo_customer = self.env.ref('base.res_partner_1')
+        partner_demo_customer = self.partner
         final_location = partner_demo_customer.property_stock_customer
         product_a = self.env['product.product'].create({
             'name': 'ProductA',
@@ -2098,7 +2099,7 @@ class TestRoutes(TestStockCommon):
         """
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
         warehouse.delivery_steps = 'pick_pack_ship'
-        partner_demo_customer = self.env.ref('base.res_partner_1')
+        partner_demo_customer = self.partner
         final_location = partner_demo_customer.property_stock_customer
         product_a = self.env['product.product'].create({
             'name': 'ProductA',
@@ -2144,7 +2145,7 @@ class TestRoutes(TestStockCommon):
         """
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
         warehouse.delivery_steps = 'pick_pack_ship'
-        partner_demo_customer = self.env.ref('base.res_partner_1')
+        partner_demo_customer = self.partner
         final_location = partner_demo_customer.property_stock_customer
         product_a = self.env['product.product'].create({
             'name': 'ProductA',
@@ -2237,7 +2238,7 @@ class TestRoutes(TestStockCommon):
         """
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         warehouse.delivery_steps = 'pick_pack_ship'
-        partner_demo_customer = self.env.ref('base.res_partner_1')
+        partner_demo_customer = self.partner
         final_location = partner_demo_customer.property_stock_customer
         product_a = self.env['product.product'].create({
             'name': 'ProductA',

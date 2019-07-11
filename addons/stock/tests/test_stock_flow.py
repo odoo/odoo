@@ -6,6 +6,17 @@ from odoo.tools import mute_logger, float_round
 from odoo.exceptions import UserError
 
 class TestStockFlow(TestStockCommon):
+    def setUp(cls):
+        super(TestStockFlow, cls).setUp()
+        cls.partner_company2 = cls.env['res.partner'].create({
+            'name': 'My Company (Chicago)-demo',
+            'email': 'chicago@yourcompany.com',
+            })
+        cls.company = cls.env['res.company'].create({
+            'currency_id': cls.env.ref('base.USD').id,
+            'partner_id': cls.partner_company2.id,
+            'name': 'My Company (Chicago)-demo',
+            })
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_00_picking_create_and_transfer_quantity(self):
@@ -1806,7 +1817,7 @@ class TestStockFlow(TestStockCommon):
         self.env.user.write({'groups_id': [(4, grp_multi_routes.id)]})
         self.env.user.write({'groups_id': [(4, grp_multi_companies.id)]})
 
-        company_2 = self.env.ref('stock.res_company_1')
+        company_2 = self.company
         # Need to add a new company on user.
         self.env.user.write({'company_ids': [(4, company_2.id)]})
 
@@ -1870,7 +1881,7 @@ class TestStockFlow(TestStockCommon):
         self.env.user.write({'groups_id': [(4, grp_multi_routes.id)]})
         self.env.user.write({'groups_id': [(4, grp_multi_companies.id)]})
 
-        company_2 = self.env.ref('stock.res_company_1')
+        company_2 = self.company
         # Need to add a new company on user.
         self.env.user.write({'company_ids': [(4, company_2.id)]})
 

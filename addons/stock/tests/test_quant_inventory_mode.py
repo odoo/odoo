@@ -197,7 +197,12 @@ class TestEditableQuant(SavepointCase):
         """ Try to edit a record without the inventory mode.
         Must raise an error.
         """
-        user_demo = self.env.ref('base.user_demo')
+        self.demo_user = self.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True}).create({
+            'name': 'Pauline Poivraisselle',
+            'login': 'pauline',
+            'email': 'p.p@example.com',
+            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])]
+        })
         user_admin = self.env.ref('base.user_admin')
         quant = self.Quant.create({
             'product_id': self.product.id,
@@ -207,7 +212,7 @@ class TestEditableQuant(SavepointCase):
         self.assertEqual(quant.quantity, 12)
         # Try to write on quant without permission
         with self.assertRaises(AccessError):
-            quant.with_user(user_demo).write({'inventory_quantity': 8})
+            quant.with_user(self.demo_user).write({'inventory_quantity': 8})
         self.assertEqual(quant.quantity, 12)
 
         # Try to write on quant with permission

@@ -315,6 +315,13 @@ class TestInventory(SavepointCase):
         """ Check inventory lines product quantity is 0 when inventory is
         started with `prefill_counted_quantity` disable.
         """
+        self.env['stock.quant'].create({
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': self.stock_location.id,
+            'quantity': 7,
+            'reserved_quantity': 0,
+        })
         inventory_form = Form(self.env['stock.inventory'].with_context(
                 default_prefill_counted_quantity=False,
              ), view='stock.view_inventory_form')
