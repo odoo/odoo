@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import OrderedDict
-from itertools import groupby
-
 from odoo import api, fields, models, tools
 
 
@@ -20,121 +17,89 @@ class StockInventoryReport(models.Model):
     product_uom_id = fields.Many2one('uom.uom', related='product_id.uom_id')
     company_id = fields.Many2one('res.company', 'Company')
     quantity = fields.Float('Quantity', group_operator='SUM')
-    date = fields.Datetime(string='Date', group_operator='MAX')
+    date = fields.Date(string='Date', group_operator='MAX')
 
     @api.model_cr
     def init(self):
         tools.drop_view_if_exists(self.env.cr, 'stock_inventory_report')
-        query = """ CREATE OR REPLACE VIEW stock_inventory_report AS (
-            SELECT
-                row_number() OVER() AS id,
-                product_id,
-                lot_id,
-                package_id,
-                owner_id,
-                date,
-                quantity,
-                location_id,
-                company_id
-            FROM
-            (
-                SELECT
-                    product_id,
-                    lot_id,
-                    package_id,
-                    owner_id,
-                    - SUM(qty_done) AS quantity,
-                    location_id,
-                    date,
-                    company_id
-                FROM
-                    stock_move_line
-                WHERE
-                    state = 'done'
-                GROUP BY
-                    product_id,
-                    lot_id,
-                    package_id,
-                    owner_id,
-                    date,
-                    location_id,
-                    company_id
-                UNION ALL
-                SELECT
-                    product_id,
-                    lot_id,
-                    result_package_id AS package_id,
-                    owner_id,
-                    SUM(qty_done) AS quantity,
-                    location_dest_id AS location_id,
-                    date,
-                    company_id
-                FROM
-                    stock_move_line
-                WHERE
-                    state = 'done'
-                GROUP BY
-                    product_id,
-                    lot_id,
-                    result_package_id,
-                    owner_id,
-                    date,
-                    location_dest_id,
-                    company_id
-            )
-            AS ml
-        ) """
+        query = """
+CREATE or REPLACE VIEW stock_inventory_report AS (
+WITH stock_inventory_report_tmp AS (
+SELECT
+    -MIN(q.id) as id,
+    product_id,
+    location_id,
+    lot_id,
+    owner_id,
+    package_id,
+    date.*::date,
+    SUM(quantity) as product_qty,
+    company_id
+FROM
+    GENERATE_SERIES((now() at time zone 'utc')::date - interval '3month',
+    (now() at time zone 'utc')::date + interval '3 month', '1 day'::interval) date,
+    stock_quant q
+GROUP BY
+    product_id, location_id, lot_id, owner_id, package_id, date, company_id
+UNION
+SELECT
+    MIN(ml.id),
+    product_id,
+    location_dest_id as location_id,
+    lot_id,
+    owner_id,
+    package_id,
+    GENERATE_SERIES((now() at time zone 'utc')::date - interval '3month', date::date - interval '1 day', '1 day'::interval)::date date,
+    SUM(-qty_done / u_pp.factor * u_pp.factor) AS product_qty,
+    ml.company_id
+FROM
+    stock_move_line ml
+LEFT JOIN uom_uom u_ml ON ml.product_uom_id = u_ml.id
+LEFT JOIN product_product pp ON pp.id = ml.product_id
+LEFT JOIN product_template pt ON pp.product_tmpl_id = pt.id
+LEFT JOIN uom_uom u_pp ON u_pp.id = pt.uom_id
+WHERE
+    ml.state = 'done'
+GROUP BY
+    product_id, location_dest_id, lot_id, owner_id, package_id, date, ml.company_id
+UNION
+SELECT
+    MIN(ml.id),
+    product_id,
+    location_id,
+    lot_id,
+    owner_id,
+    package_id,
+    GENERATE_SERIES((now() at time zone 'utc')::date - interval '3month', date::date - interval '1 day', '1 day'::interval)::date date,
+    SUM(qty_done / u_pp.factor * u_pp.factor) AS product_qty,
+    ml.company_id
+FROM
+    stock_move_line ml
+LEFT JOIN uom_uom u_ml ON ml.product_uom_id = u_ml.id
+LEFT JOIN product_product pp ON pp.id = ml.product_id
+LEFT JOIN product_template pt ON pp.product_tmpl_id = pt.id
+LEFT JOIN uom_uom u_pp ON u_pp.id = pt.uom_id
+WHERE
+    ml.state = 'done'
+GROUP BY
+    product_id, location_id, lot_id, owner_id, package_id, date, ml.company_id
+)
+SELECT
+    row_number() over() AS id,
+    product_id,
+    location_id,
+    lot_id,
+    owner_id,
+    package_id,
+    date::date,
+    SUM(product_qty) AS quantity,
+    company_id
+FROM
+    stock_inventory_report_tmp
+GROUP BY
+    product_id, location_id, lot_id, owner_id, package_id, date, company_id
+HAVING
+    SUM(product_qty) != 0
+);
+"""
         self.env.cr.execute(query)
-
-    @api.model
-    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
-        records = super(StockInventoryReport, self).search_read(domain=domain, fields=fields, offset=offset, limit=limit, order=order)
-        returned_records = []
-
-        def _key_groupby_sorted(record):
-            return [record.get('product_id') or (),
-            record.get('package_id') or (), record.get('location_id') or ()]
-
-        for f, groups in groupby(sorted(records, key=_key_groupby_sorted), key=_key_groupby_sorted):
-            groups = list(groups)
-
-            records = OrderedDict()
-            for record in groups:
-                lot_and_owner = (record.get('lot_id'), record.get('owner_id'))
-                if lot_and_owner in records:
-                    if not fields or 'quantity' in fields:
-                        records[lot_and_owner]['quantity'] += record['quantity']
-                    if not fields or 'date' in fields:
-                        if record['date'] > records[lot_and_owner]['date']:
-                            records[lot_and_owner]['date'] = record['date']
-                else:
-                    records[lot_and_owner] = record
-
-            for record in records.values():
-                if not fields or 'quantity' in fields:
-                    if not record['quantity']:
-                        continue
-                returned_records.append(record)
-
-        return returned_records
-
-    @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        groups = super(StockInventoryReport, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
-        groups_filtered = []
-        for group in groups:
-            # It will probably destroy the performance but the sum for a group
-            # could be 0 but could contains different lot or package, ...
-            # the only way to know if a group is relevant or not is to check
-            # with a search read if lot and owner reconcile each other.
-            real_records = self.search_read(group.get('__domain', []))
-            if real_records:
-                # Set the real number of useful records
-                group[(groupby and groupby[0] or '') + '_count'] = len(real_records)
-                groups_filtered.append(group)
-        return groups_filtered
-
-    @api.model
-    def search_count(self, args):
-        """ return the number of reconciled records """
-        return len(self.search_read(args))

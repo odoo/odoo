@@ -24,5 +24,5 @@ class StockQuantityHistory(models.TransientModel):
                 'search_default_productgroup': 1,
                 'search_default_locationgroup': 1,
             },
-            'domain': [('date', '<=', self.inventory_datetime)],
+            'domain': [('date', '=', self.inventory_datetime.date())],
         }
