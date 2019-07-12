@@ -290,6 +290,7 @@
             <field name="arch" type="xml">
                 <form string="Work Center">
                     <sheet>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="%(mrp_workcenter_productivity_report_oee)d" type="action" class="oe_stat_button" icon="fa-pie-chart">
                                 <div class="o_field_widget o_stat_info">
@@ -315,13 +316,10 @@
                                     <span class="o_stat_text">Performance</span>
                                 </div>
                             </button>
-                            <button class="oe_stat_button" name="toggle_active" type="object" icon="fa-archive">
-                                <field name="active" widget="boolean_button"
-                                    options='{"terminology": "archive"}'/>
-                            </button>
                         </div>
                         <group>
                             <group>
+                                <field name="active" invisible="1"/>
                                 <field name="name" string="Work Center Name" required="True"/>
                                 <field
                                     name="alternative_workcenter_ids"

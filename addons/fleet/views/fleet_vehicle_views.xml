@@ -10,6 +10,7 @@
                     <field name="state_id"  widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="currency_id" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="open_assignation_logs"
@@ -58,9 +59,6 @@
                             help="show the odometer logs for this vehicle" >
                             <field name="odometer_count" widget="statinfo" string="Odometer"/>
                         </button>
-                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                        </button>
                     </div>
                     <field name="image_medium" widget='image' class="oe_avatar"/>
                     <div class="oe_title">
@@ -77,6 +75,7 @@
                     </div>
                     <group col="2">
                         <group string="Driver">
+                            <field name="active" invisible="1"/>
                             <field name="driver_id"/>
                             <label for="future_driver_id"/>
                             <div class="o_row">

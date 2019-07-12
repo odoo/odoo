@@ -121,16 +121,12 @@
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" string="Rates" type="action" name="%(act_view_currency_rates)d"
                                 icon="fa-money" widget="statinfo" attrs="{'invisible': [('active', '=', False)]}"/>
-                            <button name="toggle_active" type="object"
-                                    class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button"
-                                    options='{"terminology": "active"}'/>
-                            </button>
                         </div>
                         <group>
                             <group>
                                 <field name="name"/>
                                 <field name="rate"/>
+                                <field name="active"/>
                             </group>
                             <group>
                                 <field name="currency_unit_label"/>

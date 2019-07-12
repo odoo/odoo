@@ -41,13 +41,13 @@
                     </div>
                 </group>
             </xpath>
-            <xpath expr="//button[@name='toggle_active']" position="before">
+            <div name="button_box" position="inside">
                 <button class="oe_stat_button" type="action" name="%(timesheet_action_from_employee)d" icon="fa-calendar" groups="hr_timesheet.group_timesheet_manager">
                     <div class="o_stat_info">
                         <span class="o_stat_text">Timesheets</span>
                     </div>
                 </button>
-            </xpath>
+            </div>
         </field>
     </record>
 

@@ -65,9 +65,9 @@
                         attrs="{'invisible': ['&amp;', ('probability', '=', 0), ('active', '=', False)]}"/>
                 </header>
                 <sheet>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="active" invisible="1"/>
-                    <div class="oe_button_box" name="button_box">
-                    </div>
+                    <div class="oe_button_box" name="button_box"/>
                     <div class="badge-pill badge-danger float-right" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</div>
                     <div class="badge-pill badge-success float-right" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</div>
                     <div class="oe_title">
@@ -509,6 +509,7 @@
                             attrs="{'invisible': [('active', '=', False)]}"/>
                     </header>
                     <sheet>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" type="object"
@@ -839,11 +840,7 @@
             <field name="arch" type="xml">
                 <form string="Channel">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name"/>
@@ -851,6 +848,7 @@
                             <h1>
                                 <field name="name"/>
                             </h1>
+                            <field name="active" invisible="1"/>
                         </div>
                     </sheet>
                 </form>

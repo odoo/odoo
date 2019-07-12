@@ -49,7 +49,6 @@ registry
     .add('state_selection', basic_fields.StateSelectionWidget)
     .add('kanban_state_selection', basic_fields.StateSelectionWidget) // deprecated, use state_selection
     .add('boolean_favorite', basic_fields.FavoriteWidget)
-    .add('boolean_button', basic_fields.FieldBooleanButton)
     .add('boolean_toggle', basic_fields.BooleanToggle)
     .add('statinfo', basic_fields.StatInfo)
     .add('percentpie', basic_fields.FieldPercentPie)

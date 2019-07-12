@@ -19,12 +19,9 @@
             <field name="arch" type="xml">
                 <form string="Blog">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" confirm="(Un)archiving a blog automatically (un)archives its posts. Do you want to proceed?" class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <group>
+                            <field name="active" invisible="1"/>
                             <field name="name"/>
                             <field name="subtitle"/>
                             <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
@@ -62,17 +59,16 @@
             <field name="arch" type="xml">
                 <form string="Blog Post">
                     <sheet>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" name="website_publish_button"
                                 type="object" icon="fa-globe">
                                 <field name="is_published" widget="website_button"/>
                             </button>
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
                         </div>
                         <group name="blog_details">
                             <field name="blog_id"/>
+                            <field name="active" invisible="1"/>
                             <field name="name" placeholder="Blog Post Title"/>
                             <field name="subtitle" placeholder="Blog Subtitle"/>
                             <field name="tag_ids" widget="many2many_tags"/>

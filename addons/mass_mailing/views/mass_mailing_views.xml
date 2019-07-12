@@ -303,15 +303,11 @@
             <field name="arch" type="xml">
                 <form string="Contact List">
                     <sheet>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="%(mass_mailing.action_view_mass_mailing_contacts_from_list)d"
                                     type="action" icon="fa-user" class="oe_stat_button">
                                 <field name="contact_nbr" string="Recipients" widget="statinfo"/>
-                            </button>
-                            <button name="toggle_active" type="object"
-                                    class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button"
-                                    options='{"terminology": "archive"}'/>
                             </button>
                         </div>
                         <div class="oe_title">
@@ -321,6 +317,7 @@
                             </h1>
                         </div>
                         <group>
+                            <field name="active" invisible="1"/>
                             <field name="is_public"/>
                         </group>
                     </sheet>
@@ -536,6 +533,7 @@
                         </strong></p>
                     </div>
                     <sheet>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_view_sent"
                                 type="object"
@@ -578,15 +576,10 @@
                                 class="oe_stat_button">
                                 <field name="bounced_ratio" string="Bounced" widget="percentpie"/>
                             </button>
-                            <button name="toggle_active" type="object"
-                                    attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
-                                    class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button"
-                                    options='{"terminology": "archive"}'/>
-                            </button>
                         </div>
 
                         <group>
+                            <field name="active" invisible="1"/>
                             <field name="name" required="1" string="Mailing Name"/>
                             <field name="subject" string="Subject"/>
                             <label for="mailing_model_id" string="Recipients"/>

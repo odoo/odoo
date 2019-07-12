@@ -7,13 +7,6 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="base.view_server_action_form"/>
             <field name="arch" type="xml">
-                <div class="oe_title" position="before">
-                    <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button"/>
-                        </button>
-                    </div>
-                </div>
                 <xpath expr="//button[@name='create_action']" position="replace">
                     <button name="method_direct_trigger" type="object" string="Run Manually" class="oe_highlight"/>
                 </xpath>
@@ -27,6 +20,7 @@
                             <field name="interval_number" class="oe_inline"/>
                             <field name="interval_type" class="oe_inline"/>
                         </div>
+                        <field name="active" invisible="1"/>
                         <field name="nextcall"/>
                         <field name="numbercall"/>
                         <field name="priority"/>

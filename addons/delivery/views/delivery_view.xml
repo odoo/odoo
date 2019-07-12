@@ -49,24 +49,40 @@
                 <form string="Carrier">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="toggle_prod_environment" type="object" class="oe_stat_button" icon="fa-check-square" attrs="{'invisible': ['|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}">
-                                <field name="prod_environment" widget="boolean_button" options='{"terminology": {
-                                    "string_true": "Production Environment",
-                                    "hover_true": "Switch to test environment",
-                                    "string_false": "Test Environment",
-                                    "hover_false": "Switch to production environment"
-                                }}'/>
+                            <button name="toggle_prod_environment"
+                                    attrs="{'invisible': ['|', '|', ('prod_environment', '=', False), ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"
+                                    class="oe_stat_button"
+                                    type="object" icon="fa-play">
+                                <div class="o_stat_info o_field_widget">
+                                    <span class="text-success">Production</span>
+                                    <span class="o_stat_text">Environment</span>
+                                </div>
                             </button>
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "active"}'/>
+                            <!-- transfer referenced here due to view inheritance issue in current master (post-saas-16) -->
+                            <button name="toggle_prod_environment"
+                                    attrs="{'invisible': ['|', '|', ('prod_environment', '=', True), ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"
+                                    class="oe_stat_button"
+                                    type="object" icon="fa-stop">
+                                <div class="o_stat_info o_field_widget">
+                                    <span class="o_warning_text">Test</span>
+                                    <span class="o_stat_text">Environment</span>
+                                </div>
                             </button>
-                            <button name="toggle_debug" type="object" class="oe_stat_button" icon="fa-code" groups="base.group_no_one" attrs="{'invisible': ['|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}">
-                                <field name="debug_logging" widget="boolean_button" options='{"terminology": {
-                                    "string_true": "Debug requests",
-                                    "hover_true": "Disable debug",
-                                    "string_false": "No debug",
-                                    "hover_false": "Enable debug"
-                                }}'/>
+                            <button name="toggle_debug"
+                                    attrs="{'invisible': ['|', '|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule'), ('debug_logging', '=', True)]}"
+                                    class="oe_stat_button"
+                                    type="object" icon="fa-code">
+                                <div class="o_stat_info o_field_widget">
+                                    <span class="text-danger">No debug</span>
+                                </div>
+                            </button>
+                            <button name="toggle_debug"
+                                    attrs="{'invisible': ['|', '|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule'), ('debug_logging', '=', False)]}"
+                                    class="oe_stat_button"
+                                    type="object" icon="fa-code">
+                                <div class="o_stat_info o_field_widget">
+                                    <span class="text-success">Debug requests</span>
+                                </div>
                             </button>
                         </div>
                         <div class="oe_title" name="title">
@@ -77,6 +93,9 @@
                         </div>
                         <group>
                             <group name="provider_details">
+                                <field name="active"/>
+                                <field name="prod_environment" invisible="1"/>
+                                <field name="debug_logging" invisible="1"/>
                                 <label for="delivery_type"/>
                                 <div>
                                     <field name="delivery_type" widget="radio"/>

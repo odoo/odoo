@@ -24,11 +24,6 @@
             <field name="arch" type="xml">
                 <form string="Languages">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
-                                <field name="active" widget="boolean_button" options='{"terminology": "active"}'/>
-                            </button>
-                        </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
@@ -37,6 +32,7 @@
                             <group>
                                 <field name="code"/>
                                 <field name="iso_code"/>
+                                <field name="active"/>
                                 <field name="translatable"/>
                             </group>
                             <group>

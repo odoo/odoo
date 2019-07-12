@@ -1473,6 +1473,10 @@ QUnit.module('Views', {
             arch: '<tree><field name="foo"/></tree>',
             mockRPC: function (route) {
                 assert.step(route);
+                if (route === '/web/dataset/call_kw/foo/action_archive') {
+                    this.data.foo.records[0].active = false;
+                    return Promise.resolve();
+                }
                 return this._super.apply(this, arguments);
             },
         });
@@ -1496,7 +1500,7 @@ QUnit.module('Views', {
         assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
         await testUtils.dom.click($('.modal-footer .btn-primary'));
         assert.containsN(list, 'tbody td.o_list_record_selector', 3, "should have 3 records");
-        assert.verifySteps(['/web/dataset/call_kw/foo/write', '/web/dataset/search_read']);
+        assert.verifySteps(['/web/dataset/call_kw/foo/action_archive', '/web/dataset/search_read']);
         list.destroy();
     });
 

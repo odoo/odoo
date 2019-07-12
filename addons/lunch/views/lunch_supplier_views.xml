@@ -18,11 +18,7 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
-                        </button>
-                    </div>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name" required="1"/></h1>
@@ -41,6 +37,7 @@
                             </div>
                         </group>
                         <group>
+                            <field name="active" invisible="1"/>
                             <field name="email" attrs="{'required': [('send_by', '=', 'mail')]}"/>
                             <field name="phone"  attrs="{'required': [('send_by', '=', 'phone')]}"/>
                             <field name="responsible_id" attrs="{'required': [('send_by', '=', 'mail')]}" groups="base.group_no_one"/>

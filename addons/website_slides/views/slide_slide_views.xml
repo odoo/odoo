@@ -36,13 +36,11 @@
             <field name="arch" type="xml">
                 <form string="Slide">
                     <sheet>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" name="website_publish_button"
                                     type="object" icon="fa-globe">
                                 <field name="is_published" widget="website_button"/>
-                            </button>
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                             </button>
                         </div>
                         <field name="image" widget="image" class="oe_avatar" options='{"preview_image": "image_large"}'
@@ -58,6 +56,7 @@
                             <field name="tag_ids" widget="many2many_tags" placeholder="Tags..."/>
                         </div>
                         <group>
+                            <field name="active" invisible="1"/>
                             <field name="user_id"/>
                             <field name="channel_id"/>
                             <field name="category_id" context="{'default_channel_id': channel_id}"/>

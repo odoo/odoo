@@ -291,6 +291,7 @@ class HrEmployeePrivate(models.Model):
                 'view_mode': 'form',
                 'target': 'new',
                 'context': {'active_id': self.id},
+                'views': [[False, 'form']]
             }
         return res
 
