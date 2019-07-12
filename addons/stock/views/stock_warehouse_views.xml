@@ -7,6 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Warehouse" create="false">
                     <sheet>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_view_all_routes"
                                     string="Routes"
@@ -201,6 +202,7 @@
             <field name="arch" type="xml">
                 <form string="Reordering Rules">
                     <sheet>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <group>
                             <div class="alert alert-info" role="alert">
                                 <a style="cursor: pointer" class="alert-link o_form_uri" type="action" name="%(action_procurement_compute)d">Run the scheduler</a> manually to trigger the reordering rules right now.

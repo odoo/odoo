@@ -7,6 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Fiscal Position">
                     <sheet>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box"/>
                     <group>
                         <group>

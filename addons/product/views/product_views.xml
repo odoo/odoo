@@ -15,6 +15,7 @@
                         groups="product.group_product_variant"/>
                 </header>
                 <sheet>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box"/>
                     <field name='product_variant_count' invisible='1'/>
                     <field name='is_product_variant' invisible='1'/>
@@ -263,6 +264,7 @@
             <field name="arch" type="xml">
                 <form string="Variant Information">
                     <sheet>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box"/>
                         <field name="active" invisible="1"/>
                         <field name="id" invisible="1"/>

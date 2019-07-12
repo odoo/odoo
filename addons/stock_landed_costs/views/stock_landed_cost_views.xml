@@ -204,6 +204,7 @@
             <field name="arch" type="xml">
                 <form string="Landed Costs">
                     <sheet>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="image_medium" widget="image" class="oe_avatar"/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
