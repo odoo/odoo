@@ -96,7 +96,11 @@ class StockMove(models.Model):
                     move.order_finished_lot_ids = finished_lots_ids
                     move.finished_lots_exist = True
                 else:
+                    move.order_finished_lot_ids = False
                     move.finished_lots_exist = False
+            else:
+                move.order_finished_lot_ids = False
+                move.finished_lots_exist = False
 
     @api.depends('product_id.tracking')
     def _compute_needs_lots(self):

@@ -299,6 +299,10 @@ class account_payment(models.Model):
         if not invoices:
             return 0.0
 
+        self.env['account.move'].flush(['type', 'currency_id'])
+        self.env['account.move.line'].flush(['amount_residual', 'amount_residual_currency', 'move_id', 'account_id'])
+        self.env['account.account'].flush(['user_type_id'])
+        self.env['account.account.type'].flush(['type'])
         self._cr.execute('''
             SELECT
                 move.type AS type,

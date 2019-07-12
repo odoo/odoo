@@ -3271,6 +3271,11 @@ Fields:
           .. note:: Values marked as ``_`` in the list above are ignored and
                     can be anything, generally ``0`` or ``False``.
         """
+        return self._write_no_override(vals)
+
+    # DLE P146
+    @api.multi
+    def _write_no_override(self, vals):
         if not self:
             return True
 

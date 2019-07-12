@@ -1066,12 +1066,43 @@ class Field(MetaField('DummyField', (object,), {})):
         # The convert to cache is important for one2many field for which we assign `False` as value
         # It converts the `False` to an empty tuple `()`, and then convert_to_write converts it to [(6, 0, [])]
         # `test_clear_caches`, `variant.attribute_value_ids = False` wasn't doing anything, it let the previous attribute_value_ids
-        value = write_value = self.convert_to_cache(value, records)
-        if self.store or self.inverse or self.inherited:
-            write_value = self.convert_to_write(self.convert_to_record(value, records), records)
         # DLE P29: issue with `write` overwrite of `/mail/models/mail_thread.py`
         # Before calling super, it tried to get the value of computed field, which therefore recalled "write"
         # therefore recalling the write overwrite of `mail`, therefore creating an infinite loop.
+        cache_value = self.convert_to_cache(value, records)
+        record_value = self.convert_to_record(cache_value, records)
+        write_value = self.convert_to_write(record_value, records)
+
+        # DLE P146
+        # This is basically to bypass overrides of `write` for:
+        #  - `new` records: multiple override of write do not expect to receive `new` records,
+        #    e.g. validation checks, which are not meant on new records
+        #  - computed field which are not stored and do not have an inverse:
+        #    to avoid to go through the override of mail.thread each time we set a function field, it was not the case before neither.
+        #  - += and -= operation on new records:
+        #    `test_product_produce_6` calls `_onchange_qty_producing`
+        #    which is basically looping like this:
+        # ```
+        # for line in line_values['to_delete']:
+        #     if line in self.raw_workorder_line_ids:
+        #         self.raw_workorder_line_ids -= line
+        #     else:
+        #         self.finished_workorder_line_ids -= line
+        # ```
+        # When calling convert_to_write on a `new` line, it converts the 2many value to commands, and loose the NewId,
+        # and therefore the ids of `self.raw_workorder_line_ids` are completely replaced by new NewId ids.
+        # Therefore, at the second iteration, `line` is no longer in `self.raw_workorder_line_ids` and it fallbacks to else while it shouldn't have.
+        def write(records):
+            if not self.store and not self.inverse and not self.inherited:
+                records._write_no_override({self.name: value})
+            else:
+                existing_records = records.filtered('id')
+                new_records = records - existing_records
+                if existing_records:
+                    existing_records.write({self.name: write_value})
+                if new_records:
+                    new_records._write_no_override({self.name: value})
+
         if self.compute:
             not_protected = (records - records.env.protected(self))
             if not_protected:
@@ -1080,12 +1111,12 @@ class Field(MetaField('DummyField', (object,), {})):
                 # without protecting.
                 # Though, this is a bommer we have to protect records twice, as we do it as well in regular write
                 with records.env.protecting(records._field_computed.get(self, [self]), records):
-                    not_protected.write({self.name: write_value})
+                    write(not_protected)
             protecteds = (records & records.env.protected(self))
             if protecteds:
                 for record in protecteds:
                     # DLE P128: `test_pick_a_pack_confirm`, `test_put_in_pack`
-                    record.env.cache.set(record, self, self.convert_to_cache(write_value, record))
+                    record.env.cache.set(record, self, cache_value)
                     if record.id and self.store:
                         if self.column_type:
                             # DLE P65: Support translations in flush
@@ -1109,8 +1140,7 @@ class Field(MetaField('DummyField', (object,), {})):
                     for invf in record._field_inverses[self]:
                         invf._update(record[self.name], record)
         else:
-            records.write({self.name: write_value})
-
+            write(records)
 
     ############################################################################
     #
