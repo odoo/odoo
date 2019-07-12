@@ -175,7 +175,7 @@ tour.register('rte_translator', {
 }, {
     content: "check bis: content is translated",
     trigger: '#wrap p font:first:contains(translated french text)',
-    extra_trigger: 'body:not(:has(button[data-action=save]))',
+    extra_trigger: 'html[lang*="fr"] body:not(:has(button[data-action=save]))',
 }, {
     content: "check bis: placeholder translation",
     trigger: 'input[placeholder="test french placeholder"]',

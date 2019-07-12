@@ -1426,7 +1426,7 @@ QUnit.test('rename DM conversation', async function (assert) {
                 assert.step(args.method);
                 assert.strictEqual(args.args[0], 1);
                 assert.strictEqual(args.kwargs.name, "Demo");
-                return Promise.resolve("Demo");
+                return Promise.resolve();
             }
             return this._super.apply(this, arguments);
         },
