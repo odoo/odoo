@@ -266,7 +266,7 @@
                 <attribute name="context">{'display_website': True}</attribute>
             </field>
             <field name="team_id" position="after">
-                <field name="website_id" groups="website.group_multi_website"/>
+                <field name="website_id" attrs="{'invisible': [('website_id', '=', False)]}" groups="website.group_multi_website"/>
             </field>
         </field>
     </record>

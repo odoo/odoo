@@ -14,9 +14,6 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <field name="client_order_ref" position="after">
-                <field name="tag_ids" widget="many2many_tags"/>
-            </field>
             <xpath expr="//group[@name='utm_link']" position="replace">
                 <group name="utm_link" colspan="2" class="mt-0">
                     <field name="campaign_id"/>
