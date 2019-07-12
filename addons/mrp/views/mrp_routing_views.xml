@@ -68,15 +68,12 @@
             <field name="arch" type="xml">
                 <form string="Routing">
                     <sheet>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="%(action_mrp_routing_time)d" type="action" class="oe_stat_button" icon="fa-clock-o">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_text">Time<br/> Analysis</span>
                                 </div>
-                            </button>
-                            <button class="oe_stat_button" name="toggle_active" type="object" icon="fa-archive">
-                                <field name="active" widget="boolean_button"
-                                    options='{"terminology": "archive"}'/>
                             </button>
                         </div>
                         <div class="oe_title">
@@ -87,6 +84,7 @@
                         <group>
                             <group>
                                 <field name="name"/>
+                                <field name="active" invisible="1"/>
                             </group>
                             <group>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>

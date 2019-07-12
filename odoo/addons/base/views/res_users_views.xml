@@ -159,6 +159,7 @@
                     <header>
                     </header>
                     <sheet>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="id" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_show_groups" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-users">
@@ -169,9 +170,6 @@
                             </button>
                             <button name="action_show_rules" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-list-ul">
                                 <field string="Record Rules" name="rules_count" widget="statinfo"/>
-                            </button>
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
-                                <field name="active" widget="boolean_button" options='{"terminology": "active"}'/>
                             </button>
                         </div>
                         <field name="active_partner" required="0" readonly="1" invisible="1"/>
@@ -216,6 +214,7 @@
                                 <group>
                                     <group string="Localization" name="preferences">
                                         <field name="lang"/>
+                                        <field name="active" invisible="1"/>
                                         <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" />
                                         <field name="tz_offset" invisible="1"/>
                                     </group>

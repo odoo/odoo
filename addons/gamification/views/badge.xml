@@ -38,6 +38,7 @@
                     <button string="Grant this Badge" type="action" name="%(action_grant_wizard)d" class="oe_highlight" attrs="{'invisible': [('remaining_sending','=',0)]}" />
                 </header>
                 <sheet>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box"/>
                     <field name="image" widget='image' class="oe_avatar"/>
                     <div class="oe_title">
@@ -54,6 +55,7 @@
                             Security rules to define who is allowed to manually grant badges. Not enforced for administrator.
                         </div>
                         <group>
+                            <field name="active" invisible="1"/>
                             <field name="rule_auth" widget="radio"/>
                             <field name="rule_auth_user_ids" attrs="{'invisible': [('rule_auth','!=','users')]}" widget="many2many_tags" />
                             <field name="rule_auth_badge_ids" attrs="{'invisible': [('rule_auth','!=','having')]}" widget="many2many_tags" />

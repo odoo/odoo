@@ -995,7 +995,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
             <field name="arch" type="xml">
-                <button name="toggle_active" position="before">
+                <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="action_view_sales"
                         type="object" icon="fa-signal" groups="sales_team.group_sale_salesman" help="Sold in the last 365 days" attrs="{'invisible': [('sale_ok', '=', False)]}">
                         <div class="o_field_widget o_stat_info">
@@ -1006,7 +1006,7 @@
                             <span class="o_stat_text">Sold</span>
                         </div>
                     </button>
-                </button>
+                </div>
                 <group name="description" position="after">
                     <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
                         <field name="sale_line_warn" nolabel="1"/>
@@ -1023,7 +1023,7 @@
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
             <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
             <field name="arch" type="xml">
-                <button name="toggle_active" position="before">
+                <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="action_view_sales"
                         type="object" icon="fa-signal" groups="sales_team.group_sale_salesman" help="Sold in the last 365 days" attrs="{'invisible': [('sale_ok', '=', False)]}">
                         <div class="o_field_widget o_stat_info">
@@ -1034,7 +1034,7 @@
                             <span class="o_stat_text">Sold</span>
                         </div>
                     </button>
-                </button>
+                </div>
                 <group name="description" position="after">
                     <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
                         <field name="sale_line_warn" nolabel="1"/>
@@ -1127,9 +1127,6 @@
                 <field name="currency_id" position="before">
                     <field name="discount_policy" groups="sale.group_discount_per_so_line" widget="radio"/>
                 </field>
-                <button name="toggle_active" position="attributes">
-                    <attribute name="groups">sales_team.group_sale_manager</attribute>
-                </button>
             </field>
         </record>
 

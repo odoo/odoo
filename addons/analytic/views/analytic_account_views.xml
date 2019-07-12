@@ -17,12 +17,9 @@
             <field name="arch" type="xml">
                 <form string="Analytic Tags">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <group>
+                            <field name="active" invisible="1"/>
                             <field name="name"/>
                             <field name="active_analytic_distribution" groups="analytic.group_analytic_accounting"/>
                             <field name="company_id" groups="base.group_multi_company"/>
@@ -143,13 +140,10 @@
             <field name="arch" type="xml">
                 <form string="Analytic Account">
                     <sheet string="Analytic Account">
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" type="action" name="%(account_analytic_line_action)d"
                             icon="fa-usd"  string="Cost/Revenue" widget="statinfo"/>
-                            <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
-                                <field name="active" widget="boolean_button"
-                                options='{"terminology": "archive"}'/>
-                            </button>
                         </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -160,6 +154,7 @@
                         <div name="project"/>
                         <group name="main">
                             <group>
+                                <field name="active" invisible="1"/>
                                 <field name="code"/>
                                 <field name="partner_id"/>
                             </group>

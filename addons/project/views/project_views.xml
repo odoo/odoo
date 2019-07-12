@@ -95,6 +95,7 @@
                         <button name="%(portal.portal_share_action)d" string="Share" type="action" class="oe_highlight oe_read_only"/>
                     </header>
                 <sheet string="Project">
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
                         <button  class="oe_stat_button" name="attachment_tree_view" type="object" icon="fa-files-o">
                             <field string="Documents" name="doc_count" widget="statinfo"/>
@@ -113,12 +114,6 @@
                                 </span>
                             </div>
                         </button>
-                        <button name="toggle_active" type="object"
-                                confirm="(Un)archiving a project automatically (un)archives its tasks. Do you want to proceed?"
-                                class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button"
-                                options='{"terminology": "archive"}'/>
-                        </button>
                     </div>
                     <div class="oe_title">
                         <h1>
@@ -135,6 +130,7 @@
                         <page name="settings" string="Settings">
                             <group>
                                 <group>
+                                    <field name="active" invisible="1"/>
                                     <field name="user_id" string="Project Manager" attrs="{'readonly':[('active','=',False)]}"/>
                                     <field name="privacy_visibility" widget="radio"/>
                                 </group>
@@ -427,6 +423,7 @@
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}"/>
                     </header>
                     <sheet string="Task">
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" icon="fa-tasks" type="object" name="action_open_parent_task" string="Parent Task" attrs="{'invisible' : [('parent_id', '=', False)]}" groups="project.group_subtask_project"/>
                         <button name="action_subtask" type="object" class="oe_stat_button" icon="fa-tasks"
@@ -436,11 +433,6 @@
                         </button>
                         <button name="%(rating_rating_action_task)d" type="action" attrs="{'invisible': [('rating_count', '=', 0)]}" class="oe_stat_button" icon="fa-smile-o" groups="project.group_project_rating">
                             <field name="rating_count" string="Rating" widget="statinfo"/>
-                        </button>
-                        <button name="toggle_active" type="object" groups="base.group_user"
-                                class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button"
-                                options='{"terminology": "archive"}'/>
                         </button>
                     </div>
                     <div class="oe_title pr-0">
@@ -453,6 +445,7 @@
                     <group>
                         <group>
                             <field name="project_id" domain="[('active', '=', True)]" options="{'no_create': True}"/>
+                            <field name="active" invisible="1"/>
                             <field name="user_id"
                                 class="o_task_user_field"
                                 options='{"no_open": True}'/>

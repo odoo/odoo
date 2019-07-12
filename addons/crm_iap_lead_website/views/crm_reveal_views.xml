@@ -19,9 +19,6 @@
                                 <span class="o_stat_text"> Leads </span>
                             </div>
                         </button>
-                        <button name="toggle_active" type="object" groups="base.group_user" class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button" options="{'terminology': 'archive'}"/>
-                        </button>
                     </div>
                     <div class="oe_title mb8">
                         <label for="name" class="oe_edit_only"/>
@@ -33,6 +30,7 @@
                         <div class="col-md-6">
                             <group>
                                 <field name="lead_for" widget="radio"/>
+                                <field name="active"/>
                             </group>
                             <group string="Website Traffic Conditions">
                                 <field name="country_ids" widget="many2many_tags"/>

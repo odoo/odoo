@@ -183,13 +183,13 @@
                             attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
                 </sheet>
-                <button name="toggle_active" position="before">
+                <div name="button_box" position="inside">
                     <button string="Putaway Rules" type="object"
                         name="action_view_related_putaway_rules"
                         class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
                         attrs="{'invisible': [('type', '=', 'service')]}"
                         context="{'invisible_handle': True, 'single_product': True}"/>
-                </button>
+                </div>
             </field>
         </record>
 
@@ -211,7 +211,7 @@
                             groups="stock.group_stock_user"
                             attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
-                    <button name="toggle_active" position="before">
+                    <div name="button_box" position="inside">
                         <button class="oe_stat_button"
                                name="action_open_quants"
                                icon="fa-building-o"
@@ -279,7 +279,7 @@
                             name="action_open_product_lot"
                             attrs="{'invisible': [('tracking', '=', 'none')]}"
                             class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot"/>
-                    </button>
+                    </div>
                     <xpath expr="//field[@name='product_tmpl_id']" position="attributes">
                         <attribute name="context">{'quantity_available_locations_domain': ('internal',)}</attribute>
                     </xpath>
@@ -305,7 +305,7 @@
                             groups="stock.group_stock_user"
                             attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
-                    <button name="toggle_active" position="before">
+                    <div name="button_box" position="inside">
                         <button type="object"
                             name="action_open_quants"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
@@ -377,7 +377,7 @@
                             name="action_open_product_lot"
                             attrs="{'invisible': [('tracking', '=', 'none')]}"
                             class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot"/>
-                    </button>
+                    </div>
 
                     <!-- change attrs of fields added in view_template_property_form
                     to restrict the display for templates -->

@@ -4671,6 +4671,21 @@ Fields:
         for record in self:
             record.active = not record.active
 
+    def action_archive(self):
+        """
+            Set active=False on a recordset, by calling toggle_active to take the
+            corresponding actions according to the model
+        """
+        return self.filtered(lambda record: record.active).toggle_active()
+
+    @api.multi
+    def action_unarchive(self):
+        """
+            Set active=True on a recordset, by calling toggle_active to take the
+            corresponding actions according to the model
+        """
+        return self.filtered(lambda record: not record.active).toggle_active()
+
     def _register_hook(self):
         """ stuff to do right after the registry is built """
         pass

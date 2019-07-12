@@ -71,7 +71,7 @@
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
             <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
             <field name="arch" type="xml">
-                <button name="toggle_active" position="before">
+                <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="action_view_po"
                         type="object" icon="fa-shopping-cart" attrs="{'invisible': [('purchase_ok', '=', False)]}" help="Purchased in the last 365 days">
                         <div class="o_field_widget o_stat_info">
@@ -82,7 +82,7 @@
                             <span class="o_stat_text">Purchased</span>
                         </div>
                     </button>
-                </button>
+                </div>
             </field>
         </record>
 
@@ -103,7 +103,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
             <field name="arch" type="xml">
-                <button name="toggle_active" position="before">
+                <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="action_view_po"
                         type="object" icon="fa-shopping-cart" attrs="{'invisible': [('purchase_ok', '=', False)]}" help="Purchased in the last 365 days">
                         <div class="o_field_widget o_stat_info">
@@ -114,7 +114,7 @@
                             <span class="o_stat_text">Purchased</span>
                         </div>
                     </button>
-                </button>
+                </div>
             </field>
         </record>
 

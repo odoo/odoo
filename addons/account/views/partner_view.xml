@@ -7,14 +7,11 @@
             <field name="arch" type="xml">
                 <form string="Fiscal Position">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
-                                <field name="active" widget="boolean_button"
-                                options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_button_box" name="button_box"/>
                     <group>
                         <group>
+                            <field name="active" invisible="1"/>
                             <field name="name"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
@@ -123,7 +120,7 @@
             <field name="priority" eval="11"/>
             <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="arch" type="xml">
-                <button name="toggle_active" position="before">
+                <div name="button_box" position="inside">
                     <button type="object" class="oe_stat_button" icon="fa-pencil-square-o" name="action_view_partner_invoices"
                         attrs="{'invisible': [('customer', '=', False)]}" context="{'default_partner_id': active_id}">
                         <div class="o_form_field o_stat_info">
@@ -133,7 +130,7 @@
                             <span class="o_stat_text">Invoiced</span>
                         </div>
                     </button>
-                </button>
+                </div>
 
                 <page name="internal_notes" position="inside">
                     <group colspan="2" col="2" groups="account.group_warning_account">
@@ -153,13 +150,13 @@
             <field name="priority" eval="14"/>
             <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="arch" type="xml">
-                <button name="toggle_active" position="before">
+                <div name="button_box" position="inside">
                     <button class="oe_stat_button" type="action" name="%(account.action_open_partner_analytic_accounts)d"
                         groups="account.group_account_invoice"
                         icon="fa-book" title="Analytic Accounts" attrs="{'invisible': [('contracts_count', '=', 0)]}">
                         <field string="Analytic Accounts" name="contracts_count" widget="statinfo"/>
                     </button>
-                </button>
+                </div>
             </field>
         </record>
 

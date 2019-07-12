@@ -18,6 +18,7 @@
             <field name="arch" type="xml">
                 <form string="Employee" create="0" write="0">
                     <sheet>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="user_id" invisible="1"/>
                         <field name="active" invisible="1"/>
                         <div class="oe_button_box" name="button_box">

@@ -28,11 +28,7 @@
             <field name="arch" type="xml">
                 <form string="Forum">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" confirm="(Un)archiving a forum automatically (un)archives its posts. Do you want to proceed?" class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="image" widget="image" options="{'preview_image': 'image_medium'}" class="oe_avatar"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -41,6 +37,7 @@
                             </h1>
                         </div>
                         <group>
+                            <field name="active" invisible="1"/>
                             <field name="description"/>
                             <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                         </group>
@@ -147,17 +144,14 @@
             <field name="arch" type="xml">
                 <form string="Forum Post">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" confirm="(Un)archiving a post automatically (un)archives its answers. Do you want to proceed?" class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <label for="name" class="oe_edit_only"/>
                         <h1>
                             <field name="name" placeholder="Name"/>
                         </h1>
                         <group>
                             <group>
+                                <field name="active" invisible="1"/>
                                 <field name="forum_id"/>
                                 <field name="website_id" groups="website.group_multi_website"/>
                                 <field name="parent_id"/>

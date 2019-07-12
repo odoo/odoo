@@ -89,7 +89,7 @@
             <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
             <field name="arch" type="xml">
                 <data>
-                    <button name="toggle_active" position="before">
+                    <div name="button_box" position="inside">
                         <button class="oe_stat_button o_res_partner_tip_opp" type="action"
                             attrs="{'invisible': [('customer', '=', False)]}"
                             name="%(crm.crm_lead_opportunities)d"
@@ -105,7 +105,7 @@
                             context="{'partner_id': active_id, 'partner_name': name}">
                             <field string="Meetings" name="meeting_count" widget="statinfo"/>
                         </button>
-                    </button>
+                    </div>
                 </data>
             </field>
         </record>

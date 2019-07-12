@@ -3140,42 +3140,6 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('attrs are properly transmitted to new records', async function (assert) {
-        assert.expect(2);
-
-        // this test checks that the fieldsInfo have been transmitted to the
-        // load function when creating a new record
-
-        var terminology = {
-            string_true: "Production Environment",
-            hover_true: "Switch to test environment",
-            string_false: "Test Environment",
-            hover_false: "Switch to production environment"
-        };
-        var form = await createView({
-            View: FormView,
-            model: 'partner',
-            data: this.data,
-            arch: '<form>' +
-                    '<group>' +
-                        '<field name="bar" widget="boolean_button" options=\'{"terminology": ' +
-                            JSON.stringify(terminology) + '}\'/>' +
-                    '</group>' +
-                '</form>',
-            res_id: 2,
-        });
-
-        assert.strictEqual(form.$('.o_stat_text.o_not_hover:contains(Production Environment)').length, 1,
-            "button should contain correct string");
-
-        await testUtils.form.clickCreate(form);
-
-        assert.strictEqual(form.$('.o_stat_text.o_not_hover:contains(Test Environment)').length, 1,
-            "button should contain correct string");
-
-        form.destroy();
-    });
-
     QUnit.test('button box is rendered in create mode', async function (assert) {
         assert.expect(3);
 
