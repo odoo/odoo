@@ -30,9 +30,10 @@ odoo.define('payment_ogone.payment_form', function (require) {
             var acquirerForm = this.$('#o_payment_add_token_acq_' + acquirerID);
             var inputsForm = $('input', acquirerForm);
             var ds = $('input[name="data_set"]', acquirerForm)[0];
-
+            var kwargs =  {"partner_id": this.options.partnerId};
             if (this.options.partnerId === undefined) {
                 console.warn('payment_form: unset partner_id when adding new token; things could go wrong');
+                kwargs= {};
             }
             var formData = this.getFormData(inputsForm);
             console.log(formData);
@@ -41,18 +42,16 @@ odoo.define('payment_ogone.payment_form', function (require) {
                 model: 'payment.token',
                 method: 'ogone_prepare_token',
                 context: self.context,
+                kwargs: kwargs,
             }).then(function (result) {
 
                 result['CVC'] = formData.cc_cvc;
                 result['CARDNO'] = formData.cc_number.replace(/\s/g, '');
                 result['ED'] = formData.cc_expiry.replace(/\s\/\s/g, '');
                 result['CN'] = formData.cc_holder_name;
-                result['PARAMPLUS'] = "test1=0&test2=coucou&test3=5";
-                
-                // TEST if INPUT FORM IS VALID
-                var APIUrl = "https://ogone.test.v-psp.com/ncol/test/alias_gateway.asp";
-                console.log(result);  
 
+                // TEST if INPUT FORM IS VALID
+                var APIUrl = "https://ogone.test.v-psp.com/ncol/test/Alias_gateway_utf8.asp";
                 var ogoneForm = document.createElement("form");
                 ogoneForm.method = "POST";
                 ogoneForm.action = APIUrl;
@@ -60,11 +59,12 @@ odoo.define('payment_ogone.payment_form', function (require) {
                 el.setAttribute('type', 'submit');
                 el.setAttribute('name', "Submit");
                 ogoneForm.appendChild(el);
-                _.each(result, function (key, value) {
+                console.log(result);
+                _.each(result, function (value, key) {
                     var el = document.createElement("input");
                     el.setAttribute('type', 'hidden');
-                    el.setAttribute('value', key);
-                    el.setAttribute('name', value);
+                    el.setAttribute('value', value);
+                    el.setAttribute('name', key);
                     ogoneForm.appendChild(el);
                 });
                 document.body.appendChild(ogoneForm);

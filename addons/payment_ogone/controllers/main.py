@@ -141,5 +141,56 @@ class OgoneController(http.Controller):
         for key, value in post.items():
             ret += "{} : {} </br>".format(key, value)
 
-        return ret
-
+        # We have created the token. We can now make the payment and create the transaction.
+        try:
+            ogone_order_id = post['order_id']
+        except KeyError:
+            ogone_order_id = None
+            pass
+        cvc_masked = 'XXX'
+        card_number_masked = post['CardNo']
+        acquirer = request.env['payment.acquirer'].search([('provider', '=', 'ogone')])
+        # transaction = request.env['payment.transaction'].search([('provider', '=', 'ogone')])
+        # TODO: check integrity of partner_id to prevent malicious data manipulation on the client side.
+        try:
+            partner_id = post['partner_id']
+        except KeyError:
+            partner_id = None
+            pass
+        data_clean = {}
+        for key, value in post.items():
+            data_clean[key.upper()] = value
+        shasign = acquirer._ogone_generate_shasign('out', data_clean)
+        print(data_clean['SHASIGN'])
+        print(shasign)
+        ret += str(data_clean) + '</br>' + data_clean['SHASIGN'] + '</br>' + shasign.upper()
+        # return ret
+        if partner_id:
+            token_parameters = {
+                'cc_number': card_number_masked,
+                'cc_cvc': cvc_masked,
+                'cc_holder_name': 0,
+                'cc_expiry': data_clean['ED'],
+                'cc_brand': data_clean['BRAND'],
+                'acquirer_id': acquirer.id,
+                'partner_id': partner_id,
+                'alias_gateway': True,
+                'alias': data_clean['ALIAS'],
+            }
+            token = request.env['payment.token'].create(token_parameters, )
+            baseurl = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            params = {
+                'accept_url': baseurl + '/payment/ogone/validate/accept',
+                'decline_url': baseurl + '/payment/ogone/validate/decline',
+                'exception_url': baseurl + '/payment/ogone/validate/exception',
+                'return_url': post.get('return_url', baseurl)
+            }
+            tx = token.validate(**params)
+            if tx and tx.html_3ds:
+                return tx.html_3ds
+            # add the payment transaction into the session to let the page /payment/process to handle it
+            PaymentProcessing.add_payment_transaction(tx)
+            #return werkzeug.utils.redirect("/payment/process")
+            return ret
+        else:
+            return ret
