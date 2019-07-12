@@ -20,7 +20,7 @@
                                 attrs="{'invisible': [('state', 'not in', ['done'])]}" />
                         </div>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
+                            <label for="name" class="oe_edit_only" string="Landed Cost"/>
                             <h1>
                                 <field name="name" placeholder="Landed Cost Name"/>
                             </h1>
@@ -31,15 +31,13 @@
                                 <field name="picking_ids" widget="many2many_tags" options="{'no_create_edit': True}" domain="[('state', '=', 'done'), ('picking_type_code', '!=', 'internal')]"/>
                             </group>
                             <group>
-                                <field name="account_journal_id"/>
-                                <field name="account_move_id"/>
+                                <label for="account_journal_id" string="Journal"/>
+                                <field name="account_journal_id" nolabel="1"/>
+                                <field name="account_move_id" attrs="{'invisible': [('account_move_id', '=', False)]}"/>
                             </group>
                         </group>
-                        <p class="oe_grey">
-                            Landed cost are computed based on the purchase unit of measure.
-                        </p>
                         <notebook>
-                            <page string="Cost Lines">
+                            <page string="Additional Costs">
                                 <field name="cost_lines">
                                     <form string="Cost Lines">
                                         <group>
@@ -89,12 +87,12 @@
                                     <tree string="Valuation Adjustments" editable="bottom" create="0">
                                         <field name="cost_line_id" readonly="1"/>
                                         <field name="product_id" readonly="1"/>
-                                        <field name="weight" readonly="1"/>
-                                        <field name="volume" readonly="1"/>
+                                        <field name="weight" readonly="1" optional="hide"/>
+                                        <field name="volume" readonly="1" optional="hide"/>
                                         <field name="quantity" readonly="1"/>
-                                        <field name="former_cost_per_unit" readonly="1" widget="monetary"/>
-                                        <field name="former_cost" readonly="1"/>
-                                        <field name="additional_landed_cost"/>
+                                        <field name="currency_id" invisible="1"/>
+                                        <field name="former_cost" readonly="1" widget="monetary"/>
+                                        <field name="final_cost" readonly="1" widget="monetary"/>
                                     </tree>
                                 </field>
                             </page>
