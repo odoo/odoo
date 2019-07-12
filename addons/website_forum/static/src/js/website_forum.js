@@ -18,9 +18,6 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         'click .karma_required': '_onKarmaRequiredClick',
         'mouseenter .o_js_forum_tag_follow': '_onTagFollowBoxMouseEnter',
         'mouseleave .o_js_forum_tag_follow': '_onTagFollowBoxMouseLeave',
-        'click .o_forum_profile_pic_edit': '_onEditProfilePicClick',
-        'change .o_forum_file_upload': '_onFileUploadChange',
-        'click .o_forum_profile_pic_clear': '_onProfilePicClearClick',
         'mouseenter .o_forum_user_info': '_onUserInfoMouseEnter',
         'mouseleave .o_forum_user_info': '_onUserInfoMouseLeave',
         'mouseleave .o_forum_user_bio_expand': '_onUserBioExpandMouseLeave',
@@ -214,41 +211,6 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      */
     _onTagFollowBoxMouseLeave: function (ev) {
         $(ev.currentTarget).find('.o_forum_tag_follow_box').stop().fadeOut().css('display', 'none');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onEditProfilePicClick: function (ev) {
-        ev.preventDefault();
-        $(ev.currentTarget).closest('form').find('.o_forum_file_upload').trigger('click');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onFileUploadChange: function (ev) {
-        if (!ev.currentTarget.files.length) {
-            return;
-        }
-        var $form = $(ev.currentTarget).closest('form');
-        utils.getDataURLFromFile(ev.currentTarget.files[0]).then(function (result) {
-            $form.find('.o_forum_avatar_img').attr('src', result);
-        });
-        $form.find('#forum_clear_image').remove();
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onProfilePicClearClick: function (ev) {
-        var $form = $(ev.currentTarget).closest('form');
-        $form.find('.o_forum_avatar_img').attr('src', '/web/static/src/img/placeholder.png');
-        $form.append($('<input/>', {
-            name: 'clear_image',
-            id: 'forum_clear_image',
-            type: 'hidden',
-        }));
     },
     /**
      * @private
