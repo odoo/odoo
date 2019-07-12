@@ -24,7 +24,7 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
         'click .vote_up:not(.karma_required), .vote_down:not(.karma_required)': '_onVotePostClick',
         'click .o_js_validation_queue a[href*="/validate"]': '_onValidationQueueClick',
         'click .accept_answer:not(.karma_required)': '_onAcceptAnswerClick',
-        'click .favourite_question': '_onFavoriteQuestionClick',
+        'click .favourite_question, .forum_favourite_question': '_onFavoriteQuestionClick',
         'click .comment_delete': '_onDeleteCommentClick',
         'click .notification_close': '_onCloseNotificationClick',
         'click .js_close_intro': '_onCloseIntroClick',
@@ -392,6 +392,7 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
         this._rpc({
             route: $link.data('href'),
         }).then(function (data) {
+            $link.toggleClass('favourite_question', !data);
             $link.toggleClass('forum_favourite_question', !!data);
         });
     },

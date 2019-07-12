@@ -655,7 +655,7 @@
                         <t t-set="post" t-value="question"/>
                         <div class="mt-1">
                             <a t-attf-data-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite" aria-label="Toggle favorite status" title="Toggle favorite status"
-                                t-attf-class="favourite_question no-decoration fa fa-star #{question.user_favourite and 'forum_favourite_question' or ''}"/><br/>
+                                t-attf-class="no-decoration fa fa-star #{'forum_favourite_question' if question.user_favourite else 'favourite_question'}"/><br/>
                             <t t-esc="question.favourite_count"/>
                         </div>
                     </t>
