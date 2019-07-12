@@ -990,7 +990,7 @@ var VideoPlugin = AbstractMediaPlugin.extend({
  */
 dom.isIcon = function (node) {
     node = node && !node.tagName ? node.parentNode : node;
-    return node && node.className && node.className.indexOf(' fa-') !== -1;
+    return node && node.classList && node.classList.value && node.classList.value.indexOf(' fa-') !== -1;
 };
 
 var IconPlugin = AbstractMediaPlugin.extend({
