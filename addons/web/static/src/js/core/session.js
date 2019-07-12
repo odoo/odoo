@@ -64,17 +64,12 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * Setup a session
      */
     session_bind: function (origin) {
-        var self = this;
         this.setup(origin);
         qweb.default_dict._s = this.origin;
         this.uid = null;
         this.username = null;
         this.user_context= {};
         this.db = null;
-        this.module_loaded = {};
-        _(this.module_list).each(function (mod) {
-            self.module_loaded[mod] = true;
-        });
         this.active_id = null;
         return this.session_init();
     },
@@ -212,10 +207,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         }
         return loaded.then(function () {
             return self.load_js(file_list);
-        }).then(function () {
-            self.on_modules_loaded();
-            self.trigger('module_loaded');
-       });
+        });
     },
     load_translations: function () {
         return _t.database.load_translations(this, this.module_list, this.user_context.lang, this.translationURL);
@@ -249,25 +241,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             });
         });
         return lock;
-    },
-    on_modules_loaded: function () {
-        var openerp = window.openerp;
-        for(var j=0; j<this.module_list.length; j++) {
-            var mod = this.module_list[j];
-            if(this.module_loaded[mod])
-                continue;
-            openerp[mod] = {};
-            // init module mod
-            var fct = openerp._openerp[mod];
-            if(typeof(fct) === "function") {
-                openerp._openerp[mod] = {};
-                for (var k in fct) {
-                    openerp._openerp[mod][k] = fct[k];
-                }
-                fct(openerp, openerp._openerp[mod]);
-            }
-            this.module_loaded[mod] = true;
-        }
     },
     get_currency: function (currency_id) {
         return this.currencies[currency_id];
