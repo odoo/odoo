@@ -5570,7 +5570,10 @@ Fields:
                             records = self.mapped(invf.name)
                         except MissingError:
                             records = self.exists().mapped(invf.name)
-                        break
+                        # TBE: avoid using different model which will crash when trying to substract them
+                        # the issue can be triggered by installing hr_holidays
+                        if key.model_name == records._name:
+                            break
                 else:
                     # DLE P121: `test_adv_activity_full`, `test_adv_activity_mixin`
                     # When creating a mail activity, to find the inverse field that must be updated
@@ -5589,8 +5592,10 @@ Fields:
                     if key.type in ('one2many',) and key.inverse_name == 'res_id' and 'res_model' in self._fields:
                         records = model.browse()
                         for r in self:
+                            ids = set()
                             if r.res_model == key.model_name:
-                                records |= model.browse(r.res_id)
+                                ids |= set([r.res_id])
+                            records = model.browse(ids)
                     else:
                         # DLE P77: you can't do a search to find the inverse of new records, as they are not yet in database :(
                         # `test_onchange_one2many_with_domain_on_related_field`
